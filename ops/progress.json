@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The curated-unit cross-surface identity slice is completed. Four existing original character sources now own BattleBoard, TownShell recruitment, and OverworldMap encounter identity while all battle and non-target payloads remain exact.",
+  "currentNotes": "The River Pass starter-army curated character-source slice is completed with exact generated provenance, live River Pass BattleBoard proof, compatibility/static checks, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-curated-unit-cross-surface-identity-10184",
-  "currentSliceId": "art-curated-unit-cross-surface-identity-10184",
-  "currentSliceNotes": "Completed eight reproducible portrait/overworld derivatives for the four curated units. Full 412-asset regeneration, focused live TownShell/Overworld ownership, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; broad/final art and release readiness remain unclaimed.",
+  "currentSlice": "art-river-pass-starter-army-curated-character-sources-10184",
+  "currentSliceId": "art-river-pass-starter-army-curated-character-sources-10184",
+  "currentSliceNotes": "River Guard and Ember Archer now use distinct original transparent sources across all four existing-path runtime surfaces. The other 101 units remain byte-exact; gameplay/content authority is unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Curated Unit Cross-Surface Identity",
-  "currentSliceUpdatedAt": "2026-08-22T10:40:44Z",
+  "currentSliceTitle": "River Pass Starter Army Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T11:09:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,52 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad/final art or release readiness from the completed four-unit cross-surface vertical.",
-  "notes": "Completed the four-unit curated cross-surface identity vertical with exact battle/non-target preservation and bounded live/runtime/platform evidence.",
+  "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this bounded completion.",
+  "notes": "Completed the River Pass first-play army art vertical: two original sources, eight exact runtime replacements, live BattleBoard identity/ability/session authority, full 412-asset reproducibility, compatibility/static checks, and bounded Linux/Windows export-startup evidence.",
   "plannedSlices": [
+    {
+      "id": "art-river-pass-starter-army-curated-character-sources-10184",
+      "title": "River Pass Starter Army Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Make the complete first playable River Pass army character-readable by replacing River Guard and Ember Archer abstract generated motifs with distinct original sources and reproducible existing-path runtime derivatives.",
+      "implementationTargets": [
+        "art/units/source/curated/unit_river_guard.png",
+        "art/units/source/curated/unit_ember_archer.png",
+        "art/units/portraits/unit_river_guard.png",
+        "art/units/portraits/unit_ember_archer.png",
+        "art/units/battle_icons/unit_river_guard.png",
+        "art/units/battle_icons/unit_ember_archer.png",
+        "art/units/overworld_icons/unit_river_guard.png",
+        "art/units/overworld_icons/unit_ember_archer.png",
+        "art/animation/runtime/units/unit_river_guard.png",
+        "art/animation/runtime/units/unit_ember_archer.png",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "tests/unit_river_pass_starter_army_curated_art_report.gd",
+        "tests/unit_river_pass_starter_army_curated_art_report.tscn",
+        "tests/unit_art_reproducibility_report.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"scenario_id": "river-pass", "army_group_id": "army_emberwell_vanguard", "unit_ids": ["unit_river_guard", "unit_ember_archer"], "starting_counts": [10,5], "non_manifest_content_reference_counts": [25,24], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "final_sprite_import": false},
+      "completionCriteria": [
+        "Two distinct original transparent sources own exact manifest provenance and reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives",
+        "A live River Pass session preserves exact Emberwell Vanguard unit ids/counts and abilities while BattleBoard loads both curated icon/sheet pairs and all 112 target frames remain visible and character-readable",
+        "Only the two sources, eight target runtime payloads, and two manifest records change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": ["Another unit, unit stats/abilities/counts/content, BattleRules/BattleAiRules, animation state timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T10:46:05Z",
+      "startedAt": "2026-08-22T10:46:05Z",
+      "updatedAt": "2026-08-22T11:09:00Z",
+      "completedAt": "2026-08-22T11:09:00Z",
+      "notes": "Completed two distinct original transparent character sources and all eight existing-path derivatives for River Guard and Ember Archer. Exact pre/post hashing proves only those eight of 412 runtime assets changed and the other 404 remain byte-exact; a second generation pass reproduces all 412 assets and both manifests. Focused River Pass runtime preserves army_emberwell_vanguard River Guard x10 / Ember Archer x5, exact reach+brace and volley+harry ability ids, all 112 visible/varied target frames, exact BattleBoard icon/sheet loading, and whole session authority. Unit-art/runtime/animation/BattleBoard/core compatibility and repository/editor checks pass. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, Native RMG parity, and release readiness remain unclaimed."
+    },
     {
       "id": "art-curated-unit-cross-surface-identity-10184",
       "title": "Curated Unit Cross-Surface Identity",
@@ -93901,7 +93944,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_curated_unit_cross_surface_identity_in_progress",
+  "result": "art_river_pass_starter_army_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94002,9 +94045,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The curated-unit cross-surface identity slice is in progress, bounded to replacing eight abstract portrait/overworld payloads for the four existing curated units while preserving battle, content, and non-target authority.",
+  "summary": "The River Pass starter-army curated character-source slice is completed: River Guard and Ember Archer now have original source-backed identity across all four runtime surfaces, with exact non-target/gameplay authority and bounded validation claims.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T10:24:59Z",
+  "updatedAt": "2026-08-22T11:09:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

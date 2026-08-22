@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-river-pass-starter-army-curated-character-sources-10184`. River Guard and Ember Archer, the complete live `army_emberwell_vanguard` River Pass starting army, now use two distinct original transparent character sources across reproducible portraits, battle icons, overworld icons, and fourteen-state battle sheets on their existing runtime paths. Exactly two sources and eight runtime payloads changed; all four surfaces for the other 101 units remain byte-exact, and all 412 assets plus both manifests reproduce. Focused live River Pass BattleBoard loading preserves exact ids, counts, abilities, 112 visible target frames, and session authority; unit-art/runtime/animation/Battle/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `art-river-pass-starter-army-curated-character-sources-10184`
+
+  Completion criteria:
+  - two distinct 512x512 transparent original sources own exact generated-manifest provenance and reproducible 384x512 portraits, 160x160 battle icons, 96x96 overworld icons, and 256x896 fourteen-state/four-frame battle sheets;
+  - a live River Pass session preserves exact `army_emberwell_vanguard` content and abilities while BattleBoard loads both curated icon/sheet pairs and every target state/frame remains visible and character-readable;
+  - exactly the two source files, eight target runtime payloads, and two manifest records change; all four surfaces for the other 101 units remain byte-exact, full 412-asset regeneration/reproducibility and focused/compatibility/validator/editor/Linux/Windows startup gates pass.
+
+  Non-goals: another unit, unit stats/abilities/counts/content, BattleRules/BattleAiRules, animation state timing/order, save schema, rendering settings, Native RMG, or packaging behavior; broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `art-curated-unit-cross-surface-identity-10184`. Fordhook Cadets and Brasshollow Scrip Haulers, Rivet Hounds, and Furnace Pavis Teams now use their existing original transparent character sources across BattleBoard, TownShell recruitment portraits, and OverworldMap encounter icons. Exactly eight portrait/overworld payloads changed; all 206 battle payloads and every surface for the other 99 units remain byte-exact, while all 412 assets and both manifests reproduce. Focused live TownShell/Overworld loading, unit-art/runtime/Town/animation/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; new source art, broad/final art, packaged interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `art-curated-unit-cross-surface-identity-10184`
 

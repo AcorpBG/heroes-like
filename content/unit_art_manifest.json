@@ -27,7 +27,10 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_river_guard.png",
       "battle_icon": "res://art/units/battle_icons/unit_river_guard.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_river_guard.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_river_guard.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_river_guard.png",
+      "curated_source_sha256": "95e7c9fc8dfddeebe0d5cd7439347dc1e6538b4d0e1f52584dac8cbaf76354eb"
     },
     {
       "id": "unit_ember_archer",
@@ -39,7 +42,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_ember_archer.png",
       "battle_icon": "res://art/units/battle_icons/unit_ember_archer.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_ember_archer.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_ember_archer.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_ember_archer.png",
+      "curated_source_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83"
     },
     {
       "id": "unit_citadel_pikeward",
