@@ -48,12 +48,12 @@ const TARGET_CONTRACTS := {
 	},
 }
 const CONTROL_SAMPLE_CONTRACTS := {
-	"river-pass/river_pass_hollow_mire": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 34, "enemy_damage_per_round": 27},
-	"bellwake-wreck-claim/bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13},
+	"river-pass/river_pass_hollow_mire": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 32, "enemy_damage_per_round": 28},
+	"bellwake-wreck-claim/bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 61, "enemy_damage_per_round": 16},
 	"bellwake-wreck-claim/bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 25},
 	"fen-crown/bone_ferry": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 30, "enemy_damage_per_round": 29},
 	"fen-crown/fen_crown_bone_ferry_watch": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 72, "enemy_damage_per_round": 12},
-	"glassfen-breakers/glassfen_glasswing_sortie": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 42, "enemy_damage_per_round": 24},
+	"glassfen-breakers/glassfen_glasswing_sortie": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 45, "enemy_damage_per_round": 42},
 	"glassfen-breakers/glassfen_aurora_battery": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 68, "enemy_damage_per_round": 29},
 	"orevein-contract/orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 18},
 	"orevein-contract/orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 69, "enemy_damage_per_round": 23},

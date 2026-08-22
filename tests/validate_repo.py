@@ -47472,6 +47472,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     bellwake_wreck_scene_path = ROOT / "tests/battle_bellwake_wreck_balance_regression.tscn"
     bellwake_relay_production_report_path = ROOT / "tests/battle_bellwake_relay_pickets_production_line_report.gd"
     bellwake_relay_production_scene_path = ROOT / "tests/battle_bellwake_relay_pickets_production_line_report.tscn"
+    glasswing_production_report_path = ROOT / "tests/battle_glassfen_glasswing_sortie_production_line_report.gd"
+    glasswing_production_scene_path = ROOT / "tests/battle_glassfen_glasswing_sortie_production_line_report.tscn"
     barrow_vault_report_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.gd"
     barrow_vault_scene_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
@@ -47548,6 +47550,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         active_breadth_scene_path,
         bellwake_relay_production_report_path,
         bellwake_relay_production_scene_path,
+        glasswing_production_report_path,
+        glasswing_production_scene_path,
         ford_reavers_report_path,
         ford_reavers_scene_path,
         prismhearth_relay_report_path,
@@ -47949,6 +47953,88 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             errors,
             "Bellwake Relay Pickets production-line scene is not wired exactly to its report script.",
         )
+    if glasswing_production_report_path.exists():
+        glasswing_production_text = glasswing_production_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            'REPORT_ID := "BATTLE_GLASSFEN_GLASSWING_SORTIE_PRODUCTION_LINE_REPORT"',
+            'SCENARIO_ID := "glassfen-breakers"',
+            'PLACEMENT_ID := "glassfen_glasswing_sortie"',
+            '"unit_sunvault_prism_adepts", "count": 4',
+            '"unit_sunvault_shard_wardens", "count": 4',
+            '"unit_sunvault_mirror_duelists", "count": 1',
+            '"unit_prism_adept", "count": 5',
+            '"unit_shard_guard", "count": 4',
+            '"unit_mirror_duelist", "count": 1',
+            '"unit_sunvault_prism_adepts": ["volley"]',
+            '"unit_sunvault_shard_wardens": ["shielding"]',
+            '"unit_sunvault_mirror_duelists": ["backstab", "reach"]',
+            '["glassfen_breakers_prismhearth_array_rare_exchange"]',
+            '"clear_glasswing", "label": "Clear the Glasswing Sortie", "type": "encounter_resolved"',
+            "OverworldRules.normalize_overworld_state(session)",
+            "_stack_health(PRODUCTION_STACKS) != 83",
+            "_stack_health(LEGACY_STACKS) != 84",
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+            "not _sample_exact(production_normal, 3, 45, 42)",
+            "not _sample_exact(production_hard, 3, 72, 42)",
+            "not _sample_exact(legacy_normal, 4, 42, 24)",
+            "not _sample_exact(legacy_hard, 3, 74, 32)",
+            '"guarded_rare_exchange_exact": true',
+            '"adjacent_fronts_exact": true',
+            '"scenario_authority_exact": true',
+            '"session_authority_exact": true',
+            'SAVE_SLOT := 6',
+            "SaveService.save_runtime_manual_session(session, SAVE_SLOT)",
+            "SaveService.restore_manual_session(SAVE_SLOT)",
+            'String(summary.get("resume_target", "")) != "overworld"',
+            'victory_session.overworld["resolved_encounters"] = ["glassfen_relay_pickets", PLACEMENT_ID, "glassfen_aurora_battery"]',
+            'defeat_session.day = 16',
+            'ScenarioRules.evaluate_session(victory_session)',
+            'ScenarioRules.evaluate_session(defeat_session)',
+            '"save_resume_exact": true',
+            '"campaign_progression_unchanged": true',
+            "get_tree().quit(0)",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in glasswing_production_text, errors, f"Glassfen Glasswing production-line report is missing token: {required_token}")
+        glasswing_run_match = re.search(r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _scenario_encounter)", glasswing_production_text, re.S)
+        ensure(glasswing_run_match is not None, errors, "Could not isolate Glassfen Glasswing production-line report run")
+        if glasswing_run_match is not None:
+            glasswing_run_body = glasswing_run_match.group("body")
+            ordered_tokens = (
+                "scenario_authority_before: Dictionary = scenario.duplicate(true)",
+                "relay_before: Dictionary",
+                "aurora_before: Dictionary",
+                "OverworldRules.normalize_overworld_state(session)",
+                "session_authority_before: Dictionary = session.to_dict()",
+                "BattleRules.create_battle_payload(session, encounter)",
+                "_save_restore(session)",
+                "legacy_encounter: Dictionary = encounter.duplicate(true)",
+                'legacy_army["stacks"] = LEGACY_STACKS.duplicate(true)',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+                "_outcome_contract()",
+                '_scenario_encounter(scenario, "glassfen_relay_pickets") != relay_before',
+                '_scenario_encounter(scenario, "glassfen_aurora_battery") != aurora_before',
+                "scenario != scenario_authority_before",
+            )
+            positions = [glasswing_run_body.find(token) for token in ordered_tokens]
+            ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Glasswing production report must preserve payload, independent controls, adjacent fronts, and scenario authority in exact order")
+            ensure(glasswing_run_body.count("Harness.run_battle_sample(") == 4, errors, "Glasswing production report must run exactly four method-matched samples")
+            for forbidden_token in ("BattleRules.apply_action", "BattleAiRules", '\n\tencounter["enemy_army"] =', "session.battle =", "create_timer", "await "):
+                ensure(forbidden_token not in glasswing_run_body, errors, f"Glasswing production report must remain method-matched and observation-only, not use {forbidden_token}")
+    if glasswing_production_scene_path.exists():
+        glasswing_production_scene_text = glasswing_production_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/battle_glassfen_glasswing_sortie_production_line_report.gd"' in glasswing_production_scene_text
+            and 'name="BattleGlassfenGlasswingSortieProductionLineReport" type="Node"' in glasswing_production_scene_text,
+            errors,
+            "Glassfen Glasswing production-line scene is not wired exactly to its report script.",
+        )
     if barrow_vault_report_path.exists():
         barrow_vault_text = barrow_vault_report_path.read_text(encoding="utf-8")
         for required_token in (
@@ -48092,12 +48178,12 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         ensure(
             glasswing_army.get("stacks")
             == [
-                {"unit_id": "unit_prism_adept", "count": 5},
-                {"unit_id": "unit_shard_guard", "count": 4},
-                {"unit_id": "unit_mirror_duelist", "count": 1},
+                {"unit_id": "unit_sunvault_prism_adepts", "count": 4},
+                {"unit_id": "unit_sunvault_shard_wardens", "count": 4},
+                {"unit_id": "unit_sunvault_mirror_duelists", "count": 1},
             ],
             errors,
-            "Glassfen Glasswing Sortie must remain outside the Relay production-line migration",
+            "Glassfen Glasswing Sortie must retain its exact independent 4/4/1 production-line migration",
         )
         aurora = glassfen_encounters.get("glassfen_aurora_battery", {})
         ensure("enemy_army" not in aurora, errors, "Glassfen Aurora Battery must remain on its shared authored army")

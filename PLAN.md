@@ -24,6 +24,24 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-glassfen-glasswing-sortie-production-line-10184`. Glassfen Breakers' placement-owned Glasswing Sortie now fields four production Prism Adepts, four production Shard Wardens, and one production Mirror Duelist. Focused public BattleRules evidence proves volley/shielding/reach/backstab, 83 versus 84 stack health, normal three-round/45% and hard three-round/72% standard defeats, zero invalid orders, and independent legacy four-round/42% and three-round/74% controls. Live save/resume, reachable victory/defeat, campaign-progression isolation, guarded rare-exchange and adjacent-front authority, 24-scenario/77-encounter queue `829808c9`, unit abilities, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Other fronts, shared content/rules, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed. Select the next tracker-approved source-backed slice.
+  id: `content-glassfen-glasswing-sortie-production-line-10184`
+
+  Implemented boundary:
+  - migrate only `glassfen_glasswing_sortie` to four production Prism Adepts, four production Shard Wardens, and one production Mirror Duelist while retaining encounter/army identity, placement, difficulty, seed, objective, and guarded rare exchange;
+  - prove the public battle payload exposes exact production volley/shielding/reach/backstab abilities and retains bounded normal/hard standard defeats against an independent legacy `5/4/1` control;
+  - retain Glassfen Relay Pickets, Aurora Battery, scenario/session/save/campaign authority, shared units/rules, and every unrelated encounter exactly.
+
+  Completion criteria:
+  - focused runtime proves exact production ids/counts, 83 versus 84 stack health, normal three-round/45% and hard three-round/72% standard defeats, zero invalid orders, and independent legacy four-round/42% and three-round/74% controls;
+  - the real Glassfen scenario preserves all encounter objectives, the guarded rare exchange, town/reward/economy, save/resume, outcome, and campaign-progression authority while adjacent fronts remain exact;
+  - active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green;
+  - repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+  Non-goals:
+  - do not change another Glassfen front, production counts beyond exact `4/4/1`, shared unit stats/abilities, BattleRules, BattleAiRules, player army, reward/objective/route topology, difficulty thresholds, save schema, Native RMG, or packaging behavior;
+  - do not claim broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `content-bellwake-relay-pickets-production-line-10184`. Bellwake Wreck Claim's placement-owned Relay Pickets now field production Shard Wardens, Prism Adepts, and Mirror Duelists at exact `9/7/8` counts. Focused public BattleRules evidence proves shielding/volley/reach/backstab, 255 versus 211 stack health, normal five-round/61% and hard four-round/65% even standard victories, zero invalid orders, and independent legacy three-round/66% and four-round/60% controls. Mirror Lancers and Aurora Battery remain exact; Bellwake town recruitment, save/resume, reachable outcomes, campaign-progression isolation, the nine-chapter Frontier Claims authority, 24-scenario/77-encounter queue at `829808c9`, unit abilities, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Other fronts, counts, shared rules/content, a complete Veilmourn campaign, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed. Select the next tracker-approved source-backed slice.
   id: `content-bellwake-relay-pickets-production-line-10184`
 

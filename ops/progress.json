@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Bellwake Relay Pickets now use the exact 9/7/8 production Sunvault line. Focused battle, Bellwake skirmish/save, Frontier Claims, active breadth, unit ability, core, static/editor, Linux, and Windows startup gates are green with bounded claims.",
+  "currentNotes": "Glassfen Glasswing Sortie now uses the exact production 4/4/1 Sunvault line. Focused live behavior, active breadth, campaign/unit/core compatibility, static/editor, Linux, and Windows startup gates are green with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-bellwake-relay-pickets-production-line-10184",
-  "currentSliceId": "content-bellwake-relay-pickets-production-line-10184",
-  "currentSliceNotes": "Completed. The exact 9/7/8 production line retains even, standard victories at 61% normal and 65% hard versus 66%/60% legacy controls; Bellwake, campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
+  "currentSlice": "content-glassfen-glasswing-sortie-production-line-10184",
+  "currentSliceId": "content-glassfen-glasswing-sortie-production-line-10184",
+  "currentSliceNotes": "Completed. The exact production 4/4/1 line retains standard defeats at 45% normal and 72% hard versus independent legacy 42%/74% controls; live scenario, breadth, compatibility, static, and bounded platform startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bellwake Relay Pickets Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T06:37:14Z",
+  "currentSliceTitle": "Glassfen Glasswing Sortie Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T07:05:50Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,52 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Bellwake migration opportunistically.",
-  "notes": "Completed the bounded Bellwake Relay Pickets production-line migration. Exact focused production/legacy controls, Bellwake skirmish/save, Frontier Claims, active breadth, compatibility, static/editor, and Linux/Windows export-startup evidence are green; no complete Veilmourn campaign, broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Glasswing migration opportunistically.",
+  "notes": "Completed the bounded Glassfen Glasswing Sortie production-line migration. Exact focused production/legacy controls, live save/outcome behavior, active breadth, campaign/unit/core compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "content-glassfen-glasswing-sortie-production-line-10184",
+      "title": "Glassfen Glasswing Sortie Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Glassfen Breakers' placement-owned Glasswing Sortie legacy Sunvault T1-T3 ids with a pressure-matched production line while retaining its authored defeat pressure and scenario authority.",
+      "implementationTargets": ["content/scenarios.json", "tests/battle_glassfen_glasswing_sortie_production_line_report.gd", "tests/battle_glassfen_glasswing_sortie_production_line_report.tscn", "tests/battle_active_cohort_queue_clear_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "glassfen-breakers",
+        "encounter_placement_id": "glassfen_glasswing_sortie",
+        "legacy_stack_ids": ["unit_prism_adept", "unit_shard_guard", "unit_mirror_duelist"],
+        "legacy_stack_counts": [5, 4, 1],
+        "production_stack_ids": ["unit_sunvault_prism_adepts", "unit_sunvault_shard_wardens", "unit_sunvault_mirror_duelists"],
+        "production_stack_counts": [4, 4, 1],
+        "legacy_total_stack_health": 84,
+        "production_total_stack_health": 83,
+        "legacy_normal": {"outcome": "defeat", "rounds": 4, "enemy_health_remaining_pct": 42, "enemy_damage_per_round": 24, "pacing_band": "standard"},
+        "production_normal": {"outcome": "defeat", "rounds": 3, "enemy_health_remaining_pct": 45, "enemy_damage_per_round": 42, "pacing_band": "standard"},
+        "legacy_hard": {"outcome": "defeat", "rounds": 3, "enemy_health_remaining_pct": 74, "enemy_damage_per_round": 32, "pacing_band": "standard"},
+        "production_hard": {"outcome": "defeat", "rounds": 3, "enemy_health_remaining_pct": 72, "enemy_damage_per_round": 42, "pacing_band": "standard"},
+        "invalid_order_count": 0,
+        "rejected_count_preserving_control": "Production 5/4/1 resolves as a two-round burst defeat and is outside the authored pressure boundary."
+      },
+      "completionCriteria": [
+        "The exact Glassfen Glasswing Sortie uses only production Prism Adepts, Shard Wardens, and Mirror Duelists at 4/4/1 while retaining encounter/army identity, placement, medium difficulty, combat seed, objective, and guarded rare exchange",
+        "Public BattleRules payload and deterministic normal/hard autoplay expose exact volley/shielding/reach/backstab abilities, retain standard defeats at 45%/72% with zero invalid orders, and retain independent legacy controls at 42%/74%",
+        "Real Glassfen scenario behavior preserves all encounter objectives, guarded rare exchange, town/reward/economy, save/resume, outcome, campaign-progression, and adjacent-front authority",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Another Glassfen front, production counts beyond exact 4/4/1, shared unit stat/ability, BattleRules, BattleAiRules, player army, reward/objective/route topology, difficulty-threshold, save-schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T06:49:39Z",
+      "startedAt": "2026-08-22T06:49:39Z",
+      "updatedAt": "2026-08-22T07:05:50Z",
+      "completedAt": "2026-08-22T07:05:50Z",
+      "notes": "Completed with the exact production 4/4/1 line. Focused runtime proves volley/shielding/reach/backstab, 83 versus 84 health, production normal 3 rounds/45%/DPR42 and hard 3 rounds/72%/DPR42, independent legacy controls 4 rounds/42%/DPR24 and 3 rounds/74%/DPR32, and zero invalid orders. Live Glassfen save/resume, reachable victory/defeat, campaign-progression isolation, guarded rare exchange, Relay/Aurora authority, campaign replayability, and unit/core compatibility are exact. Active breadth is 77/77 with queue signature 829808c9 and zero stalls/invalid orders/items. Static/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Other fronts, shared content/rules, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain out of scope."
+    },
     {
       "id": "content-bellwake-relay-pickets-production-line-10184",
       "title": "Bellwake Relay Pickets Production Line",
@@ -92968,7 +93011,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "native_rmg_metadata_only_proxy_live_surface_fail_closed_completed",
+  "result": "content_glassfen_glasswing_sortie_production_line_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -93069,9 +93112,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Charter Bastion Counterseal's final legacy Sunvault front now uses an exact strength-matched production roster with focused and active-scenario runtime evidence.",
+  "summary": "Glassfen Breakers' Glasswing Sortie now uses a pressure-matched production Sunvault 4/4/1 roster with focused live, active-breadth, compatibility, static/editor, and bounded platform startup evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T03:52:59Z",
+  "updatedAt": "2026-08-22T07:05:50Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
