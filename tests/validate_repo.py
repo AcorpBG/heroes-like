@@ -324,6 +324,11 @@ THORNWAKE_THORNWHIP_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" /
 THORNWAKE_SPOREGLASS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_sporeglass_menders.png"
 THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_thornwake_early_ladder_curated_art_report.gd"
 THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_thornwake_early_ladder_curated_art_report.tscn"
+VEILMOURN_BELLWAKE_OARS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_veilmourn_bellwake_oars.png"
+VEILMOURN_MOURNING_LANTERNS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_veilmourn_mourning_lanterns.png"
+VEILMOURN_MASKGLASS_CORSAIRS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_veilmourn_maskglass_corsairs.png"
+VEILMOURN_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_veilmourn_early_ladder_curated_art_report.gd"
+VEILMOURN_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_veilmourn_early_ladder_curated_art_report.tscn"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.gd"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
@@ -42287,6 +42292,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         THORNWAKE_SPOREGLASS_CURATED_SOURCE_PATH,
         THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
         THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH,
+        VEILMOURN_BELLWAKE_OARS_CURATED_SOURCE_PATH,
+        VEILMOURN_MOURNING_LANTERNS_CURATED_SOURCE_PATH,
+        VEILMOURN_MASKGLASS_CORSAIRS_CURATED_SOURCE_PATH,
+        VEILMOURN_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
+        VEILMOURN_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH,
         CONTENT_SERVICE_PATH,
@@ -42424,6 +42434,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     thornwake_seedcutters_unit_id = "unit_thornwake_seedcutters"
     thornwake_thornwhip_unit_id = "unit_thornwake_thornwhip_carriers"
     thornwake_sporeglass_unit_id = "unit_thornwake_sporeglass_menders"
+    veilmourn_bellwake_oars_unit_id = "unit_veilmourn_bellwake_oars"
+    veilmourn_mourning_lanterns_unit_id = "unit_veilmourn_mourning_lanterns"
+    veilmourn_maskglass_corsairs_unit_id = "unit_veilmourn_maskglass_corsairs"
     fordhook_source_res_path = "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png"
     fordhook_source_sha256 = "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
     ensure(png_size(FORDHOOK_CURATED_SOURCE_PATH) == (512, 512), errors, "Fordhook curated character source must be a 512x512 PNG")
@@ -42504,6 +42517,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    veilmourn_early_ladder_curated_sources = (
+        (veilmourn_bellwake_oars_unit_id, VEILMOURN_BELLWAKE_OARS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_veilmourn_bellwake_oars.png", "81b03a91ce36b024c7d244120055539bd4f790106291d1e669eb9fd013accafa", "Bellwake Oars"),
+        (veilmourn_mourning_lanterns_unit_id, VEILMOURN_MOURNING_LANTERNS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_veilmourn_mourning_lanterns.png", "b12f75e6b7b7419544194b3dd22ca672fce76207ab988c46025755d81e87591b", "Mourning Lanterns"),
+        (veilmourn_maskglass_corsairs_unit_id, VEILMOURN_MASKGLASS_CORSAIRS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_veilmourn_maskglass_corsairs.png", "4c715c8d0e20d69592d7dbc124de33cadb89b2b1e10ad0a0cd5efcb89950ea27", "Maskglass Corsairs"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in veilmourn_early_ladder_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     curated_art_records = [
         record for record in manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
@@ -42513,12 +42534,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
         "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw, Sunvault, and Thornwake T1-T3 art records may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
         "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw, Sunvault, and Thornwake T1-T3 animation records may use the curated character-source branch",
     )
@@ -42553,6 +42574,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in mireclaw_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in sunvault_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in veilmourn_early_ladder_curated_sources),
     ):
         for curated_record, label in (
             (records_by_unit_id.get(unit_id, {}), "art"),
@@ -42635,8 +42657,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
     "unit_thornwake_thornwhip_carriers",
+    "unit_veilmourn_bellwake_oars",
+    "unit_veilmourn_maskglass_corsairs",
+    "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the eighteen approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-one approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -43136,6 +43161,43 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "Thornwake early-ladder curated art report scene must own the exact focused script",
     )
+
+    veilmourn_report_text = VEILMOURN_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_VEILMOURN_EARLY_LADDER_CURATED_ART_REPORT"',
+        'TARGET_IDS := ["unit_veilmourn_bellwake_oars", "unit_veilmourn_mourning_lanterns", "unit_veilmourn_maskglass_corsairs"]',
+        '"unit_id": "unit_veilmourn_bellwake_oars", "label": "Bellwake Oars", "ability_ids": []',
+        '"source_sha256": "81b03a91ce36b024c7d244120055539bd4f790106291d1e669eb9fd013accafa"',
+        '"portrait_sha256": "c855f95ac00ebc680d28e8c2e4dd8e199060c4fcc2987256564036d54c5f129b"',
+        '"old_portrait_sha256": "6d9032208b7f200a856277cd59207018747b5be204a3ef5f8730a86f8c19a6f3"',
+        '"unit_id": "unit_veilmourn_mourning_lanterns", "label": "Mourning Lanterns", "ability_ids": ["harry"]',
+        '"source_sha256": "b12f75e6b7b7419544194b3dd22ca672fce76207ab988c46025755d81e87591b"',
+        '"portrait_sha256": "bdcfe4c84caee23878f6df6dde922faad92f3c686139a6db7a742c7b6157c112"',
+        '"old_portrait_sha256": "18968a8aba805393357a2b5441e29ac72c3995ddb3898a1e7aaaf5890a4fe59e"',
+        '"unit_id": "unit_veilmourn_maskglass_corsairs", "label": "Maskglass Corsairs", "ability_ids": ["backstab"]',
+        '"source_sha256": "4c715c8d0e20d69592d7dbc124de33cadb89b2b1e10ad0a0cd5efcb89950ea27"',
+        '"portrait_sha256": "069d65156a3db29f03047e3df7299fa6a587ff109e5666a79bdd1ec58349e757"',
+        '"old_portrait_sha256": "fa34c6ab246682921d8e4886ef0081c64dba7014f5a2672f9eb2e41e455e44c5"',
+        '"scenario_id": "bellwake-wreck-claim", "army_id": "army_bellwake_wreck_claimants"',
+        '"scenario_id": "fogchart-mooring", "army_id": "army_bellwake_privateers"',
+        '"scenario_id": "ninefold-confluence", "placement_id": "ninefold_bellwake_privateers", "encounter_id": "encounter_bellwake_privateers", "army_id": "army_bellwake_privateers"',
+        'player_session.overworld.get("army", {})',
+        'String(player_army.get("id", "")) == String(army_spec["army_id"]) and _stack_contract(player_army.get("stacks", [])) == army_spec["stacks"]',
+        'String(placement.get("encounter_id", "")) == String(spec["encounter_id"])',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        '_battle_stack_contract(enemy_stacks) == spec["stacks"]',
+        '_battle_target_ability_contract(enemy_stacks) == expected_abilities',
+        'source.get_size() == Vector2i(512, 512)',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'board.validation_unit_art_summary()',
+        'board_session.to_dict() == board_authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in veilmourn_report_text, errors, f"Veilmourn early-ladder curated art report is missing token {required_token}")
+    for forbidden_token in ("draw_curated_portrait", "save_png", "generate_unit_art_assets", "ContentService._unit_art_manifest", 'placement[', 'enemy_stacks['):
+        ensure(forbidden_token not in veilmourn_report_text, errors, f"Veilmourn early-ladder focused report must remain observation-only: {forbidden_token}")
+    veilmourn_scene_text = VEILMOURN_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_veilmourn_early_ladder_curated_art_report.gd"' in veilmourn_scene_text, errors, "Veilmourn early-ladder curated art report scene must own the exact focused script")
 
     cross_surface_report_text = UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (

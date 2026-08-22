@@ -633,7 +633,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_veilmourn_bellwake_oars.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_bellwake_oars.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_bellwake_oars.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_bellwake_oars.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_veilmourn_bellwake_oars.png",
+      "curated_source_sha256": "81b03a91ce36b024c7d244120055539bd4f790106291d1e669eb9fd013accafa"
     },
     {
       "id": "unit_veilmourn_mourning_lanterns",
@@ -645,7 +648,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_veilmourn_mourning_lanterns.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_mourning_lanterns.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_mourning_lanterns.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_mourning_lanterns.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_veilmourn_mourning_lanterns.png",
+      "curated_source_sha256": "b12f75e6b7b7419544194b3dd22ca672fce76207ab988c46025755d81e87591b"
     },
     {
       "id": "unit_veilmourn_maskglass_corsairs",
@@ -657,7 +663,10 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_veilmourn_maskglass_corsairs.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_maskglass_corsairs.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_maskglass_corsairs.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_maskglass_corsairs.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_veilmourn_maskglass_corsairs.png",
+      "curated_source_sha256": "4c715c8d0e20d69592d7dbc124de33cadb89b2b1e10ad0a0cd5efcb89950ea27"
     },
     {
       "id": "unit_veilmourn_undertow_harpooners",
