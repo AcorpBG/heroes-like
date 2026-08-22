@@ -24,6 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-charter-counterseal-production-relay-pickets-10184`. Charter Bastion Counterseal's first Sunvault front now fields the production Shard Wardens, Prism Adepts, and Resonant Choristers at exact `7/5/1` counts. The public battle payload exposes shielding, volley, Resonant Relay, and Calibration Cant; the deterministic medium autoplay resolves as a six-round player victory at 32% health with zero invalid orders. Neighboring fronts, scenario/campaign/save/outcome authority, all 24 active scenarios and 77 encounter samples, unit abilities, core systems, repository/editor checks, and bounded Linux/Windows export-startup gates pass. Other legacy-front migrations, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `content-charter-counterseal-production-relay-pickets-10184`
+
+  Implementation target:
+  - migrate only `counterseal_relay_pickets` to `unit_sunvault_shard_wardens`, `unit_sunvault_prism_adepts`, and `unit_sunvault_resonant_choristers`, with method-matched counts that preserve the authored medium front and three-stack shape;
+  - prove the production shielding, volley, Resonant Relay, and Calibration Cant contracts materialize through the real public battle payload and autoplay path;
+  - retain the other two Counterseal encounters, scenario order, map, objectives, Day 13 deadline, towns, resources, rewards, script hooks, campaign unlock/carryover, save authority, and every other content record exactly.
+
+  Completion criteria:
+  - focused runtime proves exact production unit ids/counts, live ability payloads/consequences, a bounded player-advantaged battle result, campaign/skirmish launch, save/resume, victory/defeat, and unchanged neighboring encounter/session authority;
+  - the active-scenario autoplay breadth remains complete with zero stalls/invalid orders and no new high-priority queue item;
+  - Counterseal, Frontier Claims, content, battle, core, repository, JSON, Python, exact/generic editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+  Non-goals:
+  - do not migrate the other Counterseal fronts or other legacy scenarios in this slice;
+  - do not change shared unit stats/abilities, battle rules/AI, player army, rewards, difficulty thresholds, save schema, campaign structure, Native RMG, packaging behavior, or claim broad scenario migration, faction balance, whole-game validation, or release readiness.
+
 - Completed implementation slice: `presentation-battle-board-failed-action-invalid-audio-10184`. Every non-empty failed Battle Board result now retains its exact Shell/live-region feedback and plays one imported `ui_invalid` transient through the existing result-publication boundary. The focused real D-pad/physical-A path proves exact cue metadata on blocked enemies at 1280x720 and 1920x720, while physical-B cancel and successful physical-A movement remain silent with exact focus, semantic timer, cursor, event, recap, and battle authority. UI-audio, withdrawal, animation, focus, accessibility, core, all three Battle layout viewports, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged Board interaction/listening, native controller hardware, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `presentation-battle-board-failed-action-invalid-audio-10184`
 - Completed implementation slice: `presentation-town-failed-action-invalid-audio-10184`. Every non-empty failed Town rule result now retains its blocked feedback and plays exactly one imported `ui_invalid` transient through the common result boundary. The focused stale enabled tavern-button path proves exact invalid/click cue order and metadata, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire completion across 1280x720 and 1920x1080 in normal, missing-asset, and reduced-motion modes. UI-audio, focus, accessibility, Town visual, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged Town interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
