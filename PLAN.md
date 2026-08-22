@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-brasshollow-early-ladder-curated-sprite-source-10184`. Brasshollow's live T1-T3 battle-line presentation is now character-readable: Rivet Hounds use an original low mechanical-skirmisher source, while Furnace Pavis Teams use an original shield-dominant operator source. Their four existing-path battle icon/sheet derivatives are reproducible, and full regeneration is byte-idempotent across all 412 unit-art payloads and both manifests; the other 101 unit pairs remain exact. Focused BattleBoard loading, all 112 target frames, ability preservation, unit-art/animation/readiness/Battle-event/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; portraits/overworld icons, broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `art-brasshollow-early-ladder-curated-sprite-source-10184`
+
+  Completion criteria:
+  - two original transparent sources and four derived existing-path assets are reproducible, loadable, and manifest-provenanced with exact dimensions, state order, frame count, and BattleBoard ownership;
+  - the other 101 unit battle-icon/sheet pairs remain byte-exact; full 412-asset regeneration/reproducibility, focused runtime, animation/unit-art/core compatibility, validator/editor, Linux, and Windows startup gates pass;
+  - no content/stat/ability, animation timing/order, save, rendering-setting, Native RMG, or packaging behavior changes occur.
+
+  Non-goals: another unit or tier, portraits/overworld icons, broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `art-brasshollow-scrip-haulers-curated-sprite-source-10184`. The heavily reused Scrip Haulers' generated abstract emblem/motif is replaced by one original transparent armored-labor character source and reproducible shipped battle-icon and fourteen-state/four-frame runtime-sheet derivatives. Full regeneration is byte-idempotent across all 412 unit-art payloads and both manifests; exactly the Scrip battle icon and sheet changed from the pre-slice baseline, while curated Fordhook and the other 102 unit pairs remain exact. Focused BattleBoard loading, all 56 Scrip frames, unit-art/animation/readiness/Battle-event/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `art-brasshollow-scrip-haulers-curated-sprite-source-10184`
 

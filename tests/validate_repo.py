@@ -296,6 +296,10 @@ FORDHOOK_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_fordh
 SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
+RIVET_HOUNDS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_rivet_hounds.png"
+FURNACE_PAVIS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_furnace_pavis_teams.png"
+BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_early_ladder_curated_art_report.gd"
+BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_early_ladder_curated_art_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime_report.gd"
@@ -42348,6 +42352,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
 
     fordhook_unit_id = "unit_embercourt_fordhook_cadets"
     scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
+    rivet_hounds_unit_id = "unit_brasshollow_rivet_hounds"
+    furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
     fordhook_source_res_path = "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png"
     fordhook_source_sha256 = "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
     ensure(png_size(FORDHOOK_CURATED_SOURCE_PATH) == (512, 512), errors, "Fordhook curated character source must be a 512x512 PNG")
@@ -42364,6 +42370,22 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "Scrip Haulers curated character source bytes drifted",
     )
+    rivet_hounds_source_res_path = "res://art/units/source/curated/unit_brasshollow_rivet_hounds.png"
+    rivet_hounds_source_sha256 = "46aa988fafeb9052785bbae6735e210a9fb841f2e3f5fece76328e2cbc596ccf"
+    ensure(png_size(RIVET_HOUNDS_CURATED_SOURCE_PATH) == (512, 512), errors, "Rivet Hounds curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(RIVET_HOUNDS_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == rivet_hounds_source_sha256,
+        errors,
+        "Rivet Hounds curated character source bytes drifted",
+    )
+    furnace_pavis_source_res_path = "res://art/units/source/curated/unit_brasshollow_furnace_pavis_teams.png"
+    furnace_pavis_source_sha256 = "d02f57e6c89d5bf24265ab27df052e333e3ea2c9833c3d71915745253dbbb0e4"
+    ensure(png_size(FURNACE_PAVIS_CURATED_SOURCE_PATH) == (512, 512), errors, "Furnace Pavis Teams curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(FURNACE_PAVIS_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == furnace_pavis_source_sha256,
+        errors,
+        "Furnace Pavis Teams curated character source bytes drifted",
+    )
     curated_art_records = [
         record for record in manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
@@ -42373,14 +42395,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id]),
         errors,
-        "Exactly Fordhook and Scrip Haulers art records may use the curated character-source branch",
+        "Exactly Fordhook and the Brasshollow T1-T3 art records may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id]),
         errors,
-        "Exactly Fordhook and Scrip Haulers animation records may use the curated character-source branch",
+        "Exactly Fordhook and the Brasshollow T1-T3 animation records may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42394,6 +42416,18 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == scrip_haulers_source_res_path, errors, f"Scrip Haulers {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == scrip_haulers_source_sha256, errors, f"Scrip Haulers {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(rivet_hounds_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(rivet_hounds_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == rivet_hounds_source_res_path, errors, f"Rivet Hounds {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == rivet_hounds_source_sha256, errors, f"Rivet Hounds {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(furnace_pavis_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(furnace_pavis_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == furnace_pavis_source_res_path, errors, f"Furnace Pavis Teams {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == furnace_pavis_source_sha256, errors, f"Furnace Pavis Teams {label} manifest curated source hash drifted")
 
     used_surface_paths: dict[str, set[str]] = {surface: set() for surface in expected_sizes.keys()}
     used_animation_paths: set[str] = set()
@@ -42449,10 +42483,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
     expected_curated_id_block = '''CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_brasshollow_furnace_pavis_teams",
+    "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
     "unit_embercourt_fordhook_cadets",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly Fordhook and Scrip Haulers in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly Fordhook and the Brasshollow T1-T3 line in stable order")
     ensure(
         'if str(state.get("state", "")) == "surrender_stand_down":' in generator_text
         and 'render_state["family"] = "retreat"' in generator_text,
@@ -42541,6 +42577,53 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in scrip_report_text, errors, f"Scrip Haulers focused report must remain observation-only: {forbidden_token}")
     scrip_scene_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_brasshollow_scrip_haulers_curated_art_report.gd"' in scrip_scene_text, errors, "Scrip Haulers curated art report scene must own the exact focused script")
+
+    brasshollow_early_report_text = BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT"',
+        '"unit_id": "unit_brasshollow_rivet_hounds"',
+        '"unit_id": "unit_brasshollow_furnace_pavis_teams"',
+        '"source_sha256": "46aa988fafeb9052785bbae6735e210a9fb841f2e3f5fece76328e2cbc596ccf"',
+        '"icon_sha256": "9a03cbf4ca07e1593d2f970373990da1b2e9774bbb3a07c7e427fcb76989c305"',
+        '"sheet_sha256": "a21781b53811e4236e573d5d73cdef492ab30bc890360d18c15f4fd1172d5a0e"',
+        '"old_icon_sha256": "26a10fc0be0de16be1eabb8e1f987008fe28175126217da5b01f0b15ee1fb9c1"',
+        '"old_sheet_sha256": "d1b5bc56d743033ea365d2601192a1d72d16c1809456e538d40b20fd7effcf1f"',
+        '"source_sha256": "d02f57e6c89d5bf24265ab27df052e333e3ea2c9833c3d71915745253dbbb0e4"',
+        '"icon_sha256": "c8219bbc6e385dad5daedf72565f958205c588a1192588db3911a7d94f88e8ec"',
+        '"sheet_sha256": "5ff92a28cdfba8fb62af0e8171fa9f6d8668bb4b9257c8c5778c718dc7a89bbe"',
+        '"old_icon_sha256": "fc73af5e3e5ea68c97455bce47afcdad0cd4b20c42556ac150ca3ba8d4aa2b69"',
+        '"old_sheet_sha256": "4a4f16f849f3c5f7430795b149a0e5ec87ff17470b058cff8f75c38ab4d5ffcf"',
+        '"ability_ids": ["shielding", "harry"]',
+        '"ability_ids": ["shielding"]',
+        "_validate_assets_and_provenance()",
+        "await _validate_battle_board_runtime()",
+        'signatures[hash(frame.get_data())] = true',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'board.validation_unit_art_summary()',
+        'matches.size() == 1',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        'ability_ids == spec["ability_ids"]',
+        'source.get_size() == Vector2i(512, 512)',
+        'icon.get_size() == Vector2i(160, 160)',
+        'sheet.get_size() == Vector2i(256, 896)',
+        'int(source_alpha.get("transparent", 0)) > 100000 and int(source_alpha.get("visible", 0)) > 50000 and int(source_alpha.get("opaque", 0)) > 40000',
+    ):
+        ensure(required_token in brasshollow_early_report_text, errors, f"Brasshollow early-ladder curated art report is missing token {required_token}")
+    for forbidden_token in (
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "FileAccess.WRITE_READ",
+        "ContentService._unit_art_manifest",
+    ):
+        ensure(forbidden_token not in brasshollow_early_report_text, errors, f"Brasshollow early-ladder focused report must remain observation-only: {forbidden_token}")
+    brasshollow_early_scene_text = BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_brasshollow_early_ladder_curated_art_report.gd"' in brasshollow_early_scene_text,
+        errors,
+        "Brasshollow early-ladder curated art report scene must own the exact focused script",
+    )
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in (
