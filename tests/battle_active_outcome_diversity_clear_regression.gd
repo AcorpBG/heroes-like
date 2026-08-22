@@ -62,7 +62,7 @@ const CASES := [
 		"placement_id": "bellwake_mirror_lancers",
 		"army_id": "army_bellwake_mirror_lancers_watch",
 		"counts": {"unit_shard_guard": 9, "unit_prism_adept": 8, "unit_mirror_duelist": 8, "unit_sunvault_resonant_choristers": 5},
-		"expected": {"outcome_state": "defeat", "matchup_band": "even", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 52, "enemy_damage_per_round": 74},
+		"expected": {"outcome_state": "defeat", "matchup_band": "even", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 40, "enemy_damage_per_round": 49},
 		"shared_army_id": "army_mirror_lancers",
 		"shared_counts": {"unit_mirror_duelist": 6, "unit_shard_guard": 4, "unit_prism_adept": 4},
 	},

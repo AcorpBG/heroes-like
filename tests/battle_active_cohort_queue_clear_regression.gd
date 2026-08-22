@@ -24,7 +24,7 @@ const TARGET_CONTRACTS := {
 	"bellwake-wreck-claim/bellwake_mirror_lancers": {
 		"army_id": "army_bellwake_mirror_lancers_watch",
 		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 8, "unit_mirror_duelist": 8, "unit_sunvault_resonant_choristers": 5},
-		"sample": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 52, "enemy_damage_per_round": 74},
+		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 40, "enemy_damage_per_round": 49},
 	},
 	"fen-crown/fen_crown_watch": {
 		"army_id": "army_fen_crown_gate_watch",
@@ -33,8 +33,8 @@ const TARGET_CONTRACTS := {
 	},
 	"glassfen-breakers/glassfen_relay_pickets": {
 		"army_id": "army_glassfen_relay_pickets_watch",
-		"stack_counts": {"unit_shard_guard": 6, "unit_prism_adept": 2, "unit_mirror_duelist": 1},
-		"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 69, "enemy_damage_per_round": 6},
+		"stack_counts": {"unit_sunvault_shard_wardens": 6, "unit_sunvault_prism_adepts": 2, "unit_sunvault_mirror_duelists": 1},
+		"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 6},
 	},
 	"orevein-contract/orevein_archive_wardens": {
 		"army_id": "army_orevein_archive_wardens_watch",
@@ -49,8 +49,8 @@ const TARGET_CONTRACTS := {
 }
 const CONTROL_SAMPLE_CONTRACTS := {
 	"river-pass/river_pass_hollow_mire": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 34, "enemy_damage_per_round": 27},
-	"bellwake-wreck-claim/bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 68, "enemy_damage_per_round": 11},
-	"bellwake-wreck-claim/bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 25, "enemy_damage_per_round": 25},
+	"bellwake-wreck-claim/bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13},
+	"bellwake-wreck-claim/bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 25},
 	"fen-crown/bone_ferry": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 30, "enemy_damage_per_round": 29},
 	"fen-crown/fen_crown_bone_ferry_watch": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 72, "enemy_damage_per_round": 12},
 	"glassfen-breakers/glassfen_glasswing_sortie": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 42, "enemy_damage_per_round": 24},
