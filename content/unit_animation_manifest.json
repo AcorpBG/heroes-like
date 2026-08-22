@@ -2912,7 +2912,10 @@
         "retaliation_release",
         "retreat_withdraw_column",
         "surrender_stand_down"
-      ]
+      ],
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_basalt_wardens.png",
+      "curated_source_sha256": "81f748fafeec18bd318af244059458edc22ca3646acfad8e16685a804dc509c8"
     },
     {
       "id": "unit_neutral_tunnelmark_bolters",
@@ -2938,7 +2941,10 @@
         "retaliation_release",
         "retreat_withdraw_column",
         "surrender_stand_down"
-      ]
+      ],
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_tunnelmark_bolters.png",
+      "curated_source_sha256": "376c11173412cf401b9177089d7a106281b5dd8c62d59ad563d1e89881aedc73"
     }
   ]
 }
