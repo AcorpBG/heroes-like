@@ -38,6 +38,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_shard_guard",
     "unit_sunvault_mirror_duelists",
     "unit_sunvault_prism_adepts",
+    "unit_sunvault_resonant_choristers",
     "unit_sunvault_shard_wardens",
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
