@@ -117,7 +117,10 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_gorefen_ripper.png",
       "battle_icon": "res://art/units/battle_icons/unit_gorefen_ripper.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_gorefen_ripper.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_gorefen_ripper.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_gorefen_ripper.png",
+      "curated_source_sha256": "52d9ad6dd10b9b29b0b73447fafd73f07d418128632aa9662ed329e40cf5e7b3"
     },
     {
       "id": "unit_shard_guard",
