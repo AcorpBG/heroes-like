@@ -50,6 +50,11 @@ func _run() -> void:
 	if package_stem == "" or not FileAccess.file_exists(map_path) or not FileAccess.file_exists(scenario_path):
 		_fail("Generated setup did not write paired map packages: %s" % JSON.stringify(startup))
 		return
+	var cache_lifecycle: Dictionary = _validate_native_browser_manifest_cache(package_service, map_path, scenario_path)
+	if not bool(cache_lifecycle.get("ok", false)):
+		_cleanup_many([[map_path, scenario_path]])
+		_fail("Native browser manifest cache lifecycle changed package authority: %s" % JSON.stringify(cache_lifecycle))
+		return
 	var compact_artifacts := _generate_compact_package_artifact()
 	var compact_map_path := String(compact_artifacts.get("map_path", ""))
 	var compact_scenario_path := String(compact_artifacts.get("scenario_path", ""))
@@ -254,10 +259,130 @@ func _run() -> void:
 		"single_read_failure_classification_exact": true,
 		"native_browser_manifest_exact": true,
 		"native_browser_manifest_detached": true,
+		"native_browser_manifest_cache_exact": true,
+		"native_browser_manifest_cache_save_prepopulated": bool(cache_lifecycle.get("save_prepopulated", false)),
+		"native_browser_manifest_cache_changed_content_rebuilt": bool(cache_lifecycle.get("changed_content_rebuilt", false)),
+		"native_browser_manifest_cache_corruption_rebuilt": bool(cache_lifecycle.get("corruption_rebuilt", false)),
 		"authored_json_scenarios_used": false,
 		"generated_draft_registry_used": false,
 	})])
 	get_tree().quit(0)
+
+func _validate_native_browser_manifest_cache(package_service: Variant, map_path: String, scenario_path: String) -> Dictionary:
+	var map_profiled: Dictionary = package_service.inspect_package(map_path, {"include_browser_manifest_cache_profile": true})
+	var scenario_profiled: Dictionary = package_service.inspect_package(scenario_path, {"include_browser_manifest_cache_profile": true})
+	var map_profile: Dictionary = map_profiled.get("browser_manifest_cache_profile", {}) if map_profiled.get("browser_manifest_cache_profile", {}) is Dictionary else {}
+	var scenario_profile: Dictionary = scenario_profiled.get("browser_manifest_cache_profile", {}) if scenario_profiled.get("browser_manifest_cache_profile", {}) is Dictionary else {}
+	var save_prepopulated: bool = (
+		String(map_profile.get("status", "")) == "hit"
+		and String(scenario_profile.get("status", "")) == "hit"
+		and not String(map_profile.get("source_sha256", "")).is_empty()
+		and not String(scenario_profile.get("source_sha256", "")).is_empty()
+	)
+	var map_cached: Dictionary = package_service.inspect_package(map_path)
+	var map_bypass: Dictionary = package_service.inspect_package(map_path, {"browser_manifest_cache_mode": "bypass_read"})
+	var scenario_cached: Dictionary = package_service.inspect_package(scenario_path)
+	var scenario_bypass: Dictionary = package_service.inspect_package(scenario_path, {"browser_manifest_cache_mode": "bypass_read"})
+	var whole_payload_exact: bool = map_cached == map_bypass and scenario_cached == scenario_bypass
+	var map_cache_path := String(map_profile.get("cache_path", ""))
+	var scenario_cache_path := String(scenario_profile.get("cache_path", ""))
+	var cache_paths_exact: bool = (
+		map_cache_path.begins_with("user://package_browser_manifest_cache_v1/")
+		and scenario_cache_path.begins_with("user://package_browser_manifest_cache_v1/")
+		and map_cache_path != scenario_cache_path
+		and FileAccess.file_exists(map_cache_path)
+		and FileAccess.file_exists(scenario_cache_path)
+	)
+	if not save_prepopulated or not whole_payload_exact or not cache_paths_exact:
+		return {
+			"ok": false,
+			"save_prepopulated": save_prepopulated,
+			"whole_payload_exact": whole_payload_exact,
+			"cache_paths_exact": cache_paths_exact,
+			"map_differences": _variant_differences(map_cached, map_bypass, "$"),
+			"scenario_differences": _variant_differences(scenario_cached, scenario_bypass, "$"),
+			"map_profile": map_profile,
+			"scenario_profile": scenario_profile,
+		}
+	var cached_manifest: Dictionary = map_cached.get("browser_manifest", {}).duplicate(true)
+	cached_manifest["metadata"]["cache_detach_probe"] = true
+	var detached_rebuild: Dictionary = package_service.inspect_package(map_path)
+	var detached_exact: bool = not bool(detached_rebuild.get("browser_manifest", {}).get("metadata", {}).get("cache_detach_probe", false))
+	var cache_file := FileAccess.open(map_cache_path, FileAccess.WRITE)
+	if cache_file == null:
+		return {"ok": false, "error": "cache_corruption_open_failed", "cache_path": map_cache_path}
+	cache_file.store_string("{corrupt-cache")
+	cache_file.close()
+	var corruption_rebuild: Dictionary = package_service.inspect_package(map_path, {"include_browser_manifest_cache_profile": true})
+	var corruption_profile: Dictionary = corruption_rebuild.get("browser_manifest_cache_profile", {}) if corruption_rebuild.get("browser_manifest_cache_profile", {}) is Dictionary else {}
+	var corruption_exact: bool = (
+		String(corruption_profile.get("status", "")) == "miss_written"
+		and _inspection_without_cache_profile(corruption_rebuild) == map_bypass
+		and String(package_service.inspect_package(map_path, {"include_browser_manifest_cache_profile": true}).get("browser_manifest_cache_profile", {}).get("status", "")) == "hit"
+	)
+	var original_scenario_text := FileAccess.get_file_as_string(scenario_path)
+	var changed_scenario = JSON.parse_string(original_scenario_text)
+	if not (changed_scenario is Dictionary):
+		return {"ok": false, "error": "scenario_source_parse_failed"}
+	changed_scenario = changed_scenario.duplicate(true)
+	changed_scenario["document"]["selection"]["display_name"] = "Cache Content Change Probe"
+	if not _write_fixture_text(scenario_path, JSON.stringify(changed_scenario, "\t")):
+		return {"ok": false, "error": "scenario_change_write_failed"}
+	var changed_profiled: Dictionary = package_service.inspect_package(scenario_path, {"include_browser_manifest_cache_profile": true})
+	var changed_profile: Dictionary = changed_profiled.get("browser_manifest_cache_profile", {}) if changed_profiled.get("browser_manifest_cache_profile", {}) is Dictionary else {}
+	var changed_content_rebuilt: bool = (
+		String(changed_profile.get("status", "")) == "miss_written"
+		and String(changed_profile.get("source_sha256", "")) != String(scenario_profile.get("source_sha256", ""))
+		and String(changed_profiled.get("browser_manifest", {}).get("selection", {}).get("display_name", "")) == "Cache Content Change Probe"
+	)
+	if not _write_fixture_text(scenario_path, original_scenario_text):
+		return {"ok": false, "error": "scenario_restore_write_failed"}
+	var restored_profiled: Dictionary = package_service.inspect_package(scenario_path, {"include_browser_manifest_cache_profile": true})
+	var restored_profile: Dictionary = restored_profiled.get("browser_manifest_cache_profile", {}) if restored_profiled.get("browser_manifest_cache_profile", {}) is Dictionary else {}
+	var restored_exact: bool = (
+		String(restored_profile.get("status", "")) == "miss_written"
+		and String(restored_profile.get("source_sha256", "")) == String(scenario_profile.get("source_sha256", ""))
+		and _inspection_without_cache_profile(restored_profiled) == scenario_bypass
+		and String(package_service.inspect_package(scenario_path, {"include_browser_manifest_cache_profile": true}).get("browser_manifest_cache_profile", {}).get("status", "")) == "hit"
+	)
+	return {
+		"ok": detached_exact and corruption_exact and changed_content_rebuilt and restored_exact,
+		"save_prepopulated": save_prepopulated,
+		"whole_payload_exact": whole_payload_exact,
+		"cache_paths_exact": cache_paths_exact,
+		"detached_exact": detached_exact,
+		"corruption_rebuilt": corruption_exact,
+		"changed_content_rebuilt": changed_content_rebuilt,
+		"restored_exact": restored_exact,
+	}
+
+func _inspection_without_cache_profile(value: Dictionary) -> Dictionary:
+	var result: Dictionary = value.duplicate(true)
+	result.erase("browser_manifest_cache_profile")
+	return result
+
+func _variant_differences(left: Variant, right: Variant, path: String) -> Array:
+	var differences: Array = []
+	if typeof(left) != typeof(right):
+		return [{"path": path, "left_type": typeof(left), "right_type": typeof(right), "left": left, "right": right}]
+	if left is Dictionary:
+		for key in left.keys():
+			if not right.has(key):
+				differences.append({"path": "%s.%s" % [path, key], "missing_right": true})
+			else:
+				differences.append_array(_variant_differences(left[key], right[key], "%s.%s" % [path, key]))
+		for key in right.keys():
+			if not left.has(key):
+				differences.append({"path": "%s.%s" % [path, key], "missing_left": true})
+	elif left is Array:
+		if left.size() != right.size():
+			differences.append({"path": path, "left_size": left.size(), "right_size": right.size()})
+		else:
+			for index in left.size():
+				differences.append_array(_variant_differences(left[index], right[index], "%s[%d]" % [path, index]))
+	elif left != right:
+		differences.append({"path": path, "left": left, "right": right, "type": typeof(left)})
+	return differences
 
 func _create_package_index_failure_fixture(source_map_path: String, source_scenario_path: String) -> Dictionary:
 	var package_dir := "user://maps-folder-package-index-single-read-%d" % Time.get_ticks_usec()

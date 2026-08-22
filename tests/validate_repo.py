@@ -14149,6 +14149,7 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         if inspect_native == "":
             inspect_match = re.search(r"Dictionary MapPackageService::inspect_package\([^\n]*\) const \{(?P<body>.*?)\n\}", native_map_service_text, flags=re.DOTALL)
             inspect_native = inspect_match.group("body") if inspect_match is not None else ""
+        manifest_native = native_map_service_text.split("Dictionary browser_manifest_from_package", 1)[-1].split("Dictionary package_inspection_payload", 1)[0]
         for required_token in (
             'package_schema == MAP_PACKAGE_SCHEMA_ID && document_schema == MAP_SCHEMA_ID',
             'package_schema == SCENARIO_PACKAGE_SCHEMA_ID && document_schema == SCENARIO_SCHEMA_ID',
@@ -14162,11 +14163,53 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             'browser_manifest["selection"] = selection.duplicate(true)',
             'browser_manifest["player_count"] = player_slots.size()',
             'browser_manifest["scenario_ref"] = scenario_ref.duplicate(true)',
-            'payload["browser_manifest"] = browser_manifest',
         ):
-            ensure(required_token in inspect_native, errors, f"Native package inspection is missing bounded detached browser-manifest token: {required_token}")
+            ensure(required_token in manifest_native, errors, f"Native package inspection is missing bounded detached browser-manifest token: {required_token}")
+        ensure('payload["browser_manifest"] = browser_manifest' in native_map_service_text, errors, "Native package inspection payload must retain the bounded browser manifest")
         for forbidden_token in ('browser_manifest["objects"]', 'browser_manifest["terrain_layers"]', 'browser_manifest["script_hooks"]'):
-            ensure(forbidden_token not in inspect_native, errors, f"Native package browser manifest must not expose full document payload: {forbidden_token}")
+            ensure(forbidden_token not in manifest_native, errors, f"Native package browser manifest must not expose full document payload: {forbidden_token}")
+
+        cache_read_native = native_map_service_text.split("Dictionary read_browser_manifest_cache", 1)[-1].split("bool write_browser_manifest_cache", 1)[0]
+        cache_write_native = native_map_service_text.split("bool write_browser_manifest_cache", 1)[-1].split("Dictionary write_package_dictionary", 1)[0]
+        package_write_native = native_map_service_text.split("Dictionary write_package_dictionary", 1)[-1].split("Array document_objects", 1)[0]
+        for required_token in (
+            'BROWSER_MANIFEST_CACHE_SCHEMA_ID = "aurelion_package_browser_manifest_cache_v1"',
+            'BROWSER_MANIFEST_CACHE_DIR = "user://package_browser_manifest_cache_v1"',
+            'return String(BROWSER_MANIFEST_CACHE_DIR) + "/" + hash32_hex(source_path) + ".json"',
+            'String(cache.get("source_path", "")) != source_path',
+            'String(cache.get("source_sha256", "")) != source_sha256',
+            'const String expected_hash = "fnv1a32:" + hash32_hex(canonical_variant(payload))',
+            'String(cache.get("inspection_payload_hash", "")) != expected_hash',
+            'cached_metadata.erase("schema_version")',
+            'cached_metadata["schema_version"] = int64_t(1)',
+            'cached_manifest.erase("player_count")',
+            'cached_manifest["player_count"] = cached_player_count',
+        ):
+            ensure(required_token in native_map_service_text, errors, f"Native browser-manifest cache is missing exact content-addressed authority: {required_token}")
+        ensure('return payload;' in cache_read_native and 'return Dictionary();' in cache_read_native, errors, "Native browser-manifest cache read must fail closed and return only a validated detached payload")
+        for required_token in (
+            'cache["source_path"] = source_path',
+            'cache["source_sha256"] = source_sha256',
+            'payload_parser->parse(JSON::stringify(payload, "", true, false))',
+            'Dictionary normalized_payload = Dictionary(payload_parser->get_data())',
+            'Dictionary stable_payload = Dictionary(stable_payload_parser->get_data())',
+            'cache["inspection_payload"] = stable_payload.duplicate(true)',
+            'cache["inspection_payload_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(stable_payload))',
+        ):
+            ensure(required_token in cache_write_native, errors, f"Native browser-manifest cache writer is missing detached integrity field: {required_token}")
+        ensure('file->close();' in package_write_native and 'const String source_sha256 = FileAccess::get_sha256(path);' in package_write_native and 'write_browser_manifest_cache(path, source_sha256, package_inspection_payload(package));' in package_write_native, errors, "Successful native package save must prepopulate the exact-hash bounded manifest cache only after closing the package file")
+        for required_token in (
+            'const bool bypass_cache = String(options.get("browser_manifest_cache_mode", "default")) == "bypass_read"',
+            'const String source_sha256 = FileAccess::file_exists(path) ? FileAccess::get_sha256(path) : String()',
+            'Dictionary cached_payload = read_browser_manifest_cache(path, source_sha256)',
+            'Dictionary read_result = read_package_dictionary("inspect_package", path)',
+            'const bool cache_written = write_browser_manifest_cache(path, source_sha256, payload)',
+            'profile["status"] = "hit"',
+            'bypass_cache ? "bypass_written" : "miss_written"',
+        ):
+            ensure(required_token in inspect_native, errors, f"Native inspect cache lifecycle is missing required fail-closed token: {required_token}")
+        ensure(inspect_native.find("read_browser_manifest_cache(path, source_sha256)") < inspect_native.find('read_package_dictionary("inspect_package", path)'), errors, "Native inspect must try only the exact-hash cache before retaining the full package parser fallback")
+        ensure('FileAccess::get_modified_time' not in inspect_native and 'FileAccess::get_size' not in inspect_native, errors, "Native manifest cache must not trust timestamps or file size in place of exact content hashing")
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     selected_setup = function_block(main_menu_script_text, "_selected_skirmish_setup")
@@ -14241,8 +14284,30 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             'scenario_manifest.get("selection", {}) == scenario_document.get_selection()',
             '"native_browser_manifest_exact": true',
             '"native_browser_manifest_detached": true',
+            "_validate_native_browser_manifest_cache(package_service, map_path, scenario_path)",
+            '"native_browser_manifest_cache_exact": true',
+            '"native_browser_manifest_cache_save_prepopulated"',
+            '"native_browser_manifest_cache_changed_content_rebuilt"',
+            '"native_browser_manifest_cache_corruption_rebuilt"',
         ):
             ensure(required_token in integration_text, errors, f"Maps-folder package integration is missing selected-entry reuse proof token: {required_token}")
+        cache_case = function_block(integration_text, "_validate_native_browser_manifest_cache")
+        for required_token in (
+            '"include_browser_manifest_cache_profile": true',
+            '"browser_manifest_cache_mode": "bypass_read"',
+            'String(map_profile.get("status", "")) == "hit"',
+            'String(scenario_profile.get("status", "")) == "hit"',
+            'map_cached == map_bypass and scenario_cached == scenario_bypass',
+            'map_cache_path.begins_with("user://package_browser_manifest_cache_v1/")',
+            'cache_file.store_string("{corrupt-cache")',
+            'String(corruption_profile.get("status", "")) == "miss_written"',
+            'changed_scenario["document"]["selection"]["display_name"] = "Cache Content Change Probe"',
+            'String(changed_profile.get("source_sha256", "")) != String(scenario_profile.get("source_sha256", ""))',
+            '_inspection_without_cache_profile(restored_profiled) == scenario_bypass',
+        ):
+            ensure(required_token in cache_case, errors, f"Focused native browser-manifest cache lifecycle is missing exact parity/fallback token: {required_token}")
+        for forbidden_token in ("get_modified_time", 'erase("browser_manifest")', 'erase("source_sha256")'):
+            ensure(forbidden_token not in cache_case, errors, f"Focused native browser-manifest cache proof must not weaken exact authority: {forbidden_token}")
 
     scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
     ensure_script_functions(

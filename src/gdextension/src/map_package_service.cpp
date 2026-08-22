@@ -27,6 +27,8 @@ constexpr const char *MAP_SCHEMA_ID = "aurelion_map_document";
 constexpr const char *SCENARIO_SCHEMA_ID = "aurelion_scenario_document";
 constexpr const char *MAP_PACKAGE_SCHEMA_ID = "aurelion_map_package";
 constexpr const char *SCENARIO_PACKAGE_SCHEMA_ID = "aurelion_scenario_package";
+constexpr const char *BROWSER_MANIFEST_CACHE_SCHEMA_ID = "aurelion_package_browser_manifest_cache_v1";
+constexpr const char *BROWSER_MANIFEST_CACHE_DIR = "user://package_browser_manifest_cache_v1";
 constexpr const char *NATIVE_RMG_SCHEMA_ID = "aurelion_native_random_map_config_normalization";
 constexpr const char *NATIVE_RMG_VERSION = "native_rmg_exact_h3maped_state_chain_v1";
 constexpr const char *HOMM3_RE_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
@@ -1308,7 +1310,179 @@ Dictionary read_package_dictionary(const String &operation, const String &path) 
 	return result;
 }
 
-Dictionary write_package_dictionary(const String &operation, const String &path, const Dictionary &package, bool return_package = true) {
+Dictionary browser_manifest_from_package(const Dictionary &package) {
+	Variant document_value = package.get("document", Variant());
+	if (document_value.get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	Dictionary document = document_value;
+	Dictionary browser_manifest;
+	const String package_schema = package.get("schema_id", "");
+	const String document_schema = document.get("schema_id", "");
+	if (package_schema == MAP_PACKAGE_SCHEMA_ID && document_schema == MAP_SCHEMA_ID) {
+		Variant metadata_value = document.get("metadata", Variant());
+		Dictionary metadata = metadata_value.get_type() == Variant::DICTIONARY ? Dictionary(metadata_value) : Dictionary();
+		metadata = metadata.duplicate(true);
+		metadata["schema_id"] = MAP_SCHEMA_ID;
+		metadata["schema_version"] = 1;
+		Variant map_ref_value = package.get("map_ref", Variant());
+		Dictionary map_ref = map_ref_value.get_type() == Variant::DICTIONARY ? Dictionary(map_ref_value) : Dictionary();
+		browser_manifest["document_kind"] = "map";
+		browser_manifest["width"] = document.get("width", 0);
+		browser_manifest["height"] = document.get("height", 0);
+		browser_manifest["level_count"] = document.get("level_count", 1);
+		browser_manifest["metadata"] = metadata;
+		browser_manifest["map_ref"] = map_ref.duplicate(true);
+	} else if (package_schema == SCENARIO_PACKAGE_SCHEMA_ID && document_schema == SCENARIO_SCHEMA_ID) {
+		Variant selection_value = document.get("selection", Variant());
+		Dictionary selection = selection_value.get_type() == Variant::DICTIONARY ? Dictionary(selection_value) : Dictionary();
+		Variant slots_value = document.get("player_slots", Variant());
+		Array player_slots = slots_value.get_type() == Variant::ARRAY ? Array(slots_value) : Array();
+		Variant scenario_ref_value = package.get("scenario_ref", Variant());
+		Dictionary scenario_ref = scenario_ref_value.get_type() == Variant::DICTIONARY ? Dictionary(scenario_ref_value) : Dictionary();
+		browser_manifest["document_kind"] = "scenario";
+		browser_manifest["selection"] = selection.duplicate(true);
+		browser_manifest["player_count"] = player_slots.size();
+		browser_manifest["scenario_ref"] = scenario_ref.duplicate(true);
+	}
+	return browser_manifest;
+}
+
+Dictionary package_inspection_payload(const Dictionary &package) {
+	Dictionary payload;
+	payload["schema_id"] = package.get("schema_id", "");
+	payload["schema_version"] = package.get("schema_version", 0);
+	payload["package_id"] = package.get("package_id", "");
+	payload["package_kind"] = package.get("package_kind", "");
+	payload["document_kind"] = package.get("document_kind", "");
+	payload["package_hash"] = package.get("package_hash", "");
+	payload["storage_policy"] = package.get("storage_policy", "");
+	payload["path_policy"] = package.get("path_policy", "");
+	payload["authored_content_writeback"] = package.get("authored_content_writeback", false);
+	payload["legacy_json_scenario_record"] = package.get("legacy_json_scenario_record", false);
+	Dictionary browser_manifest = browser_manifest_from_package(package);
+	if (!browser_manifest.is_empty()) {
+		payload["browser_manifest"] = browser_manifest;
+	}
+	return payload;
+}
+
+String browser_manifest_cache_path(const String &source_path) {
+	return String(BROWSER_MANIFEST_CACHE_DIR) + "/" + hash32_hex(source_path) + ".json";
+}
+
+bool browser_manifest_cache_payload_is_valid(const Dictionary &payload) {
+	Variant manifest_value = payload.get("browser_manifest", Variant());
+	if (manifest_value.get_type() != Variant::DICTIONARY) {
+		return false;
+	}
+	Dictionary manifest = manifest_value;
+	const String package_schema = payload.get("schema_id", "");
+	const String document_kind = manifest.get("document_kind", "");
+	return (package_schema == MAP_PACKAGE_SCHEMA_ID && document_kind == "map") ||
+			(package_schema == SCENARIO_PACKAGE_SCHEMA_ID && document_kind == "scenario");
+}
+
+Dictionary read_browser_manifest_cache(const String &source_path, const String &source_sha256) {
+	if (source_sha256.is_empty()) {
+		return Dictionary();
+	}
+	const String cache_path = browser_manifest_cache_path(source_path);
+	if (!FileAccess::file_exists(cache_path)) {
+		return Dictionary();
+	}
+	Dictionary read_result = read_package_dictionary("read_browser_manifest_cache", cache_path);
+	if (!bool(read_result.get("ok", false))) {
+		return Dictionary();
+	}
+	Dictionary cache = read_result.get("package", Dictionary());
+	if (String(cache.get("schema_id", "")) != BROWSER_MANIFEST_CACHE_SCHEMA_ID ||
+			int32_t(cache.get("schema_version", 0)) != 1 ||
+			String(cache.get("source_path", "")) != source_path ||
+			String(cache.get("source_sha256", "")) != source_sha256) {
+		return Dictionary();
+	}
+	Variant payload_value = cache.get("inspection_payload", Variant());
+	if (payload_value.get_type() != Variant::DICTIONARY) {
+		return Dictionary();
+	}
+	Dictionary payload = Dictionary(payload_value).duplicate(true);
+	if (!browser_manifest_cache_payload_is_valid(payload)) {
+		return Dictionary();
+	}
+	const String expected_hash = "fnv1a32:" + hash32_hex(canonical_variant(payload));
+	if (String(cache.get("inspection_payload_hash", "")) != expected_hash) {
+		return Dictionary();
+	}
+	Dictionary cached_manifest = payload.get("browser_manifest", Dictionary());
+	if (String(cached_manifest.get("document_kind", "")) == "map") {
+		Dictionary cached_metadata = cached_manifest.get("metadata", Dictionary());
+		cached_metadata.erase("schema_version");
+		cached_metadata["schema_version"] = int64_t(1);
+		cached_manifest["metadata"] = cached_metadata;
+		payload["browser_manifest"] = cached_manifest;
+	} else if (String(cached_manifest.get("document_kind", "")) == "scenario") {
+		const int64_t cached_player_count = int64_t(cached_manifest.get("player_count", 0));
+		cached_manifest.erase("player_count");
+		cached_manifest["player_count"] = cached_player_count;
+		payload["browser_manifest"] = cached_manifest;
+	}
+	return payload;
+}
+
+bool write_browser_manifest_cache(const String &source_path, const String &source_sha256, const Dictionary &payload) {
+	if (source_sha256.is_empty() || !browser_manifest_cache_payload_is_valid(payload)) {
+		return false;
+	}
+	Ref<JSON> payload_parser;
+	payload_parser.instantiate();
+	if (payload_parser->parse(JSON::stringify(payload, "", true, false)) != OK || payload_parser->get_data().get_type() != Variant::DICTIONARY) {
+		return false;
+	}
+	Dictionary normalized_payload = Dictionary(payload_parser->get_data());
+	if (!browser_manifest_cache_payload_is_valid(normalized_payload)) {
+		return false;
+	}
+	Dictionary normalized_manifest = normalized_payload.get("browser_manifest", Dictionary());
+	if (String(normalized_manifest.get("document_kind", "")) == "map") {
+		Dictionary normalized_metadata = normalized_manifest.get("metadata", Dictionary());
+		normalized_metadata["schema_id"] = MAP_SCHEMA_ID;
+		normalized_metadata.erase("schema_version");
+		normalized_metadata["schema_version"] = int64_t(1);
+		normalized_manifest["metadata"] = normalized_metadata;
+		normalized_payload["browser_manifest"] = normalized_manifest;
+	}
+	Ref<JSON> stable_payload_parser;
+	stable_payload_parser.instantiate();
+	if (stable_payload_parser->parse(JSON::stringify(normalized_payload, "", true, false)) != OK || stable_payload_parser->get_data().get_type() != Variant::DICTIONARY) {
+		return false;
+	}
+	Dictionary stable_payload = Dictionary(stable_payload_parser->get_data());
+	if (!browser_manifest_cache_payload_is_valid(stable_payload)) {
+		return false;
+	}
+	const String cache_path = browser_manifest_cache_path(source_path);
+	if (!ensure_parent_dir(cache_path)) {
+		return false;
+	}
+	Dictionary cache;
+	cache["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
+	cache["schema_version"] = 1;
+	cache["source_path"] = source_path;
+	cache["source_sha256"] = source_sha256;
+	cache["inspection_payload"] = stable_payload.duplicate(true);
+	cache["inspection_payload_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(stable_payload));
+	Ref<FileAccess> file = FileAccess::open(cache_path, FileAccess::WRITE);
+	if (file.is_null() || !file->is_open()) {
+		return false;
+	}
+	file->store_string(JSON::stringify(cache, "\t", true, false));
+	file->flush();
+	file->close();
+	return true;
+}
+
+Dictionary write_package_dictionary(const String &operation, const String &path, const Dictionary &package, bool return_package = true, bool include_cache_profile = false) {
 	if (!ensure_parent_dir(path)) {
 		return package_failure(operation, path, "create_directory_failed", "Package parent directory could not be created.");
 	}
@@ -1317,11 +1491,23 @@ Dictionary write_package_dictionary(const String &operation, const String &path,
 		return package_failure(operation, path, "open_failed", "Package file could not be opened for writing.");
 	}
 	file->store_string(JSON::stringify(package, "\t", true, false));
+	file->flush();
+	file->close();
+	const String source_sha256 = FileAccess::get_sha256(path);
+	const bool cache_written = write_browser_manifest_cache(path, source_sha256, package_inspection_payload(package));
 	Dictionary payload;
 	if (return_package) {
 		payload["package"] = package.duplicate(true);
 	}
 	payload["package_hash"] = package.get("package_hash", "");
+	if (include_cache_profile) {
+		Dictionary profile;
+		profile["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
+		profile["status"] = cache_written ? "prepopulated" : "not_cacheable";
+		profile["source_sha256"] = source_sha256;
+		profile["cache_path"] = browser_manifest_cache_path(path);
+		payload["browser_manifest_cache_profile"] = profile;
+	}
 	return package_success(operation, path, payload);
 }
 
@@ -1824,7 +2010,7 @@ Dictionary MapPackageService::save_map_package(Ref<MapDocument> map_document, St
 	Dictionary final_map_ref = map_ref.duplicate(true);
 	final_map_ref["package_hash"] = package.get("package_hash", "");
 	package["map_ref"] = final_map_ref;
-	return write_package_dictionary(operation, path, package, bool(options.get("return_package", true)));
+	return write_package_dictionary(operation, path, package, bool(options.get("return_package", true)), bool(options.get("include_browser_manifest_cache_profile", false)));
 }
 
 Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenario_document, String path, Dictionary options) const {
@@ -1863,7 +2049,7 @@ Dictionary MapPackageService::save_scenario_package(Ref<ScenarioDocument> scenar
 	Dictionary final_scenario_ref = scenario_ref.duplicate(true);
 	final_scenario_ref["package_hash"] = package.get("package_hash", "");
 	package["scenario_ref"] = final_scenario_ref;
-	return write_package_dictionary(operation, path, package, bool(options.get("return_package", true)));
+	return write_package_dictionary(operation, path, package, bool(options.get("return_package", true)), bool(options.get("include_browser_manifest_cache_profile", false)));
 }
 
 Dictionary MapPackageService::migrate_map_package(String source_path, String target_path, int32_t target_version, Dictionary options) const {
@@ -2237,60 +2423,42 @@ Dictionary MapPackageService::compute_document_hash(Variant document, Dictionary
 }
 
 Dictionary MapPackageService::inspect_package(String path, Dictionary options) const {
-	(void)options;
+	const bool bypass_cache = String(options.get("browser_manifest_cache_mode", "default")) == "bypass_read";
+	const bool include_cache_profile = bool(options.get("include_browser_manifest_cache_profile", false));
+	const String source_sha256 = FileAccess::file_exists(path) ? FileAccess::get_sha256(path) : String();
+	const String cache_path = browser_manifest_cache_path(path);
+	if (!bypass_cache) {
+		Dictionary cached_payload = read_browser_manifest_cache(path, source_sha256);
+		if (!cached_payload.is_empty()) {
+			Dictionary cached_result = package_success("inspect_package", path, cached_payload);
+			if (include_cache_profile) {
+				Dictionary profile;
+				profile["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
+				profile["status"] = "hit";
+				profile["source_sha256"] = source_sha256;
+				profile["cache_path"] = cache_path;
+				cached_result["browser_manifest_cache_profile"] = profile;
+			}
+			return cached_result;
+		}
+	}
 	Dictionary read_result = read_package_dictionary("inspect_package", path);
 	if (!bool(read_result.get("ok", false))) {
 		return read_result;
 	}
 	Dictionary package = read_result.get("package", Dictionary());
-	Dictionary payload;
-	payload["schema_id"] = package.get("schema_id", "");
-	payload["schema_version"] = package.get("schema_version", 0);
-	payload["package_id"] = package.get("package_id", "");
-	payload["package_kind"] = package.get("package_kind", "");
-	payload["document_kind"] = package.get("document_kind", "");
-	payload["package_hash"] = package.get("package_hash", "");
-	payload["storage_policy"] = package.get("storage_policy", "");
-	payload["path_policy"] = package.get("path_policy", "");
-	payload["authored_content_writeback"] = package.get("authored_content_writeback", false);
-	payload["legacy_json_scenario_record"] = package.get("legacy_json_scenario_record", false);
-	Variant document_value = package.get("document", Variant());
-	if (document_value.get_type() == Variant::DICTIONARY) {
-		Dictionary document = document_value;
-		Dictionary browser_manifest;
-		const String package_schema = package.get("schema_id", "");
-		const String document_schema = document.get("schema_id", "");
-		if (package_schema == MAP_PACKAGE_SCHEMA_ID && document_schema == MAP_SCHEMA_ID) {
-			Variant metadata_value = document.get("metadata", Variant());
-			Dictionary metadata = metadata_value.get_type() == Variant::DICTIONARY ? Dictionary(metadata_value) : Dictionary();
-			metadata = metadata.duplicate(true);
-			metadata["schema_id"] = MAP_SCHEMA_ID;
-			metadata["schema_version"] = 1;
-			Variant map_ref_value = package.get("map_ref", Variant());
-			Dictionary map_ref = map_ref_value.get_type() == Variant::DICTIONARY ? Dictionary(map_ref_value) : Dictionary();
-			browser_manifest["document_kind"] = "map";
-			browser_manifest["width"] = document.get("width", 0);
-			browser_manifest["height"] = document.get("height", 0);
-			browser_manifest["level_count"] = document.get("level_count", 1);
-			browser_manifest["metadata"] = metadata;
-			browser_manifest["map_ref"] = map_ref.duplicate(true);
-		} else if (package_schema == SCENARIO_PACKAGE_SCHEMA_ID && document_schema == SCENARIO_SCHEMA_ID) {
-			Variant selection_value = document.get("selection", Variant());
-			Dictionary selection = selection_value.get_type() == Variant::DICTIONARY ? Dictionary(selection_value) : Dictionary();
-			Variant slots_value = document.get("player_slots", Variant());
-			Array player_slots = slots_value.get_type() == Variant::ARRAY ? Array(slots_value) : Array();
-			Variant scenario_ref_value = package.get("scenario_ref", Variant());
-			Dictionary scenario_ref = scenario_ref_value.get_type() == Variant::DICTIONARY ? Dictionary(scenario_ref_value) : Dictionary();
-			browser_manifest["document_kind"] = "scenario";
-			browser_manifest["selection"] = selection.duplicate(true);
-			browser_manifest["player_count"] = player_slots.size();
-			browser_manifest["scenario_ref"] = scenario_ref.duplicate(true);
-		}
-		if (!browser_manifest.is_empty()) {
-			payload["browser_manifest"] = browser_manifest;
-		}
+	Dictionary payload = package_inspection_payload(package);
+	const bool cache_written = write_browser_manifest_cache(path, source_sha256, payload);
+	Dictionary result = package_success("inspect_package", path, payload);
+	if (include_cache_profile) {
+		Dictionary profile;
+		profile["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
+		profile["status"] = cache_written ? (bypass_cache ? "bypass_written" : "miss_written") : "not_cacheable";
+		profile["source_sha256"] = source_sha256;
+		profile["cache_path"] = cache_path;
+		result["browser_manifest_cache_profile"] = profile;
 	}
-	return package_success("inspect_package", path, payload);
+	return result;
 }
 
 Dictionary MapPackageService::inspect_random_map_generator_data_model(Dictionary options) const {
