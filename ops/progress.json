@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Basalt Gatehouse art slice with two original sources, eight exact runtime derivatives, live dwelling/shared-watch/Ninefold-required-encounter/BattleBoard authority, two byte-identical 412-asset regeneration passes, thirteen compatibility owners, static/editor validation, and bounded Linux/Windows startup gates. The stale dedicated Basalt oracle now matches the authoritative 170375d9 result without a combat production change.",
+  "currentNotes": "Completed the Fenhound Kennels curated-character source slice with two original transparent sources, exact deterministic derivatives, preserved live dwelling/content/Native-RMG authority, focused BattleBoard proof, reproducible 412-asset manifests, relevant compatibility, static/editor, and bounded Linux/Windows export-startup gates. The independent fixed-seed random-map same-type-neutral-town fixture remains red and is not claimed by this art slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-basalt-gatehouse-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-basalt-gatehouse-curated-character-sources-10184",
-  "currentSliceNotes": "Basalt Wardens and Tunnelmark Bolters now own distinct original sources and exact reproducible derivatives while neutral content, the shared and Ninefold encounter armies, required objective, and gameplay authority remain exact. Packaged interaction and broad release claims remain excluded.",
+  "currentSlice": "art-neutral-fenhound-kennels-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-fenhound-kennels-curated-character-sources-10184",
+  "currentSliceNotes": "The two curated Fenhound Kennels unit sources and exact existing-path derivatives are complete; content, gameplay, Native-RMG mapping, and broader release authority remain unchanged. Select the next source-backed slice without inferring broad neutral-art or release completion.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Basalt Gatehouse Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T21:34:42Z",
+  "currentSliceTitle": "Fenhound Kennels Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T22:08:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion or release readiness from this bounded Basalt Gatehouse result.",
-  "notes": "The Basalt Gatehouse art slice is complete. Focused runtime proves two content rows, two live BattleBoard entries, exact shared 8/3 watch, Ninefold 11/6 required encounter, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical; thirteen compatibility owners, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The dedicated Rough Exactors Basalt sample now matches the already-authoritative 170375d9 round-5/margin-59/DPR-31 result; combat production was unchanged. Packaged battle interaction, certification, signing/publication, whole-game validation, broad neutral art, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion, waive the independent fixed-seed random-map red, or claim release readiness.",
+  "notes": "The Fenhound Kennels art slice is completed. Two original sources own exact reproducible derivatives and manifests; live stats, abilities, dwelling graph, shared 7/2 watch, three authored placements, Native-RMG mapping, and BattleBoard authority remain exact. Focused/relevant compatibility/static/editor and bounded Linux/Windows export-startup gates are green. The separate random-map same-type-neutral-town fixture remains red and unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-fenhound-kennels-curated-character-sources-10184",
+      "title": "Fenhound Kennels Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Fenhound Runners and Mossglass Sentinels emblems with two distinct character-readable original marsh-kennel sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, shared watch, authored placements, Native-RMG projection, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_fenhound_runners.png", "art/units/source/curated/unit_neutral_mossglass_sentinels.png", "art/units/portraits/unit_neutral_fenhound_runners.png", "art/units/portraits/unit_neutral_mossglass_sentinels.png", "art/units/battle_icons/unit_neutral_fenhound_runners.png", "art/units/battle_icons/unit_neutral_mossglass_sentinels.png", "art/units/overworld_icons/unit_neutral_fenhound_runners.png", "art/units/overworld_icons/unit_neutral_mossglass_sentinels.png", "art/animation/runtime/units/unit_neutral_fenhound_runners.png", "art/animation/runtime/units/unit_neutral_mossglass_sentinels.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_fenhound_kennels_curated_art_report.gd", "tests/unit_neutral_fenhound_kennels_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_fenhound_runners", "unit_neutral_mossglass_sentinels"], "tiers": [2,3], "roles": ["melee","melee"], "ability_ids": [["bloodrush"],["shielding"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_fenhound_kennels", "shared_army_id": "army_neutral_fenhound_kennel_watch", "shared_army_counts": [7,2], "authored_site_placement_ids": ["causeway_fenhound_kennels","reedbarrow_kennels","dwelling_fenhound_kennels"], "native_rmg_object_id": "object_fenhound_kennels", "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow swift marsh kennel-runner and plated mossglass sentinel identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Fenhound Kennels graph, shared 7/2 watch, and authored Blackfen Causeway/Reedbarrow Ferry/Ninefold Confluence placements; a production-rule BattleBoard loads both icon/sheet pairs and all 112 target frames remain visible", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/neutral-dwelling/Native-RMG compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment or Native-RMG mapping rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T21:40:32Z",
+      "startedAt": "2026-08-22T21:40:32Z",
+      "updatedAt": "2026-08-22T22:08:20Z",
+      "completedAt": "2026-08-22T22:08:20Z",
+      "notes": "Completed two original transparent sources and exact reproducible portrait, battle-icon, overworld-icon, and 14-state/4-frame battle-sheet derivatives. Live unit/dwelling authority, shared 7/2 watch, three authored placements, and existing Native-RMG projection remain exact; focused BattleBoard proves 2 runtime entries and 112 visible frames. Two full 412-asset passes are byte-identical, relevant compatibility/static/editor gates pass, and official Linux plus Windows/Wine export-startup smokes are green. The independent fixed-seed random-map same-type-neutral-town fixture remains red and is not claimed by this slice.",
+      "remainingWork": "None for this slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-basalt-gatehouse-curated-character-sources-10184",
       "title": "Basalt Gatehouse Curated Character Sources",
@@ -94515,7 +94535,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_basalt_gatehouse_curated_character_sources_completed",
+  "result": "art_neutral_fenhound_kennels_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

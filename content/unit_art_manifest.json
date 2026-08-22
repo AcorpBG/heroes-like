@@ -852,7 +852,10 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_neutral_fenhound_runners.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_fenhound_runners.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_fenhound_runners.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_fenhound_runners.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_fenhound_runners.png",
+      "curated_source_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca"
     },
     {
       "id": "unit_neutral_mossglass_sentinels",
@@ -864,7 +867,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_mossglass_sentinels.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_mossglass_sentinels.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_mossglass_sentinels.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_mossglass_sentinels.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_mossglass_sentinels.png",
+      "curated_source_sha256": "0170d88b2f5eef69d51419cbe1fcaabb147b6c27ceca9797a282428aada0c8ae"
     },
     {
       "id": "unit_neutral_cliffhawk_wardens",
