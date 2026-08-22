@@ -133,12 +133,23 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
         overworld_path = art_root / "overworld_icons" / f"{unit_id}.png"
         animation_path = animation_root / f"{unit_id}.png"
 
-        generator.draw_portrait(unit, palette, motif, initials, portrait_path)
-        generator.draw_battle_icon(unit, palette, motif, initials, battle_path)
-        generator.draw_overworld_icon(unit, palette, motif, initials, overworld_path)
-        generator.draw_battle_troop_animation_sheet(unit, palette, motif, initials, animation_path)
+        curated_source = generator.load_curated_character_source(unit_id)
+        if not generator.preserve_authored_asset(unit_id, "portrait", portrait_path):
+            generator.draw_portrait(unit, palette, motif, initials, portrait_path)
+        if not generator.preserve_authored_asset(unit_id, "battle_icon", battle_path):
+            if curated_source is None:
+                generator.draw_battle_icon(unit, palette, motif, initials, battle_path)
+            else:
+                generator.draw_curated_battle_icon(unit, palette, curated_source, battle_path)
+        if not generator.preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
+            generator.draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+        if not generator.preserve_authored_asset(unit_id, "battle_animation_sheet", animation_path):
+            if curated_source is None:
+                generator.draw_battle_troop_animation_sheet(unit, palette, motif, initials, animation_path)
+            else:
+                generator.draw_curated_battle_troop_animation_sheet(unit, palette, curated_source, animation_path)
 
-        art_manifest["items"].append({
+        art_record = {
             "id": unit_id,
             "unit_id": unit_id,
             "name": str(unit.get("name", unit_id)),
@@ -149,8 +160,8 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
             "portrait": f"res://art/units/portraits/{unit_id}.png",
             "battle_icon": f"res://art/units/battle_icons/{unit_id}.png",
             "overworld_icon": f"res://art/units/overworld_icons/{unit_id}.png",
-        })
-        animation_manifest["items"].append({
+        }
+        animation_record = {
             "id": unit_id,
             "unit_id": unit_id,
             "name": str(unit.get("name", unit_id)),
@@ -160,7 +171,13 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
             "motif": motif,
             "sprite_sheet": f"res://art/animation/runtime/units/{unit_id}.png",
             "states": [state["state"] for state in generator.BATTLE_TROOP_ANIMATION_STATES],
-        })
+        }
+        provenance = generator.curated_source_provenance(unit_id)
+        if provenance:
+            art_record.update(provenance)
+            animation_record.update(provenance)
+        art_manifest["items"].append(art_record)
+        animation_manifest["items"].append(animation_record)
         assets.extend([
             {"unit_id": unit_id, "surface": "portrait", "res_path": f"res://art/units/portraits/{unit_id}.png", "temp_path": str(portrait_path)},
             {"unit_id": unit_id, "surface": "battle_icon", "res_path": f"res://art/units/battle_icons/{unit_id}.png", "temp_path": str(battle_path)},

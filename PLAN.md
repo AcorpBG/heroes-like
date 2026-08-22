@@ -24,6 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-embercourt-fordhook-cadets-curated-sprite-source-10184`. The generated abstract Fordhook Cadet emblem/motif is replaced by one original transparent full-body character source and reproducible shipped battle-icon and fourteen-state/four-frame runtime-sheet derivatives. Full regeneration is byte-idempotent across all 412 unit-art payloads and both manifests; exactly the Fordhook battle icon and sheet changed from the pre-slice baseline, while five existing authored overrides and the other 102 unit battle-icon/sheet pairs remain exact. Focused BattleBoard loading, all 56 Fordhook frames, unit-art/animation/readiness/event-cue/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `art-embercourt-fordhook-cadets-curated-sprite-source-10184`
+
+  Implementation boundary:
+  - add one transparent original Fordhook Cadet source under `art/units/source/curated/` and teach the unit-art generator to use it only for `unit_embercourt_fordhook_cadets`;
+  - derive the existing 160x160 battle icon and 256x896, fourteen-state/four-frame animation sheet from that source without changing runtime paths or BattleBoard animation-state semantics;
+  - record exact curated-source provenance in the generated manifests and prove the other 102 unit icon/sheet payloads remain byte-exact.
+
+  Completion criteria:
+  - the transparent source, generated icon, and generated sheet are reproducible, loadable, visibly nonempty character art with the exact existing dimensions, state order, frame count, runtime paths, and ContentService/BattleBoard ownership;
+  - focused runtime proves Fordhook content lookup and all fourteen animation states use the curated-derived sheet while Battle event animation and unit-art reproducibility gates remain green;
+  - all non-Fordhook battle icons and unit animation sheets remain byte-exact; manifests, validator, JSON/Python checks, repository/editor, core compatibility, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+  Non-goals:
+  - do not change another unit asset, Fordhook stats/abilities/content, battle rules/AI, animation state timing/order, save schema, project rendering settings, Native RMG, or packaging behavior;
+  - do not set final sprite/VFX/audio import flags or claim broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Superseded candidate: `content-ironbridge-bridge-silt-hunters-production-line-10184`. The count-preserving `8/12/6` production Mireclaw line was byte-exact to its legacy focused control at normal four-round/77%/DPR38 and hard four-round/67%/DPR38 standard defeats, but the authoritative 24-scenario/77-encounter breadth gate reopened two medium watches: Ironbridge cohort terminal margin 72 and Silt Hunters sample terminal margin 77 (`a27a1dc5`). The slice forbade count, stat, ability, and threshold tuning, so the candidate was rejected and shipped Ironbridge content remains unchanged. Select another tracker-approved source-backed slice rather than reopening completed adjacent owners or weakening the queue.
   id: `content-ironbridge-bridge-silt-hunters-production-line-10184`
 

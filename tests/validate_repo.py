@@ -290,6 +290,9 @@ UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
 UNIT_ART_REPRODUCIBILITY_REPORT_PATH = ROOT / "tests" / "unit_art_reproducibility_report.py"
 UNIT_ART_ROOT = ROOT / "art" / "units"
 UNIT_ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
+FORDHOOK_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_fordhook_cadets.png"
+FORDHOOK_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_fordhook_curated_art_report.gd"
+FORDHOOK_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_fordhook_curated_art_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime_report.gd"
@@ -42217,6 +42220,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         UNIT_ANIMATION_MANIFEST_PATH,
         UNIT_ART_GENERATOR_PATH,
         UNIT_ART_REPRODUCIBILITY_REPORT_PATH,
+        FORDHOOK_CURATED_SOURCE_PATH,
+        FORDHOOK_CURATED_ART_REPORT_SCRIPT_PATH,
+        FORDHOOK_CURATED_ART_REPORT_SCENE_PATH,
         CONTENT_SERVICE_PATH,
         BATTLE_BOARD_VIEW_SCRIPT_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -42334,6 +42340,40 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ensure(not missing_animation_unit_ids, errors, "Unit animation manifest is missing authored units: " + ", ".join(missing_animation_unit_ids[:12]))
     ensure(not extra_animation_unit_ids, errors, "Unit animation manifest references unknown units: " + ", ".join(extra_animation_unit_ids[:12]))
 
+    fordhook_unit_id = "unit_embercourt_fordhook_cadets"
+    fordhook_source_res_path = "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png"
+    fordhook_source_sha256 = "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
+    ensure(png_size(FORDHOOK_CURATED_SOURCE_PATH) == (512, 512), errors, "Fordhook curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(FORDHOOK_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == fordhook_source_sha256,
+        errors,
+        "Fordhook curated character source bytes drifted",
+    )
+    curated_art_records = [
+        record for record in manifest.get("items", [])
+        if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
+    ]
+    curated_animation_records = [
+        record for record in animation_manifest.get("items", [])
+        if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
+    ]
+    ensure(
+        [str(record.get("unit_id", "")) for record in curated_art_records] == [fordhook_unit_id],
+        errors,
+        "Exactly the Fordhook art record may use the curated character-source branch",
+    )
+    ensure(
+        [str(record.get("unit_id", "")) for record in curated_animation_records] == [fordhook_unit_id],
+        errors,
+        "Exactly the Fordhook animation record may use the curated character-source branch",
+    )
+    for curated_record, label in (
+        (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(fordhook_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == fordhook_source_res_path, errors, f"Fordhook {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == fordhook_source_sha256, errors, f"Fordhook {label} manifest curated source hash drifted")
+
     used_surface_paths: dict[str, set[str]] = {surface: set() for surface in expected_sizes.keys()}
     used_animation_paths: set[str] = set()
     for unit_id, unit in units.items():
@@ -42376,8 +42416,28 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "draw_battle_troop_animation_sheet",
         "draw_animation_frame_signature",
         "draw_animation_palette_marks",
+        "CURATED_CHARACTER_SOURCE_IDS",
+        '"unit_embercourt_fordhook_cadets"',
+        "load_curated_character_source",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"art_source_kind": "curated_original_character_v1"',
+        "curated_source_sha256",
+        "PRESERVED_AUTHORED_ASSET_SHA256",
+        "preserve_authored_asset",
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
+    ensure(
+        generator_text.count('"unit_embercourt_fordhook_cadets",\n}') == 1,
+        errors,
+        "Unit art generator curated source id set must contain exactly the Fordhook unit",
+    )
+    ensure(
+        'if str(state.get("state", "")) == "surrender_stand_down":' in generator_text
+        and 'render_state["family"] = "retreat"' in generator_text,
+        errors,
+        "Non-curated generator must preserve the checked-in surrender-row byte contract",
+    )
 
     reproducibility_report_text = UNIT_ART_REPRODUCIBILITY_REPORT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -42392,8 +42452,52 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "draw_battle_troop_animation_sheet",
         "matching_asset_count",
         "matching_manifest_count",
+        "load_curated_character_source",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        "curated_source_provenance",
+        "preserve_authored_asset",
     ):
         ensure(required_token in reproducibility_report_text, errors, f"unit_art_reproducibility_report.py is missing token {required_token}")
+
+    fordhook_report_text = FORDHOOK_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_EMBERCOURT_FORDHOOK_CURATED_ART_REPORT"',
+        'UNIT_ID := "unit_embercourt_fordhook_cadets"',
+        'SOURCE_SHA256 := "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"',
+        'BATTLE_ICON_SHA256 := "9ed1ac039d88abfd06d83ad1bcf7e5b970df999d245010be651b3cc3b96e1d87"',
+        'ANIMATION_SHA256 := "1aa44e4b02fd4177b0d9980f19fe3d00c38865083e96fab1bec0166a6b6382a8"',
+        'PREVIOUS_ABSTRACT_BATTLE_ICON_SHA256 := "7d0c43a207f7adbb4641ae9b2729b5bfeab7b828d8d675d22879c761081b2851"',
+        'PREVIOUS_ABSTRACT_ANIMATION_SHA256 := "668a50c68087b09ab4c3e245d965faa7a4f205ae3f812f8d8114ac3e7bb07576"',
+        "_validate_source_and_manifest_provenance()",
+        "_validate_battle_icon()",
+        "_validate_animation_sheet()",
+        "await _validate_runtime_board_ownership()",
+        "var source: Image = _load_image(SOURCE_PATH)",
+        "var icon: Image = _load_image(BATTLE_ICON_PATH)",
+        "var sheet: Image = _load_image(ANIMATION_PATH)",
+        "var frame: Image = sheet.get_region",
+        "func _load_image(path: String) -> Image:",
+        'frame_signatures[hash(frame.get_data())] = true',
+        'visible_frame_count == EXPECTED_FRAMES_PER_STATE',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == BATTLE_ICON_PATH',
+        'String(entry.get("animation_sheet", "")) == ANIMATION_PATH',
+    ):
+        ensure(required_token in fordhook_report_text, errors, f"Fordhook curated art report is missing token {required_token}")
+    for forbidden_token in (
+        "final_sprite_import = true",
+        '"final_sprite_import": true',
+        "draw_battle_icon(unit",
+        "draw_battle_troop_animation_sheet(unit",
+    ):
+        ensure(forbidden_token not in fordhook_report_text, errors, f"Fordhook focused report must not generate or broaden art at runtime: {forbidden_token}")
+    fordhook_scene_text = FORDHOOK_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_embercourt_fordhook_curated_art_report.gd"' in fordhook_scene_text,
+        errors,
+        "Fordhook curated art report scene must own the exact focused script",
+    )
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in (
