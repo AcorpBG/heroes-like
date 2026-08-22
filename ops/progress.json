@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Scrip Haulers curated sprite-source vertical slice is completed. One original transparent source reproducibly owns its existing battle-icon and fourteen-state sheet paths while Fordhook and every other unit pair remain exact.",
+  "currentNotes": "The Brasshollow early-ladder curated sprite-source slice is completed. Distinct original Rivet Hound and Furnace Pavis sources now complete the live T1-T3 character-readable battle line while preserving all other unit assets.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-brasshollow-scrip-haulers-curated-sprite-source-10184",
-  "currentSliceId": "art-brasshollow-scrip-haulers-curated-sprite-source-10184",
-  "currentSliceNotes": "Completed one original transparent armored-labor Scrip Haulers source and reproducible existing-path battle-icon and fourteen-state-sheet derivatives. Full 412-asset regeneration, focused BattleBoard runtime, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; broad/final art and release readiness remain unclaimed.",
+  "currentSlice": "art-brasshollow-early-ladder-curated-sprite-source-10184",
+  "currentSliceId": "art-brasshollow-early-ladder-curated-sprite-source-10184",
+  "currentSliceNotes": "Completed two original transparent sources and four reproducible existing-path derivatives for Rivet Hounds and Furnace Pavis Teams. Full 412-asset regeneration, focused BattleBoard runtime over 112 target frames, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; broad/final art and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Scrip Haulers Curated Sprite Source",
-  "currentSliceUpdatedAt": "2026-08-22T09:58:08Z",
+  "currentSliceTitle": "Brasshollow Early Ladder Curated Sprite Source",
+  "currentSliceUpdatedAt": "2026-08-22T10:21:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,48 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad/final art or release readiness from two completed curated unit-art verticals.",
-  "notes": "Completed the second source-backed curated character-art vertical on Brasshollow Scrip Haulers with exact non-target preservation and bounded runtime/platform evidence.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad/final art or release readiness from the completed Brasshollow early-ladder vertical.",
+  "notes": "Completed the two-unit Brasshollow early-ladder curated art vertical with exact non-target preservation and bounded runtime/platform evidence.",
   "plannedSlices": [
+    {
+      "id": "art-brasshollow-early-ladder-curated-sprite-source-10184",
+      "title": "Brasshollow Early Ladder Curated Sprite Source",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Complete Brasshollow's live T1-T3 battle-line presentation by replacing the Rivet Hounds and Furnace Pavis Teams generated badge motifs with original character-readable sources and reproducible existing-path runtime derivatives.",
+      "implementationTargets": [
+        "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+        "art/units/source/curated/unit_brasshollow_furnace_pavis_teams.png",
+        "art/units/battle_icons/unit_brasshollow_rivet_hounds.png",
+        "art/units/battle_icons/unit_brasshollow_furnace_pavis_teams.png",
+        "art/animation/runtime/units/unit_brasshollow_rivet_hounds.png",
+        "art/animation/runtime/units/unit_brasshollow_furnace_pavis_teams.png",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "tests/unit_brasshollow_early_ladder_curated_art_report.gd",
+        "tests/unit_brasshollow_early_ladder_curated_art_report.tscn",
+        "tests/unit_art_reproducibility_report.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"unit_ids": ["unit_brasshollow_rivet_hounds", "unit_brasshollow_furnace_pavis_teams"], "content_reference_counts": [30,26], "battle_icon_size": [160,160], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_unit_pairs_must_remain_byte_exact": 101, "final_sprite_import": false},
+      "completionCriteria": [
+        "Two transparent original sources own exact manifest provenance and reproducible existing-path battle-icon and fourteen-state/four-frame animation-sheet derivatives",
+        "Focused runtime loads all four derivatives in BattleBoard and every state/frame remains visible and distinct while unit content and abilities remain unchanged",
+        "The other 101 unit battle-icon/sheet pairs remain byte-exact; full regeneration/reproducibility, unit art/animation/readiness, Battle animation, core, validator/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": ["Another unit or tier, portraits/overworld icons, unit stats/abilities/content, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T10:02:53Z",
+      "startedAt": "2026-08-22T10:02:53Z",
+      "updatedAt": "2026-08-22T10:21:30Z",
+      "completedAt": "2026-08-22T10:21:30Z",
+      "notes": "Completed distinct original transparent Rivet Hound and Furnace Pavis sources plus four reproducible icon/sheet derivatives. Full 412-asset/two-manifest regeneration is byte-idempotent; exactly four target payloads changed and all other 101 pairs remain exact. Focused BattleBoard loads both units, preserves their exact ability ids, and proves all 112 target frames visible/variant. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. final_sprite_import remains false; broad/final art and release readiness are not claimed."
+    },
     {
       "id": "art-brasshollow-scrip-haulers-curated-sprite-source-10184",
       "title": "Brasshollow Scrip Haulers Curated Sprite Source",
@@ -93821,7 +93860,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_brasshollow_scrip_haulers_curated_sprite_source_completed",
+  "result": "art_brasshollow_early_ladder_curated_sprite_source_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -93922,9 +93961,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Scrip Haulers curated sprite-source vertical is completed with one original armored-labor source, reproducible existing-path derivatives, exact preservation of every other unit pair, focused runtime/compatibility validation, and bounded Linux/Windows export-startup evidence.",
+  "summary": "The Brasshollow early-ladder curated sprite-source vertical is completed with distinct original Rivet Hound and Furnace Pavis sources, reproducible existing-path derivatives, exact preservation of every other unit pair, focused runtime/compatibility validation, and bounded Linux/Windows export-startup evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T09:58:08Z",
+  "updatedAt": "2026-08-22T10:21:30Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
