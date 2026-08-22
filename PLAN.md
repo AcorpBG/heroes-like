@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-sunvault-early-ladder-curated-character-sources-10184`. Shard Wardens, Prism Adepts, and Mirror Duelists now use three distinct original transparent Sunvault character sources across reproducible portraits, battle icons, overworld icons, and fourteen-state battle sheets on their existing runtime paths. Exactly three sources and twelve runtime payloads changed; all four surfaces for the other 100 units remain byte-exact, and all 412 assets plus both manifests reproduce. Eight live Glassfen, Bellwake, Ninefold, Fogchart, and Counterseal battle payloads preserve exact ids/counts/abilities, the Glassfen BattleBoard loads all three icon/sheet pairs, all 168 target frames remain visible, and focused/compatibility/static/editor/Linux/Windows startup gates are green. Broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `art-sunvault-early-ladder-curated-character-sources-10184`
+
+  Completion criteria:
+  - three distinct 512x512 transparent original sources own exact generated-manifest provenance and reproducible 384x512 portraits, 160x160 battle icons, 96x96 overworld icons, and 256x896 fourteen-state/four-frame battle sheets;
+  - all eight live authored battle payloads preserve exact target ids/counts/abilities while a three-unit production BattleBoard loads the curated icon/sheet pairs and every target state/frame remains visible and character-readable;
+  - exactly the three source files, twelve target runtime payloads, and three records in each manifest change; all four surfaces for the other 100 units remain byte-exact, and full 412-asset regeneration/reproducibility plus focused/compatibility/validator/editor/Linux/Windows startup gates pass.
+
+  Non-goals: another unit or tier, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, animation state timing/order, save schema, rendering settings, Native RMG, or packaging behavior; broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `art-mireclaw-early-ladder-curated-character-sources-10184`. Reedsnare Kin, Mudglass Slingers, and Bogplate Maulers now use three distinct original transparent human wetland-fighter sources across reproducible portraits, battle icons, overworld icons, and fourteen-state battle sheets on their existing runtime paths. Exactly three sources and twelve runtime payloads changed; all four surfaces for the other 100 units remain byte-exact, and all 412 assets plus both manifests reproduce. Four live River Pass/Causeway/Mireford encounter payloads preserve exact ids/counts/abilities, the Causeway BattleBoard loads all three icon/sheet pairs, all 168 target frames remain visible, and focused/compatibility/static/editor/Linux/Windows startup gates are green. Broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `art-mireclaw-early-ladder-curated-character-sources-10184`
 
