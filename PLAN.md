@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-failed-command-invalid-audio-10184`. Every non-empty failed Overworld command result now retains its visible blocked feedback and plays exactly one imported `ui_invalid` transient through the common result-feedback boundary. The focused real failed field-spell path proves exact cue metadata and unchanged session/presentation authority at 1280x720 and 1920x1080 in normal and reduced-motion modes; UI-audio, focus, accessibility, overworld visual, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Successful commands, specialized presentation audio, Effects policy, packaged interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain outside the claim. Select the next tracker-approved source-backed slice.
+  id: `presentation-overworld-failed-command-invalid-audio-10184`
 - Completed implementation slice: `ux-main-menu-credits-controller-paging-10184`. The Credits & Notices modal now pages down/up through physical controller shoulder buttons, while D-pad Up enters the body from initial Close focus and physical B closes and restores the secondary Guide command. The focused report proves keyboard paging 16->0 and controller-only paging 17->0 at 1280x720 and 1920x1080 with exact notice content, modal semantics, and session/campaign/save/settings/input-map/router authority. Main Menu navigation, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged interaction, native controller hardware, AT-SPI/UIA, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `ux-main-menu-credits-controller-paging-10184`
 - Completed implementation slice: `ux-main-menu-credits-third-party-notices-10184`. The existing Guide board now owns a secondary, scrollable Credits & Notices modal that composes the running Godot Engine license/component notices with an exported exact godot-cpp MIT notice, preserves the scenic first view, supports keyboard/controller open-close and keyboard paging at 1280x720 and 1920x1080, restores focus, and leaves session/save/settings/input-map/router authority exact. Focused, broad Main Menu/navigation/layout/accessibility/core, payload, repository/editor, and bounded Linux/Windows export-startup gates pass. This does not choose a project license or claim packaged interaction, legal/accessibility/hardware certification, signing/publication, whole-game, or release readiness. Select the next tracker-approved source-backed slice.
@@ -8689,6 +8691,31 @@ Completion evidence:
 - `/tmp/heroes-native-browser-cache-focused4.xb6kWY` passes save prepopulation, whole cached-versus-parser payload parity, detached returns, corrupted-cache rebuild, changed-content invalidation/restoration, exact package entry/failure/session authority, and Map Editor integration. The full focused matrix improves from 125 to about 49 seconds;
 - `/tmp/heroes-native-browser-cache-corpus.XDxMnS` measures 796-file cached inspection at 2714/2710 ms versus the 18315/14348 ms full-parser baseline and within the 2162/2135 ms exact-hash lane. Public Main Menu improves 32 to 22 seconds, Save Copy 36 to 30, and broad player-facing Skirmish 64 to 50 while exact behavior markers remain green;
 - menu visual, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, and synchronized debug/release native builds pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; no packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim is made.
+
+## Overworld Failed Command Invalid Audio
+
+id: `presentation-overworld-failed-command-invalid-audio-10184`
+
+Status: completed.
+
+Implementation boundary:
+- when the existing `OverworldShell._record_result_feedback` receives a non-empty failed result, retain its exact blocked text/recap behavior and play the existing imported `ui_invalid` cue exactly once through `UiAudio.play_invalid`;
+- keep successful command feedback silent on this route, leave the automatic button-click cue and all specialized Overworld presentation audio unchanged, and let the existing Effects mute and reduced-repetition policies remain authoritative;
+- prove the behavior through the real failed field-spell command path after a successful live cast, with exact session, presentation, focus, feedback, and audio-record authority.
+
+Completion criteria:
+- a failed live Overworld spell command appends one exact imported `ui_invalid` record with the common result-feedback source and detached failure metadata, while the failed command changes no session state and publishes no spell presentation or presentation-audio cue;
+- the successful spell command path retains its exact imported field-spell audio/VFX, button-click behavior, result recap, input blocking, reduced-motion fallback, and session authority at 1280x720 and 1920x1080;
+- UI-audio, field-spell, Overworld input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no command availability, spell, movement, route, action result, feedback copy/layout, focus, session, save, Effects setting, cooldown, voice-budget, specialized VFX/audio, or asset change;
+- no Town/Battle/Editor invalid-result wiring, packaged Overworld interaction or listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the real failed field-spell command appends one exact imported `ui_invalid` record with the common feedback source and detached failure metadata while session bytes, spell presentation, and `PresentationAudio` remain unchanged across 1280x720 and 1920x1080 in normal and reduced-motion modes;
+- UI-audio, keyboard focus, screen-reader semantics, overworld visual, core, repository validation, Python/JSON/diff checks, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass;
+- packaged Overworld interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 

@@ -36727,6 +36727,28 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
         cast_handler.find("_record_spell_cast_presentation(result, spell_id)"),
     ]
     ensure(all(index >= 0 for index in cast_order) and cast_order == sorted(cast_order), errors, "Live field-spell cue must publish after rule result, feedback, resolution guard, and refresh")
+    result_feedback_block = gdscript_function_block(shell_text, "_record_result_feedback")
+    for token in (
+        'if not bool(result.get("ok", false)):',
+        'feedback_kind = "blocked"',
+        '_record_action_feedback(feedback_kind, message, fallback, recap)',
+        'if feedback_kind == "blocked":',
+        'UiAudio.play_invalid("OverworldShell._record_result_feedback", {',
+        '"kind": kind',
+        '"feedback_kind": feedback_kind',
+        '"message": message',
+    ):
+        ensure(token in result_feedback_block, errors, f"Overworld failed-result feedback is missing exact invalid-audio token: {token}")
+    feedback_order = [
+        result_feedback_block.find('if not bool(result.get("ok", false)):'),
+        result_feedback_block.find('_record_action_feedback(feedback_kind, message, fallback, recap)'),
+        result_feedback_block.find('if feedback_kind == "blocked":'),
+        result_feedback_block.find('UiAudio.play_invalid("OverworldShell._record_result_feedback", {'),
+    ]
+    ensure(all(index >= 0 for index in feedback_order) and feedback_order == sorted(feedback_order), errors, "Overworld invalid audio must follow exact failed-result classification and visible feedback publication")
+    ensure(result_feedback_block.count("UiAudio.play_invalid(") == 1, errors, "Overworld common result feedback must own exactly one invalid-audio call")
+    for forbidden in ("UiAudio.play_confirm", "UiAudio.play_cue", "PresentationAudio", "await ", "create_timer", "session."):
+        ensure(forbidden not in result_feedback_block, errors, f"Overworld failed-result audio must not change gameplay or presentation ownership through {forbidden}")
     record_block = gdscript_function_block(shell_text, "_record_spell_cast_presentation")
     ensure(record_block.find('not bool(result.get("ok", false))') < record_block.find('String(recap.get("kind", ""))') < record_block.find("cue_playback_policy_for_event") < record_block.find("_spell_cast_presentation_serial += 1"), errors, "Field-spell producer must validate success, spell recap, and catalog policy before publication")
     ensure("session.overworld[" not in record_block and "session.flags[" not in record_block, errors, "Field-spell presentation producer must not mutate session authority")
@@ -36798,6 +36820,16 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
         "settle_frames += 1",
         'while bool(_spell_presentation(shell).get("active", false))',
         'shell.validation_cast_overworld_spell("spell_missing")',
+        "var ui_audio_before_failure: Array = UiAudio.validation_records()",
+        "var ui_audio_after_failure: Array = UiAudio.validation_records()",
+        'String(invalid_record.get("cue_id", "")) == "ui_invalid"',
+        'String(invalid_record.get("source", "")) == "OverworldShell._record_result_feedback"',
+        'String(invalid_record.get("asset_path", "")) == "res://art/audio/runtime/ui/invalid.wav"',
+        'String(invalid_record.get("role", "")) == "invalid_action"',
+        'and Dictionary(invalid_record.get("metadata", {})) == {',
+        '"kind": "cast"',
+        '"feedback_kind": "blocked"',
+        'and invalid_audio_exact',
         'print("OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT %s"',
     ):
         ensure(token in report_text, errors, f"Field-spell cue report is missing method-matched live proof: {token}")
@@ -36807,6 +36839,12 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
     control_persist_index = report_text.find('control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)', control_recap_index)
     button_index = report_text.find('spell_button.emit_signal("pressed")', control_persist_index)
     ensure(0 <= control_result_index < control_recap_index < control_persist_index < button_index, errors, "Independent spell control must persist the exact complete feedback recap before the live button action")
+    failed_audio_before_index = report_text.find("var ui_audio_before_failure: Array = UiAudio.validation_records()")
+    failed_cast_index = report_text.find('shell.validation_cast_overworld_spell("spell_missing")', failed_audio_before_index)
+    failed_audio_after_index = report_text.find("var ui_audio_after_failure: Array = UiAudio.validation_records()", failed_cast_index)
+    failed_audio_gate_index = report_text.find("and invalid_audio_exact", failed_audio_after_index)
+    ensure(0 <= failed_audio_before_index < failed_cast_index < failed_audio_after_index < failed_audio_gate_index, errors, "Focused spell failure must capture UI audio, perform the real command, capture the appended record, then make it mandatory")
+    ensure(report_text.count("UiAudio.validation_reset()") == 2, errors, "Field-spell report must reset UI audio exactly at row start and teardown")
     for forbidden in (
         "_on_spell_action_pressed(",
         "_record_spell_cast_presentation(",

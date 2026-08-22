@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved source-backed release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The native package browser content-addressed manifest cache is completed. Exact source path, SHA-256, cache schema, payload kind, and payload-integrity authority guard a bounded user:// cache; every invalid path falls back to the original parser. The 796-file cached lane measures 2710-2714 ms versus 14348-18315 ms, focused integration improves about 125 to 49 seconds, Main Menu 32 to 22, Save Copy 36 to 30, and broad Skirmish 64 to 50; compatibility, static/editor, synchronized native builds, and Linux/Windows export-startup gates pass under bounded claims.",
+  "currentNotes": "The Overworld failed-command invalid-audio slice is completed. The common non-empty failed-result feedback boundary now plays one exact imported ui_invalid transient while retaining blocked copy and session/presentation authority; focused 1280/1920 normal/reduced-motion, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-native-package-browser-content-addressed-manifest-cache-10184",
-  "currentSliceId": "performance-native-package-browser-content-addressed-manifest-cache-10184",
-  "currentSliceNotes": "Completed with save-prepopulated, content-addressed bounded native manifests under user://, exact cached-versus-parser parity, fail-closed corruption/content-change fallback, material current-corpus and public-flow improvement, synchronized Linux/Windows binaries, compatibility/static/editor validation, and official export/startup gates. This does not claim packaged Skirmish interaction, certification, signing/publication, whole-game completion, or release readiness.",
+  "currentSlice": "presentation-overworld-failed-command-invalid-audio-10184",
+  "currentSliceId": "presentation-overworld-failed-command-invalid-audio-10184",
+  "currentSliceNotes": "Completed live invalid-command audio at the existing Overworld failed-result feedback boundary. The real failed field-spell path proves exact imported cue metadata and unchanged session/presentation authority; no Town/Battle/Editor expansion or packaged interaction claim was made.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Native Package Browser Content-Addressed Manifest Cache",
-  "currentSliceUpdatedAt": "2026-08-22T00:38:00Z",
+  "currentSliceTitle": "Overworld Failed Command Invalid Audio",
+  "currentSliceUpdatedAt": "2026-08-22T01:05:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve the completed Battle initiative-chip fitting policy and its exact tooltip, count, geometry, order, color, input, and battle authority.",
-  "notes": "The Town scenic-header pixel-fit slice is completed with exact two-width behavior, genuine-overflow fitting, fresh painted evidence, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "notes": "The Overworld failed-command invalid-audio slice is completed. Every non-empty failed result now retains visible blocked feedback and plays one imported ui_invalid transient through the common feedback boundary. Focused 1280/1920 normal/reduced-motion, UI-audio/focus/accessibility/visual/core, static/editor, and bounded Linux/Windows export-startup evidence is green. Packaged Overworld interaction/listening, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
     {
       "id": "native-rmg-zero-road-runtime-layer-projection-10184",
@@ -92039,6 +92039,34 @@
       ],
       "notes": "Completed. Native save prepopulates a bounded JSON-normalized browser-manifest cache under user://; inspect accepts it only under exact path, whole-file SHA-256, schema, payload-kind, and integrity-hash authority and otherwise retains the original full parser. Focused save/hit/detach/corruption/change/restore/entry/failure/session/Map Editor parity passes in about49 seconds versus125. The 796-file cached lane is2710-2714 ms versus14348-18315, Main Menu22 versus32 seconds, Save Copy30 versus36, and broad Skirmish50 versus64. Visual, keyboard, accessibility, core, static/editor, synchronized native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-22T00:38:00Z"
+    },
+    {
+      "id": "presentation-overworld-failed-command-invalid-audio-10184",
+      "title": "Overworld Failed Command Invalid Audio",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-22T00:51:26Z",
+      "updatedAt": "2026-08-22T01:05:38Z",
+      "completedAt": "2026-08-22T01:05:38Z",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_field_spell_cast_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A failed live Overworld spell command appends one exact imported ui_invalid record through the common result-feedback boundary while session, presentation, feedback, focus, and presentation-audio authority remain exact.",
+        "Successful normal and reduced-motion field-spell commands retain exact imported field-spell audio/VFX, button-click behavior, recap, blocking, completion, and session authority at 1280x720 and 1920x1080.",
+        "Focused UI-audio/field-spell and Overworld input/focus/accessibility/core compatibility, static/editor, and official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No command availability, spell, movement, route, result, copy/layout, focus, session, save, Effects settings, cooldown, voice-budget, specialized VFX/audio, or asset change.",
+        "No Town/Battle/Editor invalid-result wiring, packaged interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. OverworldShell's common non-empty failed-result feedback boundary now plays exactly one imported ui_invalid transient with detached failure metadata. The real failed field-spell path proves exact cue/source/asset/role metadata and unchanged session, spell-presentation, focus, feedback, and PresentationAudio authority across 1280x720 and 1920x1080 in normal and reduced-motion modes. UI-audio, keyboard focus, accessibility, overworld visual, core, validation/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No Town/Battle/Editor expansion, packaged interaction/listening, certification, signing/publication, whole-game, or release-readiness claim."
     }
   ],
   "project": "heroes-like",
@@ -92583,7 +92611,7 @@
   ],
   "summary": "The native startup now shows the approved original Aurelion Reach crest instead of the stock Godot splash while preserving Boot behavior and compatibility identity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-21T20:19:45Z",
+  "updatedAt": "2026-08-22T01:05:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
