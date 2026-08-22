@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The production Mireclaw T1-T3 curated character-source slice is completed with exact source provenance, four live encounter payloads, BattleBoard ownership, 412-asset reproducibility, compatibility, and bounded Linux/Windows startup evidence. Select the next tracker-approved source-backed slice.",
+  "currentNotes": "The production Sunvault early-ladder curated character-source slice is active. Shard Wardens, Prism Adepts, and Mirror Duelists still ship as abstract emblems across eight authored fronts and Sunvault recruitment.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-mireclaw-early-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-mireclaw-early-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "Three original human wetland-fighter sources now own the Mireclaw T1-T3 ladder's existing-path runtime surfaces; the other 100 units remain byte-exact and focused/compatibility/static/platform gates are green without gameplay changes.",
+  "currentSlice": "art-sunvault-early-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-sunvault-early-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Three original Sunvault character sources now own the T1-T3 ladder's existing-path runtime surfaces; the other 100 units remain byte-exact and focused/compatibility/static/platform gates are green without gameplay changes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Early Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T12:14:16Z",
+  "currentSliceTitle": "Sunvault Early Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T12:44:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,56 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not imply broad/final art or release readiness from this completed three-unit vertical.",
-  "notes": "Completed the three-unit production Mireclaw T1-T3 art vertical with exact live battle, reproducibility, compatibility, static/editor, and bounded platform-startup evidence. Broad/final art and release readiness remain unclaimed.",
+  "notes": "Completed the three-unit production Sunvault T1-T3 art vertical with exact live battle, reproducibility, compatibility, static/editor, and bounded platform-startup evidence. Broad/final art and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-sunvault-early-ladder-curated-character-sources-10184",
+      "title": "Sunvault Early Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Make the complete production Sunvault T1-T3 ladder character-readable across its live scenario and town surfaces by replacing three abstract generated emblems with distinct original sources and reproducible existing-path runtime derivatives.",
+      "implementationTargets": [
+        "art/units/source/curated/unit_sunvault_shard_wardens.png",
+        "art/units/source/curated/unit_sunvault_prism_adepts.png",
+        "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+        "art/units/portraits/unit_sunvault_shard_wardens.png",
+        "art/units/portraits/unit_sunvault_prism_adepts.png",
+        "art/units/portraits/unit_sunvault_mirror_duelists.png",
+        "art/units/battle_icons/unit_sunvault_shard_wardens.png",
+        "art/units/battle_icons/unit_sunvault_prism_adepts.png",
+        "art/units/battle_icons/unit_sunvault_mirror_duelists.png",
+        "art/units/overworld_icons/unit_sunvault_shard_wardens.png",
+        "art/units/overworld_icons/unit_sunvault_prism_adepts.png",
+        "art/units/overworld_icons/unit_sunvault_mirror_duelists.png",
+        "art/animation/runtime/units/unit_sunvault_shard_wardens.png",
+        "art/animation/runtime/units/unit_sunvault_prism_adepts.png",
+        "art/animation/runtime/units/unit_sunvault_mirror_duelists.png",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "tests/unit_sunvault_early_ladder_curated_art_report.gd",
+        "tests/unit_sunvault_early_ladder_curated_art_report.tscn",
+        "tests/unit_art_reproducibility_report.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"unit_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_sunvault_mirror_duelists"], "tiers": [1,2,3], "roles": ["melee","ranged","melee"], "active_encounter_count": 8, "all_three_encounter_count": 5, "live_scenario_ids": ["glassfen-breakers","bellwake-wreck-claim","ninefold-confluence","fogchart-mooring","charter-bastion-counterseal"], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 100, "final_sprite_import": false},
+      "completionCriteria": [
+        "Three distinct original transparent sources own exact manifest provenance and reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives",
+        "All eight live authored battle payloads preserve exact target ids/counts/abilities while a three-unit production BattleBoard loads all curated icon/sheet pairs and all 168 target frames remain visible and character-readable",
+        "Only the three sources, twelve target runtime payloads, and three records in each manifest change; all four surfaces for the other 100 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": ["Another unit or tier, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T12:18:02Z",
+      "startedAt": "2026-08-22T12:18:02Z",
+      "updatedAt": "2026-08-22T12:44:10Z",
+      "completedAt": "2026-08-22T12:44:10Z",
+      "notes": "Completed with three original transparent Sunvault character sources, twelve exact existing-path runtime derivatives, and three exact records in each manifest. Full 412-asset regeneration matched twice; only the target 12 runtime payloads changed and the other 400 remained byte-exact. The focused report passed with 3 units, 8 authored encounter fronts, exact public ids/counts/abilities, 168 visible frames, BattleBoard icon/sheet loading, and session authority. Unit art/runtime/animation/readiness/ability, Glassfen/Bellwake/Ninefold/Fogchart/Counterseal/Sunvault chapter, Battle animation/navigation/active-cohort, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates passed. Platform claims are export/startup only; broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, and release readiness remain unclaimed."
+    },
     {
       "id": "art-mireclaw-early-ladder-curated-character-sources-10184",
       "title": "Mireclaw Early Ladder Curated Character Sources",
@@ -94041,7 +94089,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_mireclaw_early_ladder_curated_character_sources_completed",
+  "result": "art_sunvault_early_ladder_curated_character_sources_in_progress",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94142,9 +94190,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The production Mireclaw early-ladder curated character-source slice is in progress, bounded to three original sources and twelve exact existing-path runtime derivatives while preserving encounter/gameplay and non-target authority.",
+  "summary": "The production Sunvault early-ladder curated character-source slice is completed with three original sources, twelve exact existing-path runtime derivatives, eight authored battle fronts, and bounded compatibility/platform startup evidence while broad/final art and release readiness remain unclaimed.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T11:45:29Z",
+  "updatedAt": "2026-08-22T12:44:10Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
