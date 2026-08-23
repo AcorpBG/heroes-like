@@ -83,6 +83,8 @@ TOWN_SHARED_FOUNDATIONAL_BUILDING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "to
 TOWN_SHARED_FOUNDATIONAL_BUILDING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_shared_foundational_building_icon_report.tscn"
 TOWN_MIRECLAW_UNIQUE_LANDMARK_BUILDING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_mireclaw_unique_landmark_building_icon_report.gd"
 TOWN_MIRECLAW_UNIQUE_LANDMARK_BUILDING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_mireclaw_unique_landmark_building_icon_report.tscn"
+TOWN_MIRECLAW_LEGACY_DWELLING_BUILDING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_mireclaw_legacy_dwelling_building_icon_report.gd"
+TOWN_MIRECLAW_LEGACY_DWELLING_BUILDING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_mireclaw_legacy_dwelling_building_icon_report.tscn"
 FACTION_CREST_MANIFEST_PATH = CONTENT_DIR / "faction_crests.json"
 FACTION_CREST_ATLAS_PATH = ROOT / "art" / "factions" / "source" / "faction_crest_atlas.png"
 TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.gd"
@@ -38033,6 +38035,8 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         TOWN_SHARED_FOUNDATIONAL_BUILDING_ICON_REPORT_SCENE_PATH,
         TOWN_MIRECLAW_UNIQUE_LANDMARK_BUILDING_ICON_REPORT_SCRIPT_PATH,
         TOWN_MIRECLAW_UNIQUE_LANDMARK_BUILDING_ICON_REPORT_SCENE_PATH,
+        TOWN_MIRECLAW_LEGACY_DWELLING_BUILDING_ICON_REPORT_SCRIPT_PATH,
+        TOWN_MIRECLAW_LEGACY_DWELLING_BUILDING_ICON_REPORT_SCENE_PATH,
     )
     for path in required:
         ensure(path.exists(), errors, f"Missing Embercourt dwelling icon owner: {path.relative_to(ROOT)}")
@@ -38097,6 +38101,13 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         "building_mireclaw_bog_oracle_nest",
         "building_mireclaw_boneboom_palisade",
         "building_mireclaw_oathmire_court",
+        "building_blackbranch_den",
+        "building_mire_pens",
+        "building_reed_warren",
+        "building_slingers_post",
+        "building_rot_warren",
+        "building_fenscale_pens",
+        "building_gorefen_ring",
     ]
     manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
     rows = manifest_root.get("items", [])
@@ -38125,7 +38136,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
             ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
             header = icon_path.read_bytes()[:26]
             ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
-    ensure(len(set(source_hashes)) == 58 and len(set(icon_hashes)) == 58, errors, "All fifty-eight building sources and icons must be distinct")
+    ensure(len(set(source_hashes)) == 65 and len(set(icon_hashes)) == 65, errors, "All sixty-five building sources and icons must be distinct")
 
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
     for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
@@ -38146,7 +38157,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == _target_building_ids().size()", "specific_count == 58", "fallback_count == 75", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == _target_building_ids().size()", "specific_count == 65", "fallback_count == 68", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     for forbidden in ("_on_build_action_pressed(", "_on_confirm_build_pressed(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Focused building icon report must not bypass production: {forbidden}")
@@ -38202,10 +38213,17 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     mire_landmark_text = TOWN_MIRECLAW_UNIQUE_LANDMARK_BUILDING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     mire_landmark_scene = TOWN_MIRECLAW_UNIQUE_LANDMARK_BUILDING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(mire_landmark_scene, errors, "town_mireclaw_unique_landmark_building_icon_report.tscn", [("TownMireclawUniqueLandmarkBuildingIconReport", "Node")])
-    for building_id in expected_ids[54:]:
+    for building_id in expected_ids[54:58]:
         ensure(f'"{building_id}"' in mire_landmark_text, errors, f"Mireclaw unique landmark focused report is missing {building_id}")
     for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return MIRECLAW_UNIQUE_LANDMARK_BUILDING_IDS", 'return "TOWN_MIRECLAW_UNIQUE_LANDMARK_BUILDING_ICON_REPORT"'):
         ensure(token in mire_landmark_text, errors, f"Mireclaw unique landmark focused report is missing: {token}")
+    mire_legacy_text = TOWN_MIRECLAW_LEGACY_DWELLING_BUILDING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    mire_legacy_scene = TOWN_MIRECLAW_LEGACY_DWELLING_BUILDING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(mire_legacy_scene, errors, "town_mireclaw_legacy_dwelling_building_icon_report.tscn", [("TownMireclawLegacyDwellingBuildingIconReport", "Node")])
+    for building_id in expected_ids[58:65]:
+        ensure(f'"{building_id}"' in mire_legacy_text, errors, f"Mireclaw legacy dwelling focused report is missing {building_id}")
+    for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return MIRECLAW_LEGACY_DWELLING_BUILDING_IDS", 'return "TOWN_MIRECLAW_LEGACY_DWELLING_BUILDING_ICON_REPORT"'):
+        ensure(token in mire_legacy_text, errors, f"Mireclaw legacy dwelling focused report is missing: {token}")
 
 
 def validate_town_faction_crest_runtime(errors: list[str]) -> None:

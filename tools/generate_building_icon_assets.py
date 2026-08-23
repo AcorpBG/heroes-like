@@ -73,6 +73,13 @@ BUILDING_IDS = (
     "building_mireclaw_bog_oracle_nest",
     "building_mireclaw_boneboom_palisade",
     "building_mireclaw_oathmire_court",
+    "building_blackbranch_den",
+    "building_mire_pens",
+    "building_reed_warren",
+    "building_slingers_post",
+    "building_rot_warren",
+    "building_fenscale_pens",
+    "building_gorefen_ring",
 )
 
 
