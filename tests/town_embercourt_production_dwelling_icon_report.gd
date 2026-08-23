@@ -66,7 +66,7 @@ func _catalog_contract() -> Dictionary:
 			fallback_count += 1
 			fallback_exact = fallback_exact and TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)
 	return {
-		"ok": target_count == 7 and specific_count == 28 and fallback_count == 105 and fallback_exact and source_hashes.size() == 7 and icon_hashes.size() == 7 and icon_paths.size() == 7 and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
+		"ok": target_count == 7 and specific_count == 35 and fallback_count == 98 and fallback_exact and source_hashes.size() == 7 and icon_hashes.size() == 7 and icon_paths.size() == 7 and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
 		"target_count": target_count,
 		"specific_count": specific_count,
 		"fallback_count": fallback_count,
