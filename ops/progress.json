@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed implementation slice; do not infer release readiness from the completed Orchard Levy Grounds curated-art boundary."
+    "Select the next tracker-approved source-backed implementation slice; do not infer release readiness from the completed Switchback Hostel curated-art boundary."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Orchard Levy Grounds curated character sources are implemented and validated. Exact live content/gameplay authority and all 101 non-target unit payloads remain unchanged; broader release gaps remain.",
+  "currentNotes": "Switchback Hostel curated character sources are implemented and validated. Exact live content/gameplay authority and all 101 non-target unit payloads remain unchanged; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-orchard-levy-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-orchard-levy-curated-character-sources-10184",
+  "currentSlice": "art-neutral-switchback-hostel-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-switchback-hostel-curated-character-sources-10184",
   "currentSliceNotes": "Completed two distinct original transparent sources, exact deterministic derivatives/manifests, focused live authority, full reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Orchard Levy Grounds Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T04:53:06Z",
+  "currentSliceTitle": "Switchback Hostel Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-23T05:23:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,28 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer broad completion or release readiness from curated-art validation.",
-  "notes": "Orchard Levy Grounds curated sources are completed with exact live content authority, deterministic derivatives, compatibility, and bounded platform startup validation. The game is not release-ready.",
+  "notes": "Switchback Hostel curated sources are completed with exact live content authority, deterministic derivatives, compatibility, and bounded platform startup validation. The game is not release-ready.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-switchback-hostel-curated-character-sources-10184",
+      "title": "Switchback Hostel Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace generated Switchback Pikes and Cairnshield Porters emblems with original character-readable sources and exact existing-path derivatives while preserving the Switchback Hostel graph and gameplay.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_switchback_pikes.png", "art/units/source/curated/unit_neutral_cairnshield_porters.png", "art/units/portraits/unit_neutral_switchback_pikes.png", "art/units/portraits/unit_neutral_cairnshield_porters.png", "art/units/battle_icons/unit_neutral_switchback_pikes.png", "art/units/battle_icons/unit_neutral_cairnshield_porters.png", "art/units/overworld_icons/unit_neutral_switchback_pikes.png", "art/units/overworld_icons/unit_neutral_cairnshield_porters.png", "art/animation/runtime/units/unit_neutral_switchback_pikes.png", "art/animation/runtime/units/unit_neutral_cairnshield_porters.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_switchback_hostel_curated_art_report.gd", "tests/unit_neutral_switchback_hostel_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_switchback_pikes","unit_neutral_cairnshield_porters"], "tiers": [2,3], "roles": ["melee","melee"], "ability_ids": [["reach"],["shielding"]], "shared_army_counts": [8,3], "authored_site_placement_ids": ["dwelling_switchback_hostel"], "claim_recruits": [2,1], "source_size": [512,512], "other_units_must_remain_byte_exact": 101},
+      "completionCriteria": ["Two distinct transparent sources and all eight deterministic existing-path derivatives own exact provenance", "Live units, dwelling graph, 8/3 watch, authored placement, explicit Native-RMG proxy absence, rewards, rough elevated-fire/chokepoint encounter, BattleBoard resources, session authority, and 112 frames are exact", "Two full 412-asset regenerations, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Content, stats, abilities, costs, growth, balance, AI, dwelling/site/object/encounter/army, reward/recruitment, random/native mapping, animation timing, save, rendering, or packaging behavior", "Another unit, broad neutral art, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T04:57:10Z",
+      "startedAt": "2026-08-23T04:57:10Z",
+      "updatedAt": "2026-08-23T05:23:58Z",
+      "completedAt": "2026-08-23T05:23:58Z",
+      "notes": "Completed two original transparent Switchback Hostel sources and exact deterministic derivatives/manifests. Focused report /tmp/heroes-switchback-focused.q2MwwY proves source alpha/provenance, exact unit stats/abilities/costs/growth, Switchback Hostel dwelling/site/object/encounter graph, explicit Native-RMG proxy absence, shared 8/3 watch, exact Ninefold placement at 9,14, rewards/recruits, BattleBoard resources, session authority, and 112 visible frames. Two complete generator passes plus both sources and manifests are byte-identical across 416 paths in /tmp/heroes-switchback-repro.bl6is0; the independent reproducibility report matches 412 assets and both manifests. The 15-owner compatibility chain is green in /tmp/heroes-switchback-compat.jkQbym; static validation, sixteen exact scene parses, and generic editor are green in /tmp/heroes-switchback-final-audit.1HrsAQ. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are ok:true. Packaged Switchback interaction, native-RMG parity, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None within the bounded Switchback Hostel two-unit curated-character source slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-orchard-levy-curated-character-sources-10184",
       "title": "Orchard Levy Grounds Curated Character Sources",
@@ -94815,7 +94835,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_orchard_levy_curated_character_sources_completed",
+  "result": "art_neutral_switchback_hostel_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94916,9 +94936,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Orchard Levy Grounds curated-character slice is complete: two original sources and exact reproducible derivatives ship while live content/gameplay authority remains unchanged.",
+  "summary": "The Switchback Hostel curated-character slice is complete: two original sources and exact reproducible derivatives ship while live content/gameplay authority remains unchanged.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T04:53:06Z",
+  "updatedAt": "2026-08-23T05:23:58Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
