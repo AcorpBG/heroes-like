@@ -345,7 +345,10 @@
       "name": "Marka Ironclause",
       "faction_id": "faction_brasshollow",
       "archetype": "contractmarshal",
-      "portrait": "res://art/heroes/portraits/hero_brasshollow_marka_ironclause.png"
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_marka_ironclause.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_marka_ironclause.png",
+      "source_sha256": "932e4dea2e9eb7363793ccc5ea6bbe4b2f8418e49b4ee0193215f1b6d256d7ab"
     },
     {
       "id": "hero_brasshollow_oren_bellfounder",
@@ -425,7 +428,10 @@
       "name": "Ivara Blacktide",
       "faction_id": "faction_veilmourn",
       "archetype": "admiral",
-      "portrait": "res://art/heroes/portraits/hero_veilmourn_ivara_blacktide.png"
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_ivara_blacktide.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_ivara_blacktide.png",
+      "source_sha256": "fabe4aa3f28c856d8b608b5c8e27db6ca94663d4580c4d7f76add753f528ac79"
     },
     {
       "id": "hero_veilmourn_ruln_vanehook",
