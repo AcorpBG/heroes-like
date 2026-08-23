@@ -1182,7 +1182,10 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_saltpan_bucklers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_saltpan_bucklers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_saltpan_bucklers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_saltpan_bucklers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_saltpan_bucklers.png",
+      "curated_source_sha256": "fdb75b512864fd6a1ca6c0d8ebea16ab66b6a14eebfd81702aa58a51a06cb193"
     },
     {
       "id": "unit_neutral_suncrack_throwers",
@@ -1194,7 +1197,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_suncrack_throwers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_suncrack_throwers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_suncrack_throwers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_suncrack_throwers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_suncrack_throwers.png",
+      "curated_source_sha256": "8e10024c7edc44b9a25f55d3315f8544a219e6576a34ee441c2b7f6839899562"
     },
     {
       "id": "unit_neutral_sumpstone_guards",
