@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Saltpan Camp curated character sources are completed with focused live authority, whole-art reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
+  "currentNotes": "Crystal Sump curated character sources are completed with focused live authority, whole-art reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-saltpan-camp-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-saltpan-camp-curated-character-sources-10184",
-  "currentSliceNotes": "Two original Saltpan Camp sources and eight exact deterministic derivatives are live; authored/generated-map/content/gameplay authority stayed exact and bounded validation is green.",
+  "currentSlice": "art-neutral-crystal-sump-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-crystal-sump-curated-character-sources-10184",
+  "currentSliceNotes": "Two original Crystal Sump sources and eight exact deterministic derivatives are live; authored/generated-map/content/gameplay authority stayed exact and bounded validation is green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Saltpan Camp Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T05:58:44Z",
+  "currentSliceTitle": "Crystal Sump Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-23T06:28:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select and register one source-backed product slice before further implementation; do not infer broad completion or release readiness from the completed Saltpan art boundary.",
-  "notes": "Saltpan Camp curated sources are completed. Production content, gameplay, generated/native mapping, and all non-target unit art remain unchanged; select the next tracker-approved slice.",
+  "nextActionGuardrailNote": "Select and register one source-backed product slice before further implementation; do not infer broad completion or release readiness from the completed Crystal Sump art boundary.",
+  "notes": "Crystal Sump curated sources are completed. Production content, gameplay, generated/native mapping, and all non-target unit art remain unchanged; select the next tracker-approved slice.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-crystal-sump-curated-character-sources-10184",
+      "title": "Crystal Sump Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace generated Sumpstone Guards and Echodart Casts emblems with original character-readable sources and exact existing-path derivatives while preserving the Crystal Sump graph, generated-map projection, and gameplay.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_sumpstone_guards.png", "art/units/source/curated/unit_neutral_echodart_casts.png", "art/units/portraits/unit_neutral_sumpstone_guards.png", "art/units/portraits/unit_neutral_echodart_casts.png", "art/units/battle_icons/unit_neutral_sumpstone_guards.png", "art/units/battle_icons/unit_neutral_echodart_casts.png", "art/units/overworld_icons/unit_neutral_sumpstone_guards.png", "art/units/overworld_icons/unit_neutral_echodart_casts.png", "art/animation/runtime/units/unit_neutral_sumpstone_guards.png", "art/animation/runtime/units/unit_neutral_echodart_casts.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_crystal_sump_curated_art_report.gd", "tests/unit_neutral_crystal_sump_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_sumpstone_guards","unit_neutral_echodart_casts"], "tiers": [3,2], "roles": ["melee","ranged"], "ability_ids": [["shielding"],["volley"]], "shared_army_counts": [6,2], "authored_site_placement_ids": ["dwelling_crystal_sump"], "generated_map_site_ids": ["site_crystal_sump"], "claim_recruits": [2,1], "source_size": [512,512], "other_units_must_remain_byte_exact": 101},
+      "completionCriteria": ["Two distinct transparent sources and all eight deterministic existing-path derivatives own exact provenance", "Live units, dwelling graph, 6/2 watch, authored placement, generated-map projection, explicit Native-RMG proxy absence, rewards, rough chokepoint/fog-bank encounter, BattleBoard resources, session authority, and 112 frames are exact", "Two full 412-asset regenerations, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Content, stats, abilities, costs, growth, balance, AI, dwelling/site/object/encounter/army, reward/recruitment, generated/native mapping, animation timing, save, rendering, or packaging behavior", "Another unit, broad neutral art, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T06:01:01Z",
+      "startedAt": "2026-08-23T06:01:01Z",
+      "completedAt": "2026-08-23T06:28:56Z",
+      "updatedAt": "2026-08-23T06:28:56Z",
+      "notes": "Two original transparent Crystal Sump sources and eight exact existing-path derivatives are live. Focused /tmp/heroes-crystal-focused.FwzCKW proves exact source provenance, unit/content/site/generated-map/native-proxy-absence/session authority, two BattleBoard entries, and 112 visible frames. /tmp/heroes-crystal-repro.3y8lzP proves two complete generator passes byte-exact across 416 paths with 412 derivatives and two manifests. The 15-owner compatibility chain /tmp/heroes-crystal-compat.cy32Lf and final static/editor audit /tmp/heroes-crystal-final-audit.tLqx78 are green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are ok:true. Packaged Crystal Sump interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-saltpan-camp-curated-character-sources-10184",
       "title": "Saltpan Camp Curated Character Sources",
@@ -94855,7 +94875,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_saltpan_camp_curated_character_sources_completed",
+  "result": "art_neutral_crystal_sump_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94956,9 +94976,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Saltpan Camp curated-character slice is completed: original Buckler and Thrower sources, exact deterministic derivatives, focused live authority, reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup validation are green without content/gameplay/native mapping changes or broader release claims.",
+  "summary": "The Crystal Sump curated-character slice is completed: original Guard and Echodart sources, exact deterministic derivatives, focused live authority, reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup validation are green without content/gameplay/native mapping changes or broader release claims.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T05:58:44Z",
+  "updatedAt": "2026-08-23T06:28:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
