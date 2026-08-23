@@ -24,9 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- In-progress implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current product evidence.
+- In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current behavior evidence.
 
-- Previous completed implementation slice: `presentation-mireclaw-legacy-dwelling-specific-icons-10184`. Mireclaw's seven-building legacy recruitment chain now has distinct original Town Build icons across all five authored Mireclaw towns.
+- Previous completed implementation slice: `presentation-mireclaw-complete-authored-town-building-icons-10184`. Mireclaw's final four category fallbacks now use specific original Town Build art, so every building shown in all five authored Mireclaw towns has specific art.
+  id: `presentation-mireclaw-complete-authored-town-building-icons-10184`
+
+  Completion criteria: four distinct deterministic source/runtime pairs for War Drum Circle, Floodtide Forge, Smugglers Flotilla, and Nightglass Dominion; zero category fallbacks across all five authored Mireclaw towns at 1280/1920; 69 specific building icons and 64 exact global category fallbacks; unchanged costs, prerequisites, income, recruitment, market, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the other 64 building illustrations, other factions' Town Build art, prior icon/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
+- Earlier completed implementation slice: `presentation-mireclaw-legacy-dwelling-specific-icons-10184`. Mireclaw's seven-building legacy recruitment chain now has distinct original Town Build icons across all five authored Mireclaw towns.
   id: `presentation-mireclaw-legacy-dwelling-specific-icons-10184`
 
   Completion criteria: seven distinct deterministic source/runtime pairs for Blackbranch Den, Mire Pens, Reed Warren, Slingers Post, Rot Warren, Fenscale Pens, and Gorefen Ring; exact live 1280/1920 resolution; 65 specific building icons and 68 category fallbacks; unchanged costs, prerequisites, upgrade links, recruitment, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
