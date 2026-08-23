@@ -29,6 +29,13 @@ BUILDING_IDS = (
     "building_mireclaw_sporewake_shrine",
     "building_mireclaw_nightglass_dominion",
     "building_mireclaw_antler_pit",
+    "building_sunvault_shard_yard",
+    "building_sunvault_lens_gallery",
+    "building_sunvault_mirror_forge",
+    "building_sunvault_harmonic_cloister",
+    "building_sunvault_zenith_observatory",
+    "building_sunvault_aurora_spire",
+    "building_sunvault_daybreak_matrix",
 )
 
 
