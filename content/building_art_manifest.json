@@ -531,6 +531,69 @@
       "source_sha256": "7326192b1cebd4f24cec319b51308d0f5109eb149c5536c924d6e46e62921015",
       "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_oathmire_court.png",
       "icon_sha256": "8784adf3226dcae08b2ded3583aeef90f647adc9cdc43fc80f508420758df049"
+    },
+    {
+      "id": "building_blackbranch_den",
+      "building_id": "building_blackbranch_den",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_blackbranch_den.png",
+      "source_sha256": "e5523639be53352fbfdc21284cebcef5e8257c6b35bbe3b6bb00b7b0dccdc861",
+      "icon_path": "res://art/towns/runtime/buildings/building_blackbranch_den.png",
+      "icon_sha256": "b050952fc097921c03e226079cefa37b9bb48bc56f69046196376d0a93454114"
+    },
+    {
+      "id": "building_mire_pens",
+      "building_id": "building_mire_pens",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mire_pens.png",
+      "source_sha256": "0978c970eab63b41624497a7d6e88b06142c7bf1ad3b38754492fa2f1908b589",
+      "icon_path": "res://art/towns/runtime/buildings/building_mire_pens.png",
+      "icon_sha256": "fac01ac8d622d2d3f8fce67860aeaa4a77a4e558b1258d86d21b6a3327b195db"
+    },
+    {
+      "id": "building_reed_warren",
+      "building_id": "building_reed_warren",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_reed_warren.png",
+      "source_sha256": "b04b1e5c972598bb66c0afbf394b3227ed46c50ddec65c25a9c7d706938b27ff",
+      "icon_path": "res://art/towns/runtime/buildings/building_reed_warren.png",
+      "icon_sha256": "a8fdf4f3ecd7f7c11493e7d4aa8ff75ade99f87b1d614f450bb051ed6baff693"
+    },
+    {
+      "id": "building_slingers_post",
+      "building_id": "building_slingers_post",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_slingers_post.png",
+      "source_sha256": "b78cbf159d7de471328416802169eb5a87ae178ec20b29ce8d69cb5af529755d",
+      "icon_path": "res://art/towns/runtime/buildings/building_slingers_post.png",
+      "icon_sha256": "d38a03cd709e2c84dd5fa9ab8253f96f19f2c4ba8bc745330837ff55e190c8f1"
+    },
+    {
+      "id": "building_rot_warren",
+      "building_id": "building_rot_warren",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_rot_warren.png",
+      "source_sha256": "c96375e6a39a2bd068685b44b7ba8eaee0a1b2d0dbecd40c82aec669697b7b35",
+      "icon_path": "res://art/towns/runtime/buildings/building_rot_warren.png",
+      "icon_sha256": "ac5ab39697d41087509a8bf0d5b4a276d9ca4a071327208d60f7f3b0cd0c3701"
+    },
+    {
+      "id": "building_fenscale_pens",
+      "building_id": "building_fenscale_pens",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_fenscale_pens.png",
+      "source_sha256": "5b369e3f8da3dd366d6dc1184f2ffe5fd9e895d5663adc54aba53033bc98ed84",
+      "icon_path": "res://art/towns/runtime/buildings/building_fenscale_pens.png",
+      "icon_sha256": "37d52702da5da012db456bcb0df5e949dd63ea2b5c9330154d156260a2039b2d"
+    },
+    {
+      "id": "building_gorefen_ring",
+      "building_id": "building_gorefen_ring",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_gorefen_ring.png",
+      "source_sha256": "51157d1bec4fa881f23478831f806c0f10a42e8535ee41d4d4b816f6e567a567",
+      "icon_path": "res://art/towns/runtime/buildings/building_gorefen_ring.png",
+      "icon_sha256": "191d86ec812e9cc7b94fc8321462e8e2b94178f80b4c69828118704a8f75eac2"
     }
   ]
 }

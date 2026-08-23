@@ -26,6 +26,13 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - In-progress implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current product evidence.
 
+- Previous completed implementation slice: `presentation-mireclaw-legacy-dwelling-specific-icons-10184`. Mireclaw's seven-building legacy recruitment chain now has distinct original Town Build icons across all five authored Mireclaw towns.
+  id: `presentation-mireclaw-legacy-dwelling-specific-icons-10184`
+
+  Completion criteria: seven distinct deterministic source/runtime pairs for Blackbranch Den, Mire Pens, Reed Warren, Slingers Post, Rot Warren, Fenscale Pens, and Gorefen Ring; exact live 1280/1920 resolution; 65 specific building icons and 68 category fallbacks; unchanged costs, prerequisites, upgrade links, recruitment, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the remaining 68 building illustrations, Mireclaw support/economy/civic buildings, prior icon/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
 - Previous completed implementation slice: `presentation-mireclaw-unique-town-landmark-specific-icons-10184`. Mireclaw's live five-building non-unit landmark chain now has complete specific visual ownership across all five authored Mireclaw towns.
   id: `presentation-mireclaw-unique-town-landmark-specific-icons-10184`
 

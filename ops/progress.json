@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Mireclaw's live five-building non-unit landmark chain now has complete specific icon ownership across all five authored Mireclaw towns. The game is not release-ready.",
+  "currentNotes": "Mireclaw's seven-building legacy recruitment chain now has complete specific icon ownership across all five authored towns. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-mireclaw-unique-town-landmark-specific-icons-10184",
-  "currentSliceId": "presentation-mireclaw-unique-town-landmark-specific-icons-10184",
-  "currentSliceNotes": "Completed four exact Mireclaw landmark source/runtime icons while preserving all fifty-four prior icons, 75 category fallbacks, and every building rule.",
+  "currentSlice": "presentation-mireclaw-legacy-dwelling-specific-icons-10184",
+  "currentSliceId": "presentation-mireclaw-legacy-dwelling-specific-icons-10184",
+  "currentSliceNotes": "Completed seven exact source/runtime icons for the legacy Mireclaw recruitment chain while preserving all fifty-eight prior icons, 68 category fallbacks, and every building/recruitment rule.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Unique Town Landmark Specific Icons",
-  "currentSliceUpdatedAt": "2026-08-23T20:58:14Z",
+  "currentSliceTitle": "Mireclaw Legacy Dwelling Specific Icons",
+  "currentSliceUpdatedAt": "2026-08-23T21:18:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all fifty-eight specific icons, all building behavior, and 75 category fallbacks; do not infer release readiness.",
-  "notes": "Mireclaw's production and unique non-unit chains now have specific art; 75 buildings retain category fallback. Release readiness remains unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all sixty-five specific icons, all building/recruitment behavior, and 68 category fallbacks; do not infer release readiness.",
+  "notes": "Mireclaw's seven-building legacy recruitment chain now has specific art; 68 buildings retain category fallback. Release readiness remains unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-mireclaw-legacy-dwelling-specific-icons-10184", "title": "Mireclaw Legacy Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Give the seven-building legacy recruitment chain distinct original icons in every one of Mireclaw's five authored towns.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_{blackbranch_den,mire_pens,reed_warren,slingers_post,rot_warren,fenscale_pens,gorefen_ring}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_mireclaw_legacy_dwelling_building_icon_report.gd", "tests/town_mireclaw_legacy_dwelling_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_blackbranch_den", "building_mire_pens", "building_reed_warren", "building_slingers_post", "building_rot_warren", "building_fenscale_pens", "building_gorefen_ring"], "authored_town_use_count_each": 5, "production_building_count": 133, "existing_specific_icon_count": 58, "category_fallback_count": 75, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Seven distinct legacy-dwelling source/runtime icons with exact provenance", "Sixty-five specific icons and exact category fallback for the other68 buildings", "1280/1920 live presentation and unchanged building/recruitment/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Mireclaw support/economy/civic buildings or the other68 building illustrations", "Building costs/prerequisites/upgrade links/recruitment/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T21:01:58Z", "startedAt": "2026-08-23T21:01:58Z", "completedAt": "2026-08-23T21:18:51Z", "updatedAt": "2026-08-23T21:18:51Z", "notes": "Completed seven distinct original source/runtime icons, a sixty-five-row deterministic manifest with 68 exact fallbacks, focused 1280/1920 presentation, Mireclaw/shared/economy/category/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged Town Build interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-mireclaw-unique-town-landmark-specific-icons-10184", "title": "Mireclaw Unique Town Landmark Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Complete distinct original icon ownership for Mireclaw's live non-unit town identity chain across its five authored towns.",
