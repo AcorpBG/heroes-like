@@ -66,7 +66,7 @@ func _catalog_contract() -> Dictionary:
 			fallback_count += 1
 			fallback_exact = fallback_exact and TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)
 	return {
-		"ok": target_count == _target_building_ids().size() and specific_count == 121 and fallback_count == 12 and fallback_exact and source_hashes.size() == _target_building_ids().size() and icon_hashes.size() == _target_building_ids().size() and icon_paths.size() == _target_building_ids().size() and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
+		"ok": target_count == _target_building_ids().size() and specific_count == 133 and fallback_count == 0 and fallback_exact and source_hashes.size() == _target_building_ids().size() and icon_hashes.size() == _target_building_ids().size() and icon_paths.size() == _target_building_ids().size() and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
 		"target_count": target_count,
 		"specific_count": specific_count,
 		"fallback_count": fallback_count,
@@ -108,17 +108,16 @@ func _live_case(viewport_size: Vector2i) -> Dictionary:
 		var building_id := TownRules.building_id_for_action(String(actions[index].get("id", "")))
 		var button: Button = buttons[index]
 		live_exact = live_exact and button.icon != null and button.icon.resource_path == TownRules.building_icon_path(building_id)
-	var fallback_id := "building_veilmourn_bell_chain_watch"
-	var fallback_button := Button.new()
-	shell._apply_build_action_icon(fallback_button, {"id": "build:%s" % fallback_id})
-	var fallback_exact := fallback_button.icon != null and fallback_button.icon.resource_path == TownRules.building_category_icon_path(fallback_id)
-	fallback_button.free()
+	var all_production_specific := true
+	for building_id in ContentService.get_content_ids(ContentService.BUILDINGS_PATH):
+		var art: Dictionary = ContentService.get_building_art(building_id)
+		all_production_specific = all_production_specific and not art.is_empty() and TownRules.building_icon_path(building_id) == String(art.get("icon_path", "")) and TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)
 	var invalid_button := Button.new()
 	shell._apply_build_action_icon(invalid_button, {"id": "build:missing_building"})
 	var invalid_fail_closed := invalid_button.icon == null
 	invalid_button.free()
 	var authority_exact := session.to_dict() == before and int(session.save_version) == SessionStateStore.SAVE_VERSION
-	var result := {"ok": get_window().size == viewport_size and direct_icons_exact and live_exact and fallback_exact and invalid_fail_closed and authority_exact, "viewport_size": viewport_size, "direct_icons_exact": direct_icons_exact, "live_exact": live_exact, "fallback_exact": fallback_exact, "invalid_fail_closed": invalid_fail_closed, "authority_exact": authority_exact}
+	var result := {"ok": get_window().size == viewport_size and direct_icons_exact and live_exact and all_production_specific and invalid_fail_closed and authority_exact, "viewport_size": viewport_size, "direct_icons_exact": direct_icons_exact, "live_exact": live_exact, "all_production_specific": all_production_specific, "invalid_fail_closed": invalid_fail_closed, "authority_exact": authority_exact}
 	shell.queue_free()
 	await get_tree().process_frame
 	SessionState.reset_session()

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Thornwake Town Build art slice is completed: Graftroot Caravan and Rootgate Nursery now use specific original icons for all authored buildings. Select the next tracker-approved source-backed slice; the game is not release-ready.",
+  "currentNotes": "The Veilmourn Town Build art slice is completed: Bellwake Harbor and Fogchart Mooring now use specific original icons, and all 133 production buildings have specific art. Select the next tracker-approved source-backed slice; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-thornwake-complete-authored-town-building-icons-10184",
-  "currentSliceId": "presentation-thornwake-complete-authored-town-building-icons-10184",
-  "currentSliceNotes": "Completed 14 distinct original source/runtime icons and a 121-row deterministic manifest with 12 exact category fallbacks. Both authored Thornwake towns have zero fallback icons at 1280/1920; adjacent faction/category/payoff/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town Build interaction and release readiness remain unclaimed.",
+  "currentSlice": "presentation-veilmourn-complete-authored-town-building-icons-10184",
+  "currentSliceId": "presentation-veilmourn-complete-authored-town-building-icons-10184",
+  "currentSliceNotes": "Completed 12 distinct original source/runtime icons and a 133-row deterministic manifest with zero category fallbacks. Both authored Veilmourn towns and every production building are specific at 1280/1920; all-faction/category/payoff/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town Build interaction and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Complete Authored Town Building Icons",
-  "currentSliceUpdatedAt": "2026-08-23T23:23:45Z",
+  "currentSliceTitle": "Veilmourn Complete Authored Town Building Icons",
+  "currentSliceUpdatedAt": "2026-08-23T23:47:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 121-icon catalog and do not infer release readiness from bounded local and packaging startup gates.",
-  "notes": "Thornwake's two authored towns now have complete specific Town Build art. The focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 133-icon catalog and do not infer release readiness from bounded local and packaging startup gates.",
+  "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-veilmourn-complete-authored-town-building-icons-10184", "title": "Veilmourn Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Complete faction-wide specific Town Build art across every building shown in Veilmourn's two authored towns and remove the final production category fallbacks.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_veilmourn_{bell_chain_watch,black_sail_loft,drowned_admiralty,drowned_map_room,fog_signal_buoys,memory_anchor,memory_rite_court,mourner_pilot_guild,salt_counting_house,saltwake_factor,tideglass_chapel,wake_oratory}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_veilmourn_complete_authored_building_icon_report.gd", "tests/town_veilmourn_complete_authored_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_veilmourn_bell_chain_watch", "building_veilmourn_black_sail_loft", "building_veilmourn_drowned_admiralty", "building_veilmourn_drowned_map_room", "building_veilmourn_fog_signal_buoys", "building_veilmourn_memory_anchor", "building_veilmourn_memory_rite_court", "building_veilmourn_mourner_pilot_guild", "building_veilmourn_salt_counting_house", "building_veilmourn_saltwake_factor", "building_veilmourn_tideglass_chapel", "building_veilmourn_wake_oratory"], "authored_veilmourn_town_count": 2, "bellwake_harbor_fallback_count": 12, "fogchart_mooring_fallback_count": 12, "remaining_veilmourn_unique_fallback_count": 12, "authored_scenario_placement_count": 3, "player_owned_placement_count": 2, "production_building_count": 133, "existing_specific_icon_count": 121, "category_fallback_count": 12, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Twelve distinct final Veilmourn authored-building source/runtime icons with exact provenance", "Both authored Veilmourn towns and all one hundred thirty-three production buildings have zero category fallbacks", "1280/1920 live presentation and unchanged building/economy/recruitment/magic/capital/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Prior building illustrations or resolver behavior", "Building costs/prerequisites/income/recruitment/magic/capital/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T23:25:14Z", "startedAt": "2026-08-23T23:25:14Z", "completedAt": "2026-08-23T23:47:38Z", "updatedAt": "2026-08-23T23:47:38Z", "notes": "Completed 12 distinct original source/runtime icons and the full 133-row deterministic building-art manifest with zero category fallbacks. Focused 1280/1920 Town presentation passes for Bellwake Harbor and Fogchart Mooring with every production id specific; all-faction/category/payoff/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Town Build interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-thornwake-complete-authored-town-building-icons-10184", "title": "Thornwake Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Complete faction-wide specific Town Build art across every building shown in Thornwake's two authored towns.",

@@ -136,6 +136,18 @@ BUILDING_IDS = (
     "building_thornwake_thornwarden_husk_yard",
     "building_thornwake_old_grove_accord",
     "building_thornwake_verdant_concord_seat",
+    "building_veilmourn_bell_chain_watch",
+    "building_veilmourn_black_sail_loft",
+    "building_veilmourn_drowned_admiralty",
+    "building_veilmourn_drowned_map_room",
+    "building_veilmourn_fog_signal_buoys",
+    "building_veilmourn_memory_anchor",
+    "building_veilmourn_memory_rite_court",
+    "building_veilmourn_mourner_pilot_guild",
+    "building_veilmourn_salt_counting_house",
+    "building_veilmourn_saltwake_factor",
+    "building_veilmourn_tideglass_chapel",
+    "building_veilmourn_wake_oratory",
 )
 
 
