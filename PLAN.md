@@ -26,6 +26,13 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current product evidence.
 
+- Previous completed implementation slice: `presentation-sunvault-production-dwelling-specific-icons-10184`. The live building-art manifest now gives Sunvault's exact seven-tier production ladder distinct original icons while preserving the completed resolver and all untargeted category fallbacks.
+  id: `presentation-sunvault-production-dwelling-specific-icons-10184`
+
+  Completion criteria: seven distinct original source/runtime pairs with exact deterministic provenance; live 1280/1920 production resolution for Shard Yard through Daybreak Colossus Matrix; exact preservation of the existing fourteen icons, 112 category fallbacks, building/gameplay/session/save authority, compatibility, static/editor, and bounded Linux/Windows startup gates.
+
+  Non-goals: the other 112 buildings, prior art/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
 - Previous completed implementation slice: `presentation-mireclaw-production-dwelling-specific-icons-10184`. The live building-art manifest now gives Mireclaw's exact seven-tier production ladder distinct original icons while retaining the completed resolver and category fallback for every untargeted building.
   id: `presentation-mireclaw-production-dwelling-specific-icons-10184`
 

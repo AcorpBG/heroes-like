@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Mireclaw's seven production dwellings now own distinct original icons through the completed fail-closed building-art resolver. Focused, compatibility, static/editor, and bounded platform startup gates pass; the game is not release-ready.",
+  "currentNotes": "Sunvault's seven production buildings now own distinct original icons through the completed fail-closed resolver. Focused, compatibility, static/editor, and bounded platform gates pass; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-mireclaw-production-dwelling-specific-icons-10184",
-  "currentSliceId": "presentation-mireclaw-production-dwelling-specific-icons-10184",
-  "currentSliceNotes": "Completed seven exact Mireclaw source/runtime icons while preserving the resolver, all Embercourt assets, 119 category fallbacks, and all building/gameplay authority.",
+  "currentSlice": "presentation-sunvault-production-dwelling-specific-icons-10184",
+  "currentSliceId": "presentation-sunvault-production-dwelling-specific-icons-10184",
+  "currentSliceNotes": "Completed seven exact Sunvault source/runtime icons while preserving all fourteen prior icons, 112 category fallbacks, and all building/gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Production Dwelling Specific Icons",
-  "currentSliceUpdatedAt": "2026-08-23T19:27:00Z",
+  "currentSliceTitle": "Sunvault Production Dwelling Specific Icons",
+  "currentSliceUpdatedAt": "2026-08-23T19:39:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all fourteen specific icons and 119 category fallbacks; do not infer release readiness.",
-  "notes": "Embercourt and Mireclaw production ladders now have fourteen distinct original icons; 119 buildings retain category fallback. Packaged interaction and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all twenty-one specific icons and 112 category fallbacks; do not infer release readiness.",
+  "notes": "Embercourt, Mireclaw, and Sunvault production ladders now have twenty-one distinct original icons; 112 buildings retain category fallback. Release readiness remains unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-sunvault-production-dwelling-specific-icons-10184", "title": "Sunvault Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Give Sunvault's seven production buildings distinct original live Town Build icons through the completed data-driven resolver.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_sunvault_*.png", "art/towns/runtime/buildings/building_sunvault_*.png", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_sunvault_production_dwelling_icon_report.gd", "tests/town_sunvault_production_dwelling_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_sunvault_shard_yard", "building_sunvault_lens_gallery", "building_sunvault_mirror_forge", "building_sunvault_harmonic_cloister", "building_sunvault_zenith_observatory", "building_sunvault_aurora_spire", "building_sunvault_daybreak_matrix"], "production_building_count": 133, "existing_specific_icon_count": 14, "category_fallback_count": 119, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Seven distinct original Sunvault sources and deterministic runtime icons own exact manifest provenance", "Existing production resolver selects all twenty-one specific icons and retains exact category fallback for the other112 buildings", "1280/1920 live presentation, authority, reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other112 buildings, completed art/resolver changes, building/gameplay/economy/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T19:28:20Z", "startedAt": "2026-08-23T19:28:20Z", "completedAt": "2026-08-23T19:39:30Z", "updatedAt": "2026-08-23T19:39:30Z", "notes": "Completed seven distinct Sunvault source/runtime icons, exact twenty-one-row manifest ownership, 112 category fallbacks, focused 1280/1920 presentation, compatibility/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-mireclaw-production-dwelling-specific-icons-10184", "title": "Mireclaw Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Give Mireclaw's seven production dwellings distinct original live Town Build icons through the completed data-driven resolver.",
