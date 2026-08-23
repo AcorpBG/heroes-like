@@ -324,6 +324,69 @@
       "source_sha256": "40c373cc4f8a2117f1222d852fe0d46b6ce5279bd77ed034110d1bcc7988c5a0",
       "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_titan_charter_hall.png",
       "icon_sha256": "95f69e8965d7ec4b62f3c65be126f1c364396e0dfaa971c78cdac279dd459b70"
+    },
+    {
+      "id": "building_veilmourn_bell_harbor",
+      "building_id": "building_veilmourn_bell_harbor",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_bell_harbor.png",
+      "source_sha256": "caf7521986d4d57499fbe6a34b52cb93885a84abbe204a221b11cbcc3aeb78bc",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_bell_harbor.png",
+      "icon_sha256": "564d5fa1a227322aa21e3f28c486a64673607a266a591dfbdd33aecda81bb598"
+    },
+    {
+      "id": "building_veilmourn_ransom_exchange",
+      "building_id": "building_veilmourn_ransom_exchange",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_ransom_exchange.png",
+      "source_sha256": "6c937e2f28bcca0cdb309e9ca5437178373611ecd3279753422ed560eae4361f",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_ransom_exchange.png",
+      "icon_sha256": "44d60e119654938bc1898f6e944305909f76221be6402a3ff71bf17264160ccd"
+    },
+    {
+      "id": "building_veilmourn_mirror_drydock",
+      "building_id": "building_veilmourn_mirror_drydock",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mirror_drydock.png",
+      "source_sha256": "9d884692f48c6f699af9bc64301debd749fb08874b3b6746b0bb3f6eef0bb87c",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mirror_drydock.png",
+      "icon_sha256": "0b097f071e090afc9d63f791bc2a3093092dfeda08b2654a7337cd75255e7248"
+    },
+    {
+      "id": "building_veilmourn_harpoon_gantry",
+      "building_id": "building_veilmourn_harpoon_gantry",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_harpoon_gantry.png",
+      "source_sha256": "1f19756e77c5cfd9c37086cd07923bda7cdb005f98035fa03d7d0fec682ee0ec",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_harpoon_gantry.png",
+      "icon_sha256": "d44283a9b89e8782b399effb96b39ece645bc841aa8ed459d34f8d2efd568b8b"
+    },
+    {
+      "id": "building_veilmourn_obituary_vault",
+      "building_id": "building_veilmourn_obituary_vault",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_obituary_vault.png",
+      "source_sha256": "1fd2b5537be9b8ef98eb6d892547f73f794fdcf91ca1a560b3b87b0de033d3ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_obituary_vault.png",
+      "icon_sha256": "46c73a9424a30d69d3c0189ff2be19e336c04c0fdbfc32959808e592b66b90a4"
+    },
+    {
+      "id": "building_veilmourn_mistgate_slip",
+      "building_id": "building_veilmourn_mistgate_slip",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mistgate_slip.png",
+      "source_sha256": "983d9dd95013a9f07d3b9fda8769c3c26131c0a8293aaf1ed2a106c3c7794b54",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mistgate_slip.png",
+      "icon_sha256": "8a05f3b6fc85bb7823b04273737f6462692a214918560ab614fe173e87df56ef"
+    },
+    {
+      "id": "building_veilmourn_leviathan_sounding",
+      "building_id": "building_veilmourn_leviathan_sounding",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_leviathan_sounding.png",
+      "source_sha256": "c0fb5111c28fc0ad0fc06eed3c23be167a41c10a4058e32a0c3df92d4ca25b9d",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_leviathan_sounding.png",
+      "icon_sha256": "f2bfdc9b434b783fe57717c7f6df3b38651cfea9aacfc715d78b2557fc329dad"
     }
   ]
 }

@@ -50,6 +50,13 @@ BUILDING_IDS = (
     "building_brasshollow_pressure_rail",
     "building_brasshollow_crucible_dock",
     "building_brasshollow_titan_charter_hall",
+    "building_veilmourn_bell_harbor",
+    "building_veilmourn_ransom_exchange",
+    "building_veilmourn_mirror_drydock",
+    "building_veilmourn_harpoon_gantry",
+    "building_veilmourn_obituary_vault",
+    "building_veilmourn_mistgate_slip",
+    "building_veilmourn_leviathan_sounding",
 )
 
 
