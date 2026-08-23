@@ -1032,7 +1032,10 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_frostbeacon_pikes.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_frostbeacon_pikes.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_frostbeacon_pikes.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_frostbeacon_pikes.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_frostbeacon_pikes.png",
+      "curated_source_sha256": "c785b013c35e96e1c808a6704318aa5fa3cb3c5be930680d332fa3c05f1b5d8e"
     },
     {
       "id": "unit_neutral_snowglass_markers",
@@ -1044,7 +1047,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_snowglass_markers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_snowglass_markers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_snowglass_markers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_snowglass_markers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_snowglass_markers.png",
+      "curated_source_sha256": "8177175e3b32c805c907844949e3cbab3f5d4906258a83cbb85cc6119f7d6e90"
     },
     {
       "id": "unit_neutral_orchard_halberds",
