@@ -30,14 +30,14 @@ func _run() -> void:
 			return
 	get_window().size = original_window_size
 	await get_tree().process_frame
-	print("TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT %s" % JSON.stringify({"ok": true, "catalog": catalog, "rows": rows}))
+	print("%s %s" % [_report_marker(), JSON.stringify({"ok": true, "catalog": catalog, "rows": rows})])
 	get_tree().quit(0)
 
 func _catalog_contract() -> Dictionary:
 	var source_hashes := []
 	var icon_hashes := []
 	var icon_paths := []
-	for building_id in TARGET_BUILDING_IDS:
+	for building_id in _target_building_ids():
 		var art: Dictionary = ContentService.get_building_art(building_id)
 		var source_path := String(art.get("source_path", ""))
 		var icon_path := String(art.get("icon_path", ""))
@@ -55,16 +55,20 @@ func _catalog_contract() -> Dictionary:
 		icon_paths.append(icon_path)
 	var fallback_exact := true
 	var target_count := 0
+	var specific_count := 0
 	var fallback_count := 0
 	for building_id in ContentService.get_content_ids(ContentService.BUILDINGS_PATH):
-		if building_id in TARGET_BUILDING_IDS:
-			target_count += 1
+		if not ContentService.get_building_art(building_id).is_empty():
+			specific_count += 1
+			if building_id in _target_building_ids():
+				target_count += 1
 		else:
 			fallback_count += 1
 			fallback_exact = fallback_exact and TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)
 	return {
-		"ok": target_count == 7 and fallback_count == 126 and fallback_exact and source_hashes.size() == 7 and icon_hashes.size() == 7 and icon_paths.size() == 7 and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
+		"ok": target_count == 7 and specific_count == 14 and fallback_count == 119 and fallback_exact and source_hashes.size() == 7 and icon_hashes.size() == 7 and icon_paths.size() == 7 and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
 		"target_count": target_count,
+		"specific_count": specific_count,
 		"fallback_count": fallback_count,
 		"fallback_exact": fallback_exact,
 		"source_hashes": source_hashes,
@@ -87,7 +91,7 @@ func _live_case(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var direct_icons_exact := true
-	for building_id in TARGET_BUILDING_IDS:
+	for building_id in _target_building_ids():
 		var button := Button.new()
 		shell._apply_build_action_icon(button, {"id": "build:%s" % building_id})
 		direct_icons_exact = direct_icons_exact and button.icon != null and button.icon.resource_path == TownRules.building_icon_path(building_id) and button.expand_icon and button.get_theme_constant("icon_max_width") == 24
@@ -126,6 +130,12 @@ func _unique(values: Array) -> bool:
 	for value in values:
 		seen[value] = true
 	return seen.size() == values.size()
+
+func _target_building_ids() -> Array:
+	return TARGET_BUILDING_IDS
+
+func _report_marker() -> String:
+	return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"
 
 func _first_player_town(session) -> Dictionary:
 	for town in session.overworld.get("towns", []):

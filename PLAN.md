@@ -24,7 +24,17 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current product evidence; do not infer whole-game or release readiness from this completed building-art slice.
+- In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current product evidence.
+
+- Previous completed implementation slice: `presentation-mireclaw-production-dwelling-specific-icons-10184`. The live building-art manifest now gives Mireclaw's exact seven-tier production ladder distinct original icons while retaining the completed resolver and category fallback for every untargeted building.
+  id: `presentation-mireclaw-production-dwelling-specific-icons-10184`
+
+  Completion criteria:
+  - Blackbranch Den, Mudglass Drum Circle, Bogplate Floodtide Forge, Chainboom Ferry, Sporewake Shrine, Gorefen Nightglass Dominion, and Antler Pit each own one distinct original source and deterministic runtime icon with exact manifest provenance;
+  - all seven resolve through the existing production building-icon path while the other 119 untargeted buildings retain category fallback, with no building/gameplay/content-field mutation;
+  - focused 1280/1920 live Town presentation, byte-exact regeneration, Town/core compatibility, repository/editor validation, and bounded Linux/Windows export-startup gates pass.
+
+  Non-goals: the other 119 buildings, changes to the completed Embercourt assets/resolver, mechanics/economy/balance/AI/save/layout changes, packaged interaction, hardware/accessibility certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
 
 - Previous completed implementation slice: `presentation-embercourt-production-dwelling-specific-icons-10184`. A data-driven building-art manifest and fail-closed TownRules resolver now give Muster Yard, Bowyer Lodge, Bargebow Slip, Oath Pikehall, Beacon Court, Drake Sluice, and Charter Colossus Bastion distinct original icons in the live Town Build list. The other 126 buildings retain their exact category sigils, and building identity, costs, prerequisites, ordering, construction consequences, session/save authority, and the completed category-icon path remain unchanged. Deterministic regeneration, focused 1280/1920 presentation, Town/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
   id: `presentation-embercourt-production-dwelling-specific-icons-10184`

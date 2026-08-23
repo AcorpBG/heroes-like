@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Seven Embercourt production dwellings now own distinct original icons through a deterministic manifest and fail-closed production resolver. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass; the game is not release-ready.",
+  "currentNotes": "Mireclaw's seven production dwellings now own distinct original icons through the completed fail-closed building-art resolver. Focused, compatibility, static/editor, and bounded platform startup gates pass; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-embercourt-production-dwelling-specific-icons-10184",
-  "currentSliceId": "presentation-embercourt-production-dwelling-specific-icons-10184",
-  "currentSliceNotes": "Completed the exact seven-building source/runtime scope. All 126 untargeted buildings retain category fallback, live 1280/1920 presentation and construction authority are exact, deterministic regeneration and compatibility gates pass, and platform evidence is bounded to export/startup.",
+  "currentSlice": "presentation-mireclaw-production-dwelling-specific-icons-10184",
+  "currentSliceId": "presentation-mireclaw-production-dwelling-specific-icons-10184",
+  "currentSliceNotes": "Completed seven exact Mireclaw source/runtime icons while preserving the resolver, all Embercourt assets, 119 category fallbacks, and all building/gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Production Dwelling Specific Icons",
-  "currentSliceUpdatedAt": "2026-08-23T19:10:10Z",
+  "currentSliceTitle": "Mireclaw Production Dwelling Specific Icons",
+  "currentSliceUpdatedAt": "2026-08-23T19:27:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve the completed seven-building icon resolver and all category fallbacks; do not infer release readiness from local export/startup success.",
-  "notes": "Seven Embercourt production dwellings now have distinct original icon ownership. The five completed category sigils remain the fallback for all 126 untargeted buildings and invalid mappings; packaged interaction and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all fourteen specific icons and 119 category fallbacks; do not infer release readiness.",
+  "notes": "Embercourt and Mireclaw production ladders now have fourteen distinct original icons; 119 buildings retain category fallback. Packaged interaction and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-mireclaw-production-dwelling-specific-icons-10184", "title": "Mireclaw Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Give Mireclaw's seven production dwellings distinct original live Town Build icons through the completed data-driven resolver.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_mireclaw_blackbranch_den.png", "art/towns/source/buildings/curated/building_mireclaw_war_drum_circle.png", "art/towns/source/buildings/curated/building_mireclaw_floodtide_forge.png", "art/towns/source/buildings/curated/building_mireclaw_chainboom_ferry.png", "art/towns/source/buildings/curated/building_mireclaw_sporewake_shrine.png", "art/towns/source/buildings/curated/building_mireclaw_nightglass_dominion.png", "art/towns/source/buildings/curated/building_mireclaw_antler_pit.png", "art/towns/runtime/buildings/*.png", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_mireclaw_production_dwelling_icon_report.gd", "tests/town_mireclaw_production_dwelling_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_mireclaw_blackbranch_den", "building_mireclaw_war_drum_circle", "building_mireclaw_floodtide_forge", "building_mireclaw_chainboom_ferry", "building_mireclaw_sporewake_shrine", "building_mireclaw_nightglass_dominion", "building_mireclaw_antler_pit"], "production_building_count": 133, "existing_specific_icon_count": 7, "category_fallback_count": 126, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Seven distinct original Mireclaw sources and deterministic runtime icons own exact manifest provenance", "Existing production resolver selects all fourteen specific icons and retains exact category fallback for the other119 buildings", "1280/1920 live presentation, authority, reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other119 buildings, Embercourt art/resolver changes, building/gameplay/economy/balance/AI/save/layout changes", "Packaged interaction, hardware/accessibility certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T19:12:00Z", "startedAt": "2026-08-23T19:12:00Z", "completedAt": "2026-08-23T19:27:00Z", "updatedAt": "2026-08-23T19:27:00Z", "notes": "Completed seven distinct Mireclaw source/runtime icons, exact fourteen-row manifest ownership, 119 category fallbacks, focused 1280/1920 presentation, compatibility/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-embercourt-production-dwelling-specific-icons-10184", "title": "Embercourt Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Add a data-driven building-specific icon resolver to the live Town Build list and replace the shared dwelling/category sigil on Embercourt's seven production dwelling tiers with distinct original assets.",
