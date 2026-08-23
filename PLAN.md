@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-frontier-finale-seren-curated-portrait-10184`. One original painterly starseer source now replaces the generator-only portrait for Seren Valechant, Embercourt commander of Frontier Claims finale Charter Bastion Counterseal. Exact provenance, all 59 non-target portrait bytes, finale/campaign/hero/save/UI/gameplay authority, focused 1280/1920 live surfaces, reproducibility, campaign compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-frontier-finale-seren-curated-portrait-10184`
+
+  Completion criteria:
+  - one original square source establishes Seren as an archive-bred Embercourt route-and-salvage starseer, with exact provenance and deterministic 384x512 runtime portrait;
+  - Frontier Claims/Charter Bastion Counterseal selection plus save-resume, Overworld, Town, Battle, and Outcome surfaces retain the exact hero path and every hero/campaign/gameplay field;
+  - exactly one source, one runtime portrait, and one manifest record change; the other 59 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: another hero, hero/content/rule/balance/AI changes, campaign/scenario/generated-map behavior, hero stats/spells/specialties/traits/cost, portrait path or UI layout changes, save schema, Overworld sprites, other art domains, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-frontier-commanders-kessa-neral-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Kessa Chainboom, Mireclaw commander of Frontier Claims chapter seven, and Neral Glasswind, Sunvault commander of chapter eight. Exact provenance, all 58 non-target portrait bytes, chapter/campaign/hero/save/UI/gameplay authority, focused 1280/1920 live surfaces, reproducibility, campaign compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-frontier-commanders-kessa-neral-curated-portraits-10184`
 
