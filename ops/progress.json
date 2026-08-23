@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Six original curated roster-adept sources and deterministic existing-path portraits are live with exact skirmish, tavern, save, and runtime-surface authority. Select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Six original curated roster-sage sources and deterministic existing-path portraits are live with exact skirmish, tavern, save, and runtime-surface authority. Select the next tracker-approved source-backed implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-six-faction-roster-adepts-curated-portraits-10184",
-  "currentSliceId": "art-six-faction-roster-adepts-curated-portraits-10184",
-  "currentSliceNotes": "Orra, Brakka, Dovan, Osmund, Vellum, and Morwen now have distinct original curated sources and deterministic 384x512 portraits with exact roster, content, gameplay, and live-surface authority; bounded Linux and Windows export/startup gates pass.",
+  "currentSlice": "art-six-faction-roster-sages-curated-portraits-10184",
+  "currentSliceId": "art-six-faction-roster-sages-curated-portraits-10184",
+  "currentSliceNotes": "Belis, Nix, Renn, Elian, Odrik, and Thir now have distinct original curated sources and deterministic 384x512 portraits with exact roster, content, gameplay, and live-surface authority; bounded Linux and Windows export/startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six-Faction Curated Roster Adepts",
-  "currentSliceUpdatedAt": "2026-08-23T13:55:53Z",
+  "currentSliceTitle": "Six-Faction Curated Roster Sages",
+  "currentSliceUpdatedAt": "2026-08-23T14:19:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,19 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; preserve the completed roster-adept portrait authority and do not infer release readiness.",
-  "notes": "Six-faction roster adept portrait curation is complete as shipped roster-art breadth through live skirmish/tavern/save/runtime surfaces. This does not claim hero/content/rule/balance/AI changes, packaged portrait interaction, certification, Native-RMG parity, or release readiness.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; preserve the completed roster-sage portrait authority and do not infer release readiness.",
+  "notes": "Six-faction roster sage portrait curation is complete as shipped roster-art breadth through live skirmish/tavern/save/runtime surfaces. This does not claim hero/content/rule/balance/AI changes, packaged portrait interaction, certification, Native-RMG parity, or release readiness.",
   "plannedSlices": [
+    {
+      "id": "art-six-faction-roster-sages-curated-portraits-10184", "title": "Six-Faction Curated Roster Sages", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace the next generator-only live roster hero in every faction with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_embercourt_belis_rainledger.png", "art/heroes/source/curated/hero_mireclaw_nix_votivejaw.png", "art/heroes/source/curated/hero_sunvault_renn_facetlane.png", "art/heroes/source/curated/hero_thornwake_elian_loamchant.png", "art/heroes/source/curated/hero_brasshollow_odrik_heatpriest.png", "art/heroes/source/curated/hero_veilmourn_thir_obituaryink.png", "art/heroes/portraits/hero_embercourt_belis_rainledger.png", "art/heroes/portraits/hero_mireclaw_nix_votivejaw.png", "art/heroes/portraits/hero_sunvault_renn_facetlane.png", "art/heroes/portraits/hero_thornwake_elian_loamchant.png", "art/heroes/portraits/hero_brasshollow_odrik_heatpriest.png", "art/heroes/portraits/hero_veilmourn_thir_obituaryink.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/six_faction_roster_sages_curated_portrait_report.gd", "tests/six_faction_roster_sages_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_embercourt_belis_rainledger","hero_mireclaw_nix_votivejaw","hero_sunvault_renn_facetlane","hero_thornwake_elian_loamchant","hero_brasshollow_odrik_heatpriest","hero_veilmourn_thir_obituaryink"], "faction_ids": ["faction_embercourt","faction_mireclaw","faction_sunvault","faction_thornwake","faction_brasshollow","faction_veilmourn"], "roster_indices": [8,6,6,7,6,6], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 54, "old_portrait_sha256": ["fd65a9cad1ae093b73c3949107ed9c0219816f73ee61bb2f0bc37d752a8d11f3","353fced127c2d2e1802834fee48c01a21c42f56221cb4ee40b6b2d7fbea853f7","7563b3259bf6598ae3eb54f50e86fb1d89a8721afd14ca24e61584442b4cd80a","08b48bed50637a74f7bb9a9bf90a08cc31a7cd32d1fa520758667fa772271271","67f6306bedb8641b85721e7a6e5a1c984df4a4d8f7d43d8ef52c5c49adf96a5e","2d3e7d54ebae9dbff83fe5e17cc5ee016b4be169667a0d3be7873e176b28e70e"]},
+      "completionCriteria": ["Six original square sources and deterministic 384x512 portraits own exact provenance and distinct faction/role identity", "Skirmish/tavern/save/Overworld/Town/Battle/Outcome surfaces retain exact paths, faction roster order, and hero/content/gameplay authority", "Only six sources, six runtime portraits, and six manifest records change; 54 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Campaign/scenario ownership, any other hero or content/rule/balance/AI behavior", "Roster order/recruitment policy, portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T14:02:00Z", "startedAt": "2026-08-23T14:02:00Z", "updatedAt": "2026-08-23T14:19:28Z", "completedAt": "2026-08-23T14:19:28Z", "notes": "Six original sources and deterministic runtime portraits are live. Focused /tmp/heroes-roster-sages-focused.keAdoa proves exact roster/content/tavern/runtime surfaces at 1280/1920. Repro /tmp/heroes-roster-sages-repro.HlWBaL proves two byte-identical generations and 54 non-target portraits exact to HEAD 7dc84477. Compatibility /tmp/heroes-roster-sages-compat.fjbcdQ and static/editor /tmp/heroes-roster-sages-static.xNp1uS pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.", "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-six-faction-roster-adepts-curated-portraits-10184",
       "title": "Six-Faction Curated Roster Adepts",
@@ -95153,7 +95163,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_six_faction_roster_adepts_curated_portraits_completed",
+  "result": "art_six_faction_roster_sages_curated_portraits_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -95254,9 +95264,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Six-faction roster adept portrait curation is complete with six original live sources, deterministic existing-path portraits, exact roster/content/gameplay authority, all 54 non-target portraits byte-exact, and focused, reproducibility, compatibility, static/editor, Linux, and Windows startup gates green.",
+  "summary": "Six-faction roster sage portrait curation is complete with six original live sources, deterministic existing-path portraits, exact roster/content/gameplay authority, all 54 non-target portraits byte-exact, and focused, reproducibility, compatibility, static/editor, Linux, and Windows startup gates green.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T13:55:53Z",
+  "updatedAt": "2026-08-23T14:19:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

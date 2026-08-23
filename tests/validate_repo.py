@@ -309,6 +309,8 @@ SIX_FACTION_ROSTER_SPECIALISTS_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tes
 SIX_FACTION_ROSTER_SPECIALISTS_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "six_faction_roster_specialists_curated_portrait_report.tscn"
 SIX_FACTION_ROSTER_ADEPTS_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "six_faction_roster_adepts_curated_portrait_report.gd"
 SIX_FACTION_ROSTER_ADEPTS_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "six_faction_roster_adepts_curated_portrait_report.tscn"
+SIX_FACTION_ROSTER_SAGES_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "six_faction_roster_sages_curated_portrait_report.gd"
+SIX_FACTION_ROSTER_SAGES_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "six_faction_roster_sages_curated_portrait_report.tscn"
 SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH = ROOT / "tests" / "save_load_confidence_visual_smoke.gd"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
@@ -42320,6 +42322,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         SIX_FACTION_ROSTER_SPECIALISTS_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         SIX_FACTION_ROSTER_ADEPTS_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
         SIX_FACTION_ROSTER_ADEPTS_CURATED_PORTRAIT_REPORT_SCENE_PATH,
+        SIX_FACTION_ROSTER_SAGES_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
+        SIX_FACTION_ROSTER_SAGES_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH,
     )
     for path in required_paths:
@@ -42668,13 +42672,19 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
             "source_sha256": "c5a70609478b4c00269ea1252ab4d0f1ed898e5473f50b6eba16450e3df14138",
             "portrait_sha256": "1ec89232c4f1ad2a88182c99ee22a50423d31663f77d3994deae6d1ee914db80",
         },
+        "hero_embercourt_belis_rainledger": {"name": "Belis Rainledger", "faction_id": "faction_embercourt", "archetype": "granary", "source_path": "res://art/heroes/source/curated/hero_embercourt_belis_rainledger.png", "source_sha256": "5a50f7eaf88136e4f5105a52202558e67e5d37de54e208a19d1a14a1719c5c33", "portrait_sha256": "e1294be02a0a20f9fc91a8f28491e4c5119beca9c61e5cd9fed68d068ffb6f54"},
+        "hero_mireclaw_nix_votivejaw": {"name": "Nix Votivejaw", "faction_id": "faction_mireclaw", "archetype": "shrinebiter", "source_path": "res://art/heroes/source/curated/hero_mireclaw_nix_votivejaw.png", "source_sha256": "299d9d06370cbffcf1de5b1813f2500177aface1151d2543aa5a25960f73536b", "portrait_sha256": "71955facb9b40fc1ae93c4c050b81985d77e5134bde3f50a60f0647211ce01be"},
+        "hero_sunvault_renn_facetlane": {"name": "Renn Facetlane", "faction_id": "faction_sunvault", "archetype": "duelline", "source_path": "res://art/heroes/source/curated/hero_sunvault_renn_facetlane.png", "source_sha256": "39809ba6e78d6c73dd5a3ab60d24c55644ed32b84c9199b6297b3850a87c4576", "portrait_sha256": "31c7367ce2e21afcc6ff30d11b6a94a646d344eaa5ce2afa6bc445b2970a0fbe"},
+        "hero_thornwake_elian_loamchant": {"name": "Elian Loamchant", "faction_id": "faction_thornwake", "archetype": "loamsinger", "source_path": "res://art/heroes/source/curated/hero_thornwake_elian_loamchant.png", "source_sha256": "00f23dd80baafd34f92e6489d51d360d166e3bf4d16ffa2a0c847380610ca707", "portrait_sha256": "8800619b0e41effc5f9acf2b05a1814e4eab283bc58ebce52c64ada61e59e46a"},
+        "hero_brasshollow_odrik_heatpriest": {"name": "Odrik Heatpriest", "faction_id": "faction_brasshollow", "archetype": "furnacechaplain", "source_path": "res://art/heroes/source/curated/hero_brasshollow_odrik_heatpriest.png", "source_sha256": "29730ac16425730fb5f2ed38edf4d500ae0860efb1f38b7284b3b169321734cf", "portrait_sha256": "ac6b988cf15a83e5ec916b0f8e8ab00ee0edd6e381002086367541f9a9a2c155"},
+        "hero_veilmourn_thir_obituaryink": {"name": "Thir Obituary-Ink", "faction_id": "faction_veilmourn", "archetype": "memoryscribe", "source_path": "res://art/heroes/source/curated/hero_veilmourn_thir_obituaryink.png", "source_sha256": "9facde8c9d97099ab015a8809a1d11374611a4612ab490710ae306315bc9860c", "portrait_sha256": "1dc1f9f082aa0ec0ec0794f13be3c2c9c38d24baea33e2f348eb6fcb0807f6a5"},
     }
     curated_record_ids = {
         hero_id
         for hero_id, record in records.items()
         if any(key in record for key in ("source_kind", "source_path", "source_sha256"))
     }
-    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Daxis, Kuld, Marka, Oren, Selka, Vellum, Caelen, Helva, Orra, Saren, Lyra, Mira, Brakka, Kessa, Neral, Orrik, Sable, Seren, Solera, Dovan, Ilyr, Tarn, Thalen, Ardren, Halen, Merek, Osmund, Silsa, Tova, Veyra, Torren, Varis, Vaska, Cela, Damar, Ivara, Jessa, Morwen, and Ruln")
+    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Daxis, Kuld, Marka, Odrik, Oren, Selka, Vellum, Caelen, Belis, Helva, Orra, Saren, Lyra, Mira, Brakka, Kessa, Nix, Neral, Orrik, Sable, Seren, Solera, Dovan, Ilyr, Renn, Tarn, Thalen, Ardren, Elian, Halen, Merek, Osmund, Silsa, Tova, Veyra, Torren, Varis, Vaska, Cela, Damar, Ivara, Jessa, Morwen, Ruln, and Thir")
     for hero_id, expected in curated_cases.items():
         record = records.get(hero_id, {})
         source_path = str(expected["source_path"])
@@ -42702,7 +42712,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "faction_id",
         "command_path",
         "384, 512",
-        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_brasshollow_daxis_chaincaptain",\n    "hero_brasshollow_kuld_varn",\n    "hero_brasshollow_marka_ironclause",\n    "hero_brasshollow_oren_bellfounder",\n    "hero_brasshollow_selka_pitmarshal",\n    "hero_brasshollow_vellum_quench",\n    "hero_caelen",\n    "hero_embercourt_helva_tollbrand",\n    "hero_embercourt_orra_cinderquill",\n    "hero_embercourt_saren_lockmaster",\n    "hero_lyra",\n    "hero_mira",\n    "hero_mireclaw_brakka_mudkeel",\n    "hero_mireclaw_kessa_chainboom",\n    "hero_neral",\n    "hero_orrik",\n    "hero_sable",\n    "hero_seren",\n    "hero_solera",\n    "hero_sunvault_dovan_lenscaptain",\n    "hero_sunvault_ilyr_glassmarshal",\n    "hero_tarn",\n    "hero_thalen",\n    "hero_thornwake_ardren_briarmarshal",\n    "hero_thornwake_halen_thorncart",\n    "hero_thornwake_merek_greenbarrow",\n    "hero_thornwake_osmund_pollenglass",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_thornwake_tova_rootwright",\n    "hero_thornwake_veyra_seedseer",\n    "hero_torren",\n    "hero_varis",\n    "hero_vaska",\n    "hero_veilmourn_cela_mistcorsair",\n    "hero_veilmourn_damar_oriflag",\n    "hero_veilmourn_ivara_blacktide",\n    "hero_veilmourn_jessa_keelwarden",\n    "hero_veilmourn_morwen_wakeoracle",\n    "hero_veilmourn_ruln_vanehook",\n}',
+        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_brasshollow_daxis_chaincaptain",\n    "hero_brasshollow_kuld_varn",\n    "hero_brasshollow_marka_ironclause",\n    "hero_brasshollow_odrik_heatpriest",\n    "hero_brasshollow_oren_bellfounder",\n    "hero_brasshollow_selka_pitmarshal",\n    "hero_brasshollow_vellum_quench",\n    "hero_caelen",\n    "hero_embercourt_belis_rainledger",\n    "hero_embercourt_helva_tollbrand",\n    "hero_embercourt_orra_cinderquill",\n    "hero_embercourt_saren_lockmaster",\n    "hero_lyra",\n    "hero_mira",\n    "hero_mireclaw_brakka_mudkeel",\n    "hero_mireclaw_kessa_chainboom",\n    "hero_mireclaw_nix_votivejaw",\n    "hero_neral",\n    "hero_orrik",\n    "hero_sable",\n    "hero_seren",\n    "hero_solera",\n    "hero_sunvault_dovan_lenscaptain",\n    "hero_sunvault_ilyr_glassmarshal",\n    "hero_sunvault_renn_facetlane",\n    "hero_tarn",\n    "hero_thalen",\n    "hero_thornwake_ardren_briarmarshal",\n    "hero_thornwake_elian_loamchant",\n    "hero_thornwake_halen_thorncart",\n    "hero_thornwake_merek_greenbarrow",\n    "hero_thornwake_osmund_pollenglass",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_thornwake_tova_rootwright",\n    "hero_thornwake_veyra_seedseer",\n    "hero_torren",\n    "hero_varis",\n    "hero_vaska",\n    "hero_veilmourn_cela_mistcorsair",\n    "hero_veilmourn_damar_oriflag",\n    "hero_veilmourn_ivara_blacktide",\n    "hero_veilmourn_jessa_keelwarden",\n    "hero_veilmourn_morwen_wakeoracle",\n    "hero_veilmourn_ruln_vanehook",\n    "hero_veilmourn_thir_obituaryink",\n}',
         'CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"',
         "def draw_curated_hero_portrait(source_path: Path, path: Path) -> None:",
         "portrait = ImageOps.fit(",
@@ -43533,6 +43543,44 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
     for forbidden_token in ("generate_hero_portrait_assets.py", "draw_curated_hero_portrait", "source_sha256 =", "SessionState.set_active_session(null)", "DEFAULT_HERO_BY_FACTION[", "RandomMapGeneratorRules.generate(", 'ContentService._heroes', 'ContentService._factions', 'ContentService._hero_art_manifest'):
         ensure(forbidden_token not in roster_adepts_report_text, errors, f"Six-faction roster adept report must remain observation-only and must not contain {forbidden_token}")
     ensure('path="res://tests/six_faction_roster_adepts_curated_portrait_report.gd"' in roster_adepts_scene_text, errors, "Six-faction roster adept curated portrait report scene must own the focused report script")
+
+    roster_sages_report_text = SIX_FACTION_ROSTER_SAGES_CURATED_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    roster_sages_scene_text = SIX_FACTION_ROSTER_SAGES_CURATED_PORTRAIT_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "SIX_FACTION_ROSTER_SAGES_CURATED_PORTRAIT_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"hero_id": "hero_embercourt_belis_rainledger"', '"hero_id": "hero_mireclaw_nix_votivejaw"',
+        '"hero_id": "hero_sunvault_renn_facetlane"', '"hero_id": "hero_thornwake_elian_loamchant"',
+        '"hero_id": "hero_brasshollow_odrik_heatpriest"', '"hero_id": "hero_veilmourn_thir_obituaryink"',
+        '"source_sha256": "5a50f7eaf88136e4f5105a52202558e67e5d37de54e208a19d1a14a1719c5c33"',
+        '"source_sha256": "299d9d06370cbffcf1de5b1813f2500177aface1151d2543aa5a25960f73536b"',
+        '"source_sha256": "39809ba6e78d6c73dd5a3ab60d24c55644ed32b84c9199b6297b3850a87c4576"',
+        '"source_sha256": "00f23dd80baafd34f92e6489d51d360d166e3bf4d16ffa2a0c847380610ca707"',
+        '"source_sha256": "29730ac16425730fb5f2ed38edf4d500ae0860efb1f38b7284b3b169321734cf"',
+        '"source_sha256": "9facde8c9d97099ab015a8809a1d11374611a4612ab490710ae306315bc9860c"',
+        '"portrait_sha256": "e1294be02a0a20f9fc91a8f28491e4c5119beca9c61e5cd9fed68d068ffb6f54"',
+        '"portrait_sha256": "71955facb9b40fc1ae93c4c050b81985d77e5134bde3f50a60f0647211ce01be"',
+        '"portrait_sha256": "31c7367ce2e21afcc6ff30d11b6a94a646d344eaa5ce2afa6bc445b2970a0fbe"',
+        '"portrait_sha256": "8800619b0e41effc5f9acf2b05a1814e4eab283bc58ebce52c64ada61e59e46a"',
+        '"portrait_sha256": "ac6b988cf15a83e5ec916b0f8e8ab00ee0edd6e381002086367541f9a9a2c155"',
+        '"portrait_sha256": "1dc1f9f082aa0ec0ec0794f13be3c2c9c38d24baea33e2f348eb6fcb0807f6a5"',
+        '"source_count": 6', '"portrait_count": 6', '"non_target_portrait_count": 54',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60', 'String(art.get("source_kind", "")) != "curated_original_character"',
+        'source_image.get_size() != Vector2i(1254, 1254)', 'portrait_image.get_size() != Vector2i(384, 512)',
+        'roster.find(hero_id) != int(case.get("roster_index", -1))', 'HeroCommandRules.recruitable_hero_ids(session)', 'TownRules.get_tavern_actions(session)',
+        'load("res://scenes/overworld/OverworldShell.tscn")', 'load("res://scenes/town/TownShell.tscn")',
+        'load("res://scenes/battle/BattleShell.tscn")', 'load("res://scenes/results/ScenarioOutcomeShell.tscn")',
+        'SessionState.ensure_active_session().to_dict() == authority_before', 'portrait.set_hero_id("hero_not_authored")',
+        'frame_rect.encloses(portrait_rect)', '"enemy_unknown_hidden": true', 'SIX_FACTION_ROSTER_SAGES_PORTRAIT_GEOMETRY',
+    ):
+        ensure(required_token in roster_sages_report_text, errors, f"Six-faction roster sage curated portrait report is missing token {required_token}")
+    ensure(roster_sages_report_text.count('"hero_id": "') == 6, errors, "Six-faction roster sage report must own exactly six hero cases")
+    ensure(roster_sages_report_text.count('"faction_id": "faction_') == 6, errors, "Six-faction roster sage report must own one case per faction")
+    ensure(roster_sages_report_text.count('HeroCommandRules.recruitable_hero_ids(session)') == 1, errors, "Six-faction roster sage report must use one public recruitable roster call site")
+    ensure(roster_sages_report_text.count('TownRules.get_tavern_actions(session)') == 1, errors, "Six-faction roster sage report must use one public tavern action call site")
+    for forbidden_token in ("generate_hero_portrait_assets.py", "draw_curated_hero_portrait", "source_sha256 =", "SessionState.set_active_session(null)", "DEFAULT_HERO_BY_FACTION[", "RandomMapGeneratorRules.generate(", 'ContentService._heroes', 'ContentService._factions', 'ContentService._hero_art_manifest'):
+        ensure(forbidden_token not in roster_sages_report_text, errors, f"Six-faction roster sage report must remain observation-only and must not contain {forbidden_token}")
+    ensure('path="res://tests/six_faction_roster_sages_curated_portrait_report.gd"' in roster_sages_scene_text, errors, "Six-faction roster sage curated portrait report scene must own the focused report script")
 
     for required_token in (
         "%SaveCommanderPortrait",
