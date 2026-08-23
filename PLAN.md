@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-frontier-commanders-marka-ivara-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Frontier Claims commanders Marka Ironclause and Ivara Blacktide, also the Brasshollow and Veilmourn generated-map defaults. Exact provenance, campaign/default/hero/save/UI/gameplay authority, all 58 non-target portrait bytes, focused 1280/1920 live surfaces, campaign compatibility, reproducibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-frontier-commanders-marka-ivara-curated-portraits-10184`
+
+  Completion criteria:
+  - two distinct original square sources establish Marka as a Brasshollow attrition contract marshal and Ivara as a Veilmourn isolated-target admiral, with exact provenance and deterministic 384x512 runtime portraits;
+  - Orevein Contract and Bellwake Wreck Claim selection plus generated-map defaults, save-resume, Overworld, Town, Battle, and Outcome surfaces retain exact hero paths and all hero/campaign/gameplay fields;
+  - exactly two source files, two runtime portraits, and two manifest records change; the other 58 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: another hero, hero/content/rule/balance/AI changes, campaign/scenario/generated-map behavior, hero stats/spells/specialties/traits/cost, portrait path or UI layout changes, save schema, Overworld sprites, other art domains, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-campaign-leads-solera-silsa-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Solera Prismarch, lead of the three-chapter Shards of Daybreak campaign and Sunvault generated-map default, and Silsa Bramble-Hound, opening commander of the nine-chapter Frontier Claims campaign. Exact provenance, campaign/default policy, hero/save/UI/gameplay authority, all 58 non-target portrait bytes, focused 1280/1920 live surfaces, campaign compatibility, reproducibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-campaign-leads-solera-silsa-curated-portraits-10184`
 

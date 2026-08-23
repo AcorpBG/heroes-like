@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Solera Prismarch and Silsa Bramble-Hound now have distinct original curated character sources and deterministic existing-path portraits. Focused campaign/default/UI authority, compatibility, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Marka Ironclause and Ivara Blacktide now have distinct original curated character sources and deterministic existing-path portraits. Focused campaign/default/UI authority, compatibility, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-campaign-leads-solera-silsa-curated-portraits-10184",
-  "currentSliceId": "art-campaign-leads-solera-silsa-curated-portraits-10184",
-  "currentSliceNotes": "Two original curated sources now own exact Solera/Silsa provenance and deterministic 384x512 existing-path portraits. Campaign starts, Sunvault/Thornwake generated defaults, all hero/save/UI/gameplay authority, and 58 non-target portrait bytes remain exact; focused, compatibility, reproducibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentSlice": "art-frontier-commanders-marka-ivara-curated-portraits-10184",
+  "currentSliceId": "art-frontier-commanders-marka-ivara-curated-portraits-10184",
+  "currentSliceNotes": "Two original curated sources and deterministic portraits are live with exact Frontier Claims chapter, generated-default, save, UI, gameplay, reproducibility, compatibility, static/editor, and bounded platform startup proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Solera and Silsa Curated Campaign Lead Portraits",
-  "currentSliceUpdatedAt": "2026-08-23T09:38:09Z",
+  "currentSliceTitle": "Marka and Ivara Curated Frontier Commanders",
+  "currentSliceUpdatedAt": "2026-08-23T10:01:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,25 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer release readiness from completed portrait or packaging-startup evidence.",
-  "notes": "Solera/Silsa curated campaign-lead portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+  "notes": "Marka/Ivara curated Frontier commander portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-frontier-commanders-marka-ivara-curated-portraits-10184",
+      "title": "Marka and Ivara Curated Frontier Commanders",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace generator-only portraits for two live Frontier Claims commanders and faction generated-map defaults with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_brasshollow_marka_ironclause.png", "art/heroes/source/curated/hero_veilmourn_ivara_blacktide.png", "art/heroes/portraits/hero_brasshollow_marka_ironclause.png", "art/heroes/portraits/hero_veilmourn_ivara_blacktide.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/frontier_commander_curated_portrait_report.gd", "tests/frontier_commander_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_brasshollow_marka_ironclause","hero_veilmourn_ivara_blacktide"], "faction_ids": ["faction_brasshollow","faction_veilmourn"], "archetypes": ["contractmarshal","admiral"], "campaign_id": "campaign_frontier_claims", "scenario_ids": ["orevein-contract","bellwake-wreck-claim"], "generated_map_default_factions": ["faction_brasshollow","faction_veilmourn"], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 58, "old_portrait_sha256": ["ca5652c5bf04a293442cf6b5add0a53ee09a4dc80578601ecfd035e0bc8c3e93","c176cc45fd377f6178c24e3d15bd12a56753c56e9b4e1b2037bc031058937ee4"]},
+      "completionCriteria": ["Two distinct original square sources and deterministic 384x512 portraits own exact provenance", "Frontier Claims chapter/default/save/Overworld/Town/Battle/Outcome surfaces retain exact paths and hero/content/gameplay authority", "Only two sources, two runtime portraits, and two manifest records change; 58 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Any other hero or content/rule/balance/AI/campaign/scenario/generated-map behavior", "Portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T09:40:04Z", "startedAt": "2026-08-23T09:40:04Z", "completedAt": "2026-08-23T10:01:40Z", "updatedAt": "2026-08-23T10:01:40Z",
+      "notes": "Two distinct original painterly sources and deterministic existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-frontier-commanders-focused-final.GLMlag proves Marka/Ivara campaign chapter and generated-default identity, all 60 unique shared portrait paths, fail-closed unknown/enemy handling, exact normalized session authority, and campaign menu/Overworld/Town/Battle/Outcome containment at 1280x720 and 1920x1080. /tmp/heroes-frontier-commanders-repro.Fcrq0h proves two complete generator passes byte-exact and all 58 non-target portraits exact to HEAD. The nine-owner compatibility chain /tmp/heroes-frontier-commanders-compat.7fl7ma and final audit /tmp/heroes-frontier-commanders-final-audit.snTs8N are green. Official Linux and Windows reports in /tmp/heroes-frontier-commanders-platform.40v9ys are ok:true for export/headless startup and export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup respectively. Packaged portrait interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-campaign-leads-solera-silsa-curated-portraits-10184",
       "title": "Solera and Silsa Curated Campaign Lead Portraits",
@@ -95086,7 +95103,7 @@
   ],
   "summary": "Frostwharf House curated character sources are registered as the sole active slice from exact live content and source-coverage evidence; implementation and behavior validation are in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T08:10:16Z",
+  "updatedAt": "2026-08-23T10:01:40Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
