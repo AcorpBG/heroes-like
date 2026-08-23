@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Lyra Emberwell and Vaska Reedmaw now have two distinct original curated character sources and deterministic existing-path portraits. Focused and compatibility runtime, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Solera Prismarch and Silsa Bramble-Hound now have distinct original curated character sources and deterministic existing-path portraits. Focused campaign/default/UI authority, compatibility, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-campaign-commanders-lyra-vaska-curated-portraits-10184",
-  "currentSliceId": "art-campaign-commanders-lyra-vaska-curated-portraits-10184",
-  "currentSliceNotes": "Two original curated sources now own exact Lyra/Vaska provenance and deterministic 384x512 existing-path portraits. All hero/campaign/scenario/default-commander/save/UI/gameplay authority and 58 non-target portrait bytes remain exact; focused, compatibility, reproducibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentSlice": "art-campaign-leads-solera-silsa-curated-portraits-10184",
+  "currentSliceId": "art-campaign-leads-solera-silsa-curated-portraits-10184",
+  "currentSliceNotes": "Two original curated sources now own exact Solera/Silsa provenance and deterministic 384x512 existing-path portraits. Campaign starts, Sunvault/Thornwake generated defaults, all hero/save/UI/gameplay authority, and 58 non-target portrait bytes remain exact; focused, compatibility, reproducibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Lyra and Vaska Curated Campaign Commander Portraits",
-  "currentSliceUpdatedAt": "2026-08-23T09:15:46Z",
+  "currentSliceTitle": "Solera and Silsa Curated Campaign Lead Portraits",
+  "currentSliceUpdatedAt": "2026-08-23T09:38:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,25 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer release readiness from completed portrait or packaging-startup evidence.",
-  "notes": "Lyra/Vaska curated campaign-commander portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+  "notes": "Solera/Silsa curated campaign-lead portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-campaign-leads-solera-silsa-curated-portraits-10184",
+      "title": "Solera and Silsa Curated Campaign Lead Portraits",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace generator-only portraits for the two remaining player-facing campaign opening commanders with original character-readable sources and exact deterministic existing-path portraits while preserving all live hero and campaign authority.",
+      "implementationTargets": ["art/heroes/source/curated/hero_solera.png", "art/heroes/source/curated/hero_thornwake_silsa_bramblehound.png", "art/heroes/portraits/hero_solera.png", "art/heroes/portraits/hero_thornwake_silsa_bramblehound.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/campaign_lead_curated_portrait_report.gd", "tests/campaign_lead_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_solera","hero_thornwake_silsa_bramblehound"], "faction_ids": ["faction_sunvault","faction_thornwake"], "archetypes": ["marshal","huntleader"], "campaign_ids": ["campaign_shards_of_daybreak","campaign_frontier_claims"], "starting_scenario_ids": ["prismhearth-watch","mireford-skirmish"], "generated_map_default_factions": ["faction_sunvault"], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 58, "old_portrait_sha256": ["e2c7083304d169a4d7321cea08a8b87a05521e7858acf6f8d7ad03594888e7a6","8789cc2f4ebde5e8744cf67113ddd978b155e298b27264f947b5dff988a45124"]},
+      "completionCriteria": ["Two distinct original square sources and deterministic 384x512 portraits own exact provenance", "Both campaign-opening/save/Overworld/Town/Battle/Outcome portrait surfaces retain exact paths and hero/content/gameplay authority; Solera remains Sunvault's generated-map default", "Only two sources, two runtime portraits, and two manifest records change; 58 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Any other hero or hero/content/rule/balance/AI/campaign/scenario/generated-map behavior", "Portrait paths or UI layout, save schema, Overworld sprites, unit/town/object art, animation/audio/VFX, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T09:17:58Z", "startedAt": "2026-08-23T09:17:58Z", "completedAt": "2026-08-23T09:38:09Z", "updatedAt": "2026-08-23T09:38:09Z",
+      "notes": "Two distinct original painterly sources and deterministic existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-campaign-leads-focused.8GRNFm proves Solera/Silsa campaign-opening identity, exact Sunvault/Thornwake generated defaults, all 60 unique shared portrait paths, fail-closed unknown/enemy handling, exact normalized session authority, and campaign menu/Overworld/Town/Battle/Outcome containment at 1280x720 and 1920x1080. /tmp/heroes-campaign-leads-repro.ImnoPd proves two complete generator passes byte-exact and all 58 non-target portraits exact to HEAD. The nine-owner campaign compatibility chain /tmp/heroes-campaign-leads-compat.8S1W13 and editor audit /tmp/heroes-campaign-leads-editor.xygDOp are green. Official Linux and Windows packaging reports are ok:true for export/headless startup and export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup respectively. Packaged portrait interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-campaign-commanders-lyra-vaska-curated-portraits-10184",
       "title": "Lyra and Vaska Curated Campaign Commander Portraits",

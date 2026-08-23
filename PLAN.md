@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-campaign-leads-solera-silsa-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Solera Prismarch, lead of the three-chapter Shards of Daybreak campaign and Sunvault generated-map default, and Silsa Bramble-Hound, opening commander of the nine-chapter Frontier Claims campaign. Exact provenance, campaign/default policy, hero/save/UI/gameplay authority, all 58 non-target portrait bytes, focused 1280/1920 live surfaces, campaign compatibility, reproducibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-campaign-leads-solera-silsa-curated-portraits-10184`
+
+  Completion criteria:
+  - two distinct original square source portraits establish Solera as a compact Sunvault array marshal and Silsa as a Thornwake anti-ranged beast-knot huntleader, with exact source provenance and deterministic 384x512 runtime portraits;
+  - Shards of Daybreak/Prismhearth Watch and Frontier Claims/Rootbound Mireford campaign selection, save-resume, Overworld, Town, Battle, and Outcome surfaces load the exact existing hero portrait paths while hero ids, factions, archetypes, spells, specialties, traits, command stats, movement, recruitment cost, campaign/scenario wiring, and Solera's generated-map default remain exact;
+  - exactly two source files, two runtime portraits, and two hero-manifest records change; the other 58 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: another hero, hero/content/rule/balance/AI changes, campaign/scenario/map/generated-map behavior, hero stats/spells/specialties/traits/cost, portrait path or UI layout changes, save schema, Overworld sprites, unit/town/object art, animation/audio/VFX, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-campaign-commanders-lyra-vaska-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for opposing flagship campaign commanders Lyra Emberwell and Vaska Reedmaw through deterministic existing-path portraits. Exact provenance, hero/campaign/scenario/default-commander/save/UI/gameplay authority, all 58 non-target portrait bytes, focused 1280/1920 live surfaces, compatibility, reproducibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-campaign-commanders-lyra-vaska-curated-portraits-10184`
 
