@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Ardren Briar-Marshal and Tova Rootwright now have distinct original curated sources and deterministic existing-path portraits with exact generated-map, campaign, UI, save, and gameplay authority. The bounded slice is complete; broader release gaps remain.",
+  "currentNotes": "Ruln Vanehook and Oren Bellfounder now have distinct original curated sources and deterministic existing-path portraits with exact campaign, UI, save, and gameplay authority. The bounded slice is complete; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-thornwake-commanders-ardren-tova-curated-portraits-10184",
-  "currentSliceId": "art-thornwake-commanders-ardren-tova-curated-portraits-10184",
-  "currentSliceNotes": "Completed with exact source/runtime provenance, real generated Thornwake and authored Rootgate ownership, 1280/1920 live surfaces, 58 byte-exact non-target portraits, reproducibility, campaign/save/core compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence. The unrelated native-RMG UI save/replay provenance owner remains fail-closed on an empty recovered template id and was not changed.",
+  "currentSlice": "art-frontier-commanders-ruln-oren-curated-portraits-10184",
+  "currentSliceId": "art-frontier-commanders-ruln-oren-curated-portraits-10184",
+  "currentSliceNotes": "Completed with exact source/runtime provenance, authored Fogchart Mooring and Clauseworks Counterclaim ownership, 1280/1920 live surfaces, 58 byte-exact non-target portraits, reproducibility, chapter/campaign/save/core compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ardren and Tova Curated Thornwake Commanders",
-  "currentSliceUpdatedAt": "2026-08-23T10:52:17Z",
+  "currentSliceTitle": "Ruln and Oren Curated Frontier Commanders",
+  "currentSliceUpdatedAt": "2026-08-23T11:15:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,26 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a tracker-approved source-backed implementation gap; do not infer release readiness from the completed Ardren/Tova art slice, and keep native-RMG provenance/parity fail-closed.",
-  "notes": "Ardren/Tova curated Thornwake commander portraits are complete as shipped character-art breadth with live generated/campaign runtime validation. This is not content/rule/balance/campaign or release-completion work.",
+  "nextActionGuardrailNote": "Select a tracker-approved source-backed implementation gap; do not infer release readiness from the completed Ruln/Oren art slice, and keep native-RMG provenance/parity fail-closed.",
+  "notes": "Ruln/Oren curated Frontier Claims commander portraits are complete as shipped character-art breadth with live campaign runtime validation. This is not content/rule/balance/campaign or release-completion work.",
   "plannedSlices": [
+    {
+      "id": "art-frontier-commanders-ruln-oren-curated-portraits-10184",
+      "title": "Ruln and Oren Curated Frontier Commanders",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace generator-only portraits for Frontier Claims chapters five and six with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_veilmourn_ruln_vanehook.png", "art/heroes/source/curated/hero_brasshollow_oren_bellfounder.png", "art/heroes/portraits/hero_veilmourn_ruln_vanehook.png", "art/heroes/portraits/hero_brasshollow_oren_bellfounder.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/frontier_middle_commanders_curated_portrait_report.gd", "tests/frontier_middle_commanders_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_veilmourn_ruln_vanehook","hero_brasshollow_oren_bellfounder"], "faction_ids": ["faction_veilmourn","faction_brasshollow"], "archetypes": ["harpooncaptain","siegecaptain"], "campaign_id": "campaign_frontier_claims", "scenario_ids": ["fogchart-mooring","clauseworks-counterclaim"], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 58, "old_portrait_sha256": ["0eb80b8ff577fdc076d2cde9071b83c4fc4b6559ba865825ce8c181ec4a7dd28","0d144b4a2c5898af3b5875189a9eb2cf93d1f0488aa38e633691cb70a1f1da89"]},
+      "completionCriteria": ["Two distinct original square sources and deterministic 384x512 portraits own exact provenance", "Fogchart Mooring and Clauseworks Counterclaim selection/save/Overworld/Town/Battle/Outcome surfaces retain exact paths and hero/content/gameplay authority", "Only two sources, two runtime portraits, and two manifest records change; 58 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Any other hero or content/rule/balance/AI/campaign/scenario/generated-map behavior", "Portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T10:55:46Z", "startedAt": "2026-08-23T10:55:46Z", "completedAt": "2026-08-23T11:15:51Z", "updatedAt": "2026-08-23T11:15:51Z",
+      "notes": "Two distinct original painterly sources and deterministic existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-ruln-oren-focused.kTehYD proves Fogchart Mooring and Clauseworks Counterclaim selection, all 60 unique shared portrait paths, fail-closed unknown/enemy handling, exact normalized session authority, and campaign menu/Overworld/Town/Battle/Outcome containment at 1280x720 and 1920x1080. /tmp/heroes-ruln-oren-repro.mQGeXU proves two complete generator passes byte-exact and all 58 non-target portraits exact to HEAD. The eleven-owner compatibility chain /tmp/heroes-ruln-oren-compat.MNMwEc proves both dedicated chapters, Frontier Claims, save/menu/restart, replayability, Ninefold, and core authority. Static/editor /tmp/heroes-ruln-oren-static.QXOqUo is green. Official Linux and Windows reports in /tmp/heroes-ruln-oren-packaging.Beu7Fm are ok:true for export/headless startup and export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup respectively. Packaged portrait interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-thornwake-commanders-ardren-tova-curated-portraits-10184",
       "title": "Ardren and Tova Curated Thornwake Commanders",
@@ -95034,7 +95051,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_thornwake_commanders_ardren_tova_curated_portraits_completed",
+  "result": "art_frontier_commanders_ruln_oren_curated_portraits_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -95135,9 +95152,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Ardren and Tova now have original curated character sources and deterministic live portraits with exact generated-map, campaign, save, UI, reproducibility, compatibility, static/editor, and bounded platform startup evidence. Broader release gaps remain.",
+  "summary": "Ruln and Oren now have original curated character sources and deterministic live portraits with exact campaign, save, UI, reproducibility, compatibility, static/editor, and bounded platform startup evidence. Broader release gaps remain.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T10:52:17Z",
+  "updatedAt": "2026-08-23T11:15:51Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

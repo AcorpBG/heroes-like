@@ -368,7 +368,10 @@
       "name": "Oren Bellfounder",
       "faction_id": "faction_brasshollow",
       "archetype": "siegecaptain",
-      "portrait": "res://art/heroes/portraits/hero_brasshollow_oren_bellfounder.png"
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_oren_bellfounder.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_oren_bellfounder.png",
+      "source_sha256": "b83fd6b64c06d8fc4b7bc8bfd49cfa457d286795409809869213bd1870682b8d"
     },
     {
       "id": "hero_brasshollow_kuld_varn",
@@ -451,7 +454,10 @@
       "name": "Ruln Vanehook",
       "faction_id": "faction_veilmourn",
       "archetype": "harpooncaptain",
-      "portrait": "res://art/heroes/portraits/hero_veilmourn_ruln_vanehook.png"
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_ruln_vanehook.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_ruln_vanehook.png",
+      "source_sha256": "e1596dc02e51db1b443f7f2f817c5e19f5f3242c9b2b127196f00d13de9b71f0"
     },
     {
       "id": "hero_veilmourn_cela_mistcorsair",
