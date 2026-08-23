@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Cinder Kiln art slice with two original transparent sources and exact reproducible runtime derivatives. Focused runtime proves the live 7/4 watch, authored site and exact native-RMG subtype-22/source-row-180 proxy authority, rewards/recruits, encounter graph, two BattleBoard entries, and 112 visible frames; repeated full regeneration is byte-identical; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broader neutral art, native-RMG parity, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentNotes": "Completed the Kite Signal Eyrie art slice with two original transparent sources and exact reproducible runtime derivatives. Focused runtime proves the live 7/4 watch, authored Ninefold placement, random-map candidate, native-RMG subtype-50/source-row-168 projection, rewards/recruits, encounter graph, two BattleBoard entries, and 112 visible frames; repeated full regeneration is byte-identical; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broader neutral art, native-RMG parity, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-cinder-kiln-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-cinder-kiln-curated-character-sources-10184",
-  "currentSliceNotes": "Completed only the two original Cinder Kiln unit sources and exact existing-path derivatives; content, gameplay, recruitment/reward, native-RMG mapping, and broader release authority remain frozen.",
+  "currentSlice": "art-neutral-kite-signal-eyrie-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-kite-signal-eyrie-curated-character-sources-10184",
+  "currentSliceNotes": "Completed only the two original Kite Signal Eyrie unit sources and exact existing-path derivatives; content, gameplay, recruitment/reward, random-map/native-RMG mapping, and broader release authority remain frozen.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Cinder Kiln Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T00:07:55Z",
+  "currentSliceTitle": "Kite Signal Eyrie Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-23T00:40:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad neutral-art completion, native-RMG parity, packaged battle interaction parity, certification, signing/publication, whole-game validation, or release readiness from the completed Cinder Kiln boundary.",
-  "notes": "The Cinder Kiln art slice is completed. Two original sources now own all eight existing-path runtime derivatives and exact manifest provenance; focused live BattleBoard, authored dwelling, exact native-RMG subtype-22/source-row-180 proxy, reward/recruitment and encounter authority, regeneration, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green. Broader product and release gaps remain.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad neutral-art completion, native-RMG parity, packaged battle interaction parity, certification, signing/publication, whole-game validation, or release readiness from the completed Kite Signal Eyrie boundary.",
+  "notes": "The Kite Signal Eyrie art slice is completed. Two original sources now own all eight existing-path runtime derivatives and exact manifest provenance; focused live BattleBoard, authored dwelling, generated-map selection, exact native-RMG subtype-50/source-row-168 proxy, reward/recruitment and encounter authority, regeneration, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green. Broader product and release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-kite-signal-eyrie-curated-character-sources-10184",
+      "title": "Kite Signal Eyrie Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Kitehook Runners and Ridgeflare Shots emblems with two distinct character-readable original signal-eyrie sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, shared watch, authored placement, generated-map selection, native-RMG projection, reward/recruitment behavior, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_kitehook_runners.png", "art/units/source/curated/unit_neutral_ridgeflare_shots.png", "art/units/portraits/unit_neutral_kitehook_runners.png", "art/units/portraits/unit_neutral_ridgeflare_shots.png", "art/units/battle_icons/unit_neutral_kitehook_runners.png", "art/units/battle_icons/unit_neutral_ridgeflare_shots.png", "art/units/overworld_icons/unit_neutral_kitehook_runners.png", "art/units/overworld_icons/unit_neutral_ridgeflare_shots.png", "art/animation/runtime/units/unit_neutral_kitehook_runners.png", "art/animation/runtime/units/unit_neutral_ridgeflare_shots.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_kite_signal_eyrie_curated_art_report.gd", "tests/unit_neutral_kite_signal_eyrie_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_kitehook_runners","unit_neutral_ridgeflare_shots"], "tiers": [2,2], "roles": ["melee","ranged"], "ability_ids": [["bloodrush"],["volley"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_kite_signal_eyrie", "shared_army_id": "army_neutral_kite_signal_eyrie_watch", "shared_army_counts": [7,4], "authored_site_placement_ids": ["dwelling_kite_signal_eyrie"], "random_map_site_id": "site_kite_signal_eyrie", "native_rmg_type17_subtype": 50, "native_rmg_source_row": 168, "native_rmg_def_ref": "AVGpega0.def", "claim_recruits": [2,1], "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow hook-rope highland-courier and ridge-flare signal-marksman identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Kite Signal Eyrie graph, shared 7/4 watch, authored Ninefold placement, generated-map site family, native-RMG type-17 subtype-50/source-row-168/AVGpega0.def projection, claim rewards/recruits, and encounter authority; a production-rule BattleBoard loads both icon/sheet pairs and all 112 target frames remain visible", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/neutral-dwelling/random-map/Native-RMG/reward/AI compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment/reward rules, random-map or Native-RMG mapping rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T00:12:54Z",
+      "startedAt": "2026-08-23T00:12:54Z",
+      "updatedAt": "2026-08-23T00:40:39Z",
+      "completedAt": "2026-08-23T00:40:39Z",
+      "notes": "Completed two original transparent sources and exact deterministic derivatives/manifests. Focused report /tmp/heroes-kite-focused.S5fnxM proves source alpha/provenance, live unit stats/abilities/costs/growth, Kite Signal Eyrie dwelling/site/object/encounter graph, generated-map candidate, exact type-17 subtype-50/source-row-168/AVGpega0.def proxy authority, shared 7/4 watch, authored Ninefold placement, rewards/recruits, exact BattleBoard resources, session authority, and 112 visible frames. Two 412-asset plus two-manifest regenerations are byte-identical in /tmp/heroes-kite-repro.hZwETR. The 15-owner compatibility chain is green in /tmp/heroes-kite-compat.KTQ1fR; static/editor gates pass in /tmp/heroes-kite-static.68iDk7. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green in /tmp/heroes-kite-platform.nfofm7. Packaged Kite interaction, native-RMG parity, certification, hardware/accessibility platform parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None within the bounded Kite Signal Eyrie two-unit curated-character source slice."
+    },
     {
       "id": "art-neutral-cinder-kiln-curated-character-sources-10184",
       "title": "Cinder Kiln Curated Character Sources",
