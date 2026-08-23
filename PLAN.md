@@ -24,7 +24,14 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current product evidence.
+- In-progress implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current product evidence.
+
+- Previous completed implementation slice: `presentation-veilmourn-production-dwelling-specific-icons-10184`. Veilmourn's exact seven-tier production ladder now has distinct original icons through the completed building-art resolver, completing specific art ownership across all six faction production ladders while preserving all other category fallbacks.
+  id: `presentation-veilmourn-production-dwelling-specific-icons-10184`
+
+  Completion criteria: seven distinct deterministic source/runtime pairs; exact live 1280/1920 resolution for Bell Harbor through Leviathan Sounding; all 42 faction production buildings specific and 91 other buildings on exact category fallback; unchanged gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the other 91 building illustrations, prior art/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
 
 - Previous completed implementation slice: `presentation-brasshollow-production-dwelling-specific-icons-10184`. Brasshollow's exact seven-tier production ladder now has distinct original icons through the completed building-art resolver, preserving prior icons and untargeted category fallbacks.
   id: `presentation-brasshollow-production-dwelling-specific-icons-10184`

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Brasshollow's seven production buildings now own distinct original icons through the completed resolver. Focused, compatibility, static/editor, and bounded platform gates pass; the game is not release-ready.",
+  "currentNotes": "Veilmourn's seven production buildings now own distinct original icons, completing all six faction production ladders. Focused, compatibility, static/editor, and bounded platform gates pass; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-brasshollow-production-dwelling-specific-icons-10184",
-  "currentSliceId": "presentation-brasshollow-production-dwelling-specific-icons-10184",
-  "currentSliceNotes": "Completed seven exact Brasshollow source/runtime icons while preserving all twenty-eight prior icons, 98 category fallbacks, and gameplay authority.",
+  "currentSlice": "presentation-veilmourn-production-dwelling-specific-icons-10184",
+  "currentSliceId": "presentation-veilmourn-production-dwelling-specific-icons-10184",
+  "currentSliceNotes": "Completed seven exact Veilmourn source/runtime icons while preserving all thirty-five prior icons, 91 category fallbacks, and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Production Dwelling Specific Icons",
-  "currentSliceUpdatedAt": "2026-08-23T20:01:20Z",
+  "currentSliceTitle": "Veilmourn Production Dwelling Specific Icons",
+  "currentSliceUpdatedAt": "2026-08-23T20:15:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct evidence. Preserve all thirty-five specific icons and 98 category fallbacks; do not infer release readiness.",
-  "notes": "Five faction production ladders now have thirty-five distinct original icons; 98 buildings retain category fallback. Release readiness remains unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all forty-two specific faction-production icons and 91 category fallbacks; do not infer release readiness.",
+  "notes": "All six faction production ladders now have forty-two distinct original icons; 91 buildings retain category fallback. Release readiness remains unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-veilmourn-production-dwelling-specific-icons-10184", "title": "Veilmourn Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Give Veilmourn's seven production buildings distinct original Town Build icons and complete all six faction ladders.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_veilmourn_*.png", "art/towns/runtime/buildings/building_veilmourn_*.png", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_veilmourn_production_dwelling_icon_report.gd", "tests/town_veilmourn_production_dwelling_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_veilmourn_bell_harbor", "building_veilmourn_ransom_exchange", "building_veilmourn_mirror_drydock", "building_veilmourn_harpoon_gantry", "building_veilmourn_obituary_vault", "building_veilmourn_mistgate_slip", "building_veilmourn_leviathan_sounding"], "production_building_count": 133, "existing_specific_icon_count": 35, "category_fallback_count": 98, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Seven distinct Veilmourn source/runtime icons with exact provenance", "All42 faction production buildings specific and exact fallback for the other91 buildings", "1280/1920 live presentation, authority, reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other91 building illustrations, completed art/resolver changes, gameplay/economy/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T20:02:00Z", "startedAt": "2026-08-23T20:02:00Z", "completedAt": "2026-08-23T20:15:05Z", "updatedAt": "2026-08-23T20:15:05Z", "notes": "Completed seven Veilmourn source/runtime icons, forty-two-row manifest, 91 fallbacks, focused 1280/1920 presentation, compatibility/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-brasshollow-production-dwelling-specific-icons-10184", "title": "Brasshollow Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Give Brasshollow's seven production buildings distinct original Town Build icons through the completed resolver.",
