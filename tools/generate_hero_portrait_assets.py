@@ -21,6 +21,8 @@ CURATED_PORTRAIT_SOURCE_IDS = {
     "hero_caelen",
     "hero_lyra",
     "hero_mira",
+    "hero_mireclaw_kessa_chainboom",
+    "hero_neral",
     "hero_solera",
     "hero_thornwake_ardren_briarmarshal",
     "hero_thornwake_silsa_bramblehound",
