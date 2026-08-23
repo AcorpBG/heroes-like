@@ -26,6 +26,13 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - In-progress implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current product evidence.
 
+- Previous completed implementation slice: `presentation-mireclaw-unique-town-landmark-specific-icons-10184`. Mireclaw's live five-building non-unit landmark chain now has complete specific visual ownership across all five authored Mireclaw towns.
+  id: `presentation-mireclaw-unique-town-landmark-specific-icons-10184`
+
+  Completion criteria: four distinct deterministic source/runtime pairs for Silt Watch, Bog Oracle Nest, Boneboom Palisade, and Oathmire Court; exact live 1280/1920 resolution; 58 specific building icons and 75 category fallbacks; unchanged costs, prerequisites, effects, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: other Mireclaw legacy dwellings, the other 75 building illustrations, prior icon/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
 - Previous completed implementation slice: `presentation-shared-foundational-town-building-specific-icons-10184`. The six ubiquitous shared town foundations now have distinct original icons while every building rule and all remaining fallbacks stay unchanged.
   id: `presentation-shared-foundational-town-building-specific-icons-10184`
 

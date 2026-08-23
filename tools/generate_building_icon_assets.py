@@ -69,6 +69,10 @@ BUILDING_IDS = (
     "building_stone_store",
     "building_lantern_archive",
     "building_starseer_annex",
+    "building_mireclaw_silt_watch",
+    "building_mireclaw_bog_oracle_nest",
+    "building_mireclaw_boneboom_palisade",
+    "building_mireclaw_oathmire_court",
 )
 
 

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/town_mireclaw_unique_landmark_building_icon_report.gd" type="Script" id="1"]
+
+[node name="TownMireclawUniqueLandmarkBuildingIconReport" type="Node"]
+script = ExtResource("1")

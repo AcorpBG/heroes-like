@@ -495,6 +495,42 @@
       "source_sha256": "c04a79ea5f86d301a466c28904dd45dade7b9cf938fab0ff39502d860c51c569",
       "icon_path": "res://art/towns/runtime/buildings/building_starseer_annex.png",
       "icon_sha256": "60c047f12425f17a678933f80fff7bd9426e18e2bb64870625dbff3f0e24da56"
+    },
+    {
+      "id": "building_mireclaw_silt_watch",
+      "building_id": "building_mireclaw_silt_watch",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_silt_watch.png",
+      "source_sha256": "d7757cc7da46e9bb3753c090d4fc61869f41fae57a0633179ab0976db40d652b",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_silt_watch.png",
+      "icon_sha256": "23de8b4170b8df418aa0a119db745168814b3ba567146ed05f99134e5194114f"
+    },
+    {
+      "id": "building_mireclaw_bog_oracle_nest",
+      "building_id": "building_mireclaw_bog_oracle_nest",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_bog_oracle_nest.png",
+      "source_sha256": "d37f5cc2b876d8b312937babea01dfa6ed6ea1378061d832b9cbfc1a72e3679e",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_bog_oracle_nest.png",
+      "icon_sha256": "755c7556eb57719d7b138951be9e2485f6973cf0cdd7852ecdf13b6e3534be5f"
+    },
+    {
+      "id": "building_mireclaw_boneboom_palisade",
+      "building_id": "building_mireclaw_boneboom_palisade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_boneboom_palisade.png",
+      "source_sha256": "dc109caf9de4d4b3b555d7e11a8bb96d43c29c9d81f96e28ec331abf9445b39a",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_boneboom_palisade.png",
+      "icon_sha256": "ec0cb670d3a5bab1b794abd8e76915105897204fa059f5b0533527cd65cfc3b5"
+    },
+    {
+      "id": "building_mireclaw_oathmire_court",
+      "building_id": "building_mireclaw_oathmire_court",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_oathmire_court.png",
+      "source_sha256": "7326192b1cebd4f24cec319b51308d0f5109eb149c5536c924d6e46e62921015",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_oathmire_court.png",
+      "icon_sha256": "8784adf3226dcae08b2ded3583aeef90f647adc9cdc43fc80f508420758df049"
     }
   ]
 }
