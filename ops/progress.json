@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed implementation slice; do not infer release readiness from the completed Switchback Hostel curated-art boundary."
+    "Select the next tracker-approved source-backed implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Switchback Hostel curated character sources are implemented and validated. Exact live content/gameplay authority and all 101 non-target unit payloads remain unchanged; broader release gaps remain.",
+  "currentNotes": "Saltpan Camp curated character sources are completed with focused live authority, whole-art reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-switchback-hostel-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-switchback-hostel-curated-character-sources-10184",
-  "currentSliceNotes": "Completed two distinct original transparent sources, exact deterministic derivatives/manifests, focused live authority, full reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup gates.",
+  "currentSlice": "art-neutral-saltpan-camp-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-saltpan-camp-curated-character-sources-10184",
+  "currentSliceNotes": "Two original Saltpan Camp sources and eight exact deterministic derivatives are live; authored/generated-map/content/gameplay authority stayed exact and bounded validation is green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Switchback Hostel Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T05:23:58Z",
+  "currentSliceTitle": "Saltpan Camp Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-23T05:58:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer broad completion or release readiness from curated-art validation.",
-  "notes": "Switchback Hostel curated sources are completed with exact live content authority, deterministic derivatives, compatibility, and bounded platform startup validation. The game is not release-ready.",
+  "nextActionGuardrailNote": "Select and register one source-backed product slice before further implementation; do not infer broad completion or release readiness from the completed Saltpan art boundary.",
+  "notes": "Saltpan Camp curated sources are completed. Production content, gameplay, generated/native mapping, and all non-target unit art remain unchanged; select the next tracker-approved slice.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-saltpan-camp-curated-character-sources-10184",
+      "title": "Saltpan Camp Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace generated Saltpan Bucklers and Suncrack Throwers emblems with original character-readable sources and exact existing-path derivatives while preserving the Saltpan Camp graph, generated-map projection, and gameplay.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_saltpan_bucklers.png", "art/units/source/curated/unit_neutral_suncrack_throwers.png", "art/units/portraits/unit_neutral_saltpan_bucklers.png", "art/units/portraits/unit_neutral_suncrack_throwers.png", "art/units/battle_icons/unit_neutral_saltpan_bucklers.png", "art/units/battle_icons/unit_neutral_suncrack_throwers.png", "art/units/overworld_icons/unit_neutral_saltpan_bucklers.png", "art/units/overworld_icons/unit_neutral_suncrack_throwers.png", "art/animation/runtime/units/unit_neutral_saltpan_bucklers.png", "art/animation/runtime/units/unit_neutral_suncrack_throwers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_saltpan_camp_curated_art_report.gd", "tests/unit_neutral_saltpan_camp_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_saltpan_bucklers","unit_neutral_suncrack_throwers"], "tiers": [2,2], "roles": ["melee","ranged"], "ability_ids": [["shielding"],["harry"]], "shared_army_counts": [9,4], "authored_site_placement_ids": ["dwelling_saltpan_camp"], "generated_map_site_ids": ["site_saltpan_camp"], "claim_recruits": [2,1], "source_size": [512,512], "other_units_must_remain_byte_exact": 101},
+      "completionCriteria": ["Two distinct transparent sources and all eight deterministic existing-path derivatives own exact provenance", "Live units, dwelling graph, 9/4 watch, authored placement, generated-map projection, explicit Native-RMG proxy absence, rewards, road open-lane/wall-pressure encounter, BattleBoard resources, session authority, and 112 frames are exact", "Two full 412-asset regenerations, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Content, stats, abilities, costs, growth, balance, AI, dwelling/site/object/encounter/army, reward/recruitment, generated/native mapping, animation timing, save, rendering, or packaging behavior", "Another unit, broad neutral art, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T05:26:01Z",
+      "startedAt": "2026-08-23T05:26:01Z",
+      "completedAt": "2026-08-23T05:58:44Z",
+      "updatedAt": "2026-08-23T05:58:44Z",
+      "notes": "Two original transparent Saltpan Camp sources and eight exact existing-path derivatives are live. Focused /tmp/heroes-saltpan-focused-rerun.3q5428 proves exact source provenance, unit/content/site/generated-map/native-proxy-absence/session authority, two BattleBoard entries, and 112 visible frames. /tmp/heroes-saltpan-repro.V00ZwZ proves two complete generator passes byte-exact across 416 paths with 412 derivatives and two manifests. The 15-owner compatibility chain /tmp/heroes-saltpan-compat.sl7cXk and final static/editor audit /tmp/heroes-saltpan-final-audit.A5OFeJ are green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are ok:true. Packaged Saltpan interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-switchback-hostel-curated-character-sources-10184",
       "title": "Switchback Hostel Curated Character Sources",
@@ -94404,7 +94424,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Complete the Saltpan Camp two-source curated art slice with exact live dwelling/generated-map/encounter/BattleBoard authority, full reproducibility, compatibility, static/editor, and bounded platform startup validation. Broader release gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -94835,7 +94855,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_switchback_hostel_curated_character_sources_completed",
+  "result": "art_neutral_saltpan_camp_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94936,9 +94956,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Switchback Hostel curated-character slice is complete: two original sources and exact reproducible derivatives ship while live content/gameplay authority remains unchanged.",
+  "summary": "The Saltpan Camp curated-character slice is completed: original Buckler and Thrower sources, exact deterministic derivatives, focused live authority, reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup validation are green without content/gameplay/native mapping changes or broader release claims.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T05:23:58Z",
+  "updatedAt": "2026-08-23T05:58:44Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

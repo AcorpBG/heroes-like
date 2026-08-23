@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-neutral-saltpan-camp-curated-character-sources-10184`. Two distinct original transparent salt-road character sources now replace the generated Saltpan Bucklers and Suncrack Throwers emblems through exact reproducible existing-path derivatives. The live Saltpan Camp graph, shared 9/4 watch, authored Ninefold placement, generated-map biome/pressure projection, explicit Native-RMG proxy absence, rewards/recruits, road open-lane/wall-pressure encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-neutral-saltpan-camp-curated-character-sources-10184`
+
+  Completion criteria:
+  - two distinct 512x512 transparent original sources follow a salt-hauler buckler guard and a sun-glare flask thrower identity and own exact manifest provenance plus reproducible portraits, battle icons, overworld icons, and fourteen-state/four-frame battle sheets;
+  - live content preserves exact stats/costs/growth/abilities, dwelling graph, shared 9/4 watch, authored Ninefold placement, generated-map site/family/biome/pressure projection, explicit Native-RMG proxy absence, rewards/recruits, road open-lane/wall-pressure encounter authority, and 112 visible BattleBoard frames;
+  - exactly two sources, eight runtime payloads, and two records per manifest change; the other 101 units remain byte-exact and reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: content/rule/balance/AI, dwelling/site/object/encounter/army, recruitment/reward, random-map selection or mapping, native mapping, animation timing, save/render/package behavior, another unit, broad neutral-art completion, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-neutral-switchback-hostel-curated-character-sources-10184`. Two distinct original transparent mountain-pass character sources now replace the generated Switchback Pikes and Cairnshield Porters emblems through exact reproducible existing-path derivatives. The live Switchback Hostel graph, shared 8/3 watch, authored Ninefold placement, explicit Native-RMG proxy absence, rewards/recruits, rough elevated-fire/chokepoint encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-neutral-switchback-hostel-curated-character-sources-10184`
 
