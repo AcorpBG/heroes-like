@@ -26,6 +26,13 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - In-progress implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current product evidence.
 
+- Previous completed implementation slice: `presentation-shared-foundational-town-building-specific-icons-10184`. The six ubiquitous shared town foundations now have distinct original icons while every building rule and all remaining fallbacks stay unchanged.
+  id: `presentation-shared-foundational-town-building-specific-icons-10184`
+
+  Completion criteria: six distinct deterministic source/runtime pairs for Town Hall, Market Square, Wayfarers Hall, Stone Store, Lantern Archive, and Starseer Annex; exact live 1280/1920 resolution; 54 specific building icons and 79 category fallbacks; unchanged costs, prerequisites, income/services, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the other 79 building illustrations, faction-specific support/magic/civic landmarks, prior icon/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
 - Previous completed implementation slice: `presentation-six-faction-foundational-economy-building-specific-icons-10184`. Each faction's first live economy landmark now has a distinct original Town Build icon while every building rule and the remaining category fallbacks stay unchanged.
   id: `presentation-six-faction-foundational-economy-building-specific-icons-10184`
 

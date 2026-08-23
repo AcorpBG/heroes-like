@@ -441,6 +441,60 @@
       "source_sha256": "3914d42ea5e43b479bb0c43185e306faeca556e112af29f78f1de99d1ad56de6",
       "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_salvage_ledger.png",
       "icon_sha256": "898200ac45aeb15cbce0f2616cd5f9bcb455882a81c793b74701447f8ab7c824"
+    },
+    {
+      "id": "building_town_hall",
+      "building_id": "building_town_hall",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_town_hall.png",
+      "source_sha256": "ad65fb78ee7658cf21424976a831deb27a9d4b188d1496afbf132df2874bf7d4",
+      "icon_path": "res://art/towns/runtime/buildings/building_town_hall.png",
+      "icon_sha256": "2a6d9193b251344669927e04f024f63ce3e6a490781fc5b7dce652314d400336"
+    },
+    {
+      "id": "building_market_square",
+      "building_id": "building_market_square",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_market_square.png",
+      "source_sha256": "ad39ee15d48d7d94ca8dd8a9c6305a439f5cbec2257e381b5d0dc7ddd3a622a0",
+      "icon_path": "res://art/towns/runtime/buildings/building_market_square.png",
+      "icon_sha256": "f0153603da197ea369ae1c43c338f90f0adc75e5f25de351eae073adf6a89c52"
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "building_id": "building_wayfarers_hall",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_wayfarers_hall.png",
+      "source_sha256": "99482f7050812c4195edd6f0afbbc0d6489e738efcafc8b9bebfea43df010291",
+      "icon_path": "res://art/towns/runtime/buildings/building_wayfarers_hall.png",
+      "icon_sha256": "b30bb87522d001356087cb5fc991d31d4bb340ce189761bbe7ee3a1c67759693"
+    },
+    {
+      "id": "building_stone_store",
+      "building_id": "building_stone_store",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_stone_store.png",
+      "source_sha256": "dbe7fbfd98797530a3f699e5d6471ab8217a5510bd857caa70395ca757166f40",
+      "icon_path": "res://art/towns/runtime/buildings/building_stone_store.png",
+      "icon_sha256": "de8119843539d01685dcfe0c61b1a4b9e1049cb964444a21cbafacd23563e60b"
+    },
+    {
+      "id": "building_lantern_archive",
+      "building_id": "building_lantern_archive",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_lantern_archive.png",
+      "source_sha256": "a5833f5b1c18f1dd8eb8cab27f60026e428d5f82ce87c9266325998ff114309e",
+      "icon_path": "res://art/towns/runtime/buildings/building_lantern_archive.png",
+      "icon_sha256": "cb03d313b02a4b8ff6531ce38b85d0ac0def07e557a983023e7198d17ac6f9c2"
+    },
+    {
+      "id": "building_starseer_annex",
+      "building_id": "building_starseer_annex",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_starseer_annex.png",
+      "source_sha256": "c04a79ea5f86d301a466c28904dd45dade7b9cf938fab0ff39502d860c51c569",
+      "icon_path": "res://art/towns/runtime/buildings/building_starseer_annex.png",
+      "icon_sha256": "60c047f12425f17a678933f80fff7bd9426e18e2bb64870625dbff3f0e24da56"
     }
   ]
 }
