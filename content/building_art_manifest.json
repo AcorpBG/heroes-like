@@ -864,6 +864,114 @@
       "source_sha256": "c584ed3b24a5ffd9b10a7ac3c4708dcfb9d0c6c66d4bb8cdce6a2e31e028c9ae",
       "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_court.png",
       "icon_sha256": "7dc34d7220a0e0c0cd2ea06385d1e75fe67bc5b09fdb5fc62258d6036c2ffbad"
+    },
+    {
+      "id": "building_brasshollow_clause_court",
+      "building_id": "building_brasshollow_clause_court",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_clause_court.png",
+      "source_sha256": "5cbf3dd607e997a3e07745f9c659bf667ecad8430d47f100560d81bd3acf34d9",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_clause_court.png",
+      "icon_sha256": "e9a6a07b0f1dd36bcf73e91ca6c53b254cce31cb45d38f4a5a92cd3181c4b159"
+    },
+    {
+      "id": "building_brasshollow_heatwright_vestry",
+      "building_id": "building_brasshollow_heatwright_vestry",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_heatwright_vestry.png",
+      "source_sha256": "a19655720a9464d8e00b8703c3bb7bc222ce4ef5cbd9d48c66cdf0597392c839",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_heatwright_vestry.png",
+      "icon_sha256": "a6585d1f68021f02ca852f9711cfbd4b43ef9a868469d0406c65554ca549bf6b"
+    },
+    {
+      "id": "building_brasshollow_gauge_arsenal",
+      "building_id": "building_brasshollow_gauge_arsenal",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_gauge_arsenal.png",
+      "source_sha256": "e7dccfbc11a3a8350f5c731625d90314808698822c2d24ed248d6901b1ef0a72",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_gauge_arsenal.png",
+      "icon_sha256": "89eb5706363130e9a67d28014cf1153fabab83b6c6309cc34b9e590d60dbf506"
+    },
+    {
+      "id": "building_brasshollow_debtworks_vault",
+      "building_id": "building_brasshollow_debtworks_vault",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_debtworks_vault.png",
+      "source_sha256": "29a223bebe50f48b9a800603fe7780ff5c05ff209a200396ec704ad000a78aa9",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_debtworks_vault.png",
+      "icon_sha256": "1af7fdd3236107fbe632d1303338a86722fbcdb7e7c293fe61e99d7b11eecc33"
+    },
+    {
+      "id": "building_brasshollow_ledger_mint",
+      "building_id": "building_brasshollow_ledger_mint",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_ledger_mint.png",
+      "source_sha256": "a806594fe481c1e8a733558e4d3c12d56e0fc20c5febae367634b4f4363e9d08",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_ledger_mint.png",
+      "icon_sha256": "e4e0a368d6ca42a93718d7b44c9806bb3d178dd4dee9ab087dd339ff8c717059"
+    },
+    {
+      "id": "building_brasshollow_foreman_clausehouse",
+      "building_id": "building_brasshollow_foreman_clausehouse",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_foreman_clausehouse.png",
+      "source_sha256": "5ae57d8b53e7970761b661e99a2a6ec3a65e90c8767be530a5731f11c6566d69",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_foreman_clausehouse.png",
+      "icon_sha256": "93db876691d2c48664858fe8f7b678ff543ef620a0a999c9fd80eb4991a91ff4"
+    },
+    {
+      "id": "building_brasshollow_caliper_sanctum",
+      "building_id": "building_brasshollow_caliper_sanctum",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_caliper_sanctum.png",
+      "source_sha256": "6ffb2d2f027aeb6a65a4da67e875cea81cbca51b8d759c822282994535f3454f",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_caliper_sanctum.png",
+      "icon_sha256": "d8cb63cbc9c5295d07499294f2dae3dc55d4936931449d8946a1981bcfedfed0"
+    },
+    {
+      "id": "building_brasshollow_redline_assembly_yard",
+      "building_id": "building_brasshollow_redline_assembly_yard",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_assembly_yard.png",
+      "source_sha256": "db1c83350c203fc7e10e9aba8b617b1ee0111e0993b1e5c3a2ff3fef0d2c923b",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_assembly_yard.png",
+      "icon_sha256": "a57147a8001c829d8e43156b8672854e2f4d354653bbd4fdba7b982737673611"
+    },
+    {
+      "id": "building_brasshollow_brassbound_directorate",
+      "building_id": "building_brasshollow_brassbound_directorate",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_brassbound_directorate.png",
+      "source_sha256": "382c55f0745e0e5d4225f35cb193a372be2a15544970397468fd4ef66d98f5b6",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_brassbound_directorate.png",
+      "icon_sha256": "423bbe4c6613aea9660dfd42c0e50c973e18430ca23c327905c5a40c0ef95e8d"
+    },
+    {
+      "id": "building_brasshollow_quenchwright_bay",
+      "building_id": "building_brasshollow_quenchwright_bay",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_quenchwright_bay.png",
+      "source_sha256": "8be2f5b4bc9ada9797e62c4f4d224a45f180cb4fd2e3be67ab30f3ff9ea5386e",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_quenchwright_bay.png",
+      "icon_sha256": "eeeb7979716ceb33d9557fc5142170d0d352fdedc63ac3ab9fa290723b6c82a2"
+    },
+    {
+      "id": "building_brasshollow_rail_tax_office",
+      "building_id": "building_brasshollow_rail_tax_office",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_rail_tax_office.png",
+      "source_sha256": "f23339730f5b83e5625f8a3a73b9ec076989f07cd97ce4bb57621162e2d6cf81",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_rail_tax_office.png",
+      "icon_sha256": "c172b2f1e3b975791096ec581e472389b5a499dd62c0bd93d1b744b641f74728"
+    },
+    {
+      "id": "building_brasshollow_warrant_engine_house",
+      "building_id": "building_brasshollow_warrant_engine_house",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_warrant_engine_house.png",
+      "source_sha256": "a408ea1241ae1e0f24085a64baed4261596a05dfff0d85bfbb2652938edb3504",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_warrant_engine_house.png",
+      "icon_sha256": "83d458332bc589b561a9c59a097c1af0552e08e4a14f3792b937f289cd394f4f"
     }
   ]
 }

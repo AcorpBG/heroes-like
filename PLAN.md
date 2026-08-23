@@ -26,7 +26,14 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - No implementation slice is currently in progress. Select the next tracker-approved release-readiness slice from direct shipped-behavior evidence.
 
-- Previous completed implementation slice: `presentation-sunvault-complete-authored-town-building-icons-10184`. The 13 former category fallbacks across Prismhearth and Halo Spire now have specific original Town Build art, completing both authored Sunvault towns.
+- Previous completed implementation slice: `presentation-brasshollow-complete-authored-town-building-icons-10184`. The 12 former category fallbacks across Orevein Gantry and Clauseworks Depot now have specific original Town Build art, completing both authored Brasshollow towns.
+  id: `presentation-brasshollow-complete-authored-town-building-icons-10184`
+
+  Completion criteria: 12 distinct deterministic source/runtime pairs for the exact remaining Brasshollow building ids; zero category fallbacks across both authored Brasshollow towns at 1280/1920; 107 specific building icons and 26 exact global category fallbacks; unchanged costs, prerequisites, income, recruitment, magic, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the other 26 building illustrations, other factions' Town Build art, prior icon/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
+- Earlier completed implementation slice: `presentation-sunvault-complete-authored-town-building-icons-10184`. The 13 former category fallbacks across Prismhearth and Halo Spire now have specific original Town Build art, completing both authored Sunvault towns.
   id: `presentation-sunvault-complete-authored-town-building-icons-10184`
 
   Completion criteria: 13 distinct deterministic source/runtime pairs for the exact remaining Sunvault building ids; zero category fallbacks across both authored Sunvault towns at 1280/1920; 95 specific building icons and 38 exact global category fallbacks; unchanged costs, prerequisites, income, recruitment, magic, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
