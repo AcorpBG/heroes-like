@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-neutral-glowcap-croft-curated-character-sources-10184`. Two distinct original transparent fungal-croft character sources now replace the generated Glowcap Bulwarks and Sporelamp Tossers emblems through exact reproducible existing-path derivatives. The live Glowcap Croft graph, shared 9/2 watch, authored Ninefold placement, rewards/recruits, rough fog-bank/chokepoint encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-neutral-glowcap-croft-curated-character-sources-10184`
+
+  Completion criteria:
+  - two distinct 512x512 transparent original sources follow a fungus-buckler tunnel linekeeper and a glass-sporelamp skirmisher identity and own exact manifest provenance plus reproducible portraits, battle icons, overworld icons, and fourteen-state/four-frame battle sheets;
+  - live content preserves exact stats/costs/growth/abilities, dwelling graph, shared 9/2 watch, authored Ninefold placement, rewards/recruits, rough fog-bank/chokepoint encounter authority, and 112 visible BattleBoard frames;
+  - exactly two sources, eight runtime payloads, and two records per manifest change; the other 101 units remain byte-exact and reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: content/rule/balance/AI, dwelling/site/object/encounter/army, recruitment/reward, random-map/native mapping, animation timing, save/render/package behavior, another unit, broad neutral-art completion, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-neutral-lantern-warren-curated-character-sources-10184`. Two distinct original transparent subterranean-warren character sources now replace the generated Tunnel Lanterns and Glimmercap Needlers emblems through exact reproducible existing-path derivatives. The live Lantern Warren graph, shared 8/2 watch, authored Ninefold placement, native-RMG subtype-52/source-row-190 projection, rewards/recruits, rough encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-neutral-lantern-warren-curated-character-sources-10184`
 

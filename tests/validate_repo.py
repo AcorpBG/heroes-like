@@ -409,6 +409,10 @@ TUNNEL_LANTERNS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "un
 GLIMMERCAP_NEEDLERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_glimmercap_needlers.png"
 LANTERN_WARREN_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_lantern_warren_curated_art_report.gd"
 LANTERN_WARREN_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_neutral_lantern_warren_curated_art_report.tscn"
+GLOWCAP_BULWARKS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_glowcap_bulwarks.png"
+SPORELAMP_TOSSERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_sporelamp_tossers.png"
+GLOWCAP_CROFT_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_glowcap_croft_curated_art_report.gd"
+GLOWCAP_CROFT_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_neutral_glowcap_croft_curated_art_report.tscn"
 ROADWARDENS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_roadwardens.png"
 HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_hearthbow_carriers.png"
 ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_roadward_lodge_curated_art_report.gd"
@@ -42493,6 +42497,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         GLIMMERCAP_NEEDLERS_CURATED_SOURCE_PATH,
         LANTERN_WARREN_CURATED_ART_REPORT_SCRIPT_PATH,
         LANTERN_WARREN_CURATED_ART_REPORT_SCENE_PATH,
+        GLOWCAP_BULWARKS_CURATED_SOURCE_PATH,
+        SPORELAMP_TOSSERS_CURATED_SOURCE_PATH,
+        GLOWCAP_CROFT_CURATED_ART_REPORT_SCRIPT_PATH,
+        GLOWCAP_CROFT_CURATED_ART_REPORT_SCENE_PATH,
         ROADWARDENS_CURATED_SOURCE_PATH,
         HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH,
         ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH,
@@ -42710,6 +42718,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     emberpack_lobbers_unit_id = "unit_neutral_emberpack_lobbers"
     tunnel_lanterns_unit_id = "unit_neutral_tunnel_lanterns"
     glimmercap_needlers_unit_id = "unit_neutral_glimmercap_needlers"
+    glowcap_bulwarks_unit_id = "unit_neutral_glowcap_bulwarks"
+    sporelamp_tossers_unit_id = "unit_neutral_sporelamp_tossers"
     roadwardens_unit_id = "unit_neutral_roadwardens"
     hearthbow_carriers_unit_id = "unit_neutral_hearthbow_carriers"
     gorefen_ripper_unit_id = "unit_gorefen_ripper"
@@ -42962,6 +42972,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in lantern_warren_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    glowcap_croft_curated_sources = (
+        (glowcap_bulwarks_unit_id, GLOWCAP_BULWARKS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_glowcap_bulwarks.png", "f52f0a9b0ca54f4554bf1fd518f9620ce57b9a71abb7857ad0ece4784e2631c0", "Glowcap Bulwarks"),
+        (sporelamp_tossers_unit_id, SPORELAMP_TOSSERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_sporelamp_tossers.png", "097a62a7ac168e9664192e4038d39eb4ffed36ce480c41552e07c202c7932e95", "Sporelamp Tossers"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in glowcap_croft_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     roadward_lodge_curated_sources = (
         (roadwardens_unit_id, ROADWARDENS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_roadwardens.png", "625b2deb46cd667b28824cb2833338073406d411dc2adaea6e3a116d7a5c14b7", "Roadwardens"),
         (hearthbow_carriers_unit_id, HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_hearthbow_carriers.png", "6557279fcd3e442ed0baafe591073874a4242ce246f6e2722d736171ceb812a0", "Hearthbow Carriers"),
@@ -43027,19 +43044,19 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         record for record in animation_manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
-    lantern_warren_unit_ids = [tunnel_lanterns_unit_id, glimmercap_needlers_unit_id]
+    lantern_warren_unit_ids = [tunnel_lanterns_unit_id, glimmercap_needlers_unit_id, glowcap_bulwarks_unit_id, sporelamp_tossers_unit_id]
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) not in lantern_warren_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved eighty-one units, including both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source branch",
+        "Exactly the approved eighty-three units, including both Glowcap Croft units, both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source branch",
     )
-    ensure(len(curated_art_records) == 81 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in lantern_warren_unit_ids) == sorted(lantern_warren_unit_ids), errors, "Lantern Warren must extend the curated art set with exactly its two units")
+    ensure(len(curated_art_records) == 83 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in lantern_warren_unit_ids) == sorted(lantern_warren_unit_ids), errors, "Lantern Warren and Glowcap Croft must extend the curated art set with exactly their four units")
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) not in lantern_warren_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved eighty-one units, including both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source animation branch",
+        "Exactly the approved eighty-three units, including both Glowcap Croft units, both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source animation branch",
     )
-    ensure(len(curated_animation_records) == 81 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in lantern_warren_unit_ids) == sorted(lantern_warren_unit_ids), errors, "Lantern Warren must extend the curated animation set with exactly its two units")
+    ensure(len(curated_animation_records) == 83 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in lantern_warren_unit_ids) == sorted(lantern_warren_unit_ids), errors, "Lantern Warren and Glowcap Croft must extend the curated animation set with exactly their four units")
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(fordhook_unit_id, {}), "animation"),
@@ -43127,6 +43144,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in reedbarge_mooring_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in charcoal_burners_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in lantern_warren_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in glowcap_croft_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in roadward_lodge_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_upper_ladder_curated_sources),
@@ -43236,6 +43254,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_neutral_emberpack_lobbers",
     "unit_neutral_fenhound_runners",
     "unit_neutral_glimmercap_needlers",
+    "unit_neutral_glowcap_bulwarks",
     "unit_neutral_greenbranch_cudgels",
     "unit_neutral_hearthbow_carriers",
     "unit_neutral_hedgehook_watch",
@@ -43250,6 +43269,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_neutral_roadwardens",
     "unit_neutral_scarshield_veterans",
     "unit_neutral_sapwhistle_callers",
+    "unit_neutral_sporelamp_tossers",
     "unit_neutral_thornbow_scouts",
     "unit_neutral_tidepool_cutters",
     "unit_neutral_tunnel_lanterns",
@@ -43280,7 +43300,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_undertow_harpooners",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the eighty-one approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the eighty-three approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -44876,6 +44896,69 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in lantern_warren_report_text, errors, f"Lantern Warren focused report must remain observation-only: {forbidden_token}")
     lantern_warren_scene_text = LANTERN_WARREN_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_neutral_lantern_warren_curated_art_report.gd"' in lantern_warren_scene_text, errors, "Lantern Warren curated art report scene must own the exact focused script")
+
+    glowcap_croft_report_text = GLOWCAP_CROFT_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_NEUTRAL_GLOWCAP_CROFT_CURATED_ART_REPORT"',
+        'SHARED_ARMY_ID := "army_neutral_glowcap_croft_watch"',
+        '{"scenario_id": "ninefold-confluence", "placement_id": "dwelling_glowcap_croft", "site_id": "site_glowcap_croft"}',
+        '"unit_id": "unit_neutral_glowcap_bulwarks", "label": "Glowcap Bulwarks", "count": 9, "tier": 2, "role": "melee", "growth": 4, "cost": {"gold": 115, "ore": 1}, "ability_ids": ["shielding"], "hp": 14, "attack": 5, "defense": 7, "min_damage": 3, "max_damage": 5, "speed": 3, "initiative": 5, "retaliations": 1, "ranged": false, "shots": -1',
+        '"unit_id": "unit_neutral_sporelamp_tossers", "label": "Sporelamp Tossers", "count": 2, "tier": 2, "role": "ranged", "growth": 5, "cost": {"gold": 95}, "ability_ids": ["harry"], "hp": 8, "attack": 5, "defense": 4, "min_damage": 2, "max_damage": 4, "speed": 4, "initiative": 6, "retaliations": 1, "ranged": true, "shots": 6',
+        '"source_sha256": "f52f0a9b0ca54f4554bf1fd518f9620ce57b9a71abb7857ad0ece4784e2631c0"',
+        '"source_sha256": "097a62a7ac168e9664192e4038d39eb4ffed36ce480c41552e07c202c7932e95"',
+        '"portrait_sha256": "b6889a81039e92b5d3a4d7f2bbd36699d5472d4ad04c5efb7032ff3265bac60e"',
+        '"portrait_sha256": "4f4c36cd7fb7fea79f16eac84a4892815f92eed9f65fe697887a9f70ddc69db8"',
+        '"icon_sha256": "b94bb40e86ca7e7e7e2942c8c8ff8d56bb24b6df7919dafcfcfd0f465bd0eea4"',
+        '"icon_sha256": "0aad7f8d4da010342516a88a98f824351a46f51cea35acc5aa2d2d88e67160cf"',
+        '"overworld_icon_sha256": "d9fc13559262148c1a708fea75bc969e03f20ab89d43510aee3e34443e018978"',
+        '"overworld_icon_sha256": "3acac7539d8fd9824f6616287bc8cdb2de0201f4d773e6cac0179fa30fc83d5f"',
+        '"sheet_sha256": "3ab03ef0eeafe43298be30fa8ae381c457b5aa4e6296f4e6e605d5c69e57f325"',
+        '"sheet_sha256": "e84650ea63920dabc59f3199327c03fd73264510fe38bb683b7faae3cef4a7c9"',
+        '"old_portrait_sha256": "be2b9d83f3393561fb8df137a27c8dd7c05ac726c8a12a328053019172106f89"',
+        '"old_portrait_sha256": "d6b7a831a98870b97cdeacd6b099ef3ac8ab19a6ca672a86cb7093f1593ea1cc"',
+        '"old_sheet_sha256": "c145331e3b0f5e2c42fabc84a447df4dfbea9494fb413b10b727d13c3e9dca1a"',
+        '"old_sheet_sha256": "fd6417ca08b54d330501eed1168220658ac387e5c6843057b910aa9de213e0f6"',
+        '_validate_assets_and_provenance()', '_validate_content_authority()', '_validate_authored_site_authority()', 'await _validate_live_glowcap_croft_battle_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 40000 and int(source_alpha.get("strong", 0)) > 40000',
+        'bool(source_alpha.get("corners_transparent", false))',
+        'dwelling.get("unit_ids", []) == ["unit_neutral_glowcap_bulwarks", "unit_neutral_sporelamp_tossers"]',
+        'dwelling.get("site_ids", []) == ["site_glowcap_croft"] and dwelling.get("map_object_ids", []) == ["object_glowcap_croft"]',
+        'dwelling.get("army_group_ids", []) == [SHARED_ARMY_ID] and dwelling.get("encounter_ids", []) == ["encounter_glowcap_croft_watch"]',
+        'FileAccess.get_file_as_string("res://content/homm3_re_reward_object_proxy_catalog.json")',
+        'String(row.get("native_proxy_object_id", "")) == "object_glowcap_croft"',
+        'native_proxy_rows.is_empty()',
+        '_resource_cost_contract(site.get("claim_rewards", {})) == {"gold": 105} and _resource_cost_contract(site.get("claim_recruits", {})) == {"unit_neutral_glowcap_bulwarks": 2, "unit_neutral_sporelamp_tossers": 1}',
+        '_resource_cost_contract(site.get("control_income", {})) == {"gold": 40} and _resource_cost_contract(site.get("weekly_recruits", {})) == {"unit_neutral_glowcap_bulwarks": 1}',
+        'String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "rough" and encounter.get("battlefield_tags", []) == ["fog_bank", "chokepoint"] and int(encounter.get("max_rounds", 0)) == 12',
+        'String(unit.get("affiliation", "")) == "neutral" and int(unit.get("tier", 0)) == int(spec["tier"]) and String(unit.get("role", "")) == String(spec["role"])',
+        'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
+        'for stat_id in ["hp", "attack", "defense", "min_damage", "max_damage", "speed", "initiative", "retaliations"]',
+        'ability_ids == spec["ability_ids"]',
+        'String(placement.get("site_id", "")) == String(expected["site_id"])',
+        'ScenarioFactory.create_session("ninefold-confluence", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'var expected_counts := {"unit_neutral_glowcap_bulwarks": 9, "unit_neutral_sporelamp_tossers": 2}',
+        'BattleRulesScript.create_battle_payload(session, placement)', '_battle_stack_counts(enemy_stacks) == expected_counts',
+        'session.to_dict() == authority_before', 'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+        '"authored_site_count": AUTHORED_SITE_ROWS.size()',
+    ):
+        ensure(required_token in glowcap_croft_report_text, errors, f"Glowcap Croft curated art report is missing token {required_token}")
+    ensure(glowcap_croft_report_text.count('BattleRulesScript.create_battle_payload(') == 1, errors, "Glowcap Croft report must use exactly one public shared-watch battle materialization")
+    ensure(glowcap_croft_report_text.count('ContentService.get_scenario(') == 1, errors, "Glowcap Croft report must use one ordered authored-site scenario lookup")
+    ensure(glowcap_croft_report_text.count('FileAccess.get_file_as_string("res://content/homm3_re_reward_object_proxy_catalog.json")') == 1, errors, "Glowcap Croft report must use one read-only Native-RMG proxy absence observation")
+    ensure('homm3_re_object_subtype' not in glowcap_croft_report_text and 'homm3_re_object_source_row' not in glowcap_croft_report_text and 'homm3_re_object_def_ref' not in glowcap_croft_report_text, errors, "Glowcap Croft must not invent Native-RMG subtype/source authority")
+    ensure('RandomMapGeneratorRulesScript' not in glowcap_croft_report_text, errors, "Glowcap Croft report must not claim random-map selection")
+    ensure('unit.get("cost", {}) == spec["cost"]' not in glowcap_croft_report_text, errors, "Glowcap Croft cost oracle must compare the typed integer resource contract")
+    ensure('String(entry.get("side", "enemy")) != "player"' not in glowcap_croft_report_text, errors, "Glowcap Croft report must not infer a side field absent from the public Board art summary")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'unit["', 'dwelling["', 'site["', 'encounter["', 'shared_army["', 'enemy_stacks['):
+        ensure(forbidden_token not in glowcap_croft_report_text, errors, f"Glowcap Croft focused report must remain observation-only: {forbidden_token}")
+    glowcap_croft_scene_text = GLOWCAP_CROFT_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_neutral_glowcap_croft_curated_art_report.gd"' in glowcap_croft_scene_text, errors, "Glowcap Croft curated art report scene must own the exact focused script")
 
     roadward_lodge_report_text = ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
