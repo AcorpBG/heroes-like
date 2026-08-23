@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Six original curated roster-sage sources and deterministic existing-path portraits are live with exact skirmish, tavern, save, and runtime-surface authority. Select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "The six-faction roster-scholar portrait slice is complete with six original curated sources, deterministic runtime portraits, exact gameplay and roster preservation, focused/compatibility/static validation, and bounded Linux/Windows export-startup evidence. This does not establish release readiness.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-six-faction-roster-sages-curated-portraits-10184",
-  "currentSliceId": "art-six-faction-roster-sages-curated-portraits-10184",
-  "currentSliceNotes": "Belis, Nix, Renn, Elian, Odrik, and Thir now have distinct original curated sources and deterministic 384x512 portraits with exact roster, content, gameplay, and live-surface authority; bounded Linux and Windows export/startup gates pass.",
+  "currentSlice": "art-six-faction-roster-scholars-curated-portraits-10184",
+  "currentSliceId": "art-six-faction-roster-scholars-curated-portraits-10184",
+  "currentSliceNotes": "Jorun, Edda, Essa, Ralka, Lina, and Sael now have distinct curated sources and deterministic 384x512 portraits; the other 54 portraits remain byte-exact and all bounded gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six-Faction Curated Roster Sages",
-  "currentSliceUpdatedAt": "2026-08-23T14:19:28Z",
+  "currentSliceTitle": "Six-Faction Curated Roster Scholars",
+  "currentSliceUpdatedAt": "2026-08-23T14:49:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; preserve the completed roster-sage portrait authority and do not infer release readiness.",
-  "notes": "Six-faction roster sage portrait curation is complete as shipped roster-art breadth through live skirmish/tavern/save/runtime surfaces. This does not claim hero/content/rule/balance/AI changes, packaged portrait interaction, certification, Native-RMG parity, or release readiness.",
+  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice from current source-backed release gaps; preserve honest bounded claims and do not infer release readiness from portrait or packaging gates.",
+  "notes": "Six curated roster-scholar portraits are complete and validated. Focused headless evidence covers portrait interaction at 1280/1920; platform evidence is limited to Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup.",
   "plannedSlices": [
+    {
+      "id": "art-six-faction-roster-scholars-curated-portraits-10184", "title": "Six-Faction Curated Roster Scholars", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace the next generator-only live roster hero in every faction with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_embercourt_jorun_beaconscribe.png", "art/heroes/source/curated/hero_mireclaw_edda_rotlamp.png", "art/heroes/source/curated/hero_sunvault_essa_daynote.png", "art/heroes/source/curated/hero_thornwake_ralka_mossvein.png", "art/heroes/source/curated/hero_brasshollow_lina_gaugesavant.png", "art/heroes/source/curated/hero_veilmourn_sael_mirrorbell.png", "art/heroes/portraits/hero_embercourt_jorun_beaconscribe.png", "art/heroes/portraits/hero_mireclaw_edda_rotlamp.png", "art/heroes/portraits/hero_sunvault_essa_daynote.png", "art/heroes/portraits/hero_thornwake_ralka_mossvein.png", "art/heroes/portraits/hero_brasshollow_lina_gaugesavant.png", "art/heroes/portraits/hero_veilmourn_sael_mirrorbell.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/six_faction_roster_scholars_curated_portrait_report.gd", "tests/six_faction_roster_scholars_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_embercourt_jorun_beaconscribe","hero_mireclaw_edda_rotlamp","hero_sunvault_essa_daynote","hero_thornwake_ralka_mossvein","hero_brasshollow_lina_gaugesavant","hero_veilmourn_sael_mirrorbell"], "faction_ids": ["faction_embercourt","faction_mireclaw","faction_sunvault","faction_thornwake","faction_brasshollow","faction_veilmourn"], "roster_indices": [9,7,7,8,7,7], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 54, "old_portrait_sha256": ["66c84ccab61dd8d80bda1b37338602faa799110322a31e0230217d4c816502b6","8a5e2b77ae3dd318d65dbcd5db31cdace92186757de60c91a6892bae32f1ddc2","7c848aca89a69c5380f1986eef56ab7e358e782b4d6194bcb70df423c692bfd9","b6c9c84b45c9986513596798c7e9c670012da0fe520f61cf4211b9f1bd456b57","864d6ac2587fa84de84397e4b35b5a0636fd6242f2158ade1372b7a8f58a41ff","39e14abe7e5fda3115b5b1252d917c60f8df6a831f4dfee95cd309591fd85ac9"]},
+      "completionCriteria": ["Six original square sources and deterministic 384x512 portraits own exact provenance and distinct faction/role identity", "Skirmish/tavern/save/Overworld/Town/Battle/Outcome surfaces retain exact paths, faction roster order, and hero/content/gameplay authority", "Only six sources, six runtime portraits, and six manifest records change; 54 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Campaign/scenario ownership, any other hero or content/rule/balance/AI behavior", "Roster order/recruitment policy, portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T14:22:02Z", "startedAt": "2026-08-23T14:22:02Z", "completedAt": "2026-08-23T14:49:00Z", "updatedAt": "2026-08-23T14:49:00Z", "notes": "Six curated scholar sources and deterministic portraits are integrated. Two regenerations are byte-identical, all 54 non-target portraits remain exact, focused and compatibility owners pass, static/editor validation is green, and official Linux plus Windows/Wine export-startup smokes pass with bounded claims.", "remainingWork": "Select the next tracker-approved release-readiness implementation slice; no packaged portrait interaction, certification, signing/publication, Native-RMG parity, or whole-release claim is made."
+    },
     {
       "id": "art-six-faction-roster-sages-curated-portraits-10184", "title": "Six-Faction Curated Roster Sages", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md",
       "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
@@ -94732,7 +94741,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Complete the registered six-faction roster-scholar curated portrait slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -95163,7 +95172,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_six_faction_roster_sages_curated_portraits_completed",
+  "result": "art_six_faction_roster_scholars_curated_portraits_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -95264,9 +95273,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Six-faction roster sage portrait curation is complete with six original live sources, deterministic existing-path portraits, exact roster/content/gameplay authority, all 54 non-target portraits byte-exact, and focused, reproducibility, compatibility, static/editor, Linux, and Windows startup gates green.",
+  "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T14:19:28Z",
+  "updatedAt": "2026-08-23T14:49:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
