@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Crystal Sump curated character sources are completed with focused live authority, whole-art reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
+  "currentNotes": "Icehook Trapper Lodge curated character sources are completed with focused live authority, whole-art reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-crystal-sump-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-crystal-sump-curated-character-sources-10184",
-  "currentSliceNotes": "Two original Crystal Sump sources and eight exact deterministic derivatives are live; authored/generated-map/content/gameplay authority stayed exact and bounded validation is green.",
+  "currentSlice": "art-neutral-icehook-trapper-lodge-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-icehook-trapper-lodge-curated-character-sources-10184",
+  "currentSliceNotes": "Two original Icehook Trapper Lodge sources and eight exact deterministic derivatives are live; authored content, gameplay, random/native mapping absences, and all non-target unit art stayed exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Crystal Sump Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T06:28:56Z",
+  "currentSliceTitle": "Icehook Trapper Lodge Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-23T07:04:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select and register one source-backed product slice before further implementation; do not infer broad completion or release readiness from the completed Crystal Sump art boundary.",
-  "notes": "Crystal Sump curated sources are completed. Production content, gameplay, generated/native mapping, and all non-target unit art remain unchanged; select the next tracker-approved slice.",
+  "nextActionGuardrailNote": "Select and register one source-backed product slice before further implementation; do not infer broad completion or release readiness from the completed Icehook Trapper Lodge art boundary.",
+  "notes": "Icehook Trapper Lodge curated sources are completed. Production content, gameplay, random/native mapping, and all non-target unit art remain unchanged; select the next tracker-approved slice.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-icehook-trapper-lodge-curated-character-sources-10184",
+      "title": "Icehook Trapper Lodge Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace generated Icehook Trappers and Whitepike Keepers emblems with original character-readable sources and exact existing-path derivatives while preserving the Icehook Trapper Lodge graph and gameplay.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_icehook_trappers.png", "art/units/source/curated/unit_neutral_whitepike_keepers.png", "art/units/portraits/unit_neutral_icehook_trappers.png", "art/units/portraits/unit_neutral_whitepike_keepers.png", "art/units/battle_icons/unit_neutral_icehook_trappers.png", "art/units/battle_icons/unit_neutral_whitepike_keepers.png", "art/units/overworld_icons/unit_neutral_icehook_trappers.png", "art/units/overworld_icons/unit_neutral_whitepike_keepers.png", "art/animation/runtime/units/unit_neutral_icehook_trappers.png", "art/animation/runtime/units/unit_neutral_whitepike_keepers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_icehook_trapper_lodge_curated_art_report.gd", "tests/unit_neutral_icehook_trapper_lodge_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_icehook_trappers","unit_neutral_whitepike_keepers"], "tiers": [2,2], "roles": ["melee","melee"], "ability_ids": [["backstab"],["reach"]], "shared_army_counts": [7,3], "authored_site_placement_ids": ["dwelling_icehook_trapper_lodge"], "generated_map_site_ids": [], "claim_recruits": [2,1], "source_size": [512,512], "other_units_must_remain_byte_exact": 101},
+      "completionCriteria": ["Two distinct transparent sources and all eight deterministic existing-path derivatives own exact provenance", "Live units, dwelling graph, 7/3 watch, authored placement, exact random-map/native-proxy absences, rewards, forest fog-bank/ambush-cover encounter, BattleBoard resources, session authority, and 112 frames are exact", "Two full 412-asset regenerations, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Content, stats, abilities, costs, growth, balance, AI, dwelling/site/object/encounter/army, reward/recruitment, random/native mapping, animation timing, save, rendering, or packaging behavior", "Another unit, broad neutral art, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T06:32:12Z",
+      "startedAt": "2026-08-23T06:32:12Z",
+      "completedAt": "2026-08-23T07:04:52Z",
+      "updatedAt": "2026-08-23T07:04:52Z",
+      "notes": "Two original transparent Icehook Trapper Lodge sources and eight exact existing-path derivatives are live. Focused /tmp/heroes-icehook-focused.UfuK4f proves exact source provenance, unit/content/site/random-map-candidate-absence/native-proxy-absence/session authority, two BattleBoard entries, and 112 visible frames. /tmp/heroes-icehook-repro.brDn6f proves two complete generator passes byte-exact across 412 derivatives and two manifests. The 15-owner compatibility chain /tmp/heroes-icehook-compat.KxvzbY and final static/editor audit /tmp/heroes-icehook-final-editor.poD4Cz are green. Official Linux /tmp/heroes-icehook-linux-package.xeACtp export/headless startup and Windows /tmp/heroes-icehook-windows-package.bhMDdf export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are ok:true. Packaged Icehook interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-crystal-sump-curated-character-sources-10184",
       "title": "Crystal Sump Curated Character Sources",
@@ -94875,7 +94895,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_crystal_sump_curated_character_sources_completed",
+  "result": "art_neutral_icehook_trapper_lodge_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94976,9 +94996,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Crystal Sump curated-character slice is completed: original Guard and Echodart sources, exact deterministic derivatives, focused live authority, reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup validation are green without content/gameplay/native mapping changes or broader release claims.",
+  "summary": "The Icehook Trapper Lodge curated-character slice is completed: original Trapper and Keeper sources, exact deterministic derivatives, focused live authority, reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup validation are green without content/gameplay/mapping changes or broader release claims.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T06:28:56Z",
+  "updatedAt": "2026-08-23T07:04:52Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
