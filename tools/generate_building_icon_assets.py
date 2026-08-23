@@ -97,6 +97,19 @@ BUILDING_IDS = (
     "building_embercourt_charter_flame",
     "building_signal_citadel",
     "building_charter_bastion",
+    "building_shard_yard",
+    "building_sunvault_relay_scribes",
+    "building_prism_range",
+    "building_mirror_forge",
+    "building_lens_gallery",
+    "building_duel_circle",
+    "building_resonant_exchange",
+    "building_harmonic_cloister",
+    "building_aurora_spire",
+    "building_daybreak_matrix",
+    "building_sunvault_prism_oratory",
+    "building_sunvault_halo_battery_yard",
+    "building_sunvault_zenith_court",
 )
 
 

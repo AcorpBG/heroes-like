@@ -747,6 +747,123 @@
       "source_sha256": "26a83c6b45b9f40471374ee6830e425af484eed7275962026a5989b8de762929",
       "icon_path": "res://art/towns/runtime/buildings/building_charter_bastion.png",
       "icon_sha256": "8370f3d5ed4543b3147b45a2a8e16b72f31c53c11363844be2f664d5ea945ddf"
+    },
+    {
+      "id": "building_shard_yard",
+      "building_id": "building_shard_yard",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_shard_yard.png",
+      "source_sha256": "af744f9dd5b58b59613c736079c9b65e737061311aa66733ce885607b084989f",
+      "icon_path": "res://art/towns/runtime/buildings/building_shard_yard.png",
+      "icon_sha256": "636652f2c50be014bd3303693129f47b7ed505f89bd20e908a1872c8f18a2937"
+    },
+    {
+      "id": "building_sunvault_relay_scribes",
+      "building_id": "building_sunvault_relay_scribes",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_relay_scribes.png",
+      "source_sha256": "28a782c0b5798c9b006bf0689b5137cb1f47f643de09b5500a5002e008ee5d5b",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_relay_scribes.png",
+      "icon_sha256": "0ceefeaf026a54f101ea064b37ee269047f65b5c7e518fe7a64abcd238198c26"
+    },
+    {
+      "id": "building_prism_range",
+      "building_id": "building_prism_range",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_prism_range.png",
+      "source_sha256": "6803b7ef8a4cafcfebe298ff33bc2e6f370f979fe10638491b342839cd8890ec",
+      "icon_path": "res://art/towns/runtime/buildings/building_prism_range.png",
+      "icon_sha256": "dabdd4f53033efdc65f69c48d148df177884fd9539d4f46d3546d9ff93ce6108"
+    },
+    {
+      "id": "building_mirror_forge",
+      "building_id": "building_mirror_forge",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mirror_forge.png",
+      "source_sha256": "ac91b5d55aa94dc7f464f4d183cf61eac829832ca0130363ab99ac7d6f6ef08e",
+      "icon_path": "res://art/towns/runtime/buildings/building_mirror_forge.png",
+      "icon_sha256": "1ebb7d16dfa47b856736e5cd407117083f4d7bd96520d6adf4b675d010eaf69d"
+    },
+    {
+      "id": "building_lens_gallery",
+      "building_id": "building_lens_gallery",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_lens_gallery.png",
+      "source_sha256": "cc3064b10e4e36a15483d95a4f0951d733ec04c0d76ae070014040b7f4d51c72",
+      "icon_path": "res://art/towns/runtime/buildings/building_lens_gallery.png",
+      "icon_sha256": "3f695490babca8a85aa9bec8b3d8c1f8fec2f5950547f37180bf19c03eaedcac"
+    },
+    {
+      "id": "building_duel_circle",
+      "building_id": "building_duel_circle",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_duel_circle.png",
+      "source_sha256": "4846207fec41bc96a0251405ddf0c0461b9b1230f2c5e09daa5b5f0944ec6395",
+      "icon_path": "res://art/towns/runtime/buildings/building_duel_circle.png",
+      "icon_sha256": "cd7ff6581b4f8b3738a78223185d95c7b5dd442a4baaabe5cbee6dd9a8d2bd7e"
+    },
+    {
+      "id": "building_resonant_exchange",
+      "building_id": "building_resonant_exchange",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_resonant_exchange.png",
+      "source_sha256": "a94b5a0b6442cf2c236718f587aa7b9743661986be05346aa522929dd658ab28",
+      "icon_path": "res://art/towns/runtime/buildings/building_resonant_exchange.png",
+      "icon_sha256": "551a44a728ae34f2071e4f0bca82a38acbb218de8efdb9da7bdca0ed33b8dedd"
+    },
+    {
+      "id": "building_harmonic_cloister",
+      "building_id": "building_harmonic_cloister",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_harmonic_cloister.png",
+      "source_sha256": "e85faf84ec5517b981755c26ca793ef2f95298c82dc6bcf755a5b008bebe9b6f",
+      "icon_path": "res://art/towns/runtime/buildings/building_harmonic_cloister.png",
+      "icon_sha256": "4ebd1a68f69cc46ea3f9633d6d0f326d1d2759630382c5570f565da09baaee09"
+    },
+    {
+      "id": "building_aurora_spire",
+      "building_id": "building_aurora_spire",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_aurora_spire.png",
+      "source_sha256": "7fdf024f750e1649ab891045371f1c9373136bde45fa8fa8f04515d75a154fb5",
+      "icon_path": "res://art/towns/runtime/buildings/building_aurora_spire.png",
+      "icon_sha256": "06606ff9f286c82bb174a04606d953fd4a4e2cde71560eb3052438f29ed3842e"
+    },
+    {
+      "id": "building_daybreak_matrix",
+      "building_id": "building_daybreak_matrix",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_daybreak_matrix.png",
+      "source_sha256": "50632a37862f3a45bcd533b367ff718bf8eb7386987e305061845b1e1acba25b",
+      "icon_path": "res://art/towns/runtime/buildings/building_daybreak_matrix.png",
+      "icon_sha256": "7b6c4c26717fb580ca01beea1597c21bcd993a8c5cc1eaf6b6b0676a4c9cc0c9"
+    },
+    {
+      "id": "building_sunvault_prism_oratory",
+      "building_id": "building_sunvault_prism_oratory",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_prism_oratory.png",
+      "source_sha256": "cb6098aa097f97e57e540b77d4e73a25628fe7d10e013864d0d309cba76ad69f",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_prism_oratory.png",
+      "icon_sha256": "59f870147596c076651c15a4864169eb11935862ace65fc4c9ce5657f55bcee3"
+    },
+    {
+      "id": "building_sunvault_halo_battery_yard",
+      "building_id": "building_sunvault_halo_battery_yard",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_halo_battery_yard.png",
+      "source_sha256": "57debfa13d7f1ca3650317899e06b58b2a84cb62925acdf79d9b7f8d90da9a51",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_halo_battery_yard.png",
+      "icon_sha256": "bd2afec30e94d275f573d3e2c7815f0da8be0cb4c99c6afaf17cb197683e0e7b"
+    },
+    {
+      "id": "building_sunvault_zenith_court",
+      "building_id": "building_sunvault_zenith_court",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_zenith_court.png",
+      "source_sha256": "c584ed3b24a5ffd9b10a7ac3c4708dcfb9d0c6c66d4bb8cdce6a2e31e028c9ae",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_court.png",
+      "icon_sha256": "7dc34d7220a0e0c0cd2ea06385d1e75fe67bc5b09fdb5fc62258d6036c2ffbad"
     }
   ]
 }
