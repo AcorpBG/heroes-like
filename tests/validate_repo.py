@@ -73,6 +73,8 @@ TOWN_SUNVAULT_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_sunvault
 TOWN_SUNVAULT_DWELLING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_sunvault_production_dwelling_icon_report.tscn"
 TOWN_THORNWAKE_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_thornwake_production_dwelling_icon_report.gd"
 TOWN_THORNWAKE_DWELLING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_thornwake_production_dwelling_icon_report.tscn"
+TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_brasshollow_production_dwelling_icon_report.gd"
+TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_brasshollow_production_dwelling_icon_report.tscn"
 FACTION_CREST_MANIFEST_PATH = CONTENT_DIR / "faction_crests.json"
 FACTION_CREST_ATLAS_PATH = ROOT / "art" / "factions" / "source" / "faction_crest_atlas.png"
 TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.gd"
@@ -38013,6 +38015,8 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         TOWN_SUNVAULT_DWELLING_ICON_REPORT_SCENE_PATH,
         TOWN_THORNWAKE_DWELLING_ICON_REPORT_SCRIPT_PATH,
         TOWN_THORNWAKE_DWELLING_ICON_REPORT_SCENE_PATH,
+        TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCRIPT_PATH,
+        TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCENE_PATH,
     )
     for path in required:
         ensure(path.exists(), errors, f"Missing Embercourt dwelling icon owner: {path.relative_to(ROOT)}")
@@ -38047,6 +38051,13 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         "building_thornwake_pilgrim_orchard",
         "building_thornwake_graftworks",
         "building_thornwake_worldroot_gate",
+        "building_brasshollow_ore_tithe_office",
+        "building_brasshollow_rivet_kennels",
+        "building_brasshollow_pavis_foundry",
+        "building_brasshollow_boiler_cathedral",
+        "building_brasshollow_pressure_rail",
+        "building_brasshollow_crucible_dock",
+        "building_brasshollow_titan_charter_hall",
     ]
     manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
     rows = manifest_root.get("items", [])
@@ -38075,7 +38086,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
             ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
             header = icon_path.read_bytes()[:26]
             ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
-    ensure(len(set(source_hashes)) == 28 and len(set(icon_hashes)) == 28, errors, "All twenty-eight building sources and icons must be distinct")
+    ensure(len(set(source_hashes)) == 35 and len(set(icon_hashes)) == 35, errors, "All thirty-five building sources and icons must be distinct")
 
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
     for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
@@ -38096,7 +38107,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == 7", "specific_count == 28", "fallback_count == 105", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == 7", "specific_count == 35", "fallback_count == 98", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     for forbidden in ("_on_build_action_pressed(", "_on_confirm_build_pressed(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Focused building icon report must not bypass production: {forbidden}")
@@ -38117,10 +38128,17 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     thorn_text = TOWN_THORNWAKE_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     thorn_scene = TOWN_THORNWAKE_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(thorn_scene, errors, "town_thornwake_production_dwelling_icon_report.tscn", [("TownThornwakeProductionDwellingIconReport", "Node")])
-    for building_id in expected_ids[21:]:
+    for building_id in expected_ids[21:28]:
         ensure(f'"{building_id}"' in thorn_text, errors, f"Thornwake focused report is missing {building_id}")
     for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return THORNWAKE_TARGET_BUILDING_IDS", 'return "TOWN_THORNWAKE_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in thorn_text, errors, f"Thornwake focused report is missing: {token}")
+    brass_text = TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    brass_scene = TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(brass_scene, errors, "town_brasshollow_production_dwelling_icon_report.tscn", [("TownBrasshollowProductionDwellingIconReport", "Node")])
+    for building_id in expected_ids[28:]:
+        ensure(f'"{building_id}"' in brass_text, errors, f"Brasshollow focused report is missing {building_id}")
+    for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return BRASSHOLLOW_TARGET_BUILDING_IDS", 'return "TOWN_BRASSHOLLOW_PRODUCTION_DWELLING_ICON_REPORT"'):
+        ensure(token in brass_text, errors, f"Brasshollow focused report is missing: {token}")
 
 
 def validate_town_faction_crest_runtime(errors: list[str]) -> None:

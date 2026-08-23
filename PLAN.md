@@ -26,6 +26,13 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current product evidence.
 
+- Previous completed implementation slice: `presentation-brasshollow-production-dwelling-specific-icons-10184`. Brasshollow's exact seven-tier production ladder now has distinct original icons through the completed building-art resolver, preserving prior icons and untargeted category fallbacks.
+  id: `presentation-brasshollow-production-dwelling-specific-icons-10184`
+
+  Completion criteria: seven distinct deterministic source/runtime pairs; exact live 1280/1920 resolution for Ore Tithe Office through Titan Charter Hall; 35 specific icons and 98 category fallbacks; unchanged building/gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the other 98 buildings, prior art/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
 - Previous completed implementation slice: `presentation-thornwake-production-dwelling-specific-icons-10184`. Thornwake's exact seven-tier production ladder now has distinct original icons through the completed building-art resolver, preserving all prior icons and untargeted category fallbacks.
   id: `presentation-thornwake-production-dwelling-specific-icons-10184`
 

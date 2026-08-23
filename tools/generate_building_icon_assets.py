@@ -43,6 +43,13 @@ BUILDING_IDS = (
     "building_thornwake_pilgrim_orchard",
     "building_thornwake_graftworks",
     "building_thornwake_worldroot_gate",
+    "building_brasshollow_ore_tithe_office",
+    "building_brasshollow_rivet_kennels",
+    "building_brasshollow_pavis_foundry",
+    "building_brasshollow_boiler_cathedral",
+    "building_brasshollow_pressure_rail",
+    "building_brasshollow_crucible_dock",
+    "building_brasshollow_titan_charter_hall",
 )
 
 

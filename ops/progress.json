@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Thornwake's seven production buildings now own distinct original icons through the completed fail-closed resolver. Focused, compatibility, static/editor, and bounded platform gates pass; the game is not release-ready.",
+  "currentNotes": "Brasshollow's seven production buildings now own distinct original icons through the completed resolver. Focused, compatibility, static/editor, and bounded platform gates pass; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-thornwake-production-dwelling-specific-icons-10184",
-  "currentSliceId": "presentation-thornwake-production-dwelling-specific-icons-10184",
-  "currentSliceNotes": "Completed seven exact Thornwake source/runtime icons while preserving all twenty-one prior icons, 105 category fallbacks, and gameplay authority.",
+  "currentSlice": "presentation-brasshollow-production-dwelling-specific-icons-10184",
+  "currentSliceId": "presentation-brasshollow-production-dwelling-specific-icons-10184",
+  "currentSliceNotes": "Completed seven exact Brasshollow source/runtime icons while preserving all twenty-eight prior icons, 98 category fallbacks, and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Production Dwelling Specific Icons",
-  "currentSliceUpdatedAt": "2026-08-23T19:51:00Z",
+  "currentSliceTitle": "Brasshollow Production Dwelling Specific Icons",
+  "currentSliceUpdatedAt": "2026-08-23T20:01:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current evidence. Preserve all twenty-eight specific icons and 105 category fallbacks; do not infer release readiness.",
-  "notes": "Four faction production ladders now have twenty-eight distinct original icons; 105 buildings retain category fallback. Release readiness remains unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct evidence. Preserve all thirty-five specific icons and 98 category fallbacks; do not infer release readiness.",
+  "notes": "Five faction production ladders now have thirty-five distinct original icons; 98 buildings retain category fallback. Release readiness remains unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-brasshollow-production-dwelling-specific-icons-10184", "title": "Brasshollow Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Give Brasshollow's seven production buildings distinct original Town Build icons through the completed resolver.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_brasshollow_*.png", "art/towns/runtime/buildings/building_brasshollow_*.png", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_brasshollow_production_dwelling_icon_report.gd", "tests/town_brasshollow_production_dwelling_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_brasshollow_ore_tithe_office", "building_brasshollow_rivet_kennels", "building_brasshollow_pavis_foundry", "building_brasshollow_boiler_cathedral", "building_brasshollow_pressure_rail", "building_brasshollow_crucible_dock", "building_brasshollow_titan_charter_hall"], "production_building_count": 133, "existing_specific_icon_count": 28, "category_fallback_count": 105, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Seven distinct Brasshollow source/runtime icons with exact provenance", "Thirty-five specific icons and exact fallback for the other98 buildings", "1280/1920 live presentation, authority, reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other98 buildings, completed art/resolver changes, gameplay/economy/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T19:52:00Z", "startedAt": "2026-08-23T19:52:00Z", "completedAt": "2026-08-23T20:01:20Z", "updatedAt": "2026-08-23T20:01:20Z", "notes": "Completed seven Brasshollow source/runtime icons, thirty-five-row manifest, 98 fallbacks, focused 1280/1920 presentation, compatibility/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-thornwake-production-dwelling-specific-icons-10184", "title": "Thornwake Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Give Thornwake's seven production buildings distinct original live Town Build icons through the completed resolver.",
