@@ -57,6 +57,12 @@ BUILDING_IDS = (
     "building_veilmourn_obituary_vault",
     "building_veilmourn_mistgate_slip",
     "building_veilmourn_leviathan_sounding",
+    "building_embercourt_lockhouse_tally",
+    "building_mireclaw_reed_toll",
+    "building_sunvault_lens_tithe",
+    "building_thornwake_loam_ledger",
+    "building_brasshollow_scalehouse",
+    "building_veilmourn_salvage_ledger",
 )
 
 

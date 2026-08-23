@@ -77,6 +77,8 @@ TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_brass
 TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_brasshollow_production_dwelling_icon_report.tscn"
 TOWN_VEILMOURN_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_veilmourn_production_dwelling_icon_report.gd"
 TOWN_VEILMOURN_DWELLING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_veilmourn_production_dwelling_icon_report.tscn"
+TOWN_FACTION_FOUNDATIONAL_ECONOMY_BUILDING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_foundational_economy_building_icon_report.gd"
+TOWN_FACTION_FOUNDATIONAL_ECONOMY_BUILDING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_faction_foundational_economy_building_icon_report.tscn"
 FACTION_CREST_MANIFEST_PATH = CONTENT_DIR / "faction_crests.json"
 FACTION_CREST_ATLAS_PATH = ROOT / "art" / "factions" / "source" / "faction_crest_atlas.png"
 TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.gd"
@@ -38021,6 +38023,8 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         TOWN_BRASSHOLLOW_DWELLING_ICON_REPORT_SCENE_PATH,
         TOWN_VEILMOURN_DWELLING_ICON_REPORT_SCRIPT_PATH,
         TOWN_VEILMOURN_DWELLING_ICON_REPORT_SCENE_PATH,
+        TOWN_FACTION_FOUNDATIONAL_ECONOMY_BUILDING_ICON_REPORT_SCRIPT_PATH,
+        TOWN_FACTION_FOUNDATIONAL_ECONOMY_BUILDING_ICON_REPORT_SCENE_PATH,
     )
     for path in required:
         ensure(path.exists(), errors, f"Missing Embercourt dwelling icon owner: {path.relative_to(ROOT)}")
@@ -38069,13 +38073,19 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         "building_veilmourn_obituary_vault",
         "building_veilmourn_mistgate_slip",
         "building_veilmourn_leviathan_sounding",
+        "building_embercourt_lockhouse_tally",
+        "building_mireclaw_reed_toll",
+        "building_sunvault_lens_tithe",
+        "building_thornwake_loam_ledger",
+        "building_brasshollow_scalehouse",
+        "building_veilmourn_salvage_ledger",
     ]
     manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
     rows = manifest_root.get("items", [])
     ensure(manifest_root.get("generator") == "deterministic_building_icon_assets_v1", errors, "Building icon manifest must identify its deterministic generator")
     ensure(manifest_root.get("source_size") == {"width": 1254, "height": 1254}, errors, "Building icon manifest must retain exact source size")
     ensure(manifest_root.get("icon_size") == {"width": 256, "height": 256}, errors, "Building icon manifest must retain exact runtime size")
-    ensure(isinstance(rows, list) and [str(row.get("building_id", "")) for row in rows if isinstance(row, dict)] == expected_ids, errors, "Building icon manifest must contain the exact seven ordered ids")
+    ensure(isinstance(rows, list) and [str(row.get("building_id", "")) for row in rows if isinstance(row, dict)] == expected_ids, errors, "Building icon manifest must contain the exact ordered ids")
     source_hashes: list[str] = []
     icon_hashes: list[str] = []
     for row in rows if isinstance(rows, list) else []:
@@ -38097,7 +38107,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
             ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
             header = icon_path.read_bytes()[:26]
             ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
-    ensure(len(set(source_hashes)) == 42 and len(set(icon_hashes)) == 42, errors, "All forty-two building sources and icons must be distinct")
+    ensure(len(set(source_hashes)) == 48 and len(set(icon_hashes)) == 48, errors, "All forty-eight building sources and icons must be distinct")
 
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
     for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
@@ -38118,7 +38128,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == 7", "specific_count == 42", "fallback_count == 91", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == _target_building_ids().size()", "specific_count == 48", "fallback_count == 85", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     for forbidden in ("_on_build_action_pressed(", "_on_confirm_build_pressed(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Focused building icon report must not bypass production: {forbidden}")
@@ -38153,10 +38163,17 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     veil_text = TOWN_VEILMOURN_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     veil_scene = TOWN_VEILMOURN_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(veil_scene, errors, "town_veilmourn_production_dwelling_icon_report.tscn", [("TownVeilmournProductionDwellingIconReport", "Node")])
-    for building_id in expected_ids[35:]:
+    for building_id in expected_ids[35:42]:
         ensure(f'"{building_id}"' in veil_text, errors, f"Veilmourn focused report is missing {building_id}")
     for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return VEILMOURN_TARGET_BUILDING_IDS", 'return "TOWN_VEILMOURN_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in veil_text, errors, f"Veilmourn focused report is missing: {token}")
+    economy_text = TOWN_FACTION_FOUNDATIONAL_ECONOMY_BUILDING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    economy_scene = TOWN_FACTION_FOUNDATIONAL_ECONOMY_BUILDING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(economy_scene, errors, "town_faction_foundational_economy_building_icon_report.tscn", [("TownFactionFoundationalEconomyBuildingIconReport", "Node")])
+    for building_id in expected_ids[42:]:
+        ensure(f'"{building_id}"' in economy_text, errors, f"Faction economy focused report is missing {building_id}")
+    for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return FACTION_FOUNDATIONAL_ECONOMY_BUILDING_IDS", 'return "TOWN_FACTION_FOUNDATIONAL_ECONOMY_BUILDING_ICON_REPORT"'):
+        ensure(token in economy_text, errors, f"Faction economy focused report is missing: {token}")
 
 
 def validate_town_faction_crest_runtime(errors: list[str]) -> None:
