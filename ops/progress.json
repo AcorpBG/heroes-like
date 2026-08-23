@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness slice from direct current behavior evidence."
+    "Select the next tracker-approved release-readiness slice from direct shipped-behavior evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Riverwatch Hold and Highwater Keep now have specific original Town Build art for every building. Focused 1280/1920, compatibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates passed; packaged Town interaction, certification, signing, publication, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
+  "currentNotes": "Sunvault's two authored towns now use specific original Town Build art for every shown building. Focused and compatibility runtime, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; packaged Town interaction and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-embercourt-complete-authored-town-building-icons-10184",
-  "currentSliceId": "presentation-embercourt-complete-authored-town-building-icons-10184",
-  "currentSliceNotes": "Completed: 13 exact source/runtime icons for Embercourt's final authored-town fallbacks; both Embercourt towns now have zero fallbacks, the global catalog has 82 specific icons and 51 exact category fallbacks, and building/economy/recruitment/magic/capital/session/save authority remained exact.",
+  "currentSlice": "presentation-sunvault-complete-authored-town-building-icons-10184",
+  "currentSliceId": "presentation-sunvault-complete-authored-town-building-icons-10184",
+  "currentSliceNotes": "Completed 13 distinct original source/runtime icons, a 95-row deterministic manifest with 38 exact fallbacks, and zero fallbacks across Prismhearth and Halo Spire at 1280/1920 while preserving gameplay/session/save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Complete Authored Town Building Icons",
-  "currentSliceUpdatedAt": "2026-08-23T22:02:24Z",
+  "currentSliceTitle": "Sunvault Complete Authored Town Building Icons",
+  "currentSliceUpdatedAt": "2026-08-23T22:30:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved slice backed by direct current behavior evidence. Preserve the completed Embercourt and Mireclaw art and all building/economy/recruitment/magic/capital behavior; do not infer release readiness.",
-  "notes": "Embercourt and Mireclaw now have specific Town Build art for every building shown across their authored towns. This bounded Embercourt presentation slice is complete; release readiness remains unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness slice from direct shipped-behavior evidence; do not infer whole-game or release readiness from completed Town Build art and bounded packaging startup gates.",
+  "notes": "Sunvault authored-town building art is complete and validated. Focused headless Town presentation covers 1280/1920; official platform evidence is export/startup only, with no packaged Town interaction, certification, signing/publication, Native-RMG parity, whole-game, or release-ready claim.",
   "plannedSlices": [
+    {
+      "id": "presentation-sunvault-complete-authored-town-building-icons-10184", "title": "Sunvault Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Complete faction-wide specific Town Build art across every building shown in Sunvault's two authored towns.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_{shard_yard,sunvault_relay_scribes,prism_range,mirror_forge,lens_gallery,duel_circle,resonant_exchange,harmonic_cloister,aurora_spire,daybreak_matrix,sunvault_prism_oratory,sunvault_halo_battery_yard,sunvault_zenith_court}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_sunvault_complete_authored_building_icon_report.gd", "tests/town_sunvault_complete_authored_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_shard_yard", "building_sunvault_relay_scribes", "building_prism_range", "building_mirror_forge", "building_lens_gallery", "building_duel_circle", "building_resonant_exchange", "building_harmonic_cloister", "building_aurora_spire", "building_daybreak_matrix", "building_sunvault_prism_oratory", "building_sunvault_halo_battery_yard", "building_sunvault_zenith_court"], "authored_sunvault_town_count": 2, "prismhearth_fallback_count": 13, "halo_spire_fallback_count": 12, "remaining_sunvault_unique_fallback_count": 13, "production_building_count": 133, "existing_specific_icon_count": 82, "category_fallback_count": 51, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Thirteen distinct final Sunvault authored-building source/runtime icons with exact provenance", "Both authored Sunvault towns have zero category fallbacks; ninety-five global specific icons and exact category fallback for the other38 buildings", "1280/1920 live presentation and unchanged building/economy/recruitment/magic/capital/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other factions or the other38 building illustrations", "Building costs/prerequisites/income/recruitment/magic/capital/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T22:04:57Z", "startedAt": "2026-08-23T22:04:57Z", "completedAt": "2026-08-23T22:30:38Z", "updatedAt": "2026-08-23T22:30:38Z", "notes": "Completed 13 distinct original source/runtime icons, a 95-row deterministic manifest with 38 exact category fallbacks, focused 1280/1920 Town presentation with zero fallbacks across Prismhearth and Halo Spire, prior icon/category/payoff/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged Town Build interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-embercourt-complete-authored-town-building-icons-10184", "title": "Embercourt Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Complete faction-wide specific Town Build art across every building shown in Embercourt's two authored towns, including the default River Pass player town.",

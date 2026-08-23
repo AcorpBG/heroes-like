@@ -89,6 +89,8 @@ TOWN_MIRECLAW_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests
 TOWN_MIRECLAW_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_mireclaw_complete_authored_building_icon_report.tscn"
 TOWN_EMBERCOURT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_embercourt_complete_authored_building_icon_report.gd"
 TOWN_EMBERCOURT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_embercourt_complete_authored_building_icon_report.tscn"
+TOWN_SUNVAULT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_sunvault_complete_authored_building_icon_report.gd"
+TOWN_SUNVAULT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_sunvault_complete_authored_building_icon_report.tscn"
 FACTION_CREST_MANIFEST_PATH = CONTENT_DIR / "faction_crests.json"
 FACTION_CREST_ATLAS_PATH = ROOT / "art" / "factions" / "source" / "faction_crest_atlas.png"
 TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.gd"
@@ -38045,6 +38047,8 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         TOWN_MIRECLAW_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCENE_PATH,
         TOWN_EMBERCOURT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCRIPT_PATH,
         TOWN_EMBERCOURT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCENE_PATH,
+        TOWN_SUNVAULT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCRIPT_PATH,
+        TOWN_SUNVAULT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCENE_PATH,
     )
     for path in required:
         ensure(path.exists(), errors, f"Missing Embercourt dwelling icon owner: {path.relative_to(ROOT)}")
@@ -38133,6 +38137,19 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         "building_embercourt_charter_flame",
         "building_signal_citadel",
         "building_charter_bastion",
+        "building_shard_yard",
+        "building_sunvault_relay_scribes",
+        "building_prism_range",
+        "building_mirror_forge",
+        "building_lens_gallery",
+        "building_duel_circle",
+        "building_resonant_exchange",
+        "building_harmonic_cloister",
+        "building_aurora_spire",
+        "building_daybreak_matrix",
+        "building_sunvault_prism_oratory",
+        "building_sunvault_halo_battery_yard",
+        "building_sunvault_zenith_court",
     ]
     manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
     rows = manifest_root.get("items", [])
@@ -38161,7 +38178,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
             ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
             header = icon_path.read_bytes()[:26]
             ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
-    ensure(len(set(source_hashes)) == 82 and len(set(icon_hashes)) == 82, errors, "All eighty-two building sources and icons must be distinct")
+    ensure(len(set(source_hashes)) == 95 and len(set(icon_hashes)) == 95, errors, "All ninety-five building sources and icons must be distinct")
 
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
     for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
@@ -38182,7 +38199,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == _target_building_ids().size()", "specific_count == 82", "fallback_count == 51", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", 'var fallback_id := "building_brasshollow_clause_court"', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == _target_building_ids().size()", "specific_count == 95", "fallback_count == 38", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", 'var fallback_id := "building_brasshollow_clause_court"', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     ensure('var fallback_id := "building_embercourt_granary_lock_exchange"' not in report_text, errors, "Focused building icon report must not treat Embercourt's now-specific Granary Lock Exchange as a category fallback")
     for forbidden in ("_on_build_action_pressed(", "_on_confirm_build_pressed(", "create_timer", "create_tween"):
@@ -38264,6 +38281,13 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         ensure(f'"{building_id}"' in ember_complete_text, errors, f"Embercourt complete authored focused report is missing {building_id}")
     for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return EMBERCOURT_FINAL_AUTHORED_BUILDING_IDS", 'return "TOWN_EMBERCOURT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT"', "ContentService.get_content_ids(ContentService.TOWNS_PATH)", 'String(town_template.get("faction_id", "")) != "faction_embercourt"', 'town_template.get("starting_building_ids", [])', 'town_template.get("buildable_building_ids", [])', "ContentService.get_building_art(String(building_id)).is_empty()", "embercourt_town_ids.size() == 2 and remaining_fallback_ids.is_empty()"):
         ensure(token in ember_complete_text, errors, f"Embercourt complete authored focused report is missing: {token}")
+    sun_complete_text = TOWN_SUNVAULT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    sun_complete_scene = TOWN_SUNVAULT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(sun_complete_scene, errors, "town_sunvault_complete_authored_building_icon_report.tscn", [("TownSunvaultCompleteAuthoredBuildingIconReport", "Node")])
+    for building_id in expected_ids[82:95]:
+        ensure(f'"{building_id}"' in sun_complete_text, errors, f"Sunvault complete authored focused report is missing {building_id}")
+    for token in ('extends "res://tests/town_embercourt_production_dwelling_icon_report.gd"', "return SUNVAULT_FINAL_AUTHORED_BUILDING_IDS", 'return "TOWN_SUNVAULT_COMPLETE_AUTHORED_BUILDING_ICON_REPORT"', "ContentService.get_content_ids(ContentService.TOWNS_PATH)", 'String(town_template.get("faction_id", "")) != "faction_sunvault"', 'town_template.get("starting_building_ids", [])', 'town_template.get("buildable_building_ids", [])', "ContentService.get_building_art(String(building_id)).is_empty()", "sunvault_town_ids.size() == 2 and remaining_fallback_ids.is_empty()"):
+        ensure(token in sun_complete_text, errors, f"Sunvault complete authored focused report is missing: {token}")
 
 
 def validate_town_faction_crest_runtime(errors: list[str]) -> None:
