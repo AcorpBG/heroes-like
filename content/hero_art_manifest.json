@@ -268,7 +268,10 @@
       "name": "Ardren Briar-Marshal",
       "faction_id": "faction_thornwake",
       "archetype": "briarmarshal",
-      "portrait": "res://art/heroes/portraits/hero_thornwake_ardren_briarmarshal.png"
+      "portrait": "res://art/heroes/portraits/hero_thornwake_ardren_briarmarshal.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_ardren_briarmarshal.png",
+      "source_sha256": "f1109df6472f1f7a7c71d5572de270c1380b4f2073a208d9712d647f7b63872d"
     },
     {
       "id": "hero_thornwake_tova_rootwright",
@@ -276,7 +279,10 @@
       "name": "Tova Rootwright",
       "faction_id": "faction_thornwake",
       "archetype": "rootwright",
-      "portrait": "res://art/heroes/portraits/hero_thornwake_tova_rootwright.png"
+      "portrait": "res://art/heroes/portraits/hero_thornwake_tova_rootwright.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_tova_rootwright.png",
+      "source_sha256": "f298054edf5605d3f7ba9d71331476d7e96edce9fcd7f15718d854749e8d3ba3"
     },
     {
       "id": "hero_thornwake_halen_thorncart",

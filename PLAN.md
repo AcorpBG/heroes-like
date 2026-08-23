@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-thornwake-commanders-ardren-tova-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Ardren Briar-Marshal, Thornwake's generated-map default, and Tova Rootwright, commander of Frontier Claims chapter four. Exact provenance, all 58 non-target portrait bytes, generated/default/campaign/hero/save/UI/gameplay authority, focused 1280/1920 live surfaces, reproducibility, campaign compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The independent native-RMG UI save/replay provenance gate remains fail-closed on its pre-existing empty recovered template id and is not claimed or changed by this art slice. Select the next tracker-approved source-backed implementation slice.
+  id: `art-thornwake-commanders-ardren-tova-curated-portraits-10184`
+
+  Completion criteria:
+  - two distinct original square sources establish Ardren as a rooted-ground Briar Marshal and Tova as a siege-growing Rootwright, with exact provenance and deterministic 384x512 runtime portraits;
+  - a real generated Thornwake session and Frontier Claims/Rootgate Toll selection plus save-resume, Overworld, Town, Battle, and Outcome surfaces retain exact hero paths and all hero/default/campaign/gameplay fields;
+  - exactly two source files, two runtime portraits, and two manifest records change; the other 58 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: another hero, hero/content/rule/balance/AI changes, campaign/scenario/generated-map generation behavior, hero stats/spells/specialties/traits/cost, portrait path or UI layout changes, save schema, Overworld sprites, other art domains, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-campaign-leads-caelen-mira-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Caelen Ashgrove, lead of Stonewake and a Ninefold Survey chapter, and Mira Flintmere, lead of the Ninefold Survey opening and finale. Exact provenance, all six campaign chapters, hero/save/UI/gameplay authority, all 58 non-target portrait bytes, focused 1280/1920 live surfaces, campaign compatibility, reproducibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-campaign-leads-caelen-mira-curated-portraits-10184`
 
