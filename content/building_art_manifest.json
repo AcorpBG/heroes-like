@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "generator": "deterministic_building_icon_assets_v1",
+  "source_size": {
+    "width": 1254,
+    "height": 1254
+  },
+  "icon_size": {
+    "width": 256,
+    "height": 256
+  },
+  "items": [
+    {
+      "id": "building_muster_yard",
+      "building_id": "building_muster_yard",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_muster_yard.png",
+      "source_sha256": "ed381e3f788abe9e83e5f8c0d43fc56bc606331554c983af7bb64e376541ddcb",
+      "icon_path": "res://art/towns/runtime/buildings/building_muster_yard.png",
+      "icon_sha256": "ecececff16d37ae0ad1f9c9ecc5fe82ea62ae87b0cb3575b5477cfe6dfbe55fd"
+    },
+    {
+      "id": "building_bowyer_lodge",
+      "building_id": "building_bowyer_lodge",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_bowyer_lodge.png",
+      "source_sha256": "a0079879659626501003d9f268bb7b881b12f334e7d3acded61fe5dc92603d73",
+      "icon_path": "res://art/towns/runtime/buildings/building_bowyer_lodge.png",
+      "icon_sha256": "799b5db01e844096448462a0d2cb3801c49534a04081cda365594a552b3d50dd"
+    },
+    {
+      "id": "building_embercourt_bargebow_slip",
+      "building_id": "building_embercourt_bargebow_slip",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_bargebow_slip.png",
+      "source_sha256": "c1fd0bc6797232e944b460c557e3adf4b713f2d081872f7a2eb1374edcbabbb1",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_bargebow_slip.png",
+      "icon_sha256": "848aefaefc19e58006bf587d1e8f4fc547de61fd3afda9e0a31dc64f7b872d7f"
+    },
+    {
+      "id": "building_embercourt_oath_pikehall",
+      "building_id": "building_embercourt_oath_pikehall",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_oath_pikehall.png",
+      "source_sha256": "591d062a338d00c2e5e3dc36ed62a33bd96d520f07bf464acedbc7f1575d55ef",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_oath_pikehall.png",
+      "icon_sha256": "b812efcfce3e68d6e236f59ab7a2fa965566f23540dc3b6b0fbbd26e9b3fbe7d"
+    },
+    {
+      "id": "building_embercourt_beacon_court",
+      "building_id": "building_embercourt_beacon_court",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beacon_court.png",
+      "source_sha256": "1692e285ad06e5cbaab53afd814b6ece3a187a4f4a9a9e9c7fbe794cfb288ec9",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beacon_court.png",
+      "icon_sha256": "ee3836aee08e0838d6ab7afff6ab74ae09150a5244aa854053878aacc5f801d5"
+    },
+    {
+      "id": "building_embercourt_drake_sluice",
+      "building_id": "building_embercourt_drake_sluice",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_drake_sluice.png",
+      "source_sha256": "fdd51b486712197d34ca31d83a4eb35cf1594c0021d9801561b20a1f1251103d",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_drake_sluice.png",
+      "icon_sha256": "5917a21e23c08fb8ca57dddf804f38d1233aeb0551f25bb3424139cf809d7bc9"
+    },
+    {
+      "id": "building_embercourt_charter_bastion",
+      "building_id": "building_embercourt_charter_bastion",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_charter_bastion.png",
+      "source_sha256": "d9dcb06fd8dbd27b1d181560cc732a0b57cdb5b57b577e30d2b31de2c7b4016a",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_charter_bastion.png",
+      "icon_sha256": "c60af07375f9b8ccbb8c049359b65230e97411aded4e3f1af20721d3c28ea725"
+    }
+  ]
+}

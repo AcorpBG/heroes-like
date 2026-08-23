@@ -91,7 +91,7 @@ func _run_live_case(viewport_size: Vector2i) -> Dictionary:
 		var action: Dictionary = actions[index]
 		var button: Button = buttons[index]
 		var building_id := TownRules.building_id_for_action(String(action.get("id", "")))
-		var expected_path := TownRules.building_category_icon_path(building_id)
+		var expected_path := TownRules.building_icon_path(building_id)
 		presentation_exact = presentation_exact and button.icon != null and button.icon.resource_path == expected_path and button.expand_icon and button.get_theme_constant("icon_max_width") == 24
 		presentation_exact = presentation_exact and button.text == shell._build_plan_option_label(action) and button.tooltip_text == shell._town_action_button_tooltip(action, "build")
 		contained = contained and container.get_global_rect().encloses(button.get_global_rect())

@@ -63,6 +63,10 @@ SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "spell_school_ico
 BUILDING_CATEGORY_ICON_MANIFEST_PATH = CONTENT_DIR / "building_category_icons.json"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.gd"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.tscn"
+BUILDING_ART_MANIFEST_PATH = CONTENT_DIR / "building_art_manifest.json"
+BUILDING_ICON_GENERATOR_PATH = ROOT / "tools" / "generate_building_icon_assets.py"
+TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_embercourt_production_dwelling_icon_report.gd"
+TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH = ROOT / "tests" / "town_embercourt_production_dwelling_icon_report.tscn"
 FACTION_CREST_MANIFEST_PATH = CONTENT_DIR / "faction_crests.json"
 FACTION_CREST_ATLAS_PATH = ROOT / "art" / "factions" / "source" / "faction_crest_atlas.png"
 TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.gd"
@@ -37964,7 +37968,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     helper = function_block(shell_text, "_apply_build_action_icon")
     order = [rebuild.find("_style_action_button"), rebuild.find("_apply_build_action_icon(button, action)"), rebuild.find("button.pressed.connect"), rebuild.find("add_child(button)")]
     ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town Build category icon must apply after styling and before unchanged binding/order")
-    for token in ("TownRules.building_id_for_action", "TownRules.building_category_icon_path", "load(icon_path) as Texture2D", "button.icon = texture", "button.expand_icon = true", 'button.add_theme_constant_override("icon_max_width", 24)'):
+    for token in ("TownRules.building_id_for_action", "TownRules.building_icon_path", "load(icon_path) as Texture2D", "button.icon = texture", "button.expand_icon = true", 'button.add_theme_constant_override("icon_max_width", 24)'):
         ensure(token in helper, errors, f"Town Build category icon helper is missing: {token}")
     for forbidden in ("button.text =", "button.tooltip_text =", "button.disabled =", "await ", "create_timer", "create_tween"):
         ensure(forbidden not in helper, errors, f"Town Build category icon helper must not alter action/timing authority: {forbidden}")
@@ -37986,6 +37990,83 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Town building category focused owner is missing: {token}")
     for forbidden in ("_on_build_action_pressed(", "_on_confirm_build_pressed(", "\n\tbutton.icon = ", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Town building category focused owner must not bypass production: {forbidden}")
+
+
+def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> None:
+    required = (
+        BUILDING_ART_MANIFEST_PATH,
+        BUILDING_ICON_GENERATOR_PATH,
+        CONTENT_SERVICE_PATH,
+        TOWN_RULES_PATH,
+        TOWN_SCRIPT_PATH,
+        TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH,
+        TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH,
+    )
+    for path in required:
+        ensure(path.exists(), errors, f"Missing Embercourt dwelling icon owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required):
+        return
+    expected_ids = [
+        "building_muster_yard",
+        "building_bowyer_lodge",
+        "building_embercourt_bargebow_slip",
+        "building_embercourt_oath_pikehall",
+        "building_embercourt_beacon_court",
+        "building_embercourt_drake_sluice",
+        "building_embercourt_charter_bastion",
+    ]
+    manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
+    rows = manifest_root.get("items", [])
+    ensure(manifest_root.get("generator") == "deterministic_building_icon_assets_v1", errors, "Building icon manifest must identify its deterministic generator")
+    ensure(manifest_root.get("source_size") == {"width": 1254, "height": 1254}, errors, "Building icon manifest must retain exact source size")
+    ensure(manifest_root.get("icon_size") == {"width": 256, "height": 256}, errors, "Building icon manifest must retain exact runtime size")
+    ensure(isinstance(rows, list) and [str(row.get("building_id", "")) for row in rows if isinstance(row, dict)] == expected_ids, errors, "Building icon manifest must contain the exact seven ordered ids")
+    source_hashes: list[str] = []
+    icon_hashes: list[str] = []
+    for row in rows if isinstance(rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        building_id = str(row.get("building_id", ""))
+        source_path = res_path_to_disk(str(row.get("source_path", "")))
+        icon_path = res_path_to_disk(str(row.get("icon_path", "")))
+        ensure(row.get("id") == building_id and row.get("source_kind") == "curated_original_building", errors, f"Building {building_id} must own exact curated identity")
+        ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"Building {building_id} source must be 1254x1254")
+        ensure(icon_path.is_file() and png_size(icon_path) == (256, 256), errors, f"Building {building_id} icon must be 256x256")
+        if source_path.is_file():
+            source_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+            source_hashes.append(source_hash)
+            ensure(row.get("source_sha256") == source_hash, errors, f"Building {building_id} source hash must be exact")
+        if icon_path.is_file():
+            icon_hash = hashlib.sha256(icon_path.read_bytes()).hexdigest()
+            icon_hashes.append(icon_hash)
+            ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
+            header = icon_path.read_bytes()[:26]
+            ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
+    ensure(len(set(source_hashes)) == 7 and len(set(icon_hashes)) == 7, errors, "All seven building sources and icons must be distinct")
+
+    generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
+    for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
+        ensure(token in generator_text, errors, f"Building icon generator is missing deterministic ownership: {token}")
+
+    content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for token in ('const BUILDING_ART_PATH := "%s/building_art_manifest.json" % CONTENT_DIR', "func get_building_art(building_id: String) -> Dictionary:", "_validate_building_art_manifest(building_index, building_art_index)", 'source_path.begins_with("res://art/towns/source/buildings/curated/")', 'icon_path.begins_with("res://art/towns/runtime/buildings/")'):
+        ensure(token in content_text, errors, f"ContentService building-art ownership is missing: {token}")
+    rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    resolver_start = rules_text.find("static func building_icon_path")
+    resolver_end = rules_text.find("\nstatic func ", resolver_start + 1)
+    resolver = rules_text[resolver_start:resolver_end]
+    for token in ("ContentService.get_building_art(building_id)", 'String(art.get("id", "")) == building_id', 'String(art.get("building_id", "")) == building_id', 'source_kind", "")) == "curated_original_building"', 'res://art/towns/runtime/buildings/', 'ResourceLoader.exists(icon_path, "Texture2D")', "return building_category_icon_path(building_id)"):
+        ensure(token in resolver, errors, f"Building-specific resolver is missing: {token}")
+    ensure("load(" not in resolver and "preload(" not in resolver, errors, "TownRules building resolver must not load textures")
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure("var icon_path := TownRules.building_icon_path(building_id)" in shell_text, errors, "Town Build must use the building-specific resolver")
+    report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
+    for token in ("target_count == 7", "fallback_count == 126", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'print("TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT %s"'):
+        ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
+    for forbidden in ("_on_build_action_pressed(", "_on_confirm_build_pressed(", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Focused building icon report must not bypass production: {forbidden}")
 
 
 def validate_town_faction_crest_runtime(errors: list[str]) -> None:
@@ -60403,6 +60484,7 @@ def main() -> int:
     validate_artifact_icon_runtime(errors)
     validate_spell_school_icon_runtime(errors)
     validate_town_building_category_icon_runtime(errors)
+    validate_town_embercourt_production_dwelling_icons(errors)
     validate_town_faction_crest_runtime(errors)
     validate_overworld_faction_town_sprite_runtime(errors)
     validate_overworld_faction_hero_sprite_runtime(errors)

@@ -24,7 +24,12 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current product evidence; do not infer whole-game or release readiness from this completed portrait slice.
+- In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current product evidence; do not infer whole-game or release readiness from this completed building-art slice.
+
+- Previous completed implementation slice: `presentation-embercourt-production-dwelling-specific-icons-10184`. A data-driven building-art manifest and fail-closed TownRules resolver now give Muster Yard, Bowyer Lodge, Bargebow Slip, Oath Pikehall, Beacon Court, Drake Sluice, and Charter Colossus Bastion distinct original icons in the live Town Build list. The other 126 buildings retain their exact category sigils, and building identity, costs, prerequisites, ordering, construction consequences, session/save authority, and the completed category-icon path remain unchanged. Deterministic regeneration, focused 1280/1920 presentation, Town/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+  id: `presentation-embercourt-production-dwelling-specific-icons-10184`
+
+  Non-goals retained: the other 126 building illustrations, building mechanics/economy/balance/AI/save changes, Town layout redesign, packaged construction interaction, controller/native-hardware or accessibility certification, signing/publication, whole-game validation, Native-RMG changes, or release readiness.
 
 - Previous completed implementation slice: `art-five-faction-roster-final-nine-curated-portraits-10184`. Nine distinct original painterly sources now replace the final generator-only live roster portraits for Pell Reedscript, Zhorra Fenwake, Calis Sunvein, Mirro Halometer, Nara Graft-Sibyl, Harro Debt-Rune, Pava Ashmeter, Nacre Vowless, and Orso Nightchart through deterministic existing-path portraits. All 60 live heroes now have curated portrait ownership while exact roster order, tavern/skirmish/save/live-shell authority, every gameplay/content field, and the other 51 curated portrait bytes remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
   id: `art-five-faction-roster-final-nine-curated-portraits-10184`

@@ -14,6 +14,7 @@ const UNIT_ANIMATION_PATH := "%s/unit_animation_manifest.json" % CONTENT_DIR
 const ARMY_GROUPS_PATH := "%s/army_groups.json" % CONTENT_DIR
 const TOWNS_PATH := "%s/towns.json" % CONTENT_DIR
 const BUILDINGS_PATH := "%s/buildings.json" % CONTENT_DIR
+const BUILDING_ART_PATH := "%s/building_art_manifest.json" % CONTENT_DIR
 const RESOURCES_PATH := "%s/resources.json" % CONTENT_DIR
 const RESOURCE_SITES_PATH := "%s/resource_sites.json" % CONTENT_DIR
 const BIOMES_PATH := "%s/biomes.json" % CONTENT_DIR
@@ -143,6 +144,9 @@ func get_town(id: String) -> Dictionary:
 
 func get_building(id: String) -> Dictionary:
 	return get_content_by_id(BUILDINGS_PATH, id)
+
+func get_building_art(building_id: String) -> Dictionary:
+	return get_content_by_id(BUILDING_ART_PATH, building_id)
 
 func get_resource(id: String) -> Dictionary:
 	return get_content_by_id(RESOURCES_PATH, id)
@@ -363,6 +367,7 @@ func _validate_content() -> void:
 	var army_group_index := _index_items(_items_from_raw(load_json(ARMY_GROUPS_PATH)))
 	var town_index := _index_items(_items_from_raw(load_json(TOWNS_PATH)))
 	var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
+	var building_art_index := _index_items(_items_from_raw(load_json(BUILDING_ART_PATH)))
 	var resource_index := _index_items(_items_from_raw(load_json(RESOURCES_PATH)))
 	var resource_site_index := _index_items(_items_from_raw(load_json(RESOURCE_SITES_PATH)))
 	var biome_index := _index_items(_items_from_raw(load_json(BIOMES_PATH)))
@@ -411,6 +416,7 @@ func _validate_content() -> void:
 		_validate_army_group(army_group, faction_index, unit_index)
 	for building in building_index.values():
 		_validate_building(building, building_index, unit_index)
+	_validate_building_art_manifest(building_index, building_art_index)
 	_validate_resources(resource_index)
 	for town in town_index.values():
 		_validate_town(town, faction_index, building_index, unit_index, spell_index)
@@ -1276,6 +1282,26 @@ func _validate_building_category_icons(icon_index: Dictionary) -> void:
 	for category_id in icon_index:
 		if String(category_id) not in expected_category_ids:
 			push_warning("Building category icon manifest contains unsupported category %s." % String(category_id))
+
+func _validate_building_art_manifest(building_index: Dictionary, art_index: Dictionary) -> void:
+	for building_id_value in art_index:
+		var building_id := String(building_id_value)
+		var art: Dictionary = art_index.get(building_id, {}) if art_index.get(building_id, {}) is Dictionary else {}
+		if not building_index.has(building_id) or String(art.get("building_id", "")) != building_id:
+			push_warning("Building art manifest contains unsupported building %s." % building_id)
+			continue
+		if String(art.get("source_kind", "")) != "curated_original_building":
+			push_warning("Building %s must own curated original building art." % building_id)
+		var source_path := String(art.get("source_path", ""))
+		var icon_path := String(art.get("icon_path", ""))
+		if not source_path.begins_with("res://art/towns/source/buildings/curated/"):
+			push_warning("Building %s source must use the curated building art domain." % building_id)
+		else:
+			_validate_art_path(source_path, "Building %s curated source" % building_id)
+		if not icon_path.begins_with("res://art/towns/runtime/buildings/"):
+			push_warning("Building %s icon must use the runtime building art domain." % building_id)
+		else:
+			_validate_art_path(icon_path, "Building %s runtime icon" % building_id)
 
 func _validate_spell(spell: Dictionary) -> void:
 	var spell_id := String(spell.get("id", ""))
