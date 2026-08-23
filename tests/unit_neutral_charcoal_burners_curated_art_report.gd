@@ -254,4 +254,3 @@ func _write_json(path: String, payload: Dictionary) -> void:
 		_errors.append("Failed to write %s." % path)
 		return
 	file.store_string(JSON.stringify(payload, "\t") + "\n")
-
