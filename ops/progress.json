@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness slice from direct shipped-behavior evidence."
+    "Select the next tracker-approved source-backed release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Brasshollow's two authored towns now use specific original Town Build art for every shown building. Focused and compatibility runtime, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; packaged Town interaction and release readiness remain unclaimed.",
+  "currentNotes": "The Thornwake Town Build art slice is completed: Graftroot Caravan and Rootgate Nursery now use specific original icons for all authored buildings. Select the next tracker-approved source-backed slice; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-brasshollow-complete-authored-town-building-icons-10184",
-  "currentSliceId": "presentation-brasshollow-complete-authored-town-building-icons-10184",
-  "currentSliceNotes": "Completed 12 distinct original source/runtime icons, a 107-row deterministic manifest with 26 exact fallbacks, and zero fallbacks across Orevein Gantry and Clauseworks Depot at 1280/1920 while preserving gameplay/session/save authority.",
+  "currentSlice": "presentation-thornwake-complete-authored-town-building-icons-10184",
+  "currentSliceId": "presentation-thornwake-complete-authored-town-building-icons-10184",
+  "currentSliceNotes": "Completed 14 distinct original source/runtime icons and a 121-row deterministic manifest with 12 exact category fallbacks. Both authored Thornwake towns have zero fallback icons at 1280/1920; adjacent faction/category/payoff/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town Build interaction and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Complete Authored Town Building Icons",
-  "currentSliceUpdatedAt": "2026-08-23T22:54:00Z",
+  "currentSliceTitle": "Thornwake Complete Authored Town Building Icons",
+  "currentSliceUpdatedAt": "2026-08-23T23:23:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness slice from direct shipped-behavior evidence; do not infer whole-game or release readiness from completed Town Build art and bounded packaging startup gates.",
-  "notes": "Brasshollow authored-town building art is complete and validated. Focused headless Town presentation covers 1280/1920; official platform evidence is export/startup only, with no packaged Town interaction, certification, signing/publication, Native-RMG parity, whole-game, or release-ready claim.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 121-icon catalog and do not infer release readiness from bounded local and packaging startup gates.",
+  "notes": "Thornwake's two authored towns now have complete specific Town Build art. The focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-thornwake-complete-authored-town-building-icons-10184", "title": "Thornwake Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Complete faction-wide specific Town Build art across every building shown in Thornwake's two authored towns.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_thornwake_{rootlaw_moot,pollen_litany,root_cairn_watch,mycorrhizal_store,sap_chandler_grove,rootroad_markers,rootweave_tithe,bramblewall_coppice,bastion_seed_conclave,bramble_marshal_moot,spore_oath_chantry,thornwarden_husk_yard,old_grove_accord,verdant_concord_seat}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_thornwake_complete_authored_building_icon_report.gd", "tests/town_thornwake_complete_authored_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_thornwake_rootlaw_moot", "building_thornwake_pollen_litany", "building_thornwake_root_cairn_watch", "building_thornwake_mycorrhizal_store", "building_thornwake_sap_chandler_grove", "building_thornwake_rootroad_markers", "building_thornwake_rootweave_tithe", "building_thornwake_bramblewall_coppice", "building_thornwake_bastion_seed_conclave", "building_thornwake_bramble_marshal_moot", "building_thornwake_spore_oath_chantry", "building_thornwake_thornwarden_husk_yard", "building_thornwake_old_grove_accord", "building_thornwake_verdant_concord_seat"], "authored_thornwake_town_count": 2, "graftroot_caravan_fallback_count": 14, "rootgate_nursery_fallback_count": 14, "remaining_thornwake_unique_fallback_count": 14, "authored_scenario_placement_count": 4, "player_owned_placement_count": 2, "production_building_count": 133, "existing_specific_icon_count": 107, "category_fallback_count": 26, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Fourteen distinct final Thornwake authored-building source/runtime icons with exact provenance", "Both authored Thornwake towns have zero category fallbacks; one hundred twenty-one global specific icons and exact category fallback for the other12 buildings", "1280/1920 live presentation and unchanged building/economy/recruitment/magic/capital/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other factions or the other12 building illustrations", "Building costs/prerequisites/income/recruitment/magic/capital/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T22:56:36Z", "startedAt": "2026-08-23T22:56:36Z", "completedAt": "2026-08-23T23:23:45Z", "updatedAt": "2026-08-23T23:23:45Z", "notes": "Completed 14 distinct original source/runtime icons, a 121-row deterministic manifest with 12 exact category fallbacks, focused 1280/1920 Town presentation with zero fallbacks across Graftroot Caravan and Rootgate Nursery, adjacent faction/category/payoff/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged Town Build interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-brasshollow-complete-authored-town-building-icons-10184", "title": "Brasshollow Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Complete faction-wide specific Town Build art across every building shown in Brasshollow's two authored towns.",

@@ -972,6 +972,132 @@
       "source_sha256": "a408ea1241ae1e0f24085a64baed4261596a05dfff0d85bfbb2652938edb3504",
       "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_warrant_engine_house.png",
       "icon_sha256": "83d458332bc589b561a9c59a097c1af0552e08e4a14f3792b937f289cd394f4f"
+    },
+    {
+      "id": "building_thornwake_rootlaw_moot",
+      "building_id": "building_thornwake_rootlaw_moot",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_rootlaw_moot.png",
+      "source_sha256": "c883e4596863f680c4bac10d39f850f39625bf9fea1484d78557379c400448dc",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_rootlaw_moot.png",
+      "icon_sha256": "8bde45fe52d2681337ad5e8404c921e54be43251b0c469c596ceb9a745108f37"
+    },
+    {
+      "id": "building_thornwake_pollen_litany",
+      "building_id": "building_thornwake_pollen_litany",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_pollen_litany.png",
+      "source_sha256": "e4b89575bf749160ce1a6765dd4d5076ae89862781dac378b4871a6f622157dd",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_pollen_litany.png",
+      "icon_sha256": "a9ebf4e7ae367d89da644543149c25afcdfaff78d57b763c75da4dce8f2c1459"
+    },
+    {
+      "id": "building_thornwake_root_cairn_watch",
+      "building_id": "building_thornwake_root_cairn_watch",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_root_cairn_watch.png",
+      "source_sha256": "801ac01f63d631f86e0f3730045a6859a92bed89882fb1c28e1c99e4c0e9bfcf",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_root_cairn_watch.png",
+      "icon_sha256": "f98d6d08e3637f80048b46c6d0484087eedfa921fc28d8e5678263de13bae78d"
+    },
+    {
+      "id": "building_thornwake_mycorrhizal_store",
+      "building_id": "building_thornwake_mycorrhizal_store",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_mycorrhizal_store.png",
+      "source_sha256": "7ec74ac3f9eed6ce9ae84a2bb1ef9a6df5522361c7fa3d792edc7fd35090602f",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_mycorrhizal_store.png",
+      "icon_sha256": "da379382ec2a2f1278a943545cd6843ba49abdba91321d804db288b4cf9459ed"
+    },
+    {
+      "id": "building_thornwake_sap_chandler_grove",
+      "building_id": "building_thornwake_sap_chandler_grove",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_sap_chandler_grove.png",
+      "source_sha256": "2e56149be8c89494f4384725e5dcfb1007bb17bf2edbea76aa16eb795e319b79",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_sap_chandler_grove.png",
+      "icon_sha256": "f137c3f3dfe320120bc602cb7a239b6bdf9abbf09ff845c19b9e1d93ead89404"
+    },
+    {
+      "id": "building_thornwake_rootroad_markers",
+      "building_id": "building_thornwake_rootroad_markers",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_rootroad_markers.png",
+      "source_sha256": "047bf64afb93398a58ebea9f64ed804fdbf1454eaafed2d661f579882e0dcd56",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_rootroad_markers.png",
+      "icon_sha256": "d4c112143ba2c7eaa0d566fc2f42c99f92ed1cc87da73cab92d82a59eb2aed79"
+    },
+    {
+      "id": "building_thornwake_rootweave_tithe",
+      "building_id": "building_thornwake_rootweave_tithe",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_rootweave_tithe.png",
+      "source_sha256": "c3249f1054d4c76fea02c4e7308f01447158e667eb2b914c391e2182ec2dcd79",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_rootweave_tithe.png",
+      "icon_sha256": "78592285ed718d9269749f7bcef2a58b73e4ca0a374ae9b19a2a93ce9072c8a3"
+    },
+    {
+      "id": "building_thornwake_bramblewall_coppice",
+      "building_id": "building_thornwake_bramblewall_coppice",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_bramblewall_coppice.png",
+      "source_sha256": "f0e0bfe4ec85d9a9bf81af190d3f1c755450b8b22b979d6de93992a5fab69674",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_bramblewall_coppice.png",
+      "icon_sha256": "91987da892ed89f1d282f998bb0a5078fedcdcaadebfbe50f731db68753b9e40"
+    },
+    {
+      "id": "building_thornwake_bastion_seed_conclave",
+      "building_id": "building_thornwake_bastion_seed_conclave",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_bastion_seed_conclave.png",
+      "source_sha256": "5ce95f5e7d95b92c0fbebb824208f59d48bdcc5b41a230e6b002e224f0eb01bb",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_bastion_seed_conclave.png",
+      "icon_sha256": "3933d6776bd7851ce64edd77b86141ad5ba70bfe9319bb3d51edd4ef72f4d6d2"
+    },
+    {
+      "id": "building_thornwake_bramble_marshal_moot",
+      "building_id": "building_thornwake_bramble_marshal_moot",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_bramble_marshal_moot.png",
+      "source_sha256": "dbd88beb18391409c045ad4bb04a356f114c802d9d761744a56c92890f4c956d",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_bramble_marshal_moot.png",
+      "icon_sha256": "7e60dfa41a06a35e343c95f4d1dcdc7b5ce316f7910abb8eba45faf719d51218"
+    },
+    {
+      "id": "building_thornwake_spore_oath_chantry",
+      "building_id": "building_thornwake_spore_oath_chantry",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_spore_oath_chantry.png",
+      "source_sha256": "e193f412faf4ba6572506708f21db34d52ac2e1f715affc53b8eace440a580cb",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_spore_oath_chantry.png",
+      "icon_sha256": "be59b925dae3c27bafff44e25d61efa5187e75b2e5762ae6249830fb318fe976"
+    },
+    {
+      "id": "building_thornwake_thornwarden_husk_yard",
+      "building_id": "building_thornwake_thornwarden_husk_yard",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_thornwarden_husk_yard.png",
+      "source_sha256": "8e561145a3185b722ab9f0b8cbd6e3ae671c6fc069d46d0a718711dc9cc4fa74",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_thornwarden_husk_yard.png",
+      "icon_sha256": "cdcb76d6a7872c9ffd94bb0759e23acfeac2d4956ad53030ef1876fcf3ca8bc9"
+    },
+    {
+      "id": "building_thornwake_old_grove_accord",
+      "building_id": "building_thornwake_old_grove_accord",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_old_grove_accord.png",
+      "source_sha256": "9e51279754be5f6f9f7306f949a2896d2595cd6815d0410dd83eadf7f9eb9b60",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_old_grove_accord.png",
+      "icon_sha256": "34661f2bde31f569b5d11f7643b80c486425de57c29acc696c7de0e2886d5146"
+    },
+    {
+      "id": "building_thornwake_verdant_concord_seat",
+      "building_id": "building_thornwake_verdant_concord_seat",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_verdant_concord_seat.png",
+      "source_sha256": "78f1ab1a1d5e01295fdc6bf798b02a164106023073da4331f8315c415d3a4c8e",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_verdant_concord_seat.png",
+      "icon_sha256": "e759664a2ebe49a5ccd8b8418b93eeb5b01496349a2eab91318b39d307714afe"
     }
   ]
 }
