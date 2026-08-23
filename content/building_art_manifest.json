@@ -198,6 +198,69 @@
       "source_sha256": "bf5f62bbfbf6cc9211b0476beb5d79339c6186ccc8813a37b5cac544de1828ff",
       "icon_path": "res://art/towns/runtime/buildings/building_sunvault_daybreak_matrix.png",
       "icon_sha256": "60de0f9ec509b8b5788be819bb43dd746da852204d1bd448d38c9415241149be"
+    },
+    {
+      "id": "building_thornwake_seed_vault",
+      "building_id": "building_thornwake_seed_vault",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_seed_vault.png",
+      "source_sha256": "433a9124c354f4fb0552b386a781948ac64970b6f7daa64b8c9e2f100f5f57f7",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_seed_vault.png",
+      "icon_sha256": "6a23654fd8d7ddeddbc1829d135dd3abeedc7b8c71d6583fd712d7ae156bb72b"
+    },
+    {
+      "id": "building_thornwake_bramble_toll",
+      "building_id": "building_thornwake_bramble_toll",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_bramble_toll.png",
+      "source_sha256": "a58ed4bcec7adbfd44c94f05b27e0e3db51a9b114a07689a75a4c051cdb57aa7",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_bramble_toll.png",
+      "icon_sha256": "a1c309de760151054c3851d684a6e00e045d1813663cd3d14c1c0f4a3ae7a66b"
+    },
+    {
+      "id": "building_thornwake_sporeglass_hothouse",
+      "building_id": "building_thornwake_sporeglass_hothouse",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_sporeglass_hothouse.png",
+      "source_sha256": "a1f358f948b4f7ec6e9d0a043ae7052b89f2dbdfdbb673d6f7f3d3d006fe124c",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_sporeglass_hothouse.png",
+      "icon_sha256": "93218b93452695488d31e3d79099c7c5cdc75aa5559ffb5a9265c814f758f481"
+    },
+    {
+      "id": "building_thornwake_barkmantle_run",
+      "building_id": "building_thornwake_barkmantle_run",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_barkmantle_run.png",
+      "source_sha256": "3a5ed127ea2f397fba0ce573c0266633064b0e269294e4992e9fccea1694b738",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_barkmantle_run.png",
+      "icon_sha256": "95e773e8537232cb1429287468fe336bf144e19e18ae0cfe8911f4f500cd32cb"
+    },
+    {
+      "id": "building_thornwake_pilgrim_orchard",
+      "building_id": "building_thornwake_pilgrim_orchard",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_pilgrim_orchard.png",
+      "source_sha256": "6baf7a9c609b6594032e8c23984463bd1d2ea1197e57ddcb5fca7cc2dc810925",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_pilgrim_orchard.png",
+      "icon_sha256": "220cf4ad19ae46e23e189b517d2d907e42a0cea91268f07229cea2e1789fb9ec"
+    },
+    {
+      "id": "building_thornwake_graftworks",
+      "building_id": "building_thornwake_graftworks",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_graftworks.png",
+      "source_sha256": "755d1aae050454b28d23d02194af14ee5fd9f57c28b74f7c188c832ef2bc6a26",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_graftworks.png",
+      "icon_sha256": "d0d17c6e0bc8793823c5d095b7ad2a259a1cc3583d8da6f612a9ac654d9bb601"
+    },
+    {
+      "id": "building_thornwake_worldroot_gate",
+      "building_id": "building_thornwake_worldroot_gate",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_worldroot_gate.png",
+      "source_sha256": "7c6aee02c7dcbffb29f09608a8e664ce76c04051e677d2f6360f4eafbadd3251",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_worldroot_gate.png",
+      "icon_sha256": "2c0f7fac7f1c546d8403b602a6ef4e2dafa54a7b1ca8fea53ac00de5f588f061"
     }
   ]
 }

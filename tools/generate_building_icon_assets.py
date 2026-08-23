@@ -36,6 +36,13 @@ BUILDING_IDS = (
     "building_sunvault_zenith_observatory",
     "building_sunvault_aurora_spire",
     "building_sunvault_daybreak_matrix",
+    "building_thornwake_seed_vault",
+    "building_thornwake_bramble_toll",
+    "building_thornwake_sporeglass_hothouse",
+    "building_thornwake_barkmantle_run",
+    "building_thornwake_pilgrim_orchard",
+    "building_thornwake_graftworks",
+    "building_thornwake_worldroot_gate",
 )
 
 
