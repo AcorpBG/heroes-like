@@ -21,7 +21,9 @@ CURATED_PORTRAIT_SOURCE_IDS = {
     "hero_lyra",
     "hero_mira",
     "hero_solera",
+    "hero_thornwake_ardren_briarmarshal",
     "hero_thornwake_silsa_bramblehound",
+    "hero_thornwake_tova_rootwright",
     "hero_vaska",
     "hero_veilmourn_ivara_blacktide",
 }

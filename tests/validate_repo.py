@@ -293,6 +293,8 @@ FRONTIER_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "front
 FRONTIER_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "frontier_commander_curated_portrait_report.tscn"
 MULTI_CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "multi_campaign_lead_curated_portrait_report.gd"
 MULTI_CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "multi_campaign_lead_curated_portrait_report.tscn"
+THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "thornwake_commander_curated_portrait_report.gd"
+THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "thornwake_commander_curated_portrait_report.tscn"
 SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH = ROOT / "tests" / "save_load_confidence_visual_smoke.gd"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
@@ -42288,6 +42290,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         FRONTIER_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         MULTI_CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
         MULTI_CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCENE_PATH,
+        THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
+        THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH,
     )
     for path in required_paths:
@@ -42376,6 +42380,14 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
             "source_sha256": "da709332aad655d58bacde34eb2106ac0b938ad5cff4fd57b04de2c9ab451850",
             "portrait_sha256": "455b864439baac23ec0e51fcd4e986bb1e0c81fd93547b85e4c45a850bfa5414",
         },
+        "hero_thornwake_ardren_briarmarshal": {
+            "name": "Ardren Briar-Marshal",
+            "faction_id": "faction_thornwake",
+            "archetype": "briarmarshal",
+            "source_path": "res://art/heroes/source/curated/hero_thornwake_ardren_briarmarshal.png",
+            "source_sha256": "f1109df6472f1f7a7c71d5572de270c1380b4f2073a208d9712d647f7b63872d",
+            "portrait_sha256": "c4f2c8bacad4a64efda5f63ed4c8d02bf3316cf54a9c85d6bdc8430d390976e0",
+        },
         "hero_thornwake_silsa_bramblehound": {
             "name": "Silsa Bramble-Hound",
             "faction_id": "faction_thornwake",
@@ -42383,6 +42395,14 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
             "source_path": "res://art/heroes/source/curated/hero_thornwake_silsa_bramblehound.png",
             "source_sha256": "5b7da93abfe6e2c42926a6749f71306eb4bd180636ce8f1c17a3c3fb0a70059e",
             "portrait_sha256": "47463a01b63ce9cb782b674521a3adb38dac0c4c70f6ba4351ab850ebe4487f3",
+        },
+        "hero_thornwake_tova_rootwright": {
+            "name": "Tova Rootwright",
+            "faction_id": "faction_thornwake",
+            "archetype": "rootwright",
+            "source_path": "res://art/heroes/source/curated/hero_thornwake_tova_rootwright.png",
+            "source_sha256": "f298054edf5605d3f7ba9d71331476d7e96edce9fcd7f15718d854749e8d3ba3",
+            "portrait_sha256": "a00562af41fbf557a67538fd1e3aaa2f2ec228563178c8d5f2817e1f9d8e5ace",
         },
         "hero_vaska": {
             "name": "Vaska Reedmaw",
@@ -42406,7 +42426,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         for hero_id, record in records.items()
         if any(key in record for key in ("source_kind", "source_path", "source_sha256"))
     }
-    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Marka, Caelen, Lyra, Mira, Solera, Silsa, Vaska, and Ivara")
+    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Marka, Caelen, Lyra, Mira, Solera, Ardren, Silsa, Tova, Vaska, and Ivara")
     for hero_id, expected in curated_cases.items():
         record = records.get(hero_id, {})
         source_path = str(expected["source_path"])
@@ -42434,7 +42454,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "faction_id",
         "command_path",
         "384, 512",
-        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_brasshollow_marka_ironclause",\n    "hero_caelen",\n    "hero_lyra",\n    "hero_mira",\n    "hero_solera",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_vaska",\n    "hero_veilmourn_ivara_blacktide",\n}',
+        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_brasshollow_marka_ironclause",\n    "hero_caelen",\n    "hero_lyra",\n    "hero_mira",\n    "hero_solera",\n    "hero_thornwake_ardren_briarmarshal",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_thornwake_tova_rootwright",\n    "hero_vaska",\n    "hero_veilmourn_ivara_blacktide",\n}',
         'CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"',
         "def draw_curated_hero_portrait(source_path: Path, path: Path) -> None:",
         "portrait = ImageOps.fit(",
@@ -42761,6 +42781,75 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
     ):
         ensure(forbidden_token not in multi_lead_report_text, errors, f"Multi-campaign lead curated portrait report must remain observation-only and must not contain {forbidden_token}")
     ensure('path="res://tests/multi_campaign_lead_curated_portrait_report.gd"' in multi_lead_scene_text, errors, "Multi-campaign lead curated portrait report scene must own the focused report script")
+
+    thornwake_report_text = THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    thornwake_scene_text = THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"hero_id": "hero_thornwake_ardren_briarmarshal"',
+        '"hero_id": "hero_thornwake_tova_rootwright"',
+        '"campaign_id": "campaign_frontier_claims"',
+        '"scenario_id": "rootgate-toll"',
+        '"generated_default_hero_id": "hero_thornwake_ardren_briarmarshal"',
+        '"source_sha256": "f1109df6472f1f7a7c71d5572de270c1380b4f2073a208d9712d647f7b63872d"',
+        '"source_sha256": "f298054edf5605d3f7ba9d71331476d7e96edce9fcd7f15718d854749e8d3ba3"',
+        '"portrait_sha256": "c4f2c8bacad4a64efda5f63ed4c8d02bf3316cf54a9c85d6bdc8430d390976e0"',
+        '"portrait_sha256": "a00562af41fbf557a67538fd1e3aaa2f2ec228563178c8d5f2817e1f9d8e5ace"',
+        '"source_count": 2',
+        '"portrait_count": 2',
+        '"non_target_portrait_count": 58',
+        '"generated_default_session"',
+        'ScenarioSelectRules.build_random_map_player_config(',
+        '"thornwake-commander-portrait-10184"',
+        '"frontier_spokes_v1"',
+        '"frontier_spokes_profile_v1"',
+        '"homm3_small"',
+        'profile["faction_ids"] = ["faction_thornwake", "faction_embercourt", "faction_mireclaw", "faction_sunvault"]',
+        'RandomMapGeneratorRules.generate(config)',
+        'ScenarioFactory.create_generated_draft_session(generated_map, "normal")',
+        'bool(session.flags.get("generated_random_map_draft", false))',
+        'String(scenario.get("hero_id", "")) != "hero_thornwake_ardren_briarmarshal"',
+        'ContentService.unregister_generated_scenario_draft(_generated_scenario_id)',
+        'SessionStateStoreScript.SessionData.new()',
+        'session.from_dict(_generated_session_payload.duplicate(true))',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        'String(art.get("source_kind", "")) != "curated_original_character"',
+        'source_image.get_size() != Vector2i(1254, 1254)',
+        'portrait_image.get_size() != Vector2i(384, 512)',
+        'FileAccess.get_sha256(source_path)',
+        'FileAccess.get_sha256(portrait_path)',
+        'RandomMapGeneratorRules.DEFAULT_HERO_BY_FACTION',
+        'shell.call("validation_select_campaign"',
+        'shell.call("validation_select_campaign_chapter"',
+        'load("res://scenes/overworld/OverworldShell.tscn")',
+        'load("res://scenes/town/TownShell.tscn")',
+        'load("res://scenes/battle/BattleShell.tscn")',
+        'load("res://scenes/results/ScenarioOutcomeShell.tscn")',
+        'SessionState.ensure_active_session().to_dict() == authority_before',
+        'OverworldRules.consume_command_briefing(session)',
+        'OverworldRules.normalize_overworld_state_for_runtime(session)',
+        'BattleRules.normalize_battle_state(session)',
+        'BattleRules.consume_tactical_briefing(session)',
+        'not _numeric_dictionary_exact(hero.get("command", {}), case.get("command", {}))',
+        'not _numeric_dictionary_exact(hero.get("recruit_cost", {}), case.get("recruit_cost", {}))',
+        'portrait.set_hero_id("hero_not_authored")',
+        'frame_rect.encloses(portrait_rect)',
+        '"enemy_unknown_hidden": true',
+    ):
+        ensure(required_token in thornwake_report_text, errors, f"Thornwake commander curated portrait report is missing token {required_token}")
+    for forbidden_token in (
+        "generate_hero_portrait_assets.py",
+        "draw_curated_hero_portrait",
+        "source_sha256 =",
+        "SessionState.set_active_session(null)",
+        "DEFAULT_HERO_BY_FACTION[",
+        "ContentService.register_generated_scenario_draft(",
+    ):
+        ensure(forbidden_token not in thornwake_report_text, errors, f"Thornwake commander curated portrait report must use public runtime authority and must not contain {forbidden_token}")
+    ensure(thornwake_report_text.count("RandomMapGeneratorRules.generate(config)") == 1, errors, "Thornwake commander curated portrait report must generate exactly one public fixture")
+    ensure(thornwake_report_text.count("ScenarioFactory.create_generated_draft_session(generated_map, \"normal\")") == 1, errors, "Thornwake commander curated portrait report must create exactly one real generated draft session")
+    ensure('path="res://tests/thornwake_commander_curated_portrait_report.gd"' in thornwake_scene_text, errors, "Thornwake commander curated portrait report scene must own the focused report script")
 
     for required_token in (
         "%SaveCommanderPortrait",

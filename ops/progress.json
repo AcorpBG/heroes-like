@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed implementation slice."
+    "Select the next tracker-approved source-backed release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Caelen Ashgrove and Mira Flintmere now have distinct original curated character sources and deterministic existing-path portraits. Focused six-chapter/UI authority, compatibility, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Ardren Briar-Marshal and Tova Rootwright now have distinct original curated sources and deterministic existing-path portraits with exact generated-map, campaign, UI, save, and gameplay authority. The bounded slice is complete; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-campaign-leads-caelen-mira-curated-portraits-10184",
-  "currentSliceId": "art-campaign-leads-caelen-mira-curated-portraits-10184",
-  "currentSliceNotes": "Two original curated sources and deterministic portraits are live with exact Stonewake/Ninefold chapter, save, UI, gameplay, reproducibility, compatibility, static/editor, and bounded platform startup proof.",
+  "currentSlice": "art-thornwake-commanders-ardren-tova-curated-portraits-10184",
+  "currentSliceId": "art-thornwake-commanders-ardren-tova-curated-portraits-10184",
+  "currentSliceNotes": "Completed with exact source/runtime provenance, real generated Thornwake and authored Rootgate ownership, 1280/1920 live surfaces, 58 byte-exact non-target portraits, reproducibility, campaign/save/core compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence. The unrelated native-RMG UI save/replay provenance owner remains fail-closed on an empty recovered template id and was not changed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Caelen and Mira Curated Multi-Campaign Leads",
-  "currentSliceUpdatedAt": "2026-08-23T10:23:49Z",
+  "currentSliceTitle": "Ardren and Tova Curated Thornwake Commanders",
+  "currentSliceUpdatedAt": "2026-08-23T10:52:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,26 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer release readiness from completed portrait or packaging-startup evidence.",
-  "notes": "Caelen/Mira curated multi-campaign lead portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select a tracker-approved source-backed implementation gap; do not infer release readiness from the completed Ardren/Tova art slice, and keep native-RMG provenance/parity fail-closed.",
+  "notes": "Ardren/Tova curated Thornwake commander portraits are complete as shipped character-art breadth with live generated/campaign runtime validation. This is not content/rule/balance/campaign or release-completion work.",
   "plannedSlices": [
+    {
+      "id": "art-thornwake-commanders-ardren-tova-curated-portraits-10184",
+      "title": "Ardren and Tova Curated Thornwake Commanders",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace generator-only portraits for the remaining uncurated faction generated-map default and the next live Frontier Claims commander with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_thornwake_ardren_briarmarshal.png", "art/heroes/source/curated/hero_thornwake_tova_rootwright.png", "art/heroes/portraits/hero_thornwake_ardren_briarmarshal.png", "art/heroes/portraits/hero_thornwake_tova_rootwright.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/thornwake_commander_curated_portrait_report.gd", "tests/thornwake_commander_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_thornwake_ardren_briarmarshal","hero_thornwake_tova_rootwright"], "faction_ids": ["faction_thornwake","faction_thornwake"], "archetypes": ["briarmarshal","rootwright"], "generated_map_default_factions": ["faction_thornwake"], "campaign_id": "campaign_frontier_claims", "scenario_ids": ["rootgate-toll"], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 58, "old_portrait_sha256": ["845812c74a679c6fed3d70d9b854d0b96a55d253ef68e7812f4b55d1d2997cf0","02e4bfea88e8d7e462d30292117ea477f3f8ccd1592c6f0e7cf25e2052e9c6f0"]},
+      "completionCriteria": ["Two distinct original square sources and deterministic 384x512 portraits own exact provenance", "A real generated Thornwake session and Frontier Claims chapter/save/Overworld/Town/Battle/Outcome surfaces retain exact paths and hero/default/content/gameplay authority", "Only two sources, two runtime portraits, and two manifest records change; 58 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Any other hero or content/rule/balance/AI/campaign/scenario/generated-map generation behavior", "Portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T10:28:06Z", "startedAt": "2026-08-23T10:28:06Z", "completedAt": "2026-08-23T10:52:17Z", "updatedAt": "2026-08-23T10:52:17Z",
+      "notes": "Two distinct original painterly sources and deterministic existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-thornwake-portrait-focused.EtIgMn proves a real public generated Thornwake session selects Ardren, Rootgate Toll selects Tova, all 60 shared portrait paths remain unique, unknown/enemy portraits fail closed, normalized session authority is exact, and menu/Overworld/Town/Battle/Outcome surfaces are contained at 1280x720 and 1920x1080. /tmp/heroes-thornwake-portrait-repro.MA2R9a proves two complete generator passes byte-exact and all 58 non-target portraits exact to HEAD. Portrait menu, live commander, generated scenario load, save/load, campaign menu/restart, Frontier Claims, campaign replayability, Ninefold, and core compatibility gates pass in /tmp/heroes-thornwake-portrait-compat.cjsl5h and /tmp/heroes-thornwake-portrait-compat-resume.ceNJni. The separate native-RMG UI save/replay report remains fail-closed on its pre-existing empty recovered template_id; no RMG source, test, provenance, or package behavior changed. Static/editor gates and official Linux export/headless startup plus Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged portrait interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-campaign-leads-caelen-mira-curated-portraits-10184",
       "title": "Caelen and Mira Curated Multi-Campaign Leads",
@@ -94586,7 +94603,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Complete the registered Frostwharf House source/derivative/runtime validation boundary. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -95017,8 +95034,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_frostwharf_house_curated_character_sources_in_progress",
-  "status": "in_progress",
+  "result": "art_thornwake_commanders_ardren_tova_curated_portraits_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -95118,9 +95135,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Frostwharf House curated character sources are registered as the sole active slice from exact live content and source-coverage evidence; implementation and behavior validation are in progress.",
+  "summary": "Ardren and Tova now have original curated character sources and deterministic live portraits with exact generated-map, campaign, save, UI, reproducibility, compatibility, static/editor, and bounded platform startup evidence. Broader release gaps remain.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T10:23:49Z",
+  "updatedAt": "2026-08-23T10:52:17Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
