@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Kessa Chainboom and Neral Glasswind now have distinct original curated sources and deterministic existing-path portraits with focused campaign/runtime, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup evidence.",
+  "currentNotes": "Seren Valechant now has one original curated source and deterministic existing-path portrait with focused finale/runtime, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-frontier-commanders-kessa-neral-curated-portraits-10184",
-  "currentSliceId": "art-frontier-commanders-kessa-neral-curated-portraits-10184",
-  "currentSliceNotes": "Completed with exact source provenance, 58 non-target portraits byte-exact, focused 1280/1920 live-surface authority, two deterministic regenerations, chapter/campaign compatibility, static/editor validation, and bounded Linux/Windows export/startup gates.",
+  "currentSlice": "art-frontier-finale-seren-curated-portrait-10184",
+  "currentSliceId": "art-frontier-finale-seren-curated-portrait-10184",
+  "currentSliceNotes": "Completed with exact source provenance, 59 non-target portraits byte-exact, focused 1280/1920 live-surface authority, two deterministic regenerations, finale/campaign compatibility, static/editor validation, and bounded Linux/Windows export/startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Kessa and Neral Curated Frontier Commanders",
-  "currentSliceUpdatedAt": "2026-08-23T11:39:33Z",
+  "currentSliceTitle": "Seren Curated Frontier Finale Commander",
+  "currentSliceUpdatedAt": "2026-08-23T11:58:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,26 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve validated Kessa/Neral portrait and campaign authority, and do not infer release readiness.",
-  "notes": "Kessa/Neral curated Frontier Claims commander portraits are complete. Focused runtime proves shared component, campaign menu, Overworld, Town, Battle, Outcome, unknown-enemy hiding, and exact hero/session authority at 1280/1920; deterministic regeneration preserves all 58 non-target portraits. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve validated Seren portrait and finale campaign authority, and do not infer release readiness.",
+  "notes": "Seren curated Frontier Claims finale portrait is complete. Focused runtime proves shared component, campaign menu, Overworld, Town, Battle, Outcome, unknown-enemy hiding, and exact hero/session authority at 1280/1920; deterministic regeneration preserves all 59 non-target portraits. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-frontier-finale-seren-curated-portrait-10184",
+      "title": "Seren Curated Frontier Finale Commander",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace Seren Valechant's generator-only Frontier Claims finale portrait with one original character-readable source and exact deterministic existing-path portrait.",
+      "implementationTargets": ["art/heroes/source/curated/hero_seren.png", "art/heroes/portraits/hero_seren.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/frontier_final_commander_curated_portrait_report.gd", "tests/frontier_final_commander_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_id": "hero_seren", "faction_id": "faction_embercourt", "archetype": "starseer", "campaign_id": "campaign_frontier_claims", "scenario_id": "charter-bastion-counterseal", "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 59, "old_portrait_sha256": "b75d1db6bd912da0142a928b98bffbc02a8e25baf869c5952398835027a2633c"},
+      "completionCriteria": ["One original square Seren source and deterministic 384x512 portrait own exact provenance", "Charter Bastion Counterseal selection/save/Overworld/Town/Battle/Outcome surfaces retain exact path and hero/content/gameplay authority", "Only one source, one runtime portrait, and one manifest record change; 59 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Any other hero or content/rule/balance/AI/campaign/scenario/generated-map behavior", "Portrait path/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T11:41:58Z", "startedAt": "2026-08-23T11:41:58Z", "updatedAt": "2026-08-23T11:58:26Z", "completedAt": "2026-08-23T11:58:26Z",
+      "notes": "One original Seren source is integrated through the deterministic existing-path portrait pipeline. Focused /tmp/heroes-seren-focused.G99RCJ proves exact provenance, hero/finale/gameplay authority, shared component, campaign menu, Overworld, Town, Battle player/authored enemy, Outcome, unknown-enemy hiding, and session authority at 1280/1920. Repro /tmp/heroes-seren-repro.1DJ9Xm proves two byte-identical regenerations and all 59 non-target portraits exact to HEAD 6a157a70. Compatibility /tmp/heroes-seren-compat.LQ0s5q and static/editor /tmp/heroes-seren-static.Pa4qyr pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; no packaged portrait interaction, certification, signing/publication, native hardware, whole-game, Native-RMG parity, or release-readiness claim.",
+      "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice."
+    },
     {
       "id": "art-frontier-commanders-kessa-neral-curated-portraits-10184",
       "title": "Kessa and Neral Curated Frontier Commanders",
@@ -95171,7 +95188,7 @@
   ],
   "summary": "Kessa and Neral curated Frontier Claims commander portraits are registered as the sole active slice from exact live chapter ownership and source-coverage evidence; implementation and behavior validation are in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T11:39:33Z",
+  "updatedAt": "2026-08-23T11:58:26Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

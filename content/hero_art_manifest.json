@@ -46,7 +46,10 @@
       "name": "Seren Valechant",
       "faction_id": "faction_embercourt",
       "archetype": "starseer",
-      "portrait": "res://art/heroes/portraits/hero_seren.png"
+      "portrait": "res://art/heroes/portraits/hero_seren.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_seren.png",
+      "source_sha256": "bbda05517d37396328e4b1e4cf37472786d8f0c5fcfa1df2fbcb5f3e12803ec5"
     },
     {
       "id": "hero_torren",
