@@ -24,7 +24,10 @@
       "name": "Caelen Ashgrove",
       "faction_id": "faction_embercourt",
       "archetype": "warden",
-      "portrait": "res://art/heroes/portraits/hero_caelen.png"
+      "portrait": "res://art/heroes/portraits/hero_caelen.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_caelen.png",
+      "source_sha256": "fd869c87a7781caf425df1f75f376cff1c82becffbfc6b7a55e6562f5f85e526"
     },
     {
       "id": "hero_mira",
@@ -32,7 +35,10 @@
       "name": "Mira Flintmere",
       "faction_id": "faction_embercourt",
       "archetype": "marshal",
-      "portrait": "res://art/heroes/portraits/hero_mira.png"
+      "portrait": "res://art/heroes/portraits/hero_mira.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_mira.png",
+      "source_sha256": "b40c92ce16e28e0d4d79dfb78ad4c11fd78629c37dec5ad136e9e319d3b72487"
     },
     {
       "id": "hero_seren",

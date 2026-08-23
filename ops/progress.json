@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Marka Ironclause and Ivara Blacktide now have distinct original curated character sources and deterministic existing-path portraits. Focused campaign/default/UI authority, compatibility, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Caelen Ashgrove and Mira Flintmere now have distinct original curated character sources and deterministic existing-path portraits. Focused six-chapter/UI authority, compatibility, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-frontier-commanders-marka-ivara-curated-portraits-10184",
-  "currentSliceId": "art-frontier-commanders-marka-ivara-curated-portraits-10184",
-  "currentSliceNotes": "Two original curated sources and deterministic portraits are live with exact Frontier Claims chapter, generated-default, save, UI, gameplay, reproducibility, compatibility, static/editor, and bounded platform startup proof.",
+  "currentSlice": "art-campaign-leads-caelen-mira-curated-portraits-10184",
+  "currentSliceId": "art-campaign-leads-caelen-mira-curated-portraits-10184",
+  "currentSliceNotes": "Two original curated sources and deterministic portraits are live with exact Stonewake/Ninefold chapter, save, UI, gameplay, reproducibility, compatibility, static/editor, and bounded platform startup proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Marka and Ivara Curated Frontier Commanders",
-  "currentSliceUpdatedAt": "2026-08-23T10:01:40Z",
+  "currentSliceTitle": "Caelen and Mira Curated Multi-Campaign Leads",
+  "currentSliceUpdatedAt": "2026-08-23T10:23:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,25 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer release readiness from completed portrait or packaging-startup evidence.",
-  "notes": "Marka/Ivara curated Frontier commander portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+  "notes": "Caelen/Mira curated multi-campaign lead portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-campaign-leads-caelen-mira-curated-portraits-10184",
+      "title": "Caelen and Mira Curated Multi-Campaign Leads",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace generator-only portraits for the two remaining multi-chapter player-facing campaign leads with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_caelen.png", "art/heroes/source/curated/hero_mira.png", "art/heroes/portraits/hero_caelen.png", "art/heroes/portraits/hero_mira.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/multi_campaign_lead_curated_portrait_report.gd", "tests/multi_campaign_lead_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_caelen","hero_mira"], "faction_ids": ["faction_embercourt","faction_embercourt"], "archetypes": ["warden","marshal"], "campaign_ids": ["campaign_stonewake","campaign_ninefold_survey"], "scenario_ids_by_hero": {"hero_caelen": ["stonewake-watch","reedbarrow-ferry","nightglass-redoubt","glassfen-breakers"], "hero_mira": ["ironbridge-stand","ninefold-confluence"]}, "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 58, "old_portrait_sha256": ["b6947a383d468ba5b57b1a0a1960e7bd5710e9757b53661fbc5f9bbfc77039e1","1adbbbbeaef9c3410249e0aad3b80279d87d86f733c712e8eafcdd75520bc4e0"]},
+      "completionCriteria": ["Two distinct original square sources and deterministic 384x512 portraits own exact provenance", "Stonewake/Ninefold campaign chapter/save/Overworld/Town/Battle/Outcome surfaces retain exact paths and hero/content/gameplay authority", "Only two sources, two runtime portraits, and two manifest records change; 58 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Any other hero or content/rule/balance/AI/campaign/scenario/generated-map behavior", "Portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T10:04:32Z", "startedAt": "2026-08-23T10:04:32Z", "completedAt": "2026-08-23T10:23:49Z", "updatedAt": "2026-08-23T10:23:49Z",
+      "notes": "Two distinct original painterly sources and deterministic existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-caelen-mira-focused.5ju7eV proves all six Caelen/Mira campaign chapter selections, all 60 unique shared portrait paths, fail-closed unknown/enemy handling, exact normalized session authority, and campaign menu/Overworld/Town/Battle/Outcome containment at 1280x720 and 1920x1080. /tmp/heroes-caelen-mira-repro.blEoGf proves two complete generator passes byte-exact and all 58 non-target portraits exact to HEAD. The nine-owner compatibility chain /tmp/heroes-caelen-mira-compat.AsHwRt and final audit /tmp/heroes-caelen-mira-final-audit.aBgPlV are green. Official Linux and Windows reports in /tmp/heroes-caelen-mira-platform.VzvdEa are ok:true for export/headless startup and export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup respectively. Packaged portrait interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-frontier-commanders-marka-ivara-curated-portraits-10184",
       "title": "Marka and Ivara Curated Frontier Commanders",
@@ -95103,7 +95120,7 @@
   ],
   "summary": "Frostwharf House curated character sources are registered as the sole active slice from exact live content and source-coverage evidence; implementation and behavior validation are in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T10:01:40Z",
+  "updatedAt": "2026-08-23T10:23:49Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
