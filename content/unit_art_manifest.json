@@ -1338,7 +1338,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_tunnel_lanterns.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_tunnel_lanterns.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_tunnel_lanterns.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_tunnel_lanterns.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_tunnel_lanterns.png",
+      "curated_source_sha256": "e6e6078a32f1aad9fd8e606acae15a44f0abab135ee70190eead521adfdcfa1b"
     },
     {
       "id": "unit_neutral_glimmercap_needlers",
@@ -1350,7 +1353,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_glimmercap_needlers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_glimmercap_needlers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_glimmercap_needlers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_glimmercap_needlers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_glimmercap_needlers.png",
+      "curated_source_sha256": "2f4e79c6002d1b2823c292ff4532da7f2ad956ce657dd5844c041d48579fe941"
     },
     {
       "id": "unit_neutral_bogbell_mauls",
