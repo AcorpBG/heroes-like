@@ -108,7 +108,10 @@
       "name": "Neral Glasswind",
       "faction_id": "faction_sunvault",
       "archetype": "starseer",
-      "portrait": "res://art/heroes/portraits/hero_neral.png"
+      "portrait": "res://art/heroes/portraits/hero_neral.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_neral.png",
+      "source_sha256": "3164299eee42a11d40fe30472890a77b422460c89823c722147751888328114a"
     },
     {
       "id": "hero_varis",
@@ -172,7 +175,10 @@
       "name": "Kessa Chainboom",
       "faction_id": "faction_mireclaw",
       "archetype": "chainbreaker",
-      "portrait": "res://art/heroes/portraits/hero_mireclaw_kessa_chainboom.png"
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_kessa_chainboom.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_mireclaw_kessa_chainboom.png",
+      "source_sha256": "9358ad99048d7ca6990e5d0476d3df3ff0a44f22d03ce71e0a386f795e530a25"
     },
     {
       "id": "hero_mireclaw_brakka_mudkeel",

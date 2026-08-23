@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-frontier-commanders-kessa-neral-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Kessa Chainboom, Mireclaw commander of Frontier Claims chapter seven, and Neral Glasswind, Sunvault commander of chapter eight. Exact provenance, all 58 non-target portrait bytes, chapter/campaign/hero/save/UI/gameplay authority, focused 1280/1920 live surfaces, reproducibility, campaign compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-frontier-commanders-kessa-neral-curated-portraits-10184`
+
+  Completion criteria:
+  - two distinct original square sources establish Kessa as a marsh-ledger chainbreaker and Neral as a refracted-lens starseer, with exact provenance and deterministic 384x512 runtime portraits;
+  - Frontier Claims/Nightglass Ledger Reversal and Halo Reserve Refraction Claim selection plus save-resume, Overworld, Town, Battle, and Outcome surfaces retain exact hero paths and every hero/campaign/gameplay field;
+  - exactly two source files, two runtime portraits, and two manifest records change; the other 58 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: Seren/finale art, another hero, hero/content/rule/balance/AI changes, campaign/scenario/generated-map behavior, hero stats/spells/specialties/traits/cost, portrait path or UI layout changes, save schema, Overworld sprites, other art domains, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-frontier-commanders-ruln-oren-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for Ruln Vanehook, Veilmourn commander of Frontier Claims chapter five, and Oren Bellfounder, Brasshollow commander of chapter six. Exact provenance, all 58 non-target portrait bytes, chapter/campaign/hero/save/UI/gameplay authority, focused 1280/1920 live surfaces, reproducibility, campaign compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-frontier-commanders-ruln-oren-curated-portraits-10184`
 

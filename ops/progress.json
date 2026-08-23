@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Ruln Vanehook and Oren Bellfounder now have distinct original curated sources and deterministic existing-path portraits with exact campaign, UI, save, and gameplay authority. The bounded slice is complete; broader release gaps remain.",
+  "currentNotes": "Kessa Chainboom and Neral Glasswind now have distinct original curated sources and deterministic existing-path portraits with focused campaign/runtime, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-frontier-commanders-ruln-oren-curated-portraits-10184",
-  "currentSliceId": "art-frontier-commanders-ruln-oren-curated-portraits-10184",
-  "currentSliceNotes": "Completed with exact source/runtime provenance, authored Fogchart Mooring and Clauseworks Counterclaim ownership, 1280/1920 live surfaces, 58 byte-exact non-target portraits, reproducibility, chapter/campaign/save/core compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "art-frontier-commanders-kessa-neral-curated-portraits-10184",
+  "currentSliceId": "art-frontier-commanders-kessa-neral-curated-portraits-10184",
+  "currentSliceNotes": "Completed with exact source provenance, 58 non-target portraits byte-exact, focused 1280/1920 live-surface authority, two deterministic regenerations, chapter/campaign compatibility, static/editor validation, and bounded Linux/Windows export/startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ruln and Oren Curated Frontier Commanders",
-  "currentSliceUpdatedAt": "2026-08-23T11:15:51Z",
+  "currentSliceTitle": "Kessa and Neral Curated Frontier Commanders",
+  "currentSliceUpdatedAt": "2026-08-23T11:39:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,26 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a tracker-approved source-backed implementation gap; do not infer release readiness from the completed Ruln/Oren art slice, and keep native-RMG provenance/parity fail-closed.",
-  "notes": "Ruln/Oren curated Frontier Claims commander portraits are complete as shipped character-art breadth with live campaign runtime validation. This is not content/rule/balance/campaign or release-completion work.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve validated Kessa/Neral portrait and campaign authority, and do not infer release readiness.",
+  "notes": "Kessa/Neral curated Frontier Claims commander portraits are complete. Focused runtime proves shared component, campaign menu, Overworld, Town, Battle, Outcome, unknown-enemy hiding, and exact hero/session authority at 1280/1920; deterministic regeneration preserves all 58 non-target portraits. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-frontier-commanders-kessa-neral-curated-portraits-10184",
+      "title": "Kessa and Neral Curated Frontier Commanders",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace generator-only portraits for Frontier Claims chapters seven and eight with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_mireclaw_kessa_chainboom.png", "art/heroes/source/curated/hero_neral.png", "art/heroes/portraits/hero_mireclaw_kessa_chainboom.png", "art/heroes/portraits/hero_neral.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/frontier_late_commanders_curated_portrait_report.gd", "tests/frontier_late_commanders_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_mireclaw_kessa_chainboom","hero_neral"], "faction_ids": ["faction_mireclaw","faction_sunvault"], "archetypes": ["chainbreaker","starseer"], "campaign_id": "campaign_frontier_claims", "scenario_ids": ["nightglass-ledger-reversal","halo-reserve-refraction-claim"], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 58, "old_portrait_sha256": ["a9bddd33b5fa312f8c36c96abbefb4ac40073b636a02b322ab65d915b3d195d3","1ac8b7227b1fd33fd6572c9f18a28d1583dc73953ddf8f1caed4f9234be2ff48"]},
+      "completionCriteria": ["Two distinct original square sources and deterministic 384x512 portraits own exact provenance", "Nightglass Ledger Reversal and Halo Reserve Refraction Claim selection/save/Overworld/Town/Battle/Outcome surfaces retain exact paths and hero/content/gameplay authority", "Only two sources, two runtime portraits, and two manifest records change; 58 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Seren/finale art, any other hero or content/rule/balance/AI/campaign/scenario/generated-map behavior", "Portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T11:17:35Z", "startedAt": "2026-08-23T11:17:35Z", "updatedAt": "2026-08-23T11:39:33Z", "completedAt": "2026-08-23T11:39:33Z",
+      "notes": "Distinct original Kessa and Neral sources are integrated through the deterministic existing-path portrait pipeline. Focused /tmp/heroes-kessa-neral-focused.Obmk1T proves exact provenance, hero/chapter/gameplay authority, shared component, campaign menu, Overworld, Town, Battle player/authored enemy, Outcome, unknown-enemy hiding, and session authority at 1280/1920. Repro /tmp/heroes-kessa-neral-repro.4GvjgY proves two byte-identical regenerations and all 58 non-target portraits exact to HEAD 34e5ed6a. Compatibility /tmp/heroes-kessa-neral-compat.sEU8jd and static/editor /tmp/heroes-kessa-neral-static.yWQWTx pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; no packaged portrait interaction, certification, signing/publication, native hardware, whole-game, Native-RMG parity, or release-readiness claim.",
+      "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice."
+    },
     {
       "id": "art-frontier-commanders-ruln-oren-curated-portraits-10184",
       "title": "Ruln and Oren Curated Frontier Commanders",
@@ -94620,7 +94637,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Complete the registered Kessa/Neral curated Frontier Claims commander portrait slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -95051,8 +95068,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_frontier_commanders_ruln_oren_curated_portraits_completed",
-  "status": "completed",
+  "result": "art_frontier_commanders_kessa_neral_curated_portraits_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -95152,9 +95169,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Ruln and Oren now have original curated character sources and deterministic live portraits with exact campaign, save, UI, reproducibility, compatibility, static/editor, and bounded platform startup evidence. Broader release gaps remain.",
+  "summary": "Kessa and Neral curated Frontier Claims commander portraits are registered as the sole active slice from exact live chapter ownership and source-coverage evidence; implementation and behavior validation are in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T11:15:51Z",
+  "updatedAt": "2026-08-23T11:39:33Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
