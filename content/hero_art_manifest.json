@@ -13,7 +13,10 @@
       "name": "Lyra Emberwell",
       "faction_id": "faction_embercourt",
       "archetype": "pathfinder",
-      "portrait": "res://art/heroes/portraits/hero_lyra.png"
+      "portrait": "res://art/heroes/portraits/hero_lyra.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_lyra.png",
+      "source_sha256": "3717b692fe3d40da4431ebd1699ba40945d9ca4697afd6b54683afd739a9bc50"
     },
     {
       "id": "hero_caelen",
@@ -53,7 +56,10 @@
       "name": "Vaska Reedmaw",
       "faction_id": "faction_mireclaw",
       "archetype": "raider",
-      "portrait": "res://art/heroes/portraits/hero_vaska.png"
+      "portrait": "res://art/heroes/portraits/hero_vaska.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_vaska.png",
+      "source_sha256": "6249f30e3ee8672aa34156af86e88dda8d9926b9f27e00e2d36ec1ad9f56926d"
     },
     {
       "id": "hero_sable",

@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-campaign-commanders-lyra-vaska-curated-portraits-10184`. Two distinct original painterly character sources now replace the generator-only portraits for opposing flagship campaign commanders Lyra Emberwell and Vaska Reedmaw through deterministic existing-path portraits. Exact provenance, hero/campaign/scenario/default-commander/save/UI/gameplay authority, all 58 non-target portrait bytes, focused 1280/1920 live surfaces, compatibility, reproducibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-campaign-commanders-lyra-vaska-curated-portraits-10184`
+
+  Completion criteria:
+  - two distinct original square source portraits establish Lyra as an Embercourt river-frontier pathfinder and Vaska as a Mireclaw road-cut raid captain, with exact source provenance and deterministic 384x512 runtime portraits;
+  - River Pass/Reedfall and Bogbound Oath campaign selection, save-resume, Overworld, Town, Battle, and Outcome surfaces load the exact existing hero portrait paths while hero ids, factions, archetypes, spells, specialties, traits, command stats, movement, recruitment cost, campaign/scenario wiring, and generated-map defaults remain exact;
+  - exactly two source files, two runtime portraits, and two hero-manifest records change; the other 58 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: another hero, hero/content/rule/balance/AI changes, campaign/scenario/map/generated-map behavior, hero stats/spells/specialties/traits/cost, portrait path or UI layout changes, save schema, Overworld sprites, unit/town/object art, animation/audio/VFX, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-neutral-frostwharf-house-curated-character-sources-10184`. Two distinct original transparent Frostwharf character sources now replace the generated Frostwharf Cutters and Lanternskate Throwers emblems through exact reproducible existing-path derivatives. The live Frostwharf House graph, 7/2 watch, authored Ninefold placement, exact generated-map candidate absence, explicit Native-RMG proxy absence, rewards/recruits, grass fog-bank/open-lane encounter authority, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-neutral-frostwharf-house-curated-character-sources-10184`
 
