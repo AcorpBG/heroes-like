@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-neutral-frostwharf-house-curated-character-sources-10184`. Two distinct original transparent Frostwharf character sources now replace the generated Frostwharf Cutters and Lanternskate Throwers emblems through exact reproducible existing-path derivatives. The live Frostwharf House graph, 7/2 watch, authored Ninefold placement, exact generated-map candidate absence, explicit Native-RMG proxy absence, rewards/recruits, grass fog-bank/open-lane encounter authority, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-neutral-frostwharf-house-curated-character-sources-10184`
+
+  Completion criteria:
+  - two distinct 512x512 transparent original sources follow an ice-plank boarding cutter and a low-skating signal-lantern thrower identity and own exact manifest provenance plus reproducible portraits, battle icons, overworld icons, and fourteen-state/four-frame battle sheets;
+  - live content preserves exact stats/costs/growth/abilities, the Frostwharf House graph, shared 7/2 watch, authored Ninefold placement at 52/34, exact random-map candidate absence, explicit Native-RMG proxy absence, 75-gold claim, 2/1 claim recruits, weekly Cutter recruit, grass fog-bank/open-lane encounter authority, and 112 visible BattleBoard frames;
+  - exactly two sources, eight runtime payloads, and two records per manifest change; the other 101 units remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: content/rule/balance/AI, unit stats/abilities/costs/growth, dwelling/site/object/encounter/army, recruitment/reward, random-map or Native-RMG mapping, animation timing, save/render/package behavior, another unit, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-neutral-milestone-arsenal-curated-character-sources-10184`. Two distinct original transparent road-arsenal character sources now replace the generated Milestone Bucklers and Cartbow Tenders emblems through exact reproducible existing-path derivatives. The live Milestone Arsenal graph, shared 6/4 watch, authored Ninefold placement, exact random-map candidate absence, explicit Native-RMG proxy absence, rewards/recruits, grass open-lane/fortified-line encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-neutral-milestone-arsenal-curated-character-sources-10184`
 
