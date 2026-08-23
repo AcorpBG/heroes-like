@@ -122,6 +122,20 @@ BUILDING_IDS = (
     "building_brasshollow_quenchwright_bay",
     "building_brasshollow_rail_tax_office",
     "building_brasshollow_warrant_engine_house",
+    "building_thornwake_rootlaw_moot",
+    "building_thornwake_pollen_litany",
+    "building_thornwake_root_cairn_watch",
+    "building_thornwake_mycorrhizal_store",
+    "building_thornwake_sap_chandler_grove",
+    "building_thornwake_rootroad_markers",
+    "building_thornwake_rootweave_tithe",
+    "building_thornwake_bramblewall_coppice",
+    "building_thornwake_bastion_seed_conclave",
+    "building_thornwake_bramble_marshal_moot",
+    "building_thornwake_spore_oath_chantry",
+    "building_thornwake_thornwarden_husk_yard",
+    "building_thornwake_old_grove_accord",
+    "building_thornwake_verdant_concord_seat",
 )
 
 

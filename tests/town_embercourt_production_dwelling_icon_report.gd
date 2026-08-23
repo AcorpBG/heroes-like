@@ -66,7 +66,7 @@ func _catalog_contract() -> Dictionary:
 			fallback_count += 1
 			fallback_exact = fallback_exact and TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)
 	return {
-		"ok": target_count == _target_building_ids().size() and specific_count == 107 and fallback_count == 26 and fallback_exact and source_hashes.size() == _target_building_ids().size() and icon_hashes.size() == _target_building_ids().size() and icon_paths.size() == _target_building_ids().size() and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
+		"ok": target_count == _target_building_ids().size() and specific_count == 121 and fallback_count == 12 and fallback_exact and source_hashes.size() == _target_building_ids().size() and icon_hashes.size() == _target_building_ids().size() and icon_paths.size() == _target_building_ids().size() and _unique(source_hashes) and _unique(icon_hashes) and _unique(icon_paths),
 		"target_count": target_count,
 		"specific_count": specific_count,
 		"fallback_count": fallback_count,
@@ -108,7 +108,7 @@ func _live_case(viewport_size: Vector2i) -> Dictionary:
 		var building_id := TownRules.building_id_for_action(String(actions[index].get("id", "")))
 		var button: Button = buttons[index]
 		live_exact = live_exact and button.icon != null and button.icon.resource_path == TownRules.building_icon_path(building_id)
-	var fallback_id := "building_thornwake_rootlaw_moot"
+	var fallback_id := "building_veilmourn_bell_chain_watch"
 	var fallback_button := Button.new()
 	shell._apply_build_action_icon(fallback_button, {"id": "build:%s" % fallback_id})
 	var fallback_exact := fallback_button.icon != null and fallback_button.icon.resource_path == TownRules.building_category_icon_path(fallback_id)
