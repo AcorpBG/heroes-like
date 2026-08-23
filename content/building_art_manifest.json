@@ -387,6 +387,60 @@
       "source_sha256": "c0fb5111c28fc0ad0fc06eed3c23be167a41c10a4058e32a0c3df92d4ca25b9d",
       "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_leviathan_sounding.png",
       "icon_sha256": "f2bfdc9b434b783fe57717c7f6df3b38651cfea9aacfc715d78b2557fc329dad"
+    },
+    {
+      "id": "building_embercourt_lockhouse_tally",
+      "building_id": "building_embercourt_lockhouse_tally",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_lockhouse_tally.png",
+      "source_sha256": "99141e24eb5930cc404679d8ddbec1446ba58a0356e1cf6e3f92820037cbb70b",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_lockhouse_tally.png",
+      "icon_sha256": "1bd2052a4802559db7449fb87f3c761d03cca3dffe9816a2dd116843589681d6"
+    },
+    {
+      "id": "building_mireclaw_reed_toll",
+      "building_id": "building_mireclaw_reed_toll",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_reed_toll.png",
+      "source_sha256": "bb35aefcd783a43fe62c8a99fa765f94384212a104dfc626b14eaff7c84ab0e6",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_reed_toll.png",
+      "icon_sha256": "4a418b324af7d0c01f41d2961cf8321176198ef0fbaab3571e6fbfa007908497"
+    },
+    {
+      "id": "building_sunvault_lens_tithe",
+      "building_id": "building_sunvault_lens_tithe",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_lens_tithe.png",
+      "source_sha256": "76d69a0a1932090624829a194aa325b1f029909cf0a278cff876408f6871ab9b",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_lens_tithe.png",
+      "icon_sha256": "17521d8143506b284c7cb106f7d5a6d17ade4c3f14f651085e1f858404c23be4"
+    },
+    {
+      "id": "building_thornwake_loam_ledger",
+      "building_id": "building_thornwake_loam_ledger",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_loam_ledger.png",
+      "source_sha256": "ec904b89332760885602d90e38d0f71b2822a70e6ae6a1c51141b3327fdc0e9f",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_loam_ledger.png",
+      "icon_sha256": "e1f00d3f8d8af602b3437064ab450148b928c47d5190a9e1dfcd3128c33191ec"
+    },
+    {
+      "id": "building_brasshollow_scalehouse",
+      "building_id": "building_brasshollow_scalehouse",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_scalehouse.png",
+      "source_sha256": "d94cc212169591980e800310a5c9c7be70c78e0f0fe60ea23102af1169077c76",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_scalehouse.png",
+      "icon_sha256": "fb4355e41908fef43511e71ae79609dd1407d2fc46afe7fe043d35aaf587f0e6"
+    },
+    {
+      "id": "building_veilmourn_salvage_ledger",
+      "building_id": "building_veilmourn_salvage_ledger",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_salvage_ledger.png",
+      "source_sha256": "3914d42ea5e43b479bb0c43185e306faeca556e112af29f78f1de99d1ad56de6",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_salvage_ledger.png",
+      "icon_sha256": "898200ac45aeb15cbce0f2616cd5f9bcb455882a81c793b74701447f8ab7c824"
     }
   ]
 }

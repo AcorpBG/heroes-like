@@ -26,6 +26,13 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - In-progress implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current product evidence.
 
+- Previous completed implementation slice: `presentation-six-faction-foundational-economy-building-specific-icons-10184`. Each faction's first live economy landmark now has a distinct original Town Build icon while every building rule and the remaining category fallbacks stay unchanged.
+  id: `presentation-six-faction-foundational-economy-building-specific-icons-10184`
+
+  Completion criteria: six distinct deterministic source/runtime pairs for Lockhouse Tally, Reed Toll, Lens Tithe, Loam Ledger, Scalehouse, and Salvage Ledger; exact live 1280/1920 resolution; 48 specific building icons and 85 category fallbacks; unchanged costs, prerequisites, income/services, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the other 85 building illustrations, additional economy landmarks, prior icon/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
 - Previous completed implementation slice: `presentation-veilmourn-production-dwelling-specific-icons-10184`. Veilmourn's exact seven-tier production ladder now has distinct original icons through the completed building-art resolver, completing specific art ownership across all six faction production ladders while preserving all other category fallbacks.
   id: `presentation-veilmourn-production-dwelling-specific-icons-10184`
 

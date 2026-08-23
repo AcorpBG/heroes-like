@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Veilmourn's seven production buildings now own distinct original icons, completing all six faction production ladders. Focused, compatibility, static/editor, and bounded platform gates pass; the game is not release-ready.",
+  "currentNotes": "Each faction's first live economy landmark now owns a distinct original icon. Focused, compatibility, static/editor, and bounded platform gates pass; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-veilmourn-production-dwelling-specific-icons-10184",
-  "currentSliceId": "presentation-veilmourn-production-dwelling-specific-icons-10184",
-  "currentSliceNotes": "Completed seven exact Veilmourn source/runtime icons while preserving all thirty-five prior icons, 91 category fallbacks, and gameplay authority.",
+  "currentSlice": "presentation-six-faction-foundational-economy-building-specific-icons-10184",
+  "currentSliceId": "presentation-six-faction-foundational-economy-building-specific-icons-10184",
+  "currentSliceNotes": "Completed six exact faction economy-landmark source/runtime icons while preserving the forty-two production icons, 85 category fallbacks, and every building rule.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Production Dwelling Specific Icons",
-  "currentSliceUpdatedAt": "2026-08-23T20:15:05Z",
+  "currentSliceTitle": "Six-Faction Foundational Economy Building Specific Icons",
+  "currentSliceUpdatedAt": "2026-08-23T20:32:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all forty-two specific faction-production icons and 91 category fallbacks; do not infer release readiness.",
-  "notes": "All six faction production ladders now have forty-two distinct original icons; 91 buildings retain category fallback. Release readiness remains unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all forty-eight specific icons, all building behavior, and 85 category fallbacks; do not infer release readiness.",
+  "notes": "All six faction production ladders and first economy landmarks now have forty-eight distinct original icons; 85 buildings retain category fallback. Release readiness remains unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-six-faction-foundational-economy-building-specific-icons-10184", "title": "Six-Faction Foundational Economy Building Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Give the first live faction economy landmark in each authored town a distinct original icon through the completed building-art resolver.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_{embercourt_lockhouse_tally,mireclaw_reed_toll,sunvault_lens_tithe,thornwake_loam_ledger,brasshollow_scalehouse,veilmourn_salvage_ledger}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_faction_foundational_economy_building_icon_report.gd", "tests/town_faction_foundational_economy_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_embercourt_lockhouse_tally", "building_mireclaw_reed_toll", "building_sunvault_lens_tithe", "building_thornwake_loam_ledger", "building_brasshollow_scalehouse", "building_veilmourn_salvage_ledger"], "production_building_count": 133, "existing_specific_icon_count": 42, "category_fallback_count": 91, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Six distinct economy-landmark source/runtime icons with exact provenance", "Forty-eight specific icons and exact category fallback for the other85 buildings", "1280/1920 live presentation and unchanged building/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other85 building illustrations or additional economy landmarks", "Building costs/prerequisites/income/services/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T20:18:00Z", "startedAt": "2026-08-23T20:18:00Z", "completedAt": "2026-08-23T20:32:11Z", "updatedAt": "2026-08-23T20:32:11Z", "notes": "Completed six faction economy-landmark source/runtime icons, forty-eight-row manifest, 85 fallbacks, focused 1280/1920 presentation, compatibility/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-veilmourn-production-dwelling-specific-icons-10184", "title": "Veilmourn Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Give Veilmourn's seven production buildings distinct original Town Build icons and complete all six faction ladders.",
