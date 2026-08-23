@@ -46,6 +46,17 @@ static func building_category_icon_path(building_id: String) -> String:
 		return ""
 	return icon_path
 
+static func building_icon_path(building_id: String) -> String:
+	var art := ContentService.get_building_art(building_id)
+	var icon_path := String(art.get("icon_path", "")).strip_edges()
+	if String(art.get("id", "")) == building_id \
+	and String(art.get("building_id", "")) == building_id \
+	and String(art.get("source_kind", "")) == "curated_original_building" \
+	and icon_path.begins_with("res://art/towns/runtime/buildings/") \
+	and ResourceLoader.exists(icon_path, "Texture2D"):
+		return icon_path
+	return building_category_icon_path(building_id)
+
 static func faction_crest_icon_path(faction_id: String) -> String:
 	var normalized_faction_id := faction_id.strip_edges()
 	if ContentService.get_faction(normalized_faction_id).is_empty():

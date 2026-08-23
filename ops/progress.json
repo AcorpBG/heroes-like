@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The final nine live-hero portraits are curated through original sources and deterministic runtime assets, completing curated ownership for all 60 live heroes. Focused, reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass; the game is not release-ready.",
+  "currentNotes": "Seven Embercourt production dwellings now own distinct original icons through a deterministic manifest and fail-closed production resolver. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-five-faction-roster-final-nine-curated-portraits-10184",
-  "currentSliceId": "art-five-faction-roster-final-nine-curated-portraits-10184",
-  "currentSliceNotes": "Completed the exact Pell, Zhorra, Calis, Mirro, Nara, Harro, Pava, Nacre, and Orso source/runtime portrait scope. Two full generations are byte-identical, all 51 non-target portraits remain exact, focused and seven-owner compatibility gates pass, static/editor validation is green, and official Linux plus Windows/Wine export-startup smokes pass with bounded claims.",
+  "currentSlice": "presentation-embercourt-production-dwelling-specific-icons-10184",
+  "currentSliceId": "presentation-embercourt-production-dwelling-specific-icons-10184",
+  "currentSliceNotes": "Completed the exact seven-building source/runtime scope. All 126 untargeted buildings retain category fallback, live 1280/1920 presentation and construction authority are exact, deterministic regeneration and compatibility gates pass, and platform evidence is bounded to export/startup.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Five-Faction Final Nine Curated Hero Portraits",
-  "currentSliceUpdatedAt": "2026-08-23T15:27:02Z",
+  "currentSliceTitle": "Embercourt Production Dwelling Specific Icons",
+  "currentSliceUpdatedAt": "2026-08-23T19:10:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve the completed 60-hero curated portrait ownership and do not infer release readiness from local export/startup success.",
-  "notes": "All 60 live heroes now have curated portrait ownership. The final nine source/runtime pairs preserve exact hero gameplay, roster, save, tavern, and live-shell authority; bounded package evidence covers export/startup only, not packaged portrait interaction or release readiness.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve the completed seven-building icon resolver and all category fallbacks; do not infer release readiness from local export/startup success.",
+  "notes": "Seven Embercourt production dwellings now have distinct original icon ownership. The five completed category sigils remain the fallback for all 126 untargeted buildings and invalid mappings; packaged interaction and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-embercourt-production-dwelling-specific-icons-10184", "title": "Embercourt Production Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Add a data-driven building-specific icon resolver to the live Town Build list and replace the shared dwelling/category sigil on Embercourt's seven production dwelling tiers with distinct original assets.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_muster_yard.png", "art/towns/source/buildings/curated/building_bowyer_lodge.png", "art/towns/source/buildings/curated/building_embercourt_bargebow_slip.png", "art/towns/source/buildings/curated/building_embercourt_oath_pikehall.png", "art/towns/source/buildings/curated/building_embercourt_beacon_court.png", "art/towns/source/buildings/curated/building_embercourt_drake_sluice.png", "art/towns/source/buildings/curated/building_embercourt_charter_bastion.png", "art/towns/runtime/buildings/*.png", "content/building_art_manifest.json", "scripts/autoload/ContentService.gd", "scripts/core/TownRules.gd", "scenes/town/TownShell.gd", "tools/generate_building_icon_assets.py", "tests/town_embercourt_production_dwelling_icon_report.gd", "tests/town_embercourt_production_dwelling_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_muster_yard", "building_bowyer_lodge", "building_embercourt_bargebow_slip", "building_embercourt_oath_pikehall", "building_embercourt_beacon_court", "building_embercourt_drake_sluice", "building_embercourt_charter_bastion"], "production_building_count": 133, "category_fallback_count": 5, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Seven distinct original sources and deterministic runtime icons own exact provenance for the Embercourt production dwelling chain", "TownRules resolves a valid building-specific icon first and the exact existing category sigil for every untargeted/missing/malformed row", "Live Riverwatch Town Build options show exact target icons at 1280/1920 while order/readiness/focus/consequences and all building/session/save authority remain exact; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["The other 126 buildings, building ids/names/categories/costs/prerequisites/unlocks/order/readiness/consequences, economy/balance/AI/save schema, Town layout", "Packaged construction interaction, controller/native hardware, accessibility certification, signing/publication, whole-game validation, Native-RMG, or release readiness"],
+      "createdAt": "2026-08-23T18:50:34Z", "startedAt": "2026-08-23T18:50:34Z", "completedAt": "2026-08-23T19:10:10Z", "updatedAt": "2026-08-23T19:10:10Z", "notes": "Completed seven exact original source/runtime pairs, deterministic manifest ownership, fail-closed resolver fallback for 126 untargeted buildings, 1280/1920 live presentation and authority, compatibility/static/editor gates, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged construction interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "art-five-faction-roster-final-nine-curated-portraits-10184", "title": "Five-Faction Final Nine Curated Hero Portraits", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Replace the exact nine remaining generator-only live hero portraits with original character-readable sources and deterministic existing-path portraits, completing curated ownership for all 60 live heroes.",

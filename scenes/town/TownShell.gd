@@ -2926,7 +2926,7 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 
 func _apply_build_action_icon(button: Button, action: Dictionary) -> void:
 	var building_id := TownRules.building_id_for_action(String(action.get("id", "")))
-	var icon_path := TownRules.building_category_icon_path(building_id)
+	var icon_path := TownRules.building_icon_path(building_id)
 	if icon_path == "":
 		return
 	var texture := load(icon_path) as Texture2D
