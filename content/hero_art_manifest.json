@@ -255,7 +255,10 @@
       "name": "Pell Reedscript",
       "faction_id": "faction_mireclaw",
       "archetype": "denaugur",
-      "portrait": "res://art/heroes/portraits/hero_mireclaw_pell_reedscript.png"
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_pell_reedscript.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_mireclaw_pell_reedscript.png",
+      "source_sha256": "692074bfcb365ed46788a256122a9215fee4926b6eb84c1c24b33072c4637c08"
     },
     {
       "id": "hero_mireclaw_zhorra_fenwake",
@@ -263,7 +266,10 @@
       "name": "Zhorra Fenwake",
       "faction_id": "faction_mireclaw",
       "archetype": "drumoracle",
-      "portrait": "res://art/heroes/portraits/hero_mireclaw_zhorra_fenwake.png"
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_zhorra_fenwake.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_mireclaw_zhorra_fenwake.png",
+      "source_sha256": "b0d7a891e93f00ee1aae3de089faef35145b257c6a953109a23d8611b1ed0d46"
     },
     {
       "id": "hero_sunvault_ilyr_glassmarshal",
@@ -315,7 +321,10 @@
       "name": "Calis Sunvein",
       "faction_id": "faction_sunvault",
       "archetype": "solarphysician",
-      "portrait": "res://art/heroes/portraits/hero_sunvault_calis_sunvein.png"
+      "portrait": "res://art/heroes/portraits/hero_sunvault_calis_sunvein.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_sunvault_calis_sunvein.png",
+      "source_sha256": "ce60c3cc285553bcc5bd32fc37e9768b6d28888975931e446cdb23a1f6cffb46"
     },
     {
       "id": "hero_sunvault_mirro_halometer",
@@ -323,7 +332,10 @@
       "name": "Mirro Halometer",
       "faction_id": "faction_sunvault",
       "archetype": "calibration",
-      "portrait": "res://art/heroes/portraits/hero_sunvault_mirro_halometer.png"
+      "portrait": "res://art/heroes/portraits/hero_sunvault_mirro_halometer.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_sunvault_mirro_halometer.png",
+      "source_sha256": "60bd8f0a1e64c9dbf0503513fab82d6fbe4e08ae7f5b3de01f4492be3f220500"
     },
     {
       "id": "hero_thornwake_ardren_briarmarshal",
@@ -430,7 +442,10 @@
       "name": "Nara Graft-Sibyl",
       "faction_id": "faction_thornwake",
       "archetype": "graftprophet",
-      "portrait": "res://art/heroes/portraits/hero_thornwake_nara_graftsibyl.png"
+      "portrait": "res://art/heroes/portraits/hero_thornwake_nara_graftsibyl.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_nara_graftsibyl.png",
+      "source_sha256": "c2ccbd6efa9acd34e524416078735d1b1a4a742bb7da1c8ed2d06423520174de"
     },
     {
       "id": "hero_brasshollow_marka_ironclause",
@@ -526,7 +541,10 @@
       "name": "Harro Debt-Rune",
       "faction_id": "faction_brasshollow",
       "archetype": "clausemage",
-      "portrait": "res://art/heroes/portraits/hero_brasshollow_harro_debtrune.png"
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_harro_debtrune.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_harro_debtrune.png",
+      "source_sha256": "aa849944235857bcea00a1e399b29bbd2a572f9421710c194675767b438ae49b"
     },
     {
       "id": "hero_brasshollow_pava_ashmeter",
@@ -534,7 +552,10 @@
       "name": "Pava Ashmeter",
       "faction_id": "faction_brasshollow",
       "archetype": "slagalchemist",
-      "portrait": "res://art/heroes/portraits/hero_brasshollow_pava_ashmeter.png"
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_pava_ashmeter.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_pava_ashmeter.png",
+      "source_sha256": "9e3c1804a89042c74fd9f77c34a544cf2eaa89a57f0b1fffb289d77303c01bff"
     },
     {
       "id": "hero_veilmourn_ivara_blacktide",
@@ -630,7 +651,10 @@
       "name": "Nacre Vowless",
       "faction_id": "faction_veilmourn",
       "archetype": "funeralhexer",
-      "portrait": "res://art/heroes/portraits/hero_veilmourn_nacre_vowless.png"
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_nacre_vowless.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_nacre_vowless.png",
+      "source_sha256": "8b5518b76431926bcd6c37a7b53ef6255888056d4dcc7444f01c373ef794bee7"
     },
     {
       "id": "hero_veilmourn_orso_nightchart",
@@ -638,7 +662,10 @@
       "name": "Orso Nightchart",
       "faction_id": "faction_veilmourn",
       "archetype": "routediviner",
-      "portrait": "res://art/heroes/portraits/hero_veilmourn_orso_nightchart.png"
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_orso_nightchart.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_orso_nightchart.png",
+      "source_sha256": "ead583409f8d92a8275ba7922dc029cffbc82c032265a84cbcb15f2f65a89034"
     }
   ]
 }

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The six-faction roster-scholar portrait slice is complete with six original curated sources, deterministic runtime portraits, exact gameplay and roster preservation, focused/compatibility/static validation, and bounded Linux/Windows export-startup evidence. This does not establish release readiness.",
+  "currentNotes": "The final nine live-hero portraits are curated through original sources and deterministic runtime assets, completing curated ownership for all 60 live heroes. Focused, reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-six-faction-roster-scholars-curated-portraits-10184",
-  "currentSliceId": "art-six-faction-roster-scholars-curated-portraits-10184",
-  "currentSliceNotes": "Jorun, Edda, Essa, Ralka, Lina, and Sael now have distinct curated sources and deterministic 384x512 portraits; the other 54 portraits remain byte-exact and all bounded gates pass.",
+  "currentSlice": "art-five-faction-roster-final-nine-curated-portraits-10184",
+  "currentSliceId": "art-five-faction-roster-final-nine-curated-portraits-10184",
+  "currentSliceNotes": "Completed the exact Pell, Zhorra, Calis, Mirro, Nara, Harro, Pava, Nacre, and Orso source/runtime portrait scope. Two full generations are byte-identical, all 51 non-target portraits remain exact, focused and seven-owner compatibility gates pass, static/editor validation is green, and official Linux plus Windows/Wine export-startup smokes pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six-Faction Curated Roster Scholars",
-  "currentSliceUpdatedAt": "2026-08-23T14:49:00Z",
+  "currentSliceTitle": "Five-Faction Final Nine Curated Hero Portraits",
+  "currentSliceUpdatedAt": "2026-08-23T15:27:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice from current source-backed release gaps; preserve honest bounded claims and do not infer release readiness from portrait or packaging gates.",
-  "notes": "Six curated roster-scholar portraits are complete and validated. Focused headless evidence covers portrait interaction at 1280/1920; platform evidence is limited to Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup.",
+  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve the completed 60-hero curated portrait ownership and do not infer release readiness from local export/startup success.",
+  "notes": "All 60 live heroes now have curated portrait ownership. The final nine source/runtime pairs preserve exact hero gameplay, roster, save, tavern, and live-shell authority; bounded package evidence covers export/startup only, not packaged portrait interaction or release readiness.",
   "plannedSlices": [
+    {
+      "id": "art-five-faction-roster-final-nine-curated-portraits-10184", "title": "Five-Faction Final Nine Curated Hero Portraits", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace the exact nine remaining generator-only live hero portraits with original character-readable sources and deterministic existing-path portraits, completing curated ownership for all 60 live heroes.",
+      "implementationTargets": ["art/heroes/source/curated/hero_mireclaw_pell_reedscript.png", "art/heroes/source/curated/hero_mireclaw_zhorra_fenwake.png", "art/heroes/source/curated/hero_sunvault_calis_sunvein.png", "art/heroes/source/curated/hero_sunvault_mirro_halometer.png", "art/heroes/source/curated/hero_thornwake_nara_graftsibyl.png", "art/heroes/source/curated/hero_brasshollow_harro_debtrune.png", "art/heroes/source/curated/hero_brasshollow_pava_ashmeter.png", "art/heroes/source/curated/hero_veilmourn_nacre_vowless.png", "art/heroes/source/curated/hero_veilmourn_orso_nightchart.png", "art/heroes/portraits/hero_mireclaw_pell_reedscript.png", "art/heroes/portraits/hero_mireclaw_zhorra_fenwake.png", "art/heroes/portraits/hero_sunvault_calis_sunvein.png", "art/heroes/portraits/hero_sunvault_mirro_halometer.png", "art/heroes/portraits/hero_thornwake_nara_graftsibyl.png", "art/heroes/portraits/hero_brasshollow_harro_debtrune.png", "art/heroes/portraits/hero_brasshollow_pava_ashmeter.png", "art/heroes/portraits/hero_veilmourn_nacre_vowless.png", "art/heroes/portraits/hero_veilmourn_orso_nightchart.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/five_faction_roster_final_nine_curated_portrait_report.gd", "tests/five_faction_roster_final_nine_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_mireclaw_pell_reedscript","hero_mireclaw_zhorra_fenwake","hero_sunvault_calis_sunvein","hero_sunvault_mirro_halometer","hero_thornwake_nara_graftsibyl","hero_brasshollow_harro_debtrune","hero_brasshollow_pava_ashmeter","hero_veilmourn_nacre_vowless","hero_veilmourn_orso_nightchart"], "faction_ids": ["faction_mireclaw","faction_mireclaw","faction_sunvault","faction_sunvault","faction_thornwake","faction_brasshollow","faction_brasshollow","faction_veilmourn","faction_veilmourn"], "roster_indices": [8,9,8,9,9,8,9,8,9], "runtime_portrait_size": [384,512], "existing_curated_portraits_must_remain_byte_exact": 51, "old_portrait_sha256": ["8286bfe6da1f3f0c286d4265661a72791fc34ddae675dbf22df09a86c7f36f98","5b8fb114d773e4c2f69a7ba7720624acf61be2e51cb27dbfcc41e9d37580739b","472c941fc93c8d5fe328cb84cd64e060277a0e480335053c6b1cd6e57e27af38","5e9d2c7b4b72ae328045e4b48d86dfed97b3a2b034773d7a66773e99439b423b","5032860d74b9c807843098c9fe10a3210c34b90e0f8d0dfbcea8b660d7ad84e0","343bbf152412925d380f1269bc84482edf5815d733f650fdd64a75cddf7814d8","9d0f803fa64bfd284550285cc0196969e915ffd68ac061fa9a07bff3d41bb3de","4f51e42fec811c85d42c3994c1ce34949706649f543b093447ea182e4286a046","c74f25f0ac0f851cc349571e0332b9f4d9ebb0e2250e6a5eb367052b8f874af0"]},
+      "completionCriteria": ["Nine original square sources and deterministic 384x512 portraits own exact provenance and distinct faction/profession identity", "Skirmish/tavern/save/Overworld/Town/Battle/Outcome surfaces retain exact paths, faction roster order, and hero/content/gameplay authority", "Only nine sources, nine runtime portraits, and nine manifest records change; all 51 existing curated portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Hero/content/rule/balance/AI, campaign/scenario/map/generated-map behavior, roster/recruitment policy, portrait paths/UI layout, save schema, Overworld sprites, other art", "Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T14:52:57Z", "startedAt": "2026-08-23T14:52:57Z", "updatedAt": "2026-08-23T15:27:02Z", "completedAt": "2026-08-23T15:27:02Z", "notes": "Nine original painterly sources and deterministic 384x512 portraits are live with exact manifest provenance. Two full generations are byte-identical and all 51 non-target portraits remain exact. Focused /tmp/heroes-final-nine-focused.Tdghaf proves exact hero/content/roster and live portrait authority; compatibility /tmp/heroes-final-nine-compat.dgv5n5 and static/editor /tmp/heroes-final-nine-static-editor.3LmHc3 pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.", "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-six-faction-roster-scholars-curated-portraits-10184", "title": "Six-Faction Curated Roster Scholars", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Replace the next generator-only live roster hero in every faction with original character-readable sources and exact deterministic existing-path portraits.",
@@ -94741,7 +94750,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Complete the registered six-faction roster-scholar curated portrait slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -95172,7 +95181,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_six_faction_roster_scholars_curated_portraits_completed",
+  "result": "art_five_faction_roster_final_nine_curated_portraits_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -95275,7 +95284,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T14:49:00Z",
+  "updatedAt": "2026-08-23T14:52:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
