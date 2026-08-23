@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-neutral-obsidian-scar-curated-character-sources-10184`. Two distinct original transparent ash-road character sources now replace the generated Scarshield Veterans and Ashdart Stalkers emblems through exact reproducible existing-path derivatives. The live Obsidian Scar Camp graph, shared 8/4 watch, authored Ninefold placement, native-RMG subtype-40/source-row-183 projection, rewards/recruits, encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-neutral-obsidian-scar-curated-character-sources-10184`
+
+  Completion criteria:
+  - two distinct 512x512 transparent original sources follow an obsidian-scar shield veteran and an ash-dart route stalker identity and own exact manifest provenance plus reproducible portraits, battle icons, overworld icons, and fourteen-state/four-frame battle sheets;
+  - live content preserves exact stats/costs/growth/abilities, dwelling graph, shared 8/4 watch, authored Ninefold placement, native type-17 subtype-40/source-row-183/`AVGpit0.def` projection, rewards/recruits, encounter authority, and 112 visible BattleBoard frames;
+  - exactly two sources, eight runtime payloads, and two records per manifest change; the other 101 units remain byte-exact and reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass.
+
+  Non-goals: content/rule/balance/AI, dwelling/site/object/encounter/army, recruitment/reward, random-map/native mapping, animation timing, save/render/package behavior, another unit, broad neutral-art completion, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-neutral-kite-signal-eyrie-curated-character-sources-10184`. Two distinct original transparent signal-eyrie character sources now replace the generated Kitehook Runners and Ridgeflare Shots emblems through exact reproducible existing-path derivatives. The live Kite Signal Eyrie graph, shared 7/4 watch, authored Ninefold placement, generated-map site selection, native-RMG subtype-50/source-row-168 projection, rewards/recruits, encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-neutral-kite-signal-eyrie-curated-character-sources-10184`
 
