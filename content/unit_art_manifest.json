@@ -1332,7 +1332,10 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_harbor_polearms.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_harbor_polearms.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_harbor_polearms.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_harbor_polearms.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_harbor_polearms.png",
+      "curated_source_sha256": "34c08101e5264935c71230fc4efef3f0974b2f060e126b500e4bdd3b75f5bc0e"
     },
     {
       "id": "unit_neutral_flaremast_crews",
@@ -1344,7 +1347,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_flaremast_crews.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_flaremast_crews.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_flaremast_crews.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_flaremast_crews.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_flaremast_crews.png",
+      "curated_source_sha256": "23e7a25a6d651c1b4f3a56b588c5586689462f8a9d720ba82fb0b3c2c1935af7"
     },
     {
       "id": "unit_neutral_kitehook_runners",

@@ -441,6 +441,10 @@ ICEHOOK_TRAPPERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "u
 WHITEPIKE_KEEPERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_whitepike_keepers.png"
 ICEHOOK_TRAPPER_LODGE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_icehook_trapper_lodge_curated_art_report.gd"
 ICEHOOK_TRAPPER_LODGE_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_neutral_icehook_trapper_lodge_curated_art_report.tscn"
+HARBOR_POLEARMS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_harbor_polearms.png"
+FLAREMAST_CREWS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_flaremast_crews.png"
+HARBOR_PILOT_HOUSE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_harbor_pilot_house_curated_art_report.gd"
+HARBOR_PILOT_HOUSE_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_neutral_harbor_pilot_house_curated_art_report.tscn"
 ROADWARDENS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_roadwardens.png"
 HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_hearthbow_carriers.png"
 ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_roadward_lodge_curated_art_report.gd"
@@ -42557,6 +42561,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         WHITEPIKE_KEEPERS_CURATED_SOURCE_PATH,
         ICEHOOK_TRAPPER_LODGE_CURATED_ART_REPORT_SCRIPT_PATH,
         ICEHOOK_TRAPPER_LODGE_CURATED_ART_REPORT_SCENE_PATH,
+        HARBOR_POLEARMS_CURATED_SOURCE_PATH,
+        FLAREMAST_CREWS_CURATED_SOURCE_PATH,
+        HARBOR_PILOT_HOUSE_CURATED_ART_REPORT_SCRIPT_PATH,
+        HARBOR_PILOT_HOUSE_CURATED_ART_REPORT_SCENE_PATH,
         ROADWARDENS_CURATED_SOURCE_PATH,
         HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH,
         ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH,
@@ -42790,6 +42798,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     echodart_casts_unit_id = "unit_neutral_echodart_casts"
     icehook_trappers_unit_id = "unit_neutral_icehook_trappers"
     whitepike_keepers_unit_id = "unit_neutral_whitepike_keepers"
+    harbor_polearms_unit_id = "unit_neutral_harbor_polearms"
+    flaremast_crews_unit_id = "unit_neutral_flaremast_crews"
     roadwardens_unit_id = "unit_neutral_roadwardens"
     hearthbow_carriers_unit_id = "unit_neutral_hearthbow_carriers"
     gorefen_ripper_unit_id = "unit_gorefen_ripper"
@@ -43098,6 +43108,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in icehook_trapper_lodge_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    harbor_pilot_house_curated_sources = (
+        (harbor_polearms_unit_id, HARBOR_POLEARMS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_harbor_polearms.png", "34c08101e5264935c71230fc4efef3f0974b2f060e126b500e4bdd3b75f5bc0e", "Harbor Polearms"),
+        (flaremast_crews_unit_id, FLAREMAST_CREWS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_flaremast_crews.png", "23e7a25a6d651c1b4f3a56b588c5586689462f8a9d720ba82fb0b3c2c1935af7", "Flaremast Crews"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in harbor_pilot_house_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     roadward_lodge_curated_sources = (
         (roadwardens_unit_id, ROADWARDENS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_roadwardens.png", "625b2deb46cd667b28824cb2833338073406d411dc2adaea6e3a116d7a5c14b7", "Roadwardens"),
         (hearthbow_carriers_unit_id, HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_hearthbow_carriers.png", "6557279fcd3e442ed0baafe591073874a4242ce246f6e2722d736171ceb812a0", "Hearthbow Carriers"),
@@ -43163,19 +43180,19 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         record for record in animation_manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
-    latest_neutral_curated_unit_ids = [tunnel_lanterns_unit_id, glimmercap_needlers_unit_id, glowcap_bulwarks_unit_id, sporelamp_tossers_unit_id, dustjack_blades_unit_id, scrapbow_teams_unit_id, frostbeacon_pikes_unit_id, snowglass_markers_unit_id, orchard_halberds_unit_id, millstone_slingers_unit_id, switchback_pikes_unit_id, cairnshield_porters_unit_id, saltpan_bucklers_unit_id, suncrack_throwers_unit_id, sumpstone_guards_unit_id, echodart_casts_unit_id, icehook_trappers_unit_id, whitepike_keepers_unit_id]
+    latest_neutral_curated_unit_ids = [tunnel_lanterns_unit_id, glimmercap_needlers_unit_id, glowcap_bulwarks_unit_id, sporelamp_tossers_unit_id, dustjack_blades_unit_id, scrapbow_teams_unit_id, frostbeacon_pikes_unit_id, snowglass_markers_unit_id, orchard_halberds_unit_id, millstone_slingers_unit_id, switchback_pikes_unit_id, cairnshield_porters_unit_id, saltpan_bucklers_unit_id, suncrack_throwers_unit_id, sumpstone_guards_unit_id, echodart_casts_unit_id, icehook_trappers_unit_id, whitepike_keepers_unit_id, harbor_polearms_unit_id, flaremast_crews_unit_id]
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) not in latest_neutral_curated_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved ninety-one units, including both Switchback Hostel units, both Orchard Levy Grounds units, both Frostbeacon Bothy units, both Dustjack Yard units, both Glowcap Croft units, both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source branch",
+        "Exactly the approved ninety-nine units, including both Harbor Pilot House units, both Switchback Hostel units, both Orchard Levy Grounds units, both Frostbeacon Bothy units, both Dustjack Yard units, both Glowcap Croft units, both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source branch",
     )
-    ensure(len(curated_art_records) == 97 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in latest_neutral_curated_unit_ids) == sorted(latest_neutral_curated_unit_ids), errors, "Icehook Trapper Lodge, Crystal Sump, Saltpan Camp, Switchback Hostel, Orchard Levy Grounds, Frostbeacon Bothy, Dustjack Yard, Glowcap Croft, and Lantern Warren must extend the curated art set with exactly their eighteen units")
+    ensure(len(curated_art_records) == 99 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in latest_neutral_curated_unit_ids) == sorted(latest_neutral_curated_unit_ids), errors, "Harbor Pilot House, Icehook Trapper Lodge, Crystal Sump, Saltpan Camp, Switchback Hostel, Orchard Levy Grounds, Frostbeacon Bothy, Dustjack Yard, Glowcap Croft, and Lantern Warren must extend the curated art set with exactly their twenty units")
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) not in latest_neutral_curated_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved ninety-one units, including both Switchback Hostel units, both Orchard Levy Grounds units, both Frostbeacon Bothy units, both Dustjack Yard units, both Glowcap Croft units, both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source animation branch",
+        "Exactly the approved ninety-nine units, including both Harbor Pilot House units, both Switchback Hostel units, both Orchard Levy Grounds units, both Frostbeacon Bothy units, both Dustjack Yard units, both Glowcap Croft units, both Lantern Warren units, both Charcoal Burners units, and both distinct Gorefen tiers, may use the curated character-source animation branch",
     )
-    ensure(len(curated_animation_records) == 97 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in latest_neutral_curated_unit_ids) == sorted(latest_neutral_curated_unit_ids), errors, "Icehook Trapper Lodge, Crystal Sump, Saltpan Camp, Switchback Hostel, Orchard Levy Grounds, Frostbeacon Bothy, Dustjack Yard, Glowcap Croft, and Lantern Warren must extend the curated animation set with exactly their eighteen units")
+    ensure(len(curated_animation_records) == 99 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in latest_neutral_curated_unit_ids) == sorted(latest_neutral_curated_unit_ids), errors, "Harbor Pilot House, Icehook Trapper Lodge, Crystal Sump, Saltpan Camp, Switchback Hostel, Orchard Levy Grounds, Frostbeacon Bothy, Dustjack Yard, Glowcap Croft, and Lantern Warren must extend the curated animation set with exactly their twenty units")
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(fordhook_unit_id, {}), "animation"),
@@ -43271,6 +43288,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in saltpan_camp_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in crystal_sump_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in icehook_trapper_lodge_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in harbor_pilot_house_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in roadward_lodge_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_upper_ladder_curated_sources),
@@ -43382,10 +43400,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_neutral_echodart_casts",
     "unit_neutral_emberpack_lobbers",
     "unit_neutral_fenhound_runners",
+    "unit_neutral_flaremast_crews",
     "unit_neutral_frostbeacon_pikes",
     "unit_neutral_glimmercap_needlers",
     "unit_neutral_glowcap_bulwarks",
     "unit_neutral_greenbranch_cudgels",
+    "unit_neutral_harbor_polearms",
     "unit_neutral_hearthbow_carriers",
     "unit_neutral_hedgehook_watch",
     "unit_neutral_icehook_trappers",
@@ -43440,7 +43460,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_undertow_harpooners",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the ninety-one approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the ninety-nine approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -45521,6 +45541,65 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in icehook_trapper_lodge_report_text, errors, f"Icehook Trapper Lodge focused report must remain observation-only: {forbidden_token}")
     icehook_trapper_lodge_scene_text = ICEHOOK_TRAPPER_LODGE_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_neutral_icehook_trapper_lodge_curated_art_report.gd"' in icehook_trapper_lodge_scene_text, errors, "Icehook Trapper Lodge curated art report scene must own the exact focused script")
+
+    harbor_pilot_house_report_text = HARBOR_PILOT_HOUSE_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_NEUTRAL_HARBOR_PILOT_HOUSE_CURATED_ART_REPORT"',
+        'SHARED_ARMY_ID := "army_neutral_harbor_pilot_house_watch"',
+        '{"scenario_id": "ninefold-confluence", "placement_id": "dwelling_harbor_pilot_house", "site_id": "site_harbor_pilot_house", "x": 52, "y": 24}',
+        '"unit_id": "unit_neutral_harbor_polearms", "label": "Harbor Polearms", "count": 6, "tier": 1, "role": "melee", "growth": 7, "cost": {"gold": 60}, "ability_ids": ["reach"], "hp": 9, "attack": 4, "defense": 4, "min_damage": 2, "max_damage": 4, "speed": 5, "initiative": 7, "retaliations": 1, "ranged": false, "shots": -1',
+        '"unit_id": "unit_neutral_flaremast_crews", "label": "Flaremast Crews", "count": 3, "tier": 2, "role": "ranged", "growth": 5, "cost": {"gold": 85}, "ability_ids": ["volley"], "hp": 7, "attack": 5, "defense": 3, "min_damage": 2, "max_damage": 4, "speed": 4, "initiative": 7, "retaliations": 1, "ranged": true, "shots": 7',
+        '"source_sha256": "34c08101e5264935c71230fc4efef3f0974b2f060e126b500e4bdd3b75f5bc0e"',
+        '"source_sha256": "23e7a25a6d651c1b4f3a56b588c5586689462f8a9d720ba82fb0b3c2c1935af7"',
+        '"portrait_sha256": "ac2d9d73562312d8ed41958c21439d45ab9ed91d76fbd1ad6b14b6af1a2b0df9"',
+        '"portrait_sha256": "5ebdc1ce6962ba97d238014689f4b28fd97f78b029e51570dd930ab1251ec6d7"',
+        '"icon_sha256": "308c6f8b394248ad89420a60e62fc0235b6f03bb9855f034e80a2a47fe1176fa"',
+        '"icon_sha256": "e3e153bf298be7f22b0e5ceded4ff792934f20165580d979fb13e4beedf847d1"',
+        '"overworld_icon_sha256": "4f5aac270722c788d851a5619be7bf6a341fda6e82d91216055aa73374e1c30f"',
+        '"overworld_icon_sha256": "42a57f5f6a4a2319ade2239dd28fd05d397d4d9512638608b043560d6a4e786f"',
+        '"sheet_sha256": "bfa195928549022183d326a617cfd59c217f6e33ad5c665ebcfab5e3977ef602"',
+        '"sheet_sha256": "d4be2eef86ba1efe121f9cb8b123cb38d36ffe6b3923c61e15d38020b555610f"',
+        '"old_portrait_sha256": "ad5df9cfc7ed4632a6801d442adbe5f99c802531826782cdc4af32378e5d31c6"',
+        '"old_portrait_sha256": "32009ffe4e009ddb62fe229a6b68c5ff4098f46d0d252f8361da16d5ccb5b6e8"',
+        '"old_sheet_sha256": "d9799da71d30d7e95dee8a3a83883be4a302dc2195d4f361cf073623f45b91bb"',
+        '"old_sheet_sha256": "954e40ff4952dbb53f21e6d3d45973725325aeeed802bc7093b81394d5de6bb1"',
+        'await _validate_live_harbor_pilot_house_battle_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 40000 and int(source_alpha.get("strong", 0)) > 40000',
+        'bool(source_alpha.get("corners_transparent", false))',
+        'dwelling.get("unit_ids", []) == ["unit_neutral_harbor_polearms", "unit_neutral_flaremast_crews"]',
+        'dwelling.get("site_ids", []) == ["site_harbor_pilot_house"] and dwelling.get("map_object_ids", []) == ["object_harbor_pilot_house"]',
+        'dwelling.get("army_group_ids", []) == [SHARED_ARMY_ID] and dwelling.get("encounter_ids", []) == ["encounter_harbor_pilot_house_watch"]',
+        'String(row.get("site_id", "")) == "site_harbor_pilot_house"', 'generated_site_rows.is_empty()',
+        'String(row.get("native_proxy_object_id", "")) == "object_harbor_pilot_house"', 'native_proxy_rows.is_empty()',
+        '_resource_cost_contract(site.get("claim_rewards", {})) == {"gold": 60} and _resource_cost_contract(site.get("claim_recruits", {})) == {"unit_neutral_flaremast_crews": 1, "unit_neutral_harbor_polearms": 2}',
+        '_resource_cost_contract(site.get("control_income", {})) == {"gold": 25} and _resource_cost_contract(site.get("weekly_recruits", {})) == {"unit_neutral_harbor_polearms": 1}',
+        'String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "road" and encounter.get("battlefield_tags", []) == ["open_lane", "fog_bank"] and int(encounter.get("max_rounds", 0)) == 13',
+        'String(unit.get("affiliation", "")) == "neutral" and int(unit.get("tier", 0)) == int(spec["tier"]) and String(unit.get("role", "")) == String(spec["role"])',
+        'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
+        'ability_ids == spec["ability_ids"]',
+        'var expected_counts := {"unit_neutral_harbor_polearms": 6, "unit_neutral_flaremast_crews": 3}',
+        'BattleRulesScript.create_battle_payload(session, placement)', '_battle_stack_counts(enemy_stacks) == expected_counts',
+        'session.to_dict() == authority_before', 'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in harbor_pilot_house_report_text, errors, f"Harbor Pilot House curated art report is missing token {required_token}")
+    ensure(harbor_pilot_house_report_text.count('BattleRulesScript.create_battle_payload(') == 1, errors, "Harbor Pilot House report must use exactly one public shared-watch battle materialization")
+    ensure(harbor_pilot_house_report_text.count('ContentService.get_scenario(') == 1, errors, "Harbor Pilot House report must use one authored-site lookup")
+    ensure(harbor_pilot_house_report_text.count('RandomMapGeneratorRulesScript.DWELLING_SITE_CANDIDATES.filter') == 1, errors, "Harbor Pilot House report must use one RandomMapGeneratorRules candidate-absence observation")
+    ensure(harbor_pilot_house_report_text.count('FileAccess.get_file_as_string("res://content/homm3_re_reward_object_proxy_catalog.json")') == 1, errors, "Harbor Pilot House report must use one Native-RMG proxy absence observation")
+    ensure('expected_generated_site' not in harbor_pilot_house_report_text, errors, "Harbor Pilot House must not invent a generated-map dwelling candidate")
+    ensure('homm3_re_object_subtype' not in harbor_pilot_house_report_text and 'homm3_re_object_source_row' not in harbor_pilot_house_report_text and 'homm3_re_object_def_ref' not in harbor_pilot_house_report_text, errors, "Harbor Pilot House must not invent Native-RMG authority")
+    ensure('unit.get("cost", {}) == spec["cost"]' not in harbor_pilot_house_report_text, errors, "Harbor Pilot House cost oracle must compare the typed integer resource contract")
+    ensure('String(entry.get("side", "enemy")) != "player"' not in harbor_pilot_house_report_text, errors, "Harbor Pilot House report must not infer a side field absent from the public Board art summary")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'unit["', 'dwelling["', 'site["', 'encounter["', 'shared_army["', 'enemy_stacks['):
+        ensure(forbidden_token not in harbor_pilot_house_report_text, errors, f"Harbor Pilot House focused report must remain observation-only: {forbidden_token}")
+    harbor_pilot_house_scene_text = HARBOR_PILOT_HOUSE_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_neutral_harbor_pilot_house_curated_art_report.gd"' in harbor_pilot_house_scene_text, errors, "Harbor Pilot House curated art report scene must own the exact focused script")
 
     roadward_lodge_report_text = ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
