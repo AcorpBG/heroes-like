@@ -26,7 +26,14 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - In-progress implementation slice: none. Select the next tracker-approved release-readiness slice from direct current behavior evidence.
 
-- Previous completed implementation slice: `presentation-mireclaw-complete-authored-town-building-icons-10184`. Mireclaw's final four category fallbacks now use specific original Town Build art, so every building shown in all five authored Mireclaw towns has specific art.
+- Previous completed implementation slice: `presentation-embercourt-complete-authored-town-building-icons-10184`. The 13 former category fallbacks across Riverwatch Hold and Highwater Keep now have specific original Town Build art, completing both authored Embercourt towns.
+  id: `presentation-embercourt-complete-authored-town-building-icons-10184`
+
+  Completion criteria: 13 distinct deterministic source/runtime pairs for the exact remaining Embercourt building ids; zero category fallbacks across both authored Embercourt towns at 1280/1920; 82 specific building icons and 51 exact global category fallbacks; unchanged costs, prerequisites, income, recruitment, magic, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: the other 51 building illustrations, other factions' Town Build art, prior icon/resolver changes, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
+- Earlier completed implementation slice: `presentation-mireclaw-complete-authored-town-building-icons-10184`. Mireclaw's final four category fallbacks now use specific original Town Build art, so every building shown in all five authored Mireclaw towns has specific art.
   id: `presentation-mireclaw-complete-authored-town-building-icons-10184`
 
   Completion criteria: four distinct deterministic source/runtime pairs for War Drum Circle, Floodtide Forge, Smugglers Flotilla, and Nightglass Dominion; zero category fallbacks across all five authored Mireclaw towns at 1280/1920; 69 specific building icons and 64 exact global category fallbacks; unchanged costs, prerequisites, income, recruitment, market, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.

@@ -84,6 +84,19 @@ BUILDING_IDS = (
     "building_floodtide_forge",
     "building_smugglers_flotilla",
     "building_nightglass_dominion",
+    "building_watch_barracks",
+    "building_beacon_range",
+    "building_river_granary_exchange",
+    "building_quartermasters_depot",
+    "building_citadel_pikehall",
+    "building_embercourt_granary_lock_exchange",
+    "building_embercourt_tollstone_weir",
+    "building_embercourt_beacon_writs",
+    "building_embercourt_lantern_court",
+    "building_embercourt_relief_quay",
+    "building_embercourt_charter_flame",
+    "building_signal_citadel",
+    "building_charter_bastion",
 )
 
 
