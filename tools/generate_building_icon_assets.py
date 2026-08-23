@@ -22,6 +22,13 @@ BUILDING_IDS = (
     "building_embercourt_beacon_court",
     "building_embercourt_drake_sluice",
     "building_embercourt_charter_bastion",
+    "building_mireclaw_blackbranch_den",
+    "building_mireclaw_war_drum_circle",
+    "building_mireclaw_floodtide_forge",
+    "building_mireclaw_chainboom_ferry",
+    "building_mireclaw_sporewake_shrine",
+    "building_mireclaw_nightglass_dominion",
+    "building_mireclaw_antler_pit",
 )
 
 

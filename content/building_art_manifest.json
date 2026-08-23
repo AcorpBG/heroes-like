@@ -72,6 +72,69 @@
       "source_sha256": "d9dcb06fd8dbd27b1d181560cc732a0b57cdb5b57b577e30d2b31de2c7b4016a",
       "icon_path": "res://art/towns/runtime/buildings/building_embercourt_charter_bastion.png",
       "icon_sha256": "c60af07375f9b8ccbb8c049359b65230e97411aded4e3f1af20721d3c28ea725"
+    },
+    {
+      "id": "building_mireclaw_blackbranch_den",
+      "building_id": "building_mireclaw_blackbranch_den",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_blackbranch_den.png",
+      "source_sha256": "5246c49e542dfb293f6d84e2cf83d7d1704fc8860299595445e8a7b8b9173ff9",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_blackbranch_den.png",
+      "icon_sha256": "1323bec4e265afb3dc253163fda817d5b002e4afabec4665e58c9f5d3245ccfb"
+    },
+    {
+      "id": "building_mireclaw_war_drum_circle",
+      "building_id": "building_mireclaw_war_drum_circle",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_war_drum_circle.png",
+      "source_sha256": "4d5ac9cf2ceadd4d9bff7934233cb7f88e9234b7c06294a4a3db10aabec10532",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_war_drum_circle.png",
+      "icon_sha256": "12e2843c8f214729069eaac3907ae7e3d36c3cee07f776cd3ca319fefb43e3e8"
+    },
+    {
+      "id": "building_mireclaw_floodtide_forge",
+      "building_id": "building_mireclaw_floodtide_forge",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_floodtide_forge.png",
+      "source_sha256": "15ed15c7cdaec9b082e52c766e11de0b5fef006c5991dd61380fae90152fafec",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_floodtide_forge.png",
+      "icon_sha256": "2402f9930e928a4f780d456fdbb8c8712ba5aec078797fdafe53347f548ee385"
+    },
+    {
+      "id": "building_mireclaw_chainboom_ferry",
+      "building_id": "building_mireclaw_chainboom_ferry",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_chainboom_ferry.png",
+      "source_sha256": "315e6b954d07671a027236e58d646014d60fa1111cc086f56b9c1ad8f015aca2",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_chainboom_ferry.png",
+      "icon_sha256": "1b672e5c7572d3dd5866576a94e0f92f1931e76550c831340b01eb81d306d29f"
+    },
+    {
+      "id": "building_mireclaw_sporewake_shrine",
+      "building_id": "building_mireclaw_sporewake_shrine",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_sporewake_shrine.png",
+      "source_sha256": "f700ca20e09591f43bc828eafceff8012500480d3788ef7ef2f777e986def9b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_sporewake_shrine.png",
+      "icon_sha256": "760f54c59d38dbcdf3df19d7d3c46f4db6a44881202f43efe58e9b027dc35729"
+    },
+    {
+      "id": "building_mireclaw_nightglass_dominion",
+      "building_id": "building_mireclaw_nightglass_dominion",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_nightglass_dominion.png",
+      "source_sha256": "5b028d234aba0f4ab76e314ba5ff44405039db63f38f2b1a35641b7183ad7929",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_nightglass_dominion.png",
+      "icon_sha256": "f92791eaa832ffb2fc38e703e1b0533aef5967d6ea7f8c2d15a826846a7759fe"
+    },
+    {
+      "id": "building_mireclaw_antler_pit",
+      "building_id": "building_mireclaw_antler_pit",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_antler_pit.png",
+      "source_sha256": "25250d146294122591e2065ae88d1102dc5c49cdf4fa9e168d6a998ca0b6d164",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_antler_pit.png",
+      "icon_sha256": "92e0290ab80cb2eef251226906506e07f10f317ec33d137de75bcd71a9e9f8f7"
     }
   ]
 }
