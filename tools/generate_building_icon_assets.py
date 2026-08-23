@@ -63,6 +63,12 @@ BUILDING_IDS = (
     "building_thornwake_loam_ledger",
     "building_brasshollow_scalehouse",
     "building_veilmourn_salvage_ledger",
+    "building_town_hall",
+    "building_market_square",
+    "building_wayfarers_hall",
+    "building_stone_store",
+    "building_lantern_archive",
+    "building_starseer_annex",
 )
 
 
