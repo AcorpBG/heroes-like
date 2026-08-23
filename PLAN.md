@@ -24,13 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `art-six-faction-roster-specialists-curated-portraits-10184`. Six distinct original painterly sources now replace the generator-only live roster portraits for Saren Lockmaster, Orrik Tollreaver, Ilyr Glassmarshal, Veyra Seedseer, Daxis Chain-Captain, and Jessa Keelwarden through deterministic existing-path portraits. Exact faction roster order, tavern/skirmish/save/live-shell authority, all hero gameplay/content fields, and the other 54 portraits remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
-  id: `art-six-faction-roster-specialists-curated-portraits-10184`
+- Completed implementation slice: `art-six-faction-roster-adepts-curated-portraits-10184`. Six distinct original painterly sources now replace the generator-only live roster portraits for Orra Cinderquill, Brakka Mudkeel, Dovan Lens-Captain, Osmund Pollenglass, Vellum Quench, and Morwen Wakeoracle through deterministic existing-path portraits. Exact faction roster order, tavern/skirmish/save/live-shell authority, every hero gameplay/content field, and the other 54 portraits remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-six-faction-roster-adepts-curated-portraits-10184`
 
   Completion criteria:
-  - six distinct original square sources establish each roster specialist's faction, role, and silhouette, with exact provenance and deterministic 384x512 runtime portraits;
+  - six distinct original square sources establish each roster adept's faction, role, and silhouette, with exact provenance and deterministic 384x512 runtime portraits;
   - skirmish selection, tavern recruitment, save-resume, Overworld, Town, Battle, and Outcome surfaces retain exact paths, ordered faction rosters, and all hero/content/gameplay authority at 1280 and 1920;
   - exactly six sources, six runtime portraits, and six manifest records change; the other 54 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+- Previous completed implementation slice: `art-six-faction-roster-specialists-curated-portraits-10184`. Six distinct original painterly sources now replace the generator-only live roster portraits for Saren Lockmaster, Orrik Tollreaver, Ilyr Glassmarshal, Veyra Seedseer, Daxis Chain-Captain, and Jessa Keelwarden through deterministic existing-path portraits. Exact faction roster order, tavern/skirmish/save/live-shell authority, all hero gameplay/content fields, and the other 54 portraits remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+  id: `art-six-faction-roster-specialists-curated-portraits-10184`
 
   Non-goals: campaign/scenario ownership, another hero, hero/content/rule/balance/AI changes, hero stats/spells/specialties/traits/cost, roster order or recruitment policy, portrait paths/UI layout, save schema, Overworld sprites, other art domains, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.
 
