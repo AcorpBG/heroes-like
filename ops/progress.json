@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Sunvault's two authored towns now use specific original Town Build art for every shown building. Focused and compatibility runtime, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; packaged Town interaction and release readiness remain unclaimed.",
+  "currentNotes": "Brasshollow's two authored towns now use specific original Town Build art for every shown building. Focused and compatibility runtime, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; packaged Town interaction and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-sunvault-complete-authored-town-building-icons-10184",
-  "currentSliceId": "presentation-sunvault-complete-authored-town-building-icons-10184",
-  "currentSliceNotes": "Completed 13 distinct original source/runtime icons, a 95-row deterministic manifest with 38 exact fallbacks, and zero fallbacks across Prismhearth and Halo Spire at 1280/1920 while preserving gameplay/session/save authority.",
+  "currentSlice": "presentation-brasshollow-complete-authored-town-building-icons-10184",
+  "currentSliceId": "presentation-brasshollow-complete-authored-town-building-icons-10184",
+  "currentSliceNotes": "Completed 12 distinct original source/runtime icons, a 107-row deterministic manifest with 26 exact fallbacks, and zero fallbacks across Orevein Gantry and Clauseworks Depot at 1280/1920 while preserving gameplay/session/save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Complete Authored Town Building Icons",
-  "currentSliceUpdatedAt": "2026-08-23T22:30:38Z",
+  "currentSliceTitle": "Brasshollow Complete Authored Town Building Icons",
+  "currentSliceUpdatedAt": "2026-08-23T22:54:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,17 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved release-readiness slice from direct shipped-behavior evidence; do not infer whole-game or release readiness from completed Town Build art and bounded packaging startup gates.",
-  "notes": "Sunvault authored-town building art is complete and validated. Focused headless Town presentation covers 1280/1920; official platform evidence is export/startup only, with no packaged Town interaction, certification, signing/publication, Native-RMG parity, whole-game, or release-ready claim.",
+  "notes": "Brasshollow authored-town building art is complete and validated. Focused headless Town presentation covers 1280/1920; official platform evidence is export/startup only, with no packaged Town interaction, certification, signing/publication, Native-RMG parity, whole-game, or release-ready claim.",
   "plannedSlices": [
+    {
+      "id": "presentation-brasshollow-complete-authored-town-building-icons-10184", "title": "Brasshollow Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Complete faction-wide specific Town Build art across every building shown in Brasshollow's two authored towns.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_brasshollow_{clause_court,heatwright_vestry,gauge_arsenal,debtworks_vault,ledger_mint,foreman_clausehouse,caliper_sanctum,redline_assembly_yard,brassbound_directorate,quenchwright_bay,rail_tax_office,warrant_engine_house}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_brasshollow_complete_authored_building_icon_report.gd", "tests/town_brasshollow_complete_authored_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_brasshollow_clause_court", "building_brasshollow_heatwright_vestry", "building_brasshollow_gauge_arsenal", "building_brasshollow_debtworks_vault", "building_brasshollow_ledger_mint", "building_brasshollow_foreman_clausehouse", "building_brasshollow_caliper_sanctum", "building_brasshollow_redline_assembly_yard", "building_brasshollow_brassbound_directorate", "building_brasshollow_quenchwright_bay", "building_brasshollow_rail_tax_office", "building_brasshollow_warrant_engine_house"], "authored_brasshollow_town_count": 2, "orevein_gantry_fallback_count": 12, "clauseworks_depot_fallback_count": 12, "remaining_brasshollow_unique_fallback_count": 12, "authored_scenario_placement_count": 5, "player_owned_placement_count": 2, "production_building_count": 133, "existing_specific_icon_count": 95, "category_fallback_count": 38, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Twelve distinct final Brasshollow authored-building source/runtime icons with exact provenance", "Both authored Brasshollow towns have zero category fallbacks; one hundred seven global specific icons and exact category fallback for the other26 buildings", "1280/1920 live presentation and unchanged building/economy/recruitment/magic/capital/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other factions or the other26 building illustrations", "Building costs/prerequisites/income/recruitment/magic/capital/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T22:32:41Z", "startedAt": "2026-08-23T22:32:41Z", "completedAt": "2026-08-23T22:54:00Z", "updatedAt": "2026-08-23T22:54:00Z", "notes": "Completed 12 distinct original source/runtime icons, a 107-row deterministic manifest with 26 exact category fallbacks, focused 1280/1920 Town presentation with zero fallbacks across Orevein Gantry and Clauseworks Depot, prior faction icon/category/payoff/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged Town Build interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-sunvault-complete-authored-town-building-icons-10184", "title": "Sunvault Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Complete faction-wide specific Town Build art across every building shown in Sunvault's two authored towns.",

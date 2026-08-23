@@ -110,6 +110,18 @@ BUILDING_IDS = (
     "building_sunvault_prism_oratory",
     "building_sunvault_halo_battery_yard",
     "building_sunvault_zenith_court",
+    "building_brasshollow_clause_court",
+    "building_brasshollow_heatwright_vestry",
+    "building_brasshollow_gauge_arsenal",
+    "building_brasshollow_debtworks_vault",
+    "building_brasshollow_ledger_mint",
+    "building_brasshollow_foreman_clausehouse",
+    "building_brasshollow_caliper_sanctum",
+    "building_brasshollow_redline_assembly_yard",
+    "building_brasshollow_brassbound_directorate",
+    "building_brasshollow_quenchwright_bay",
+    "building_brasshollow_rail_tax_office",
+    "building_brasshollow_warrant_engine_house",
 )
 
 
