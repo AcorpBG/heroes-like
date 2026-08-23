@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Seren Valechant now has one original curated source and deterministic existing-path portrait with focused finale/runtime, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup evidence.",
+  "currentNotes": "Six original roster-lieutenant portraits are integrated with exact provenance and deterministic runtime assets. Focused roster/tavern/live-shell, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass; select the next tracker-approved implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-frontier-finale-seren-curated-portrait-10184",
-  "currentSliceId": "art-frontier-finale-seren-curated-portrait-10184",
-  "currentSliceNotes": "Completed with exact source provenance, 59 non-target portraits byte-exact, focused 1280/1920 live-surface authority, two deterministic regenerations, finale/campaign compatibility, static/editor validation, and bounded Linux/Windows export/startup gates.",
+  "currentSlice": "art-six-faction-roster-lieutenants-curated-portraits-10184",
+  "currentSliceId": "art-six-faction-roster-lieutenants-curated-portraits-10184",
+  "currentSliceNotes": "Torren, Sable, Varis, Halen, Kuld, and Cela now have distinct original curated sources and deterministic existing-path portraits; exact roster/tavern/gameplay authority and all 54 non-target portrait bytes are preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Seren Curated Frontier Finale Commander",
-  "currentSliceUpdatedAt": "2026-08-23T11:58:26Z",
+  "currentSliceTitle": "Six-Faction Curated Roster Lieutenants",
+  "currentSliceUpdatedAt": "2026-08-23T12:28:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,26 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve validated Seren portrait and finale campaign authority, and do not infer release readiness.",
-  "notes": "Seren curated Frontier Claims finale portrait is complete. Focused runtime proves shared component, campaign menu, Overworld, Town, Battle, Outcome, unknown-enemy hiding, and exact hero/session authority at 1280/1920; deterministic regeneration preserves all 59 non-target portraits. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select one tracker-approved source-backed implementation slice; preserve completed portrait authority and do not infer release readiness from bounded local/export startup evidence.",
+  "notes": "Six-faction roster lieutenant portrait curation is completed as shipped roster-art breadth. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-six-faction-roster-lieutenants-curated-portraits-10184",
+      "title": "Six-Faction Curated Roster Lieutenants",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace the first remaining generator-only live roster hero in every faction with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_torren.png", "art/heroes/source/curated/hero_sable.png", "art/heroes/source/curated/hero_varis.png", "art/heroes/source/curated/hero_thornwake_halen_thorncart.png", "art/heroes/source/curated/hero_brasshollow_kuld_varn.png", "art/heroes/source/curated/hero_veilmourn_cela_mistcorsair.png", "art/heroes/portraits/hero_torren.png", "art/heroes/portraits/hero_sable.png", "art/heroes/portraits/hero_varis.png", "art/heroes/portraits/hero_thornwake_halen_thorncart.png", "art/heroes/portraits/hero_brasshollow_kuld_varn.png", "art/heroes/portraits/hero_veilmourn_cela_mistcorsair.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/six_faction_roster_lieutenants_curated_portrait_report.gd", "tests/six_faction_roster_lieutenants_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_torren","hero_sable","hero_varis","hero_thornwake_halen_thorncart","hero_brasshollow_kuld_varn","hero_veilmourn_cela_mistcorsair"], "faction_ids": ["faction_embercourt","faction_mireclaw","faction_sunvault","faction_thornwake","faction_brasshollow","faction_veilmourn"], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 54, "old_portrait_sha256": ["86eb7b505649e1c4994df11b3f71e0870e628e564b4e8138017334d3db3e6453","a80093d5fb362793533df2fba905d5a3ad206a6b327b65d3320872e364cc6738","b0ac8b2c294ccc69296c4cb33550621a56d388fd49137974f6ae8fd96ee3c829","fb915eaea4de40f7e04f1a67e6408479b4e5f4fd5eb7507539b18bf9bf4299b3","0347ef84aad0c77122d1845af4128f88025b83340bcd4a1992911cf77674ecfb","dd7044bf31fefe54510af261aacbd52f68d7d14136f83fe29f99def2cb8db014"]},
+      "completionCriteria": ["Six original square sources and deterministic 384x512 portraits own exact provenance and distinct faction/role identity", "Skirmish/tavern/save/Overworld/Town/Battle/Outcome surfaces retain exact paths, faction roster order, and hero/content/gameplay authority", "Only six sources, six runtime portraits, and six manifest records change; 54 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Campaign/scenario ownership, any other hero or content/rule/balance/AI behavior", "Roster order/recruitment policy, portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T12:02:00Z", "startedAt": "2026-08-23T12:02:00Z", "updatedAt": "2026-08-23T12:28:20Z", "completedAt": "2026-08-23T12:28:20Z",
+      "notes": "Six distinct original sources and deterministic 384x512 existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-six-lieutenant-focused-rerun.UdH18m proves exact hero/content/roster index, public recruitable roster and tavern action, all 60 unique shared portrait paths, fail-closed unknown/enemy handling, session authority, and Overworld/Town/Battle/Outcome containment at 1280x720 and 1920x1080. Repro /tmp/heroes-six-lieutenant-repro.tFAjDW proves two byte-identical full regenerations and all 54 non-target portraits exact to HEAD 135236d5. Compatibility /tmp/heroes-six-lieutenant-compat.vGCnZO and static/editor /tmp/heroes-six-lieutenant-static.8SBD21 pass. Official Linux /tmp/heroes-six-lieutenant-linux-package.cnXjkQ proves export plus packaged headless startup; official Windows /tmp/heroes-six-lieutenant-windows-package.LBsEAV proves export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-frontier-finale-seren-curated-portrait-10184",
       "title": "Seren Curated Frontier Finale Commander",
@@ -95085,8 +95102,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_frontier_commanders_kessa_neral_curated_portraits_in_progress",
-  "status": "in_progress",
+  "result": "art_six_faction_roster_lieutenants_curated_portraits_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -95186,9 +95203,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Kessa and Neral curated Frontier Claims commander portraits are registered as the sole active slice from exact live chapter ownership and source-coverage evidence; implementation and behavior validation are in progress.",
+  "summary": "Six original curated roster-lieutenant portraits are live with exact provenance, deterministic regeneration, preserved roster/tavern/gameplay authority, 54 byte-exact non-target portraits, and bounded cross-platform export/startup validation; select the next tracker-approved implementation slice.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T11:58:26Z",
+  "updatedAt": "2026-08-23T12:28:20Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

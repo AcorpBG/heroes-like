@@ -57,7 +57,10 @@
       "name": "Torren Pikeward",
       "faction_id": "faction_embercourt",
       "archetype": "castellan",
-      "portrait": "res://art/heroes/portraits/hero_torren.png"
+      "portrait": "res://art/heroes/portraits/hero_torren.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_torren.png",
+      "source_sha256": "0df02f345ab257d9b51505589f446c4be64f5d60c4cf876d9405bf01616bec56"
     },
     {
       "id": "hero_vaska",
@@ -76,7 +79,10 @@
       "name": "Sable Muckscribe",
       "faction_id": "faction_mireclaw",
       "archetype": "hexcaller",
-      "portrait": "res://art/heroes/portraits/hero_sable.png"
+      "portrait": "res://art/heroes/portraits/hero_sable.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_sable.png",
+      "source_sha256": "49d57ee32434f2835b6041fa0761f7309246f911de532dc07be69523e9415977"
     },
     {
       "id": "hero_tarn",
@@ -122,7 +128,10 @@
       "name": "Varis Mirrorstep",
       "faction_id": "faction_sunvault",
       "archetype": "outrider",
-      "portrait": "res://art/heroes/portraits/hero_varis.png"
+      "portrait": "res://art/heroes/portraits/hero_varis.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_varis.png",
+      "source_sha256": "d17489ee09f59887f7f79e3766eab82b42dc1cde4b1f510a55065da01ffefe71"
     },
     {
       "id": "hero_thalen",
@@ -299,7 +308,10 @@
       "name": "Halen Thorncart",
       "faction_id": "faction_thornwake",
       "archetype": "pilgrimcaptain",
-      "portrait": "res://art/heroes/portraits/hero_thornwake_halen_thorncart.png"
+      "portrait": "res://art/heroes/portraits/hero_thornwake_halen_thorncart.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_halen_thorncart.png",
+      "source_sha256": "80e2e21112d6dd071b47592f8fb1b23bbfd785f069fea3199a8eda776faad9b6"
     },
     {
       "id": "hero_thornwake_merek_greenbarrow",
@@ -388,7 +400,10 @@
       "name": "Kuld Varn",
       "faction_id": "faction_brasshollow",
       "archetype": "railhead",
-      "portrait": "res://art/heroes/portraits/hero_brasshollow_kuld_varn.png"
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_kuld_varn.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_kuld_varn.png",
+      "source_sha256": "8e0df2db0332a8db443572a09fdab7d0803e1f258c995fc2328c0bb38710a582"
     },
     {
       "id": "hero_brasshollow_selka_pitmarshal",
@@ -474,7 +489,10 @@
       "name": "Cela Mist-Corsair",
       "faction_id": "faction_veilmourn",
       "archetype": "backlineraider",
-      "portrait": "res://art/heroes/portraits/hero_veilmourn_cela_mistcorsair.png"
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_cela_mistcorsair.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_cela_mistcorsair.png",
+      "source_sha256": "952ef44c53e35a37a82a68a7b2f852c37a5d7042f68bac77248912d7f24f5b15"
     },
     {
       "id": "hero_veilmourn_damar_oriflag",
