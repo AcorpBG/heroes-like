@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Frostwharf House curated character sources are complete with exact live-content authority, deterministic derivatives, compatibility, static/editor, and bounded Linux/Windows startup validation. Select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Lyra Emberwell and Vaska Reedmaw now have two distinct original curated character sources and deterministic existing-path portraits. Focused and compatibility runtime, reproducibility, static/editor, and bounded Linux/Windows export-startup gates pass; select the next tracker-approved source-backed implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-frostwharf-house-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-frostwharf-house-curated-character-sources-10184",
-  "currentSliceNotes": "Two original transparent Frostwharf sources and eight exact existing-path derivatives are live. Focused runtime proves exact provenance, content/site/mapping/session authority, two BattleBoard entries, and 112 visible frames; repeated generation, compatibility, static/editor, and bounded Linux/Windows startup gates are green.",
+  "currentSlice": "art-campaign-commanders-lyra-vaska-curated-portraits-10184",
+  "currentSliceId": "art-campaign-commanders-lyra-vaska-curated-portraits-10184",
+  "currentSliceNotes": "Two original curated sources now own exact Lyra/Vaska provenance and deterministic 384x512 existing-path portraits. All hero/campaign/scenario/default-commander/save/UI/gameplay authority and 58 non-target portrait bytes remain exact; focused, compatibility, reproducibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Frostwharf House Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T08:37:54Z",
+  "currentSliceTitle": "Lyra and Vaska Curated Campaign Commander Portraits",
+  "currentSliceUpdatedAt": "2026-08-23T09:15:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,26 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select and register the next source-backed implementation slice before editing; preserve completed Frostwharf content, gameplay, mapping, and art authority and do not infer release readiness.",
-  "notes": "Frostwharf House curated character sources are complete. This is shipped art breadth with live runtime validation, not content/rule/balance/mapping or release-completion work.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer release readiness from completed portrait or packaging-startup evidence.",
+  "notes": "Lyra/Vaska curated campaign-commander portraits are completed as bounded shipped character-art breadth. Packaged portrait interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-campaign-commanders-lyra-vaska-curated-portraits-10184",
+      "title": "Lyra and Vaska Curated Campaign Commander Portraits",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace generator-only portraits for the opposing flagship campaign commanders with original character-readable sources and exact deterministic existing-path portraits while preserving all live hero and campaign authority.",
+      "implementationTargets": ["art/heroes/source/curated/hero_lyra.png", "art/heroes/source/curated/hero_vaska.png", "art/heroes/portraits/hero_lyra.png", "art/heroes/portraits/hero_vaska.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/campaign_commander_curated_portrait_report.gd", "tests/campaign_commander_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_lyra","hero_vaska"], "faction_ids": ["faction_embercourt","faction_mireclaw"], "archetypes": ["pathfinder","raider"], "campaign_ids": ["campaign_reedfall","campaign_bogbound_oath"], "starting_scenario_ids": ["river-pass","bogbound-oath"], "generated_map_default_factions": ["faction_embercourt","faction_mireclaw"], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 58, "old_portrait_sha256": ["707140e7e1d9947bd224ceb8a91b678dfd535d25d766a510848c2e660ade1193","34424b3d480b53e603b6ac23dffddb1bae2c16e7316750531e70e8c8994077a4"]},
+      "completionCriteria": ["Two distinct original square sources and deterministic 384x512 portraits own exact provenance", "All campaign/skirmish/save/Overworld/Town/Battle/Outcome portrait surfaces retain exact paths and hero/content/gameplay authority", "Only two sources, two runtime portraits, and two manifest records change; 58 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Any other hero or hero/content/rule/balance/AI/campaign/scenario/generated-map behavior", "Portrait paths or UI layout, save schema, Overworld sprites, unit/town/object art, animation/audio/VFX, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T08:44:40Z", "startedAt": "2026-08-23T08:44:40Z", "completedAt": "2026-08-23T09:15:46Z", "updatedAt": "2026-08-23T09:15:46Z",
+      "notes": "Two distinct original painterly sources and deterministic existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-campaign-commanders-focused-authoritative.r8xGs6 proves Lyra/Vaska campaign/default-commander identity, all 60 unique shared portrait paths, fail-closed unknown/enemy handling, exact normalized session authority, and campaign menu/Overworld/Town/Battle/Outcome containment at 1280x720 and 1920x1080. /tmp/heroes-campaign-commanders-repro.Kq8rB1 proves two complete generator passes byte-exact and all 58 non-target portraits exact to HEAD. The seven-owner compatibility chain /tmp/heroes-campaign-commanders-compat.0M36oR and editor audit /tmp/heroes-campaign-commanders-editor-audit.uabFP2 are green. Official Linux and Windows packaging reports are ok:true for export/headless startup and export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup respectively. Packaged portrait interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-frostwharf-house-curated-character-sources-10184",
       "title": "Frostwharf House Curated Character Sources",

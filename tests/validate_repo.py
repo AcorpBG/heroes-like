@@ -279,11 +279,14 @@ UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
 HERO_ART_MANIFEST_PATH = CONTENT_DIR / "hero_art_manifest.json"
 HERO_ART_GENERATOR_PATH = ROOT / "tools" / "generate_hero_portrait_assets.py"
 HERO_ART_ROOT = ROOT / "art" / "heroes" / "portraits"
+HERO_CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"
 HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_portrait_menu_report.gd"
 HERO_PORTRAIT_MENU_REPORT_SCENE_PATH = ROOT / "tests" / "hero_portrait_menu_report.tscn"
 HERO_PORTRAIT_VIEW_PATH = ROOT / "scenes" / "ui" / "HeroPortraitView.gd"
 LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_commander_portrait_report.gd"
 LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "live_commander_portrait_report.tscn"
+CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "campaign_commander_curated_portrait_report.gd"
+CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "campaign_commander_curated_portrait_report.tscn"
 SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH = ROOT / "tests" / "save_load_confidence_visual_smoke.gd"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
@@ -42271,6 +42274,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         HERO_PORTRAIT_VIEW_PATH,
         LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH,
         LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH,
+        CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
+        CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH,
     )
     for path in required_paths:
@@ -42318,6 +42323,48 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         if disk_path.exists():
             ensure(png_size(disk_path) == (384, 512), errors, f"Hero portrait must be 384x512 PNG: {raw_path}")
 
+    curated_cases = {
+        "hero_lyra": {
+            "name": "Lyra Emberwell",
+            "faction_id": "faction_embercourt",
+            "archetype": "pathfinder",
+            "source_path": "res://art/heroes/source/curated/hero_lyra.png",
+            "source_sha256": "3717b692fe3d40da4431ebd1699ba40945d9ca4697afd6b54683afd739a9bc50",
+            "portrait_sha256": "f8b8e527e17af22a209a7a2e5f89e4c2a8116d471547b8eb014f9b6526c37543",
+        },
+        "hero_vaska": {
+            "name": "Vaska Reedmaw",
+            "faction_id": "faction_mireclaw",
+            "archetype": "raider",
+            "source_path": "res://art/heroes/source/curated/hero_vaska.png",
+            "source_sha256": "6249f30e3ee8672aa34156af86e88dda8d9926b9f27e00e2d36ec1ad9f56926d",
+            "portrait_sha256": "8050f35ecb4b27d63768dcaf69d33407b39a032e06189fdcaa4e42af98b172dd",
+        },
+    }
+    curated_record_ids = {
+        hero_id
+        for hero_id, record in records.items()
+        if any(key in record for key in ("source_kind", "source_path", "source_sha256"))
+    }
+    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Lyra and Vaska")
+    for hero_id, expected in curated_cases.items():
+        record = records.get(hero_id, {})
+        source_path = str(expected["source_path"])
+        source_disk_path = res_path_to_disk(source_path)
+        portrait_disk_path = HERO_ART_ROOT / f"{hero_id}.png"
+        ensure(str(record.get("name", "")) == expected["name"], errors, f"Curated hero name drifted for {hero_id}")
+        ensure(str(record.get("faction_id", "")) == expected["faction_id"], errors, f"Curated hero faction drifted for {hero_id}")
+        ensure(str(record.get("archetype", "")) == expected["archetype"], errors, f"Curated hero archetype drifted for {hero_id}")
+        ensure(str(record.get("source_kind", "")) == "curated_original_character", errors, f"Curated hero source kind drifted for {hero_id}")
+        ensure(str(record.get("source_path", "")) == source_path, errors, f"Curated hero source path drifted for {hero_id}")
+        ensure(str(record.get("source_sha256", "")) == expected["source_sha256"], errors, f"Curated hero manifest source hash drifted for {hero_id}")
+        ensure(source_disk_path.exists(), errors, f"Curated hero source is missing for {hero_id}")
+        if source_disk_path.exists():
+            ensure(png_size(source_disk_path) == (1254, 1254), errors, f"Curated hero source must remain 1254x1254 for {hero_id}")
+            ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == expected["source_sha256"], errors, f"Curated hero source bytes drifted for {hero_id}")
+        if portrait_disk_path.exists():
+            ensure(hashlib.sha256(portrait_disk_path.read_bytes()).hexdigest() == expected["portrait_sha256"], errors, f"Curated hero portrait bytes drifted for {hero_id}")
+
     generator_text = HERO_ART_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
         "deterministic_hero_portrait_assets_v1",
@@ -42327,8 +42374,17 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "faction_id",
         "command_path",
         "384, 512",
+        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_lyra",\n    "hero_vaska",\n}',
+        'CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"',
+        "def draw_curated_hero_portrait(source_path: Path, path: Path) -> None:",
+        "portrait = ImageOps.fit(",
+        "method=Image.Resampling.LANCZOS",
+        'item["source_kind"] = "curated_original_character"',
+        'raise FileNotFoundError(f"missing curated hero portrait source: {source_path}")',
     ):
         ensure(required_token in generator_text, errors, f"Hero portrait generator is missing token {required_token}")
+    ensure(generator_text.count("draw_curated_hero_portrait(source_path, path)") == 1, errors, "Hero portrait generator must have one curated portrait materialization call")
+    ensure("CURATED_PORTRAIT_SOURCE_IDS.add" not in generator_text and "CURATED_PORTRAIT_SOURCE_IDS.update" not in generator_text, errors, "Hero portrait curated source ownership must remain static")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in ("HERO_ART_PATH", "func get_hero_art", "func _validate_hero_art_manifest"):
@@ -42411,6 +42467,64 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"enemy_unknown_hidden": true',
     ):
         ensure(required_token in live_report_text, errors, f"Live commander portrait report is missing token {required_token}")
+
+    curated_report_text = CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    curated_scene_text = CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"hero_id": "hero_lyra"',
+        '"hero_id": "hero_vaska"',
+        '"campaign_id": "campaign_reedfall"',
+        '"campaign_id": "campaign_bogbound_oath"',
+        '"scenario_id": "river-pass"',
+        '"scenario_id": "bogbound-oath"',
+        '"source_count": 2',
+        '"portrait_count": 2',
+        '"non_target_portrait_count": 58',
+        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60",
+        'String(art.get("source_kind", "")) != "curated_original_character"',
+        "source_image.get_size() != Vector2i(1254, 1254)",
+        "portrait_image.get_size() != Vector2i(384, 512)",
+        "image.load_png_from_buffer(FileAccess.get_file_as_bytes(path)) != OK",
+        "FileAccess.get_sha256(source_path)",
+        "FileAccess.get_sha256(portrait_path)",
+        "RandomMapGeneratorRules.DEFAULT_HERO_BY_FACTION",
+        'shell.call("validation_select_campaign"',
+        'shell.call("validation_select_campaign_chapter"',
+        'load("res://scenes/overworld/OverworldShell.tscn")',
+        'load("res://scenes/town/TownShell.tscn")',
+        'load("res://scenes/battle/BattleShell.tscn")',
+        'load("res://scenes/results/ScenarioOutcomeShell.tscn")',
+        "SessionState.ensure_active_session().to_dict() == authority_before",
+        "OverworldRules.consume_command_briefing(session)",
+        "OverworldRules.normalize_overworld_state_for_runtime(session)",
+        'session.game_state = "town"',
+        'session.game_state = "battle"',
+        "OverworldRules.normalize_overworld_state(session)",
+        "BattleRules.normalize_battle_state(session)",
+        "BattleRules.set_battle_presentation_speed(session, SettingsService.battle_playback_speed_id())",
+        "BattleRules.resolve_if_battle_ready(session)",
+        "BattleRules.consume_tactical_briefing(session)",
+        'enemy_hero["artifacts"] = ArtifactRules.normalize_hero_artifacts(enemy_hero.get("artifacts", {}))',
+        'session.game_state = "outcome"',
+        'not _numeric_dictionary_exact(hero.get("command", {}), case.get("command", {}))',
+        'not _numeric_dictionary_exact(hero.get("recruit_cost", {}), case.get("recruit_cost", {}))',
+        "func _numeric_dictionary_exact(actual_value: Variant, expected_value: Variant) -> bool:",
+        "actual.size() != expected.size()",
+        'portrait.set_hero_id("hero_not_authored")',
+        "frame_rect.encloses(portrait_rect)",
+        '"enemy_unknown_hidden": true',
+    ):
+        ensure(required_token in curated_report_text, errors, f"Campaign commander curated portrait report is missing token {required_token}")
+    for forbidden_token in (
+        "generate_hero_portrait_assets.py",
+        "draw_curated_hero_portrait",
+        "source_sha256 =",
+        "SessionState.set_active_session(null)",
+    ):
+        ensure(forbidden_token not in curated_report_text, errors, f"Campaign commander curated portrait report must remain observation-only and must not contain {forbidden_token}")
+    ensure('path="res://tests/campaign_commander_curated_portrait_report.gd"' in curated_scene_text, errors, "Campaign commander curated portrait report scene must own the focused report script")
 
     for required_token in (
         "%SaveCommanderPortrait",

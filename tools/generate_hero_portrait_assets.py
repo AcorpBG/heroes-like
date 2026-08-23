@@ -6,7 +6,7 @@ import json
 import math
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +14,11 @@ HEROES_PATH = ROOT / "content" / "heroes.json"
 MANIFEST_PATH = ROOT / "content" / "hero_art_manifest.json"
 ART_ROOT = ROOT / "art" / "heroes" / "portraits"
 PORTRAIT_SIZE = (384, 512)
+CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"
+CURATED_PORTRAIT_SOURCE_IDS = {
+    "hero_lyra",
+    "hero_vaska",
+}
 
 PALETTES = {
     "faction_embercourt": ((184, 66, 36), (237, 157, 63), (50, 25, 22), (237, 202, 132)),
@@ -168,6 +173,18 @@ def draw_hero(hero: dict, path: Path) -> None:
     image.save(path, format="PNG", optimize=True)
 
 
+def draw_curated_hero_portrait(source_path: Path, path: Path) -> None:
+    with Image.open(source_path) as source:
+        portrait = ImageOps.fit(
+            source.convert("RGB"),
+            PORTRAIT_SIZE,
+            method=Image.Resampling.LANCZOS,
+            centering=(0.5, 0.5),
+        )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    portrait.save(path, format="PNG", optimize=True)
+
+
 def main() -> int:
     heroes = json.loads(HEROES_PATH.read_text(encoding="utf-8")).get("items", [])
     ART_ROOT.mkdir(parents=True, exist_ok=True)
@@ -175,15 +192,26 @@ def main() -> int:
     for hero in heroes:
         hero_id = str(hero["id"])
         path = ART_ROOT / f"{hero_id}.png"
-        draw_hero(hero, path)
-        items.append({
+        source_path = CURATED_SOURCE_ROOT / f"{hero_id}.png"
+        if hero_id in CURATED_PORTRAIT_SOURCE_IDS:
+            if not source_path.is_file():
+                raise FileNotFoundError(f"missing curated hero portrait source: {source_path}")
+            draw_curated_hero_portrait(source_path, path)
+        else:
+            draw_hero(hero, path)
+        item = {
             "id": hero_id,
             "hero_id": hero_id,
             "name": str(hero.get("name", hero_id)),
             "faction_id": str(hero.get("faction_id", "")),
             "archetype": str(hero.get("archetype", "")),
             "portrait": "res://" + path.relative_to(ROOT).as_posix(),
-        })
+        }
+        if hero_id in CURATED_PORTRAIT_SOURCE_IDS:
+            item["source_kind"] = "curated_original_character"
+            item["source_path"] = "res://" + source_path.relative_to(ROOT).as_posix()
+            item["source_sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+        items.append(item)
     manifest = {
         "schema_version": 1,
         "generator": "deterministic_hero_portrait_assets_v1",
