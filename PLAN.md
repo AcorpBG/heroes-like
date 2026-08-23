@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-neutral-cinder-kiln-curated-character-sources-10184`. Two distinct original transparent kiln-guild character sources now replace the generated Kilnward Mallets and Cinderpot Hurlers emblems through exact reproducible existing-path derivatives. The live Cinder Kiln graph, shared 7/4 watch, authored Ninefold placement, native-RMG subtype-22/source-row-180 projection, rewards/recruits, encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-neutral-cinder-kiln-curated-character-sources-10184`
+
+  Completion criteria:
+  - two distinct 512x512 transparent original sources follow an ash-road kiln mallet keeper and cinderpot artillery skirmisher identity and own exact generated-manifest provenance plus reproducible portraits, battle icons, overworld icons, and fourteen-state/four-frame battle sheets;
+  - live neutral-dwelling/content lookup preserves both unit stats/costs/growth/abilities, the Cinder Kiln graph, shared 7/4 watch, authored Ninefold placement, native-RMG subtype-22 object/site/recruit projection, claim recruits/rewards, and encounter authority; a production-rule BattleBoard loads both curated icon/sheet pairs and all 112 target frames remain visible and machine-readable;
+  - exactly two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact, and full regeneration/reproducibility plus focused/neutral-dwelling/Native-RMG/reward/AI/validator/editor/Linux/Windows startup gates pass.
+
+  Non-goals: another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment/reward rules, random-map or Native-RMG mapping rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, or packaging behavior; broad/final neutral art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, native-RMG parity, or release readiness.
+
 - Completed implementation slice: `art-neutral-bogbell-croft-curated-character-sources-10184`. Two distinct original transparent fen-crofter character sources now replace the generated Bogbell Mauls and Peatflare Jarriers emblems through exact reproducible existing-path derivatives. The live Bogbell Croft dwelling graph, shared 9/3 watch, authored Ninefold placement, generated-map site selection, rewards/recruits, encounter behavior, and gameplay authority remain exact. Focused runtime proves both BattleBoard entries and all 112 frames; repeated full regeneration is byte-exact; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
   id: `art-neutral-bogbell-croft-curated-character-sources-10184`
 
