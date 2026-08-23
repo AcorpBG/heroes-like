@@ -389,6 +389,10 @@ CINDERPOT_HURLERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "
 KILNWARD_MALLETS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_kilnward_mallets.png"
 CINDER_KILN_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_cinder_kiln_curated_art_report.gd"
 CINDER_KILN_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_neutral_cinder_kiln_curated_art_report.tscn"
+KITEHOOK_RUNNERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_kitehook_runners.png"
+RIDGEFLARE_SHOTS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_ridgeflare_shots.png"
+KITE_SIGNAL_EYRIE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_kite_signal_eyrie_curated_art_report.gd"
+KITE_SIGNAL_EYRIE_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_neutral_kite_signal_eyrie_curated_art_report.tscn"
 ROADWARDENS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_roadwardens.png"
 HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_hearthbow_carriers.png"
 ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_roadward_lodge_curated_art_report.gd"
@@ -42453,6 +42457,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         KILNWARD_MALLETS_CURATED_SOURCE_PATH,
         CINDER_KILN_CURATED_ART_REPORT_SCRIPT_PATH,
         CINDER_KILN_CURATED_ART_REPORT_SCENE_PATH,
+        KITEHOOK_RUNNERS_CURATED_SOURCE_PATH,
+        RIDGEFLARE_SHOTS_CURATED_SOURCE_PATH,
+        KITE_SIGNAL_EYRIE_CURATED_ART_REPORT_SCRIPT_PATH,
+        KITE_SIGNAL_EYRIE_CURATED_ART_REPORT_SCENE_PATH,
         ROADWARDENS_CURATED_SOURCE_PATH,
         HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH,
         ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH,
@@ -42660,6 +42668,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     peatflare_jarriers_unit_id = "unit_neutral_peatflare_jarriers"
     cinderpot_hurlers_unit_id = "unit_neutral_cinderpot_hurlers"
     kilnward_mallets_unit_id = "unit_neutral_kilnward_mallets"
+    kitehook_runners_unit_id = "unit_neutral_kitehook_runners"
+    ridgeflare_shots_unit_id = "unit_neutral_ridgeflare_shots"
     roadwardens_unit_id = "unit_neutral_roadwardens"
     hearthbow_carriers_unit_id = "unit_neutral_hearthbow_carriers"
     gorefen_ripper_unit_id = "unit_gorefen_ripper"
@@ -42877,6 +42887,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in cinder_kiln_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    kite_signal_eyrie_curated_sources = (
+        (kitehook_runners_unit_id, KITEHOOK_RUNNERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_kitehook_runners.png", "6da31ee07d76905c4f9f2885ab4c3218f266192a283b35c6a557fed4a0c2c921", "Kitehook Runners"),
+        (ridgeflare_shots_unit_id, RIDGEFLARE_SHOTS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_ridgeflare_shots.png", "277dd758df76c45f3c63a88ecb80ab261729231254ff12be6dc343b872f404ba", "Ridgeflare Shots"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in kite_signal_eyrie_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     roadward_lodge_curated_sources = (
         (roadwardens_unit_id, ROADWARDENS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_roadwardens.png", "625b2deb46cd667b28824cb2833338073406d411dc2adaea6e3a116d7a5c14b7", "Roadwardens"),
         (hearthbow_carriers_unit_id, HEARTHBOW_CARRIERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_hearthbow_carriers.png", "6557279fcd3e442ed0baafe591073874a4242ce246f6e2722d736171ceb812a0", "Hearthbow Carriers"),
@@ -42943,14 +42960,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved sixty-seven units, including both Greenbranch Copse units and both distinct Gorefen tiers, may use the curated character-source branch",
+        "Exactly the approved seventy-three units, including both Kite Signal Eyrie units and both distinct Gorefen tiers, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved sixty-seven units, including both Greenbranch Copse units and both distinct Gorefen tiers, may use the curated character-source animation branch",
+        "Exactly the approved seventy-three units, including both Kite Signal Eyrie units and both distinct Gorefen tiers, may use the curated character-source animation branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -43034,6 +43051,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in greenbranch_copse_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in bogbell_croft_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in cinder_kiln_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in kite_signal_eyrie_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in roadward_lodge_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_upper_ladder_curated_sources),
@@ -43142,10 +43160,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_neutral_greenbranch_cudgels",
     "unit_neutral_hearthbow_carriers",
     "unit_neutral_hedgehook_watch",
+    "unit_neutral_kitehook_runners",
     "unit_neutral_kilnward_mallets",
     "unit_neutral_mossglass_sentinels",
     "unit_neutral_peatflare_jarriers",
     "unit_neutral_reefbolt_crews",
+    "unit_neutral_ridgeflare_shots",
     "unit_neutral_roadwardens",
     "unit_neutral_sapwhistle_callers",
     "unit_neutral_thornbow_scouts",
@@ -43177,7 +43197,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_undertow_harpooners",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the seventy-one approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the seventy-three approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -44441,6 +44461,74 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in cinder_kiln_report_text, errors, f"Cinder Kiln focused report must remain observation-only: {forbidden_token}")
     cinder_kiln_scene_text = CINDER_KILN_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_neutral_cinder_kiln_curated_art_report.gd"' in cinder_kiln_scene_text, errors, "Cinder Kiln curated art report scene must own the exact focused script")
+
+    kite_signal_eyrie_report_text = KITE_SIGNAL_EYRIE_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_NEUTRAL_KITE_SIGNAL_EYRIE_CURATED_ART_REPORT"',
+        'SHARED_ARMY_ID := "army_neutral_kite_signal_eyrie_watch"',
+        '{"scenario_id": "ninefold-confluence", "placement_id": "dwelling_kite_signal_eyrie", "site_id": "site_kite_signal_eyrie"}',
+        '"unit_id": "unit_neutral_kitehook_runners", "label": "Kitehook Runners", "count": 7, "tier": 2, "role": "melee", "growth": 5, "cost": {"gold": 95}, "ability_ids": ["bloodrush"], "hp": 10, "attack": 6, "defense": 3, "min_damage": 3, "max_damage": 5, "speed": 7, "initiative": 8, "retaliations": 1, "ranged": false, "shots": -1',
+        '"unit_id": "unit_neutral_ridgeflare_shots", "label": "Ridgeflare Shots", "count": 4, "tier": 2, "role": "ranged", "growth": 5, "cost": {"gold": 90}, "ability_ids": ["volley"], "hp": 7, "attack": 5, "defense": 3, "min_damage": 2, "max_damage": 4, "speed": 5, "initiative": 8, "retaliations": 1, "ranged": true, "shots": 8',
+        '"source_sha256": "6da31ee07d76905c4f9f2885ab4c3218f266192a283b35c6a557fed4a0c2c921"',
+        '"source_sha256": "277dd758df76c45f3c63a88ecb80ab261729231254ff12be6dc343b872f404ba"',
+        '"portrait_sha256": "7f14d86aafe80f79d4d47ca7ad71b6d957fe651bcf11bb563241029f899e7874"',
+        '"portrait_sha256": "9371983b189d11e3917e9ff5e980be02f99b43335a110b76e4c590aeec525b23"',
+        '"old_portrait_sha256": "c22e0a47fd4eaf5cff9802ee497b0cfa28768b5cd14c6ef4a9e07b375614944d"',
+        '"old_portrait_sha256": "6b26f504b8c7d5aa1a5e287ef0bc12e342ce54451f1a1d762bec1abbf9a1cb4d"',
+        '"old_sheet_sha256": "a2baadf7b8e401a7a84602919cfd6056717d530ada69b3bc4ec96e2d87de3d9a"',
+        '"old_sheet_sha256": "893bc3283673d3d0106ed4178603bea0f38fbf7c6f9caf88a3b20eaa0f29d421"',
+        '_validate_assets_and_provenance()', '_validate_content_authority()', '_validate_authored_site_authority()', 'await _validate_live_kite_battle_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 40000 and int(source_alpha.get("strong", 0)) > 40000',
+        'bool(source_alpha.get("corners_transparent", false))',
+        'dwelling.get("unit_ids", []) == ["unit_neutral_kitehook_runners", "unit_neutral_ridgeflare_shots"]',
+        'dwelling.get("site_ids", []) == ["site_kite_signal_eyrie"] and dwelling.get("map_object_ids", []) == ["object_kite_signal_eyrie"]',
+        'dwelling.get("army_group_ids", []) == [SHARED_ARMY_ID] and dwelling.get("encounter_ids", []) == ["encounter_kite_signal_eyrie_watch"]',
+        'FileAccess.get_file_as_string("res://content/homm3_re_reward_object_proxy_catalog.json")',
+        'String(row.get("id", "")) == "dwelling_creature_generator_pegasus_kite_signal_eyrie_proxy"',
+        'int(native_proxy_rows[0].get("homm3_re_object_type_id", -1)) == 17',
+        'int(native_proxy_rows[0].get("homm3_re_object_subtype", -1)) == 50',
+        'int(native_proxy_rows[0].get("homm3_re_object_source_row", -1)) == 168',
+        'String(native_proxy_rows[0].get("homm3_re_object_def_ref", "")) == "AVGpega0.def"',
+        'String(native_proxy_rows[0].get("native_proxy_object_id", "")) == "object_kite_signal_eyrie"',
+        'RandomMapGeneratorRulesScript.DWELLING_SITE_CANDIDATES.filter',
+        'generated_rows.size() == 1 and String(generated_rows[0].get("object_id", "")) == "object_kite_signal_eyrie"',
+        'generated_rows[0].get("biome_ids", []) == ["biome_highland_ridge", "biome_coast_archipelago"]',
+        'String(generated_rows[0].get("guard_pressure", "")) == "medium"',
+        '_resource_cost_contract(site.get("claim_rewards", {})) == {"gold": 75} and _resource_cost_contract(site.get("claim_recruits", {})) == {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1}',
+        '_resource_cost_contract(site.get("control_income", {})) == {"gold": 30} and _resource_cost_contract(site.get("weekly_recruits", {})) == {"unit_neutral_kitehook_runners": 1}',
+        'String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "rough" and int(encounter.get("max_rounds", 0)) == 14',
+        'String(unit.get("affiliation", "")) == "neutral" and int(unit.get("tier", 0)) == int(spec["tier"]) and String(unit.get("role", "")) == String(spec["role"])',
+        'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
+        'for stat_id in ["hp", "attack", "defense", "min_damage", "max_damage", "speed", "initiative", "retaliations"]',
+        'int(unit.get(stat_id, -1)) == int(spec[stat_id])',
+        'bool(unit.get("ranged", false)) == bool(spec["ranged"])',
+        'ability_ids == spec["ability_ids"]',
+        'String(placement.get("site_id", "")) == String(expected["site_id"])',
+        'ScenarioFactory.create_session("ninefold-confluence", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'var expected_counts := {"unit_neutral_kitehook_runners": 7, "unit_neutral_ridgeflare_shots": 4}',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        '_battle_stack_counts(enemy_stacks) == expected_counts',
+        'session.to_dict() == authority_before',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+        '"authored_site_count": AUTHORED_SITE_ROWS.size()',
+    ):
+        ensure(required_token in kite_signal_eyrie_report_text, errors, f"Kite Signal Eyrie curated art report is missing token {required_token}")
+    ensure(kite_signal_eyrie_report_text.count('BattleRulesScript.create_battle_payload(') == 1, errors, "Kite Signal Eyrie report must use exactly one public shared-watch battle materialization")
+    ensure(kite_signal_eyrie_report_text.count('ContentService.get_scenario(') == 1, errors, "Kite Signal Eyrie report must use one ordered authored-site scenario lookup")
+    ensure(kite_signal_eyrie_report_text.count('FileAccess.get_file_as_string("res://content/homm3_re_reward_object_proxy_catalog.json")') == 1, errors, "Kite Signal Eyrie report must use one read-only Native-RMG proxy catalog observation")
+    ensure(kite_signal_eyrie_report_text.count('RandomMapGeneratorRulesScript.DWELLING_SITE_CANDIDATES.filter(') == 1, errors, "Kite Signal Eyrie report must use one ordered random-map candidate observation")
+    ensure('unit.get("cost", {}) == spec["cost"]' not in kite_signal_eyrie_report_text, errors, "Kite Signal Eyrie cost oracle must compare the typed integer resource contract")
+    ensure('String(entry.get("side", "enemy")) != "player"' not in kite_signal_eyrie_report_text, errors, "Kite Signal Eyrie report must not infer a side field absent from the public Board art summary")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'unit["', 'dwelling["', 'site["', 'encounter["', 'shared_army["', 'enemy_stacks['):
+        ensure(forbidden_token not in kite_signal_eyrie_report_text, errors, f"Kite Signal Eyrie focused report must remain observation-only: {forbidden_token}")
+    kite_signal_eyrie_scene_text = KITE_SIGNAL_EYRIE_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_neutral_kite_signal_eyrie_curated_art_report.gd"' in kite_signal_eyrie_scene_text, errors, "Kite Signal Eyrie curated art report scene must own the exact focused script")
 
     roadward_lodge_report_text = ROADWARD_LODGE_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
