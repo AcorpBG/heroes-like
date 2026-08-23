@@ -1440,7 +1440,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_charcoal_mauls.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_charcoal_mauls.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_charcoal_mauls.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_charcoal_mauls.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_charcoal_mauls.png",
+      "curated_source_sha256": "9219441a5b3d133aace3b9e5126a61ca156c596e827d5c0295da98a43b604ddd"
     },
     {
       "id": "unit_neutral_emberpack_lobbers",
@@ -1452,7 +1455,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_emberpack_lobbers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_emberpack_lobbers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_emberpack_lobbers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_emberpack_lobbers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+      "curated_source_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead"
     },
     {
       "id": "unit_neutral_basalt_wardens",

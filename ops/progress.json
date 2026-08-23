@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Reedbarge Mooring curated sources and deterministic derivatives are complete with focused live BattleBoard, reproducibility, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Charcoal Burners curated sources and deterministic derivatives are complete with focused live BattleBoard, reproducibility, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Select the next tracker-approved source-backed implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-reedbarge-mooring-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-reedbarge-mooring-curated-character-sources-10184",
-  "currentSliceNotes": "Completed only the two Reedbarge Mooring unit sources and exact existing-path derivatives; content, gameplay, rewards, native mapping, and broader authority remain unchanged.",
+  "currentSlice": "art-neutral-charcoal-burners-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-charcoal-burners-curated-character-sources-10184",
+  "currentSliceNotes": "Completed only the two Charcoal Burners Camp unit sources and exact existing-path derivatives; content, gameplay, rewards, native mapping, and broader authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Reedbarge Mooring Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T01:45:26Z",
+  "currentSliceTitle": "Charcoal Burners Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-23T02:13:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not infer broad completion or release readiness from the completed Reedbarge Mooring art boundary.",
-  "notes": "Reedbarge Mooring now has two original transparent character sources and exact deterministic derivatives while authored/native/gameplay and non-target authority remain unchanged. Select the next tracker-approved source-backed implementation slice.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not infer broad completion or release readiness from the completed Charcoal Burners art boundary.",
+  "notes": "Charcoal Burners Camp now has two original transparent character sources and exact deterministic derivatives while authored/native/gameplay and non-target authority remain unchanged. Select the next tracker-approved source-backed implementation slice.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-charcoal-burners-curated-character-sources-10184",
+      "title": "Charcoal Burners Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace generated Charcoal Mauls and Emberpack Lobbers emblems with original character-readable sources and exact existing-path derivatives while preserving the Charcoal Burners Camp graph and gameplay.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_charcoal_mauls.png", "art/units/source/curated/unit_neutral_emberpack_lobbers.png", "art/units/portraits/unit_neutral_charcoal_mauls.png", "art/units/portraits/unit_neutral_emberpack_lobbers.png", "art/units/battle_icons/unit_neutral_charcoal_mauls.png", "art/units/battle_icons/unit_neutral_emberpack_lobbers.png", "art/units/overworld_icons/unit_neutral_charcoal_mauls.png", "art/units/overworld_icons/unit_neutral_emberpack_lobbers.png", "art/animation/runtime/units/unit_neutral_charcoal_mauls.png", "art/animation/runtime/units/unit_neutral_emberpack_lobbers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_charcoal_burners_curated_art_report.gd", "tests/unit_neutral_charcoal_burners_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_charcoal_mauls","unit_neutral_emberpack_lobbers"], "tiers": [2,2], "roles": ["melee","ranged"], "ability_ids": [["brace"],["harry"]], "shared_army_counts": [8,3], "authored_site_placement_ids": ["dwelling_charcoal_burners"], "native_rmg_type17_subtype": 29, "native_rmg_source_row": 179, "native_rmg_def_ref": "AVGimp0.def", "claim_recruits": [2,1], "source_size": [512,512], "other_units_must_remain_byte_exact": 101},
+      "completionCriteria": ["Two distinct transparent sources and all eight deterministic existing-path derivatives own exact provenance", "Live units, dwelling graph, 8/3 watch, authored placement, native subtype-29/source-179 proxy, rewards, road encounter, BattleBoard resources, session authority, and 112 frames are exact", "Two full 412-asset regenerations, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Content, stats, abilities, costs, growth, balance, AI, dwelling/site/object/encounter/army, reward/recruitment, random/native mapping, animation timing, save, rendering, or packaging behavior", "Another unit, broad neutral art, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T01:47:56Z",
+      "startedAt": "2026-08-23T01:47:56Z",
+      "updatedAt": "2026-08-23T02:13:06Z",
+      "completedAt": "2026-08-23T02:13:06Z",
+      "notes": "Completed two original transparent sources and exact deterministic derivatives/manifests. Focused report /tmp/heroes-charcoal-focused.Q0DGQM proves source alpha/provenance, live unit stats/abilities/costs/growth, Charcoal Burners dwelling/site/object/encounter graph, exact type-17 subtype-29/source-row-179/AVGimp0.def proxy authority, shared 8/3 watch, authored Ninefold placement, rewards/recruits, exact BattleBoard resources, session authority, and 112 visible frames. Two complete generator passes plus both manifests are byte-identical in /tmp/heroes-charcoal-repro.R5mJfA. The 15-owner compatibility chain is green in /tmp/heroes-charcoal-compat.Q1g46K; static validation, sixteen exact scene parses, and generic editor are green in /tmp/heroes-charcoal-static.SqIhT0. Official Linux export/headless startup is green in /tmp/heroes-charcoal-linux.H3g4Hi and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup is green in /tmp/heroes-charcoal-windows.JoMDEw. Packaged Charcoal Burners interaction, native-RMG parity, certification, hardware/accessibility platform parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None within the bounded Charcoal Burners two-unit curated-character source slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-reedbarge-mooring-curated-character-sources-10184",
       "title": "Reedbarge Mooring Curated Character Sources",
