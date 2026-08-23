@@ -80,6 +80,10 @@ BUILDING_IDS = (
     "building_rot_warren",
     "building_fenscale_pens",
     "building_gorefen_ring",
+    "building_war_drum_circle",
+    "building_floodtide_forge",
+    "building_smugglers_flotilla",
+    "building_nightglass_dominion",
 )
 
 

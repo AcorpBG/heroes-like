@@ -594,6 +594,42 @@
       "source_sha256": "51157d1bec4fa881f23478831f806c0f10a42e8535ee41d4d4b816f6e567a567",
       "icon_path": "res://art/towns/runtime/buildings/building_gorefen_ring.png",
       "icon_sha256": "191d86ec812e9cc7b94fc8321462e8e2b94178f80b4c69828118704a8f75eac2"
+    },
+    {
+      "id": "building_war_drum_circle",
+      "building_id": "building_war_drum_circle",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_war_drum_circle.png",
+      "source_sha256": "918babd38e7e752e99fed724618eadb3733aa1af454f7e9b27da8ad6dad2de1d",
+      "icon_path": "res://art/towns/runtime/buildings/building_war_drum_circle.png",
+      "icon_sha256": "42c9f3a56543cce3562e7665cfda97c42906e80531a224ec34080d628efc24cf"
+    },
+    {
+      "id": "building_floodtide_forge",
+      "building_id": "building_floodtide_forge",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_floodtide_forge.png",
+      "source_sha256": "77a0ecd09164f0d8eb055ad79cb4915fe174f0b23d25d466711c204e5fb9047c",
+      "icon_path": "res://art/towns/runtime/buildings/building_floodtide_forge.png",
+      "icon_sha256": "73bb71846012300d4a4b16bde04295daa61be216c84e3f07e9d4cf0085c945c3"
+    },
+    {
+      "id": "building_smugglers_flotilla",
+      "building_id": "building_smugglers_flotilla",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_smugglers_flotilla.png",
+      "source_sha256": "53f17639461db651bdf6b6bdcc690f286460861138ea0f618d5e0894ccbd2006",
+      "icon_path": "res://art/towns/runtime/buildings/building_smugglers_flotilla.png",
+      "icon_sha256": "0ec63c30a640a68321867241901c33f58f313f0cf7128d36772d667b86d02c1b"
+    },
+    {
+      "id": "building_nightglass_dominion",
+      "building_id": "building_nightglass_dominion",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_nightglass_dominion.png",
+      "source_sha256": "023e23db0d05c260a38b9ef44aec7db9c800f9ed625c0ccadb96344becd0a437",
+      "icon_path": "res://art/towns/runtime/buildings/building_nightglass_dominion.png",
+      "icon_sha256": "ebd2049e8e56df5261bdd1df6bbc835df815201da3d0ad80e17eb980a5035d4f"
     }
   ]
 }

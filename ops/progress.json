@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness slice from direct current behavior evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Mireclaw's seven-building legacy recruitment chain now has complete specific icon ownership across all five authored towns. The game is not release-ready.",
+  "currentNotes": "The final four Mireclaw authored-town fallback buildings now have distinct source/runtime art, leaving zero category fallbacks across all five Mireclaw towns. Focused 1280/1920, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates passed; packaged Town interaction, certification, signing, publication, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-mireclaw-legacy-dwelling-specific-icons-10184",
-  "currentSliceId": "presentation-mireclaw-legacy-dwelling-specific-icons-10184",
-  "currentSliceNotes": "Completed seven exact source/runtime icons for the legacy Mireclaw recruitment chain while preserving all fifty-eight prior icons, 68 category fallbacks, and every building/recruitment rule.",
+  "currentSlice": "presentation-mireclaw-complete-authored-town-building-icons-10184",
+  "currentSliceId": "presentation-mireclaw-complete-authored-town-building-icons-10184",
+  "currentSliceNotes": "Completed: four exact source/runtime icons for Mireclaw's final authored-town fallbacks; all five Mireclaw towns now have zero fallbacks, the global catalog has 69 specific icons and 64 exact category fallbacks, and building/economy/recruitment/capital/session/save authority remained exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Legacy Dwelling Specific Icons",
-  "currentSliceUpdatedAt": "2026-08-23T21:18:51Z",
+  "currentSliceTitle": "Mireclaw Complete Authored Town Building Icons",
+  "currentSliceUpdatedAt": "2026-08-23T21:33:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved slice from direct current product evidence. Preserve all sixty-five specific icons, all building/recruitment behavior, and 68 category fallbacks; do not infer release readiness.",
-  "notes": "Mireclaw's seven-building legacy recruitment chain now has specific art; 68 buildings retain category fallback. Release readiness remains unclaimed.",
+  "nextActionGuardrailNote": "Select only a tracker-approved slice backed by direct current behavior evidence. Preserve the completed Mireclaw art and all building/economy/recruitment/capital behavior; do not infer release readiness.",
+  "notes": "Mireclaw now has specific Town Build art for every building shown across its five authored towns. This bounded presentation slice is complete; release readiness remains unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-mireclaw-complete-authored-town-building-icons-10184", "title": "Mireclaw Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Complete faction-wide specific Town Build art across every building shown in Mireclaw's five authored towns.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_{war_drum_circle,floodtide_forge,smugglers_flotilla,nightglass_dominion}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_mireclaw_complete_authored_building_icon_report.gd", "tests/town_mireclaw_complete_authored_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_war_drum_circle", "building_floodtide_forge", "building_smugglers_flotilla", "building_nightglass_dominion"], "authored_mireclaw_town_count": 5, "remaining_mireclaw_fallback_count": 4, "production_building_count": 133, "existing_specific_icon_count": 65, "category_fallback_count": 68, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Four distinct final Mireclaw authored-building source/runtime icons with exact provenance", "All five authored Mireclaw towns have zero category fallbacks; sixty-nine global specific icons and exact category fallback for the other64 buildings", "1280/1920 live presentation and unchanged building/economy/recruitment/capital/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other factions or the other64 building illustrations", "Building costs/prerequisites/income/recruitment/market/capital/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T21:21:46Z", "startedAt": "2026-08-23T21:21:46Z", "completedAt": "2026-08-23T21:33:08Z", "updatedAt": "2026-08-23T21:33:08Z", "notes": "Completed four original source/runtime icon pairs for War Drum Circle, Floodtide Forge, Smugglers Flotilla, and Nightglass Dominion. All five authored Mireclaw towns have zero fallbacks; the global catalog is 69 specific/64 fallback. Focused 1280/1920, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, certification, signing/publication, Native-RMG parity, whole-game validation, and release readiness are not claimed.", "remainingWork": ""
+    },
     {
       "id": "presentation-mireclaw-legacy-dwelling-specific-icons-10184", "title": "Mireclaw Legacy Dwelling Specific Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Give the seven-building legacy recruitment chain distinct original icons in every one of Mireclaw's five authored towns.",
@@ -95272,7 +95281,7 @@
     }
   ],
   "result": "art_five_faction_roster_final_nine_curated_portraits_completed",
-  "status": "completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
