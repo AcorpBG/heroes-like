@@ -16,19 +16,23 @@ ART_ROOT = ROOT / "art" / "heroes" / "portraits"
 PORTRAIT_SIZE = (384, 512)
 CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"
 CURATED_PORTRAIT_SOURCE_IDS = {
+    "hero_brasshollow_daxis_chaincaptain",
     "hero_brasshollow_kuld_varn",
     "hero_brasshollow_marka_ironclause",
     "hero_brasshollow_oren_bellfounder",
     "hero_brasshollow_selka_pitmarshal",
     "hero_caelen",
     "hero_embercourt_helva_tollbrand",
+    "hero_embercourt_saren_lockmaster",
     "hero_lyra",
     "hero_mira",
     "hero_mireclaw_kessa_chainboom",
     "hero_neral",
+    "hero_orrik",
     "hero_sable",
     "hero_seren",
     "hero_solera",
+    "hero_sunvault_ilyr_glassmarshal",
     "hero_tarn",
     "hero_thalen",
     "hero_thornwake_ardren_briarmarshal",
@@ -36,12 +40,14 @@ CURATED_PORTRAIT_SOURCE_IDS = {
     "hero_thornwake_merek_greenbarrow",
     "hero_thornwake_silsa_bramblehound",
     "hero_thornwake_tova_rootwright",
+    "hero_thornwake_veyra_seedseer",
     "hero_torren",
     "hero_varis",
     "hero_vaska",
     "hero_veilmourn_cela_mistcorsair",
     "hero_veilmourn_damar_oriflag",
     "hero_veilmourn_ivara_blacktide",
+    "hero_veilmourn_jessa_keelwarden",
     "hero_veilmourn_ruln_vanehook",
 }
 
