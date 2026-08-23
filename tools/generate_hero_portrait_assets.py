@@ -17,6 +17,8 @@ PORTRAIT_SIZE = (384, 512)
 CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"
 CURATED_PORTRAIT_SOURCE_IDS = {
     "hero_lyra",
+    "hero_solera",
+    "hero_thornwake_silsa_bramblehound",
     "hero_vaska",
 }
 

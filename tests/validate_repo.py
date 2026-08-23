@@ -287,6 +287,8 @@ LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_commander_po
 LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "live_commander_portrait_report.tscn"
 CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "campaign_commander_curated_portrait_report.gd"
 CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "campaign_commander_curated_portrait_report.tscn"
+CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "campaign_lead_curated_portrait_report.gd"
+CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "campaign_lead_curated_portrait_report.tscn"
 SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH = ROOT / "tests" / "save_load_confidence_visual_smoke.gd"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
@@ -42276,6 +42278,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH,
         CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
         CAMPAIGN_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH,
+        CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
+        CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH,
     )
     for path in required_paths:
@@ -42332,6 +42336,22 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
             "source_sha256": "3717b692fe3d40da4431ebd1699ba40945d9ca4697afd6b54683afd739a9bc50",
             "portrait_sha256": "f8b8e527e17af22a209a7a2e5f89e4c2a8116d471547b8eb014f9b6526c37543",
         },
+        "hero_solera": {
+            "name": "Solera Prismarch",
+            "faction_id": "faction_sunvault",
+            "archetype": "marshal",
+            "source_path": "res://art/heroes/source/curated/hero_solera.png",
+            "source_sha256": "da709332aad655d58bacde34eb2106ac0b938ad5cff4fd57b04de2c9ab451850",
+            "portrait_sha256": "455b864439baac23ec0e51fcd4e986bb1e0c81fd93547b85e4c45a850bfa5414",
+        },
+        "hero_thornwake_silsa_bramblehound": {
+            "name": "Silsa Bramble-Hound",
+            "faction_id": "faction_thornwake",
+            "archetype": "huntleader",
+            "source_path": "res://art/heroes/source/curated/hero_thornwake_silsa_bramblehound.png",
+            "source_sha256": "5b7da93abfe6e2c42926a6749f71306eb4bd180636ce8f1c17a3c3fb0a70059e",
+            "portrait_sha256": "47463a01b63ce9cb782b674521a3adb38dac0c4c70f6ba4351ab850ebe4487f3",
+        },
         "hero_vaska": {
             "name": "Vaska Reedmaw",
             "faction_id": "faction_mireclaw",
@@ -42346,7 +42366,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         for hero_id, record in records.items()
         if any(key in record for key in ("source_kind", "source_path", "source_sha256"))
     }
-    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Lyra and Vaska")
+    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Lyra, Solera, Silsa, and Vaska")
     for hero_id, expected in curated_cases.items():
         record = records.get(hero_id, {})
         source_path = str(expected["source_path"])
@@ -42374,7 +42394,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "faction_id",
         "command_path",
         "384, 512",
-        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_lyra",\n    "hero_vaska",\n}',
+        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_lyra",\n    "hero_solera",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_vaska",\n}',
         'CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"',
         "def draw_curated_hero_portrait(source_path: Path, path: Path) -> None:",
         "portrait = ImageOps.fit(",
@@ -42525,6 +42545,54 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
     ):
         ensure(forbidden_token not in curated_report_text, errors, f"Campaign commander curated portrait report must remain observation-only and must not contain {forbidden_token}")
     ensure('path="res://tests/campaign_commander_curated_portrait_report.gd"' in curated_scene_text, errors, "Campaign commander curated portrait report scene must own the focused report script")
+
+    campaign_lead_report_text = CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    campaign_lead_scene_text = CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"hero_id": "hero_solera"',
+        '"hero_id": "hero_thornwake_silsa_bramblehound"',
+        '"campaign_id": "campaign_shards_of_daybreak"',
+        '"campaign_id": "campaign_frontier_claims"',
+        '"scenario_id": "prismhearth-watch"',
+        '"scenario_id": "mireford-skirmish"',
+        '"generated_default_hero_id": "hero_solera"',
+        '"generated_default_hero_id": "hero_thornwake_ardren_briarmarshal"',
+        '"source_count": 2',
+        '"portrait_count": 2',
+        '"non_target_portrait_count": 58',
+        "ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60",
+        'String(art.get("source_kind", "")) != "curated_original_character"',
+        "source_image.get_size() != Vector2i(1254, 1254)",
+        "portrait_image.get_size() != Vector2i(384, 512)",
+        "FileAccess.get_sha256(source_path)",
+        "FileAccess.get_sha256(portrait_path)",
+        "RandomMapGeneratorRules.DEFAULT_HERO_BY_FACTION",
+        'shell.call("validation_select_campaign"',
+        'shell.call("validation_select_campaign_chapter"',
+        'load("res://scenes/overworld/OverworldShell.tscn")',
+        'load("res://scenes/town/TownShell.tscn")',
+        'load("res://scenes/battle/BattleShell.tscn")',
+        'load("res://scenes/results/ScenarioOutcomeShell.tscn")',
+        "SessionState.ensure_active_session().to_dict() == authority_before",
+        "OverworldRules.consume_command_briefing(session)",
+        "OverworldRules.normalize_overworld_state_for_runtime(session)",
+        "BattleRules.normalize_battle_state(session)",
+        "BattleRules.consume_tactical_briefing(session)",
+        'portrait.set_hero_id("hero_not_authored")',
+        "frame_rect.encloses(portrait_rect)",
+        '"enemy_unknown_hidden": true',
+    ):
+        ensure(required_token in campaign_lead_report_text, errors, f"Campaign lead curated portrait report is missing token {required_token}")
+    for forbidden_token in (
+        "generate_hero_portrait_assets.py",
+        "draw_curated_hero_portrait",
+        "source_sha256 =",
+        "SessionState.set_active_session(null)",
+    ):
+        ensure(forbidden_token not in campaign_lead_report_text, errors, f"Campaign lead curated portrait report must remain observation-only and must not contain {forbidden_token}")
+    ensure('path="res://tests/campaign_lead_curated_portrait_report.gd"' in campaign_lead_scene_text, errors, "Campaign lead curated portrait report scene must own the focused report script")
 
     for required_token in (
         "%SaveCommanderPortrait",

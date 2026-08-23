@@ -91,7 +91,10 @@
       "name": "Solera Prismarch",
       "faction_id": "faction_sunvault",
       "archetype": "marshal",
-      "portrait": "res://art/heroes/portraits/hero_solera.png"
+      "portrait": "res://art/heroes/portraits/hero_solera.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_solera.png",
+      "source_sha256": "da709332aad655d58bacde34eb2106ac0b938ad5cff4fd57b04de2c9ab451850"
     },
     {
       "id": "hero_neral",
@@ -291,7 +294,10 @@
       "name": "Silsa Bramble-Hound",
       "faction_id": "faction_thornwake",
       "archetype": "huntleader",
-      "portrait": "res://art/heroes/portraits/hero_thornwake_silsa_bramblehound.png"
+      "portrait": "res://art/heroes/portraits/hero_thornwake_silsa_bramblehound.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_silsa_bramblehound.png",
+      "source_sha256": "5b7da93abfe6e2c42926a6749f71306eb4bd180636ce8f1c17a3c3fb0a70059e"
     },
     {
       "id": "hero_thornwake_veyra_seedseer",
