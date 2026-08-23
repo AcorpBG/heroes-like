@@ -1098,6 +1098,114 @@
       "source_sha256": "78f1ab1a1d5e01295fdc6bf798b02a164106023073da4331f8315c415d3a4c8e",
       "icon_path": "res://art/towns/runtime/buildings/building_thornwake_verdant_concord_seat.png",
       "icon_sha256": "e759664a2ebe49a5ccd8b8418b93eeb5b01496349a2eab91318b39d307714afe"
+    },
+    {
+      "id": "building_veilmourn_bell_chain_watch",
+      "building_id": "building_veilmourn_bell_chain_watch",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_bell_chain_watch.png",
+      "source_sha256": "e25c88cc1d37da1dea78a0a95ff905a0f9fb4a3d597e208b2bc4ec2f0c9c7624",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_bell_chain_watch.png",
+      "icon_sha256": "db8c73ae29759a99479bcb587816193d955ea2491726b70731b60c059a887fc4"
+    },
+    {
+      "id": "building_veilmourn_black_sail_loft",
+      "building_id": "building_veilmourn_black_sail_loft",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_black_sail_loft.png",
+      "source_sha256": "fe29a79c416d5d516bdbd3f832a3017d160f4e5d874b79cfec496ea17087a3c2",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_black_sail_loft.png",
+      "icon_sha256": "f7fc9c0c5fd1458edffbcb41c68c27967ae224e6cfda61f32edd01bf835ef74e"
+    },
+    {
+      "id": "building_veilmourn_drowned_admiralty",
+      "building_id": "building_veilmourn_drowned_admiralty",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_drowned_admiralty.png",
+      "source_sha256": "0866b0f76ad004b3cd5d4a96a45128efb6a5de8d3d5246dfcf8fe4ea2799d492",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_drowned_admiralty.png",
+      "icon_sha256": "84ab63ad309710a0ad399f50c004ecc54f1ceaac0c17e57165063dfae6f6011e"
+    },
+    {
+      "id": "building_veilmourn_drowned_map_room",
+      "building_id": "building_veilmourn_drowned_map_room",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_drowned_map_room.png",
+      "source_sha256": "7b641b2c113731d7c7217c9c5a4ced06139cc360610b1b8a3e7dd6b8f454fad7",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_drowned_map_room.png",
+      "icon_sha256": "5cf9e89878cf4885cde8b78effb90f19b819f3fc9d43c452779b1718c02e6046"
+    },
+    {
+      "id": "building_veilmourn_fog_signal_buoys",
+      "building_id": "building_veilmourn_fog_signal_buoys",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_fog_signal_buoys.png",
+      "source_sha256": "392c428f6277aca0f7f460fcc4993fd800477c0ffddb0d49e8a11d3f1f291d7e",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_fog_signal_buoys.png",
+      "icon_sha256": "82ffe0d8608eecf154c937b04f6d607c7adfe6599006462e1c6ff2a53beae43f"
+    },
+    {
+      "id": "building_veilmourn_memory_anchor",
+      "building_id": "building_veilmourn_memory_anchor",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_memory_anchor.png",
+      "source_sha256": "e029ed8dd948b7f804ae4b1035747d9da9cbec0c05eeb0faf526cee5fe5dfe47",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_memory_anchor.png",
+      "icon_sha256": "ad0d4c54470d69a8e2dbabf708b3f4b76cceb25e588281742013055923d4bccc"
+    },
+    {
+      "id": "building_veilmourn_memory_rite_court",
+      "building_id": "building_veilmourn_memory_rite_court",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_memory_rite_court.png",
+      "source_sha256": "f38318da172f5dea01aa8b9660a88fb463e2e9279cb450c7b42df9889d69830e",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_memory_rite_court.png",
+      "icon_sha256": "9d69dc45c4718566796c402ed121452ae7291a718a8521f4bad428c86a607d2f"
+    },
+    {
+      "id": "building_veilmourn_mourner_pilot_guild",
+      "building_id": "building_veilmourn_mourner_pilot_guild",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mourner_pilot_guild.png",
+      "source_sha256": "ea4492366fb7509b07c0c2ffa883801b08cb61916663b5b62a6594d27ee59ce0",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mourner_pilot_guild.png",
+      "icon_sha256": "e03037a80e86933f17fb9d2f6452b2fd79ac806a1872a61a70b3aa902302c159"
+    },
+    {
+      "id": "building_veilmourn_salt_counting_house",
+      "building_id": "building_veilmourn_salt_counting_house",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_salt_counting_house.png",
+      "source_sha256": "9d8e1607691ae4853fc74ea2637792540a123d09c5f77114151d8b0a3df3de0b",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_salt_counting_house.png",
+      "icon_sha256": "dec9c5a093f9e4c25b4fd78f774b71196fb2ba66c4363c85dfb10ef5b2c5d69d"
+    },
+    {
+      "id": "building_veilmourn_saltwake_factor",
+      "building_id": "building_veilmourn_saltwake_factor",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_saltwake_factor.png",
+      "source_sha256": "bd17e42a737566b0ae9b6a9bf6467b7282035426d8e6d0f822e5473b33f5c357",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_saltwake_factor.png",
+      "icon_sha256": "484616c482411b454a2573ab0e087bfcb0211ddf9585b1c12895c5a4d65950eb"
+    },
+    {
+      "id": "building_veilmourn_tideglass_chapel",
+      "building_id": "building_veilmourn_tideglass_chapel",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_tideglass_chapel.png",
+      "source_sha256": "4a1f93750ce8c9cf588ee97e4007f9b56319bbb1927dbc3a199e5c517d72bb47",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_tideglass_chapel.png",
+      "icon_sha256": "cba98eb627ab1f4832869c1834845adfe3c136946fa4f38d3146c4fbd395003e"
+    },
+    {
+      "id": "building_veilmourn_wake_oratory",
+      "building_id": "building_veilmourn_wake_oratory",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wake_oratory.png",
+      "source_sha256": "1c2cf90649aef569dc7c597f013d0d4086587b219d6d8a0a4e65381ed32359eb",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wake_oratory.png",
+      "icon_sha256": "def10e1f43b517a5a14f473e08eeaae20884b17b144466ad1efa30ddda052b3d"
     }
   ]
 }

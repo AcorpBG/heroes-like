@@ -26,7 +26,14 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - No implementation slice is currently selected. Select the next tracker-approved source-backed release-readiness slice.
 
-- Previous completed implementation slice: `presentation-thornwake-complete-authored-town-building-icons-10184`. The 14 former category fallbacks across Graftroot Caravan and Rootgate Nursery now have specific original Town Build art, completing both authored Thornwake towns.
+- Previous completed implementation slice: `presentation-veilmourn-complete-authored-town-building-icons-10184`. The final 12 category fallbacks across Bellwake Harbor and Fogchart Mooring now have specific original Town Build art, so all 133 production buildings own specific icons.
+  id: `presentation-veilmourn-complete-authored-town-building-icons-10184`
+
+  Completion criteria: 12 distinct deterministic source/runtime pairs for the exact remaining Veilmourn building ids; zero category fallbacks across both authored Veilmourn towns at 1280/1920; all 133 production buildings have specific icons; unchanged costs, prerequisites, income, recruitment, magic, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
+
+  Non-goals: prior building illustrations or resolver behavior, mechanics/economy/balance/AI/save/layout changes, packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness.
+
+- Earlier completed implementation slice: `presentation-thornwake-complete-authored-town-building-icons-10184`. The 14 former category fallbacks across Graftroot Caravan and Rootgate Nursery now have specific original Town Build art, completing both authored Thornwake towns.
   id: `presentation-thornwake-complete-authored-town-building-icons-10184`
 
   Completion criteria: 14 distinct deterministic source/runtime pairs for the exact remaining Thornwake building ids; zero category fallbacks across both authored Thornwake towns at 1280/1920; 121 specific building icons and 12 exact global category fallbacks; unchanged costs, prerequisites, income, recruitment, magic, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
