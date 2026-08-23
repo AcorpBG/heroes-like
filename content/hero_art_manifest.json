@@ -90,7 +90,10 @@
       "name": "Tarn Fenhook",
       "faction_id": "faction_mireclaw",
       "archetype": "warrenhunter",
-      "portrait": "res://art/heroes/portraits/hero_tarn.png"
+      "portrait": "res://art/heroes/portraits/hero_tarn.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_tarn.png",
+      "source_sha256": "3645da65b38b7e5699f84eacf1edf448a31cbfd1865f7b4c8d601dd78fef3b04"
     },
     {
       "id": "hero_orrik",
@@ -139,7 +142,10 @@
       "name": "Thalen Choirward",
       "faction_id": "faction_sunvault",
       "archetype": "castellan",
-      "portrait": "res://art/heroes/portraits/hero_thalen.png"
+      "portrait": "res://art/heroes/portraits/hero_thalen.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thalen.png",
+      "source_sha256": "f8254d1061e369486c0648f12dd69e136e20f6fc497e357deeed856f7d9ce4fe"
     },
     {
       "id": "hero_embercourt_helva_tollbrand",
@@ -147,7 +153,10 @@
       "name": "Helva Tollbrand",
       "faction_id": "faction_embercourt",
       "archetype": "roadwarden",
-      "portrait": "res://art/heroes/portraits/hero_embercourt_helva_tollbrand.png"
+      "portrait": "res://art/heroes/portraits/hero_embercourt_helva_tollbrand.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_embercourt_helva_tollbrand.png",
+      "source_sha256": "dbd9fd9f2e2c22185c3e60a6e021828dbf9208da87cc2f184d3466df47ac43af"
     },
     {
       "id": "hero_embercourt_saren_lockmaster",
@@ -319,7 +328,10 @@
       "name": "Merek Greenbarrow",
       "faction_id": "faction_thornwake",
       "archetype": "recoverywarden",
-      "portrait": "res://art/heroes/portraits/hero_thornwake_merek_greenbarrow.png"
+      "portrait": "res://art/heroes/portraits/hero_thornwake_merek_greenbarrow.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_merek_greenbarrow.png",
+      "source_sha256": "bf302e7937dd9a5d7598606e01c8f1601c2feb8edf4185cb8bd97b43bcf86f2d"
     },
     {
       "id": "hero_thornwake_silsa_bramblehound",
@@ -411,7 +423,10 @@
       "name": "Selka Pitmarshal",
       "faction_id": "faction_brasshollow",
       "archetype": "pitmarshal",
-      "portrait": "res://art/heroes/portraits/hero_brasshollow_selka_pitmarshal.png"
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_selka_pitmarshal.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_selka_pitmarshal.png",
+      "source_sha256": "432adcc6d79bda00d57fa739016dabbe00593e8fd983747c22145c112c48375e"
     },
     {
       "id": "hero_brasshollow_daxis_chaincaptain",
@@ -500,7 +515,10 @@
       "name": "Damar Oriflag",
       "faction_id": "faction_veilmourn",
       "archetype": "signalthief",
-      "portrait": "res://art/heroes/portraits/hero_veilmourn_damar_oriflag.png"
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_damar_oriflag.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_damar_oriflag.png",
+      "source_sha256": "ff2f05fe5bd5dc58d1ccc01f3931a8d5db04a904a0554d782f911e5b06f835b9"
     },
     {
       "id": "hero_veilmourn_jessa_keelwarden",

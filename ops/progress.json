@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness implementation slice."
+    "Select the next tracker-approved source-backed implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Six original roster-lieutenant portraits are integrated with exact provenance and deterministic runtime assets. Focused roster/tavern/live-shell, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass; select the next tracker-approved implementation slice.",
+  "currentNotes": "Six original curated roster-officer sources and deterministic existing-path portraits are live with exact skirmish, tavern, save, and runtime-surface authority. Select the next tracker-approved source-backed implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-six-faction-roster-lieutenants-curated-portraits-10184",
-  "currentSliceId": "art-six-faction-roster-lieutenants-curated-portraits-10184",
-  "currentSliceNotes": "Torren, Sable, Varis, Halen, Kuld, and Cela now have distinct original curated sources and deterministic existing-path portraits; exact roster/tavern/gameplay authority and all 54 non-target portrait bytes are preserved.",
+  "currentSlice": "art-six-faction-roster-officers-curated-portraits-10184",
+  "currentSliceId": "art-six-faction-roster-officers-curated-portraits-10184",
+  "currentSliceNotes": "Helva, Tarn, Thalen, Merek, Selka, and Damar now have distinct original curated sources and deterministic 384x512 portraits with exact roster, content, gameplay, and live-surface authority; bounded Linux and Windows export/startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six-Faction Curated Roster Lieutenants",
-  "currentSliceUpdatedAt": "2026-08-23T12:28:20Z",
+  "currentSliceTitle": "Six-Faction Curated Roster Officers",
+  "currentSliceUpdatedAt": "2026-08-23T12:57:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,26 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select one tracker-approved source-backed implementation slice; preserve completed portrait authority and do not infer release readiness from bounded local/export startup evidence.",
-  "notes": "Six-faction roster lieutenant portrait curation is completed as shipped roster-art breadth. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; preserve the completed roster-officer portrait authority and do not infer release readiness.",
+  "notes": "Six-faction roster officer portrait curation is complete as shipped roster-art breadth through live skirmish/tavern/save/runtime surfaces. This does not claim hero/content/rule/balance/AI changes, packaged portrait interaction, certification, Native-RMG parity, or release readiness.",
   "plannedSlices": [
+    {
+      "id": "art-six-faction-roster-officers-curated-portraits-10184",
+      "title": "Six-Faction Curated Roster Officers",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Replace the next generator-only live roster hero in every faction with original character-readable sources and exact deterministic existing-path portraits.",
+      "implementationTargets": ["art/heroes/source/curated/hero_embercourt_helva_tollbrand.png", "art/heroes/source/curated/hero_tarn.png", "art/heroes/source/curated/hero_thalen.png", "art/heroes/source/curated/hero_thornwake_merek_greenbarrow.png", "art/heroes/source/curated/hero_brasshollow_selka_pitmarshal.png", "art/heroes/source/curated/hero_veilmourn_damar_oriflag.png", "art/heroes/portraits/hero_embercourt_helva_tollbrand.png", "art/heroes/portraits/hero_tarn.png", "art/heroes/portraits/hero_thalen.png", "art/heroes/portraits/hero_thornwake_merek_greenbarrow.png", "art/heroes/portraits/hero_brasshollow_selka_pitmarshal.png", "art/heroes/portraits/hero_veilmourn_damar_oriflag.png", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "tests/six_faction_roster_officers_curated_portrait_report.gd", "tests/six_faction_roster_officers_curated_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"hero_ids": ["hero_embercourt_helva_tollbrand","hero_tarn","hero_thalen","hero_thornwake_merek_greenbarrow","hero_brasshollow_selka_pitmarshal","hero_veilmourn_damar_oriflag"], "faction_ids": ["faction_embercourt","faction_mireclaw","faction_sunvault","faction_thornwake","faction_brasshollow","faction_veilmourn"], "roster_indices": [5,2,3,3,3,3], "runtime_portrait_size": [384,512], "other_portraits_must_remain_byte_exact": 54, "old_portrait_sha256": ["e6daf9359f09996065522d3b4b088f0661a9dcb3fcf8bd8d07cd34079cdaf75d","385c7ee0e95c3f9f38e04da798565f5e8034b5b2702a319aa308250ba4c5a1e8","904b9dbe8dc0e25c220c4a14c5a6f9c0b55a2437fe2510bc1cfea9cdc1fd166b","22d5a81574587723c1f171a10cd70a810cb176291b950c0e954c1feb038490dd","20ce608410a63d799cc2e59039c4a0b8cce2409276b582416bed434897db0257","0060c3062b5a061ae53a42dd8bfdbe29c3aa38363a415299380d967e8e8a662a"]},
+      "completionCriteria": ["Six original square sources and deterministic 384x512 portraits own exact provenance and distinct faction/role identity", "Skirmish/tavern/save/Overworld/Town/Battle/Outcome surfaces retain exact paths, faction roster order, and hero/content/gameplay authority", "Only six sources, six runtime portraits, and six manifest records change; 54 portraits remain byte-exact and reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Campaign/scenario ownership, any other hero or content/rule/balance/AI behavior", "Roster order/recruitment policy, portrait paths/UI layout, save schema, Overworld sprites, other art, packaged interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T12:31:37Z", "startedAt": "2026-08-23T12:31:37Z", "updatedAt": "2026-08-23T12:57:13Z", "completedAt": "2026-08-23T12:57:13Z",
+      "notes": "Six distinct original painterly sources and deterministic 384x512 existing-path portraits are live with exact manifest provenance. Focused /tmp/heroes-roster-officers-focused.DKW59l proves exact hero/content/roster index, public recruitable roster and tavern action, all 60 unique shared portrait paths, fail-closed unknown handling, session authority, and Overworld/Town/Battle/Outcome containment at 1280x720 and 1920x1080. Repro /tmp/heroes-roster-officers-repro.SWHUAh proves two byte-identical full regenerations and all 54 non-target portraits exact to HEAD 9506ac56. Compatibility /tmp/heroes-roster-officers-compat.gUE3RK passes the portrait menu, live commander, town hire, save visual, skirmish, overworld sprite, and core owners. Static/editor gates pass, official Linux /tmp/heroes-roster-officers-linux-package.OPkwHU proves export plus packaged headless startup, and official Windows /tmp/heroes-roster-officers-windows-package.V8d4OA proves export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup. Packaged portrait interaction, certification, signing/publication, native hardware, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-six-faction-roster-lieutenants-curated-portraits-10184",
       "title": "Six-Faction Curated Roster Lieutenants",
@@ -95102,7 +95119,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_six_faction_roster_lieutenants_curated_portraits_completed",
+  "result": "art_six_faction_roster_officers_curated_portraits_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -95203,9 +95220,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Six original curated roster-lieutenant portraits are live with exact provenance, deterministic regeneration, preserved roster/tavern/gameplay authority, 54 byte-exact non-target portraits, and bounded cross-platform export/startup validation; select the next tracker-approved implementation slice.",
+  "summary": "Six-faction roster officer portrait curation is complete with six original live sources, deterministic existing-path portraits, exact roster/content/gameplay authority, all 54 non-target portraits byte-exact, and focused, reproducibility, compatibility, static/editor, Linux, and Windows startup gates green.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T12:28:20Z",
+  "updatedAt": "2026-08-23T12:57:13Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
