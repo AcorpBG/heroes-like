@@ -295,6 +295,8 @@ MULTI_CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "mult
 MULTI_CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "multi_campaign_lead_curated_portrait_report.tscn"
 THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "thornwake_commander_curated_portrait_report.gd"
 THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "thornwake_commander_curated_portrait_report.tscn"
+FRONTIER_MIDDLE_COMMANDERS_CURATED_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "frontier_middle_commanders_curated_portrait_report.gd"
+FRONTIER_MIDDLE_COMMANDERS_CURATED_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "frontier_middle_commanders_curated_portrait_report.tscn"
 SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH = ROOT / "tests" / "save_load_confidence_visual_smoke.gd"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
@@ -42292,6 +42294,8 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         MULTI_CAMPAIGN_LEAD_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
         THORNWAKE_COMMANDER_CURATED_PORTRAIT_REPORT_SCENE_PATH,
+        FRONTIER_MIDDLE_COMMANDERS_CURATED_PORTRAIT_REPORT_SCRIPT_PATH,
+        FRONTIER_MIDDLE_COMMANDERS_CURATED_PORTRAIT_REPORT_SCENE_PATH,
         SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH,
     )
     for path in required_paths:
@@ -42347,6 +42351,14 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
             "source_path": "res://art/heroes/source/curated/hero_brasshollow_marka_ironclause.png",
             "source_sha256": "932e4dea2e9eb7363793ccc5ea6bbe4b2f8418e49b4ee0193215f1b6d256d7ab",
             "portrait_sha256": "efb202b3434eccf87f5f8af64acc4ef2b3661e9f8009ec4f1ee8cae3b9857198",
+        },
+        "hero_brasshollow_oren_bellfounder": {
+            "name": "Oren Bellfounder",
+            "faction_id": "faction_brasshollow",
+            "archetype": "siegecaptain",
+            "source_path": "res://art/heroes/source/curated/hero_brasshollow_oren_bellfounder.png",
+            "source_sha256": "b83fd6b64c06d8fc4b7bc8bfd49cfa457d286795409809869213bd1870682b8d",
+            "portrait_sha256": "daecf892d3b8e47d9234af4a957196cc67b25959fbe1a13847df2aa4d2e95602",
         },
         "hero_caelen": {
             "name": "Caelen Ashgrove",
@@ -42420,13 +42432,21 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
             "source_sha256": "fabe4aa3f28c856d8b608b5c8e27db6ca94663d4580c4d7f76add753f528ac79",
             "portrait_sha256": "8f1dfd491bf8ca4875a5d84fea31dd747c548a19b9db1d06a654f6807e80346f",
         },
+        "hero_veilmourn_ruln_vanehook": {
+            "name": "Ruln Vanehook",
+            "faction_id": "faction_veilmourn",
+            "archetype": "harpooncaptain",
+            "source_path": "res://art/heroes/source/curated/hero_veilmourn_ruln_vanehook.png",
+            "source_sha256": "e1596dc02e51db1b443f7f2f817c5e19f5f3242c9b2b127196f00d13de9b71f0",
+            "portrait_sha256": "f987cba0e1fb2c375c156f8f5422e5c296470eb6ffa89dfa950bc02f8f0477ee",
+        },
     }
     curated_record_ids = {
         hero_id
         for hero_id, record in records.items()
         if any(key in record for key in ("source_kind", "source_path", "source_sha256"))
     }
-    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Marka, Caelen, Lyra, Mira, Solera, Ardren, Silsa, Tova, Vaska, and Ivara")
+    ensure(curated_record_ids == set(curated_cases), errors, "Hero art curated provenance must belong only to Marka, Oren, Caelen, Lyra, Mira, Solera, Ardren, Silsa, Tova, Vaska, Ivara, and Ruln")
     for hero_id, expected in curated_cases.items():
         record = records.get(hero_id, {})
         source_path = str(expected["source_path"])
@@ -42454,7 +42474,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "faction_id",
         "command_path",
         "384, 512",
-        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_brasshollow_marka_ironclause",\n    "hero_caelen",\n    "hero_lyra",\n    "hero_mira",\n    "hero_solera",\n    "hero_thornwake_ardren_briarmarshal",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_thornwake_tova_rootwright",\n    "hero_vaska",\n    "hero_veilmourn_ivara_blacktide",\n}',
+        'CURATED_PORTRAIT_SOURCE_IDS = {\n    "hero_brasshollow_marka_ironclause",\n    "hero_brasshollow_oren_bellfounder",\n    "hero_caelen",\n    "hero_lyra",\n    "hero_mira",\n    "hero_solera",\n    "hero_thornwake_ardren_briarmarshal",\n    "hero_thornwake_silsa_bramblehound",\n    "hero_thornwake_tova_rootwright",\n    "hero_vaska",\n    "hero_veilmourn_ivara_blacktide",\n    "hero_veilmourn_ruln_vanehook",\n}',
         'CURATED_SOURCE_ROOT = ROOT / "art" / "heroes" / "source" / "curated"',
         "def draw_curated_hero_portrait(source_path: Path, path: Path) -> None:",
         "portrait = ImageOps.fit(",
@@ -42850,6 +42870,69 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
     ensure(thornwake_report_text.count("RandomMapGeneratorRules.generate(config)") == 1, errors, "Thornwake commander curated portrait report must generate exactly one public fixture")
     ensure(thornwake_report_text.count("ScenarioFactory.create_generated_draft_session(generated_map, \"normal\")") == 1, errors, "Thornwake commander curated portrait report must create exactly one real generated draft session")
     ensure('path="res://tests/thornwake_commander_curated_portrait_report.gd"' in thornwake_scene_text, errors, "Thornwake commander curated portrait report scene must own the focused report script")
+
+    frontier_middle_report_text = FRONTIER_MIDDLE_COMMANDERS_CURATED_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    frontier_middle_scene_text = FRONTIER_MIDDLE_COMMANDERS_CURATED_PORTRAIT_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "FRONTIER_MIDDLE_COMMANDERS_CURATED_PORTRAIT_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"hero_id": "hero_veilmourn_ruln_vanehook"',
+        '"hero_id": "hero_brasshollow_oren_bellfounder"',
+        '"campaign_id": "campaign_frontier_claims"',
+        '"scenario_id": "fogchart-mooring"',
+        '"scenario_id": "clauseworks-counterclaim"',
+        '"source_sha256": "e1596dc02e51db1b443f7f2f817c5e19f5f3242c9b2b127196f00d13de9b71f0"',
+        '"source_sha256": "b83fd6b64c06d8fc4b7bc8bfd49cfa457d286795409809869213bd1870682b8d"',
+        '"portrait_sha256": "f987cba0e1fb2c375c156f8f5422e5c296470eb6ffa89dfa950bc02f8f0477ee"',
+        '"portrait_sha256": "daecf892d3b8e47d9234af4a957196cc67b25959fbe1a13847df2aa4d2e95602"',
+        '"source_count": 2',
+        '"portrait_count": 2',
+        '"non_target_portrait_count": 58',
+        'ContentService.get_content_ids(ContentService.HEROES_PATH).size() != 60',
+        'String(art.get("source_kind", "")) != "curated_original_character"',
+        'source_image.get_size() != Vector2i(1254, 1254)',
+        'portrait_image.get_size() != Vector2i(384, 512)',
+        'image.load_png_from_buffer(FileAccess.get_file_as_bytes(path)) != OK',
+        'FileAccess.get_sha256(source_path)',
+        'FileAccess.get_sha256(portrait_path)',
+        'func _campaign_has_scenario(campaign: Dictionary, scenario_id: String) -> bool:',
+        'not _campaign_has_scenario(campaign, scenario_id)',
+        'chapters.is_empty() or RandomMapGeneratorRules.DEFAULT_HERO_BY_FACTION.values().has(hero_id)',
+        'for chapter_value in _active_case.get("chapters", [])',
+        'shell.call("validation_select_campaign", campaign_id)',
+        'shell.call("validation_select_campaign_chapter", scenario_id)',
+        'load("res://scenes/overworld/OverworldShell.tscn")',
+        'load("res://scenes/town/TownShell.tscn")',
+        'load("res://scenes/battle/BattleShell.tscn")',
+        'load("res://scenes/results/ScenarioOutcomeShell.tscn")',
+        'SessionState.ensure_active_session().to_dict() == authority_before',
+        'OverworldRules.consume_command_briefing(session)',
+        'OverworldRules.normalize_overworld_state_for_runtime(session)',
+        'session.game_state = "town"',
+        'session.game_state = "battle"',
+        'BattleRules.normalize_battle_state(session)',
+        'BattleRules.consume_tactical_briefing(session)',
+        'session.game_state = "outcome"',
+        'not _numeric_dictionary_exact(hero.get("command", {}), case.get("command", {}))',
+        'not _numeric_dictionary_exact(hero.get("recruit_cost", {}), case.get("recruit_cost", {}))',
+        'portrait.set_hero_id("hero_not_authored")',
+        'frame_rect.encloses(portrait_rect)',
+        '"enemy_unknown_hidden": true',
+    ):
+        ensure(required_token in frontier_middle_report_text, errors, f"Frontier middle commanders curated portrait report is missing token {required_token}")
+    for forbidden_token in (
+        "generate_hero_portrait_assets.py",
+        "draw_curated_hero_portrait",
+        "source_sha256 =",
+        "SessionState.set_active_session(null)",
+        "DEFAULT_HERO_BY_FACTION[",
+        "RandomMapGeneratorRules.generate(",
+    ):
+        ensure(forbidden_token not in frontier_middle_report_text, errors, f"Frontier middle commanders curated portrait report must remain observation-only and must not contain {forbidden_token}")
+    ensure(frontier_middle_report_text.count('"campaign_id": "campaign_frontier_claims"') == 4, errors, "Frontier middle commanders report must bind both cases and both chapter rows to Frontier Claims")
+    ensure(frontier_middle_report_text.count('shell.call("validation_select_campaign", campaign_id)') == 1, errors, "Frontier middle commanders report must use one public campaign selection call site")
+    ensure(frontier_middle_report_text.count('shell.call("validation_select_campaign_chapter", scenario_id)') == 1, errors, "Frontier middle commanders report must use one public chapter selection call site")
+    ensure('path="res://tests/frontier_middle_commanders_curated_portrait_report.gd"' in frontier_middle_scene_text, errors, "Frontier middle commanders curated portrait report scene must own the focused report script")
 
     for required_token in (
         "%SaveCommanderPortrait",
