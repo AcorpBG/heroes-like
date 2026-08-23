@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed implementation slice."
+    "Select the next tracker-approved source-backed implementation slice; do not infer release readiness from the completed Orchard Levy Grounds curated-art boundary."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Frostbeacon Bothy curated sources and deterministic derivatives are complete with focused live BattleBoard, reproducibility, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Select the next tracker-approved source-backed implementation slice.",
+  "currentNotes": "Orchard Levy Grounds curated character sources are implemented and validated. Exact live content/gameplay authority and all 101 non-target unit payloads remain unchanged; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-frostbeacon-bothy-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-frostbeacon-bothy-curated-character-sources-10184",
-  "currentSliceNotes": "Completed only the two Frostbeacon Bothy unit sources and exact existing-path derivatives; content, gameplay, rewards, random/native mapping, and broader authority remain unchanged.",
+  "currentSlice": "art-neutral-orchard-levy-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-orchard-levy-curated-character-sources-10184",
+  "currentSliceNotes": "Completed two distinct original transparent sources, exact deterministic derivatives/manifests, focused live authority, full reproducibility, compatibility, static/editor, and bounded Linux/Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Frostbeacon Bothy Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-23T04:17:46Z",
+  "currentSliceTitle": "Orchard Levy Grounds Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-23T04:53:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad completion or release readiness.",
-  "notes": "Frostbeacon Bothy curated sources are complete with exact focused, reproducibility, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. No next implementation slice is selected.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice; do not infer broad completion or release readiness from curated-art validation.",
+  "notes": "Orchard Levy Grounds curated sources are completed with exact live content authority, deterministic derivatives, compatibility, and bounded platform startup validation. The game is not release-ready.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-orchard-levy-curated-character-sources-10184",
+      "title": "Orchard Levy Grounds Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace generated Orchard Halberds and Millstone Slingers emblems with original character-readable sources and exact existing-path derivatives while preserving the Orchard Levy Grounds graph and gameplay.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_orchard_halberds.png", "art/units/source/curated/unit_neutral_millstone_slingers.png", "art/units/portraits/unit_neutral_orchard_halberds.png", "art/units/portraits/unit_neutral_millstone_slingers.png", "art/units/battle_icons/unit_neutral_orchard_halberds.png", "art/units/battle_icons/unit_neutral_millstone_slingers.png", "art/units/overworld_icons/unit_neutral_orchard_halberds.png", "art/units/overworld_icons/unit_neutral_millstone_slingers.png", "art/animation/runtime/units/unit_neutral_orchard_halberds.png", "art/animation/runtime/units/unit_neutral_millstone_slingers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_orchard_levy_curated_art_report.gd", "tests/unit_neutral_orchard_levy_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_orchard_halberds","unit_neutral_millstone_slingers"], "tiers": [1,1], "roles": ["melee","ranged"], "ability_ids": [["brace"],["harry"]], "shared_army_counts": [9,3], "authored_site_placement_ids": ["dwelling_orchard_levy"], "claim_recruits": [2,1], "source_size": [512,512], "other_units_must_remain_byte_exact": 101},
+      "completionCriteria": ["Two distinct transparent sources and all eight deterministic existing-path derivatives own exact provenance", "Live units, dwelling graph, 9/3 watch, authored placement, explicit Native-RMG proxy absence, rewards, grass open-lane/fortified-line encounter, BattleBoard resources, session authority, and 112 frames are exact", "Two full 412-asset regenerations, compatibility, static/editor, and bounded Linux/Windows startup gates pass"],
+      "nonGoals": ["Content, stats, abilities, costs, growth, balance, AI, dwelling/site/object/encounter/army, reward/recruitment, random/native mapping, animation timing, save, rendering, or packaging behavior", "Another unit, broad neutral art, packaged interaction, certification, signing/publication, whole-game validation, native-RMG parity, or release readiness"],
+      "createdAt": "2026-08-23T04:21:46Z",
+      "startedAt": "2026-08-23T04:21:46Z",
+      "updatedAt": "2026-08-23T04:53:06Z",
+      "completedAt": "2026-08-23T04:53:06Z",
+      "notes": "Completed two original transparent Orchard Levy sources and exact deterministic derivatives/manifests. Focused report /tmp/heroes-orchard-focused.13483 proves source alpha/provenance, exact unit stats/abilities/costs/growth, Orchard Levy dwelling/site/object/encounter graph, explicit Native-RMG proxy absence, shared 9/3 watch, authored Ninefold placement, rewards/recruits, BattleBoard resources, session authority, and 112 visible frames. Two complete generator passes plus both sources and manifests are byte-identical across 416 paths in /tmp/heroes-orchard-repro.7286; the independent reproducibility report matches 412 assets and both manifests. The 15-owner compatibility chain is green in /tmp/heroes-orchard-compat.MaXrZw; static validation, sixteen exact scene parses, and generic editor are green in /tmp/heroes-orchard-final-audit.glEeci. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are ok:true. Packaged Orchard interaction, native-RMG parity, controller/accessibility/native-hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None within the bounded Orchard Levy Grounds two-unit curated-character source slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-frostbeacon-bothy-curated-character-sources-10184",
       "title": "Frostbeacon Bothy Curated Character Sources",
@@ -94364,7 +94384,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, balance, accessibility, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -94795,8 +94815,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_cliffhawk_roost_curated_character_sources_in_progress",
-  "status": "in_progress",
+  "result": "art_neutral_orchard_levy_curated_character_sources_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -94896,9 +94916,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Frostbeacon Bothy now has two distinct original curated character sources and exact reproducible existing-path derivatives with focused live BattleBoard, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. No next implementation slice is selected, and the game is not release-ready.",
+  "summary": "The Orchard Levy Grounds curated-character slice is complete: two original sources and exact reproducible derivatives ship while live content/gameplay authority remains unchanged.",
   "taskId": "10184",
-  "updatedAt": "2026-08-23T04:17:46Z",
+  "updatedAt": "2026-08-23T04:53:06Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
