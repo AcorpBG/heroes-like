@@ -200,7 +200,10 @@
       "name": "Jorun Beaconscribe",
       "faction_id": "faction_embercourt",
       "archetype": "beaconscribe",
-      "portrait": "res://art/heroes/portraits/hero_embercourt_jorun_beaconscribe.png"
+      "portrait": "res://art/heroes/portraits/hero_embercourt_jorun_beaconscribe.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_embercourt_jorun_beaconscribe.png",
+      "source_sha256": "8496e8867ff5158f8c4127667fa17ece1cb90eaf34c632747a704bb24572bb95"
     },
     {
       "id": "hero_mireclaw_kessa_chainboom",
@@ -241,7 +244,10 @@
       "name": "Edda Rotlamp",
       "faction_id": "faction_mireclaw",
       "archetype": "sporewake",
-      "portrait": "res://art/heroes/portraits/hero_mireclaw_edda_rotlamp.png"
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_edda_rotlamp.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_mireclaw_edda_rotlamp.png",
+      "source_sha256": "c86d8f36fc598940eddd7841bb7368d5e7292f2de1b1c91e8820effdc05cb836"
     },
     {
       "id": "hero_mireclaw_pell_reedscript",
@@ -298,7 +304,10 @@
       "name": "Essa Daynote",
       "faction_id": "faction_sunvault",
       "archetype": "harmonicscholar",
-      "portrait": "res://art/heroes/portraits/hero_sunvault_essa_daynote.png"
+      "portrait": "res://art/heroes/portraits/hero_sunvault_essa_daynote.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_sunvault_essa_daynote.png",
+      "source_sha256": "78ed84d723d15c8bb654db47e935f41599376005aa1b235d2671fadcd930d31a"
     },
     {
       "id": "hero_sunvault_calis_sunvein",
@@ -410,7 +419,10 @@
       "name": "Ralka Mossvein",
       "faction_id": "faction_thornwake",
       "archetype": "mossmemory",
-      "portrait": "res://art/heroes/portraits/hero_thornwake_ralka_mossvein.png"
+      "portrait": "res://art/heroes/portraits/hero_thornwake_ralka_mossvein.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_thornwake_ralka_mossvein.png",
+      "source_sha256": "bde2e26f446ac59b0a6a75e2e0d7978ca441c40138fe0f6ab0be07658b2561f7"
     },
     {
       "id": "hero_thornwake_nara_graftsibyl",
@@ -503,7 +515,10 @@
       "name": "Lina Gauge-Savant",
       "faction_id": "faction_brasshollow",
       "archetype": "pressuremath",
-      "portrait": "res://art/heroes/portraits/hero_brasshollow_lina_gaugesavant.png"
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_lina_gaugesavant.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_brasshollow_lina_gaugesavant.png",
+      "source_sha256": "62c8105b3444f185f4d60c6c746b1c5c754c9020f0cda6524e10a5765589e67e"
     },
     {
       "id": "hero_brasshollow_harro_debtrune",
@@ -604,7 +619,10 @@
       "name": "Sael Mirrorbell",
       "faction_id": "faction_veilmourn",
       "archetype": "mirrornavigator",
-      "portrait": "res://art/heroes/portraits/hero_veilmourn_sael_mirrorbell.png"
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_sael_mirrorbell.png",
+      "source_kind": "curated_original_character",
+      "source_path": "res://art/heroes/source/curated/hero_veilmourn_sael_mirrorbell.png",
+      "source_sha256": "b159b801fbc2eea5784e47a8cbc8b67ff6b1310303ce4f35e74110076e72109b"
     },
     {
       "id": "hero_veilmourn_nacre_vowless",

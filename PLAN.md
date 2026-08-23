@@ -24,13 +24,18 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `art-six-faction-roster-sages-curated-portraits-10184`. Six distinct original painterly sources now replace the generator-only live roster portraits for Belis Rainledger, Nix Votivejaw, Renn Facetlane, Elian Loamchant, Odrik Heatpriest, and Thir Obituary-Ink through deterministic existing-path portraits. Exact faction roster order, tavern/skirmish/save/live-shell authority, every hero gameplay/content field, and the other 54 portraits remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved source-backed implementation slice.
-  id: `art-six-faction-roster-sages-curated-portraits-10184`
+- No implementation slice is currently selected. The next action is to select the next tracker-approved release-readiness implementation slice; no release-readiness or whole-game completion claim is implied.
+
+- Previous completed implementation slice: `art-six-faction-roster-scholars-curated-portraits-10184`. Six distinct original painterly sources now replace the generator-only live roster portraits for Jorun Beaconscribe, Edda Rotlamp, Essa Daynote, Ralka Mossvein, Lina Gauge-Savant, and Sael Mirrorbell through deterministic existing-path portraits. Exact faction roster order, tavern/skirmish/save/live-shell authority, every hero gameplay/content field, and the other 54 portraits remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+  id: `art-six-faction-roster-scholars-curated-portraits-10184`
 
   Completion criteria:
-  - six distinct original square sources establish each roster sage's faction, role, and silhouette, with exact provenance and deterministic 384x512 runtime portraits;
+  - six distinct original square sources establish each roster scholar's faction, role, and silhouette, with exact provenance and deterministic 384x512 runtime portraits;
   - skirmish selection, tavern recruitment, save-resume, Overworld, Town, Battle, and Outcome surfaces retain exact paths, ordered faction rosters, and all hero/content/gameplay authority at 1280 and 1920;
   - exactly six sources, six runtime portraits, and six manifest records change; the other 54 portraits remain byte-exact and two full regenerations plus focused, compatibility, validator/editor, Linux, and Windows startup gates pass.
+
+- Previous completed implementation slice: `art-six-faction-roster-sages-curated-portraits-10184`. Six distinct original painterly sources now replace the generator-only live roster portraits for Belis Rainledger, Nix Votivejaw, Renn Facetlane, Elian Loamchant, Odrik Heatpriest, and Thir Obituary-Ink through deterministic existing-path portraits. Exact faction roster order, tavern/skirmish/save/live-shell authority, every hero gameplay/content field, and the other 54 portraits remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+  id: `art-six-faction-roster-sages-curated-portraits-10184`
 
 - Previous completed implementation slice: `art-six-faction-roster-adepts-curated-portraits-10184`. Six distinct original painterly sources now replace the generator-only live roster portraits for Orra Cinderquill, Brakka Mudkeel, Dovan Lens-Captain, Osmund Pollenglass, Vellum Quench, and Morwen Wakeoracle through deterministic existing-path portraits. Exact faction roster order, tavern/skirmish/save/live-shell authority, every hero gameplay/content field, and the other 54 portraits remain unchanged. Focused, reproducibility, compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
   id: `art-six-faction-roster-adepts-curated-portraits-10184`
