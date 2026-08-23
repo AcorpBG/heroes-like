@@ -630,6 +630,123 @@
       "source_sha256": "023e23db0d05c260a38b9ef44aec7db9c800f9ed625c0ccadb96344becd0a437",
       "icon_path": "res://art/towns/runtime/buildings/building_nightglass_dominion.png",
       "icon_sha256": "ebd2049e8e56df5261bdd1df6bbc835df815201da3d0ad80e17eb980a5035d4f"
+    },
+    {
+      "id": "building_watch_barracks",
+      "building_id": "building_watch_barracks",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0"
+    },
+    {
+      "id": "building_beacon_range",
+      "building_id": "building_beacon_range",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_beacon_range.png",
+      "source_sha256": "59e73eb65de69a8f3af05b4c7e47b2c0cab88a2528cbee7620d49f3a59804d83",
+      "icon_path": "res://art/towns/runtime/buildings/building_beacon_range.png",
+      "icon_sha256": "2155e8abb17ad003e2a5063c0f28c4f6f29ba94eaddd742c1238a80a7d8711ff"
+    },
+    {
+      "id": "building_river_granary_exchange",
+      "building_id": "building_river_granary_exchange",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_river_granary_exchange.png",
+      "source_sha256": "5f8b01010e6e177879e9ccc56049c5cbe3e3d6a5671ff77bf2712b560b67c4ae",
+      "icon_path": "res://art/towns/runtime/buildings/building_river_granary_exchange.png",
+      "icon_sha256": "32ab95073e947dbc708b5beeb5f5c69370334dfa4e1f0e01c62c0dbdf68a01af"
+    },
+    {
+      "id": "building_quartermasters_depot",
+      "building_id": "building_quartermasters_depot",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_quartermasters_depot.png",
+      "source_sha256": "3d8f23039434ded8c0de742b4ebd81c3074c0eac3e6c59868243802df05177a5",
+      "icon_path": "res://art/towns/runtime/buildings/building_quartermasters_depot.png",
+      "icon_sha256": "224c41a29abb5f187184e47ca23a1b4b068f81e3baa475ea512d882b3c74a1e7"
+    },
+    {
+      "id": "building_citadel_pikehall",
+      "building_id": "building_citadel_pikehall",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_citadel_pikehall.png",
+      "source_sha256": "28d0e115a164a08068700964759e088985850802a446aee3e3ceec9429c46449",
+      "icon_path": "res://art/towns/runtime/buildings/building_citadel_pikehall.png",
+      "icon_sha256": "c79651b32eda20c15788a75a7b0ef48393668067585b3553f729cf4a3b200c78"
+    },
+    {
+      "id": "building_embercourt_granary_lock_exchange",
+      "building_id": "building_embercourt_granary_lock_exchange",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_granary_lock_exchange.png",
+      "source_sha256": "8eb9236188d7a10d203e1078d09fce7c62e56e0e98d2dbb06e4f5394ca920b1d",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_granary_lock_exchange.png",
+      "icon_sha256": "71edf6d0c0bbe1cfe54d1ab5fd26d9b3c0a67d4199a412d312872281360de695"
+    },
+    {
+      "id": "building_embercourt_tollstone_weir",
+      "building_id": "building_embercourt_tollstone_weir",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_tollstone_weir.png",
+      "source_sha256": "714fd1843aa483a4085795c22ad531dd4a1c4e81c5a680deb391ed792105fb70",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_tollstone_weir.png",
+      "icon_sha256": "c65dbca95a8659ff0d168a0899555e59a145e11591a19f8a6bea3f95739c177c"
+    },
+    {
+      "id": "building_embercourt_beacon_writs",
+      "building_id": "building_embercourt_beacon_writs",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beacon_writs.png",
+      "source_sha256": "e4db4b183c066c7e28df1654effe95734b1caf358046e5524292fa4308225325",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beacon_writs.png",
+      "icon_sha256": "69112cac8a4b23d386270ef4f8305219e5acbb63dad407315d5f255bd53e2122"
+    },
+    {
+      "id": "building_embercourt_lantern_court",
+      "building_id": "building_embercourt_lantern_court",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_lantern_court.png",
+      "source_sha256": "203b2111e253d7ea2fb54dcd77d44738562f4e4e89540b7279e9a01c854448f5",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_lantern_court.png",
+      "icon_sha256": "6506b523e63eb25ad47a9c70eca2d47a728ce73258bae51356e817b01f5d7043"
+    },
+    {
+      "id": "building_embercourt_relief_quay",
+      "building_id": "building_embercourt_relief_quay",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_relief_quay.png",
+      "source_sha256": "ca804f75185d7c58a0743d77b0c4b8dc30b45b25fb95a1ddeb9366cd3d3e800f",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_relief_quay.png",
+      "icon_sha256": "6ab3c919e1ae0ff953182f0ff62f4059467c295fd7b0142fdac413ccef73d405"
+    },
+    {
+      "id": "building_embercourt_charter_flame",
+      "building_id": "building_embercourt_charter_flame",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_charter_flame.png",
+      "source_sha256": "2b5a08c2feb44e9dbc98857a9b1055940aa341e0036a46b7e3bb26d20d76787c",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_charter_flame.png",
+      "icon_sha256": "f22d35bd76445ebaf70eb40d115957080c932f25a3c0c18bca08876ed40f188a"
+    },
+    {
+      "id": "building_signal_citadel",
+      "building_id": "building_signal_citadel",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_signal_citadel.png",
+      "source_sha256": "7369123003b3e85edf240abdb749ae14e978ef15d9b5e4b77f8a5b43c783ea46",
+      "icon_path": "res://art/towns/runtime/buildings/building_signal_citadel.png",
+      "icon_sha256": "acf5dacf828dc7e9d4facda9b409e12304dd808c3eb924af155f47960794a597"
+    },
+    {
+      "id": "building_charter_bastion",
+      "building_id": "building_charter_bastion",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_charter_bastion.png",
+      "source_sha256": "26a83c6b45b9f40471374ee6830e425af484eed7275962026a5989b8de762929",
+      "icon_path": "res://art/towns/runtime/buildings/building_charter_bastion.png",
+      "icon_sha256": "8370f3d5ed4543b3147b45a2a8e16b72f31c53c11363844be2f664d5ea945ddf"
     }
   ]
 }

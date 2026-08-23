@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The final four Mireclaw authored-town fallback buildings now have distinct source/runtime art, leaving zero category fallbacks across all five Mireclaw towns. Focused 1280/1920, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates passed; packaged Town interaction, certification, signing, publication, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
+  "currentNotes": "Riverwatch Hold and Highwater Keep now have specific original Town Build art for every building. Focused 1280/1920, compatibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates passed; packaged Town interaction, certification, signing, publication, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-mireclaw-complete-authored-town-building-icons-10184",
-  "currentSliceId": "presentation-mireclaw-complete-authored-town-building-icons-10184",
-  "currentSliceNotes": "Completed: four exact source/runtime icons for Mireclaw's final authored-town fallbacks; all five Mireclaw towns now have zero fallbacks, the global catalog has 69 specific icons and 64 exact category fallbacks, and building/economy/recruitment/capital/session/save authority remained exact.",
+  "currentSlice": "presentation-embercourt-complete-authored-town-building-icons-10184",
+  "currentSliceId": "presentation-embercourt-complete-authored-town-building-icons-10184",
+  "currentSliceNotes": "Completed: 13 exact source/runtime icons for Embercourt's final authored-town fallbacks; both Embercourt towns now have zero fallbacks, the global catalog has 82 specific icons and 51 exact category fallbacks, and building/economy/recruitment/magic/capital/session/save authority remained exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Complete Authored Town Building Icons",
-  "currentSliceUpdatedAt": "2026-08-23T21:33:08Z",
+  "currentSliceTitle": "Embercourt Complete Authored Town Building Icons",
+  "currentSliceUpdatedAt": "2026-08-23T22:02:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,18 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved slice backed by direct current behavior evidence. Preserve the completed Mireclaw art and all building/economy/recruitment/capital behavior; do not infer release readiness.",
-  "notes": "Mireclaw now has specific Town Build art for every building shown across its five authored towns. This bounded presentation slice is complete; release readiness remains unclaimed.",
+  "nextActionGuardrailNote": "Select only a tracker-approved slice backed by direct current behavior evidence. Preserve the completed Embercourt and Mireclaw art and all building/economy/recruitment/magic/capital behavior; do not infer release readiness.",
+  "notes": "Embercourt and Mireclaw now have specific Town Build art for every building shown across their authored towns. This bounded Embercourt presentation slice is complete; release readiness remains unclaimed.",
   "plannedSlices": [
+    {
+      "id": "presentation-embercourt-complete-authored-town-building-icons-10184", "title": "Embercourt Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
+      "purpose": "Complete faction-wide specific Town Build art across every building shown in Embercourt's two authored towns, including the default River Pass player town.",
+      "implementationTargets": ["art/towns/source/buildings/curated/building_{watch_barracks,beacon_range,river_granary_exchange,quartermasters_depot,citadel_pikehall,embercourt_granary_lock_exchange,embercourt_tollstone_weir,embercourt_beacon_writs,embercourt_lantern_court,embercourt_relief_quay,embercourt_charter_flame,signal_citadel,charter_bastion}.png", "art/towns/runtime/buildings/", "content/building_art_manifest.json", "tools/generate_building_icon_assets.py", "tests/town_embercourt_complete_authored_building_icon_report.gd", "tests/town_embercourt_complete_authored_building_icon_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"target_building_ids": ["building_watch_barracks", "building_beacon_range", "building_river_granary_exchange", "building_quartermasters_depot", "building_citadel_pikehall", "building_embercourt_granary_lock_exchange", "building_embercourt_tollstone_weir", "building_embercourt_beacon_writs", "building_embercourt_lantern_court", "building_embercourt_relief_quay", "building_embercourt_charter_flame", "building_signal_citadel", "building_charter_bastion"], "authored_embercourt_town_count": 2, "riverwatch_fallback_count": 11, "highwater_fallback_count": 12, "remaining_embercourt_unique_fallback_count": 13, "production_building_count": 133, "existing_specific_icon_count": 69, "category_fallback_count": 64, "source_size": [1254,1254], "runtime_icon_size": [256,256]},
+      "completionCriteria": ["Thirteen distinct final Embercourt authored-building source/runtime icons with exact provenance", "Both authored Embercourt towns have zero category fallbacks; eighty-two global specific icons and exact category fallback for the other51 buildings", "1280/1920 live presentation and unchanged building/economy/recruitment/magic/capital/session/save authority; reproducibility, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Other factions or the other51 building illustrations", "Building costs/prerequisites/income/recruitment/magic/capital/order, gameplay/balance/AI/save/layout changes", "Packaged interaction, certification, signing/publication, Native-RMG, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-23T21:36:12Z", "startedAt": "2026-08-23T21:36:12Z", "completedAt": "2026-08-23T22:02:24Z", "updatedAt": "2026-08-23T22:02:24Z", "notes": "Completed 13 distinct original source/runtime icons, an 82-row deterministic manifest with 51 exact fallbacks, focused 1280/1920 presentation with zero fallbacks across Riverwatch Hold and Highwater Keep, prior icon/category/payoff/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. No packaged Town Build interaction or release-readiness claim.", "remainingWork": ""
+    },
     {
       "id": "presentation-mireclaw-complete-authored-town-building-icons-10184", "title": "Mireclaw Complete Authored Town Building Icons", "status": "completed", "phase": "phase-6-production-alpha-layer", "classification": "implementation_slice", "source": "PLAN.md", "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md"],
       "purpose": "Complete faction-wide specific Town Build art across every building shown in Mireclaw's five authored towns.",
