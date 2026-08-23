@@ -439,4 +439,3 @@ func _fail(message: String) -> void:
 	push_error(message)
 	print(REPORT_ID, " ", JSON.stringify({"ok": false, "error": message}))
 	get_tree().quit(1)
-
