@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness implementation slice."
+    "Implement and validate exact victory/defeat Outcome music identity with generic fallback and unchanged result authority."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The selected six-faction Overworld music identity slice is in progress. Exact live player faction must select six original three-layer Overworld themes while missing/unknown identity retains generic Overworld fallback. No implementation or runtime validation has completed yet. The game is not release-ready.",
+  "currentNotes": "The Outcome result music identity slice is completed with exact victory/defeat routing, generic fallback, 57 deterministic imported layers, real 1280/1920 OutcomeShell authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No slice is currently selected. Packaged Outcome interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-six-faction-overworld-music-identity-10184",
-  "currentSliceId": "presentation-six-faction-overworld-music-identity-10184",
-  "currentSliceNotes": "In progress: add six original player-faction-specific three-layer Overworld themes selected only by exact scenario player_faction_id, with the generic Overworld cue as fail-closed fallback. Preserve all other music, Overworld route/movement/action/focus/session/save behavior, and bounded export-startup claims. No implementation or runtime validation has completed yet.",
+  "currentSlice": "presentation-scenario-outcome-result-music-identity-10184",
+  "currentSliceId": "presentation-scenario-outcome-result-music-identity-10184",
+  "currentSliceNotes": "Completed: exact terminal victory and defeat status select distinct original three-layer Outcome themes, missing/unknown status retains the generic cue, and focused/compatibility/static/editor plus bounded Linux/Windows export-startup gates pass. No next slice is selected; release readiness remains unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation six faction overworld music identity 10184",
-  "currentSliceUpdatedAt": "2026-08-24T09:25:19Z",
+  "currentSliceTitle": "presentation scenario outcome result music identity 10184",
+  "currentSliceUpdatedAt": "2026-08-24T10:12:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The six-faction Overworld music identity slice is complete. Preserve exact player-faction routing, generic fallback, the 51-cue pack, Town and other context authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer final composition, faction battle/outcome/menu themes, packaged Overworld interaction/listening, certification, signing/publication, whole-game validation, or release readiness.",
+  "guardrailNote": "Implement only exact victory/defeat Outcome music identity from live terminal status, retaining the generic Outcome fallback and all existing music/result/routing/save/focus authority. Do not change scenario rules or infer final composition, faction-specific Battle/Outcome/Menu themes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The six-faction Overworld music identity slice is complete. Preserve exact player-faction routing, generic fallback, the 51-cue pack, Town and other context authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer final composition, faction battle/outcome/menu themes, packaged Overworld interaction/listening, certification, signing/publication, whole-game validation, or release readiness.",
-  "notes": "Six exact live scenario player faction identities now route to six original three-layer Overworld themes; missing/unknown identity remains on the generic Overworld cue. The deterministic 51-cue pack, six direct routes, 12 real 1280/1920 OverworldShell rows, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Final composition, faction battle/outcome/menu themes, packaged Overworld listening/interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Implement only exact victory/defeat Outcome music identity from live terminal status, retaining the generic Outcome fallback and all existing music/result/routing/save/focus authority. Do not change scenario rules or infer final composition, faction-specific Battle/Outcome/Menu themes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.",
+  "notes": "Selected from exact shipped behavior: ScenarioOutcomeShell passes terminal status to MusicAudio, but the selector ignores it and victory/defeat share one generic major-cadence cue. Add two original result-specific three-layer themes, retain generic fallback, and validate direct plus real 1280/1920 Outcome routes without changing result, routing, save, focus, or other music authority. No implementation or runtime validation has completed yet.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100655,6 +100655,16 @@
       "startedAt": "2026-08-24T09:25:19Z",
       "notes": "Completed with 18 new original faction-specific Overworld stems and exact live scenario player_faction_id routing; missing/unknown identity retains the generic Overworld cue. The deterministic 51-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 OverworldShell rows, continuous/settings/generated fallback, route/movement/focus/session authority, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition, faction battle/outcome/menu themes, packaged Overworld interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T09:46:15Z"
+    },
+    {
+      "id": "presentation-scenario-outcome-result-music-identity-10184",
+      "title": "presentation scenario outcome result music identity 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T10:12:05Z",
+      "startedAt": "2026-08-24T09:54:58Z",
+      "notes": "Completed with two original three-layer terminal Outcome themes. Exact victory and defeat status select distinct cues while missing/unknown status retains the generic Outcome cue. The deterministic 57-cue pack is byte-distinct and exact-length; direct routes, four real 1280/1920 OutcomeShell rows with unchanged session authority, continuous/settings/generated fallback, Outcome focus and autosave-recovery compatibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition/mastering, faction-specific Battle/Outcome/Menu themes, packaged Outcome interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T10:12:05Z"
     }
   ],
   "project": "heroes-like",
@@ -100665,7 +100675,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Implement and validate the scenario Outcome result music identity slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101199,7 +101209,7 @@
   ],
   "summary": "The six-faction Overworld music identity slice is selected and in progress; implementation and runtime validation have not completed yet.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T09:46:15Z",
+  "updatedAt": "2026-08-24T09:54:58Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

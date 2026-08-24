@@ -26,6 +26,10 @@ const OVERWORLD_FACTION_SCENARIOS := {
 	"faction_brasshollow": "orevein-contract",
 	"faction_veilmourn": "bellwake-wreck-claim",
 }
+const OUTCOME_STATUS_CUES := {
+	"victory": "music_outcome_victory_theme",
+	"defeat": "music_outcome_defeat_theme",
+}
 const EXPECTED_CUES := [
 	"music_menu_theme",
 	"music_overworld_theme",
@@ -44,6 +48,8 @@ const EXPECTED_CUES := [
 	"music_town_veilmourn_theme",
 	"music_battle_theme",
 	"music_outcome_theme",
+	"music_outcome_victory_theme",
+	"music_outcome_defeat_theme",
 ]
 const EXPECTED_LAYER_CUES := [
 	"music_menu_theme",
@@ -97,6 +103,12 @@ const EXPECTED_LAYER_CUES := [
 	"music_outcome_theme",
 	"music_outcome_theme_harmony",
 	"music_outcome_theme_motion",
+	"music_outcome_victory_theme",
+	"music_outcome_victory_theme_harmony",
+	"music_outcome_victory_theme_motion",
+	"music_outcome_defeat_theme",
+	"music_outcome_defeat_theme_harmony",
+	"music_outcome_defeat_theme_motion",
 ]
 const EXPECTED_SEGMENT_DURATION_SEC := 8.0
 const EXPECTED_SEGMENT_FRAMES := 352800
@@ -112,6 +124,7 @@ var _report := {
 	"shell_summary": {},
 	"town_shell_rows": [],
 	"overworld_shell_rows": [],
+	"outcome_shell_rows": [],
 	"errors": [],
 }
 
@@ -178,11 +191,22 @@ func _run() -> void:
 		"encounter_id": "validation_encounter",
 		"encounter_difficulty": "hard",
 	})
+	var outcome_fallback_record: Dictionary = MusicAudio.sync_context("outcome", "validation_outcome_unknown", {
+		"scenario_id": "river-pass",
+		"status": "unknown",
+		"day": 3,
+	})
 	var outcome_metadata := {
 		"scenario_id": "river-pass",
 		"status": "victory",
 		"day": 3,
 	}
+	var outcome_victory_record: Dictionary = MusicAudio.sync_context("outcome", "validation_outcome_victory", outcome_metadata)
+	var outcome_defeat_record: Dictionary = MusicAudio.sync_context("outcome", "validation_outcome_defeat", {
+		"scenario_id": "river-pass",
+		"status": "defeat",
+		"day": 3,
+	})
 	var outcome_record: Dictionary = MusicAudio.sync_context("outcome", "validation_outcome", outcome_metadata)
 	await get_tree().create_timer(EXPECTED_SEGMENT_DURATION_SEC + 0.35).timeout
 	var continuous_summary := MusicAudio.validation_summary()
@@ -209,11 +233,14 @@ func _run() -> void:
 	var original_window_size := get_window().size
 	var town_shell_rows: Array = []
 	var overworld_shell_rows: Array = []
+	var outcome_shell_rows: Array = []
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		for faction_id_value in OVERWORLD_FACTION_CUES:
 			overworld_shell_rows.append(await _overworld_shell_route_row(viewport_size, String(faction_id_value)))
 		for faction_id_value in TOWN_FACTION_CUES:
 			town_shell_rows.append(await _town_shell_route_row(viewport_size, String(faction_id_value)))
+		for status in OUTCOME_STATUS_CUES:
+			outcome_shell_rows.append(await _outcome_shell_route_row(viewport_size, String(status)))
 	get_window().size = original_window_size
 	await get_tree().process_frame
 
@@ -225,6 +252,7 @@ func _run() -> void:
 	_report["shell_summary"] = shell_summary
 	_report["town_shell_rows"] = town_shell_rows
 	_report["overworld_shell_rows"] = overworld_shell_rows
+	_report["outcome_shell_rows"] = outcome_shell_rows
 	_validate_record("menu", menu_record, "music_menu_theme", "menu", true)
 	_validate_record("stable", stable_record, "music_menu_theme", "menu", false)
 	_validate_record("overworld", overworld_record, "music_overworld_theme", "overworld", true)
@@ -238,7 +266,10 @@ func _run() -> void:
 		var faction_id := String(faction_id_value)
 		_validate_record("town %s" % faction_id, faction_town_records.get(faction_id, {}), String(TOWN_FACTION_CUES[faction_id]), "town", true)
 	_validate_record("battle", battle_record, "music_battle_theme", "battle", true)
-	_validate_record("outcome", outcome_record, "music_outcome_theme", "outcome", true)
+	_validate_record("outcome unknown", outcome_fallback_record, "music_outcome_theme", "outcome", true)
+	_validate_record("outcome victory", outcome_victory_record, "music_outcome_victory_theme", "outcome", true)
+	_validate_record("outcome defeat", outcome_defeat_record, "music_outcome_defeat_theme", "outcome", true)
+	_validate_record("outcome", outcome_record, "music_outcome_victory_theme", "outcome", true)
 	_validate_continuous_playback(continuous_summary, continuous_record)
 	_validate_generated_fallback(fallback_record)
 	_validate_direct_summary(direct_summary)
@@ -249,6 +280,9 @@ func _run() -> void:
 	for row_value in overworld_shell_rows:
 		var row: Dictionary = row_value
 		_expect(bool(row.get("ok", false)), "OverworldShell route must own exact player-faction music at both target viewports: %s" % row)
+	for row_value in outcome_shell_rows:
+		var row: Dictionary = row_value
+		_expect(bool(row.get("ok", false)), "ScenarioOutcomeShell route must own exact victory/defeat music at both target viewports: %s" % row)
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -476,6 +510,56 @@ func _overworld_shell_route_row(viewport_size: Vector2i, faction_id: String) -> 
 	shell.queue_free()
 	await get_tree().process_frame
 	return {"ok": exact, "viewport_size": viewport_size, "scenario_id": scenario_id, "player_faction_id": faction_id, "checks": checks, "record": record}
+
+func _outcome_shell_route_row(viewport_size: Vector2i, status: String) -> Dictionary:
+	get_window().size = viewport_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	session.scenario_status = status
+	session.scenario_summary = "Music validation %s outcome." % status
+	session.game_state = "outcome"
+	session.battle = {}
+	var session_before: Dictionary = session.to_dict()
+	SessionState.set_active_session(session)
+	MusicAudio.validation_reset()
+	var frame := Control.new()
+	frame.name = "OutcomeMusicFrame"
+	frame.size = Vector2(viewport_size)
+	frame.clip_contents = true
+	add_child(frame)
+	var shell = load("res://scenes/results/ScenarioOutcomeShell.tscn").instantiate()
+	frame.add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not is_instance_valid(shell) or not shell.is_inside_tree():
+		frame.queue_free()
+		return {"ok": false, "failure": "outcome_shell_missing", "viewport_size": viewport_size, "status": status}
+	var snapshot: Dictionary = shell.validation_snapshot()
+	var summary: Dictionary = MusicAudio.validation_summary()
+	var records: Array = summary.get("records", []) if summary.get("records", []) is Array else []
+	var record: Dictionary = records[-1] if not records.is_empty() and records[-1] is Dictionary else {}
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	var checks := {
+		"window_size_exact": get_window().size == viewport_size,
+		"game_state_exact": String(snapshot.get("game_state", "")) == "outcome",
+		"scenario_status_exact": String(snapshot.get("scenario_status", "")) == status,
+		"current_context_exact": String(summary.get("current_context_id", "")) == "outcome",
+		"player_count_exact": int(summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS,
+		"record_count_exact": int(summary.get("record_count", 0)) == 1,
+		"cue_exact": String(record.get("cue_id", "")) == String(OUTCOME_STATUS_CUES.get(status, "")),
+		"record_context_exact": String(record.get("context_id", "")) == "outcome",
+		"source_exact": String(record.get("source", "")) == "outcome_shell_ready",
+		"changed_exact": bool(record.get("changed", false)),
+		"metadata_status_exact": String(metadata.get("status", "")) == status,
+		"snapshot_music_exact": snapshot.get("music_audio", {}) == summary,
+		"session_authority_exact": session.to_dict() == session_before,
+	}
+	var exact := not checks.values().has(false)
+	frame.queue_free()
+	await get_tree().process_frame
+	return {"ok": exact, "viewport_size": viewport_size, "status": status, "checks": checks, "record": record}
 
 func _town_for_faction(session, faction_id: String) -> Dictionary:
 	for town_value in session.overworld.get("towns", []):

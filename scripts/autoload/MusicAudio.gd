@@ -23,6 +23,10 @@ const OVERWORLD_FACTION_CUE_IDS := {
 	"faction_brasshollow": "music_overworld_brasshollow_theme",
 	"faction_veilmourn": "music_overworld_veilmourn_theme",
 }
+const OUTCOME_STATUS_CUE_IDS := {
+	"victory": "music_outcome_victory_theme",
+	"defeat": "music_outcome_defeat_theme",
+}
 const CONTEXT_SPECS := {
 	"menu": {
 		"cue_id": "music_menu_theme",
@@ -179,6 +183,10 @@ func _cue_id_for_context(context_id: String, metadata: Dictionary) -> String:
 		var faction_id := String(metadata.get("town_faction_id", "")).strip_edges().to_lower()
 		if TOWN_FACTION_CUE_IDS.has(faction_id):
 			return String(TOWN_FACTION_CUE_IDS[faction_id])
+	if context_id == "outcome":
+		var status := String(metadata.get("status", "")).strip_edges().to_lower()
+		if OUTCOME_STATUS_CUE_IDS.has(status):
+			return String(OUTCOME_STATUS_CUE_IDS[status])
 	return String(spec.get("cue_id", "music_menu_theme"))
 
 func _layers_for_context(context_id: String, cue_id: String, metadata: Dictionary) -> Array[Dictionary]:
