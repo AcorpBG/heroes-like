@@ -65,6 +65,20 @@ const TARGET_OLD_MEASURE_BATTLE_REWARD_SPELL_IDS := [
 	"spell_old_measure_compass_correction_22",
 	"spell_old_measure_count_boundary_30",
 ]
+const TARGET_LENS_REWARD_SPELL_IDS := [
+	"spell_lens_array_ray_06",
+	"spell_lens_array_chorus_22",
+	"spell_lens_glass_facet_08",
+	"spell_lens_focus_array_14",
+	"spell_lens_aurora_chorus_10",
+]
+const TARGET_LENS_BATTLE_REWARD_SPELL_IDS := [
+	"spell_lens_array_ray_06",
+	"spell_lens_array_chorus_22",
+	"spell_lens_glass_facet_08",
+	"spell_lens_focus_array_14",
+	"spell_lens_aurora_chorus_10",
+]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
 	"battle": "spell_bulwark_litany",
@@ -118,6 +132,11 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_old_measure_count_survey_14": "res://art/magic/runtime/spells/spell_old_measure_count_survey_14.png",
 	"spell_old_measure_compass_correction_22": "res://art/magic/runtime/spells/spell_old_measure_compass_correction_22.png",
 	"spell_old_measure_count_boundary_30": "res://art/magic/runtime/spells/spell_old_measure_count_boundary_30.png",
+	"spell_lens_array_ray_06": "res://art/magic/runtime/spells/spell_lens_array_ray_06.png",
+	"spell_lens_array_chorus_22": "res://art/magic/runtime/spells/spell_lens_array_chorus_22.png",
+	"spell_lens_glass_facet_08": "res://art/magic/runtime/spells/spell_lens_glass_facet_08.png",
+	"spell_lens_focus_array_14": "res://art/magic/runtime/spells/spell_lens_focus_array_14.png",
+	"spell_lens_aurora_chorus_10": "res://art/magic/runtime/spells/spell_lens_aurora_chorus_10.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -146,7 +165,7 @@ func _run() -> void:
 			if not bool(row.get("ok", false)):
 				_fail("Spell school icon surface failed: %s" % JSON.stringify(row), original_window_size)
 				return
-		var battle_reward_spell_ids: Array = TARGET_BEACON_REWARD_SPELL_IDS + TARGET_MIRE_BATTLE_REWARD_SPELL_IDS + TARGET_FURNACE_BATTLE_REWARD_SPELL_IDS + TARGET_ROOT_BATTLE_REWARD_SPELL_IDS + TARGET_VEIL_BATTLE_REWARD_SPELL_IDS + TARGET_OLD_MEASURE_BATTLE_REWARD_SPELL_IDS
+		var battle_reward_spell_ids: Array = TARGET_BEACON_REWARD_SPELL_IDS + TARGET_MIRE_BATTLE_REWARD_SPELL_IDS + TARGET_FURNACE_BATTLE_REWARD_SPELL_IDS + TARGET_ROOT_BATTLE_REWARD_SPELL_IDS + TARGET_VEIL_BATTLE_REWARD_SPELL_IDS + TARGET_OLD_MEASURE_BATTLE_REWARD_SPELL_IDS + TARGET_LENS_BATTLE_REWARD_SPELL_IDS
 		var reward_row: Dictionary = await _surface_case(viewport_size, "battle", String(TARGET_BEACON_REWARD_SPELL_IDS[0]), battle_reward_spell_ids)
 		rows.append(reward_row)
 		if not bool(reward_row.get("ok", false)):
@@ -257,7 +276,7 @@ func _catalog_contract() -> Dictionary:
 		"ok": (
 			bool(fallback_contract.get("ok", false))
 			and bool(generated_reward_contract.get("ok", false))
-			and signature_contract.size() == 48
+			and signature_contract.size() == 53
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -266,8 +285,8 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 48
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 64
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 53
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 59
 			and SpellRules.spell_icon_path("spell_furnace_foundry_clamp_27") == SpellRules.spell_school_icon_path("spell_furnace_foundry_clamp_27")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
@@ -277,7 +296,7 @@ func _catalog_contract() -> Dictionary:
 		"fallback": fallback_contract,
 		"generated_reward": generated_reward_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 64,
+		"school_fallback_count": 59,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
@@ -320,8 +339,9 @@ func _generated_reward_contract() -> Dictionary:
 			and TARGET_ROOT_REWARD_SPELL_IDS.all(func(spell_id): return spell_id in reward_ids and SpellRules.spell_icon_path(spell_id) == String(EXPECTED_SIGNATURE_ICONS.get(spell_id, "")))
 			and TARGET_VEIL_REWARD_SPELL_IDS.all(func(spell_id): return spell_id in reward_ids and SpellRules.spell_icon_path(spell_id) == String(EXPECTED_SIGNATURE_ICONS.get(spell_id, "")))
 			and TARGET_OLD_MEASURE_REWARD_SPELL_IDS.all(func(spell_id): return spell_id in reward_ids and SpellRules.spell_icon_path(spell_id) == String(EXPECTED_SIGNATURE_ICONS.get(spell_id, "")))
-			and specific_count == 33
-			and rows.size() - specific_count == 5
+			and TARGET_LENS_REWARD_SPELL_IDS.all(func(spell_id): return spell_id in reward_ids and SpellRules.spell_icon_path(spell_id) == String(EXPECTED_SIGNATURE_ICONS.get(spell_id, "")))
+			and specific_count == 38
+			and rows.size() - specific_count == 0
 		),
 		"reward_spell_ids": reward_ids,
 		"specific_count": specific_count,

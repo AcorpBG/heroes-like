@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The Old Measure generated-map reward icon slice is complete: Marker Tally, Count Survey, Compass Correction, and Count Boundary own original source art and deterministic runtime icons; the manifest is 48 specific/64 fallback and the reward pool is 33 specific/5 fallback. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Lens generated-map reward icon slice is complete: Array Ray, Array Chorus, Glass Facet, Focus Array, and Aurora Chorus own original source art and deterministic runtime icons; the manifest is 53 specific/59 fallback and the generated reward pool is 38 specific/0 fallback. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-generated-map-old-measure-spell-reward-distinct-icons-10184",
-  "currentSliceId": "presentation-generated-map-old-measure-spell-reward-distinct-icons-10184",
-  "currentSliceNotes": "Completed four exact Old Measure generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 48 specific/64 fallback; generated reward pool is 33 specific/5 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
+  "currentSlice": "presentation-generated-map-lens-spell-reward-distinct-icons-10184",
+  "currentSliceId": "presentation-generated-map-lens-spell-reward-distinct-icons-10184",
+  "currentSliceNotes": "Completed with five distinct original Lens spell reward icons, deterministic 53-row manifest generation, 38/38 generated reward-specific coverage, focused 1280/1920 battle authority, reward/spell/focus/core compatibility, exact repository/editor checks, Linux export plus packaged headless startup, and Windows export plus fresh-Wine Boot/MainMenu/native-DLL startup. Remaining 59 non-reward catalog fallbacks and packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation generated map old measure spell reward distinct icons 10184",
+  "currentSliceTitle": "presentation generated map lens spell reward distinct icons 10184",
   "currentSliceUpdatedAt": "2026-08-24T03:07:39Z",
   "deferredRiskRegister": [
     {
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The four selected Old Measure generated-map reward icons are complete. Preserve the exact 38-spell reward order/values, 48 specific icons and 64 catalog fallbacks, all spell behavior, and Battle/Overworld/session/save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "The five selected Lens generated-map reward icons are complete. Preserve the exact 38-spell reward order/values, 53 specific icons and 59 non-reward catalog fallbacks, all spell behavior, and Battle/session/save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Old Measure reward icon slice is complete. Preserve the completed 133-building icon catalog, 48 specific spell icons, exact 64-spell catalog fallback, and unchanged 38-spell reward pool; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "The Lens reward icon slice is complete. Preserve the completed 133-building icon catalog, 53 specific spell icons, exact 59-spell non-reward catalog fallback, and unchanged 38-spell reward pool with full specific coverage; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100535,6 +100535,16 @@
       "startedAt": "2026-08-24T02:55:39Z",
       "notes": "Completed four exact Old Measure generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 48 specific/64 fallback; generated reward pool is 33 specific/5 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-24T03:07:39Z"
+    },
+    {
+      "id": "presentation-generated-map-lens-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map lens spell reward distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T03:23:57Z",
+      "startedAt": "2026-08-24T03:10:00Z",
+      "notes": "Completed with five distinct original Lens spell reward icons, deterministic 53-row manifest generation, 38/38 generated reward-specific coverage, focused 1280/1920 battle authority, reward/spell/focus/core compatibility, exact repository/editor checks, Linux export plus packaged headless startup, and Windows export plus fresh-Wine Boot/MainMenu/native-DLL startup. Remaining 59 non-reward catalog fallbacks and packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T03:23:57Z"
     }
   ],
   "project": "heroes-like",
@@ -101079,7 +101089,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T03:07:39Z",
+  "updatedAt": "2026-08-24T03:23:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
