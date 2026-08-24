@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Implement and validate exact victory/defeat Outcome music identity with generic fallback and unchanged result authority."
+    "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The music context crossfade slice is completed. Changed signatures now crossfade exact outgoing/incoming three-layer groups over 360 ms, rapid replacements are generation-owned and capped at six players, and stable/stop/mute/fallback/routing/session authority is exact. No slice is currently selected; packaged listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+  "currentNotes": "Completed presentation-overworld-ambient-context-crossfade-transition-10184. Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence; no whole-game or release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-music-context-crossfade-transition-10184",
-  "currentSliceId": "presentation-music-context-crossfade-transition-10184",
-  "currentSliceNotes": "Completed: changed signatures crossfade exact outgoing/incoming three-layer groups over 360 ms; rapid replacement, stable signature, explicit stop, mute/fallback, routing, shell/session, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. No next slice is selected; release readiness remains unclaimed.",
+  "currentSlice": "presentation-overworld-ambient-context-crossfade-transition-10184",
+  "currentSliceId": "presentation-overworld-ambient-context-crossfade-transition-10184",
+  "currentSliceNotes": "Completed with an exact 300 ms variable-layer crossfade, generation-owned rapid replacement, stable non-restart, and immediate missing-session/explicit stop. Focused, route/input/focus/audio/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass; packaged listening, certification, Native-RMG parity, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation music context crossfade transition 10184",
-  "currentSliceUpdatedAt": "2026-08-24T11:07:47Z",
+  "currentSliceTitle": "presentation overworld ambient context crossfade transition 10184",
+  "currentSliceUpdatedAt": "2026-08-24T11:24:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness slice from direct current product evidence. Do not infer release readiness from completed presentation, compatibility, or export/startup gates, and do not broaden Native-RMG work without recovered private-state and final-payload parity evidence.",
-  "notes": "The music context crossfade slice is completed with a bounded exact 360 ms outgoing/incoming transition, rapid-route generation ownership, three-player steady state, six-player transition cap, stable non-restart, immediate stop, mute/fallback authority, real 1280/1920 Menu-to-Overworld proof, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No next slice is selected; packaged listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Implement only a bounded exact outgoing/incoming AmbientAudio crossfade on coordinate/terrain/day/threat signature changes. Preserve stable non-restart, missing-session/explicit immediate stop, mute/fallback, terrain/pressure/day cues and session authority; do not add assets, spatial audio, mixer or gameplay changes, certification, Native-RMG, or release claims.",
+  "notes": "Selected from the shipped AmbientAudio stop_overworld_ambient(\"signature_changed\") path. The selected slice owns only transition lifecycle for the existing terrain/pressure/day groups; implementation and runtime validation have not completed.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100685,6 +100685,16 @@
       "startedAt": "2026-08-24T10:47:31Z",
       "notes": "Completed with a bounded exact 360 ms three-layer crossfade for changed signatures. Rapid replacements invalidate stale tween generations, retire only the older outgoing group, and remain capped at six transition players before settling to three; stable signatures do not restart, explicit stop is immediate, mute/generated fallback and all cue/metadata/settings/bus/session authority remain exact. Focused direct and real 1280/1920 Menu-to-Overworld, UI/ambient audio, active-play focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. New composition, beat/bar synchronization, adaptive intensity, mixer migration, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T11:07:47Z"
+    },
+    {
+      "id": "presentation-overworld-ambient-context-crossfade-transition-10184",
+      "title": "presentation overworld ambient context crossfade transition 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T11:24:44Z",
+      "startedAt": "2026-08-24T11:09:56Z",
+      "notes": "Completed with a bounded exact 300 ms crossfade for changed coordinate/terrain/day/threat signatures. Rapid replacements invalidate stale tween generations, retire only the older outgoing group, and remain capped at eight transition players before settling to the exact current 1-3 layers; stable signatures do not restart, missing-session/explicit stop is immediate, and mute/generated fallback plus cue/settings/session authority remain exact. Focused ambient lifecycle, real route movement and input ownership, active-play focus, music coexistence, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. New ambient assets, spatial audio, mixer/gameplay changes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T11:24:44Z"
     }
   ],
   "project": "heroes-like",
@@ -100695,7 +100705,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness slice from direct current product evidence. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Implement and validate the selected Overworld ambient context-crossfade transition. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
