@@ -19312,6 +19312,7 @@ def validate_main_menu_battle_shake_picker_theme_parity(errors: list[str]) -> No
             expected_pickers = (
                 "_campaign_difficulty_picker",
                 "_difficulty_picker",
+                "_generated_size_picker",
                 "_generated_template_picker",
                 "_generated_profile_picker",
                 "_generated_player_count_picker",
@@ -19337,6 +19338,85 @@ def validate_main_menu_battle_shake_picker_theme_parity(errors: list[str]) -> No
         errors,
         "Battle Shake picker must use the shared OptionButton theme loop rather than a one-off style path",
     )
+
+
+def validate_main_menu_generated_size_picker_theme_parity(errors: list[str]) -> None:
+    generated_visual_path = ROOT / "tests" / "generated_map_setup_visual_smoke.gd"
+    for path in (MAIN_MENU_SCRIPT_PATH, generated_visual_path):
+        ensure(path.exists(), errors, f"Missing Generated Size picker theme-parity dependency: {path.relative_to(ROOT)}")
+    if not MAIN_MENU_SCRIPT_PATH.exists() or not generated_visual_path.exists():
+        return
+
+    script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_theme_match = re.search(
+        r"func _apply_visual_theme\(\) -> void:(.*?)(?=\n\nfunc |\Z)",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(visual_theme_match is not None, errors, "MainMenu.gd is missing its visual-theme owner")
+    if visual_theme_match is not None:
+        body = visual_theme_match.group(1)
+        ensure(body.count("\t\t_generated_size_picker,") == 1, errors, "Generated Size picker must appear exactly once in the shared visual-theme owner")
+        size_index = body.find("\t\t_generated_size_picker,")
+        template_index = body.find("\t\t_generated_template_picker,")
+        apply_index = body.find('FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)')
+        ensure(0 <= size_index < template_index < apply_index, errors, "Generated Size picker must precede hidden generated template/profile controls in the exact shared secondary loop")
+    ensure(
+        "FrontierVisualKit.apply_option_button(_generated_size_picker" not in script_text,
+        errors,
+        "Generated Size picker must use the shared OptionButton loop rather than a one-off style path",
+    )
+
+    visual_text = generated_visual_path.read_text(encoding="utf-8")
+    case_match = re.search(
+        r"func _assert_generated_size_picker_theme_parity\((.*?)\n\treturn true(?=\n\nfunc )",
+        visual_text,
+        flags=re.DOTALL,
+    )
+    ensure(case_match is not None, errors, "Generated map setup visual smoke is missing the Generated Size picker theme-parity case")
+    if case_match is not None:
+        body = case_match.group(1)
+        for token in (
+            'shell.get_node_or_null("%GeneratedSizePicker") as OptionButton',
+            'shell.get_node_or_null("%GeneratedPlayerCountPicker") as OptionButton',
+            'shell.get_node_or_null("%GeneratedWaterPicker") as OptionButton',
+            'var setup_before: Dictionary = shell.call("validation_generated_random_map_snapshot")',
+            "var size_before: Dictionary = _option_button_behavior_contract(size_picker)",
+            "for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
+            "viewport.size = requested_size",
+            '"normal": "res://art/ui/runtime/shared/button_secondary_normal.png"',
+            '"hover": "res://art/ui/runtime/shared/button_secondary_hover.png"',
+            '"pressed": "res://art/ui/runtime/shared/button_secondary_pressed.png"',
+            '"disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png"',
+            "size_style != player_count_style",
+            "size_style != water_style",
+            'size_style.get("custom_minimum_size", Vector2.ZERO) != Vector2(176.0, 34.0)',
+            'int(size_style.get("font_size", 0)) != 13',
+            "_rect_contains(generated_panel.get_global_rect(), size_picker.get_global_rect())",
+            "size_picker.get_global_rect().intersects(player_count_picker.get_global_rect())",
+            "viewport.size = VIEWPORT_SIZE",
+            'shell.call("validation_generated_random_map_snapshot") != setup_before',
+            "_option_button_behavior_contract(size_picker) != size_before",
+        ):
+            ensure(token in body, errors, f"Generated Size picker focused parity case is missing token: {token}")
+        size_loop_index = body.find("for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:")
+        resize_index = body.find("viewport.size = requested_size")
+        style_index = body.find("var size_style: Dictionary = _option_button_style_contract(size_picker)")
+        restore_index = body.find("viewport.size = VIEWPORT_SIZE")
+        authority_index = body.find('shell.call("validation_generated_random_map_snapshot") != setup_before')
+        ensure(
+            0 <= size_loop_index < resize_index < style_index < restore_index < authority_index,
+            errors,
+            "Generated Size picker focused parity case must resize, measure, restore, then check whole setup authority",
+        )
+    for forbidden in (
+        'shell.call("validation_select_generated_size_class"',
+        "set_item_text(",
+        "set_item_metadata(",
+        "remove_item(",
+        "clear()",
+    ):
+        ensure(forbidden not in (case_match.group(1) if case_match is not None else ""), errors, f"Generated Size theme validation must not mutate picker semantics: {forbidden}")
 
     smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
     parity_match = re.search(
@@ -61950,6 +62030,7 @@ def main() -> int:
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_main_menu_battle_shake_picker_theme_parity(errors)
+    validate_main_menu_generated_size_picker_theme_parity(errors)
     validate_main_menu_settings_focus_visibility(errors)
     validate_main_menu_settings_summary_word_ellipsis(errors)
     validate_map_editor_shell_slice(errors)
