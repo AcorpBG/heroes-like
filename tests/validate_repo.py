@@ -58064,6 +58064,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_overworld_theme",
             "music_town_theme",
             "TOWN_FACTION_CUE_IDS",
+            "BATTLE_FACTION_CUE_IDS",
             "OUTCOME_STATUS_CUE_IDS",
             "func _cue_id_for_context",
             'String(metadata.get("town_faction_id", "")).strip_edges().to_lower()',
@@ -58074,6 +58075,12 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_town_brasshollow_theme",
             "music_town_veilmourn_theme",
             "music_battle_theme",
+            "music_battle_embercourt_theme",
+            "music_battle_mireclaw_theme",
+            "music_battle_sunvault_theme",
+            "music_battle_thornwake_theme",
+            "music_battle_brasshollow_theme",
+            "music_battle_veilmourn_theme",
             "music_outcome_theme",
             "music_outcome_victory_theme",
             "music_outcome_defeat_theme",
@@ -58120,12 +58127,20 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         ensure(town_faction_mapping.count('"faction_') == 6, errors, "MusicAudio Town faction routing must contain exactly the six production factions")
         overworld_faction_mapping = music_text[
             music_text.index("const OVERWORLD_FACTION_CUE_IDS := {"):
-            music_text.index("const OUTCOME_STATUS_CUE_IDS := {")
+            music_text.index("const BATTLE_FACTION_CUE_IDS := {")
         ]
         for faction_id in exact_town_faction_cues:
             cue_id = f"music_overworld_{faction_id.removeprefix('faction_')}_theme"
             ensure(overworld_faction_mapping.count(f'"{faction_id}": "{cue_id}"') == 1, errors, f"MusicAudio Overworld routing must contain exactly one {faction_id} -> {cue_id} mapping")
         ensure(overworld_faction_mapping.count('"faction_') == 6, errors, "MusicAudio Overworld faction routing must contain exactly the six production factions")
+        battle_faction_mapping = music_text[
+            music_text.index("const BATTLE_FACTION_CUE_IDS := {"):
+            music_text.index("const OUTCOME_STATUS_CUE_IDS := {")
+        ]
+        for faction_id in exact_town_faction_cues:
+            cue_id = f"music_battle_{faction_id.removeprefix('faction_')}_theme"
+            ensure(battle_faction_mapping.count(f'"{faction_id}": "{cue_id}"') == 1, errors, f"MusicAudio Battle routing must contain exactly one {faction_id} -> {cue_id} mapping")
+        ensure(battle_faction_mapping.count('"faction_') == 6, errors, "MusicAudio Battle faction routing must contain exactly the six production factions")
         outcome_status_mapping = music_text[
             music_text.index("const OUTCOME_STATUS_CUE_IDS := {"):
             music_text.index("const CONTEXT_SPECS := {")
@@ -58139,8 +58154,10 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         ]
         ensure('if context_id == "town":' in cue_selector, errors, "MusicAudio faction cue selection must be Town-only")
         ensure('if context_id == "overworld":' in cue_selector, errors, "MusicAudio faction cue selection must include exact Overworld ownership")
+        ensure('if context_id == "battle":' in cue_selector, errors, "MusicAudio faction cue selection must include exact Battle ownership")
         ensure('if context_id == "outcome":' in cue_selector, errors, "MusicAudio cue selection must include exact Outcome status ownership")
         ensure('if OVERWORLD_FACTION_CUE_IDS.has(player_faction_id):' in cue_selector, errors, "MusicAudio Overworld cue selection must require exact registered identity")
+        ensure('if BATTLE_FACTION_CUE_IDS.has(player_faction_id):' in cue_selector, errors, "MusicAudio Battle cue selection must require exact registered identity")
         ensure('if TOWN_FACTION_CUE_IDS.has(faction_id):' in cue_selector, errors, "MusicAudio faction cue selection must require exact registered identity")
         ensure('String(metadata.get("status", "")).strip_edges().to_lower()' in cue_selector, errors, "MusicAudio Outcome cue selection must normalize only the supplied status")
         ensure('if OUTCOME_STATUS_CUE_IDS.has(status):' in cue_selector, errors, "MusicAudio Outcome cue selection must require exact registered status")
@@ -58199,6 +58216,11 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         for faction_id in ("embercourt", "mireclaw", "sunvault", "thornwake", "brasshollow", "veilmourn")
         for suffix in ("theme", "theme_harmony", "theme_motion")
     )
+    required_music_cue_ids += tuple(
+        f"music_battle_{faction_id}_{suffix}"
+        for faction_id in ("embercourt", "mireclaw", "sunvault", "thornwake", "brasshollow", "veilmourn")
+        for suffix in ("theme", "theme_harmony", "theme_motion")
+    )
     if MUSIC_RUNTIME_MANIFEST_PATH.exists():
         music_manifest = json.loads(MUSIC_RUNTIME_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(music_manifest.get("schema") == "music_runtime_asset_manifest_v1", errors, "music_runtime_manifest.json has the wrong schema")
@@ -58212,7 +58234,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         ensure(music_manifest.get("asset_tier") == "production_layered_loop_v1", errors, "production music manifest must declare production_layered_loop_v1")
         music_cues = music_manifest.get("cues", {})
         ensure(isinstance(music_cues, dict), errors, "music_runtime_manifest.json cues must be an object")
-        ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the fifty-seven live music layer ids")
+        ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the seventy-five live music layer ids")
         expected_music_cues = {
             "music_menu_theme": ("res://art/audio/runtime/music/menu_root.wav", "menu root", -23.0),
             "music_menu_theme_harmony": ("res://art/audio/runtime/music/menu_harmony.wav", "menu harmony", -26.0),
@@ -58259,6 +58281,9 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             expected_music_cues[f"music_overworld_{faction_id}_theme"] = (f"res://art/audio/runtime/music/overworld_{faction_id}_root.wav", f"{faction_name} overworld root", -23.5)
             expected_music_cues[f"music_overworld_{faction_id}_theme_harmony"] = (f"res://art/audio/runtime/music/overworld_{faction_id}_harmony.wav", f"{faction_name} overworld harmony", -26.5)
             expected_music_cues[f"music_overworld_{faction_id}_theme_motion"] = (f"res://art/audio/runtime/music/overworld_{faction_id}_motion.wav", f"{faction_name} overworld motion", -28.5)
+            expected_music_cues[f"music_battle_{faction_id}_theme"] = (f"res://art/audio/runtime/music/battle_{faction_id}_root.wav", f"{faction_name} battle root", -22.5)
+            expected_music_cues[f"music_battle_{faction_id}_theme_harmony"] = (f"res://art/audio/runtime/music/battle_{faction_id}_harmony.wav", f"{faction_name} battle harmony", -25.5)
+            expected_music_cues[f"music_battle_{faction_id}_theme_motion"] = (f"res://art/audio/runtime/music/battle_{faction_id}_motion.wav", f"{faction_name} battle motion", -27.5)
         music_asset_hashes = set()
         for cue_id in required_music_cue_ids:
             cue = music_cues.get(cue_id, {}) if isinstance(music_cues, dict) else {}
@@ -58297,7 +58322,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
                     ensure(left_samples[0] == left_samples[-1] and right_samples[0] == right_samples[-1], errors, f"production music asset must close its stereo loop boundary exactly: {path_value}")
             ensure(int(cue.get("duration_msec", 0)) == 8000, errors, f"music cue {cue_id} must use exact eight-second duration")
             ensure("volume_db" in cue, errors, f"music cue {cue_id} needs volume_db")
-        ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all fifty-seven production music WAV payloads must be byte-distinct")
+        ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all seventy-five production music WAV payloads must be byte-distinct")
 
     music_generator_text = MUSIC_RUNTIME_GENERATOR_PATH.read_text(encoding="utf-8") if MUSIC_RUNTIME_GENERATOR_PATH.exists() else ""
     for required_token in (
@@ -58337,6 +58362,19 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         '"music_overworld_thornwake_theme"',
         '"music_overworld_brasshollow_theme"',
         '"music_overworld_veilmourn_theme"',
+        '"battle_embercourt":',
+        '"battle_mireclaw":',
+        '"battle_sunvault":',
+        '"battle_thornwake":',
+        '"battle_brasshollow":',
+        '"battle_veilmourn":',
+        '"music_battle_embercourt_theme"',
+        '"music_battle_mireclaw_theme"',
+        '"music_battle_sunvault_theme"',
+        '"music_battle_thornwake_theme"',
+        '"music_battle_brasshollow_theme"',
+        '"music_battle_veilmourn_theme"',
+        'context_id.startswith("battle")',
         '"outcome_victory":',
         '"outcome_defeat":',
         '"music_outcome_victory_theme"',
@@ -58348,7 +58386,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         (MAIN_MENU_SCRIPT_PATH, ("MusicAudio.sync_context", '"menu"', '"music_audio"')),
         (OVERWORLD_SCRIPT_PATH, ("_sync_overworld_music_audio", "MusicAudio.sync_context", "validation_music_audio_summary", '"overworld"', '"music_audio"')),
         (TOWN_SCRIPT_PATH, ("_town_music_metadata", 'MusicAudio.sync_context("town", "town_shell_ready", _town_music_metadata())', '"music_audio": MusicAudio.validation_summary()', '"town_music_metadata": _town_music_metadata()')),
-        (BATTLE_SCRIPT_PATH, ("_battle_music_metadata", "MusicAudio.sync_context", '"battle"', '"music_audio"')),
+        (BATTLE_SCRIPT_PATH, ("_battle_music_metadata", "MusicAudio.sync_context", '"battle"', '"music_audio"', '"player_faction_id"', "ContentService.get_scenario(_session.scenario_id)")),
         (OUTCOME_SCRIPT_PATH, ("_outcome_music_metadata", "MusicAudio.sync_context", '"outcome"', '"music_audio"')),
     )
     for path, tokens in shell_requirements:
@@ -58369,6 +58407,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_town_theme",
             "TOWN_FACTION_CUES",
             "OVERWORLD_FACTION_CUES",
+            "BATTLE_FACTION_CUES",
             "OVERWORLD_FACTION_SCENARIOS",
             "music_town_embercourt_theme",
             "music_town_mireclaw_theme",
@@ -58377,6 +58416,12 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_town_brasshollow_theme",
             "music_town_veilmourn_theme",
             "music_battle_theme",
+            "music_battle_embercourt_theme",
+            "music_battle_mireclaw_theme",
+            "music_battle_sunvault_theme",
+            "music_battle_thornwake_theme",
+            "music_battle_brasshollow_theme",
+            "music_battle_veilmourn_theme",
             "music_outcome_theme",
             "OUTCOME_STATUS_CUES",
             "music_outcome_victory_theme",
@@ -58393,6 +58438,8 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "_validate_manifest_asset_surface",
             "_validate_continuous_playback",
             "_validate_generated_fallback",
+            "pre_battle_summary",
+            "pre_battle_cue_counts",
             "AudioStreamWAV.LOOP_FORWARD",
             "validation_outcome_repeat_after_loop",
             "continuous_active_player_count",
@@ -58415,6 +58462,14 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             'String(metadata.get("player_faction_id", "")) == faction_id',
             '"validation_town_generic"',
             '"validation_town_unknown"',
+            '"validation_battle_unknown"',
+            '"validation_battle_faction"',
+            "_battle_shell_route_row",
+            "_battle_music_authority",
+            'load("res://scenes/battle/BattleShell.tscn")',
+            'String(record.get("source", "")) == "battle_shell_ready"',
+            'String(record.get("cue_id", "")) == String(BATTLE_FACTION_CUES.get(faction_id, ""))',
+            '"battle_authority_exact": _battle_music_authority(session) == authority_before',
             '"validation_outcome_unknown"',
             '"validation_outcome_victory"',
             '"validation_outcome_defeat"',
@@ -58459,6 +58514,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_menu_theme",
             "music_overworld_theme",
             "music_battle_theme",
+            "music_battle_embercourt_theme",
             "music_outcome_theme",
             "music_outcome_victory_theme",
             "music_outcome_defeat_theme",
@@ -58472,7 +58528,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "seamless eight-second 44.1 kHz stereo",
             "LOOP_FORWARD",
             "all three players still active after a full segment",
-            "fifty-seven byte-distinct original layered stereo loops",
+            "seventy-five byte-distinct original layered stereo loops",
             "Not final music composition",
             "No final music stems",
         ):

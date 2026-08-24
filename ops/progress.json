@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Outcome result music identity slice is completed with exact victory/defeat routing, generic fallback, 57 deterministic imported layers, real 1280/1920 OutcomeShell authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No slice is currently selected. Packaged Outcome interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+  "currentNotes": "The six-faction Battle music identity slice is completed with exact player-faction routing, generic fallback, 75 deterministic imported layers, real 1280/1920 BattleShell authority, Battle compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No slice is currently selected. Packaged Battle interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-scenario-outcome-result-music-identity-10184",
-  "currentSliceId": "presentation-scenario-outcome-result-music-identity-10184",
-  "currentSliceNotes": "Completed: exact terminal victory and defeat status select distinct original three-layer Outcome themes, missing/unknown status retains the generic cue, and focused/compatibility/static/editor plus bounded Linux/Windows export-startup gates pass. No next slice is selected; release readiness remains unclaimed.",
+  "currentSlice": "presentation-six-faction-battle-music-identity-10184",
+  "currentSliceId": "presentation-six-faction-battle-music-identity-10184",
+  "currentSliceNotes": "Completed: exact scenario player faction selects one of six original three-layer Battle themes, missing/unknown identity retains the generic cue, and focused/compatibility/deterministic/static/editor plus bounded Linux/Windows export-startup gates pass. No next slice is selected; release readiness remains unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation scenario outcome result music identity 10184",
-  "currentSliceUpdatedAt": "2026-08-24T10:12:05Z",
+  "currentSliceTitle": "presentation six faction battle music identity 10184",
+  "currentSliceUpdatedAt": "2026-08-24T10:42:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "Implement only exact victory/defeat Outcome music identity from live terminal status, retaining the generic Outcome fallback and all existing music/result/routing/save/focus authority. Do not change scenario rules or infer final composition, faction-specific Battle/Outcome/Menu themes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.",
+  "guardrailNote": "The completed Battle music identity slice owns only exact scenario player_faction_id routing and original faction Battle loops with generic fallback. Do not infer final composition, matchup-adaptive music, faction-specific Outcome/Menu themes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness. Select the next slice from direct current product evidence.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Implement only exact victory/defeat Outcome music identity from live terminal status, retaining the generic Outcome fallback and all existing music/result/routing/save/focus authority. Do not change scenario rules or infer final composition, faction-specific Battle/Outcome/Menu themes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.",
-  "notes": "Selected from exact shipped behavior: ScenarioOutcomeShell passes terminal status to MusicAudio, but the selector ignores it and victory/defeat share one generic major-cadence cue. Add two original result-specific three-layer themes, retain generic fallback, and validate direct plus real 1280/1920 Outcome routes without changing result, routing, save, focus, or other music authority. No implementation or runtime validation has completed yet.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness slice from direct current product evidence. Do not infer release readiness from completed presentation, compatibility, or export/startup gates, and do not broaden Native-RMG work without recovered private-state and final-payload parity evidence.",
+  "notes": "The six-faction Battle music identity slice is completed with exact scenario player-faction routing, generic fallback, 18 original faction-specific stems, deterministic regeneration, real BattleShell authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No next slice is selected; packaged Battle interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100665,6 +100665,16 @@
       "startedAt": "2026-08-24T09:54:58Z",
       "notes": "Completed with two original three-layer terminal Outcome themes. Exact victory and defeat status select distinct cues while missing/unknown status retains the generic Outcome cue. The deterministic 57-cue pack is byte-distinct and exact-length; direct routes, four real 1280/1920 OutcomeShell rows with unchanged session authority, continuous/settings/generated fallback, Outcome focus and autosave-recovery compatibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition/mastering, faction-specific Battle/Outcome/Menu themes, packaged Outcome interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T10:12:05Z"
+    },
+    {
+      "id": "presentation-six-faction-battle-music-identity-10184",
+      "title": "presentation six faction battle music identity 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T10:42:13Z",
+      "startedAt": "2026-08-24T10:15:39Z",
+      "notes": "Completed with 18 new original faction-specific Battle stems and exact live scenario player_faction_id routing; missing/unknown identity retains the generic Battle cue. The deterministic 75-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 BattleShell rows with exact battle authority, continuous/settings/generated fallback, Battle animation/presentation, controller Board navigation, core, repository/editor, deterministic regeneration, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition/mastering, enemy-faction or matchup-adaptive music, faction-specific Outcome/Menu themes, packaged Battle interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T10:42:13Z"
     }
   ],
   "project": "heroes-like",
@@ -100675,7 +100685,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Implement and validate the scenario Outcome result music identity slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness slice from direct current product evidence. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

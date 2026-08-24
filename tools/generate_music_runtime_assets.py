@@ -64,6 +64,12 @@ CONTEXTS = {
         "pulse_steps": 32,
         "color": 0.72,
     },
+    "battle_embercourt": {"base": 117.0, "progression": [0, 5, 7, 9], "minor": False, "pulse_steps": 32, "color": 0.65},
+    "battle_mireclaw": {"base": 92.0, "progression": [0, 1, 6, 3], "minor": True, "pulse_steps": 28, "color": 0.79},
+    "battle_sunvault": {"base": 139.0, "progression": [0, 7, 11, 4], "minor": False, "pulse_steps": 40, "color": 0.70},
+    "battle_thornwake": {"base": 101.0, "progression": [0, 5, 3, 10], "minor": True, "pulse_steps": 24, "color": 0.63},
+    "battle_brasshollow": {"base": 82.0, "progression": [0, 2, 5, 7], "minor": True, "pulse_steps": 48, "color": 0.86},
+    "battle_veilmourn": {"base": 126.0, "progression": [0, 3, 8, 1], "minor": True, "pulse_steps": 36, "color": 0.75},
     "outcome": {
         "base": 220.0,
         "progression": [0, 5, 2, 7],
@@ -136,6 +142,24 @@ SPECS = {
     "music_battle_theme": {"context": "battle", "stem": "root", "peak": 0.62, "pan": -0.06, "width": 0.09},
     "music_battle_theme_harmony": {"context": "battle", "stem": "harmony", "peak": 0.54, "pan": 0.08, "width": 0.19},
     "music_battle_theme_motion": {"context": "battle", "stem": "motion", "peak": 0.58, "pan": -0.12, "width": 0.30},
+    "music_battle_embercourt_theme": {"context": "battle_embercourt", "stem": "root", "peak": 0.62, "pan": -0.10, "width": 0.10},
+    "music_battle_embercourt_theme_harmony": {"context": "battle_embercourt", "stem": "harmony", "peak": 0.54, "pan": 0.14, "width": 0.22},
+    "music_battle_embercourt_theme_motion": {"context": "battle_embercourt", "stem": "motion", "peak": 0.59, "pan": -0.18, "width": 0.31},
+    "music_battle_mireclaw_theme": {"context": "battle_mireclaw", "stem": "root", "peak": 0.60, "pan": 0.11, "width": 0.13},
+    "music_battle_mireclaw_theme_harmony": {"context": "battle_mireclaw", "stem": "harmony", "peak": 0.52, "pan": -0.17, "width": 0.26},
+    "music_battle_mireclaw_theme_motion": {"context": "battle_mireclaw", "stem": "motion", "peak": 0.61, "pan": 0.20, "width": 0.34},
+    "music_battle_sunvault_theme": {"context": "battle_sunvault", "stem": "root", "peak": 0.61, "pan": -0.06, "width": 0.11},
+    "music_battle_sunvault_theme_harmony": {"context": "battle_sunvault", "stem": "harmony", "peak": 0.55, "pan": 0.19, "width": 0.28},
+    "music_battle_sunvault_theme_motion": {"context": "battle_sunvault", "stem": "motion", "peak": 0.60, "pan": -0.22, "width": 0.36},
+    "music_battle_thornwake_theme": {"context": "battle_thornwake", "stem": "root", "peak": 0.58, "pan": 0.08, "width": 0.12},
+    "music_battle_thornwake_theme_harmony": {"context": "battle_thornwake", "stem": "harmony", "peak": 0.50, "pan": -0.14, "width": 0.24},
+    "music_battle_thornwake_theme_motion": {"context": "battle_thornwake", "stem": "motion", "peak": 0.56, "pan": 0.17, "width": 0.32},
+    "music_battle_brasshollow_theme": {"context": "battle_brasshollow", "stem": "root", "peak": 0.66, "pan": -0.15, "width": 0.09},
+    "music_battle_brasshollow_theme_harmony": {"context": "battle_brasshollow", "stem": "harmony", "peak": 0.57, "pan": 0.12, "width": 0.21},
+    "music_battle_brasshollow_theme_motion": {"context": "battle_brasshollow", "stem": "motion", "peak": 0.65, "pan": 0.23, "width": 0.35},
+    "music_battle_veilmourn_theme": {"context": "battle_veilmourn", "stem": "root", "peak": 0.59, "pan": 0.13, "width": 0.14},
+    "music_battle_veilmourn_theme_harmony": {"context": "battle_veilmourn", "stem": "harmony", "peak": 0.53, "pan": -0.20, "width": 0.29},
+    "music_battle_veilmourn_theme_motion": {"context": "battle_veilmourn", "stem": "motion", "peak": 0.58, "pan": 0.19, "width": 0.37},
     "music_outcome_theme": {"context": "outcome", "stem": "root", "peak": 0.48, "pan": -0.08, "width": 0.08},
     "music_outcome_theme_harmony": {"context": "outcome", "stem": "harmony", "peak": 0.43, "pan": 0.10, "width": 0.22},
     "music_outcome_theme_motion": {"context": "outcome", "stem": "motion", "peak": 0.38, "pan": 0.15, "width": 0.27},
@@ -208,7 +232,7 @@ def root_voice(context_id: str, context: dict[str, object], progress: float, tim
         body = oscillator(sub, time_sec, phase * 0.35) * 0.46
         body += oscillator(root, time_sec, phase) * 0.34
         body += triangle(fifth * time_sec + phase * 0.6) * (0.07 + color * 0.04)
-        if context_id == "battle":
+        if context_id.startswith("battle"):
             body += saw(periodic_frequency(root * 0.25) * time_sec + phase) * 0.13
         elif context_id == "menu":
             body += oscillator(periodic_frequency(root * 2.0), time_sec, -phase) * 0.08
@@ -250,7 +274,7 @@ def motion_voice(
     step_index = min(step_count - 1, int(step_position))
     local = step_position - step_index
     attack = smoothstep(0.0, 0.08, local)
-    release = 1.0 - smoothstep(0.48 if context_id == "battle" else 0.62, 1.0, local)
+    release = 1.0 - smoothstep(0.48 if context_id.startswith("battle") else 0.62, 1.0, local)
     gate = attack * release
     chord_index = min(3, int(progress * 4.0))
     tones = chord_tones(context, chord_index)
@@ -261,9 +285,9 @@ def motion_voice(
     pluck = oscillator(note, time_sec, phase) * 0.44
     pluck += triangle(periodic_frequency(note * 2.0) * time_sec - phase) * 0.20
     pluck += oscillator(periodic_frequency(note * 3.0), time_sec, phase * 1.7) * 0.10
-    transient = math.exp(-local * (16.0 if context_id == "battle" else 11.0))
-    percussion = texture * transient * (0.32 if context_id == "battle" else 0.18)
-    if context_id == "battle":
+    transient = math.exp(-local * (16.0 if context_id.startswith("battle") else 11.0))
+    percussion = texture * transient * (0.32 if context_id.startswith("battle") else 0.18)
+    if context_id.startswith("battle"):
         low = periodic_frequency(float(context["base"]) * 0.5)
         percussion += oscillator(low, time_sec, phase) * transient * 0.22
     elif context_id == "overworld":

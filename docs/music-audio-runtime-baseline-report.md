@@ -11,9 +11,10 @@ The service now prefers committed original WAV cue layers from `content/music_ru
 ## Runtime Contract
 
 - `MusicAudio.sync_context(...)` is the single public routing call.
-- Context cues are `music_menu_theme`, `music_overworld_theme`, `music_town_theme`, `music_battle_theme`, and `music_outcome_theme`. Exact live Town and scenario player faction identity select six additional `music_town_<faction>_theme` and `music_overworld_<faction>_theme` roots. Exact terminal Outcome status selects the original `music_outcome_victory_theme` or `music_outcome_defeat_theme`; missing or unknown identity/status retains the corresponding generic context cue.
+- Context cues are `music_menu_theme`, `music_overworld_theme`, `music_town_theme`, `music_battle_theme`, and `music_outcome_theme`. Exact live Town and scenario player faction identity select six additional `music_town_<faction>_theme`, `music_overworld_<faction>_theme`, and `music_battle_<faction>_theme` roots. Exact terminal Outcome status selects the original `music_outcome_victory_theme` or `music_outcome_defeat_theme`; missing or unknown identity/status retains the corresponding generic context cue.
+- The faction Battle set begins with `music_battle_embercourt_theme` and contains one exact root/harmony/motion trio for each of the six production factions.
 - Every context owns exact root, harmony, and motion cue layers; the established three-player cap is unchanged.
-- `tools/generate_music_runtime_assets.py` reproducibly writes fifty-seven byte-distinct original layered stereo loops from `content/music_runtime_manifest.json`. Each generic, faction Town/Overworld, or terminal Outcome phrase shares one exact eight-second boundary across its three stems.
+- `tools/generate_music_runtime_assets.py` reproducibly writes seventy-five byte-distinct original layered stereo loops from `content/music_runtime_manifest.json`. Each generic, faction Town/Overworld/Battle, or terminal Outcome phrase shares one exact eight-second boundary across its three stems.
 - Imported WAV resources are deep-duplicated before `LOOP_FORWARD` metadata is applied, so the source import cache is not mutated.
 - Normal imported playback remains active beyond a full segment; an unchanged context signature does not restart it, while a changed context still stops and replaces the three old players.
 - Unchanged context signatures do not restart active music.
@@ -30,7 +31,7 @@ The service now prefers committed original WAV cue layers from `content/music_ru
 
 ## Validation
 
-`tests/music_audio_runtime_report.tscn` proves exact manifest and imported asset coverage for all fifty-seven byte-distinct original layered stereo loops, six direct Town and Overworld faction routes plus generic/unknown fallback, exact victory/defeat Outcome routing plus generic status fallback, 44.1 kHz stereo eight-second imports, forward-loop metadata, all three players still active after a full segment, stable non-restart behavior, changed-context replacement, generated fallback, bus selection, player cap exposure, a live shell route through `MainMenu`, all six real faction `TownShell` and `OverworldShell` routes, and real victory/defeat `ScenarioOutcomeShell` routes at 1280x720 and 1920x1080. Repository validation separately checks 16-bit source PCM, bounded peaks, non-silent distinct channels, exact loop boundaries, unique hashes, and deterministic generation.
+`tests/music_audio_runtime_report.tscn` proves exact manifest and imported asset coverage for all seventy-five byte-distinct original layered stereo loops, six direct Town, Overworld, and Battle faction routes plus generic/unknown fallback, exact victory/defeat Outcome routing plus generic status fallback, 44.1 kHz stereo eight-second imports, forward-loop metadata, all three players still active after a full segment, stable non-restart behavior, changed-context replacement, generated fallback, bus selection, player cap exposure, a live shell route through `MainMenu`, all six real faction `TownShell`, `OverworldShell`, and `BattleShell` routes, and real victory/defeat `ScenarioOutcomeShell` routes at 1280x720 and 1920x1080. Repository validation separately checks 16-bit source PCM, bounded peaks, non-silent distinct channels, exact loop boundaries, unique hashes, and deterministic generation.
 
 ## Non-Goals
 
