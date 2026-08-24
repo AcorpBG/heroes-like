@@ -7,6 +7,14 @@ const MAX_RECORDS := 24
 const DEFAULT_SEGMENT_DURATION := 1.35
 const REPORT_SCHEMA := "music_audio_runtime_v1"
 const MUSIC_RUNTIME_MANIFEST_PATH := "res://content/music_runtime_manifest.json"
+const TOWN_FACTION_CUE_IDS := {
+	"faction_embercourt": "music_town_embercourt_theme",
+	"faction_mireclaw": "music_town_mireclaw_theme",
+	"faction_sunvault": "music_town_sunvault_theme",
+	"faction_thornwake": "music_town_thornwake_theme",
+	"faction_brasshollow": "music_town_brasshollow_theme",
+	"faction_veilmourn": "music_town_veilmourn_theme",
+}
 const CONTEXT_SPECS := {
 	"menu": {
 		"cue_id": "music_menu_theme",
@@ -60,12 +68,12 @@ var _music_runtime_manifest_loaded := false
 
 func sync_context(context_id: String, source: String = "runtime", metadata: Dictionary = {}) -> Dictionary:
 	var normalized := _normalize_context_id(context_id)
-	var spec: Dictionary = CONTEXT_SPECS[normalized]
+	var cue_id := _cue_id_for_context(normalized, metadata)
 	var signature := _signature_for_context(normalized, metadata)
 	if signature == _current_signature and not _active_players.is_empty():
 		return {
 			"schema": REPORT_SCHEMA,
-			"cue_id": String(spec.get("cue_id", "")),
+			"cue_id": cue_id,
 			"context_id": normalized,
 			"source": source,
 			"changed": false,
@@ -84,13 +92,13 @@ func sync_context(context_id: String, source: String = "runtime", metadata: Dict
 	stop_music("signature_changed")
 	_current_signature = signature
 	_current_context_id = normalized
-	_current_layers = _layers_for_context(normalized, metadata)
+	_current_layers = _layers_for_context(normalized, cue_id, metadata)
 	var muted := _is_muted()
 	if not muted:
 		_play_layers(_current_layers)
 	return _append_record({
 		"schema": REPORT_SCHEMA,
-		"cue_id": String(spec.get("cue_id", "")),
+		"cue_id": cue_id,
 		"context_id": normalized,
 		"source": source,
 		"changed": true,
@@ -153,12 +161,19 @@ func _normalize_context_id(context_id: String) -> String:
 		return normalized
 	return "menu"
 
-func _layers_for_context(context_id: String, metadata: Dictionary) -> Array[Dictionary]:
+func _cue_id_for_context(context_id: String, metadata: Dictionary) -> String:
+	var spec: Dictionary = CONTEXT_SPECS[context_id]
+	if context_id == "town":
+		var faction_id := String(metadata.get("town_faction_id", "")).strip_edges().to_lower()
+		if TOWN_FACTION_CUE_IDS.has(faction_id):
+			return String(TOWN_FACTION_CUE_IDS[faction_id])
+	return String(spec.get("cue_id", "music_menu_theme"))
+
+func _layers_for_context(context_id: String, cue_id: String, metadata: Dictionary) -> Array[Dictionary]:
 	var spec: Dictionary = CONTEXT_SPECS[context_id]
 	var root := float(spec.get("root", 174.0))
 	var gain := float(spec.get("gain", 0.024))
 	var mode := String(spec.get("mode", "major"))
-	var cue_id := String(spec.get("cue_id", "music_menu_theme"))
 	var third_multiplier := 1.2599 if mode == "major" else 1.1892
 	var intensity := _metadata_intensity(metadata)
 	var layers: Array[Dictionary] = []
