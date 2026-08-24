@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The Old Measure town-study icon slice is complete: all 16 Old Measure catalog spells own original source art and deterministic runtime icons; the manifest is 94 specific/18 Root+Veil fallback and the unchanged generated reward pool is 38 specific/0 fallback. Focused live Orevein Contract, Clauseworks Counterclaim, Bellwake Wreck Claim, and Fogchart Mooring study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Veil town-study icon slice is complete: all 16 Veil catalog spells own original source art and deterministic runtime icons; the manifest is 103 specific/9 Root fallback and the unchanged generated reward pool is 38 specific/0 fallback. Focused live 1280/1920 Bellwake Harbor and Fogchart Mooring Study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-old-measure-town-study-complete-distinct-icons-10184",
-  "currentSliceId": "presentation-old-measure-town-study-complete-distinct-icons-10184",
-  "currentSliceNotes": "All ten formerly fallback Old Measure town-study spells now own distinct original 1254px source art and deterministic 128px runtime icons, completing all 16 Old Measure catalog spells. The manifest is 94 specific/18 Root+Veil fallback; the unchanged 38-spell generated reward pool remains fully specific. Focused 1280x720/1920x1080 Orevein Contract, Clauseworks Counterclaim, Bellwake Wreck Claim, and Fogchart Mooring study actions preserve exact access/order, focus/scroll, consequences, session, and save authority. Magic/Town/focus/core compatibility, deterministic regeneration, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining Root/Veil fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-veil-town-study-complete-distinct-icons-10184",
+  "currentSliceId": "presentation-veil-town-study-complete-distinct-icons-10184",
+  "currentSliceNotes": "Completed with nine original 1254px Veil spell sources and deterministic 128px runtime icons: all 16 Veil catalog spells are specific, the manifest is 103 specific/9 Root fallback, and the 38-spell generated reward pool remains fully specific. Focused live 1280/1920 Bellwake Harbor and Fogchart Mooring Study rows preserve order/access/focus/session/save authority; magic, Town, focus, core, deterministic/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, Root completion, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation old measure town study complete distinct icons 10184",
+  "currentSliceTitle": "presentation veil town study complete distinct icons 10184",
   "currentSliceUpdatedAt": "2026-08-24T05:30:07Z",
   "deferredRiskRegister": [
     {
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Old Measure town-study icon slice is complete. Preserve the completed 133-building icon catalog, 94 specific spell icons, exact 18-spell Root/Veil catalog fallback, unchanged 38-spell reward pool with full specific coverage, and focus-following Town study scroll; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "The Veil town-study icon slice is complete. Preserve the completed 133-building icon catalog, 103 specific spell icons, exact nine-spell Root catalog fallback, unchanged 38-spell reward pool with full specific coverage, and focus-following Town Study scroll; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100595,6 +100595,16 @@
       "startedAt": "2026-08-24T05:34:34Z",
       "notes": "All ten formerly fallback Old Measure town-study spells now own distinct original 1254px source art and deterministic 128px runtime icons, completing all 16 Old Measure catalog spells. The manifest is 94 specific/18 Root+Veil fallback; the unchanged 38-spell generated reward pool remains fully specific. Focused 1280x720/1920x1080 Orevein Contract, Clauseworks Counterclaim, Bellwake Wreck Claim, and Fogchart Mooring study actions preserve exact access/order, focus/scroll, consequences, session, and save authority. Magic/Town/focus/core compatibility, deterministic regeneration, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining Root/Veil fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T05:58:42Z"
+    },
+    {
+      "id": "presentation-veil-town-study-complete-distinct-icons-10184",
+      "title": "presentation veil town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T06:26:20Z",
+      "startedAt": "2026-08-24T06:04:17Z",
+      "notes": "Completed with nine original 1254px Veil spell sources and deterministic 128px runtime icons: all 16 Veil catalog spells are specific, the manifest is 103 specific/9 Root fallback, and the 38-spell generated reward pool remains fully specific. Focused live 1280/1920 Bellwake Harbor and Fogchart Mooring Study rows preserve order/access/focus/session/save authority; magic, Town, focus, core, deterministic/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, Root completion, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T06:26:20Z"
     }
   ],
   "project": "heroes-like",
@@ -101139,7 +101149,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T05:58:42Z",
+  "updatedAt": "2026-08-24T06:26:20Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

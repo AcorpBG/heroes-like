@@ -185,6 +185,26 @@ const TARGET_OLD_MEASURE_TOWN_STUDY_BUILDING_IDS := {
 	"bellwake-wreck-claim": ["building_veilmourn_obituary_vault", "building_veilmourn_wake_oratory", "building_veilmourn_tideglass_chapel"],
 	"fogchart-mooring": ["building_veilmourn_obituary_vault", "building_veilmourn_wake_oratory", "building_veilmourn_tideglass_chapel"],
 }
+const TARGET_VEIL_TOWN_STUDY_SPELL_IDS := [
+	"spell_veil_salt_step_06",
+	"spell_veil_tide_fogbind_08",
+	"spell_veil_wraith_duel_14",
+	"spell_veil_lantern_mark_16",
+	"spell_veil_obituary_step_18",
+	"spell_veil_mourning_fogbind_20",
+	"spell_veil_salt_shroud_22",
+	"spell_veil_tide_drift_24",
+	"spell_veil_mist_duel_26",
+]
+const TARGET_VEIL_TOWN_SCENARIOS := {
+	"bellwake-wreck-claim": "town_veilmourn_bellwake_harbor",
+	"fogchart-mooring": "town_veilmourn_fogchart_mooring",
+}
+const TARGET_VEIL_TOWN_STUDY_BUILDING_IDS := [
+	"building_veilmourn_obituary_vault",
+	"building_veilmourn_wake_oratory",
+	"building_veilmourn_tideglass_chapel",
+]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
 	"battle": "spell_bulwark_litany",
@@ -284,6 +304,15 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_old_measure_marker_pace_24": "res://art/magic/runtime/spells/spell_old_measure_marker_pace_24.png",
 	"spell_old_measure_index_survey_26": "res://art/magic/runtime/spells/spell_old_measure_index_survey_26.png",
 	"spell_old_measure_proof_axiom_28": "res://art/magic/runtime/spells/spell_old_measure_proof_axiom_28.png",
+	"spell_veil_salt_step_06": "res://art/magic/runtime/spells/spell_veil_salt_step_06.png",
+	"spell_veil_tide_fogbind_08": "res://art/magic/runtime/spells/spell_veil_tide_fogbind_08.png",
+	"spell_veil_wraith_duel_14": "res://art/magic/runtime/spells/spell_veil_wraith_duel_14.png",
+	"spell_veil_lantern_mark_16": "res://art/magic/runtime/spells/spell_veil_lantern_mark_16.png",
+	"spell_veil_obituary_step_18": "res://art/magic/runtime/spells/spell_veil_obituary_step_18.png",
+	"spell_veil_mourning_fogbind_20": "res://art/magic/runtime/spells/spell_veil_mourning_fogbind_20.png",
+	"spell_veil_salt_shroud_22": "res://art/magic/runtime/spells/spell_veil_salt_shroud_22.png",
+	"spell_veil_tide_drift_24": "res://art/magic/runtime/spells/spell_veil_tide_drift_24.png",
+	"spell_veil_mist_duel_26": "res://art/magic/runtime/spells/spell_veil_mist_duel_26.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -373,6 +402,12 @@ func _run() -> void:
 			if not bool(old_measure_town_row.get("ok", false)):
 				_fail("Old Measure town-study spell icon surface failed: %s" % JSON.stringify(old_measure_town_row), original_window_size)
 				return
+		for town_scenario_id in TARGET_VEIL_TOWN_SCENARIOS:
+			var veil_town_row: Dictionary = await _surface_case(viewport_size, "town", String(TARGET_VEIL_TOWN_STUDY_SPELL_IDS[0]), TARGET_VEIL_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))
+			rows.append(veil_town_row)
+			if not bool(veil_town_row.get("ok", false)):
+				_fail("Veil town-study spell icon surface failed: %s" % JSON.stringify(veil_town_row), original_window_size)
+				return
 	SessionState.reset_session()
 	get_window().size = original_window_size
 	await get_tree().process_frame
@@ -453,7 +488,7 @@ func _catalog_contract() -> Dictionary:
 		"ok": (
 			bool(fallback_contract.get("ok", false))
 			and bool(generated_reward_contract.get("ok", false))
-			and signature_contract.size() == 94
+			and signature_contract.size() == 103
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -462,8 +497,8 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 94
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 18
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 103
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 9
 			and SpellRules.spell_icon_path("spell_root_bloom_briar_04") == SpellRules.spell_school_icon_path("spell_root_bloom_briar_04")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
@@ -473,7 +508,7 @@ func _catalog_contract() -> Dictionary:
 		"fallback": fallback_contract,
 		"generated_reward": generated_reward_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 18,
+		"school_fallback_count": 9,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
@@ -691,10 +726,14 @@ func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids
 			target_study_spell_ids = TARGET_MIRE_TOWN_STUDY_SPELL_IDS
 			target_town_scenarios = TARGET_MIRE_TOWN_SCENARIOS
 			required_study_buildings = TARGET_MIRE_TOWN_STUDY_BUILDING_IDS
-		elif TARGET_OLD_MEASURE_TOWN_SCENARIOS.has(town_scenario_id):
+		elif TARGET_OLD_MEASURE_TOWN_SCENARIOS.has(town_scenario_id) and spell_id_override in TARGET_OLD_MEASURE_TOWN_STUDY_SPELL_IDS:
 			target_study_spell_ids = TARGET_OLD_MEASURE_TOWN_STUDY_SPELL_IDS
 			target_town_scenarios = TARGET_OLD_MEASURE_TOWN_SCENARIOS
 			required_study_buildings = TARGET_OLD_MEASURE_TOWN_STUDY_BUILDING_IDS.get(town_scenario_id, [])
+		elif TARGET_VEIL_TOWN_SCENARIOS.has(town_scenario_id) and spell_id_override in TARGET_VEIL_TOWN_STUDY_SPELL_IDS:
+			target_study_spell_ids = TARGET_VEIL_TOWN_STUDY_SPELL_IDS
+			target_town_scenarios = TARGET_VEIL_TOWN_SCENARIOS
+			required_study_buildings = TARGET_VEIL_TOWN_STUDY_BUILDING_IDS
 		if town_scenario_id == "":
 			required_study_buildings = ["building_lantern_archive"]
 		for building_id in required_study_buildings:

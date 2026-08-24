@@ -1043,6 +1043,105 @@
       "source_sha256": "2306a0f26d537f2bf452c35ac593914871ff8c1628c9233a54b9b7e532823a6f",
       "icon_path": "res://art/magic/runtime/spells/spell_old_measure_proof_axiom_28.png",
       "icon_sha256": "650b4f3e802611b835d04a51c44baa87adffefbef570a11f71926ae5acbde981"
+    },
+    {
+      "id": "spell_veil_salt_step_06",
+      "spell_id": "spell_veil_salt_step_06",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_salt_step_06",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_salt_step_06.png",
+      "source_sha256": "2e0f1c7aeed3a8eaae34f8ded79d28a42d0994838885af3bcb4a5a87f152fd7e",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_salt_step_06.png",
+      "icon_sha256": "d15cbfe748b0d3a52c28583b09e0856cd0c28c42ab99f2e7c2604dd1ccd84d32"
+    },
+    {
+      "id": "spell_veil_tide_fogbind_08",
+      "spell_id": "spell_veil_tide_fogbind_08",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_tide_fogbind_08",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_tide_fogbind_08.png",
+      "source_sha256": "fabaf9ccc6b42539245f4e431f0a25180d3495556564fd3683fa88b20e6f0b53",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_tide_fogbind_08.png",
+      "icon_sha256": "a96ed37e0ea24f6065d334fb22a6b543613d565e6f40fe3dcb0579011a6d508c"
+    },
+    {
+      "id": "spell_veil_wraith_duel_14",
+      "spell_id": "spell_veil_wraith_duel_14",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_wraith_duel_14",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_wraith_duel_14.png",
+      "source_sha256": "1b3a92698a29fda67df59600bfb2b136982679af15f61cd469567182d2efb41f",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_wraith_duel_14.png",
+      "icon_sha256": "73a09d7f741894f660b8264d9a5d3900bdc9f63d0d3d5bb4684b376be5491152"
+    },
+    {
+      "id": "spell_veil_lantern_mark_16",
+      "spell_id": "spell_veil_lantern_mark_16",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_lantern_mark_16",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_lantern_mark_16.png",
+      "source_sha256": "f1bb5d25e7d166fb2ada4be35f01446c770745158da55d5132b661f525ea3b97",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_lantern_mark_16.png",
+      "icon_sha256": "1ad944502c60f9d5d62cf926bec1045c39bc3e6144170a8e869dc39fd8a2ccd2"
+    },
+    {
+      "id": "spell_veil_obituary_step_18",
+      "spell_id": "spell_veil_obituary_step_18",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_obituary_step_18",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_obituary_step_18.png",
+      "source_sha256": "b81d973d0c5f293bc3c988031b7285106d83be7ae5ff005ea31bdaef0e3cfd72",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_obituary_step_18.png",
+      "icon_sha256": "e22dbae54ee7ee147d5fa9adfb7d5c4b35604089fc0d48b71836564a05c2f3a9"
+    },
+    {
+      "id": "spell_veil_mourning_fogbind_20",
+      "spell_id": "spell_veil_mourning_fogbind_20",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_mourning_fogbind_20",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_mourning_fogbind_20.png",
+      "source_sha256": "5adc83cb3e5407cbec22abd4ce0fe33846cc3d2d056c393404ae20c211f58cbe",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_mourning_fogbind_20.png",
+      "icon_sha256": "33b346f01c7e72c74d9c17ecc152be5ba4f40c2113925ad05299e506a34ab80a"
+    },
+    {
+      "id": "spell_veil_salt_shroud_22",
+      "spell_id": "spell_veil_salt_shroud_22",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_salt_shroud_22",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_salt_shroud_22.png",
+      "source_sha256": "bb72dc4ab26a557b94e8f795eb9fd888512af886151d3437f6eff288c43e8ba8",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_salt_shroud_22.png",
+      "icon_sha256": "5116a94f3fe79e85a0f997203f69ae41f3827ecb2431721008beec94c077dcd7"
+    },
+    {
+      "id": "spell_veil_tide_drift_24",
+      "spell_id": "spell_veil_tide_drift_24",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_tide_drift_24",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_tide_drift_24.png",
+      "source_sha256": "191f2d555a49ed5b06d06966b4d9e7aa8d9c2477ad24efe61dc8f421b0657e6a",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_tide_drift_24.png",
+      "icon_sha256": "fb050a1be38053936099de1d2fccf4d52f81874fc815ca685117d408c734dd98"
+    },
+    {
+      "id": "spell_veil_mist_duel_26",
+      "spell_id": "spell_veil_mist_duel_26",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_mist_duel_26",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_mist_duel_26.png",
+      "source_sha256": "1d7df14059a53abe37473c139924a5196ba36eb0ef1e246da519dffd8a19ea7e",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_mist_duel_26.png",
+      "icon_sha256": "2804729b7060c5d472e078d8451de11b9e0e4de8e91c069abe98a641cdf21583"
     }
   ]
 }
