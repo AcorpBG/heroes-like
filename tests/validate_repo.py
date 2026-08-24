@@ -26455,11 +26455,21 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
     if not all(path.exists() for path in required_paths):
         return
 
+    def function_block(text: str, function_name: str) -> str:
+        match = re.search(
+            rf"^(?:static )?func {re.escape(function_name)}\([\s\S]*?(?=^(?:static )?func |\Z)",
+            text,
+            re.MULTILINE,
+        )
+        return match.group(0) if match else ""
+
     battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func intent_forecast_payload",
         "func describe_intent_forecast",
         "func _intent_forecast_action_id",
+        "func _intent_forecast_tactical_spell_target_is_public",
+        "func _intent_forecast_action_matches_tactical_order",
         "func _intent_forecast_expected_result",
         "func _intent_forecast_confidence_line",
         "BattleAiRulesScript.choose_stack_tactical_order",
@@ -26469,6 +26479,48 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
     ):
         ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle intent-forecast token: {required_token}")
 
+    forecast_block = function_block(battle_rules_text, "intent_forecast_payload")
+    for required_token in (
+        "var spell_actions := get_spell_actions(session)",
+        "_intent_forecast_action_id(battle, surface, spell_actions, tactical_order, active_stack)",
+        "_intent_forecast_action(surface, spell_actions, action_id)",
+        'if tactical_target_id != "" and _intent_forecast_action_matches_tactical_order(action_id, tactical_order):',
+        'String(action.get("why", action.get("best_use", "")))',
+    ):
+        ensure(required_token in forecast_block, errors, f"Battle intent forecast must retain spell-order coherence token: {required_token}")
+    ensure(
+        'if tactical_target_id != "":\n' not in forecast_block,
+        errors,
+        "Battle intent forecast must not retain a tactical spell target after falling back to a different action",
+    )
+
+    action_id_block = function_block(battle_rules_text, "_intent_forecast_action_id")
+    for required_token in (
+        'if tactical_action == "cast_spell":',
+        '"cast_spell:%s" % String(tactical_order.get("spell_id", ""))',
+        "_intent_forecast_tactical_spell_target_is_public(battle, active_stack, tactical_order)",
+        'String(spell_action.get("id", "")) == tactical_spell_action_id',
+        'not bool(spell_action.get("disabled", true))',
+        "return _preferred_player_action_id(surface, active_stack)",
+    ):
+        ensure(required_token in action_id_block, errors, f"Battle intent forecast action selection must retain exact ready spell mapping: {required_token}")
+    ensure(
+        "static func _intent_forecast_action_id(surface: Dictionary, tactical_order: Dictionary, active_stack: Dictionary)" not in battle_rules_text,
+        errors,
+        "Battle intent forecast must not restore the pre-spell action selector signature",
+    )
+
+    public_target_block = function_block(battle_rules_text, "_intent_forecast_tactical_spell_target_is_public")
+    for required_token in (
+        "ContentService.get_spell(spell_id)",
+        '"ally_active":',
+        'String(active_stack.get("battle_id", ""))',
+        '"enemy_selected":',
+        'String(get_selected_target(battle).get("battle_id", ""))',
+        'return public_target_id != "" and tactical_target_id == public_target_id',
+    ):
+        ensure(required_token in public_target_block, errors, f"Battle intent forecast public spell target gate is missing: {required_token}")
+
     battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "BattleRules.intent_forecast_payload",
@@ -26477,6 +26529,20 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
         '"intent_forecast_tooltip_text"',
     ):
         ensure(required_token in battle_shell_text, errors, f"BattleShell.gd is missing required battle intent-forecast token: {required_token}")
+    preferred_focus_block = function_block(battle_shell_text, "_preferred_battle_keyboard_focus")
+    rebuild_spells_block = function_block(battle_shell_text, "_rebuild_spell_actions")
+    for required_token in (
+        'action_id.begins_with("cast_spell:")',
+        'not child.is_queued_for_deletion()',
+        'String(child.get_meta("battle_action_id", "")) == action_id',
+        "FrontierVisualKit.is_keyboard_focusable(child)",
+    ):
+        ensure(required_token in preferred_focus_block, errors, f"BattleShell preferred focus must retain exact forecast spell matching: {required_token}")
+    ensure(
+        'button.set_meta("battle_action_id", String(action.get("id", "")))' in rebuild_spells_block,
+        errors,
+        "BattleShell spell buttons must expose their exact battle action id for forecast focus",
+    )
 
     report_text = BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -26486,8 +26552,42 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
         "Confidence:",
         "does not spend an action",
         "Incoming order:",
+        "_damage_spell_session",
+        "_support_spell_session",
+        'cast_spell:spell_cinder_burst',
+        'cast_spell:spell_stone_veil',
+        'target_battle_id", "")) != "enemy_spell_target"',
+        'target_battle_id", "")) != "player_guard"',
+        'support_confirmation.get("action_id", "")) != "strike"',
+        'support_confirmation.get("target", "")) != "enemy_front"',
+        '"target_battle_id": "enemy_front"',
+        'fallback_action_id != "strike"',
+        "_intent_forecast_action_matches_tactical_order(fallback_action_id, rejected_spell_order)",
+        'get_selected_target(support_spell_session.battle).get("battle_id", "")) != "enemy_front"',
+        'unavailable_mana["current"] = 0',
+        'unavailable_fallback_action_id != "strike"',
+        "_intent_forecast_action_matches_tactical_order(unavailable_fallback_action_id, unavailable_spell_order)",
+        'get_selected_target(unavailable_spell_session.battle).get("battle_id", "")) != "enemy_front"',
+        "damage_spell_session.to_dict() != damage_spell_before",
+        "support_spell_session.to_dict() != support_spell_before",
+        "unavailable_spell_session.to_dict() != unavailable_before",
     ):
         ensure(required_token in report_text, errors, f"battle_intent_forecast_report.gd is missing required token: {required_token}")
+
+    active_focus_text = (ROOT / "tests" / "active_play_keyboard_focus_smoke.gd").read_text(encoding="utf-8")
+    focus_match_block = function_block(active_focus_text, "_battle_focus_matches_action")
+    for required_token in (
+        'action_id.begins_with("cast_spell:")',
+        'String(focus_owner.get_meta("battle_action_id", "")) == action_id',
+        "_battle_button_name(action_id)",
+        'expected_name != "" and String(focus_owner.name) == expected_name',
+    ):
+        ensure(required_token in focus_match_block, errors, f"active_play_keyboard_focus_smoke.gd must match exact forecast focus: {required_token}")
+    ensure(
+        active_focus_text.count("_battle_focus_matches_action(") == 3,
+        errors,
+        "Active-play focus smoke must define and use the exact forecast-action matcher at entry and after refresh",
+    )
 
     scene_text = BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure("battle_intent_forecast_report.gd" in scene_text, errors, "battle_intent_forecast_report.tscn must reference its report script")

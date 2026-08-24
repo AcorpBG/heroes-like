@@ -1080,10 +1080,13 @@ func _check_battle_keyboard_defend() -> bool:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var forecast: Dictionary = snapshot.get("intent_forecast", {}) if snapshot.get("intent_forecast", {}) is Dictionary else {}
 	var action_id := String(forecast.get("action_id", ""))
-	var expected_name := _battle_button_name(action_id)
-	if expected_name == "" or _focus_name() != expected_name:
-		return _fail("Battle entry focus did not match suggested order %s: expected=%s got=%s." % [action_id, expected_name, _focus_name()])
 	var battle_entry_focus := get_viewport().gui_get_focus_owner()
+	if not _battle_focus_matches_action(battle_entry_focus, action_id):
+		return _fail("Battle entry focus did not match suggested order %s: got=%s metadata=%s." % [
+			action_id,
+			_focus_name(),
+			String(battle_entry_focus.get_meta("battle_action_id", "")) if battle_entry_focus != null else "",
+		])
 	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
 	var battle_dpad_focus := get_viewport().gui_get_focus_owner()
 	if battle_dpad_focus == null or battle_dpad_focus == battle_entry_focus or not shell.is_ancestor_of(battle_dpad_focus):
@@ -1139,9 +1142,13 @@ func _check_battle_keyboard_defend() -> bool:
 			or String(post_tab_snapshot.get("focus_owner", "")) != String(post_owner.name):
 		return _fail("Battle action refresh did not retain the selected Timing tab and legal refreshed focus: before=%s after=%s." % [tab_before_action, post_tab_snapshot])
 	var post_forecast: Dictionary = post_snapshot.get("intent_forecast", {}) if post_snapshot.get("intent_forecast", {}) is Dictionary else {}
-	var post_expected := _battle_button_name(String(post_forecast.get("action_id", "")))
-	if post_expected != "" and post_owner.name != post_expected:
-		return _fail("Battle post-action focus did not follow the next suggested order: expected=%s got=%s." % [post_expected, post_owner.name])
+	var post_action_id := String(post_forecast.get("action_id", ""))
+	if not _battle_focus_matches_action(post_owner, post_action_id):
+		return _fail("Battle post-action focus did not follow the next suggested order: action=%s got=%s metadata=%s." % [
+			post_action_id,
+			post_owner.name,
+			String(post_owner.get_meta("battle_action_id", "")),
+		])
 	if not await _check_quick_resolve_confirm_parity(shell, session):
 		return false
 	shell.queue_free()
@@ -2010,6 +2017,14 @@ func _battle_button_name(action_id: String) -> String:
 		"retreat": "Retreat",
 		"surrender": "Surrender",
 	}.get(action_id, "")
+
+func _battle_focus_matches_action(focus_owner: Control, action_id: String) -> bool:
+	if focus_owner == null or action_id == "":
+		return false
+	if action_id.begins_with("cast_spell:"):
+		return String(focus_owner.get_meta("battle_action_id", "")) == action_id
+	var expected_name := _battle_button_name(action_id)
+	return expected_name != "" and String(focus_owner.name) == expected_name
 
 func _press_action(action: StringName) -> void:
 	var pressed := InputEventAction.new()
