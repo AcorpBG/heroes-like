@@ -15,6 +15,14 @@ const TOWN_FACTION_CUE_IDS := {
 	"faction_brasshollow": "music_town_brasshollow_theme",
 	"faction_veilmourn": "music_town_veilmourn_theme",
 }
+const OVERWORLD_FACTION_CUE_IDS := {
+	"faction_embercourt": "music_overworld_embercourt_theme",
+	"faction_mireclaw": "music_overworld_mireclaw_theme",
+	"faction_sunvault": "music_overworld_sunvault_theme",
+	"faction_thornwake": "music_overworld_thornwake_theme",
+	"faction_brasshollow": "music_overworld_brasshollow_theme",
+	"faction_veilmourn": "music_overworld_veilmourn_theme",
+}
 const CONTEXT_SPECS := {
 	"menu": {
 		"cue_id": "music_menu_theme",
@@ -163,6 +171,10 @@ func _normalize_context_id(context_id: String) -> String:
 
 func _cue_id_for_context(context_id: String, metadata: Dictionary) -> String:
 	var spec: Dictionary = CONTEXT_SPECS[context_id]
+	if context_id == "overworld":
+		var player_faction_id := String(metadata.get("player_faction_id", "")).strip_edges().to_lower()
+		if OVERWORLD_FACTION_CUE_IDS.has(player_faction_id):
+			return String(OVERWORLD_FACTION_CUE_IDS[player_faction_id])
 	if context_id == "town":
 		var faction_id := String(metadata.get("town_faction_id", "")).strip_edges().to_lower()
 		if TOWN_FACTION_CUE_IDS.has(faction_id):
@@ -311,7 +323,7 @@ func _fill_music_waveform(playback: AudioStreamGeneratorPlayback, layer: Diction
 
 func _signature_for_context(context_id: String, metadata: Dictionary) -> String:
 	var parts := [context_id]
-	for key in ["scenario_id", "day", "status", "encounter_id", "encounter_difficulty", "launch_mode", "threat_level", "town_placement_id", "town_id", "town_faction_id"]:
+	for key in ["scenario_id", "day", "status", "encounter_id", "encounter_difficulty", "launch_mode", "threat_level", "player_faction_id", "town_placement_id", "town_id", "town_faction_id"]:
 		if metadata.has(key):
 			parts.append("%s=%s" % [key, str(metadata.get(key, ""))])
 	return "|".join(parts)

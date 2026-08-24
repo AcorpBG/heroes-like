@@ -10,9 +10,31 @@ const TOWN_FACTION_CUES := {
 	"faction_brasshollow": "music_town_brasshollow_theme",
 	"faction_veilmourn": "music_town_veilmourn_theme",
 }
+const OVERWORLD_FACTION_CUES := {
+	"faction_embercourt": "music_overworld_embercourt_theme",
+	"faction_mireclaw": "music_overworld_mireclaw_theme",
+	"faction_sunvault": "music_overworld_sunvault_theme",
+	"faction_thornwake": "music_overworld_thornwake_theme",
+	"faction_brasshollow": "music_overworld_brasshollow_theme",
+	"faction_veilmourn": "music_overworld_veilmourn_theme",
+}
+const OVERWORLD_FACTION_SCENARIOS := {
+	"faction_embercourt": "river-pass",
+	"faction_mireclaw": "bogbound-oath",
+	"faction_sunvault": "prismhearth-watch",
+	"faction_thornwake": "mireford-skirmish",
+	"faction_brasshollow": "orevein-contract",
+	"faction_veilmourn": "bellwake-wreck-claim",
+}
 const EXPECTED_CUES := [
 	"music_menu_theme",
 	"music_overworld_theme",
+	"music_overworld_embercourt_theme",
+	"music_overworld_mireclaw_theme",
+	"music_overworld_sunvault_theme",
+	"music_overworld_thornwake_theme",
+	"music_overworld_brasshollow_theme",
+	"music_overworld_veilmourn_theme",
 	"music_town_theme",
 	"music_town_embercourt_theme",
 	"music_town_mireclaw_theme",
@@ -30,6 +52,24 @@ const EXPECTED_LAYER_CUES := [
 	"music_overworld_theme",
 	"music_overworld_theme_harmony",
 	"music_overworld_theme_motion",
+	"music_overworld_embercourt_theme",
+	"music_overworld_embercourt_theme_harmony",
+	"music_overworld_embercourt_theme_motion",
+	"music_overworld_mireclaw_theme",
+	"music_overworld_mireclaw_theme_harmony",
+	"music_overworld_mireclaw_theme_motion",
+	"music_overworld_sunvault_theme",
+	"music_overworld_sunvault_theme_harmony",
+	"music_overworld_sunvault_theme_motion",
+	"music_overworld_thornwake_theme",
+	"music_overworld_thornwake_theme_harmony",
+	"music_overworld_thornwake_theme_motion",
+	"music_overworld_brasshollow_theme",
+	"music_overworld_brasshollow_theme_harmony",
+	"music_overworld_brasshollow_theme_motion",
+	"music_overworld_veilmourn_theme",
+	"music_overworld_veilmourn_theme_harmony",
+	"music_overworld_veilmourn_theme_motion",
 	"music_town_theme",
 	"music_town_theme_harmony",
 	"music_town_theme_motion",
@@ -71,6 +111,7 @@ var _report := {
 	"fallback_record": {},
 	"shell_summary": {},
 	"town_shell_rows": [],
+	"overworld_shell_rows": [],
 	"errors": [],
 }
 
@@ -89,6 +130,23 @@ func _run() -> void:
 		"threat_level": "low",
 		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
 	})
+	var overworld_unknown_record: Dictionary = MusicAudio.sync_context("overworld", "validation_overworld_unknown", {
+		"scenario_id": "unknown",
+		"day": 1,
+		"threat_level": "low",
+		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+		"player_faction_id": "faction_unknown",
+	})
+	var faction_overworld_records := {}
+	for faction_id_value in OVERWORLD_FACTION_CUES:
+		var faction_id := String(faction_id_value)
+		faction_overworld_records[faction_id] = MusicAudio.sync_context("overworld", "validation_overworld_faction", {
+			"scenario_id": String(OVERWORLD_FACTION_SCENARIOS[faction_id]),
+			"day": 1,
+			"threat_level": "low",
+			"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+			"player_faction_id": faction_id,
+		})
 	var town_record: Dictionary = MusicAudio.sync_context("town", "validation_town_generic", {
 		"scenario_id": "river-pass",
 		"day": 1,
@@ -150,7 +208,10 @@ func _run() -> void:
 	await get_tree().process_frame
 	var original_window_size := get_window().size
 	var town_shell_rows: Array = []
+	var overworld_shell_rows: Array = []
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		for faction_id_value in OVERWORLD_FACTION_CUES:
+			overworld_shell_rows.append(await _overworld_shell_route_row(viewport_size, String(faction_id_value)))
 		for faction_id_value in TOWN_FACTION_CUES:
 			town_shell_rows.append(await _town_shell_route_row(viewport_size, String(faction_id_value)))
 	get_window().size = original_window_size
@@ -163,9 +224,14 @@ func _run() -> void:
 	_report["fallback_record"] = fallback_record
 	_report["shell_summary"] = shell_summary
 	_report["town_shell_rows"] = town_shell_rows
+	_report["overworld_shell_rows"] = overworld_shell_rows
 	_validate_record("menu", menu_record, "music_menu_theme", "menu", true)
 	_validate_record("stable", stable_record, "music_menu_theme", "menu", false)
 	_validate_record("overworld", overworld_record, "music_overworld_theme", "overworld", true)
+	_validate_record("overworld unknown", overworld_unknown_record, "music_overworld_theme", "overworld", true)
+	for faction_id_value in OVERWORLD_FACTION_CUES:
+		var faction_id := String(faction_id_value)
+		_validate_record("overworld %s" % faction_id, faction_overworld_records.get(faction_id, {}), String(OVERWORLD_FACTION_CUES[faction_id]), "overworld", true)
 	_validate_record("town", town_record, "music_town_theme", "town", true)
 	_validate_record("town unknown", town_unknown_record, "music_town_theme", "town", true)
 	for faction_id_value in TOWN_FACTION_CUES:
@@ -180,6 +246,9 @@ func _run() -> void:
 	for row_value in town_shell_rows:
 		var row: Dictionary = row_value
 		_expect(bool(row.get("ok", false)), "TownShell route must own exact faction Town music at both target viewports: %s" % row)
+	for row_value in overworld_shell_rows:
+		var row: Dictionary = row_value
+		_expect(bool(row.get("ok", false)), "OverworldShell route must own exact player-faction music at both target viewports: %s" % row)
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -338,6 +407,7 @@ func _town_shell_route_row(viewport_size: Vector2i, faction_id: String) -> Dicti
 		"town_id": String(town.get("town_id", "")),
 		"town_faction_id": String(town_template.get("faction_id", "")),
 	}
+
 	var checks := {
 		"window_size_exact": get_window().size == viewport_size,
 		"game_state_exact": String(snapshot.get("game_state", "")) == "town",
@@ -369,6 +439,43 @@ func _town_shell_route_row(viewport_size: Vector2i, faction_id: String) -> Dicti
 		"checks": checks,
 		"record": record,
 	}
+
+func _overworld_shell_route_row(viewport_size: Vector2i, faction_id: String) -> Dictionary:
+	get_window().size = viewport_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var scenario_id := String(OVERWORLD_FACTION_SCENARIOS.get(faction_id, ""))
+	var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	SessionState.set_active_session(session)
+	MusicAudio.validation_reset()
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not is_instance_valid(shell) or not shell.is_inside_tree():
+		return {"ok": false, "failure": "overworld_shell_missing", "viewport_size": viewport_size, "faction_id": faction_id}
+	var snapshot: Dictionary = shell.validation_snapshot()
+	var summary: Dictionary = MusicAudio.validation_summary()
+	var records: Array = summary.get("records", []) if summary.get("records", []) is Array else []
+	var record: Dictionary = records[-1] if not records.is_empty() and records[-1] is Dictionary else {}
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	var scenario := ContentService.get_scenario(scenario_id)
+	var checks := {
+		"window_size_exact": get_window().size == viewport_size,
+		"game_state_exact": String(snapshot.get("game_state", "")) == "overworld",
+		"current_context_exact": String(summary.get("current_context_id", "")) == "overworld",
+		"player_count_exact": int(summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS,
+		"cue_exact": String(record.get("cue_id", "")) == String(OVERWORLD_FACTION_CUES.get(faction_id, "")),
+		"record_context_exact": String(record.get("context_id", "")) == "overworld",
+		"player_faction_exact": String(metadata.get("player_faction_id", "")) == faction_id,
+		"scenario_faction_exact": String(scenario.get("player_faction_id", "")) == faction_id,
+		"snapshot_music_exact": snapshot.get("music_audio", {}) == summary,
+	}
+	var exact := not checks.values().has(false)
+	shell.queue_free()
+	await get_tree().process_frame
+	return {"ok": exact, "viewport_size": viewport_size, "scenario_id": scenario_id, "player_faction_id": faction_id, "checks": checks, "record": record}
 
 func _town_for_faction(session, faction_id: String) -> Dictionary:
 	for town_value in session.overworld.get("towns", []):

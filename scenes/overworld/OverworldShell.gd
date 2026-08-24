@@ -2353,8 +2353,10 @@ func _sync_overworld_music_audio(source: String) -> void:
 func _music_session_metadata() -> Dictionary:
 	if _session == null:
 		return {}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
 	return {
 		"scenario_id": _session.scenario_id,
+		"player_faction_id": String(scenario.get("player_faction_id", "")),
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
 		"day": _session.day,
