@@ -1318,7 +1318,7 @@ func _validate_building_art_manifest(building_index: Dictionary, art_index: Dict
 		var icon_path := String(art.get("icon_path", ""))
 		if not source_path.begins_with("res://art/towns/source/buildings/curated/"):
 			push_warning("Building %s source must use the curated building art domain." % building_id)
-		else:
+		elif OS.has_feature("editor"):
 			_validate_art_path(source_path, "Building %s curated source" % building_id)
 		if not icon_path.begins_with("res://art/towns/runtime/buildings/"):
 			push_warning("Building %s icon must use the runtime building art domain." % building_id)

@@ -19,6 +19,8 @@ godot --headless --path . --export-release "Windows Release" .artifacts/packagin
 
 - The runner verifies the exported executable exists, is larger than the minimum binary-size floor, and has Windows `MZ` plus `PE` headers.
 - The runner verifies `.artifacts/packaging_windows_export_smoke/export/heroes-like.pck` exists and is larger than the minimum package-size floor.
+- The runner requires the release PCK to remain at or below the explicit 250 MB ceiling.
+- The runner builds an exact inventory from repository `art/*/source/**/*.import` metadata, then parses the exported PCK directory and requires both the development source-art metadata and imported source textures to be absent. Repository source files are preserved; runtime assets remain packaged and retain their existing resource identities.
 - The runner verifies `aurelion_map_persistence.windows.template_release.x86_64.dll` is present beside the exported executable.
 - The runner removes and recreates `.artifacts/packaging_windows_export_smoke/wine-prefix`, then launches the exported executable headlessly with dummy audio and the compatibility renderer.
 - The Wine 9 harness sets `WINEDLLOVERRIDES=dinput8=` because Wine's builtin DirectInput path crashes this Godot executable before project startup. This bypass is confined to the harness and means DirectInput or controller validation is not claimed.
@@ -46,5 +48,13 @@ Latest v2 local result on 2026-08-02:
 - Windows release GDExtension DLL: 4255232 bytes and observed in Wine loader output.
 - Godot startup, `Boot.scn`, `MainMenu.scn`, and native DLL markers were all present; no fatal runtime pattern matched.
 - Runner: Wine 9.0 with an isolated `win64` prefix and `dinput8=` override.
+
+Latest source-art-exclusion result on 2026-08-24:
+
+- `ok: true`; export and fresh-prefix Wine runtime return codes were both `0`, with no fatal patterns.
+- `heroes-like.exe`: 104540160 bytes, with valid `MZ` and `PE` headers.
+- `heroes-like.pck`: 215251188 bytes, down from the 764036400-byte pre-slice release PCK.
+- Exact PCK directory inspection found zero development source-art metadata entries and zero corresponding imported source textures; required runtime terrain/artifact identities remained present.
+- The Windows release GDExtension DLL was exported and observed at runtime; Godot, Boot, MainMenu, and native-DLL markers were all present.
 
 The v2 gate additionally requires a successful isolated Wine boot. Future release packaging still needs clean native Windows execution, clean-machine validation, settings persistence verification under native Windows packaged binaries, controller and hardware validation, native minidump/symbol policy, code signing, and release-channel packaging. Bounded abnormal-exit recovery into the local support bundle is now covered separately.

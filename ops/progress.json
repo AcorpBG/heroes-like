@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed presentation-overworld-ambient-context-crossfade-transition-10184. Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence; no whole-game or release-readiness claim.",
+  "currentNotes": "Completed packaging-release-source-art-payload-exclusion-10184. Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence; no whole-game or release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-ambient-context-crossfade-transition-10184",
-  "currentSliceId": "presentation-overworld-ambient-context-crossfade-transition-10184",
-  "currentSliceNotes": "Completed with an exact 300 ms variable-layer crossfade, generation-owned rapid replacement, stable non-restart, and immediate missing-session/explicit stop. Focused, route/input/focus/audio/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass; packaged listening, certification, Native-RMG parity, and release readiness remain unclaimed.",
+  "currentSlice": "packaging-release-source-art-payload-exclusion-10184",
+  "currentSliceId": "packaging-release-source-art-payload-exclusion-10184",
+  "currentSliceNotes": "Completed cross-platform release source-art exclusion. Exact PCK inspection reports zero source metadata/imported payload entries and 215251188 bytes versus 764036400 before; required runtime identities/native libraries remain, and Linux headless plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No source deletion, packaged interaction, certification, Native-RMG parity, or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation overworld ambient context crossfade transition 10184",
-  "currentSliceUpdatedAt": "2026-08-24T11:24:44Z",
+  "currentSliceTitle": "packaging release source art payload exclusion 10184",
+  "currentSliceUpdatedAt": "2026-08-24T11:39:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The completed Battle music identity slice owns only exact scenario player_faction_id routing and original faction Battle loops with generic fallback. Do not infer final composition, matchup-adaptive music, faction-specific Outcome/Menu themes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness. Select the next slice from direct current product evidence.",
+  "guardrailNote": "The completed source-art payload slice owns only release-export exclusion of development art sources plus exact PCK/runtime startup validation. Do not infer source deletion, texture-quality/gameplay/save change, packaged interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release readiness. Select the next slice from direct current product evidence.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Implement only a bounded exact outgoing/incoming AmbientAudio crossfade on coordinate/terrain/day/threat signature changes. Preserve stable non-restart, missing-session/explicit immediate stop, mute/fallback, terrain/pressure/day cues and session authority; do not add assets, spatial audio, mixer or gameplay changes, certification, Native-RMG, or release claims.",
-  "notes": "Selected from the shipped AmbientAudio stop_overworld_ambient(\"signature_changed\") path. The selected slice owns only transition lifecycle for the existing terrain/pressure/day groups; implementation and runtime validation have not completed.",
+  "nextActionGuardrailNote": "Select the next slice from direct current product evidence. The completed source-art payload slice does not imply source deletion, texture-quality/gameplay/save changes, packaged interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release readiness.",
+  "notes": "Completed packaging-release-source-art-payload-exclusion-10184 with exact cross-platform PCK-directory and packaged-startup evidence. No implementation slice is currently selected.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100695,6 +100695,16 @@
       "startedAt": "2026-08-24T11:09:56Z",
       "notes": "Completed with a bounded exact 300 ms crossfade for changed coordinate/terrain/day/threat signatures. Rapid replacements invalidate stale tween generations, retire only the older outgoing group, and remain capped at eight transition players before settling to the exact current 1-3 layers; stable signatures do not restart, missing-session/explicit stop is immediate, and mute/generated fallback plus cue/settings/session authority remain exact. Focused ambient lifecycle, real route movement and input ownership, active-play focus, music coexistence, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. New ambient assets, spatial audio, mixer/gameplay changes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T11:24:44Z"
+    },
+    {
+      "id": "packaging-release-source-art-payload-exclusion-10184",
+      "title": "packaging release source art payload exclusion 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T11:39:55Z",
+      "startedAt": "2026-08-24T11:30:33Z",
+      "notes": "Completed cross-platform release source-art payload exclusion. Both official PCKs are 215251188 bytes versus 764036400 before (548785212 bytes / 71.8% smaller), with zero source-art metadata/imported payload entries versus 421/421 and 548587824 imported source bytes before. Required runtime terrain/artifact identities and Linux/Windows native libraries remain; repository/editor checks, Linux ELF export/headless startup, and Windows PE export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No source deletion, texture-quality/gameplay/save change, packaged interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release-readiness claim.",
+      "completedAt": "2026-08-24T11:39:55Z"
     }
   ],
   "project": "heroes-like",
@@ -100705,7 +100715,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Implement and validate the selected Overworld ambient context-crossfade transition. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101237,9 +101247,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The six-faction Overworld music identity slice is selected and in progress; implementation and runtime validation have not completed yet.",
+  "summary": "The release source-art payload exclusion slice is completed with exact Linux and Windows PCK/startup evidence; no next implementation slice is selected and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T09:54:58Z",
+  "updatedAt": "2026-08-24T11:39:55Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
