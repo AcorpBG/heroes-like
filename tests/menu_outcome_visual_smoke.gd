@@ -638,6 +638,15 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
+	if not await _assert_battle_shake_picker_theme_parity(
+		shell as Control,
+		ui_scale_picker as OptionButton,
+		battle_camera_shake_picker as OptionButton,
+		color_cue_picker as OptionButton,
+		original_ui_scale,
+		original_high_contrast
+	):
+		return false
 	var render_quality_items: Array = settings_snapshot.get("render_quality_picker_items", []) if settings_snapshot.get("render_quality_picker_items", []) is Array else []
 	for expected_label in ["Low", "Balanced", "High"]:
 		if not render_quality_items.has(expected_label):
@@ -1109,6 +1118,132 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 	await get_tree().process_frame
 	await get_tree().process_frame
 	return true
+
+func _assert_battle_shake_picker_theme_parity(
+		shell: Control,
+		ui_scale_picker: OptionButton,
+		battle_shake_picker: OptionButton,
+		color_cue_picker: OptionButton,
+		original_ui_scale: int,
+		original_high_contrast: bool
+	) -> bool:
+	var original_size: Vector2i = get_window().size
+	var settings_before: Dictionary = SettingsService.ensure_settings().duplicate(true)
+	var ui_scale_before: Dictionary = _option_button_behavior_contract(ui_scale_picker)
+	var battle_shake_before: Dictionary = _option_button_behavior_contract(battle_shake_picker)
+	var color_cue_before: Dictionary = _option_button_behavior_contract(color_cue_picker)
+	var failure := ""
+	if original_high_contrast and not bool(shell.call("validation_set_high_contrast", false)):
+		failure = "could not establish the standard asset-backed theme"
+	for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		if failure != "":
+			break
+		for requested_scale in [100, 130]:
+			if not bool(shell.call("validation_select_ui_scale", requested_scale)):
+				failure = "could not select UI scale %d at %s" % [requested_scale, requested_size]
+				break
+			SettingsService.call("_set_runtime_window_size", requested_size)
+			await get_tree().process_frame
+			await get_tree().process_frame
+			var physical_size: Vector2i = DisplayServer.window_get_size()
+			var physical_size_exact: bool = physical_size == requested_size \
+				or (DisplayServer.get_name() == "headless" and physical_size == Vector2i.ZERO)
+			var expected_shell_size := Vector2(requested_size) * (100.0 / float(requested_scale))
+			if not physical_size_exact \
+					or get_window().size != requested_size \
+					or get_tree().root.size != requested_size \
+					or get_tree().root.content_scale_size != requested_size \
+					or shell.size.distance_to(expected_shell_size) > 0.1:
+				failure = "window/root/canvas authority diverged at %s and %d%%: physical=%s window=%s root=%s content_scale=%s shell=%s expected_shell=%s" % [requested_size, requested_scale, physical_size, get_window().size, get_tree().root.size, get_tree().root.content_scale_size, shell.size, expected_shell_size]
+				break
+			var expected_style_paths := {
+				"normal": "res://art/ui/runtime/shared/button_secondary_normal.png",
+				"hover": "res://art/ui/runtime/shared/button_secondary_hover.png",
+				"pressed": "res://art/ui/runtime/shared/button_secondary_pressed.png",
+				"disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png",
+			}
+			var ui_scale_style: Dictionary = _option_button_style_contract(ui_scale_picker)
+			var battle_shake_style: Dictionary = _option_button_style_contract(battle_shake_picker)
+			var color_cue_style: Dictionary = _option_button_style_contract(color_cue_picker)
+			if ui_scale_style.is_empty() \
+					or battle_shake_style != ui_scale_style \
+					or color_cue_style != ui_scale_style \
+					or ui_scale_style.get("style_paths", {}) != expected_style_paths \
+					or ui_scale_style.get("custom_minimum_size", Vector2.ZERO) != Vector2(176.0, 34.0) \
+					or int(ui_scale_style.get("font_size", 0)) != 13 \
+					or int(ui_scale_style.get("focus_mode", -1)) != Control.FOCUS_ALL:
+				failure = "secondary style contract diverged at %s and %d%%: ui=%s battle=%s color=%s" % [requested_size, requested_scale, ui_scale_style, battle_shake_style, color_cue_style]
+				break
+			var scale_row := ui_scale_picker.get_parent() as Control
+			var assist_row := color_cue_picker.get_parent() as Control
+			if scale_row == null \
+					or assist_row == null \
+					or battle_shake_picker.get_parent() != scale_row \
+					or not _rect_is_contained(scale_row.get_global_rect(), ui_scale_picker.get_global_rect()) \
+					or not _rect_is_contained(scale_row.get_global_rect(), battle_shake_picker.get_global_rect()) \
+					or not _rect_is_contained(assist_row.get_global_rect(), color_cue_picker.get_global_rect()) \
+					or ui_scale_picker.get_global_rect().intersects(battle_shake_picker.get_global_rect()):
+				failure = "picker row containment or non-overlap failed at %s and %d%%" % [requested_size, requested_scale]
+				break
+	if SettingsService.ui_scale_percent() != original_ui_scale:
+		if not bool(shell.call("validation_select_ui_scale", original_ui_scale)) and failure == "":
+			failure = "could not restore the original UI scale"
+	if SettingsService.high_contrast_ui_enabled() != original_high_contrast:
+		if not bool(shell.call("validation_set_high_contrast", original_high_contrast)) and failure == "":
+			failure = "could not restore the original high-contrast setting"
+	SettingsService.call("_set_runtime_window_size", original_size)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if SettingsService.ensure_settings() != settings_before and failure == "":
+		failure = "settings authority changed after the width/scale round trip"
+	if (
+		_option_button_behavior_contract(ui_scale_picker) != ui_scale_before
+		or _option_button_behavior_contract(battle_shake_picker) != battle_shake_before
+		or _option_button_behavior_contract(color_cue_picker) != color_cue_before
+	) and failure == "":
+		failure = "picker items, selection, tooltip, focus, or parent authority changed after the round trip"
+	if failure != "":
+		push_error("Main menu smoke: Battle Shake picker theme parity failed: %s." % failure)
+		get_tree().quit(1)
+		return false
+	return true
+
+func _option_button_style_contract(picker: OptionButton) -> Dictionary:
+	var style_paths := {}
+	for state in ["normal", "hover", "pressed", "disabled"]:
+		var style := picker.get_theme_stylebox(state)
+		if not (style is StyleBoxTexture):
+			return {}
+		var texture := (style as StyleBoxTexture).texture
+		if texture == null:
+			return {}
+		style_paths[state] = texture.resource_path
+	return {
+		"style_paths": style_paths,
+		"custom_minimum_size": picker.custom_minimum_size,
+		"font_size": picker.get_theme_font_size("font_size"),
+		"focus_mode": picker.focus_mode,
+	}
+
+func _option_button_behavior_contract(picker: OptionButton) -> Dictionary:
+	var items := []
+	for index in range(picker.get_item_count()):
+		items.append({
+			"text": picker.get_item_text(index),
+			"metadata": picker.get_item_metadata(index),
+			"disabled": picker.is_item_disabled(index),
+		})
+	return {
+		"items": items,
+		"selected": picker.selected,
+		"tooltip": picker.tooltip_text,
+		"parent": picker.get_parent().get_path(),
+		"size_flags_horizontal": picker.size_flags_horizontal,
+		"focus_neighbor_top": picker.focus_neighbor_top,
+		"focus_neighbor_bottom": picker.focus_neighbor_bottom,
+		"focus_previous": picker.focus_previous,
+		"focus_next": picker.focus_next,
+	}
 
 func _assert_footer_pocket_containment(shell: Control, viewport_size: Vector2, context: String) -> bool:
 	var footer_panel := shell.get_node_or_null("FooterPocketPanel") as PanelContainer

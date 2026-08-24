@@ -4821,6 +4821,7 @@ func _apply_visual_theme() -> void:
 		_battle_playback_speed_picker,
 		_keyboard_navigation_layout_picker,
 		_ui_scale_picker,
+		_battle_camera_shake_picker,
 		_color_cue_picker,
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
