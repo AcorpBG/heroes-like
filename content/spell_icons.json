@@ -493,6 +493,50 @@
       "source_sha256": "7ab992c0ba763e408be9970f0e481da83aafebd7a168a76a90dab62189c1a723",
       "icon_path": "res://art/magic/runtime/spells/spell_veil_moon_mark_28.png",
       "icon_sha256": "a8f47c59c76b20edc17ab9e09dd40e30234fd67e9618acce106138ea45e481b7"
+    },
+    {
+      "id": "spell_old_measure_marker_tally_08",
+      "spell_id": "spell_old_measure_marker_tally_08",
+      "school_id": "old_measure",
+      "icon_id": "spell_signature_icon_old_measure_marker_tally_08",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_marker_tally_08.png",
+      "source_sha256": "06d7388d0878c2e1cb2c261d9bd83a6f6646df2cd08e6c4f3e8b7dade3bab4e6",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_marker_tally_08.png",
+      "icon_sha256": "3cf077d5a37494d5e9fb12dec9caa05e8ceb4ca136a41f4f96533ed098d75efe"
+    },
+    {
+      "id": "spell_old_measure_count_survey_14",
+      "spell_id": "spell_old_measure_count_survey_14",
+      "school_id": "old_measure",
+      "icon_id": "spell_signature_icon_old_measure_count_survey_14",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_count_survey_14.png",
+      "source_sha256": "6aa8ad91ddb729ca1dda58e302dfeb509ef01137fdaad4cb6992b21a1e653b6b",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_count_survey_14.png",
+      "icon_sha256": "07efc81bd64a587a61696f805061ea6208035a0bef155e7c4c75b486162e22a3"
+    },
+    {
+      "id": "spell_old_measure_compass_correction_22",
+      "spell_id": "spell_old_measure_compass_correction_22",
+      "school_id": "old_measure",
+      "icon_id": "spell_signature_icon_old_measure_compass_correction_22",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_compass_correction_22.png",
+      "source_sha256": "554b1dfa825ef88fd527bdb95c4cb6e82d241a076de2aa3f93317bc163d59fbc",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_compass_correction_22.png",
+      "icon_sha256": "acea7ae9efe95605e92ca1d72020529f019fee383151a3994dbcad1ea37c7116"
+    },
+    {
+      "id": "spell_old_measure_count_boundary_30",
+      "spell_id": "spell_old_measure_count_boundary_30",
+      "school_id": "old_measure",
+      "icon_id": "spell_signature_icon_old_measure_count_boundary_30",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_count_boundary_30.png",
+      "source_sha256": "705e8ca62f6ee0884000f4f397db813d44f106e9185556e174237940a0658d59",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_count_boundary_30.png",
+      "icon_sha256": "96347776f2f73f96b104bba2d45b48ed1c15f08ed1eb1ffd7fc0c0ba69ea22a7"
     }
   ]
 }
