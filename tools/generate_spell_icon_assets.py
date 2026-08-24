@@ -76,6 +76,11 @@ SPELLS = (
     ("spell_lens_glass_survey_24", "lens"),
     ("spell_lens_aurora_array_26", "lens"),
     ("spell_lens_starlens_prism_28", "lens"),
+    ("spell_beacon_roadward_signal_07", "beacon"),
+    ("spell_beacon_writ_lance_13", "beacon"),
+    ("spell_beacon_waymark_road_15", "beacon"),
+    ("spell_beacon_crown_signal_19", "beacon"),
+    ("spell_beacon_dawn_ward_21", "beacon"),
 )
 
 
