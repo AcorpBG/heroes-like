@@ -100,6 +100,24 @@ const TARGET_LENS_TOWN_STUDY_BUILDING_IDS := [
 	"building_sunvault_prism_oratory",
 	"building_sunvault_daybreak_matrix",
 ]
+const TARGET_BEACON_TOWN_STUDY_SPELL_IDS := [
+	"spell_beacon_roadward_signal_07",
+	"spell_beacon_writ_lance_13",
+	"spell_beacon_waymark_road_15",
+	"spell_beacon_crown_signal_19",
+	"spell_beacon_dawn_ward_21",
+]
+const TARGET_BEACON_TOWN_SCENARIOS := {
+	"river-pass": "town_riverwatch",
+	"stonewake-watch": "town_highwater_keep",
+}
+const TARGET_BEACON_TOWN_STUDY_BUILDING_IDS := [
+	"building_lantern_archive",
+	"building_starseer_annex",
+	"building_embercourt_beacon_court",
+	"building_embercourt_lantern_court",
+	"building_embercourt_relief_quay",
+]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
 	"battle": "spell_bulwark_litany",
@@ -166,6 +184,11 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_lens_glass_survey_24": "res://art/magic/runtime/spells/spell_lens_glass_survey_24.png",
 	"spell_lens_aurora_array_26": "res://art/magic/runtime/spells/spell_lens_aurora_array_26.png",
 	"spell_lens_starlens_prism_28": "res://art/magic/runtime/spells/spell_lens_starlens_prism_28.png",
+	"spell_beacon_roadward_signal_07": "res://art/magic/runtime/spells/spell_beacon_roadward_signal_07.png",
+	"spell_beacon_writ_lance_13": "res://art/magic/runtime/spells/spell_beacon_writ_lance_13.png",
+	"spell_beacon_waymark_road_15": "res://art/magic/runtime/spells/spell_beacon_waymark_road_15.png",
+	"spell_beacon_crown_signal_19": "res://art/magic/runtime/spells/spell_beacon_crown_signal_19.png",
+	"spell_beacon_dawn_ward_21": "res://art/magic/runtime/spells/spell_beacon_dawn_ward_21.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -230,6 +253,12 @@ func _run() -> void:
 			rows.append(lens_town_row)
 			if not bool(lens_town_row.get("ok", false)):
 				_fail("Lens town-study spell icon surface failed: %s" % JSON.stringify(lens_town_row), original_window_size)
+				return
+		for town_scenario_id in TARGET_BEACON_TOWN_SCENARIOS:
+			var beacon_town_row: Dictionary = await _surface_case(viewport_size, "town", String(TARGET_BEACON_TOWN_STUDY_SPELL_IDS[0]), TARGET_BEACON_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))
+			rows.append(beacon_town_row)
+			if not bool(beacon_town_row.get("ok", false)):
+				_fail("Beacon town-study spell icon surface failed: %s" % JSON.stringify(beacon_town_row), original_window_size)
 				return
 	SessionState.reset_session()
 	get_window().size = original_window_size
@@ -311,7 +340,7 @@ func _catalog_contract() -> Dictionary:
 		"ok": (
 			bool(fallback_contract.get("ok", false))
 			and bool(generated_reward_contract.get("ok", false))
-			and signature_contract.size() == 61
+			and signature_contract.size() == 66
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -320,8 +349,8 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 61
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 51
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 66
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 46
 			and SpellRules.spell_icon_path("spell_furnace_foundry_clamp_27") == SpellRules.spell_school_icon_path("spell_furnace_foundry_clamp_27")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
@@ -331,7 +360,7 @@ func _catalog_contract() -> Dictionary:
 		"fallback": fallback_contract,
 		"generated_reward": generated_reward_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 51,
+		"school_fallback_count": 46,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
@@ -534,7 +563,11 @@ func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids
 		if town.is_empty():
 			return {}
 		var built_buildings: Array = town.get("built_buildings", []) if town.get("built_buildings", []) is Array else []
-		var required_study_buildings: Array = TARGET_LENS_TOWN_STUDY_BUILDING_IDS if town_scenario_id != "" else ["building_lantern_archive"]
+		var target_study_spell_ids: Array = TARGET_BEACON_TOWN_STUDY_SPELL_IDS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_STUDY_SPELL_IDS
+		var target_town_scenarios: Dictionary = TARGET_BEACON_TOWN_SCENARIOS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_SCENARIOS
+		var required_study_buildings: Array = TARGET_BEACON_TOWN_STUDY_BUILDING_IDS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_STUDY_BUILDING_IDS
+		if town_scenario_id == "":
+			required_study_buildings = ["building_lantern_archive"]
 		for building_id in required_study_buildings:
 			if building_id not in built_buildings:
 				built_buildings.append(building_id)
@@ -550,12 +583,12 @@ func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids
 					learning_spell_ids.append(spell_id)
 		if town_scenario_id != "":
 			var targeted_learning_ids := learning_spell_ids.filter(func(spell_id): return spell_id in spell_ids_override)
-			var expected_town_id := String(TARGET_LENS_TOWN_SCENARIOS.get(town_scenario_id, ""))
+			var expected_town_id := String(target_town_scenarios.get(town_scenario_id, ""))
 			var town_study_contract_exact := (
 				String(town.get("town_id", "")) == expected_town_id
 				and TownRules.current_spell_tier(town) == 5
 				and targeted_learning_ids == spell_ids_override
-				and TARGET_LENS_TOWN_STUDY_SPELL_IDS.all(func(spell_id): return spell_id in TownRules.accessible_spell_ids(town))
+				and target_study_spell_ids.all(func(spell_id): return spell_id in TownRules.accessible_spell_ids(town))
 			)
 			if spell_id_override in learning_spell_ids:
 				return {
