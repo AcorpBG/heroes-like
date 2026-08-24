@@ -4,6 +4,14 @@ const SessionDataScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "SPELL_SCHOOL_ICON_RUNTIME_REPORT"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const SURFACES := ["overworld", "town", "battle"]
+const GENERATED_MAP_MODEL_PATH := "res://content/random_map_generator_data_model.json"
+const TARGET_BEACON_REWARD_SPELL_IDS := [
+	"spell_beacon_column_charge_11",
+	"spell_beacon_lantern_oath_17",
+	"spell_beacon_roadward_charge_23",
+	"spell_beacon_bell_ward_09",
+	"spell_beacon_bell_lance_25",
+]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
 	"battle": "spell_bulwark_litany",
@@ -33,6 +41,11 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_waystride": "res://art/magic/runtime/spells/spell_waystride.png",
 	"spell_fogline_drift": "res://art/magic/runtime/spells/spell_fogline_drift.png",
 	"spell_rootway_tangle": "res://art/magic/runtime/spells/spell_rootway_tangle.png",
+	"spell_beacon_column_charge_11": "res://art/magic/runtime/spells/spell_beacon_column_charge_11.png",
+	"spell_beacon_lantern_oath_17": "res://art/magic/runtime/spells/spell_beacon_lantern_oath_17.png",
+	"spell_beacon_roadward_charge_23": "res://art/magic/runtime/spells/spell_beacon_roadward_charge_23.png",
+	"spell_beacon_bell_ward_09": "res://art/magic/runtime/spells/spell_beacon_bell_ward_09.png",
+	"spell_beacon_bell_lance_25": "res://art/magic/runtime/spells/spell_beacon_bell_lance_25.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -61,6 +74,11 @@ func _run() -> void:
 			if not bool(row.get("ok", false)):
 				_fail("Spell school icon surface failed: %s" % JSON.stringify(row), original_window_size)
 				return
+		var reward_row: Dictionary = await _surface_case(viewport_size, "battle", String(TARGET_BEACON_REWARD_SPELL_IDS[0]), TARGET_BEACON_REWARD_SPELL_IDS)
+		rows.append(reward_row)
+		if not bool(reward_row.get("ok", false)):
+			_fail("Generated reward spell icon surface failed: %s" % JSON.stringify(reward_row), original_window_size)
+			return
 	SessionState.reset_session()
 	get_window().size = original_window_size
 	await get_tree().process_frame
@@ -136,10 +154,12 @@ func _catalog_contract() -> Dictionary:
 	var sorted_expected_signature_ids: Array = EXPECTED_SIGNATURE_ICONS.keys()
 	sorted_expected_signature_ids.sort()
 	var fallback_contract := _signature_fallback_contract()
+	var generated_reward_contract := _generated_reward_contract()
 	return {
 		"ok": (
 			bool(fallback_contract.get("ok", false))
-			and signature_contract.size() == 24
+			and bool(generated_reward_contract.get("ok", false))
+			and signature_contract.size() == 29
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -148,8 +168,8 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 24
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 88
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 29
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 83
 			and SpellRules.spell_icon_path("spell_furnace_foundry_bellows_11") == SpellRules.spell_school_icon_path("spell_furnace_foundry_bellows_11")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
@@ -157,14 +177,53 @@ func _catalog_contract() -> Dictionary:
 			and SpellRules.spell_icon_path("spell_missing") == ""
 		),
 		"fallback": fallback_contract,
+		"generated_reward": generated_reward_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 88,
+		"school_fallback_count": 83,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
 		"distinct_icon_path_count": manifest_paths.size() if _all_unique(manifest_paths) else 0,
 		"manifest": manifest_contract,
 		"spells": spell_rows,
+	}
+
+func _generated_reward_contract() -> Dictionary:
+	var model := ContentService.load_json(GENERATED_MAP_MODEL_PATH)
+	var definitions: Array = model.get("object_definitions", []) if model.get("object_definitions", []) is Array else []
+	var reward_ids := []
+	for definition_value in definitions:
+		if not (definition_value is Dictionary):
+			continue
+		var definition: Dictionary = definition_value
+		if String(definition.get("id", "")) != "rmg_object_reward_reference_v1":
+			continue
+		for object_id_value in definition.get("supported_runtime_object_ids", []):
+			var object_id := String(object_id_value)
+			if not ContentService.get_spell(object_id).is_empty():
+				reward_ids.append(object_id)
+		break
+	var rows := []
+	for spell_id in reward_ids:
+		var icon_path := SpellRules.spell_icon_path(spell_id)
+		rows.append({
+			"spell_id": spell_id,
+			"icon_path": icon_path,
+			"specific": icon_path.begins_with("res://art/magic/runtime/spells/"),
+		})
+	var specific_count := rows.filter(func(row): return bool(row.get("specific", false))).size()
+	return {
+		"ok": (
+			reward_ids.size() == 38
+			and _all_unique(reward_ids)
+			and TARGET_BEACON_REWARD_SPELL_IDS.all(func(spell_id): return spell_id in reward_ids and SpellRules.spell_icon_path(spell_id) == String(EXPECTED_SIGNATURE_ICONS.get(spell_id, "")))
+			and specific_count == 14
+			and rows.size() - specific_count == 24
+		),
+		"reward_spell_ids": reward_ids,
+		"specific_count": specific_count,
+		"school_fallback_count": rows.size() - specific_count,
+		"rows": rows,
 	}
 
 func _signature_fallback_contract() -> Dictionary:
@@ -198,13 +257,13 @@ func _signature_fallback_contract() -> Dictionary:
 		"restored_path": restored_path,
 	}
 
-func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
+func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: String = "", spell_ids_override: Array = []) -> Dictionary:
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if get_window().size != viewport_size:
 		return {"ok": false, "failure": "window_size", "surface": surface, "actual": get_window().size}
-	var fixture := _surface_fixture(surface)
+	var fixture := _surface_fixture(surface, spell_id_override, spell_ids_override)
 	var session = fixture.get("session")
 	var spell_id := String(fixture.get("spell_id", ""))
 	if session == null or spell_id == "":
@@ -244,6 +303,11 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 	var expected_icon_path := SpellRules.spell_icon_path(spell_id)
 	var selected_icon_exact := _icon_exact(button, expected_icon_path)
 	var selected_specific := expected_icon_path.begins_with("res://art/magic/runtime/spells/")
+	var targeted_buttons_exact := true
+	for targeted_spell_id in spell_ids_override:
+		var targeted_action_id := _surface_action_id(surface, String(targeted_spell_id))
+		var targeted_button := _button_for_action(shell, container, actions, surface, targeted_action_id)
+		targeted_buttons_exact = targeted_buttons_exact and targeted_button != null and _icon_exact(targeted_button, SpellRules.spell_icon_path(String(targeted_spell_id)))
 	var invalid_button := Button.new()
 	invalid_button.text = "Invalid spell control"
 	shell.call("_apply_spell_action_icon", invalid_button, {"id": _surface_action_id(surface, "spell_missing")})
@@ -265,6 +329,7 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 			and focus_exact
 			and selected_icon_exact
 			and selected_specific
+			and targeted_buttons_exact
 			and invalid_fail_closed
 			and bool(control_result.get("ok", false))
 			and live_after == control.to_dict()
@@ -279,6 +344,8 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 		"focus_exact": focus_exact,
 		"selected_icon_exact": selected_icon_exact,
 		"selected_specific": selected_specific,
+		"targeted_spell_ids": spell_ids_override.duplicate(),
+		"targeted_buttons_exact": targeted_buttons_exact,
 		"invalid_fail_closed": invalid_fail_closed,
 		"control_ok": bool(control_result.get("ok", false)),
 		"session_exact": live_after == control.to_dict(),
@@ -289,7 +356,7 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 		row["session_differences"] = _recursive_exact_differences(control.to_dict(), live_after)
 	return await _finish_case(shell, row)
 
-func _surface_fixture(surface: String) -> Dictionary:
+func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids_override: Array = []) -> Dictionary:
 	if surface == "town":
 		var town_session = _base_session()
 		var town := _first_player_town(town_session)
@@ -310,8 +377,9 @@ func _surface_fixture(surface: String) -> Dictionary:
 		return {}
 	if surface == "battle":
 		var battle_session = _base_session()
-		var battle_spell_id := String(SURFACE_SPELL_IDS.get("battle", ""))
-		_set_active_hero_spellbook(battle_session, [battle_spell_id])
+		var battle_spell_id := spell_id_override if spell_id_override != "" else String(SURFACE_SPELL_IDS.get("battle", ""))
+		var battle_spell_ids := spell_ids_override.duplicate() if not spell_ids_override.is_empty() else [battle_spell_id]
+		_set_active_hero_spellbook(battle_session, battle_spell_ids)
 		var enemy_town := _first_enemy_town(battle_session)
 		if enemy_town.is_empty():
 			return {}
@@ -361,10 +429,13 @@ func _stage_player_turn(battle: Dictionary) -> void:
 	for stack_value in battle.get("stacks", []):
 		if not (stack_value is Dictionary):
 			continue
-		if player_id == "" and String(stack_value.get("side", "")) == "player":
-			player_id = String(stack_value.get("battle_id", ""))
-		elif enemy_id == "" and String(stack_value.get("side", "")) == "enemy":
-			enemy_id = String(stack_value.get("battle_id", ""))
+		var stack: Dictionary = stack_value
+		if player_id == "" and String(stack.get("side", "")) == "player":
+			player_id = String(stack.get("battle_id", ""))
+		elif enemy_id == "" and String(stack.get("side", "")) == "enemy":
+			enemy_id = String(stack.get("battle_id", ""))
+			stack["base_count"] = max(200, int(stack.get("base_count", 0)))
+			stack["total_health"] = int(stack.get("base_count", 200)) * max(1, int(stack.get("unit_hp", 1)))
 	battle["active_stack_id"] = player_id
 	battle["selected_target_id"] = enemy_id
 	battle["commander_spell_cast_rounds"] = {}

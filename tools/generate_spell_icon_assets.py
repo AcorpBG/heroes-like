@@ -39,6 +39,11 @@ SPELLS = (
     ("spell_waystride", "beacon"),
     ("spell_fogline_drift", "veil"),
     ("spell_rootway_tangle", "root"),
+    ("spell_beacon_column_charge_11", "beacon"),
+    ("spell_beacon_lantern_oath_17", "beacon"),
+    ("spell_beacon_roadward_charge_23", "beacon"),
+    ("spell_beacon_bell_ward_09", "beacon"),
+    ("spell_beacon_bell_lance_25", "beacon"),
 )
 
 
