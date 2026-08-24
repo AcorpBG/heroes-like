@@ -16,6 +16,23 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_cinder_burst": "res://art/magic/runtime/spells/spell_cinder_burst.png",
 	"spell_fogwake_step": "res://art/magic/runtime/spells/spell_fogwake_step.png",
 	"spell_old_measure_compass_boundary_06": "res://art/magic/runtime/spells/spell_old_measure_compass_boundary_06.png",
+	"spell_stone_veil": "res://art/magic/runtime/spells/spell_stone_veil.png",
+	"spell_quickmarch_hymn": "res://art/magic/runtime/spells/spell_quickmarch_hymn.png",
+	"spell_relay_drum": "res://art/magic/runtime/spells/spell_relay_drum.png",
+	"spell_resonant_chorus": "res://art/magic/runtime/spells/spell_resonant_chorus.png",
+	"spell_bloodwake_drum": "res://art/magic/runtime/spells/spell_bloodwake_drum.png",
+	"spell_trailglyph": "res://art/magic/runtime/spells/spell_trailglyph.png",
+	"spell_prism_bastion": "res://art/magic/runtime/spells/spell_prism_bastion.png",
+	"spell_lantern_phalanx": "res://art/magic/runtime/spells/spell_lantern_phalanx.png",
+	"spell_survey_chain": "res://art/magic/runtime/spells/spell_survey_chain.png",
+	"spell_graft_mend": "res://art/magic/runtime/spells/spell_graft_mend.png",
+	"spell_heat_rite": "res://art/magic/runtime/spells/spell_heat_rite.png",
+	"spell_obituary_mark": "res://art/magic/runtime/spells/spell_obituary_mark.png",
+	"spell_pressure_clause": "res://art/magic/runtime/spells/spell_pressure_clause.png",
+	"spell_beacon_path": "res://art/magic/runtime/spells/spell_beacon_path.png",
+	"spell_waystride": "res://art/magic/runtime/spells/spell_waystride.png",
+	"spell_fogline_drift": "res://art/magic/runtime/spells/spell_fogline_drift.png",
+	"spell_rootway_tangle": "res://art/magic/runtime/spells/spell_rootway_tangle.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -122,7 +139,7 @@ func _catalog_contract() -> Dictionary:
 	return {
 		"ok": (
 			bool(fallback_contract.get("ok", false))
-			and signature_contract.size() == 7
+			and signature_contract.size() == 24
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -131,9 +148,9 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 7
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 105
-			and SpellRules.spell_icon_path("spell_waystride") == SpellRules.spell_school_icon_path("spell_waystride")
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 24
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 88
+			and SpellRules.spell_icon_path("spell_furnace_foundry_bellows_11") == SpellRules.spell_school_icon_path("spell_furnace_foundry_bellows_11")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
 			and SpellRules.spell_school_icon_path("spell_missing") == ""
@@ -141,7 +158,7 @@ func _catalog_contract() -> Dictionary:
 		),
 		"fallback": fallback_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 105,
+		"school_fallback_count": 88,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
@@ -226,6 +243,7 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 	var focus_exact := get_viewport().gui_get_focus_owner() == button
 	var expected_icon_path := SpellRules.spell_icon_path(spell_id)
 	var selected_icon_exact := _icon_exact(button, expected_icon_path)
+	var selected_specific := expected_icon_path.begins_with("res://art/magic/runtime/spells/")
 	var invalid_button := Button.new()
 	invalid_button.text = "Invalid spell control"
 	shell.call("_apply_spell_action_icon", invalid_button, {"id": _surface_action_id(surface, "spell_missing")})
@@ -246,6 +264,7 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 			bool(buttons.get("ok", false))
 			and focus_exact
 			and selected_icon_exact
+			and selected_specific
 			and invalid_fail_closed
 			and bool(control_result.get("ok", false))
 			and live_after == control.to_dict()
@@ -259,6 +278,7 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 		"buttons": buttons,
 		"focus_exact": focus_exact,
 		"selected_icon_exact": selected_icon_exact,
+		"selected_specific": selected_specific,
 		"invalid_fail_closed": invalid_fail_closed,
 		"control_ok": bool(control_result.get("ok", false)),
 		"session_exact": live_after == control.to_dict(),

@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The Veilmourn Town Build art slice is completed: Bellwake Harbor and Fogchart Mooring now use specific original icons, and all 133 production buildings have specific art. Select the next tracker-approved source-backed slice; the game is not release-ready.",
+  "currentNotes": "The active spellbook icon slice is completed: 17 additional exposed spells now own specific original icons, all 23 production hero-start, town-library, and enemy-commander spells resolve specific art, the established Old Measure signature remains specific, and 88 catalog spells retain school fallback. Select the next tracker-approved source-backed slice; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-veilmourn-complete-authored-town-building-icons-10184",
-  "currentSliceId": "presentation-signature-spell-distinct-icons-10184",
-  "currentSliceNotes": "Implemented seven distinct original signature spell source/runtime icons through centralized content/spell_icons.json and deterministic generation; SpellRules now prefers exact identities and fails closed to the unchanged school sigils for 105 other spells plus missing/malformed rows. Focused 1280/1920 Battle/Town/Overworld runtime report passed with exact focus/action/session/save authority, magic/Town/focus/core compatibility passed, and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. No packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, Native RMG, or release-readiness claim.",
+  "currentSlice": "presentation-active-spellbook-distinct-icons-10184",
+  "currentSliceId": "presentation-active-spellbook-distinct-icons-10184",
+  "currentSliceNotes": "Implemented 17 distinct original 1254px source and deterministic 128px runtime icons, expanding the centralized specific spell manifest to 24 exact rows. All 23 production hero-start, town-library, and enemy-commander spells resolve specific art; the established Old Measure signature remains specific; 88 catalog spells retain school fallback. Focused Battle/Town/Overworld 1280/1920 runtime, spell schema/behavior/adventure/town/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation signature spell distinct icons 10184",
+  "currentSliceTitle": "presentation active spellbook distinct icons 10184",
   "currentSliceUpdatedAt": "2026-08-23T23:47:38Z",
   "deferredRiskRegister": [
     {
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the seven shipped signature spell icons and exact 105-spell school fallback; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the 24 shipped specific spell icons and exact 88-spell school fallback; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 133-icon catalog and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 133-building icon catalog, 24 specific spell icons, and exact 88-spell school fallback; do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100389,6 +100389,16 @@
       "startedAt": "2026-08-24T00:40:39Z",
       "notes": "Implemented seven distinct original signature spell source/runtime icons through centralized content/spell_icons.json and deterministic generation; SpellRules now prefers exact identities and fails closed to the unchanged school sigils for 105 other spells plus missing/malformed rows. Focused 1280/1920 Battle/Town/Overworld runtime report passed with exact focus/action/session/save authority, magic/Town/focus/core compatibility passed, and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. No packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, Native RMG, or release-readiness claim.",
       "completedAt": "2026-08-24T00:56:39Z"
+    },
+    {
+      "id": "presentation-active-spellbook-distinct-icons-10184",
+      "title": "presentation active spellbook distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T01:22:49Z",
+      "startedAt": "2026-08-24T01:00:54Z",
+      "notes": "Implemented 17 distinct original 1254px source and deterministic 128px runtime icons, expanding the centralized specific spell manifest to 24 exact rows. All 23 production hero-start, town-library, and enemy-commander spells resolve specific art; the established Old Measure signature remains specific; 88 catalog spells retain school fallback. Focused Battle/Town/Overworld 1280/1920 runtime, spell schema/behavior/adventure/town/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T01:22:49Z"
     }
   ],
   "project": "heroes-like",
@@ -100933,7 +100943,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T00:56:39Z",
+  "updatedAt": "2026-08-24T01:22:49Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
