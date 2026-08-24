@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence.
 
+- Previous completed implementation slice: `ux-main-menu-generated-size-picker-theme-parity-10184`. The live generated-map Size picker now uses the same authored secondary `OptionButton` theme as adjacent Player Count, Water, and Level controls instead of the flat engine default. Focused runtime proves exact four-state assets, 13px font, 34px minimum height, containment, and whole generated-setup/picker authority at 1280x720 and 1920x1080; the 1280 capture confirms the corrected frame. Generated-map wiring, full Main Menu keyboard navigation, accessibility semantics, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Size options, metadata, setup/launch/generation, Native-RMG, other themes/layout, packaged generated-map interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
+  id: `ux-main-menu-generated-size-picker-theme-parity-10184`
+
 - Previous completed implementation slice: `ux-main-menu-settings-battle-shake-picker-theme-parity-10184`. The live Battle Shake Settings picker now uses the same authored secondary `OptionButton` theme as adjacent UI Scale and Color Cue controls. Focused runtime proves exact four-state asset, 13px font, 34px minimum-height, containment, and whole picker/settings authority at 1280/1920 and 100/130 UI scale; a real 1280 capture confirms the framed control. Active-play Settings, defaults restoration, full Main Menu keyboard/focus, accessibility semantics, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Setting semantics/defaults, items, persistence, layout, other picker styles, packaged Settings interaction, certification, signing/publication, Native-RMG parity, whole-game validation, and release readiness remain unchanged or unclaimed.
   id: `ux-main-menu-settings-battle-shake-picker-theme-parity-10184`
 
@@ -9746,6 +9749,31 @@ Completion evidence:
 - `.artifacts/battle_spell_identity_focused_rerun.cLXBsd` exits naturally with one `BATTLE_EVENT_ANIMATION_STATE_REPORT` `ok:true`; the exact classifier reports 90 Battle spells partitioned into 7 explicit, 55 shared-effect, and 28 generic-only rows, and the real Pressure Clause public cast preserves whole session authority while selecting imported `core_cast_anchor.png`/generic cast audio and no Cinder Burst cue;
 - magic battle behavior, animation cue catalog, controller Board navigation, core systems, validator/JSON/Python/diff checks, and exact/generic editor parsing pass;
 - official Linux export plus packaged headless startup and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction/listening, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness are not claimed.
+
+## Main Menu Generated Size Picker Theme Parity
+
+id: `ux-main-menu-generated-size-picker-theme-parity-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add the existing `GeneratedSizePicker` to the shared `FrontierVisualKit.apply_option_button` loop used by every adjacent generated-map picker;
+- preserve exact picker items, metadata, selection, setup summary, launch behavior, focus order, layout, generated package authority, and Native-RMG boundary;
+- keep all other Main Menu controls and themes unchanged.
+
+Completion criteria:
+- the live Size picker uses the exact shared secondary normal/hover/pressed/disabled styles, 13px font, and 34px minimum height at 1280x720 and 1920x1080;
+- the Size picker and its popup remain contained and preserve exact labels, metadata, selection, keyboard focus, generated setup, and launch authority;
+- focused generated-map setup visual/style proof, menu focus/accessibility/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no size-class, template/profile, player-count, water/underground, seed, package, generation, validation, retry, launch, Native-RMG, layout, focus-order, or save behavior change;
+- no broader Main Menu redesign, other control theme change, packaged generated-map interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion evidence:
+- focused 1280x720 and 1920x1080 runtime proves the exact shared secondary normal/hover/pressed/disabled asset paths, 13px font, 34px minimum height, generated-panel containment/non-overlap, and unchanged whole generated setup plus item/metadata/selection/focus/parent authority;
+- the regenerated 1280 visual capture shows Size, Player Count, and Water with the same authored frame, while generated-map wiring reports all 54 built configurations and retains the exact validator-gated 24-workflow Native-RMG launch boundary;
+- full Main Menu keyboard navigation, screen-reader semantics, core, repository validation, Python/JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass with bounded claims only.
 
 ## Progress Reconciliation
 

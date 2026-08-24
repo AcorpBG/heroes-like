@@ -4809,6 +4809,7 @@ func _apply_visual_theme() -> void:
 	for picker in [
 		_campaign_difficulty_picker,
 		_difficulty_picker,
+		_generated_size_picker,
 		_generated_template_picker,
 		_generated_profile_picker,
 		_generated_player_count_picker,
