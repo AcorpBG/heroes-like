@@ -1836,6 +1836,17 @@ func _validate_script_effect(
 						push_warning("Scenario %s hook %s references missing garrison unit id %s." % [scenario_id, hook_id, unit_id])
 					if int(garrison[unit_id_value]) <= 0:
 						push_warning("Scenario %s hook %s garrison counts must be > 0 for unit %s." % [scenario_id, hook_id, unit_id])
+		"add_army_units":
+			var army_units = effect.get("units", {})
+			if not (army_units is Dictionary) or army_units.is_empty():
+				push_warning("Scenario %s hook %s add_army_units effects must define units." % [scenario_id, hook_id])
+			elif army_units is Dictionary:
+				for unit_id_value in army_units.keys():
+					var unit_id := String(unit_id_value)
+					if unit_id == "" or not unit_index.has(unit_id):
+						push_warning("Scenario %s hook %s references missing active-army unit id %s." % [scenario_id, hook_id, unit_id])
+					if int(army_units[unit_id_value]) <= 0:
+						push_warning("Scenario %s hook %s active-army unit counts must be > 0 for unit %s." % [scenario_id, hook_id, unit_id])
 		"add_enemy_pressure":
 			var faction_id := String(effect.get("faction_id", ""))
 			if faction_id == "" or not faction_index.has(faction_id):

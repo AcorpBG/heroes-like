@@ -2475,6 +2475,13 @@ def validate_script_effect(
             for unit_id, amount in garrison.items():
                 ensure(str(unit_id) in units, errors, f"Scenario {scenario_id} hook {hook_id} references missing garrison unit {unit_id}")
                 ensure(int(amount) > 0, errors, f"Scenario {scenario_id} hook {hook_id} garrison count must be > 0 for {unit_id}")
+    elif effect_type == "add_army_units":
+        army_units = effect.get("units", {})
+        ensure(isinstance(army_units, dict) and bool(army_units), errors, f"Scenario {scenario_id} hook {hook_id} add_army_units effects must define units")
+        if isinstance(army_units, dict):
+            for unit_id, amount in army_units.items():
+                ensure(str(unit_id) in units, errors, f"Scenario {scenario_id} hook {hook_id} references missing active-army unit {unit_id}")
+                ensure(int(amount) > 0, errors, f"Scenario {scenario_id} hook {hook_id} active-army unit count must be > 0 for {unit_id}")
     elif effect_type == "add_enemy_pressure":
         ensure(str(effect.get("faction_id", "")) in factions, errors, f"Scenario {scenario_id} hook {hook_id} references missing faction {effect.get('faction_id')}")
         ensure(int(effect.get("amount", 0)) > 0 or int(effect.get("minimum", 0)) > 0, errors, f"Scenario {scenario_id} hook {hook_id} add_enemy_pressure must define amount > 0 or minimum > 0")
@@ -62067,6 +62074,46 @@ def validate_embercourt_charter_bastion_counterseal_chapter(errors: list[str]) -
             ensure(token in frontier, errors, f"Frontier Claims runtime owner is missing Counterseal token: {token}")
 
 
+def validate_scenario_script_active_army_reinforcements(errors: list[str]) -> None:
+    text = SCENARIO_SCRIPT_RULES_PATH.read_text(encoding="utf-8")
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for token in (
+        '"add_army_units":',
+        'var army_units = effect.get("units", {})',
+        'not unit_index.has(unit_id)',
+        'int(army_units[unit_id_value]) <= 0',
+    ):
+        ensure(token in content_service_text, errors, f"ContentService must validate data-driven active-army reinforcements: {token}")
+    ensure('"add_army_units":\n\t\t\treturn _add_army_units(session, effect.get("units", {}))' in text, errors, "ScenarioScriptRules must dispatch the data-driven active-army reinforcement effect")
+    match = re.search(
+        r"static func _add_army_units\(session: SessionStateStoreScript\.SessionData, units: Variant\) -> Dictionary:\n(?P<body>.*?)(?=\nstatic func _append_event_log)",
+        text,
+        flags=re.S,
+    )
+    ensure(match is not None, errors, "ScenarioScriptRules must define the bounded active-army reinforcement materializer")
+    if match is None:
+        return
+    body = match.group("body")
+    for token in (
+        'if session == null or not (units is Dictionary) or units.is_empty():',
+        'var army: Dictionary = session.overworld.get("army", {}).duplicate(true)',
+        'var stacks: Array = army.get("stacks", []).duplicate(true)',
+        'var unit_ids: Array = units.keys()',
+        'unit_ids.sort()',
+        'ContentService.get_unit(unit_id).is_empty()',
+        'var count: int = max(0, int(units.get(unit_id_value, 0)))',
+        'stacks = _overworld_rules()._add_army_stack(stacks, unit_id, count)',
+        'session.overworld["army"] = army',
+        'hero["army"] = army.duplicate(true)',
+        'HeroCommandRulesScript.commit_active_hero(session)',
+        '"Field reinforcements join the active army (%s)." % summary',
+    ):
+        ensure(token in body, errors, f"ScenarioScriptRules active-army reinforcement is missing fail-closed authority token: {token}")
+    ensure(body.find("unit_ids.sort()") < body.find("_add_army_stack") < body.find('session.overworld["army"] = army') < body.find("commit_active_hero"), errors, "ScenarioScriptRules active-army reinforcement must apply sorted valid units before synchronizing active hero mirrors")
+    for forbidden in ('session.battle', 'session.scenario_status', 'resolved_encounters', 'quick_resolve', 'session.save'):
+        ensure(forbidden not in body, errors, f"ScenarioScriptRules active-army reinforcement must not mutate battle, scenario, or save authority: {forbidden}")
+
+
 def validate_stonewake_watch_chapter_one_sequential_viability(errors: list[str]) -> None:
     army_payload = load_json(CONTENT_DIR / "army_groups.json")
     scenario_payload = load_json(CONTENT_DIR / "scenarios.json")
@@ -62081,9 +62128,16 @@ def validate_stonewake_watch_chapter_one_sequential_viability(errors: list[str])
     }
     ensure(stack_counts(local_army) == {"unit_river_guard": 25, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Stonewake Watch local army must keep exact 25/4/1 chapter-one roster")
     ensure(stack_counts(shared_army) == {"unit_river_guard": 9, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Shared Ashgrove Watch army must remain exact 9/4/1")
-    ensure(str(scenarios.get("stonewake-watch", {}).get("player_army_id", "")) == "army_stonewake_basin_watch", errors, "Stonewake Watch must use only its scenario-local army")
-    for scenario_id in ("reedbarrow-ferry", "nightglass-redoubt"):
-        ensure(str(scenarios.get(scenario_id, {}).get("player_army_id", "")) == "army_ashgrove_watch", errors, f"Later Stonewake chapter {scenario_id} must retain shared army authority")
+    for scenario_id in ("stonewake-watch", "reedbarrow-ferry", "nightglass-redoubt"):
+        ensure(str(scenarios.get(scenario_id, {}).get("player_army_id", "")) == "army_ashgrove_watch", errors, f"Stonewake campaign chapter {scenario_id} must use the shared balanced opening army")
+    stonewake_hooks = [row for row in scenarios.get("stonewake-watch", {}).get("script_hooks", []) if isinstance(row, dict) and str(row.get("id", "")) == "reed_totemist_survivors_rally"]
+    ensure(len(stonewake_hooks) == 1, errors, "Stonewake Watch must define exactly one first-victory field-reinforcement hook")
+    if len(stonewake_hooks) == 1:
+        ensure(stonewake_hooks[0].get("conditions", []) == [{"type": "encounter_resolved", "placement_id": "stonewake_reed_totemists"}], errors, "Stonewake staged reinforcements must follow the first required victory")
+        ensure(stonewake_hooks[0].get("effects", []) == [
+            {"type": "add_army_units", "units": {"unit_river_guard": 16}},
+            {"type": "message", "text": "Freed basin wardens rally behind Caelen after the reed totems fall, bringing the field watch back to marching strength."},
+        ], errors, "Stonewake first-victory reinforcement must retain exact 16-guard delivery and authored message")
 
     report_path = ROOT / "tests" / "stonewake_watch_chapter_one_sequential_viability_report.gd"
     scene_path = ROOT / "tests" / "stonewake_watch_chapter_one_sequential_viability_report.tscn"
@@ -62093,12 +62147,17 @@ def validate_stonewake_watch_chapter_one_sequential_viability(errors: list[str])
         for token in (
             'const REPORT_ID := "STONEWAKE_WATCH_CHAPTER_ONE_SEQUENTIAL_VIABILITY_REPORT"',
             'const CONTROL_OPENING_GUARDS := 9',
-            'const SELECTED_OPENING_GUARDS := 25',
+            'const REINFORCEMENT_HOOK_ID := "reed_totemist_survivors_rally"',
+            'const SELECTED_REINFORCEMENT_GUARDS := 16',
             'const TOWN_RECRUIT_GUARDS := 11',
             'const REQUIRED_ENCOUNTERS := ["stonewake_reed_totemists", "willow_mill", "sluice_band"]',
             'control.get("states", []) != ["victory", "victory", "defeat"]',
             'selected.get("states", []) != ["victory", "victory", "victory", "victory"]',
             'selected.get("post_battle_guard_counts", []) != [36, 30, 21, 21]',
+            'selected.get("reinforcement_fired_ids", []) != [REINFORCEMENT_HOOK_ID]',
+            'not bool(selected.get("army_mirrors_exact", false))',
+            'ScenarioScriptRulesScript.normalize_script_state(session)',
+            'state["fired_hook_ids"] = [REINFORCEMENT_HOOK_ID]',
             'BattleRulesScript.create_battle_payload(session, encounter)',
             'BattleRulesScript.create_town_assault_payload(session, "murkward_ford")',
             'BattleRulesScript.perform_player_action(session, action_id)',
@@ -62108,6 +62167,7 @@ def validate_stonewake_watch_chapter_one_sequential_viability(errors: list[str])
         ):
             ensure(token in report_text, errors, f"Stonewake Watch sequential viability report is missing token: {token}")
         ensure("quick_resolve" not in report_text and "scenario_status =" not in report_text and "resolved_encounters" not in report_text, errors, "Stonewake focused owner must not force outcomes, resolved flags, or Quick Resolve")
+        ensure('const SELECTED_OPENING_GUARDS := 25' not in report_text, errors, "Stonewake focused owner must not retain the breadth-breaking 25-guard opening as production authority")
     if scene_path.exists():
         ensure('res://tests/stonewake_watch_chapter_one_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Stonewake focused scene must load its exact report script")
 
@@ -62121,6 +62181,274 @@ def validate_stonewake_watch_chapter_one_sequential_viability(errors: list[str])
     for token in harness_tokens:
         ensure(token in harness_text, errors, f"Stonewake routed live owner is missing token: {token}")
     ensure(harness_text.find('"ford_cache"') < harness_text.find('"ford_gorget"') < harness_text.find('"murkward_ford" if scenario_id == "stonewake-watch" else ""'), errors, "Stonewake routed live owner must claim cache then gorget before exact Murkward assault")
+
+
+def validate_reedbarrow_ferry_murkward_veteran_garrison(errors: list[str]) -> None:
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    reedbarrow = scenarios.get("reedbarrow-ferry", {})
+    ensure(str(reedbarrow.get("player_army_id", "")) == "army_ashgrove_watch", errors, "Reedbarrow Ferry veteran-garrison ownership must coexist with the shared balanced opening army")
+    hooks = [row for row in reedbarrow.get("script_hooks", []) if isinstance(row, dict)]
+    veteran_hooks = [row for row in hooks if str(row.get("id", "")) == "stonewake_veterans_arrive"]
+    ensure(len(veteran_hooks) == 1, errors, "Reedbarrow Ferry must retain exactly one Stonewake veteran hook")
+    if len(veteran_hooks) == 1:
+        hook = veteran_hooks[0]
+        ensure(int(hook.get("priority", 0)) == 120, errors, "Reedbarrow veteran support must retain priority 120")
+        ensure(hook.get("conditions", []) == [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_willow_mill_secured"},
+        ], errors, "Reedbarrow veteran support must remain chapter-one-carryover-only on day one")
+        effects = hook.get("effects", [])
+        ensure(effects == [
+            {"type": "add_resources", "resources": {"gold": 200, "wood": 1}},
+            {"type": "town_add_recruits", "placement_id": "murkward_bridgehead", "recruits": {"unit_river_guard": 1, "unit_ember_archer": 1}},
+            {"type": "town_add_garrison", "placement_id": "murkward_bridgehead", "garrison": {"unit_river_guard": 32}},
+            {"type": "message", "text": "Willow Mill boatmen slip downriver with grain, dry bowstrings, and a veteran file for the bridgehead."},
+        ], errors, "Reedbarrow veteran support must retain exact resources, recruits, selected garrison, and message")
+        ensure(sum(1 for row in effects if isinstance(row, dict) and str(row.get("type", "")) == "town_add_garrison") == 1, errors, "Reedbarrow veteran support must add exactly one bounded garrison effect")
+
+    report_path = ROOT / "tests" / "reedbarrow_ferry_murkward_veteran_garrison_report.gd"
+    scene_path = ROOT / "tests" / "reedbarrow_ferry_murkward_veteran_garrison_report.tscn"
+    ensure(report_path.exists() and scene_path.exists(), errors, "Reedbarrow Murkward veteran-garrison focused owner is missing")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "REEDBARROW_FERRY_MURKWARD_VETERAN_GARRISON_REPORT"',
+            'const SCENARIO_ID := "reedbarrow-ferry"',
+            'const TOWN_ID := "murkward_bridgehead"',
+            'const HOOK_ID := "stonewake_veterans_arrive"',
+            'const CARRYOVER_FLAG := "carryover_willow_mill_secured"',
+            'const FIELD_ARMY_ID := "army_ashgrove_watch"',
+            'const SELECTED_GUARD_COUNT := 32',
+            'const LIVE_COMBAT_SEED := 2861950694',
+            '"unit_blackbranch_cutthroat": 20',
+            '"unit_mire_slinger": 8',
+            '"unit_bog_brute": 4',
+            'ScenarioScriptRulesScript.process_hooks(session)',
+            'HOOK_ID not in fired_ids',
+            'HOOK_ID in second_result.get("fired_ids", [])',
+            'HOOK_ID in fired_ids or town_after != town_before',
+            'BattleRulesScript.create_battle_payload(session, placement)',
+            'String(control.get("state", "")) != "defeat"',
+            'String(selected.get("state", "")) != "victory"',
+            'selected.get("survivors", {}) != {"unit_river_guard": 16}',
+            'for action_id in ["shoot", "strike", "advance", "defend"]',
+            'BattleRulesScript.perform_player_action(session, action_id)',
+            '"type": "town_defense"',
+            'active_hero["position"] = {"x": 5, "y": 3}',
+            'session.overworld["hero_position"] = {"x": 5, "y": 3}',
+            'get_tree().quit(0)',
+            'get_tree().quit(1)',
+        ):
+            ensure(token in report_text, errors, f"Reedbarrow veteran-garrison focused report is missing token: {token}")
+        ensure("quick_resolve" not in report_text and "scenario_status =" not in report_text and "resolved_encounters" not in report_text, errors, "Reedbarrow focused owner must not force outcomes, resolved flags, or Quick Resolve")
+        ensure("raid_threshold" not in report_text and "EnemyTurnRules" not in report_text, errors, "Reedbarrow focused owner must not weaken or bypass strategic raid policy")
+        ensure(report_text.count("ScenarioScriptRulesScript.process_hooks(session)") == 3, errors, "Reedbarrow focused owner must exercise no-carryover, carryover, idempotence, and selected battle through exactly three hook-processing call sites")
+    if scene_path.exists():
+        ensure('res://tests/reedbarrow_ferry_murkward_veteran_garrison_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Reedbarrow veteran-garrison scene must load its exact report script")
+
+    harness_text = LIVE_VALIDATION_HARNESS_PATH.read_text(encoding="utf-8")
+    harness_tokens = (
+        'elif scenario_id == "reedbarrow-ferry":',
+        '"murkward_peatwax_yard"',
+        '"%s_support_site_claimed_murkward_peatwax_yard" % step_prefix',
+        '"Could not follow Reedbarrow\'s authored peatwax-yard route before the levee objectives."',
+        'objective_clear = await _clear_required_encounters_to_overworld(current_overworld)',
+    )
+    for token in harness_tokens:
+        ensure(token in harness_text, errors, f"Reedbarrow routed live owner is missing token: {token}")
+    ensure(harness_text.find('elif scenario_id == "reedbarrow-ferry":') < harness_text.find('"murkward_peatwax_yard"') < harness_text.find('objective_clear = await _clear_required_encounters_to_overworld(current_overworld)'), errors, "Reedbarrow routed owner must claim its authored peatwax yard before required encounter routing")
+
+
+def validate_reedbarrow_ferry_chapter_two_sequential_viability(errors: list[str]) -> None:
+    army_payload = load_json(CONTENT_DIR / "army_groups.json")
+    scenario_payload = load_json(CONTENT_DIR / "scenarios.json")
+    armies = items_index(army_payload)
+    scenarios = items_index(scenario_payload)
+    local_army = armies.get("army_reedbarrow_ferry_watch", {})
+    shared_army = armies.get("army_ashgrove_watch", {})
+    nightglass_army = armies.get("army_nightglass_redoubt_watch", {})
+    stack_counts = lambda army: {
+        str(stack.get("unit_id", "")): int(stack.get("count", 0))
+        for stack in army.get("stacks", [])
+        if isinstance(stack, dict)
+    }
+    ensure(stack_counts(local_army) == {"unit_river_guard": 20, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Reedbarrow Ferry local army must keep exact 20/4/1 chapter-two roster")
+    ensure(stack_counts(shared_army) == {"unit_river_guard": 9, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Shared Ashgrove Watch army must remain exact 9/4/1 after the Reedbarrow local reserve")
+    ensure(stack_counts(nightglass_army) == {"unit_river_guard": 32, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Nightglass Redoubt local army must retain its independent exact 32/4/1 roster")
+    for scenario_id in ("stonewake-watch", "reedbarrow-ferry", "nightglass-redoubt"):
+        ensure(str(scenarios.get(scenario_id, {}).get("player_army_id", "")) == "army_ashgrove_watch", errors, f"Stonewake campaign chapter {scenario_id} must use the shared balanced opening army")
+    reinforcement_hooks = [row for row in scenarios.get("reedbarrow-ferry", {}).get("script_hooks", []) if isinstance(row, dict) and str(row.get("id", "")) == "levee_totemist_survivors_rally"]
+    ensure(len(reinforcement_hooks) == 1, errors, "Reedbarrow Ferry must define exactly one first-victory field-reinforcement hook")
+    if len(reinforcement_hooks) == 1:
+        ensure(reinforcement_hooks[0].get("conditions", []) == [{"type": "encounter_resolved", "placement_id": "reedbarrow_levee_totemists"}], errors, "Reedbarrow staged reinforcements must follow the first required victory")
+        ensure(reinforcement_hooks[0].get("effects", []) == [
+            {"type": "add_army_units", "units": {"unit_river_guard": 11}},
+            {"type": "message", "text": "Levee wardens cut loose from the broken totems and join Caelen's field column for the ferry advance."},
+        ], errors, "Reedbarrow first-victory reinforcement must retain exact 11-guard delivery and authored message")
+
+    report_path = ROOT / "tests" / "reedbarrow_ferry_chapter_two_sequential_viability_report.gd"
+    scene_path = ROOT / "tests" / "reedbarrow_ferry_chapter_two_sequential_viability_report.tscn"
+    ensure(report_path.exists() and scene_path.exists(), errors, "Reedbarrow Ferry sequential viability focused owner is missing")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "REEDBARROW_FERRY_CHAPTER_TWO_SEQUENTIAL_VIABILITY_REPORT"',
+            'const LOCAL_ARMY_ID := "army_reedbarrow_ferry_watch"',
+            'const SHARED_ARMY_ID := "army_ashgrove_watch"',
+            'const NIGHTGLASS_ARMY_ID := "army_nightglass_redoubt_watch"',
+            'var expected_nightglass := {"unit_river_guard": 32, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}',
+            'const REQUIRED_ENCOUNTERS := ["reedbarrow_levee_totemists", "barrow_pickets", "reedbarrow_chain"]',
+            'const CONTROL_OPENING_GUARDS := 9',
+            'const REINFORCEMENT_HOOK_ID := "levee_totemist_survivors_rally"',
+            'const SELECTED_REINFORCEMENT_GUARDS := 11',
+            'const VETERAN_RECRUIT_GUARDS := 1',
+            '"unit_ember_archer": 5',
+            '"unit_citadel_pikeward": 1',
+            '"unit_mire_slinger": 7',
+            '"unit_blackbranch_cutthroat": 7',
+            '"unit_bog_brute": 3',
+            '"unit_bog_brute": 9',
+            '"unit_mire_slinger": 3',
+            '"unit_mireclaw_reedsnare_kin": 15',
+            'control.get("states", []) != ["victory", "victory", "victory", "defeat"]',
+            'control.get("post_guard_counts", []) != [10, 10, 9, 0]',
+            'selected.get("states", []) != ["victory", "victory", "victory", "victory"]',
+            'selected.get("post_guard_counts", []) != [21, 21, 20, 3]',
+            'selected.get("final_enemy_entry", {}) != LIVE_REEDBARROW_GARRISON',
+            'selected.get("reinforcement_fired_ids", []) != [REINFORCEMENT_HOOK_ID]',
+            'not bool(selected.get("army_mirrors_exact", false))',
+            'var army: Dictionary = ContentService.get_army_group(SHARED_ARMY_ID).duplicate(true)',
+            'army["stacks"] = [',
+            '{"unit_id": "unit_river_guard", "count": int(counts.get("unit_river_guard", 0))}',
+            '{"unit_id": "unit_bog_brute", "count": int(counts.get("unit_bog_brute", 0))}',
+            'BattleRulesScript.create_battle_payload(session, encounter)',
+            'BattleRulesScript.create_town_assault_payload(session, "reedbarrow_ferry")',
+            'BattleRulesScript.cast_player_spell(session, "spell_stone_veil")',
+            'BattleRulesScript.perform_player_action(session, action_id)',
+            'for action_id in ["shoot", "strike", "advance", "defend"]',
+            'if session_identity_after != session_identity_before',
+            'if _assert_content_contract() != content_contract',
+            'ScenarioScriptRulesScript.normalize_script_state(session)',
+            'state["fired_hook_ids"] = [REINFORCEMENT_HOOK_ID]',
+            'get_tree().quit(0)',
+            'get_tree().quit(1)',
+        ):
+            ensure(token in report_text, errors, f"Reedbarrow Ferry sequential viability report is missing token: {token}")
+        ensure(report_text.count('BattleRulesScript.cast_player_spell(session, "spell_stone_veil")') == 2, errors, "Reedbarrow sequential owner must reproduce exactly the routed Ferry Chain and final-assault Stone Veil call sites")
+        ensure('var expected_nightglass := {"unit_river_guard": 29' not in report_text, errors, "Reedbarrow sequential owner must not retain the rejected Nightglass 29-guard compatibility oracle")
+        ensure('const SELECTED_OPENING_GUARDS := 20' not in report_text, errors, "Reedbarrow focused owner must not retain the breadth-breaking 20-guard opening as production authority")
+        ensure("quick_resolve" not in report_text and "scenario_status =" not in report_text and "resolved_encounters" not in report_text, errors, "Reedbarrow sequential owner must not force outcomes, resolved flags, or Quick Resolve")
+        ensure("EnemyTurnRules" not in report_text and "raid_threshold" not in report_text, errors, "Reedbarrow sequential owner must not alter strategic raid policy")
+    if scene_path.exists():
+        ensure('res://tests/reedbarrow_ferry_chapter_two_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Reedbarrow Ferry sequential scene must load its exact report script")
+
+
+def validate_nightglass_redoubt_chapter_three_sequential_viability(errors: list[str]) -> None:
+    armies = items_index(load_json(CONTENT_DIR / "army_groups.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    stack_counts = lambda army: {
+        str(stack.get("unit_id", "")): int(stack.get("count", 0))
+        for stack in army.get("stacks", [])
+        if isinstance(stack, dict)
+    }
+    ensure(stack_counts(armies.get("army_nightglass_redoubt_watch", {})) == {"unit_river_guard": 32, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Nightglass Redoubt local army must keep exact screened 32/4/1 chapter-three roster")
+    ensure(stack_counts(armies.get("army_ashgrove_watch", {})) == {"unit_river_guard": 9, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Nightglass local reserve must not change shared Ashgrove Watch")
+    ensure(stack_counts(armies.get("army_reedbarrow_ferry_watch", {})) == {"unit_river_guard": 20, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Nightglass local reserve must not change Reedbarrow Ferry Watch")
+    for scenario_id in ("stonewake-watch", "reedbarrow-ferry", "nightglass-redoubt"):
+        ensure(str(scenarios.get(scenario_id, {}).get("player_army_id", "")) == "army_ashgrove_watch", errors, f"Stonewake campaign chapter {scenario_id} must use the shared balanced opening army")
+    reinforcement_hooks = [row for row in scenarios.get("nightglass-redoubt", {}).get("script_hooks", []) if isinstance(row, dict) and str(row.get("id", "")) == "bone_ferry_survivors_rally"]
+    ensure(len(reinforcement_hooks) == 1, errors, "Nightglass Redoubt must define exactly one first-victory field-reinforcement hook")
+    if len(reinforcement_hooks) == 1:
+        ensure(reinforcement_hooks[0].get("conditions", []) == [{"type": "encounter_resolved", "placement_id": "nightglass_bone_ferry_watch"}], errors, "Nightglass staged reinforcements must follow the first required victory")
+        ensure(reinforcement_hooks[0].get("effects", []) == [
+            {"type": "add_army_units", "units": {"unit_river_guard": 23}},
+            {"type": "message", "text": "Freed ferry crews and marsh wardens form behind Caelen once the Bone Ferry screen breaks, ready for the causeway."},
+        ], errors, "Nightglass first-victory reinforcement must retain exact 23-guard delivery and authored message")
+
+    report_path = ROOT / "tests" / "nightglass_redoubt_chapter_three_sequential_viability_report.gd"
+    scene_path = ROOT / "tests" / "nightglass_redoubt_chapter_three_sequential_viability_report.tscn"
+    ensure(report_path.exists() and scene_path.exists(), errors, "Nightglass chapter-three sequential viability owner is missing")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "NIGHTGLASS_REDOUBT_CHAPTER_THREE_SEQUENTIAL_VIABILITY_REPORT"',
+            'const LOCAL_ARMY_ID := "army_nightglass_redoubt_watch"',
+            'const SHARED_ARMY_ID := "army_ashgrove_watch"',
+            'const REEDBARROW_ARMY_ID := "army_reedbarrow_ferry_watch"',
+            'const CONTROL_OPENING_GUARDS := 9',
+            'const REINFORCEMENT_HOOK_ID := "bone_ferry_survivors_rally"',
+            'const REJECTED_REINFORCEMENT_GUARDS := 20',
+            'const SELECTED_REINFORCEMENT_GUARDS := 23',
+            'const FERRY_RECRUIT_GUARDS := 2',
+            'const SESSION_SAMPLE_COUNT := 1024',
+            'const OBSERVED_SESSION_IDS := ["362289", "362692"]',
+            'const REQUIRED_ENCOUNTERS := ["nightglass_bone_ferry_watch", "nightglass_drum_circle", "mirror_causeway"]',
+            '"unit_ember_archer": 5',
+            '"unit_citadel_pikeward": 1',
+            '"unit_bog_brute": 5',
+            '"unit_blackbranch_cutthroat": 6',
+            '"unit_mire_slinger": 1',
+            '"unit_bog_brute": 10',
+            '"unit_blackbranch_cutthroat": 11',
+            '"unit_gorefen_ripper": 1',
+            'control.get("states", []) != ["victory", "victory", "defeat"]',
+            'control.get("guard_counts", []) != [11, 11, 0]',
+            'rejected_prefix.get("guard_counts", []) != [31, 31, 31]',
+            'selected_prefix.get("guard_counts", []) != [34, 34, 34]',
+            'selected_prefix.get("army_counts", []) != expected_selected_prefix_armies',
+            'selected_prefix.get("enemy_entries", []) != EXPECTED_ENEMY_ENTRIES.slice(0, 3)',
+            'selected_prefix.get("hero_states", []) != _expected_selected_prefix_hero_states()',
+            'selected_prefix.get("reinforcement_fired_ids", []) != [REINFORCEMENT_HOOK_ID]',
+            'not bool(selected_prefix.get("army_mirrors_exact", false))',
+            'rejected_observed.get("362289", {}).get("final_state", "") != "defeat"',
+            'int(rejected_observed.get("362289", {}).get("post_interrupt_guards", -1)) != 20',
+            'rejected_observed.get("362692", {}).get("final_state", "") != "defeat"',
+            'int(rejected_observed.get("362692", {}).get("post_interrupt_guards", -1)) != 19',
+            'int(selected_matrix.get("evaluated_count", 0)) != SESSION_SAMPLE_COUNT + OBSERVED_SESSION_IDS.size()',
+            'int(selected_matrix.get("failure_count", -1)) != 0',
+            'int(selected_matrix.get("minimum_post_interrupt_guards", -1)) != 21',
+            'int(selected_matrix.get("minimum_final_guards", -1)) != 1',
+            'String(worst.get("session_id", "")) != "376090"',
+            'int(worst.get("combat_seed", 0)) != 1590943562',
+            'session.day = 2',
+            '_restore_mana(session)',
+            'var combat_seed := hash("%s:%d:%s" % [session.session_id, session.day, "faction_mireclaw_raid_1"])',
+            'var route_interrupt: Dictionary = _route_interrupt_encounter(combat_seed)',
+            '_install_route_interrupt(session, route_interrupt)',
+            'ScenarioScriptRulesScript._add_army_units(session, {"unit_river_guard": reinforcement_guards})',
+            'ScenarioScriptRulesScript.normalize_script_state(session)',
+            'state["fired_hook_ids"] = [REINFORCEMENT_HOOK_ID]',
+            '"placement_id": "faction_mireclaw_raid_1"',
+            '"spawned_by_faction_id": "faction_mireclaw"',
+            '"target_placement_id": "causeway_ore"',
+            '"post_objective_continuation": true',
+            '"name": "Sable Muckscribe"',
+            '"command": {"attack": 0, "defense": 0, "power": 2, "knowledge": 2}',
+            '"deployments": 1',
+            '"strategic_successes": 1',
+            '"last_outcome": "artifact_secured"',
+            '"target_success_counts": {"artifact": 1}',
+            'var candidate_id := str((index * 104729 + 7919) % 10000000)',
+            'BattleRulesScript.create_battle_payload(session, encounter)',
+            'BattleRulesScript.create_town_assault_payload(session, "nightglass_redoubt")',
+            'BattleRulesScript.cast_player_spell(session, "spell_stone_veil")',
+            'BattleRulesScript.perform_player_action(session, action_id)',
+            'for action_id in ["shoot", "strike", "advance", "defend"]',
+            '"session_identity_exact": identity_before == identity_after',
+            'if _assert_content_contract() != content_contract',
+            'get_tree().quit(0)',
+            'get_tree().quit(1)',
+        ):
+            ensure(token in report_text, errors, f"Nightglass chapter-three focused report is missing token: {token}")
+        ensure(report_text.count('BattleRulesScript.cast_player_spell(session, "spell_stone_veil")') == 3, errors, "Nightglass focused owner must reproduce the ordered encounter, exact Sable intercept, and final town-assault Stone Veil paths through exactly three call sites")
+        ensure('for encounter_index in range(REQUIRED_ENCOUNTERS.size()):' in report_text and report_text.find('for encounter_index in range(REQUIRED_ENCOUNTERS.size()):') < report_text.find('BattleRulesScript.create_town_assault_payload(session, "nightglass_redoubt")'), errors, "Nightglass focused owner must resolve the three exact encounters before the town assault")
+        ensure("quick_resolve" not in report_text and "scenario_status =" not in report_text and "resolved_encounters" not in report_text, errors, "Nightglass focused owner must not force outcomes, resolved flags, or Quick Resolve")
+        ensure("EnemyTurnRules" not in report_text and "raid_threshold" not in report_text, errors, "Nightglass focused owner must not alter strategic-AI or raid policy")
+        ensure('const SELECTED_OPENING_GUARDS := 32' not in report_text and 'const REJECTED_OPENING_GUARDS := 29' not in report_text, errors, "Nightglass focused owner must not retain breadth-breaking opening reserves as production authority")
+        ensure("army_mirror_causeway_watch" not in report_text and 'session.overworld["encounters"] = []' not in report_text, errors, "Nightglass focused owner must not replace production encounter content or erase strategic state")
+        ensure(report_text.count('filtered.append(route_interrupt.duplicate(true))') == 1 and report_text.count('session.overworld["encounters"] = filtered') == 1, errors, "Nightglass focused owner must install exactly one detached method-matched live raid per tail without changing production state")
+    if scene_path.exists():
+        ensure('res://tests/nightglass_redoubt_chapter_three_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Nightglass chapter-three scene must load its exact report script")
 
 
 def main() -> int:
@@ -62161,7 +62489,11 @@ def main() -> int:
     validate_overworld_resource_assault_victory_return_feedback(errors)
     validate_overworld_encounter_victory_return_feedback(errors)
     validate_content(errors)
+    validate_scenario_script_active_army_reinforcements(errors)
     validate_stonewake_watch_chapter_one_sequential_viability(errors)
+    validate_reedbarrow_ferry_murkward_veteran_garrison(errors)
+    validate_reedbarrow_ferry_chapter_two_sequential_viability(errors)
+    validate_nightglass_redoubt_chapter_three_sequential_viability(errors)
     validate_frontier_claims_direct_encounter_objectives(errors)
     validate_thornwake_rootgate_toll_chapter(errors)
     validate_veilmourn_fogchart_mooring_chapter(errors)

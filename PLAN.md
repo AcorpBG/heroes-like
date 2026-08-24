@@ -9810,7 +9810,7 @@ id: `content-stonewake-watch-chapter-one-sequential-encounter-viability-10184`
 Status: completed.
 
 Implementation boundary:
-- replace only Stonewake Watch chapter one's shared `army_ashgrove_watch` opening reference with a scenario-local Embercourt watch army, preserving the existing hero, town preparation, encounter forces, seeds, objective order, rewards, deadlines, pressure, combat rules, and later Stonewake chapters;
+- retain the exact screened 25-guard local army as an independent method control, but ship the shared `army_ashgrove_watch` opening and deliver its 16-guard difference only after Reed Totemists through the staged-reinforcement owner;
 - use the current routed chapter sequence as the exact control: the prepared 20 River Guards / 4 Ember Archers / 1 Citadel Pikeward clear the Reed Totemists and Willow Mill but enter Sluice Band with only four River Guards and are defeated;
 - screen the smallest scenario-local River Guard reserve that clears the unchanged Reed Totemists -> Willow Mill -> Sluice Band sequence through the shipped Battle action path, rejecting larger opportunistic reinforcement.
 
@@ -9823,13 +9823,100 @@ Observed next gap:
 - the unchanged Reedbarrow Ferry chapter-two route can still lose Murkward to a strategic raid after its required encounters; that is a separate later-chapter defense/content owner and is not evidence against the chapter-one opening-reserve correction.
 
 Completion evidence:
-- the old shared 9/4/1 opening prepares to 20 River Guards and reproduces the exact 20 -> 6 -> 0 Sluice defeat, while the scenario-local 25/4/1 opening prepares to 36 and preserves 36 -> 30 -> 21 survivors through the three required encounters plus 21 after the unchanged Murkward town assault;
+- the shared 9/4/1 opening prepares to 20 River Guards and reproduces the exact control defeat; the authored post-Reed-Totemists 16-guard reinforcement reaches the screened 36-guard state and preserves 36 -> 30 -> 21 survivors through the remaining required encounters plus 21 after the unchanged Murkward town assault;
 - the public routed chapter-one run claims ford_cache then ford_gorget, wins the unchanged Murkward assault, saves/resumes the outcome, and hands off to Reedbarrow Ferry while both later chapters retain `army_ashgrove_watch`;
 - the focused sequential viability report, active medium sample-pressure regression, core systems, repository/validator/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass with bounded claims only.
 
 Non-goals:
 - no unit, spell, hero, battle/autoresolve, tactical-AI, strategic-AI, recruitment-cost, save-schema, encounter-force, objective, deadline, pressure, generated-map, Native-RMG, asset, or project-setting change;
 - no harness-only success substitution, manual-tactical-play certification, packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
+
+## Reedbarrow Ferry Murkward Veteran Garrison Viability
+
+id: `content-reedbarrow-ferry-murkward-veteran-garrison-10184`
+
+Status: completed through `content-stonewake-three-chapter-staged-reinforcement-compatibility-10184`.
+
+Implementation boundary:
+- extend only Reedbarrow Ferry's existing carryover-gated `stonewake_veterans_arrive` hook with a Murkward River Guard garrison reinforcement, preserving the existing resources, recruits, message, hero field army, town preparation, encounter forces, strategic-AI policy, raid force, objectives, pressure, deadlines, and later chapter;
+- use the exact routed chapter-two state as the method-matched control: Murkward's inherited 5 Blackbranch Cutthroats / 3 Mire Slingers are defeated by Vaska's live 20 Blackbranch Cutthroats / 8 Mire Slingers / 4 Bog Brutes at combat seed 2861950694 after the unchanged Levee Totemists, Barrow Pickets, and Ferry Chain encounters;
+- adopt the established authored `veteran_supply_train` 32-River-Guard garrison scale only if it wins that exact public town-defense battle and the full routed Stonewake campaign arc without weakening the raid or forcing state.
+
+Completion criteria:
+- focused method-matched proof reproduces the exact 8-unit control defeat and proves the carryover-only 32-guard garrison wins the unchanged Vaska raid with exact survivor, ownership, hook, and no-carryover exclusion evidence;
+- the real routed three-chapter Stonewake arc completes chapter two through the unchanged required encounters, live strategic raid defense, Reedbarrow assault, outcome save/resume, and Nightglass handoff while shared armies and later content remain exact;
+- active strategic pressure, campaign/core compatibility, repository/editor checks, and bounded Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no shared army, unit, spell, hero, battle/autoresolve, tactical-AI, strategic-AI, raid threshold, spawn, pressure, recruitment-cost, save-schema, encounter-force, objective, deadline, generated-map, Native-RMG, asset, or project-setting change;
+- no harness-only success substitution, manual-tactical-play certification, packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
+
+## Reedbarrow Ferry Chapter-Two Sequential Assault Viability
+
+id: `content-reedbarrow-ferry-chapter-two-sequential-assault-viability-10184`
+
+Status: completed through `content-stonewake-three-chapter-staged-reinforcement-compatibility-10184`.
+
+Implementation boundary:
+- retain the exact screened 20-guard local army as an independent method control, but ship the shared opening and deliver its 11-guard difference only after Levee Totemists through the staged-reinforcement owner;
+- use the exact routed Day-2 method control: town preparation raises the shared 9-guard opening to 10 guards plus the unchanged five other stacks, the Levee Totemists / Barrow Pickets / Ferry Chain sequence leaves 9 guards / 3 Bog Brutes, and Reedbarrow's live 9 Bog Brutes / 3 Mire Slingers / 15 Reedsnare Kin defeat the primary commander;
+- accept only the first fully method-matched screened local reserve: the 20-guard opening plus the existing one-guard veteran recruit prepares 21 guards, keeps every other stack and battle exact, follows the routed Stone Veil cast at Ferry Chain and Reedbarrow, and wins with 3 River Guards surviving the town assault; every prepared total from 10 through 20 loses.
+
+Completion criteria:
+- focused proof reproduces the routed shared-army defeat, proves the authored 11-guard post-Levee reinforcement completes all three encounters and the exact 27-unit town assault through the routed spell/action method, and pins entry/survivor arrays, content ownership, shared openings, hook authority, and session mirrors;
+- the real routed Stonewake arc completes the corrected Murkward raid defense, Reedbarrow assault, victory outcome save/resume, Nightglass handoff, and subsequent authored chapters without forced state or weaker enemies;
+- active strategic pressure, campaign/core compatibility, repository/editor checks, and bounded Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no shared army, unit, spell, hero, battle/autoresolve, tactical-AI, strategic-AI, raid force/threshold, town garrison, recruitment rule/cost, encounter force/reward, objective, deadline, pressure, save schema, generated-map, Native-RMG, asset, or project-setting change;
+- no value above the screened 20-guard opening, harness-only success substitution, manual-tactical-play certification, packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
+
+## Nightglass Redoubt Chapter-Three Sequential Assault Viability
+
+id: `content-nightglass-redoubt-chapter-three-sequential-assault-viability-10184`
+
+Status: completed through `content-stonewake-three-chapter-staged-reinforcement-compatibility-10184`.
+
+Implementation boundary:
+- retain the exact screened 32-guard local army as an independent method control, but ship the shared opening and deliver its 23-guard difference only after Bone Ferry through the staged-reinforcement owner, leaving all encounter forces, the live Sable Muckscribe raid, and battle rules exact;
+- use the exact routed chapter-three state as the control: town preparation fields 11 River Guards / 5 Ember Archers / 1 Citadel Pikeward / 5 Bog Brutes / 6 Blackbranch Cutthroats / 1 Mire Slinger, Bone Ferry leaves 11/4/1/5, Drum Circle leaves 11/1/0/5, and Mirror Causeway defeats the remaining 11 River Guards / 1 Ember Archer / 5 Bog Brutes after the routed Stone Veil cast;
+- accept only the first fully method-matched scenario-local opening reserve after including the routed strategic intercept and its production session-derived seed: the rejected 29-guard opening prepares 31 but reproduces exact live-session town defeats after the Sable Muckscribe raid; 30 and 31 also fail the deterministic screen; 32 opening guards plus the unchanged two-guard Ferry Veteran recruit prepares 34, retains 34 through Bone Ferry / Drum Circle / Mirror Causeway, and wins the unchanged raid and 10 Bog Brute / 11 Blackbranch Cutthroat / 1 Gorefen Ripper Nightglass assault for both observed live session ids and 1,024 deterministic additional session ids. The exact 1,026-session screen has zero failures, a 21-guard post-intercept floor, a one-guard final floor, and worst control session `376090` / raid seed `1590943562`.
+
+Completion criteria:
+- focused proof reproduces the exact routed control defeat, the two observed rejected +20 staged failures, and the complete 1,026-session production-seed matrix for the authored +23 stage, with exact entry/survivor arrays, raid route and commander continuity, spell/action progression, content isolation, hook authority, and session mirrors;
+- the real routed three-chapter Stonewake arc completes chapter three through Bone Ferry, Drum Circle, Mirror Causeway, the Nightglass assault, outcome save/resume, and campaign completion without forced state or weaker enemies;
+- active encounter breadth, campaign/core compatibility, repository/editor checks, and bounded Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no shared army, unit, spell, hero, battle/autoresolve, tactical-AI, strategic-AI, encounter force/reward, town garrison, recruitment rule/cost, objective, deadline, pressure, save schema, generated-map, Native-RMG, asset, or project-setting change;
+- no value above the screened 32-guard opening, harness-only success substitution, fixed-seed substitution for the session-derived raid seed, manual-tactical-play certification, packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
+
+## Stonewake Three-Chapter Staged Reinforcement Compatibility
+
+id: `content-stonewake-three-chapter-staged-reinforcement-compatibility-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace the three oversized scenario-local opening reserves with the original shared 9 River Guard / 4 Ember Archer / 1 Citadel Pikeward field army, preserving every encounter, town garrison, raid, hero, spell, battle rule, strategic-AI rule, and campaign objective;
+- add one generic data-driven `add_army_units` scenario-hook effect that detaches and updates only the active field army plus its active-hero/player-roster mirrors, remains one-shot through existing hook authority, and does not change save schema or any battle calculation;
+- stage exactly the already-screened reserve difference after each chapter's first required victory: 16 River Guards after Stonewake Reed Totemists, 11 after Reedbarrow Levee Totemists, and 23 after the Nightglass Bone Ferry Watch. These reproduce the previously accepted effective 36, 21, and 34-guard downstream states without exposing the whole reserve to every independent encounter sample;
+- treat the current breadth red as product evidence, not a gate exception: the oversized openings reopen 13 medium watches, while the exact shared-opening control completes all 77 samples with zero stalls/invalid orders and restores the clear queue signature `829808c9`.
+
+Completion criteria:
+- focused hook/runtime proof requires exact condition, one-shot firing, active-army and hero-roster mirrors, survivor arrays, save/resume authority, and no reinforcement before the first victory for all three chapters;
+- the exact Nightglass session-derived 1,026-tail screen still has zero failures with post-intercept floor 21 and final floor 1 after the staged 23-guard reinforcement, and both observed 20-guard rejected controls still lose;
+- the real 86-step three-chapter routed client completes Murkward, Reedbarrow, and Nightglass through strategic interrupts, outcome save/resume, Main Menu returns, and campaign-completed browser state;
+- active 77-encounter breadth is queue-clear with signature `829808c9`; campaign/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup remain green.
+
+Completion evidence:
+- focused Stonewake, Murkward-garrison, and Reedbarrow owners pass through public battle/hook paths; Nightglass passes all 1,026 session-derived tails with post-intercept floor 21 and final floor 1;
+- active breadth completes all 77 samples with zero stalls and queue signature `829808c9`, while the real routed client completes all 86 menu/overworld/town/battle/outcome/save-resume steps and returns to the campaign-completed browser with zero errors;
+- core, repository validation, exact/editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass with bounded claims only.
+
+Non-goals:
+- no encounter/enemy/town-garrison weakening, extra reinforcements, value above 16/11/23, altered recruitment, battle/autoresolve/tactical-AI/strategic-AI/pressure/objective/deadline/save-schema/generated-map/Native-RMG rule, or harness queue exemption;
+- no manual-tactical-play certification, packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 

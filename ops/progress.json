@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select and register the next tracker-approved release-readiness slice."
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Stonewake Watch chapter one now uses its scenario-local 25/4/1 Basin Watch, clears the unchanged required encounters and exact ford-cache/gorget route, wins Murkward, saves/resumes, and hands off to chapter two. Reedbarrow Ferry can still lose Murkward to a later strategic raid after its required encounters; that is a separate unregistered chapter-two defense/content gap.",
+  "currentNotes": "Completed the Stonewake three-chapter staged reinforcement correction. All chapters ship the balanced shared 9/4/1 opening and use one-shot first-victory active-army hooks for the exact screened 16/11/23 River Guard differences. Stonewake, Murkward garrison, Reedbarrow, and the Nightglass 1,026-seed owner are green; active breadth completes all 77 samples with queue0/signature829808c9; the real 86-step routed client completes all three chapters with zero errors; core/static/editor checks are green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Claims remain bounded: no manual tactical or packaged campaign interaction, controller/accessibility/native-hardware certification, signing, whole-game, or release-readiness completion.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-stonewake-watch-chapter-one-sequential-encounter-viability-10184",
-  "currentSliceId": "content-stonewake-watch-chapter-one-sequential-encounter-viability-10184",
-  "currentSliceNotes": "Completed from direct shipped behavior evidence. The shared 9/4/1 control prepares to 20 and reproduces 20 -> 6 -> 0 defeat; the local 25/4/1 opening prepares to 36 and retains 36 -> 30 -> 21 through all three required encounters plus the unchanged Murkward assault. The public route, save/resume, chapter-two handoff, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Chapter-two raid defense remains separate.",
+  "currentSlice": "content-stonewake-three-chapter-staged-reinforcement-compatibility-10184",
+  "currentSliceId": "content-stonewake-three-chapter-staged-reinforcement-compatibility-10184",
+  "currentSliceNotes": "Completed with balanced shared openings, exact one-shot 16/11/23 post-victory reinforcements, authoritative focused chapter owners, Nightglass 1,026-seed coverage, queue-clear 77-encounter breadth, and the real 86-step three-chapter route. Enemies, routes, battle/AI rules, save schema, and campaign objectives remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Stonewake Watch chapter-one sequential encounter viability",
-  "currentSliceUpdatedAt": "2026-08-24T14:13:23Z",
+  "currentSliceTitle": "Stonewake three-chapter staged reinforcement compatibility",
+  "currentSliceUpdatedAt": "2026-08-24T17:58:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Tune only Stonewake Watch chapter one's scenario-local opening reserve from the exact routed sequential control. Do not change shared armies, encounter forces, combat rules, later chapters, Native-RMG behavior, or claim manual tactical play or release readiness.",
-  "notes": "Stonewake Watch chapter-one sequential encounter viability is selected from a current routed attrition defeat. Implementation is limited to a scenario-local opening reserve with exact control, routed campaign, compatibility, static/editor, and bounded platform validation.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current product evidence. Preserve completed Stonewake staged reinforcement, shared-opening breadth, and routed campaign authority; do not claim whole-game release readiness from one slice.",
+  "notes": "The selected compatibility correction is direct gameplay work: data-driven first-victory reinforcements preserve the exact screened sequential effective armies while restoring meaningful independent encounter balance. It is not a report-only or gate-only change.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100749,6 +100749,50 @@
       "startedAt": "2026-08-24T13:19:21Z",
       "notes": "Completed the exact Stonewake Watch chapter-one opening-reserve correction. The old shared 9/4/1 control prepares to 20 and reproduces 20 -> 6 -> 0 defeat; the scenario-local 25/4/1 Basin Watch prepares to 36 and preserves 36 -> 30 -> 21 survivors through Reed Totemists, Willow Mill, Sluice Band, and the unchanged Murkward assault. The public route claims ford_cache then ford_gorget, wins Murkward, saves/resumes, and hands off to Reedbarrow Ferry; both later chapters retain the shared army. Focused sequential viability, active sample pressure, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. A later Reedbarrow strategic raid can still retake Murkward and is a separate unregistered chapter-two gap. No encounter/rule/AI/save/schema/generated-map/Native-RMG change, manual tactical certification, packaged campaign interaction, signing, whole-game validation, or release-readiness claim.",
       "completedAt": "2026-08-24T14:13:23Z"
+    },
+    {
+      "id": "content-reedbarrow-ferry-murkward-veteran-garrison-10184",
+      "title": "Reedbarrow Ferry Murkward veteran garrison viability",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T17:58:28Z",
+      "startedAt": "2026-08-24T14:25:21Z",
+      "notes": "Completed from exact routed chapter-two evidence. Murkward's inherited 5 Blackbranch / 3 Mire Slinger garrison loses to Vaska's live raid; the carryover-only 32-guard reinforcement wins with 16 River Guards surviving. The staged Reedbarrow field reinforcement now also preserves the subsequent final assault, and the real three-chapter route completes.",
+      "completedAt": "2026-08-24T17:58:28Z"
+    },
+    {
+      "id": "content-reedbarrow-ferry-chapter-two-sequential-assault-viability-10184",
+      "title": "Reedbarrow Ferry chapter-two sequential assault viability",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T17:58:28Z",
+      "startedAt": "2026-08-24T15:11:00Z",
+      "notes": "Completed from the exact routed post-raid defeat. The shared opening plus veteran recruit remains the control; the authored 11-guard post-Levee reinforcement reaches the first passing prepared total of 21, keeps all other stacks and forces exact, and wins the Reedbarrow assault with 3 guards. The real route completes Reedbarrow and hands off to Nightglass.",
+      "completedAt": "2026-08-24T17:58:28Z"
+    },
+    {
+      "id": "content-nightglass-redoubt-chapter-three-sequential-assault-viability-10184",
+      "title": "Nightglass Redoubt chapter-three sequential assault viability",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T17:58:28Z",
+      "startedAt": "2026-08-24T15:19:25Z",
+      "notes": "Completed with the exact 23-guard post-Bone-Ferry stage instead of an oversized opening. The 1,026-session screen has zero failures, post-intercept floor 21, final floor 1, and retains both rejected +20 live-session defeats. Independent breadth is queue-clear and the real routed chapter reaches campaign completion.",
+      "completedAt": "2026-08-24T17:58:28Z"
+    },
+    {
+      "id": "content-stonewake-three-chapter-staged-reinforcement-compatibility-10184",
+      "title": "Stonewake three-chapter staged reinforcement compatibility",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T17:58:28Z",
+      "startedAt": "2026-08-24T17:16:02Z",
+      "notes": "Completed with one generic data-driven active-army reinforcement effect and exact 16/11/23 River Guard stages after each chapter's first required victory. Focused chapter owners, the Nightglass 1,026-session screen, all 77 independent encounters with queue0/signature829808c9, the real 86-step three-chapter client route, core, repository validation, editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Enemies, routes, battle/AI rules, save schema, and campaign objectives remain exact; platform claims are startup-only.",
+      "completedAt": "2026-08-24T17:58:28Z"
     }
   ],
   "project": "heroes-like",
@@ -100758,8 +100802,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select and register the next tracker-approved release-readiness slice. The observed Reedbarrow Ferry strategic raid-defense loss is a direct later-chapter candidate that still needs bounded attribution before registration. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Implement and focus-prove the three exact first-victory staged reinforcements, rerun the Nightglass 1,026-session matrix and real 86-step routed Stonewake arc, require the active 77-encounter queue to return to clear signature829808c9, then complete core/static/platform gates and close the linked slices. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101190,7 +101234,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_five_faction_roster_final_nine_curated_portraits_completed",
+  "result": "content_stonewake_three_chapter_staged_reinforcement_compatibility_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
