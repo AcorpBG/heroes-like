@@ -537,6 +537,61 @@
       "source_sha256": "705e8ca62f6ee0884000f4f397db813d44f106e9185556e174237940a0658d59",
       "icon_path": "res://art/magic/runtime/spells/spell_old_measure_count_boundary_30.png",
       "icon_sha256": "96347776f2f73f96b104bba2d45b48ed1c15f08ed1eb1ffd7fc0c0ba69ea22a7"
+    },
+    {
+      "id": "spell_lens_array_ray_06",
+      "spell_id": "spell_lens_array_ray_06",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_array_ray_06",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_array_ray_06.png",
+      "source_sha256": "92a5c13a0a83647abb7b372e3dddf002cd3b8284a04daf8a20e9778f7ab37845",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_array_ray_06.png",
+      "icon_sha256": "a351e0466bbd5833fde7b329e66a869b23f6f5561da3ec97f45d9da23acebc16"
+    },
+    {
+      "id": "spell_lens_array_chorus_22",
+      "spell_id": "spell_lens_array_chorus_22",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_array_chorus_22",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_array_chorus_22.png",
+      "source_sha256": "fd9db1ff5d1a087a1fc07e3e35eb607ff340c3368a8e07b99d91b748ed195844",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_array_chorus_22.png",
+      "icon_sha256": "e92c1f13a903773598d87570fbab8bc3659ce976603a6baf15df3fcf880a278d"
+    },
+    {
+      "id": "spell_lens_glass_facet_08",
+      "spell_id": "spell_lens_glass_facet_08",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_glass_facet_08",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_glass_facet_08.png",
+      "source_sha256": "3a46854d8cf92ffd2b81419bff44715d9799b16ca75ebf2b43c247cd244bc90c",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_glass_facet_08.png",
+      "icon_sha256": "ef5e93b269e68e9b3ef6b5a333c1311b64f2b03b00a47d8fe9293a32e5c03c42"
+    },
+    {
+      "id": "spell_lens_focus_array_14",
+      "spell_id": "spell_lens_focus_array_14",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_focus_array_14",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_focus_array_14.png",
+      "source_sha256": "8c2405f786729253103a980d779bf0cd9d58693275a38943a10eb5bb6995770d",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_focus_array_14.png",
+      "icon_sha256": "7219add07b59c44438fb1724ace00ec81d12b03792930d30e67e97c9e8459d00"
+    },
+    {
+      "id": "spell_lens_aurora_chorus_10",
+      "spell_id": "spell_lens_aurora_chorus_10",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_aurora_chorus_10",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_aurora_chorus_10.png",
+      "source_sha256": "eaf27683d2cd017398541ec18e8dc96a3badf141f3fe712cbacb5a1b2f5fcfb4",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_aurora_chorus_10.png",
+      "icon_sha256": "8b6371286304f8abcc22b90988eb97eeb9027fa80a03e0cdcaf382464f914251"
     }
   ]
 }

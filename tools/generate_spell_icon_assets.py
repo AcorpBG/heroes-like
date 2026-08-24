@@ -63,6 +63,11 @@ SPELLS = (
     ("spell_old_measure_count_survey_14", "old_measure"),
     ("spell_old_measure_compass_correction_22", "old_measure"),
     ("spell_old_measure_count_boundary_30", "old_measure"),
+    ("spell_lens_array_ray_06", "lens"),
+    ("spell_lens_array_chorus_22", "lens"),
+    ("spell_lens_glass_facet_08", "lens"),
+    ("spell_lens_focus_array_14", "lens"),
+    ("spell_lens_aurora_chorus_10", "lens"),
 )
 
 
