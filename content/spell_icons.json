@@ -405,6 +405,50 @@
       "source_sha256": "fd635906abbfaada0c48841a35a9dddc73f87212bcd09d3bbd947d7637ce579a",
       "icon_path": "res://art/magic/runtime/spells/spell_furnace_ash_rail_25.png",
       "icon_sha256": "7cfa44310a0eb7598dde20007842432847b8f4abf1c68ca6b0af8c8513f3998d"
+    },
+    {
+      "id": "spell_root_canopy_thorn_22",
+      "spell_id": "spell_root_canopy_thorn_22",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_canopy_thorn_22",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_canopy_thorn_22.png",
+      "source_sha256": "10c3be38fd5066f25d012cf6322769e17f830b632187bef7776874fc6c68515e",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_canopy_thorn_22.png",
+      "icon_sha256": "134c0c2c4a433728965f8a29b145c5b99c56563ce7b9ba730e0931a28a2184fc"
+    },
+    {
+      "id": "spell_root_bark_bark_08",
+      "spell_id": "spell_root_bark_bark_08",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_bark_bark_08",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_bark_bark_08.png",
+      "source_sha256": "a666ce82bc7564425876d0fe57f1d3507f2871f8784b16cebe8965220a6cbf5f",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_bark_bark_08.png",
+      "icon_sha256": "11ed01af306ede4baf24a722a67bffdb3f5b1311d31d71e3f4ac7af202c2b369"
+    },
+    {
+      "id": "spell_root_bark_rootway_24",
+      "spell_id": "spell_root_bark_rootway_24",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_bark_rootway_24",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_bark_rootway_24.png",
+      "source_sha256": "626fbb08fa6390bb574800fd5c53dceae8a5f01daeee9d772e929084b255a180",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_bark_rootway_24.png",
+      "icon_sha256": "8ae509cf33f808afad07e3d57fa07eba02003b1d291fffd6466efb0e47275504"
+    },
+    {
+      "id": "spell_root_bloom_bark_20",
+      "spell_id": "spell_root_bloom_bark_20",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_bloom_bark_20",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_bloom_bark_20.png",
+      "source_sha256": "9cdcb0430bd728dfbd40b6d148e578f9df0a2d55a7d8e486d73995cd24c87378",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_bloom_bark_20.png",
+      "icon_sha256": "2ff694d8495f4d05a6233f056764374a8fd8938349083965fdfdfd9b0d679799"
     }
   ]
 }
