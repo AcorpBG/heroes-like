@@ -16,6 +16,7 @@ const MAP_PADDING := 22.0
 const TACTICAL_VISIBLE_TILE_SPAN := 16.0
 const TACTICAL_VISIBLE_TILE_AREA := TACTICAL_VISIBLE_TILE_SPAN * TACTICAL_VISIBLE_TILE_SPAN
 const MIN_TILE_EXTENT := 24.0
+const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0
 const UNEXPLORED_SHROUD_BASE := Color(0.13, 0.15, 0.16, 0.10)
 const UNEXPLORED_SHROUD_MIST := Color(0.30, 0.32, 0.33, 0.055)
 const UNEXPLORED_SHROUD_LAYER_COUNT := 3
@@ -106,6 +107,7 @@ const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
+const TOWN_SPRITE_EXTENT_FACTOR := 0.80
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -2235,7 +2237,7 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	var footprint := _object_profile_footprint(profile)
 	var anchor := _draw_town_grounding_anchor(rect, remembered, tile)
 	var extent := minf(rect.size.x, rect.size.y)
-	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
+	var sprite_fraction := TOWN_SPRITE_EXTENT_FACTOR
 	var sprite_extent := maxf(12.0, extent * sprite_fraction)
 	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction("town", footprint))
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
@@ -3476,17 +3478,20 @@ func _map_viewport_rect() -> Rect2:
 func _tile_extent_for_viewport(viewport_size: Vector2) -> float:
 	var minimum_tile_extent := _active_minimum_tile_extent()
 	if _should_fit_entire_map():
-		var fit_extent: float = floor(
-			min(
-				viewport_size.x / float(max(_map_size.x, 1)),
-				viewport_size.y / float(max(_map_size.y, 1))
-			)
-		)
-		return max(fit_extent, minimum_tile_extent)
+		var fit_extent := _uncapped_whole_map_fit_tile_extent(viewport_size)
+		return clampf(fit_extent, minimum_tile_extent, maxf(minimum_tile_extent, MAX_SMALL_MAP_FIT_TILE_EXTENT))
 	var visible_tile_span := _active_visible_tile_span()
 	var visible_tile_area := visible_tile_span * visible_tile_span
 	var tactical_extent: float = floor(sqrt(max(viewport_size.x * viewport_size.y, 1.0) / maxf(visible_tile_area, 1.0)))
 	return max(tactical_extent, minimum_tile_extent)
+
+func _uncapped_whole_map_fit_tile_extent(viewport_size: Vector2) -> float:
+	return floor(
+		min(
+			viewport_size.x / float(max(_map_size.x, 1)),
+			viewport_size.y / float(max(_map_size.y, 1))
+		)
+	)
 
 func _should_fit_entire_map() -> bool:
 	var visible_tile_span := int(floor(_active_visible_tile_span()))
@@ -3689,6 +3694,7 @@ func _visible_object_presentation_count(tile: Vector2i) -> int:
 func validation_view_metrics() -> Dictionary:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect := _board_rect()
+	var uncapped_whole_map_fit_tile_extent := _uncapped_whole_map_fit_tile_extent(viewport_rect.size)
 	var cell_size: Vector2 = board_rect.size / Vector2(float(max(_map_size.x, 1)), float(max(_map_size.y, 1)))
 	var visible_columns: float = min(float(_map_size.x), viewport_rect.size.x / max(cell_size.x, 1.0))
 	var visible_rows: float = min(float(_map_size.y), viewport_rect.size.y / max(cell_size.y, 1.0))
@@ -3706,6 +3712,10 @@ func validation_view_metrics() -> Dictionary:
 		"visible_tile_span_override_active": large_map_visible_tile_span_override > 0.0,
 		"visible_tile_span_zoom_out_factor": active_visible_tile_span / TACTICAL_VISIBLE_TILE_SPAN,
 		"minimum_tile_extent": _active_minimum_tile_extent(),
+		"maximum_small_map_fit_tile_extent": MAX_SMALL_MAP_FIT_TILE_EXTENT,
+		"uncapped_whole_map_fit_tile_extent": uncapped_whole_map_fit_tile_extent,
+		"small_map_fit_extent_capped": _should_fit_entire_map() and uncapped_whole_map_fit_tile_extent > cell_size.x,
+		"whole_map_fit_scale_policy": "bounded_small_map_fit_extent",
 		"visible_tile_columns": visible_columns,
 		"visible_tile_rows": visible_rows,
 		"visible_tile_area": visible_columns * visible_rows,
@@ -4442,6 +4452,8 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
 		"uses_faction_sprite": faction_id != "" and String(_town_faction_asset_ids.get(faction_id, "")) == sprite_asset_id,
 		"uses_default_sprite": sprite_asset_id == _town_default_asset_id,
+		"visual_sprite_extent_fraction_of_footprint": TOWN_SPRITE_EXTENT_FACTOR,
+		"visual_sprite_extent_tiles": TOWN_SPRITE_EXTENT_FACTOR * float(mini(TOWN_PRESENTATION_FOOTPRINT.x, TOWN_PRESENTATION_FOOTPRINT.y)),
 		"owner": String(town.get("owner", "neutral")),
 		"footprint_cells": cells,
 		"blocked_footprint_cells": blocked_cells,

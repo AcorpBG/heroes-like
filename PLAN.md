@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence.
+- Selected implementation slice: none. Select the next tracker-approved implementation slice from direct current behavior evidence before making further product changes.
+
+- Previous completed implementation slice: `ux-overworld-small-map-visual-scale-cap-10184`. Small authored maps now cap whole-map fit at 104px instead of expanding to the reproduced 132px extent, and town art uses 80% of its unchanged 3x2 footprint (1.6 visual tiles instead of about 2.16). Focused 1280x720 and 1920x1080 proof keeps the map centered and fully visible, preserves town entry/blocking, hero and one-tile object presentation, session authority, and the Ninefold 65px large-map tactical camera control. Faction-town, faction-hero, artifact, full-route, broad Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Art/content replacement, logical footprints, pathing, gameplay, generated maps, Native RMG, packaged Overworld interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
+  id: `ux-overworld-small-map-visual-scale-cap-10184`
 
 - Previous completed implementation slice: `content-bogbound-oath-reed-watcher-staged-reinforcement-10184`. Bogbound Oath now earns exact one-shot Reed-Watcher reinforcements only after Lantern Patrol, imported Lantern victory plus Bridgeward Levies, Road Chaplains, and Archive Wardens. The exact 40 Cutthroat / 15 Slinger / 31 Cutthroat / 11 Cutthroat stages preserve every enemy force and turn the real three-chapter attrition path into a completed campaign. Focused briefing-normalized proof retains the Bog-Brute-first Highwater formation, captain `linekeeper` trait, combat seed/RNG, ten-Cutthroat losing predecessor, and five-Cutthroat selected survivor floor. The real 78-step shipped-browser route, 77/77 queue-clear encounter breadth, preserved Archive Wardens defeat, campaign/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged campaign interaction, manual tactical certification, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `content-bogbound-oath-reed-watcher-staged-reinforcement-10184`
@@ -9954,6 +9957,27 @@ Completion evidence:
 Non-goals:
 - no base army, enemy roster, unit/stat/spell/hero, town garrison, recruitment, battle/autoresolve/tactical-AI/strategic-AI, pressure/deadline/objective, save-schema, generated-map, Native-RMG, asset, or project-setting change;
 - no reinforcement before Lantern Patrol victory, before the carried Lantern flag plus Bridgeward victory, before Road Chaplains victory, or before Archive Wardens victory; no value above 40 opening Cutthroats, 15 Slingers, 31 post-Road Cutthroats, or eleven post-Archive Cutthroats; no harness-only success substitution, manual tactical-play certification, packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
+
+## Overworld Small-Map Visual Scale Cap
+
+id: `ux-overworld-small-map-visual-scale-cap-10184`
+
+Status: completed.
+
+Implementation boundary:
+- cap only the whole-map fit tile extent at 104px when both authored map dimensions fit within the existing tactical visible span, preventing display resolution from enlarging the same map objects without bound;
+- render town art at 80% of its unchanged 3x2 logical footprint (1.6 tiles visually) so the settlement remains dominant without overwhelming heroes and one-tile sites;
+- retain the existing natural fit below the cap, centered board placement, full-map visibility, and no-pan behavior for small maps;
+- preserve the existing tactical extent/camera behavior for maps larger than the visible span and preserve every object sprite fraction, logical footprint, passability body, town entry tile, selection/focus rect, route, and interaction target.
+
+Completion criteria:
+- focused live runtime at 1280x720 and 1920x1080 proves the small authored control remains fully visible and centered, the 1920 tile/object scale is bounded, and town/hero/site pixel hierarchy no longer expands with the full high-resolution fit extent;
+- exact presentation authority remains 3x2 for towns and 1x1 for heroes, encounters, artifacts, and ordinary sites; town entry/non-entry blocking, hero focus, object selection/click, and route behavior are unchanged;
+- a large-map control retains the prior tactical extent, camera focus, pan support, and object presentation;
+- Overworld visual, faction-town, faction-hero, object/route compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no art/manifest/content replacement, non-town sprite-family fraction, object/town logical footprint, passability, pathfinding, camera-pan policy, input, gameplay, battle, economy, AI, save schema, generated-map, Native-RMG, project stretch/UI scale, packaged Overworld interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, whole-game validation, or release-readiness change or claim.
 
 ## Progress Reconciliation
 
