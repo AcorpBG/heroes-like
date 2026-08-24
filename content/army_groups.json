@@ -76,6 +76,16 @@
       ]
     },
     {
+      "id": "army_stonewake_basin_watch",
+      "name": "Stonewake Basin Watch",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 25},
+        {"unit_id": "unit_ember_archer", "count": 4},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
       "id": "army_sluice_raiders",
       "name": "Sluice Raiders",
       "faction_id": "faction_mireclaw",
