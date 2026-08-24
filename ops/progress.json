@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed packaging-release-source-art-payload-exclusion-10184. Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence; no whole-game or release-readiness claim.",
+  "currentNotes": "Completed ux-main-menu-settings-battle-shake-picker-theme-parity-10184 with exact focused style/authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved slice; no release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-release-source-art-payload-exclusion-10184",
-  "currentSliceId": "packaging-release-source-art-payload-exclusion-10184",
-  "currentSliceNotes": "Completed cross-platform release source-art exclusion. Exact PCK inspection reports zero source metadata/imported payload entries and 215251188 bytes versus 764036400 before; required runtime identities/native libraries remain, and Linux headless plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No source deletion, packaged interaction, certification, Native-RMG parity, or release-readiness claim.",
+  "currentSlice": "ux-main-menu-settings-battle-shake-picker-theme-parity-10184",
+  "currentSliceId": "ux-main-menu-settings-battle-shake-picker-theme-parity-10184",
+  "currentSliceNotes": "Completed exact secondary OptionButton theme parity for BattleCameraShakePicker. Focused 1280/1920 and 100/130 runtime, visual capture, Settings behavior/defaults, Main Menu keyboard/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup pass; broad packaged interaction and release claims remain excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "packaging release source art payload exclusion 10184",
-  "currentSliceUpdatedAt": "2026-08-24T11:39:55Z",
+  "currentSliceTitle": "ux main menu settings battle shake picker theme parity 10184",
+  "currentSliceUpdatedAt": "2026-08-24T12:12:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The completed source-art payload slice owns only release-export exclusion of development art sources plus exact PCK/runtime startup validation. Do not infer source deletion, texture-quality/gameplay/save change, packaged interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release readiness. Select the next slice from direct current product evidence.",
+  "guardrailNote": "The completed Battle Shake picker slice owns only exact visual-theme parity with adjacent Settings OptionButtons. Do not infer setting semantics/default changes, other picker/layout changes, packaged Settings interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release readiness. Select the next slice from direct current product evidence.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next slice from direct current product evidence. The completed source-art payload slice does not imply source deletion, texture-quality/gameplay/save changes, packaged interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release readiness.",
-  "notes": "Completed packaging-release-source-art-payload-exclusion-10184 with exact cross-platform PCK-directory and packaged-startup evidence. No implementation slice is currently selected.",
+  "nextActionGuardrailNote": "Select the next slice from direct current product evidence. The completed Battle Shake picker slice does not imply broader Settings redesign, packaged interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release readiness.",
+  "notes": "Completed ux-main-menu-settings-battle-shake-picker-theme-parity-10184 with exact live style/authority and bounded cross-platform startup evidence. No implementation slice is currently selected.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100705,6 +100705,17 @@
       "startedAt": "2026-08-24T11:30:33Z",
       "notes": "Completed cross-platform release source-art payload exclusion. Both official PCKs are 215251188 bytes versus 764036400 before (548785212 bytes / 71.8% smaller), with zero source-art metadata/imported payload entries versus 421/421 and 548587824 imported source bytes before. Required runtime terrain/artifact identities and Linux/Windows native libraries remain; repository/editor checks, Linux ELF export/headless startup, and Windows PE export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No source deletion, texture-quality/gameplay/save change, packaged interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release-readiness claim.",
       "completedAt": "2026-08-24T11:39:55Z"
+    },
+    {
+      "id": "ux-main-menu-settings-battle-shake-picker-theme-parity-10184",
+      "title": "ux main menu settings battle shake picker theme parity 10184",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T12:12:18Z",
+      "startedAt": "2026-08-24T11:50:15Z",
+      "notes": "Completed exact shared secondary OptionButton theme parity for BattleCameraShakePicker. Focused runtime proves the four asset-backed states, 13px font, 34px minimum height, containment, and whole settings/picker restoration at 1280/1920 and 100/130 UI scale; the 1280 visual capture confirms the frame. Active-play Settings, defaults, full Main Menu keyboard/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Setting semantics/defaults, items, persistence, layout, other picker styles, packaged Settings interaction, certification, signing/publication, Native-RMG parity, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "completedAt": "2026-08-24T12:12:18Z"
     }
   ],
   "project": "heroes-like",
@@ -101247,9 +101258,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The release source-art payload exclusion slice is completed with exact Linux and Windows PCK/startup evidence; no next implementation slice is selected and the game is not release-ready.",
+  "summary": "The Battle Shake picker theme-parity slice is completed with exact focused, compatibility, static/editor, and bounded Linux/Windows startup evidence; no next implementation slice is selected and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T11:39:55Z",
+  "updatedAt": "2026-08-24T12:12:18Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -19286,6 +19286,143 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         ensure(required_token in display_control_text, errors, f"Display Change focused control is missing token: {required_token}")
 
 
+def validate_main_menu_battle_shake_picker_theme_parity(errors: list[str]) -> None:
+    for path in (MAIN_MENU_SCRIPT_PATH, MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH):
+        ensure(path.exists(), errors, f"Missing Battle Shake picker theme-parity dependency: {path.relative_to(ROOT)}")
+    if not MAIN_MENU_SCRIPT_PATH.exists() or not MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists():
+        return
+
+    script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_theme_match = re.search(
+        r"func _apply_visual_theme\(\) -> void:(.*?)(?=\n\nfunc |\Z)",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(visual_theme_match is not None, errors, "MainMenu.gd is missing its visual-theme owner")
+    if visual_theme_match is not None:
+        visual_theme_body = visual_theme_match.group(1)
+        picker_loop_match = re.search(
+            r"for picker in \[(.*?)\]:\n\s*FrontierVisualKit\.apply_option_button\(picker, \"secondary\", maxf\(picker\.custom_minimum_size\.x, 176\.0\), 34\.0, 13\)",
+            visual_theme_body,
+            flags=re.DOTALL,
+        )
+        ensure(picker_loop_match is not None, errors, "Main Menu visual theme is missing the exact shared secondary OptionButton loop")
+        if picker_loop_match is not None:
+            actual_pickers = tuple(re.findall(r"^\s*(_[a-z0-9_]+),$", picker_loop_match.group(1), flags=re.MULTILINE))
+            expected_pickers = (
+                "_campaign_difficulty_picker",
+                "_difficulty_picker",
+                "_generated_template_picker",
+                "_generated_profile_picker",
+                "_generated_player_count_picker",
+                "_generated_water_picker",
+                "_generated_underground_toggle",
+                "_presentation_mode_picker",
+                "_resolution_picker",
+                "_render_quality_picker",
+                "_frame_rate_picker",
+                "_battle_playback_speed_picker",
+                "_keyboard_navigation_layout_picker",
+                "_ui_scale_picker",
+                "_battle_camera_shake_picker",
+                "_color_cue_picker",
+            )
+            ensure(
+                actual_pickers == expected_pickers,
+                errors,
+                f"Main Menu shared OptionButton theme ownership must remain exact and ordered: expected={expected_pickers} actual={actual_pickers}",
+            )
+    ensure(
+        "FrontierVisualKit.apply_option_button(_battle_camera_shake_picker" not in script_text,
+        errors,
+        "Battle Shake picker must use the shared OptionButton theme loop rather than a one-off style path",
+    )
+
+    smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    parity_match = re.search(
+        r"func _assert_battle_shake_picker_theme_parity\((.*?)\n\treturn true(?=\n\nfunc )",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(parity_match is not None, errors, "Menu/outcome visual smoke is missing the Battle Shake picker theme-parity case")
+    if parity_match is not None:
+        parity_body = parity_match.group(1)
+        for token in (
+            "var settings_before: Dictionary = SettingsService.ensure_settings().duplicate(true)",
+            "var ui_scale_before: Dictionary = _option_button_behavior_contract(ui_scale_picker)",
+            "var battle_shake_before: Dictionary = _option_button_behavior_contract(battle_shake_picker)",
+            "var color_cue_before: Dictionary = _option_button_behavior_contract(color_cue_picker)",
+            "for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
+            "for requested_scale in [100, 130]:",
+            'SettingsService.call("_set_runtime_window_size", requested_size)',
+            'shell.call("validation_select_ui_scale", requested_scale)',
+            "var expected_shell_size := Vector2(requested_size) * (100.0 / float(requested_scale))",
+            "shell.size.distance_to(expected_shell_size) > 0.1",
+            '"normal": "res://art/ui/runtime/shared/button_secondary_normal.png"',
+            '"hover": "res://art/ui/runtime/shared/button_secondary_hover.png"',
+            '"pressed": "res://art/ui/runtime/shared/button_secondary_pressed.png"',
+            '"disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png"',
+            "battle_shake_style != ui_scale_style",
+            "color_cue_style != ui_scale_style",
+            'ui_scale_style.get("custom_minimum_size", Vector2.ZERO) != Vector2(176.0, 34.0)',
+            'int(ui_scale_style.get("font_size", 0)) != 13',
+            "battle_shake_picker.get_parent() != scale_row",
+            "ui_scale_picker.get_global_rect().intersects(battle_shake_picker.get_global_rect())",
+            'shell.call("validation_select_ui_scale", original_ui_scale)',
+            'shell.call("validation_set_high_contrast", original_high_contrast)',
+            'SettingsService.call("_set_runtime_window_size", original_size)',
+            "SettingsService.ensure_settings() != settings_before",
+            "_option_button_behavior_contract(battle_shake_picker) != battle_shake_before",
+        ):
+            ensure(token in parity_body, errors, f"Battle Shake picker focused parity case is missing token: {token}")
+        size_index = parity_body.find("for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:")
+        scale_index = parity_body.find("for requested_scale in [100, 130]:")
+        select_scale_index = parity_body.find('shell.call("validation_select_ui_scale", requested_scale)')
+        requested_width_index = parity_body.find('SettingsService.call("_set_runtime_window_size", requested_size)')
+        style_index = parity_body.find("var battle_shake_style: Dictionary = _option_button_style_contract(battle_shake_picker)")
+        restore_scale_index = parity_body.find('shell.call("validation_select_ui_scale", original_ui_scale)')
+        restore_window_index = parity_body.find('SettingsService.call("_set_runtime_window_size", original_size)')
+        authority_index = parity_body.find("SettingsService.ensure_settings() != settings_before")
+        ensure(
+            0 <= size_index < scale_index < select_scale_index < requested_width_index < style_index < restore_scale_index < restore_window_index < authority_index,
+            errors,
+            "Battle Shake picker focused parity case must select scale before setting each requested width, then measure before restoring and checking whole authority",
+        )
+        for forbidden in (
+            "validation_select_battle_camera_shake",
+            "FrontierVisualKit",
+            "add_theme_",
+            "remove_theme_",
+            "set_item_text",
+            "set_item_metadata",
+            "sort",
+            "erase",
+        ):
+            ensure(forbidden not in parity_body, errors, f"Battle Shake picker style proof must remain passive for picker semantics: {forbidden}")
+
+    for required_helper_token in (
+        "func _option_button_style_contract(picker: OptionButton) -> Dictionary:",
+        'for state in ["normal", "hover", "pressed", "disabled"]:',
+        "if not (style is StyleBoxTexture):",
+        'style_paths[state] = texture.resource_path',
+        "func _option_button_behavior_contract(picker: OptionButton) -> Dictionary:",
+        '"text": picker.get_item_text(index)',
+        '"metadata": picker.get_item_metadata(index)',
+        '"disabled": picker.is_item_disabled(index)',
+        '"selected": picker.selected',
+        '"tooltip": picker.tooltip_text',
+        '"parent": picker.get_parent().get_path()',
+        '"focus_neighbor_top": picker.focus_neighbor_top',
+        '"focus_next": picker.focus_next',
+    ):
+        ensure(required_helper_token in smoke_text, errors, f"Battle Shake picker contract helper is missing token: {required_helper_token}")
+    ensure(
+        smoke_text.count("_assert_battle_shake_picker_theme_parity(") == 2,
+        errors,
+        "Battle Shake picker parity owner must have exactly one helper and one runtime invocation",
+    )
+
+
 def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
     for path in (MAIN_MENU_SCRIPT_PATH, MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH):
         ensure(path.exists(), errors, f"Missing Main Menu Settings focus-visibility dependency: {path.relative_to(ROOT)}")
@@ -61812,6 +61949,7 @@ def main() -> int:
     validate_main_menu_first_view(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
+    validate_main_menu_battle_shake_picker_theme_parity(errors)
     validate_main_menu_settings_focus_visibility(errors)
     validate_main_menu_settings_summary_word_ellipsis(errors)
     validate_map_editor_shell_slice(errors)
