@@ -162,11 +162,29 @@ func _ready() -> void:
 	_configure_save_slot_picker()
 	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
+	MusicAudio.sync_context("town", "town_shell_ready", _town_music_metadata())
+	buckets["music_audio"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_refresh(true)
 	_present_load_resumed_cue()
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("town", "entry", "town_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(true), _session)
 	call_deferred("_configure_town_keyboard_focus", true)
+
+func _town_music_metadata() -> Dictionary:
+	if _session == null:
+		return {}
+	var town := TownRules.get_active_town(_session)
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	return {
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"day": _session.day,
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"town_faction_id": String(town_template.get("faction_id", "")),
+	}
 
 func _apply_responsive_layout() -> void:
 	if _sidebar_shell_panel == null:
@@ -2335,6 +2353,8 @@ func validation_snapshot() -> Dictionary:
 	var defense_check := _defense_check_surface()
 	return {
 		"scene_path": scene_file_path,
+		"music_audio": MusicAudio.validation_summary(),
+		"town_music_metadata": _town_music_metadata(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
 		"return_to_menu_visible_message": _last_message,

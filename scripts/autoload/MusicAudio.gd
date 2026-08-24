@@ -24,6 +24,14 @@ const CONTEXT_SPECS := {
 		"mode": "minor",
 		"pulse": 0.45,
 	},
+	"town": {
+		"cue_id": "music_town_theme",
+		"root": 146.0,
+		"gain": 0.023,
+		"label": "town hearth",
+		"mode": "major",
+		"pulse": 0.52,
+	},
 	"battle": {
 		"cue_id": "music_battle_theme",
 		"root": 110.0,
@@ -288,7 +296,7 @@ func _fill_music_waveform(playback: AudioStreamGeneratorPlayback, layer: Diction
 
 func _signature_for_context(context_id: String, metadata: Dictionary) -> String:
 	var parts := [context_id]
-	for key in ["scenario_id", "day", "status", "encounter_id", "encounter_difficulty", "launch_mode", "threat_level"]:
+	for key in ["scenario_id", "day", "status", "encounter_id", "encounter_difficulty", "launch_mode", "threat_level", "town_placement_id", "town_id", "town_faction_id"]:
 		if metadata.has(key):
 			parts.append("%s=%s" % [key, str(metadata.get(key, ""))])
 	return "|".join(parts)
