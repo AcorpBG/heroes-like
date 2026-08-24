@@ -81,6 +81,14 @@ SPELLS = (
     ("spell_beacon_waymark_road_15", "beacon"),
     ("spell_beacon_crown_signal_19", "beacon"),
     ("spell_beacon_dawn_ward_21", "beacon"),
+    ("spell_furnace_rivet_clause_05", "furnace"),
+    ("spell_furnace_brass_rite_07", "furnace"),
+    ("spell_furnace_hammer_rail_13", "furnace"),
+    ("spell_furnace_slag_clamp_15", "furnace"),
+    ("spell_furnace_coal_clause_17", "furnace"),
+    ("spell_furnace_kiln_rite_19", "furnace"),
+    ("spell_furnace_rivet_mantle_21", "furnace"),
+    ("spell_furnace_foundry_clamp_27", "furnace"),
 )
 
 

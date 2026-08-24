@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Beacon town-study icon slice is complete: all 16 Beacon catalog spells own original source art and deterministic runtime icons; the manifest is 66 specific/46 non-Beacon fallback and the unchanged generated reward pool is 38 specific/0 fallback. Focused live Riverwatch Hold/Highwater Keep study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Furnace town-study icon slice is complete: all 16 Furnace catalog spells own original source art and deterministic runtime icons; the manifest is 74 specific/38 non-Furnace fallback and the unchanged generated reward pool is 38 specific/0 fallback. Focused live Orevein Gantry/Clauseworks Depot study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-beacon-town-study-complete-distinct-icons-10184",
-  "currentSliceId": "presentation-beacon-town-study-complete-distinct-icons-10184",
-  "currentSliceNotes": "Five remaining Beacon town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Beacon catalog icons. Manifest coverage is 66 specific/46 non-Beacon fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Riverwatch Hold and Highwater Keep tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 46 non-Beacon fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-furnace-town-study-complete-distinct-icons-10184",
+  "currentSliceId": "presentation-furnace-town-study-complete-distinct-icons-10184",
+  "currentSliceNotes": "Eight remaining Furnace town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Furnace catalog icons. Manifest coverage is 74 specific/38 non-Furnace fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Orevein Gantry and Clauseworks Depot tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 38 non-Furnace fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation beacon town study complete distinct icons 10184",
-  "currentSliceUpdatedAt": "2026-08-24T04:39:09Z",
+  "currentSliceTitle": "presentation furnace town study complete distinct icons 10184",
+  "currentSliceUpdatedAt": "2026-08-24T04:59:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The complete 16-spell Beacon catalog now owns distinct specific icons. Preserve the exact 38-spell reward order/values, 66 specific icons and 46 non-Beacon catalog fallbacks, all spell and Town-study behavior, focus, session, and save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "The complete 16-spell Furnace catalog now owns distinct specific icons. Preserve the exact 38-spell reward order/values, 74 specific icons and 38 non-Furnace catalog fallbacks, all spell and Town-study behavior, focus, session, and save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Beacon town-study icon slice is complete. Preserve the completed 133-building icon catalog, 66 specific spell icons, exact 46-spell non-Beacon catalog fallback, and unchanged 38-spell reward pool with full specific coverage; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "The Furnace town-study icon slice is complete. Preserve the completed 133-building icon catalog, 74 specific spell icons, exact 38-spell non-Furnace catalog fallback, and unchanged 38-spell reward pool with full specific coverage; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100565,6 +100565,16 @@
       "startedAt": "2026-08-24T04:24:08Z",
       "notes": "Five remaining Beacon town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Beacon catalog icons. Manifest coverage is 66 specific/46 non-Beacon fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Riverwatch Hold and Highwater Keep tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 46 non-Beacon fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T04:38:56Z"
+    },
+    {
+      "id": "presentation-furnace-town-study-complete-distinct-icons-10184",
+      "title": "presentation furnace town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T04:59:01Z",
+      "startedAt": "2026-08-24T04:41:37Z",
+      "notes": "Eight remaining Furnace town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Furnace catalog icons. Manifest coverage is 74 specific/38 non-Furnace fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Orevein Gantry and Clauseworks Depot tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 38 non-Furnace fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T04:59:01Z"
     }
   ],
   "project": "heroes-like",
@@ -101109,7 +101119,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T04:38:56Z",
+  "updatedAt": "2026-08-24T04:59:01Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
