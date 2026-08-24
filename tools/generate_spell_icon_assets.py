@@ -99,6 +99,16 @@ SPELLS = (
     ("spell_mire_dusk_snare_22", "mire"),
     ("spell_mire_leech_poultice_26", "mire"),
     ("spell_mire_flood_rot_28", "mire"),
+    ("spell_old_measure_survey_survey_02", "old_measure"),
+    ("spell_old_measure_tally_axiom_04", "old_measure"),
+    ("spell_old_measure_index_correction_10", "old_measure"),
+    ("spell_old_measure_proof_pace_12", "old_measure"),
+    ("spell_old_measure_measure_axiom_16", "old_measure"),
+    ("spell_old_measure_survey_boundary_18", "old_measure"),
+    ("spell_old_measure_tally_tally_20", "old_measure"),
+    ("spell_old_measure_marker_pace_24", "old_measure"),
+    ("spell_old_measure_index_survey_26", "old_measure"),
+    ("spell_old_measure_proof_axiom_28", "old_measure"),
 )
 
 

@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The Mire town-study icon slice is complete: all 16 Mire catalog spells own original source art and deterministic runtime icons; the manifest is 84 specific/28 non-Mire fallback and the unchanged generated reward pool is 38 specific/0 fallback. Dense Town study lists now scroll and follow focus. Focused live Causeway Stand/Bogbound Oath/Nightglass Ledger Reversal study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Old Measure town-study icon slice is complete: all 16 Old Measure catalog spells own original source art and deterministic runtime icons; the manifest is 94 specific/18 Root+Veil fallback and the unchanged generated reward pool is 38 specific/0 fallback. Focused live Orevein Contract, Clauseworks Counterclaim, Bellwake Wreck Claim, and Fogchart Mooring study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-mire-town-study-complete-distinct-icons-10184",
-  "currentSliceId": "presentation-mire-town-study-complete-distinct-icons-10184",
-  "currentSliceNotes": "Ten remaining Mire town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Mire catalog icons. Manifest coverage is 84 specific/28 non-Mire fallback; the unchanged generated reward pool remains 38/38 specific. A production Study ScrollContainer with focus following keeps all valid actions reachable without changing order or rule authority. Focused 1280/1920 Causeway Stand, Bogbound Oath, and Nightglass Ledger Reversal study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 28 non-Mire fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-old-measure-town-study-complete-distinct-icons-10184",
+  "currentSliceId": "presentation-old-measure-town-study-complete-distinct-icons-10184",
+  "currentSliceNotes": "All ten formerly fallback Old Measure town-study spells now own distinct original 1254px source art and deterministic 128px runtime icons, completing all 16 Old Measure catalog spells. The manifest is 94 specific/18 Root+Veil fallback; the unchanged 38-spell generated reward pool remains fully specific. Focused 1280x720/1920x1080 Orevein Contract, Clauseworks Counterclaim, Bellwake Wreck Claim, and Fogchart Mooring study actions preserve exact access/order, focus/scroll, consequences, session, and save authority. Magic/Town/focus/core compatibility, deterministic regeneration, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining Root/Veil fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation mire town study complete distinct icons 10184",
+  "currentSliceTitle": "presentation old measure town study complete distinct icons 10184",
   "currentSliceUpdatedAt": "2026-08-24T05:30:07Z",
   "deferredRiskRegister": [
     {
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The complete 16-spell Furnace catalog now owns distinct specific icons. Preserve the exact 38-spell reward order/values, 74 specific icons and 38 non-Furnace catalog fallbacks, all spell and Town-study behavior, focus, session, and save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "The complete 16-spell Old Measure catalog now owns distinct specific icons. Preserve the exact 38-spell reward order/values, 94 specific icons and 18 Root/Veil catalog fallbacks, all spell and Town-study behavior, focus, session, and save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Mire town-study icon slice is complete. Preserve the completed 133-building icon catalog, 84 specific spell icons, exact 28-spell non-Mire catalog fallback, unchanged 38-spell reward pool with full specific coverage, and focus-following Town study scroll; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "The Old Measure town-study icon slice is complete. Preserve the completed 133-building icon catalog, 94 specific spell icons, exact 18-spell Root/Veil catalog fallback, unchanged 38-spell reward pool with full specific coverage, and focus-following Town study scroll; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100585,6 +100585,16 @@
       "startedAt": "2026-08-24T05:01:55Z",
       "notes": "Ten remaining Mire town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Mire catalog icons. Manifest coverage is 84 specific/28 non-Mire fallback; the unchanged generated reward pool remains 38/38 specific. A production Study ScrollContainer with focus following keeps all valid actions reachable without changing order or rule authority. Focused 1280/1920 Causeway Stand, Bogbound Oath, and Nightglass Ledger Reversal study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 28 non-Mire fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T05:29:25Z"
+    },
+    {
+      "id": "presentation-old-measure-town-study-complete-distinct-icons-10184",
+      "title": "presentation old measure town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T05:58:42Z",
+      "startedAt": "2026-08-24T05:34:34Z",
+      "notes": "All ten formerly fallback Old Measure town-study spells now own distinct original 1254px source art and deterministic 128px runtime icons, completing all 16 Old Measure catalog spells. The manifest is 94 specific/18 Root+Veil fallback; the unchanged 38-spell generated reward pool remains fully specific. Focused 1280x720/1920x1080 Orevein Contract, Clauseworks Counterclaim, Bellwake Wreck Claim, and Fogchart Mooring study actions preserve exact access/order, focus/scroll, consequences, session, and save authority. Magic/Town/focus/core compatibility, deterministic regeneration, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining Root/Veil fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T05:58:42Z"
     }
   ],
   "project": "heroes-like",
@@ -101129,7 +101139,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T05:29:25Z",
+  "updatedAt": "2026-08-24T05:58:42Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
