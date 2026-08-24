@@ -59,6 +59,10 @@ SPELLS = (
     ("spell_veil_mist_shroud_10", "veil"),
     ("spell_veil_moon_drift_12", "veil"),
     ("spell_veil_moon_mark_28", "veil"),
+    ("spell_old_measure_marker_tally_08", "old_measure"),
+    ("spell_old_measure_count_survey_14", "old_measure"),
+    ("spell_old_measure_compass_correction_22", "old_measure"),
+    ("spell_old_measure_count_boundary_30", "old_measure"),
 )
 
 

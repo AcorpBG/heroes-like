@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Veil generated-map reward icon slice is complete: Mourning Mark, Mist Shroud, Moon Drift, and Moon Mark own original source art and deterministic runtime icons; the manifest is 44 specific/68 fallback and the reward pool is 29 specific/9 fallback. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Old Measure generated-map reward icon slice is complete: Marker Tally, Count Survey, Compass Correction, and Count Boundary own original source art and deterministic runtime icons; the manifest is 48 specific/64 fallback and the reward pool is 33 specific/5 fallback. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-generated-map-veil-spell-reward-distinct-icons-10184",
-  "currentSliceId": "presentation-generated-map-veil-spell-reward-distinct-icons-10184",
-  "currentSliceNotes": "Completed four exact Veil generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 44 specific/68 fallback; generated reward pool is 29 specific/9 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
+  "currentSlice": "presentation-generated-map-old-measure-spell-reward-distinct-icons-10184",
+  "currentSliceId": "presentation-generated-map-old-measure-spell-reward-distinct-icons-10184",
+  "currentSliceNotes": "Completed four exact Old Measure generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 48 specific/64 fallback; generated reward pool is 33 specific/5 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation generated map veil spell reward distinct icons 10184",
-  "currentSliceUpdatedAt": "2026-08-24T02:53:39Z",
+  "currentSliceTitle": "presentation generated map old measure spell reward distinct icons 10184",
+  "currentSliceUpdatedAt": "2026-08-24T03:07:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The four selected Veil generated-map reward icons are complete. Preserve the exact 38-spell reward order/values, 44 specific icons and 68 catalog fallbacks, all spell behavior, and Battle/Overworld/session/save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "The four selected Old Measure generated-map reward icons are complete. Preserve the exact 38-spell reward order/values, 48 specific icons and 64 catalog fallbacks, all spell behavior, and Battle/Overworld/session/save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Veil reward icon slice is complete. Preserve the completed 133-building icon catalog, 44 specific spell icons, exact 68-spell catalog fallback, and unchanged 38-spell reward pool; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "The Old Measure reward icon slice is complete. Preserve the completed 133-building icon catalog, 48 specific spell icons, exact 64-spell catalog fallback, and unchanged 38-spell reward pool; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100525,6 +100525,16 @@
       "startedAt": "2026-08-24T02:41:12Z",
       "notes": "Completed four exact Veil generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 44 specific/68 fallback; generated reward pool is 29 specific/9 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-24T02:53:39Z"
+    },
+    {
+      "id": "presentation-generated-map-old-measure-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map old measure spell reward distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T03:07:39Z",
+      "startedAt": "2026-08-24T02:55:39Z",
+      "notes": "Completed four exact Old Measure generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 48 specific/64 fallback; generated reward pool is 33 specific/5 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-24T03:07:39Z"
     }
   ],
   "project": "heroes-like",
@@ -101069,7 +101079,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T02:53:39Z",
+  "updatedAt": "2026-08-24T03:07:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
