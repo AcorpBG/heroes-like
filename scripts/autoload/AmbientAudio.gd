@@ -3,8 +3,11 @@ extends Node
 
 const SAMPLE_RATE := 22050
 const MAX_ACTIVE_PLAYERS := 4
+const MAX_TRANSITION_PLAYERS := MAX_ACTIVE_PLAYERS * 2
 const MAX_RECORDS := 24
 const DEFAULT_SEGMENT_DURATION := 0.85
+const CONTEXT_CROSSFADE_DURATION_SEC := 0.3
+const CONTEXT_CROSSFADE_SILENCE_DB := -60.0
 const REPORT_SCHEMA := "overworld_ambient_audio_runtime_v1"
 const AMBIENT_SFX_MANIFEST_PATH := "res://content/ambient_sfx_manifest.json"
 const EFFECTS_AUDIO_BUS := "Effects"
@@ -24,10 +27,16 @@ const DAY_SPEC := {"frequency": 248.0, "gain": 0.014, "label": "day pulse"}
 
 var _records: Array[Dictionary] = []
 var _active_players: Array[AudioStreamPlayer] = []
+var _current_players: Array[AudioStreamPlayer] = []
+var _outgoing_players: Array[AudioStreamPlayer] = []
 var _current_signature := ""
 var _current_layers: Array[Dictionary] = []
 var _ambient_sfx_manifest: Dictionary = {}
 var _ambient_sfx_manifest_loaded := false
+var _transition_tween: Tween = null
+var _transition_generation := 0
+var _transition_active := false
+var _last_transition: Dictionary = {}
 
 func sync_overworld_session(session: Variant, source: String = "overworld") -> Dictionary:
 	if session == null:
@@ -46,6 +55,10 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 			"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 			"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 			"active_player_count": _active_players.size(),
+			"current_player_count": _current_players.size(),
+			"outgoing_player_count": _outgoing_players.size(),
+			"transition_active": _transition_active,
+			"transition": _transition_snapshot(),
 			"timestamp_msec": Time.get_ticks_msec(),
 		})
 	var context := _overworld_context(session)
@@ -69,16 +82,24 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 			"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 			"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 			"active_player_count": _active_players.size(),
+			"current_player_count": _current_players.size(),
+			"outgoing_player_count": _outgoing_players.size(),
+			"transition_active": _transition_active,
+			"transition": _transition_snapshot(),
 			"muted": SettingsService.effects_audio_muted(),
 			"played": not SettingsService.effects_audio_muted(),
 			"timestamp_msec": Time.get_ticks_msec(),
 		}
-	stop_overworld_ambient("signature_changed")
+	_cancel_transition_for_replacement()
+	var outgoing := _copy_player_group(_current_players)
 	_current_signature = signature
 	_current_layers = _ambient_layers_for_context(context)
 	var muted := SettingsService.effects_audio_muted()
+	var incoming: Array[AudioStreamPlayer] = []
 	if not muted:
-		_play_layers(_current_layers)
+		incoming = _play_layers(_current_layers, not outgoing.is_empty())
+	_current_players = incoming
+	var transition := _begin_context_crossfade(outgoing, incoming, source, context)
 	return _append_record({
 		"schema": REPORT_SCHEMA,
 		"cue_id": "overworld_ambient_mix",
@@ -96,16 +117,30 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 		"active_player_count": _active_players.size(),
+		"current_player_count": _current_players.size(),
+		"outgoing_player_count": _outgoing_players.size(),
+		"transition_active": _transition_active,
+		"transition": transition,
 		"muted": muted,
 		"played": not muted,
 		"timestamp_msec": Time.get_ticks_msec(),
 	})
 
 func stop_overworld_ambient(reason: String = "manual") -> void:
+	_transition_generation += 1
+	_kill_transition_tween()
 	for player in _active_players:
 		if is_instance_valid(player):
 			player.queue_free()
 	_active_players.clear()
+	_current_players.clear()
+	_outgoing_players.clear()
+	_transition_active = false
+	_last_transition = {
+		"reason": reason,
+		"stopped_immediately": true,
+		"generation": _transition_generation,
+	}
 	_current_signature = ""
 	_current_layers.clear()
 
@@ -136,10 +171,19 @@ func validation_summary() -> Dictionary:
 		"terrain_counts": terrain_counts,
 		"pressure_layer_count": pressure_layer_count,
 		"active_player_count": _active_players.size(),
+		"current_player_count": _current_players.size(),
+		"outgoing_player_count": _outgoing_players.size(),
 		"current_signature": _current_signature,
 		"current_layers": _current_layers.duplicate(true),
 		"audio_bus": EFFECTS_AUDIO_BUS,
 		"max_active_players": MAX_ACTIVE_PLAYERS,
+		"max_transition_players": MAX_TRANSITION_PLAYERS,
+		"context_crossfade_duration_sec": CONTEXT_CROSSFADE_DURATION_SEC,
+		"context_crossfade_silence_db": CONTEXT_CROSSFADE_SILENCE_DB,
+		"transition_active": _transition_active,
+		"transition": _transition_snapshot(),
+		"current_players": _player_group_snapshot(_current_players),
+		"outgoing_players": _player_group_snapshot(_outgoing_players),
 		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 		"records": validation_records(),
@@ -203,14 +247,16 @@ func _layer_payload(layer_id: String, cue_id: String, spec: Dictionary, phase_of
 		"generated_fallback_count": 0,
 	}
 
-func _play_layers(layers: Array[Dictionary]) -> void:
+func _play_layers(layers: Array[Dictionary], start_silent: bool = false) -> Array[AudioStreamPlayer]:
 	_prune_players()
 	var generated_playback_started := false
+	var started: Array[AudioStreamPlayer] = []
 	for index in range(layers.size()):
-		if _active_players.size() >= MAX_ACTIVE_PLAYERS:
+		if started.size() >= MAX_ACTIVE_PLAYERS:
 			break
 		var layer: Dictionary = layers[index]
-		if _play_imported_layer(layer):
+		if _play_imported_layer(layer, start_silent):
+			started.append(_active_players[-1])
 			layers[index] = layer
 			continue
 		var stream := AudioStreamGenerator.new()
@@ -219,12 +265,15 @@ func _play_layers(layers: Array[Dictionary]) -> void:
 		var player := AudioStreamPlayer.new()
 		player.bus = SettingsService.effects_audio_bus_name()
 		player.stream = stream
+		player.set_meta("ambient_target_volume_db", 0.0)
+		player.volume_db = CONTEXT_CROSSFADE_SILENCE_DB if start_silent else 0.0
 		add_child(player)
 		player.play()
 		var playback := player.get_stream_playback() as AudioStreamGeneratorPlayback
 		if playback != null:
 			_fill_ambient_waveform(playback, layer)
 		_active_players.append(player)
+		started.append(player)
 		layer["playback_source"] = "generated_waveform"
 		layer["generated_fallback_count"] = 1
 		layers[index] = layer
@@ -232,8 +281,9 @@ func _play_layers(layers: Array[Dictionary]) -> void:
 	var timer := get_tree().create_timer(DEFAULT_SEGMENT_DURATION + 0.08) if get_tree() != null and generated_playback_started else null
 	if timer != null:
 		timer.timeout.connect(_prune_players)
+	return started
 
-func _play_imported_layer(layer: Dictionary) -> bool:
+func _play_imported_layer(layer: Dictionary, start_silent: bool = false) -> bool:
 	var cue := _ambient_sfx_manifest_cue(String(layer.get("cue_id", "")))
 	if cue.is_empty():
 		return false
@@ -274,7 +324,9 @@ func _play_imported_layer(layer: Dictionary) -> bool:
 	var player := AudioStreamPlayer.new()
 	player.bus = SettingsService.effects_audio_bus_name()
 	player.stream = playback_stream
-	player.volume_db = float(cue.get("volume_db", -27.0))
+	var target_volume_db := float(cue.get("volume_db", -27.0))
+	player.set_meta("ambient_target_volume_db", target_volume_db)
+	player.volume_db = CONTEXT_CROSSFADE_SILENCE_DB if start_silent else target_volume_db
 	add_child(player)
 	_active_players.append(player)
 	player.play()
@@ -382,13 +434,138 @@ func _signature_for_context(context: Dictionary) -> String:
 	]
 
 func _prune_players() -> void:
-	var kept: Array[AudioStreamPlayer] = []
-	for player in _active_players:
-		if is_instance_valid(player) and player.is_inside_tree() and player.playing:
-			kept.append(player)
-		elif is_instance_valid(player):
+	_active_players = _live_player_group(_active_players)
+	_current_players = _live_player_group(_current_players)
+	_outgoing_players = _live_player_group(_outgoing_players)
+
+func _begin_context_crossfade(
+	outgoing: Array[AudioStreamPlayer],
+	incoming: Array[AudioStreamPlayer],
+	source: String,
+	context: Dictionary
+) -> Dictionary:
+	if outgoing.is_empty() or incoming.is_empty():
+		_free_player_group(outgoing)
+		_outgoing_players.clear()
+		_transition_active = false
+		_last_transition = {
+			"started": false,
+			"completed": true,
+			"generation": _transition_generation,
+			"source": source,
+			"terrain_id": String(context.get("terrain_id", "")),
+			"outgoing_player_count": 0,
+			"incoming_player_count": incoming.size(),
+		}
+		return _last_transition.duplicate(true)
+	_transition_generation += 1
+	var generation := _transition_generation
+	_outgoing_players = _copy_player_group(outgoing)
+	_transition_active = true
+	_last_transition = {
+		"started": true,
+		"completed": false,
+		"generation": generation,
+		"source": source,
+		"terrain_id": String(context.get("terrain_id", "")),
+		"threat_level": String(context.get("threat_level", "")),
+		"day": int(context.get("day", 0)),
+		"duration_sec": CONTEXT_CROSSFADE_DURATION_SEC,
+		"outgoing_player_count": _outgoing_players.size(),
+		"incoming_player_count": incoming.size(),
+		"outgoing_player_ids": _player_ids(_outgoing_players),
+		"incoming_player_ids": _player_ids(incoming),
+	}
+	_transition_tween = create_tween()
+	_transition_tween.set_parallel(true)
+	for player in _outgoing_players:
+		_transition_tween.tween_property(player, "volume_db", CONTEXT_CROSSFADE_SILENCE_DB, CONTEXT_CROSSFADE_DURATION_SEC).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	for player in incoming:
+		_transition_tween.tween_property(player, "volume_db", _player_target_volume_db(player), CONTEXT_CROSSFADE_DURATION_SEC).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	_transition_tween.finished.connect(_on_context_crossfade_finished.bind(generation))
+	return _last_transition.duplicate(true)
+
+func _on_context_crossfade_finished(generation: int) -> void:
+	if generation != _transition_generation:
+		return
+	_free_player_group(_outgoing_players)
+	_outgoing_players.clear()
+	_transition_active = false
+	_transition_tween = null
+	_last_transition["completed"] = true
+	_last_transition["outgoing_player_count_after"] = 0
+	_last_transition["incoming_player_count_after"] = _current_players.size()
+	_prune_players()
+
+func _cancel_transition_for_replacement() -> void:
+	if not _transition_active and _outgoing_players.is_empty():
+		return
+	_transition_generation += 1
+	_kill_transition_tween()
+	_free_player_group(_outgoing_players)
+	_outgoing_players.clear()
+	_transition_active = false
+
+func _kill_transition_tween() -> void:
+	if _transition_tween != null and _transition_tween.is_valid():
+		_transition_tween.kill()
+	_transition_tween = null
+
+func _free_player_group(players: Array[AudioStreamPlayer]) -> void:
+	for player in players:
+		_active_players.erase(player)
+		if is_instance_valid(player):
 			player.queue_free()
-	_active_players = kept
+
+func _live_player_group(players: Array[AudioStreamPlayer]) -> Array[AudioStreamPlayer]:
+	var kept: Array[AudioStreamPlayer] = []
+	for player in players:
+		if is_instance_valid(player) and not player.is_queued_for_deletion() and player.is_inside_tree() and player.playing:
+			kept.append(player)
+		elif is_instance_valid(player) and not player.is_queued_for_deletion():
+			player.queue_free()
+	return kept
+
+func _copy_player_group(players: Array[AudioStreamPlayer]) -> Array[AudioStreamPlayer]:
+	var copied: Array[AudioStreamPlayer] = []
+	for player in players:
+		if is_instance_valid(player) and not player.is_queued_for_deletion():
+			copied.append(player)
+	return copied
+
+func _player_ids(players: Array[AudioStreamPlayer]) -> Array[int]:
+	var ids: Array[int] = []
+	for player in players:
+		if is_instance_valid(player):
+			ids.append(int(player.get_instance_id()))
+	return ids
+
+func _player_target_volume_db(player: AudioStreamPlayer) -> float:
+	if player != null and player.has_meta("ambient_target_volume_db"):
+		return float(player.get_meta("ambient_target_volume_db"))
+	return 0.0
+
+func _player_group_snapshot(players: Array[AudioStreamPlayer]) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	for player in players:
+		if not is_instance_valid(player):
+			continue
+		rows.append({
+			"instance_id": int(player.get_instance_id()),
+			"playing": player.playing,
+			"volume_db": snappedf(player.volume_db, 0.001),
+			"target_volume_db": snappedf(_player_target_volume_db(player), 0.001),
+			"queued_for_deletion": player.is_queued_for_deletion(),
+		})
+	return rows
+
+func _transition_snapshot() -> Dictionary:
+	var snapshot := _last_transition.duplicate(true)
+	snapshot["active"] = _transition_active
+	snapshot["generation"] = _transition_generation
+	snapshot["current_player_count"] = _current_players.size()
+	snapshot["outgoing_player_count"] = _outgoing_players.size()
+	return snapshot
 
 func _ambient_sfx_manifest_cue(cue_id: String) -> Dictionary:
 	_load_ambient_sfx_manifest()

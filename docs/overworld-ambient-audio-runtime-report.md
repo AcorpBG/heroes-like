@@ -14,6 +14,7 @@ Implemented behavior:
 - `AmbientAudio.sync_overworld_session(...)` derives layers from live session terrain, dominant map terrain, day, hero position, and enemy pressure.
 - Terrain layers use `overworld_ambient_<terrain>` cue ids, pressure adds `overworld_ambient_pressure`, and later days add `overworld_ambient_day_pulse`.
 - The service keeps signature-based restart behavior so identical context does not restart the ambient segment every refresh.
+- Changed terrain, pressure, day, or hero-position signatures use a bounded 300 ms context crossfade between the exact outgoing and incoming variable-size layer groups. Rapid context replacement retires only stale outgoing players and transfers ownership to the latest complete group.
 - `OverworldShell` syncs ambient audio from the active session during ready/refresh and exposes `validation_ambient_audio_summary()` plus the same summary inside `validation_snapshot()`.
 
 Production-loop implementation:
@@ -21,7 +22,7 @@ Production-loop implementation:
 - Each environment uses a distinct layered synthesis body: grass air and distant calls, water wash and droplets, mire drone and bubbles, dry road creaks, rough stone wind, sand sweep, snow chimes, lava rumble and crackle, underground hall and drips, distant pressure drums, and a day pulse bell layer.
 - Imported `AudioStreamWAV` resources are deep-duplicated before runtime applies `LOOP_FORWARD` across the exact `0..529200` sample range. Shared imported resources remain unmodified.
 - Normal live terrain/pressure/day playback keeps its exact active players beyond one full twelve-second segment, and an unchanged signature does not restart them.
-- Context changes still stop the old players before creating the exact new terrain, pressure, and day layers. The four-player cap, Effects bus, mute policy, generated `AudioStreamGenerator` fallback, and shell/session authority are unchanged.
+- Context changes preserve the old group only for the 300 ms context crossfade while independently enforcing the four-layer per-context cap. Stable signatures do not restart, rapid context replacement cannot retain an older group, and an explicit or missing-session stop remains immediate. The Effects bus, mute policy, generated `AudioStreamGenerator` fallback, and shell/session authority are unchanged.
 
 Validation evidence:
 - `OVERWORLD_AMBIENT_AUDIO_RUNTIME_REPORT`
@@ -37,6 +38,9 @@ Validation evidence:
 - `production_ambient_loop_v1`
 - `LOOP_FORWARD`
 - all three terrain/pressure/day players still active after a full segment
+- 300 ms context crossfade with exact outgoing/current player identities and target volumes
+- rapid context replacement with stale-player retirement and settled latest ownership
+- missing-session stop remains immediate with no current, outgoing, or active players
 
 Boundaries:
 - This is runtime ambience with production-loop original WAV assets, not final sound design.

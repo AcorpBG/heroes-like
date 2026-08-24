@@ -37,6 +37,7 @@ var _report := {
 	"summary": {},
 	"records": [],
 	"shell_summary": {},
+	"crossfade_lifecycle": {},
 	"errors": [],
 }
 
@@ -75,6 +76,7 @@ func _run() -> void:
 	var continuous_record: Dictionary = AmbientAudio.sync_overworld_session(session, "validation_repeat_after_loop")
 	_validate_continuous_playback(continuous_summary, continuous_record)
 	var direct_summary: Dictionary = AmbientAudio.validation_summary()
+	var crossfade_lifecycle := await _crossfade_lifecycle_case()
 	var saved_manifest_loaded := bool(AmbientAudio.get("_ambient_sfx_manifest_loaded"))
 	var saved_manifest: Dictionary = (AmbientAudio.get("_ambient_sfx_manifest") as Dictionary).duplicate(true)
 	AmbientAudio.validation_reset()
@@ -87,18 +89,20 @@ func _run() -> void:
 	AmbientAudio.set("_ambient_sfx_manifest", saved_manifest)
 	AmbientAudio.validation_reset()
 	var original_effects_volume := SettingsService.effects_volume_percent()
-	SettingsService.settings["audio"]["effects_volume_percent"] = 0
-	SettingsService.apply_settings()
+	var mute_result: Dictionary = SettingsService.set_effects_volume_percent(0)
 	var muted_record: Dictionary = AmbientAudio.sync_overworld_session(session, "validation_effects_muted")
-	SettingsService.settings["audio"]["effects_volume_percent"] = original_effects_volume
-	SettingsService.apply_settings()
+	var restore_effects_result: Dictionary = SettingsService.set_effects_volume_percent(original_effects_volume)
 	AmbientAudio.validation_reset()
 	_report["muted_record"] = muted_record
+	_report["crossfade_lifecycle"] = crossfade_lifecycle
 	_report["terrain_records"] = terrain_records
 	_report["continuous_summary"] = continuous_summary
 	_report["continuous_record"] = continuous_record
 	_report["fallback_record"] = fallback_record
+	_expect(bool(crossfade_lifecycle.get("ok", false)), "Ambient crossfade lifecycle must preserve variable exact player groups and settle cleanly: %s" % crossfade_lifecycle)
+	_expect(bool(mute_result.get("ok", false)) and bool(restore_effects_result.get("ok", false)) and SettingsService.effects_volume_percent() == original_effects_volume, "Ambient mute control must commit and restore exact isolated settings: %s %s" % [mute_result, restore_effects_result])
 	_expect(bool(muted_record.get("muted", false)) and not bool(muted_record.get("played", true)), "Zero Effects volume must mute ambient playback: %s" % muted_record)
+	_expect(int(muted_record.get("active_player_count", -1)) == 0 and int(muted_record.get("current_player_count", -1)) == 0 and int(muted_record.get("outgoing_player_count", -1)) == 0 and not bool(muted_record.get("transition_active", true)), "Muted ambient context must create no players or transition: %s" % muted_record)
 
 	SessionState.set_active_session(session)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
@@ -187,6 +191,7 @@ func _validate_manifest_asset_surface() -> void:
 
 func _validate_continuous_playback(summary: Dictionary, record: Dictionary) -> void:
 	_expect(int(summary.get("active_player_count", 0)) == 3, "All imported ambient players must remain active after one complete segment: %s" % summary)
+	_expect(int(summary.get("current_player_count", 0)) == 3 and int(summary.get("outgoing_player_count", -1)) == 0 and not bool(summary.get("transition_active", true)), "Continuous ambient playback must settle to exactly the current three layers: %s" % summary)
 	var layers: Array = summary.get("current_layers", []) if summary.get("current_layers", []) is Array else []
 	_expect(layers.size() == 3, "Continuous summary must retain terrain, pressure, and day layers: %s" % [layers])
 	for layer_value in layers:
@@ -214,6 +219,8 @@ func _validate_direct_summary(summary: Dictionary) -> void:
 	_expect(String(summary.get("sfx_manifest_path", "")) == "res://content/ambient_sfx_manifest.json", "Ambient direct summary must expose the ambient SFX manifest path: %s" % summary)
 	_expect(bool(summary.get("sfx_manifest_loaded", false)), "Ambient direct summary must load the ambient SFX manifest: %s" % summary)
 	_expect(int(summary.get("max_active_players", 0)) == AmbientAudio.MAX_ACTIVE_PLAYERS, "Ambient direct summary must expose player cap: %s" % summary)
+	_expect(int(summary.get("max_transition_players", 0)) == AmbientAudio.MAX_TRANSITION_PLAYERS, "Ambient direct summary must expose the exact transition cap: %s" % summary)
+	_expect(absf(float(summary.get("context_crossfade_duration_sec", 0.0)) - AmbientAudio.CONTEXT_CROSSFADE_DURATION_SEC) < 0.001, "Ambient direct summary must expose exact crossfade duration: %s" % summary)
 	_expect(int(summary.get("pressure_layer_count", 0)) >= 1, "Ambient direct summary must include pressure layer evidence: %s" % summary)
 	var terrain_counts: Dictionary = summary.get("terrain_counts", {}) if summary.get("terrain_counts", {}) is Dictionary else {}
 	for terrain_id_value in EXPECTED_TERRAIN_IDS:
@@ -231,6 +238,98 @@ func _validate_shell_summary(summary: Dictionary, snapshot: Dictionary) -> void:
 	var snapshot_summary: Dictionary = snapshot.get("ambient_audio", {}) if snapshot.get("ambient_audio", {}) is Dictionary else {}
 	_expect_equal("snapshot ambient schema", String(snapshot_summary.get("schema", "")), "overworld_ambient_audio_runtime_v1")
 	_expect(int(snapshot_summary.get("record_count", 0)) >= 1, "Overworld validation snapshot must expose ambient audio summary: %s" % snapshot_summary)
+
+func _crossfade_lifecycle_case() -> Dictionary:
+	AmbientAudio.validation_reset()
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state(session)
+	session.day = 1
+	_set_enemy_pressure(session, "faction_mireclaw", 0)
+	_set_hero_terrain(session, "grass")
+	var initial_authority: Dictionary = session.to_dict()
+	var initial_record: Dictionary = AmbientAudio.sync_overworld_session(session, "crossfade_initial")
+	var initial_summary: Dictionary = AmbientAudio.validation_summary()
+	var initial_authority_exact := session.to_dict() == initial_authority
+	var initial_ids := _summary_player_ids(initial_summary, "current_players")
+	_set_hero_terrain(session, "mire")
+	_set_enemy_pressure(session, "faction_mireclaw", 6)
+	var pressure_authority: Dictionary = session.to_dict()
+	var pressure_record: Dictionary = AmbientAudio.sync_overworld_session(session, "crossfade_pressure")
+	var pressure_summary: Dictionary = AmbientAudio.validation_summary()
+	var pressure_authority_exact := session.to_dict() == pressure_authority
+	var pressure_current_ids := _summary_player_ids(pressure_summary, "current_players")
+	var pressure_outgoing_ids := _summary_player_ids(pressure_summary, "outgoing_players")
+	session.day = 2
+	var day_authority: Dictionary = session.to_dict()
+	var day_record: Dictionary = AmbientAudio.sync_overworld_session(session, "crossfade_day")
+	var rapid_summary: Dictionary = AmbientAudio.validation_summary()
+	var rapid_current_ids := _summary_player_ids(rapid_summary, "current_players")
+	var rapid_outgoing_ids := _summary_player_ids(rapid_summary, "outgoing_players")
+	var stable_record: Dictionary = AmbientAudio.sync_overworld_session(session, "crossfade_day_stable")
+	var stable_summary: Dictionary = AmbientAudio.validation_summary()
+	var day_authority_exact := session.to_dict() == day_authority
+	await get_tree().create_timer(AmbientAudio.CONTEXT_CROSSFADE_DURATION_SEC + 0.12).timeout
+	var settled_summary: Dictionary = AmbientAudio.validation_summary()
+	var settled_ids := _summary_player_ids(settled_summary, "current_players")
+	var missing_record: Dictionary = AmbientAudio.sync_overworld_session(null, "crossfade_missing_session")
+	var missing_summary: Dictionary = AmbientAudio.validation_summary()
+	var missing_transition: Dictionary = missing_summary.get("transition", {}) if missing_summary.get("transition", {}) is Dictionary else {}
+	var checks := {
+		"initial_exact": bool(initial_record.get("changed", false)) and initial_ids.size() == 1 and int(initial_summary.get("active_player_count", 0)) == 1 and not bool(initial_summary.get("transition_active", true)) and initial_authority_exact,
+		"pressure_transition_exact": bool(pressure_record.get("transition_active", false)) and pressure_outgoing_ids == initial_ids and pressure_current_ids.size() == 2 and int(pressure_summary.get("active_player_count", 0)) == 3 and _player_groups_disjoint(pressure_current_ids, pressure_outgoing_ids) and _players_begin_silent(pressure_summary),
+		"pressure_authority_exact": pressure_authority_exact,
+		"rapid_transition_exact": bool(day_record.get("transition_active", false)) and rapid_outgoing_ids == pressure_current_ids and rapid_current_ids.size() == 3 and int(rapid_summary.get("active_player_count", 0)) == 5 and int(rapid_summary.get("active_player_count", 0)) <= AmbientAudio.MAX_TRANSITION_PLAYERS,
+		"stale_initial_retired": not _arrays_overlap(initial_ids, rapid_current_ids) and not _arrays_overlap(initial_ids, rapid_outgoing_ids),
+		"stable_no_restart": not bool(stable_record.get("changed", true)) and _summary_player_ids(stable_summary, "current_players") == rapid_current_ids and _summary_player_ids(stable_summary, "outgoing_players") == rapid_outgoing_ids,
+		"settled_exact": int(settled_summary.get("active_player_count", 0)) == 3 and int(settled_summary.get("current_player_count", 0)) == 3 and int(settled_summary.get("outgoing_player_count", -1)) == 0 and not bool(settled_summary.get("transition_active", true)) and settled_ids == rapid_current_ids and _players_reach_targets(settled_summary),
+		"session_authority_exact": day_authority_exact and session.to_dict() == day_authority,
+		"missing_session_immediate": String(missing_record.get("reason", "")) == "missing_session" and int(missing_record.get("active_player_count", -1)) == 0 and int(missing_summary.get("active_player_count", -1)) == 0 and int(missing_summary.get("current_player_count", -1)) == 0 and int(missing_summary.get("outgoing_player_count", -1)) == 0 and not bool(missing_summary.get("transition_active", true)) and bool(missing_transition.get("stopped_immediately", false)) and String(missing_transition.get("reason", "")) == "missing_session",
+	}
+	return {
+		"ok": not checks.values().has(false),
+		"checks": checks,
+		"initial_summary": initial_summary,
+		"pressure_summary": pressure_summary,
+		"rapid_summary": rapid_summary,
+		"stable_summary": stable_summary,
+		"settled_summary": settled_summary,
+		"missing_summary": missing_summary,
+	}
+
+func _summary_player_ids(summary: Dictionary, key: String) -> Array[int]:
+	var ids: Array[int] = []
+	var rows: Array = summary.get(key, []) if summary.get(key, []) is Array else []
+	for row_value in rows:
+		if row_value is Dictionary:
+			ids.append(int(row_value.get("instance_id", 0)))
+	return ids
+
+func _player_groups_disjoint(left: Array[int], right: Array[int]) -> bool:
+	return not _arrays_overlap(left, right)
+
+func _arrays_overlap(left: Array[int], right: Array[int]) -> bool:
+	for value in left:
+		if right.has(value):
+			return true
+	return false
+
+func _players_begin_silent(summary: Dictionary) -> bool:
+	var rows: Array = summary.get("current_players", []) if summary.get("current_players", []) is Array else []
+	if rows.is_empty():
+		return false
+	for row_value in rows:
+		if not (row_value is Dictionary) or float(row_value.get("volume_db", 0.0)) > AmbientAudio.CONTEXT_CROSSFADE_SILENCE_DB + 0.1:
+			return false
+	return true
+
+func _players_reach_targets(summary: Dictionary) -> bool:
+	var rows: Array = summary.get("current_players", []) if summary.get("current_players", []) is Array else []
+	if rows.is_empty():
+		return false
+	for row_value in rows:
+		if not (row_value is Dictionary) or absf(float(row_value.get("volume_db", 0.0)) - float(row_value.get("target_volume_db", 999.0))) > 0.1:
+			return false
+	return true
 
 func _set_enemy_pressure(session, faction_id: String, pressure: int) -> void:
 	var states: Array = session.overworld.get("enemy_states", []) if session.overworld.get("enemy_states", []) is Array else []

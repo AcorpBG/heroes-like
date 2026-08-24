@@ -57830,6 +57830,20 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "TERRAIN_SPECS",
             "PRESSURE_SPEC",
             "MAX_ACTIVE_PLAYERS",
+            "MAX_TRANSITION_PLAYERS := MAX_ACTIVE_PLAYERS * 2",
+            "CONTEXT_CROSSFADE_DURATION_SEC := 0.3",
+            "CONTEXT_CROSSFADE_SILENCE_DB := -60.0",
+            "func _begin_context_crossfade",
+            "func _on_context_crossfade_finished",
+            "func _cancel_transition_for_replacement",
+            "func _kill_transition_tween",
+            "func _player_target_volume_db",
+            "func _transition_snapshot",
+            'player.set_meta("ambient_target_volume_db"',
+            'tween_property(player, "volume_db", CONTEXT_CROSSFADE_SILENCE_DB',
+            'tween_property(player, "volume_db", _player_target_volume_db(player)',
+            "_transition_tween.set_parallel(true)",
+            "generation != _transition_generation",
             "audio_bus",
             "Effects",
             "imported_asset_count",
@@ -57857,6 +57871,37 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             errors,
             "AmbientAudio must prune stopped players before accepting an unchanged context signature",
         )
+        sync_context_block = ambient_text[
+            ambient_text.index("func sync_overworld_session"):
+            ambient_text.index("func stop_overworld_ambient")
+        ]
+        ensure('stop_overworld_ambient("signature_changed")' not in sync_context_block, errors, "AmbientAudio changed signatures must not synchronously destroy the outgoing context")
+        ensure(
+            sync_context_block.index("if signature == _current_signature and not _active_players.is_empty():")
+            < sync_context_block.index("_cancel_transition_for_replacement()")
+            < sync_context_block.index("var outgoing := _copy_player_group(_current_players)")
+            < sync_context_block.index("incoming = _play_layers(_current_layers, not outgoing.is_empty())")
+            < sync_context_block.index("_current_players = incoming")
+            < sync_context_block.index("_begin_context_crossfade(outgoing, incoming, source, context)"),
+            errors,
+            "AmbientAudio must preserve stable signatures, retire only stale outgoing players, start the exact incoming group, and then begin one bounded crossfade",
+        )
+        crossfade_block = ambient_text[
+            ambient_text.index("func _begin_context_crossfade"):
+            ambient_text.index("func _on_context_crossfade_finished")
+        ]
+        ensure(crossfade_block.count("tween_property(player") == 2, errors, "AmbientAudio crossfade must contain exactly one outgoing and one incoming volume tween")
+        ensure(crossfade_block.index("_transition_generation += 1") < crossfade_block.index("var generation := _transition_generation") < crossfade_block.index("_transition_tween.finished.connect(_on_context_crossfade_finished.bind(generation))"), errors, "AmbientAudio crossfade callback must be generation-owned")
+        stop_block = ambient_text[
+            ambient_text.index("func stop_overworld_ambient"):
+            ambient_text.index("func validation_reset")
+        ]
+        ensure(stop_block.index("_transition_generation += 1") < stop_block.index("_kill_transition_tween()") < stop_block.index("player.queue_free()"), errors, "AmbientAudio explicit stop must invalidate the tween before immediately freeing every player")
+        play_layers_block = ambient_text[
+            ambient_text.index("func _play_layers"):
+            ambient_text.index("func _play_imported_layer")
+        ]
+        ensure("if started.size() >= MAX_ACTIVE_PLAYERS:" in play_layers_block, errors, "AmbientAudio must cap each incoming context independently of the outgoing transition group")
 
     required_ambient_cue_ids = (
         "overworld_ambient_grass",
@@ -57990,9 +58035,54 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "validation_repeat_after_loop",
             "continuous_active_player_count",
             "exact ambient layer count",
+            "MAX_TRANSITION_PLAYERS",
+            "crossfade_lifecycle",
+            "_crossfade_lifecycle_case",
+            "crossfade_initial",
+            "crossfade_pressure",
+            "crossfade_day",
+            "crossfade_day_stable",
+            "crossfade_missing_session",
+            "pressure_transition_exact",
+            "rapid_transition_exact",
+            "stale_initial_retired",
+            "stable_no_restart",
+            "settled_exact",
+            "missing_session_immediate",
+            "session_authority_exact",
+            "_players_begin_silent",
+            "_players_reach_targets",
+            "SettingsService.set_effects_volume_percent(0)",
+            "SettingsService.set_effects_volume_percent(original_effects_volume)",
+            "Muted ambient context must create no players or transition",
             '"generated_waveform"',
         ):
             ensure(required_token in report_text, errors, f"Overworld ambient audio runtime report is missing required token: {required_token}")
+        crossfade_case = report_text[
+            report_text.index("func _crossfade_lifecycle_case"):
+            report_text.index("func _summary_player_ids")
+        ]
+        for forbidden in (
+            "AmbientAudio.set(",
+            "AudioStreamPlayer.new()",
+            "_begin_context_crossfade",
+            "_on_context_crossfade_finished",
+            "_free_player_group",
+            "volume_db =",
+        ):
+            ensure(forbidden not in crossfade_case, errors, f"Ambient crossfade focused control must observe only the public lifecycle, not mutate production internals: {forbidden}")
+        ensure(crossfade_case.count("AmbientAudio.sync_overworld_session") == 5, errors, "Ambient crossfade focused lifecycle must use exactly initial, changed, rapid replacement, stable, and missing-session public sync calls")
+        ensure(
+            crossfade_case.index('AmbientAudio.sync_overworld_session(session, "crossfade_initial")')
+            < crossfade_case.index('AmbientAudio.sync_overworld_session(session, "crossfade_pressure")')
+            < crossfade_case.index('AmbientAudio.sync_overworld_session(session, "crossfade_day")')
+            < crossfade_case.index('AmbientAudio.sync_overworld_session(session, "crossfade_day_stable")')
+            < crossfade_case.index('AmbientAudio.sync_overworld_session(null, "crossfade_missing_session")'),
+            errors,
+            "Ambient crossfade focused lifecycle must observe initial, changed, rapid replacement, stable settle, and immediate missing-session stop in order",
+        )
+        ensure(report_text.count("SettingsService.set_effects_volume_percent(0)") == 1, errors, "Ambient focused report must mute the public Effects setting exactly once")
+        ensure(report_text.count("SettingsService.set_effects_volume_percent(original_effects_volume)") == 1, errors, "Ambient focused report must restore the exact original Effects setting once")
 
     if OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH.exists():
         doc_text = OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH.read_text(encoding="utf-8")
@@ -58013,6 +58103,9 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "seamless twelve-second 44.1 kHz stereo",
             "LOOP_FORWARD",
             "all three terrain/pressure/day players still active after a full segment",
+            "300 ms context crossfade",
+            "rapid context replacement",
+            "missing-session stop remains immediate",
         ):
             ensure(required_text in doc_text, errors, f"Overworld ambient audio runtime doc is missing required text: {required_text}")
 
