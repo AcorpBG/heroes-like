@@ -31177,6 +31177,190 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     ensure('script = ExtResource("1")' in scene_text and 'overworld_small_map_visual_scale_runtime_report.gd' in scene_text, errors, "Small-map scale report scene must own the exact focused script")
 
 
+def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    report_path = ROOT / "tests" / "random_map_live_overworld_render_move_report.gd"
+    for path in (OVERWORLD_MAP_VIEW_SCRIPT_PATH, report_path):
+        ensure(path.exists(), errors, f"Missing generated-map object visual owner: {path.relative_to(ROOT)}")
+    if not OVERWORLD_MAP_VIEW_SCRIPT_PATH.exists() or not report_path.exists():
+        return
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00",
+        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72",
+        'const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_package_body_cell_terrain_matched_original_sprite"',
+        "var _generated_decorative_bodies_by_tile: Dictionary = {}",
+        "var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}",
+        "var _generated_decorative_blocker_fallback_asset_ids: Array = []",
+    ):
+        ensure(map_text.count(token) == 1, errors, f"Generated-map visual source must own exactly one token: {token}")
+    for terrain_token in (
+        '"grass": "biome_grasslands"',
+        '"mire": "biome_mire_fen"',
+        '"rough": "biome_highland_ridge"',
+        '"snow": "biome_snow_frost_marches"',
+        '"water": "biome_coast_archipelago"',
+        '"underground": "biome_subterranean_underways"',
+    ):
+        ensure(terrain_token in map_text, errors, f"Generated blocker presentation is missing terrain-to-authored-biome mapping: {terrain_token}")
+
+    manifest_block = gd_function_block(map_text, "_load_decorative_object_sprite_manifest")
+    for token in (
+        'String(entry.get("source_family", "")).strip_edges() == "blocker"',
+        'entry.get("source_biome_ids", [])',
+        "asset_id not in _generated_decorative_blocker_fallback_asset_ids",
+        "asset_id not in biome_asset_ids",
+        "_generated_decorative_blocker_fallback_asset_ids.sort()",
+        "biome_asset_ids.sort()",
+    ):
+        ensure(token in manifest_block, errors, f"Generated blocker palette must derive deterministic original blocker assets from the authored manifest: {token}")
+    for forbidden in ("RandomMapGeneratorRules", "h3m_def_name", "package_block_tiles", "session", "_session"):
+        ensure(forbidden not in manifest_block, errors, f"Generated blocker palette loading must remain art-manifest-only: {forbidden}")
+
+    index_block = gd_function_block(map_text, "_index_generated_decorative_body_cells")
+    index_order = tuple(index_block.find(token) for token in (
+        'String(object.get("runtime_object_role", "")).strip_edges() != "decorative_blocker_sprite"',
+        'var package_block_tiles = object.get("package_block_tiles", null)',
+        "for tile_value in _tiles_from_payloads(package_block_tiles):",
+        "if body_tile.x < 0 or body_tile.y < 0 or body_tile.x >= _map_size.x or body_tile.y >= _map_size.y:",
+        "if _generated_decorative_bodies_by_tile.has(key):",
+        "var presentation: Dictionary = object.duplicate(true)",
+        'presentation["x"] = body_tile.x',
+        'presentation["y"] = body_tile.y',
+        'presentation["footprint"] = {"width": 1, "height": 1, "anchor": "bottom_center"}',
+        'presentation["overworld_sprite_asset_id"] = _generated_decorative_body_asset_id(object, body_tile)',
+        '_generated_decorative_bodies_by_tile[key] = presentation',
+    ))
+    ensure(all(index >= 0 for index in index_order) and list(index_order) == sorted(index_order), errors, "Generated blocker presentation must validate exact package bodies, union collisions, detach one-cell presentation rows, and index them in order")
+    for token in (
+        'presentation["generated_decorative_body_cell"] = true',
+        'presentation["generated_body_presentation_model"] = GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL',
+        'presentation["generated_body_source_placement_ids"]',
+        'existing["generated_body_source_count"] = placement_ids.size()',
+    ):
+        ensure(token in index_block, errors, f"Generated blocker body index is missing deterministic collision/source evidence: {token}")
+    for forbidden in ("object[", "package_block_tiles.append", "package_block_tiles.erase", "OverworldRules", "RandomMapGeneratorRules", "await ", "create_timer"):
+        ensure(forbidden not in index_block, errors, f"Generated blocker body indexing must remain detached presentation-only: {forbidden}")
+
+    asset_block = gd_function_block(map_text, "_generated_decorative_body_asset_id")
+    for token in (
+        "var terrain_id := _terrain_at(tile)",
+        "GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id",
+        "_generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])",
+        "candidates = _generated_decorative_blocker_fallback_asset_ids",
+        "terrain_id,",
+        'String(object.get("h3m_def_name", ""))',
+        "absi(stable_key.hash()) % candidates.size()",
+    ):
+        ensure(token in asset_block, errors, f"Generated blocker asset choice is missing stable terrain-matched selection: {token}")
+    for forbidden in ('String(object.get("placement_id", ""))', "tile.x", "tile.y", "rand", "randi", "seed(", "session", "_session", "sort(", "erase(", "package_block_tiles"):
+        ensure(forbidden not in asset_block, errors, f"Generated blocker asset choice must remain deterministic and presentation-only: {forbidden}")
+
+    lookup_block = gd_function_block(map_text, "_decorative_object_at")
+    ensure(lookup_block.find("_generated_decorative_bodies_by_tile.get") < lookup_block.find("_decorative_objects_by_tile.get"), errors, "Exact generated body-cell presentation must precede legacy anchor-only decorative lookup")
+    generated_draw_block = gd_function_block(map_text, "_draw_generated_decorative_body_sprite")
+    for token in (
+        "_draw_mapped_sprite_grounding_anchor(rect, tile, \"blocker\", Vector2i(1, 1), remembered)",
+        "tile_extent * GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES",
+        "_canvas_draw_texture_rect(texture, sprite_rect, false",
+    ):
+        ensure(token in generated_draw_block, errors, f"Generated body cells must draw bounded original blocker sprites with normal world grounding: {token}")
+
+    metrics_block = gd_function_block(map_text, "_object_sprite_visual_metrics")
+    metrics_order = tuple(metrics_block.find(token) for token in (
+        "var footprint := _object_profile_footprint(profile)",
+        "var single_tile_extent := minf(",
+        'family not in ["blocker", "decoration", "town"]',
+        "single_tile_extent * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES",
+        "sprite_center.y = rect.end.y - single_tile_extent * 0.5",
+        '"uses_multi_tile_visual_cap": uses_multi_tile_cap',
+    ))
+    ensure(all(index >= 0 for index in metrics_order) and list(metrics_order) == sorted(metrics_order), errors, "Multi-tile interactive art must cap from one logical tile and remain grounded on the footprint bottom row")
+    for forbidden in ("footprint =", "rect.size =", "session", "_session", "package_block_tiles", "await ", "create_timer"):
+        ensure(forbidden not in metrics_block, errors, f"Visual sprite metrics must not mutate logical geometry or gameplay authority: {forbidden}")
+
+    summary_block = gd_function_block(map_text, "validation_generated_object_visual_summary")
+    for token in (
+        'object.get("package_block_tiles", null)',
+        'expected_body_keys[_tile_key(tile)] = true',
+        '"body_tile_keys_exact": indexed_keys == expected_keys',
+        '"all_body_assets_loaded": loaded_asset_count == indexed_keys.size()',
+        '"all_body_assets_terrain_matched": terrain_matched_asset_count == indexed_keys.size()',
+        '"multi_tile_interactive_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES',
+        '"resource_entries": resource_entries',
+    ):
+        ensure(token in summary_block, errors, f"Generated visual validation summary is missing source-independent whole-coverage evidence: {token}")
+
+    for token in (
+        'RANDOM_MAP_LIVE_SIZE_CLASS',
+        'RANDOM_MAP_LIVE_SEED',
+        'const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")',
+        'var map_visual_before := _map_visual_summary(overworld)',
+        'var generated_presentation_authority_before := _generated_presentation_authority(SessionState.active_session)',
+        'var map_visual_after := _map_visual_summary(overworld)',
+        '_generated_presentation_authority(SessionState.active_session) != generated_presentation_authority_before',
+        'var save_reload_source_authority := _generated_save_reload_authority(SessionState.active_session)',
+        'var save_result: Dictionary = SaveService.save_runtime_manual_session(SessionState.active_session, 3)',
+        'var restored_session = SaveService.restore_manual_session(3)',
+        'var save_reload_restored_authority := _generated_save_reload_authority(restored_session)',
+        'not _save_authority_values_equal(save_reload_restored_authority, save_reload_source_authority)',
+        '"save_reload_authority_exact": true',
+        'String(summary.get("presentation_model", "")) != "exact_package_body_cell_terrain_matched_original_sprite"',
+        'int(summary.get("expected_body_tile_count", 0)) != 464',
+        'not bool(summary.get("body_tile_keys_exact", false))',
+        'not bool(summary.get("all_body_assets_loaded", false))',
+        'not bool(summary.get("all_body_assets_terrain_matched", false))',
+        'float(metrics.get("sprite_extent_tiles", 99.0)) > 1.0001',
+        'not is_equal_approx(float(metrics.get("uncapped_sprite_extent_px", 0.0)), float(metrics.get("sprite_extent_px", -1.0)))',
+        '"map_objects": session.overworld.get("map_objects", []).duplicate(true)',
+        '"resource_nodes": session.overworld.get("resource_nodes", []).duplicate(true)',
+        'func _generated_save_reload_authority(session) -> Dictionary:',
+        '"generated_random_map_provenance": flags.get("generated_random_map_provenance", {}).duplicate(true)',
+        '"generated_random_map_replay_metadata": flags.get("generated_random_map_replay_metadata", {}).duplicate(true)',
+    ):
+        ensure(token in report_text, errors, f"Generated live render/move report is missing exact body/scale/authority proof: {token}")
+    save_reload_order = tuple(report_text.find(token) for token in (
+        'var save_reload_source_authority := _generated_save_reload_authority(SessionState.active_session)',
+        'var save_result: Dictionary = SaveService.save_runtime_manual_session(SessionState.active_session, 3)',
+        'var restored_session = SaveService.restore_manual_session(3)',
+        'var save_reload_restored_authority := _generated_save_reload_authority(restored_session)',
+        'if not _save_authority_values_equal(save_reload_restored_authority, save_reload_source_authority):',
+        '"save_reload_authority_exact": true',
+    ))
+    ensure(all(index >= 0 for index in save_reload_order) and list(save_reload_order) == sorted(save_reload_order), errors, "Generated visual report must capture live authority, use the public save/restore paths, compare exact detached authority, then publish success")
+    save_reload_block = gd_function_block(report_text, "_generated_save_reload_authority")
+    ensure(save_reload_block.count("SessionStateStoreScript.normalize_payload(session.to_dict())") == 1, errors, "Generated save/reload authority must use the exact production save normalizer once")
+    for forbidden in ("sort(", ".erase(", "JSON.stringify", "JSON.parse", "set(", "session.overworld[", "session.flags["):
+        ensure(forbidden not in save_reload_block, errors, f"Generated save/reload authority must remain a detached exact observer: {forbidden}")
+    semantic_equal_block = gd_function_block(report_text, "_save_authority_values_equal")
+    for token in (
+        '(left is int or left is float) and (right is int or right is float)',
+        'is_equal_approx(float(left), float(right))',
+        'if typeof(left) != typeof(right):',
+        'if left.size() != right.size():',
+        'for key in left.keys():',
+        'not right.has(key) or not _save_authority_values_equal(left.get(key), right.get(key))',
+        'for index in range(left.size()):',
+        'not _save_authority_values_equal(left[index], right[index])',
+        'return left == right',
+    ):
+        ensure(token in semantic_equal_block, errors, f"Generated save/reload authority comparison must retain exact structure and numeric JSON equivalence: {token}")
+    for forbidden in ("sort(", ".erase(", "JSON.stringify", "JSON.parse", "round(", "floor(", "ceil(", "abs(", "skip", "ignore"):
+        ensure(forbidden not in semantic_equal_block, errors, f"Generated save/reload authority comparison must not exclude or coarsen saved authority: {forbidden}")
+    for forbidden in (
+        "package_block_tiles =", "body_tiles =", "blocking_body =", "session.overworld.erase", "RandomMapGeneratorRules", "set_tile", "sort(", ".erase(", "create_timer",
+    ):
+        ensure(forbidden not in report_text, errors, f"Generated visual report must observe production output without altering generation/passability: {forbidden}")
+
+
 def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
     visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
     for path in (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, visual_path):
@@ -62998,6 +63182,7 @@ def main() -> int:
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_objective_brief_native_pixel_ellipsis(errors)
     validate_overworld_small_map_visual_scale(errors)
+    validate_generated_map_object_visual_coherence(errors)
     validate_overworld_130_scale_footer_containment(errors)
     validate_overworld_hero_card_mana_first_view(errors)
     validate_overworld_rail_word_boundary_ellipsis(errors)
