@@ -31859,7 +31859,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "dialog.push_input(event)",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required End Turn exclusive-input token: {required_token}")
-    end_turn_request_body = overworld_script_text.split("func _request_end_turn() -> Dictionary:", 1)[1].split("\nfunc _current_end_turn_warning", 1)[0]
+    end_turn_request_body = overworld_script_text.split("func _request_end_turn(show_dialog: bool = true) -> Dictionary:", 1)[1].split("\nfunc _current_end_turn_warning", 1)[0]
     end_turn_cancel_focus_body = overworld_script_text.split("func _focus_end_turn_cancel_after_popup() -> void:", 1)[1].split("\nfunc _commit_end_turn", 1)[0]
     ensure(
         '_end_turn_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")' not in end_turn_request_body,
@@ -62183,6 +62183,310 @@ def validate_stonewake_watch_chapter_one_sequential_viability(errors: list[str])
     ensure(harness_text.find('"ford_cache"') < harness_text.find('"ford_gorget"') < harness_text.find('"murkward_ford" if scenario_id == "stonewake-watch" else ""'), errors, "Stonewake routed live owner must claim cache then gorget before exact Murkward assault")
 
 
+def validate_bogbound_oath_chapter_one_sequential_viability(errors: list[str]) -> None:
+    armies = items_index(load_json(CONTENT_DIR / "army_groups.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    stack_counts = lambda army: {
+        str(stack.get("unit_id", "")): int(stack.get("count", 0))
+        for stack in army.get("stacks", [])
+        if isinstance(stack, dict)
+    }
+    ensure(stack_counts(armies.get("army_reedmaw_host", {})) == {
+        "unit_blackbranch_cutthroat": 7,
+        "unit_bog_brute": 6,
+        "unit_mire_slinger": 5,
+        "unit_gorefen_ripper": 2,
+    }, errors, "Bogbound staged reinforcement must preserve the exact shared Reedmaw Host opening")
+    scenario = scenarios.get("bogbound-oath", {})
+    ensure(str(scenario.get("player_army_id", "")) == "army_reedmaw_host", errors, "Bogbound Oath must retain the shared Reedmaw Host")
+    hooks = [row for row in scenario.get("script_hooks", []) if isinstance(row, dict) and str(row.get("id", "")) == "reed_watchers_return"]
+    ensure(len(hooks) == 1, errors, "Bogbound Oath must define exactly one Reed-Watcher return hook")
+    if len(hooks) == 1:
+        ensure(hooks[0] == {
+            "id": "reed_watchers_return",
+            "priority": 120,
+            "conditions": [{"type": "objective_met", "objective_id": "clear_lantern_patrol"}],
+            "effects": [
+                {"type": "add_army_units", "units": {"unit_blackbranch_cutthroat": 40}},
+                {"type": "spawn_resource_node", "placement": {"placement_id": "reed_watchers_cache", "site_id": "site_waystone_cache", "x": 4, "y": 0}},
+                {"type": "message", "text": "When the Lantern Patrol breaks, Reed-Watcher cutters rally behind Vaska while mire scouts drag a seized waystone cache back onto the road."},
+            ],
+        }, errors, "Bogbound Reed-Watcher hook must retain the exact post-Lantern 40-Cutthroat delivery, cache, and message")
+    encounters = {str(row.get("placement_id", "")): row for row in scenario.get("encounters", []) if isinstance(row, dict)}
+    ensure(encounters.get("bogbound_archive_wardens", {}).get("enemy_army", {}).get("stacks", []) == [
+        {"unit_id": "unit_river_guard", "count": 8},
+        {"unit_id": "unit_ember_archer", "count": 12},
+        {"unit_id": "unit_citadel_pikeward", "count": 6},
+    ], errors, "Bogbound staged reinforcement must not weaken the accepted Archive Wardens roster")
+    charter = scenarios.get("charter-pyre", {})
+    charter_hooks = [row for row in charter.get("script_hooks", []) if isinstance(row, dict) and str(row.get("id", "")) == "reed_watcher_slingers_cross_the_bridge"]
+    ensure(len(charter_hooks) == 1, errors, "Charter Pyre must define exactly one Reed-Watcher sling followthrough hook")
+    if len(charter_hooks) == 1:
+        ensure(charter_hooks[0] == {
+            "id": "reed_watcher_slingers_cross_the_bridge",
+            "priority": 105,
+            "conditions": [
+                {"type": "flag_true", "flag": "carryover_lantern_patrol_broken"},
+                {"type": "encounter_resolved", "placement_id": "charter_bridgeward_levies"},
+            ],
+            "effects": [
+                {"type": "add_army_units", "units": {"unit_mire_slinger": 15}},
+                {"type": "message", "text": "Once the bridgeward column breaks, fifteen Reed-Watcher sling crews cross from Riverwatch and rejoin Vaska for the granary push."},
+            ],
+        }, errors, "Charter Pyre Reed-Watcher followthrough must retain exact earned carryover, post-Bridgeward timing, fifteen Slingers, and message")
+    charter_encounters = {str(row.get("placement_id", "")): row for row in charter.get("encounters", []) if isinstance(row, dict)}
+    ensure(charter_encounters.get("charter_granary_levies", {}).get("enemy_army", {}).get("stacks", []) == [
+        {"unit_id": "unit_river_guard", "count": 11},
+        {"unit_id": "unit_ember_archer", "count": 8},
+        {"unit_id": "unit_citadel_pikeward", "count": 2},
+    ], errors, "Charter Reed-Watcher followthrough must not weaken the accepted Granary Levies roster")
+    lockmarsh = scenarios.get("lockmarsh-surge", {})
+    lockmarsh_hooks = [row for row in lockmarsh.get("script_hooks", []) if isinstance(row, dict) and str(row.get("id", "")) == "reed_watchers_cross_the_firebreak"]
+    ensure(len(lockmarsh_hooks) == 1, errors, "Lockmarsh Surge must define exactly one final Reed-Watcher firebreak hook")
+    if len(lockmarsh_hooks) == 1:
+        ensure(lockmarsh_hooks[0] == {
+            "id": "reed_watchers_cross_the_firebreak",
+            "priority": 99,
+            "conditions": [{"type": "objective_met", "objective_id": "break_road_chaplains"}],
+            "effects": [
+                {"type": "add_army_units", "units": {"unit_blackbranch_cutthroat": 31}},
+                {"type": "message", "text": "With the road chaplains broken, the final thirty-one Reed-Watcher cutters cross the firebreak and reform around Vaska for the Highwater assault."},
+            ],
+        }, errors, "Lockmarsh final Reed-Watcher stage must retain exact post-Road timing, thirty-one Cutthroats, and message")
+    lockmarsh_finale_hooks = [row for row in lockmarsh.get("script_hooks", []) if isinstance(row, dict) and str(row.get("id", "")) == "reed_watchers_break_the_archive_seal"]
+    ensure(len(lockmarsh_finale_hooks) == 1, errors, "Lockmarsh Surge must define exactly one post-Archive Reed-Watcher finale hook")
+    if len(lockmarsh_finale_hooks) == 1:
+        ensure(lockmarsh_finale_hooks[0] == {
+            "id": "reed_watchers_break_the_archive_seal",
+            "priority": 94,
+            "conditions": [{"type": "objective_met", "objective_id": "break_archive_wardens"}],
+            "effects": [
+                {"type": "add_army_units", "units": {"unit_blackbranch_cutthroat": 11}},
+                {"type": "message", "text": "With the archive wardens broken, eleven Reed-Watcher cutters emerge from the flooded ledger vaults and join Vaska for the final assault on Highwater."},
+            ],
+        }, errors, "Lockmarsh finale Reed-Watcher stage must retain exact post-Archive timing, eleven Cutthroats, and message")
+    ensure(stack_counts({"stacks": towns.get("town_highwater_keep", {}).get("garrison", [])}) == {
+        "unit_river_guard": 5,
+        "unit_ember_archer": 2,
+        "unit_citadel_pikeward": 1,
+    }, errors, "Lockmarsh finale support must not weaken the authored Highwater garrison")
+    lockmarsh_encounters = {str(row.get("placement_id", "")): row for row in lockmarsh.get("encounters", []) if isinstance(row, dict)}
+    ensure({placement_id: lockmarsh_encounters.get(placement_id, {}).get("enemy_army", {}).get("stacks", []) for placement_id in (
+        "surge_road_chaplains", "surge_charter_guard", "lockmarsh_archive_wardens",
+    )} == {
+        "surge_road_chaplains": [
+            {"unit_id": "unit_river_guard", "count": 9},
+            {"unit_id": "unit_ember_archer", "count": 10},
+            {"unit_id": "unit_citadel_pikeward", "count": 6},
+        ],
+        "surge_charter_guard": [
+            {"unit_id": "unit_river_guard", "count": 7},
+            {"unit_id": "unit_ember_archer", "count": 6},
+            {"unit_id": "unit_citadel_pikeward", "count": 2},
+        ],
+        "lockmarsh_archive_wardens": [
+            {"unit_id": "unit_river_guard", "count": 7},
+            {"unit_id": "unit_ember_archer", "count": 9},
+            {"unit_id": "unit_citadel_pikeward", "count": 2},
+        ],
+    }, errors, "Lockmarsh Reed-Watcher stage must not weaken any accepted Road, Charter, or Archive roster")
+
+    report_path = ROOT / "tests" / "bogbound_oath_chapter_one_sequential_viability_report.gd"
+    scene_path = ROOT / "tests" / "bogbound_oath_chapter_one_sequential_viability_report.tscn"
+    ensure(report_path.exists() and scene_path.exists(), errors, "Bogbound chapter-one sequential viability focused owner is missing")
+    if report_path.exists():
+        text = report_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "BOGBOUND_OATH_CHAPTER_ONE_SEQUENTIAL_VIABILITY_REPORT"',
+            'const CAMPAIGN_ID := "campaign_bogbound_oath"',
+            'const ARMY_ID := "army_reedmaw_host"',
+            'const REINFORCEMENT_HOOK_ID := "reed_watchers_return"',
+            'const SELECTED_REINFORCEMENT_CUTTHROATS := 40',
+            'const SAVE_SLOT := 3',
+            'const CHARTER_SCENARIO_ID := "charter-pyre"',
+            'const CHARTER_REINFORCEMENT_HOOK_ID := "reed_watcher_slingers_cross_the_bridge"',
+            'const CHARTER_REINFORCEMENT_SLINGERS := 15',
+            'const CHARTER_SAVE_SLOT := 2',
+            'const LOCKMARSH_SCENARIO_ID := "lockmarsh-surge"',
+            'const LOCKMARSH_REINFORCEMENT_HOOK_ID := "reed_watchers_cross_the_firebreak"',
+            'const LOCKMARSH_REINFORCEMENT_CUTTHROATS := 31',
+            'const LOCKMARSH_SAVE_SLOT := 1',
+            'const LOCKMARSH_FINALE_REINFORCEMENT_HOOK_ID := "reed_watchers_break_the_archive_seal"',
+            'const LOCKMARSH_FINALE_REINFORCEMENT_CUTTHROATS := 11',
+            'const LOCKMARSH_FINALE_SAVE_SLOT := 4',
+            'const LOCKMARSH_LIVE_FINALE_STACK_ORDER := ["unit_bog_brute", "unit_blackbranch_cutthroat"]',
+            'const LOCKMARSH_LIVE_FINALE_COMBAT_SEED := 50133025',
+            'const LOCKMARSH_LIVE_FINALE_DAMAGE_RNG_STATE := "770320593367029343"',
+            'const RIVERWATCH_GORGET_ID := "artifact_bastion_gorget"',
+            'const REQUIRED_ENCOUNTERS := ["bogbound_lantern_patrol", "bogbound_survey_guard", "bogbound_archive_wardens"]',
+            'const CHARTER_REQUIRED_ENCOUNTERS := ["charter_bridgeward_levies", "charter_beacon_wardens", "charter_granary_levies"]',
+            'const LOCKMARSH_REQUIRED_ENCOUNTERS := ["surge_road_chaplains", "surge_charter_guard", "lockmarsh_archive_wardens"]',
+            'const LOCKMARSH_SELECTED_SURVIVORS := [\n\t{"unit_blackbranch_cutthroat": 31, "unit_bog_brute": 4},\n\t{"unit_blackbranch_cutthroat": 26, "unit_bog_brute": 3},\n\t{"unit_blackbranch_cutthroat": 33},\n]',
+            '"unit_blackbranch_cutthroat": 14',
+            '"unit_bog_brute": 6',
+            '"unit_mire_slinger": 6',
+            '"unit_gorefen_ripper": 2',
+            'control.get("states", []) != ["victory", "defeat"]',
+            'control.get("survivors", []) != CONTROL_SURVIVORS',
+            'selected.get("states", []) != ["victory", "victory", "victory", "victory"]',
+            'selected.get("survivors", []) != SELECTED_SURVIVORS',
+            'selected.get("enemy_entries", []) != ENEMY_ENTRIES',
+            'selected.get("town_enemy_entry", {}) != {"unit_river_guard": 4}',
+            'selected.get("reinforcement_fired_ids", []).count(REINFORCEMENT_HOOK_ID) != 1',
+            'not bool(selected.get("army_mirrors_exact", false))',
+            'not bool(selected.get("save_resume_exact", false))',
+            'not bool(selected.get("one_shot_exact", false))',
+            'charter_control.get("states", []) != ["victory", "victory", "defeat"]',
+            'charter_control.get("survivors", []) != CHARTER_CONTROL_SURVIVORS',
+            'charter_selected.get("states", []) != ["victory", "victory", "victory"]',
+            'charter_selected.get("survivors", []) != CHARTER_SELECTED_SURVIVORS',
+            'charter_selected.get("enemy_entries", []) != CHARTER_ENEMY_ENTRIES',
+            'charter_selected.get("reinforcement_fired_ids", []).count(CHARTER_REINFORCEMENT_HOOK_ID) != 1',
+            'not bool(charter_control.get("campaign_entry_exact", false))',
+            'charter_control.get("campaign_entry", {}) != charter_selected.get("campaign_entry", {})',
+            'String(charter_selected.get("town_state", "")) != "victory"',
+            'lockmarsh_control.get("states", []) != ["victory", "defeat"]',
+            'lockmarsh_control.get("survivors", []) != LOCKMARSH_CONTROL_SURVIVORS',
+            'lockmarsh_selected.get("states", []) != ["victory", "victory", "victory"]',
+            'lockmarsh_selected.get("survivors", []) != LOCKMARSH_SELECTED_SURVIVORS',
+            'lockmarsh_selected.get("enemy_entries", []) != LOCKMARSH_ENEMY_ENTRIES',
+            'lockmarsh_selected.get("reinforcement_fired_ids", []).count(LOCKMARSH_REINFORCEMENT_HOOK_ID) != 1',
+            'not bool(lockmarsh_selected.get("army_mirrors_exact", false))',
+            'not bool(lockmarsh_selected.get("save_resume_exact", false))',
+            'not bool(lockmarsh_selected.get("one_shot_exact", false))',
+            'lockmarsh_control.get("campaign_entry", {}) != lockmarsh_selected.get("campaign_entry", {})',
+            'String(lockmarsh_finale_control.get("state", "")) != "defeat"',
+            'lockmarsh_finale_control.get("pre_hook_counts", {}) != LOCKMARSH_LIVE_POST_ARCHIVE_COUNTS',
+            'String(lockmarsh_finale_predecessor.get("state", "")) != "defeat"',
+            'lockmarsh_finale_predecessor.get("pre_hook_counts", {}) != LOCKMARSH_LIVE_FINALE_PREDECESSOR_COUNTS',
+            'String(lockmarsh_finale_selected.get("state", "")) != "victory"',
+            'lockmarsh_finale_selected.get("post_hook_counts", {}) != LOCKMARSH_LIVE_FINALE_SELECTED_COUNTS',
+            'lockmarsh_finale_selected.get("survivors", {}) != {"unit_blackbranch_cutthroat": 5}',
+            'finale_row.get("player_entry_order", []) != LOCKMARSH_LIVE_FINALE_STACK_ORDER',
+            'finale_row.get("enemy_entry", {}) != LOCKMARSH_LIVE_FINALE_ENEMY_ENTRY',
+            'finale_row.get("enemy_battle_traits", []) != ["linekeeper"]',
+            'int(finale_row.get("combat_seed", 0)) != LOCKMARSH_LIVE_FINALE_COMBAT_SEED',
+            'String(finale_row.get("damage_rng_state", "")) != LOCKMARSH_LIVE_FINALE_DAMAGE_RNG_STATE',
+            'not bool(lockmarsh_finale_predecessor.get("live_trace_prefix_exact", false))',
+            'lockmarsh_finale_selected.get("fired_ids", []).count(LOCKMARSH_FINALE_REINFORCEMENT_HOOK_ID) != 1',
+            'func _run_lockmarsh_finale_candidate(additional_cutthroats: int, use_authored_hook: bool) -> Dictionary:',
+            '_set_live_army(session, counts, LOCKMARSH_LIVE_FINALE_STACK_ORDER)',
+            'var player_entry_order: Array = _battle_side_unit_order(session.battle, "player")',
+            'var _briefing_text: String = BattleRulesScript.consume_tactical_briefing(session)',
+            '"River Guard batters Bog Brute for 28 damage." in String(action_trace[1].get("message", ""))',
+            '"River Guard braces for impact. River Guard steadies the line." in String(action_trace[1].get("message", ""))',
+            '"Blackbranch Cutthroat retaliates for 53 damage." in String(action_trace[2].get("message", ""))',
+            'func _battle_side_unit_order(battle: Dictionary, side: String) -> Array:',
+            'session.overworld["resolved_encounters"] = LOCKMARSH_REQUIRED_ENCOUNTERS.duplicate()',
+            'hero["experience"] = 1640',
+            'hero["specialties"] = ["drillmaster", "armsmaster", "armsmaster", "drillmaster"]',
+            'spellbook["mana"] = {"current": 12, "max": 12}',
+            '{"unit_id": "unit_river_guard", "count": 16}',
+            '{"unit_id": "unit_ember_archer", "count": 2}',
+            '{"unit_id": "unit_citadel_pikeward", "count": 1}',
+            'ScenarioScriptRulesScript.process_hooks(session)',
+            'SaveService.save_runtime_manual_session(session, LOCKMARSH_FINALE_SAVE_SLOT)',
+            'SaveService.restore_manual_session(LOCKMARSH_FINALE_SAVE_SLOT)',
+            'CampaignRulesScript.build_session(',
+            'CampaignRulesScript.record_session_completion({}, session)',
+            'CampaignRulesScript.record_session_completion(_campaign_profile_after_chapter_one, session)',
+            'TownRulesScript.choose_specialty_at_active_town(session, "armsmaster")',
+            'OverworldRulesScript.claim_artifact_for_session(',
+            'RIVERWATCH_GORGET_ID not in _owned_artifact_ids(session)',
+            'String(campaign_entry.get("previous_scenario_id", "")) == SCENARIO_ID',
+            'bool(campaign_entry.get("carryover_lantern_patrol_broken", false))',
+            'RIVERWATCH_GORGET_ID in campaign_entry.get("artifact_ids", [])',
+            '"hero_experience": int(hero.get("experience", 0))',
+            '"hero_spellbook": hero.get("spellbook", {}).duplicate(true)',
+            'var high_difficulty := String(encounter.get("difficulty", "")) == "high"',
+            '_resolve_like_live_validation(session, high_difficulty, high_difficulty)',
+            '_resolve_like_live_validation(session, true, false)',
+            'BattleRulesScript.get_spell_actions(session)',
+            'BattleRulesScript.cast_player_spell(session, spell_id)',
+            'BattleRulesScript.create_battle_payload(session, encounter)',
+            'BattleRulesScript.create_town_assault_payload(session, "riverwatch_hold")',
+            'BattleRulesScript.perform_player_action(session, action_id)',
+            'for action_id in ["shoot", "strike", "advance", "defend"]',
+            'SaveService.save_runtime_manual_session(session, SAVE_SLOT)',
+            'SaveService.restore_manual_session(SAVE_SLOT)',
+            'SaveService.save_runtime_manual_session(session, CHARTER_SAVE_SLOT)',
+            'SaveService.restore_manual_session(CHARTER_SAVE_SLOT)',
+            'SaveService.save_runtime_manual_session(session, LOCKMARSH_SAVE_SLOT)',
+            'SaveService.restore_manual_session(LOCKMARSH_SAVE_SLOT)',
+            'ScenarioScriptRulesScript.process_hooks(restored)',
+            'state["fired_hook_ids"] = [REINFORCEMENT_HOOK_ID]',
+            'if _assert_content_contract() != content_contract',
+            'get_tree().quit(0)',
+            'get_tree().quit(1)',
+        ):
+            ensure(token in text, errors, f"Bogbound chapter-one focused owner is missing token: {token}")
+        ensure('ScenarioScriptRulesScript._add_army_units' not in text, errors, "Bogbound focused owner must observe the authored hook rather than inject reinforcements directly")
+        ensure('quick_resolve' not in text and 'scenario_status =' not in text, errors, "Bogbound focused owner must not force battle or scenario outcomes")
+        ensure('session.flags["carryover_lantern_patrol_broken"] = true' not in text, errors, "Bogbound focused owner must import the Lantern flag through production campaign carryover")
+        ensure(text.count('session.overworld["resolved_encounters"] = LOCKMARSH_REQUIRED_ENCOUNTERS.duplicate()') == 1 and 'resolved_encounters"].append' not in text and 'resolved_encounters"].erase' not in text, errors, "Bogbound focused owner may materialize only the exact captured post-Archive finale state; routed prerequisite controls must resolve real battles")
+        ensure('ScenarioFactoryScript' not in text, errors, "Bogbound focused owner must build all three chapters through production CampaignRules carryover")
+        ensure(text.count('CampaignRulesScript.build_session(') == 4 and text.count('CampaignRulesScript.record_session_completion({}, session)') == 1 and text.count('CampaignRulesScript.record_session_completion(_campaign_profile_after_chapter_one, session)') == 1, errors, "Bogbound focused owner must build all three chapters through exactly two production completion/carryover transitions plus one captured live-finale fixture owner")
+        ensure(text.count('TownRulesScript.choose_specialty_at_active_town(session, "armsmaster")') == 1 and 'HeroProgressionRulesScript.choose_specialty' not in text, errors, "Bogbound focused owner must use the exact production Chapter II Armsmaster town action once")
+        ensure(text.count('OverworldRulesScript.claim_artifact_for_session(') == 1, errors, "Bogbound focused owner must claim the authored Riverwatch Gorget exactly once before carryover")
+        ensure('const SELECTED_REINFORCEMENT_CUTTHROATS := 41' not in text, errors, "Bogbound focused owner must not drift above the screened 40-Cutthroat stage")
+        ensure('const CHARTER_REINFORCEMENT_SLINGERS := 16' not in text, errors, "Charter focused owner must not drift above the screened fifteen-Slinger followthrough")
+        ensure('const LOCKMARSH_REINFORCEMENT_CUTTHROATS := 32' not in text, errors, "Lockmarsh focused owner must not drift above the screened minimum thirty-one-Cutthroat firebreak stage")
+        ensure('const LOCKMARSH_FINALE_REINFORCEMENT_CUTTHROATS := 12' not in text, errors, "Lockmarsh finale owner must not drift above the exact screened eleven-Cutthroat post-Archive stage")
+        ensure(text.count('BattleRulesScript.consume_tactical_briefing(session)') == 1, errors, "Lockmarsh finale owner must normalize the exact live tactical briefing once before screening")
+        ensure(text.index('session.battle = BattleRulesScript.create_town_assault_payload(session, "highwater_keep")', text.index('func _run_lockmarsh_finale_candidate')) < text.index('var _briefing_text: String = BattleRulesScript.consume_tactical_briefing(session)', text.index('func _run_lockmarsh_finale_candidate')) < text.index('var result: Dictionary = _resolve_like_live_validation(session, true, false)', text.index('func _run_lockmarsh_finale_candidate')), errors, "Lockmarsh finale owner must consume the live briefing after payload creation and before resolution")
+    if scene_path.exists():
+        ensure('res://tests/bogbound_oath_chapter_one_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Bogbound chapter-one focused scene must load its exact report script")
+
+    harness_text = LIVE_VALIDATION_HARNESS_PATH.read_text(encoding="utf-8")
+    ensure('validation_exact_battle_payload' not in harness_text, errors, "Bogbound routed owner must not retain temporary raw battle-payload diagnostics")
+    order_block = 'if String(_config.get("scenario_id", "")) == "bogbound-oath":\n\t\tfor placement_id in ["bogbound_lantern_patrol", "bogbound_survey_guard", "bogbound_archive_wardens"]:\n\t\t\tif not _encounter_placement_resolved(placement_id):\n\t\t\t\treturn placement_id'
+    ensure(harness_text.count(order_block) == 1, errors, "Bogbound routed owner must follow exact authored setup-before-Archive order once")
+    route_start = harness_text.find("func _next_required_encounter_placement")
+    route_end = harness_text.find("\nfunc _direct_required_encounter_placements_for_resolution", route_start)
+    route_body = harness_text[route_start:route_end] if route_start >= 0 and route_end > route_start else ""
+    ensure(route_body.find(order_block) >= 0 and route_body.find(order_block) < route_body.find("for placement_id_value in required_placements:"), errors, "Bogbound routed order must resolve before generic direct-objective scoring")
+    charter_order_block = 'if String(_config.get("scenario_id", "")) == "charter-pyre":\n\t\tfor placement_id in ["charter_bridgeward_levies", "charter_beacon_wardens", "charter_granary_levies"]:\n\t\t\tif not _encounter_placement_resolved(placement_id):\n\t\t\t\treturn placement_id'
+    ensure(harness_text.count(charter_order_block) == 1, errors, "Charter routed owner must follow exact Bridgeward-before-Reed-Watcher-before-Granary order once")
+    ensure(route_body.find(charter_order_block) >= 0 and route_body.find(charter_order_block) < route_body.find("for placement_id_value in required_placements:"), errors, "Charter routed order must resolve before generic direct-objective scoring")
+    lockmarsh_order_block = 'if String(_config.get("scenario_id", "")) == "lockmarsh-surge":\n\t\tfor placement_id in ["surge_road_chaplains", "surge_charter_guard", "lockmarsh_archive_wardens"]:\n\t\t\tif not _encounter_placement_resolved(placement_id):\n\t\t\t\treturn placement_id'
+    ensure(harness_text.count(lockmarsh_order_block) == 1, errors, "Lockmarsh routed owner must follow exact Road-Chaplains-before-Charter-Guard-before-Archive order once")
+    ensure(route_body.find(lockmarsh_order_block) >= 0 and route_body.find(lockmarsh_order_block) < route_body.find("for placement_id_value in required_placements:"), errors, "Lockmarsh routed order must resolve before generic direct-objective scoring")
+    lockmarsh_support_block = '''String(_config.get("scenario_id", "")) == "lockmarsh-surge"
+			and placement_id == "surge_road_chaplains"
+			and not lockmarsh_staging_exit_claimed'''
+    ensure(harness_text.count('var lockmarsh_staging_exit_claimed := false') == 1, errors, "Lockmarsh routed owner must track the staging-exit claim once per encounter-clear route")
+    ensure(harness_text.count(lockmarsh_support_block) == 1, errors, "Lockmarsh routed owner must claim support only before the first Road Chaplains route")
+    ensure(harness_text.count('"pre_outcome_support_site_claimed_surge_riverwatch_ore"') == 1, errors, "Lockmarsh routed owner must capture the exact authored Riverwatch ore staging exit")
+    ensure(harness_text.count('Could not claim the authored Riverwatch ore staging exit before the Road Chaplains.') == 1, errors, "Lockmarsh staging-exit support must fail closed")
+    support_block = '''elif scenario_id == "bogbound-oath":
+\t\tvar riverwatch_gorget_claim := await _claim_overworld_validation_target(
+\t\t\tcurrent_overworld,
+\t\t\t"artifact",
+\t\t\t"riverwatch_gorget",
+\t\t\t"%s_support_artifact_claimed_riverwatch_gorget" % step_prefix
+\t\t)'''
+    ensure(harness_text.count(support_block) == 1, errors, "Bogbound routed owner must claim the authored Riverwatch Gorget approach exactly once")
+    chapter_start = harness_text.find("func _drive_campaign_chapter_to_victory_outcome")
+    chapter_end = harness_text.find("\nfunc _prepare_campaign_town", chapter_start)
+    chapter_body = harness_text[chapter_start:chapter_end] if chapter_start >= 0 and chapter_end > chapter_start else ""
+    support_index = chapter_body.find(support_block)
+    town_route_index = chapter_body.find('var battle_route := await _route_with_battle_interrupts(', support_index)
+    ensure(support_index >= 0 and town_route_index > support_index, errors, "Bogbound routed owner must claim the Riverwatch Gorget after required encounters and before the town assault")
+
+    overworld_shell_text = (ROOT / "scenes" / "overworld" / "OverworldShell.gd").read_text(encoding="utf-8")
+    ensure('func _request_end_turn(show_dialog: bool = true) -> Dictionary:' in overworld_shell_text, errors, "Overworld End Turn request must retain explicit real-dialog ownership")
+    ensure('func _on_end_turn_confirmation_confirmed() -> Dictionary:' in overworld_shell_text, errors, "Overworld End Turn confirmation must retain the public confirmation path")
+    ensure(overworld_shell_text.count('if _end_turn_confirmation_dialog.visible:\n\t\t_end_turn_confirmation_dialog.hide()') >= 1, errors, "Overworld End Turn confirmation must hide only a live dialog")
+    ensure('_end_turn_confirmation_dialog.call_deferred("hide")' not in overworld_shell_text, errors, "Overworld End Turn validation must not queue a close for a newly registered native subwindow")
+    validation_end_turn_start = overworld_shell_text.find("func validation_end_turn() -> Dictionary:")
+    validation_end_turn_end = overworld_shell_text.find("\nfunc ", validation_end_turn_start + 1)
+    validation_end_turn_body = overworld_shell_text[validation_end_turn_start:validation_end_turn_end] if validation_end_turn_start >= 0 and validation_end_turn_end > validation_end_turn_start else ""
+    ensure(validation_end_turn_body.count("_request_end_turn(false)") == 1, errors, "Overworld validation End Turn must request the exact rule path without opening a native subwindow")
+    ensure(validation_end_turn_body.count("_on_end_turn_confirmation_confirmed()") == 1, errors, "Overworld validation End Turn must confirm the pending request through the public confirmation path")
+    ensure("_on_end_turn_pressed()" not in validation_end_turn_body and "popup_centered" not in validation_end_turn_body, errors, "Overworld validation End Turn must not open the real native dialog")
+
+
 def validate_reedbarrow_ferry_murkward_veteran_garrison(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     reedbarrow = scenarios.get("reedbarrow-ferry", {})
@@ -62491,6 +62795,7 @@ def main() -> int:
     validate_content(errors)
     validate_scenario_script_active_army_reinforcements(errors)
     validate_stonewake_watch_chapter_one_sequential_viability(errors)
+    validate_bogbound_oath_chapter_one_sequential_viability(errors)
     validate_reedbarrow_ferry_murkward_veteran_garrison(errors)
     validate_reedbarrow_ferry_chapter_two_sequential_viability(errors)
     validate_nightglass_redoubt_chapter_three_sequential_viability(errors)

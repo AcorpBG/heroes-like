@@ -1419,6 +1419,17 @@ func _drive_campaign_chapter_to_victory_outcome(
 			_fail("Could not follow Stonewake's authored ford-gorget route before the Murkward assault.", ford_gorget_claim)
 			return {"ok": false}
 		current_overworld = ford_gorget_claim.get("scene", current_overworld)
+	elif scenario_id == "bogbound-oath":
+		var riverwatch_gorget_claim := await _claim_overworld_validation_target(
+			current_overworld,
+			"artifact",
+			"riverwatch_gorget",
+			"%s_support_artifact_claimed_riverwatch_gorget" % step_prefix
+		)
+		if not bool(riverwatch_gorget_claim.get("ok", false)):
+			_fail("Could not follow Bogbound Oath's authored Riverwatch Gorget approach before the final assault.", riverwatch_gorget_claim)
+			return {"ok": false}
+		current_overworld = riverwatch_gorget_claim.get("scene", current_overworld)
 
 	var battle_route := await _route_with_battle_interrupts(
 		current_overworld,
@@ -2320,6 +2331,7 @@ func _clear_required_encounters_to_overworld(overworld) -> Dictionary:
 
 	var current_overworld = overworld
 	var causeway_support_claimed := false
+	var lockmarsh_staging_exit_claimed := false
 	while true:
 		var placement_id := _next_required_encounter_placement(current_overworld, required_placements)
 		if placement_id == "":
@@ -2362,6 +2374,22 @@ func _clear_required_encounters_to_overworld(overworld) -> Dictionary:
 				return {"ok": false}
 			current_overworld = pennon_claim.get("scene", current_overworld)
 			causeway_support_claimed = true
+		if (
+			String(_config.get("scenario_id", "")) == "lockmarsh-surge"
+			and placement_id == "surge_road_chaplains"
+			and not lockmarsh_staging_exit_claimed
+		):
+			var staging_ore_claim := await _claim_overworld_validation_target(
+				current_overworld,
+				"resource",
+				"surge_riverwatch_ore",
+				"pre_outcome_support_site_claimed_surge_riverwatch_ore"
+			)
+			if not bool(staging_ore_claim.get("ok", false)):
+				_fail("Could not claim the authored Riverwatch ore staging exit before the Road Chaplains.", staging_ore_claim)
+				return {"ok": false}
+			current_overworld = staging_ore_claim.get("scene", current_overworld)
+			lockmarsh_staging_exit_claimed = true
 		var battle_route := await _route_from_overworld_to_scene(current_overworld, "encounter", "", BATTLE_SCENE, placement_id)
 		if not _require(bool(battle_route.get("ok", false)), "Could not route from the live overworld into a required encounter objective before the final assault.", battle_route):
 			return {"ok": false}
@@ -2509,6 +2537,18 @@ func _next_required_encounter_placement(overworld, required_placements: Array[St
 			return "causeway_gate_marshals"
 		if not _encounter_placement_resolved("causeway_reed_camp"):
 			return "causeway_reed_camp"
+	if String(_config.get("scenario_id", "")) == "bogbound-oath":
+		for placement_id in ["bogbound_lantern_patrol", "bogbound_survey_guard", "bogbound_archive_wardens"]:
+			if not _encounter_placement_resolved(placement_id):
+				return placement_id
+	if String(_config.get("scenario_id", "")) == "charter-pyre":
+		for placement_id in ["charter_bridgeward_levies", "charter_beacon_wardens", "charter_granary_levies"]:
+			if not _encounter_placement_resolved(placement_id):
+				return placement_id
+	if String(_config.get("scenario_id", "")) == "lockmarsh-surge":
+		for placement_id in ["surge_road_chaplains", "surge_charter_guard", "lockmarsh_archive_wardens"]:
+			if not _encounter_placement_resolved(placement_id):
+				return placement_id
 	for placement_id_value in required_placements:
 		var placement_id := String(placement_id_value)
 		if _encounter_placement_resolved(placement_id):

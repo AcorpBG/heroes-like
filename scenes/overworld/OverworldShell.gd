@@ -1166,7 +1166,7 @@ func _forward_root_physical_input_to_end_turn_confirmation(
 func _on_end_turn_pressed() -> Dictionary:
 	return _request_end_turn()
 
-func _request_end_turn() -> Dictionary:
+func _request_end_turn(show_dialog: bool = true) -> Dictionary:
 	_validation_end_turn_request_count += 1
 	if not _pending_end_turn_confirmation.is_empty() or _end_turn_commit_in_progress:
 		var busy_result := {
@@ -1214,9 +1214,10 @@ func _request_end_turn() -> Dictionary:
 	var dialog_label := _end_turn_confirmation_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(680.0, 0.0)
-	_on_overworld_interaction_owner_opened()
-	_end_turn_confirmation_dialog.popup_centered(Vector2i(760, 300))
-	_focus_end_turn_cancel_after_popup()
+	if show_dialog:
+		_on_overworld_interaction_owner_opened()
+		_end_turn_confirmation_dialog.popup_centered(Vector2i(760, 300))
+		_focus_end_turn_cancel_after_popup()
 	var request_result := validation_end_turn_confirmation_snapshot()
 	request_result["ok"] = true
 	request_result["confirmation_required"] = true
@@ -1328,7 +1329,8 @@ func _on_end_turn_confirmation_confirmed() -> Dictionary:
 	_validation_end_turn_confirm_count += 1
 	var pending := _pending_end_turn_confirmation.duplicate()
 	var stale_fields := _stale_end_turn_request_fields(pending)
-	_end_turn_confirmation_dialog.hide()
+	if _end_turn_confirmation_dialog.visible:
+		_end_turn_confirmation_dialog.hide()
 	_pending_end_turn_confirmation = {}
 	if not stale_fields.is_empty():
 		var stale_result := {
@@ -10811,7 +10813,7 @@ func validation_end_turn() -> Dictionary:
 	var day_before := _session.day
 	var status_before := _session.scenario_status
 	var pressure_before := _validation_enemy_pressure_states()
-	_on_end_turn_pressed()
+	_request_end_turn(false)
 	if not _pending_end_turn_confirmation.is_empty():
 		_on_end_turn_confirmation_confirmed()
 	return {
