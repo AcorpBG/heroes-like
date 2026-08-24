@@ -59,6 +59,12 @@
     "music_battle_theme_motion": {"path": "res://art/audio/runtime/music/battle_motion.wav", "role": "battle motion", "duration_msec": 8000, "volume_db": -27.5},
     "music_outcome_theme": {"path": "res://art/audio/runtime/music/outcome_root.wav", "role": "outcome root", "duration_msec": 8000, "volume_db": -24.0},
     "music_outcome_theme_harmony": {"path": "res://art/audio/runtime/music/outcome_harmony.wav", "role": "outcome harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_outcome_theme_motion": {"path": "res://art/audio/runtime/music/outcome_motion.wav", "role": "outcome motion", "duration_msec": 8000, "volume_db": -29.0}
+    "music_outcome_theme_motion": {"path": "res://art/audio/runtime/music/outcome_motion.wav", "role": "outcome motion", "duration_msec": 8000, "volume_db": -29.0},
+    "music_outcome_victory_theme": {"path": "res://art/audio/runtime/music/outcome_victory_root.wav", "role": "victory outcome root", "duration_msec": 8000, "volume_db": -24.0},
+    "music_outcome_victory_theme_harmony": {"path": "res://art/audio/runtime/music/outcome_victory_harmony.wav", "role": "victory outcome harmony", "duration_msec": 8000, "volume_db": -27.0},
+    "music_outcome_victory_theme_motion": {"path": "res://art/audio/runtime/music/outcome_victory_motion.wav", "role": "victory outcome motion", "duration_msec": 8000, "volume_db": -29.0},
+    "music_outcome_defeat_theme": {"path": "res://art/audio/runtime/music/outcome_defeat_root.wav", "role": "defeat outcome root", "duration_msec": 8000, "volume_db": -24.0},
+    "music_outcome_defeat_theme_harmony": {"path": "res://art/audio/runtime/music/outcome_defeat_harmony.wav", "role": "defeat outcome harmony", "duration_msec": 8000, "volume_db": -27.0},
+    "music_outcome_defeat_theme_motion": {"path": "res://art/audio/runtime/music/outcome_defeat_motion.wav", "role": "defeat outcome motion", "duration_msec": 8000, "volume_db": -29.0}
   }
 }

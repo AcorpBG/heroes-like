@@ -71,6 +71,20 @@ CONTEXTS = {
         "pulse_steps": 16,
         "color": 0.26,
     },
+    "outcome_victory": {
+        "base": 233.0,
+        "progression": [0, 4, 7, 11],
+        "minor": False,
+        "pulse_steps": 20,
+        "color": 0.32,
+    },
+    "outcome_defeat": {
+        "base": 123.0,
+        "progression": [0, 3, 1, 8],
+        "minor": True,
+        "pulse_steps": 12,
+        "color": 0.61,
+    },
 }
 
 SPECS = {
@@ -125,6 +139,12 @@ SPECS = {
     "music_outcome_theme": {"context": "outcome", "stem": "root", "peak": 0.48, "pan": -0.08, "width": 0.08},
     "music_outcome_theme_harmony": {"context": "outcome", "stem": "harmony", "peak": 0.43, "pan": 0.10, "width": 0.22},
     "music_outcome_theme_motion": {"context": "outcome", "stem": "motion", "peak": 0.38, "pan": 0.15, "width": 0.27},
+    "music_outcome_victory_theme": {"context": "outcome_victory", "stem": "root", "peak": 0.51, "pan": -0.08, "width": 0.09},
+    "music_outcome_victory_theme_harmony": {"context": "outcome_victory", "stem": "harmony", "peak": 0.46, "pan": 0.13, "width": 0.23},
+    "music_outcome_victory_theme_motion": {"context": "outcome_victory", "stem": "motion", "peak": 0.42, "pan": -0.17, "width": 0.29},
+    "music_outcome_defeat_theme": {"context": "outcome_defeat", "stem": "root", "peak": 0.49, "pan": 0.10, "width": 0.12},
+    "music_outcome_defeat_theme_harmony": {"context": "outcome_defeat", "stem": "harmony", "peak": 0.43, "pan": -0.16, "width": 0.25},
+    "music_outcome_defeat_theme_motion": {"context": "outcome_defeat", "stem": "motion", "peak": 0.39, "pan": 0.18, "width": 0.31},
 }
 
 
