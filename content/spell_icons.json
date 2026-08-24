@@ -273,6 +273,61 @@
       "source_sha256": "7b83480930de76f728f36c8a41982af58eea8c77512ba827d2b8b1208d65be4e",
       "icon_path": "res://art/magic/runtime/spells/spell_rootway_tangle.png",
       "icon_sha256": "5cf9331f663da9255cb506bc85d1267de9159f8a8b48731d478428d8563586e0"
+    },
+    {
+      "id": "spell_beacon_column_charge_11",
+      "spell_id": "spell_beacon_column_charge_11",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_beacon_column_charge_11",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_column_charge_11.png",
+      "source_sha256": "1964baa226a11ad5fc808a5fa60d3298a60121c946111440531d2740e6228a1f",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_column_charge_11.png",
+      "icon_sha256": "cb574f9b23f15eedc5827b832ad1b143ca75061a583316e711ea0bd17537419f"
+    },
+    {
+      "id": "spell_beacon_lantern_oath_17",
+      "spell_id": "spell_beacon_lantern_oath_17",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_beacon_lantern_oath_17",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_lantern_oath_17.png",
+      "source_sha256": "899320f6063790ef5e618045e6e5ac2544e51d27bd5fa22a6098f21f07acfecd",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_lantern_oath_17.png",
+      "icon_sha256": "ddac993ee4ef9b04e0f50dd3a78b56ce63739e5a7a2988a55fcb6ab66157efa4"
+    },
+    {
+      "id": "spell_beacon_roadward_charge_23",
+      "spell_id": "spell_beacon_roadward_charge_23",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_beacon_roadward_charge_23",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_roadward_charge_23.png",
+      "source_sha256": "9c490e6eae6b5a39127caf2efad12ddbf8893167f3c112cb6c3d70a4468be63d",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_roadward_charge_23.png",
+      "icon_sha256": "6baedaca85c774dbbf8fbb190fa899c6929f484e6f7a3e6be9f28c0225014f8d"
+    },
+    {
+      "id": "spell_beacon_bell_ward_09",
+      "spell_id": "spell_beacon_bell_ward_09",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_beacon_bell_ward_09",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_bell_ward_09.png",
+      "source_sha256": "3bc92be1df34f6d82b520f16741630a787264338567a7a2f55f4f37ab92c134b",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_bell_ward_09.png",
+      "icon_sha256": "eb7630dba8ed5cd16173e0f4f48af74a6c5a31db6e2acebd6069840b6dac688b"
+    },
+    {
+      "id": "spell_beacon_bell_lance_25",
+      "spell_id": "spell_beacon_bell_lance_25",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_beacon_bell_lance_25",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_beacon_bell_lance_25.png",
+      "source_sha256": "11f44219c835aab740d13b22ee7091d1c422766b13df15632a9fc8cd958995a5",
+      "icon_path": "res://art/magic/runtime/spells/spell_beacon_bell_lance_25.png",
+      "icon_sha256": "3faae4e7a8d803f04089b74dfbd3a2fbaa128356ea6106f79f3e24ed8cee2274"
     }
   ]
 }

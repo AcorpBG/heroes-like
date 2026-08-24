@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The active spellbook icon slice is completed: 17 additional exposed spells now own specific original icons, all 23 production hero-start, town-library, and enemy-commander spells resolve specific art, the established Old Measure signature remains specific, and 88 catalog spells retain school fallback. Select the next tracker-approved source-backed slice; the game is not release-ready.",
+  "currentNotes": "The Beacon generated-map reward icon slice is completed: five tier 1-5 Beacon rewards now own specific original icons, the centralized manifest has 29 specific rows and 83 catalog fallbacks, and the unchanged 38-spell generated reward pool has 14 specific and 24 school-fallback entries. Select the next tracker-approved source-backed slice; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-active-spellbook-distinct-icons-10184",
-  "currentSliceId": "presentation-active-spellbook-distinct-icons-10184",
-  "currentSliceNotes": "Implemented 17 distinct original 1254px source and deterministic 128px runtime icons, expanding the centralized specific spell manifest to 24 exact rows. All 23 production hero-start, town-library, and enemy-commander spells resolve specific art; the established Old Measure signature remains specific; 88 catalog spells retain school fallback. Focused Battle/Town/Overworld 1280/1920 runtime, spell schema/behavior/adventure/town/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-generated-map-beacon-spell-reward-distinct-icons-10184",
+  "currentSliceId": "presentation-generated-map-beacon-spell-reward-distinct-icons-10184",
+  "currentSliceNotes": "Implemented five distinct original 1254px source and deterministic 128px runtime icons for the exact tier 1-5 Beacon generated-map spell rewards. The specific manifest now has 29 rows and 83 catalog fallbacks; the unchanged ordered 38-spell reward pool has 14 specific and 24 school-fallback entries. Focused 1280/1920 Battle buttons and non-terminal cast parity, generated reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation active spellbook distinct icons 10184",
+  "currentSliceTitle": "presentation generated map beacon spell reward distinct icons 10184",
   "currentSliceUpdatedAt": "2026-08-23T23:47:38Z",
   "deferredRiskRegister": [
     {
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the 24 shipped specific spell icons and exact 88-spell school fallback; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the 29 shipped specific spell icons, exact 83-spell school fallback, and unchanged 38-spell generated reward pool split of 14 specific and 24 fallback entries; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 133-building icon catalog, 24 specific spell icons, and exact 88-spell school fallback; do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 133-building icon catalog, 29 specific spell icons, exact 83-spell school fallback, and unchanged 38-spell generated reward pool split of 14 specific and 24 fallback entries; do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100399,6 +100399,16 @@
       "startedAt": "2026-08-24T01:00:54Z",
       "notes": "Implemented 17 distinct original 1254px source and deterministic 128px runtime icons, expanding the centralized specific spell manifest to 24 exact rows. All 23 production hero-start, town-library, and enemy-commander spells resolve specific art; the established Old Measure signature remains specific; 88 catalog spells retain school fallback. Focused Battle/Town/Overworld 1280/1920 runtime, spell schema/behavior/adventure/town/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T01:22:49Z"
+    },
+    {
+      "id": "presentation-generated-map-beacon-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map beacon spell reward distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T01:56:03Z",
+      "startedAt": "2026-08-24T01:26:09Z",
+      "notes": "Implemented five distinct original 1254px source and deterministic 128px runtime icons for the exact tier 1-5 Beacon generated-map spell rewards. The specific manifest now has 29 rows and 83 catalog fallbacks; the unchanged ordered 38-spell reward pool has 14 specific and 24 school-fallback entries. Focused 1280/1920 Battle buttons and non-terminal cast parity, generated reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T01:56:03Z"
     }
   ],
   "project": "heroes-like",
@@ -100943,7 +100953,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T01:22:49Z",
+  "updatedAt": "2026-08-24T01:56:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
