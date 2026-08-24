@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence.
 
+- Previous completed implementation slice: `ux-battle-intent-forecast-spell-order-target-coherence-10184`. A ready scored Battle spell now remains the exact public `cast_spell:<spell_id>` forecast with its legal allied or enemy target, consequence, tooltip, and matching spell-button focus. Unsupported, non-public-target, and unavailable spell recommendations fall back to the legal base action without retaining the spell target. Focused Stone Veil/Cinder Burst/Strike/fallback/incoming/no-mutation proof, active-play focus, 1280/1920 Battle layout, tactical AI, spell behavior, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Tactical scoring, spell/combat behavior, action execution, layout/input, save schema, packaged Battle interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unchanged or unclaimed.
+  id: `ux-battle-intent-forecast-spell-order-target-coherence-10184`
+
 - Previous completed implementation slice: `ux-main-menu-generated-size-picker-theme-parity-10184`. The live generated-map Size picker now uses the same authored secondary `OptionButton` theme as adjacent Player Count, Water, and Level controls instead of the flat engine default. Focused runtime proves exact four-state assets, 13px font, 34px minimum height, containment, and whole generated-setup/picker authority at 1280x720 and 1920x1080; the 1280 capture confirms the corrected frame. Generated-map wiring, full Main Menu keyboard navigation, accessibility semantics, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Size options, metadata, setup/launch/generation, Native-RMG, other themes/layout, packaged generated-map interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
   id: `ux-main-menu-generated-size-picker-theme-parity-10184`
 
@@ -9774,6 +9777,31 @@ Completion evidence:
 - focused 1280x720 and 1920x1080 runtime proves the exact shared secondary normal/hover/pressed/disabled asset paths, 13px font, 34px minimum height, generated-panel containment/non-overlap, and unchanged whole generated setup plus item/metadata/selection/focus/parent authority;
 - the regenerated 1280 visual capture shows Size, Player Count, and Water with the same authored frame, while generated-map wiring reports all 54 built configurations and retains the exact validator-gated 24-workflow Native-RMG launch boundary;
 - full Main Menu keyboard navigation, screen-reader semantics, core, repository validation, Python/JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass with bounded claims only.
+
+## Battle Intent Forecast Spell Order And Target Coherence
+
+id: `ux-battle-intent-forecast-spell-order-target-coherence-10184`
+
+Status: completed.
+
+Implementation boundary:
+- when the shared tactical scorer selects a ready Battle spell, resolve it to the exact public `cast_spell:<spell_id>` action instead of falling back to a stack order;
+- retain the scorer's exact allied or enemy `target_battle_id` only while the resolved public action is that same spell, and build its label, consequence, tooltip, and preferred keyboard focus from the matching live spell action;
+- when a tactical action cannot be represented and the forecast falls back, recompute the target from the legal selected enemy/action surface and never carry an allied spell target into Strike, Shoot, or Advance guidance.
+
+Completion criteria:
+- the current Stonewake support-spell shape recommends the exact ready Stone Veil cast on River Guard, focuses the matching spell control, and does not emit any self-attack text while the unchanged legal Strike confirmation still targets Blackbranch Cutthroat;
+- damage-spell, ordinary Strike, unavailable-spell fallback, enemy-incoming-order, action-focus, and no-mutation controls preserve exact action/target/consequence authority;
+- focused intent forecast, live Battle layout/navigation, spell behavior/AI, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- exact Stone Veil and Cinder Burst forecasts preserve their scored spell ids and legal targets; ordinary Strike, rejected-target, zero-mana unavailable-spell, enemy-incoming, and whole-session no-mutation controls pass;
+- real active-play focus follows the exact spell action metadata, and the 1920x1080 plus 1280x720 routed Battle layout matrices finish naturally with save/menu/return authority intact;
+- tactical-order, spell behavior, accessibility, core, repository/validator/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass with bounded claims only.
+
+Non-goals:
+- no tactical scoring, spell selection, spell effects, mana, target legality, damage, AI policy, action execution, initiative, battle balance, content, save schema, layout, or input mapping change;
+- no Battle tutorial redesign, new spell/action controls, packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, Native-RMG work, or release-readiness claim.
 
 ## Progress Reconciliation
 

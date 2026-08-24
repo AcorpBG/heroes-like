@@ -1870,7 +1870,10 @@ func _preferred_battle_keyboard_focus() -> Control:
 		_:
 			if action_id.begins_with("cast_spell:"):
 				for child in _spell_actions.get_children():
-					if child is Control and FrontierVisualKit.is_keyboard_focusable(child):
+					if child is Control \
+							and not child.is_queued_for_deletion() \
+							and String(child.get_meta("battle_action_id", "")) == action_id \
+							and FrontierVisualKit.is_keyboard_focusable(child):
 						return child
 	return _defend_button
 
@@ -1893,6 +1896,7 @@ func _rebuild_spell_actions() -> void:
 		button.tooltip_text = _battle_spell_action_tooltip(action)
 		_style_action_button(button, false, 132)
 		_apply_spell_action_icon(button, action)
+		button.set_meta("battle_action_id", String(action.get("id", "")))
 		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
 		_spell_actions.add_child(button)
 

@@ -2659,28 +2659,29 @@ static func intent_forecast_payload(session: SessionStateStoreScript.SessionData
 		}
 
 	var surface := get_action_surface(session)
+	var spell_actions := get_spell_actions(session)
 	var tactical_commander_payload: Dictionary = battle.get("player_hero", {}) if battle.get("player_hero", {}) is Dictionary else {}
 	if tactical_commander_payload.is_empty() and battle.get("player_commander_state", {}) is Dictionary:
 		tactical_commander_payload = battle.get("player_commander_state", {})
 	var tactical_order := BattleAiRulesScript.choose_stack_tactical_order(battle, active_stack, "enemy", tactical_commander_payload)
-	var action_id := _intent_forecast_action_id(surface, tactical_order, active_stack)
+	var action_id := _intent_forecast_action_id(battle, surface, spell_actions, tactical_order, active_stack)
 	if action_id == "":
 		return {
 			"visible_text": "Suggested order: no legal action is open.",
 			"tooltip_text": "Order Preview\n- Active: %s\n- No ready action is available from the current posture.\n- Next: retarget, move, or wait for initiative to change." % _stack_label(active_stack),
 			"readiness": "blocked",
 		}
-	var action: Dictionary = surface.get(action_id, {}) if surface.get(action_id, {}) is Dictionary else {}
+	var action := _intent_forecast_action(surface, spell_actions, action_id)
 	var target := get_selected_target(battle)
 	var tactical_target_id := String(tactical_order.get("target_battle_id", ""))
-	if tactical_target_id != "":
+	if tactical_target_id != "" and _intent_forecast_action_matches_tactical_order(action_id, tactical_order):
 		var tactical_target := _get_stack_by_id(battle, tactical_target_id)
 		if not tactical_target.is_empty():
 			target = tactical_target
 	var action_label := String(action.get("label", action_id.capitalize())).strip_edges()
 	var target_label := _intent_forecast_target_label(action_id, active_stack, target)
 	var expected_result := _intent_forecast_expected_result(action_id, session, battle, active_stack, target, action)
-	var reason := String(action.get("why", "")).strip_edges()
+	var reason := String(action.get("why", action.get("best_use", ""))).strip_edges()
 	if reason == "":
 		reason = _action_why_line(action_id, session, battle, active_stack, target, true)
 	var risk := _enemy_reply_line(session, battle)
@@ -2726,15 +2727,69 @@ static func intent_forecast_payload(session: SessionStateStoreScript.SessionData
 static func describe_intent_forecast(session: SessionStateStoreScript.SessionData) -> String:
 	return String(intent_forecast_payload(session).get("visible_text", "Suggested order unavailable."))
 
-static func _intent_forecast_action_id(surface: Dictionary, tactical_order: Dictionary, active_stack: Dictionary) -> String:
+static func _intent_forecast_action_id(
+	battle: Dictionary,
+	surface: Dictionary,
+	spell_actions: Array,
+	tactical_order: Dictionary,
+	active_stack: Dictionary
+) -> String:
 	var tactical_action := String(tactical_order.get("action", ""))
+	if tactical_action == "cast_spell":
+		var tactical_spell_action_id := "cast_spell:%s" % String(tactical_order.get("spell_id", ""))
+		if _intent_forecast_tactical_spell_target_is_public(battle, active_stack, tactical_order):
+			for action_value in spell_actions:
+				if not (action_value is Dictionary):
+					continue
+				var spell_action: Dictionary = action_value
+				if String(spell_action.get("id", "")) == tactical_spell_action_id and not bool(spell_action.get("disabled", true)):
+					return tactical_spell_action_id
+		return _preferred_player_action_id(surface, active_stack)
 	if tactical_action != "":
 		var tactical_surface: Dictionary = surface.get(tactical_action, {}) if surface.get(tactical_action, {}) is Dictionary else {}
 		if not bool(tactical_surface.get("disabled", true)):
 			return tactical_action
 	return _preferred_player_action_id(surface, active_stack)
 
+static func _intent_forecast_tactical_spell_target_is_public(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	tactical_order: Dictionary
+) -> bool:
+	var spell_id := String(tactical_order.get("spell_id", ""))
+	var tactical_target_id := String(tactical_order.get("target_battle_id", ""))
+	if spell_id == "" or tactical_target_id == "":
+		return false
+	var spell := ContentService.get_spell(spell_id)
+	if spell.is_empty():
+		return false
+	var public_target_id := ""
+	match String(spell.get("target_mode", "")):
+		"ally_active":
+			public_target_id = String(active_stack.get("battle_id", ""))
+		"enemy_selected":
+			public_target_id = String(get_selected_target(battle).get("battle_id", ""))
+		_:
+			return false
+	return public_target_id != "" and tactical_target_id == public_target_id
+
+static func _intent_forecast_action(surface: Dictionary, spell_actions: Array, action_id: String) -> Dictionary:
+	if action_id.begins_with("cast_spell:"):
+		for action_value in spell_actions:
+			if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
+				return (action_value as Dictionary).duplicate(true)
+	var surface_action: Variant = surface.get(action_id, {})
+	return (surface_action as Dictionary).duplicate(true) if surface_action is Dictionary else {}
+
+static func _intent_forecast_action_matches_tactical_order(action_id: String, tactical_order: Dictionary) -> bool:
+	var tactical_action := String(tactical_order.get("action", ""))
+	if tactical_action == "cast_spell":
+		return action_id == "cast_spell:%s" % String(tactical_order.get("spell_id", ""))
+	return action_id == tactical_action
+
 static func _intent_forecast_target_label(action_id: String, active_stack: Dictionary, target: Dictionary) -> String:
+	if action_id.begins_with("cast_spell:"):
+		return _stack_label(target) if not target.is_empty() else "spell target"
 	match action_id:
 		"strike", "shoot":
 			return _stack_label(target) if not target.is_empty() else "selected target"
@@ -2754,6 +2809,11 @@ static func _intent_forecast_expected_result(
 	target: Dictionary,
 	action: Dictionary
 ) -> String:
+	if action_id.begins_with("cast_spell:"):
+		var spell_effect := String(action.get("effect", "")).strip_edges()
+		if spell_effect != "":
+			return spell_effect.trim_suffix(".")
+		return String(action.get("summary", "Casting resolves the selected spell consequence")).strip_edges().trim_suffix(".")
 	if action_id in ["strike", "shoot"] and not active_stack.is_empty() and not target.is_empty():
 		return _attack_action_summary(active_stack, target, battle, action_id == "shoot").trim_suffix(".")
 	if action_id == "advance":
@@ -2813,10 +2873,11 @@ static func _intent_forecast_confidence_line(tactical_order: Dictionary, action_
 		return "manual order surface; no score spread is available."
 	var chosen_score := -99999.0
 	var next_score := -99999.0
+	var score_action_id := "cast_spell" if action_id.begins_with("cast_spell:") else action_id
 	for key_value in scores.keys():
 		var key := String(key_value)
 		var score := float(scores.get(key_value, 0.0))
-		if key == action_id:
+		if key == score_action_id:
 			chosen_score = score
 		elif score > next_score:
 			next_score = score
