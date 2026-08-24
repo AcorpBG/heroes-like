@@ -109,6 +109,15 @@ SPELLS = (
     ("spell_old_measure_marker_pace_24", "old_measure"),
     ("spell_old_measure_index_survey_26", "old_measure"),
     ("spell_old_measure_proof_axiom_28", "old_measure"),
+    ("spell_veil_salt_step_06", "veil"),
+    ("spell_veil_tide_fogbind_08", "veil"),
+    ("spell_veil_wraith_duel_14", "veil"),
+    ("spell_veil_lantern_mark_16", "veil"),
+    ("spell_veil_obituary_step_18", "veil"),
+    ("spell_veil_mourning_fogbind_20", "veil"),
+    ("spell_veil_salt_shroud_22", "veil"),
+    ("spell_veil_tide_drift_24", "veil"),
+    ("spell_veil_mist_duel_26", "veil"),
 )
 
 
