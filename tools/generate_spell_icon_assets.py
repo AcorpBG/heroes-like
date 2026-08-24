@@ -55,6 +55,10 @@ SPELLS = (
     ("spell_root_bark_bark_08", "root"),
     ("spell_root_bark_rootway_24", "root"),
     ("spell_root_bloom_bark_20", "root"),
+    ("spell_veil_mourning_mark_04", "veil"),
+    ("spell_veil_mist_shroud_10", "veil"),
+    ("spell_veil_moon_drift_12", "veil"),
+    ("spell_veil_moon_mark_28", "veil"),
 )
 
 

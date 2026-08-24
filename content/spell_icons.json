@@ -449,6 +449,50 @@
       "source_sha256": "9cdcb0430bd728dfbd40b6d148e578f9df0a2d55a7d8e486d73995cd24c87378",
       "icon_path": "res://art/magic/runtime/spells/spell_root_bloom_bark_20.png",
       "icon_sha256": "2ff694d8495f4d05a6233f056764374a8fd8938349083965fdfdfd9b0d679799"
+    },
+    {
+      "id": "spell_veil_mourning_mark_04",
+      "spell_id": "spell_veil_mourning_mark_04",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_mourning_mark_04",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_mourning_mark_04.png",
+      "source_sha256": "7c87cf4ee89d662d8070b4d59888a9cb8c8e470f4d0a6bfc0557ebfe1489629b",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_mourning_mark_04.png",
+      "icon_sha256": "0ee2071fa529a3af60b4eced53c61a4c96c1ac4d8e2f2d12bcf54de70d0f7af9"
+    },
+    {
+      "id": "spell_veil_mist_shroud_10",
+      "spell_id": "spell_veil_mist_shroud_10",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_mist_shroud_10",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_mist_shroud_10.png",
+      "source_sha256": "aef4b00186f1f08414b44ce92d6d68e640e80f9e2996ea785a163b3c97c9f6f3",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_mist_shroud_10.png",
+      "icon_sha256": "e6c7d876e7e1a7f5ae47953e07f9c98434f7c01ae523dcea40d393747c54436d"
+    },
+    {
+      "id": "spell_veil_moon_drift_12",
+      "spell_id": "spell_veil_moon_drift_12",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_moon_drift_12",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_moon_drift_12.png",
+      "source_sha256": "73d03576d80b6f7487c7fc1a3526d9f2fbc868bec336037f9effefba8b572811",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_moon_drift_12.png",
+      "icon_sha256": "188553efcd8eb532dfbb71a616b73c0638b428daaa278a30a69cb4732b78252b"
+    },
+    {
+      "id": "spell_veil_moon_mark_28",
+      "spell_id": "spell_veil_moon_mark_28",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_veil_moon_mark_28",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_veil_moon_mark_28.png",
+      "source_sha256": "7ab992c0ba763e408be9970f0e481da83aafebd7a168a76a90dab62189c1a723",
+      "icon_path": "res://art/magic/runtime/spells/spell_veil_moon_mark_28.png",
+      "icon_sha256": "a8f47c59c76b20edc17ab9e09dd40e30234fd67e9618acce106138ea45e481b7"
     }
   ]
 }
