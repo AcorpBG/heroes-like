@@ -1957,14 +1957,8 @@ func _spell_specific_vfx_cue_id(spell_id: String, resolution_type: String) -> St
 			return "vfx_spell_resonant_chorus"
 	var family := resolution_type.strip_edges()
 	match family:
-		"cleanse_effect":
-			return "vfx_spell_prism_bastion"
-		"recover_effect":
-			return "vfx_spell_graft_mend"
 		"effect":
 			return "vfx_spell_command_ward"
-		"damage":
-			return "vfx_spell_cinder_burst"
 	return ""
 
 func _spell_specific_audio_cue_id(spell_id: String, resolution_type: String) -> String:
@@ -1985,14 +1979,8 @@ func _spell_specific_audio_cue_id(spell_id: String, resolution_type: String) -> 
 			return "audio_spell_resonant_chorus"
 	var family := resolution_type.strip_edges()
 	match family:
-		"cleanse_effect":
-			return "audio_spell_prism_bastion"
-		"recover_effect":
-			return "audio_spell_graft_mend"
 		"effect":
 			return "audio_spell_command_ward"
-		"damage":
-			return "audio_spell_cinder_burst"
 	return ""
 
 func _animation_preferences() -> Dictionary:

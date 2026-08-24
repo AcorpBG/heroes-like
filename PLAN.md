@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved source-backed release-readiness slice; do not infer release readiness from complete spell-icon coverage.
+- Selected implementation slice: none. Select the next tracker-approved source-backed release-readiness slice; do not infer release readiness from bounded Battle cue-identity correction and export-startup gates.
+
+- Previous completed implementation slice: `presentation-battle-spell-specific-cue-identity-fail-closed-10184`. The Battle Board now retains the seven catalog-owned spell-specific VFX/audio identities and the shared Command Ward effect cue while unrelated damage, recovery, and cleanse spells use their existing generic event cues instead of masquerading as Cinder Burst, Graft Mend, or Prism Bastion. The exhaustive 90-spell classifier is 7 specific/55 shared-effect/28 generic-only; a real Pressure Clause cast uses the imported generic cast anchor/audio with exact battle authority. Battle animation, magic behavior, cue catalog, Board navigation, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Assets, spell/battle rules, packaged Battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
+  id: `presentation-battle-spell-specific-cue-identity-fail-closed-10184`
 
 - Previous completed implementation slice: `presentation-root-town-study-complete-distinct-icons-10184`. Bloom Briar, Canopy Graft, Loam Thorn, Green Rootway, Branch Bloom, Wild Briar, Graft Ward, Loam Bloom, and Green Briar now own distinct original 1254px source art and deterministic 128px runtime icons, completing all 16 Root spells and all 112 production catalog spell icons without changing Study order/access, effects, tiers, costs, learning consequences, or generated-reward identity. The centralized manifest has 112 specific rows and zero school-sigil catalog fallbacks; the unchanged 38-spell generated reward pool remains fully specific. Focused 1280/1920 Graftroot Caravan and Rootgate Nursery tier-one-to-five Study actions preserve focus/scroll, rule-result, session, and save authority. Magic, Town, focus, core, deterministic generation, repository/editor, official Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `presentation-root-town-study-complete-distinct-icons-10184`
@@ -9691,6 +9694,31 @@ Completion evidence:
 - the focused real controller Board report passes at 1280x720 and 1920x720 with one exact imported invalid cue for blocked physical-A results, unchanged Shell/live-region text and real 1.2-second timer, no new event, and unchanged presentation authority; physical-B cancel and later successful movement add no invalid cue while retaining exact focus/cursor/event/recap/battle consequences;
 - UI-audio, withdrawal, battle-event animation, active-play focus, screen-reader semantics, core, independent 1920x1080/1280x720/1024x600 Battle layout gates, repository validation, Python/JSON/diff checks, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass;
 - packaged Battle Board interaction/listening, native controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+## Battle Spell-Specific Cue Identity Fail-Closed
+
+id: `presentation-battle-spell-specific-cue-identity-fail-closed-10184`
+
+Status: completed.
+
+Implementation boundary:
+- keep the seven catalog-owned spell-specific VFX/audio mappings exact for Cinder Burst, Coal Rain, Sunlance Arc, Briar Bind, Graft Mend, Prism Bastion, and Resonant Chorus, and retain the shared Command Ward effect cue for generic status/buff effects;
+- remove only the resolution-family aliases that currently prepend Cinder Burst, Graft Mend, or Prism Bastion cues to every unrelated damage, recovery, or cleanse spell;
+- let all other Battle spells use the existing generic animation-catalog VFX/audio selected for their actual cast, hit, status, or expiry event, preserving event order, timing, reduced-motion/reduced-flash policy, and BattleRules authority.
+
+Completion criteria:
+- focused live public casts prove Cinder Burst keeps exact imported specific VFX/audio while Pressure Clause retains generic damage/cast cues and never selects Cinder Burst identity;
+- all 90 production Battle spells are exhaustively classified as seven exact explicit-specific, 55 shared Command Ward effect, or 28 generic-only rows, with no damage/recovery/cleanse resolution-family masquerading, and missing/unknown spell ids fail closed to generic playback;
+- battle event animation, magic behavior/AI, accessibility policy, Battle layout/navigation, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no spell effect, tier, mana, target, duration, AI valuation, balance, content, icon, sound/VFX asset, manifest, cue timing, event schema, camera, BattleRules, save, or input/layout change;
+- no new spell-specific assets, catalog-wide VFX redesign, Overworld/Town presentation change, packaged Battle interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- `.artifacts/battle_spell_identity_focused_rerun.cLXBsd` exits naturally with one `BATTLE_EVENT_ANIMATION_STATE_REPORT` `ok:true`; the exact classifier reports 90 Battle spells partitioned into 7 explicit, 55 shared-effect, and 28 generic-only rows, and the real Pressure Clause public cast preserves whole session authority while selecting imported `core_cast_anchor.png`/generic cast audio and no Cinder Burst cue;
+- magic battle behavior, animation cue catalog, controller Board navigation, core systems, validator/JSON/Python/diff checks, and exact/generic editor parsing pass;
+- official Linux export plus packaged headless startup and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction/listening, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness are not claimed.
 
 ## Progress Reconciliation
 

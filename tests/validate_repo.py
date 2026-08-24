@@ -48867,6 +48867,28 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "BattleBoardView.gd must not collapse Resonant Chorus back onto Prism Bastion audio identity",
     )
+    spell_specific_vfx_start = battle_board_text.find("func _spell_specific_vfx_cue_id(")
+    spell_specific_vfx_end = battle_board_text.find("\nfunc ", spell_specific_vfx_start + 1)
+    spell_specific_audio_start = battle_board_text.find("func _spell_specific_audio_cue_id(")
+    spell_specific_audio_end = battle_board_text.find("\nfunc ", spell_specific_audio_start + 1)
+    spell_specific_vfx_block = battle_board_text[spell_specific_vfx_start:spell_specific_vfx_end]
+    spell_specific_audio_block = battle_board_text[spell_specific_audio_start:spell_specific_audio_end]
+    ensure(spell_specific_vfx_start >= 0 and spell_specific_vfx_end > spell_specific_vfx_start, errors, "BattleBoardView.gd spell-specific VFX selector block is missing")
+    ensure(spell_specific_audio_start >= 0 and spell_specific_audio_end > spell_specific_audio_start, errors, "BattleBoardView.gd spell-specific audio selector block is missing")
+    for forbidden_mapping in (
+        '"cleanse_effect":\n\t\t\treturn "vfx_spell_prism_bastion"',
+        '"recover_effect":\n\t\t\treturn "vfx_spell_graft_mend"',
+        '"damage":\n\t\t\treturn "vfx_spell_cinder_burst"',
+    ):
+        ensure(forbidden_mapping not in spell_specific_vfx_block, errors, f"BattleBoardView.gd retains a cross-spell VFX identity alias: {forbidden_mapping}")
+    for forbidden_mapping in (
+        '"cleanse_effect":\n\t\t\treturn "audio_spell_prism_bastion"',
+        '"recover_effect":\n\t\t\treturn "audio_spell_graft_mend"',
+        '"damage":\n\t\t\treturn "audio_spell_cinder_burst"',
+    ):
+        ensure(forbidden_mapping not in spell_specific_audio_block, errors, f"BattleBoardView.gd retains a cross-spell audio identity alias: {forbidden_mapping}")
+    ensure('\t\t"effect":\n\t\t\treturn "vfx_spell_command_ward"' in spell_specific_vfx_block, errors, "BattleBoardView.gd must retain the shared Command Ward effect VFX cue")
+    ensure('\t\t"effect":\n\t\t\treturn "audio_spell_command_ward"' in spell_specific_audio_block, errors, "BattleBoardView.gd must retain the shared Command Ward effect audio cue")
     draw_block = battle_board_text[battle_board_text.find("func _draw() -> void:"):battle_board_text.find("func _draw_terrain", battle_board_text.find("func _draw() -> void:"))]
     ensure(draw_block.find("_draw_vfx_cues(hex_layout, stack_cells)") < draw_block.find("_draw_stack_tokens(hex_layout, stack_cells)"), errors, "Battle VFX assets must draw below stack tokens and count labels")
     imported_draw_block = battle_board_text[battle_board_text.find("func _draw_imported_vfx_asset"):battle_board_text.find("func _vfx_draw_entries", battle_board_text.find("func _draw_imported_vfx_asset"))]
@@ -49098,6 +49120,22 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "state path vfx imported asset draw count",
         "state path vfx missing mapping procedural count",
         "spell-specific imported asset",
+        "_validate_spell_specific_cue_identity_fail_closed",
+        "battle spell identity catalog count",
+        "battle spell explicit identity count",
+        "battle spell shared effect identity count",
+        "battle spell generic-only identity count",
+        "unknown spell vfx fail closed",
+        "unknown spell audio fail closed",
+        "pressure clause generic identity public cast",
+        "pressure clause presentation preserves session authority",
+        "pressure clause generic cast vfx",
+        "pressure clause generic cast audio",
+        "Pressure Clause retained Cinder Burst presentation identity",
+        '"battle_spell_count": battle_spell_ids.size()',
+        '"explicit_count": explicit_count',
+        '"shared_effect_count": shared_effect_count',
+        '"generic_only_count": generic_only_count',
         "move path ghost imported asset",
         "death fade imported asset",
         "retreat path imported asset",

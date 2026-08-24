@@ -40,6 +40,7 @@ func _run() -> void:
 	await _validate_ranged_status_state()
 	_validate_death_state()
 	await _validate_spell_cast_state()
+	await _validate_spell_specific_cue_identity_fail_closed()
 	await _validate_resonant_chorus_vfx_identity()
 	await _validate_reduced_flash_spell_state()
 	await _validate_status_cleanse_state()
@@ -703,6 +704,104 @@ func _validate_spell_cast_state() -> void:
 	case_payload["spell_specific_vfx"] = spell_vfx
 	case_payload["spell_specific_audio"] = caster_audio
 	_report["cases"]["spell_cast"] = case_payload
+
+func _validate_spell_specific_cue_identity_fail_closed() -> void:
+	var view := BattleBoardViewScript.new()
+	var explicit_vfx := {
+		"spell_cinder_burst": "vfx_spell_cinder_burst",
+		"spell_coal_rain": "vfx_spell_coal_rain",
+		"spell_sunlance_arc": "vfx_spell_sunlance_arc",
+		"spell_briar_bind": "vfx_spell_briar_bind",
+		"spell_graft_mend": "vfx_spell_graft_mend",
+		"spell_prism_bastion": "vfx_spell_prism_bastion",
+		"spell_resonant_chorus": "vfx_spell_resonant_chorus",
+	}
+	var explicit_audio := {
+		"spell_cinder_burst": "audio_spell_cinder_burst",
+		"spell_coal_rain": "audio_spell_coal_rain",
+		"spell_sunlance_arc": "audio_spell_sunlance_arc",
+		"spell_briar_bind": "audio_spell_briar_bind",
+		"spell_graft_mend": "audio_spell_graft_mend",
+		"spell_prism_bastion": "audio_spell_prism_bastion",
+		"spell_resonant_chorus": "audio_spell_resonant_chorus",
+	}
+	var battle_spell_ids: Array[String] = []
+	var explicit_count := 0
+	var shared_effect_count := 0
+	var generic_only_count := 0
+	var raw_spells: Dictionary = ContentService.load_json(ContentService.SPELLS_PATH)
+	var spell_rows: Array = raw_spells.get("items", []) if raw_spells.get("items", []) is Array else []
+	for spell_value in spell_rows:
+		if not (spell_value is Dictionary):
+			continue
+		var spell: Dictionary = spell_value
+		if String(spell.get("context", "")) != "battle":
+			continue
+		var spell_id := String(spell.get("id", ""))
+		battle_spell_ids.append(spell_id)
+		var effect: Dictionary = spell.get("effect", {}) if spell.get("effect", {}) is Dictionary else {}
+		var effect_type := String(effect.get("type", ""))
+		var resolution_type := "effect"
+		if effect_type == "damage_enemy":
+			resolution_type = "damage"
+		elif effect_type == "recover_ally":
+			resolution_type = "recover_effect"
+		elif effect_type == "cleanse_ally":
+			resolution_type = "cleanse_effect"
+		var actual_vfx := String(view.call("_spell_specific_vfx_cue_id", spell_id, resolution_type))
+		var actual_audio := String(view.call("_spell_specific_audio_cue_id", spell_id, resolution_type))
+		if explicit_vfx.has(spell_id):
+			explicit_count += 1
+			_expect_equal("explicit spell vfx identity %s" % spell_id, actual_vfx, String(explicit_vfx.get(spell_id, "")))
+			_expect_equal("explicit spell audio identity %s" % spell_id, actual_audio, String(explicit_audio.get(spell_id, "")))
+		elif resolution_type == "effect":
+			shared_effect_count += 1
+			_expect_equal("shared effect vfx identity %s" % spell_id, actual_vfx, "vfx_spell_command_ward")
+			_expect_equal("shared effect audio identity %s" % spell_id, actual_audio, "audio_spell_command_ward")
+		else:
+			generic_only_count += 1
+			_expect_equal("generic-only spell vfx identity %s" % spell_id, actual_vfx, "")
+			_expect_equal("generic-only spell audio identity %s" % spell_id, actual_audio, "")
+	_expect_int("battle spell identity catalog count", battle_spell_ids.size(), 90)
+	_expect_int("battle spell explicit identity count", explicit_count, 7)
+	_expect_int("battle spell shared effect identity count", shared_effect_count, 55)
+	_expect_int("battle spell generic-only identity count", generic_only_count, 28)
+	for resolution_type in ["damage", "recover_effect", "cleanse_effect"]:
+		_expect_equal("unknown spell vfx fail closed %s" % resolution_type, String(view.call("_spell_specific_vfx_cue_id", "spell_missing_identity", resolution_type)), "")
+		_expect_equal("unknown spell audio fail closed %s" % resolution_type, String(view.call("_spell_specific_audio_cue_id", "spell_missing_identity", resolution_type)), "")
+	view.free()
+
+	var pressure_session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	pressure_session.battle["turn_order"] = ["player_0", "player_0"]
+	pressure_session.battle["player_commander_state"] = _spellcaster_state(["spell_pressure_clause"])
+	_set_stack_field(pressure_session.battle, "enemy_0", "total_health", 999)
+	var pressure_result := BattleRulesScript.cast_player_spell(pressure_session, "spell_pressure_clause")
+	_expect_ok("pressure clause generic identity public cast", pressure_result)
+	var pressure_event := _event_record_for(pressure_session.battle, "player_0", "battle_unit_cast")
+	_expect_equal("pressure clause public cast event spell id", String(pressure_event.get("spell_id", "")), "spell_pressure_clause")
+	var pressure_authority: Dictionary = pressure_session.to_dict()
+	var pressure_summary := await _board_summary_for_session_after_audio(pressure_session)
+	_expect_equal("pressure clause presentation preserves session authority", JSON.stringify(pressure_session.to_dict()), JSON.stringify(pressure_authority))
+	var pressure_cues: Dictionary = pressure_summary.get("cue_playback", {}) if pressure_summary.get("cue_playback", {}) is Dictionary else {}
+	var pressure_cue := _cue_record_for(pressure_cues, "player_0")
+	var pressure_vfx_ids: Array = pressure_cue.get("selected_vfx_cue_ids", []) if pressure_cue.get("selected_vfx_cue_ids", []) is Array else []
+	var pressure_audio_ids: Array = pressure_cue.get("selected_audio_cue_ids", []) if pressure_cue.get("selected_audio_cue_ids", []) is Array else []
+	_expect_array_contains("pressure clause generic cast vfx", pressure_vfx_ids, "vfx_placeholder_cast_anchor")
+	_expect_array_contains("pressure clause generic cast audio", pressure_audio_ids, "audio_placeholder_cast")
+	if pressure_vfx_ids.has("vfx_spell_cinder_burst") or pressure_audio_ids.has("audio_spell_cinder_burst"):
+		_error("Pressure Clause retained Cinder Burst presentation identity: %s." % pressure_cue)
+	var pressure_vfx_playback: Dictionary = pressure_summary.get("vfx_playback", {}) if pressure_summary.get("vfx_playback", {}) is Dictionary else {}
+	var generic_cast_entry := _vfx_entry_for_cue(pressure_vfx_playback, "vfx_placeholder_cast_anchor")
+	_expect_equal("pressure clause generic cast imported asset", String(generic_cast_entry.get("asset_path", "")), "res://art/battle/vfx/core_cast_anchor.png")
+	_report["cases"]["spell_specific_cue_identity_fail_closed"] = {
+		"battle_spell_count": battle_spell_ids.size(),
+		"explicit_count": explicit_count,
+		"shared_effect_count": shared_effect_count,
+		"generic_only_count": generic_only_count,
+		"pressure_clause_result": pressure_result,
+		"pressure_clause_cue": pressure_cue,
+		"pressure_clause_vfx": generic_cast_entry,
+	}
 
 func _validate_resonant_chorus_vfx_identity() -> void:
 	SettingsService.ensure_settings()
