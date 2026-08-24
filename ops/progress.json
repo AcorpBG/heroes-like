@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-small-map-visual-scale-cap-10184",
-    "title": "Overworld small-map visual scale cap",
+    "id": "ux-generated-map-object-scale-and-blocker-body-coherence-10184",
+    "title": "Generated-map object scale and blocker-body coherence",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-24T22:25:00Z",
-    "updatedAt": "2026-08-24T22:47:08Z",
-    "completedAt": "2026-08-24T22:47:08Z",
+    "startedAt": "2026-08-24T23:03:22Z",
+    "updatedAt": "2026-08-24T23:50:10Z",
+    "completedAt": "2026-08-24T23:50:10Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct shipped screenshot evidence. Small authored maps now cap whole-map fit at 104px instead of the reproduced 132px extent, and town art uses 80% of its unchanged 3x2 footprint (1.6 visual tiles instead of about 2.16). Focused 1280x720 and 1920x1080 runtime preserves centered full-map visibility, exact town entry/blocking, hero and one-tile object presentation, session authority, and the Ninefold 65px large-map tactical camera control. Faction-town, faction-hero, artifact, full-route, broad Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, certification, whole-game validation, and release readiness remain unclaimed."
+    "notes": "Completed from direct supported generated-map evidence. Generated decorative blockers now draw every exact package body cell with deterministic terrain-matched original art at 0.72 tile, and multi-tile interactive resources/sites are capped at one tile without changing logical footprints. Four Small/Medium seeds, Small and Medium captures at 1280x720 and 1920x1080, movement, exact body-union/collision/terrain matching, semantic save/reload authority, authored-map/sprite compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, body/visit masks, passability, density, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unchanged or unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld small-map visual scale correction is completed: whole-map fit is capped at 104px, town art is 1.6 visual tiles within its unchanged 3x2 logical footprint, focused and compatibility runtime are green, and bounded Linux/Windows export-startup gates pass. Select the next tracker-approved slice from direct current behavior evidence.",
+  "currentNotes": "Generated-map object-scale and blocker-body presentation is complete. Select the next tracker-approved slice from direct current behavior evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-small-map-visual-scale-cap-10184",
-  "currentSliceId": "ux-overworld-small-map-visual-scale-cap-10184",
-  "currentSliceNotes": "Completed with focused 1280/1920 small-map scale proof, exact logical-footprint and interaction authority, unchanged large-map camera behavior, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "ux-generated-map-object-scale-and-blocker-body-coherence-10184",
+  "currentSliceId": "ux-generated-map-object-scale-and-blocker-body-coherence-10184",
+  "currentSliceNotes": "Completed: all exact generated decorative body cells receive bounded terrain-matched presentation and multi-tile interactive sprites are capped independently from unchanged logical footprints, with movement and save/reload authority preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld small-map visual scale cap",
-  "currentSliceUpdatedAt": "2026-08-24T22:47:08Z",
+  "currentSliceTitle": "Generated-map object scale and blocker-body coherence",
+  "currentSliceUpdatedAt": "2026-08-24T23:50:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19650,7 +19650,7 @@
       }
     }
   },
-  "guardrailNote": "Change only the small-map whole-fit visual tile extent. Preserve exact town/object/hero logical footprints, passability, pathing, focus, selection, routes, assets, save/gameplay authority, and large-map tactical camera behavior; do not claim packaged interaction, certification, whole-game validation, or release readiness.",
+  "guardrailNote": "Change generated-map presentation only: render the exact package decorative body union with existing original terrain-matched assets and cap multi-tile interactive sprite extent independently from logical footprints. Preserve every native payload field, object/body/visit tile, passability, route, interaction, content, save, and camera authority; do not add generator heuristics or claim Native-RMG parity, packaged interaction, certification, whole-game validation, or release readiness.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19860,8 +19860,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Implement only the small-map whole-fit visual extent cap and prove 1280/1920 scale, centering, full-map visibility, exact footprints/interactions, and unchanged large-map camera behavior. Do not alter art, content, pathing, gameplay, saves, generated maps, or Native RMG.",
-  "notes": "The selected compatibility correction is direct gameplay work: data-driven first-victory reinforcements preserve the exact screened sequential effective armies while restoring meaningful independent encounter balance. It is not a report-only or gate-only change.",
+  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice from direct current behavior evidence; do not extend the completed generated-map presentation slice into native generation, passability, density, content, or parity work.",
+  "notes": "The completed generated-map correction is live presentation behavior, not a report-only change: exact blocker-body cells now render bounded terrain-matched art and multi-tile interactive sprites are capped independently from unchanged logical footprints.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100829,6 +100829,24 @@
       "startedAt": "2026-08-24T22:25:00Z",
       "notes": "Completed from direct shipped screenshot evidence. Small authored maps now cap whole-map fit at 104px instead of the reproduced 132px extent, and town art uses 80% of its unchanged 3x2 footprint (1.6 visual tiles instead of about 2.16). Focused 1280x720 and 1920x1080 runtime preserves centered full-map visibility, exact town entry/blocking, hero and one-tile object presentation, session authority, and the Ninefold 65px large-map tactical camera control. Faction-town, faction-hero, artifact, full-route, broad Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, certification, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T22:47:08Z"
+    },
+    {
+      "id": "ux-generated-map-object-scale-and-blocker-body-coherence-10184",
+      "title": "Generated-map object scale and blocker-body coherence",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T23:50:10Z",
+      "startedAt": "2026-08-24T23:03:22Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct supported generated-map evidence. Every exact generated decorative body cell now renders bounded deterministic terrain-matched original obstacle art, and multi-tile interactive resources/sites are capped at one tile independently from unchanged logical footprints. Four Small/Medium seeds and direct Small/Medium 1280x720 plus 1920x1080 captures pass exact body-union, collision, terrain matching, movement, and semantic save/reload authority. Authored-map/sprite compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, body/visit masks, passability, pathfinding, density, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T23:50:10Z"
     }
   ],
   "project": "heroes-like",
@@ -100839,7 +100857,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Implement and validate the bounded small-map visual tile-extent cap, then retain exact logical object footprints, pathing, interaction, large-map camera behavior, and bounded platform startup compatibility. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain.",
+  "remainingWork": "Select the next tracker-approved implementation slice from direct current behavior evidence. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101270,7 +101288,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_bogbound_oath_reed_watcher_staged_reinforcement_in_progress",
+  "result": "ux_generated_map_object_scale_and_blocker_body_coherence_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -101371,9 +101389,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The bounded Overworld small-map visual scale correction is implemented and validated; no next implementation slice is selected, and the game is not release-ready.",
+  "summary": "Generated-map object scale and blocker-body visual coherence is implemented and validated; exact native package, body-mask, passability, pathing, and save authority remain unchanged, and no next implementation slice is selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T22:47:08Z",
+  "updatedAt": "2026-08-24T23:50:10Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

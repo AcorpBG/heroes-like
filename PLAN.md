@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved implementation slice from direct current behavior evidence before making further product changes.
 
+- Previous completed implementation slice: `ux-generated-map-object-scale-and-blocker-body-coherence-10184`. Generated decorative blocker bodies now render every exact in-bounds package body cell with deterministic terrain-matched original obstacle art at a bounded 0.72-tile extent, while multi-tile interactive resource/site art is capped at one tile independently from unchanged logical footprints. Direct Small and Medium captures at 1280x720 and 1920x1080, four supported generated-package seeds, exact body-union/collision/terrain matching, real movement, exact semantic save/reload authority, authored-map and sprite compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Native generation, body/visit masks, passability, pathfinding, density, content, packaged generated-map interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unchanged or unclaimed.
+  id: `ux-generated-map-object-scale-and-blocker-body-coherence-10184`
+
 - Previous completed implementation slice: `ux-overworld-small-map-visual-scale-cap-10184`. Small authored maps now cap whole-map fit at 104px instead of expanding to the reproduced 132px extent, and town art uses 80% of its unchanged 3x2 footprint (1.6 visual tiles instead of about 2.16). Focused 1280x720 and 1920x1080 proof keeps the map centered and fully visible, preserves town entry/blocking, hero and one-tile object presentation, session authority, and the Ninefold 65px large-map tactical camera control. Faction-town, faction-hero, artifact, full-route, broad Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Art/content replacement, logical footprints, pathing, gameplay, generated maps, Native RMG, packaged Overworld interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
   id: `ux-overworld-small-map-visual-scale-cap-10184`
 
@@ -9978,6 +9981,27 @@ Completion criteria:
 
 Non-goals:
 - no art/manifest/content replacement, non-town sprite-family fraction, object/town logical footprint, passability, pathfinding, camera-pan policy, input, gameplay, battle, economy, AI, save schema, generated-map, Native-RMG, project stretch/UI scale, packaged Overworld interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, whole-game validation, or release-readiness change or claim.
+
+## Generated-Map Object Scale and Blocker-Body Coherence
+
+id: `ux-generated-map-object-scale-and-blocker-body-coherence-10184`
+
+Status: completed.
+
+Implementation boundary:
+- preserve every generated package `package_block_tiles`/`package_body_tiles` cell as the exact movement and save authority while indexing every in-bounds decorative blocker body cell for presentation instead of drawing only the record anchor;
+- choose only existing original decorative/blocker runtime art from the current terrain's authored biome pool, deterministically per exact package body cell, and draw it at a bounded sub-tile extent without changing generated object identity, count, order, placement, or passability;
+- cap mapped interactive art for multi-tile resource/site footprints independently from the unchanged logical footprint so mines, bundles, and reward sites remain subordinate to towns and legible beside heroes; retain one-tile object presentation unchanged;
+- keep authored non-generated decorative placements, town presentation, selection/focus/interaction rectangles, generated camera behavior, movement, route planning, save normalization, package adoption, and native payloads exact.
+
+Completion criteria:
+- direct 1280x720 and 1920x1080 captures of actual supported generated Small and Medium land packages show coherent hero/town/site hierarchy, bounded multi-tile interactive art, and visible obstacle presentation on every explored exact decorative body cell;
+- focused authority proves decorative visual-body coverage equals the exact union of in-bounds generated `package_block_tiles`, collisions are deterministic, passable tiles never gain generated blocker presentation, and anchor/body indexing rebuilds exactly after session replacement;
+- generated blocked-tile counts, path results, movement, object/resource/town/encounter arrays, native package fields, session/save authority, and reload results remain exact before and after presentation changes;
+- random-map live render/move, package adoption, generated-map compatibility, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no native/H3MapEd recovery or parity claim; no generator density, terrain, placement, body-mask, visit-mask, passability, pathfinding, object-count, retry, heuristic, content, asset-generation, save-schema, battle, economy, AI, input, camera-policy, packaged generated-map interaction, certification, signing/publication, whole-game validation, or release-readiness change or claim.
 
 ## Progress Reconciliation
 

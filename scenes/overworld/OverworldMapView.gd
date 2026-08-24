@@ -68,6 +68,27 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00
+const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72
+const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_package_body_cell_terrain_matched_original_sprite"
+const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := {
+	"grass": "biome_grasslands",
+	"forest": "biome_deep_forest",
+	"mire": "biome_mire_fen",
+	"swamp": "biome_mire_fen",
+	"rough": "biome_highland_ridge",
+	"rock": "biome_highland_ridge",
+	"badlands": "biome_rough_badlands",
+	"sand": "biome_rough_badlands",
+	"dirt": "biome_rough_badlands",
+	"ash": "biome_ash_lava_wastes",
+	"lava": "biome_ash_lava_wastes",
+	"snow": "biome_snow_frost_marches",
+	"water": "biome_coast_archipelago",
+	"coast": "biome_coast_archipelago",
+	"cavern": "biome_subterranean_underways",
+	"underground": "biome_subterranean_underways",
+}
 const OBJECT_SPRITE_VISIBLE_MODULATE := Color(1.0, 1.0, 1.0, 0.96)
 const OBJECT_SPRITE_SHADOW_MODULATE := Color(0.02, 0.018, 0.014, 0.30)
 const OBJECT_SPRITE_MEMORY_MODULATE := Color(0.72, 0.82, 0.84, 0.82)
@@ -285,9 +306,12 @@ var _artifacts_by_tile: Dictionary = {}
 var _encounters_by_tile: Dictionary = {}
 var _rememberable_encounters_by_tile: Dictionary = {}
 var _decorative_objects_by_tile: Dictionary = {}
+var _generated_decorative_bodies_by_tile: Dictionary = {}
 var _standalone_map_objects_by_tile: Dictionary = {}
 var _heroes_by_tile: Dictionary = {}
 var _decorative_object_asset_ids: Dictionary = {}
+var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}
+var _generated_decorative_blocker_fallback_asset_ids: Array = []
 var _map_object_content_profiles: Dictionary = {}
 var _placement_debug_overlay_enabled := false
 var _hero_movement_last_serial := 0
@@ -2295,7 +2319,21 @@ func _draw_encounter_unit_icon(encounter: Dictionary, rect: Rect2, remembered: b
 	return true
 
 func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if bool(object.get("generated_decorative_body_cell", false)):
+		return _draw_generated_decorative_body_sprite(object, rect, remembered, tile)
 	return _draw_object_sprite(_decorative_object_asset_id(object), rect, remembered, _decorative_object_profile(object), tile)
+
+func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	var texture = _object_texture_for_asset(_decorative_object_asset_id(object))
+	if not (texture is Texture2D):
+		return false
+	_draw_mapped_sprite_grounding_anchor(rect, tile, "blocker", Vector2i(1, 1), remembered)
+	var tile_extent := minf(rect.size.x, rect.size.y)
+	var sprite_extent := maxf(12.0, tile_extent * GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES)
+	var sprite_center := rect.get_center() + Vector2(0.0, -tile_extent * _object_lift_fraction("blocker", Vector2i(1, 1)))
+	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	return true
 
 func _draw_standalone_map_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_standalone_map_object_asset_id(object), rect, remembered, _standalone_map_object_profile(object), tile)
@@ -2344,13 +2382,37 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	var footprint := _object_profile_footprint(profile)
 	var family := String(profile.get("family", "pickup"))
 	_draw_mapped_sprite_grounding_anchor(rect, tile, family, footprint, remembered)
-	var extent := minf(rect.size.x, rect.size.y)
-	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
-	var sprite_extent := maxf(12.0, extent * sprite_fraction)
-	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction(family, footprint))
+	var metrics := _object_sprite_visual_metrics(rect, profile)
+	var sprite_extent := float(metrics.get("sprite_extent_px", 12.0))
+	var sprite_center: Vector2 = metrics.get("sprite_center", rect.get_center())
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
 	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	return true
+
+func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictionary:
+	var footprint := _object_profile_footprint(profile)
+	var family := String(profile.get("family", "pickup"))
+	var extent := minf(rect.size.x, rect.size.y)
+	var single_tile_extent := minf(rect.size.x / float(maxi(footprint.x, 1)), rect.size.y / float(maxi(footprint.y, 1)))
+	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
+	var uncapped_sprite_extent := maxf(12.0, extent * sprite_fraction)
+	var uses_multi_tile_cap := (footprint.x > 1 or footprint.y > 1) and family not in ["blocker", "decoration", "town"]
+	var sprite_extent := minf(uncapped_sprite_extent, single_tile_extent * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES) if uses_multi_tile_cap else uncapped_sprite_extent
+	var sprite_center := rect.get_center()
+	if uses_multi_tile_cap:
+		sprite_center.y = rect.end.y - single_tile_extent * 0.5
+	sprite_center.y -= single_tile_extent * _object_lift_fraction(family, footprint)
+	return {
+		"family": family,
+		"footprint": {"width": footprint.x, "height": footprint.y},
+		"single_tile_extent_px": single_tile_extent,
+		"uncapped_sprite_extent_px": uncapped_sprite_extent,
+		"sprite_extent_px": maxf(12.0, sprite_extent),
+		"sprite_extent_tiles": maxf(12.0, sprite_extent) / maxf(single_tile_extent, 1.0),
+		"cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES if uses_multi_tile_cap else 0.0,
+		"uses_multi_tile_visual_cap": uses_multi_tile_cap,
+		"sprite_center": sprite_center,
+	}
 
 func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool, owner: String) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -3661,6 +3723,104 @@ func validation_placement_debug_overlay_snapshot() -> Dictionary:
 	payload["dynamic_reason"] = _dynamic_layer_reason
 	return payload
 
+func validation_generated_object_visual_summary() -> Dictionary:
+	var expected_body_keys: Dictionary = {}
+	var generated_record_count := 0
+	if _session != null:
+		for object_value in _session.overworld.get("map_objects", []):
+			if not (object_value is Dictionary):
+				continue
+			var object: Dictionary = object_value
+			if String(object.get("runtime_object_role", "")).strip_edges() != "decorative_blocker_sprite":
+				continue
+			var package_block_tiles = object.get("package_block_tiles", null)
+			if not (package_block_tiles is Array) or package_block_tiles.is_empty():
+				continue
+			generated_record_count += 1
+			for tile_value in _tiles_from_payloads(package_block_tiles):
+				if tile_value is Vector2i:
+					var tile: Vector2i = tile_value
+					if tile.x >= 0 and tile.y >= 0 and tile.x < _map_size.x and tile.y < _map_size.y:
+						expected_body_keys[_tile_key(tile)] = true
+	var indexed_keys: Array = _generated_decorative_bodies_by_tile.keys()
+	indexed_keys.sort()
+	var expected_keys: Array = expected_body_keys.keys()
+	expected_keys.sort()
+	var entries: Array = []
+	var loaded_asset_count := 0
+	var terrain_matched_asset_count := 0
+	var collision_tile_count := 0
+	for key_value in indexed_keys:
+		var key := String(key_value)
+		var presentation: Dictionary = _generated_decorative_bodies_by_tile.get(key, {})
+		var asset_id := String(presentation.get("overworld_sprite_asset_id", ""))
+		var loaded := asset_id != "" and _object_texture_for_asset(asset_id) is Texture2D
+		var presentation_tile := Vector2i(int(presentation.get("x", -1)), int(presentation.get("y", -1)))
+		var terrain_id := _terrain_at(presentation_tile)
+		var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
+		var terrain_asset_ids: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
+		var terrain_matched := not terrain_asset_ids.is_empty() and asset_id in terrain_asset_ids
+		if loaded:
+			loaded_asset_count += 1
+		if terrain_matched:
+			terrain_matched_asset_count += 1
+		if int(presentation.get("generated_body_source_count", 0)) > 1:
+			collision_tile_count += 1
+		entries.append({
+			"tile_key": key,
+			"x": int(presentation.get("x", -1)),
+			"y": int(presentation.get("y", -1)),
+			"terrain_id": terrain_id,
+			"biome_id": biome_id,
+			"asset_id": asset_id,
+			"asset_loaded": loaded,
+			"terrain_matched_asset": terrain_matched,
+			"source_placement_ids": presentation.get("generated_body_source_placement_ids", []).duplicate(true),
+		})
+	var resource_entries: Array = []
+	var capped_resource_count := 0
+	var max_capped_extent_tiles := 0.0
+	if _session != null:
+		var board_rect := _board_rect()
+		for node_value in _session.overworld.get("resource_nodes", []):
+			if not (node_value is Dictionary):
+				continue
+			var node: Dictionary = node_value
+			var anchor_tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+			if anchor_tile.x < 0 or anchor_tile.y < 0 or anchor_tile.x >= _map_size.x or anchor_tile.y >= _map_size.y:
+				continue
+			var anchor_rect := _tile_rect(board_rect, anchor_tile)
+			var resource_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)
+			var metrics := _object_sprite_visual_metrics(resource_rect, _resource_object_profile(node))
+			if bool(metrics.get("uses_multi_tile_visual_cap", false)):
+				capped_resource_count += 1
+				max_capped_extent_tiles = maxf(max_capped_extent_tiles, float(metrics.get("sprite_extent_tiles", 0.0)))
+			resource_entries.append({
+				"placement_id": String(node.get("placement_id", "")),
+				"site_id": String(node.get("site_id", "")),
+				"x": anchor_tile.x,
+				"y": anchor_tile.y,
+				"visual_metrics": metrics,
+			})
+	return {
+		"presentation_model": GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL,
+		"generated_record_count": generated_record_count,
+		"expected_body_tile_count": expected_keys.size(),
+		"indexed_body_tile_count": indexed_keys.size(),
+		"body_tile_keys_exact": indexed_keys == expected_keys,
+		"loaded_body_asset_count": loaded_asset_count,
+		"all_body_assets_loaded": loaded_asset_count == indexed_keys.size(),
+		"terrain_matched_body_asset_count": terrain_matched_asset_count,
+		"all_body_assets_terrain_matched": terrain_matched_asset_count == indexed_keys.size(),
+		"collision_tile_count": collision_tile_count,
+		"body_sprite_extent_tiles": GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES,
+		"body_entries": entries,
+		"multi_tile_interactive_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES,
+		"capped_resource_count": capped_resource_count,
+		"max_capped_resource_extent_tiles": max_capped_extent_tiles,
+		"resource_entries": resource_entries,
+	}
+
 func _profile_begin(_name: String) -> int:
 	return Time.get_ticks_usec()
 
@@ -3754,6 +3914,7 @@ func validation_view_metrics() -> Dictionary:
 			"encounter_tiles": _encounters_by_tile.size(),
 			"rememberable_encounter_tiles": _rememberable_encounters_by_tile.size(),
 			"decorative_object_tiles": _decorative_objects_by_tile.size(),
+			"generated_decorative_body_tiles": _generated_decorative_bodies_by_tile.size(),
 			"standalone_map_object_tiles": _standalone_map_objects_by_tile.size(),
 			"hero_tiles": _heroes_by_tile.size(),
 		},
@@ -6763,6 +6924,7 @@ func _rebuild_object_indexes() -> void:
 		_encounters_by_tile.clear()
 		_rememberable_encounters_by_tile.clear()
 		_decorative_objects_by_tile.clear()
+		_generated_decorative_bodies_by_tile.clear()
 		_standalone_map_objects_by_tile.clear()
 		_heroes_by_tile.clear()
 		_object_index_signature = 0
@@ -6791,6 +6953,7 @@ func _rebuild_object_indexes() -> void:
 		"artifact_tiles": _artifacts_by_tile.size(),
 		"encounter_tiles": _encounters_by_tile.size(),
 		"decorative_object_tiles": _decorative_objects_by_tile.size(),
+		"generated_decorative_body_tiles": _generated_decorative_bodies_by_tile.size(),
 		"standalone_map_object_tiles": _standalone_map_objects_by_tile.size(),
 		"hero_tiles": _heroes_by_tile.size(),
 	})
@@ -6803,6 +6966,7 @@ func _rebuild_static_object_indexes() -> void:
 	_encounters_by_tile.clear()
 	_rememberable_encounters_by_tile.clear()
 	_decorative_objects_by_tile.clear()
+	_generated_decorative_bodies_by_tile.clear()
 	_standalone_map_objects_by_tile.clear()
 	for town_value in _session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
@@ -6865,6 +7029,56 @@ func _rebuild_static_object_indexes() -> void:
 		if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 			continue
 		_decorative_objects_by_tile[_tile_key(tile)] = object
+		_index_generated_decorative_body_cells(object)
+
+func _index_generated_decorative_body_cells(object: Dictionary) -> void:
+	if String(object.get("runtime_object_role", "")).strip_edges() != "decorative_blocker_sprite":
+		return
+	var package_block_tiles = object.get("package_block_tiles", null)
+	if not (package_block_tiles is Array) or package_block_tiles.is_empty():
+		return
+	var source_placement_id := String(object.get("placement_id", "")).strip_edges()
+	for tile_value in _tiles_from_payloads(package_block_tiles):
+		if not (tile_value is Vector2i):
+			continue
+		var body_tile: Vector2i = tile_value
+		if body_tile.x < 0 or body_tile.y < 0 or body_tile.x >= _map_size.x or body_tile.y >= _map_size.y:
+			continue
+		var key := _tile_key(body_tile)
+		if _generated_decorative_bodies_by_tile.has(key):
+			var existing: Dictionary = _generated_decorative_bodies_by_tile.get(key, {})
+			var placement_ids: Array = existing.get("generated_body_source_placement_ids", [])
+			if source_placement_id != "" and source_placement_id not in placement_ids:
+				placement_ids.append(source_placement_id)
+			existing["generated_body_source_placement_ids"] = placement_ids
+			existing["generated_body_source_count"] = placement_ids.size()
+			_generated_decorative_bodies_by_tile[key] = existing
+			continue
+		var presentation: Dictionary = object.duplicate(true)
+		presentation["x"] = body_tile.x
+		presentation["y"] = body_tile.y
+		presentation["primary_tile"] = {"x": body_tile.x, "y": body_tile.y, "level": int(object.get("level", 0))}
+		presentation["footprint"] = {"width": 1, "height": 1, "anchor": "bottom_center"}
+		presentation["overworld_sprite_asset_id"] = _generated_decorative_body_asset_id(object, body_tile)
+		presentation["generated_decorative_body_cell"] = true
+		presentation["generated_body_presentation_model"] = GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL
+		presentation["generated_body_source_placement_ids"] = [source_placement_id] if source_placement_id != "" else []
+		presentation["generated_body_source_count"] = 1
+		_generated_decorative_bodies_by_tile[key] = presentation
+
+func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> String:
+	var terrain_id := _terrain_at(tile)
+	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
+	var candidates: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
+	if candidates.is_empty():
+		candidates = _generated_decorative_blocker_fallback_asset_ids
+	if candidates.is_empty():
+		return ""
+	var stable_key := "%s|%s" % [
+		terrain_id,
+		String(object.get("h3m_def_name", "")),
+	]
+	return String(candidates[absi(stable_key.hash()) % candidates.size()])
 
 func _rebuild_hero_index() -> void:
 	_heroes_by_tile.clear()
@@ -7022,6 +7236,8 @@ func _load_overworld_art_manifest() -> void:
 	_resource_site_object_profiles.clear()
 	_map_object_asset_ids.clear()
 	_decorative_object_asset_ids.clear()
+	_generated_decorative_blocker_asset_ids_by_biome.clear()
+	_generated_decorative_blocker_fallback_asset_ids.clear()
 	_artifact_default_asset_id = ""
 	_artifact_field_asset_ids.clear()
 	_town_default_asset_id = ""
@@ -7165,6 +7381,24 @@ func _load_decorative_object_sprite_manifest(manifest_path: String) -> void:
 		if object_id == "" or asset_id == "":
 			continue
 		_decorative_object_asset_ids[object_id] = asset_id
+		if entry is Dictionary and String(entry.get("source_family", "")).strip_edges() == "blocker":
+			if asset_id not in _generated_decorative_blocker_fallback_asset_ids:
+				_generated_decorative_blocker_fallback_asset_ids.append(asset_id)
+			var source_biome_ids = entry.get("source_biome_ids", [])
+			if source_biome_ids is Array:
+				for biome_id_value in source_biome_ids:
+					var biome_id := String(biome_id_value).strip_edges()
+					if biome_id == "":
+						continue
+					var biome_asset_ids: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
+					if asset_id not in biome_asset_ids:
+						biome_asset_ids.append(asset_id)
+					_generated_decorative_blocker_asset_ids_by_biome[biome_id] = biome_asset_ids
+	_generated_decorative_blocker_fallback_asset_ids.sort()
+	for biome_id_value in _generated_decorative_blocker_asset_ids_by_biome.keys():
+		var biome_asset_ids: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id_value, [])
+		biome_asset_ids.sort()
+		_generated_decorative_blocker_asset_ids_by_biome[biome_id_value] = biome_asset_ids
 
 func _load_map_object_sprite_manifest(manifest_path: String) -> void:
 	var normalized_path := manifest_path.strip_edges()
@@ -7650,6 +7884,9 @@ func _has_decorative_object_at(tile: Vector2i) -> bool:
 	return not _decorative_object_at(tile).is_empty()
 
 func _decorative_object_at(tile: Vector2i) -> Dictionary:
+	var generated_body: Dictionary = _generated_decorative_bodies_by_tile.get(_tile_key(tile), {})
+	if not generated_body.is_empty():
+		return generated_body
 	return _decorative_objects_by_tile.get(_tile_key(tile), {})
 
 func _has_standalone_map_object_at(tile: Vector2i) -> bool:
