@@ -7095,7 +7095,7 @@ func _rebuild_spell_actions() -> void:
 
 func _apply_spell_action_icon(button: Button, action: Dictionary) -> void:
 	var spell_id := SpellRules.spell_id_for_action(String(action.get("id", "")))
-	var icon_path := SpellRules.spell_school_icon_path(spell_id)
+	var icon_path := SpellRules.spell_icon_path(spell_id)
 	if icon_path == "":
 		return
 	var texture := load(icon_path) as Texture2D

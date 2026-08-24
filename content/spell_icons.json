@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "generator": "deterministic_signature_spell_icon_assets_v1",
+  "source_size": {
+    "width": 1254,
+    "height": 1254
+  },
+  "icon_size": {
+    "width": 128,
+    "height": 128
+  },
+  "items": [
+    {
+      "id": "spell_bulwark_litany",
+      "spell_id": "spell_bulwark_litany",
+      "school_id": "beacon",
+      "icon_id": "spell_signature_icon_bulwark_litany",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_bulwark_litany.png",
+      "source_sha256": "a2c56b497757d6331c64172e5603a38a569edb64b07758288e7b47853bfbe1d8",
+      "icon_path": "res://art/magic/runtime/spells/spell_bulwark_litany.png",
+      "icon_sha256": "7a4263c565f0b1a5c817dcf02a196e0aff7733bd19630135bd4a8d4b4559eaec"
+    },
+    {
+      "id": "spell_coal_rain",
+      "spell_id": "spell_coal_rain",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_coal_rain",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_coal_rain.png",
+      "source_sha256": "48ecc190cfd6eebb2d9ac44acf59ebcfe5e2ca0f38bc98fc57364c9d31d6d924",
+      "icon_path": "res://art/magic/runtime/spells/spell_coal_rain.png",
+      "icon_sha256": "ad93ec22cbe0e4a8cfb841478d2259bff59c88c3fb51b482c157c74320488b56"
+    },
+    {
+      "id": "spell_sunlance_arc",
+      "spell_id": "spell_sunlance_arc",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_sunlance_arc",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_sunlance_arc.png",
+      "source_sha256": "bba36612748a46e072746abc521162da32cbec2b76161e82954c3ec855b47d18",
+      "icon_path": "res://art/magic/runtime/spells/spell_sunlance_arc.png",
+      "icon_sha256": "6a5d032ce47ed314ae45ee7b87821f27ed308b967a789f77a5031675f0a606be"
+    },
+    {
+      "id": "spell_briar_bind",
+      "spell_id": "spell_briar_bind",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_briar_bind",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_briar_bind.png",
+      "source_sha256": "acfd6ac04e8581227f1a3627c717f5d86356571c2ed8a06ebae773032b25a40a",
+      "icon_path": "res://art/magic/runtime/spells/spell_briar_bind.png",
+      "icon_sha256": "c438cc218f1a58fc1999e9b0d118a14128948a36bed82ecf397e0abe33e53157"
+    },
+    {
+      "id": "spell_cinder_burst",
+      "spell_id": "spell_cinder_burst",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_cinder_burst",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_cinder_burst.png",
+      "source_sha256": "ed0c8d4e83a0078442d13ddb124d845d2bc99ca99dd7aab856e522a7cb1b33e2",
+      "icon_path": "res://art/magic/runtime/spells/spell_cinder_burst.png",
+      "icon_sha256": "1c1e45c2d234debfd7dbcd31651e9822bb2822cc342d501d3e7e4085db8173f6"
+    },
+    {
+      "id": "spell_fogwake_step",
+      "spell_id": "spell_fogwake_step",
+      "school_id": "veil",
+      "icon_id": "spell_signature_icon_fogwake_step",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_fogwake_step.png",
+      "source_sha256": "64e59672c77328b60ab6ce809aa188eba9f0e213a815915be85bc6d2fbccd7c3",
+      "icon_path": "res://art/magic/runtime/spells/spell_fogwake_step.png",
+      "icon_sha256": "a372099c71c1cb534152870ee1f0f4ae4cbf84880a8fecbd0bd01933acfe0eb0"
+    },
+    {
+      "id": "spell_old_measure_compass_boundary_06",
+      "spell_id": "spell_old_measure_compass_boundary_06",
+      "school_id": "old_measure",
+      "icon_id": "spell_signature_icon_old_measure_compass_boundary_06",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_old_measure_compass_boundary_06.png",
+      "source_sha256": "8374def11e4e968d384d83f68d99e208aeda8f1295aa68f069f4e946010eae11",
+      "icon_path": "res://art/magic/runtime/spells/spell_old_measure_compass_boundary_06.png",
+      "icon_sha256": "7d95205cae4a20eb7195701c01cb356e9711e67458973b92abd9b15549651a55"
+    }
+  ]
+}

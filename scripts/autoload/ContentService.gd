@@ -24,6 +24,7 @@ const MAP_OBJECTS_PATH := "%s/map_objects.json" % CONTENT_DIR
 const NEUTRAL_DWELLINGS_PATH := "%s/neutral_dwellings.json" % CONTENT_DIR
 const ARTIFACTS_PATH := "%s/artifacts.json" % CONTENT_DIR
 const SPELLS_PATH := "%s/spells.json" % CONTENT_DIR
+const SPELL_ICONS_PATH := "%s/spell_icons.json" % CONTENT_DIR
 const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR
 const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % CONTENT_DIR
@@ -223,6 +224,9 @@ func get_artifact(id: String) -> Dictionary:
 func get_spell(id: String) -> Dictionary:
 	return get_content_by_id(SPELLS_PATH, id)
 
+func get_spell_icon(spell_id: String) -> Dictionary:
+	return get_content_by_id(SPELL_ICONS_PATH, spell_id)
+
 func get_spell_school_icon(school_id: String) -> Dictionary:
 	return get_content_by_id(SPELL_SCHOOL_ICONS_PATH, school_id)
 
@@ -377,6 +381,7 @@ func _validate_content() -> void:
 	var neutral_dwelling_index := _index_items(_items_from_raw(load_json(NEUTRAL_DWELLINGS_PATH)))
 	var artifact_index := _index_items(_items_from_raw(load_json(ARTIFACTS_PATH)))
 	var spell_index := _index_items(_items_from_raw(load_json(SPELLS_PATH)))
+	var spell_icon_index := _index_items(_items_from_raw(load_json(SPELL_ICONS_PATH)))
 	var spell_school_icon_index := _index_items(_items_from_raw(load_json(SPELL_SCHOOL_ICONS_PATH)))
 	var building_category_icon_index := _index_items(_items_from_raw(load_json(BUILDING_CATEGORY_ICONS_PATH)))
 	var campaign_index := _index_items(_items_from_raw(load_json(CAMPAIGNS_PATH)))
@@ -424,6 +429,7 @@ func _validate_content() -> void:
 		_validate_artifact(artifact)
 	for spell in spell_index.values():
 		_validate_spell(spell)
+	_validate_spell_icons(spell_index, spell_icon_index)
 	_validate_spell_school_icons(spell_school_icon_index)
 	_validate_building_category_icons(building_category_icon_index)
 	for encounter in encounter_index.values():
@@ -1245,6 +1251,22 @@ func _validate_spell_school_icons(icon_index: Dictionary) -> void:
 	for school_id in icon_index:
 		if String(school_id) not in expected_school_ids:
 			push_warning("Spell school icon manifest contains unsupported school %s." % String(school_id))
+
+func _validate_spell_icons(spell_index: Dictionary, icon_index: Dictionary) -> void:
+	for spell_id_value in icon_index:
+		var spell_id := String(spell_id_value)
+		var icon: Dictionary = icon_index.get(spell_id, {}) if icon_index.get(spell_id, {}) is Dictionary else {}
+		var spell: Dictionary = spell_index.get(spell_id, {}) if spell_index.get(spell_id, {}) is Dictionary else {}
+		if spell.is_empty():
+			push_warning("Spell icon manifest references unsupported spell %s." % spell_id)
+			continue
+		if String(icon.get("spell_id", "")) != spell_id:
+			push_warning("Spell icon %s must retain its exact spell id." % spell_id)
+		if String(icon.get("school_id", "")) != String(spell.get("school_id", "")):
+			push_warning("Spell icon %s must retain its authored school id." % spell_id)
+		if String(icon.get("icon_id", "")) != "spell_signature_icon_%s" % spell_id.trim_prefix("spell_"):
+			push_warning("Spell icon %s must own its stable signature icon id." % spell_id)
+		_validate_art_path(String(icon.get("icon_path", "")), "Spell %s signature icon" % spell_id)
 
 func _validate_faction_crests(faction_index: Dictionary, crest_index: Dictionary) -> void:
 	for faction_id_value in faction_index:

@@ -51,6 +51,24 @@ static func spell_school_icon_path(spell_id: String) -> String:
 		return ""
 	return icon_path
 
+static func spell_icon_path(spell_id: String) -> String:
+	var spell := ContentService.get_spell(spell_id)
+	if spell.is_empty():
+		return ""
+	var icon := ContentService.get_spell_icon(spell_id)
+	var icon_path := String(icon.get("icon_path", "")).strip_edges()
+	var school_id := String(spell.get("school_id", "")).strip_edges()
+	if (
+		String(icon.get("id", "")) == spell_id
+		and String(icon.get("spell_id", "")) == spell_id
+		and String(icon.get("school_id", "")) == school_id
+		and String(icon.get("icon_id", "")) == "spell_signature_icon_%s" % spell_id.trim_prefix("spell_")
+		and icon_path.begins_with("res://art/magic/runtime/spells/")
+		and ResourceLoader.exists(icon_path, "Texture2D")
+	):
+		return icon_path
+	return spell_school_icon_path(spell_id)
+
 static func build_spellbook(hero_template: Dictionary) -> Dictionary:
 	var mana_max := mana_max_from_command(hero_template.get("command", {}))
 	return {

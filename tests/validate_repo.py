@@ -58,6 +58,7 @@ ARTIFACT_RULES_PATH = ROOT / "scripts" / "core" / "ArtifactRules.gd"
 ARTIFACT_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "artifact_icon_runtime_report.gd"
 ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "artifact_icon_runtime_report.tscn"
 SPELL_SCHOOL_ICON_MANIFEST_PATH = CONTENT_DIR / "spell_school_icons.json"
+SPELL_ICON_MANIFEST_PATH = CONTENT_DIR / "spell_icons.json"
 SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.gd"
 SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.tscn"
 BUILDING_CATEGORY_ICON_MANIFEST_PATH = CONTENT_DIR / "building_category_icons.json"
@@ -37720,6 +37721,7 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
 
 def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     required_paths = (
+        SPELL_ICON_MANIFEST_PATH,
         SPELL_SCHOOL_ICON_MANIFEST_PATH,
         CONTENT_DIR / "spells.json",
         CONTENT_SERVICE_PATH,
@@ -37752,6 +37754,51 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "veil": "res://art/magic/runtime/schools/veil.png",
         "old_measure": "res://art/magic/runtime/schools/old_measure.png",
     }
+    expected_signature_icons = {
+        "spell_bulwark_litany": ("beacon", "res://art/magic/runtime/spells/spell_bulwark_litany.png"),
+        "spell_coal_rain": ("mire", "res://art/magic/runtime/spells/spell_coal_rain.png"),
+        "spell_sunlance_arc": ("lens", "res://art/magic/runtime/spells/spell_sunlance_arc.png"),
+        "spell_briar_bind": ("root", "res://art/magic/runtime/spells/spell_briar_bind.png"),
+        "spell_cinder_burst": ("furnace", "res://art/magic/runtime/spells/spell_cinder_burst.png"),
+        "spell_fogwake_step": ("veil", "res://art/magic/runtime/spells/spell_fogwake_step.png"),
+        "spell_old_measure_compass_boundary_06": ("old_measure", "res://art/magic/runtime/spells/spell_old_measure_compass_boundary_06.png"),
+    }
+    signature_raw = load_json(SPELL_ICON_MANIFEST_PATH)
+    signature_items = signature_raw.get("items", []) if isinstance(signature_raw, dict) else []
+    ensure(signature_raw.get("schema_version") == 1, errors, "Signature spell icon manifest must retain schema version 1")
+    ensure(signature_raw.get("generator") == "deterministic_signature_spell_icon_assets_v1", errors, "Signature spell icon manifest must retain deterministic generator identity")
+    ensure(signature_raw.get("source_size") == {"width": 1254, "height": 1254}, errors, "Signature spell icon manifest must retain exact source dimensions")
+    ensure(signature_raw.get("icon_size") == {"width": 128, "height": 128}, errors, "Signature spell icon manifest must retain exact runtime dimensions")
+    ensure(isinstance(signature_items, list) and len(signature_items) == 7, errors, "Signature spell icon manifest must contain exactly seven rows")
+    signature_ids: list[str] = []
+    signature_paths: list[str] = []
+    if isinstance(signature_items, list):
+        for index, row in enumerate(signature_items):
+            ensure(isinstance(row, dict), errors, f"Signature spell icon manifest row {index} must be a dictionary")
+            if not isinstance(row, dict):
+                continue
+            spell_id = str(row.get("spell_id", ""))
+            school_id = str(row.get("school_id", ""))
+            icon_path = str(row.get("icon_path", ""))
+            expected_school_id, expected_path = expected_signature_icons.get(spell_id, ("", ""))
+            signature_ids.append(spell_id)
+            signature_paths.append(icon_path)
+            ensure(str(row.get("id", "")) == spell_id, errors, f"Signature spell icon {spell_id} must retain exact manifest identity")
+            ensure(school_id == expected_school_id, errors, f"Signature spell icon {spell_id} must retain authored school")
+            ensure(str(row.get("icon_id", "")) == f"spell_signature_icon_{spell_id.removeprefix('spell_')}", errors, f"Signature spell icon {spell_id} must own its stable icon id")
+            ensure(icon_path == expected_path, errors, f"Signature spell icon {spell_id} must own its exact runtime path")
+            ensure(str(row.get("source_kind", "")) == "curated_original_spell", errors, f"Signature spell icon {spell_id} must retain original curated provenance")
+            source_path = res_path_to_disk(str(row.get("source_path", "")))
+            disk_path = res_path_to_disk(icon_path)
+            ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"Signature spell icon {spell_id} source must be the exact 1254x1254 curated PNG")
+            ensure(disk_path.is_file() and png_size(disk_path) == (128, 128), errors, f"Signature spell icon {spell_id} runtime must be the exact 128x128 PNG")
+            if source_path.is_file():
+                ensure(hashlib.sha256(source_path.read_bytes()).hexdigest() == str(row.get("source_sha256", "")), errors, f"Signature spell icon {spell_id} source hash drifted")
+            if disk_path.is_file():
+                ensure(hashlib.sha256(disk_path.read_bytes()).hexdigest() == str(row.get("icon_sha256", "")), errors, f"Signature spell icon {spell_id} runtime hash drifted")
+            ensure(Path(f"{disk_path}.import").is_file(), errors, f"Signature spell icon {spell_id} runtime import is missing")
+    ensure(signature_ids == list(expected_signature_icons), errors, "Signature spell manifest must preserve exact one-per-school authored order")
+    ensure(len(set(signature_paths)) == 7, errors, "Signature spell runtime paths must remain distinct")
     manifest_raw = load_json(SPELL_SCHOOL_ICON_MANIFEST_PATH)
     manifest_items = manifest_raw.get("items", []) if isinstance(manifest_raw, dict) else []
     ensure(isinstance(manifest_items, list) and len(manifest_items) == 7, errors, "Spell school icon manifest must contain exactly seven rows")
@@ -37792,9 +37839,14 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for token in (
+        'const SPELL_ICONS_PATH := "%s/spell_icons.json" % CONTENT_DIR',
         'const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR',
+        "func get_spell_icon(spell_id: String) -> Dictionary:",
+        "return get_content_by_id(SPELL_ICONS_PATH, spell_id)",
         "func get_spell_school_icon(school_id: String) -> Dictionary:",
         "return get_content_by_id(SPELL_SCHOOL_ICONS_PATH, school_id)",
+        "var spell_icon_index := _index_items(_items_from_raw(load_json(SPELL_ICONS_PATH)))",
+        "_validate_spell_icons(spell_index, spell_icon_index)",
         "var spell_school_icon_index := _index_items(_items_from_raw(load_json(SPELL_SCHOOL_ICONS_PATH)))",
         "_validate_spell_school_icons(spell_school_icon_index)",
         'var expected_school_ids := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]',
@@ -37808,6 +37860,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     spell_rules_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
     action_block = function_block(spell_rules_text, "spell_id_for_action")
     resolver_block = function_block(spell_rules_text, "spell_school_icon_path")
+    signature_resolver_block = function_block(spell_rules_text, "spell_icon_path")
     for token in (
         'action_id.begins_with("cast_spell:")',
         'action_id.trim_prefix("cast_spell:")',
@@ -37831,6 +37884,19 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         ensure(token in resolver_block, errors, f"Spell school icon resolver is missing exact fail-closed token: {token}")
     ensure(resolver_block.find("school_id not in") < resolver_block.find("get_spell_school_icon") < resolver_block.find("begins_with") < resolver_block.find("ResourceLoader.exists") < resolver_block.rfind("return icon_path"), errors, "Spell school icon resolver must validate spell school, manifest ownership, asset domain, and import before publishing")
     ensure("load(" not in resolver_block and "preload(" not in resolver_block, errors, "SpellRules must not load presentation textures")
+    for token in (
+        "ContentService.get_spell(spell_id)",
+        "ContentService.get_spell_icon(spell_id)",
+        'String(icon.get("spell_id", "")) == spell_id',
+        'String(icon.get("school_id", "")) == school_id',
+        '"spell_signature_icon_%s" % spell_id.trim_prefix("spell_")',
+        'icon_path.begins_with("res://art/magic/runtime/spells/")',
+        'ResourceLoader.exists(icon_path, "Texture2D")',
+        "return spell_school_icon_path(spell_id)",
+    ):
+        ensure(token in signature_resolver_block, errors, f"Signature spell icon resolver is missing exact ownership/fallback token: {token}")
+    ensure(signature_resolver_block.find("get_spell_icon") < signature_resolver_block.find("begins_with") < signature_resolver_block.find("ResourceLoader.exists") < signature_resolver_block.find("return icon_path") < signature_resolver_block.find("return spell_school_icon_path"), errors, "Signature spell resolver must validate specific art before exact school fallback")
+    ensure("load(" not in signature_resolver_block and "preload(" not in signature_resolver_block, errors, "Signature spell resolver must not load presentation textures")
 
     for shell_path, rebuild_name in (
         (OVERWORLD_SCRIPT_PATH, "_rebuild_spell_actions"),
@@ -37850,7 +37916,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{shell_path.name} must apply school icons after existing style and before unchanged binding/order")
         for token in (
             'SpellRules.spell_id_for_action(String(action.get("id", "")))',
-            "SpellRules.spell_school_icon_path(spell_id)",
+            "SpellRules.spell_icon_path(spell_id)",
             'if icon_path == "":\n\t\treturn',
             "load(icon_path) as Texture2D",
             "if texture == null:\n\t\treturn",
@@ -37869,6 +37935,15 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         'const REPORT_ID := "SPELL_SCHOOL_ICON_RUNTIME_REPORT"',
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const SURFACES := ["overworld", "town", "battle"]',
+        "signature_contract.size() == 7",
+        '"school_fallback_count": 105',
+        "var fallback_contract := _signature_fallback_contract()",
+        'ContentService._cache[ContentService.SPELL_ICONS_PATH] = malformed_manifest',
+        'ContentService._cache[ContentService.SPELL_ICONS_PATH] = {"items": []}',
+        'ContentService._cache[ContentService.SPELL_ICONS_PATH] = original_manifest',
+        "malformed_fallback == expected_school_path",
+        "missing_fallback == expected_school_path",
+        "ContentService.load_json(ContentService.SPELL_ICONS_PATH) == original_manifest",
         "manifest_contract.size() == 7",
         "spell_rows.size() == 112",
         'row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0)',
