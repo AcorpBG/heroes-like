@@ -6,7 +6,16 @@ const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const SURFACES := ["overworld", "town", "battle"]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
-	"battle": "spell_stone_veil",
+	"battle": "spell_bulwark_litany",
+}
+const EXPECTED_SIGNATURE_ICONS := {
+	"spell_bulwark_litany": "res://art/magic/runtime/spells/spell_bulwark_litany.png",
+	"spell_coal_rain": "res://art/magic/runtime/spells/spell_coal_rain.png",
+	"spell_sunlance_arc": "res://art/magic/runtime/spells/spell_sunlance_arc.png",
+	"spell_briar_bind": "res://art/magic/runtime/spells/spell_briar_bind.png",
+	"spell_cinder_burst": "res://art/magic/runtime/spells/spell_cinder_burst.png",
+	"spell_fogwake_step": "res://art/magic/runtime/spells/spell_fogwake_step.png",
+	"spell_old_measure_compass_boundary_06": "res://art/magic/runtime/spells/spell_old_measure_compass_boundary_06.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -43,6 +52,26 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _catalog_contract() -> Dictionary:
+	var signature_raw := ContentService.load_json(ContentService.SPELL_ICONS_PATH)
+	var signature_rows: Array = signature_raw.get("items", []) if signature_raw.get("items", []) is Array else []
+	var signature_contract := []
+	var signature_ids := []
+	for row_value in signature_rows:
+		if not (row_value is Dictionary):
+			continue
+		var row: Dictionary = row_value
+		var spell_id := String(row.get("spell_id", ""))
+		var icon_path := String(row.get("icon_path", ""))
+		var texture := load(icon_path) as Texture2D if ResourceLoader.exists(icon_path, "Texture2D") else null
+		signature_ids.append(spell_id)
+		signature_contract.append({
+			"spell_id": spell_id,
+			"school_id": String(row.get("school_id", "")),
+			"icon_id": String(row.get("icon_id", "")),
+			"icon_path": icon_path,
+			"source_kind": String(row.get("source_kind", "")),
+			"size": texture.get_size() if texture != null else Vector2.ZERO,
+		})
 	var raw_manifest := ContentService.load_json(ContentService.SPELL_SCHOOL_ICONS_PATH)
 	var manifest_rows: Array = raw_manifest.get("items", []) if raw_manifest.get("items", []) is Array else []
 	var manifest_contract := []
@@ -73,34 +102,83 @@ func _catalog_contract() -> Dictionary:
 		var spell: Dictionary = spell_value
 		var spell_id := String(spell.get("id", ""))
 		var school_id := String(spell.get("school_id", ""))
-		var expected_path := String(EXPECTED_ICONS.get(school_id, ""))
+		var expected_path := String(EXPECTED_SIGNATURE_ICONS.get(spell_id, EXPECTED_ICONS.get(school_id, "")))
 		spell_rows.append({
 			"spell_id": spell_id,
 			"school_id": school_id,
-			"resolved_path": SpellRules.spell_school_icon_path(spell_id),
+			"resolved_path": SpellRules.spell_icon_path(spell_id),
 			"expected_path": expected_path,
+			"uses_signature": EXPECTED_SIGNATURE_ICONS.has(spell_id),
 		})
 	var sorted_ids := manifest_ids.duplicate()
 	sorted_ids.sort()
 	var sorted_expected_ids: Array = EXPECTED_ICONS.keys()
 	sorted_expected_ids.sort()
+	var sorted_signature_ids := signature_ids.duplicate()
+	sorted_signature_ids.sort()
+	var sorted_expected_signature_ids: Array = EXPECTED_SIGNATURE_ICONS.keys()
+	sorted_expected_signature_ids.sort()
+	var fallback_contract := _signature_fallback_contract()
 	return {
 		"ok": (
-			manifest_contract.size() == 7
+			bool(fallback_contract.get("ok", false))
+			and signature_contract.size() == 7
+			and sorted_signature_ids == sorted_expected_signature_ids
+			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
+			and manifest_contract.size() == 7
 			and sorted_ids == sorted_expected_ids
 			and _all_unique(manifest_paths)
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 7
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 105
+			and SpellRules.spell_icon_path("spell_waystride") == SpellRules.spell_school_icon_path("spell_waystride")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
 			and SpellRules.spell_school_icon_path("spell_missing") == ""
+			and SpellRules.spell_icon_path("spell_missing") == ""
 		),
+		"fallback": fallback_contract,
+		"signature_count": signature_contract.size(),
+		"school_fallback_count": 105,
+		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
 		"distinct_icon_path_count": manifest_paths.size() if _all_unique(manifest_paths) else 0,
 		"manifest": manifest_contract,
 		"spells": spell_rows,
+	}
+
+func _signature_fallback_contract() -> Dictionary:
+	var spell_id := "spell_bulwark_litany"
+	var original_manifest: Dictionary = ContentService.load_json(ContentService.SPELL_ICONS_PATH).duplicate(true)
+	var expected_school_path := SpellRules.spell_school_icon_path(spell_id)
+	var malformed_manifest: Dictionary = original_manifest.duplicate(true)
+	var malformed_rows: Array = malformed_manifest.get("items", []) if malformed_manifest.get("items", []) is Array else []
+	for row_value in malformed_rows:
+		if row_value is Dictionary and String(row_value.get("spell_id", "")) == spell_id:
+			row_value["school_id"] = "mire"
+			row_value["icon_path"] = "res://art/magic/runtime/spells/missing.png"
+			break
+	ContentService._cache[ContentService.SPELL_ICONS_PATH] = malformed_manifest
+	var malformed_fallback := SpellRules.spell_icon_path(spell_id)
+	ContentService._cache[ContentService.SPELL_ICONS_PATH] = {"items": []}
+	var missing_fallback := SpellRules.spell_icon_path(spell_id)
+	ContentService._cache[ContentService.SPELL_ICONS_PATH] = original_manifest
+	var restored_path := SpellRules.spell_icon_path(spell_id)
+	return {
+		"ok": (
+			expected_school_path != ""
+			and malformed_fallback == expected_school_path
+			and missing_fallback == expected_school_path
+			and restored_path == String(EXPECTED_SIGNATURE_ICONS.get(spell_id, ""))
+			and ContentService.load_json(ContentService.SPELL_ICONS_PATH) == original_manifest
+		),
+		"spell_id": spell_id,
+		"malformed_fallback": malformed_fallback,
+		"missing_fallback": missing_fallback,
+		"restored_path": restored_path,
 	}
 
 func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
@@ -146,7 +224,7 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 	button.grab_focus()
 	await get_tree().process_frame
 	var focus_exact := get_viewport().gui_get_focus_owner() == button
-	var expected_icon_path := SpellRules.spell_school_icon_path(spell_id)
+	var expected_icon_path := SpellRules.spell_icon_path(spell_id)
 	var selected_icon_exact := _icon_exact(button, expected_icon_path)
 	var invalid_button := Button.new()
 	invalid_button.text = "Invalid spell control"
@@ -311,7 +389,7 @@ func _button_contract(shell: Node, container: Container, actions: Array, surface
 		var action: Dictionary = actions[index] if actions[index] is Dictionary else {}
 		var button: Button = buttons[index] if index < buttons.size() else null
 		var spell_id := SpellRules.spell_id_for_action(String(action.get("id", "")))
-		var expected_path := SpellRules.spell_school_icon_path(spell_id)
+		var expected_path := SpellRules.spell_icon_path(spell_id)
 		var expected_text := _expected_button_text(shell, surface, action)
 		var expected_tooltip := _expected_button_tooltip(shell, surface, action)
 		var rect := button.get_global_rect() if button != null else Rect2()

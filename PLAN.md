@@ -24,9 +24,12 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- No implementation slice is currently selected. Select the next tracker-approved source-backed release-readiness slice.
+- Selected implementation slice: **None.** Select the next tracker-approved source-backed implementation slice; do not infer release readiness from this bounded presentation completion.
 
-- Previous completed implementation slice: `presentation-veilmourn-complete-authored-town-building-icons-10184`. The final 12 category fallbacks across Bellwake Harbor and Fogchart Mooring now have specific original Town Build art, so all 133 production buildings own specific icons.
+- Previous completed implementation slice: `presentation-signature-spell-distinct-icons-10184`. Seven player-facing signature spells—one from each live school—now own distinct original 1254px source art and deterministic 128px runtime icons. The centralized resolver publishes those exact identities across Battle, Town, and Overworld buttons and falls back to the existing school sigils for the other 105 spells and for missing or malformed specific rows. Focused 1280/1920 runtime coverage preserved action ordering, focus, session, settings, save, and spell behavior; compatibility owners and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `presentation-signature-spell-distinct-icons-10184`
+
+- Prior completed implementation slice: `presentation-veilmourn-complete-authored-town-building-icons-10184`. The final 12 category fallbacks across Bellwake Harbor and Fogchart Mooring now have specific original Town Build art, so all 133 production buildings own specific icons.
   id: `presentation-veilmourn-complete-authored-town-building-icons-10184`
 
   Completion criteria: 12 distinct deterministic source/runtime pairs for the exact remaining Veilmourn building ids; zero category fallbacks across both authored Veilmourn towns at 1280/1920; all 133 production buildings have specific icons; unchanged costs, prerequisites, income, recruitment, magic, capital-project, ordering, gameplay/session/save authority; compatibility, static/editor, Linux, and Windows startup gates.
