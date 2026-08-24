@@ -22,6 +22,23 @@ SPELLS = (
     ("spell_cinder_burst", "furnace"),
     ("spell_fogwake_step", "veil"),
     ("spell_old_measure_compass_boundary_06", "old_measure"),
+    ("spell_stone_veil", "furnace"),
+    ("spell_quickmarch_hymn", "beacon"),
+    ("spell_relay_drum", "mire"),
+    ("spell_resonant_chorus", "lens"),
+    ("spell_bloodwake_drum", "mire"),
+    ("spell_trailglyph", "beacon"),
+    ("spell_prism_bastion", "lens"),
+    ("spell_lantern_phalanx", "beacon"),
+    ("spell_survey_chain", "old_measure"),
+    ("spell_graft_mend", "root"),
+    ("spell_heat_rite", "furnace"),
+    ("spell_obituary_mark", "veil"),
+    ("spell_pressure_clause", "furnace"),
+    ("spell_beacon_path", "beacon"),
+    ("spell_waystride", "beacon"),
+    ("spell_fogline_drift", "veil"),
+    ("spell_rootway_tangle", "root"),
 )
 
 

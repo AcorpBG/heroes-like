@@ -37762,6 +37762,23 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "spell_cinder_burst": ("furnace", "res://art/magic/runtime/spells/spell_cinder_burst.png"),
         "spell_fogwake_step": ("veil", "res://art/magic/runtime/spells/spell_fogwake_step.png"),
         "spell_old_measure_compass_boundary_06": ("old_measure", "res://art/magic/runtime/spells/spell_old_measure_compass_boundary_06.png"),
+        "spell_stone_veil": ("furnace", "res://art/magic/runtime/spells/spell_stone_veil.png"),
+        "spell_quickmarch_hymn": ("beacon", "res://art/magic/runtime/spells/spell_quickmarch_hymn.png"),
+        "spell_relay_drum": ("mire", "res://art/magic/runtime/spells/spell_relay_drum.png"),
+        "spell_resonant_chorus": ("lens", "res://art/magic/runtime/spells/spell_resonant_chorus.png"),
+        "spell_bloodwake_drum": ("mire", "res://art/magic/runtime/spells/spell_bloodwake_drum.png"),
+        "spell_trailglyph": ("beacon", "res://art/magic/runtime/spells/spell_trailglyph.png"),
+        "spell_prism_bastion": ("lens", "res://art/magic/runtime/spells/spell_prism_bastion.png"),
+        "spell_lantern_phalanx": ("beacon", "res://art/magic/runtime/spells/spell_lantern_phalanx.png"),
+        "spell_survey_chain": ("old_measure", "res://art/magic/runtime/spells/spell_survey_chain.png"),
+        "spell_graft_mend": ("root", "res://art/magic/runtime/spells/spell_graft_mend.png"),
+        "spell_heat_rite": ("furnace", "res://art/magic/runtime/spells/spell_heat_rite.png"),
+        "spell_obituary_mark": ("veil", "res://art/magic/runtime/spells/spell_obituary_mark.png"),
+        "spell_pressure_clause": ("furnace", "res://art/magic/runtime/spells/spell_pressure_clause.png"),
+        "spell_beacon_path": ("beacon", "res://art/magic/runtime/spells/spell_beacon_path.png"),
+        "spell_waystride": ("beacon", "res://art/magic/runtime/spells/spell_waystride.png"),
+        "spell_fogline_drift": ("veil", "res://art/magic/runtime/spells/spell_fogline_drift.png"),
+        "spell_rootway_tangle": ("root", "res://art/magic/runtime/spells/spell_rootway_tangle.png"),
     }
     signature_raw = load_json(SPELL_ICON_MANIFEST_PATH)
     signature_items = signature_raw.get("items", []) if isinstance(signature_raw, dict) else []
@@ -37769,7 +37786,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(signature_raw.get("generator") == "deterministic_signature_spell_icon_assets_v1", errors, "Signature spell icon manifest must retain deterministic generator identity")
     ensure(signature_raw.get("source_size") == {"width": 1254, "height": 1254}, errors, "Signature spell icon manifest must retain exact source dimensions")
     ensure(signature_raw.get("icon_size") == {"width": 128, "height": 128}, errors, "Signature spell icon manifest must retain exact runtime dimensions")
-    ensure(isinstance(signature_items, list) and len(signature_items) == 7, errors, "Signature spell icon manifest must contain exactly seven rows")
+    ensure(isinstance(signature_items, list) and len(signature_items) == 24, errors, "Active spell icon manifest must contain exactly twenty-four rows")
     signature_ids: list[str] = []
     signature_paths: list[str] = []
     if isinstance(signature_items, list):
@@ -37798,7 +37815,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
                 ensure(hashlib.sha256(disk_path.read_bytes()).hexdigest() == str(row.get("icon_sha256", "")), errors, f"Signature spell icon {spell_id} runtime hash drifted")
             ensure(Path(f"{disk_path}.import").is_file(), errors, f"Signature spell icon {spell_id} runtime import is missing")
     ensure(signature_ids == list(expected_signature_icons), errors, "Signature spell manifest must preserve exact one-per-school authored order")
-    ensure(len(set(signature_paths)) == 7, errors, "Signature spell runtime paths must remain distinct")
+    ensure(len(set(signature_paths)) == 24, errors, "Active spell runtime paths must remain distinct")
     manifest_raw = load_json(SPELL_SCHOOL_ICON_MANIFEST_PATH)
     manifest_items = manifest_raw.get("items", []) if isinstance(manifest_raw, dict) else []
     ensure(isinstance(manifest_items, list) and len(manifest_items) == 7, errors, "Spell school icon manifest must contain exactly seven rows")
@@ -37836,6 +37853,25 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
                 continue
             ensure(str(spell.get("school_id", "")) in expected_icons, errors, f"Spell {spell.get('id', '')} must retain one supported school id")
             ensure("ui" not in spell and "icon_id" not in spell and "icon_path" not in spell, errors, f"Spell {spell.get('id', '')} must resolve shared school art without duplicated presentation metadata")
+    active_spell_ids: set[str] = set()
+    for hero in load_json(CONTENT_DIR / "heroes.json").get("items", []):
+        if isinstance(hero, dict):
+            active_spell_ids.update(str(spell_id) for spell_id in hero.get("starting_spell_ids", []) if str(spell_id))
+    for town in load_json(CONTENT_DIR / "towns.json").get("items", []):
+        if not isinstance(town, dict):
+            continue
+        for library_row in town.get("spell_library", []):
+            if isinstance(library_row, dict):
+                active_spell_ids.update(str(spell_id) for spell_id in library_row.get("spell_ids", []) if str(spell_id))
+    for encounter in load_json(CONTENT_DIR / "encounters.json").get("items", []):
+        if not isinstance(encounter, dict):
+            continue
+        commander = encounter.get("enemy_commander", {})
+        if isinstance(commander, dict):
+            active_spell_ids.update(str(spell_id) for spell_id in commander.get("starting_spell_ids", []) if str(spell_id))
+    ensure(active_spell_ids.issubset(set(expected_signature_icons)), errors, "Every production hero-start, town-library, and enemy-commander spell must own a specific icon")
+    ensure(set(expected_signature_icons) - active_spell_ids == {"spell_old_measure_compass_boundary_06"}, errors, "The established Old Measure signature boundary must remain the only specific icon outside active spellbook exposure")
+    ensure(len({str(spell.get("id", "")) for spell in spells if isinstance(spell, dict)} - set(expected_signature_icons)) == 88, errors, "Exactly eighty-eight catalog spells must retain school-sigil fallback")
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for token in (
@@ -37935,8 +37971,10 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         'const REPORT_ID := "SPELL_SCHOOL_ICON_RUNTIME_REPORT"',
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const SURFACES := ["overworld", "town", "battle"]',
-        "signature_contract.size() == 7",
-        '"school_fallback_count": 105',
+        "signature_contract.size() == 24",
+        '"school_fallback_count": 88',
+        'expected_icon_path.begins_with("res://art/magic/runtime/spells/")',
+        '"selected_specific": selected_specific',
         "var fallback_contract := _signature_fallback_contract()",
         'ContentService._cache[ContentService.SPELL_ICONS_PATH] = malformed_manifest',
         'ContentService._cache[ContentService.SPELL_ICONS_PATH] = {"items": []}',
