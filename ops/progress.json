@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The Root town-study icon slice is complete: all 112 production catalog spells own original specific source/runtime icons with zero school fallback; the unchanged generated reward pool is 38 specific/0 fallback. Focused live 1280/1920 Graftroot Caravan and Rootgate Nursery Study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Battle spell cue-identity slice is complete: seven catalog-owned spells keep exact specific VFX/audio, 55 status/buff spells retain the shared Command Ward effect cue, and 28 other Battle spells use generic cues without masquerading as Cinder Burst, Graft Mend, or Prism Bastion. Focused live behavior, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-root-town-study-complete-distinct-icons-10184",
-  "currentSliceId": "presentation-root-town-study-complete-distinct-icons-10184",
-  "currentSliceNotes": "Completed with nine original 1254px Root spell sources and deterministic 128px runtime icons: all 112 production catalog spells now own specific icons, with zero school-sigil catalog fallback; the 38-spell generated reward pool remains fully specific. Focused live 1280/1920 Graftroot Caravan and Rootgate Nursery Study rows preserve order/access/focus/session/save authority; magic, Town, focus, core, deterministic/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-battle-spell-specific-cue-identity-fail-closed-10184",
+  "currentSliceId": "presentation-battle-spell-specific-cue-identity-fail-closed-10184",
+  "currentSliceNotes": "Completed live Battle cue-identity correction: the exact 90-spell classifier is 7 explicit, 55 shared Command Ward effects, and 28 generic-only. A real Pressure Clause cast retains generic imported cast VFX/audio and exact session authority without Cinder Burst identity. Battle animation, magic, cue catalog, Board navigation, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No asset, spell/rule, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation root town study complete distinct icons 10184",
+  "currentSliceTitle": "presentation battle spell specific cue identity fail closed 10184",
   "currentSliceUpdatedAt": "2026-08-24T05:30:07Z",
   "deferredRiskRegister": [
     {
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Root town-study icon slice is complete. Preserve the completed 133-building icon catalog, all 112 specific spell icons with zero catalog fallback, unchanged 38-spell reward pool with full specific coverage, and focus-following Town Study scroll; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "The Battle spell cue-identity correction is complete. Preserve the exact 7 specific/55 shared-effect/28 generic-only partition, all 112 specific spell icons, unchanged spell and BattleRules behavior, and bounded export/startup claims; select the next tracker-approved source-backed slice and do not infer packaged interaction, certification, whole-game validation, or release readiness.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100615,6 +100615,16 @@
       "startedAt": "2026-08-24T06:28:31Z",
       "notes": "Completed with nine original 1254px Root spell sources and deterministic 128px runtime icons: all 112 production catalog spells now own specific icons, with zero school-sigil catalog fallback; the 38-spell generated reward pool remains fully specific. Focused live 1280/1920 Graftroot Caravan and Rootgate Nursery Study rows preserve order/access/focus/session/save authority; magic, Town, focus, core, deterministic/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T06:46:09Z"
+    },
+    {
+      "id": "presentation-battle-spell-specific-cue-identity-fail-closed-10184",
+      "title": "presentation battle spell specific cue identity fail closed 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T07:03:40Z",
+      "startedAt": "2026-08-24T06:54:29Z",
+      "notes": "Completed live Battle cue-identity correction: the exact 90-spell classifier is 7 explicit, 55 shared Command Ward effects, and 28 generic-only. A real Pressure Clause cast retains generic imported cast VFX/audio and exact session authority without Cinder Burst identity. Battle animation, magic, cue catalog, Board navigation, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No asset, spell/rule, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-24T07:03:40Z"
     }
   ],
   "project": "heroes-like",
@@ -101159,7 +101169,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T06:46:09Z",
+  "updatedAt": "2026-08-24T07:03:40Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
