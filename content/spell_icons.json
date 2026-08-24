@@ -1142,6 +1142,105 @@
       "source_sha256": "1d7df14059a53abe37473c139924a5196ba36eb0ef1e246da519dffd8a19ea7e",
       "icon_path": "res://art/magic/runtime/spells/spell_veil_mist_duel_26.png",
       "icon_sha256": "2804729b7060c5d472e078d8451de11b9e0e4de8e91c069abe98a641cdf21583"
+    },
+    {
+      "id": "spell_root_bloom_briar_04",
+      "spell_id": "spell_root_bloom_briar_04",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_bloom_briar_04",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_bloom_briar_04.png",
+      "source_sha256": "0411544b4c6ca37777bfe4b1adcb57907033f09f9621707b93ca989034514ba6",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_bloom_briar_04.png",
+      "icon_sha256": "9ea62f69e3d89b3bcb5ba1704e9d632b1e9887651d61d0cd31219fdcb6022543"
+    },
+    {
+      "id": "spell_root_canopy_graft_06",
+      "spell_id": "spell_root_canopy_graft_06",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_canopy_graft_06",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_canopy_graft_06.png",
+      "source_sha256": "9713cd497b94a03225007556593a28f576b05dd25e6f61e1804832a8c17e02e2",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_canopy_graft_06.png",
+      "icon_sha256": "c296dc38d1078221545b5fb961b461ca519b91e62d43a966bf8fec0f11ff9531"
+    },
+    {
+      "id": "spell_root_loam_thorn_10",
+      "spell_id": "spell_root_loam_thorn_10",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_loam_thorn_10",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_loam_thorn_10.png",
+      "source_sha256": "9def8249790bee7c4b0dde6e001067397eb18c96b2f43c247fcb55950205e986",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_loam_thorn_10.png",
+      "icon_sha256": "d64c2b5cbcc9af4b32288abbf7c185cfdf7f0b4507bd1a393adbf49a78210e39"
+    },
+    {
+      "id": "spell_root_green_rootway_12",
+      "spell_id": "spell_root_green_rootway_12",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_green_rootway_12",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_green_rootway_12.png",
+      "source_sha256": "d4a71f0d4dfa31ca17164a8c9ab981293ea5522a679f2478ab1ea9d1d26feeaa",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_green_rootway_12.png",
+      "icon_sha256": "5d00cc05db8abf973106f08672851741471528711268c9c692882925a285c9a7"
+    },
+    {
+      "id": "spell_root_branch_bloom_14",
+      "spell_id": "spell_root_branch_bloom_14",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_branch_bloom_14",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_branch_bloom_14.png",
+      "source_sha256": "54d9ff647b36e57b0fa23eed0e9f44a6a5fd7310e88b8695fb89f883e14effab",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_branch_bloom_14.png",
+      "icon_sha256": "0f1a36c47a1ce7cc5eeb0548c50e8622f6c63ec966d70cac00c63463b9690d86"
+    },
+    {
+      "id": "spell_root_wild_briar_16",
+      "spell_id": "spell_root_wild_briar_16",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_wild_briar_16",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_wild_briar_16.png",
+      "source_sha256": "841a624a5448efaed1859e68af0f0d1bb77e3a64c7eab9ffaa14554b38f8061d",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_wild_briar_16.png",
+      "icon_sha256": "03d1eb0b27c990ee789e3f067d4dfbff3bff52f80cb1253ca8a16909be017056"
+    },
+    {
+      "id": "spell_root_graft_graft_18",
+      "spell_id": "spell_root_graft_graft_18",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_graft_graft_18",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_graft_graft_18.png",
+      "source_sha256": "0752f8e8def71dfb7fcc8cf9556485eb45666b8850d307ecea05500f84e4cba7",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_graft_graft_18.png",
+      "icon_sha256": "34ea642ba193218a163c8550af752271ee317e184423bfd2513898e6f2f04ea4"
+    },
+    {
+      "id": "spell_root_loam_bloom_26",
+      "spell_id": "spell_root_loam_bloom_26",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_loam_bloom_26",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_loam_bloom_26.png",
+      "source_sha256": "34285903fa8c64d96deae8b8329b7adcbdfe36d905b7bfc7f495a7ce05702798",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_loam_bloom_26.png",
+      "icon_sha256": "045372d74422c7a711a13025ef3ece2937c962013889b881d1fa774260d1c6b5"
+    },
+    {
+      "id": "spell_root_green_briar_28",
+      "spell_id": "spell_root_green_briar_28",
+      "school_id": "root",
+      "icon_id": "spell_signature_icon_root_green_briar_28",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_root_green_briar_28.png",
+      "source_sha256": "c8ef802dd5f06ed5006a4799006f14b2e11d4d9ba639118c85b693d0702b50ab",
+      "icon_path": "res://art/magic/runtime/spells/spell_root_green_briar_28.png",
+      "icon_sha256": "93828e370cf5493e7f581a54cf6e2d8727d56e4f5e4ad9e463cfb2a8b407a0ca"
     }
   ]
 }

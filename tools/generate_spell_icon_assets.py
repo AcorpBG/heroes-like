@@ -118,6 +118,15 @@ SPELLS = (
     ("spell_veil_salt_shroud_22", "veil"),
     ("spell_veil_tide_drift_24", "veil"),
     ("spell_veil_mist_duel_26", "veil"),
+    ("spell_root_bloom_briar_04", "root"),
+    ("spell_root_canopy_graft_06", "root"),
+    ("spell_root_loam_thorn_10", "root"),
+    ("spell_root_green_rootway_12", "root"),
+    ("spell_root_branch_bloom_14", "root"),
+    ("spell_root_wild_briar_16", "root"),
+    ("spell_root_graft_graft_18", "root"),
+    ("spell_root_loam_bloom_26", "root"),
+    ("spell_root_green_briar_28", "root"),
 )
 
 
