@@ -38787,8 +38787,22 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         ensure(token in generator_text, errors, f"Building icon generator is missing deterministic ownership: {token}")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
-    for token in ('const BUILDING_ART_PATH := "%s/building_art_manifest.json" % CONTENT_DIR', "func get_building_art(building_id: String) -> Dictionary:", "_validate_building_art_manifest(building_index, building_art_index)", 'source_path.begins_with("res://art/towns/source/buildings/curated/")', 'icon_path.begins_with("res://art/towns/runtime/buildings/")'):
+    for token in ('const BUILDING_ART_PATH := "%s/building_art_manifest.json" % CONTENT_DIR', "func get_building_art(building_id: String) -> Dictionary:", "_validate_building_art_manifest(building_index, building_art_index)", 'source_path.begins_with("res://art/towns/source/buildings/curated/")', 'elif OS.has_feature("editor"):', 'icon_path.begins_with("res://art/towns/runtime/buildings/")'):
         ensure(token in content_text, errors, f"ContentService building-art ownership is missing: {token}")
+    building_manifest_start = content_text.find("func _validate_building_art_manifest")
+    building_manifest_end = content_text.find("\nfunc ", building_manifest_start + 1)
+    building_manifest = content_text[building_manifest_start:building_manifest_end]
+    building_manifest_order = (
+        'if not source_path.begins_with("res://art/towns/source/buildings/curated/"):',
+        'elif OS.has_feature("editor"):',
+        '_validate_art_path(source_path, "Building %s curated source" % building_id)',
+        'if not icon_path.begins_with("res://art/towns/runtime/buildings/"):',
+        '_validate_art_path(icon_path, "Building %s runtime icon" % building_id)',
+    )
+    ensure(all(token in building_manifest for token in building_manifest_order), errors, "ContentService building-art packaged-source ownership is incomplete")
+    if all(token in building_manifest for token in building_manifest_order):
+        ensure([building_manifest.index(token) for token in building_manifest_order] == sorted(building_manifest.index(token) for token in building_manifest_order), errors, "ContentService building-art packaged-source ownership order drifted")
+    ensure('if not OS.has_feature("editor"):' not in building_manifest, errors, "ContentService building-art validation must not return early for editor/source runs")
     rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     resolver_start = rules_text.find("static func building_icon_path")
     resolver_end = rules_text.find("\nstatic func ", resolver_start + 1)
@@ -55822,7 +55836,7 @@ def validate_packaging_platform_readiness(errors: list[str]) -> None:
             "third_party/*",
             "ops/*",
             "maps/*",
-            "art/overworld/source/*",
+            "art/*/source/*",
             "art/overworld/runtime/homm3_local_prototype/*",
             "art/overworld/runtime/terrain_tiles/generated/*",
             "src/gdextension/build/*",
@@ -55971,6 +55985,7 @@ def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
             "clean-machine smoke coverage",
             "MIN_BINARY_BYTES",
             "MIN_PCK_BYTES",
+            "MAX_RELEASE_PCK_BYTES = 250_000_000",
             "FORBIDDEN_TERRAIN_PCK_PREFIXES",
             '"art/overworld/runtime/homm3_local_prototype/"',
             '"art/overworld/runtime/terrain_tiles/generated/"',
@@ -55987,6 +56002,21 @@ def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
             'entry_path.startswith(".godot/imported/")',
             'summary["artifact_field_texture_names"].append(imported_name)',
             'bool(terrain_payload["artifact_field_entries_present"])',
+            "def source_art_import_payload_paths() -> tuple[set[str], set[str]]:",
+            '(ROOT / "art").glob("*/source/**/*.import")',
+            "metadata_paths.add(import_path.relative_to(ROOT).as_posix())",
+            'value.startswith(\'path="res://\')',
+            'entry_path.startswith("art/") and "/source/" in entry_path',
+            "if entry_path in source_art_imported_payload_paths:",
+            'struct.unpack_from("<Q", metadata, 8)[0]',
+            'int(pck["size_bytes"]) <= MAX_RELEASE_PCK_BYTES',
+            'bool(terrain_payload["source_art_excluded"])',
+            '"repository_source_art_metadata_count"',
+            '"repository_source_art_imported_payload_count"',
+            '"source_art_metadata_entries"',
+            '"source_art_imported_payload_entries"',
+            '"source_art_imported_payload_bytes"',
+            '"source_art_excluded"',
             '"artifact_field_pck_import_entry_count"',
             '"artifact_field_pck_texture_count"',
             '"artifact_field_pck_entries_present"',
@@ -55994,6 +56024,21 @@ def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
             "report.json",
         ):
             ensure(required_token in script_text, errors, f"Packaging Linux export smoke script is missing required token: {required_token}")
+        source_helper_start = script_text.find("def source_art_import_payload_paths")
+        source_helper_end = script_text.find("\ndef ", source_helper_start + 1)
+        source_helper = script_text[source_helper_start:source_helper_end]
+        source_helper_order = (
+            '(ROOT / "art").glob("*/source/**/*.import")',
+            "metadata_paths.add(import_path.relative_to(ROOT).as_posix())",
+            'value.startswith(\'path="res://\')',
+            "imported_payload_paths.add(",
+            "return metadata_paths, imported_payload_paths",
+        )
+        ensure(all(token in source_helper for token in source_helper_order), errors, "Packaging Linux source-art import ownership is incomplete")
+        if all(token in source_helper for token in source_helper_order):
+            ensure([source_helper.index(token) for token in source_helper_order] == sorted(source_helper.index(token) for token in source_helper_order), errors, "Packaging Linux source-art import ownership order drifted")
+        for forbidden in ("unlink(", "rmtree(", ".erase(", "resolve("):
+            ensure(forbidden not in source_helper, errors, f"Packaging Linux source-art inspection must remain read-only: {forbidden}")
 
     app_router_path = ROOT / "scripts" / "autoload" / "AppRouter.gd"
     if app_router_path.exists():
@@ -56020,6 +56065,9 @@ def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
             "heroes-like.pck",
             "ELF x86_64",
             "libaurelion_map_persistence.linux.template_release.x86_64.so",
+            "250 MB",
+            "development source-art metadata and imported source textures",
+            "runtime assets remain packaged",
             "does not claim installer readiness",
             "clean-machine smoke coverage",
             "release readiness",
@@ -56063,6 +56111,7 @@ def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
             "clean-machine smoke coverage",
             "MIN_EXE_BYTES",
             "MIN_PCK_BYTES",
+            "MAX_RELEASE_PCK_BYTES = 250_000_000",
             "FORBIDDEN_TERRAIN_PCK_PREFIXES",
             '"art/overworld/runtime/homm3_local_prototype/"',
             '"art/overworld/runtime/terrain_tiles/generated/"',
@@ -56079,6 +56128,21 @@ def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
             'entry_path.startswith(".godot/imported/")',
             'summary["artifact_field_texture_names"].append(imported_name)',
             'bool(terrain_payload["artifact_field_entries_present"])',
+            "def source_art_import_payload_paths() -> tuple[set[str], set[str]]:",
+            '(ROOT / "art").glob("*/source/**/*.import")',
+            "metadata_paths.add(import_path.relative_to(ROOT).as_posix())",
+            'value.startswith(\'path="res://\')',
+            'entry_path.startswith("art/") and "/source/" in entry_path',
+            "if entry_path in source_art_imported_payload_paths:",
+            'struct.unpack_from("<Q", metadata, 8)[0]',
+            'int(pck["size_bytes"]) <= MAX_RELEASE_PCK_BYTES',
+            'bool(terrain_payload["source_art_excluded"])',
+            '"repository_source_art_metadata_count"',
+            '"repository_source_art_imported_payload_count"',
+            '"source_art_metadata_entries"',
+            '"source_art_imported_payload_entries"',
+            '"source_art_imported_payload_bytes"',
+            '"source_art_excluded"',
             '"artifact_field_pck_import_entry_count"',
             '"artifact_field_pck_texture_count"',
             '"artifact_field_pck_entries_present"',
@@ -56086,6 +56150,21 @@ def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
             "report.json",
         ):
             ensure(required_token in script_text, errors, f"Packaging Windows export smoke script is missing required token: {required_token}")
+        source_helper_start = script_text.find("def source_art_import_payload_paths")
+        source_helper_end = script_text.find("\ndef ", source_helper_start + 1)
+        source_helper = script_text[source_helper_start:source_helper_end]
+        source_helper_order = (
+            '(ROOT / "art").glob("*/source/**/*.import")',
+            "metadata_paths.add(import_path.relative_to(ROOT).as_posix())",
+            'value.startswith(\'path="res://\')',
+            "imported_payload_paths.add(",
+            "return metadata_paths, imported_payload_paths",
+        )
+        ensure(all(token in source_helper for token in source_helper_order), errors, "Packaging Windows source-art import ownership is incomplete")
+        if all(token in source_helper for token in source_helper_order):
+            ensure([source_helper.index(token) for token in source_helper_order] == sorted(source_helper.index(token) for token in source_helper_order), errors, "Packaging Windows source-art import ownership order drifted")
+        for forbidden in ("unlink(", "rmtree(", ".erase(", "resolve("):
+            ensure(forbidden not in source_helper, errors, f"Packaging Windows source-art inspection must remain read-only: {forbidden}")
 
     if PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH.exists():
         doc_text = PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH.read_text(encoding="utf-8")
@@ -56100,6 +56179,9 @@ def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
             "PE",
             "aurelion_map_persistence.windows.template_release.x86_64.dll",
             "packaging_windows_export_smoke_v2",
+            "250 MB",
+            "development source-art metadata and imported source textures",
+            "runtime assets remain packaged",
             "Wine",
             "dinput8=",
             "Boot.scn",

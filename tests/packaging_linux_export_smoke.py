@@ -28,6 +28,7 @@ SCHEMA_ID = "packaging_linux_export_smoke_v1"
 PRESET_NAME = "Linux Release"
 MIN_BINARY_BYTES = 500_000
 MIN_PCK_BYTES = 10_000_000
+MAX_RELEASE_PCK_BYTES = 250_000_000
 EXPORT_TIMEOUT_SECONDS = 360
 BOOT_TIMEOUT_SECONDS = 90
 BOOT_QUIT_AFTER_SECONDS = 20
@@ -214,7 +215,23 @@ def artifact_listing() -> list[dict]:
     return rows
 
 
+def source_art_import_payload_paths() -> tuple[set[str], set[str]]:
+    metadata_paths: set[str] = set()
+    imported_payload_paths: set[str] = set()
+    for import_path in sorted((ROOT / "art").glob("*/source/**/*.import")):
+        if not import_path.is_file():
+            continue
+        metadata_paths.add(import_path.relative_to(ROOT).as_posix())
+        for line in import_path.read_text(encoding="utf-8").splitlines():
+            value = line.strip()
+            if value.startswith('path="res://') and value.endswith('"'):
+                imported_payload_paths.add(value.removeprefix('path="res://').removesuffix('"'))
+                break
+    return metadata_paths, imported_payload_paths
+
+
 def pck_terrain_payload_summary() -> dict:
+    source_art_metadata_paths, source_art_imported_payload_paths = source_art_import_payload_paths()
     summary = {
         "checked": False,
         "valid_directory": False,
@@ -227,6 +244,12 @@ def pck_terrain_payload_summary() -> dict:
         "artifact_field_import_entries": [],
         "artifact_field_texture_names": [],
         "artifact_field_entries_present": False,
+        "repository_source_art_metadata_count": len(source_art_metadata_paths),
+        "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
+        "source_art_metadata_entries": [],
+        "source_art_imported_payload_entries": [],
+        "source_art_imported_payload_bytes": 0,
+        "source_art_excluded": False,
     }
     if not PCK_PATH.exists():
         return summary
@@ -258,6 +281,12 @@ def pck_terrain_payload_summary() -> dict:
                 if len(path_data) != padded_length or len(metadata) != 36:
                     return summary
                 entry_path = path_data[:path_length].rstrip(b"\0").decode("utf-8", errors="replace")
+                entry_size = struct.unpack_from("<Q", metadata, 8)[0]
+                if entry_path.startswith("art/") and "/source/" in entry_path:
+                    summary["source_art_metadata_entries"].append(entry_path)
+                if entry_path in source_art_imported_payload_paths:
+                    summary["source_art_imported_payload_entries"].append(entry_path)
+                    summary["source_art_imported_payload_bytes"] += entry_size
                 for prefix in FORBIDDEN_TERRAIN_PCK_PREFIXES:
                     if entry_path.startswith(prefix):
                         summary["forbidden_entries"].append(entry_path)
@@ -277,6 +306,12 @@ def pck_terrain_payload_summary() -> dict:
         count > 0 for count in summary["required_prefix_counts"].values()
     )
     summary["artifact_field_entries_present"] = set(summary["artifact_field_import_entries"]) == set(REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES) and set(summary["artifact_field_texture_names"]) == set(REQUIRED_ARTIFACT_FIELD_NAMES)
+    summary["source_art_excluded"] = (
+        len(source_art_metadata_paths) > 0
+        and len(source_art_imported_payload_paths) > 0
+        and not summary["source_art_metadata_entries"]
+        and not summary["source_art_imported_payload_entries"]
+    )
     return summary
 
 
@@ -315,11 +350,13 @@ def main() -> int:
         and bool(header["x86_64"])
         and bool(pck["exists"])
         and bool(pck["large_enough"])
+        and int(pck["size_bytes"]) <= MAX_RELEASE_PCK_BYTES
         and bool(libraries["all_exported"])
         and bool(terrain_payload["valid_directory"])
         and not terrain_payload["forbidden_entries"]
         and bool(terrain_payload["required_entries_present"])
         and bool(terrain_payload["artifact_field_entries_present"])
+        and bool(terrain_payload["source_art_excluded"])
     )
 
     boot_result: dict | None = None
@@ -348,6 +385,7 @@ def main() -> int:
                 "The Linux Release preset can export a real executable artifact in this local Godot environment.",
                 "The exported executable has an ELF x86_64 header and executable permission bits.",
                 "The sidecar PCK and required Linux native GDExtension shared library are present beside the executable.",
+                "The release PCK excludes development source-art metadata and imported source textures while retaining runtime assets.",
                 "The exported Linux binary can start headlessly in this local environment.",
             ],
             "does_not_claim": [
@@ -387,6 +425,11 @@ def main() -> int:
         "artifact_field_pck_import_entry_count": len(terrain_payload["artifact_field_import_entries"]),
         "artifact_field_pck_texture_count": len(set(terrain_payload["artifact_field_texture_names"])),
         "artifact_field_pck_entries_present": terrain_payload["artifact_field_entries_present"],
+        "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
+        "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
+        "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],
+        "source_art_pck_excluded": terrain_payload["source_art_excluded"],
+        "pck_within_release_size_ceiling": int(pck["size_bytes"]) <= MAX_RELEASE_PCK_BYTES,
         "fatal_export_matches": export_fatal_matches,
         "boot_fatal_matches": boot_fatal_matches,
         "report": relative(REPORT_PATH),
