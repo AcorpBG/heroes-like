@@ -47,6 +47,10 @@ SPELLS = (
     ("spell_mire_bog_drum_18", "mire"),
     ("spell_mire_brine_fenlight_24", "mire"),
     ("spell_mire_leech_snare_10", "mire"),
+    ("spell_furnace_foundry_bellows_11", "furnace"),
+    ("spell_furnace_brass_bellows_23", "furnace"),
+    ("spell_furnace_ash_mantle_09", "furnace"),
+    ("spell_furnace_ash_rail_25", "furnace"),
 )
 
 
