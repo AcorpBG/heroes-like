@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The six-faction Battle music identity slice is completed with exact player-faction routing, generic fallback, 75 deterministic imported layers, real 1280/1920 BattleShell authority, Battle compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No slice is currently selected. Packaged Battle interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+  "currentNotes": "The music context crossfade slice is completed. Changed signatures now crossfade exact outgoing/incoming three-layer groups over 360 ms, rapid replacements are generation-owned and capped at six players, and stable/stop/mute/fallback/routing/session authority is exact. No slice is currently selected; packaged listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-six-faction-battle-music-identity-10184",
-  "currentSliceId": "presentation-six-faction-battle-music-identity-10184",
-  "currentSliceNotes": "Completed: exact scenario player faction selects one of six original three-layer Battle themes, missing/unknown identity retains the generic cue, and focused/compatibility/deterministic/static/editor plus bounded Linux/Windows export-startup gates pass. No next slice is selected; release readiness remains unclaimed.",
+  "currentSlice": "presentation-music-context-crossfade-transition-10184",
+  "currentSliceId": "presentation-music-context-crossfade-transition-10184",
+  "currentSliceNotes": "Completed: changed signatures crossfade exact outgoing/incoming three-layer groups over 360 ms; rapid replacement, stable signature, explicit stop, mute/fallback, routing, shell/session, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. No next slice is selected; release readiness remains unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation six faction battle music identity 10184",
-  "currentSliceUpdatedAt": "2026-08-24T10:42:13Z",
+  "currentSliceTitle": "presentation music context crossfade transition 10184",
+  "currentSliceUpdatedAt": "2026-08-24T11:07:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved release-readiness slice from direct current product evidence. Do not infer release readiness from completed presentation, compatibility, or export/startup gates, and do not broaden Native-RMG work without recovered private-state and final-payload parity evidence.",
-  "notes": "The six-faction Battle music identity slice is completed with exact scenario player-faction routing, generic fallback, 18 original faction-specific stems, deterministic regeneration, real BattleShell authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No next slice is selected; packaged Battle interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+  "notes": "The music context crossfade slice is completed with a bounded exact 360 ms outgoing/incoming transition, rapid-route generation ownership, three-player steady state, six-player transition cap, stable non-restart, immediate stop, mute/fallback authority, real 1280/1920 Menu-to-Overworld proof, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No next slice is selected; packaged listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100675,6 +100675,16 @@
       "startedAt": "2026-08-24T10:15:39Z",
       "notes": "Completed with 18 new original faction-specific Battle stems and exact live scenario player_faction_id routing; missing/unknown identity retains the generic Battle cue. The deterministic 75-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 BattleShell rows with exact battle authority, continuous/settings/generated fallback, Battle animation/presentation, controller Board navigation, core, repository/editor, deterministic regeneration, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition/mastering, enemy-faction or matchup-adaptive music, faction-specific Outcome/Menu themes, packaged Battle interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T10:42:13Z"
+    },
+    {
+      "id": "presentation-music-context-crossfade-transition-10184",
+      "title": "presentation music context crossfade transition 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T11:07:47Z",
+      "startedAt": "2026-08-24T10:47:31Z",
+      "notes": "Completed with a bounded exact 360 ms three-layer crossfade for changed signatures. Rapid replacements invalidate stale tween generations, retire only the older outgoing group, and remain capped at six transition players before settling to three; stable signatures do not restart, explicit stop is immediate, mute/generated fallback and all cue/metadata/settings/bus/session authority remain exact. Focused direct and real 1280/1920 Menu-to-Overworld, UI/ambient audio, active-play focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. New composition, beat/bar synchronization, adaptive intensity, mixer migration, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T11:07:47Z"
     }
   ],
   "project": "heroes-like",

@@ -153,6 +153,9 @@ var _report := {
 	"pre_battle_summary": {},
 	"continuous_summary": {},
 	"continuous_record": {},
+	"crossfade_lifecycle": {},
+	"shell_transition_rows": [],
+	"muted_record": {},
 	"fallback_record": {},
 	"shell_summary": {},
 	"town_shell_rows": [],
@@ -262,6 +265,7 @@ func _run() -> void:
 	var continuous_summary := MusicAudio.validation_summary()
 	var continuous_record: Dictionary = MusicAudio.sync_context("outcome", "validation_outcome_repeat_after_loop", outcome_metadata)
 	var direct_summary := MusicAudio.validation_summary()
+	var crossfade_lifecycle := await _crossfade_lifecycle_case()
 	MusicAudio.validation_reset()
 	var saved_manifest_loaded := bool(MusicAudio.get("_music_runtime_manifest_loaded"))
 	var saved_manifest: Dictionary = (MusicAudio.get("_music_runtime_manifest") as Dictionary).duplicate(true)
@@ -271,6 +275,13 @@ func _run() -> void:
 	MusicAudio.validation_reset()
 	MusicAudio.set("_music_runtime_manifest_loaded", saved_manifest_loaded)
 	MusicAudio.set("_music_runtime_manifest", saved_manifest)
+	var original_music_volume := SettingsService.music_volume_percent()
+	var mute_result: Dictionary = SettingsService.set_music_volume_percent(0)
+	MusicAudio.validation_reset()
+	var muted_record: Dictionary = MusicAudio.sync_context("menu", "validation_muted_context", {"scenario_id": "muted"})
+	var muted_summary: Dictionary = MusicAudio.validation_summary()
+	var restore_music_result: Dictionary = SettingsService.set_music_volume_percent(original_music_volume)
+	MusicAudio.validation_reset()
 
 	var menu_shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
 	add_child(menu_shell)
@@ -285,7 +296,9 @@ func _run() -> void:
 	var overworld_shell_rows: Array = []
 	var battle_shell_rows: Array = []
 	var outcome_shell_rows: Array = []
+	var shell_transition_rows: Array = []
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		shell_transition_rows.append(await _menu_to_overworld_transition_row(viewport_size))
 		for faction_id_value in OVERWORLD_FACTION_CUES:
 			overworld_shell_rows.append(await _overworld_shell_route_row(viewport_size, String(faction_id_value)))
 		for faction_id_value in TOWN_FACTION_CUES:
@@ -302,6 +315,9 @@ func _run() -> void:
 	_report["pre_battle_summary"] = pre_battle_summary
 	_report["continuous_summary"] = continuous_summary
 	_report["continuous_record"] = continuous_record
+	_report["crossfade_lifecycle"] = crossfade_lifecycle
+	_report["shell_transition_rows"] = shell_transition_rows
+	_report["muted_record"] = muted_record
 	_report["fallback_record"] = fallback_record
 	_report["shell_summary"] = shell_summary
 	_report["town_shell_rows"] = town_shell_rows
@@ -330,9 +346,14 @@ func _run() -> void:
 	_validate_record("outcome defeat", outcome_defeat_record, "music_outcome_defeat_theme", "outcome", true)
 	_validate_record("outcome", outcome_record, "music_outcome_victory_theme", "outcome", true)
 	_validate_continuous_playback(continuous_summary, continuous_record)
+	_expect(bool(crossfade_lifecycle.get("ok", false)), "Direct music crossfade lifecycle must preserve exact player groups and settle cleanly: %s" % crossfade_lifecycle)
 	_validate_generated_fallback(fallback_record)
+	_validate_muted_context(muted_record, muted_summary, mute_result, restore_music_result, original_music_volume)
 	_validate_direct_summary(direct_summary, pre_battle_summary)
 	_validate_shell_summary(shell_summary, shell_snapshot)
+	for row_value in shell_transition_rows:
+		var row: Dictionary = row_value
+		_expect(bool(row.get("ok", false)), "Real MainMenu-to-Overworld music transition must crossfade exactly at both target viewports: %s" % row)
 	for row_value in town_shell_rows:
 		var row: Dictionary = row_value
 		_expect(bool(row.get("ok", false)), "TownShell route must own exact faction Town music at both target viewports: %s" % row)
@@ -360,7 +381,14 @@ func _validate_record(label: String, record: Dictionary, expected_cue: String, e
 	_expect_equal("%s context" % label, String(record.get("context_id", "")), expected_context)
 	_expect_equal("%s changed" % label, bool(record.get("changed", false)), expected_changed)
 	_expect(int(record.get("layer_count", 0)) == 3, "%s record must expose three music layers: %s" % [label, record])
-	_expect(int(record.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS, "%s route must own exactly three active music players: %s" % [label, record])
+	var expects_transition := expected_changed and label != "menu"
+	var expected_active_count := MusicAudio.MAX_TRANSITION_PLAYERS if expects_transition else MusicAudio.MAX_ACTIVE_PLAYERS
+	_expect(int(record.get("active_player_count", 0)) == expected_active_count, "%s route must own the exact steady or transition player count: %s" % [label, record])
+	_expect(int(record.get("current_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS, "%s route must own exactly three current players: %s" % [label, record])
+	_expect(int(record.get("outgoing_player_count", 0)) == (MusicAudio.MAX_ACTIVE_PLAYERS if expects_transition else 0), "%s route must expose the exact outgoing player count: %s" % [label, record])
+	_expect(bool(record.get("transition_active", false)) == expects_transition, "%s route transition state must be exact: %s" % [label, record])
+	var transition: Dictionary = record.get("transition", {}) if record.get("transition", {}) is Dictionary else {}
+	_expect(bool(transition.get("started", false)) == expects_transition, "%s transition start authority must be exact: %s" % [label, transition])
 	_expect(["Master", "Music"].has(String(record.get("audio_bus", ""))), "%s record must route through Master or Music: %s" % [label, record])
 	_expect(String(record.get("music_manifest_path", "")) == "res://content/music_runtime_manifest.json", "%s record must expose music manifest path: %s" % [label, record])
 	_expect(bool(record.get("music_manifest_loaded", false)), "%s record must load music manifest: %s" % [label, record])
@@ -418,6 +446,9 @@ func _validate_manifest_asset_surface() -> void:
 
 func _validate_continuous_playback(summary: Dictionary, record: Dictionary) -> void:
 	_expect(int(summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS, "All imported music players must remain active after one complete segment: %s" % summary)
+	_expect(int(summary.get("current_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS, "Settled music must retain exactly three current players: %s" % summary)
+	_expect(int(summary.get("outgoing_player_count", -1)) == 0, "Settled music must retire every outgoing player: %s" % summary)
+	_expect(not bool(summary.get("transition_active", true)), "Settled music transition must be inactive: %s" % summary)
 	_expect_equal("continuous context", String(summary.get("current_context_id", "")), "outcome")
 	var layers: Array = summary.get("current_layers", []) if summary.get("current_layers", []) is Array else []
 	_expect(layers.size() == MusicAudio.MAX_ACTIVE_PLAYERS, "Continuous summary must retain all three layers: %s" % [layers])
@@ -439,11 +470,23 @@ func _validate_generated_fallback(record: Dictionary) -> void:
 		_expect(int(layer.get("imported_asset_count", 0)) == 0, "Fallback layer must not count imported playback: %s" % layer)
 		_expect(int(layer.get("generated_fallback_count", 0)) == 1, "Fallback layer must count generated playback: %s" % layer)
 
+func _validate_muted_context(record: Dictionary, summary: Dictionary, mute_result: Dictionary, restore_result: Dictionary, original_music_volume: int) -> void:
+	_expect(bool(mute_result.get("ok", false)), "Focused music mute setting must commit in the isolated runtime: %s" % mute_result)
+	_expect(bool(restore_result.get("ok", false)), "Focused music volume restoration must commit in the isolated runtime: %s" % restore_result)
+	_expect(SettingsService.music_volume_percent() == original_music_volume, "Focused music mute control must restore the original isolated setting.")
+	_expect(bool(record.get("changed", false)), "Muted context must still own the changed signature: %s" % record)
+	_expect(bool(record.get("muted", false)) and not bool(record.get("played", true)), "Muted context must fail closed without playback: %s" % record)
+	_expect(int(record.get("active_player_count", -1)) == 0 and int(record.get("current_player_count", -1)) == 0 and int(record.get("outgoing_player_count", -1)) == 0, "Muted context must create no current, outgoing, or active players: %s" % record)
+	_expect(not bool(record.get("transition_active", true)), "Muted context must not leave a transition active: %s" % record)
+	_expect(int(summary.get("active_player_count", -1)) == 0 and int(summary.get("current_player_count", -1)) == 0 and int(summary.get("outgoing_player_count", -1)) == 0, "Muted summary must contain no music players: %s" % summary)
+
 func _validate_direct_summary(summary: Dictionary, pre_battle_summary: Dictionary) -> void:
 	_expect_equal("direct schema", String(summary.get("schema", "")), "music_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 4, "Music direct summary must keep changed context records: %s" % summary)
 	_expect(["Master", "Music"].has(String(summary.get("audio_bus", ""))), "Music direct summary must expose a valid bus: %s" % summary)
 	_expect(int(summary.get("max_active_players", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS, "Music direct summary must expose player cap: %s" % summary)
+	_expect(int(summary.get("max_transition_players", 0)) == MusicAudio.MAX_TRANSITION_PLAYERS, "Music direct summary must expose the exact six-player transition cap: %s" % summary)
+	_expect(absf(float(summary.get("context_crossfade_duration_sec", 0.0)) - MusicAudio.CONTEXT_CROSSFADE_DURATION_SEC) < 0.001, "Music direct summary must expose exact crossfade duration: %s" % summary)
 	_expect(String(summary.get("music_manifest_path", "")) == "res://content/music_runtime_manifest.json", "Music direct summary must expose the music manifest path: %s" % summary)
 	_expect(bool(summary.get("music_manifest_loaded", false)), "Music direct summary must load the music manifest: %s" % summary)
 	var cue_counts: Dictionary = summary.get("cue_counts", {}) if summary.get("cue_counts", {}) is Dictionary else {}
@@ -468,6 +511,162 @@ func _validate_shell_summary(summary: Dictionary, snapshot: Dictionary) -> void:
 	var snapshot_summary: Dictionary = snapshot.get("music_audio", {}) if snapshot.get("music_audio", {}) is Dictionary else {}
 	_expect_equal("snapshot music schema", String(snapshot_summary.get("schema", "")), "music_audio_runtime_v1")
 	_expect(int(snapshot_summary.get("record_count", 0)) >= 1, "MainMenu validation snapshot must expose music audio summary: %s" % snapshot_summary)
+
+func _crossfade_lifecycle_case() -> Dictionary:
+	MusicAudio.validation_reset()
+	var initial_record: Dictionary = MusicAudio.sync_context("menu", "crossfade_initial", {"scenario_id": "crossfade"})
+	var initial_summary: Dictionary = MusicAudio.validation_summary()
+	var initial_ids := _summary_player_ids(initial_summary, "current_players")
+	var overworld_record: Dictionary = MusicAudio.sync_context("overworld", "crossfade_overworld", {
+		"scenario_id": "river-pass",
+		"day": 1,
+		"player_faction_id": "faction_embercourt",
+	})
+	var overworld_summary: Dictionary = MusicAudio.validation_summary()
+	var overworld_current_ids := _summary_player_ids(overworld_summary, "current_players")
+	var overworld_outgoing_ids := _summary_player_ids(overworld_summary, "outgoing_players")
+	var town_record: Dictionary = MusicAudio.sync_context("town", "crossfade_town", {
+		"scenario_id": "river-pass",
+		"day": 1,
+		"town_placement_id": "riverwatch_hold",
+		"town_id": "town_riverwatch_hold",
+		"town_faction_id": "faction_embercourt",
+	})
+	var rapid_summary: Dictionary = MusicAudio.validation_summary()
+	var rapid_current_ids := _summary_player_ids(rapid_summary, "current_players")
+	var rapid_outgoing_ids := _summary_player_ids(rapid_summary, "outgoing_players")
+	var stable_record: Dictionary = MusicAudio.sync_context("town", "crossfade_town_stable", {
+		"scenario_id": "river-pass",
+		"day": 1,
+		"town_placement_id": "riverwatch_hold",
+		"town_id": "town_riverwatch_hold",
+		"town_faction_id": "faction_embercourt",
+	})
+	var stable_summary: Dictionary = MusicAudio.validation_summary()
+	await get_tree().create_timer(MusicAudio.CONTEXT_CROSSFADE_DURATION_SEC + 0.12).timeout
+	var settled_summary: Dictionary = MusicAudio.validation_summary()
+	var settled_current_ids := _summary_player_ids(settled_summary, "current_players")
+	MusicAudio.stop_music("crossfade_validation_explicit_stop")
+	var stopped_summary: Dictionary = MusicAudio.validation_summary()
+	var stopped_transition: Dictionary = stopped_summary.get("transition", {}) if stopped_summary.get("transition", {}) is Dictionary else {}
+	var checks := {
+		"initial_record_exact": bool(initial_record.get("changed", false)) and int(initial_record.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS and not bool(initial_record.get("transition_active", true)),
+		"initial_group_exact": initial_ids.size() == MusicAudio.MAX_ACTIVE_PLAYERS and int(initial_summary.get("outgoing_player_count", -1)) == 0,
+		"overworld_transition_exact": bool(overworld_record.get("transition_active", false)) and int(overworld_record.get("active_player_count", 0)) == MusicAudio.MAX_TRANSITION_PLAYERS,
+		"overworld_groups_exact": overworld_current_ids.size() == MusicAudio.MAX_ACTIVE_PLAYERS and overworld_outgoing_ids == initial_ids and _player_groups_disjoint(overworld_current_ids, overworld_outgoing_ids),
+		"overworld_incoming_silent": _players_begin_silent(overworld_summary),
+		"rapid_transition_exact": bool(town_record.get("transition_active", false)) and int(rapid_summary.get("active_player_count", 0)) == MusicAudio.MAX_TRANSITION_PLAYERS,
+		"rapid_outgoing_is_latest_exact": rapid_outgoing_ids == overworld_current_ids,
+		"rapid_current_exact": rapid_current_ids.size() == MusicAudio.MAX_ACTIVE_PLAYERS and _player_groups_disjoint(rapid_current_ids, rapid_outgoing_ids),
+		"stale_initial_retired": not _arrays_overlap(initial_ids, rapid_current_ids) and not _arrays_overlap(initial_ids, rapid_outgoing_ids),
+		"stable_no_restart": not bool(stable_record.get("changed", true)) and _summary_player_ids(stable_summary, "current_players") == rapid_current_ids and _summary_player_ids(stable_summary, "outgoing_players") == rapid_outgoing_ids,
+		"settled_exact": int(settled_summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS and int(settled_summary.get("current_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS and int(settled_summary.get("outgoing_player_count", -1)) == 0 and not bool(settled_summary.get("transition_active", true)),
+		"settled_identity_exact": settled_current_ids == rapid_current_ids and _players_reach_targets(settled_summary),
+		"explicit_stop_immediate": int(stopped_summary.get("active_player_count", -1)) == 0 and int(stopped_summary.get("current_player_count", -1)) == 0 and int(stopped_summary.get("outgoing_player_count", -1)) == 0 and not bool(stopped_summary.get("transition_active", true)) and bool(stopped_transition.get("stopped_immediately", false)) and String(stopped_transition.get("reason", "")) == "crossfade_validation_explicit_stop",
+	}
+	return {
+		"ok": not checks.values().has(false),
+		"checks": checks,
+		"initial_summary": initial_summary,
+		"overworld_summary": overworld_summary,
+		"rapid_summary": rapid_summary,
+		"stable_summary": stable_summary,
+		"settled_summary": settled_summary,
+		"stopped_summary": stopped_summary,
+	}
+
+func _menu_to_overworld_transition_row(viewport_size: Vector2i) -> Dictionary:
+	get_window().size = viewport_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	SessionState.set_active_session(null)
+	MusicAudio.validation_reset()
+	var menu_shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
+	add_child(menu_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var menu_summary: Dictionary = MusicAudio.validation_summary()
+	var menu_ids := _summary_player_ids(menu_summary, "current_players")
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var authority_before: Dictionary = session.to_dict()
+	SessionState.set_active_session(session)
+	var frame := Control.new()
+	frame.name = "MusicTransitionFrame"
+	frame.size = Vector2(viewport_size)
+	frame.clip_contents = true
+	add_child(frame)
+	var overworld_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	frame.add_child(overworld_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var transition_summary: Dictionary = MusicAudio.validation_summary()
+	var records: Array = transition_summary.get("records", []) if transition_summary.get("records", []) is Array else []
+	var record: Dictionary = records[-1] if not records.is_empty() and records[-1] is Dictionary else {}
+	var transition_current_ids := _summary_player_ids(transition_summary, "current_players")
+	var transition_outgoing_ids := _summary_player_ids(transition_summary, "outgoing_players")
+	await get_tree().create_timer(MusicAudio.CONTEXT_CROSSFADE_DURATION_SEC + 0.12).timeout
+	var settled_summary: Dictionary = MusicAudio.validation_summary()
+	var checks := {
+		"window_size_exact": get_window().size == viewport_size,
+		"menu_context_exact": String(menu_summary.get("current_context_id", "")) == "menu" and int(menu_summary.get("current_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS,
+		"transition_context_exact": String(transition_summary.get("current_context_id", "")) == "overworld" and String(record.get("context_id", "")) == "overworld" and String(record.get("source", "")) == "overworld_shell_refresh",
+		"transition_groups_exact": int(transition_summary.get("active_player_count", 0)) == MusicAudio.MAX_TRANSITION_PLAYERS and transition_outgoing_ids == menu_ids and transition_current_ids.size() == MusicAudio.MAX_ACTIVE_PLAYERS and _player_groups_disjoint(transition_current_ids, transition_outgoing_ids),
+		"transition_cue_exact": String(record.get("cue_id", "")) == "music_overworld_embercourt_theme",
+		"settled_exact": int(settled_summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS and int(settled_summary.get("outgoing_player_count", -1)) == 0 and not bool(settled_summary.get("transition_active", true)) and _summary_player_ids(settled_summary, "current_players") == transition_current_ids and _players_reach_targets(settled_summary),
+		"session_authority_exact": session.to_dict() == authority_before,
+	}
+	frame.queue_free()
+	menu_shell.queue_free()
+	SessionState.set_active_session(null)
+	MusicAudio.validation_reset()
+	await get_tree().process_frame
+	return {
+		"ok": not checks.values().has(false),
+		"viewport_size": viewport_size,
+		"checks": checks,
+		"record": record,
+		"menu_summary": menu_summary,
+		"transition_summary": transition_summary,
+		"settled_summary": settled_summary,
+	}
+
+func _summary_player_ids(summary: Dictionary, key: String) -> Array[int]:
+	var ids: Array[int] = []
+	var rows: Array = summary.get(key, []) if summary.get(key, []) is Array else []
+	for row_value in rows:
+		if row_value is Dictionary:
+			ids.append(int(row_value.get("instance_id", 0)))
+	return ids
+
+func _player_groups_disjoint(left: Array[int], right: Array[int]) -> bool:
+	return not _arrays_overlap(left, right)
+
+func _arrays_overlap(left: Array[int], right: Array[int]) -> bool:
+	for value in left:
+		if right.has(value):
+			return true
+	return false
+
+func _players_begin_silent(summary: Dictionary) -> bool:
+	var rows: Array = summary.get("current_players", []) if summary.get("current_players", []) is Array else []
+	if rows.size() != MusicAudio.MAX_ACTIVE_PLAYERS:
+		return false
+	for row_value in rows:
+		if not (row_value is Dictionary) or float(row_value.get("volume_db", 0.0)) > MusicAudio.CONTEXT_CROSSFADE_SILENCE_DB + 0.1:
+			return false
+	return true
+
+func _players_reach_targets(summary: Dictionary) -> bool:
+	var rows: Array = summary.get("current_players", []) if summary.get("current_players", []) is Array else []
+	if rows.size() != MusicAudio.MAX_ACTIVE_PLAYERS:
+		return false
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			return false
+		if absf(float(row_value.get("volume_db", 0.0)) - float(row_value.get("target_volume_db", 999.0))) > 0.1:
+			return false
+	return true
 
 func _town_shell_route_row(viewport_size: Vector2i, faction_id: String) -> Dictionary:
 	get_window().size = viewport_size

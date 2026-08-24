@@ -58085,6 +58085,20 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_outcome_victory_theme",
             "music_outcome_defeat_theme",
             "MAX_ACTIVE_PLAYERS",
+            "MAX_TRANSITION_PLAYERS := MAX_ACTIVE_PLAYERS * 2",
+            "CONTEXT_CROSSFADE_DURATION_SEC := 0.36",
+            "CONTEXT_CROSSFADE_SILENCE_DB := -60.0",
+            "func _begin_context_crossfade",
+            "func _on_context_crossfade_finished",
+            "func _cancel_transition_for_replacement",
+            "func _kill_transition_tween",
+            "func _player_target_volume_db",
+            "func _transition_snapshot",
+            'player.set_meta("music_target_volume_db"',
+            'tween_property(player, "volume_db", CONTEXT_CROSSFADE_SILENCE_DB',
+            'tween_property(player, "volume_db", _player_target_volume_db(player)',
+            "_transition_tween.set_parallel(true)",
+            "generation != _transition_generation",
             "audio_bus",
             "Music",
             "SettingsService.music_audio_bus_name",
@@ -58169,6 +58183,37 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             errors,
             "MusicAudio must resolve one exact cue before signature-owned playback layers",
         )
+        sync_context_block = music_text[
+            music_text.index("func sync_context"):
+            music_text.index("func stop_music")
+        ]
+        ensure('stop_music("signature_changed")' not in sync_context_block, errors, "MusicAudio changed signatures must not synchronously destroy the outgoing context")
+        ensure(
+            sync_context_block.index("if signature == _current_signature and not _active_players.is_empty():")
+            < sync_context_block.index("_cancel_transition_for_replacement()")
+            < sync_context_block.index("var outgoing := _copy_player_group(_current_players)")
+            < sync_context_block.index("incoming = _play_layers(_current_layers, not outgoing.is_empty())")
+            < sync_context_block.index("_current_players = incoming")
+            < sync_context_block.index("_begin_context_crossfade(outgoing, incoming, source, normalized, cue_id)"),
+            errors,
+            "MusicAudio must preserve stable signatures, retire only stale outgoing players, start the exact incoming group, and then begin one bounded crossfade",
+        )
+        crossfade_block = music_text[
+            music_text.index("func _begin_context_crossfade"):
+            music_text.index("func _on_context_crossfade_finished")
+        ]
+        ensure(crossfade_block.count("tween_property(player") == 2, errors, "MusicAudio crossfade must contain exactly one outgoing and one incoming volume tween")
+        ensure(crossfade_block.index("_transition_generation += 1") < crossfade_block.index("var generation := _transition_generation") < crossfade_block.index("_transition_tween.finished.connect(_on_context_crossfade_finished.bind(generation))"), errors, "MusicAudio crossfade callback must be generation-owned")
+        stop_block = music_text[
+            music_text.index("func stop_music"):
+            music_text.index("func validation_reset")
+        ]
+        ensure(stop_block.index("_transition_generation += 1") < stop_block.index("_kill_transition_tween()") < stop_block.index("player.queue_free()"), errors, "MusicAudio explicit stop must invalidate the tween before immediately freeing every player")
+        play_layers_block = music_text[
+            music_text.index("func _play_layers"):
+            music_text.index("func _play_imported_layer")
+        ]
+        ensure("if started.size() >= MAX_ACTIVE_PLAYERS:" in play_layers_block, errors, "MusicAudio must cap each incoming context at exactly three layers independent of the outgoing transition group")
 
     required_music_cue_ids = (
         "music_menu_theme",
@@ -58443,7 +58488,28 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "AudioStreamWAV.LOOP_FORWARD",
             "validation_outcome_repeat_after_loop",
             "continuous_active_player_count",
-            "route must own exactly three active music players",
+            "MAX_TRANSITION_PLAYERS",
+            "crossfade_lifecycle",
+            "shell_transition_rows",
+            "_crossfade_lifecycle_case",
+            "_menu_to_overworld_transition_row",
+            "crossfade_validation_explicit_stop",
+            "overworld_incoming_silent",
+            "rapid_outgoing_is_latest_exact",
+            "stale_initial_retired",
+            "stable_no_restart",
+            "settled_identity_exact",
+            "explicit_stop_immediate",
+            "transition_groups_exact",
+            'String(record.get("source", "")) == "overworld_shell_refresh"',
+            '"session_authority_exact": session.to_dict() == authority_before',
+            "_players_begin_silent",
+            "_players_reach_targets",
+            "_validate_muted_context",
+            "SettingsService.set_music_volume_percent(0)",
+            "SettingsService.set_music_volume_percent(original_music_volume)",
+            '"validation_muted_context"',
+            "Muted context must create no current, outgoing, or active players",
             '"generated_waveform"',
             "TownShell.tscn",
             "_town_shell_route_row",
@@ -58481,6 +58547,23 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             '"session_authority_exact": session.to_dict() == session_before',
         ):
             ensure(required_token in report_text, errors, f"Music audio runtime report is missing required token: {required_token}")
+        crossfade_case = report_text[
+            report_text.index("func _crossfade_lifecycle_case"):
+            report_text.index("func _menu_to_overworld_transition_row")
+        ]
+        for forbidden in (
+            "MusicAudio.set(",
+            "AudioStreamPlayer.new()",
+            "_begin_context_crossfade",
+            "_on_context_crossfade_finished",
+            "_free_player_group",
+            "volume_db =",
+        ):
+            ensure(forbidden not in crossfade_case, errors, f"Music crossfade focused control must observe only the public lifecycle, not mutate production internals: {forbidden}")
+        ensure(crossfade_case.count("MusicAudio.sync_context") == 4, errors, "Music crossfade focused lifecycle must use exactly initial, changed, rapid replacement, and stable public sync calls")
+        ensure(crossfade_case.index('MusicAudio.sync_context("overworld"') < crossfade_case.index('MusicAudio.sync_context("town"') < crossfade_case.index('MusicAudio.stop_music("crossfade_validation_explicit_stop")'), errors, "Music crossfade focused lifecycle must observe changed, rapid replacement, settle, then explicit stop in order")
+        ensure(report_text.count("SettingsService.set_music_volume_percent(0)") == 1, errors, "Music focused report must mute the public music setting exactly once")
+        ensure(report_text.count("SettingsService.set_music_volume_percent(original_music_volume)") == 1, errors, "Music focused report must restore the exact original music setting once")
 
     if TOWN_SCRIPT_PATH.exists():
         town_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -58529,6 +58612,11 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "LOOP_FORWARD",
             "all three players still active after a full segment",
             "seventy-five byte-distinct original layered stereo loops",
+            "linearly crossfades both groups over 360 ms",
+            "transition state is capped at six",
+            "rapid third route invalidates the older tween generation",
+            "Explicit `stop_music(...)` and validation reset remain immediate",
+            "No beat/bar synchronization or adaptive soundtrack redesign",
             "Not final music composition",
             "No final music stems",
         ):
