@@ -51,6 +51,10 @@ SPELLS = (
     ("spell_furnace_brass_bellows_23", "furnace"),
     ("spell_furnace_ash_mantle_09", "furnace"),
     ("spell_furnace_ash_rail_25", "furnace"),
+    ("spell_root_canopy_thorn_22", "root"),
+    ("spell_root_bark_bark_08", "root"),
+    ("spell_root_bark_rootway_24", "root"),
+    ("spell_root_bloom_bark_20", "root"),
 )
 
 
