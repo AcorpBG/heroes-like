@@ -1361,6 +1361,17 @@ func _drive_campaign_chapter_to_victory_outcome(
 			_fail("Could not claim the authored River Pass support site before objective clearing.", free_company_claim)
 			return {"ok": false}
 		current_overworld = free_company_claim.get("scene", current_overworld)
+	elif scenario_id == "reedbarrow-ferry":
+		var peatwax_claim := await _claim_overworld_validation_target(
+			current_overworld,
+			"resource",
+			"murkward_peatwax_yard",
+			"%s_support_site_claimed_murkward_peatwax_yard" % step_prefix
+		)
+		if not bool(peatwax_claim.get("ok", false)):
+			_fail("Could not follow Reedbarrow's authored peatwax-yard route before the levee objectives.", peatwax_claim)
+			return {"ok": false}
+		current_overworld = peatwax_claim.get("scene", current_overworld)
 
 	if scenario_id == "causeway-stand":
 		return await _drive_causeway_chapter_to_victory_outcome(current_overworld, step_prefix)

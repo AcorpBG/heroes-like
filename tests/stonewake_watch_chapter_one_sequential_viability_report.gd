@@ -2,6 +2,7 @@ extends Node
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
+const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 const REPORT_ID := "STONEWAKE_WATCH_CHAPTER_ONE_SEQUENTIAL_VIABILITY_REPORT"
@@ -10,7 +11,8 @@ const LOCAL_ARMY_ID := "army_stonewake_basin_watch"
 const SHARED_ARMY_ID := "army_ashgrove_watch"
 const REQUIRED_ENCOUNTERS := ["stonewake_reed_totemists", "willow_mill", "sluice_band"]
 const CONTROL_OPENING_GUARDS := 9
-const SELECTED_OPENING_GUARDS := 25
+const REINFORCEMENT_HOOK_ID := "reed_totemist_survivors_rally"
+const SELECTED_REINFORCEMENT_GUARDS := 16
 const TOWN_RECRUIT_GUARDS := 11
 
 var _failed := false
@@ -23,10 +25,10 @@ func _run() -> void:
 	var content_contract := _assert_content_contract()
 	if _failed:
 		return
-	var control := _run_sequence(CONTROL_OPENING_GUARDS)
+	var control := _run_sequence(false)
 	if _failed:
 		return
-	var selected := _run_sequence(SELECTED_OPENING_GUARDS)
+	var selected := _run_sequence(true)
 	if _failed:
 		return
 	if control.get("states", []) != ["victory", "victory", "defeat"]:
@@ -36,7 +38,10 @@ func _run() -> void:
 		_fail("Scenario-local army did not complete the exact encounter and town sequence: %s" % JSON.stringify(selected))
 		return
 	if selected.get("post_battle_guard_counts", []) != [36, 30, 21, 21]:
-		_fail("Scenario-local sequence changed its exact survivor contract: %s" % JSON.stringify(selected))
+		_fail("Staged-reinforcement sequence changed its exact survivor contract: %s" % JSON.stringify(selected))
+		return
+	if selected.get("reinforcement_fired_ids", []) != [REINFORCEMENT_HOOK_ID] or not bool(selected.get("army_mirrors_exact", false)):
+		_fail("Stonewake staged reinforcement did not fire once with exact active-army mirrors: %s" % JSON.stringify(selected))
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -48,8 +53,8 @@ func _run() -> void:
 
 func _assert_content_contract() -> Dictionary:
 	var scenario: Dictionary = ContentService.get_scenario(SCENARIO_ID)
-	if String(scenario.get("player_army_id", "")) != LOCAL_ARMY_ID:
-		_fail("Stonewake Watch does not use its scenario-local army.")
+	if String(scenario.get("player_army_id", "")) != SHARED_ARMY_ID:
+		_fail("Stonewake Watch does not use the shared opening army.")
 		return {}
 	var local_counts := _stack_counts(ContentService.get_army_group(LOCAL_ARMY_ID))
 	var shared_counts := _stack_counts(ContentService.get_army_group(SHARED_ARMY_ID))
@@ -58,23 +63,29 @@ func _assert_content_contract() -> Dictionary:
 	if local_counts != expected_local or shared_counts != expected_shared:
 		_fail("Stonewake local/shared army contracts drifted: local=%s shared=%s" % [JSON.stringify(local_counts), JSON.stringify(shared_counts)])
 		return {}
-	for later_id in ["reedbarrow-ferry", "nightglass-redoubt"]:
-		if String(ContentService.get_scenario(later_id).get("player_army_id", "")) != SHARED_ARMY_ID:
-			_fail("Later Stonewake chapter %s no longer uses the shared army." % later_id)
+	var reinforcement_hook := _script_hook(scenario, REINFORCEMENT_HOOK_ID)
+	if not _reinforcement_hook_exact(reinforcement_hook, "stonewake_reed_totemists", SELECTED_REINFORCEMENT_GUARDS, "Freed basin wardens rally behind Caelen after the reed totems fall, bringing the field watch back to marching strength."):
+		_fail("Stonewake first-victory reinforcement contract drifted: %s" % JSON.stringify(reinforcement_hook))
+		return {}
+	for chapter_id in [SCENARIO_ID, "reedbarrow-ferry", "nightglass-redoubt"]:
+		if String(ContentService.get_scenario(chapter_id).get("player_army_id", "")) != SHARED_ARMY_ID:
+			_fail("Stonewake chapter %s no longer uses the shared opening army." % chapter_id)
 			return {}
-	return {"local_army_id": LOCAL_ARMY_ID, "local_counts": local_counts, "shared_army_id": SHARED_ARMY_ID, "shared_counts": shared_counts, "later_chapters_shared": true}
+	return {"screened_local_control_id": LOCAL_ARMY_ID, "screened_local_control_counts": local_counts, "shared_army_id": SHARED_ARMY_ID, "shared_counts": shared_counts, "reinforcement_hook": reinforcement_hook, "all_chapters_shared": true}
 
-func _run_sequence(opening_guard_count: int) -> Dictionary:
+func _run_sequence(use_authored_reinforcement: bool) -> Dictionary:
 	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
 		SCENARIO_ID,
 		"normal",
 		SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN
 	)
-	var prepared_army := ContentService.get_army_group(LOCAL_ARMY_ID)
+	if not use_authored_reinforcement:
+		_suppress_reinforcement_hook(session)
+	var prepared_army := ContentService.get_army_group(SHARED_ARMY_ID)
 	prepared_army["stacks"] = prepared_army.get("stacks", []).duplicate(true)
 	for stack in prepared_army.get("stacks", []):
 		if stack is Dictionary and String(stack.get("unit_id", "")) == "unit_river_guard":
-			stack["count"] = opening_guard_count + TOWN_RECRUIT_GUARDS
+			stack["count"] = CONTROL_OPENING_GUARDS + TOWN_RECRUIT_GUARDS
 	_set_live_army(session, prepared_army)
 	var rows := []
 	var states := []
@@ -101,7 +112,49 @@ func _run_sequence(opening_guard_count: int) -> Dictionary:
 		rows.append({"placement_id": "murkward_ford", "entry_counts": town_entry, "state": town_state, "guard_count": town_guards})
 		states.append(town_state)
 		post_counts.append(town_guards)
-	return {"opening_guard_count": opening_guard_count, "prepared_guard_count": opening_guard_count + TOWN_RECRUIT_GUARDS, "states": states, "post_battle_guard_counts": post_counts, "rows": rows}
+	var fired_ids: Array = session.overworld.get("scenario_script_state", {}).get("fired_hook_ids", [])
+	return {
+		"opening_guard_count": CONTROL_OPENING_GUARDS,
+		"prepared_guard_count": CONTROL_OPENING_GUARDS + TOWN_RECRUIT_GUARDS,
+		"reinforcement_guard_count": SELECTED_REINFORCEMENT_GUARDS if use_authored_reinforcement else 0,
+		"reinforcement_fired_ids": [REINFORCEMENT_HOOK_ID] if use_authored_reinforcement and REINFORCEMENT_HOOK_ID in fired_ids else [],
+		"army_mirrors_exact": _army_mirrors_exact(session),
+		"states": states,
+		"post_battle_guard_counts": post_counts,
+		"rows": rows,
+	}
+
+func _suppress_reinforcement_hook(session: SessionStateStoreScript.SessionData) -> void:
+	ScenarioScriptRulesScript.normalize_script_state(session)
+	var state: Dictionary = session.overworld.get("scenario_script_state", {})
+	state["fired_hook_ids"] = [REINFORCEMENT_HOOK_ID]
+	session.overworld["scenario_script_state"] = state
+
+func _script_hook(scenario: Dictionary, hook_id: String) -> Dictionary:
+	for value in scenario.get("script_hooks", []):
+		if value is Dictionary and String(value.get("id", "")) == hook_id:
+			return value.duplicate(true)
+	return {}
+
+func _reinforcement_hook_exact(hook: Dictionary, placement_id: String, guard_count: int, message: String) -> bool:
+	var effects: Array = hook.get("effects", [])
+	var units: Dictionary = effects[0].get("units", {}) if effects.size() == 2 and effects[0] is Dictionary else {}
+	return hook.get("conditions", []) == [{"type": "encounter_resolved", "placement_id": placement_id}] \
+		and effects.size() == 2 \
+		and String(effects[0].get("type", "")) == "add_army_units" \
+		and units.size() == 1 and int(units.get("unit_river_guard", 0)) == guard_count \
+		and effects[1] is Dictionary and String(effects[1].get("type", "")) == "message" \
+		and String(effects[1].get("text", "")) == message
+
+func _army_mirrors_exact(session: SessionStateStoreScript.SessionData) -> bool:
+	var army: Dictionary = session.overworld.get("army", {})
+	var hero: Dictionary = session.overworld.get("hero", {})
+	if hero.get("army", {}) != army:
+		return false
+	for value in session.overworld.get("player_heroes", []):
+		if value is Dictionary and String(value.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			return value.get("army", {}) == army
+	return false
 
 func _set_live_army(session: SessionStateStoreScript.SessionData, army: Dictionary) -> void:
 	session.overworld["army"] = army.duplicate(true)

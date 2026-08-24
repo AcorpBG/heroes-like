@@ -262,6 +262,8 @@ static func _apply_effect(session: SessionStateStoreScript.SessionData, effect: 
 				String(effect.get("placement_id", "")),
 				effect.get("garrison", {})
 			)
+		"add_army_units":
+			return _add_army_units(session, effect.get("units", {}))
 		"add_enemy_pressure":
 			return _add_enemy_pressure(
 				session,
@@ -474,6 +476,35 @@ static func _town_add_garrison(session: SessionStateStoreScript.SessionData, pla
 		var town_label = _town_name(town) if _placement_is_visible(session, town) else "A town beyond current scouting"
 		return {"messages": ["%s garrisons %s." % [town_label, summary]]}
 	return {"messages": []}
+
+static func _add_army_units(session: SessionStateStoreScript.SessionData, units: Variant) -> Dictionary:
+	if session == null or not (units is Dictionary) or units.is_empty():
+		return {"messages": []}
+	var army: Dictionary = session.overworld.get("army", {}).duplicate(true) if session.overworld.get("army", {}) is Dictionary else {}
+	if army.is_empty():
+		return {"messages": []}
+	var stacks: Array = army.get("stacks", []).duplicate(true) if army.get("stacks", []) is Array else []
+	var unit_ids: Array = units.keys()
+	unit_ids.sort()
+	var added := {}
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var count: int = max(0, int(units.get(unit_id_value, 0)))
+		if unit_id == "" or count <= 0 or ContentService.get_unit(unit_id).is_empty():
+			continue
+		stacks = _overworld_rules()._add_army_stack(stacks, unit_id, count)
+		added[unit_id] = count
+	if added.is_empty():
+		return {"messages": []}
+	army["stacks"] = stacks
+	session.overworld["army"] = army
+	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true) if session.overworld.get("hero", {}) is Dictionary else {}
+	if not hero.is_empty():
+		hero["army"] = army.duplicate(true)
+		session.overworld["hero"] = hero
+	HeroCommandRulesScript.commit_active_hero(session)
+	var summary := _describe_recruits(added)
+	return {"messages": ["Field reinforcements join the active army (%s)." % summary]} if summary != "" else {"messages": []}
 
 static func _append_event_log(session: SessionStateStoreScript.SessionData, hook_id: String, messages: Array) -> void:
 	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})

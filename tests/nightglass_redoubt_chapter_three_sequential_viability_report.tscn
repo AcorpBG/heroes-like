@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/nightglass_redoubt_chapter_three_sequential_viability_report.gd" type="Script" id="1"]
+
+[node name="NightglassRedoubtChapterThreeSequentialViabilityReport" type="Node"]
+script = ExtResource("1")

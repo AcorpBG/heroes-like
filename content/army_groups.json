@@ -76,6 +76,26 @@
       ]
     },
     {
+      "id": "army_reedbarrow_ferry_watch",
+      "name": "Reedbarrow Ferry Watch",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 20},
+        {"unit_id": "unit_ember_archer", "count": 4},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
+      "id": "army_nightglass_redoubt_watch",
+      "name": "Nightglass Redoubt Watch",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 32},
+        {"unit_id": "unit_ember_archer", "count": 4},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
       "id": "army_stonewake_basin_watch",
       "name": "Stonewake Basin Watch",
       "faction_id": "faction_embercourt",

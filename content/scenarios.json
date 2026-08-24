@@ -951,7 +951,7 @@
       },
       "map_size": {"width": 10, "height": 6},
       "player_faction_id": "faction_embercourt",
-      "player_army_id": "army_stonewake_basin_watch",
+      "player_army_id": "army_ashgrove_watch",
       "hero_id": "hero_caelen",
       "starting_resources": {"gold": 1400, "wood": 4, "ore": 3},
       "map": [
@@ -994,6 +994,20 @@
             {
               "type": "message",
               "text": "Millwright wagons roll into Highwater with grain tallies, spare tools, and a fresh levy from the basin farms."
+            }
+          ]
+        },
+        {
+          "id": "reed_totemist_survivors_rally",
+          "priority": 115,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "stonewake_reed_totemists"}
+          ],
+          "effects": [
+            {"type": "add_army_units", "units": {"unit_river_guard": 16}},
+            {
+              "type": "message",
+              "text": "Freed basin wardens rally behind Caelen after the reed totems fall, bringing the field watch back to marching strength."
             }
           ]
         },
@@ -1221,9 +1235,24 @@
           "effects": [
             {"type": "add_resources", "resources": {"gold": 200, "wood": 1}},
             {"type": "town_add_recruits", "placement_id": "murkward_bridgehead", "recruits": {"unit_river_guard": 1, "unit_ember_archer": 1}},
+            {"type": "town_add_garrison", "placement_id": "murkward_bridgehead", "garrison": {"unit_river_guard": 32}},
             {
               "type": "message",
               "text": "Willow Mill boatmen slip downriver with grain, dry bowstrings, and a veteran file for the bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "levee_totemist_survivors_rally",
+          "priority": 115,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "reedbarrow_levee_totemists"}
+          ],
+          "effects": [
+            {"type": "add_army_units", "units": {"unit_river_guard": 11}},
+            {
+              "type": "message",
+              "text": "Levee wardens cut loose from the broken totems and join Caelen's field column for the ferry advance."
             }
           ]
         },
@@ -1479,6 +1508,20 @@
             {
               "type": "message",
               "text": "Cut ferry chains leave enough intact hulls for veterans, ore, and spare shot to reinforce the bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "bone_ferry_survivors_rally",
+          "priority": 115,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "nightglass_bone_ferry_watch"}
+          ],
+          "effects": [
+            {"type": "add_army_units", "units": {"unit_river_guard": 23}},
+            {
+              "type": "message",
+              "text": "Freed ferry crews and marsh wardens form behind Caelen once the Bone Ferry screen breaks, ready for the causeway."
             }
           ]
         },
