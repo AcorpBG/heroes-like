@@ -1802,6 +1802,7 @@
             {"type": "objective_met", "objective_id": "clear_lantern_patrol"}
           ],
           "effects": [
+            {"type": "add_army_units", "units": {"unit_blackbranch_cutthroat": 40}},
             {
               "type": "spawn_resource_node",
               "placement": {
@@ -1813,7 +1814,7 @@
             },
             {
               "type": "message",
-              "text": "When the Lantern Patrol breaks, mire scouts drag a seized waystone cache back onto the road."
+              "text": "When the Lantern Patrol breaks, Reed-Watcher cutters rally behind Vaska while mire scouts drag a seized waystone cache back onto the road."
             }
           ]
         },
@@ -2061,6 +2062,21 @@
           ]
         },
         {
+          "id": "reed_watcher_slingers_cross_the_bridge",
+          "priority": 105,
+          "conditions": [
+            {"type": "flag_true", "flag": "carryover_lantern_patrol_broken"},
+            {"type": "encounter_resolved", "placement_id": "charter_bridgeward_levies"}
+          ],
+          "effects": [
+            {"type": "add_army_units", "units": {"unit_mire_slinger": 15}},
+            {
+              "type": "message",
+              "text": "Once the bridgeward column breaks, fifteen Reed-Watcher sling crews cross from Riverwatch and rejoin Vaska for the granary push."
+            }
+          ]
+        },
+        {
           "id": "highwater_storehouses_open",
           "priority": 100,
           "conditions": [
@@ -2302,6 +2318,20 @@
           ]
         },
         {
+          "id": "reed_watchers_cross_the_firebreak",
+          "priority": 99,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "break_road_chaplains"}
+          ],
+          "effects": [
+            {"type": "add_army_units", "units": {"unit_blackbranch_cutthroat": 31}},
+            {
+              "type": "message",
+              "text": "With the road chaplains broken, the final thirty-one Reed-Watcher cutters cross the firebreak and reform around Vaska for the Highwater assault."
+            }
+          ]
+        },
+        {
           "id": "charter_ledger_breach",
           "priority": 95,
           "conditions": [
@@ -2312,6 +2342,20 @@
             {
               "type": "message",
               "text": "The charter guard breaks with Highwater's ledgers in tow, gifting Vaska the basin's last tally rod."
+            }
+          ]
+        },
+        {
+          "id": "reed_watchers_break_the_archive_seal",
+          "priority": 94,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "break_archive_wardens"}
+          ],
+          "effects": [
+            {"type": "add_army_units", "units": {"unit_blackbranch_cutthroat": 11}},
+            {
+              "type": "message",
+              "text": "With the archive wardens broken, eleven Reed-Watcher cutters emerge from the flooded ledger vaults and join Vaska for the final assault on Highwater."
             }
           ]
         },

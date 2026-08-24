@@ -1,8 +1,8 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence."
   ],
-  "active_slice": {
+  "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
         "blocker": "Same-run final payload comparison still blocks first at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload after source-backed final object definition wrapper order was corrected.",
@@ -692,7 +692,7 @@
       ".artifacts/rmg_native_selector_mask_arg/final_payload_compare.json"
     ],
     "latestEvidenceId": "native-rmg-4ba938-selector-mask-stack-slot-20260708",
-    "latestFinding": "Native RMG source-order alignment remains in progress and final parity remains blocked. h3maped_rmg_core now separates the recovered 0x4ba938 selector stack roles: the first argument is the 0x4bce6d neighbor/probability mask and the second argument is the current-row preserve value. Ordinary 0x4bcfc3 calls now pass neighbor_mask,-1 and final-sweep current-record calls pass neighbor_mask,current_art_row; the probability threshold uses the source unsigned logical SHR on the mask argument. Focused no-Godot Medium seed10 setup1 still reaches final_payload_compare and remains blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile stream length matches 36288/36288, first mismatch offset 1 moved from native=61 to native=53 against expected=54. Generated-object payload remains short at 10923 native bytes vs H3MapEd 17057 bytes, first object payload mismatch offset 0 native=3 expected=2. Runtime/native map output remains disabled; this is source-backed implementation progress, not parity completion.",
+    "latestFinding": "Native RMG parity and runtime adoption are completed for the selected 24-workflow supported release matrix. Public generation is authority-independent within that supported scope, and unsupported configurations fail closed. Final-payload parity is not a current blocker or remaining release requirement.",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -1909,6 +1909,20 @@
       }
     },
     "blockedReason": ""
+  },
+  "active_slice": {
+    "id": "content-bogbound-oath-reed-watcher-staged-reinforcement-10184",
+    "title": "Bogbound Oath Reed-Watcher staged reinforcement",
+    "status": "completed",
+    "classification": "implementation_slice",
+    "source": "PLAN.md",
+    "startedAt": "2026-08-24T18:12:37Z",
+    "updatedAt": "2026-08-24T22:12:33Z",
+    "completedAt": "2026-08-24T22:12:33Z",
+    "currentBlocker": "",
+    "blocker": "",
+    "blockedReason": null,
+    "notes": "Completed with exact one-shot 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat Reed-Watcher stages after the four authored victories. Focused proof retains every enemy force, all losing predecessors, army mirrors, carryover/save authority, the briefing-normalized linekeeper captain, combat seed/RNG, Bog-Brute-first Highwater formation, and five surviving Cutthroats. The real 78-step three-chapter route, preserved Archive Wardens defeat, 77/77 queue-clear breadth signature 829808c9, campaign/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged campaign interaction and broader certification/release claims remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14324,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Stonewake three-chapter staged reinforcement correction. All chapters ship the balanced shared 9/4/1 opening and use one-shot first-victory active-army hooks for the exact screened 16/11/23 River Guard differences. Stonewake, Murkward garrison, Reedbarrow, and the Nightglass 1,026-seed owner are green; active breadth completes all 77 samples with queue0/signature829808c9; the real 86-step routed client completes all three chapters with zero errors; core/static/editor checks are green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Claims remain bounded: no manual tactical or packaged campaign interaction, controller/accessibility/native-hardware certification, signing, whole-game, or release-readiness completion.",
+  "currentNotes": "Bogbound Oath's exact earned 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat stages are complete. Every enemy force remains exact; focused proof preserves all losing predecessors, one-shot/carryover/save authority, the briefing-normalized linekeeper captain, combat seed/RNG, Bog-Brute-first Highwater formation, and five selected survivors. The real 78-step three-chapter route, 77/77 queue-clear breadth signature 829808c9, compatibility, static/editor, and bounded Linux/Windows startup gates are green. Select the next tracker-approved source-backed product slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-stonewake-three-chapter-staged-reinforcement-compatibility-10184",
-  "currentSliceId": "content-stonewake-three-chapter-staged-reinforcement-compatibility-10184",
-  "currentSliceNotes": "Completed with balanced shared openings, exact one-shot 16/11/23 post-victory reinforcements, authoritative focused chapter owners, Nightglass 1,026-seed coverage, queue-clear 77-encounter breadth, and the real 86-step three-chapter route. Enemies, routes, battle/AI rules, save schema, and campaign objectives remain unchanged.",
+  "currentSlice": "content-bogbound-oath-reed-watcher-staged-reinforcement-10184",
+  "currentSliceId": "content-bogbound-oath-reed-watcher-staged-reinforcement-10184",
+  "currentSliceNotes": "Completed with exact earned 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat stages. Focused, real 78-step route, preserved Archive defeat, 77/77 breadth queue, campaign/core, static/editor, and bounded Linux/Windows startup gates are green; broader release claims remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Stonewake three-chapter staged reinforcement compatibility",
-  "currentSliceUpdatedAt": "2026-08-24T17:58:28Z",
+  "currentSliceTitle": "Bogbound Oath Reed-Watcher staged reinforcement",
+  "currentSliceUpdatedAt": "2026-08-24T22:12:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19650,7 @@
       }
     }
   },
-  "guardrailNote": "The completed Battle Shake picker slice owns only exact visual-theme parity with adjacent Settings OptionButtons. Do not infer setting semantics/default changes, other picker/layout changes, packaged Settings interaction, certification, signing/publication, Native-RMG parity, whole-game validation, or release readiness. Select the next slice from direct current product evidence.",
+  "guardrailNote": "Preserve the accepted Bogbound, Charter Pyre, and Lockmarsh enemy armies and shared Reedmaw opening. The selected slice may add only the exact screened earned post-Lantern, carried post-Bridgeward, and post-Road active-army reinforcements plus authored validation route ordering; do not weaken battles, change AI/rules/objectives, or claim packaged campaign interaction, certification, whole-game validation, or release readiness.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19784,7 +19798,7 @@
     ".artifacts/rmg_native_4a901a_identity/final_payload_compare.json"
   ],
   "latestEvidenceId": "native-rmg-4a7605-source-owned-monolith-dispatch-20260714",
-  "latestFinding": "The public homm3_extra_large identity and normalized extra_large identity now map to the already-recovered exact 144x144 workflow. Linux and Windows native self-tests, public runtime generation/adoption, core/editor/repository validation, and bounded export/startup gates pass. The production owner-corpus audit remains fail-closed on object/town/guard/road count, topology, and semantic-layout parity; broad Native RMG parity is not complete.",
+  "latestFinding": "The active Bogbound Oath staged-reinforcement slice is in progress. Native RMG is completed for the selected supported release matrix and is not a current blocker. The first three stages reach Chapter III Archive, but the authoritative client route then loses the final Highwater assault from the exact 15-Cutthroat/1-Brute state. Exact captured-payload and briefing-normalized production screens agree: ten extra Cutthroats still lose and eleven win the unchanged day-two 16/2/1 garrison with five Cutthroats surviving. The focused rerun and full routed validation chain are now active.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -19846,7 +19860,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current product evidence. Preserve completed Stonewake staged reinforcement, shared-opening breadth, and routed campaign authority; do not claim whole-game release readiness from one slice.",
+  "nextActionGuardrailNote": "Preserve the accepted Bogbound enemy armies and shared Reedmaw opening. Implement only the exact screened post-Lantern active-army reinforcement and authored validation order; do not weaken battles, change AI/rules/objectives, or claim packaged campaign interaction, certification, whole-game validation, or release readiness.",
   "notes": "The selected compatibility correction is direct gameplay work: data-driven first-victory reinforcements preserve the exact screened sequential effective armies while restoring meaningful independent encounter balance. It is not a report-only or gate-only change.",
   "plannedSlices": [
     {
@@ -53233,7 +53247,7 @@
         "Remaining package object/category, town, and guard gaps are explicitly visible in the owner-corpus gate until corrected by the next implementation pass.",
         "No uploaded .h3m, generated .amap, or generated .ascenario evidence is committed."
       ],
-      "deferredReason": "Replaced as active work by generalized RMG policy re-gate; do not continue one-off count fitting.",
+      "deferredReason": "Superseded by the completed supported 24-workflow Native RMG matrix; do not resume one-off owner-sample count fitting.",
       "id": "native-rmg-owner-small-islands-underground-corpus-road-checkpoint-10184",
       "implementationTargets": [
         "src/gdextension/src/map_package_service.cpp",
@@ -53245,7 +53259,7 @@
         "No completion claim for the Small islands two-level owner sample yet.",
         "No broad Small islands, underground, or full HoMM3 production parity claim."
       ],
-      "notes": "Paused because continued owner-H3M sample-by-sample exact-count fitting is not a production RMG path. The Small islands two-level sample remains useful as corpus evidence: road topology matched in the checkpoint, while object/town/guard/category gaps should now drive generalized policy work rather than new sample-count runtime branches.",
+      "notes": "Superseded historical checkpoint. Continued owner-H3M sample-by-sample exact-count fitting is not a production RMG path, and the later supported 24-workflow Native RMG matrix is complete. The Small islands two-level sample remains corpus evidence only.",
       "pausedAt": "2026-05-07T10:46:48Z",
       "phase": "phase-3-homm3-style-rmg-rework",
       "purpose": "Promote the uploaded Small islands two-level owner sample into the hard owner-corpus native comparison path and checkpoint the first road-topology correction for manual review before finishing object/category, town, and guard parity.",
@@ -53257,7 +53271,7 @@
         "maps/h3m-maps/S-RandomNumberofplayers-islands-2level.h3m"
       ],
       "startedAt": "2026-05-07T10:17:36Z",
-      "status": "paused",
+      "status": "superseded",
       "title": "Native RMG Owner Small Islands Underground Corpus Road Checkpoint",
       "updatedAt": "2026-05-07T10:46:48Z",
       "validationResults": [
@@ -62337,8 +62351,8 @@
         "save/load and outcome loops",
         "AI pressure and economy viability"
       ],
-      "notes": "No alpha claim based on content breadth alone. Current recovery queue is RMG-only until explicit owner direction changes it.",
-      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only.",
+      "notes": "No alpha claim based on content breadth alone. This umbrella remains paused while bounded tracker-selected production slices are completed.",
+      "pausedReason": "Future-phase umbrella only; not blocked by Native RMG and not part of the current active queue.",
       "phase": "phase-5-playable-alpha-baseline",
       "sourceDocs": [
         "completed Phase 2 outputs",
@@ -62360,8 +62374,8 @@
         "save/load",
         "help/onboarding surfaces"
       ],
-      "notes": "No panel-heavy dashboard composition or unprioritized cue stream. Current recovery queue is RMG-only until explicit owner direction changes it.",
-      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only.",
+      "notes": "No panel-heavy dashboard composition or unprioritized cue stream. This umbrella remains paused while bounded tracker-selected production slices are completed.",
+      "pausedReason": "Future-phase umbrella only; not blocked by Native RMG and not part of the current active queue.",
       "phase": "phase-5-playable-alpha-baseline",
       "sourceDocs": [
         "docs/screen-wireframes.md",
@@ -62378,8 +62392,8 @@
         "campaign/skirmish expansion",
         "difficulty and AI stability"
       ],
-      "notes": "No content dump that bypasses validation or live-flow proof. Current recovery queue is RMG-only until explicit owner direction changes it.",
-      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only.",
+      "notes": "No content dump that bypasses validation or live-flow proof. This umbrella remains paused while bounded tracker-selected production slices are completed.",
+      "pausedReason": "Future-phase umbrella only; not blocked by Native RMG and not part of the current active queue.",
       "phase": "phase-6-production-alpha-layer",
       "sourceDocs": [
         "completed Phase 2-4 outputs",
@@ -62396,8 +62410,8 @@
         "settings/accessibility baseline",
         "performance budgets and checks"
       ],
-      "notes": "No release claim. Current recovery queue is RMG-only until explicit owner direction changes it.",
-      "pausedReason": "Paused during RMG parity recovery; not part of the current active queue. Preserve as future-phase planning only.",
+      "notes": "No release claim. This umbrella remains paused while bounded tracker-selected production slices are completed.",
+      "pausedReason": "Future-phase umbrella only; not blocked by Native RMG and not part of the current active queue.",
       "phase": "phase-6-production-alpha-layer",
       "sourceDocs": [
         "future packaging/settings/accessibility/performance requirements"
@@ -74093,14 +74107,14 @@
         "jq empty ops/progress.json",
         "git diff --check"
       ],
-      "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
+      "blocker": "",
       "classification": "implementation_slice",
       "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-      "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Implemented source-backed generated-cell span-gate alignment in h3maped_rmg_core: 0x4a5767 preserves the recovered single-reference first-pass coordinate path, 0x4a89da now skips candidate marking for any positive object-reference span, 0x4a8260 initial object-span bit26/bit27 classification is explicit, and 0x4a4c8e no longer spreads bit26 candidates across a 3x3 neighborhood while preserving the 3x3 0x49a932(false) clear pass. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 11082 vs 17057; native 0x49eb8d bit26 candidates 3264 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
-      "currentSliceNotes": "Implemented source-backed generated-cell span-gate alignment in h3maped_rmg_core: 0x4a5767 preserves the recovered single-reference first-pass coordinate path, 0x4a89da now skips candidate marking for any positive object-reference span, 0x4a8260 initial object-span bit26/bit27 classification is explicit, and 0x4a4c8e no longer spreads bit26 candidates across a 3x3 neighborhood while preserving the 3x3 0x49a932(false) clear pass. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 11082 vs 17057; native 0x49eb8d bit26 candidates 3264 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
+      "currentBlocker": "",
+      "currentNotes": "Native RMG parity and runtime adoption are complete for the selected 24-workflow supported release matrix. Public generation is authority-independent inside that scope; unsupported configurations fail closed.",
+      "currentSliceNotes": "Native RMG parity and runtime adoption are complete for the selected 24-workflow supported release matrix. Public generation is authority-independent inside that scope; unsupported configurations fail closed.",
       "currentSliceUpdatedAt": "2026-07-08T02:54:14Z",
-      "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation. Do not reopen reverse engineering unless Python/Ghidra evidence contradicts the authority artifacts, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary.",
+      "guardrailNote": "Keep the completed supported 24-workflow Native RMG matrix and authority-independent public package/session adoption intact. Unsupported configurations remain intentionally fail closed; do not generalize the supported matrix into arbitrary H3MapEd configuration parity or reintroduce density scalars, speculative gates, brute-force retries, GDScript reports, or final-map delta tuning.",
       "id": "rmg-small-generalization-hardening-10184",
       "implementationTargets": [
         "native Small/Medium one-level land RMG alignment to H3MapEd authority replay",
@@ -74220,7 +74234,7 @@
         ".artifacts/rmg_recovery/ghidra_object_table_loader_dump_20260610/target_0049d914_FUN_0049d914.txt"
       ],
       "latestEvidenceId": "native-rmg-49d914-backing-state-constructor-20260706",
-      "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. The no-Godot standalone CLI now completes the Medium seed10 same-run 0x49ecf2 setup authority for the focused controlled case: captured prefix args 0..6, recovered setup fields +0x34/+0x38/+0x3c/+0x40, prepared arg8=2, live 0x4adfe1 caller arg9=3274172, and setup +0x44/+0x4c complete the authority stack while native keeps its non-null direct-entry sentinel for arg9. Focused Medium seed10 setup0 now reaches same-run final payload comparison with authority scope matching and compare invoked. It blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile payload first mismatch offset 0 native=4 expected=2, generated-object payload first mismatch offset 0 native=3 expected=2, native generated-object payload is 13135 bytes vs H3MapEd 17057, and native generated-object count is 1039 vs H3MapEd 1212. Runtime/native map output remains disabled.",
+      "latestFinding": "Native RMG parity and runtime adoption are complete for the selected 24-workflow supported release matrix. Public generation is authority-independent inside that scope; unsupported configurations fail closed. The earlier focused final-payload mismatch remains historical validation evidence, not a current blocker or remaining requirement.",
       "metrics": {
         "4a9641_4a98f0_sampled_projection_write_count": 319,
         "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -75057,7 +75071,7 @@
         },
         "remainingWork": "Align upstream generated-cell/TerrainPlacement state before 0x49b2b6 and generated-object materialization/count/order before 0x4ad3eb against the same-run H3MapEd payload. Runtime/native map output stays disabled until tile/object payload parity is source-owned."
       },
-      "blockedReason": "native_0x49d914_backing_state_constructor_0x49d914_source_handler_arg9_from_0x4adfe1_caller_stack_ebp_0x0c_missing"
+      "blockedReason": null
     },
     {
       "baselineChecks": [
@@ -100793,6 +100807,17 @@
       "startedAt": "2026-08-24T17:16:02Z",
       "notes": "Completed with one generic data-driven active-army reinforcement effect and exact 16/11/23 River Guard stages after each chapter's first required victory. Focused chapter owners, the Nightglass 1,026-session screen, all 77 independent encounters with queue0/signature829808c9, the real 86-step three-chapter client route, core, repository validation, editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Enemies, routes, battle/AI rules, save schema, and campaign objectives remain exact; platform claims are startup-only.",
       "completedAt": "2026-08-24T17:58:28Z"
+    },
+    {
+      "id": "content-bogbound-oath-reed-watcher-staged-reinforcement-10184",
+      "title": "Bogbound Oath Reed-Watcher staged reinforcement",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T22:12:33Z",
+      "startedAt": "2026-08-24T18:12:37Z",
+      "notes": "Completed with exact one-shot 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat Reed-Watcher stages after the four authored victories. Every enemy force remains exact; focused proof preserves all losing predecessors, one-shot/carryover/save authority, the briefing-normalized linekeeper captain, combat seed/RNG, Bog-Brute-first Highwater formation, and five surviving Cutthroats. The real shipped-browser route completes all 78 steps and campaign completion; Archive Wardens remains the accepted bounded defeat; 77/77 active encounters are queue-clear with signature 829808c9. Campaign/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged campaign interaction, certification, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T22:12:33Z"
     }
   ],
   "project": "heroes-like",
@@ -100803,7 +100828,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Implement and focus-prove the three exact first-victory staged reinforcements, rerun the Nightglass 1,026-session matrix and real 86-step routed Stonewake arc, require the active 77-encounter queue to return to clear signature829808c9, then complete core/static/platform gates and close the linked slices. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101234,8 +101259,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_stonewake_three_chapter_staged_reinforcement_compatibility_completed",
-  "status": "completed",
+  "result": "content_bogbound_oath_reed_watcher_staged_reinforcement_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -101335,9 +101360,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Stonewake Watch chapter-one sequential encounter viability is completed from the exact routed attrition control; the separate Reedbarrow Ferry raid-defense gap and broader release gaps remain, so the game is not release-ready.",
+  "summary": "Bogbound Oath chapter-one routed viability is now selected from an exact shipped-client defeat; implementation and validation remain in progress, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T14:13:23Z",
+  "updatedAt": "2026-08-24T18:12:37Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
