@@ -361,6 +361,50 @@
       "source_sha256": "a4a6bbe5b3fcec1260e08a6e0bda9a89c1b0a83ad904534b3c9075c4485db96e",
       "icon_path": "res://art/magic/runtime/spells/spell_mire_leech_snare_10.png",
       "icon_sha256": "4b2ce4ce8980d373d44c4012f9bef43e97f9b45954d618c365d3c062e7b71de2"
+    },
+    {
+      "id": "spell_furnace_foundry_bellows_11",
+      "spell_id": "spell_furnace_foundry_bellows_11",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_foundry_bellows_11",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_foundry_bellows_11.png",
+      "source_sha256": "3a2b6efb89539b009ce10fe43d371677e5c9dbc56184698287eff8f51a3ec74e",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_foundry_bellows_11.png",
+      "icon_sha256": "7ab73d791e79924d9e063632ad89019b905e49d19d8164680336701d9255745d"
+    },
+    {
+      "id": "spell_furnace_brass_bellows_23",
+      "spell_id": "spell_furnace_brass_bellows_23",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_brass_bellows_23",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_brass_bellows_23.png",
+      "source_sha256": "fe83be49da00f60272ad3a8bef2bc50bb4768212ae15baf01e059f93ad9aca25",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_brass_bellows_23.png",
+      "icon_sha256": "66278142a779b76c9a014eca999a5ec8fc5167a965d99b8c0f0bb468e2efd7ad"
+    },
+    {
+      "id": "spell_furnace_ash_mantle_09",
+      "spell_id": "spell_furnace_ash_mantle_09",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_ash_mantle_09",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_ash_mantle_09.png",
+      "source_sha256": "a4a8e08f6203dfe0d2d91ed4135a07a5a357e36e910c10d59dadc05d2148d2be",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_ash_mantle_09.png",
+      "icon_sha256": "efef0accfd4171cfa62035f23c529b0c77c61f89f80ac927ee928fb3a33f9ee6"
+    },
+    {
+      "id": "spell_furnace_ash_rail_25",
+      "spell_id": "spell_furnace_ash_rail_25",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_ash_rail_25",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_ash_rail_25.png",
+      "source_sha256": "fd635906abbfaada0c48841a35a9dddc73f87212bcd09d3bbd947d7637ce579a",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_ash_rail_25.png",
+      "icon_sha256": "7cfa44310a0eb7598dde20007842432847b8f4abf1c68ca6b0af8c8513f3998d"
     }
   ]
 }
