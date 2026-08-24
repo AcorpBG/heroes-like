@@ -89,6 +89,16 @@ SPELLS = (
     ("spell_furnace_kiln_rite_19", "furnace"),
     ("spell_furnace_rivet_mantle_21", "furnace"),
     ("spell_furnace_foundry_clamp_27", "furnace"),
+    ("spell_mire_silt_rot_04", "mire"),
+    ("spell_mire_dusk_drum_06", "mire"),
+    ("spell_mire_brine_frenzy_08", "mire"),
+    ("spell_mire_flood_fenlight_12", "mire"),
+    ("spell_mire_sluice_poultice_14", "mire"),
+    ("spell_mire_lowtide_rot_16", "mire"),
+    ("spell_mire_silt_frenzy_20", "mire"),
+    ("spell_mire_dusk_snare_22", "mire"),
+    ("spell_mire_leech_poultice_26", "mire"),
+    ("spell_mire_flood_rot_28", "mire"),
 )
 
 

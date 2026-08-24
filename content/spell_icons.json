@@ -823,6 +823,116 @@
       "source_sha256": "b38ad240b6deff3f8a6f6fe64d2d15ffd53763b77dc65d4a66850f4ddd1cf47f",
       "icon_path": "res://art/magic/runtime/spells/spell_furnace_foundry_clamp_27.png",
       "icon_sha256": "c6b16f9d2c1d6f290528dbbc2f32bee54a41477ae66a0ee1a8ace95cef762041"
+    },
+    {
+      "id": "spell_mire_silt_rot_04",
+      "spell_id": "spell_mire_silt_rot_04",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_silt_rot_04",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_silt_rot_04.png",
+      "source_sha256": "51e51b2b4254dac2ccec8b368df54f361da23c2f5666c0fa8514591718b0155f",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_silt_rot_04.png",
+      "icon_sha256": "92d2a9181047409c00df620667e3391527d3c2b2c673728899cf52e8c1e01771"
+    },
+    {
+      "id": "spell_mire_dusk_drum_06",
+      "spell_id": "spell_mire_dusk_drum_06",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_dusk_drum_06",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_dusk_drum_06.png",
+      "source_sha256": "e66a3de056827dfa445570890f22199f63fc3bf67824b6b6d54e03776d78e934",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_dusk_drum_06.png",
+      "icon_sha256": "26757294da70c7caf7d92f9d91a2c4d35dfbe43003ad446151f54c0cd442d6c7"
+    },
+    {
+      "id": "spell_mire_brine_frenzy_08",
+      "spell_id": "spell_mire_brine_frenzy_08",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_brine_frenzy_08",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_brine_frenzy_08.png",
+      "source_sha256": "9fdbc83ddea659368a1300f1a5c051165348a0bc2e4db112a87376930d3dbd55",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_brine_frenzy_08.png",
+      "icon_sha256": "fd57cab8e98cf083745eca064dbe898582b1515d64b9d7fcc584f069ddf63867"
+    },
+    {
+      "id": "spell_mire_flood_fenlight_12",
+      "spell_id": "spell_mire_flood_fenlight_12",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_flood_fenlight_12",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_flood_fenlight_12.png",
+      "source_sha256": "b10f78c8c29100bdf56de74fa1f0a8b3cca689403473279f82d3bf7769d3b0f6",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_flood_fenlight_12.png",
+      "icon_sha256": "2b054ac346425eb01c32f1dcbf18e05df2a8ce3d7e52152d22169d1793b70848"
+    },
+    {
+      "id": "spell_mire_sluice_poultice_14",
+      "spell_id": "spell_mire_sluice_poultice_14",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_sluice_poultice_14",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_sluice_poultice_14.png",
+      "source_sha256": "a216436a10110a6272b1df30c249c99734a70cecea7d2a50b681daa2076bf817",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_sluice_poultice_14.png",
+      "icon_sha256": "e7d928f005b54f4b5f8e35a23a49dd65411cd57c7d5b8e74de4e480779075773"
+    },
+    {
+      "id": "spell_mire_lowtide_rot_16",
+      "spell_id": "spell_mire_lowtide_rot_16",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_lowtide_rot_16",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_lowtide_rot_16.png",
+      "source_sha256": "fe17607a6ff3da6210abac4b7d6207599838a97226f0713c320cf93039f1dcef",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_lowtide_rot_16.png",
+      "icon_sha256": "80bfa06d27d8a5c2255885101711ec68d05a45ea94a7d3c1b228a0852aeb4eeb"
+    },
+    {
+      "id": "spell_mire_silt_frenzy_20",
+      "spell_id": "spell_mire_silt_frenzy_20",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_silt_frenzy_20",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_silt_frenzy_20.png",
+      "source_sha256": "fd9c92cb7ce85a69ac8524fcbaaa11d4b7afbac61e5c800e2204d69a581dc98e",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_silt_frenzy_20.png",
+      "icon_sha256": "5682d15156957dfdcc16e510d1c5bb58c41495fc6eb6a60cdbf461d7a68b941f"
+    },
+    {
+      "id": "spell_mire_dusk_snare_22",
+      "spell_id": "spell_mire_dusk_snare_22",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_dusk_snare_22",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_dusk_snare_22.png",
+      "source_sha256": "06bcf87503b8cf9db91c62d2e5a24407282d8096393f78d70dd6995738f54ced",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_dusk_snare_22.png",
+      "icon_sha256": "259940358680e89fbde9a5abe40480af8bc6743549f2f271a70a21f848d293a1"
+    },
+    {
+      "id": "spell_mire_leech_poultice_26",
+      "spell_id": "spell_mire_leech_poultice_26",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_leech_poultice_26",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_leech_poultice_26.png",
+      "source_sha256": "26ad2dc5a013adf009430a7e95ebd90ae45063cc7b9628a70a15a6f8a0b24535",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_leech_poultice_26.png",
+      "icon_sha256": "7930225064f46fbc3a6d192abe288896def1e11ad0e2b63eba96acac7695cb79"
+    },
+    {
+      "id": "spell_mire_flood_rot_28",
+      "spell_id": "spell_mire_flood_rot_28",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_flood_rot_28",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_flood_rot_28.png",
+      "source_sha256": "4c8cb4a9cb9608ad64c4125f38d85a12d52ba60f503a4ba0b8620c4ed56631fa",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_flood_rot_28.png",
+      "icon_sha256": "a6dd3d3b7e87d1d84c057214a92f90e2ddf93e867811902103807e3335111cd8"
     }
   ]
 }
