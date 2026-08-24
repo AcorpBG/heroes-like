@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle spell cue-identity slice is complete: seven catalog-owned spells keep exact specific VFX/audio, 55 status/buff spells retain the shared Command Ward effect cue, and 28 other Battle spells use generic cues without masquerading as Cinder Burst, Graft Mend, or Prism Bastion. Focused live behavior, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Town production music slice is complete. Valid live Town visits own a distinct three-layer imported context with exact town identity, while existing music, fallback, settings, actions, focus, save, and navigation authority remain intact. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-spell-specific-cue-identity-fail-closed-10184",
-  "currentSliceId": "presentation-battle-spell-specific-cue-identity-fail-closed-10184",
-  "currentSliceNotes": "Completed live Battle cue-identity correction: the exact 90-spell classifier is 7 explicit, 55 shared Command Ward effects, and 28 generic-only. A real Pressure Clause cast retains generic imported cast VFX/audio and exact session authority without Cinder Burst identity. Battle animation, magic, cue catalog, Board navigation, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No asset, spell/rule, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+  "currentSlice": "presentation-town-production-music-context-10184",
+  "currentSliceId": "presentation-town-production-music-context-10184",
+  "currentSliceNotes": "Completed: a valid live Town visit synchronizes three distinct imported seamless Town loops with exact scenario/day/launch/town-placement/town-template/faction signature authority. Direct and real 1280/1920 Town routing, fallback/continuity, Town action/focus, active-play/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition/mastering, packaged listening/interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation battle spell specific cue identity fail closed 10184",
-  "currentSliceUpdatedAt": "2026-08-24T05:30:07Z",
+  "currentSliceTitle": "presentation town production music context 10184",
+  "currentSliceUpdatedAt": "2026-08-24T08:41:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The complete 16-spell Old Measure catalog now owns distinct specific icons. Preserve the exact 38-spell reward order/values, 94 specific icons and 18 Root/Veil catalog fallbacks, all spell and Town-study behavior, focus, session, and save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "The Town production music context is complete. Preserve all five exact music contexts, fifteen distinct imported loop stems, valid-route-only Town synchronization, town-identity signatures, fallback/settings/save/action/focus authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer packaged listening, certification, signing, whole-game validation, or release readiness.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Battle spell cue-identity correction is complete. Preserve the exact 7 specific/55 shared-effect/28 generic-only partition, all 112 specific spell icons, unchanged spell and BattleRules behavior, and bounded export/startup claims; select the next tracker-approved source-backed slice and do not infer packaged interaction, certification, whole-game validation, or release readiness.",
+  "nextActionGuardrailNote": "The Town production music context is complete. Preserve all five exact music contexts, fifteen distinct imported loop stems, valid-route-only Town synchronization, town-identity signatures, fallback/settings/save/action/focus authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer packaged listening, certification, signing, whole-game validation, or release readiness.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100625,6 +100625,16 @@
       "startedAt": "2026-08-24T06:54:29Z",
       "notes": "Completed live Battle cue-identity correction: the exact 90-spell classifier is 7 explicit, 55 shared Command Ward effects, and 28 generic-only. A real Pressure Clause cast retains generic imported cast VFX/audio and exact session authority without Cinder Burst identity. Battle animation, magic, cue catalog, Board navigation, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No asset, spell/rule, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-24T07:03:40Z"
+    },
+    {
+      "id": "presentation-town-production-music-context-10184",
+      "title": "presentation town production music context 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T08:41:31Z",
+      "startedAt": "2026-08-24T08:25:50Z",
+      "notes": "Completed with three byte-distinct original deterministic seamless 8-second 44.1 kHz stereo 16-bit imported Town stems. A valid live Town visit synchronizes exact scenario/day/launch/town-placement/town-template/faction identity after route authority; invalid routes remain unchanged. Direct five-context playback, continuity/fallback, real TownShell 1280/1920, construction/audio, focus/layout, active-play/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, and both PCKs contain all three imports. Final composition/mastering, packaged Town listening/interaction, hardware/accessibility/controller certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T08:41:31Z"
     }
   ],
   "project": "heroes-like",
@@ -101167,9 +101177,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
+  "summary": "The selected Town production music context is implemented and validated; no next source-backed slice is selected yet.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T07:03:40Z",
+  "updatedAt": "2026-08-24T08:41:31Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

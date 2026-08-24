@@ -38,6 +38,13 @@ CONTEXTS = {
         "pulse_steps": 16,
         "color": 0.48,
     },
+    "town": {
+        "base": 146.0,
+        "progression": [0, 4, 7, 5],
+        "minor": False,
+        "pulse_steps": 16,
+        "color": 0.41,
+    },
     "battle": {
         "base": 110.0,
         "progression": [0, 1, 5, 7],
@@ -61,6 +68,9 @@ SPECS = {
     "music_overworld_theme": {"context": "overworld", "stem": "root", "peak": 0.54, "pan": -0.10, "width": 0.08},
     "music_overworld_theme_harmony": {"context": "overworld", "stem": "harmony", "peak": 0.46, "pan": 0.12, "width": 0.20},
     "music_overworld_theme_motion": {"context": "overworld", "stem": "motion", "peak": 0.42, "pan": 0.16, "width": 0.28},
+    "music_town_theme": {"context": "town", "stem": "root", "peak": 0.50, "pan": -0.09, "width": 0.08},
+    "music_town_theme_harmony": {"context": "town", "stem": "harmony", "peak": 0.44, "pan": 0.11, "width": 0.20},
+    "music_town_theme_motion": {"context": "town", "stem": "motion", "peak": 0.40, "pan": -0.15, "width": 0.25},
     "music_battle_theme": {"context": "battle", "stem": "root", "peak": 0.62, "pan": -0.06, "width": 0.09},
     "music_battle_theme_harmony": {"context": "battle", "stem": "harmony", "peak": 0.54, "pan": 0.08, "width": 0.19},
     "music_battle_theme_motion": {"context": "battle", "stem": "motion", "peak": 0.58, "pan": -0.12, "width": 0.30},

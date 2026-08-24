@@ -5,6 +5,7 @@ const OUTPUT_DIR := "res://.artifacts/music_audio_runtime_report"
 const EXPECTED_CUES := [
 	"music_menu_theme",
 	"music_overworld_theme",
+	"music_town_theme",
 	"music_battle_theme",
 	"music_outcome_theme",
 ]
@@ -15,6 +16,9 @@ const EXPECTED_LAYER_CUES := [
 	"music_overworld_theme",
 	"music_overworld_theme_harmony",
 	"music_overworld_theme_motion",
+	"music_town_theme",
+	"music_town_theme_harmony",
+	"music_town_theme_motion",
 	"music_battle_theme",
 	"music_battle_theme_harmony",
 	"music_battle_theme_motion",
@@ -34,6 +38,7 @@ var _report := {
 	"continuous_record": {},
 	"fallback_record": {},
 	"shell_summary": {},
+	"town_shell_rows": [],
 	"errors": [],
 }
 
@@ -51,6 +56,14 @@ func _run() -> void:
 		"day": 1,
 		"threat_level": "low",
 		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+	})
+	var town_record: Dictionary = MusicAudio.sync_context("town", "validation_town", {
+		"scenario_id": "river-pass",
+		"day": 1,
+		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+		"town_placement_id": "riverwatch_hold",
+		"town_id": "town_riverwatch_hold",
+		"town_faction_id": "faction_embercourt",
 	})
 	var battle_record: Dictionary = MusicAudio.sync_context("battle", "validation_battle", {
 		"scenario_id": "river-pass",
@@ -83,6 +96,14 @@ func _run() -> void:
 	await get_tree().process_frame
 	var shell_summary := MusicAudio.validation_summary()
 	var shell_snapshot: Dictionary = menu_shell.call("validation_snapshot")
+	menu_shell.queue_free()
+	await get_tree().process_frame
+	var original_window_size := get_window().size
+	var town_shell_rows: Array = []
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		town_shell_rows.append(await _town_shell_route_row(viewport_size))
+	get_window().size = original_window_size
+	await get_tree().process_frame
 
 	_report["summary"] = direct_summary
 	_report["records"] = direct_summary.get("records", [])
@@ -90,15 +111,20 @@ func _run() -> void:
 	_report["continuous_record"] = continuous_record
 	_report["fallback_record"] = fallback_record
 	_report["shell_summary"] = shell_summary
+	_report["town_shell_rows"] = town_shell_rows
 	_validate_record("menu", menu_record, "music_menu_theme", "menu", true)
 	_validate_record("stable", stable_record, "music_menu_theme", "menu", false)
 	_validate_record("overworld", overworld_record, "music_overworld_theme", "overworld", true)
+	_validate_record("town", town_record, "music_town_theme", "town", true)
 	_validate_record("battle", battle_record, "music_battle_theme", "battle", true)
 	_validate_record("outcome", outcome_record, "music_outcome_theme", "outcome", true)
 	_validate_continuous_playback(continuous_summary, continuous_record)
 	_validate_generated_fallback(fallback_record)
 	_validate_direct_summary(direct_summary)
 	_validate_shell_summary(shell_summary, shell_snapshot)
+	for row_value in town_shell_rows:
+		var row: Dictionary = row_value
+		_expect(bool(row.get("ok", false)), "TownShell route must own exact Town music at both target viewports: %s" % row)
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -204,7 +230,7 @@ func _validate_direct_summary(summary: Dictionary) -> void:
 	var context_counts: Dictionary = summary.get("context_counts", {}) if summary.get("context_counts", {}) is Dictionary else {}
 	for cue in EXPECTED_CUES:
 		_expect(int(cue_counts.get(cue, 0)) >= 1, "Music summary must include cue %s: %s" % [cue, cue_counts])
-	for context_id in ["menu", "overworld", "battle", "outcome"]:
+	for context_id in ["menu", "overworld", "town", "battle", "outcome"]:
 		_expect(int(context_counts.get(context_id, 0)) >= 1, "Music summary must include context %s: %s" % [context_id, context_counts])
 	var current_layers: Array = summary.get("current_layers", []) if summary.get("current_layers", []) is Array else []
 	_expect(current_layers.size() == 3, "Music direct summary must keep current generated layers: %s" % summary)
@@ -220,6 +246,94 @@ func _validate_shell_summary(summary: Dictionary, snapshot: Dictionary) -> void:
 	var snapshot_summary: Dictionary = snapshot.get("music_audio", {}) if snapshot.get("music_audio", {}) is Dictionary else {}
 	_expect_equal("snapshot music schema", String(snapshot_summary.get("schema", "")), "music_audio_runtime_v1")
 	_expect(int(snapshot_summary.get("record_count", 0)) >= 1, "MainMenu validation snapshot must expose music audio summary: %s" % snapshot_summary)
+
+func _town_shell_route_row(viewport_size: Vector2i) -> Dictionary:
+	get_window().size = viewport_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var town := _first_player_town(session)
+	if town.is_empty():
+		return {"ok": false, "failure": "player_town_missing", "viewport_size": viewport_size}
+	_move_active_hero_to_town(session, town)
+	SessionState.set_active_session(session)
+	MusicAudio.validation_reset()
+	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
+	add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not is_instance_valid(shell) or not shell.is_inside_tree():
+		return {"ok": false, "failure": "town_shell_missing", "viewport_size": viewport_size}
+	var snapshot: Dictionary = shell.validation_snapshot()
+	var summary: Dictionary = MusicAudio.validation_summary()
+	var records: Array = summary.get("records", []) if summary.get("records", []) is Array else []
+	var record: Dictionary = records[-1] if not records.is_empty() and records[-1] is Dictionary else {}
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	var snapshot_music: Dictionary = snapshot.get("music_audio", {}) if snapshot.get("music_audio", {}) is Dictionary else {}
+	var snapshot_metadata: Dictionary = snapshot.get("town_music_metadata", {}) if snapshot.get("town_music_metadata", {}) is Dictionary else {}
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var expected_metadata := {
+		"scenario_id": session.scenario_id,
+		"difficulty": session.difficulty,
+		"launch_mode": session.launch_mode,
+		"day": session.day,
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"town_faction_id": String(town_template.get("faction_id", "")),
+	}
+	var checks := {
+		"window_size_exact": get_window().size == viewport_size,
+		"game_state_exact": String(snapshot.get("game_state", "")) == "town",
+		"current_context_exact": String(summary.get("current_context_id", "")) == "town",
+		"player_count_exact": int(summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS,
+		"record_count_exact": int(summary.get("record_count", 0)) == 1,
+		"cue_exact": String(record.get("cue_id", "")) == "music_town_theme",
+		"record_context_exact": String(record.get("context_id", "")) == "town",
+		"source_exact": String(record.get("source", "")) == "town_shell_ready",
+		"changed_exact": bool(record.get("changed", false)),
+		"record_metadata_exact": metadata == expected_metadata,
+		"snapshot_metadata_exact": snapshot_metadata == expected_metadata,
+		"snapshot_music_exact": snapshot_music == summary,
+		"snapshot_placement_exact": String(snapshot.get("town_placement_id", "")) == String(town.get("placement_id", "")),
+		"snapshot_town_exact": String(snapshot.get("town_id", "")) == String(town.get("town_id", "")),
+	}
+	var exact := not checks.values().has(false)
+	shell.queue_free()
+	await get_tree().process_frame
+	return {
+		"ok": exact,
+		"viewport_size": viewport_size,
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"town_faction_id": String(town_template.get("faction_id", "")),
+		"actual_window_size": get_window().size,
+		"game_state": String(snapshot.get("game_state", "")),
+		"source_fixture_game_state": session.game_state,
+		"checks": checks,
+		"record": record,
+	}
+
+func _first_player_town(session) -> Dictionary:
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+			return town_value
+	return {}
+
+func _move_active_hero_to_town(session, town: Dictionary) -> void:
+	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var active_hero = session.overworld.get("hero", {})
+	if active_hero is Dictionary:
+		active_hero["position"] = position.duplicate(true)
+		session.overworld["hero"] = active_hero
+	var heroes = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if hero is Dictionary and String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			hero["position"] = position.duplicate(true)
+			heroes[index] = hero
+	session.overworld["player_heroes"] = heroes
 
 func _write_json(path: String, payload: Dictionary) -> void:
 	var file := FileAccess.open(ProjectSettings.globalize_path(path), FileAccess.WRITE)

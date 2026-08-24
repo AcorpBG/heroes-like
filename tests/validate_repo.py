@@ -15905,6 +15905,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         MAIN_MENU_SCENE_PATH,
         MAIN_MENU_SCRIPT_PATH,
         OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
         BATTLE_SCRIPT_PATH,
         BATTLE_SCENE_PATH,
         active_play_dialog_path,
@@ -58061,6 +58062,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_audio_runtime_v1",
             "music_menu_theme",
             "music_overworld_theme",
+            "music_town_theme",
             "music_battle_theme",
             "music_outcome_theme",
             "MAX_ACTIVE_PLAYERS",
@@ -58093,6 +58095,9 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         "music_overworld_theme",
         "music_overworld_theme_harmony",
         "music_overworld_theme_motion",
+        "music_town_theme",
+        "music_town_theme_harmony",
+        "music_town_theme_motion",
         "music_battle_theme",
         "music_battle_theme_harmony",
         "music_battle_theme_motion",
@@ -58113,7 +58118,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         ensure(music_manifest.get("asset_tier") == "production_layered_loop_v1", errors, "production music manifest must declare production_layered_loop_v1")
         music_cues = music_manifest.get("cues", {})
         ensure(isinstance(music_cues, dict), errors, "music_runtime_manifest.json cues must be an object")
-        ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the twelve live music layer ids")
+        ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the fifteen live music layer ids")
         expected_music_cues = {
             "music_menu_theme": ("res://art/audio/runtime/music/menu_root.wav", "menu root", -23.0),
             "music_menu_theme_harmony": ("res://art/audio/runtime/music/menu_harmony.wav", "menu harmony", -26.0),
@@ -58121,6 +58126,9 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_overworld_theme": ("res://art/audio/runtime/music/overworld_root.wav", "overworld root", -23.5),
             "music_overworld_theme_harmony": ("res://art/audio/runtime/music/overworld_harmony.wav", "overworld harmony", -26.5),
             "music_overworld_theme_motion": ("res://art/audio/runtime/music/overworld_motion.wav", "overworld motion", -28.5),
+            "music_town_theme": ("res://art/audio/runtime/music/town_root.wav", "town root", -24.0),
+            "music_town_theme_harmony": ("res://art/audio/runtime/music/town_harmony.wav", "town harmony", -27.0),
+            "music_town_theme_motion": ("res://art/audio/runtime/music/town_motion.wav", "town motion", -29.0),
             "music_battle_theme": ("res://art/audio/runtime/music/battle_root.wav", "battle root", -22.5),
             "music_battle_theme_harmony": ("res://art/audio/runtime/music/battle_harmony.wav", "battle harmony", -25.5),
             "music_battle_theme_motion": ("res://art/audio/runtime/music/battle_motion.wav", "battle motion", -27.5),
@@ -58166,7 +58174,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
                     ensure(left_samples[0] == left_samples[-1] and right_samples[0] == right_samples[-1], errors, f"production music asset must close its stereo loop boundary exactly: {path_value}")
             ensure(int(cue.get("duration_msec", 0)) == 8000, errors, f"music cue {cue_id} must use exact eight-second duration")
             ensure("volume_db" in cue, errors, f"music cue {cue_id} needs volume_db")
-        ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all twelve production music WAV payloads must be byte-distinct")
+        ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all fifteen production music WAV payloads must be byte-distinct")
 
     music_generator_text = MUSIC_RUNTIME_GENERATOR_PATH.read_text(encoding="utf-8") if MUSIC_RUNTIME_GENERATOR_PATH.exists() else ""
     for required_token in (
@@ -58180,12 +58188,15 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         "normalized[-1] = normalized[0]",
         "wave.open",
         "Manifest/spec cue mismatch",
+        '"town": {',
+        '"music_town_theme"',
     ):
         ensure(required_token in music_generator_text, errors, f"generate_music_runtime_assets.py is missing token {required_token}")
 
     shell_requirements = (
         (MAIN_MENU_SCRIPT_PATH, ("MusicAudio.sync_context", '"menu"', '"music_audio"')),
         (OVERWORLD_SCRIPT_PATH, ("_sync_overworld_music_audio", "MusicAudio.sync_context", "validation_music_audio_summary", '"overworld"', '"music_audio"')),
+        (TOWN_SCRIPT_PATH, ("_town_music_metadata", 'MusicAudio.sync_context("town", "town_shell_ready", _town_music_metadata())', '"music_audio": MusicAudio.validation_summary()', '"town_music_metadata": _town_music_metadata()')),
         (BATTLE_SCRIPT_PATH, ("_battle_music_metadata", "MusicAudio.sync_context", '"battle"', '"music_audio"')),
         (OUTCOME_SCRIPT_PATH, ("_outcome_music_metadata", "MusicAudio.sync_context", '"outcome"', '"music_audio"')),
     )
@@ -58204,6 +58215,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_audio_runtime_v1",
             "music_menu_theme",
             "music_overworld_theme",
+            "music_town_theme",
             "music_battle_theme",
             "music_outcome_theme",
             "validation_snapshot",
@@ -58223,8 +58235,36 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "continuous_active_player_count",
             "route must own exactly three active music players",
             '"generated_waveform"',
+            "TownShell.tscn",
+            "_town_shell_route_row",
+            'String(summary.get("current_context_id", "")) == "town"',
+            'String(record.get("source", "")) == "town_shell_ready"',
+            '"snapshot_music_exact": snapshot_music == summary',
+            '"game_state_exact": String(snapshot.get("game_state", "")) == "town"',
+            "var exact := not checks.values().has(false)",
+            'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         ):
             ensure(required_token in report_text, errors, f"Music audio runtime report is missing required token: {required_token}")
+
+    if TOWN_SCRIPT_PATH.exists():
+        town_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+        ensure(
+            town_text.index('if not TownRules.can_visit_active_town(_session):')
+            < town_text.index('_session.game_state = "town"')
+            < town_text.index('MusicAudio.sync_context("town", "town_shell_ready", _town_music_metadata())'),
+            errors,
+            "TownShell must synchronize Town music only after the live visit and Town game-state authority are valid",
+        )
+        for metadata_key in (
+            '"scenario_id"',
+            '"difficulty"',
+            '"launch_mode"',
+            '"day"',
+            '"town_placement_id"',
+            '"town_id"',
+            '"town_faction_id"',
+        ):
+            ensure(metadata_key in town_text[town_text.index("func _town_music_metadata"):town_text.index("func _apply_responsive_layout")], errors, f"Town music metadata is missing exact key {metadata_key}")
 
     if MUSIC_AUDIO_REPORT_DOC_PATH.exists():
         doc_text = MUSIC_AUDIO_REPORT_DOC_PATH.read_text(encoding="utf-8")
@@ -58239,7 +58279,9 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_overworld_theme",
             "music_battle_theme",
             "music_outcome_theme",
+            "music_town_theme",
             "MainMenu",
+            "TownShell",
             "OverworldShell",
             "BattleShell",
             "ScenarioOutcomeShell",
@@ -58247,6 +58289,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "seamless eight-second 44.1 kHz stereo",
             "LOOP_FORWARD",
             "all three players still active after a full segment",
+            "fifteen byte-distinct original layered stereo loops",
             "Not final music composition",
             "No final music stems",
         ):
