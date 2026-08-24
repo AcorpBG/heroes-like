@@ -37784,6 +37784,9 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "spell_beacon_roadward_charge_23": ("beacon", "res://art/magic/runtime/spells/spell_beacon_roadward_charge_23.png"),
         "spell_beacon_bell_ward_09": ("beacon", "res://art/magic/runtime/spells/spell_beacon_bell_ward_09.png"),
         "spell_beacon_bell_lance_25": ("beacon", "res://art/magic/runtime/spells/spell_beacon_bell_lance_25.png"),
+        "spell_mire_bog_drum_18": ("mire", "res://art/magic/runtime/spells/spell_mire_bog_drum_18.png"),
+        "spell_mire_brine_fenlight_24": ("mire", "res://art/magic/runtime/spells/spell_mire_brine_fenlight_24.png"),
+        "spell_mire_leech_snare_10": ("mire", "res://art/magic/runtime/spells/spell_mire_leech_snare_10.png"),
     }
     signature_raw = load_json(SPELL_ICON_MANIFEST_PATH)
     signature_items = signature_raw.get("items", []) if isinstance(signature_raw, dict) else []
@@ -37791,7 +37794,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(signature_raw.get("generator") == "deterministic_signature_spell_icon_assets_v1", errors, "Signature spell icon manifest must retain deterministic generator identity")
     ensure(signature_raw.get("source_size") == {"width": 1254, "height": 1254}, errors, "Signature spell icon manifest must retain exact source dimensions")
     ensure(signature_raw.get("icon_size") == {"width": 128, "height": 128}, errors, "Signature spell icon manifest must retain exact runtime dimensions")
-    ensure(isinstance(signature_items, list) and len(signature_items) == 29, errors, "Specific spell icon manifest must contain exactly twenty-nine rows")
+    ensure(isinstance(signature_items, list) and len(signature_items) == 32, errors, "Specific spell icon manifest must contain exactly thirty-two rows")
     signature_ids: list[str] = []
     signature_paths: list[str] = []
     if isinstance(signature_items, list):
@@ -37820,7 +37823,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
                 ensure(hashlib.sha256(disk_path.read_bytes()).hexdigest() == str(row.get("icon_sha256", "")), errors, f"Signature spell icon {spell_id} runtime hash drifted")
             ensure(Path(f"{disk_path}.import").is_file(), errors, f"Signature spell icon {spell_id} runtime import is missing")
     ensure(signature_ids == list(expected_signature_icons), errors, "Signature spell manifest must preserve exact one-per-school authored order")
-    ensure(len(set(signature_paths)) == 29, errors, "Specific spell runtime paths must remain distinct")
+    ensure(len(set(signature_paths)) == 32, errors, "Specific spell runtime paths must remain distinct")
     manifest_raw = load_json(SPELL_SCHOOL_ICON_MANIFEST_PATH)
     manifest_items = manifest_raw.get("items", []) if isinstance(manifest_raw, dict) else []
     ensure(isinstance(manifest_items, list) and len(manifest_items) == 7, errors, "Spell school icon manifest must contain exactly seven rows")
@@ -37882,9 +37885,14 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "spell_beacon_bell_ward_09",
         "spell_beacon_bell_lance_25",
     }
-    ensure(set(expected_signature_icons) - active_spell_ids == {"spell_old_measure_compass_boundary_06"} | target_beacon_reward_spell_ids, errors, "Only the established Old Measure boundary and exact targeted generated-map Beacon rewards may own specific icons outside fixed spellbook exposure")
+    target_mire_reward_spell_ids = {
+        "spell_mire_bog_drum_18",
+        "spell_mire_brine_fenlight_24",
+        "spell_mire_leech_snare_10",
+    }
+    ensure(set(expected_signature_icons) - active_spell_ids == {"spell_old_measure_compass_boundary_06"} | target_beacon_reward_spell_ids | target_mire_reward_spell_ids, errors, "Only the established Old Measure boundary and exact targeted generated-map Beacon/Mire rewards may own specific icons outside fixed spellbook exposure")
     catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict)}
-    ensure(len(catalog_spell_ids - set(expected_signature_icons)) == 83, errors, "Exactly eighty-three catalog spells must retain school-sigil fallback")
+    ensure(len(catalog_spell_ids - set(expected_signature_icons)) == 80, errors, "Exactly eighty catalog spells must retain school-sigil fallback")
     expected_generated_reward_spell_ids = [
         "spell_beacon_path", "spell_survey_chain", "spell_rootway_tangle", "spell_fogline_drift",
         "spell_beacon_bell_lance_25", "spell_beacon_bell_ward_09", "spell_beacon_column_charge_11", "spell_beacon_lantern_oath_17", "spell_beacon_roadward_charge_23",
@@ -37901,10 +37909,13 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     generated_reward_spell_ids = [str(object_id) for object_id in reward_definition.get("supported_runtime_object_ids", []) if str(object_id) in catalog_spell_ids]
     ensure(generated_reward_spell_ids == expected_generated_reward_spell_ids, errors, "Generated-map spell reward pool must retain exact 38-spell identity and order")
     ensure(target_beacon_reward_spell_ids.issubset(set(generated_reward_spell_ids)), errors, "Every targeted Beacon spell must remain an authored generated-map reward")
+    ensure(target_mire_reward_spell_ids.issubset(set(generated_reward_spell_ids)), errors, "Every targeted Mire spell must remain an authored generated-map reward")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_beacon_reward_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Beacon reward icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "beacon" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_beacon_reward_spell_ids), errors, "Targeted generated-map reward spells must remain Beacon-school content")
-    ensure(len(set(generated_reward_spell_ids) & set(expected_signature_icons)) == 14, errors, "Generated-map reward pool must expose exactly fourteen specific spell icons")
-    ensure(len(set(generated_reward_spell_ids) - set(expected_signature_icons)) == 24, errors, "The twenty-four untargeted generated-map reward spells must retain school fallback")
+    ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_mire_reward_spell_ids} == {3, 4, 5}, errors, "Targeted Mire reward icons must retain exact tier 3-5 coverage")
+    ensure(all(str(spell.get("school_id", "")) == "mire" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_mire_reward_spell_ids), errors, "Targeted generated-map reward spells must remain Mire-school content")
+    ensure(len(set(generated_reward_spell_ids) & set(expected_signature_icons)) == 17, errors, "Generated-map reward pool must expose exactly seventeen specific spell icons")
+    ensure(len(set(generated_reward_spell_ids) - set(expected_signature_icons)) == 21, errors, "The twenty-one untargeted generated-map reward spells must retain school fallback")
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for token in (
@@ -38011,14 +38022,24 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         '"spell_beacon_roadward_charge_23"',
         '"spell_beacon_bell_ward_09"',
         '"spell_beacon_bell_lance_25"',
-        "signature_contract.size() == 29",
-        '"school_fallback_count": 83',
+        'const TARGET_MIRE_REWARD_SPELL_IDS := [',
+        'const TARGET_MIRE_BATTLE_REWARD_SPELL_IDS := [',
+        '"spell_mire_bog_drum_18"',
+        '"spell_mire_brine_fenlight_24"',
+        '"spell_mire_leech_snare_10"',
+        "signature_contract.size() == 32",
+        '"school_fallback_count": 80',
         "var generated_reward_contract := _generated_reward_contract()",
         'reward_ids.size() == 38',
-        'and specific_count == 14',
-        'and rows.size() - specific_count == 24',
-        'await _surface_case(viewport_size, "battle", String(TARGET_BEACON_REWARD_SPELL_IDS[0]), TARGET_BEACON_REWARD_SPELL_IDS)',
+        'and specific_count == 17',
+        'and rows.size() - specific_count == 21',
+        'var battle_reward_spell_ids: Array = TARGET_BEACON_REWARD_SPELL_IDS + TARGET_MIRE_BATTLE_REWARD_SPELL_IDS',
+        'await _surface_case(viewport_size, "battle", String(TARGET_BEACON_REWARD_SPELL_IDS[0]), battle_reward_spell_ids)',
+        'await _surface_case(viewport_size, "overworld", "spell_mire_brine_fenlight_24", ["spell_mire_brine_fenlight_24"])',
         'var battle_spell_ids := spell_ids_override.duplicate() if not spell_ids_override.is_empty() else [battle_spell_id]',
+        'var overworld_spell_id := spell_id_override if spell_id_override != "" else String(SURFACE_SPELL_IDS.get("overworld", ""))',
+        'var overworld_spell_ids := spell_ids_override.duplicate() if not spell_ids_override.is_empty() else [overworld_spell_id]',
+        '_set_active_hero_spellbook(overworld_session, overworld_spell_ids)',
         '"targeted_spell_ids": spell_ids_override.duplicate()',
         '"targeted_buttons_exact": targeted_buttons_exact',
         'stack["base_count"] = max(200, int(stack.get("base_count", 0)))',

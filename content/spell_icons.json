@@ -328,6 +328,39 @@
       "source_sha256": "11f44219c835aab740d13b22ee7091d1c422766b13df15632a9fc8cd958995a5",
       "icon_path": "res://art/magic/runtime/spells/spell_beacon_bell_lance_25.png",
       "icon_sha256": "3faae4e7a8d803f04089b74dfbd3a2fbaa128356ea6106f79f3e24ed8cee2274"
+    },
+    {
+      "id": "spell_mire_bog_drum_18",
+      "spell_id": "spell_mire_bog_drum_18",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_bog_drum_18",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_bog_drum_18.png",
+      "source_sha256": "a62c926efa9a0febb3eb084a19b3270a02672a8ec5e3e9df58a8f9f36a4b2412",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_bog_drum_18.png",
+      "icon_sha256": "871d83fca2f929a1004e877ecfff3d3907bb7fbc92df2266ff4fa1e84699ad20"
+    },
+    {
+      "id": "spell_mire_brine_fenlight_24",
+      "spell_id": "spell_mire_brine_fenlight_24",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_brine_fenlight_24",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_brine_fenlight_24.png",
+      "source_sha256": "06ed97d429f4238fa894a149d604d9120b6d21c42adeb33bdaa883222348bda9",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_brine_fenlight_24.png",
+      "icon_sha256": "932f3dc3a8dd2f712a5862917ff2f04b3308c264ad1496d5dd8c0de95872f608"
+    },
+    {
+      "id": "spell_mire_leech_snare_10",
+      "spell_id": "spell_mire_leech_snare_10",
+      "school_id": "mire",
+      "icon_id": "spell_signature_icon_mire_leech_snare_10",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_mire_leech_snare_10.png",
+      "source_sha256": "a4a6bbe5b3fcec1260e08a6e0bda9a89c1b0a83ad904534b3c9075c4485db96e",
+      "icon_path": "res://art/magic/runtime/spells/spell_mire_leech_snare_10.png",
+      "icon_sha256": "4b2ce4ce8980d373d44c4012f9bef43e97f9b45954d618c365d3c062e7b71de2"
     }
   ]
 }
