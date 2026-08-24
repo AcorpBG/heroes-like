@@ -137,6 +137,30 @@ const TARGET_FURNACE_TOWN_STUDY_BUILDING_IDS := [
 	"building_brasshollow_heatwright_vestry",
 	"building_brasshollow_caliper_sanctum",
 ]
+const TARGET_MIRE_TOWN_STUDY_SPELL_IDS := [
+	"spell_mire_silt_rot_04",
+	"spell_mire_dusk_drum_06",
+	"spell_mire_brine_frenzy_08",
+	"spell_mire_flood_fenlight_12",
+	"spell_mire_sluice_poultice_14",
+	"spell_mire_lowtide_rot_16",
+	"spell_mire_silt_frenzy_20",
+	"spell_mire_dusk_snare_22",
+	"spell_mire_leech_poultice_26",
+	"spell_mire_flood_rot_28",
+]
+const TARGET_MIRE_TOWN_SCENARIOS := {
+	"causeway-stand": "town_duskfen",
+	"bogbound-oath": "town_duskfen",
+	"nightglass-ledger-reversal": "town_nightglass_redoubt",
+}
+const TARGET_MIRE_TOWN_STUDY_BUILDING_IDS := [
+	"building_lantern_archive",
+	"building_starseer_annex",
+	"building_mireclaw_sporewake_shrine",
+	"building_mireclaw_bog_oracle_nest",
+	"building_mireclaw_boneboom_palisade",
+]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
 	"battle": "spell_bulwark_litany",
@@ -216,6 +240,16 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_furnace_kiln_rite_19": "res://art/magic/runtime/spells/spell_furnace_kiln_rite_19.png",
 	"spell_furnace_rivet_mantle_21": "res://art/magic/runtime/spells/spell_furnace_rivet_mantle_21.png",
 	"spell_furnace_foundry_clamp_27": "res://art/magic/runtime/spells/spell_furnace_foundry_clamp_27.png",
+	"spell_mire_silt_rot_04": "res://art/magic/runtime/spells/spell_mire_silt_rot_04.png",
+	"spell_mire_dusk_drum_06": "res://art/magic/runtime/spells/spell_mire_dusk_drum_06.png",
+	"spell_mire_brine_frenzy_08": "res://art/magic/runtime/spells/spell_mire_brine_frenzy_08.png",
+	"spell_mire_flood_fenlight_12": "res://art/magic/runtime/spells/spell_mire_flood_fenlight_12.png",
+	"spell_mire_sluice_poultice_14": "res://art/magic/runtime/spells/spell_mire_sluice_poultice_14.png",
+	"spell_mire_lowtide_rot_16": "res://art/magic/runtime/spells/spell_mire_lowtide_rot_16.png",
+	"spell_mire_silt_frenzy_20": "res://art/magic/runtime/spells/spell_mire_silt_frenzy_20.png",
+	"spell_mire_dusk_snare_22": "res://art/magic/runtime/spells/spell_mire_dusk_snare_22.png",
+	"spell_mire_leech_poultice_26": "res://art/magic/runtime/spells/spell_mire_leech_poultice_26.png",
+	"spell_mire_flood_rot_28": "res://art/magic/runtime/spells/spell_mire_flood_rot_28.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -292,6 +326,12 @@ func _run() -> void:
 			rows.append(furnace_town_row)
 			if not bool(furnace_town_row.get("ok", false)):
 				_fail("Furnace town-study spell icon surface failed: %s" % JSON.stringify(furnace_town_row), original_window_size)
+				return
+		for town_scenario_id in TARGET_MIRE_TOWN_SCENARIOS:
+			var mire_town_row: Dictionary = await _surface_case(viewport_size, "town", String(TARGET_MIRE_TOWN_STUDY_SPELL_IDS[0]), TARGET_MIRE_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))
+			rows.append(mire_town_row)
+			if not bool(mire_town_row.get("ok", false)):
+				_fail("Mire town-study spell icon surface failed: %s" % JSON.stringify(mire_town_row), original_window_size)
 				return
 	SessionState.reset_session()
 	get_window().size = original_window_size
@@ -373,7 +413,7 @@ func _catalog_contract() -> Dictionary:
 		"ok": (
 			bool(fallback_contract.get("ok", false))
 			and bool(generated_reward_contract.get("ok", false))
-			and signature_contract.size() == 74
+			and signature_contract.size() == 84
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -382,9 +422,9 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 74
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 38
-			and SpellRules.spell_icon_path("spell_mire_silt_rot_04") == SpellRules.spell_school_icon_path("spell_mire_silt_rot_04")
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 84
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 28
+			and SpellRules.spell_icon_path("spell_old_measure_survey_survey_02") == SpellRules.spell_school_icon_path("spell_old_measure_survey_survey_02")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
 			and SpellRules.spell_school_icon_path("spell_missing") == ""
@@ -393,7 +433,7 @@ func _catalog_contract() -> Dictionary:
 		"fallback": fallback_contract,
 		"generated_reward": generated_reward_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 38,
+		"school_fallback_count": 28,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
@@ -607,6 +647,10 @@ func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids
 			target_study_spell_ids = TARGET_FURNACE_TOWN_STUDY_SPELL_IDS
 			target_town_scenarios = TARGET_FURNACE_TOWN_SCENARIOS
 			required_study_buildings = TARGET_FURNACE_TOWN_STUDY_BUILDING_IDS
+		elif TARGET_MIRE_TOWN_SCENARIOS.has(town_scenario_id):
+			target_study_spell_ids = TARGET_MIRE_TOWN_STUDY_SPELL_IDS
+			target_town_scenarios = TARGET_MIRE_TOWN_SCENARIOS
+			required_study_buildings = TARGET_MIRE_TOWN_STUDY_BUILDING_IDS
 		if town_scenario_id == "":
 			required_study_buildings = ["building_lantern_archive"]
 		for building_id in required_study_buildings:
