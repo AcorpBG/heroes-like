@@ -68,6 +68,14 @@ SPELLS = (
     ("spell_lens_glass_facet_08", "lens"),
     ("spell_lens_focus_array_14", "lens"),
     ("spell_lens_aurora_chorus_10", "lens"),
+    ("spell_lens_mirror_prism_04", "lens"),
+    ("spell_lens_starlens_survey_12", "lens"),
+    ("spell_lens_crown_prism_16", "lens"),
+    ("spell_lens_halo_ray_18", "lens"),
+    ("spell_lens_mirror_facet_20", "lens"),
+    ("spell_lens_glass_survey_24", "lens"),
+    ("spell_lens_aurora_array_26", "lens"),
+    ("spell_lens_starlens_prism_28", "lens"),
 )
 
 

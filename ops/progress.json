@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The Lens generated-map reward icon slice is complete: Array Ray, Array Chorus, Glass Facet, Focus Array, and Aurora Chorus own original source art and deterministic runtime icons; the manifest is 53 specific/59 fallback and the generated reward pool is 38 specific/0 fallback. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
+  "currentNotes": "The Lens town-study icon slice is complete: all 16 Lens catalog spells own original source art and deterministic runtime icons; the manifest is 61 specific/51 fallback and the unchanged generated reward pool is 38 specific/0 fallback. Focused live Prismhearth/Halo Spire study, compatibility, static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed release-readiness slice. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-generated-map-lens-spell-reward-distinct-icons-10184",
-  "currentSliceId": "presentation-generated-map-lens-spell-reward-distinct-icons-10184",
-  "currentSliceNotes": "Completed with five distinct original Lens spell reward icons, deterministic 53-row manifest generation, 38/38 generated reward-specific coverage, focused 1280/1920 battle authority, reward/spell/focus/core compatibility, exact repository/editor checks, Linux export plus packaged headless startup, and Windows export plus fresh-Wine Boot/MainMenu/native-DLL startup. Remaining 59 non-reward catalog fallbacks and packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-lens-town-study-complete-distinct-icons-10184",
+  "currentSliceId": "presentation-lens-town-study-complete-distinct-icons-10184",
+  "currentSliceNotes": "Eight remaining Lens town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Lens catalog icons. Manifest coverage is 61 specific/51 school fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Prismhearth and Halo Spire tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 51 non-Lens fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation generated map lens spell reward distinct icons 10184",
+  "currentSliceTitle": "presentation lens town study complete distinct icons 10184",
   "currentSliceUpdatedAt": "2026-08-24T03:07:39Z",
   "deferredRiskRegister": [
     {
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The five selected Lens generated-map reward icons are complete. Preserve the exact 38-spell reward order/values, 53 specific icons and 59 non-reward catalog fallbacks, all spell behavior, and Battle/session/save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "The complete 16-spell Lens catalog now owns distinct specific icons. Preserve the exact 38-spell reward order/values, 61 specific icons and 51 non-Lens catalog fallbacks, all spell and Town-study behavior, focus, session, and save authority. Select the next tracker-approved source-backed release-readiness slice; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The Lens reward icon slice is complete. Preserve the completed 133-building icon catalog, 53 specific spell icons, exact 59-spell non-reward catalog fallback, and unchanged 38-spell reward pool with full specific coverage; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "The Lens town-study icon slice is complete. Preserve the completed 133-building icon catalog, 61 specific spell icons, exact 51-spell non-Lens catalog fallback, and unchanged 38-spell reward pool with full specific coverage; select the next tracker-approved source-backed release-readiness slice and do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100545,6 +100545,16 @@
       "startedAt": "2026-08-24T03:10:00Z",
       "notes": "Completed with five distinct original Lens spell reward icons, deterministic 53-row manifest generation, 38/38 generated reward-specific coverage, focused 1280/1920 battle authority, reward/spell/focus/core compatibility, exact repository/editor checks, Linux export plus packaged headless startup, and Windows export plus fresh-Wine Boot/MainMenu/native-DLL startup. Remaining 59 non-reward catalog fallbacks and packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T03:23:57Z"
+    },
+    {
+      "id": "presentation-lens-town-study-complete-distinct-icons-10184",
+      "title": "presentation lens town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T04:21:29Z",
+      "startedAt": "2026-08-24T03:55:40Z",
+      "notes": "Eight remaining Lens town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Lens catalog icons. Manifest coverage is 61 specific/51 school fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Prismhearth and Halo Spire tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 51 non-Lens fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T04:21:29Z"
     }
   ],
   "project": "heroes-like",
@@ -101089,7 +101099,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T03:23:57Z",
+  "updatedAt": "2026-08-24T04:21:29Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

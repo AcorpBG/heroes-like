@@ -592,6 +592,94 @@
       "source_sha256": "eaf27683d2cd017398541ec18e8dc96a3badf141f3fe712cbacb5a1b2f5fcfb4",
       "icon_path": "res://art/magic/runtime/spells/spell_lens_aurora_chorus_10.png",
       "icon_sha256": "8b6371286304f8abcc22b90988eb97eeb9027fa80a03e0cdcaf382464f914251"
+    },
+    {
+      "id": "spell_lens_mirror_prism_04",
+      "spell_id": "spell_lens_mirror_prism_04",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_mirror_prism_04",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_mirror_prism_04.png",
+      "source_sha256": "a6e357571f158a7a07b7fdca55492f1d7292d710a22c5d07dda4a1efede36787",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_mirror_prism_04.png",
+      "icon_sha256": "94ce9b2eb91e705836a09437ca506f7dab77437c169e7222b2eb7970c8a57879"
+    },
+    {
+      "id": "spell_lens_starlens_survey_12",
+      "spell_id": "spell_lens_starlens_survey_12",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_starlens_survey_12",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_starlens_survey_12.png",
+      "source_sha256": "fc73e19548f31bdfdb80f5744eb96ea72da38659480d344b1ebf72a96c504ea7",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_starlens_survey_12.png",
+      "icon_sha256": "ad430f863cdc895a95238a0bc392a0ceff1d52f6c7ad24733fccf72e079afcb4"
+    },
+    {
+      "id": "spell_lens_crown_prism_16",
+      "spell_id": "spell_lens_crown_prism_16",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_crown_prism_16",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_crown_prism_16.png",
+      "source_sha256": "29f6cb0ea6b29c4b8dbde3ce04e4e5d981ed7e63ff825929b3eb4e724e33f6c3",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_crown_prism_16.png",
+      "icon_sha256": "b5d505975e80384dca27c9516390c770dacf29731445dd4c182dddc72873ff3d"
+    },
+    {
+      "id": "spell_lens_halo_ray_18",
+      "spell_id": "spell_lens_halo_ray_18",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_halo_ray_18",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_halo_ray_18.png",
+      "source_sha256": "e62c2c740bc01b9bdda8170598f1d82607d68dfce6765ac53b071f6ca0dd2dc9",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_halo_ray_18.png",
+      "icon_sha256": "a2e55ef8fd2debdfb20f50ae2808d28d412c00960030cd697f25631544dc5142"
+    },
+    {
+      "id": "spell_lens_mirror_facet_20",
+      "spell_id": "spell_lens_mirror_facet_20",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_mirror_facet_20",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_mirror_facet_20.png",
+      "source_sha256": "fd90c9a9b6236312502dbfcaf5abe88391219bf504563d71e96e7c0dbedff689",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_mirror_facet_20.png",
+      "icon_sha256": "012b4354e4b2eae7320f2abc32193385e3495995c766c736bf9e69a4ccdd2de6"
+    },
+    {
+      "id": "spell_lens_glass_survey_24",
+      "spell_id": "spell_lens_glass_survey_24",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_glass_survey_24",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_glass_survey_24.png",
+      "source_sha256": "31e336defe5160f931acf008ef3c9a022e5d266828bdfd53836150bbcd49da9f",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_glass_survey_24.png",
+      "icon_sha256": "60393c5ee01d8901efb520563b3760d35cf78c7363c74b186f887b5b9c4dde11"
+    },
+    {
+      "id": "spell_lens_aurora_array_26",
+      "spell_id": "spell_lens_aurora_array_26",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_aurora_array_26",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_aurora_array_26.png",
+      "source_sha256": "b8e65d85cdffc3421cf1d6eea323c143bd359749d91f2161b62f926ae0f0ebf6",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_aurora_array_26.png",
+      "icon_sha256": "c6346c610779263c9369c3b0cd9fe13f6a40f97892149f3554fad0199b1d9bfa"
+    },
+    {
+      "id": "spell_lens_starlens_prism_28",
+      "spell_id": "spell_lens_starlens_prism_28",
+      "school_id": "lens",
+      "icon_id": "spell_signature_icon_lens_starlens_prism_28",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_lens_starlens_prism_28.png",
+      "source_sha256": "8fa7b12ef3ac3c9c55e67c89963f96ac49c4c0eedae7686646143f8f344e81c4",
+      "icon_path": "res://art/magic/runtime/spells/spell_lens_starlens_prism_28.png",
+      "icon_sha256": "f001d7f684f9b9927e69f9ca47ef57e98ec0ae6d9aecc6bec46382b486ef6f82"
     }
   ]
 }

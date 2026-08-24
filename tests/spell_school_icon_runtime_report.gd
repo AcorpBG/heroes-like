@@ -79,6 +79,27 @@ const TARGET_LENS_BATTLE_REWARD_SPELL_IDS := [
 	"spell_lens_focus_array_14",
 	"spell_lens_aurora_chorus_10",
 ]
+const TARGET_LENS_TOWN_STUDY_SPELL_IDS := [
+	"spell_lens_mirror_prism_04",
+	"spell_lens_starlens_survey_12",
+	"spell_lens_crown_prism_16",
+	"spell_lens_halo_ray_18",
+	"spell_lens_mirror_facet_20",
+	"spell_lens_glass_survey_24",
+	"spell_lens_aurora_array_26",
+	"spell_lens_starlens_prism_28",
+]
+const TARGET_LENS_TOWN_SCENARIOS := {
+	"prismhearth-watch": "town_prismhearth",
+	"halo-reserve-refraction-claim": "town_halo_spire",
+}
+const TARGET_LENS_TOWN_STUDY_BUILDING_IDS := [
+	"building_lantern_archive",
+	"building_starseer_annex",
+	"building_sunvault_zenith_observatory",
+	"building_sunvault_prism_oratory",
+	"building_sunvault_daybreak_matrix",
+]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
 	"battle": "spell_bulwark_litany",
@@ -137,6 +158,14 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_lens_glass_facet_08": "res://art/magic/runtime/spells/spell_lens_glass_facet_08.png",
 	"spell_lens_focus_array_14": "res://art/magic/runtime/spells/spell_lens_focus_array_14.png",
 	"spell_lens_aurora_chorus_10": "res://art/magic/runtime/spells/spell_lens_aurora_chorus_10.png",
+	"spell_lens_mirror_prism_04": "res://art/magic/runtime/spells/spell_lens_mirror_prism_04.png",
+	"spell_lens_starlens_survey_12": "res://art/magic/runtime/spells/spell_lens_starlens_survey_12.png",
+	"spell_lens_crown_prism_16": "res://art/magic/runtime/spells/spell_lens_crown_prism_16.png",
+	"spell_lens_halo_ray_18": "res://art/magic/runtime/spells/spell_lens_halo_ray_18.png",
+	"spell_lens_mirror_facet_20": "res://art/magic/runtime/spells/spell_lens_mirror_facet_20.png",
+	"spell_lens_glass_survey_24": "res://art/magic/runtime/spells/spell_lens_glass_survey_24.png",
+	"spell_lens_aurora_array_26": "res://art/magic/runtime/spells/spell_lens_aurora_array_26.png",
+	"spell_lens_starlens_prism_28": "res://art/magic/runtime/spells/spell_lens_starlens_prism_28.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -196,6 +225,12 @@ func _run() -> void:
 		if not bool(old_measure_overworld_row.get("ok", false)):
 			_fail("Generated Old Measure overworld reward spell icon surface failed: %s" % JSON.stringify(old_measure_overworld_row), original_window_size)
 			return
+		for town_scenario_id in TARGET_LENS_TOWN_SCENARIOS:
+			var lens_town_row: Dictionary = await _surface_case(viewport_size, "town", String(TARGET_LENS_TOWN_STUDY_SPELL_IDS[0]), TARGET_LENS_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))
+			rows.append(lens_town_row)
+			if not bool(lens_town_row.get("ok", false)):
+				_fail("Lens town-study spell icon surface failed: %s" % JSON.stringify(lens_town_row), original_window_size)
+				return
 	SessionState.reset_session()
 	get_window().size = original_window_size
 	await get_tree().process_frame
@@ -276,7 +311,7 @@ func _catalog_contract() -> Dictionary:
 		"ok": (
 			bool(fallback_contract.get("ok", false))
 			and bool(generated_reward_contract.get("ok", false))
-			and signature_contract.size() == 53
+			and signature_contract.size() == 61
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -285,8 +320,8 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 53
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 59
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 61
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 51
 			and SpellRules.spell_icon_path("spell_furnace_foundry_clamp_27") == SpellRules.spell_school_icon_path("spell_furnace_foundry_clamp_27")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
@@ -296,7 +331,7 @@ func _catalog_contract() -> Dictionary:
 		"fallback": fallback_contract,
 		"generated_reward": generated_reward_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 59,
+		"school_fallback_count": 51,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
@@ -380,13 +415,13 @@ func _signature_fallback_contract() -> Dictionary:
 		"restored_path": restored_path,
 	}
 
-func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: String = "", spell_ids_override: Array = []) -> Dictionary:
+func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: String = "", spell_ids_override: Array = [], town_scenario_id: String = "") -> Dictionary:
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if get_window().size != viewport_size:
 		return {"ok": false, "failure": "window_size", "surface": surface, "actual": get_window().size}
-	var fixture := _surface_fixture(surface, spell_id_override, spell_ids_override)
+	var fixture := _surface_fixture(surface, spell_id_override, spell_ids_override, town_scenario_id)
 	var session = fixture.get("session")
 	var spell_id := String(fixture.get("spell_id", ""))
 	if session == null or spell_id == "":
@@ -414,15 +449,12 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 	if container == null:
 		return await _finish_case(shell, {"ok": false, "failure": "container", "surface": surface})
 	var actions := _surface_actions(surface, live_session)
-	var buttons := _button_contract(shell, container, actions, surface)
+	var buttons := _button_contract(shell, container, actions, surface, not (surface == "town" and not spell_ids_override.is_empty()))
 	var action_id := _surface_action_id(surface, spell_id)
 	var action := _action_for_id(actions, action_id)
 	var button := _button_for_action(shell, container, actions, surface, action_id)
 	if action.is_empty() or button == null or button.disabled:
 		return await _finish_case(shell, {"ok": false, "failure": "action_button", "surface": surface, "action_id": action_id, "actions": actions, "buttons": buttons})
-	button.grab_focus()
-	await get_tree().process_frame
-	var focus_exact := get_viewport().gui_get_focus_owner() == button
 	var expected_icon_path := SpellRules.spell_icon_path(spell_id)
 	var selected_icon_exact := _icon_exact(button, expected_icon_path)
 	var selected_specific := expected_icon_path.begins_with("res://art/magic/runtime/spells/")
@@ -430,7 +462,18 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 	for targeted_spell_id in spell_ids_override:
 		var targeted_action_id := _surface_action_id(surface, String(targeted_spell_id))
 		var targeted_button := _button_for_action(shell, container, actions, surface, targeted_action_id)
-		targeted_buttons_exact = targeted_buttons_exact and targeted_button != null and _icon_exact(targeted_button, SpellRules.spell_icon_path(String(targeted_spell_id)))
+		if surface == "town" and targeted_button != null:
+			targeted_button.grab_focus()
+			await get_tree().process_frame
+		targeted_buttons_exact = (
+			targeted_buttons_exact
+			and targeted_button != null
+			and _icon_exact(targeted_button, SpellRules.spell_icon_path(String(targeted_spell_id)))
+			and (surface != "town" or (get_viewport().gui_get_focus_owner() == targeted_button and get_viewport().get_visible_rect().encloses(targeted_button.get_global_rect())))
+		)
+	button.grab_focus()
+	await get_tree().process_frame
+	var focus_exact := get_viewport().gui_get_focus_owner() == button and get_viewport().get_visible_rect().encloses(button.get_global_rect())
 	var invalid_button := Button.new()
 	invalid_button.text = "Invalid spell control"
 	shell.call("_apply_spell_action_icon", invalid_button, {"id": _surface_action_id(surface, "spell_missing")})
@@ -453,6 +496,7 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 			and selected_icon_exact
 			and selected_specific
 			and targeted_buttons_exact
+			and bool(fixture.get("town_study_contract_exact", true))
 			and invalid_fail_closed
 			and bool(control_result.get("ok", false))
 			and live_after == control.to_dict()
@@ -469,6 +513,10 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 		"selected_specific": selected_specific,
 		"targeted_spell_ids": spell_ids_override.duplicate(),
 		"targeted_buttons_exact": targeted_buttons_exact,
+		"town_scenario_id": String(fixture.get("town_scenario_id", "")),
+		"town_id": String(fixture.get("town_id", "")),
+		"town_spell_tier": int(fixture.get("town_spell_tier", 0)),
+		"town_study_contract_exact": bool(fixture.get("town_study_contract_exact", true)),
 		"invalid_fail_closed": invalid_fail_closed,
 		"control_ok": bool(control_result.get("ok", false)),
 		"session_exact": live_after == control.to_dict(),
@@ -479,24 +527,48 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 		row["session_differences"] = _recursive_exact_differences(control.to_dict(), live_after)
 	return await _finish_case(shell, row)
 
-func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids_override: Array = []) -> Dictionary:
+func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids_override: Array = [], town_scenario_id: String = "") -> Dictionary:
 	if surface == "town":
-		var town_session = _base_session()
+		var town_session = _base_session(town_scenario_id if town_scenario_id != "" else "river-pass")
 		var town := _first_player_town(town_session)
 		if town.is_empty():
 			return {}
 		var built_buildings: Array = town.get("built_buildings", []) if town.get("built_buildings", []) is Array else []
-		if "building_lantern_archive" not in built_buildings:
-			built_buildings.append("building_lantern_archive")
+		var required_study_buildings: Array = TARGET_LENS_TOWN_STUDY_BUILDING_IDS if town_scenario_id != "" else ["building_lantern_archive"]
+		for building_id in required_study_buildings:
+			if building_id not in built_buildings:
+				built_buildings.append(building_id)
 		town["built_buildings"] = built_buildings
 		_move_active_hero_to_town(town_session, town)
 		_set_active_hero_spellbook(town_session, [])
 		var learning_actions := TownRules.get_spell_learning_actions(town_session)
+		var learning_spell_ids := []
 		for action_value in learning_actions:
 			if action_value is Dictionary:
 				var spell_id := SpellRules.spell_id_for_action(String(action_value.get("id", "")))
-				if spell_id != "":
-					return {"session": town_session, "spell_id": spell_id}
+				if spell_id != "" and spell_id not in learning_spell_ids:
+					learning_spell_ids.append(spell_id)
+		if town_scenario_id != "":
+			var targeted_learning_ids := learning_spell_ids.filter(func(spell_id): return spell_id in spell_ids_override)
+			var expected_town_id := String(TARGET_LENS_TOWN_SCENARIOS.get(town_scenario_id, ""))
+			var town_study_contract_exact := (
+				String(town.get("town_id", "")) == expected_town_id
+				and TownRules.current_spell_tier(town) == 5
+				and targeted_learning_ids == spell_ids_override
+				and TARGET_LENS_TOWN_STUDY_SPELL_IDS.all(func(spell_id): return spell_id in TownRules.accessible_spell_ids(town))
+			)
+			if spell_id_override in learning_spell_ids:
+				return {
+					"session": town_session,
+					"spell_id": spell_id_override,
+					"town_scenario_id": town_scenario_id,
+					"town_id": String(town.get("town_id", "")),
+					"town_spell_tier": TownRules.current_spell_tier(town),
+					"town_study_contract_exact": town_study_contract_exact,
+				}
+			return {}
+		if not learning_spell_ids.is_empty():
+			return {"session": town_session, "spell_id": String(learning_spell_ids[0])}
 		return {}
 	if surface == "battle":
 		var battle_session = _base_session()
@@ -526,8 +598,8 @@ func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids
 	overworld_session.overworld["player_heroes"] = overworld_heroes
 	return {"session": overworld_session, "spell_id": overworld_spell_id}
 
-func _base_session():
-	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+func _base_session(scenario_id: String = "river-pass"):
+	var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
 	return session
 
@@ -594,7 +666,7 @@ func _action_for_id(actions: Array, action_id: String) -> Dictionary:
 			return action_value.duplicate(true)
 	return {}
 
-func _button_contract(shell: Node, container: Container, actions: Array, surface: String) -> Dictionary:
+func _button_contract(shell: Node, container: Container, actions: Array, surface: String, require_all_contained: bool = true) -> Dictionary:
 	var button_rows := []
 	var buttons := []
 	for child in container.get_children():
@@ -622,9 +694,10 @@ func _button_contract(shell: Node, container: Container, actions: Array, surface
 			"rect": rect,
 		})
 	return {
-		"ok": button_rows.size() == actions.size() and buttons.size() == actions.size() and button_rows.all(func(row): return bool(row.get("present", false)) and bool(row.get("copy_exact", false)) and bool(row.get("disabled_exact", false)) and bool(row.get("icon_exact", false)) and bool(row.get("focusable", false)) and bool(row.get("visible", false)) and bool(row.get("contained", false))),
+		"ok": button_rows.size() == actions.size() and buttons.size() == actions.size() and button_rows.all(func(row): return bool(row.get("present", false)) and bool(row.get("copy_exact", false)) and bool(row.get("disabled_exact", false)) and bool(row.get("icon_exact", false)) and bool(row.get("focusable", false)) and bool(row.get("visible", false)) and (not require_all_contained or bool(row.get("contained", false)))),
 		"action_count": actions.size(),
 		"button_count": buttons.size(),
+		"require_all_contained": require_all_contained,
 		"rows": button_rows,
 	}
 
