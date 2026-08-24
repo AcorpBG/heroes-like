@@ -31062,6 +31062,121 @@ def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) 
             ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
 
 
+def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    report_path = ROOT / "tests" / "overworld_small_map_visual_scale_runtime_report.gd"
+    scene_path = ROOT / "tests" / "overworld_small_map_visual_scale_runtime_report.tscn"
+    for path in (OVERWORLD_MAP_VIEW_SCRIPT_PATH, report_path, scene_path):
+        ensure(path.exists(), errors, f"Missing Overworld small-map visual scale owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (OVERWORLD_MAP_VIEW_SCRIPT_PATH, report_path, scene_path)):
+        return
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = report_path.read_text(encoding="utf-8")
+    scene_text = scene_path.read_text(encoding="utf-8")
+    ensure(map_text.count("const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0") == 1, errors, "Small-map fit must own one exact 104px visual extent cap")
+    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.80") == 1, errors, "Town art must own one exact 80% visual-footprint scale")
+    extent_block = gd_function_block(map_text, "_tile_extent_for_viewport")
+    uncapped_block = gd_function_block(map_text, "_uncapped_whole_map_fit_tile_extent")
+    metrics_block = gd_function_block(map_text, "validation_view_metrics")
+    town_draw_block = gd_function_block(map_text, "_draw_town_sprite")
+    town_payload_block = gd_function_block(map_text, "_town_presentation_payload_for_town")
+    extent_order = tuple(extent_block.find(token) for token in (
+        "var minimum_tile_extent := _active_minimum_tile_extent()",
+        "if _should_fit_entire_map():",
+        "var fit_extent := _uncapped_whole_map_fit_tile_extent(viewport_size)",
+        "return clampf(fit_extent, minimum_tile_extent, maxf(minimum_tile_extent, MAX_SMALL_MAP_FIT_TILE_EXTENT))",
+        "var visible_tile_span := _active_visible_tile_span()",
+        "return max(tactical_extent, minimum_tile_extent)",
+    ))
+    ensure(all(index >= 0 for index in extent_order) and list(extent_order) == sorted(extent_order), errors, "Tile extent must cap only whole-map fit before retaining the existing large-map tactical calculation")
+    for token in (
+        "viewport_size.x / float(max(_map_size.x, 1))",
+        "viewport_size.y / float(max(_map_size.y, 1))",
+        "return floor(",
+    ):
+        ensure(token in uncapped_block, errors, f"Uncapped whole-map fit helper is missing exact source geometry: {token}")
+    for forbidden in ("session", "_session", "await ", "create_timer", "queue_redraw", "position =", "size =", "MAX_SMALL_MAP_FIT_TILE_EXTENT"):
+        ensure(forbidden not in uncapped_block, errors, f"Uncapped fit helper must remain pure viewport/map geometry without policy or mutation: {forbidden}")
+    for token in (
+        '"maximum_small_map_fit_tile_extent": MAX_SMALL_MAP_FIT_TILE_EXTENT',
+        '"uncapped_whole_map_fit_tile_extent": uncapped_whole_map_fit_tile_extent',
+        '"small_map_fit_extent_capped": _should_fit_entire_map() and uncapped_whole_map_fit_tile_extent > cell_size.x',
+        '"whole_map_fit_scale_policy": "bounded_small_map_fit_extent"',
+    ):
+        ensure(token in metrics_block, errors, f"View metrics must expose truthful small-map scale policy evidence: {token}")
+    town_draw_order = tuple(town_draw_block.find(token) for token in (
+        "var footprint := _object_profile_footprint(profile)",
+        "var extent := minf(rect.size.x, rect.size.y)",
+        "var sprite_fraction := TOWN_SPRITE_EXTENT_FACTOR",
+        "var sprite_extent := maxf(12.0, extent * sprite_fraction)",
+        "_canvas_draw_texture_rect(texture, sprite_rect, false",
+    ))
+    ensure(all(index >= 0 for index in town_draw_order) and list(town_draw_order) == sorted(town_draw_order), errors, "Town drawing must apply the visual-only extent after retaining logical footprint/grounding ownership")
+    for token in (
+        '"visual_sprite_extent_fraction_of_footprint": TOWN_SPRITE_EXTENT_FACTOR',
+        '"visual_sprite_extent_tiles": TOWN_SPRITE_EXTENT_FACTOR * float(mini(TOWN_PRESENTATION_FOOTPRINT.x, TOWN_PRESENTATION_FOOTPRINT.y))',
+    ):
+        ensure(token in town_payload_block, errors, f"Town presentation must expose exact visual/logical scale separation: {token}")
+    for preserved_token in (
+        "const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
+        "const TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.80",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.96",
+        "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
+        'const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"',
+    ):
+        ensure(preserved_token in map_text, errors, f"Small-map visual cap must preserve object presentation authority: {preserved_token}")
+
+    for token in (
+        'const SMALL_SCENARIO_ID := "prismhearth-watch"',
+        'const LARGE_SCENARIO_ID := "ninefold-confluence"',
+        "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        "const MAX_SMALL_MAP_TILE_EXTENT := 104.0",
+        "const TOWN_VISUAL_EXTENT_TILES := 1.6",
+        'var metrics: Dictionary = map_view.call("validation_view_metrics")',
+        "var expected_capped := uncapped_extent > MAX_SMALL_MAP_TILE_EXTENT",
+        "viewport_rect.get_center().distance_to(board_rect.get_center()) <= 1.5",
+        'bool(metrics.get("fit_entire_map", false))',
+        'bool(metrics.get("full_map_visible", false))',
+        'not bool(metrics.get("pan_supported", true))',
+        "var town_exact := _town_footprint_exact(shell)",
+        "var hero_exact := _hero_scale_exact(map_view, tile_extent)",
+        "var object_exact := _one_tile_object_footprints_exact(shell, session)",
+        "var authority_exact := session.to_dict() == authority_before",
+        'not bool(metrics.get("fit_entire_map", true))',
+        'bool(metrics.get("pan_supported", false))',
+        'print("OVERWORLD_SMALL_MAP_VISUAL_SCALE_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Focused small-map scale report is missing exact live proof: {token}")
+    ensure(report_text.count("await _small_map_row(viewport_size)") == 1 and report_text.count("await _large_map_control(Vector2i(1920, 1080))") == 1, errors, "Focused scale report must run exactly two small-map viewport rows then one large-map control")
+    for token in (
+        'int(profile.get("footprint_width_tiles", 0)) != 3',
+        'int(profile.get("footprint_height_tiles", 0)) != 2',
+        'int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5',
+        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.80',
+        'float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES',
+        'String(profile.get("entry_role", "")) != "bottom_middle_visit_approach"',
+        'int(readability.get("footprint_width_tiles", 0)) == 1',
+        'int(readability.get("footprint_height_tiles", 0)) == 1',
+        'sprite_rect.size.x > tile_extent + 0.01',
+    ):
+        ensure(token in report_text, errors, f"Focused scale report must retain exact logical/object hierarchy gate: {token}")
+    for forbidden in (
+        "HERO_FIELD_SPRITE_EXTENT_FACTOR =", "OBJECT_SPRITE_EXTENT_FACTOR =", "TOWN_PRESENTATION_FOOTPRINT =", "TOWN_SPRITE_EXTENT_FACTOR =",
+        "session.overworld.erase", "queue_redraw", "_tile_extent_for_viewport(", "large_map_visible_tile_span_override =",
+        "sort(", ".erase(", "create_timer",
+    ):
+        ensure(forbidden not in report_text, errors, f"Focused scale report must observe public live geometry without changing renderer/game authority: {forbidden}")
+    ensure('script = ExtResource("1")' in scene_text and 'overworld_small_map_visual_scale_runtime_report.gd' in scene_text, errors, "Small-map scale report scene must own the exact focused script")
+
+
 def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
     visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
     for path in (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, visual_path):
@@ -62882,6 +62997,7 @@ def main() -> int:
     validate_overworld_field_readiness_progress_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_objective_brief_native_pixel_ellipsis(errors)
+    validate_overworld_small_map_visual_scale(errors)
     validate_overworld_130_scale_footer_containment(errors)
     validate_overworld_hero_card_mana_first_view(errors)
     validate_overworld_rail_word_boundary_ellipsis(errors)

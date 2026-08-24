@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence."
+    "Select the next tracker-approved implementation slice from direct current behavior evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "content-bogbound-oath-reed-watcher-staged-reinforcement-10184",
-    "title": "Bogbound Oath Reed-Watcher staged reinforcement",
+    "id": "ux-overworld-small-map-visual-scale-cap-10184",
+    "title": "Overworld small-map visual scale cap",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-24T18:12:37Z",
-    "updatedAt": "2026-08-24T22:12:33Z",
-    "completedAt": "2026-08-24T22:12:33Z",
+    "startedAt": "2026-08-24T22:25:00Z",
+    "updatedAt": "2026-08-24T22:47:08Z",
+    "completedAt": "2026-08-24T22:47:08Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with exact one-shot 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat Reed-Watcher stages after the four authored victories. Focused proof retains every enemy force, all losing predecessors, army mirrors, carryover/save authority, the briefing-normalized linekeeper captain, combat seed/RNG, Bog-Brute-first Highwater formation, and five surviving Cutthroats. The real 78-step three-chapter route, preserved Archive Wardens defeat, 77/77 queue-clear breadth signature 829808c9, campaign/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged campaign interaction and broader certification/release claims remain unclaimed."
+    "notes": "Completed from direct shipped screenshot evidence. Small authored maps now cap whole-map fit at 104px instead of the reproduced 132px extent, and town art uses 80% of its unchanged 3x2 footprint (1.6 visual tiles instead of about 2.16). Focused 1280x720 and 1920x1080 runtime preserves centered full-map visibility, exact town entry/blocking, hero and one-tile object presentation, session authority, and the Ninefold 65px large-map tactical camera control. Faction-town, faction-hero, artifact, full-route, broad Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, certification, whole-game validation, and release readiness remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Bogbound Oath's exact earned 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat stages are complete. Every enemy force remains exact; focused proof preserves all losing predecessors, one-shot/carryover/save authority, the briefing-normalized linekeeper captain, combat seed/RNG, Bog-Brute-first Highwater formation, and five selected survivors. The real 78-step three-chapter route, 77/77 queue-clear breadth signature 829808c9, compatibility, static/editor, and bounded Linux/Windows startup gates are green. Select the next tracker-approved source-backed product slice.",
+  "currentNotes": "The Overworld small-map visual scale correction is completed: whole-map fit is capped at 104px, town art is 1.6 visual tiles within its unchanged 3x2 logical footprint, focused and compatibility runtime are green, and bounded Linux/Windows export-startup gates pass. Select the next tracker-approved slice from direct current behavior evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-bogbound-oath-reed-watcher-staged-reinforcement-10184",
-  "currentSliceId": "content-bogbound-oath-reed-watcher-staged-reinforcement-10184",
-  "currentSliceNotes": "Completed with exact earned 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat stages. Focused, real 78-step route, preserved Archive defeat, 77/77 breadth queue, campaign/core, static/editor, and bounded Linux/Windows startup gates are green; broader release claims remain unclaimed.",
+  "currentSlice": "ux-overworld-small-map-visual-scale-cap-10184",
+  "currentSliceId": "ux-overworld-small-map-visual-scale-cap-10184",
+  "currentSliceNotes": "Completed with focused 1280/1920 small-map scale proof, exact logical-footprint and interaction authority, unchanged large-map camera behavior, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bogbound Oath Reed-Watcher staged reinforcement",
-  "currentSliceUpdatedAt": "2026-08-24T22:12:33Z",
+  "currentSliceTitle": "Overworld small-map visual scale cap",
+  "currentSliceUpdatedAt": "2026-08-24T22:47:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19650,7 +19650,7 @@
       }
     }
   },
-  "guardrailNote": "Preserve the accepted Bogbound, Charter Pyre, and Lockmarsh enemy armies and shared Reedmaw opening. The selected slice may add only the exact screened earned post-Lantern, carried post-Bridgeward, and post-Road active-army reinforcements plus authored validation route ordering; do not weaken battles, change AI/rules/objectives, or claim packaged campaign interaction, certification, whole-game validation, or release readiness.",
+  "guardrailNote": "Change only the small-map whole-fit visual tile extent. Preserve exact town/object/hero logical footprints, passability, pathing, focus, selection, routes, assets, save/gameplay authority, and large-map tactical camera behavior; do not claim packaged interaction, certification, whole-game validation, or release readiness.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19798,7 +19798,7 @@
     ".artifacts/rmg_native_4a901a_identity/final_payload_compare.json"
   ],
   "latestEvidenceId": "native-rmg-4a7605-source-owned-monolith-dispatch-20260714",
-  "latestFinding": "The active Bogbound Oath staged-reinforcement slice is in progress. Native RMG is completed for the selected supported release matrix and is not a current blocker. The first three stages reach Chapter III Archive, but the authoritative client route then loses the final Highwater assault from the exact 15-Cutthroat/1-Brute state. Exact captured-payload and briefing-normalized production screens agree: ten extra Cutthroats still lose and eleven win the unchanged day-two 16/2/1 garrison with five Cutthroats surviving. The focused rerun and full routed validation chain are now active.",
+  "latestFinding": "The active Overworld scale slice is in progress from a reproduced shipped presentation defect. Small authored maps currently derive an unbounded full-fit tile extent, so 1920x1080 enlarges the same town, hero, encounter, and site art beyond the 1280x720 presentation. Logical footprint and interaction authority are already separate and must remain unchanged.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -19860,7 +19860,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Preserve the accepted Bogbound enemy armies and shared Reedmaw opening. Implement only the exact screened post-Lantern active-army reinforcement and authored validation order; do not weaken battles, change AI/rules/objectives, or claim packaged campaign interaction, certification, whole-game validation, or release readiness.",
+  "nextActionGuardrailNote": "Implement only the small-map whole-fit visual extent cap and prove 1280/1920 scale, centering, full-map visibility, exact footprints/interactions, and unchanged large-map camera behavior. Do not alter art, content, pathing, gameplay, saves, generated maps, or Native RMG.",
   "notes": "The selected compatibility correction is direct gameplay work: data-driven first-victory reinforcements preserve the exact screened sequential effective armies while restoring meaningful independent encounter balance. It is not a report-only or gate-only change.",
   "plannedSlices": [
     {
@@ -100818,6 +100818,17 @@
       "startedAt": "2026-08-24T18:12:37Z",
       "notes": "Completed with exact one-shot 40-Cutthroat, 15-Slinger, 31-Cutthroat, and 11-Cutthroat Reed-Watcher stages after the four authored victories. Every enemy force remains exact; focused proof preserves all losing predecessors, one-shot/carryover/save authority, the briefing-normalized linekeeper captain, combat seed/RNG, Bog-Brute-first Highwater formation, and five surviving Cutthroats. The real shipped-browser route completes all 78 steps and campaign completion; Archive Wardens remains the accepted bounded defeat; 77/77 active encounters are queue-clear with signature 829808c9. Campaign/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged campaign interaction, certification, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T22:12:33Z"
+    },
+    {
+      "id": "ux-overworld-small-map-visual-scale-cap-10184",
+      "title": "Overworld small-map visual scale cap",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T22:47:08Z",
+      "startedAt": "2026-08-24T22:25:00Z",
+      "notes": "Completed from direct shipped screenshot evidence. Small authored maps now cap whole-map fit at 104px instead of the reproduced 132px extent, and town art uses 80% of its unchanged 3x2 footprint (1.6 visual tiles instead of about 2.16). Focused 1280x720 and 1920x1080 runtime preserves centered full-map visibility, exact town entry/blocking, hero and one-tile object presentation, session authority, and the Ninefold 65px large-map tactical camera control. Faction-town, faction-hero, artifact, full-route, broad Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, certification, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T22:47:08Z"
     }
   ],
   "project": "heroes-like",
@@ -100828,7 +100839,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain.",
+  "remainingWork": "Implement and validate the bounded small-map visual tile-extent cap, then retain exact logical object footprints, pathing, interaction, large-map camera behavior, and bounded platform startup compatibility. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101360,9 +101371,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Bogbound Oath chapter-one routed viability is now selected from an exact shipped-client defeat; implementation and validation remain in progress, and the game is not release-ready.",
+  "summary": "The bounded Overworld small-map visual scale correction is implemented and validated; no next implementation slice is selected, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T18:12:37Z",
+  "updatedAt": "2026-08-24T22:47:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
