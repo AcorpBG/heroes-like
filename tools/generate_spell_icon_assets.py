@@ -44,6 +44,9 @@ SPELLS = (
     ("spell_beacon_roadward_charge_23", "beacon"),
     ("spell_beacon_bell_ward_09", "beacon"),
     ("spell_beacon_bell_lance_25", "beacon"),
+    ("spell_mire_bog_drum_18", "mire"),
+    ("spell_mire_brine_fenlight_24", "mire"),
+    ("spell_mire_leech_snare_10", "mire"),
 )
 
 

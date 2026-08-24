@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Beacon generated-map reward icon slice is completed: five tier 1-5 Beacon rewards now own specific original icons, the centralized manifest has 29 specific rows and 83 catalog fallbacks, and the unchanged 38-spell generated reward pool has 14 specific and 24 school-fallback entries. Select the next tracker-approved source-backed slice; the game is not release-ready.",
+  "currentNotes": "The generated-map Mire reward icon slice is completed: Bog Drum, Brine Fenlight, and Leech Snare now own specific original icons, the centralized manifest has 32 specific rows and 80 catalog fallbacks, and the unchanged 38-spell reward pool has 17 specific and 21 school-fallback entries. Select the next tracker-approved source-backed slice; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-generated-map-beacon-spell-reward-distinct-icons-10184",
-  "currentSliceId": "presentation-generated-map-beacon-spell-reward-distinct-icons-10184",
-  "currentSliceNotes": "Implemented five distinct original 1254px source and deterministic 128px runtime icons for the exact tier 1-5 Beacon generated-map spell rewards. The specific manifest now has 29 rows and 83 catalog fallbacks; the unchanged ordered 38-spell reward pool has 14 specific and 24 school-fallback entries. Focused 1280/1920 Battle buttons and non-terminal cast parity, generated reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-generated-map-mire-spell-reward-distinct-icons-10184",
+  "currentSliceId": "presentation-generated-map-mire-spell-reward-distinct-icons-10184",
+  "currentSliceNotes": "Implemented distinct original 1254px source and deterministic 128px runtime icons for Bog Drum, Brine Fenlight, and Leech Snare, completing the generated-map Mire reward subset. The centralized manifest now has 32 specific rows and 80 catalog fallbacks; the unchanged ordered 38-spell reward pool has 17 specific and 21 school-fallback entries. Focused 1280/1920 Battle and Overworld action/icon/focus/session/save parity, reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation generated map beacon spell reward distinct icons 10184",
-  "currentSliceUpdatedAt": "2026-08-23T23:47:38Z",
+  "currentSliceTitle": "presentation generated map mire spell reward distinct icons 10184",
+  "currentSliceUpdatedAt": "2026-08-24T01:59:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the 29 shipped specific spell icons, exact 83-spell school fallback, and unchanged 38-spell generated reward pool split of 14 specific and 24 fallback entries; do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
+  "guardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the exact 38-spell reward order/values, 32 shipped specific spell icons, 80 catalog fallbacks, all spell behavior, and Battle/Overworld/session/save authority. Do not infer packaged interaction, accessibility certification, signing, native parity, or release readiness from bounded runtime and startup gates.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 133-building icon catalog, 29 specific spell icons, exact 83-spell school fallback, and unchanged 38-spell generated reward pool split of 14 specific and 24 fallback entries; do not infer release readiness from bounded local and packaging startup gates.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice. Preserve the completed 133-building icon catalog, 32 specific spell icons, exact 80-spell fallback, and unchanged 38-spell reward pool split of 17 specific and 21 fallback entries; do not infer release readiness from bounded local and packaging startup gates.",
   "notes": "All 133 production buildings now have specific original Town Build art. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged Town interaction and release readiness remain unclaimed.",
   "plannedSlices": [
     {
@@ -100409,6 +100409,40 @@
       "startedAt": "2026-08-24T01:26:09Z",
       "notes": "Implemented five distinct original 1254px source and deterministic 128px runtime icons for the exact tier 1-5 Beacon generated-map spell rewards. The specific manifest now has 29 rows and 83 catalog fallbacks; the unchanged ordered 38-spell reward pool has 14 specific and 24 school-fallback entries. Focused 1280/1920 Battle buttons and non-terminal cast parity, generated reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T01:56:03Z"
+    },
+    {
+      "id": "presentation-generated-map-mire-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map mire spell reward distinct icons 10184",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T02:10:40Z",
+      "startedAt": "2026-08-24T01:59:01Z",
+      "implementationTargets": [
+        "tools/generate_spell_icon_assets.py",
+        "content/spell_icons.json",
+        "art/magic/source/spells/curated/spell_mire_bog_drum_18.png",
+        "art/magic/source/spells/curated/spell_mire_brine_fenlight_24.png",
+        "art/magic/source/spells/curated/spell_mire_leech_snare_10.png",
+        "art/magic/runtime/spells/spell_mire_bog_drum_18.png",
+        "art/magic/runtime/spells/spell_mire_brine_fenlight_24.png",
+        "art/magic/runtime/spells/spell_mire_leech_snare_10.png",
+        "tests/spell_school_icon_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Bog Drum, Brine Fenlight, and Leech Snare each own distinct original 1254px source art and deterministic 128px runtime icons through the existing centralized manifest/resolver; no other icon identity changes.",
+        "The exact ordered 38-spell generated reward pool, values, tiers, schools, spell effects, and shrine acquisition remain unchanged while the reward pool advances from 14 to 17 specific icons and from 24 to 21 fallbacks.",
+        "Focused 1280/1920 Battle and Overworld action surfaces, real reward acquisition, magic/reward/focus/core compatibility, deterministic generation, repository/editor validation, and bounded Linux/Windows export-startup gates pass without session/save/focus/action drift."
+      ],
+      "nonGoals": [
+        "No spell rule, effect, target mode, mana, tier, reward weight/value/order, random-map generation, native RMG, resolver/fallback, UI geometry, focus, session, save, or non-Mire icon change.",
+        "No remaining reward or catalog icon completion, packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Implemented distinct original 1254px source and deterministic 128px runtime icons for Bog Drum, Brine Fenlight, and Leech Snare, completing the generated-map Mire reward subset. The centralized manifest now has 32 specific rows and 80 catalog fallbacks; the unchanged ordered 38-spell reward pool has 17 specific and 21 school-fallback entries. Focused 1280/1920 Battle and Overworld action/icon/focus/session/save parity, reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T02:10:40Z"
     }
   ],
   "project": "heroes-like",
@@ -100953,7 +100987,7 @@
   ],
   "summary": "Six-faction roster-scholar portrait curation is registered for Jorun, Edda, Essa, Ralka, Lina, and Sael; implementation and validation are pending.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T01:56:03Z",
+  "updatedAt": "2026-08-24T02:10:40Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
