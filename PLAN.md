@@ -9803,6 +9803,34 @@ Non-goals:
 - no tactical scoring, spell selection, spell effects, mana, target legality, damage, AI policy, action execution, initiative, battle balance, content, save schema, layout, or input mapping change;
 - no Battle tutorial redesign, new spell/action controls, packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, Native-RMG work, or release-readiness claim.
 
+## Stonewake Watch Chapter-One Sequential Encounter Viability
+
+id: `content-stonewake-watch-chapter-one-sequential-encounter-viability-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only Stonewake Watch chapter one's shared `army_ashgrove_watch` opening reference with a scenario-local Embercourt watch army, preserving the existing hero, town preparation, encounter forces, seeds, objective order, rewards, deadlines, pressure, combat rules, and later Stonewake chapters;
+- use the current routed chapter sequence as the exact control: the prepared 20 River Guards / 4 Ember Archers / 1 Citadel Pikeward clear the Reed Totemists and Willow Mill but enter Sluice Band with only four River Guards and are defeated;
+- screen the smallest scenario-local River Guard reserve that clears the unchanged Reed Totemists -> Willow Mill -> Sluice Band sequence through the shipped Battle action path, rejecting larger opportunistic reinforcement.
+
+Completion criteria:
+- a focused method-matched control reproduces the current Sluice defeat and the selected local reserve completes all three unchanged required encounters with exact survivor/casualty evidence and no forced state or outcome mutation;
+- the real routed Stonewake chapter-one arc completes through town preparation, the unchanged three required encounters, exact ford-cache and ford-gorget support route, hostile Murkward assault, outcome save/resume, and chapter-two handoff while the later chapters retain their existing shared army content;
+- active battle breadth, campaign/core compatibility, repository/editor checks, and bounded Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Observed next gap:
+- the unchanged Reedbarrow Ferry chapter-two route can still lose Murkward to a strategic raid after its required encounters; that is a separate later-chapter defense/content owner and is not evidence against the chapter-one opening-reserve correction.
+
+Completion evidence:
+- the old shared 9/4/1 opening prepares to 20 River Guards and reproduces the exact 20 -> 6 -> 0 Sluice defeat, while the scenario-local 25/4/1 opening prepares to 36 and preserves 36 -> 30 -> 21 survivors through the three required encounters plus 21 after the unchanged Murkward town assault;
+- the public routed chapter-one run claims ford_cache then ford_gorget, wins the unchanged Murkward assault, saves/resumes the outcome, and hands off to Reedbarrow Ferry while both later chapters retain `army_ashgrove_watch`;
+- the focused sequential viability report, active medium sample-pressure regression, core systems, repository/validator/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass with bounded claims only.
+
+Non-goals:
+- no unit, spell, hero, battle/autoresolve, tactical-AI, strategic-AI, recruitment-cost, save-schema, encounter-force, objective, deadline, pressure, generated-map, Native-RMG, asset, or project-setting change;
+- no harness-only success substitution, manual-tactical-play certification, packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

@@ -55033,6 +55033,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "ninefold_basalt_gatehouse_watch",
             "ninefold_drowned_reliquary_watch",
             "sluice_band",
+            '"expected": {"outcome_state": "victory", "matchup_band": "player_advantaged", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 18}',
             "_sample_matches",
             "get_tree().quit(1)",
         ):
@@ -62066,6 +62067,62 @@ def validate_embercourt_charter_bastion_counterseal_chapter(errors: list[str]) -
             ensure(token in frontier, errors, f"Frontier Claims runtime owner is missing Counterseal token: {token}")
 
 
+def validate_stonewake_watch_chapter_one_sequential_viability(errors: list[str]) -> None:
+    army_payload = load_json(CONTENT_DIR / "army_groups.json")
+    scenario_payload = load_json(CONTENT_DIR / "scenarios.json")
+    armies = items_index(army_payload)
+    scenarios = items_index(scenario_payload)
+    local_army = armies.get("army_stonewake_basin_watch", {})
+    shared_army = armies.get("army_ashgrove_watch", {})
+    stack_counts = lambda army: {
+        str(stack.get("unit_id", "")): int(stack.get("count", 0))
+        for stack in army.get("stacks", [])
+        if isinstance(stack, dict)
+    }
+    ensure(stack_counts(local_army) == {"unit_river_guard": 25, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Stonewake Watch local army must keep exact 25/4/1 chapter-one roster")
+    ensure(stack_counts(shared_army) == {"unit_river_guard": 9, "unit_ember_archer": 4, "unit_citadel_pikeward": 1}, errors, "Shared Ashgrove Watch army must remain exact 9/4/1")
+    ensure(str(scenarios.get("stonewake-watch", {}).get("player_army_id", "")) == "army_stonewake_basin_watch", errors, "Stonewake Watch must use only its scenario-local army")
+    for scenario_id in ("reedbarrow-ferry", "nightglass-redoubt"):
+        ensure(str(scenarios.get(scenario_id, {}).get("player_army_id", "")) == "army_ashgrove_watch", errors, f"Later Stonewake chapter {scenario_id} must retain shared army authority")
+
+    report_path = ROOT / "tests" / "stonewake_watch_chapter_one_sequential_viability_report.gd"
+    scene_path = ROOT / "tests" / "stonewake_watch_chapter_one_sequential_viability_report.tscn"
+    ensure(report_path.exists() and scene_path.exists(), errors, "Stonewake Watch sequential viability focused owner is missing")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "STONEWAKE_WATCH_CHAPTER_ONE_SEQUENTIAL_VIABILITY_REPORT"',
+            'const CONTROL_OPENING_GUARDS := 9',
+            'const SELECTED_OPENING_GUARDS := 25',
+            'const TOWN_RECRUIT_GUARDS := 11',
+            'const REQUIRED_ENCOUNTERS := ["stonewake_reed_totemists", "willow_mill", "sluice_band"]',
+            'control.get("states", []) != ["victory", "victory", "defeat"]',
+            'selected.get("states", []) != ["victory", "victory", "victory", "victory"]',
+            'selected.get("post_battle_guard_counts", []) != [36, 30, 21, 21]',
+            'BattleRulesScript.create_battle_payload(session, encounter)',
+            'BattleRulesScript.create_town_assault_payload(session, "murkward_ford")',
+            'BattleRulesScript.perform_player_action(session, action_id)',
+            'for action_id in ["shoot", "strike", "advance", "defend"]',
+            'get_tree().quit(0)',
+            'get_tree().quit(1)',
+        ):
+            ensure(token in report_text, errors, f"Stonewake Watch sequential viability report is missing token: {token}")
+        ensure("quick_resolve" not in report_text and "scenario_status =" not in report_text and "resolved_encounters" not in report_text, errors, "Stonewake focused owner must not force outcomes, resolved flags, or Quick Resolve")
+    if scene_path.exists():
+        ensure('res://tests/stonewake_watch_chapter_one_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Stonewake focused scene must load its exact report script")
+
+    harness_text = LIVE_VALIDATION_HARNESS_PATH.read_text(encoding="utf-8")
+    harness_tokens = (
+        'elif scenario_id == "stonewake-watch":',
+        '"ford_cache"',
+        '"ford_gorget"',
+        '"murkward_ford" if scenario_id == "stonewake-watch" else ""',
+    )
+    for token in harness_tokens:
+        ensure(token in harness_text, errors, f"Stonewake routed live owner is missing token: {token}")
+    ensure(harness_text.find('"ford_cache"') < harness_text.find('"ford_gorget"') < harness_text.find('"murkward_ford" if scenario_id == "stonewake-watch" else ""'), errors, "Stonewake routed live owner must claim cache then gorget before exact Murkward assault")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -62104,6 +62161,7 @@ def main() -> int:
     validate_overworld_resource_assault_victory_return_feedback(errors)
     validate_overworld_encounter_victory_return_feedback(errors)
     validate_content(errors)
+    validate_stonewake_watch_chapter_one_sequential_viability(errors)
     validate_frontier_claims_direct_encounter_objectives(errors)
     validate_thornwake_rootgate_toll_chapter(errors)
     validate_veilmourn_fogchart_mooring_chapter(errors)

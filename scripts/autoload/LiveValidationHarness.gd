@@ -1387,13 +1387,34 @@ func _drive_campaign_chapter_to_victory_outcome(
 			_fail("Could not claim the authored River Pass Bastion Gorget before the final assault.", gorget_claim)
 			return {"ok": false}
 		current_overworld = gorget_claim.get("scene", current_overworld)
+	elif scenario_id == "stonewake-watch":
+		var ford_cache_claim := await _claim_overworld_validation_target(
+			current_overworld,
+			"resource",
+			"ford_cache",
+			"%s_support_site_claimed_ford_cache" % step_prefix
+		)
+		if not bool(ford_cache_claim.get("ok", false)):
+			_fail("Could not follow Stonewake's authored ford-cache route before the Murkward assault.", ford_cache_claim)
+			return {"ok": false}
+		current_overworld = ford_cache_claim.get("scene", current_overworld)
+		var ford_gorget_claim := await _claim_overworld_validation_target(
+			current_overworld,
+			"artifact",
+			"ford_gorget",
+			"%s_support_artifact_claimed_ford_gorget" % step_prefix
+		)
+		if not bool(ford_gorget_claim.get("ok", false)):
+			_fail("Could not follow Stonewake's authored ford-gorget route before the Murkward assault.", ford_gorget_claim)
+			return {"ok": false}
+		current_overworld = ford_gorget_claim.get("scene", current_overworld)
 
 	var battle_route := await _route_with_battle_interrupts(
 		current_overworld,
 		"town",
 		"enemy",
 		BATTLE_SCENE,
-		"",
+		"murkward_ford" if scenario_id == "stonewake-watch" else "",
 		"%s_town_assault_route" % step_prefix,
 		"town_assault",
 		"",

@@ -50,7 +50,7 @@ const CASES := [
 		"placement_id": "sluice_band",
 		"army_id": "army_stonewake_sluice_band",
 		"counts": {"unit_mire_slinger": 6, "unit_blackbranch_cutthroat": 5, "unit_gorefen_ripper": 1},
-		"expected": {"outcome_state": "victory", "matchup_band": "player_advantaged", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 41, "enemy_damage_per_round": 19},
+		"expected": {"outcome_state": "victory", "matchup_band": "player_advantaged", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 18},
 	},
 ]
 

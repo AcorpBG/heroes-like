@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence."
+    "Select and register the next tracker-approved release-readiness slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed ux-battle-intent-forecast-spell-order-target-coherence-10184 with exact spell action/target/consequence/focus preservation, fail-closed fallback target coherence, focused and live Battle compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved slice; no release-readiness claim.",
+  "currentNotes": "Stonewake Watch chapter one now uses its scenario-local 25/4/1 Basin Watch, clears the unchanged required encounters and exact ford-cache/gorget route, wins Murkward, saves/resumes, and hands off to chapter two. Reedbarrow Ferry can still lose Murkward to a later strategic raid after its required encounters; that is a separate unregistered chapter-two defense/content gap.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-intent-forecast-spell-order-target-coherence-10184",
-  "currentSliceId": "ux-battle-intent-forecast-spell-order-target-coherence-10184",
-  "currentSliceNotes": "Completed exact public Battle forecast coherence for scored ready spells. Stone Veil/Cinder Burst retain the exact public spell action and legal target, fallback actions do not retain rejected or unavailable spell targets, and keyboard/controller focus follows exact spell metadata. Focused, active-play, 1280/1920 layout, tactical AI, spell behavior, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup pass. Packaged Battle interaction and broad release claims remain excluded.",
+  "currentSlice": "content-stonewake-watch-chapter-one-sequential-encounter-viability-10184",
+  "currentSliceId": "content-stonewake-watch-chapter-one-sequential-encounter-viability-10184",
+  "currentSliceNotes": "Completed from direct shipped behavior evidence. The shared 9/4/1 control prepares to 20 and reproduces 20 -> 6 -> 0 defeat; the local 25/4/1 opening prepares to 36 and retains 36 -> 30 -> 21 through all three required encounters plus the unchanged Murkward assault. The public route, save/resume, chapter-two handoff, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Chapter-two raid defense remains separate.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "ux battle intent forecast spell order target coherence 10184",
-  "currentSliceUpdatedAt": "2026-08-24T13:09:47Z",
+  "currentSliceTitle": "Stonewake Watch chapter-one sequential encounter viability",
+  "currentSliceUpdatedAt": "2026-08-24T14:13:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next slice from direct current product evidence. The completed Battle intent forecast slice does not imply tactical scoring, spell/combat behavior, packaged Battle interaction, certification, signing/publication, whole-game validation, Native-RMG parity, or release readiness.",
-  "notes": "Completed ux-battle-intent-forecast-spell-order-target-coherence-10184 with exact live action/target/focus authority and bounded cross-platform startup evidence. No implementation slice is currently selected.",
+  "nextActionGuardrailNote": "Tune only Stonewake Watch chapter one's scenario-local opening reserve from the exact routed sequential control. Do not change shared armies, encounter forces, combat rules, later chapters, Native-RMG behavior, or claim manual tactical play or release readiness.",
+  "notes": "Stonewake Watch chapter-one sequential encounter viability is selected from a current routed attrition defeat. Implementation is limited to a scenario-local opening reserve with exact control, routed campaign, compatibility, static/editor, and bounded platform validation.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100738,6 +100738,17 @@
       "startedAt": "2026-08-24T12:46:57Z",
       "notes": "Completed exact public spell-order and target coherence. Stone Veil on River Guard and Cinder Burst on the selected enemy retain exact ready cast actions, consequence text, and focus; rejected-target and zero-mana spell recommendations fall back to legal Strike on the selected enemy without mutation. Ordinary Strike/incoming order, active-play focus, 1280/1920 routed Battle layout, tactical AI, spell behavior, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Tactical scoring, spell/combat execution, layout/input, save schema, packaged Battle interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-24T13:09:47Z"
+    },
+    {
+      "id": "content-stonewake-watch-chapter-one-sequential-encounter-viability-10184",
+      "title": "Stonewake Watch chapter-one sequential encounter viability",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T14:13:23Z",
+      "startedAt": "2026-08-24T13:19:21Z",
+      "notes": "Completed the exact Stonewake Watch chapter-one opening-reserve correction. The old shared 9/4/1 control prepares to 20 and reproduces 20 -> 6 -> 0 defeat; the scenario-local 25/4/1 Basin Watch prepares to 36 and preserves 36 -> 30 -> 21 survivors through Reed Totemists, Willow Mill, Sluice Band, and the unchanged Murkward assault. The public route claims ford_cache then ford_gorget, wins Murkward, saves/resumes, and hands off to Reedbarrow Ferry; both later chapters retain the shared army. Focused sequential viability, active sample pressure, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. A later Reedbarrow strategic raid can still retake Murkward and is a separate unregistered chapter-two gap. No encounter/rule/AI/save/schema/generated-map/Native-RMG change, manual tactical certification, packaged campaign interaction, signing, whole-game validation, or release-readiness claim.",
+      "completedAt": "2026-08-24T14:13:23Z"
     }
   ],
   "project": "heroes-like",
@@ -100748,7 +100759,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct shipped behavior evidence. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select and register the next tracker-approved release-readiness slice. The observed Reedbarrow Ferry strategic raid-defense loss is a direct later-chapter candidate that still needs bounded attribution before registration. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101280,9 +101291,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Battle Shake picker theme-parity slice is completed with exact focused, compatibility, static/editor, and bounded Linux/Windows startup evidence; no next implementation slice is selected and the game is not release-ready.",
+  "summary": "Stonewake Watch chapter-one sequential encounter viability is completed from the exact routed attrition control; the separate Reedbarrow Ferry raid-defense gap and broader release gaps remain, so the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T12:46:57Z",
+  "updatedAt": "2026-08-24T14:13:23Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
