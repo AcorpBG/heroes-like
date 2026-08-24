@@ -335,8 +335,10 @@ func _sync_battle_info_tab_tooltip() -> void:
 func _battle_music_metadata() -> Dictionary:
 	if _session == null:
 		return {}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
 	return {
 		"scenario_id": _session.scenario_id,
+		"player_faction_id": String(scenario.get("player_faction_id", "")),
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
 		"encounter_id": String(_session.battle.get("encounter_id", "")) if _session.battle is Dictionary else "",

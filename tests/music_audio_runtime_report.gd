@@ -18,6 +18,14 @@ const OVERWORLD_FACTION_CUES := {
 	"faction_brasshollow": "music_overworld_brasshollow_theme",
 	"faction_veilmourn": "music_overworld_veilmourn_theme",
 }
+const BATTLE_FACTION_CUES := {
+	"faction_embercourt": "music_battle_embercourt_theme",
+	"faction_mireclaw": "music_battle_mireclaw_theme",
+	"faction_sunvault": "music_battle_sunvault_theme",
+	"faction_thornwake": "music_battle_thornwake_theme",
+	"faction_brasshollow": "music_battle_brasshollow_theme",
+	"faction_veilmourn": "music_battle_veilmourn_theme",
+}
 const OVERWORLD_FACTION_SCENARIOS := {
 	"faction_embercourt": "river-pass",
 	"faction_mireclaw": "bogbound-oath",
@@ -47,6 +55,12 @@ const EXPECTED_CUES := [
 	"music_town_brasshollow_theme",
 	"music_town_veilmourn_theme",
 	"music_battle_theme",
+	"music_battle_embercourt_theme",
+	"music_battle_mireclaw_theme",
+	"music_battle_sunvault_theme",
+	"music_battle_thornwake_theme",
+	"music_battle_brasshollow_theme",
+	"music_battle_veilmourn_theme",
 	"music_outcome_theme",
 	"music_outcome_victory_theme",
 	"music_outcome_defeat_theme",
@@ -100,6 +114,24 @@ const EXPECTED_LAYER_CUES := [
 	"music_battle_theme",
 	"music_battle_theme_harmony",
 	"music_battle_theme_motion",
+	"music_battle_embercourt_theme",
+	"music_battle_embercourt_theme_harmony",
+	"music_battle_embercourt_theme_motion",
+	"music_battle_mireclaw_theme",
+	"music_battle_mireclaw_theme_harmony",
+	"music_battle_mireclaw_theme_motion",
+	"music_battle_sunvault_theme",
+	"music_battle_sunvault_theme_harmony",
+	"music_battle_sunvault_theme_motion",
+	"music_battle_thornwake_theme",
+	"music_battle_thornwake_theme_harmony",
+	"music_battle_thornwake_theme_motion",
+	"music_battle_brasshollow_theme",
+	"music_battle_brasshollow_theme_harmony",
+	"music_battle_brasshollow_theme_motion",
+	"music_battle_veilmourn_theme",
+	"music_battle_veilmourn_theme_harmony",
+	"music_battle_veilmourn_theme_motion",
 	"music_outcome_theme",
 	"music_outcome_theme_harmony",
 	"music_outcome_theme_motion",
@@ -118,12 +150,14 @@ var _report := {
 	"ok": false,
 	"summary": {},
 	"records": [],
+	"pre_battle_summary": {},
 	"continuous_summary": {},
 	"continuous_record": {},
 	"fallback_record": {},
 	"shell_summary": {},
 	"town_shell_rows": [],
 	"overworld_shell_rows": [],
+	"battle_shell_rows": [],
 	"outcome_shell_rows": [],
 	"errors": [],
 }
@@ -186,11 +220,27 @@ func _run() -> void:
 			"town_id": "validation_%s" % faction_id,
 			"town_faction_id": faction_id,
 		})
+	var pre_battle_summary: Dictionary = MusicAudio.validation_summary()
 	var battle_record: Dictionary = MusicAudio.sync_context("battle", "validation_battle", {
 		"scenario_id": "river-pass",
 		"encounter_id": "validation_encounter",
 		"encounter_difficulty": "hard",
 	})
+	var battle_unknown_record: Dictionary = MusicAudio.sync_context("battle", "validation_battle_unknown", {
+		"scenario_id": "river-pass",
+		"encounter_id": "validation_encounter",
+		"encounter_difficulty": "hard",
+		"player_faction_id": "faction_unknown",
+	})
+	var faction_battle_records := {}
+	for faction_id_value in BATTLE_FACTION_CUES:
+		var faction_id := String(faction_id_value)
+		faction_battle_records[faction_id] = MusicAudio.sync_context("battle", "validation_battle_faction", {
+			"scenario_id": String(OVERWORLD_FACTION_SCENARIOS[faction_id]),
+			"encounter_id": "validation_encounter",
+			"encounter_difficulty": "hard",
+			"player_faction_id": faction_id,
+		})
 	var outcome_fallback_record: Dictionary = MusicAudio.sync_context("outcome", "validation_outcome_unknown", {
 		"scenario_id": "river-pass",
 		"status": "unknown",
@@ -233,12 +283,15 @@ func _run() -> void:
 	var original_window_size := get_window().size
 	var town_shell_rows: Array = []
 	var overworld_shell_rows: Array = []
+	var battle_shell_rows: Array = []
 	var outcome_shell_rows: Array = []
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		for faction_id_value in OVERWORLD_FACTION_CUES:
 			overworld_shell_rows.append(await _overworld_shell_route_row(viewport_size, String(faction_id_value)))
 		for faction_id_value in TOWN_FACTION_CUES:
 			town_shell_rows.append(await _town_shell_route_row(viewport_size, String(faction_id_value)))
+		for faction_id_value in BATTLE_FACTION_CUES:
+			battle_shell_rows.append(await _battle_shell_route_row(viewport_size, String(faction_id_value)))
 		for status in OUTCOME_STATUS_CUES:
 			outcome_shell_rows.append(await _outcome_shell_route_row(viewport_size, String(status)))
 	get_window().size = original_window_size
@@ -246,12 +299,14 @@ func _run() -> void:
 
 	_report["summary"] = direct_summary
 	_report["records"] = direct_summary.get("records", [])
+	_report["pre_battle_summary"] = pre_battle_summary
 	_report["continuous_summary"] = continuous_summary
 	_report["continuous_record"] = continuous_record
 	_report["fallback_record"] = fallback_record
 	_report["shell_summary"] = shell_summary
 	_report["town_shell_rows"] = town_shell_rows
 	_report["overworld_shell_rows"] = overworld_shell_rows
+	_report["battle_shell_rows"] = battle_shell_rows
 	_report["outcome_shell_rows"] = outcome_shell_rows
 	_validate_record("menu", menu_record, "music_menu_theme", "menu", true)
 	_validate_record("stable", stable_record, "music_menu_theme", "menu", false)
@@ -266,13 +321,17 @@ func _run() -> void:
 		var faction_id := String(faction_id_value)
 		_validate_record("town %s" % faction_id, faction_town_records.get(faction_id, {}), String(TOWN_FACTION_CUES[faction_id]), "town", true)
 	_validate_record("battle", battle_record, "music_battle_theme", "battle", true)
+	_validate_record("battle unknown", battle_unknown_record, "music_battle_theme", "battle", true)
+	for faction_id_value in BATTLE_FACTION_CUES:
+		var faction_id := String(faction_id_value)
+		_validate_record("battle %s" % faction_id, faction_battle_records.get(faction_id, {}), String(BATTLE_FACTION_CUES[faction_id]), "battle", true)
 	_validate_record("outcome unknown", outcome_fallback_record, "music_outcome_theme", "outcome", true)
 	_validate_record("outcome victory", outcome_victory_record, "music_outcome_victory_theme", "outcome", true)
 	_validate_record("outcome defeat", outcome_defeat_record, "music_outcome_defeat_theme", "outcome", true)
 	_validate_record("outcome", outcome_record, "music_outcome_victory_theme", "outcome", true)
 	_validate_continuous_playback(continuous_summary, continuous_record)
 	_validate_generated_fallback(fallback_record)
-	_validate_direct_summary(direct_summary)
+	_validate_direct_summary(direct_summary, pre_battle_summary)
 	_validate_shell_summary(shell_summary, shell_snapshot)
 	for row_value in town_shell_rows:
 		var row: Dictionary = row_value
@@ -280,6 +339,9 @@ func _run() -> void:
 	for row_value in overworld_shell_rows:
 		var row: Dictionary = row_value
 		_expect(bool(row.get("ok", false)), "OverworldShell route must own exact player-faction music at both target viewports: %s" % row)
+	for row_value in battle_shell_rows:
+		var row: Dictionary = row_value
+		_expect(bool(row.get("ok", false)), "BattleShell route must own exact player-faction music at both target viewports: %s" % row)
 	for row_value in outcome_shell_rows:
 		var row: Dictionary = row_value
 		_expect(bool(row.get("ok", false)), "ScenarioOutcomeShell route must own exact victory/defeat music at both target viewports: %s" % row)
@@ -377,7 +439,7 @@ func _validate_generated_fallback(record: Dictionary) -> void:
 		_expect(int(layer.get("imported_asset_count", 0)) == 0, "Fallback layer must not count imported playback: %s" % layer)
 		_expect(int(layer.get("generated_fallback_count", 0)) == 1, "Fallback layer must count generated playback: %s" % layer)
 
-func _validate_direct_summary(summary: Dictionary) -> void:
+func _validate_direct_summary(summary: Dictionary, pre_battle_summary: Dictionary) -> void:
 	_expect_equal("direct schema", String(summary.get("schema", "")), "music_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 4, "Music direct summary must keep changed context records: %s" % summary)
 	_expect(["Master", "Music"].has(String(summary.get("audio_bus", ""))), "Music direct summary must expose a valid bus: %s" % summary)
@@ -386,10 +448,12 @@ func _validate_direct_summary(summary: Dictionary) -> void:
 	_expect(bool(summary.get("music_manifest_loaded", false)), "Music direct summary must load the music manifest: %s" % summary)
 	var cue_counts: Dictionary = summary.get("cue_counts", {}) if summary.get("cue_counts", {}) is Dictionary else {}
 	var context_counts: Dictionary = summary.get("context_counts", {}) if summary.get("context_counts", {}) is Dictionary else {}
+	var pre_battle_cue_counts: Dictionary = pre_battle_summary.get("cue_counts", {}) if pre_battle_summary.get("cue_counts", {}) is Dictionary else {}
+	var pre_battle_context_counts: Dictionary = pre_battle_summary.get("context_counts", {}) if pre_battle_summary.get("context_counts", {}) is Dictionary else {}
 	for cue in EXPECTED_CUES:
-		_expect(int(cue_counts.get(cue, 0)) >= 1, "Music summary must include cue %s: %s" % [cue, cue_counts])
+		_expect(int(cue_counts.get(cue, 0)) + int(pre_battle_cue_counts.get(cue, 0)) >= 1, "Music summaries must include cue %s: current=%s pre_battle=%s" % [cue, cue_counts, pre_battle_cue_counts])
 	for context_id in ["menu", "overworld", "town", "battle", "outcome"]:
-		_expect(int(context_counts.get(context_id, 0)) >= 1, "Music summary must include context %s: %s" % [context_id, context_counts])
+		_expect(int(context_counts.get(context_id, 0)) + int(pre_battle_context_counts.get(context_id, 0)) >= 1, "Music summaries must include context %s: current=%s pre_battle=%s" % [context_id, context_counts, pre_battle_context_counts])
 	var current_layers: Array = summary.get("current_layers", []) if summary.get("current_layers", []) is Array else []
 	_expect(current_layers.size() == 3, "Music direct summary must keep current generated layers: %s" % summary)
 	_expect_equal("current context", String(summary.get("current_context_id", "")), "outcome")
@@ -510,6 +574,80 @@ func _overworld_shell_route_row(viewport_size: Vector2i, faction_id: String) -> 
 	shell.queue_free()
 	await get_tree().process_frame
 	return {"ok": exact, "viewport_size": viewport_size, "scenario_id": scenario_id, "player_faction_id": faction_id, "checks": checks, "record": record}
+
+func _battle_shell_route_row(viewport_size: Vector2i, faction_id: String) -> Dictionary:
+	get_window().size = viewport_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var scenario_id := String(OVERWORLD_FACTION_SCENARIOS.get(faction_id, ""))
+	var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		return {"ok": false, "failure": "battle_encounter_missing", "viewport_size": viewport_size, "faction_id": faction_id}
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty() or not BattleRules.normalize_battle_state(session):
+		return {"ok": false, "failure": "battle_payload_missing", "viewport_size": viewport_size, "faction_id": faction_id}
+	var authority_before := _battle_music_authority(session)
+	SessionState.set_active_session(session)
+	MusicAudio.validation_reset()
+	var frame := Control.new()
+	frame.name = "BattleMusicFrame"
+	frame.size = Vector2(viewport_size)
+	frame.clip_contents = true
+	add_child(frame)
+	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	frame.add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not is_instance_valid(shell) or not shell.is_inside_tree():
+		frame.queue_free()
+		return {"ok": false, "failure": "battle_shell_missing", "viewport_size": viewport_size, "faction_id": faction_id}
+	var snapshot: Dictionary = shell.validation_snapshot()
+	var summary: Dictionary = MusicAudio.validation_summary()
+	var records: Array = summary.get("records", []) if summary.get("records", []) is Array else []
+	var record: Dictionary = records[-1] if not records.is_empty() and records[-1] is Dictionary else {}
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	var scenario := ContentService.get_scenario(scenario_id)
+	var checks := {
+		"window_size_exact": get_window().size == viewport_size,
+		"game_state_exact": String(snapshot.get("game_state", "")) == "battle",
+		"current_context_exact": String(summary.get("current_context_id", "")) == "battle",
+		"player_count_exact": int(summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS,
+		"record_count_exact": int(summary.get("record_count", 0)) == 1,
+		"cue_exact": String(record.get("cue_id", "")) == String(BATTLE_FACTION_CUES.get(faction_id, "")),
+		"record_context_exact": String(record.get("context_id", "")) == "battle",
+		"source_exact": String(record.get("source", "")) == "battle_shell_ready",
+		"changed_exact": bool(record.get("changed", false)),
+		"player_faction_exact": String(metadata.get("player_faction_id", "")) == faction_id,
+		"scenario_faction_exact": String(scenario.get("player_faction_id", "")) == faction_id,
+		"snapshot_music_exact": snapshot.get("music_audio", {}) == summary,
+		"battle_authority_exact": _battle_music_authority(session) == authority_before,
+	}
+	var exact := not checks.values().has(false)
+	frame.queue_free()
+	await get_tree().process_frame
+	return {"ok": exact, "viewport_size": viewport_size, "scenario_id": scenario_id, "player_faction_id": faction_id, "checks": checks, "record": record}
+
+func _battle_music_authority(session) -> Dictionary:
+	var battle: Dictionary = session.battle if session.battle is Dictionary else {}
+	return {
+		"scenario_id": session.scenario_id,
+		"difficulty": session.difficulty,
+		"launch_mode": session.launch_mode,
+		"scenario_status": session.scenario_status,
+		"encounter_id": String(battle.get("encounter_id", "")),
+		"stacks": battle.get("stacks", []).duplicate(true),
+		"player_hero": battle.get("player_hero", {}).duplicate(true),
+		"enemy_hero": battle.get("enemy_hero", {}).duplicate(true),
+		"combat_seed": int(battle.get("combat_seed", 0)),
+	}
+
+func _first_encounter(session) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and not bool(encounter.get("cleared", false)):
+			return encounter
+	return {}
 
 func _outcome_shell_route_row(viewport_size: Vector2i, status: String) -> Dictionary:
 	get_window().size = viewport_size
