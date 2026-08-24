@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The six-faction Town music identity slice is complete. Exact live faction identity selects six original three-layer Town themes; missing/unknown identity retains generic Town fallback. Focused, compatibility, deterministic/static/editor, and bounded Linux/Windows export-startup gates passed. Select the next tracker-approved source-backed slice. The game is not release-ready.",
+  "currentNotes": "The selected six-faction Overworld music identity slice is in progress. Exact live player faction must select six original three-layer Overworld themes while missing/unknown identity retains generic Overworld fallback. No implementation or runtime validation has completed yet. The game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-six-faction-town-music-identity-10184",
-  "currentSliceId": "presentation-six-faction-town-music-identity-10184",
-  "currentSliceNotes": "Completed: exact live town_faction_id selects six original faction-specific three-layer Town themes while missing/unknown identity retains generic Town fallback. The deterministic 33-cue pack, direct and 12 real 1280/1920 Town routes, continuous/settings/fallback, Town action/focus, active-play/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition, non-Town faction themes, packaged interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-six-faction-overworld-music-identity-10184",
+  "currentSliceId": "presentation-six-faction-overworld-music-identity-10184",
+  "currentSliceNotes": "In progress: add six original player-faction-specific three-layer Overworld themes selected only by exact scenario player_faction_id, with the generic Overworld cue as fail-closed fallback. Preserve all other music, Overworld route/movement/action/focus/session/save behavior, and bounded export-startup claims. No implementation or runtime validation has completed yet.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation six faction town music identity 10184",
-  "currentSliceUpdatedAt": "2026-08-24T09:22:57Z",
+  "currentSliceTitle": "presentation six faction overworld music identity 10184",
+  "currentSliceUpdatedAt": "2026-08-24T09:25:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19636,7 +19636,7 @@
       }
     }
   },
-  "guardrailNote": "The six-faction Town music identity slice is complete. Preserve exact town_faction_id routing, six faction themes, generic Town fallback, all five context ids, non-Town music, valid-route-only synchronization, continuous-loop/settings/generated fallback, Town action/focus/session/save authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer final composition, non-Town faction themes, packaged listening/interaction, certification, signing/publication, whole-game validation, or release readiness.",
+  "guardrailNote": "The six-faction Overworld music identity slice is complete. Preserve exact player-faction routing, generic fallback, the 51-cue pack, Town and other context authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer final composition, faction battle/outcome/menu themes, packaged Overworld interaction/listening, certification, signing/publication, whole-game validation, or release readiness.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19846,8 +19846,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The six-faction Town music identity slice is complete. Preserve exact faction routing, generic fallback, the 33-cue pack, non-Town context authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer final composition, packaged Town listening/interaction, certification, signing/publication, whole-game validation, or release readiness.",
-  "notes": "Six exact live Town faction identities now route to six original three-layer themes; missing/unknown identity remains on the generic Town cue. Focused 1280/1920, compatibility, deterministic/static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. Packaged Town listening/interaction and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "The six-faction Overworld music identity slice is complete. Preserve exact player-faction routing, generic fallback, the 51-cue pack, Town and other context authority, and bounded export-startup claims. Select the next tracker-approved source-backed slice; do not infer final composition, faction battle/outcome/menu themes, packaged Overworld interaction/listening, certification, signing/publication, whole-game validation, or release readiness.",
+  "notes": "Six exact live scenario player faction identities now route to six original three-layer Overworld themes; missing/unknown identity remains on the generic Overworld cue. The deterministic 51-cue pack, six direct routes, 12 real 1280/1920 OverworldShell rows, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Final composition, faction battle/outcome/menu themes, packaged Overworld listening/interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100645,6 +100645,16 @@
       "startedAt": "2026-08-24T09:03:08Z",
       "notes": "Completed with 18 new original faction-specific Town stems and exact live town_faction_id routing; missing/unknown identity retains the generic Town cue. The deterministic 33-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 TownShell rows, continuous/settings/generated fallback, construction/audio, focus/layout, active-play/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Both PCKs expose all 18 faction Town asset paths. Final composition, faction music outside Town, packaged interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T09:22:57Z"
+    },
+    {
+      "id": "presentation-six-faction-overworld-music-identity-10184",
+      "title": "presentation six faction overworld music identity 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T09:46:15Z",
+      "startedAt": "2026-08-24T09:25:19Z",
+      "notes": "Completed with 18 new original faction-specific Overworld stems and exact live scenario player_faction_id routing; missing/unknown identity retains the generic Overworld cue. The deterministic 51-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 OverworldShell rows, continuous/settings/generated fallback, route/movement/focus/session authority, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition, faction battle/outcome/menu themes, packaged Overworld interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T09:46:15Z"
     }
   ],
   "project": "heroes-like",
@@ -101187,9 +101197,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The six-faction Town music identity slice is implemented and validated; no next source-backed slice is selected yet.",
+  "summary": "The six-faction Overworld music identity slice is selected and in progress; implementation and runtime validation have not completed yet.",
   "taskId": "10184",
-  "updatedAt": "2026-08-24T09:22:57Z",
+  "updatedAt": "2026-08-24T09:46:15Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
