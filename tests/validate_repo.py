@@ -58063,6 +58063,15 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_menu_theme",
             "music_overworld_theme",
             "music_town_theme",
+            "TOWN_FACTION_CUE_IDS",
+            "func _cue_id_for_context",
+            'String(metadata.get("town_faction_id", "")).strip_edges().to_lower()',
+            "music_town_embercourt_theme",
+            "music_town_mireclaw_theme",
+            "music_town_sunvault_theme",
+            "music_town_thornwake_theme",
+            "music_town_brasshollow_theme",
+            "music_town_veilmourn_theme",
             "music_battle_theme",
             "music_outcome_theme",
             "MAX_ACTIVE_PLAYERS",
@@ -58087,6 +58096,39 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             errors,
             "MusicAudio must duplicate the imported WAV before applying forward-loop state and assigning it to the player",
         )
+        town_faction_mapping = music_text[
+            music_text.index("const TOWN_FACTION_CUE_IDS := {"):
+            music_text.index("const CONTEXT_SPECS := {")
+        ]
+        exact_town_faction_cues = {
+            "faction_embercourt": "music_town_embercourt_theme",
+            "faction_mireclaw": "music_town_mireclaw_theme",
+            "faction_sunvault": "music_town_sunvault_theme",
+            "faction_thornwake": "music_town_thornwake_theme",
+            "faction_brasshollow": "music_town_brasshollow_theme",
+            "faction_veilmourn": "music_town_veilmourn_theme",
+        }
+        for faction_id, cue_id in exact_town_faction_cues.items():
+            ensure(
+                town_faction_mapping.count(f'"{faction_id}": "{cue_id}"') == 1,
+                errors,
+                f"MusicAudio Town faction routing must contain exactly one {faction_id} -> {cue_id} mapping",
+            )
+        ensure(town_faction_mapping.count('"faction_') == 6, errors, "MusicAudio Town faction routing must contain exactly the six production factions")
+        cue_selector = music_text[
+            music_text.index("func _cue_id_for_context"):
+            music_text.index("func _layers_for_context")
+        ]
+        ensure('if context_id == "town":' in cue_selector, errors, "MusicAudio faction cue selection must be Town-only")
+        ensure('if TOWN_FACTION_CUE_IDS.has(faction_id):' in cue_selector, errors, "MusicAudio faction cue selection must require exact registered identity")
+        ensure('return String(spec.get("cue_id", "music_menu_theme"))' in cue_selector, errors, "MusicAudio faction cue selection must retain the generic context fallback")
+        ensure(
+            music_text.index("var cue_id := _cue_id_for_context(normalized, metadata)")
+            < music_text.index("var signature := _signature_for_context(normalized, metadata)")
+            < music_text.index("_current_layers = _layers_for_context(normalized, cue_id, metadata)"),
+            errors,
+            "MusicAudio must resolve one exact cue before signature-owned playback layers",
+        )
 
     required_music_cue_ids = (
         "music_menu_theme",
@@ -58098,6 +58140,24 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         "music_town_theme",
         "music_town_theme_harmony",
         "music_town_theme_motion",
+        "music_town_embercourt_theme",
+        "music_town_embercourt_theme_harmony",
+        "music_town_embercourt_theme_motion",
+        "music_town_mireclaw_theme",
+        "music_town_mireclaw_theme_harmony",
+        "music_town_mireclaw_theme_motion",
+        "music_town_sunvault_theme",
+        "music_town_sunvault_theme_harmony",
+        "music_town_sunvault_theme_motion",
+        "music_town_thornwake_theme",
+        "music_town_thornwake_theme_harmony",
+        "music_town_thornwake_theme_motion",
+        "music_town_brasshollow_theme",
+        "music_town_brasshollow_theme_harmony",
+        "music_town_brasshollow_theme_motion",
+        "music_town_veilmourn_theme",
+        "music_town_veilmourn_theme_harmony",
+        "music_town_veilmourn_theme_motion",
         "music_battle_theme",
         "music_battle_theme_harmony",
         "music_battle_theme_motion",
@@ -58118,7 +58178,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         ensure(music_manifest.get("asset_tier") == "production_layered_loop_v1", errors, "production music manifest must declare production_layered_loop_v1")
         music_cues = music_manifest.get("cues", {})
         ensure(isinstance(music_cues, dict), errors, "music_runtime_manifest.json cues must be an object")
-        ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the fifteen live music layer ids")
+        ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the thirty-three live music layer ids")
         expected_music_cues = {
             "music_menu_theme": ("res://art/audio/runtime/music/menu_root.wav", "menu root", -23.0),
             "music_menu_theme_harmony": ("res://art/audio/runtime/music/menu_harmony.wav", "menu harmony", -26.0),
@@ -58129,6 +58189,24 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_town_theme": ("res://art/audio/runtime/music/town_root.wav", "town root", -24.0),
             "music_town_theme_harmony": ("res://art/audio/runtime/music/town_harmony.wav", "town harmony", -27.0),
             "music_town_theme_motion": ("res://art/audio/runtime/music/town_motion.wav", "town motion", -29.0),
+            "music_town_embercourt_theme": ("res://art/audio/runtime/music/town_embercourt_root.wav", "Embercourt town root", -24.0),
+            "music_town_embercourt_theme_harmony": ("res://art/audio/runtime/music/town_embercourt_harmony.wav", "Embercourt town harmony", -27.0),
+            "music_town_embercourt_theme_motion": ("res://art/audio/runtime/music/town_embercourt_motion.wav", "Embercourt town motion", -29.0),
+            "music_town_mireclaw_theme": ("res://art/audio/runtime/music/town_mireclaw_root.wav", "Mireclaw town root", -24.0),
+            "music_town_mireclaw_theme_harmony": ("res://art/audio/runtime/music/town_mireclaw_harmony.wav", "Mireclaw town harmony", -27.0),
+            "music_town_mireclaw_theme_motion": ("res://art/audio/runtime/music/town_mireclaw_motion.wav", "Mireclaw town motion", -29.0),
+            "music_town_sunvault_theme": ("res://art/audio/runtime/music/town_sunvault_root.wav", "Sunvault town root", -24.0),
+            "music_town_sunvault_theme_harmony": ("res://art/audio/runtime/music/town_sunvault_harmony.wav", "Sunvault town harmony", -27.0),
+            "music_town_sunvault_theme_motion": ("res://art/audio/runtime/music/town_sunvault_motion.wav", "Sunvault town motion", -29.0),
+            "music_town_thornwake_theme": ("res://art/audio/runtime/music/town_thornwake_root.wav", "Thornwake town root", -24.0),
+            "music_town_thornwake_theme_harmony": ("res://art/audio/runtime/music/town_thornwake_harmony.wav", "Thornwake town harmony", -27.0),
+            "music_town_thornwake_theme_motion": ("res://art/audio/runtime/music/town_thornwake_motion.wav", "Thornwake town motion", -29.0),
+            "music_town_brasshollow_theme": ("res://art/audio/runtime/music/town_brasshollow_root.wav", "Brasshollow town root", -24.0),
+            "music_town_brasshollow_theme_harmony": ("res://art/audio/runtime/music/town_brasshollow_harmony.wav", "Brasshollow town harmony", -27.0),
+            "music_town_brasshollow_theme_motion": ("res://art/audio/runtime/music/town_brasshollow_motion.wav", "Brasshollow town motion", -29.0),
+            "music_town_veilmourn_theme": ("res://art/audio/runtime/music/town_veilmourn_root.wav", "Veilmourn town root", -24.0),
+            "music_town_veilmourn_theme_harmony": ("res://art/audio/runtime/music/town_veilmourn_harmony.wav", "Veilmourn town harmony", -27.0),
+            "music_town_veilmourn_theme_motion": ("res://art/audio/runtime/music/town_veilmourn_motion.wav", "Veilmourn town motion", -29.0),
             "music_battle_theme": ("res://art/audio/runtime/music/battle_root.wav", "battle root", -22.5),
             "music_battle_theme_harmony": ("res://art/audio/runtime/music/battle_harmony.wav", "battle harmony", -25.5),
             "music_battle_theme_motion": ("res://art/audio/runtime/music/battle_motion.wav", "battle motion", -27.5),
@@ -58174,7 +58252,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
                     ensure(left_samples[0] == left_samples[-1] and right_samples[0] == right_samples[-1], errors, f"production music asset must close its stereo loop boundary exactly: {path_value}")
             ensure(int(cue.get("duration_msec", 0)) == 8000, errors, f"music cue {cue_id} must use exact eight-second duration")
             ensure("volume_db" in cue, errors, f"music cue {cue_id} needs volume_db")
-        ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all fifteen production music WAV payloads must be byte-distinct")
+        ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all thirty-three production music WAV payloads must be byte-distinct")
 
     music_generator_text = MUSIC_RUNTIME_GENERATOR_PATH.read_text(encoding="utf-8") if MUSIC_RUNTIME_GENERATOR_PATH.exists() else ""
     for required_token in (
@@ -58190,6 +58268,18 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         "Manifest/spec cue mismatch",
         '"town": {',
         '"music_town_theme"',
+        '"town_embercourt":',
+        '"town_mireclaw":',
+        '"town_sunvault":',
+        '"town_thornwake":',
+        '"town_brasshollow":',
+        '"town_veilmourn":',
+        '"music_town_embercourt_theme"',
+        '"music_town_mireclaw_theme"',
+        '"music_town_sunvault_theme"',
+        '"music_town_thornwake_theme"',
+        '"music_town_brasshollow_theme"',
+        '"music_town_veilmourn_theme"',
     ):
         ensure(required_token in music_generator_text, errors, f"generate_music_runtime_assets.py is missing token {required_token}")
 
@@ -58216,6 +58306,13 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "music_menu_theme",
             "music_overworld_theme",
             "music_town_theme",
+            "TOWN_FACTION_CUES",
+            "music_town_embercourt_theme",
+            "music_town_mireclaw_theme",
+            "music_town_sunvault_theme",
+            "music_town_thornwake_theme",
+            "music_town_brasshollow_theme",
+            "music_town_veilmourn_theme",
             "music_battle_theme",
             "music_outcome_theme",
             "validation_snapshot",
@@ -58243,6 +58340,12 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             '"game_state_exact": String(snapshot.get("game_state", "")) == "town"',
             "var exact := not checks.values().has(false)",
             'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+            "for faction_id_value in TOWN_FACTION_CUES",
+            'String(record.get("cue_id", "")) == String(TOWN_FACTION_CUES.get(faction_id, ""))',
+            'ScenarioFactory.create_session("ninefold-confluence"',
+            "_set_only_player_town",
+            '"validation_town_generic"',
+            '"validation_town_unknown"',
         ):
             ensure(required_token in report_text, errors, f"Music audio runtime report is missing required token: {required_token}")
 
@@ -58289,7 +58392,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "seamless eight-second 44.1 kHz stereo",
             "LOOP_FORWARD",
             "all three players still active after a full segment",
-            "fifteen byte-distinct original layered stereo loops",
+            "thirty-three byte-distinct original layered stereo loops",
             "Not final music composition",
             "No final music stems",
         ):

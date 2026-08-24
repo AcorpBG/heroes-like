@@ -2,10 +2,24 @@ extends Node
 
 const REPORT_ID := "MUSIC_AUDIO_RUNTIME_REPORT"
 const OUTPUT_DIR := "res://.artifacts/music_audio_runtime_report"
+const TOWN_FACTION_CUES := {
+	"faction_embercourt": "music_town_embercourt_theme",
+	"faction_mireclaw": "music_town_mireclaw_theme",
+	"faction_sunvault": "music_town_sunvault_theme",
+	"faction_thornwake": "music_town_thornwake_theme",
+	"faction_brasshollow": "music_town_brasshollow_theme",
+	"faction_veilmourn": "music_town_veilmourn_theme",
+}
 const EXPECTED_CUES := [
 	"music_menu_theme",
 	"music_overworld_theme",
 	"music_town_theme",
+	"music_town_embercourt_theme",
+	"music_town_mireclaw_theme",
+	"music_town_sunvault_theme",
+	"music_town_thornwake_theme",
+	"music_town_brasshollow_theme",
+	"music_town_veilmourn_theme",
 	"music_battle_theme",
 	"music_outcome_theme",
 ]
@@ -19,6 +33,24 @@ const EXPECTED_LAYER_CUES := [
 	"music_town_theme",
 	"music_town_theme_harmony",
 	"music_town_theme_motion",
+	"music_town_embercourt_theme",
+	"music_town_embercourt_theme_harmony",
+	"music_town_embercourt_theme_motion",
+	"music_town_mireclaw_theme",
+	"music_town_mireclaw_theme_harmony",
+	"music_town_mireclaw_theme_motion",
+	"music_town_sunvault_theme",
+	"music_town_sunvault_theme_harmony",
+	"music_town_sunvault_theme_motion",
+	"music_town_thornwake_theme",
+	"music_town_thornwake_theme_harmony",
+	"music_town_thornwake_theme_motion",
+	"music_town_brasshollow_theme",
+	"music_town_brasshollow_theme_harmony",
+	"music_town_brasshollow_theme_motion",
+	"music_town_veilmourn_theme",
+	"music_town_veilmourn_theme_harmony",
+	"music_town_veilmourn_theme_motion",
 	"music_battle_theme",
 	"music_battle_theme_harmony",
 	"music_battle_theme_motion",
@@ -57,14 +89,32 @@ func _run() -> void:
 		"threat_level": "low",
 		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
 	})
-	var town_record: Dictionary = MusicAudio.sync_context("town", "validation_town", {
+	var town_record: Dictionary = MusicAudio.sync_context("town", "validation_town_generic", {
 		"scenario_id": "river-pass",
 		"day": 1,
 		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
 		"town_placement_id": "riverwatch_hold",
 		"town_id": "town_riverwatch_hold",
-		"town_faction_id": "faction_embercourt",
 	})
+	var town_unknown_record: Dictionary = MusicAudio.sync_context("town", "validation_town_unknown", {
+		"scenario_id": "river-pass",
+		"day": 1,
+		"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+		"town_placement_id": "unknown_town",
+		"town_id": "town_unknown",
+		"town_faction_id": "faction_unknown",
+	})
+	var faction_town_records := {}
+	for faction_id_value in TOWN_FACTION_CUES:
+		var faction_id := String(faction_id_value)
+		faction_town_records[faction_id] = MusicAudio.sync_context("town", "validation_town_faction", {
+			"scenario_id": "ninefold-confluence",
+			"day": 1,
+			"launch_mode": SessionState.LAUNCH_MODE_SKIRMISH,
+			"town_placement_id": "validation_%s" % faction_id,
+			"town_id": "validation_%s" % faction_id,
+			"town_faction_id": faction_id,
+		})
 	var battle_record: Dictionary = MusicAudio.sync_context("battle", "validation_battle", {
 		"scenario_id": "river-pass",
 		"encounter_id": "validation_encounter",
@@ -101,7 +151,8 @@ func _run() -> void:
 	var original_window_size := get_window().size
 	var town_shell_rows: Array = []
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
-		town_shell_rows.append(await _town_shell_route_row(viewport_size))
+		for faction_id_value in TOWN_FACTION_CUES:
+			town_shell_rows.append(await _town_shell_route_row(viewport_size, String(faction_id_value)))
 	get_window().size = original_window_size
 	await get_tree().process_frame
 
@@ -116,6 +167,10 @@ func _run() -> void:
 	_validate_record("stable", stable_record, "music_menu_theme", "menu", false)
 	_validate_record("overworld", overworld_record, "music_overworld_theme", "overworld", true)
 	_validate_record("town", town_record, "music_town_theme", "town", true)
+	_validate_record("town unknown", town_unknown_record, "music_town_theme", "town", true)
+	for faction_id_value in TOWN_FACTION_CUES:
+		var faction_id := String(faction_id_value)
+		_validate_record("town %s" % faction_id, faction_town_records.get(faction_id, {}), String(TOWN_FACTION_CUES[faction_id]), "town", true)
 	_validate_record("battle", battle_record, "music_battle_theme", "battle", true)
 	_validate_record("outcome", outcome_record, "music_outcome_theme", "outcome", true)
 	_validate_continuous_playback(continuous_summary, continuous_record)
@@ -124,7 +179,7 @@ func _run() -> void:
 	_validate_shell_summary(shell_summary, shell_snapshot)
 	for row_value in town_shell_rows:
 		var row: Dictionary = row_value
-		_expect(bool(row.get("ok", false)), "TownShell route must own exact Town music at both target viewports: %s" % row)
+		_expect(bool(row.get("ok", false)), "TownShell route must own exact faction Town music at both target viewports: %s" % row)
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -247,14 +302,15 @@ func _validate_shell_summary(summary: Dictionary, snapshot: Dictionary) -> void:
 	_expect_equal("snapshot music schema", String(snapshot_summary.get("schema", "")), "music_audio_runtime_v1")
 	_expect(int(snapshot_summary.get("record_count", 0)) >= 1, "MainMenu validation snapshot must expose music audio summary: %s" % snapshot_summary)
 
-func _town_shell_route_row(viewport_size: Vector2i) -> Dictionary:
+func _town_shell_route_row(viewport_size: Vector2i, faction_id: String) -> Dictionary:
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
-	var town := _first_player_town(session)
+	var session = ScenarioFactory.create_session("ninefold-confluence", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var town := _town_for_faction(session, faction_id)
 	if town.is_empty():
-		return {"ok": false, "failure": "player_town_missing", "viewport_size": viewport_size}
+		return {"ok": false, "failure": "faction_town_missing", "viewport_size": viewport_size, "faction_id": faction_id}
+	_set_only_player_town(session, String(town.get("placement_id", "")))
 	_move_active_hero_to_town(session, town)
 	SessionState.set_active_session(session)
 	MusicAudio.validation_reset()
@@ -288,7 +344,7 @@ func _town_shell_route_row(viewport_size: Vector2i) -> Dictionary:
 		"current_context_exact": String(summary.get("current_context_id", "")) == "town",
 		"player_count_exact": int(summary.get("active_player_count", 0)) == MusicAudio.MAX_ACTIVE_PLAYERS,
 		"record_count_exact": int(summary.get("record_count", 0)) == 1,
-		"cue_exact": String(record.get("cue_id", "")) == "music_town_theme",
+		"cue_exact": String(record.get("cue_id", "")) == String(TOWN_FACTION_CUES.get(faction_id, "")),
 		"record_context_exact": String(record.get("context_id", "")) == "town",
 		"source_exact": String(record.get("source", "")) == "town_shell_ready",
 		"changed_exact": bool(record.get("changed", false)),
@@ -314,11 +370,22 @@ func _town_shell_route_row(viewport_size: Vector2i) -> Dictionary:
 		"record": record,
 	}
 
-func _first_player_town(session) -> Dictionary:
+func _town_for_faction(session, faction_id: String) -> Dictionary:
 	for town_value in session.overworld.get("towns", []):
-		if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+		if not (town_value is Dictionary):
+			continue
+		var town_template := ContentService.get_town(String(town_value.get("town_id", "")))
+		if String(town_template.get("faction_id", "")) == faction_id:
 			return town_value
 	return {}
+
+func _set_only_player_town(session, placement_id: String) -> void:
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for index in range(towns.size()):
+		var town: Dictionary = towns[index]
+		town["owner"] = "player" if String(town.get("placement_id", "")) == placement_id else "enemy"
+		towns[index] = town
+	session.overworld["towns"] = towns
 
 func _move_active_hero_to_town(session, town: Dictionary) -> void:
 	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
