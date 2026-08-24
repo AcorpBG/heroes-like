@@ -37821,6 +37821,14 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         "spell_beacon_waymark_road_15": ("beacon", "res://art/magic/runtime/spells/spell_beacon_waymark_road_15.png"),
         "spell_beacon_crown_signal_19": ("beacon", "res://art/magic/runtime/spells/spell_beacon_crown_signal_19.png"),
         "spell_beacon_dawn_ward_21": ("beacon", "res://art/magic/runtime/spells/spell_beacon_dawn_ward_21.png"),
+        "spell_furnace_rivet_clause_05": ("furnace", "res://art/magic/runtime/spells/spell_furnace_rivet_clause_05.png"),
+        "spell_furnace_brass_rite_07": ("furnace", "res://art/magic/runtime/spells/spell_furnace_brass_rite_07.png"),
+        "spell_furnace_hammer_rail_13": ("furnace", "res://art/magic/runtime/spells/spell_furnace_hammer_rail_13.png"),
+        "spell_furnace_slag_clamp_15": ("furnace", "res://art/magic/runtime/spells/spell_furnace_slag_clamp_15.png"),
+        "spell_furnace_coal_clause_17": ("furnace", "res://art/magic/runtime/spells/spell_furnace_coal_clause_17.png"),
+        "spell_furnace_kiln_rite_19": ("furnace", "res://art/magic/runtime/spells/spell_furnace_kiln_rite_19.png"),
+        "spell_furnace_rivet_mantle_21": ("furnace", "res://art/magic/runtime/spells/spell_furnace_rivet_mantle_21.png"),
+        "spell_furnace_foundry_clamp_27": ("furnace", "res://art/magic/runtime/spells/spell_furnace_foundry_clamp_27.png"),
     }
     signature_raw = load_json(SPELL_ICON_MANIFEST_PATH)
     signature_items = signature_raw.get("items", []) if isinstance(signature_raw, dict) else []
@@ -37828,7 +37836,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(signature_raw.get("generator") == "deterministic_signature_spell_icon_assets_v1", errors, "Signature spell icon manifest must retain deterministic generator identity")
     ensure(signature_raw.get("source_size") == {"width": 1254, "height": 1254}, errors, "Signature spell icon manifest must retain exact source dimensions")
     ensure(signature_raw.get("icon_size") == {"width": 128, "height": 128}, errors, "Signature spell icon manifest must retain exact runtime dimensions")
-    ensure(isinstance(signature_items, list) and len(signature_items) == 66, errors, "Specific spell icon manifest must contain exactly sixty-six rows")
+    ensure(isinstance(signature_items, list) and len(signature_items) == 74, errors, "Specific spell icon manifest must contain exactly seventy-four rows")
     signature_ids: list[str] = []
     signature_paths: list[str] = []
     if isinstance(signature_items, list):
@@ -37857,7 +37865,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
                 ensure(hashlib.sha256(disk_path.read_bytes()).hexdigest() == str(row.get("icon_sha256", "")), errors, f"Signature spell icon {spell_id} runtime hash drifted")
             ensure(Path(f"{disk_path}.import").is_file(), errors, f"Signature spell icon {spell_id} runtime import is missing")
     ensure(signature_ids == list(expected_signature_icons), errors, "Signature spell manifest must preserve exact one-per-school authored order")
-    ensure(len(set(signature_paths)) == 66, errors, "Specific spell runtime paths must remain distinct")
+    ensure(len(set(signature_paths)) == 74, errors, "Specific spell runtime paths must remain distinct")
     manifest_raw = load_json(SPELL_SCHOOL_ICON_MANIFEST_PATH)
     manifest_items = manifest_raw.get("items", []) if isinstance(manifest_raw, dict) else []
     ensure(isinstance(manifest_items, list) and len(manifest_items) == 7, errors, "Spell school icon manifest must contain exactly seven rows")
@@ -37950,9 +37958,13 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     target_beacon_town_study_spell_ids = {
         "spell_beacon_roadward_signal_07", "spell_beacon_writ_lance_13", "spell_beacon_waymark_road_15", "spell_beacon_crown_signal_19", "spell_beacon_dawn_ward_21",
     }
-    ensure(set(expected_signature_icons) - active_spell_ids == {"spell_old_measure_compass_boundary_06"} | target_beacon_reward_spell_ids | target_mire_reward_spell_ids | target_furnace_reward_spell_ids | target_root_reward_spell_ids | target_veil_reward_spell_ids | target_old_measure_reward_spell_ids | target_lens_reward_spell_ids | target_lens_town_study_spell_ids | target_beacon_town_study_spell_ids, errors, "Only the established Old Measure boundary, exact generated-map reward groups, and exact Lens/Beacon town-study groups may own specific icons outside fixed spellbook exposure")
+    target_furnace_town_study_spell_ids = {
+        "spell_furnace_rivet_clause_05", "spell_furnace_brass_rite_07", "spell_furnace_hammer_rail_13", "spell_furnace_slag_clamp_15",
+        "spell_furnace_coal_clause_17", "spell_furnace_kiln_rite_19", "spell_furnace_rivet_mantle_21", "spell_furnace_foundry_clamp_27",
+    }
+    ensure(set(expected_signature_icons) - active_spell_ids == {"spell_old_measure_compass_boundary_06"} | target_beacon_reward_spell_ids | target_mire_reward_spell_ids | target_furnace_reward_spell_ids | target_root_reward_spell_ids | target_veil_reward_spell_ids | target_old_measure_reward_spell_ids | target_lens_reward_spell_ids | target_lens_town_study_spell_ids | target_beacon_town_study_spell_ids | target_furnace_town_study_spell_ids, errors, "Only the established Old Measure boundary, exact generated-map reward groups, and exact Lens/Beacon/Furnace town-study groups may own specific icons outside fixed spellbook exposure")
     catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict)}
-    ensure(len(catalog_spell_ids - set(expected_signature_icons)) == 46, errors, "Exactly forty-six catalog spells must retain school-sigil fallback")
+    ensure(len(catalog_spell_ids - set(expected_signature_icons)) == 38, errors, "Exactly thirty-eight catalog spells must retain school-sigil fallback")
     beacon_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "beacon"}
     ensure(len(beacon_catalog_spell_ids) == 16 and beacon_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Beacon catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_beacon_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Beacon town-study icons must retain exact tier 1-5 coverage")
@@ -37961,6 +37973,10 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(len(lens_catalog_spell_ids) == 16 and lens_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Lens catalog spells must own distinct specific icons")
     ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_lens_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Lens town-study icons must retain exact tier 1-5 coverage")
     ensure(all(str(spell.get("school_id", "")) == "lens" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_lens_town_study_spell_ids), errors, "Targeted town-study spells must remain Lens content")
+    furnace_catalog_spell_ids = {str(spell.get("id", "")) for spell in spells if isinstance(spell, dict) and str(spell.get("school_id", "")) == "furnace"}
+    ensure(len(furnace_catalog_spell_ids) == 16 and furnace_catalog_spell_ids.issubset(set(expected_signature_icons)), errors, "All sixteen Furnace catalog spells must own distinct specific icons")
+    ensure({int(spell.get("tier", 0)) for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_furnace_town_study_spell_ids} == {1, 2, 3, 4, 5}, errors, "Targeted Furnace town-study icons must retain exact tier 1-5 coverage")
+    ensure(all(str(spell.get("school_id", "")) == "furnace" for spell in spells if isinstance(spell, dict) and str(spell.get("id", "")) in target_furnace_town_study_spell_ids), errors, "Targeted town-study spells must remain Furnace content")
     lens_study_building_ids = [
         "building_lantern_archive", "building_starseer_annex", "building_sunvault_zenith_observatory", "building_sunvault_prism_oratory", "building_sunvault_daybreak_matrix",
     ]
@@ -37980,10 +37996,20 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     for town_id, town in embercourt_study_towns.items():
         available_building_ids = {str(building_id) for building_id in town.get("starting_building_ids", []) + town.get("buildable_building_ids", [])}
         ensure(str(town.get("faction_id", "")) == "faction_embercourt" and set(beacon_study_building_ids).issubset(available_building_ids), errors, f"{town_id} must retain Embercourt tier 1-5 Beacon study buildings")
+    furnace_study_building_ids = [
+        "building_brasshollow_boiler_cathedral", "building_brasshollow_heatwright_vestry", "building_brasshollow_caliper_sanctum",
+    ]
+    ensure([int(buildings.get(building_id, {}).get("spell_tier", 0)) for building_id in furnace_study_building_ids] == [3, 4, 5], errors, "Furnace town study must retain exact authored tier 3-5 spell buildings above its tier 1-2 town libraries")
+    brasshollow_study_towns = {str(town.get("id", "")): town for town in towns if isinstance(town, dict) and str(town.get("id", "")) in {"town_brasshollow_orevein_gantry", "town_brasshollow_clauseworks_depot"}}
+    ensure(set(brasshollow_study_towns) == {"town_brasshollow_orevein_gantry", "town_brasshollow_clauseworks_depot"}, errors, "Furnace town study must retain Orevein Gantry and Clauseworks Depot")
+    for town_id, town in brasshollow_study_towns.items():
+        available_building_ids = {str(building_id) for building_id in town.get("starting_building_ids", []) + town.get("buildable_building_ids", [])}
+        ensure(str(town.get("faction_id", "")) == "faction_brasshollow" and set(furnace_study_building_ids).issubset(available_building_ids), errors, f"{town_id} must retain Brasshollow tier 1-5 Furnace study buildings")
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     for token in (
         '"faction_sunvault": ["lens", "beacon"]',
         '"faction_embercourt": ["beacon", "furnace"]',
+        '"faction_brasshollow": ["furnace", "old_measure"]',
         "for spell_id in _school_spell_ids_for_town(town_template, tier):",
         "if spell_id != \"\" and spell_id not in spell_ids:",
         "spell_ids.append(spell_id)",
@@ -38006,6 +38032,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(generated_reward_spell_ids == expected_generated_reward_spell_ids, errors, "Generated-map spell reward pool must retain exact 38-spell identity and order")
     ensure(target_lens_town_study_spell_ids.isdisjoint(set(generated_reward_spell_ids)), errors, "Lens town-study icon targets must remain outside the generated reward pool")
     ensure(target_beacon_town_study_spell_ids.isdisjoint(set(generated_reward_spell_ids)), errors, "Beacon town-study icon targets must remain outside the generated reward pool")
+    ensure(target_furnace_town_study_spell_ids.isdisjoint(set(generated_reward_spell_ids)), errors, "Furnace town-study icon targets must remain outside the generated reward pool")
     ensure(target_beacon_reward_spell_ids.issubset(set(generated_reward_spell_ids)), errors, "Every targeted Beacon spell must remain an authored generated-map reward")
     ensure(target_mire_reward_spell_ids.issubset(set(generated_reward_spell_ids)), errors, "Every targeted Mire spell must remain an authored generated-map reward")
     ensure(target_furnace_reward_spell_ids.issubset(set(generated_reward_spell_ids)), errors, "Every targeted Furnace spell must remain an authored generated-map reward")
@@ -38173,9 +38200,17 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         '"stonewake-watch": "town_highwater_keep"',
         'const TARGET_BEACON_TOWN_STUDY_BUILDING_IDS := [',
         '"building_embercourt_beacon_court"', '"building_embercourt_lantern_court"', '"building_embercourt_relief_quay"',
-        "signature_contract.size() == 66",
-        '"school_fallback_count": 46',
-        'SpellRules.spell_icon_path("spell_furnace_foundry_clamp_27") == SpellRules.spell_school_icon_path("spell_furnace_foundry_clamp_27")',
+        'const TARGET_FURNACE_TOWN_STUDY_SPELL_IDS := [',
+        '"spell_furnace_rivet_clause_05"', '"spell_furnace_brass_rite_07"', '"spell_furnace_hammer_rail_13"', '"spell_furnace_slag_clamp_15"',
+        '"spell_furnace_coal_clause_17"', '"spell_furnace_kiln_rite_19"', '"spell_furnace_rivet_mantle_21"', '"spell_furnace_foundry_clamp_27"',
+        'const TARGET_FURNACE_TOWN_SCENARIOS := {',
+        '"orevein-contract": "town_brasshollow_orevein_gantry"',
+        '"clauseworks-counterclaim": "town_brasshollow_clauseworks_depot"',
+        'const TARGET_FURNACE_TOWN_STUDY_BUILDING_IDS := [',
+        '"building_brasshollow_boiler_cathedral"', '"building_brasshollow_heatwright_vestry"', '"building_brasshollow_caliper_sanctum"',
+        "signature_contract.size() == 74",
+        '"school_fallback_count": 38',
+        'SpellRules.spell_icon_path("spell_mire_silt_rot_04") == SpellRules.spell_school_icon_path("spell_mire_silt_rot_04")',
         "var generated_reward_contract := _generated_reward_contract()",
         'reward_ids.size() == 38',
         'and specific_count == 38',
@@ -38189,9 +38224,15 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         'await _surface_case(viewport_size, "overworld", "spell_old_measure_count_survey_14", ["spell_old_measure_count_survey_14"])',
         'await _surface_case(viewport_size, "town", String(TARGET_LENS_TOWN_STUDY_SPELL_IDS[0]), TARGET_LENS_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))',
         'await _surface_case(viewport_size, "town", String(TARGET_BEACON_TOWN_STUDY_SPELL_IDS[0]), TARGET_BEACON_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))',
-        'var target_study_spell_ids: Array = TARGET_BEACON_TOWN_STUDY_SPELL_IDS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_STUDY_SPELL_IDS',
-        'var target_town_scenarios: Dictionary = TARGET_BEACON_TOWN_SCENARIOS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_SCENARIOS',
-        'var required_study_buildings: Array = TARGET_BEACON_TOWN_STUDY_BUILDING_IDS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_STUDY_BUILDING_IDS',
+        'await _surface_case(viewport_size, "town", String(TARGET_FURNACE_TOWN_STUDY_SPELL_IDS[0]), TARGET_FURNACE_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))',
+        'var target_study_spell_ids: Array = TARGET_LENS_TOWN_STUDY_SPELL_IDS',
+        'var target_town_scenarios: Dictionary = TARGET_LENS_TOWN_SCENARIOS',
+        'var required_study_buildings: Array = TARGET_LENS_TOWN_STUDY_BUILDING_IDS',
+        'if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id):',
+        'elif TARGET_FURNACE_TOWN_SCENARIOS.has(town_scenario_id):',
+        'target_study_spell_ids = TARGET_FURNACE_TOWN_STUDY_SPELL_IDS',
+        'target_town_scenarios = TARGET_FURNACE_TOWN_SCENARIOS',
+        'required_study_buildings = TARGET_FURNACE_TOWN_STUDY_BUILDING_IDS',
         'var targeted_learning_ids := learning_spell_ids.filter(func(spell_id): return spell_id in spell_ids_override)',
         'TownRules.current_spell_tier(town) == 5',
         'target_study_spell_ids.all(func(spell_id): return spell_id in TownRules.accessible_spell_ids(town))',

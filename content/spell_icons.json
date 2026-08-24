@@ -735,6 +735,94 @@
       "source_sha256": "e8bda76490400929be81263ae41f84af61045dc97acd89dd8acc24b41b92138e",
       "icon_path": "res://art/magic/runtime/spells/spell_beacon_dawn_ward_21.png",
       "icon_sha256": "cf5d948ba04bd3b8fd78902a8874effffa1d4952e1b8b126f57fdcb32df9f053"
+    },
+    {
+      "id": "spell_furnace_rivet_clause_05",
+      "spell_id": "spell_furnace_rivet_clause_05",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_rivet_clause_05",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_rivet_clause_05.png",
+      "source_sha256": "6f6455fa44a2906f8d4504a93ec95509b6ef55877f3dca44ac1645de70cd7168",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_rivet_clause_05.png",
+      "icon_sha256": "ad0f0bb64b7e5d47a4b4cefc74eee0872848c0b2dd99edfcde11906662109279"
+    },
+    {
+      "id": "spell_furnace_brass_rite_07",
+      "spell_id": "spell_furnace_brass_rite_07",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_brass_rite_07",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_brass_rite_07.png",
+      "source_sha256": "c124269f454f63cb7386520fb9307b805af9624d137cc8e7eb864401d12abeba",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_brass_rite_07.png",
+      "icon_sha256": "010236efa015bfd6693c98c306f7ca8a04e6ae7e98f5e5f8e67d4e059942d84b"
+    },
+    {
+      "id": "spell_furnace_hammer_rail_13",
+      "spell_id": "spell_furnace_hammer_rail_13",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_hammer_rail_13",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_hammer_rail_13.png",
+      "source_sha256": "0f32185058f9918e275e5df7c20b13cf51ee8cc0efde82c436eaee647e2f1e64",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_hammer_rail_13.png",
+      "icon_sha256": "b0344a34720334c07ea75b825d4b5e40320b2cc08bc57357bd141af782debf4f"
+    },
+    {
+      "id": "spell_furnace_slag_clamp_15",
+      "spell_id": "spell_furnace_slag_clamp_15",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_slag_clamp_15",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_slag_clamp_15.png",
+      "source_sha256": "a958f21da1a7d0e14efd29c6785bddf1e80ee8c2397155d331e35fc771046de5",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_slag_clamp_15.png",
+      "icon_sha256": "bdffba24fc9ce104168b66fcf786fe9bb695285c389dba2b24c91bd1efab34fd"
+    },
+    {
+      "id": "spell_furnace_coal_clause_17",
+      "spell_id": "spell_furnace_coal_clause_17",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_coal_clause_17",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_coal_clause_17.png",
+      "source_sha256": "ba42dbc8573767cd2560f13d64b03ed210f344609ef97c8f703f7d7e97823082",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_coal_clause_17.png",
+      "icon_sha256": "35fdb4ced5cb53dac72bdd62e525ce4608f91b0e39c14bfb3231ce10c75e84d6"
+    },
+    {
+      "id": "spell_furnace_kiln_rite_19",
+      "spell_id": "spell_furnace_kiln_rite_19",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_kiln_rite_19",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_kiln_rite_19.png",
+      "source_sha256": "12128ccbfe3c61d9fb8d76cf342b14a5dd4f58f20dd82ab0e240ea2b00ea0dce",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_kiln_rite_19.png",
+      "icon_sha256": "f3fe3da6e0f1f7deb3ff088093dfc8793a078106794d614846717ef6e9c8ef1a"
+    },
+    {
+      "id": "spell_furnace_rivet_mantle_21",
+      "spell_id": "spell_furnace_rivet_mantle_21",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_rivet_mantle_21",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_rivet_mantle_21.png",
+      "source_sha256": "2f112374d2c0fbd34c7de4f4dac61b3f9b2f1b670eb153f8c3ac7c4f34401c42",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_rivet_mantle_21.png",
+      "icon_sha256": "ad161984ef79d5eaa782869d60a6ff7c71e388005b012c72be91115a0ff3998a"
+    },
+    {
+      "id": "spell_furnace_foundry_clamp_27",
+      "spell_id": "spell_furnace_foundry_clamp_27",
+      "school_id": "furnace",
+      "icon_id": "spell_signature_icon_furnace_foundry_clamp_27",
+      "source_kind": "curated_original_spell",
+      "source_path": "res://art/magic/source/spells/curated/spell_furnace_foundry_clamp_27.png",
+      "source_sha256": "b38ad240b6deff3f8a6f6fe64d2d15ffd53763b77dc65d4a66850f4ddd1cf47f",
+      "icon_path": "res://art/magic/runtime/spells/spell_furnace_foundry_clamp_27.png",
+      "icon_sha256": "c6b16f9d2c1d6f290528dbbc2f32bee54a41477ae66a0ee1a8ace95cef762041"
     }
   ]
 }

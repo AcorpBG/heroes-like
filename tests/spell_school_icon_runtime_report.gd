@@ -118,6 +118,25 @@ const TARGET_BEACON_TOWN_STUDY_BUILDING_IDS := [
 	"building_embercourt_lantern_court",
 	"building_embercourt_relief_quay",
 ]
+const TARGET_FURNACE_TOWN_STUDY_SPELL_IDS := [
+	"spell_furnace_rivet_clause_05",
+	"spell_furnace_brass_rite_07",
+	"spell_furnace_hammer_rail_13",
+	"spell_furnace_slag_clamp_15",
+	"spell_furnace_coal_clause_17",
+	"spell_furnace_kiln_rite_19",
+	"spell_furnace_rivet_mantle_21",
+	"spell_furnace_foundry_clamp_27",
+]
+const TARGET_FURNACE_TOWN_SCENARIOS := {
+	"orevein-contract": "town_brasshollow_orevein_gantry",
+	"clauseworks-counterclaim": "town_brasshollow_clauseworks_depot",
+}
+const TARGET_FURNACE_TOWN_STUDY_BUILDING_IDS := [
+	"building_brasshollow_boiler_cathedral",
+	"building_brasshollow_heatwright_vestry",
+	"building_brasshollow_caliper_sanctum",
+]
 const SURFACE_SPELL_IDS := {
 	"overworld": "spell_waystride",
 	"battle": "spell_bulwark_litany",
@@ -189,6 +208,14 @@ const EXPECTED_SIGNATURE_ICONS := {
 	"spell_beacon_waymark_road_15": "res://art/magic/runtime/spells/spell_beacon_waymark_road_15.png",
 	"spell_beacon_crown_signal_19": "res://art/magic/runtime/spells/spell_beacon_crown_signal_19.png",
 	"spell_beacon_dawn_ward_21": "res://art/magic/runtime/spells/spell_beacon_dawn_ward_21.png",
+	"spell_furnace_rivet_clause_05": "res://art/magic/runtime/spells/spell_furnace_rivet_clause_05.png",
+	"spell_furnace_brass_rite_07": "res://art/magic/runtime/spells/spell_furnace_brass_rite_07.png",
+	"spell_furnace_hammer_rail_13": "res://art/magic/runtime/spells/spell_furnace_hammer_rail_13.png",
+	"spell_furnace_slag_clamp_15": "res://art/magic/runtime/spells/spell_furnace_slag_clamp_15.png",
+	"spell_furnace_coal_clause_17": "res://art/magic/runtime/spells/spell_furnace_coal_clause_17.png",
+	"spell_furnace_kiln_rite_19": "res://art/magic/runtime/spells/spell_furnace_kiln_rite_19.png",
+	"spell_furnace_rivet_mantle_21": "res://art/magic/runtime/spells/spell_furnace_rivet_mantle_21.png",
+	"spell_furnace_foundry_clamp_27": "res://art/magic/runtime/spells/spell_furnace_foundry_clamp_27.png",
 }
 const EXPECTED_ICONS := {
 	"beacon": "res://art/magic/runtime/schools/beacon.png",
@@ -259,6 +286,12 @@ func _run() -> void:
 			rows.append(beacon_town_row)
 			if not bool(beacon_town_row.get("ok", false)):
 				_fail("Beacon town-study spell icon surface failed: %s" % JSON.stringify(beacon_town_row), original_window_size)
+				return
+		for town_scenario_id in TARGET_FURNACE_TOWN_SCENARIOS:
+			var furnace_town_row: Dictionary = await _surface_case(viewport_size, "town", String(TARGET_FURNACE_TOWN_STUDY_SPELL_IDS[0]), TARGET_FURNACE_TOWN_STUDY_SPELL_IDS, String(town_scenario_id))
+			rows.append(furnace_town_row)
+			if not bool(furnace_town_row.get("ok", false)):
+				_fail("Furnace town-study spell icon surface failed: %s" % JSON.stringify(furnace_town_row), original_window_size)
 				return
 	SessionState.reset_session()
 	get_window().size = original_window_size
@@ -340,7 +373,7 @@ func _catalog_contract() -> Dictionary:
 		"ok": (
 			bool(fallback_contract.get("ok", false))
 			and bool(generated_reward_contract.get("ok", false))
-			and signature_contract.size() == 66
+			and signature_contract.size() == 74
 			and sorted_signature_ids == sorted_expected_signature_ids
 			and signature_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_signature_icon_%s" % String(row.get("spell_id", "")).trim_prefix("spell_") and String(row.get("icon_path", "")) == String(EXPECTED_SIGNATURE_ICONS.get(String(row.get("spell_id", "")), "")) and String(row.get("source_kind", "")) == "curated_original_spell" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and manifest_contract.size() == 7
@@ -349,9 +382,9 @@ func _catalog_contract() -> Dictionary:
 			and manifest_contract.all(func(row): return String(row.get("icon_id", "")) == "spell_school_sigil_%s" % String(row.get("school_id", "")) and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("school_id", "")), "")) and String(row.get("material_language", "")) != "" and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
 			and spell_rows.size() == 112
 			and spell_rows.all(func(row): return String(row.get("resolved_path", "")) == String(row.get("expected_path", "")) and String(row.get("resolved_path", "")) != "")
-			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 66
-			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 46
-			and SpellRules.spell_icon_path("spell_furnace_foundry_clamp_27") == SpellRules.spell_school_icon_path("spell_furnace_foundry_clamp_27")
+			and spell_rows.filter(func(row): return bool(row.get("uses_signature", false))).size() == 74
+			and spell_rows.filter(func(row): return not bool(row.get("uses_signature", false))).size() == 38
+			and SpellRules.spell_icon_path("spell_mire_silt_rot_04") == SpellRules.spell_school_icon_path("spell_mire_silt_rot_04")
 			and SpellRules.spell_id_for_action("cast_spell:spell_missing") == ""
 			and SpellRules.spell_id_for_action("learn_spell:spell_missing") == ""
 			and SpellRules.spell_school_icon_path("spell_missing") == ""
@@ -360,7 +393,7 @@ func _catalog_contract() -> Dictionary:
 		"fallback": fallback_contract,
 		"generated_reward": generated_reward_contract,
 		"signature_count": signature_contract.size(),
-		"school_fallback_count": 46,
+		"school_fallback_count": 38,
 		"signatures": signature_contract,
 		"school_count": manifest_contract.size(),
 		"spell_count": spell_rows.size(),
@@ -563,9 +596,17 @@ func _surface_fixture(surface: String, spell_id_override: String = "", spell_ids
 		if town.is_empty():
 			return {}
 		var built_buildings: Array = town.get("built_buildings", []) if town.get("built_buildings", []) is Array else []
-		var target_study_spell_ids: Array = TARGET_BEACON_TOWN_STUDY_SPELL_IDS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_STUDY_SPELL_IDS
-		var target_town_scenarios: Dictionary = TARGET_BEACON_TOWN_SCENARIOS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_SCENARIOS
-		var required_study_buildings: Array = TARGET_BEACON_TOWN_STUDY_BUILDING_IDS if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id) else TARGET_LENS_TOWN_STUDY_BUILDING_IDS
+		var target_study_spell_ids: Array = TARGET_LENS_TOWN_STUDY_SPELL_IDS
+		var target_town_scenarios: Dictionary = TARGET_LENS_TOWN_SCENARIOS
+		var required_study_buildings: Array = TARGET_LENS_TOWN_STUDY_BUILDING_IDS
+		if TARGET_BEACON_TOWN_SCENARIOS.has(town_scenario_id):
+			target_study_spell_ids = TARGET_BEACON_TOWN_STUDY_SPELL_IDS
+			target_town_scenarios = TARGET_BEACON_TOWN_SCENARIOS
+			required_study_buildings = TARGET_BEACON_TOWN_STUDY_BUILDING_IDS
+		elif TARGET_FURNACE_TOWN_SCENARIOS.has(town_scenario_id):
+			target_study_spell_ids = TARGET_FURNACE_TOWN_STUDY_SPELL_IDS
+			target_town_scenarios = TARGET_FURNACE_TOWN_SCENARIOS
+			required_study_buildings = TARGET_FURNACE_TOWN_STUDY_BUILDING_IDS
 		if town_scenario_id == "":
 			required_study_buildings = ["building_lantern_archive"]
 		for building_id in required_study_buildings:
