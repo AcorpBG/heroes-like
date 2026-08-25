@@ -5,6 +5,12 @@ const CAPTURE_DIR := "res://.artifacts/main_menu_keyboard_navigation_smoke"
 const RESTART_CAMPAIGN_ID := "campaign_reedfall"
 const RESTART_SCENARIO_ID := "river-pass"
 const DESTRUCTIVE_MANUAL_SLOT := 2
+const FIELD_MANUAL_VIEWPORTS := [Vector2i(1280, 720), Vector2i(1920, 1080)]
+const FIELD_MANUAL_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
+const FIELD_MANUAL_WIDE_MAX_SIZE := Vector2(1024.0, 460.0)
+const FIELD_MANUAL_CREST_PATH := "res://art/ui/branding/aurelion_reach_frontier_crest.png"
+const FIELD_MANUAL_TOPIC_IDS := ["campaign", "skirmish", "overworld", "town", "battle", "outcome", "saves", "credits_notices"]
+const FIELD_MANUAL_TOPIC_LABELS := ["Campaign", "Skirmish", "Overworld", "Town", "Battle", "Outcome", "Save Flow", "Credits & Notices"]
 const SETTINGS_SCROLL_FOCUS_NAMES := [
 	"PresentationModePicker",
 	"RenderQualityPicker",
@@ -97,6 +103,9 @@ func _run() -> void:
 		_fail("Cancel did not close the Campaign board.")
 		return
 	_expect_focus("OpenCampaign", "campaign board focus return")
+	if not await _check_field_manual_reference_card():
+		return
+	_expect_focus("OpenCampaign", "first-view return after Field Manual reference-card validation")
 	if not await _check_destructive_dialog_controller_cancel(shell):
 		return
 	if not await _check_display_change_exclusive_parent_input(shell):
@@ -208,6 +217,161 @@ func _run() -> void:
 	print("%s PASS" % REPORT_ID)
 	shell.queue_free()
 	get_tree().quit(0)
+
+func _check_field_manual_reference_card() -> bool:
+	var original_window_size: Vector2i = get_window().size
+	var original_focus := get_viewport().gui_get_focus_owner()
+	var authority_before: Dictionary = _destructive_protected_state()
+	var layout_host := Control.new()
+	layout_host.name = "MainMenuFieldManualReferenceCardHost"
+	layout_host.size = Vector2(FIELD_MANUAL_VIEWPORTS[0])
+	add_child(layout_host)
+	var guide_shell: Control = load("res://scenes/menus/MainMenu.tscn").instantiate()
+	layout_host.add_child(guide_shell)
+	await _settle()
+	var failure := ""
+	for viewport_size in FIELD_MANUAL_VIEWPORTS:
+		SettingsService.call("_set_runtime_window_size", viewport_size)
+		layout_host.size = Vector2(viewport_size)
+		await _settle()
+		guide_shell.call("validation_open_campaign_stage")
+		await _settle()
+		guide_shell.call("validation_open_contextual_guide_stage")
+		await _settle()
+		var campaign_snapshot: Dictionary = guide_shell.call("validation_snapshot")
+		failure = _field_manual_reference_card_error(campaign_snapshot, viewport_size, "campaign")
+		if failure != "":
+			break
+		if _focus_name() != "HelpList":
+			failure = "Field Manual entry focus was %s instead of HelpList at %s." % [_focus_name(), viewport_size]
+			break
+		guide_shell.call("validation_select_help_topic", "saves")
+		await _settle()
+		var save_snapshot: Dictionary = guide_shell.call("validation_snapshot")
+		failure = _field_manual_reference_card_error(save_snapshot, viewport_size, "saves")
+		if failure != "":
+			break
+		guide_shell.call("validation_return_from_contextual_guide")
+		await _settle()
+		var returned_snapshot: Dictionary = guide_shell.call("validation_snapshot")
+		if (
+			int(returned_snapshot.get("current_tab", -1)) != 0
+			or not bool(returned_snapshot.get("stage_dock_visible", false))
+			or String(returned_snapshot.get("stage_help_text", "")) != "Guide"
+			or _focus_name() != "CampaignList"
+		):
+			failure = "Field Manual did not return to the focused Campaign board at %s: %s." % [viewport_size, returned_snapshot]
+			break
+		if _destructive_protected_state() != authority_before:
+			failure = "Field Manual changed campaign/session/save/settings authority at %s." % [viewport_size]
+			break
+	layout_host.queue_free()
+	SettingsService.call("_set_runtime_window_size", original_window_size)
+	await _settle()
+	if is_instance_valid(original_focus):
+		(original_focus as Control).grab_focus()
+		await _settle()
+	if failure == "" and _destructive_protected_state() != authority_before:
+		failure = "Field Manual width round trip changed campaign/session/save/settings authority."
+	if failure != "":
+		return _fail_bool(failure)
+	if get_viewport().gui_get_focus_owner() != original_focus:
+		return _fail_bool("Field Manual reference-card validation did not restore the original focus owner.")
+	return true
+
+func _field_manual_reference_card_error(snapshot: Dictionary, viewport_size: Vector2i, topic_id: String) -> String:
+	var expected_label := SettingsService.help_topic_label(topic_id)
+	var expected_details := "%s\n%s" % [
+		String(snapshot.get("help_handoff_tooltip", "")),
+		SettingsService.describe_help_topic(topic_id),
+	]
+	if (
+		int(snapshot.get("current_tab", -1)) != 3
+		or not bool(snapshot.get("stage_dock_visible", false))
+		or String(snapshot.get("help_topic_id", "")) != topic_id
+		or snapshot.get("help_items", []) != FIELD_MANUAL_TOPIC_LABELS
+		or String(snapshot.get("help_topic_title", "")) != expected_label
+		or String(snapshot.get("help_topic_title_tooltip", "")) != String(snapshot.get("help_handoff_tooltip", ""))
+		or String(snapshot.get("help_details_full", "")) != expected_details
+		or not bool(snapshot.get("help_topic_crest_visible", false))
+		or String(snapshot.get("help_topic_crest_path", "")) != FIELD_MANUAL_CREST_PATH
+		or String(snapshot.get("stage_help_text", "")) != "Back"
+	):
+		return "Field Manual content/title/crest contract failed for %s at %s: %s." % [topic_id, viewport_size, snapshot]
+	var help_item_tooltips: Array = snapshot.get("help_item_tooltips", []) if snapshot.get("help_item_tooltips", []) is Array else []
+	if help_item_tooltips.size() != FIELD_MANUAL_TOPIC_IDS.size():
+		return "Field Manual tooltip count changed at %s: %s." % [viewport_size, help_item_tooltips]
+	for index in range(FIELD_MANUAL_TOPIC_IDS.size()):
+		var tooltip := String(help_item_tooltips[index])
+		if not tooltip.contains("Topic cue:") or not tooltip.contains(FIELD_MANUAL_TOPIC_LABELS[index]) or not tooltip.contains("Help Handoff"):
+			return "Field Manual tooltip order/content changed at %s index %d: %s." % [viewport_size, index, tooltip]
+	var layout: Dictionary = snapshot.get("help_layout", {}) if snapshot.get("help_layout", {}) is Dictionary else {}
+	return _field_manual_layout_error(layout, viewport_size)
+
+func _field_manual_layout_error(layout: Dictionary, viewport_size: Vector2i) -> String:
+	var observed_viewport: Dictionary = layout.get("viewport_size", {}) if layout.get("viewport_size", {}) is Dictionary else {}
+	var stage_rect := _field_manual_snapshot_rect(layout.get("stage_rect", {}))
+	var panel_rect := _field_manual_snapshot_rect(layout.get("panel_rect", {}))
+	var list_rect := _field_manual_snapshot_rect(layout.get("topic_list_rect", {}))
+	var article_rect := _field_manual_snapshot_rect(layout.get("article_rect", {}))
+	var title_rect := _field_manual_snapshot_rect(layout.get("topic_title_rect", {}))
+	var crest_rect := _field_manual_snapshot_rect(layout.get("topic_crest_rect", {}))
+	var viewport_rect := Rect2(Vector2.ZERO, Vector2(viewport_size))
+	var expected_anchors := _field_manual_expected_anchors(viewport_size)
+	var expected_position := Vector2(viewport_size) * expected_anchors.position
+	var expected_size := Vector2(viewport_size) * expected_anchors.size
+	var geometry_exact := (
+		is_equal_approx(float(observed_viewport.get("x", 0.0)), float(viewport_size.x))
+		and is_equal_approx(float(observed_viewport.get("y", 0.0)), float(viewport_size.y))
+		and stage_rect.position.distance_to(expected_position) <= 1.0
+		and stage_rect.size.x >= expected_size.x - 1.0
+		and stage_rect.size.y >= expected_size.y - 1.0
+		and stage_rect.size.x <= expected_size.x + 3.0
+		and stage_rect.size.y <= expected_size.y + 3.0
+		and _field_manual_rect_contains(viewport_rect, stage_rect)
+		and _field_manual_rect_contains(stage_rect, panel_rect)
+		and _field_manual_rect_contains(panel_rect, list_rect)
+		and _field_manual_rect_contains(panel_rect, article_rect)
+		and _field_manual_rect_contains(article_rect, title_rect)
+		and _field_manual_rect_contains(article_rect, crest_rect)
+		and list_rect.end.x <= article_rect.position.x + 1.0
+		and list_rect.size.x >= 218.0
+		and article_rect.size.x > list_rect.size.x
+		and title_rect.size.x > 0.0
+		and crest_rect.size.distance_to(Vector2(56.0, 56.0)) <= 1.0
+	)
+	if viewport_size == Vector2i(1920, 1080):
+		geometry_exact = geometry_exact \
+			and stage_rect.size.x <= FIELD_MANUAL_WIDE_MAX_SIZE.x + 1.0 \
+			and stage_rect.size.y <= FIELD_MANUAL_WIDE_MAX_SIZE.y + 1.0 \
+			and float(layout.get("uncovered_right_ratio", 0.0)) >= 0.40
+	if not geometry_exact:
+		return "Field Manual geometry escaped its responsive reference-card contract at %s: %s." % [viewport_size, layout]
+	return ""
+
+func _field_manual_expected_anchors(viewport_size: Vector2i) -> Rect2:
+	if viewport_size.x <= 1280 or viewport_size.y <= 720:
+		return FIELD_MANUAL_STANDARD_ANCHORS
+	return Rect2(
+		FIELD_MANUAL_STANDARD_ANCHORS.position,
+		Vector2(
+			minf(FIELD_MANUAL_STANDARD_ANCHORS.size.x, FIELD_MANUAL_WIDE_MAX_SIZE.x / float(viewport_size.x)),
+			minf(FIELD_MANUAL_STANDARD_ANCHORS.size.y, FIELD_MANUAL_WIDE_MAX_SIZE.y / float(viewport_size.y))
+		)
+	)
+
+func _field_manual_snapshot_rect(value: Variant) -> Rect2:
+	var row: Dictionary = value if value is Dictionary else {}
+	return Rect2(
+		Vector2(float(row.get("x", 0.0)), float(row.get("y", 0.0))),
+		Vector2(float(row.get("width", 0.0)), float(row.get("height", 0.0)))
+	)
+
+func _field_manual_rect_contains(outer: Rect2, inner: Rect2, tolerance: float = 1.0) -> bool:
+	return inner.position.x >= outer.position.x - tolerance \
+		and inner.position.y >= outer.position.y - tolerance \
+		and inner.end.x <= outer.end.x + tolerance \
+		and inner.end.y <= outer.end.y + tolerance
 
 func _check_settings_focus_visibility() -> bool:
 	var original_window_size: Vector2i = get_window().size
