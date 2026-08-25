@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish or release-readiness slice."
+    "Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,17 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-terrain-integrated-road-surface-10184",
-    "title": "Overworld terrain-integrated road surface",
+    "id": "ux-overworld-organic-terrain-edge-blending-10184",
+    "title": "Overworld organic terrain edge blending",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T17:46:30Z",
-    "updatedAt": "2026-08-25T18:25:57Z",
+    "startedAt": "2026-08-25T18:29:34Z",
+    "updatedAt": "2026-08-25T18:59:10Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the presentation-only road surface correction. Inspected authored 1280x720 and 1920x1080 captures plus generated before/after captures show narrower low-contrast wheel-rutted land paths and flat cross-planked water causeways; explicit H3MapEd/source-frame ownership, road topology, movement, session/save authority, generated placement, and Native RMG behavior remain exact. Focused road, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. The unrelated broad visual-smoke objective-header oracle and packaged Overworld interaction remain unclaimed."
+    "notes": "Completed the presentation-only organic terrain-edge correction. Direct inspected authored 1280x720 and 1920x1080 plus generated before/after captures show deterministic shallow feathering; all 202 generated transition tiles retain the exact two-band model across movement. Focused ownership, movement, compatibility, static/editor, and bounded Linux/Windows startup gates pass. Terrain/gameplay/RMG authority is unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14376,14 +14376,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld terrain-integrated road surface is in progress from direct current captures and source/asset inspection; replace timber-bar ordinary overlays without changing road topology or movement authority.",
+  "currentNotes": "The Overworld organic terrain edge blending slice is completed; select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-terrain-integrated-road-surface-10184",
-  "currentSliceId": "ux-overworld-terrain-integrated-road-surface-10184",
-  "currentSliceNotes": "Completed the presentation-only road surface correction. Inspected authored 1280x720 and 1920x1080 captures plus generated before/after captures show narrower low-contrast wheel-rutted land paths and flat cross-planked water causeways; explicit H3MapEd/source-frame control retained exact N+S frame res://art/overworld/runtime/homm3_local_prototype/roads/dirtrd/00_10.png. Focused land/water render-model, Ninefold topology/source ownership, generated movement/save, full-route, input/focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The broad Overworld visual smoke was not authoritative because an unrelated pre-existing objective-header pixel-width oracle failed before road checks; it is not claimed green. Packaged Overworld road interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "ux-overworld-organic-terrain-edge-blending-10184",
+  "currentSliceId": "ux-overworld-organic-terrain-edge-blending-10184",
+  "currentSliceNotes": "Completed the presentation-only organic terrain-edge correction. Direct inspected River Pass 1280x720 and 1920x1080 X11 captures show a soft irregular water/grass shoreline; generated before/after captures show badlands, dirt, rough, swamp, and grass borders with shallow feathered silhouettes instead of pure right-angle strips. All 202 generated transition tiles report the exact deterministic two-band layered_feathered_organic_intrusion model before and after movement. Ninefold proves generic cardinal/corner ownership plus enabled exact self-contained H3MapEd/source-frame bypass and whole session authority. Normal tactical static rendering remained non-regressed at 8655 usec versus the prior 10501 usec control. Generated movement/save, full-route, input ownership, active focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The known unrelated broad visual-smoke objective-header pixel oracle and packaged Overworld interaction remain unclaimed; no terrain/gameplay/RMG data changed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld terrain-integrated road surface",
-  "currentSliceUpdatedAt": "2026-08-25T17:46:30Z",
+  "currentSliceTitle": "Overworld organic terrain edge blending",
+  "currentSliceUpdatedAt": "2026-08-25T18:59:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19688,7 +19688,7 @@
       }
     }
   },
-  "guardrailNote": "Change only Overworld painted sprite extents. Preserve exact logical footprints, town entry/body masks, hit areas, passability, routes, interaction, camera/map fit, content, save/session authority, generated placement, Native RMG behavior, and bounded release claims.",
+  "guardrailNote": "Change only generic terrain transition rendering. Preserve exact terrain ids/order, source frames, passability, movement, roads, objects, fog, routes, session/save authority, generated placement, and Native RMG behavior.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19898,8 +19898,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Inspect authored land/water and generated road surfaces before broad validation; do not alter road payloads, topology, movement, terrain, or Native RMG authority.",
-  "notes": "The terrain-integrated road surface is the current bounded graphical-polish slice. Completed reticle and object-scale hierarchy remain frozen.",
+  "nextActionGuardrailNote": "Register the next bounded slice from direct current behavior evidence before changing production; preserve gameplay authority and bounded release claims.",
+  "notes": "Organic generic terrain-edge blending is completed. The next graphical-polish or release-readiness slice has not been selected.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
@@ -101698,6 +101698,34 @@
       "notes": "Completed the presentation-only road surface correction. Inspected authored 1280x720 and 1920x1080 captures plus generated before/after captures show narrower low-contrast wheel-rutted land paths and flat cross-planked water causeways; explicit H3MapEd/source-frame control retained exact N+S frame res://art/overworld/runtime/homm3_local_prototype/roads/dirtrd/00_10.png. Focused land/water render-model, Ninefold topology/source ownership, generated movement/save, full-route, input/focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The broad Overworld visual smoke was not authoritative because an unrelated pre-existing objective-header pixel-width oracle failed before road checks; it is not claimed green. Packaged Overworld road interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T18:25:49Z"
+    },
+    {
+      "id": "ux-overworld-organic-terrain-edge-blending-10184",
+      "title": "Overworld organic terrain edge blending",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T18:58:02Z",
+      "startedAt": "2026-08-25T18:29:34Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make ordinary biome boundaries read as natural terrain transitions rather than hard stair-step rectangles by layering deterministic feathered generic edge bands while preserving exact source-frame ownership.",
+      "completionCriteria": "Fresh inspected authored 1280x720 and 1920x1080 plus generated-map captures show deterministic shallow irregular feathering across ordinary cardinal and diagonal terrain boundaries without square transition strips or terrain-obscuring blobs; exact enabled H3MapEd/source terrain frames remain self-contained and bypass the generic overlay; focused runtime proves exact source/cardinal/corner order, deterministic geometry, containment, terrain ids/order, passability, movement costs, roads, objects, fog/reveal, routes, input/focus, camera/map fit, content, session/save authority, generated placement, and Native RMG behavior; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No terrain id/order, map payload, source-frame selection, passability, movement cost, road, object, fog/reveal, route, input/focus, camera/map-fit, content, save/session, generated placement, density, or Native RMG data/behavior change.",
+        "No terrain base art replacement, object/hero/town scale or asset, shell/UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed the presentation-only organic terrain-edge correction. Direct inspected River Pass 1280x720 and 1920x1080 X11 captures show a soft irregular water/grass shoreline; generated before/after captures show badlands, dirt, rough, swamp, and grass borders with shallow feathered silhouettes instead of pure right-angle strips. All 202 generated transition tiles report the exact deterministic two-band layered_feathered_organic_intrusion model before and after movement. Ninefold proves generic cardinal/corner ownership plus enabled exact self-contained H3MapEd/source-frame bypass and whole session authority. Normal tactical static rendering remained non-regressed at 8655 usec versus the prior 10501 usec control. Generated movement/save, full-route, input ownership, active focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The known unrelated broad visual-smoke objective-header pixel oracle and packaged Overworld interaction remain unclaimed; no terrain/gameplay/RMG data changed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T18:58:02Z"
     }
   ],
   "project": "heroes-like",
@@ -101708,7 +101736,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved graphical-polish or release-readiness slice; broader product and release-readiness gaps remain.",
+  "remainingWork": "Select the next tracker-approved graphical-polish or release-readiness slice; broader graphical polish and product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102139,7 +102167,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_town_selection_cartographic_perimeter_completed",
+  "result": "overworld_organic_terrain_edge_blending_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102240,9 +102268,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld town selection cartographic perimeter is completed with direct 1280/1920 visual proof, exact selection/route/gameplay authority, and green focused, compatibility, static/editor, Linux, and Windows startup gates; the next graphical-polish slice is not selected.",
+  "summary": "Overworld generic terrain boundaries now use deterministic two-band organic feathering with exact source-frame bypass and unchanged gameplay authority. Direct authored/generated visual proof and focused, compatibility, static/editor, Linux, and Windows startup gates pass; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T18:25:57Z",
+  "updatedAt": "2026-08-25T18:59:10Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

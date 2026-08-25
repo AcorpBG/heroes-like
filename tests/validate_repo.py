@@ -38950,8 +38950,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(terrain_presentation.get("tile_art_source_basis", "")) != "original_procedural_reference_informed"',
         'String(terrain_presentation.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency"',
         'not bool(terrain_presentation.get("homm3_local_reference_only", false))',
-        'String(terrain.get("transition_shape_model", "")) != "procedural_strip_fallback"',
-        'String(terrain.get("transition_edge_treatment", "")) != "procedural_strip_fallback"',
+        'String(terrain.get("transition_shape_model", "")) != "layered_feathered_organic_intrusion"',
+        'String(terrain.get("transition_edge_treatment", "")) != "shallow_irregular_feather_bands"',
+        'String(terrain.get("generic_transition_surface_model", "")) != "layered_feathered_organic_intrusion"',
+        'int(terrain.get("generic_transition_feather_band_count", 0)) != 2',
+        'not bool(terrain.get("generic_transition_irregular_inner_edge", false))',
+        'String(terrain.get("generic_transition_deterministic_seed_basis", "")) != "tile_and_direction_only"',
     ):
         ensure(required_token in ninefold_text, errors, f"Ninefold large-map terrain gate must retain the shippable original tile-bank contract: {required_token}")
     enabled_homm3_transition_control = gd_function_block(ninefold_text, "_assert_enabled_homm3_transition_ownership")
@@ -39651,6 +39655,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "TERRAIN_TRANSITION_EDGE_MODEL",
 	        "TERRAIN_TRANSITION_CORNER_MODEL",
 	        'const TERRAIN_TRANSITION_DRAW_POLICY := "active_homm3_self_contained_else_generic_overlay"',
+	        'const GENERIC_TERRAIN_EDGE_SURFACE_MODEL := "layered_feathered_organic_intrusion"',
+	        "GENERIC_TERRAIN_EDGE_FEATHER_BAND_COUNT",
+	        "GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR",
+	        "GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR",
 	        "func _load_terrain_grammar",
 	        "func _load_homm3_prototype",
 	        "func _homm3_runtime_rendering_enabled",
@@ -39666,6 +39674,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _load_overworld_art_manifest",
         "func _draw_authored_terrain_pattern",
         "func _draw_terrain_transitions",
+	        "func _draw_terrain_edge_fallback",
+	        "func _terrain_edge_profile_points",
+	        "func _terrain_edge_band_polygon",
+	        "func _draw_terrain_corner_hint",
         "func _terrain_uses_self_contained_homm3_transition",
         "func _terrain_generic_transition_payload",
         "func _terrain_transition_payload",
@@ -39794,6 +39806,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     transition_owner_block = gd_function_block(map_view_text, "_terrain_uses_self_contained_homm3_transition")
     transition_payload_block = gd_function_block(map_view_text, "_terrain_transition_payload")
     generic_transition_payload_block = gd_function_block(map_view_text, "_terrain_generic_transition_payload")
+    generic_edge_fallback_block = gd_function_block(map_view_text, "_draw_terrain_edge_fallback")
+    generic_edge_profile_block = gd_function_block(map_view_text, "_terrain_edge_profile_points")
+    generic_edge_polygon_block = gd_function_block(map_view_text, "_terrain_edge_band_polygon")
+    generic_corner_block = gd_function_block(map_view_text, "_draw_terrain_corner_hint")
     terrain_payload_block = gd_function_block(map_view_text, "_terrain_visual_payload")
     ensure(
         transition_draw_block.find("_terrain_uses_self_contained_homm3_transition(tile, terrain)")
@@ -39806,6 +39822,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         errors,
         "Inactive HoMM3 configuration records must not suppress the active generic terrain overlay path.",
     )
+    for token in (
+        "_draw_terrain_edge_fallback(tile, source_terrain, direction, rect)",
+        '_draw_terrain_corner_hint(tile, String(source.get("source_terrain", terrain)), String(source.get("direction", "")), rect)',
+    ):
+        ensure(token in transition_draw_block, errors, f"Generic terrain transitions must pass only tile-local presentation inputs into organic edge rendering: {token}")
     for token in (
         "if not _homm3_runtime_rendering_enabled():",
         "var entry := _homm3_terrain_art_entry(terrain, tile)",
@@ -39830,6 +39851,47 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for forbidden in ("_homm3_terrain_selection_payload", "TerrainPlacementRules", "rand", "session.overworld[", "map[", "await ", "create_timer"):
         ensure(forbidden not in generic_transition_payload_block, errors, f"Generic transition drawing must not recompute disabled HoMM3 selection or mutate authority: {forbidden}")
     for token in (
+        "GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR",
+        "GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR",
+        "_terrain_edge_profile_points(tile, direction, rect,",
+        "_terrain_edge_band_polygon(direction, rect, outer_profile)",
+        "_terrain_edge_band_polygon(direction, rect, inner_profile)",
+        "GENERIC_TERRAIN_EDGE_OUTER_ALPHA",
+        "GENERIC_TERRAIN_EDGE_INNER_ALPHA",
+        "GENERIC_TERRAIN_EDGE_SEAM_ALPHA",
+        "_canvas_draw_polyline(",
+    ):
+        ensure(token in generic_edge_fallback_block, errors, f"Generic terrain edges must retain two feather bands and one restrained organic seam: {token}")
+    for token in (
+        'if direction not in ["N", "S", "W", "E"]:',
+        'var direction_seed: int = int({"N": 11, "E": 23, "S": 37, "W": 53}.get(direction, 0))',
+        "var seed: int = absi((tile.x * 37) + (tile.y * 71) + int(direction_seed))",
+        "var depth_weights := [0.78, 1.08, 0.88, 1.14, 0.82]",
+        "for index in range(5):",
+        "var depth := minf(maxf(2.0, extent * depth_factor * weight), maxf(4.0, 18.0 * weight))",
+    ):
+        ensure(token in generic_edge_profile_block, errors, f"Organic terrain-edge profiles must remain bounded and deterministic from tile plus direction: {token}")
+    for token in (
+        "if inner_profile.size() != 5:",
+        "for index in range(inner_profile.size() - 1, -1, -1):",
+        "polygon.append(inner_profile[index])",
+    ):
+        ensure(token in generic_edge_polygon_block, errors, f"Organic terrain-edge polygons must close the exact five-sample inner profile against the tile edge: {token}")
+    for token in (
+        "var seed: int = absi((tile.x * 43) + (tile.y * 61) + direction.hash())",
+        "var corner_variation := 0.92 + (float(seed % 5) * 0.04)",
+        "TERRAIN_TRANSITION_CORNER_FACTOR * corner_variation",
+    ):
+        ensure(token in generic_corner_block, errors, f"Diagonal transition corners must retain bounded tile-local variation: {token}")
+    for block_name, block in (
+        ("generic edge fallback", generic_edge_fallback_block),
+        ("generic edge profile", generic_edge_profile_block),
+        ("generic edge polygon", generic_edge_polygon_block),
+        ("generic corner", generic_corner_block),
+    ):
+        for forbidden in ("rand", "await ", "create_timer", "queue_redraw", "_session", "session.overworld", "set_map_state", "map["):
+            ensure(forbidden not in block, errors, f"{block_name} must remain deterministic presentation-only geometry: {forbidden}")
+    for token in (
         "var transition_relationship_count := edge_transition_count + corner_transition_count + propagated_transition_count",
         "var homm3_transition_self_contained := _terrain_uses_self_contained_homm3_transition(tile, terrain)",
         "var generic_transition_payload := _terrain_generic_transition_payload(tile)",
@@ -39839,6 +39901,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"homm3_transition_self_contained": homm3_transition_self_contained',
         '"generic_transition_overlay_relationship_count": generic_transition_overlay_relationship_count',
         '"generic_transition_overlay_active": generic_transition_overlay_active',
+        '"generic_transition_surface_model": GENERIC_TERRAIN_EDGE_SURFACE_MODEL if generic_transition_overlay_active else ""',
+        '"generic_transition_feather_band_count": GENERIC_TERRAIN_EDGE_FEATHER_BAND_COUNT if generic_transition_overlay_active else 0',
+        '"generic_transition_irregular_inner_edge": generic_transition_overlay_active',
+        '"generic_transition_deterministic_seed_basis": "tile_and_direction_only" if generic_transition_overlay_active else ""',
+        'else GENERIC_TERRAIN_EDGE_SURFACE_MODEL)',
+        'else "shallow_irregular_feather_bands")',
     ):
         ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose the effective transition draw policy: {token}")
 
@@ -40039,6 +40107,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'not bool(terrain.get("homm3_transition_self_contained", false))',
         'bool(terrain.get("generic_transition_overlay_active", true))',
         'String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"',
+        'String(terrain.get("generic_transition_surface_model", "leaked")) != ""',
+        'int(terrain.get("generic_transition_feather_band_count", -1)) != 0',
+        'bool(terrain.get("generic_transition_irregular_inner_edge", true))',
     ):
         ensure(token in enabled_homm3_owner_block, errors, f"Ninefold transition owner must prove enabled loaded HoMM3 tiles suppress the generic overlay without authority mutation: {token}")
     ensure(
@@ -40058,6 +40129,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'bool(terrain.get("generic_transition_overlay_active", false))',
         'bool(terrain.get("homm3_transition_self_contained", false))',
         '"inactive_homm3_overlay_tile_count"',
+        'String(terrain.get("generic_transition_surface_model", ""))',
+        'int(terrain.get("generic_transition_feather_band_count", 0))',
+        'bool(terrain.get("generic_transition_irregular_inner_edge", false))',
+        'String(terrain.get("generic_transition_deterministic_seed_basis", "")) == "tile_and_direction_only"',
+        '"surface_model_ids": surface_model_ids.keys()',
+        '"feather_band_counts": feather_band_counts.keys()',
     ):
         ensure(token in generated_transition_block, errors, f"Generated live visual owner must inspect real terrain transition presentation: {token}")
     for token in (
@@ -40066,6 +40143,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'int(summary.get("inactive_homm3_overlay_tile_count", 0)) != relationship_count',
         'int(summary.get("self_contained_tile_count", -1)) != 0',
         '["active_homm3_self_contained_else_generic_overlay"]',
+        '["layered_feathered_organic_intrusion"]',
+        'summary.get("feather_band_counts", []) != [2]',
+        'int(summary.get("irregular_inner_edge_count", 0)) != relationship_count',
+        'int(summary.get("deterministic_seed_count", 0)) != relationship_count',
     ):
         ensure(token in generated_transition_assert_block, errors, f"Generated live visual owner must fail closed on missing or mismatched generic transition overlays: {token}")
     ensure(
