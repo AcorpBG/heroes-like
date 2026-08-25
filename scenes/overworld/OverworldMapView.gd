@@ -98,7 +98,7 @@ const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
-const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72
+const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := OBJECT_BLOCKER_VISIBLE_EXTENT_TILES
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08
 const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 16
@@ -163,7 +163,7 @@ const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
-const TOWN_SPRITE_EXTENT_FACTOR := 0.48
+const TOWN_SPRITE_EXTENT_FACTOR := 0.72
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -2327,7 +2327,7 @@ func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, rememb
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var extent := minf(rect.size.x, rect.size.y)
-	var icon_extent := maxf(14.0, extent * 0.68)
+	var icon_extent := maxf(14.0, extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES)
 	var center: Vector2 = anchor.get("center", rect.get_center())
 	var icon_center := center + Vector2(0.0, -extent * 0.14)
 	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
@@ -2348,7 +2348,7 @@ func _draw_encounter_unit_icon(encounter: Dictionary, rect: Rect2, remembered: b
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var extent := minf(rect.size.x, rect.size.y)
-	var icon_extent := maxf(14.0, extent * 0.68)
+	var icon_extent := maxf(14.0, extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES)
 	var center: Vector2 = anchor.get("center", rect.get_center())
 	var icon_center := center + Vector2(0.0, -extent * 0.14)
 	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
@@ -4993,6 +4993,7 @@ func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 		"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded,
 		"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded,
 		"hostile_treatment": "encounter_ring",
+		"visible_extent_tiles": OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES,
 		"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL,
 		"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL,
 	}
