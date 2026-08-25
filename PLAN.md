@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next fresh, bounded, source-backed graphical-polish defect from direct runtime captures before changing production behavior.
+- Selected implementation slice: none. Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner.
+
+- Previous completed implementation slice: `ux-battle-movement-range-overlay-restraint-10184`. Every exact legal movement destination remains visible, but the repeated range treatment now uses a thin inset outline and near-transparent fill instead of painting the reachable battlefield as a broad cyan surface. Direct inspected 1280x720 and 1920x1080 captures keep terrain and stack silhouettes primary while active and target cues remain dominant. Exact legal cells/order, actions, pathing, hit geometry, input/focus, combat, objectives, tokens, VFX, accessibility, and session authority remain unchanged. Focused Town/Battle visual, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-battle-movement-range-overlay-restraint-10184`
 
 - Previous completed implementation slice: `presentation-overworld-small-map-cartographic-matte-10184`. Whole-map-fit Overworld boards with material gutters now sit on a quiet dark-teal cartographic survey field with a low-contrast 72px grid, corner contours, one compact compass ornament, a soft shadow, and restrained mounting brackets. Direct inspected River Pass 1280x720 and 1920x1080 captures preserve board dominance at compact size and make the wide layout intentional without suggesting extra playable tiles. The exact 104px cap, centered board rectangle, terrain/fog/routes, object/hero/town scales and footprints, camera/pan, movement/input/focus, accessibility, save/session authority, and large-map tactical presentation remain exact. Focused scale/matte, broad Overworld visual, real movement/input, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `presentation-overworld-small-map-cartographic-matte-10184`
@@ -10318,6 +10321,31 @@ Completion result:
 - material-gutter whole-map-fit boards use one passive static-layer survey field with exact 72px spacing, 48px activation threshold, low-alpha corner contours, a bounded compass ornament, and a 14px board-shadow extent; terrain draws after and fully covers the playable board;
 - direct inspected 1280x720 and 1920x1080 captures retain the compact board-first composition and replace the wide untreated gutter with an intentional, quiet map-table surround;
 - focused scale/matte, broad Overworld visual, movement/input ownership, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green with unchanged gameplay and session authority.
+
+## Battle Movement-Range Overlay Restraint
+
+id: `ux-battle-movement-range-overlay-restraint-10184`
+
+Status: completed.
+
+Implementation boundary:
+- retain the exact complete legal movement-cell set and draw every cell with the existing inset hex affordance;
+- reduce only the repeated legal-move fill opacity, outline opacity, and outline width so terrain and unit silhouettes stay primary;
+- keep active, target, blocked-target, legal melee/ranged, controller-cursor, objective, grid, token, VFX, and hover/focus cues unchanged.
+
+Completion criteria:
+- direct inspected Battle captures at 1280x720 and 1920x1080 keep legal destinations readable without turning the reachable half of the board into a cyan surface;
+- focused runtime proves exact legal movement cells/intents and one exact restrained visual profile while preserving stack cells, active/target/blocked cues, hit geometry, actions, input, combat, and session authority;
+- Battle visual, Board navigation, animation/VFX, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no movement rules, range, pathing, legal-cell enumeration/order, action, AI, combat, hex layout/grid, terrain, objective, stack/token, target, active, controller, VFX, animation, audio, input/focus, accessibility semantics, content, save schema, or package-content change;
+- no hidden destinations, hover-only disclosure, animation, timer/deferred workaround, packaged Battle interaction claim, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- every exact legal destination is still drawn from `legal_destinations_for_active_stack`, using a 0.72-radius inset hex, 0.045 fill alpha, 0.48 outline alpha, and 1.15px outline below active, target, and stack presentation;
+- direct inspected 1280x720 and 1920x1080 captures retain clear movement affordance without obscuring terrain or tactical hierarchy;
+- focused visual, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green.
 
 ## Progress Reconciliation
 

@@ -151,6 +151,10 @@ func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> 
 		shell_report["battle_banner"] = banner_contract
 		if not bool(banner_contract.get("ok", false)):
 			_error("Battle banner status containment failed at %s: %s" % [_viewport_key(viewport_size), banner_contract])
+		var movement_range_contract := _battle_movement_range_contract(shell)
+		shell_report["battle_movement_range"] = movement_range_contract
+		if not bool(movement_range_contract.get("ok", false)):
+			_error("Battle movement-range visual restraint failed at %s: %s" % [_viewport_key(viewport_size), movement_range_contract])
 	for panel_name in Dictionary(spec["panels"]).keys():
 		var expected_path := _expected_panel_style(shell_id, String(panel_name), viewport_size, String(spec["panels"][panel_name]))
 		var actual_path := _panel_texture_path(shell, String(panel_name))
@@ -239,6 +243,37 @@ func _battle_banner_contract(shell: Node, viewport_size: Vector2i) -> Dictionary
 		"header_rect": header_rect,
 		"status_rect": status_rect,
 		"pressure_rect": pressure_rect,
+	}
+
+func _battle_movement_range_contract(shell: Node) -> Dictionary:
+	var board = shell.get_node_or_null("%BattleBoard")
+	if board == null or not board.has_method("validation_hex_layout_summary"):
+		return {"ok": false, "missing_board_summary": true}
+	var summary: Dictionary = board.call("validation_hex_layout_summary")
+	var legal_destination_count := int(summary.get("legal_destination_count", -1))
+	var ok := legal_destination_count > 0 \
+		and int(summary.get("movement_range_cell_count", -2)) == legal_destination_count \
+		and String(summary.get("movement_range_visual_model", "")) == "thin_inset_outline_near_transparent_fill" \
+		and is_equal_approx(float(summary.get("movement_range_radius_factor", 0.0)), 0.72) \
+		and is_equal_approx(float(summary.get("movement_range_fill_alpha", 0.0)), 0.045) \
+		and is_equal_approx(float(summary.get("movement_range_outline_alpha", 0.0)), 0.48) \
+		and is_equal_approx(float(summary.get("movement_range_outline_width", 0.0)), 1.15) \
+		and bool(summary.get("movement_range_all_legal_cells_drawn", false)) \
+		and not bool(summary.get("movement_range_hover_only", true)) \
+		and bool(summary.get("movement_range_below_active_targets_and_stacks", false)) \
+		and String(summary.get("movement_range_action_authority", "")) == "legal_destinations_for_active_stack"
+	return {
+		"ok": ok,
+		"legal_destination_count": legal_destination_count,
+		"movement_range_cell_count": summary.get("movement_range_cell_count", -1),
+		"visual_model": summary.get("movement_range_visual_model", ""),
+		"radius_factor": summary.get("movement_range_radius_factor", 0.0),
+		"fill_alpha": summary.get("movement_range_fill_alpha", 0.0),
+		"outline_alpha": summary.get("movement_range_outline_alpha", 0.0),
+		"outline_width": summary.get("movement_range_outline_width", 0.0),
+		"all_legal_cells_drawn": summary.get("movement_range_all_legal_cells_drawn", false),
+		"hover_only": summary.get("movement_range_hover_only", true),
+		"below_active_targets_and_stacks": summary.get("movement_range_below_active_targets_and_stacks", false),
 	}
 
 func _prepare_session(shell_id: String) -> void:

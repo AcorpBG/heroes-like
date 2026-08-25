@@ -31766,6 +31766,113 @@ def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) 
             ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
 
 
+def validate_battle_movement_range_overlay_restraint(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    board_path = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
+    for path in (board_path, smoke_path, visual_path):
+        ensure(path.exists(), errors, f"Missing Battle movement-range restraint owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (board_path, smoke_path, visual_path)):
+        return
+
+    board_text = board_path.read_text(encoding="utf-8")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    for token in (
+        "const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.48)",
+        'const MOVE_RANGE_VISUAL_MODEL := "thin_inset_outline_near_transparent_fill"',
+        "const MOVE_RANGE_RADIUS_FACTOR := 0.72",
+        "const MOVE_RANGE_FILL_ALPHA := 0.045",
+        "const MOVE_RANGE_OUTLINE_WIDTH := 1.15",
+    ):
+        ensure(board_text.count(token) == 1, errors, f"Battle movement-range restraint must own one exact visual constant: {token}")
+    affordance = gd_function_block(board_text, "_draw_tactical_affordances")
+    summary = gd_function_block(board_text, "validation_hex_layout_summary")
+    ensure(affordance and summary, errors, "Could not isolate Battle movement-range draw/summary ownership")
+    if affordance:
+        draw_order = tuple(affordance.find(token) for token in (
+            "if player_input_active:",
+            "for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):",
+            "if not (destination is Dictionary):",
+            "if not _cell_in_bounds(cell):",
+            "radius * MOVE_RANGE_RADIUS_FACTOR",
+            "Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_FILL_ALPHA)",
+            "MOVE_RANGE_OUTLINE_WIDTH",
+            "_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)",
+            "var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)",
+            "var legal_ranged_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, true)",
+            "if player_input_active and not _target_stack.is_empty():",
+        ))
+        ensure(all(index >= 0 for index in draw_order) and list(draw_order) == sorted(draw_order), errors, "Movement range must draw every exact legal in-bounds destination below unchanged active/attack/target cues")
+        ensure(affordance.count("BattleRulesScript.legal_destinations_for_active_stack(_battle)") == 1, errors, "Movement range must materialize the authoritative legal destination list exactly once")
+        for forbidden in ("radius * 0.78", "0.16), MOVE_COLOR, 1.8", "sort(", "erase(", "await ", "create_timer", "hover", "controller"):
+            ensure(forbidden not in affordance, errors, f"Movement range draw must avoid obsolete/heurstic/mutating presentation path: {forbidden}")
+    if summary:
+        for token in (
+            '"legal_destinations": legal_destinations',
+            '"legal_destination_count": legal_destinations.size()',
+            '"movement_range_visual_model": MOVE_RANGE_VISUAL_MODEL',
+            '"movement_range_cell_count": legal_destinations.size()',
+            '"movement_range_radius_factor": MOVE_RANGE_RADIUS_FACTOR',
+            '"movement_range_fill_alpha": MOVE_RANGE_FILL_ALPHA',
+            '"movement_range_outline_alpha": MOVE_COLOR.a',
+            '"movement_range_outline_width": MOVE_RANGE_OUTLINE_WIDTH',
+            '"movement_range_all_legal_cells_drawn": true',
+            '"movement_range_hover_only": false',
+            '"movement_range_below_active_targets_and_stacks": true',
+            '"movement_range_action_authority": "legal_destinations_for_active_stack"',
+        ):
+            ensure(token in summary, errors, f"Battle board summary is missing exact movement-range authority/profile token: {token}")
+    for token in (
+        'String(hex_summary.get("movement_range_visual_model", "")) != "thin_inset_outline_near_transparent_fill"',
+        'int(hex_summary.get("movement_range_cell_count", -1)) != int(hex_summary.get("legal_destination_count", -2))',
+        'int(hex_summary.get("movement_range_cell_count", 0)) <= 0',
+        'float(hex_summary.get("movement_range_radius_factor", 0.0)), 0.72',
+        'float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.045',
+        'float(hex_summary.get("movement_range_outline_alpha", 0.0)), 0.48',
+        'float(hex_summary.get("movement_range_outline_width", 0.0)), 1.15',
+        'not bool(hex_summary.get("movement_range_all_legal_cells_drawn", false))',
+        'bool(hex_summary.get("movement_range_hover_only", true))',
+        'not bool(hex_summary.get("movement_range_below_active_targets_and_stacks", false))',
+        'String(hex_summary.get("movement_range_action_authority", "")) != "legal_destinations_for_active_stack"',
+    ):
+        ensure(token in smoke_text, errors, f"Town/Battle focused smoke is missing exact movement-range restraint proof: {token}")
+    visual_helper = gd_function_block(visual_text, "_battle_movement_range_contract")
+    visual_run = gd_function_block(visual_text, "_run_shell")
+    ensure(visual_helper and visual_run, errors, "Could not isolate captured Battle movement-range contract")
+    if visual_helper:
+        for token in (
+            'shell.get_node_or_null("%BattleBoard")',
+            'board.call("validation_hex_layout_summary")',
+            "legal_destination_count > 0",
+            'int(summary.get("movement_range_cell_count", -2)) == legal_destination_count',
+            'String(summary.get("movement_range_visual_model", "")) == "thin_inset_outline_near_transparent_fill"',
+            'float(summary.get("movement_range_fill_alpha", 0.0)), 0.045',
+            'float(summary.get("movement_range_outline_alpha", 0.0)), 0.48',
+            'float(summary.get("movement_range_outline_width", 0.0)), 1.15',
+            'bool(summary.get("movement_range_all_legal_cells_drawn", false))',
+            'not bool(summary.get("movement_range_hover_only", true))',
+        ):
+            ensure(token in visual_helper, errors, f"Captured Battle visual contract is missing exact movement-range token: {token}")
+        for forbidden in ("_draw_tactical_affordances", "BattleRulesScript.legal_destinations_for_active_stack", "set_battle_state", "BattleRules.perform", "Input.", "sort(", "erase(", "await ", "create_timer"):
+            ensure(forbidden not in visual_helper, errors, f"Captured movement-range contract must remain public/read-only and avoid {forbidden}")
+    if visual_run:
+        visual_order = tuple(visual_run.find(token) for token in (
+            'var movement_range_contract := _battle_movement_range_contract(shell)',
+            'shell_report["battle_movement_range"] = movement_range_contract',
+            'if not bool(movement_range_contract.get("ok", false)):',
+            "var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)",
+        ))
+        ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "Captured Battle movement-range contract must pass before each unchanged screenshot")
+
+
 def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     def gd_function_block(text: str, name: str) -> str:
         start = text.find(f"func {name}(")
@@ -64376,6 +64483,7 @@ def main() -> int:
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
+    validate_battle_movement_range_overlay_restraint(errors)
     validate_battle_terrain_context_and_system_frame(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)
