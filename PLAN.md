@@ -24,7 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `ux-battlefield-terrain-edge-and-system-frame-polish-10184`. Resume the live Battle board's terrain-edge refinement and authored wide-layout System command frame restoration now that the owner-directed Overworld scale correction is closed. Preserve the exact hex-snapped grid, stack/target/VFX draw order, layout, compact command access, input/focus, battle rules, content, save authority, and accessibility.
+- Selected implementation slice: none. Select the next source-backed graphical-polish or release-readiness slice from fresh live captures and a non-overlapping production owner.
+
+- Previous completed implementation slice: `ux-battlefield-terrain-edge-and-system-frame-polish-10184`. The Battle board now paints a subdued full-field terrain context beneath the unchanged authoritative 11x7 per-hex texture grid, eliminating flat gaps around the staggered hull without changing terrain ids, samples, cells, stacks, targets, or VFX. Wide layouts restore the authored System command frame; compact layouts keep the existing borderless visible Save/Settings/Menu row. Direct 1280x720 and 1920x1080 captures, exact responsive roundtrip/session authority, Town/Battle visual, 1280 Battle layout/routing, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-battlefield-terrain-edge-and-system-frame-polish-10184`
 
 - Previous completed implementation slice: `ux-overworld-world-scale-hierarchy-correction-10184`. The live Overworld now uses one tighter painted-bound visual hierarchy: 0.50-tile pickups, 0.60-tile encounters, 0.72-tile objectives and waypoints, 0.78-tile durable structures, a 0.84-tile multi-footprint interactive cap, and 1.28-tile towns. Direct 1280x720 and 1920x1080 captures now read as one coherent tile world while exact town 3x2 footprint/entry, one-tile objects, ids, body/visit masks, collision, passability, routes, fog, interactions, generated placement, session/save authority, and Native RMG remain unchanged. Focused Overworld scale, town/artifact assets, generated-map movement, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, accessibility certification, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
@@ -10088,18 +10090,23 @@ Non-goals:
 
 id: `ux-battlefield-terrain-edge-and-system-frame-polish-10184`
 
-Status: in_progress.
+Status: completed.
 
 Implementation boundary:
-- render the already-selected Battle terrain texture only into the field area outside the unchanged 11x7 hex-grid rectangle, using deterministic field-relative source regions and a subdued readability treatment so the tactical board no longer floats inside flat-color margins;
+- render the already-selected Battle terrain texture as a subdued full-field decorative underlay beneath the unchanged authoritative 11x7 per-hex terrain grid, so the staggered hex hull no longer floats inside flat-color gaps;
 - retain per-hex terrain texture sampling as the authoritative playable grid and keep terrain fallback behavior unchanged when no texture is available;
 - preserve the authored System command panel style captured during Battle theme setup and restore it after every wide-layout refit, while compact mode continues to use its intentional borderless command row.
 
 Completion criteria:
 - fresh 1280x720 and 1920x1080 captures show continuous terrain context around the centered grid, exact stack/hex readability, and the authored System frame at 1920 while 1280 compact remains contained and uncluttered;
-- focused runtime proves the edge rectangles are non-overlapping, contained in the field, exclude the complete hex-grid rectangle, preserve exact texture/terrain identity, and do not alter battle/session authority;
+- focused runtime proves the context underlay covers the full field, remains visually subordinate, preserves the complete per-hex texture sample count and exact texture/terrain identity, disables for the procedural fallback, and does not alter battle/session authority;
 - 1280 -> 1920 -> 1280 responsive proof restores the exact wide art style and exact compact empty style without changing command visibility, order, focus, actions, or geometry contracts;
 - Town/Battle visual, Battle layout, Board navigation, animation/VFX, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion result:
+- direct 1280x720 and 1920x1080 captures show continuous subdued terrain context around the unchanged sharp per-hex grid; the 1920 System commands use the authored frame and the 1280 command row remains borderless, contained, ordered, visible, and focusable;
+- focused runtime proves the full-field context retains all 77 authoritative texture samples, disables for missing-texture fallback, and changes no battle/session authority; the same live shell completes an exact 1280 -> 1920 -> 1280 frame/command roundtrip;
+- Town/Battle visual, 1280 Battle layout/routing, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green.
 
 Non-goals:
 - no new art, terrain id/source/UV change, playable hex/grid/stack/token/VFX geometry, BattleRules/AI/balance/content, sidebar/footer allocation, compact command visibility, input/focus, accessibility semantics, save schema, packaged Battle interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, Native RMG, or release-readiness change or claim.

@@ -641,6 +641,9 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board did not load.")
 		get_tree().quit(1)
 		return false
+	if not await _assert_battle_system_frame_roundtrip(shell, session):
+		get_tree().quit(1)
+		return false
 	if not board.has_method("validation_color_cue_summary"):
 		push_error("Battle smoke: battle board does not expose color-cue validation.")
 		get_tree().quit(1)
@@ -707,6 +710,19 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: terrain texture is not using the hex-snapped rendering path: %s." % terrain_summary)
 		get_tree().quit(1)
 		return false
+	if not bool(terrain_summary.get("terrain_context_underlay_enabled", false)) or String(terrain_summary.get("terrain_context_model", "")) != "subdued_full_field_underlay_beneath_authoritative_hex_grid" or not bool(terrain_summary.get("terrain_context_covers_full_field", false)) or not bool(terrain_summary.get("terrain_context_preserves_hex_authority", false)):
+		push_error("Battle smoke: terrain context does not cover the full field beneath the authoritative hex grid: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
+	if not is_equal_approx(float(terrain_summary.get("terrain_context_texture_modulate_alpha", 0.0)), 0.72) or not is_equal_approx(float(terrain_summary.get("terrain_context_readability_wash_alpha", 0.0)), 0.24):
+		push_error("Battle smoke: terrain context no longer uses the subdued presentation treatment: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
+	var terrain_context_rect: Dictionary = terrain_summary.get("terrain_context_rect", {}) if terrain_summary.get("terrain_context_rect", {}) is Dictionary else {}
+	if float(terrain_context_rect.get("width", 0.0)) <= 0.0 or float(terrain_context_rect.get("height", 0.0)) <= 0.0:
+		push_error("Battle smoke: terrain context did not expose a usable full-field rectangle: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
 	if not bool(terrain_summary.get("texture_visible", false)) or bool(terrain_summary.get("grid_repaints_texture_cells", true)):
 		push_error("Battle smoke: terrain texture visibility is still being buried by the tactical grid pass: %s." % terrain_summary)
 		get_tree().quit(1)
@@ -754,6 +770,10 @@ func _run_battle_smoke() -> bool:
 	var missing_summary: Dictionary = board.call("validation_terrain_rendering_summary")
 	if bool(missing_summary.get("texture_loaded", true)) or not bool(missing_summary.get("fallback", false)) or String(missing_summary.get("rendering_mode", "")) != "hex_snapped_color_fallback" or not bool(missing_summary.get("hex_snapped", false)) or bool(missing_summary.get("single_board_backdrop", true)):
 		push_error("Battle smoke: missing terrain texture did not fall back to hex-snapped color/detail rendering: %s." % missing_summary)
+		get_tree().quit(1)
+		return false
+	if bool(missing_summary.get("terrain_context_underlay_enabled", true)) or String(missing_summary.get("terrain_context_model", "")) != "disabled_for_texture_fallback" or bool(missing_summary.get("terrain_context_covers_full_field", true)) or bool(missing_summary.get("terrain_context_preserves_hex_authority", true)):
+		push_error("Battle smoke: missing texture fallback incorrectly retained the decorative terrain context: %s." % missing_summary)
 		get_tree().quit(1)
 		return false
 	if String(missing_summary.get("grid_fill_mode", "")) != "fallback_readability_fill" or float(missing_summary.get("grid_max_fill_alpha", 0.0)) <= 0.10:
@@ -846,6 +866,71 @@ func _run_battle_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _assert_battle_system_frame_roundtrip(shell: Node, session) -> bool:
+	var window := get_window()
+	var original_window_size := window.size
+	var shell_control := shell as Control
+	if shell_control == null:
+		push_error("Battle smoke: responsive System command frame owner is not a Control.")
+		return false
+	var original_shell_size := shell_control.size
+	var session_before: Dictionary = session.to_dict()
+	var system_panel := shell.get_node_or_null("%SystemPanel") as PanelContainer
+	var speed_bar := shell.get_node_or_null("%SpeedBar") as Control
+	var system_actions := shell.get_node_or_null("%SystemActions") as Container
+	if system_panel == null or speed_bar == null or system_actions == null:
+		push_error("Battle smoke: responsive System command frame nodes are incomplete.")
+		return false
+	var expected_action_names := ["SaveSlot", "Save", "Settings", "Menu"]
+	window.size = Vector2i(1280, 720)
+	shell_control.size = Vector2(1280.0, 720.0)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var compact_style := system_panel.get_theme_stylebox("panel")
+	if not compact_style is StyleBoxEmpty or speed_bar.visible or not system_actions.is_visible_in_tree() or _visible_child_names(system_actions) != expected_action_names:
+		push_error("Battle smoke: compact System command row lost its borderless visible command contract.")
+		window.size = original_window_size
+		return false
+	window.size = Vector2i(1920, 1080)
+	shell_control.size = Vector2(1920.0, 1080.0)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var wide_style := system_panel.get_theme_stylebox("panel")
+	var wide_texture_path := ""
+	if wide_style is StyleBoxTexture and (wide_style as StyleBoxTexture).texture != null:
+		wide_texture_path = (wide_style as StyleBoxTexture).texture.resource_path
+	if wide_texture_path != "res://art/ui/runtime/battle/combat_log_panel.png" or not speed_bar.visible or not system_actions.is_visible_in_tree() or _visible_child_names(system_actions) != expected_action_names:
+		push_error("Battle smoke: wide System command panel did not restore its authored frame and command order.")
+		window.size = original_window_size
+		return false
+	window.size = Vector2i(1280, 720)
+	shell_control.size = Vector2(1280.0, 720.0)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not system_panel.get_theme_stylebox("panel") is StyleBoxEmpty or speed_bar.visible or _visible_child_names(system_actions) != expected_action_names:
+		push_error("Battle smoke: System command panel did not restore the compact borderless contract after a wide roundtrip.")
+		window.size = original_window_size
+		return false
+	window.size = original_window_size
+	shell_control.size = original_shell_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if session.to_dict() != session_before:
+		push_error("Battle smoke: responsive System frame roundtrip changed battle/session authority.")
+		return false
+	return true
+
+func _visible_child_names(parent: Node) -> Array:
+	var names: Array = []
+	for child in parent.get_children():
+		if child is CanvasItem and (child as CanvasItem).is_visible_in_tree():
+			names.append(String(child.name))
+	return names
 
 func _assert_active_return_handoff_contract(shell: Node, expected_target: String, expected_button_label: String) -> bool:
 	if not shell.has_method("validation_snapshot"):

@@ -26345,6 +26345,115 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle-shell polish token: {required_token}")
 
 
+def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    visual_report_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
+    required_paths = (BATTLE_BOARD_VIEW_SCRIPT_PATH, BATTLE_SCRIPT_PATH, smoke_path, visual_report_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Battle terrain-context/System-frame file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        match = re.search(
+            rf"^func {re.escape(name)}\([^\n]*\)[^\n]*:\n[\s\S]*?(?=^func |\Z)",
+            text,
+            re.MULTILINE,
+        )
+        return match.group(0) if match else ""
+
+    board_text = BATTLE_BOARD_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.56, 0.60, 0.52, 0.72)',
+        'const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.24)',
+        'const TERRAIN_CONTEXT_MODEL := "subdued_full_field_underlay_beneath_authoritative_hex_grid"',
+        '"terrain_context_underlay_enabled": texture != null',
+        '"terrain_context_covers_full_field": texture != null and field_rect.size.x > 0.0 and field_rect.size.y > 0.0',
+        '"terrain_context_preserves_hex_authority": texture != null and int(sampling_summary.get("texture_source_sample_count", 0)) == _terrain_hex_tile_count()',
+        '"single_board_backdrop": false',
+    ):
+        ensure(required_token in board_text, errors, f"BattleBoardView terrain context is missing exact authority token: {required_token}")
+    draw_terrain = gdscript_function_block(board_text, "_draw_terrain")
+    ensure(draw_terrain != "", errors, "Could not isolate BattleBoardView _draw_terrain")
+    if draw_terrain:
+        context_index = draw_terrain.find("_draw_terrain_context_underlay(field_rect, terrain_texture)")
+        hex_index = draw_terrain.find("_draw_hex_snapped_terrain_texture(hex_layout, terrain_texture)")
+        ensure(context_index >= 0 and hex_index > context_index, errors, "Battle terrain context must draw before the unchanged authoritative per-hex texture pass")
+        ensure('_draw_terrain_context_underlay(field_rect, terrain_texture)' in draw_terrain.split("else:", 1)[0], errors, "Battle texture context must be confined to the loaded-texture branch")
+    context_helper = gdscript_function_block(board_text, "_draw_terrain_context_underlay")
+    for required_token in (
+        "texture.get_size()",
+        "draw_texture_rect(texture, field_rect, false, TERRAIN_CONTEXT_TEXTURE_MODULATE)",
+        "draw_rect(field_rect, TERRAIN_CONTEXT_READABILITY_WASH, true)",
+    ):
+        ensure(required_token in context_helper, errors, f"Battle terrain context helper is missing passive draw token: {required_token}")
+    for forbidden_token in ("await ", "Timer", "session", "BattleRules", "Input.", "set_battle_state", "queue_redraw", "_draw_terrain_edge_context", "_terrain_edge_context_rects", "_terrain_edge_source_rect"):
+        ensure(forbidden_token not in context_helper, errors, f"Battle terrain context helper must remain a passive full-field underlay: {forbidden_token}")
+    for obsolete_token in ("TERRAIN_EDGE_CONTEXT", "_draw_terrain_edge_context", "_terrain_edge_context_rects", "_terrain_edge_source_rect"):
+        ensure(obsolete_token not in board_text, errors, f"BattleBoardView must not retain the incomplete rectangular-edge terrain model: {obsolete_token}")
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "var _wide_system_panel_style: StyleBox = null",
+        "var system_panel_style := _system_panel.get_theme_stylebox(\"panel\")",
+        "_wide_system_panel_style = system_panel_style.duplicate()",
+        '_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)',
+        '_system_panel.add_theme_stylebox_override("panel", _wide_system_panel_style)',
+    ):
+        ensure(required_token in shell_text, errors, f"Battle System frame lifecycle is missing token: {required_token}")
+    theme_body = gdscript_function_block(shell_text, "_apply_visual_theme")
+    authored_apply = theme_body.find("FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL")
+    wide_capture = theme_body.find("_wide_system_panel_style = system_panel_style.duplicate()")
+    ensure(authored_apply >= 0 and wide_capture > authored_apply, errors, "BattleShell must capture the wide System frame only after applying the authored art panel")
+    responsive_body = gdscript_function_block(shell_text, "_apply_responsive_layout")
+    for required_token in (
+        "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
+        "if compact_layout:",
+        '_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)',
+        "elif _wide_system_panel_style != null:",
+        '_system_panel.add_theme_stylebox_override("panel", _wide_system_panel_style)',
+        "_speed_bar.visible = not compact_layout",
+    ):
+        ensure(required_token in responsive_body, errors, f"Battle responsive System frame is missing exact compact/wide token: {required_token}")
+
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    smoke_helper = gdscript_function_block(smoke_text, "_assert_battle_system_frame_roundtrip")
+    for required_token in (
+        "var session_before: Dictionary = session.to_dict()",
+        "var original_shell_size := shell_control.size",
+        'var expected_action_names := ["SaveSlot", "Save", "Settings", "Menu"]',
+        "window.size = Vector2i(1280, 720)",
+        "shell_control.size = Vector2(1280.0, 720.0)",
+        "not compact_style is StyleBoxEmpty",
+        "window.size = Vector2i(1920, 1080)",
+        "shell_control.size = Vector2(1920.0, 1080.0)",
+        'wide_texture_path != "res://art/ui/runtime/battle/combat_log_panel.png"',
+        "window.size = original_window_size",
+        "shell_control.size = original_shell_size",
+        "session.to_dict() != session_before",
+    ):
+        ensure(required_token in smoke_helper, errors, f"Battle focused System-frame roundtrip is missing token: {required_token}")
+    ensure(smoke_text.count("await _assert_battle_system_frame_roundtrip(shell, session)") == 1, errors, "Town/Battle visual smoke must run the responsive System-frame roundtrip exactly once")
+    for required_token in (
+        'String(terrain_summary.get("terrain_context_model", "")) != "subdued_full_field_underlay_beneath_authoritative_hex_grid"',
+        'terrain_summary.get("terrain_context_preserves_hex_authority", false)',
+        'String(missing_summary.get("terrain_context_model", "")) != "disabled_for_texture_fallback"',
+    ):
+        ensure(required_token in smoke_text, errors, f"Battle focused terrain-context proof is missing token: {required_token}")
+
+    visual_text = visual_report_path.read_text(encoding="utf-8")
+    expected_style = gdscript_function_block(visual_text, "_expected_panel_style")
+    for required_token in (
+        'shell_id == "battle" and panel_name == "SystemPanel"',
+        "viewport_size.x < 1360 or viewport_size.y < 760",
+        'return "<empty stylebox>"',
+        "return authored_path",
+    ):
+        ensure(required_token in expected_style, errors, f"UI visual report is missing method-matched Battle System-frame expectation: {required_token}")
+    panel_path = gdscript_function_block(visual_text, "_panel_texture_path")
+    ensure('if style is StyleBoxEmpty:\n\t\treturn "<empty stylebox>"' in panel_path, errors, "UI visual report must distinguish the intentional compact empty System style from a missing texture style")
+
+
 def validate_battle_objective_pressure_slice(errors: list[str]) -> None:
     required_paths = (BATTLE_RULES_PATH, BATTLE_AI_RULES_PATH, BATTLE_SCENE_PATH)
     for path in required_paths:
@@ -63467,6 +63576,7 @@ def main() -> int:
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
+    validate_battle_terrain_context_and_system_frame(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)
     validate_battle_intent_forecast(errors)

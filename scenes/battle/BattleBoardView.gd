@@ -63,6 +63,9 @@ const TERRAIN_TEXTURE_PATHS := {
 }
 const TERRAIN_TEXTURE_MODULATE := Color(0.98, 0.99, 0.95, 0.98)
 const TERRAIN_TEXTURE_READABILITY_WASH := Color(0.02, 0.025, 0.022, 0.045)
+const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.56, 0.60, 0.52, 0.72)
+const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.24)
+const TERRAIN_CONTEXT_MODEL := "subdued_full_field_underlay_beneath_authoritative_hex_grid"
 const TERRAIN_HEX_TEXTURE_INSET := 1.0
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
 const TEXTURED_HEX_LINE_COLOR := Color(0.98, 0.89, 0.62, 0.18)
@@ -1190,6 +1193,7 @@ func validation_terrain_rendering_summary() -> Dictionary:
 	var sampling_summary := _terrain_texture_sampling_summary(texture)
 	var texture_size := Vector2.ZERO
 	var source_size := Vector2.ZERO
+	var field_rect := _current_field_rect()
 	if texture != null:
 		texture_size = texture.get_size()
 		source_size = _terrain_hex_texture_source_size(texture_size)
@@ -1211,6 +1215,13 @@ func validation_terrain_rendering_summary() -> Dictionary:
 		"source_tile_height": source_size.y,
 		"texture_modulate_alpha": TERRAIN_TEXTURE_MODULATE.a if texture != null else 0.0,
 		"texture_readability_wash_alpha": TERRAIN_TEXTURE_READABILITY_WASH.a if texture != null else 0.0,
+		"terrain_context_underlay_enabled": texture != null,
+		"terrain_context_model": TERRAIN_CONTEXT_MODEL if texture != null else "disabled_for_texture_fallback",
+		"terrain_context_rect": {"x": field_rect.position.x, "y": field_rect.position.y, "width": field_rect.size.x, "height": field_rect.size.y} if texture != null else {},
+		"terrain_context_covers_full_field": texture != null and field_rect.size.x > 0.0 and field_rect.size.y > 0.0,
+		"terrain_context_texture_modulate_alpha": TERRAIN_CONTEXT_TEXTURE_MODULATE.a if texture != null else 0.0,
+		"terrain_context_readability_wash_alpha": TERRAIN_CONTEXT_READABILITY_WASH.a if texture != null else 0.0,
+		"terrain_context_preserves_hex_authority": texture != null and int(sampling_summary.get("texture_source_sample_count", 0)) == _terrain_hex_tile_count(),
 		"texture_hex_inset": TERRAIN_HEX_TEXTURE_INSET if texture != null else TERRAIN_HEX_FALLBACK_INSET,
 		"texture_visible": _terrain_texture_visible(texture != null),
 		"grid_fill_mode": _terrain_grid_fill_mode(texture != null),
@@ -1567,6 +1578,7 @@ func _draw_terrain(field_rect: Rect2, hex_layout: Dictionary) -> bool:
 	draw_rect(field_rect, base_color, true)
 	var terrain_texture = _terrain_texture_for(terrain)
 	if terrain_texture != null:
+		_draw_terrain_context_underlay(field_rect, terrain_texture)
 		_draw_hex_snapped_terrain_texture(hex_layout, terrain_texture)
 		draw_rect(field_rect, TERRAIN_TEXTURE_READABILITY_WASH, true)
 		draw_rect(field_rect, Color(0.0, 0.0, 0.0, 0.14), false, 2.0)
@@ -1575,6 +1587,13 @@ func _draw_terrain(field_rect: Rect2, hex_layout: Dictionary) -> bool:
 		_draw_hex_snapped_procedural_terrain(hex_layout, terrain)
 	draw_rect(field_rect, Color(0.0, 0.0, 0.0, 0.14), false, 2.0)
 	return false
+
+func _draw_terrain_context_underlay(field_rect: Rect2, texture: Texture2D) -> void:
+	var texture_size := texture.get_size()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or field_rect.size.x <= 0.0 or field_rect.size.y <= 0.0:
+		return
+	draw_texture_rect(texture, field_rect, false, TERRAIN_CONTEXT_TEXTURE_MODULATE)
+	draw_rect(field_rect, TERRAIN_CONTEXT_READABILITY_WASH, true)
 
 func _draw_hex_snapped_terrain_texture(hex_layout: Dictionary, texture: Texture2D) -> void:
 	var texture_size := texture.get_size()

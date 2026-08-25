@@ -147,7 +147,7 @@ func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> 
 		"screenshot_size": {},
 	}
 	for panel_name in Dictionary(spec["panels"]).keys():
-		var expected_path := String(spec["panels"][panel_name])
+		var expected_path := _expected_panel_style(shell_id, String(panel_name), viewport_size, String(spec["panels"][panel_name]))
 		var actual_path := _panel_texture_path(shell, String(panel_name))
 		shell_report["panels"][panel_name] = {
 			"expected": expected_path,
@@ -199,12 +199,19 @@ func _panel_texture_path(shell: Node, panel_name: String) -> String:
 	if not panel is PanelContainer:
 		return "<not panel>"
 	var style := (panel as PanelContainer).get_theme_stylebox("panel")
+	if style is StyleBoxEmpty:
+		return "<empty stylebox>"
 	if not style is StyleBoxTexture:
 		return "<not texture stylebox>"
 	var texture := (style as StyleBoxTexture).texture
 	if texture == null:
 		return "<missing texture>"
 	return texture.resource_path
+
+func _expected_panel_style(shell_id: String, panel_name: String, viewport_size: Vector2i, authored_path: String) -> String:
+	if shell_id == "battle" and panel_name == "SystemPanel" and (viewport_size.x < 1360 or viewport_size.y < 760):
+		return "<empty stylebox>"
+	return authored_path
 
 func _button_texture_path(shell: Node, button_name: String, style_name: String) -> String:
 	var button := shell.find_child(button_name, true, false)
