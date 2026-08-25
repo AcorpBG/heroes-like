@@ -310,6 +310,7 @@ STRATEGIC_AI_BASELINE_KPI_REPORT_SCRIPT_PATH = ROOT / "tests" / "strategic_ai_ba
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 OUTCOME_SCENIC_BACKDROP_VIEW_PATH = ROOT / "scenes" / "results" / "OutcomeScenicBackdropView.gd"
+OUTCOME_BANNER_VIEW_PATH = ROOT / "scenes" / "results" / "OutcomeBannerView.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
 HERO_ART_MANIFEST_PATH = CONTENT_DIR / "hero_art_manifest.json"
 HERO_ART_GENERATOR_PATH = ROOT / "tools" / "generate_hero_portrait_assets.py"
@@ -23830,6 +23831,48 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
     ):
         ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required outcome-shell token: {required_token}")
 
+    status_emblems = {
+        "victory": "art/results/runtime/emblems/outcome_victory_emblem.png",
+        "defeat": "art/results/runtime/emblems/outcome_defeat_emblem.png",
+    }
+    ensure(OUTCOME_BANNER_VIEW_PATH.exists(), errors, "Missing Outcome authored status-emblem view script")
+    banner_view_text = OUTCOME_BANNER_VIEW_PATH.read_text(encoding="utf-8") if OUTCOME_BANNER_VIEW_PATH.exists() else ""
+    emblem_asset_bytes = []
+    for status, relative_path in status_emblems.items():
+        asset_path = ROOT / relative_path
+        ensure(asset_path.exists(), errors, f"Outcome authored status emblem is missing for {status}: {relative_path}")
+        if asset_path.exists():
+            ensure(png_size(asset_path) == (1024, 896), errors, f"Outcome authored status emblem must be 1024x896 for {status}: {relative_path}")
+            asset_bytes = asset_path.read_bytes()
+            ensure(len(asset_bytes) > 25 and asset_bytes[:8] == b"\x89PNG\r\n\x1a\n" and asset_bytes[25] == 6, errors, f"Outcome authored status emblem must be an RGBA PNG for {status}: {relative_path}")
+            emblem_asset_bytes.append(asset_bytes)
+        resource_path = f"res://{relative_path}"
+        ensure(banner_view_text.count(f'"{status}": "{resource_path}"') == 1, errors, f"OutcomeBannerView.gd must map exactly one authored emblem path for {status}")
+        ensure(banner_view_text.count(f'"{status}": preload("{resource_path}")') == 1, errors, f"OutcomeBannerView.gd must preload exactly one authored emblem for {status}")
+    ensure(len(emblem_asset_bytes) == 2 and emblem_asset_bytes[0] != emblem_asset_bytes[1], errors, "Outcome victory and defeat authored status emblems must be byte-distinct")
+    for required_token in (
+        "const EMBLEM_INSET := 8.0",
+        "func set_outcome(status: String) -> void:",
+        "var emblem := _status_emblem()",
+        "draw_texture_rect(emblem, _emblem_destination_rect(emblem), false)",
+        "_draw_procedural_banner()",
+        "func validation_summary() -> Dictionary:",
+        '"rendering_mode": "contained_authored_status_emblem" if emblem != null else "procedural_status_fallback"',
+        '"aspect_preserved": is_equal_approx(destination_aspect, texture_aspect) if emblem != null else true',
+        '"destination_contained": _rect_contained(destination_rect, Rect2(Vector2.ZERO, size)) if emblem != null else true',
+        '"centered": destination_rect.get_center().is_equal_approx(size * 0.5) if emblem != null else true',
+        'return STATUS_EMBLEMS.get(_status, null) as Texture2D',
+        "var scale := minf(available_size.x / texture_size.x, available_size.y / texture_size.y)",
+        "return Rect2((size - draw_size) * 0.5, draw_size)",
+        "func _draw_procedural_banner() -> void:",
+        'match _status:',
+        '"victory":',
+        '"defeat":',
+    ):
+        ensure(required_token in banner_view_text, errors, f"OutcomeBannerView.gd is missing authored status-emblem/fallback token: {required_token}")
+    for forbidden_token in ("await ", "Timer", "Input.", "grab_focus", "SessionState", "ScenarioRules", "AppRouter"):
+        ensure(forbidden_token not in banner_view_text, errors, f"OutcomeBannerView authored emblem adoption must remain presentation-only: {forbidden_token}")
+
     scenic_backdrops = {
         "victory": "art/results/runtime/backdrops/outcome_victory.png",
         "defeat": "art/results/runtime/backdrops/outcome_defeat.png",
@@ -23889,6 +23932,34 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
     ensure('name="Backdrop" type="Control"' in outcome_scene_text, errors, "ScenarioOutcomeShell.tscn Backdrop must be the scenic Control")
 
     menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        'const OutcomeBannerViewScript = preload("res://scenes/results/OutcomeBannerView.gd")',
+        'const OUTCOME_STATUS_EMBLEM_PATHS := {',
+        'const OUTCOME_STATUS_EMBLEM_STAGE_SIZES := [Vector2(300.0, 112.0), Vector2(356.0, 220.0)]',
+        'var live_emblem_summary: Dictionary = live_banner.call("validation_summary")',
+        '_outcome_status_emblem_geometry_exact(live_emblem_summary, "victory")',
+        'var fresh_live_emblem_summary := live_emblem_summary.duplicate(true)',
+        'live_emblem_summary["destination_rect"] = Rect2()',
+        'live_banner.call("validation_summary") != fresh_live_emblem_summary',
+        'for stage_size in OUTCOME_STATUS_EMBLEM_STAGE_SIZES:',
+        'for status in OUTCOME_STATUS_EMBLEM_PATHS:',
+        'if not _outcome_status_emblem_alpha_exact(String(OUTCOME_STATUS_EMBLEM_PATHS[status])):',
+        'emblem_fixture.set_outcome("unmapped_outcome")',
+        'String(emblem_fallback.get("rendering_mode", "")) != "procedural_status_fallback"',
+        'FileAccess.get_file_as_bytes(OUTCOME_STATUS_EMBLEM_PATHS["victory"]) == FileAccess.get_file_as_bytes(OUTCOME_STATUS_EMBLEM_PATHS["defeat"])',
+        'func _outcome_status_emblem_geometry_exact(summary: Dictionary, status: String) -> bool:',
+        'texture_size == Vector2(1024.0, 896.0)',
+        'String(summary.get("rendering_mode", "")) == "contained_authored_status_emblem"',
+        'func _outcome_status_emblem_alpha_exact(path: String) -> bool:',
+        'image.load_png_from_buffer(FileAccess.get_file_as_bytes(path)) != OK',
+        'is_zero_approx(image.get_pixel(0, 0).a)',
+        'is_zero_approx(image.get_pixel(image.get_width() - 1, image.get_height() - 1).a)',
+    ):
+        ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing authored status-emblem lifecycle/authority token: {required_token}")
+    ensure("Image.load_from_file" not in menu_smoke_text, errors, "Outcome authored status-emblem smoke must decode source bytes without export-unsafe Image.load_from_file warnings")
+    ensure(menu_smoke_text.count("for status in OUTCOME_STATUS_EMBLEM_PATHS:") == 1, errors, "Outcome authored status-emblem smoke must traverse the exact status map once")
+    for forbidden_token in ("sort(", "erase(", "queue_redraw", "call_deferred", "Timer"):
+        ensure(forbidden_token not in menu_smoke_text.split("func _outcome_status_emblem_geometry_exact", 1)[1].split("func ", 1)[0], errors, f"Outcome authored status-emblem geometry oracle must remain passive and source-independent: {forbidden_token}")
     for required_token in (
         "func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:",
         "var authority_before: Dictionary = session.to_dict()",

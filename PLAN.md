@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next fresh, bounded, source-backed graphical-polish defect from direct runtime captures before changing production behavior.
 
+- Previous completed implementation slice: `presentation-scenario-outcome-authored-status-emblem-adoption-10184`. The remaining flat procedural Outcome diagram is replaced by distinct original transparent victory and defeat emblems, aspect-preserved inside the existing upper-left art panel, with the procedural renderer retained for missing or unsupported status art. Direct inspected 1280x720 and 1920x1080 captures now read as a coherent scenic epilogue while the panorama, cards, action dock, sidebar, tabs, model, save, routing, focus, accessibility, and session authority remain unchanged. Focused visual, normal-entry focus, safe-cancel, autosave-recovery, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The unrelated manual-save matrix produced no selected result because its whole-Shell observer captured an ambient/music crossfade completing during blocked-click frames; dialog/save/session/router authority remained exact and that owner was not changed. Packaged Outcome interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `presentation-scenario-outcome-authored-status-emblem-adoption-10184`
+
 - Previous completed implementation slice: `ux-town-command-watchplate-visual-hierarchy-10184`. The opaque 156x114 Town command-marker bullet list is now a responsive translucent five-cell Town Watch plate with the exact live Heroes, Build, Recruit, Response, and Threat values, authored labels and colors, contained cells, and a materially smaller footprint. Direct 1280x720 and 1920x1080 captures keep the faction panorama dominant while status/district rails, scenic header/action overlays, shell/sidebar/tabs/footer, input/focus, accessibility, Town rules, and session/save authority remain exact. Focused Town/Battle, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-town-command-watchplate-visual-hierarchy-10184`
 
@@ -10166,6 +10169,32 @@ Completion result:
 - direct 1280x720 and 1920x1080 Town captures show the compact five-cell watchplate readable and contained without obscuring the panorama or overlapping the status, header, or district surfaces;
 - focused Town/Battle validation proves exact live and fixture values, responsive compact/wide geometry, compact -> wide -> compact restoration, detached summaries, and unchanged whole-session authority;
 - Town action presentation, exit routing, active focus, accessibility, core, exact/generic editor parsing, repository validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Town interaction and release readiness remain unclaimed.
+
+## Scenario Outcome Authored Status Emblem Adoption
+
+id: `presentation-scenario-outcome-authored-status-emblem-adoption-10184`
+
+Status: completed on 2026-08-25.
+
+Implementation boundary:
+- replace only the upper-left `OutcomeBannerView` procedural victory/defeat diagram with two distinct original transparent authored emblems mapped one-to-one to the exact terminal status;
+- preserve aspect ratio and transparent negative space inside the existing banner-art panel at 1280x720 and 1920x1080 without changing the panel, surrounding scenic panorama, information cards, action dock, sidebar, or controls;
+- retain the current procedural drawing and flat status palette as a fail-safe whenever the exact status asset is missing or the status is unsupported.
+
+Completion criteria:
+- victory and defeat assets are original, transparent, byte-distinct, imported runtime images with exact status mapping and no text, logo, characters, or copyrighted heraldry;
+- focused 1280x720 and 1920x1080 runtime proves exact texture selection, contained aspect-preserving draw geometry, transparent corners, distinct status identity, unsupported-status procedural fallback, responsive restoration, detached validation, and unchanged whole-session/Outcome authority;
+- fresh inspected victory and defeat captures read as one coherent scenic epilogue instead of mixing a premium panorama with flat developer-style geometry;
+- menu/outcome visual, normal-entry focus, new-session safe cancel, autosave recovery, active-play focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no Outcome panorama/crop, banner/card/action/sidebar layout, copy, rules, progression, rewards, actions, tabs, save format/version, routing, focus/input, campaign, scenario, combat, AI, balance, map, or Native RMG change;
+- no animation, video, character art, global theme, UI-scale, other-screen redesign, packaged Outcome interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- two original byte-distinct 1024x896 transparent status emblems now map exactly to victory and defeat; the renderer contains them with preserved aspect ratio and centered transparent negative space at compact and wide sizes, while unsupported states retain the procedural fallback;
+- direct inspected 1280x720 and 1920x1080 victory/defeat captures, focused live/fixture validation, normal-entry focus, safe-cancel, autosave-recovery, active-focus, accessibility, and core gates are green with unchanged Outcome/session authority;
+- repository validation, Python compilation, exact/generic Godot editor parsing, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. The platform evidence is export/startup only; packaged Outcome interaction and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 

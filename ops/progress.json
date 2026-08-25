@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-town-command-watchplate-visual-hierarchy-10184",
-    "title": "Town command watchplate visual hierarchy",
+    "id": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
+    "title": "Scenario Outcome authored status emblem adoption",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T05:13:05Z",
-    "updatedAt": "2026-08-25T05:40:25Z",
-    "completedAt": "2026-08-25T05:40:25Z",
+    "startedAt": "2026-08-25T05:49:31Z",
+    "updatedAt": "2026-08-25T06:13:13Z",
+    "completedAt": "2026-08-25T06:13:13Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct 1280x720 and 1920x1080 captures. The opaque 156x114 bullet-list command marker is now a responsive translucent five-cell Town Watch plate with exact Heroes, Build, Recruit, Response, and Threat values, live colors, contained cells, and a lower footprint. Status/district/backdrop/header/action overlays, shell/sidebar/tabs/footer, input/focus/accessibility, rules, and session/save authority remain exact. Focused Town/Battle, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Town interaction and release readiness remain excluded."
+    "notes": "Completed from direct inspected 1280x720 and 1920x1080 victory/defeat captures. Distinct original transparent status emblems now replace the flat procedural diagram while preserving aspect ratio, centered containment, transparent negative space, and the existing procedural fallback. Focused visual, Outcome routing/focus/safe-cancel/autosave-recovery, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The unrelated manual-save matrix produced no selected result because its whole-Shell observer captured a live audio crossfade completing; save/dialog/session/router authority was exact. Packaged Outcome interaction and release readiness remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Town command watchplate visual hierarchy is completed from direct 1280/1920 captures; no blocker is active and the next bounded graphical-polish slice has not yet been selected.",
+  "currentNotes": "Scenario Outcome authored status emblem adoption is completed from direct 1280/1920 captures; no blocker is active and the next bounded graphical-polish slice has not yet been selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-command-watchplate-visual-hierarchy-10184",
-  "currentSliceId": "ux-town-command-watchplate-visual-hierarchy-10184",
-  "currentSliceNotes": "Completed: the opaque Town command-marker bullet list is now a compact translucent five-cell watchplate with exact live values, responsive containment, and unchanged Town authority.",
+  "currentSlice": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
+  "currentSliceId": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
+  "currentSliceNotes": "Completed: exact authored transparent victory/defeat emblems replace the flat procedural Outcome art while preserving fallback, responsive containment, and all Outcome authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town command watchplate visual hierarchy",
-  "currentSliceUpdatedAt": "2026-08-25T05:40:25Z",
+  "currentSliceTitle": "Scenario Outcome authored status emblem adoption",
+  "currentSliceUpdatedAt": "2026-08-25T06:13:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19861,8 +19861,29 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Town command watchplate visual-hierarchy slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "notes": "The Scenario Outcome authored status emblem adoption slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
+    {
+      "id": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
+      "title": "Scenario Outcome authored status emblem adoption",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T06:13:13Z",
+      "startedAt": "2026-08-25T05:49:31Z",
+      "completedAt": "2026-08-25T06:13:13Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/results/runtime/emblems/outcome_victory_emblem.png",
+        "art/results/runtime/emblems/outcome_defeat_emblem.png",
+        "scenes/results/OutcomeBannerView.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected 1280x720 and 1920x1080 victory/defeat captures. Two original byte-distinct transparent status emblems replace the flat procedural diagram with exact mapping, contained aspect-preserving geometry, transparent corners, responsive restoration, and retained procedural fallback. Focused visual, normal-entry focus, safe-cancel, autosave-recovery, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The unrelated manual-save matrix remained a no-result because ambient/music crossfade state completed during its whole-Shell snapshot. Packaged Outcome interaction and release readiness remain unclaimed.",
+      "blockedReason": null
+    },
     {
     "id": "ux-town-command-watchplate-visual-hierarchy-10184",
     "title": "Town command watchplate visual hierarchy",
@@ -100989,7 +101010,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next fresh bounded graphical-polish defect; do not infer a new implementation slice from tracker prose alone.",
+  "remainingWork": "Select the next fresh bounded visual defect before continuing graphical polish; broader product and release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101420,7 +101441,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "town_command_watchplate_visual_hierarchy_completed",
+  "result": "scenario_outcome_authored_status_emblem_adoption_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -101521,9 +101542,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Town command telemetry is now a compact responsive translucent five-cell watchplate; exact live payloads and all Town/session authority remain unchanged.",
+  "summary": "Scenario Outcome authored status emblem adoption is completed with exact transparent victory/defeat art, retained procedural fallback, responsive visual proof, and unchanged Outcome authority; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T05:40:25Z",
+  "updatedAt": "2026-08-25T06:13:13Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
