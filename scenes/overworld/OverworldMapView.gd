@@ -68,7 +68,14 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00
+const OBJECT_PICKUP_VISIBLE_EXTENT_TILES := 0.50
+const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.60
+const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.78
+const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.72
+const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.82
+const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.68
+const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.72
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_family_visible_extent"
@@ -137,7 +144,7 @@ const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
-const TOWN_SPRITE_EXTENT_FACTOR := 0.80
+const TOWN_SPRITE_EXTENT_FACTOR := 0.64
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -2271,7 +2278,8 @@ func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 	return _draw_object_sprite(_artifact_sprite_asset_id(node), rect, remembered, _artifact_object_profile(), tile)
 
 func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	var texture = _object_texture_for_asset(_town_sprite_asset_id(_town_at(tile)))
+	var asset_id := _town_sprite_asset_id(_town_at(tile))
+	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
 	var profile := _town_object_profile()
@@ -2281,8 +2289,10 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	var sprite_fraction := TOWN_SPRITE_EXTENT_FACTOR
 	var sprite_extent := maxf(12.0, extent * sprite_fraction)
 	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction("town", footprint))
-	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)
+	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
+	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center, Vector2.ZERO))
+	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_town_owner_pennant(rect, _town_color(tile), remembered, _town_owner_id(_town_at(tile)))
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
@@ -3604,25 +3614,25 @@ func _procedural_resource_marker_color(family: String, remembered: bool) -> Colo
 
 func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 	var family := String(profile.get("family", "pickup"))
-	var base := OBJECT_SPRITE_EXTENT_FACTOR
+	var base := OBJECT_DEFAULT_VISIBLE_EXTENT_TILES
 	match family:
 		"artifact", "pickup":
-			base = 0.62
+			base = OBJECT_PICKUP_VISIBLE_EXTENT_TILES
 		"encounter", "neutral_encounter":
-			base = 0.72
-		"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site":
-			base = 0.96
-		"scouting_structure", "transit_object":
-			base = 0.92
+			base = OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES
+		"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site", "support_producer", "staged_resource_front", "faction_outpost":
+			base = OBJECT_DURABLE_VISIBLE_EXTENT_TILES
+		"scouting_structure", "transit_object", "frontier_shrine", "sign_waypoint":
+			base = OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES
 		"blocker":
-			base = 1.00
+			base = OBJECT_BLOCKER_VISIBLE_EXTENT_TILES
 		"decoration":
-			base = 0.84
+			base = OBJECT_DECORATION_VISIBLE_EXTENT_TILES
 		_:
-			base = OBJECT_SPRITE_EXTENT_FACTOR
+			base = OBJECT_DEFAULT_VISIBLE_EXTENT_TILES
 	base += float(maxi(footprint.x - 1, 0)) * 0.08
 	base += float(maxi(footprint.y - 1, 0)) * 0.04
-	return clampf(base, 0.58, 1.10)
+	return clampf(base, OBJECT_PICKUP_VISIBLE_EXTENT_TILES, 0.94)
 
 func _object_lift_fraction(family: String, footprint: Vector2i) -> float:
 	var lift := 0.05
@@ -4047,6 +4057,36 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 		"visible_extent_tiles": visible_extent_px / single_tile_extent,
 		"uses_multi_tile_visual_cap": bool(metrics.get("uses_multi_tile_visual_cap", false)),
 		"cap_tiles": float(metrics.get("cap_tiles", 0.0)),
+		"cache_size_before": cache_size_before,
+		"cache_size_after_first": cache_size_after_first,
+		"cache_size_after_second": cache_size_after_second,
+		"cache_repeat_exact": first_region == second_region and cache_size_after_first == cache_size_after_second,
+	}
+
+func validation_town_sprite_scale_payload(asset_id: String = "town_faction_embercourt") -> Dictionary:
+	var texture = _object_texture_for_asset(asset_id)
+	if not (texture is Texture2D):
+		return {}
+	var single_tile_extent := 100.0
+	var footprint_rect := Rect2(Vector2.ZERO, Vector2(TOWN_PRESENTATION_FOOTPRINT) * single_tile_extent)
+	var visible_extent_px := minf(footprint_rect.size.x, footprint_rect.size.y) * TOWN_SPRITE_EXTENT_FACTOR
+	var cache_size_before := _object_texture_visible_regions.size()
+	var first_region := _object_texture_visible_region(asset_id, texture)
+	var cache_size_after_first := _object_texture_visible_regions.size()
+	var second_region := _object_texture_visible_region(asset_id, texture)
+	var cache_size_after_second := _object_texture_visible_regions.size()
+	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, footprint_rect.get_center(), visible_extent_px)
+	var draw_size: Vector2 = draw_payload.get("draw_size", Vector2.ZERO)
+	return {
+		"asset_id": asset_id,
+		"family": "town",
+		"footprint": {"width": TOWN_PRESENTATION_FOOTPRINT.x, "height": TOWN_PRESENTATION_FOOTPRINT.y},
+		"visible_scale_model": String(draw_payload.get("visible_scale_model", "")),
+		"uses_painted_bounds": bool(first_region.get("uses_painted_bounds", false)),
+		"source_aspect": float(draw_payload.get("source_aspect", 0.0)),
+		"draw_aspect": float(draw_payload.get("draw_aspect", 0.0)),
+		"draw_size_tiles": {"x": draw_size.x / single_tile_extent, "y": draw_size.y / single_tile_extent},
+		"visible_extent_tiles": visible_extent_px / single_tile_extent,
 		"cache_size_before": cache_size_before,
 		"cache_size_after_first": cache_size_after_first,
 		"cache_size_after_second": cache_size_after_second,

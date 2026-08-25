@@ -3315,7 +3315,8 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 	var service: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i.ONE)
 	var objective: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "scenario_objective", Vector2i.ONE)
 	var multi_tile_service: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(2, 2))
-	for payload in [pickup, service, objective, multi_tile_service]:
+	var town: Dictionary = map_node.call("validation_town_sprite_scale_payload", "town_faction_embercourt")
+	for payload in [pickup, service, objective, multi_tile_service, town]:
 		if (
 			payload.is_empty()
 			or String(payload.get("visible_scale_model", "")) != "cached_alpha_bounds_family_visible_extent"
@@ -3327,24 +3328,39 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			push_error("Overworld smoke: mapped sprite did not preserve cached painted bounds/aspect authority. payload=%s" % payload)
 			get_tree().quit(1)
 			return false
-	if not is_equal_approx(float(pickup.get("visible_extent_tiles", 0.0)), 0.62):
+	if not is_equal_approx(float(pickup.get("visible_extent_tiles", 0.0)), 0.50):
 		push_error("Overworld smoke: pickup visible scale no longer remains subordinate. payload=%s" % pickup)
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(service.get("visible_extent_tiles", 0.0)), 0.96):
+	if not is_equal_approx(float(service.get("visible_extent_tiles", 0.0)), 0.78):
 		push_error("Overworld smoke: durable service visible scale is not readable at one-tile presentation. payload=%s" % service)
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(objective.get("visible_extent_tiles", 0.0)), 0.88):
+	if not is_equal_approx(float(objective.get("visible_extent_tiles", 0.0)), 0.72):
 		push_error("Overworld smoke: scenario objective visible scale changed outside its family hierarchy. payload=%s" % objective)
 		get_tree().quit(1)
 		return false
 	if (
 		not bool(multi_tile_service.get("uses_multi_tile_visual_cap", false))
-		or not is_equal_approx(float(multi_tile_service.get("cap_tiles", 0.0)), 1.0)
-		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 1.0)
+		or not is_equal_approx(float(multi_tile_service.get("cap_tiles", 0.0)), 0.84)
+		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.84)
 	):
-		push_error("Overworld smoke: multi-tile interactive art escaped the one-tile visible cap. payload=%s" % multi_tile_service)
+		push_error("Overworld smoke: multi-tile interactive art escaped the bounded structure-scale cap. payload=%s" % multi_tile_service)
+		get_tree().quit(1)
+		return false
+	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 1.28):
+		push_error("Overworld smoke: town art no longer owns the bounded top of the shared world-scale hierarchy. payload=%s" % town)
+		get_tree().quit(1)
+		return false
+	if not (
+		float(pickup.get("visible_extent_tiles", 0.0))
+		< float(objective.get("visible_extent_tiles", 0.0))
+		and float(objective.get("visible_extent_tiles", 0.0))
+		< float(service.get("visible_extent_tiles", 0.0))
+		and float(service.get("visible_extent_tiles", 0.0))
+		< float(town.get("visible_extent_tiles", 0.0))
+	):
+		push_error("Overworld smoke: pickup/objective/structure/town world-scale ordering is incoherent. pickup=%s objective=%s service=%s town=%s" % [pickup, objective, service, town])
 		get_tree().quit(1)
 		return false
 	if (
