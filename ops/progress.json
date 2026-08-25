@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence."
+    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,17 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-continuous-terrain-macro-lighting-10184",
-    "title": "Overworld continuous terrain macro-lighting",
+    "id": "ux-overworld-soft-cartographic-fog-frontier-10184",
+    "title": "Overworld soft cartographic fog frontier",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T19:05:02Z",
-    "updatedAt": "2026-08-25T19:43:03Z",
+    "startedAt": "2026-08-25T19:45:36Z",
+    "updatedAt": "2026-08-25T20:19:36Z",
+    "completedAt": "2026-08-25T20:19:36Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the presentation-only continuous terrain macro-lighting correction. Direct inspected authored 1280x720 and 1920x1080 plus generated before/after captures show restrained broad terrain depth without seams or reduced road/object readability. Focused continuity, batching, fog/source-frame/session authority, movement, compatibility, static/editor, and bounded Linux/Windows startup gates pass; terrain/gameplay/RMG authority is unchanged."
+    "notes": "Completed with a cardinal explored-state-only inward fog gradient and a compressed 0.30-to-1.12-tile object hierarchy. Inspected authored and generated captures plus focused scale, movement/save, route/input/focus, accessibility, core, static/editor, Linux, and Windows startup gates are green; hidden identity, logical footprints, and gameplay/RMG authority remain exact."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14376,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld continuous terrain macro-lighting slice is completed; select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence.",
+  "currentNotes": "The Overworld fog-frontier and object-scale polish slice is completed with inspected authored/generated captures and bounded runtime/platform evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-continuous-terrain-macro-lighting-10184",
-  "currentSliceId": "ux-overworld-continuous-terrain-macro-lighting-10184",
-  "currentSliceNotes": "Completed a deterministic 12-tile continuous warm/cool macro-light field drawn below roads, objects, selection cues, and unexplored fog. Direct inspected River Pass 1280x720 and 1920x1080 plus generated before/after captures preserve scenery and readability. The generated owner proves 1296 lit tiles, 3815 shared-corner observations, zero mismatches, and six live polygons for 350 visible tiles; the no-light control was slower under the same llvmpipe/X11 path, so the measured static-draw spread is host variance rather than a lighting regression. Ninefold proves deterministic shared corners, exact source-frame coexistence, fog ownership, and whole-session authority. Generated movement/save, full route, input ownership, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and broader release claims remain unclaimed; terrain/gameplay/RMG authority is unchanged.",
+  "currentSlice": "ux-overworld-soft-cartographic-fog-frontier-10184",
+  "currentSliceId": "ux-overworld-soft-cartographic-fog-frontier-10184",
+  "currentSliceNotes": "Completed: the unexplored boundary now uses a bounded inward vertex gradient with no hidden identity sampling, and direct playtest scale feedback is resolved by compressing the visual hierarchy from 0.26-1.44 to 0.30-1.12 tile extents while preserving exact logical footprints and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld continuous terrain macro-lighting",
-  "currentSliceUpdatedAt": "2026-08-25T19:43:03Z",
+  "currentSliceTitle": "Overworld soft cartographic fog frontier",
+  "currentSliceUpdatedAt": "2026-08-25T20:19:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19898,9 +19899,41 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Register the next bounded slice from direct current behavior evidence before changing production; preserve gameplay authority and bounded release claims.",
-  "notes": "Continuous Overworld terrain macro-lighting is completed. The next graphical-polish or release-readiness slice has not been selected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
+  "notes": "Soft cartographic fog and user-reported map-object scale coherence are completed. The tracker is neutral and awaiting the next approved source-backed slice.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-soft-cartographic-fog-frontier-10184",
+      "title": "Overworld soft cartographic fog frontier",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T19:45:36Z",
+      "updatedAt": "2026-08-25T20:19:36Z",
+      "completedAt": "2026-08-25T20:19:36Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the hard explored/unexplored staircase with a restrained explored-side fog gradient and correct the visually extreme town/hero/small-object scale spread while retaining exact hidden concealment and logical map footprints.",
+      "completionCriteria": "Fresh inspected authored 1280x720 and 1920x1080 plus generated natural-fog before/after captures show a softer coherent cartographic frontier and a compressed, readable town/hero/object hierarchy without hidden terrain exposure, interior seams, object clutter, or oversized town dominance; focused runtime proves exact cardinal/corner edge ownership, bounded gradient alpha/depth, hidden-identity isolation, deterministic public presentation, exact semantic scale ordering, unchanged 3x2 town/blocking/visit authority, permanent exploration, whole session/save authority, and movement stability; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No fog explored/visible state, scouting radius, permanent-exploration semantics, hidden terrain/object payload, map content, passability, movement, roads, selection, routes, camera/map fit, save/session, generated placement, density, or Native RMG data/behavior change.",
+        "No logical object/town footprint, blocking, visit tile, object identity/content, terrain/road/object asset, UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with direct inspected River Pass 1280x720 and 1920x1080 captures plus generated natural-fog before/after and reveal-all captures. The gradient uses only cardinal explored booleans; generated movement grows exploration 25 to 32 tiles with zero invalid frontier directions and exact hidden identity. Visual extents now form a compressed artifact0.30/pickup0.36/encounter0.46/structure0.52/landmark0.56/multi0.60/hero0.62/town1.12 hierarchy while the 3x2 town footprint and all blocking/visit authority remain exact. Focused scale, hero, commander, Ninefold, generated movement/save, route/input/focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass with bounded claims.",
+      "blockedReason": null,
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved source-backed graphical-polish or release-readiness slice; packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain open."
+    },
     {
       "id": "ux-overworld-continuous-terrain-macro-lighting-10184",
       "title": "Overworld continuous terrain macro-lighting",
@@ -102195,8 +102228,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_continuous_terrain_macro_lighting_completed",
-  "status": "completed",
+  "result": "overworld_soft_cartographic_fog_frontier_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",

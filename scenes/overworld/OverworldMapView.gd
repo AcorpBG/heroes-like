@@ -22,7 +22,12 @@ const UNEXPLORED_SHROUD_BASE := Color(0.13, 0.16, 0.16, 0.16)
 const UNEXPLORED_SHROUD_LAYER_COUNT := 1
 const EXPLORED_TERRAIN_GRID_ALPHA := 0.0
 const EXPLORED_TERRAIN_GRID_MODE := "fog_boundary_only"
-const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.24)
+const EXPLORED_FOG_FRONTIER_MODEL := "inward_vertex_gradient_cartographic_frontier"
+const EXPLORED_FOG_FRONTIER_DEPTH_FACTOR := 0.32
+const EXPLORED_FOG_FRONTIER_EDGE_ALPHA := 0.24
+const EXPLORED_FOG_FRONTIER_INNER_ALPHA := 0.0
+const EXPLORED_FOG_FRONTIER_COLOR := Color(0.025, 0.035, 0.045, 1.0)
+const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.16)
 const EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH := 1.0
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
@@ -93,16 +98,16 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
-const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.26
-const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.32
-const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.40
-const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.46
-const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.44
-const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.50
-const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.46
-const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.36
-const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.40
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54
+const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30
+const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36
+const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46
+const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.52
+const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.50
+const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.56
+const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.52
+const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.40
+const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.44
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.60
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
@@ -157,7 +162,7 @@ const HERO_ANCHOR_STYLE := "hero_foot_contact_shadow"
 const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
 const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"
 const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"
-const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56
+const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.62
 const HERO_SPRITE_LIFT_FACTOR := 0.30
 const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.64
@@ -171,7 +176,7 @@ const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
-const TOWN_SPRITE_EXTENT_FACTOR := 0.72
+const TOWN_SPRITE_EXTENT_FACTOR := 0.56
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -1550,27 +1555,121 @@ func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> boo
 func _draw_explored_terrain_boundary(tile: Vector2i, rect: Rect2) -> void:
 	if _session == null:
 		return
+	for direction_value in _explored_fog_frontier_directions(tile):
+		var direction := String(direction_value)
+		var gradient_points := _explored_fog_frontier_gradient_points(rect, direction)
+		if gradient_points.size() == 4:
+			_canvas_draw_polygon(gradient_points, _explored_fog_frontier_gradient_colors())
+		_draw_explored_fog_frontier_edge(rect, direction)
+
+func _explored_fog_frontier_directions(tile: Vector2i) -> Array:
+	if _session == null:
+		return []
 	var checks := {
 		"N": Vector2i(0, -1),
 		"E": Vector2i(1, 0),
 		"S": Vector2i(0, 1),
 		"W": Vector2i(-1, 0),
 	}
-	for direction in checks.keys():
+	var directions: Array = []
+	for direction in ["N", "E", "S", "W"]:
 		var neighbor: Vector2i = tile + checks[direction]
 		if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= _map_size.x or neighbor.y >= _map_size.y:
 			continue
 		if OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
 			continue
-		match direction:
-			"N":
-				_canvas_draw_line(rect.position, Vector2(rect.end.x, rect.position.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
-			"S":
-				_canvas_draw_line(Vector2(rect.position.x, rect.end.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
-			"W":
-				_canvas_draw_line(rect.position, Vector2(rect.position.x, rect.end.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
-			"E":
-				_canvas_draw_line(Vector2(rect.end.x, rect.position.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+		directions.append(direction)
+	return directions
+
+func _explored_fog_frontier_gradient_points(rect: Rect2, direction: String) -> PackedVector2Array:
+	var depth_x := rect.size.x * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR
+	var depth_y := rect.size.y * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR
+	match direction:
+		"N":
+			return PackedVector2Array([
+				rect.position,
+				Vector2(rect.end.x, rect.position.y),
+				Vector2(rect.end.x, rect.position.y + depth_y),
+				Vector2(rect.position.x, rect.position.y + depth_y),
+			])
+		"S":
+			return PackedVector2Array([
+				Vector2(rect.position.x, rect.end.y),
+				rect.end,
+				Vector2(rect.end.x, rect.end.y - depth_y),
+				Vector2(rect.position.x, rect.end.y - depth_y),
+			])
+		"W":
+			return PackedVector2Array([
+				rect.position,
+				Vector2(rect.position.x, rect.end.y),
+				Vector2(rect.position.x + depth_x, rect.end.y),
+				Vector2(rect.position.x + depth_x, rect.position.y),
+			])
+		"E":
+			return PackedVector2Array([
+				Vector2(rect.end.x, rect.position.y),
+				rect.end,
+				Vector2(rect.end.x - depth_x, rect.end.y),
+				Vector2(rect.end.x - depth_x, rect.position.y),
+			])
+	return PackedVector2Array()
+
+func _explored_fog_frontier_gradient_colors() -> PackedColorArray:
+	var edge_color := Color(
+		EXPLORED_FOG_FRONTIER_COLOR.r,
+		EXPLORED_FOG_FRONTIER_COLOR.g,
+		EXPLORED_FOG_FRONTIER_COLOR.b,
+		EXPLORED_FOG_FRONTIER_EDGE_ALPHA
+	)
+	var inner_color := Color(
+		EXPLORED_FOG_FRONTIER_COLOR.r,
+		EXPLORED_FOG_FRONTIER_COLOR.g,
+		EXPLORED_FOG_FRONTIER_COLOR.b,
+		EXPLORED_FOG_FRONTIER_INNER_ALPHA
+	)
+	return PackedColorArray([edge_color, edge_color, inner_color, inner_color])
+
+func _draw_explored_fog_frontier_edge(rect: Rect2, direction: String) -> void:
+	match direction:
+		"N":
+			_canvas_draw_line(rect.position, Vector2(rect.end.x, rect.position.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+		"S":
+			_canvas_draw_line(Vector2(rect.position.x, rect.end.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+		"W":
+			_canvas_draw_line(rect.position, Vector2(rect.position.x, rect.end.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+		"E":
+			_canvas_draw_line(Vector2(rect.end.x, rect.position.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+
+func _explored_fog_frontier_payload(tile: Vector2i) -> Dictionary:
+	var directions := _explored_fog_frontier_directions(tile)
+	var softened_corners: Array = []
+	for corner in [
+		{"id": "NE", "edges": ["N", "E"]},
+		{"id": "SE", "edges": ["S", "E"]},
+		{"id": "SW", "edges": ["S", "W"]},
+		{"id": "NW", "edges": ["N", "W"]},
+	]:
+		var edges: Array = corner.get("edges", [])
+		if directions.has(edges[0]) and directions.has(edges[1]):
+			softened_corners.append(String(corner.get("id", "")))
+	return {
+		"model": EXPLORED_FOG_FRONTIER_MODEL,
+		"drawn": not directions.is_empty(),
+		"directions": directions.duplicate(),
+		"direction_order": ["N", "E", "S", "W"],
+		"softened_corners": softened_corners,
+		"gradient_stop_count": 2,
+		"gradient_depth_factor": EXPLORED_FOG_FRONTIER_DEPTH_FACTOR,
+		"gradient_edge_alpha": EXPLORED_FOG_FRONTIER_EDGE_ALPHA,
+		"gradient_inner_alpha": EXPLORED_FOG_FRONTIER_INNER_ALPHA,
+		"edge_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
+		"edge_width": EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH,
+		"draw_side": "explored_inward",
+		"neighbor_basis": "cardinal_explored_boolean_only",
+		"hidden_identity_sampled": false,
+		"interior_explored_seams": false,
+	}
 
 func _draw_authored_terrain_pattern(tile: Vector2i, rect: Rect2, terrain: String, visible: bool) -> void:
 	var pattern := _terrain_pattern(terrain)
@@ -5517,6 +5616,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 			"unexplored_shroud_seed_basis": "none_contiguous",
 			"unexplored_shroud_repeated_stamps": false,
 			"fog_boundary_alpha": 0.0,
+			"fog_frontier": {
+				"model": EXPLORED_FOG_FRONTIER_MODEL,
+				"drawn": false,
+				"draw_side": "explored_inward",
+				"hidden_identity_sampled": false,
+			},
 			"terrain_macro_lighting": {
 				"model": TERRAIN_MACRO_LIGHTING_MODEL,
 				"drawn": false,
@@ -5561,6 +5666,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var road_has_vertical := _road_has_vertical_connections(road_neighbor_directions)
 	var road_has_diagonal := _road_has_diagonal_connections(road_neighbor_directions)
 	var terrain_macro_lighting := _terrain_macro_lighting_payload(tile)
+	var fog_frontier := _explored_fog_frontier_payload(tile)
 	terrain_macro_lighting["drawn"] = true
 	var primary_base_model := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE if homm3_rendering_active else (TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern"))
 	return {
@@ -5587,6 +5693,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"unexplored_shroud_seed_basis": "",
 		"unexplored_shroud_repeated_stamps": false,
 		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
+		"fog_frontier": fog_frontier,
 		"terrain_macro_lighting": terrain_macro_lighting,
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,

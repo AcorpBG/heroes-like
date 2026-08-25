@@ -89,6 +89,9 @@ func _run() -> void:
 	var terrain_transition_before := _terrain_transition_summary(overworld)
 	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_terrain_transition_summary(terrain_transition_before, "before_move"):
 		return
+	var fog_frontier_before := _fog_frontier_summary(overworld)
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") != "1" and not _assert_fog_frontier_summary(fog_frontier_before, "before_move"):
+		return
 	var road_surface_before := _road_surface_summary(overworld)
 	if not _assert_generated_road_surface(road_surface_before, "before_move"):
 		return
@@ -110,11 +113,17 @@ func _run() -> void:
 	var terrain_transition_after := _terrain_transition_summary(overworld)
 	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_terrain_transition_summary(terrain_transition_after, "after_move"):
 		return
+	var fog_frontier_after := _fog_frontier_summary(overworld)
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") != "1" and not _assert_fog_frontier_summary(fog_frontier_after, "after_move"):
+		return
 	var road_surface_after := _road_surface_summary(overworld)
 	if not _assert_generated_road_surface(road_surface_after, "after_move"):
 		return
-	if terrain_transition_after != terrain_transition_before:
-		_fail("Generated terrain transition draw authority changed across movement/redraw.")
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1":
+		if terrain_transition_after != terrain_transition_before:
+			_fail("Generated terrain transition draw authority changed across movement/redraw.")
+			return
+	elif not _assert_natural_fog_terrain_transition_progression(terrain_transition_before, terrain_transition_after):
 		return
 	if road_surface_after != road_surface_before:
 		_fail("Generated terrain-integrated road surface authority changed across movement/redraw.")
@@ -180,6 +189,8 @@ func _run() -> void:
 		"generated_visual_before": _compact_generated_visual_summary(map_visual_before),
 		"generated_visual_after": _compact_generated_visual_summary(map_visual_after),
 		"terrain_transition": terrain_transition_after,
+		"fog_frontier_before": fog_frontier_before,
+		"fog_frontier_after": fog_frontier_after,
 		"road_surface": road_surface_after,
 		"save_reload_authority_exact": true,
 	})])
@@ -317,6 +328,146 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"macro_lighting_highlight_alphas": macro_lighting_highlight_alphas.keys(),
 	}
 
+func _assert_natural_fog_terrain_transition_progression(before: Dictionary, after: Dictionary) -> bool:
+	var count_keys := [
+		"explored_tile_count",
+		"relationship_tile_count",
+		"generic_overlay_tile_count",
+		"self_contained_tile_count",
+		"inactive_homm3_overlay_tile_count",
+		"irregular_inner_edge_count",
+		"deterministic_seed_count",
+	]
+	for key in count_keys:
+		if int(after.get(key, -1)) < int(before.get(key, 0)):
+			_fail("Generated natural-fog terrain presentation lost %s across exploration: before=%s after=%s" % [key, before, after])
+			return false
+	for summary in [before, after]:
+		var explored_count := int(summary.get("explored_tile_count", 0))
+		if (
+			explored_count <= 0
+			or int(summary.get("macro_lighting_tile_count", -1)) != explored_count
+			or int(summary.get("macro_lighting_continuous_count", -1)) != explored_count
+			or int(summary.get("macro_lighting_bounded_count", -1)) != explored_count
+			or int(summary.get("macro_lighting_corner_mismatch_count", -1)) != 0
+			or int(summary.get("irregular_inner_edge_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))
+			or int(summary.get("deterministic_seed_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))
+		):
+			_fail("Generated natural-fog terrain presentation contract changed: %s" % summary)
+			return false
+	for key in [
+		"draw_policy_ids",
+		"surface_model_ids",
+		"feather_band_counts",
+		"macro_lighting_model_ids",
+		"macro_lighting_cell_sizes",
+		"macro_lighting_shadow_alphas",
+		"macro_lighting_highlight_alphas",
+	]:
+		if after.get(key, []) != before.get(key, []):
+			_fail("Generated natural-fog terrain presentation model changed for %s: before=%s after=%s" % [key, before.get(key, []), after.get(key, [])])
+			return false
+	return true
+
+func _fog_frontier_summary(overworld: Node) -> Dictionary:
+	var map_view := overworld.get_node_or_null("%Map")
+	if map_view == null or not map_view.has_method("validation_tile_presentation"):
+		return {}
+	var session = SessionState.active_session
+	var map_size := OverworldRules.derive_map_size(session)
+	var checks := {
+		"N": Vector2i.UP,
+		"E": Vector2i.RIGHT,
+		"S": Vector2i.DOWN,
+		"W": Vector2i.LEFT,
+	}
+	var explored_tile_count := 0
+	var hidden_tile_count := 0
+	var active_frontier_tile_count := 0
+	var exact_frontier_tile_count := 0
+	var interior_explored_tile_count := 0
+	var direction_observation_count := 0
+	var softened_corner_count := 0
+	var hidden_exact_count := 0
+	var invalid_direction_count := 0
+	var model_ids: Dictionary = {}
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var tile := Vector2i(x, y)
+			var presentation: Dictionary = map_view.call("validation_tile_presentation", tile)
+			var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
+			var frontier: Dictionary = terrain.get("fog_frontier", {}) if terrain.get("fog_frontier", {}) is Dictionary else {}
+			if not OverworldRules.is_tile_explored(session, x, y):
+				hidden_tile_count += 1
+				if (
+					bool(terrain.get("unexplored_hidden", false))
+					and String(terrain.get("terrain", "leaked")) == ""
+					and not bool(frontier.get("drawn", true))
+					and not bool(frontier.get("hidden_identity_sampled", true))
+				):
+					hidden_exact_count += 1
+				continue
+			explored_tile_count += 1
+			var directions: Array = frontier.get("directions", []) if frontier.get("directions", []) is Array else []
+			if directions.is_empty():
+				interior_explored_tile_count += 1
+				continue
+			active_frontier_tile_count += 1
+			model_ids[String(frontier.get("model", ""))] = true
+			direction_observation_count += directions.size()
+			var softened_corners: Array = frontier.get("softened_corners", []) if frontier.get("softened_corners", []) is Array else []
+			softened_corner_count += softened_corners.size()
+			for direction_value in directions:
+				var direction := String(direction_value)
+				var neighbor: Vector2i = tile + checks.get(direction, Vector2i.ZERO)
+				if not checks.has(direction) or neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= map_size.x or neighbor.y >= map_size.y or OverworldRules.is_tile_explored(session, neighbor.x, neighbor.y):
+					invalid_direction_count += 1
+			if (
+				bool(frontier.get("drawn", false))
+				and int(frontier.get("gradient_stop_count", 0)) == 2
+				and is_equal_approx(float(frontier.get("gradient_depth_factor", 0.0)), 0.32)
+				and is_equal_approx(float(frontier.get("gradient_edge_alpha", 0.0)), 0.24)
+				and is_equal_approx(float(frontier.get("gradient_inner_alpha", -1.0)), 0.0)
+				and is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.16)
+				and String(frontier.get("draw_side", "")) == "explored_inward"
+				and String(frontier.get("neighbor_basis", "")) == "cardinal_explored_boolean_only"
+				and not bool(frontier.get("hidden_identity_sampled", true))
+				and not bool(frontier.get("interior_explored_seams", true))
+			):
+				exact_frontier_tile_count += 1
+	return {
+		"explored_tile_count": explored_tile_count,
+		"hidden_tile_count": hidden_tile_count,
+		"active_frontier_tile_count": active_frontier_tile_count,
+		"exact_frontier_tile_count": exact_frontier_tile_count,
+		"interior_explored_tile_count": interior_explored_tile_count,
+		"direction_observation_count": direction_observation_count,
+		"softened_corner_count": softened_corner_count,
+		"hidden_exact_count": hidden_exact_count,
+		"invalid_direction_count": invalid_direction_count,
+		"model_ids": model_ids.keys(),
+	}
+
+func _assert_fog_frontier_summary(summary: Dictionary, label: String) -> bool:
+	var explored_count := int(summary.get("explored_tile_count", 0))
+	var hidden_count := int(summary.get("hidden_tile_count", 0))
+	var active_count := int(summary.get("active_frontier_tile_count", 0))
+	if (
+		explored_count <= 0
+		or hidden_count <= 0
+		or active_count <= 0
+		or int(summary.get("exact_frontier_tile_count", 0)) != active_count
+		or int(summary.get("interior_explored_tile_count", 0)) <= 0
+		or int(summary.get("direction_observation_count", 0)) < active_count
+		or int(summary.get("softened_corner_count", 0)) <= 0
+		or int(summary.get("hidden_exact_count", 0)) != hidden_count
+		or int(summary.get("invalid_direction_count", -1)) != 0
+		or summary.get("model_ids", []) != ["inward_vertex_gradient_cartographic_frontier"]
+	):
+		_fail("%s generated natural-fog frontier contract changed: %s" % [label, JSON.stringify(summary)])
+		return false
+	return true
+
 func _road_surface_summary(overworld: Node) -> Dictionary:
 	var map_view := overworld.get_node_or_null("%Map")
 	if map_view == null or not map_view.has_method("validation_tile_presentation"):
@@ -440,7 +591,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if not bool(summary.get("body_tile_keys_exact", false)) or not bool(summary.get("all_body_assets_loaded", false)) or not bool(summary.get("all_body_assets_terrain_matched", false)):
 		_fail("%s generated body presentation is incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.46):
+	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.52):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
 	if int(summary.get("composition_key_count", 0)) != int(summary.get("indexed_body_tile_count", -1)):
@@ -463,7 +614,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if String(summary.get("composition_signature", "")).length() != 64:
 		_fail("%s generated body composition signature is missing: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.54):
+	if not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.60):
 		_fail("%s multi-tile visual cap changed: %s" % [label, summary.get("multi_tile_interactive_cap_tiles", -1.0)])
 		return false
 	var corrected_multi_tile_count := 0
