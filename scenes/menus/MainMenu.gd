@@ -9,6 +9,10 @@ const TAB_SKIRMISH := 1
 const TAB_SAVES := 2
 const TAB_GUIDE := 3
 const TAB_SETTINGS := 4
+const STAGE_DOCK_CARTOGRAPHY_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"
+const STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)
+const STAGE_DOCK_TEXTURE_MARGIN := 56.0
+const STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
 const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
@@ -3712,6 +3716,61 @@ func validation_snapshot() -> Dictionary:
 		"active_expedition_full": _active_expedition_label.tooltip_text,
 	}
 
+
+func validation_stage_dock_surface_summary() -> Dictionary:
+	var style := _stage_dock_panel.get_theme_stylebox("panel")
+	var texture_path := ""
+	var texture_size := Vector2.ZERO
+	var texture_margins := Vector4.ZERO
+	var content_margins := Vector4.ZERO
+	var modulate := Color.WHITE
+	if style is StyleBoxTexture:
+		var texture_style := style as StyleBoxTexture
+		if texture_style.texture != null:
+			texture_path = texture_style.texture.resource_path
+			texture_size = Vector2(texture_style.texture.get_width(), texture_style.texture.get_height())
+		texture_margins = Vector4(
+			texture_style.texture_margin_left,
+			texture_style.texture_margin_top,
+			texture_style.texture_margin_right,
+			texture_style.texture_margin_bottom
+		)
+		content_margins = Vector4(
+			texture_style.content_margin_left,
+			texture_style.content_margin_top,
+			texture_style.content_margin_right,
+			texture_style.content_margin_bottom
+		)
+		modulate = texture_style.modulate_color
+	var high_contrast_fallback := _stage_dock_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, true)
+	var missing_asset_fallback := _stage_dock_surface_style("res://art/ui/runtime/main_menu/missing_stage_dock_cartography.png", false)
+	return {
+		"asset_path": STAGE_DOCK_CARTOGRAPHY_PATH,
+		"asset_exists": ResourceLoader.exists(STAGE_DOCK_CARTOGRAPHY_PATH),
+		"style_class": style.get_class() if style != null else "",
+		"texture_path": texture_path,
+		"texture_size": texture_size,
+		"texture_margins": texture_margins,
+		"content_margins": content_margins,
+		"modulate": modulate,
+		"dock_rect": _stage_dock_panel.get_global_rect(),
+		"dock_anchors": Rect2(
+			Vector2(_stage_dock_panel.anchor_left, _stage_dock_panel.anchor_top),
+			Vector2(
+				_stage_dock_panel.anchor_right - _stage_dock_panel.anchor_left,
+				_stage_dock_panel.anchor_bottom - _stage_dock_panel.anchor_top
+			)
+		),
+		"dock_combined_minimum_size": _stage_dock_panel.get_combined_minimum_size(),
+		"dock_visible": _stage_dock_panel.visible,
+		"current_tab": _menu_tabs.current_tab,
+		"high_contrast": FrontierVisualKit.high_contrast_enabled(),
+		"rendering_mode": "authored_cartography_surface" if style is StyleBoxTexture else "smoke_fallback",
+		"high_contrast_fallback_class": high_contrast_fallback.get_class(),
+		"missing_asset_fallback_class": missing_asset_fallback.get_class(),
+		"fallbacks_texture_free": not (high_contrast_fallback is StyleBoxTexture) and not (missing_asset_fallback is StyleBoxTexture),
+	}
+
 func _editor_utility_frame_snapshot() -> Dictionary:
 	var normal_style := _open_editor_button.get_theme_stylebox("normal")
 	var normal_texture_path := ""
@@ -4746,6 +4805,34 @@ func _set_commander_portrait(target: HeroPortraitView, hero_id: String) -> void:
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 84) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)
 
+
+func _stage_dock_surface_style(asset_path: String, high_contrast: bool) -> StyleBox:
+	if high_contrast or asset_path == "" or not ResourceLoader.exists(asset_path):
+		return FrontierVisualKit.panel_style("smoke")
+	var texture := load(asset_path) as Texture2D
+	if texture == null:
+		return FrontierVisualKit.panel_style("smoke")
+	var margin := minf(
+		STAGE_DOCK_TEXTURE_MARGIN,
+		minf(float(texture.get_width()), float(texture.get_height())) * 0.5 - 1.0
+	)
+	var style := StyleBoxTexture.new()
+	style.texture = texture
+	style.texture_margin_left = margin
+	style.texture_margin_top = margin
+	style.texture_margin_right = margin
+	style.texture_margin_bottom = margin
+	style.content_margin_left = 0.0
+	style.content_margin_top = 0.0
+	style.content_margin_right = 0.0
+	style.content_margin_bottom = 0.0
+	style.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.draw_center = true
+	style.modulate_color = STAGE_DOCK_TEXTURE_MODULATE
+	return style
+
+
 func _apply_visual_theme() -> void:
 	var panel_tones := {
 		"LogoPocketPanel": "smoke",
@@ -4776,6 +4863,10 @@ func _apply_visual_theme() -> void:
 	for panel in find_children("*", "PanelContainer", true, false):
 		if panel is PanelContainer and panel.name.ends_with("Panel"):
 			FrontierVisualKit.apply_panel(panel, String(panel_tones.get(panel.name, "ink")))
+	_stage_dock_panel.add_theme_stylebox_override(
+		"panel",
+		_stage_dock_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())
+	)
 
 	FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:

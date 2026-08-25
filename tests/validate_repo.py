@@ -18947,6 +18947,151 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     )
 
 
+def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None:
+    asset_path = ROOT / "art/ui/runtime/main_menu/stage_dock_cartography.png"
+    ensure(asset_path.exists(), errors, "Main Menu Stage Dock cartography asset is missing")
+    if asset_path.exists():
+        asset_bytes = asset_path.read_bytes()
+        ensure(png_size(asset_path) == (1024, 1024), errors, "Main Menu Stage Dock cartography asset must remain exactly 1024x1024")
+        ensure(len(asset_bytes) > 25 and asset_bytes[:8] == b"\x89PNG\r\n\x1a\n" and asset_bytes[25] == 2, errors, "Main Menu Stage Dock cartography asset must remain an opaque RGB PNG")
+        ensure(
+            hashlib.sha256(asset_bytes).hexdigest() == "e19d108ae4002db0bec038988bf670d58fb1d2f313c98316f8de0bb6389fe7d0",
+            errors,
+            "Main Menu Stage Dock cartography asset must retain the reviewed original quiet campaign-table artwork",
+        )
+
+    ensure(MAIN_MENU_SCRIPT_PATH.exists(), errors, "MainMenu.gd is missing for Stage Dock cartography validation")
+    ensure(MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists(), errors, "menu_outcome_visual_smoke.gd is missing for Stage Dock cartography validation")
+    if not MAIN_MENU_SCRIPT_PATH.exists() or not MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists():
+        return
+    menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const STAGE_DOCK_CARTOGRAPHY_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
+        "const STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)",
+        "const STAGE_DOCK_TEXTURE_MARGIN := 56.0",
+        "const STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)",
+        "func _stage_dock_surface_style(asset_path: String, high_contrast: bool) -> StyleBox:",
+        'return FrontierVisualKit.panel_style("smoke")',
+        "var style := StyleBoxTexture.new()",
+        "style.texture_margin_left = margin",
+        "style.texture_margin_top = margin",
+        "style.texture_margin_right = margin",
+        "style.texture_margin_bottom = margin",
+        "style.content_margin_left = 0.0",
+        "style.content_margin_top = 0.0",
+        "style.content_margin_right = 0.0",
+        "style.content_margin_bottom = 0.0",
+        "style.draw_center = true",
+        "style.modulate_color = STAGE_DOCK_TEXTURE_MODULATE",
+        "func validation_stage_dock_surface_summary() -> Dictionary:",
+        '"dock_anchors": Rect2(',
+        '"dock_combined_minimum_size": _stage_dock_panel.get_combined_minimum_size()',
+        '"rendering_mode": "authored_cartography_surface" if style is StyleBoxTexture else "smoke_fallback"',
+        '"fallbacks_texture_free": not (high_contrast_fallback is StyleBoxTexture) and not (missing_asset_fallback is StyleBoxTexture)',
+        '_stage_dock_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())',
+    ):
+        ensure(required_token in menu_text, errors, f"MainMenu.gd is missing Stage Dock cartography token: {required_token}")
+    ensure(menu_text.count("func _stage_dock_surface_style(") == 1, errors, "MainMenu.gd must own exactly one Stage Dock surface factory")
+    ensure(menu_text.count("func validation_stage_dock_surface_summary()") == 1, errors, "MainMenu.gd must own exactly one Stage Dock surface summary")
+    ensure(menu_text.count("_stage_dock_panel.add_theme_stylebox_override(") == 1, errors, "MainMenu.gd must apply the shared Stage Dock surface exactly once")
+    surface_match = re.search(r"func _stage_dock_surface_style\([^\n]*\) -> StyleBox:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
+    ensure(surface_match is not None, errors, "MainMenu.gd Stage Dock surface factory could not be isolated")
+    if surface_match is not None:
+        surface_body = surface_match.group("body")
+        ensure(surface_body.index("if high_contrast") < surface_body.index("var texture := load(asset_path)") < surface_body.index("var style := StyleBoxTexture.new()"), errors, "Main Menu Stage Dock surface must fail closed before loading or styling the authored texture")
+        for forbidden_token in (
+            "anchor_left",
+            "anchor_top",
+            "anchor_right",
+            "anchor_bottom",
+            ".visible =",
+            ".text =",
+            "grab_focus",
+            "Input.",
+            "AppRouter",
+            "SessionState",
+            "SaveService",
+            "create_timer",
+            "call_deferred",
+        ):
+            ensure(forbidden_token not in surface_body, errors, f"Main Menu Stage Dock surface factory must remain visual-only: {forbidden_token}")
+    apply_match = re.search(r"func _apply_visual_theme\(\) -> void:\n(?P<body>.*?)(?=\nfunc |\Z)", menu_text, flags=re.DOTALL)
+    ensure(apply_match is not None, errors, "MainMenu.gd visual-theme owner could not be isolated for Stage Dock ordering")
+    if apply_match is not None:
+        apply_body = apply_match.group("body")
+        ensure(
+            apply_body.index('for panel in find_children("*", "PanelContainer", true, false):')
+            < apply_body.index("_stage_dock_panel.add_theme_stylebox_override(")
+            < apply_body.index('FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")'),
+            errors,
+            "Main Menu must apply the unique Stage Dock surface after generic panels and before tab/control styling",
+        )
+
+    for required_token in (
+        'const MAIN_MENU_STAGE_DOCK_ASSET_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
+        "const MAIN_MENU_STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)",
+        "const MAIN_MENU_STAGE_DOCK_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)",
+        "const MAIN_MENU_STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)",
+        "const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]",
+        "const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)",
+        "const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
+        "if not await _assert_main_menu_stage_dock_surface(shell, session):",
+        "func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:",
+        'for board in [',
+        '{"label": "Campaign", "tab": 0, "anchors": MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS}',
+        '{"label": "Skirmish", "tab": 1, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
+        '{"label": "Saves", "tab": 2, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
+        '{"label": "Settings", "tab": 4, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
+        '{"label": "Guide", "tab": 3, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
+        'shell.call("validation_stage_dock_surface_summary")',
+        "compact_contracts[contract_key] = summary.duplicate(true)",
+        "summary != compact_contracts.get(contract_key, {})",
+        "if session.to_dict() != session_before",
+        "func _main_menu_stage_dock_summary_exact(summary: Dictionary, expected_tab: int, expected_anchors: Rect2, anchored_rect: Rect2, viewport_size: Vector2) -> bool:",
+        'var combined_minimum: Vector2 = summary.get("dock_combined_minimum_size", Vector2.ZERO)',
+        'var actual_anchors: Rect2 = summary.get("dock_anchors", Rect2())',
+        "maxf(anchored_rect.size.x, combined_minimum.x)",
+        "maxf(anchored_rect.size.y, combined_minimum.y)",
+        'String(summary.get("style_class", "")) == "StyleBoxTexture"',
+        'String(summary.get("rendering_mode", "")) == "authored_cartography_surface"',
+        'String(summary.get("high_contrast_fallback_class", "")) == "StyleBoxFlat"',
+        'String(summary.get("missing_asset_fallback_class", "")) == "StyleBoxFlat"',
+        "dock_rect.position.distance_to(expected_rect.position) <= 1.0",
+        "dock_rect.size.distance_to(expected_rect.size) <= 1.0",
+        "actual_anchors.position.distance_to(expected_anchors.position) <= 0.0001",
+        "actual_anchors.size.distance_to(expected_anchors.size) <= 0.0001",
+        'var contrast_stage_surface: Dictionary = shell.call("validation_stage_dock_surface_summary")',
+        'String(contrast_stage_surface.get("rendering_mode", "")) != "smoke_fallback"',
+        'String(restored_stage_surface.get("rendering_mode", "")) != expected_restored_mode',
+    ):
+        ensure(required_token in smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Stage Dock cartography proof token: {required_token}")
+    stage_helper_match = re.search(r"func _assert_main_menu_stage_dock_surface\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    summary_helper_match = re.search(r"func _main_menu_stage_dock_summary_exact\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    ensure(stage_helper_match is not None and summary_helper_match is not None, errors, "Main Menu Stage Dock focused proof helpers could not be isolated")
+    if stage_helper_match is not None:
+        stage_body = stage_helper_match.group("body")
+        ensure(stage_body.count('SettingsService.call("_set_runtime_window_size", requested_size)') == 1, errors, "Main Menu Stage Dock proof must resize only through the production SettingsService boundary")
+        ensure(stage_body.count('shell.call("validation_stage_dock_surface_summary")') == 1, errors, "Main Menu Stage Dock proof must capture exactly one detached summary per board/width")
+        for forbidden_token in (
+            "_stage_dock_surface_style",
+            "add_theme_stylebox_override",
+            ".texture =",
+            ".anchor_left =",
+            ".anchor_top =",
+            ".anchor_right =",
+            ".anchor_bottom =",
+            "create_timer",
+            "sort(",
+            "erase(",
+        ):
+            ensure(forbidden_token not in stage_body, errors, f"Main Menu Stage Dock focused proof must use public actions and detached observation only: {forbidden_token}")
+    if summary_helper_match is not None:
+        summary_body = summary_helper_match.group("body")
+        for forbidden_token in ("shell", "MainMenu", "SettingsService", "load(", "ResourceLoader", "sort(", "erase(", "duplicate("):
+            ensure(forbidden_token not in summary_body, errors, f"Main Menu Stage Dock summary oracle must remain source-independent and passive: {forbidden_token}")
+
+
 def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> None:
     required_paths = (
         MAIN_MENU_SCENE_PATH,
@@ -63909,6 +64054,7 @@ def main() -> int:
     validate_battle_timing_check_detail_prefix_deduplication(errors)
     validate_main_menu_credits_third_party_notices(errors)
     validate_main_menu_first_view(errors)
+    validate_main_menu_stage_dock_cartography_surface(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_main_menu_battle_shake_picker_theme_parity(errors)
