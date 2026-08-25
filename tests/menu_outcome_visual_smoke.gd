@@ -37,6 +37,9 @@ const MAIN_MENU_STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
 const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]
 const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
+const MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
+const MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
+const MAIN_MENU_GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
 
 var _original_campaign_profile := {}
 
@@ -1035,12 +1038,14 @@ func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
 		if get_window().size != requested_size or get_tree().root.size != requested_size:
 			failure = "window/root did not reach %s" % [requested_size]
 			break
+		var campaign_anchors := _main_menu_campaign_dock_anchors(requested_size)
+		var guide_anchors := _main_menu_guide_dock_anchors(requested_size)
 		for board in [
-			{"label": "Campaign", "tab": 0, "anchors": MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS},
+			{"label": "Campaign", "tab": 0, "anchors": campaign_anchors},
 			{"label": "Skirmish", "tab": 1, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
 			{"label": "Saves", "tab": 2, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
 			{"label": "Settings", "tab": 4, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
-			{"label": "Guide", "tab": 3, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
+			{"label": "Guide", "tab": 3, "anchors": guide_anchors},
 		]:
 			match String(board.get("label", "")):
 				"Campaign":
@@ -1083,6 +1088,30 @@ func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _main_menu_campaign_dock_anchors(viewport_size: Vector2i) -> Rect2:
+	var first_view_height_ratio := minf(
+		MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y),
+		MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO
+	)
+	return Rect2(
+		MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS.position,
+		Vector2(
+			MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS.size.x,
+			maxf(MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS.size.y, first_view_height_ratio)
+		)
+	)
+
+func _main_menu_guide_dock_anchors(viewport_size: Vector2i) -> Rect2:
+	if viewport_size.x <= 1280 or viewport_size.y <= 720:
+		return MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS
+	return Rect2(
+		MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.position,
+		Vector2(
+			minf(MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.x, MAIN_MENU_GUIDE_DOCK_MAX_SIZE.x / float(viewport_size.x)),
+			minf(MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.y, MAIN_MENU_GUIDE_DOCK_MAX_SIZE.y / float(viewport_size.y))
+		)
+	)
 
 func _main_menu_stage_dock_summary_exact(summary: Dictionary, expected_tab: int, expected_anchors: Rect2, anchored_rect: Rect2, viewport_size: Vector2) -> bool:
 	var dock_rect: Rect2 = summary.get("dock_rect", Rect2())

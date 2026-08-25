@@ -19147,14 +19147,18 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         "const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]",
         "const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)",
         "const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
+        "const MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0",
+        "const MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640",
         "if not await _assert_main_menu_stage_dock_surface(shell, session):",
         "func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:",
         'for board in [',
-        '{"label": "Campaign", "tab": 0, "anchors": MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS}',
+        "var campaign_anchors := _main_menu_campaign_dock_anchors(requested_size)",
+        '{"label": "Campaign", "tab": 0, "anchors": campaign_anchors}',
         '{"label": "Skirmish", "tab": 1, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
         '{"label": "Saves", "tab": 2, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
         '{"label": "Settings", "tab": 4, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
-        '{"label": "Guide", "tab": 3, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
+        "var guide_anchors := _main_menu_guide_dock_anchors(requested_size)",
+        '{"label": "Guide", "tab": 3, "anchors": guide_anchors}',
         'shell.call("validation_stage_dock_surface_summary")',
         "compact_contracts[contract_key] = summary.duplicate(true)",
         "summary != compact_contracts.get(contract_key, {})",
@@ -19175,6 +19179,10 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         'var contrast_stage_surface: Dictionary = shell.call("validation_stage_dock_surface_summary")',
         'String(contrast_stage_surface.get("rendering_mode", "")) != "smoke_fallback"',
         'String(restored_stage_surface.get("rendering_mode", "")) != expected_restored_mode',
+        "func _main_menu_campaign_dock_anchors(viewport_size: Vector2i) -> Rect2:",
+        "MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y)",
+        "MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO",
+        "maxf(MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS.size.y, first_view_height_ratio)",
     ):
         ensure(required_token in smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Stage Dock cartography proof token: {required_token}")
     stage_helper_match = re.search(r"func _assert_main_menu_stage_dock_surface\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
@@ -19201,6 +19209,183 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         summary_body = summary_helper_match.group("body")
         for forbidden_token in ("shell", "MainMenu", "SettingsService", "load(", "ResourceLoader", "sort(", "erase(", "duplicate("):
             ensure(forbidden_token not in summary_body, errors, f"Main Menu Stage Dock summary oracle must remain source-independent and passive: {forbidden_token}")
+
+
+def validate_main_menu_field_manual_reference_card(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    required_paths = (
+        MAIN_MENU_SCENE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH,
+        MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Main Menu Field Manual reference-card owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    keyboard_text = MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.read_text(encoding="utf-8")
+    visual_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+
+    ensure(
+        scene_node_parent(scene_text, "GuideArticle", "VBoxContainer")
+        == "StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns",
+        errors,
+        "Field Manual selected-topic article must remain beside the native topic list",
+    )
+    ensure(
+        scene_node_parent(scene_text, "HelpTopicHeader", "HBoxContainer").endswith("/GuideArticle"),
+        errors,
+        "Field Manual selected-topic header must remain inside the article",
+    )
+    crest_block = scene_node_block(scene_text, "HelpTopicCrest", "TextureRect")
+    for token in (
+        "unique_name_in_owner = true",
+        "custom_minimum_size = Vector2(56, 56)",
+        "mouse_filter = 2",
+        'texture = ExtResource("6_crest")',
+        "expand_mode = 1",
+        "stretch_mode = 5",
+    ):
+        ensure(token in crest_block, errors, f"Field Manual topic crest is missing restrained reused-art token: {token}")
+    for forbidden in ("script =", "glyph_id =", "stretch_mode = 0", "texture_filter"):
+        ensure(forbidden not in crest_block, errors, f"Field Manual topic crest must reuse the authored aspect-preserving crest without procedural behavior: {forbidden}")
+    eyebrow_block = scene_node_block(scene_text, "HelpTopicEyebrow", "Label")
+    title_block = scene_node_block(scene_text, "HelpTopicTitle", "Label")
+    details_block = scene_node_block(scene_text, "HelpDetails", "Label")
+    ensure('text = "FIELD MANUAL / REFERENCE"' in eyebrow_block, errors, "Field Manual topic card is missing its exact restrained eyebrow")
+    ensure('text = "Campaign"' in title_block and "unique_name_in_owner = true" in title_block, errors, "Field Manual topic title must remain a live unique label")
+    ensure("autowrap_mode = 3" in details_block and "size_flags_vertical = 3" in details_block, errors, "Field Manual article must retain wrapped flexible body copy")
+    ensure(scene_has_node(scene_text, "HelpTopicRule", "HSeparator"), errors, "Field Manual topic hierarchy is missing its compact separator")
+
+    for token in (
+        "const GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)",
+        "const GUIDE_DOCK_COMPACT_VIEWPORT := Vector2(1280.0, 720.0)",
+        "@onready var _help_topic_crest: TextureRect = %HelpTopicCrest",
+        "@onready var _help_topic_eyebrow_label: Label = %HelpTopicEyebrow",
+        "@onready var _help_topic_title_label: Label = %HelpTopicTitle",
+        '"help_topic_title": _help_topic_title_label.text',
+        '"help_topic_title_tooltip": _help_topic_title_label.tooltip_text',
+        '"help_topic_crest_visible": _help_topic_crest.is_visible_in_tree()',
+        '"help_topic_crest_path": _help_topic_crest.texture.resource_path if _help_topic_crest.texture is Texture2D else ""',
+        '"help_layout": _guide_layout_snapshot()',
+    ):
+        ensure(token in menu_text, errors, f"MainMenu.gd is missing Field Manual reference-card token: {token}")
+    anchors_body = gd_function_block(menu_text, "_guide_stage_dock_anchors")
+    for token in (
+        "var viewport_size := get_viewport().get_visible_rect().size",
+        "if viewport_size.x <= GUIDE_DOCK_COMPACT_VIEWPORT.x or viewport_size.y <= GUIDE_DOCK_COMPACT_VIEWPORT.y:",
+        "return STANDARD_DOCK_ANCHORS",
+        "GUIDE_DOCK_MAX_SIZE.x / viewport_size.x",
+        "GUIDE_DOCK_MAX_SIZE.y / viewport_size.y",
+        "return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(width_ratio, height_ratio))",
+    ):
+        ensure(token in anchors_body, errors, f"Field Manual responsive dock allocator is missing exact source token: {token}")
+    ensure(
+        anchors_body.find("if viewport_size.x") < anchors_body.find("var width_ratio") < anchors_body.find("var height_ratio") < anchors_body.rfind("return Rect2"),
+        errors,
+        "Field Manual dock allocator must preserve compact guard then width/height cap order",
+    )
+    for forbidden in (".visible =", ".text =", "grab_focus", "Input.", "AppRouter", "SessionState", "SaveService", "create_timer", "call_deferred", "await "):
+        ensure(forbidden not in anchors_body, errors, f"Field Manual dock allocator must remain geometry-only: {forbidden}")
+    apply_body = gd_function_block(menu_text, "_apply_stage_dock_layout")
+    ensure(
+        "elif _menu_tabs.current_tab == TAB_GUIDE:\n\t\tanchors = _guide_stage_dock_anchors()" in apply_body,
+        errors,
+        "Main Menu must delegate only the Guide tab to its responsive dock allocator",
+    )
+    refresh_body = gd_function_block(menu_text, "_refresh_help_browser")
+    for token in (
+        "var handoff := _help_handoff_surface()",
+        '_help_topic_title_label.text = String(handoff.get("topic_label", "Field Manual"))',
+        '_help_topic_title_label.tooltip_text = String(handoff.get("tooltip_text", ""))',
+        "SettingsService.describe_help_topic(_selected_help_topic_id)",
+        "_refresh_credits_notices_command()",
+    ):
+        ensure(token in refresh_body, errors, f"Field Manual live title/article refresh is missing exact authority token: {token}")
+    layout_body = gd_function_block(menu_text, "_guide_layout_snapshot")
+    for token in (
+        'find_child("GuidePanel", true, false) as Control',
+        'find_child("GuideArticle", true, false) as Control',
+        '"stage_rect": _rect_snapshot(stage_rect)',
+        '"panel_rect": _control_rect_snapshot(guide_panel) if guide_panel != null else {}',
+        '"topic_list_rect": _control_rect_snapshot(_help_list)',
+        '"article_rect": _control_rect_snapshot(guide_article) if guide_article != null else {}',
+        '"topic_title_rect": _control_rect_snapshot(_help_topic_title_label)',
+        '"topic_crest_rect": _control_rect_snapshot(_help_topic_crest)',
+        '"uncovered_right_ratio":',
+    ):
+        ensure(token in layout_body, errors, f"Field Manual detached geometry snapshot is missing exact token: {token}")
+    for forbidden in (".position =", ".size =", ".visible =", ".text =", "grab_focus", "SettingsService", "create_timer", "await "):
+        ensure(forbidden not in layout_body, errors, f"Field Manual layout snapshot must remain a passive observer: {forbidden}")
+
+    for token in (
+        "const FIELD_MANUAL_VIEWPORTS := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        "const FIELD_MANUAL_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
+        "const FIELD_MANUAL_WIDE_MAX_SIZE := Vector2(1024.0, 460.0)",
+        'const FIELD_MANUAL_CREST_PATH := "res://art/ui/branding/aurelion_reach_frontier_crest.png"',
+        'const FIELD_MANUAL_TOPIC_IDS := ["campaign", "skirmish", "overworld", "town", "battle", "outcome", "saves", "credits_notices"]',
+        'const FIELD_MANUAL_TOPIC_LABELS := ["Campaign", "Skirmish", "Overworld", "Town", "Battle", "Outcome", "Save Flow", "Credits & Notices"]',
+        "if not await _check_field_manual_reference_card():",
+        'guide_shell.call("validation_open_campaign_stage")',
+        'guide_shell.call("validation_open_contextual_guide_stage")',
+        'guide_shell.call("validation_select_help_topic", "saves")',
+        'guide_shell.call("validation_return_from_contextual_guide")',
+        'SettingsService.call("_set_runtime_window_size", viewport_size)',
+        'SettingsService.call("_set_runtime_window_size", original_window_size)',
+        'String(snapshot.get("help_topic_title", "")) != expected_label',
+        'String(snapshot.get("help_topic_crest_path", "")) != FIELD_MANUAL_CREST_PATH',
+        "stage_rect.size.x <= FIELD_MANUAL_WIDE_MAX_SIZE.x + 1.0",
+        "stage_rect.size.y <= FIELD_MANUAL_WIDE_MAX_SIZE.y + 1.0",
+        'float(layout.get("uncovered_right_ratio", 0.0)) >= 0.40',
+        "_destructive_protected_state() != authority_before",
+    ):
+        ensure(token in keyboard_text, errors, f"Main Menu keyboard owner is missing Field Manual focused proof token: {token}")
+    focus_body = gd_function_block(keyboard_text, "_check_field_manual_reference_card")
+    ensure(focus_body.count("await _settle()") >= 7, errors, "Field Manual focused proof must passively settle both sizes, topic changes, return, and cleanup")
+    ensure(focus_body.count('SettingsService.call("_set_runtime_window_size", viewport_size)') == 1, errors, "Field Manual focused proof must resize each target through the production runtime-size boundary exactly once")
+    ensure(
+        focus_body.find("authority_before") < focus_body.find("for viewport_size in FIELD_MANUAL_VIEWPORTS") < focus_body.find('validation_open_campaign_stage') < focus_body.find('validation_open_contextual_guide_stage') < focus_body.find('validation_select_help_topic') < focus_body.find('validation_return_from_contextual_guide') < focus_body.find("layout_host.queue_free()") < focus_body.rfind("_destructive_protected_state()"),
+        errors,
+        "Field Manual focused proof must bracket real public navigation and both widths with exact authority",
+    )
+    for forbidden in (
+        "_guide_stage_dock_anchors",
+        "_guide_layout_snapshot",
+        ".anchor_left =",
+        ".anchor_top =",
+        ".anchor_right =",
+        ".anchor_bottom =",
+        "add_theme_",
+        "HelpTopicTitle.text =",
+        "HelpDetails.text =",
+        "create_timer",
+        "get_window().size =",
+        "sort(",
+        "erase(",
+    ):
+        ensure(forbidden not in focus_body, errors, f"Field Manual focused proof must exercise public behavior without direct layout/content mutation: {forbidden}")
+
+    for token in (
+        "const MAIN_MENU_GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)",
+        "var guide_anchors := _main_menu_guide_dock_anchors(requested_size)",
+        '{"label": "Guide", "tab": 3, "anchors": guide_anchors}',
+        "func _main_menu_guide_dock_anchors(viewport_size: Vector2i) -> Rect2:",
+        "MAIN_MENU_GUIDE_DOCK_MAX_SIZE.x / float(viewport_size.x)",
+        "MAIN_MENU_GUIDE_DOCK_MAX_SIZE.y / float(viewport_size.y)",
+    ):
+        ensure(token in visual_text, errors, f"Broad Main Menu Stage Dock owner is missing responsive Guide compatibility token: {token}")
+    broad_anchor_body = gd_function_block(visual_text, "_main_menu_guide_dock_anchors")
+    for forbidden in ("shell", "MainMenu", "SettingsService", "load(", "ResourceLoader", "create_timer", "await ", ".anchor_"):
+        ensure(forbidden not in broad_anchor_body, errors, f"Broad Guide anchor oracle must remain source-independent and passive: {forbidden}")
 
 
 def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> None:
@@ -64734,6 +64919,7 @@ def main() -> int:
     validate_main_menu_credits_third_party_notices(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_stage_dock_cartography_surface(errors)
+    validate_main_menu_field_manual_reference_card(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_main_menu_battle_shake_picker_theme_parity(errors)

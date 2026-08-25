@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next owner-directed graphical-polish slice from a fresh direct runtime defect with a bounded production owner."
+    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The owner-rejected Overworld near-peer scale is corrected and validated. Select the next graphical-polish slice from fresh direct runtime evidence; the compact Field Manual remains paused.",
+  "currentNotes": "Completed from direct 1280x720 and 1920x1080 inspection. The Field Manual keeps its contained standard footprint, caps the wide board near 1024x460, and adds a restrained crest/eyebrow/live-title/article hierarchy while exact help, navigation, accessibility, state, and gameplay authority remain unchanged.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",
-  "currentSliceId": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",
-  "currentSliceNotes": "Completed: towns now materially outrank heroes, structures, and loose props while exact logical map and gameplay authority remain unchanged.",
+  "currentSlice": "ux-main-menu-field-manual-compact-reference-card-10184",
+  "currentSliceId": "ux-main-menu-field-manual-compact-reference-card-10184",
+  "currentSliceNotes": "Completed: the responsive compact Field Manual and selected-topic reference card pass focused geometry/content/authority, broad menu, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld town, hero, and prop scale hierarchy correction",
-  "currentSliceUpdatedAt": "2026-08-25T13:24:44Z",
+  "currentSliceTitle": "Main Menu Field Manual compact reference card",
+  "currentSliceUpdatedAt": "2026-08-25T13:51:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101390,10 +101390,10 @@
     {
       "id": "ux-main-menu-field-manual-compact-reference-card-10184",
       "title": "Main Menu Field Manual compact reference card",
-      "status": "paused",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "updatedAt": "2026-08-25T13:07:45Z",
+      "updatedAt": "2026-08-25T13:51:04Z",
       "startedAt": "2026-08-25T12:59:59Z",
       "implementationTargets": [
         "PLAN.md",
@@ -101401,6 +101401,7 @@
         "scenes/menus/MainMenu.gd",
         "scenes/menus/MainMenu.tscn",
         "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/menu_outcome_visual_smoke.gd",
         "tests/validate_repo.py"
       ],
       "purpose": "Turn the oversized sparse Field Manual into a responsive compact reference card that uses its space intentionally while preserving the scenic Main Menu.",
@@ -101410,8 +101411,9 @@
         "No Main Menu first-view commands, Campaign/Skirmish/Save/Settings boards, backdrop, command rail, input mapping, focus policy, accessibility semantics, profile/session/save/settings schema, or gameplay changes.",
         "No new generated artwork, packaged Field Manual interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
       ],
-      "notes": "Paused by owner reprioritization after an unvalidated source draft and direct current-HEAD 1280x720/1920x1080 captures. The draft was withdrawn from the current tree; the evidence and bounded direction remain recorded for a future fresh implementation/validation pass after the live Overworld scale hierarchy correction.",
-      "blockedReason": null
+      "notes": "Completed from direct inspected captures and live public navigation. The standard 1280 Field Manual remains contained at roughly 938x448, while 1920 is capped near 1024x460 instead of the prior sparse 1407x670 board. The unchanged eight-topic list now shares the authored cartographic surface with a compact selected-topic card that reuses the frontier crest and adds an eyebrow, live title, separator, and article hierarchy. Exact topic ids/order/content/tooltips/selection, contextual handoff, Back/Close/focus, Credits & Notices, profile/session/save/settings authority, accessibility, and gameplay remain exact. The focused keyboard owner, broad Menu/Outcome width round-trip, Credits & Notices, global keyboard layout, accessibility semantics, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. A stale broad-test Campaign anchor oracle was aligned to the already-shipped 460px production minimum without changing Campaign behavior. Packaged Field Manual interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T13:51:04Z"
     },
     {
       "id": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",
@@ -101451,7 +101453,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next owner-directed graphical-polish slice; the compact Field Manual remains paused and broader product/release-readiness gaps remain.",
+  "remainingWork": "Select the next evidence-backed graphical-polish slice; broader graphical polish and product/release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

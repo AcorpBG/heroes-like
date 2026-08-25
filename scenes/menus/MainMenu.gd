@@ -18,6 +18,8 @@ const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
 const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
+const GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
+const GUIDE_DOCK_COMPACT_VIEWPORT := Vector2(1280.0, 720.0)
 const SETTINGS_SUMMARY_MAX_LINES := 4
 const SETTINGS_SUMMARY_MAX_CHARS := 84
 const TAB_STAGE_COPY := {
@@ -120,6 +122,9 @@ const TAB_HELP_TOPIC := {
 @onready var _start_skirmish_button: Button = %NextCampaignChapter
 @onready var _help_intro_label: Label = %HelpIntro
 @onready var _help_list: ItemList = %HelpList
+@onready var _help_topic_crest: TextureRect = %HelpTopicCrest
+@onready var _help_topic_eyebrow_label: Label = %HelpTopicEyebrow
+@onready var _help_topic_title_label: Label = %HelpTopicTitle
 @onready var _help_details_label: Label = %HelpDetails
 @onready var _open_credits_notices_button: Button = %OpenCreditsNotices
 @onready var _credits_notices_dialog: Window = %CreditsNoticesDialog
@@ -1983,6 +1988,7 @@ func _rebuild_help_browser() -> void:
 
 func _refresh_help_browser() -> void:
 	if _help_entries.is_empty():
+		_help_topic_title_label.text = "Reference unavailable"
 		_set_compact_label(_help_details_label, "No guide entries are available.", 2, 84)
 		_refresh_credits_notices_command()
 		return
@@ -1992,6 +1998,8 @@ func _refresh_help_browser() -> void:
 		_help_list.select(0)
 
 	var handoff := _help_handoff_surface()
+	_help_topic_title_label.text = String(handoff.get("topic_label", "Field Manual"))
+	_help_topic_title_label.tooltip_text = String(handoff.get("tooltip_text", ""))
 	_set_compact_label(
 		_help_details_label,
 		"%s\n%s" % [String(handoff.get("text", "")), SettingsService.describe_help_topic(_selected_help_topic_id)],
@@ -3171,6 +3179,8 @@ func _apply_stage_dock_layout() -> void:
 	var anchors := STANDARD_DOCK_ANCHORS
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
 		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
+	elif _menu_tabs.current_tab == TAB_GUIDE:
+		anchors = _guide_stage_dock_anchors()
 	_stage_dock_panel.anchor_left = anchors.position.x
 	_stage_dock_panel.anchor_top = anchors.position.y
 	_stage_dock_panel.anchor_right = anchors.end.x
@@ -3185,6 +3195,14 @@ func _campaign_stage_dock_anchors(expanded: bool) -> Rect2:
 	)
 	var height_ratio := maxf(base_anchors.size.y, first_view_height_ratio)
 	return Rect2(base_anchors.position, Vector2(base_anchors.size.x, height_ratio))
+
+func _guide_stage_dock_anchors() -> Rect2:
+	var viewport_size := get_viewport().get_visible_rect().size
+	if viewport_size.x <= GUIDE_DOCK_COMPACT_VIEWPORT.x or viewport_size.y <= GUIDE_DOCK_COMPACT_VIEWPORT.y:
+		return STANDARD_DOCK_ANCHORS
+	var width_ratio := minf(STANDARD_DOCK_ANCHORS.size.x, GUIDE_DOCK_MAX_SIZE.x / viewport_size.x)
+	var height_ratio := minf(STANDARD_DOCK_ANCHORS.size.y, GUIDE_DOCK_MAX_SIZE.y / viewport_size.y)
+	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(width_ratio, height_ratio))
 
 func _hide_stage_dock() -> void:
 	if SettingsService.display_change_pending() or _display_change_ui_active:
@@ -3537,8 +3555,13 @@ func validation_snapshot() -> Dictionary:
 		"help_handoff_tooltip": String(_help_handoff_surface().get("tooltip_text", "")),
 		"help_intro": _help_intro_label.text,
 		"help_intro_full": _help_intro_label.tooltip_text,
+		"help_topic_title": _help_topic_title_label.text,
+		"help_topic_title_tooltip": _help_topic_title_label.tooltip_text,
+		"help_topic_crest_visible": _help_topic_crest.is_visible_in_tree(),
+		"help_topic_crest_path": _help_topic_crest.texture.resource_path if _help_topic_crest.texture is Texture2D else "",
 		"help_details": _help_details_label.text,
 		"help_details_full": _help_details_label.tooltip_text,
+		"help_layout": _guide_layout_snapshot(),
 		"credits_notices_command_visible": _open_credits_notices_button.visible,
 		"credits_notices_command_disabled": _open_credits_notices_button.disabled,
 		"credits_notices_dialog_visible": _credits_notices_dialog.visible,
@@ -3851,6 +3874,24 @@ func _campaign_layout_snapshot() -> Dictionary:
 		"control_rects": control_rects,
 		"campaign_items": _campaign_item_rows(),
 		"chapter_items": _chapter_item_rows(),
+	}
+
+func _guide_layout_snapshot() -> Dictionary:
+	var viewport_size := get_viewport().get_visible_rect().size
+	var stage_rect := _stage_dock_panel.get_global_rect()
+	var guide_panel := find_child("GuidePanel", true, false) as Control
+	var guide_article := find_child("GuideArticle", true, false) as Control
+	return {
+		"viewport_size": {"x": viewport_size.x, "y": viewport_size.y},
+		"stage_rect": _rect_snapshot(stage_rect),
+		"panel_rect": _control_rect_snapshot(guide_panel) if guide_panel != null else {},
+		"topic_list_rect": _control_rect_snapshot(_help_list),
+		"article_rect": _control_rect_snapshot(guide_article) if guide_article != null else {},
+		"topic_title_rect": _control_rect_snapshot(_help_topic_title_label),
+		"topic_crest_rect": _control_rect_snapshot(_help_topic_crest),
+		"width_ratio": stage_rect.size.x / viewport_size.x if viewport_size.x > 0.0 else 0.0,
+		"height_ratio": stage_rect.size.y / viewport_size.y if viewport_size.y > 0.0 else 0.0,
+		"uncovered_right_ratio": 1.0 - (stage_rect.end.x / viewport_size.x) if viewport_size.x > 0.0 else 0.0,
 	}
 
 func _campaign_control_fully_visible_in_scroll(control: Control, scroll_rect: Rect2) -> bool:
@@ -4900,6 +4941,12 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
 		FrontierVisualKit.apply_item_list(list, "smoke")
+	_help_topic_eyebrow_label.add_theme_font_size_override("font_size", 11)
+	_help_topic_eyebrow_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("gold"))
+	_help_topic_title_label.add_theme_font_size_override("font_size", 22)
+	_help_topic_title_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("title"))
+	_help_details_label.add_theme_font_size_override("font_size", 15)
+	_help_details_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("body"))
 
 	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_open_credits_notices_button, "secondary", 220.0, 38.0, 13)

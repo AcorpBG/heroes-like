@@ -911,7 +911,44 @@ layout_mode = 2
 size_flags_vertical = 3
 allow_reselect = true
 
-[node name="HelpDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns"]
+[node name="GuideArticle" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="HelpTopicHeader" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/GuideArticle"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HelpTopicCrest" type="TextureRect" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/GuideArticle/HelpTopicHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("6_crest")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HelpTopicHeading" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/GuideArticle/HelpTopicHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="HelpTopicEyebrow" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/GuideArticle/HelpTopicHeader/HelpTopicHeading"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FIELD MANUAL / REFERENCE"
+
+[node name="HelpTopicTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/GuideArticle/HelpTopicHeader/HelpTopicHeading"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Campaign"
+
+[node name="HelpTopicRule" type="HSeparator" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/GuideArticle"]
+layout_mode = 2
+
+[node name="HelpDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/GuideArticle"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
