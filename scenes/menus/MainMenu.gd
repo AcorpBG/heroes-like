@@ -17,6 +17,8 @@ const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
 const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
+const SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0
+const SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
 const GUIDE_DOCK_COMPACT_VIEWPORT := Vector2(1280.0, 720.0)
@@ -100,6 +102,9 @@ const TAB_HELP_TOPIC := {
 @onready var _start_chapter_button: Button = %StartChapter
 @onready var _campaign_restart_dialog: ConfirmationDialog = $CampaignRestartDialog
 @onready var _skirmish_list: ItemList = %SkirmishList
+@onready var _skirmish_scroll: ScrollContainer = %SkirmishScroll
+@onready var _skirmish_mode_split: HBoxContainer = %ModeSplit
+@onready var _skirmish_intel_row: HBoxContainer = %SkirmishIntelRow
 @onready var _previous_skirmish_front_button: Button = %PreviousCampaignArc
 @onready var _next_skirmish_front_button: Button = %NextCampaignArc
 @onready var _skirmish_details_label: Label = %SkirmishDetails
@@ -113,9 +118,13 @@ const TAB_HELP_TOPIC := {
 @onready var _generated_player_count_picker: OptionButton = %GeneratedPlayerCountPicker
 @onready var _generated_water_picker: OptionButton = %GeneratedWaterPicker
 @onready var _generated_underground_toggle: OptionButton = %GeneratedUndergroundToggle
+@onready var _generated_map_panel: PanelContainer = %GeneratedMapPanel
+@onready var _generated_map_controls: GridContainer = %GeneratedMapControls
+@onready var _generated_map_eyebrow_label: Label = %GeneratedMapEyebrow
 @onready var _generated_status_label: Label = %GeneratedMapStatus
 @onready var _generated_progress_bar: ProgressBar = %GeneratedMapProgress
 @onready var _generated_provenance_label: Label = %GeneratedMapProvenance
+@onready var _generated_map_toggle_button: Button = %GeneratedMapToggle
 @onready var _start_generated_skirmish_button: Button = %StartGeneratedSkirmish
 @onready var _skirmish_commander_portrait: HeroPortraitView = %SkirmishCommanderPortrait
 @onready var _skirmish_commander_preview_label: Label = %SkirmishCommanderPreview
@@ -209,6 +218,7 @@ var _generated_player_count := 3
 var _generated_water_mode := "land"
 var _generated_underground := false
 var _generated_last_setup := {}
+var _generated_map_forge_expanded := false
 var _generated_generation_in_progress := false
 var _generated_generation_yield_count := 0
 var _generated_generation_stage := {}
@@ -949,6 +959,37 @@ func _on_generated_level_selected(index: int) -> void:
 		return
 	_generated_underground = int(_generated_underground_toggle.get_item_metadata(index)) > 1
 	_refresh_generated_random_map_setup()
+
+func _on_generated_map_toggle_pressed() -> void:
+	_set_generated_map_forge_expanded(not _generated_map_forge_expanded)
+
+func _set_generated_map_forge_expanded(expanded: bool) -> void:
+	_generated_map_forge_expanded = expanded or _generated_generation_in_progress
+	_refresh_generated_map_forge_disclosure()
+
+func _refresh_generated_map_forge_disclosure() -> void:
+	var expanded := _generated_map_forge_expanded or _generated_generation_in_progress
+	_generated_map_controls.visible = expanded
+	_generated_provenance_label.visible = expanded
+	if not expanded:
+		_generated_progress_bar.visible = false
+	_generated_map_toggle_button.text = "Close Forge" if expanded else "Open Forge"
+	_generated_map_toggle_button.disabled = _generated_generation_in_progress
+	_generated_map_toggle_button.tooltip_text = (
+		"Map generation is active; the forge stays open until this build finishes."
+		if _generated_generation_in_progress
+		else (
+			"Hide the generated-map controls and return visual priority to the selected Skirmish front."
+			if expanded
+			else "Open the Map Forge to choose a seed, map size, player count, water layout, and level count."
+		)
+	)
+	_generated_map_toggle_button.accessibility_name = "Close Map Forge" if expanded else "Open Map Forge"
+	_generated_map_toggle_button.accessibility_description = _generated_map_toggle_button.tooltip_text
+	if not expanded and is_inside_tree():
+		var focus_owner := get_viewport().gui_get_focus_owner()
+		if focus_owner != null and _generated_map_controls.is_ancestor_of(focus_owner):
+			_generated_map_toggle_button.grab_focus()
 
 func _on_generated_underground_toggled(enabled: bool) -> void:
 	if enabled and not _generated_underground_supported():
@@ -2580,6 +2621,7 @@ func _ensure_skirmish_browser_loaded() -> void:
 	_rebuild_skirmish_browser()
 	_refresh_skirmish_setup()
 	_refresh_generated_random_map_setup()
+	_refresh_generated_map_forge_disclosure()
 	_skirmish_browser_loaded = true
 
 func _refresh_skirmish_setup() -> void:
@@ -2712,7 +2754,9 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 			"snapshots": _duplicate_stage_snapshots(),
 		}
 
+	_generated_map_forge_expanded = true
 	_generated_generation_in_progress = true
+	_refresh_generated_map_forge_disclosure()
 	_generated_generation_yield_count = 0
 	_generated_generation_snapshots = []
 	_set_generated_random_map_inputs_disabled(true)
@@ -2752,6 +2796,7 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		_generated_generation_in_progress = false
 		_set_generated_random_map_inputs_disabled(false)
 		_apply_generated_random_map_setup_surface(setup)
+		_refresh_generated_map_forge_disclosure()
 		ProfileLogScript.emit_general("menu", "generated_setup", "generated_setup_blocked", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
 			"route_to_overworld": route_to_overworld,
 			"setup_ok": false,
@@ -2781,6 +2826,7 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		_generated_generation_in_progress = false
 		_set_generated_random_map_inputs_disabled(false)
 		_apply_generated_random_map_setup_surface(setup)
+		_refresh_generated_map_forge_disclosure()
 		ProfileLogScript.emit_general("menu", "generated_setup", "generated_session_failed", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
 			"route_to_overworld": route_to_overworld,
 			"setup_ok": true,
@@ -2845,6 +2891,7 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		_generated_generation_in_progress = false
 		_set_generated_random_map_inputs_disabled(false)
 		_apply_generated_random_map_setup_surface(setup)
+		_refresh_generated_map_forge_disclosure()
 		ProfileLogScript.emit_general("menu", "generated_setup", "generated_launch_staged", ProfileLogScript.elapsed_ms(profile_started), profile_buckets, {
 			"route_to_overworld": false,
 			"yield_count": _generated_generation_yield_count,
@@ -3206,6 +3253,8 @@ func _apply_stage_dock_layout() -> void:
 	var anchors := STANDARD_DOCK_ANCHORS
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
 		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
+	elif _menu_tabs.current_tab == TAB_SKIRMISH:
+		anchors = _skirmish_stage_dock_anchors()
 	elif _menu_tabs.current_tab == TAB_SAVES and _save_browser_is_empty():
 		anchors = _save_empty_stage_dock_anchors()
 	elif _menu_tabs.current_tab == TAB_GUIDE:
@@ -3224,6 +3273,15 @@ func _campaign_stage_dock_anchors(expanded: bool) -> Rect2:
 	)
 	var height_ratio := maxf(base_anchors.size.y, first_view_height_ratio)
 	return Rect2(base_anchors.position, Vector2(base_anchors.size.x, height_ratio))
+
+func _skirmish_stage_dock_anchors() -> Rect2:
+	var viewport_height := maxf(get_viewport().get_visible_rect().size.y, 1.0)
+	var first_view_height_ratio := minf(
+		SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height,
+		SKIRMISH_DOCK_MAX_HEIGHT_RATIO
+	)
+	var height_ratio := maxf(STANDARD_DOCK_ANCHORS.size.y, first_view_height_ratio)
+	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(STANDARD_DOCK_ANCHORS.size.x, height_ratio))
 
 func _guide_stage_dock_anchors() -> Rect2:
 	var viewport_size := get_viewport().get_visible_rect().size
@@ -3632,6 +3690,7 @@ func validation_snapshot() -> Dictionary:
 		"generated_random_map_status_full": _generated_status_label.tooltip_text,
 		"generated_random_map_provenance": _generated_provenance_label.text,
 		"generated_random_map_provenance_full": _generated_provenance_label.tooltip_text,
+		"generated_map_forge": _generated_map_forge_snapshot(),
 		"start_generated_skirmish_text": _start_generated_skirmish_button.text,
 		"start_generated_skirmish_tooltip": _start_generated_skirmish_button.tooltip_text,
 		"start_generated_skirmish_enabled": not _start_generated_skirmish_button.disabled,
@@ -4042,6 +4101,36 @@ func validation_generated_random_map_snapshot() -> Dictionary:
 		"generation_progress_visible": _generated_progress_bar.visible,
 		"generation_progress_value": _generated_progress_bar.value,
 		"generation_snapshots": _duplicate_stage_snapshots(),
+		"forge": _generated_map_forge_snapshot(),
+	}
+
+func validation_set_generated_map_forge_expanded(expanded: bool) -> Dictionary:
+	_set_generated_map_forge_expanded(expanded)
+	return _generated_map_forge_snapshot()
+
+func _generated_map_forge_snapshot() -> Dictionary:
+	return {
+		"expanded": _generated_map_forge_expanded,
+		"controls_visible": _generated_map_controls.is_visible_in_tree(),
+		"provenance_visible": _generated_provenance_label.is_visible_in_tree(),
+		"progress_visible": _generated_progress_bar.is_visible_in_tree(),
+		"toggle_text": _generated_map_toggle_button.text,
+		"toggle_tooltip": _generated_map_toggle_button.tooltip_text,
+		"toggle_accessibility_name": _generated_map_toggle_button.accessibility_name,
+		"toggle_accessibility_description": _generated_map_toggle_button.accessibility_description,
+		"toggle_disabled": _generated_map_toggle_button.disabled,
+		"toggle_focus_mode": _generated_map_toggle_button.focus_mode,
+		"panel_rect": _generated_map_panel.get_global_rect(),
+		"stage_dock_rect": _stage_dock_panel.get_global_rect(),
+		"scroll_rect": _skirmish_scroll.get_global_rect(),
+		"mode_split_rect": _skirmish_mode_split.get_global_rect(),
+		"intel_row_rect": _skirmish_intel_row.get_global_rect(),
+		"viewport_size": get_viewport().get_visible_rect().size,
+		"header_rect": (_generated_map_toggle_button.get_parent() as Control).get_global_rect(),
+		"controls_rect": _generated_map_controls.get_global_rect(),
+		"toggle_rect": _generated_map_toggle_button.get_global_rect(),
+		"status_rect": _generated_status_label.get_global_rect(),
+		"eyebrow_text": _generated_map_eyebrow_label.text,
 	}
 
 func _first_view_command_labels() -> Array:
@@ -5002,6 +5091,10 @@ func _apply_visual_theme() -> void:
 	_save_empty_body_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("body"))
 	_save_empty_cue_label.add_theme_font_size_override("font_size", 13)
 	_save_empty_cue_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("gold"))
+	_generated_map_eyebrow_label.add_theme_font_size_override("font_size", 10)
+	_generated_map_eyebrow_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("gold"))
+	_generated_status_label.add_theme_font_size_override("font_size", 12)
+	_generated_status_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("muted"))
 
 	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_open_credits_notices_button, "secondary", 220.0, 38.0, 13)
@@ -5019,6 +5112,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_generated_map_toggle_button, "secondary", 132.0, 38.0, 12)
 	FrontierVisualKit.apply_button(_delete_selected_save_button, "secondary", 132.0, 38.0, 13)
 	FrontierVisualKit.apply_button(_apply_save_name_button, "secondary", 112.0, 38.0, 13)
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
@@ -5090,6 +5184,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_stage_dock_title_label, "title", 18)
 	FrontierVisualKit.apply_label(_stage_dock_hint_label, "muted", 13)
 	FrontierVisualKit.apply_label(_active_expedition_label, "body", 13)
+	FrontierVisualKit.apply_label(_generated_map_eyebrow_label, "gold", 10)
+	FrontierVisualKit.apply_label(_generated_status_label, "muted", 12)
 	FrontierVisualKit.apply_label(_master_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_music_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_effects_volume_value, "gold", 13)

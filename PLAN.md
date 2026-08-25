@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner.
+- Selected implementation slice: none. The next graphical-polish slice will address the newly reported Overworld object-scale mismatch after a fresh current capture and bounded non-overlap audit.
+
+- Previous completed implementation slice: `ux-main-menu-skirmish-map-forge-disclosure-10184`. Skirmish now enters with a compact authored Map Forge header and an explicit Open Forge action instead of permanently expanding every generated-map control over the selected-front dossier. Opening the forge reveals the exact existing controls and a real Build & Play route still launches the generated Skirmish; generation keeps the forge open while active. Direct inspected collapsed/expanded 1280x720 captures, focused disclosure geometry/state/authority, real generated launch, broad Menu/Outcome, keyboard navigation, repository validation, and exact editor parsing pass. Generator configuration, retry/package/native-RMG behavior, authored front content/order, saves/session, packaged interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
+  id: `ux-main-menu-skirmish-map-forge-disclosure-10184`
 
 - Previous completed implementation slice: `ux-main-menu-empty-save-browser-scenic-card-10184`. When all four expedition slots are unavailable, Load now presents a compact 920x360 archival card with the reused frontier crest, clear empty-state hierarchy, and a Campaign/Skirmish handoff instead of stretching a mostly vacant two-column browser across the landscape. Any loadable autosave or manual slot restores the exact original populated browser and standard dock. Direct inspected 1280x720 and 1920x1080 captures preserve scenic dominance; focused empty geometry/content/focus/authority, populated save preview/delete/load, broad Menu/Outcome layout, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Save schema/paths/slot order/content/actions, packaged Load interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
   id: `ux-main-menu-empty-save-browser-scenic-card-10184`
@@ -10401,6 +10404,34 @@ Completion result:
 - the exact 3x2 selected-town footprint now derives an inset open cue with eight short corner strokes and four low-alpha edge-midpoint survey ticks, no continuous outline, and no interior fill;
 - direct inspected 1280x720 and 1920x1080 captures keep the selected town unmistakable without boxing over its painted art, terrain, route, or compact hero;
 - focused geometry, broad Overworld visual, six-faction town/hero art, real route movement, object-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green.
+
+## Main Menu Skirmish Map Forge Disclosure
+
+id: `ux-main-menu-skirmish-map-forge-disclosure-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace the permanently expanded generated-map form inside the Skirmish board with one compact authored Map Forge header and an explicit Open Forge / Close Forge disclosure;
+- keep the forge collapsed on first entry so authored fronts, the selected opening brief, and the existing commander/operational presentation regain visual priority;
+- expanding the forge reveals the exact existing seed, size, player-count, water, level, status, provenance, progress, and Build & Play controls without rebuilding or normalizing their state;
+- automatically keep the forge open while generation is active, and preserve the existing public generation result, retry, package, route, session, and save authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 captures show a materially quieter default Skirmish composition with a compact Map Forge invitation rather than a permanently open setup form;
+- focused runtime proves collapsed -> expanded -> collapsed disclosure, exact full generated-control items/metadata/selection/text/tooltips/setup state, generated-panel containment, focusability/accessibility, and no front/brief/commander/session/settings/save mutation;
+- the real Build & Play button remains visible and contained when expanded and the existing generated-map launch path still starts an exact generated Skirmish;
+- broad Main Menu visual/keyboard, authored and generated Skirmish, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no generated-map size, seed, template/profile, player count, water/level, retry, validation, package, Native RMG, launch, route, session, save, or content change;
+- no authored Skirmish entries/order/selection, difficulty, opening brief, commander/operational copy, command rail, first-view menu, shared cartography asset, input mapping, focus policy, or accessibility semantic change;
+- no new generated artwork, packaged Skirmish interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- Skirmish first entry now keeps the exact generated-map form collapsed behind a compact `MAP FORGE / Build a New Map / Open Forge` header, returning the authored front list and opening brief to the initial viewport;
+- Open Forge / Close Forge preserves every generated input and its exact setup/status/provenance authority, returns focus safely when collapsing, and forces the form open only while generation is active;
+- direct collapsed/expanded 1280x720 capture, focused disclosure geometry and state round trip, a real generated-map button launch, broad Menu/Outcome, physical keyboard navigation, repository validation, and exact editor parsing are green.
 
 ## Progress Reconciliation
 

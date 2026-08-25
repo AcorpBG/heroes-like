@@ -466,6 +466,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="SkirmishScroll" type="ScrollContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -515,6 +516,7 @@ autowrap_mode = 3
 text = "Difficulty summary"
 
 [node name="GeneratedMapPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="GeneratedMapPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel"]
@@ -526,13 +528,45 @@ theme_override_constants/margin_bottom = 10
 
 [node name="GeneratedMapBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
-[node name="GeneratedMapTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
+[node name="GeneratedMapHeader" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="GeneratedMapHeading" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapHeader"]
+layout_mode = 2
+custom_minimum_size = Vector2(150, 0)
+theme_override_constants/separation = 0
+
+[node name="GeneratedMapEyebrow" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapHeader/GeneratedMapHeading"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAP FORGE"
+
+[node name="GeneratedMapTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapHeader/GeneratedMapHeading"]
 layout_mode = 2
 text = "Build a New Map"
 
+[node name="GeneratedMapStatus" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+vertical_alignment = 1
+autowrap_mode = 3
+text = "Map setup status"
+
+[node name="GeneratedMapToggle" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(132, 38)
+layout_mode = 2
+text = "Open Forge"
+
 [node name="GeneratedMapControls" type="GridContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 columns = 4
 theme_override_constants/h_separation = 8
@@ -582,13 +616,6 @@ custom_minimum_size = Vector2(176, 34)
 layout_mode = 2
 text = "Build & Play"
 
-[node name="GeneratedMapStatus" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 34)
-layout_mode = 2
-autowrap_mode = 3
-text = "Map setup status"
-
 [node name="GeneratedMapProgress" type="ProgressBar" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
 unique_name_in_owner = true
 visible = false
@@ -598,11 +625,13 @@ show_percentage = false
 
 [node name="GeneratedMapProvenance" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 autowrap_mode = 3
 text = "Map plan"
 
 [node name="ModeSplit" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
@@ -671,6 +700,7 @@ autowrap_mode = 3
 text = "Setup summary"
 
 [node name="SkirmishIntelRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
@@ -1622,6 +1652,7 @@ size_flags_horizontal = 3
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedWaterPicker" to="." method="_on_generated_water_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedUndergroundToggle" to="." method="_on_generated_level_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/StartGeneratedSkirmish" to="." method="_on_start_generated_skirmish_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapHeader/GeneratedMapToggle" to="." method="_on_generated_map_toggle_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox/SaveList" to="." method="_on_save_selected"]
 [connection signal="text_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveNameRow/SaveNameEdit" to="." method="_on_save_name_text_changed"]
 [connection signal="text_submitted" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveNameRow/SaveNameEdit" to="." method="_on_save_name_submitted"]

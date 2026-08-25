@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
+    "Select and register the next graphical-polish slice from the reported Overworld object-scale mismatch after fresh current capture and non-overlap review."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Completed from direct 1280x720 and 1920x1080 inspection. The all-slots-unavailable Load board is now a compact authored archive card; any occupied slot retains the exact original populated browser and save authority.",
+  "currentNotes": "The Main Menu Map Forge disclosure is completed and validated. The next direct graphical-polish defect is the user-reported Overworld object-scale mismatch; no scale correction is registered until a fresh current capture and non-overlap audit identify the exact visual owner.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-empty-save-browser-scenic-card-10184",
-  "currentSliceId": "ux-main-menu-empty-save-browser-scenic-card-10184",
-  "currentSliceNotes": "Completed: the empty Load archive card passes focused two-resolution geometry/content/focus/authority, populated save workflow, broad menu, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates.",
+  "currentSlice": "ux-main-menu-skirmish-map-forge-disclosure-10184",
+  "currentSliceId": "ux-main-menu-skirmish-map-forge-disclosure-10184",
+  "currentSliceNotes": "Completed with inspected collapsed/expanded 1280x720 capture, focused disclosure state and geometry round trip, real generated-map launch, broad Menu/Outcome, keyboard navigation, repository validation, and exact editor parsing. Platform packaging was not rerun because this menu-only slice does not change export configuration, native libraries, assets, or package composition.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu empty-save scenic card",
-  "currentSliceUpdatedAt": "2026-08-25T14:18:48Z",
+  "currentSliceTitle": "Main Menu Skirmish Map Forge disclosure",
+  "currentSliceUpdatedAt": "2026-08-25T14:54:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101442,6 +101442,35 @@
       "notes": "Completed from direct inspected 1280x720 and 1920x1080 captures. With all four slots unavailable, Load now uses a compact 920x360 archival card with the reused frontier crest, an exact empty-state title/body/cue hierarchy, and Close as the safe entry focus; the underlying four ordered unavailable summaries remain exact. The existing broad populated-save owner explicitly proves that any loadable slot retains the standard dock, two-column browser, preview, naming/deletion/load actions, and authority. Focused keyboard/destructive-dialog, lean boot, save/load confidence, broad Menu/Outcome, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Save schema/paths/content/actions, packaged Load interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T14:18:48Z"
+    },
+    {
+      "id": "ux-main-menu-skirmish-map-forge-disclosure-10184",
+      "title": "Main Menu Skirmish Map Forge disclosure",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T14:54:05Z",
+      "startedAt": "2026-08-25T14:24:30Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/generated_map_setup_visual_smoke.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/random_map_skirmish_menu_button_2p_retry_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Restore visual hierarchy to the default Skirmish board by collapsing the persistent generated-map setup form behind one explicit authored Map Forge disclosure while preserving the complete generator and authored-front workflow.",
+      "completionCriteria": "Direct 1280x720 and 1920x1080 captures show a quieter default front-selection composition with a compact Map Forge invitation; focused collapsed-expanded-collapsed runtime proves exact generated-control state, geometry, focus/accessibility and whole front/session/settings/save authority; the real expanded Build & Play route still starts an exact generated Skirmish; broad Menu, authored/generated Skirmish, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No generated-map configuration, retry, validation, package, Native RMG, launch, route, session, save, or content changes.",
+        "No authored Skirmish entries/order/selection, difficulty, brief/intel copy, command rail, first-view menu, shared cartography asset, input mapping, focus policy, or accessibility semantics changes.",
+        "No new generated artwork, packaged Skirmish interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with a compact authored Map Forge header collapsed on first Skirmish entry. Open/Close disclosure preserves exact generated control/setup/status/provenance authority, focus returns safely when collapsing, and generation alone forces the forge open. Direct collapsed/expanded 1280x720 capture, focused disclosure geometry/state round trip, real generated Build & Play route, broad Menu/Outcome, keyboard navigation, repository validation, and exact editor parsing pass. Generator/native-RMG/content/save/session behavior and packaged interaction remain unchanged or unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T14:54:05Z"
     },
     {
       "id": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",
