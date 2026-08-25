@@ -253,6 +253,8 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	var receiver_tile := Vector2i(27, 23)
 	var source_tile := Vector2i(28, 23)
 	_reveal_validation_tiles(session, [receiver_tile, source_tile])
+	if not _assert_terrain_macro_lighting(shell, session, receiver_tile):
+		return false
 	shell.call("validation_select_tile", receiver_tile.x, receiver_tile.y)
 	var presentation: Dictionary = shell.call("validation_tile_presentation", receiver_tile.x, receiver_tile.y)
 	var terrain: Dictionary = presentation.get("terrain_presentation", {})
@@ -319,6 +321,85 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		return false
 	return true
 
+func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vector2i) -> bool:
+	var east_tile := north_west_tile + Vector2i.RIGHT
+	var south_tile := north_west_tile + Vector2i.DOWN
+	var south_east_tile := north_west_tile + Vector2i(1, 1)
+	_reveal_validation_tiles(session, [north_west_tile, east_tile, south_tile, south_east_tile])
+	var session_authority_before: Dictionary = session.to_dict()
+	var north_west_presentation: Dictionary = shell.call("validation_tile_presentation", north_west_tile.x, north_west_tile.y)
+	var repeated_presentation: Dictionary = shell.call("validation_tile_presentation", north_west_tile.x, north_west_tile.y)
+	var east_presentation: Dictionary = shell.call("validation_tile_presentation", east_tile.x, east_tile.y)
+	var south_presentation: Dictionary = shell.call("validation_tile_presentation", south_tile.x, south_tile.y)
+	var south_east_presentation: Dictionary = shell.call("validation_tile_presentation", south_east_tile.x, south_east_tile.y)
+	var presentations := [north_west_presentation, east_presentation, south_presentation, south_east_presentation]
+	var lighting_rows: Array = []
+	for presentation_value in presentations:
+		var presentation: Dictionary = presentation_value
+		var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
+		var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
+		var samples: Array = lighting.get("corner_samples", []) if lighting.get("corner_samples", []) is Array else []
+		if (
+			String(lighting.get("model", "")) != "continuous_shared_corner_bilinear_field"
+			or int(lighting.get("cell_tiles", 0)) != 12
+			or not is_equal_approx(float(lighting.get("shadow_max_alpha", 0.0)), 0.075)
+			or not is_equal_approx(float(lighting.get("highlight_max_alpha", 0.0)), 0.040)
+			or lighting.get("corner_order", []) != ["NW", "NE", "SE", "SW"]
+			or samples.size() != 4
+			or not bool(lighting.get("continuous_shared_corners", false))
+			or String(lighting.get("draw_order", "")) != "after_terrain_transitions_before_roads"
+			or not bool(lighting.get("hidden_by_unexplored_shroud", false))
+			or not bool(lighting.get("drawn", false))
+		):
+			_fail("Ninefold smoke: explored terrain macro-lighting contract is incomplete: %s." % JSON.stringify(lighting))
+			return false
+		for sample_value in samples:
+			if float(sample_value) < 0.0 or float(sample_value) > 1.0:
+				_fail("Ninefold smoke: terrain macro-lighting sample escaped its bounded field: %s." % JSON.stringify(lighting))
+				return false
+		lighting_rows.append(lighting)
+	var north_west_lighting: Dictionary = lighting_rows[0]
+	var repeated_terrain: Dictionary = repeated_presentation.get("terrain_presentation", {}) if repeated_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	var repeated_lighting: Dictionary = repeated_terrain.get("terrain_macro_lighting", {}) if repeated_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
+	if repeated_lighting != north_west_lighting:
+		_fail("Ninefold smoke: terrain macro-lighting changed across repeated observation.")
+		return false
+	var north_west_samples: Array = north_west_lighting.get("corner_samples", [])
+	var east_samples: Array = (lighting_rows[1] as Dictionary).get("corner_samples", [])
+	var south_samples: Array = (lighting_rows[2] as Dictionary).get("corner_samples", [])
+	var south_east_samples: Array = (lighting_rows[3] as Dictionary).get("corner_samples", [])
+	if (
+		north_west_samples[1] != east_samples[0]
+		or north_west_samples[2] != east_samples[3]
+		or north_west_samples[3] != south_samples[0]
+		or north_west_samples[2] != south_samples[1]
+		or north_west_samples[2] != south_east_samples[0]
+	):
+		_fail("Ninefold smoke: adjacent terrain tiles do not share exact macro-lighting corner samples: %s." % JSON.stringify(lighting_rows))
+		return false
+	var hidden_tile := Vector2i(-1, -1)
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(map_size.y - 1, -1, -1):
+		for x in range(map_size.x - 1, -1, -1):
+			if not OverworldRules.is_tile_explored(session, x, y):
+				hidden_tile = Vector2i(x, y)
+				break
+		if hidden_tile.x >= 0:
+			break
+	if hidden_tile.x < 0:
+		_fail("Ninefold smoke: terrain macro-lighting fixture could not find an unexplored tile.")
+		return false
+	var hidden_presentation: Dictionary = shell.call("validation_tile_presentation", hidden_tile.x, hidden_tile.y)
+	var hidden_terrain: Dictionary = hidden_presentation.get("terrain_presentation", {}) if hidden_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	var hidden_lighting: Dictionary = hidden_terrain.get("terrain_macro_lighting", {}) if hidden_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
+	if String(hidden_lighting.get("model", "")) != "continuous_shared_corner_bilinear_field" or bool(hidden_lighting.get("drawn", true)) or not bool(hidden_lighting.get("hidden_by_unexplored_shroud", false)):
+		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain macro-lighting: %s." % JSON.stringify(hidden_lighting))
+		return false
+	if session.to_dict() != session_authority_before:
+		_fail("Ninefold smoke: terrain macro-lighting observation changed session authority.")
+		return false
+	return true
+
 func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_tile: Vector2i) -> bool:
 	var map_view = shell.get_node_or_null("%Map")
 	if map_view == null:
@@ -343,6 +424,8 @@ func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_t
 		or String(terrain.get("generic_transition_surface_model", "leaked")) != ""
 		or int(terrain.get("generic_transition_feather_band_count", -1)) != 0
 		or bool(terrain.get("generic_transition_irregular_inner_edge", true))
+		or String((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("model", "")) != "continuous_shared_corner_bilinear_field"
+		or not bool((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("drawn", false))
 	):
 		_fail("Ninefold smoke: enabled and loaded HoMM3 receiver did not exclusively own its self-contained transition art: %s." % enabled_presentation)
 		return false

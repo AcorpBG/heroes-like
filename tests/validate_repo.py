@@ -32729,7 +32729,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "_canvas_draw_rect(viewport_rect, FRAME_FILL, true)",
         "_draw_small_map_cartographic_matte(viewport_rect, board_rect)",
         "var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)",
-        "_draw_tile_session_static_background(tile, rect)",
+        "_draw_tile_terrain_surface(tile, rect)",
     ))
     ensure(all(index >= 0 for index in static_matte_order) and list(static_matte_order) == sorted(static_matte_order), errors, "Small-map cartographic matte must draw below every authoritative terrain tile")
     for token in (
@@ -40120,9 +40120,158 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "Ninefold enabled HoMM3 transition fixture must restore the presentation prototype immediately after its single observation.",
     )
 
+    for token in (
+        'const TERRAIN_MACRO_LIGHTING_MODEL := "continuous_shared_corner_bilinear_field"',
+        "const TERRAIN_MACRO_LIGHTING_CELL_TILES := 12",
+        "const TERRAIN_MACRO_LIGHTING_CELL_SUBDIVISIONS := 1",
+        "const TERRAIN_MACRO_LIGHTING_SHADOW_MAX_ALPHA := 0.075",
+        "const TERRAIN_MACRO_LIGHTING_HIGHLIGHT_MAX_ALPHA := 0.040",
+        "const TERRAIN_MACRO_LIGHTING_SHADOW_COLOR := Color(0.025, 0.045, 0.060, 1.0)",
+        "const TERRAIN_MACRO_LIGHTING_HIGHLIGHT_COLOR := Color(0.96, 0.82, 0.56, 1.0)",
+    ):
+        ensure(map_view_text.count(token) == 1, errors, f"Terrain macro-lighting must own one exact bounded presentation constant: {token}")
+    static_draw_block = gd_function_block(map_view_text, "_draw_session_static_layer")
+    tile_static_block = gd_function_block(map_view_text, "_draw_tile_session_static_background")
+    ensure(
+        tile_static_block.find("_draw_terrain_transitions(tile, rect, terrain)")
+        < tile_static_block.find("_draw_terrain_macro_lighting(tile, rect)")
+        < tile_static_block.find("_draw_road_overlay(tile, rect)"),
+        errors,
+        "Terrain macro-lighting must draw after terrain transitions and before authoritative roads.",
+    )
+    ensure(
+        static_draw_block.find("_draw_tile_terrain_surface(tile, rect)")
+        < static_draw_block.find("_draw_terrain_macro_lighting_field(board_rect, visible_bounds)")
+        < static_draw_block.find("_draw_road_overlay(tile, rect)"),
+        errors,
+        "Live static rendering must batch the macro-light field between complete terrain and road passes.",
+    )
+    for token in (
+        'var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)',
+        '_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)',
+        '"terrain_macro_lighting_polygon_draws": macro_lighting_polygon_draws',
+    ):
+        ensure(token in static_draw_block, errors, f"Live static rendering must expose the bounded macro-light polygon count: {token}")
+    canvas_polygon_block = gd_function_block(map_view_text, "_canvas_draw_polygon")
+    ensure("_current_draw_canvas_item().draw_polygon(points, colors)" in canvas_polygon_block, errors, "Terrain macro-lighting must use the current static-layer canvas with per-corner colors.")
+    macro_draw_block = gd_function_block(map_view_text, "_draw_terrain_macro_lighting")
+    macro_field_block = gd_function_block(map_view_text, "_draw_terrain_macro_lighting_field")
+    macro_color_block = gd_function_block(map_view_text, "_terrain_macro_lighting_color")
+    macro_corner_block = gd_function_block(map_view_text, "_terrain_macro_lighting_corner_samples")
+    macro_sample_block = gd_function_block(map_view_text, "_terrain_macro_lighting_sample")
+    macro_sample_at_block = gd_function_block(map_view_text, "_terrain_macro_lighting_sample_at")
+    macro_anchor_block = gd_function_block(map_view_text, "_terrain_macro_lighting_anchor_value")
+    macro_payload_block = gd_function_block(map_view_text, "_terrain_macro_lighting_payload")
+    for token in (
+        "var samples := _terrain_macro_lighting_corner_samples(tile)",
+        "colors.append(_terrain_macro_lighting_color(float(sample_value)))",
+        "_canvas_draw_polygon(points, colors)",
+    ):
+        ensure(token in macro_draw_block, errors, f"Single-tile compatibility rendering must retain bounded per-corner macro-light composition: {token}")
+    for token in (
+        "var cell_size := float(TERRAIN_MACRO_LIGHTING_CELL_TILES)",
+        "for subdivision in range(1, TERRAIN_MACRO_LIGHTING_CELL_SUBDIVISIONS)",
+        "_terrain_macro_lighting_sample_at(map_north_west)",
+        "_terrain_macro_lighting_sample_at(map_north_east)",
+        "_terrain_macro_lighting_sample_at(map_south_east)",
+        "_terrain_macro_lighting_sample_at(map_south_west)",
+        "_canvas_draw_polygon(points, colors)",
+        "polygon_draws += 1",
+        "return polygon_draws",
+    ):
+        ensure(token in macro_field_block, errors, f"Live macro-lighting must batch clipped macro cells with shared field samples: {token}")
+    for token in (
+        "if sample < 0.50:",
+        "TERRAIN_MACRO_LIGHTING_SHADOW_MAX_ALPHA",
+        "TERRAIN_MACRO_LIGHTING_HIGHLIGHT_MAX_ALPHA",
+    ):
+        ensure(token in macro_color_block, errors, f"Macro-lighting must retain one bounded cool-or-warm color per vertex: {token}")
+    for token in (
+        "_terrain_macro_lighting_sample(tile)",
+        "_terrain_macro_lighting_sample(tile + Vector2i.RIGHT)",
+        "_terrain_macro_lighting_sample(tile + Vector2i(1, 1))",
+        "_terrain_macro_lighting_sample(tile + Vector2i.DOWN)",
+    ):
+        ensure(token in macro_corner_block, errors, f"Terrain macro-lighting must sample exact shared lattice corners: {token}")
+    for token in (
+        "return _terrain_macro_lighting_sample_at(Vector2(lattice_point))",
+    ):
+        ensure(token in macro_sample_block, errors, f"Integer lattice evidence must use the same continuous field as live rendering: {token}")
+    for token in (
+        "var cell_size := TERRAIN_MACRO_LIGHTING_CELL_TILES",
+        "floori(map_point.x / float(cell_size))",
+        "floori(map_point.y / float(cell_size))",
+        "var smooth_x := local_x * local_x * (3.0 - 2.0 * local_x)",
+        "var smooth_y := local_y * local_y * (3.0 - 2.0 * local_y)",
+        "return lerpf(lerpf(north_west, north_east, smooth_x), lerpf(south_west, south_east, smooth_x), smooth_y)",
+    ):
+        ensure(token in macro_sample_at_block, errors, f"Terrain macro-lighting must remain a low-frequency continuous smooth-bilinear field: {token}")
+    ensure("sin(float(anchor.x) * 12.9898 + float(anchor.y) * 78.233 + 31.416)" in macro_anchor_block, errors, "Terrain macro-lighting anchor values must depend only on stable lattice coordinates.")
+    for token in (
+        '"model": TERRAIN_MACRO_LIGHTING_MODEL',
+        '"cell_tiles": TERRAIN_MACRO_LIGHTING_CELL_TILES',
+        '"shadow_max_alpha": TERRAIN_MACRO_LIGHTING_SHADOW_MAX_ALPHA',
+        '"highlight_max_alpha": TERRAIN_MACRO_LIGHTING_HIGHLIGHT_MAX_ALPHA',
+        '"corner_order": ["NW", "NE", "SE", "SW"]',
+        '"continuous_shared_corners": true',
+        '"draw_order": "after_terrain_transitions_before_roads"',
+        '"hidden_by_unexplored_shroud": true',
+    ):
+        ensure(token in macro_payload_block, errors, f"Terrain macro-lighting payload must expose exact detached presentation evidence: {token}")
+    for block_name, block in (
+        ("macro-lighting draw", macro_draw_block),
+        ("macro-lighting field", macro_field_block),
+        ("macro-lighting color", macro_color_block),
+        ("macro-lighting corners", macro_corner_block),
+        ("macro-lighting sample", macro_sample_block),
+        ("macro-lighting continuous sample", macro_sample_at_block),
+        ("macro-lighting anchor", macro_anchor_block),
+        ("macro-lighting payload", macro_payload_block),
+    ):
+        for forbidden in ("rand", "Time.", "_session", "session.", "_map_data", "_terrain_at", "set_map_state", "queue_redraw", "await ", "create_timer"):
+            ensure(forbidden not in block, errors, f"{block_name} must remain deterministic, presentation-only, and independent of live authority: {forbidden}")
+    for token in (
+        '"terrain_macro_lighting": {',
+        '"drawn": false',
+        '"hidden_by_unexplored_shroud": true',
+        "var terrain_macro_lighting := _terrain_macro_lighting_payload(tile)",
+        'terrain_macro_lighting["drawn"] = true',
+        '"terrain_macro_lighting": terrain_macro_lighting',
+    ):
+        ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose explored and unexplored macro-lighting ownership: {token}")
+
+    ninefold_macro_block = gd_function_block(ninefold_transition_text, "_assert_terrain_macro_lighting")
+    for token in (
+        "var session_authority_before: Dictionary = session.to_dict()",
+        'String(lighting.get("model", "")) != "continuous_shared_corner_bilinear_field"',
+        'int(lighting.get("cell_tiles", 0)) != 12',
+        'float(lighting.get("shadow_max_alpha", 0.0)), 0.075',
+        'float(lighting.get("highlight_max_alpha", 0.0)), 0.040',
+        'lighting.get("corner_order", []) != ["NW", "NE", "SE", "SW"]',
+        "north_west_samples[1] != east_samples[0]",
+        "north_west_samples[2] != east_samples[3]",
+        "north_west_samples[3] != south_samples[0]",
+        "north_west_samples[2] != south_samples[1]",
+        "north_west_samples[2] != south_east_samples[0]",
+        "repeated_lighting != north_west_lighting",
+        "not OverworldRules.is_tile_explored(session, x, y)",
+        'bool(hidden_lighting.get("drawn", true))',
+        "session.to_dict() != session_authority_before",
+    ):
+        ensure(token in ninefold_macro_block, errors, f"Ninefold macro-lighting owner must prove determinism, shared edges, fog ownership, and authority: {token}")
+    for forbidden in ("map_node.set", "_draw_terrain_macro_lighting", "_terrain_macro_lighting_sample", "sort(", "erase(", "rand", "create_timer"):
+        ensure(forbidden not in ninefold_macro_block, errors, f"Ninefold macro-lighting owner must observe only the public live presentation: {forbidden}")
+    ensure('_assert_terrain_macro_lighting(shell, session, receiver_tile)' in gd_function_block(ninefold_transition_text, "_assert_neighbor_terrain_transitions"), errors, "Ninefold terrain boundary flow must run the focused macro-lighting owner before transition checks.")
+    for token in (
+        'String((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("model", "")) != "continuous_shared_corner_bilinear_field"',
+        'not bool((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("drawn", false))',
+    ):
+        ensure(token in enabled_homm3_owner_block, errors, f"Enabled exact source-frame control must retain presentation-only macro-lighting above the primary frame: {token}")
+
     generated_live_text = (ROOT / "tests" / "random_map_live_overworld_render_move_report.gd").read_text(encoding="utf-8")
     generated_transition_block = gd_function_block(generated_live_text, "_terrain_transition_summary")
     generated_transition_assert_block = gd_function_block(generated_live_text, "_assert_terrain_transition_summary")
+    generated_macro_profile_block = gd_function_block(generated_live_text, "_assert_macro_lighting_render_profile")
     for token in (
         'map_view.call("validation_tile_presentation", Vector2i(x, y))',
         'int(terrain.get("generic_transition_overlay_relationship_count", 0))',
@@ -40135,6 +40284,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(terrain.get("generic_transition_deterministic_seed_basis", "")) == "tile_and_direction_only"',
         '"surface_model_ids": surface_model_ids.keys()',
         '"feather_band_counts": feather_band_counts.keys()',
+        'var lighting: Dictionary = terrain.get("terrain_macro_lighting", {})',
+        'macro_lighting_model_ids[String(lighting.get("model", ""))] = true',
+        'macro_lighting_samples_by_key.has(corner_key)',
+        'macro_lighting_corner_mismatch_count += 1',
+        '"macro_lighting_shared_corner_observation_count"',
+        '"macro_lighting_unique_corner_count"',
+        '"macro_lighting_corner_mismatch_count"',
     ):
         ensure(token in generated_transition_block, errors, f"Generated live visual owner must inspect real terrain transition presentation: {token}")
     for token in (
@@ -40147,8 +40303,32 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'summary.get("feather_band_counts", []) != [2]',
         'int(summary.get("irregular_inner_edge_count", 0)) != relationship_count',
         'int(summary.get("deterministic_seed_count", 0)) != relationship_count',
+        'int(summary.get("macro_lighting_tile_count", 0)) != explored_tile_count',
+        'int(summary.get("macro_lighting_continuous_count", 0)) != explored_tile_count',
+        'int(summary.get("macro_lighting_bounded_count", 0)) != explored_tile_count',
+        'int(summary.get("macro_lighting_shared_corner_observation_count", 0)) <= 0',
+        'int(summary.get("macro_lighting_corner_mismatch_count", -1)) != 0',
+        '["continuous_shared_corner_bilinear_field"]',
+        'summary.get("macro_lighting_cell_sizes", []) != [12]',
+        'summary.get("macro_lighting_shadow_alphas", []) != [0.075]',
+        'summary.get("macro_lighting_highlight_alphas", []) != [0.04]',
     ):
         ensure(token in generated_transition_assert_block, errors, f"Generated live visual owner must fail closed on missing or mismatched generic transition overlays: {token}")
+    for token in (
+        'profile.get("last_draw_session_static", {})',
+        'int(last_static.get("terrain_tile_draws", 0))',
+        'int(last_static.get("terrain_macro_lighting_polygon_draws", 0))',
+        "macro_polygon_draws > 12",
+        "macro_polygon_draws * 8 >= terrain_draws",
+    ):
+        ensure(token in generated_macro_profile_block, errors, f"Generated macro-lighting must prove live polygon batching remains materially below tile count: {token}")
+    for token in (
+        'not _assert_macro_lighting_render_profile(before_snapshot, "before_move")',
+        'not _assert_macro_lighting_render_profile(after_snapshot, "after_move")',
+    ):
+        ensure(token in generated_live_text, errors, f"Generated movement flow must gate the macro-lighting render profile before and after redraw: {token}")
+    for forbidden in ("await ", "create_timer", "queue_redraw", "set_map_state", "draw_polygon"):
+        ensure(forbidden not in generated_macro_profile_block, errors, f"Generated macro-lighting render-profile assertion must remain observation-only: {forbidden}")
     ensure(
         'terrain_transition_after != terrain_transition_before' in generated_live_text,
         errors,

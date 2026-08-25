@@ -81,6 +81,8 @@ func _run() -> void:
 	var before_snapshot: Dictionary = overworld.validation_snapshot()
 	if not _assert_generated_small_snapshot(before_snapshot, "before_move"):
 		return
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_macro_lighting_render_profile(before_snapshot, "before_move"):
+		return
 	var map_visual_before := _map_visual_summary(overworld)
 	if not _assert_generated_visual_summary(map_visual_before, "before_move"):
 		return
@@ -100,6 +102,8 @@ func _run() -> void:
 	await get_tree().process_frame
 	var post_move_frame_ms := await _single_frame_ms()
 	var after_snapshot: Dictionary = overworld.validation_snapshot()
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_macro_lighting_render_profile(after_snapshot, "after_move"):
+		return
 	var map_visual_after := _map_visual_summary(overworld)
 	if not _assert_generated_visual_summary(map_visual_after, "after_move"):
 		return
@@ -224,17 +228,52 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var inactive_homm3_overlay_tile_count := 0
 	var irregular_inner_edge_count := 0
 	var deterministic_seed_count := 0
+	var explored_tile_count := 0
+	var macro_lighting_tile_count := 0
+	var macro_lighting_continuous_count := 0
+	var macro_lighting_bounded_count := 0
+	var macro_lighting_shared_corner_observation_count := 0
+	var macro_lighting_corner_mismatch_count := 0
 	var policy_ids: Dictionary = {}
 	var surface_model_ids: Dictionary = {}
 	var feather_band_counts: Dictionary = {}
+	var macro_lighting_model_ids: Dictionary = {}
+	var macro_lighting_cell_sizes: Dictionary = {}
+	var macro_lighting_shadow_alphas: Dictionary = {}
+	var macro_lighting_highlight_alphas: Dictionary = {}
+	var macro_lighting_samples_by_key: Dictionary = {}
 	var session = SessionState.active_session
 	var map_size := OverworldRules.derive_map_size(session)
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			if not OverworldRules.is_tile_explored(session, x, y):
 				continue
+			explored_tile_count += 1
 			var presentation: Dictionary = map_view.call("validation_tile_presentation", Vector2i(x, y))
 			var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
+			var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
+			var lighting_keys: Array = lighting.get("corner_keys", []) if lighting.get("corner_keys", []) is Array else []
+			var lighting_samples: Array = lighting.get("corner_samples", []) if lighting.get("corner_samples", []) is Array else []
+			if bool(lighting.get("drawn", false)):
+				macro_lighting_tile_count += 1
+				macro_lighting_model_ids[String(lighting.get("model", ""))] = true
+				macro_lighting_cell_sizes[int(lighting.get("cell_tiles", 0))] = true
+				macro_lighting_shadow_alphas[float(lighting.get("shadow_max_alpha", -1.0))] = true
+				macro_lighting_highlight_alphas[float(lighting.get("highlight_max_alpha", -1.0))] = true
+				if bool(lighting.get("continuous_shared_corners", false)) and String(lighting.get("draw_order", "")) == "after_terrain_transitions_before_roads" and bool(lighting.get("hidden_by_unexplored_shroud", false)):
+					macro_lighting_continuous_count += 1
+				if float(lighting.get("shadow_max_alpha", 1.0)) <= 0.075 and float(lighting.get("highlight_max_alpha", 1.0)) <= 0.040:
+					macro_lighting_bounded_count += 1
+				if lighting_keys.size() == 4 and lighting_samples.size() == 4:
+					for index in range(4):
+						var corner_key := String(lighting_keys[index])
+						var sample := float(lighting_samples[index])
+						if macro_lighting_samples_by_key.has(corner_key):
+							macro_lighting_shared_corner_observation_count += 1
+							if not is_equal_approx(float(macro_lighting_samples_by_key.get(corner_key, -1.0)), sample):
+								macro_lighting_corner_mismatch_count += 1
+						else:
+							macro_lighting_samples_by_key[corner_key] = sample
 			if int(terrain.get("generic_transition_overlay_relationship_count", 0)) <= 0:
 				continue
 			relationship_tile_count += 1
@@ -262,9 +301,20 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"inactive_homm3_overlay_tile_count": inactive_homm3_overlay_tile_count,
 		"irregular_inner_edge_count": irregular_inner_edge_count,
 		"deterministic_seed_count": deterministic_seed_count,
+		"explored_tile_count": explored_tile_count,
+		"macro_lighting_tile_count": macro_lighting_tile_count,
+		"macro_lighting_continuous_count": macro_lighting_continuous_count,
+		"macro_lighting_bounded_count": macro_lighting_bounded_count,
+		"macro_lighting_shared_corner_observation_count": macro_lighting_shared_corner_observation_count,
+		"macro_lighting_unique_corner_count": macro_lighting_samples_by_key.size(),
+		"macro_lighting_corner_mismatch_count": macro_lighting_corner_mismatch_count,
 		"draw_policy_ids": policy_ids.keys(),
 		"surface_model_ids": surface_model_ids.keys(),
 		"feather_band_counts": feather_band_counts.keys(),
+		"macro_lighting_model_ids": macro_lighting_model_ids.keys(),
+		"macro_lighting_cell_sizes": macro_lighting_cell_sizes.keys(),
+		"macro_lighting_shadow_alphas": macro_lighting_shadow_alphas.keys(),
+		"macro_lighting_highlight_alphas": macro_lighting_highlight_alphas.keys(),
 	}
 
 func _road_surface_summary(overworld: Node) -> Dictionary:
@@ -331,6 +381,7 @@ func _assert_generated_road_surface(summary: Dictionary, label: String) -> bool:
 
 func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> bool:
 	var relationship_count := int(summary.get("relationship_tile_count", 0))
+	var explored_tile_count := int(summary.get("explored_tile_count", 0))
 	if (
 		relationship_count <= 0
 		or int(summary.get("generic_overlay_tile_count", 0)) != relationship_count
@@ -341,8 +392,31 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or summary.get("feather_band_counts", []) != [2]
 		or int(summary.get("irregular_inner_edge_count", 0)) != relationship_count
 		or int(summary.get("deterministic_seed_count", 0)) != relationship_count
+		or explored_tile_count <= 0
+		or int(summary.get("macro_lighting_tile_count", 0)) != explored_tile_count
+		or int(summary.get("macro_lighting_continuous_count", 0)) != explored_tile_count
+		or int(summary.get("macro_lighting_bounded_count", 0)) != explored_tile_count
+		or int(summary.get("macro_lighting_shared_corner_observation_count", 0)) <= 0
+		or int(summary.get("macro_lighting_unique_corner_count", 0)) <= explored_tile_count
+		or int(summary.get("macro_lighting_corner_mismatch_count", -1)) != 0
+		or summary.get("macro_lighting_model_ids", []) != ["continuous_shared_corner_bilinear_field"]
+		or summary.get("macro_lighting_cell_sizes", []) != [12]
+		or summary.get("macro_lighting_shadow_alphas", []) != [0.075]
+		or summary.get("macro_lighting_highlight_alphas", []) != [0.04]
 	):
-		_fail("%s generated terrain transitions did not use the disabled-HoMM3 generic overlay path: %s" % [label, JSON.stringify(summary)])
+		_fail("%s generated terrain transitions or continuous macro-lighting contract did not remain exact: %s" % [label, JSON.stringify(summary)])
+		return false
+	return true
+
+func _assert_macro_lighting_render_profile(snapshot: Dictionary, label: String) -> bool:
+	var map_viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
+	var render_cache: Dictionary = map_viewport.get("render_cache", {}) if map_viewport.get("render_cache", {}) is Dictionary else {}
+	var profile: Dictionary = render_cache.get("profile", {}) if render_cache.get("profile", {}) is Dictionary else {}
+	var last_static: Dictionary = profile.get("last_draw_session_static", {}) if profile.get("last_draw_session_static", {}) is Dictionary else {}
+	var terrain_draws := int(last_static.get("terrain_tile_draws", 0))
+	var macro_polygon_draws := int(last_static.get("terrain_macro_lighting_polygon_draws", 0))
+	if terrain_draws <= 0 or macro_polygon_draws <= 0 or macro_polygon_draws > 12 or macro_polygon_draws * 8 >= terrain_draws:
+		_fail("%s macro-lighting render pass was not materially batched below tile count: %s" % [label, JSON.stringify(last_static)])
 		return false
 	return true
 
