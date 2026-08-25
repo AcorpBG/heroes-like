@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: **none**. Select the next tracker-approved graphical-polish or release-readiness slice from current direct evidence.
 
+- Previous completed implementation slice: `ux-overworld-map-object-tile-scale-convergence-10184`. Direct user playtest feedback and inspected River Pass captures identified the tiny end of the existing semantic object ladder as disconnected from the live tile/road scale. Artifacts, pickups, encounters, decorations, ordinary objects, waypoints, structures, blockers, and landmarks now occupy a restrained 0.38 through 0.60 tile ladder, while the hero remains 0.62 and the town remains 1.12 tiles. Fresh 1280x720 and 1920x1080 captures show readable props and sites without detached oversized tokens. Authored/generated scale, six-faction commander, artifact, broad Overworld, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Object identity/assets/classification, cached alpha crop/aspect/grounding, logical footprints, passability, movement, interaction, camera, content, session/save authority, generated placement, and Native RMG behavior remain unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-overworld-map-object-tile-scale-convergence-10184`
+
 - Previous completed implementation slice: `ux-overworld-continuous-terrain-grain-overlay-10184`. Authored and generated Overworld terrain now receives one original seamless low-contrast painterly microtexture as a single normalized map-space layer after base terrain/transitions and below macro lighting, roads, objects, selection, and fog. Inspected River Pass 1280x720 and 1920x1080 plus generated natural-fog and reveal-all captures show subtle organic surface richness without visible seams, per-tile repetition, muddied terrain identity, or lost road/object/selection readability. Focused Ninefold and generated movement/save proof, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Terrain identity/order/source frames/transitions, topology, passability, movement, roads, objects, selection, fog authority, session/save, generated placement, and Native RMG data/behavior remain unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-overworld-continuous-terrain-grain-overlay-10184`
 
@@ -10164,6 +10167,34 @@ Completion evidence:
 Non-goals:
 - no terrain id/order, base/source frame or transition selection, map topology, passability, movement cost, road, object, selection, fog/reveal rule, route, camera/map-fit, content, save/session, generated placement, density, or Native RMG data/behavior change;
 - no terrain tile replacement, object/hero/town asset or scale, UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+## Overworld Map-Object Tile-Scale Convergence
+
+id: `ux-overworld-map-object-tile-scale-convergence-10184`
+
+Status: completed.
+
+Implementation boundary:
+- adjust only the existing semantic visible-extent constants for one-tile and capped multi-tile map objects, retaining the exact semantic classifier, cached alpha-bound crop, aspect, grounding, and draw path;
+- converge the tiny end of the ladder toward the live tile and road scale while keeping strict artifact < pickup < structure/landmark < capped multi-tile < hero < town ordering;
+- leave the existing hero and town scale ranks unchanged so this correction addresses map objects rather than actor or settlement identity;
+- preserve exact logical footprints, town body/entry masks, hit areas, passability, routes, movement, interaction, content, generated placement, and session/save authority.
+
+Completion criteria:
+- fresh inspected authored 1280x720 and 1920x1080 captures show loose props and ordinary sites reading at a coherent world scale beside roads, the hero, and the town, without detached oversized tokens or unreadably tiny pickups;
+- focused runtime proves the exact semantic ladder, alpha-cropped aspect/containment, unchanged hero/town ranks, unchanged one-tile and multi-tile logical footprints, and exact session/save authority;
+- authored and generated Overworld visual, movement/save, route/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion evidence:
+- fresh native River Pass 1280x720 and 1920x1080 captures were inspected and show the converged object ladder beside the unchanged hero, town, roads, terrain, selection, and fog;
+- focused small-map, six-faction commander, and artifact reports pass at both supported widths, and the broad Overworld visual smoke passes;
+- the generated 36x36 movement/save report keeps all 464 decorative body tiles loaded, terrain-matched, contained, byte-stable across movement and save/reload, and exact at the new 0.56 blocker rank;
+- full-route movement, active-play keyboard focus, accessibility semantics, core systems, repository validation, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no object id/family/profile, asset replacement, alpha crop, grounding, marker/focus cue, hero/town scale, map zoom, camera, terrain, road, fog, selection, UI, animation/audio/VFX, or gameplay rule change;
+- no logical footprint, body/visit mask, collision, passability, pathing, interaction, route, content, generated placement, save/schema, AI, economy, battle, or Native RMG change;
 - no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Terrain Transition Overlay Restoration

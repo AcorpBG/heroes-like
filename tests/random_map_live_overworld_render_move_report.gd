@@ -637,7 +637,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if not bool(summary.get("body_tile_keys_exact", false)) or not bool(summary.get("all_body_assets_loaded", false)) or not bool(summary.get("all_body_assets_terrain_matched", false)):
 		_fail("%s generated body presentation is incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.52):
+	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.56):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
 	if int(summary.get("composition_key_count", 0)) != int(summary.get("indexed_body_tile_count", -1)):

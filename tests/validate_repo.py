@@ -33243,6 +33243,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'int(summary.get("distinct_body_asset_count", 0)) < 8',
         'int(summary.get("repeated_def_multi_asset_count", 0)) <= 0',
         'String(summary.get("composition_signature", "")).length() != 64',
+        'float(summary.get("body_sprite_extent_tiles", 0.0)), 0.56',
         'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.60',
         'float(metrics.get("sprite_extent_tiles", 99.0)) > 1.0001',
         'not is_equal_approx(float(metrics.get("uncapped_sprite_extent_px", 0.0)), float(metrics.get("sprite_extent_px", -1.0)))',
@@ -33259,6 +33260,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     ):
         ensure(token in report_text, errors, f"Generated live render/move report is missing exact body/scale/authority proof: {token}")
     ensure('float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.76' not in report_text, errors, "Generated live render/move report must not retain the rejected oversized multi-tile visual cap")
+    ensure('float(summary.get("body_sprite_extent_tiles", 0.0)), 0.52' not in report_text, errors, "Generated live render/move report must not retain the rejected undersized blocker rank")
     save_reload_order = tuple(report_text.find(token) for token in (
         'var save_reload_source_authority := _generated_save_reload_authority(SessionState.active_session)',
         'var save_result: Dictionary = SaveService.save_runtime_manual_session(SessionState.active_session, 3)',
@@ -33295,6 +33297,21 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     extent_block = gd_function_block(map_text, "_sprite_extent_fraction")
     semantic_class_block = gd_function_block(map_text, "_semantic_visual_scale_class")
     for token in (
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.38",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.44",
+        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.50",
+        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.56",
+        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.54",
+        "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.58",
+        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.56",
+        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.46",
+        "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.48",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.60",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.62",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.56",
+    ):
+        ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
+    for rejected_token in (
         "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30",
         "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36",
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46",
@@ -33304,21 +33321,6 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.52",
         "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.40",
         "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.44",
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.60",
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.62",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.56",
-    ):
-        ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
-    for rejected_token in (
-        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.32",
-        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.40",
-        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.48",
-        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.56",
-        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.52",
-        "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.60",
-        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.56",
-        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.42",
-        "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.48",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.66",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.68",
         "const TOWN_SPRITE_EXTENT_FACTOR := 0.64",
@@ -33441,11 +33443,11 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(payload.get("cache_repeat_exact", false))',
         'not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
         'String(artifact.get("semantic_scale_class", "")) != "handheld_artifact"',
-        'float(artifact.get("visible_extent_tiles", 0.0)), 0.30',
+        'float(artifact.get("visible_extent_tiles", 0.0)), 0.38',
         'String(pickup.get("semantic_scale_class", "")) != "loose_pickup"',
-        'float(pickup.get("visible_extent_tiles", 0.0)), 0.36',
-        'float(service.get("visible_extent_tiles", 0.0)), 0.52',
-        'float(objective.get("visible_extent_tiles", 0.0)), 0.56',
+        'float(pickup.get("visible_extent_tiles", 0.0)), 0.44',
+        'float(service.get("visible_extent_tiles", 0.0)), 0.56',
+        'float(objective.get("visible_extent_tiles", 0.0)), 0.58',
         'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.60',
         'float(hero.get("sprite_extent_fraction", 0.0)), 0.62',
         'float(town.get("visible_extent_tiles", 0.0)), 1.12',
@@ -33453,7 +33455,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
         '"id": "object_contract_scribe_booth"',
         '"map_roles": ["route_pacing", "world_lore", "repeatable_service"]',
-        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.58',
+        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.60',
         'float(service.get("visible_extent_tiles", 0.0))',
         '< float(town.get("visible_extent_tiles", 0.0))',
         "SessionState.ensure_active_session().to_dict() != authority_before",
@@ -43256,6 +43258,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(profile.get("authored_faction_id", "")) != faction_id',
         'String(profile.get("sprite_asset_id", "")) != expected_asset_id',
         'String(profile.get("hostile_treatment", "")) == "encounter_ring"',
+        'float(profile.get("visible_extent_tiles", 0.0)), 0.50',
         'session.from_dict(authority_before)',
         'if not _apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id):',
         'session.overworld["encounters"] = encounters',
@@ -43318,6 +43321,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(interceptor_profile.get("hero_id", "")) != "hero_vaska"',
         'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw"',
         'not bool(interceptor_profile.get("uses_commander_sprite", false))',
+        'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.50',
     ):
         ensure(token in visual_text, errors, f"Broad Overworld visual gate must require the exact live Mireclaw raid commander sprite: {token}")
 
