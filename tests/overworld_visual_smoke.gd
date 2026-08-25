@@ -3302,6 +3302,8 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 
 	var session = SessionState.ensure_active_session()
+	if not _assert_water_tile_bank(shell, session):
+		return false
 	if not _assert_water_causeway_render_model(shell, session):
 		return false
 	if not _assert_legacy_forest_degradation(shell, session):
@@ -3357,6 +3359,47 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	if String(fallback_art.get("fallback_contact_shadow_model", "")) != "localized_object_contact_shadow":
 		push_error("Overworld smoke: procedural fallback object did not report localized contact shadow grounding. presentation=%s" % fallback_presentation)
+		get_tree().quit(1)
+		return false
+	return true
+
+func _assert_water_tile_bank(shell: Node, session) -> bool:
+	var authority_before: Dictionary = session.to_dict()
+	var base_paths := [
+		"res://art/overworld/runtime/terrain_tiles/base/water_deep.png",
+		"res://art/overworld/runtime/terrain_tiles/base/water_current.png",
+		"res://art/overworld/runtime/terrain_tiles/base/water_blocked.png",
+	]
+	var edge_paths := [
+		"res://art/overworld/runtime/terrain_tiles/edges/water_edge_n.png",
+		"res://art/overworld/runtime/terrain_tiles/edges/water_edge_e.png",
+		"res://art/overworld/runtime/terrain_tiles/edges/water_edge_s.png",
+		"res://art/overworld/runtime/terrain_tiles/edges/water_edge_w.png",
+	]
+	for path_value in base_paths + edge_paths:
+		var path := String(path_value)
+		var texture := load(path) as Texture2D
+		if not ResourceLoader.exists(path, "Texture2D") or texture == null or texture.get_size() != Vector2(64.0, 64.0):
+			push_error("Overworld smoke: painterly water tile-bank texture is missing or malformed: %s." % path)
+			get_tree().quit(1)
+			return false
+	var water_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 3)
+	var water_terrain: Dictionary = water_presentation.get("terrain_presentation", {})
+	var repeated_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 3)
+	var repeated_terrain: Dictionary = repeated_presentation.get("terrain_presentation", {})
+	if String(water_terrain.get("terrain", "")) != "water" \
+			or not bool(water_terrain.get("texture_loaded", false)) \
+			or not bool(water_terrain.get("uses_authored_tile_art", false)) \
+			or not bool(water_terrain.get("uses_original_tile_bank", false)) \
+			or bool(water_terrain.get("fallback_pattern_rendering", true)) \
+			or String(water_terrain.get("rendering_mode", "")) != "original_quiet_tile_bank" \
+			or String(water_terrain.get("tile_art_source_basis", "")) != "original_procedural_reference_informed" \
+			or not (String(water_terrain.get("texture_path", "")) in base_paths) \
+			or String(water_terrain.get("texture_path", "")) != String(repeated_terrain.get("texture_path", "")) \
+			or bool(water_terrain.get("explored_intertile_seams", true)) \
+			or OverworldRules.terrain_id_is_passable("water") \
+			or session.to_dict() != authority_before:
+		push_error("Overworld smoke: River Pass water did not use the stable original painterly bank while preserving impassability and session authority. presentation=%s repeated=%s" % [water_presentation, repeated_presentation])
 		get_tree().quit(1)
 		return false
 	return true

@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: **None**. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+- Selected implementation slice: **none**. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+
+- Previous completed implementation slice: `presentation-overworld-painterly-water-tile-bank-10184`. River Pass and generated Overworld water now use an original quiet painterly three-tile bank with four directional transition overlays through the existing deterministic terrain renderer. Inspected 1280x720 and 1920x1080 captures show a cohesive blue-green river without the former flat blocks or distracting patch-to-patch value jumps. Exact texture loading and dimensions, deterministic selection, water impassability, session authority, broad Overworld visual behavior, generated-map movement, full-route movement, Ninefold terrain breadth, core systems, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Water identity, topology, pathfinding, transitions, causeways, objects, fog, gameplay, content, save/session authority, generated placement, and Native RMG behavior remain unchanged. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `presentation-overworld-painterly-water-tile-bank-10184`
 
 - Previous completed implementation slice: `presentation-battle-initiative-portrait-ribbon-10184`. The BattleBoard's five flat initiative rectangles are now one compact art-backed ribbon that reuses each live stack's exact shipped battle icon, a dark scenic chip body, retained side accent, and distinct current-stack frame. Inspected 1280x720 and 1920x1080 captures show a cohesive capped ribbon without board or chip overlap. Exact five-entry turn order, portrait paths/textures, iconless fallback, complete-word fitted labels, full tooltips, Board navigation, Town/Battle visuals, animation, accessibility, keyboard focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Initiative rules, stack identity/state, combat, AI, content, balance, save/session authority, and Native RMG remain unchanged. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `presentation-battle-initiative-portrait-ribbon-10184`
@@ -10170,6 +10173,33 @@ Completion evidence:
 Non-goals:
 - no terrain id/order, base/source frame or transition selection, map topology, passability, movement cost, road, object, selection, fog/reveal rule, route, camera/map-fit, content, save/session, generated placement, density, or Native RMG data/behavior change;
 - no terrain tile replacement, object/hero/town asset or scale, UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+## Overworld Painterly Water Tile Bank
+
+id: `presentation-overworld-painterly-water-tile-bank-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add three original 64x64 painterly deep-water/current/blocked base tiles and four restrained directional water-edge overlays under the existing shippable Overworld terrain-art root, and register them only on the existing `water` terrain class;
+- use the established deterministic three-tile terrain-bank selection, full-tile renderer, directional transition-overlay ownership, continuous grain/macro-lighting overlays, road/causeway draw order, and procedural fallback when art is unavailable;
+- keep exact water ids/order, map cells, topology, impassability, routes, road/causeway connectivity, fog/reveal state, objects, interaction, content, session/save authority, generated placement, and Native RMG behavior unchanged.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures replace flat blue water blocks with quiet painted water that remains visually subordinate to towns, heroes, roads, and interactives and does not show distracting hard seams;
+- focused runtime proves the exact three original water base paths and four directional overlays load as textures, deterministic base selection remains stable across refresh/movement/save, transition directions and causeway ownership remain exact, water stays impassable, and whole session/save authority is unchanged;
+- authored/generated Overworld visual, movement/route/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion evidence:
+- fresh Xvfb-backed 1280x720 and 1920x1080 River Pass captures were inspected after Godot reimport and show one cohesive painterly river surface with restrained directional current, no distracting three-bank value blocks, and unchanged town/hero/road/object hierarchy;
+- the full Overworld visual smoke passes, including exact three base textures, four directional overlays, 64x64 resource dimensions, stable deterministic tile selection, original-bank rendering, water impassability, and unchanged whole-session authority;
+- generated-map live render/movement, full-route movement, Ninefold scenario breadth, and core systems all exit naturally without selected diagnostics;
+- repository validation, Python compilation, scoped/global diff checks, JSON validation, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, with the terrain texture payload present in both release PCKs.
+
+Non-goals:
+- no water id/style/color/schema, topology, passability, pathfinding, shoreline/transition rule, road/causeway connectivity, map cell, object, selection, fog/reveal, camera, UI, gameplay, content, save, generated placement, density, or Native RMG change;
+- no land-terrain replacement, animation/audio/VFX, shader, particle, weather system, broad terrain rewrite, or new gameplay surface;
 - no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Battle Initiative Portrait Ribbon
