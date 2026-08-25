@@ -17,6 +17,20 @@ func _run() -> void:
 	if shell.has_method("validation_open_skirmish_stage"):
 		shell.call("validation_open_skirmish_stage")
 	await get_tree().process_frame
+	var forge_toggle: Button = shell.get_node("%GeneratedMapToggle")
+	var forge_before: Dictionary = shell.call("validation_generated_random_map_snapshot").get("forge", {})
+	if bool(forge_before.get("expanded", true)) or bool(forge_before.get("controls_visible", true)):
+		_fail("Map Forge was not collapsed on first Skirmish entry.", {"forge": forge_before})
+		return
+	forge_toggle.pressed.emit()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var forge_after: Dictionary = shell.call("validation_generated_random_map_snapshot").get("forge", {})
+	if not bool(forge_after.get("expanded", false)) \
+			or not bool(forge_after.get("controls_visible", false)) \
+			or String(forge_after.get("toggle_text", "")) != "Close Forge":
+		_fail("The real Map Forge disclosure did not reveal generated controls.", {"before": forge_before, "after": forge_after})
+		return
 
 	_set_line_edit(shell, "%GeneratedSeed", SEED)
 	_select_option_metadata(shell, "%GeneratedSizePicker", "homm3_small")
@@ -58,6 +72,7 @@ func _run() -> void:
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"pressed_real_button_signal": true,
+		"pressed_real_forge_toggle_signal": true,
 		"seed": SEED,
 		"before": before,
 		"after": after,

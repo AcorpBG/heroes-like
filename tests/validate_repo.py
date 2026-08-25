@@ -19149,12 +19149,15 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         "const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
         "const MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0",
         "const MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640",
+        "const MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0",
+        "const MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720",
         "if not await _assert_main_menu_stage_dock_surface(shell, session):",
         "func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:",
         'for board in [',
         "var campaign_anchors := _main_menu_campaign_dock_anchors(requested_size)",
+        "var skirmish_anchors := _main_menu_skirmish_dock_anchors(requested_size)",
         '{"label": "Campaign", "tab": 0, "anchors": campaign_anchors}',
-        '{"label": "Skirmish", "tab": 1, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
+        '{"label": "Skirmish", "tab": 1, "anchors": skirmish_anchors}',
         '{"label": "Saves", "tab": 2, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
         '{"label": "Settings", "tab": 4, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}',
         "var guide_anchors := _main_menu_guide_dock_anchors(requested_size)",
@@ -19183,6 +19186,10 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         "MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y)",
         "MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO",
         "maxf(MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS.size.y, first_view_height_ratio)",
+        "func _main_menu_skirmish_dock_anchors(viewport_size: Vector2i) -> Rect2:",
+        "MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y)",
+        "MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO",
+        "maxf(MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.y, first_view_height_ratio)",
     ):
         ensure(required_token in smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Stage Dock cartography proof token: {required_token}")
     stage_helper_match = re.search(r"func _assert_main_menu_stage_dock_surface\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
@@ -19954,7 +19961,7 @@ def validate_main_menu_generated_size_picker_theme_parity(errors: list[str]) -> 
             'shell.get_node_or_null("%GeneratedSizePicker") as OptionButton',
             'shell.get_node_or_null("%GeneratedPlayerCountPicker") as OptionButton',
             'shell.get_node_or_null("%GeneratedWaterPicker") as OptionButton',
-            'var setup_before: Dictionary = shell.call("validation_generated_random_map_snapshot")',
+            'var setup_before: Dictionary = _generated_behavior_contract(shell.call("validation_generated_random_map_snapshot"))',
             "var size_before: Dictionary = _option_button_behavior_contract(size_picker)",
             "for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
             "viewport.size = requested_size",
@@ -19969,7 +19976,7 @@ def validate_main_menu_generated_size_picker_theme_parity(errors: list[str]) -> 
             "_rect_contains(generated_panel.get_global_rect(), size_picker.get_global_rect())",
             "size_picker.get_global_rect().intersects(player_count_picker.get_global_rect())",
             "viewport.size = VIEWPORT_SIZE",
-            'shell.call("validation_generated_random_map_snapshot") != setup_before',
+            '_generated_behavior_contract(shell.call("validation_generated_random_map_snapshot")) != setup_before',
             "_option_button_behavior_contract(size_picker) != size_before",
         ):
             ensure(token in body, errors, f"Generated Size picker focused parity case is missing token: {token}")
@@ -19977,7 +19984,7 @@ def validate_main_menu_generated_size_picker_theme_parity(errors: list[str]) -> 
         resize_index = body.find("viewport.size = requested_size")
         style_index = body.find("var size_style: Dictionary = _option_button_style_contract(size_picker)")
         restore_index = body.find("viewport.size = VIEWPORT_SIZE")
-        authority_index = body.find('shell.call("validation_generated_random_map_snapshot") != setup_before')
+        authority_index = body.find('_generated_behavior_contract(shell.call("validation_generated_random_map_snapshot")) != setup_before')
         ensure(
             0 <= size_loop_index < resize_index < style_index < restore_index < authority_index,
             errors,
@@ -20075,6 +20082,101 @@ def validate_main_menu_generated_size_picker_theme_parity(errors: list[str]) -> 
         errors,
         "Battle Shake picker parity owner must have exactly one helper and one runtime invocation",
     )
+
+
+def validate_main_menu_skirmish_map_forge_disclosure(errors: list[str]) -> None:
+    focused_path = ROOT / "tests" / "generated_map_setup_visual_smoke.gd"
+    route_path = ROOT / "tests" / "random_map_skirmish_menu_button_2p_retry_report.gd"
+    for path in (MAIN_MENU_SCENE_PATH, MAIN_MENU_SCRIPT_PATH, focused_path, MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH, route_path):
+        ensure(path.exists(), errors, f"Missing Map Forge disclosure dependency: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (MAIN_MENU_SCENE_PATH, MAIN_MENU_SCRIPT_PATH, focused_path, MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH, route_path)):
+        return
+
+    scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    focused_text = focused_path.read_text(encoding="utf-8")
+    broad_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    route_text = route_path.read_text(encoding="utf-8")
+
+    for token in (
+        '[node name="GeneratedMapHeader" type="HBoxContainer"',
+        '[node name="GeneratedMapEyebrow" type="Label"',
+        'text = "MAP FORGE"',
+        '[node name="GeneratedMapToggle" type="Button"',
+        'text = "Open Forge"',
+        '[node name="GeneratedMapControls" type="GridContainer"',
+        '[node name="GeneratedMapProvenance" type="Label"',
+        'method="_on_generated_map_toggle_pressed"',
+    ):
+        ensure(token in scene_text, errors, f"Main Menu scene is missing Map Forge disclosure token: {token}")
+    ensure(scene_text.count('[node name="GeneratedMapControls" type="GridContainer"') == 1, errors, "Map Forge must retain exactly one generated-control owner")
+    ensure(scene_text.count('[node name="GeneratedMapToggle" type="Button"') == 1, errors, "Map Forge must retain exactly one disclosure button")
+    controls_index = scene_text.find('[node name="GeneratedMapControls" type="GridContainer"')
+    provenance_index = scene_text.find('[node name="GeneratedMapProvenance" type="Label"')
+    ensure("visible = false" in scene_text[controls_index:controls_index + 360], errors, "Generated controls must be authored collapsed")
+    ensure("visible = false" in scene_text[provenance_index:provenance_index + 300], errors, "Generated provenance must be authored collapsed")
+
+    for token in (
+        "const SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0",
+        "const SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720",
+        "var _generated_map_forge_expanded := false",
+        "func _on_generated_map_toggle_pressed() -> void:",
+        "_set_generated_map_forge_expanded(not _generated_map_forge_expanded)",
+        "func _set_generated_map_forge_expanded(expanded: bool) -> void:",
+        "_generated_map_forge_expanded = expanded or _generated_generation_in_progress",
+        "func _refresh_generated_map_forge_disclosure() -> void:",
+        "_generated_map_controls.visible = expanded",
+        "_generated_provenance_label.visible = expanded",
+        '_generated_map_toggle_button.text = "Close Forge" if expanded else "Open Forge"',
+        '_generated_map_toggle_button.accessibility_name = "Close Map Forge" if expanded else "Open Map Forge"',
+        "_generated_map_controls.is_ancestor_of(focus_owner)",
+        "_generated_map_toggle_button.grab_focus()",
+        "_generated_map_forge_expanded = true",
+        "func _skirmish_stage_dock_anchors() -> Rect2:",
+        '"forge": _generated_map_forge_snapshot()',
+        "func validation_set_generated_map_forge_expanded(expanded: bool) -> Dictionary:",
+    ):
+        ensure(token in script_text, errors, f"MainMenu.gd is missing Map Forge disclosure behavior: {token}")
+    ensure(script_text.count("_generated_map_forge_expanded = true") == 1, errors, "Only generated launch may force the Map Forge open")
+    ensure(script_text.count("func _on_generated_map_toggle_pressed() -> void:") == 1, errors, "Map Forge must have one public button-signal handler")
+
+    for token in (
+        'var collapsed_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")',
+        '_assert_forge_state(collapsed_forge, false, "initial collapsed")',
+        'shell.call("validation_set_generated_map_forge_expanded", true)',
+        '_assert_forge_state(expanded_forge, true, "expanded")',
+        "var behavior_before := _generated_behavior_contract(collapsed_snapshot)",
+        'shell.call("validation_set_generated_map_forge_expanded", false)',
+        '_assert_forge_state(collapsed_after, false, "restored collapsed")',
+        '_generated_behavior_contract(shell.call("validation_generated_random_map_snapshot")) != behavior_before',
+        "var visible_dossier := scroll_rect.intersection(mode_split_rect)",
+        "visible_dossier.size.y < 190.0",
+    ):
+        ensure(token in focused_text, errors, f"Focused Map Forge visual owner is missing proof token: {token}")
+    order = tuple(focused_text.find(token) for token in (
+        "var collapsed_snapshot:",
+        'validation_set_generated_map_forge_expanded", true',
+        "_assert_generated_size_picker_theme_parity",
+        'validation_set_generated_map_forge_expanded", false',
+        "!= behavior_before",
+    ))
+    ensure(all(index >= 0 for index in order) and list(order) == sorted(order), errors, "Focused Map Forge proof must check collapsed, expanded, existing controls, restored collapse, then authority")
+    for token in (
+        'initial_skirmish_snapshot.get("generated_map_forge", {})',
+        'String(initial_skirmish_forge.get("toggle_text", "")) != "Open Forge"',
+        'String(initial_skirmish_forge.get("eyebrow_text", "")) != "MAP FORGE"',
+    ):
+        ensure(token in broad_text, errors, f"Broad menu smoke is missing collapsed Map Forge first-view proof: {token}")
+    for token in (
+        'var forge_toggle: Button = shell.get_node("%GeneratedMapToggle")',
+        "forge_toggle.pressed.emit()",
+        'String(forge_after.get("toggle_text", "")) != "Close Forge"',
+        '"pressed_real_forge_toggle_signal": true',
+    ):
+        ensure(token in route_text, errors, f"Generated-map route report is missing real disclosure/button proof: {token}")
+    ensure(route_text.find("forge_toggle.pressed.emit()") < route_text.find('_set_line_edit(shell, "%GeneratedSeed", SEED)'), errors, "Generated-map route must open the real forge before operating generated controls")
+    for forbidden in ("RandomMapGeneratorRules.", "ContentService.generate", "SessionState.active_session.overworld"):
+        ensure(forbidden not in focused_text, errors, f"Map Forge visual proof must not change generator or session authority: {forbidden}")
 
 
 def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
@@ -65050,6 +65152,7 @@ def main() -> int:
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_main_menu_battle_shake_picker_theme_parity(errors)
     validate_main_menu_generated_size_picker_theme_parity(errors)
+    validate_main_menu_skirmish_map_forge_disclosure(errors)
     validate_main_menu_settings_focus_visibility(errors)
     validate_main_menu_settings_summary_word_ellipsis(errors)
     validate_map_editor_shell_slice(errors)

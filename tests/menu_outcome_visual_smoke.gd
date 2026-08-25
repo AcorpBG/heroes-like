@@ -39,6 +39,8 @@ const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
 const MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
+const MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0
+const MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720
 const MAIN_MENU_GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
 
 var _original_campaign_profile := {}
@@ -446,6 +448,15 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	var initial_skirmish_snapshot: Dictionary = shell.call("validation_snapshot")
+	var initial_skirmish_forge: Dictionary = initial_skirmish_snapshot.get("generated_map_forge", {}) if initial_skirmish_snapshot.get("generated_map_forge", {}) is Dictionary else {}
+	if bool(initial_skirmish_forge.get("expanded", true)) \
+			or bool(initial_skirmish_forge.get("controls_visible", true)) \
+			or bool(initial_skirmish_forge.get("provenance_visible", true)) \
+			or String(initial_skirmish_forge.get("toggle_text", "")) != "Open Forge" \
+			or String(initial_skirmish_forge.get("eyebrow_text", "")) != "MAP FORGE":
+		push_error("Main menu smoke: Skirmish first view did not keep the Map Forge compact: %s." % [initial_skirmish_forge])
+		get_tree().quit(1)
+		return false
 	var selected_skirmish_id := String(initial_skirmish_snapshot.get("selected_skirmish_id", ""))
 	if selected_skirmish_id == "":
 		push_error("Main menu smoke: skirmish stage has no selected launchable front: %s." % [initial_skirmish_snapshot])
@@ -1039,10 +1050,11 @@ func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
 			failure = "window/root did not reach %s" % [requested_size]
 			break
 		var campaign_anchors := _main_menu_campaign_dock_anchors(requested_size)
+		var skirmish_anchors := _main_menu_skirmish_dock_anchors(requested_size)
 		var guide_anchors := _main_menu_guide_dock_anchors(requested_size)
 		for board in [
 			{"label": "Campaign", "tab": 0, "anchors": campaign_anchors},
-			{"label": "Skirmish", "tab": 1, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
+			{"label": "Skirmish", "tab": 1, "anchors": skirmish_anchors},
 			{"label": "Saves", "tab": 2, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
 			{"label": "Settings", "tab": 4, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
 			{"label": "Guide", "tab": 3, "anchors": guide_anchors},
@@ -1106,6 +1118,19 @@ func _main_menu_campaign_dock_anchors(viewport_size: Vector2i) -> Rect2:
 		Vector2(
 			MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS.size.x,
 			maxf(MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS.size.y, first_view_height_ratio)
+		)
+	)
+
+func _main_menu_skirmish_dock_anchors(viewport_size: Vector2i) -> Rect2:
+	var first_view_height_ratio := minf(
+		MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y),
+		MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO
+	)
+	return Rect2(
+		MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.position,
+		Vector2(
+			MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.x,
+			maxf(MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.y, first_view_height_ratio)
 		)
 	)
 
