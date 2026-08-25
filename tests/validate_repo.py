@@ -32687,7 +32687,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     ensure(map_text.count("const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0") == 1, errors, "Small-map fit must own one exact 104px visual extent cap")
     ensure(map_text.count('const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"') == 1, errors, "Small-map surround must own one exact quiet cartographic matte model")
     ensure(map_text.count("const SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER := 48.0") == 1, errors, "Small-map cartographic matte must require one exact 48px material gutter")
-    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.48") == 1, errors, "Town art must own one exact proportional 48% visual-footprint scale")
+    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.72") == 1, errors, "Town art must own one exact proportional 72% visual-footprint scale")
     extent_block = gd_function_block(map_text, "_tile_extent_for_viewport")
     uncapped_block = gd_function_block(map_text, "_uncapped_whole_map_fit_tile_extent")
     metrics_block = gd_function_block(map_text, "validation_view_metrics")
@@ -32791,7 +32791,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     for preserved_token in (
         "const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
         "const TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.48",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.72",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
         "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
         'const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"',
@@ -32805,7 +32805,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "const MAX_SMALL_MAP_TILE_EXTENT := 104.0",
         'const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"',
         "const SMALL_MAP_MATTE_MIN_GUTTER := 48.0",
-        "const TOWN_VISUAL_EXTENT_TILES := 0.96",
+        "const TOWN_VISUAL_EXTENT_TILES := 1.44",
         'var metrics: Dictionary = map_view.call("validation_view_metrics")',
         "var expected_capped := uncapped_extent > MAX_SMALL_MAP_TILE_EXTENT",
         "viewport_rect.get_center().distance_to(board_rect.get_center()) <= 1.5",
@@ -32834,7 +32834,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'int(profile.get("footprint_width_tiles", 0)) != 3',
         'int(profile.get("footprint_height_tiles", 0)) != 2',
         'int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5',
-        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.48',
+        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.72',
         'float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES',
         'String(profile.get("entry_role", "")) != "bottom_middle_visit_approach"',
         'int(readability.get("footprint_width_tiles", 0)) == 1',
@@ -32873,7 +32873,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
         "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
         'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"',
-        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72",
+        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := OBJECT_BLOCKER_VISIBLE_EXTENT_TILES",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08",
         "const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 16",
@@ -33162,7 +33162,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.40",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.48",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.72",
     ):
         ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
     for rejected_token in (
@@ -33188,6 +33188,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.50",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.76",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.82",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.48",
     ):
         ensure(rejected_token not in map_text, errors, f"Overworld world-scale hierarchy must not retain the rejected near-peer scale: {rejected_token}")
     for token in (
@@ -33303,7 +33304,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'float(objective.get("visible_extent_tiles", 0.0)), 0.50',
         'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.54',
         'float(hero.get("sprite_extent_fraction", 0.0)), 0.56',
-        'float(town.get("visible_extent_tiles", 0.0)), 0.96',
+        'float(town.get("visible_extent_tiles", 0.0)), 1.44',
         '"id": "object_wood_wagon"',
         '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
         '"id": "object_contract_scribe_booth"',
@@ -42377,6 +42378,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         "_object_texture_for_asset(_hero_sprite_asset_id(hero))",
         'if not (texture is Texture2D):',
         '_draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)',
+        "extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES",
         "MEMORY_OBJECT_OUTLINE if remembered else ENCOUNTER_COLOR",
         "OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE",
         '_draw_procedural_contact_marks(anchor, "encounter", remembered)',
@@ -42418,12 +42420,18 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         '"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded',
         '"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded',
         '"hostile_treatment": "encounter_ring"',
+        '"visible_extent_tiles": OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES',
         '"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL',
         '"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL',
     ):
         ensure(token in payload_block, errors, f"Enemy commander validation payload is missing detached identity/fallback evidence: {token}")
     for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "erase("):
         ensure(forbidden not in payload_block, errors, f"Enemy commander validation payload must remain read-only: {forbidden}")
+
+    ensure(commander_draw_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Enemy commander art must use the exact semantic encounter extent once")
+    unit_draw_block = function_block(map_text, "_draw_encounter_unit_icon")
+    ensure(unit_draw_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Encounter unit fallback art must use the exact semantic encounter extent once")
+    ensure("extent * 0.68" not in commander_draw_block + unit_draw_block, errors, "Encounter actor drawing must not retain the oversized hard-coded 0.68-tile bypass")
 
     ensure('_enemy_commander_presentation_signature(overworld.get("encounters", []))' in index_block, errors, "Static object index must invalidate when nested enemy commander presentation identity changes")
     signature_order = [

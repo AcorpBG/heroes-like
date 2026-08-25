@@ -1833,7 +1833,8 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			break
 	if String(interceptor_profile.get("hero_id", "")) != "hero_vaska" \
 		or String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw" \
-		or not bool(interceptor_profile.get("uses_commander_sprite", false)):
+		or not bool(interceptor_profile.get("uses_commander_sprite", false)) \
+		or not is_equal_approx(float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.40):
 		push_error("Overworld smoke: strategic raid did not retain its exact Mireclaw commander presentation. profile=%s" % interceptor_profile)
 		get_tree().quit(1)
 		return false
@@ -3379,7 +3380,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		push_error("Overworld smoke: field hero art is not contained at its proportional tile rank. payload=%s" % hero)
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 0.96):
+	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 1.44):
 		push_error("Overworld smoke: town art no longer owns the bounded top of the shared world-scale hierarchy. payload=%s" % town)
 		get_tree().quit(1)
 		return false

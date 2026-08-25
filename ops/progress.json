@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
+    "Select the next tracker-approved graphical-polish or release-readiness slice from current direct evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-town-selection-cartographic-perimeter-10184",
-    "title": "Overworld town selection cartographic perimeter",
+    "id": "ux-overworld-physical-object-scale-hierarchy-correction-10184",
+    "title": "Overworld physical object scale hierarchy correction",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T09:48:25Z",
-    "updatedAt": "2026-08-25T10:06:49Z",
-    "completedAt": "2026-08-25T10:06:49Z",
+    "startedAt": "2026-08-25T16:39:05Z",
+    "updatedAt": "2026-08-25T17:20:00Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Selected towns now use an open cartographic footprint cue with short warm corner marks and subtle midpoint survey ticks instead of a continuous bright box. Exact selected/hover footprint, town entry, ordinary tile selection, compact hero focus, route, interaction, accessibility, gameplay, session/save authority, and Native-RMG behavior remain unchanged."
+    "notes": "Completed from direct owner feedback and inspected real X11 authored/generated captures. The unchanged 3x2 town now paints at 1.44 tiles above the unchanged 0.56 hero; enemy commander/unit encounters use the ordinary 0.40 encounter rank and generated decorative blocker cells use the ordinary 0.46 blocker rank. Focused scale, route movement, broad Overworld visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Logical map/gameplay authority is unchanged; packaged interaction and release readiness remain unclaimed.",
+    "completedAt": "2026-08-25T17:20:00Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Town management-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "currentNotes": "The Overworld physical-scale hierarchy correction is completed with inspected authored/generated captures and focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence; select the next tracker-approved graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-management-card-height-cap-10184",
-  "currentSliceId": "ux-town-management-card-height-cap-10184",
-  "currentSliceNotes": "Completed with exact 460px five-tab containment, bounded native Log scrolling, inspected 1280/1600/1920/2560 captures, focused authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "ux-overworld-physical-object-scale-hierarchy-correction-10184",
+  "currentSliceId": "ux-overworld-physical-object-scale-hierarchy-correction-10184",
+  "currentSliceNotes": "Completed: the town now paints at 1.44 tiles above the unchanged 0.56 hero, encounter actors use 0.40, and generated blockers use 0.46. Real authored/generated captures and focused, broad, static/editor, and bounded platform gates pass with logical map/gameplay authority unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town management card height cap",
-  "currentSliceUpdatedAt": "2026-08-25T16:34:10Z",
+  "currentSliceTitle": "Overworld physical object scale hierarchy correction",
+  "currentSliceUpdatedAt": "2026-08-25T17:20:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19689,7 +19689,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a non-overlapping source boundary. Preserve gameplay, input/focus/accessibility, save/session authority, platform parity, and bounded release claims.",
+  "guardrailNote": "Change only Overworld painted sprite extents. Preserve exact logical footprints, town entry/body masks, hit areas, passability, routes, interaction, camera/map fit, content, save/session authority, generated placement, Native RMG behavior, and bounded release claims.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19899,8 +19899,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Town management-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "nextActionGuardrailNote": "Select the next bounded graphical-polish or release-readiness slice from direct current evidence; preserve the completed Overworld physical-scale hierarchy and logical map authority.",
+  "notes": "The Overworld physical object-scale hierarchy correction is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
@@ -101614,6 +101614,36 @@
       "notes": "Completed from direct owner feedback and inspected current-HEAD River Pass captures. Painted extents now form a 0.32 artifact, 0.40 pickup, 0.48 encounter/default, 0.52 waypoint, 0.56 durable/blocker, 0.60 landmark, 0.66 multi-tile cap, 0.68 hero, and 1.28 town ladder; the unchanged 3x2 town is materially larger than the hero while props remain legible and subordinate. Focused small-map, six-faction hero, artifact, broad headless Overworld, generated movement/save, full-route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The X11 broad Overworld owner remains excluded because its pre-scale rail word-ellipsis pixel oracle differed under that renderer while the normal headless owner passed. Logical footprints, body/entry masks, passability, routes, movement, content, saves, generated placement, and Native RMG are unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T13:24:44Z"
+    },
+    {
+      "id": "ux-overworld-physical-object-scale-hierarchy-correction-10184",
+      "title": "Overworld physical object scale hierarchy correction",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T17:20:00Z",
+      "startedAt": "2026-08-25T16:39:05Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the directly reported physical-scale mismatch by restoring clear settlement-to-hero separation and removing special encounter-actor and generated-blocker presentation paths that bypass the established semantic scale ladder.",
+      "completionCriteria": "Fresh inspected authored and generated Overworld captures show the unchanged 3x2 town materially larger than the hero, enemy commander/unit encounters at the same physical rank as ordinary encounters, and generated decorative blocker cells at the same physical rank as ordinary blockers, without detached or oversized tokens; focused runtime proves exact painted extent/aspect/containment and unchanged hero/generic-object scale values, logical footprints, town entry/body masks, hit areas, passability, routes, movement, interaction, camera/map fit, content, session/save authority, generated placement, and Native RMG behavior; broad Overworld, generated movement/save, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No logical footprint, town entry/body mask, hit area, passability, pathfinding, route, movement, interaction, selection, content, save schema, session, generated placement, density, or Native RMG change.",
+        "No asset replacement, camera/map-fit, terrain/fog/road, shell layout, input/focus, accessibility semantic, animation/audio, VFX, AI, economy, battle, or gameplay change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct owner feedback and inspected current real X11 captures. At 1280x720 and 1920x1080 the unchanged 3x2 town now reads as a 1.44-tile landmark above the unchanged 0.56 hero; commander/unit encounters share the ordinary 0.40 encounter rank and generated decorative blocker cells share the ordinary 0.46 blocker rank. Authored route and generated before/after captures are coherent. Focused small-map/commander/generated owners, faction heroes, full-route movement, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Logical footprints, body/entry masks, hit areas, passability, routes, movement, camera/map fit, content, saves, generated placement, and Native RMG are unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T17:20:00Z"
     }
   ],
   "project": "heroes-like",
@@ -101624,7 +101654,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved graphical-polish slice from fresh direct runtime evidence; broader graphical polish and product/release-readiness gaps remain.",
+  "remainingWork": "Select the next tracker-approved graphical-polish or release-readiness slice from direct current evidence; broader graphical polish and product/release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102158,7 +102188,7 @@
   ],
   "summary": "Overworld town selection cartographic perimeter is completed with direct 1280/1920 visual proof, exact selection/route/gameplay authority, and green focused, compatibility, static/editor, Linux, and Windows startup gates; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T10:06:49Z",
+  "updatedAt": "2026-08-25T16:39:05Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
