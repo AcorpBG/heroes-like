@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Complete the selected Battle terrain-edge and System-frame polish slice, then select the next source-backed graphical-polish or release-readiness slice."
+    "Select the next source-backed graphical-polish or release-readiness slice from fresh live captures and a non-overlapping production owner."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1913,15 +1913,16 @@
   "active_slice": {
     "id": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
     "title": "Battle terrain edge and System frame polish",
-    "status": "in_progress",
+    "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
     "startedAt": "2026-08-25T04:08:21Z",
-    "updatedAt": "2026-08-25T04:28:00Z",
+    "updatedAt": "2026-08-25T04:46:32Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Resumed after completing the owner-directed Overworld scale correction. Refine the current terrain-edge underlay so no flat gaps remain around the unchanged 11x7 hex hull, retain exact per-hex terrain authority, and restore the authored wide SystemPanel frame while preserving compact commands, rules, geometry, input, focus, save, and accessibility."
+    "notes": "Completed from direct 1280/1920 captures and source-backed runtime. The Battle board paints a subdued full-field terrain context beneath all 77 unchanged authoritative per-hex samples, and wide layouts restore the authored SystemPanel frame while compact Save/Settings/Menu commands remain borderless, visible, ordered, and contained. Focused roundtrip/session authority, Town/Battle visual, 1280 layout/routing, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Battle interaction and release-readiness claims remain excluded.",
+    "completedAt": "2026-08-25T04:46:32Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14337,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Battle terrain-edge refinement and wide System frame restoration resumed after the owner-directed Overworld world-scale hierarchy correction completed and passed focused/platform gates.",
+  "currentNotes": "Battle terrain context and responsive System-frame polish completed; select the next source-backed graphical-polish or release-readiness slice from fresh live captures.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
   "currentSliceId": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
-  "currentSliceNotes": "In progress: refine the Battle terrain underlay beneath the unchanged hex grid and preserve the authored System frame across wide responsive refits.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Completed: subdued full-field terrain context sits beneath the unchanged 77-sample hex grid; wide System frame and compact command row roundtrip exactly with session authority preserved.",
+  "currentSliceStatus": "completed",
   "currentSliceTitle": "Battle terrain edge and System frame polish",
-  "currentSliceUpdatedAt": "2026-08-25T04:28:00Z",
+  "currentSliceUpdatedAt": "2026-08-25T04:46:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19859,8 +19860,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Refine only the Battle terrain underlay beneath the authoritative per-hex grid and restore the existing wide System frame. Preserve exact grid/stack/VFX geometry, compact commands, rules, input/focus, save, and accessibility authority.",
-  "notes": "The active Battle polish slice is live presentation work driven by fresh captures and the failing wide SystemPanel art contract, not report-only activity.",
+  "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh live visual defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
+  "notes": "The Battle terrain-context/System-frame polish is complete. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100907,10 +100908,10 @@
     {
       "id": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
       "title": "Battle terrain edge and System frame polish",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "updatedAt": "2026-08-25T04:28:00Z",
+      "updatedAt": "2026-08-25T04:46:32Z",
       "startedAt": "2026-08-25T04:08:21Z",
       "implementationTargets": [
         "PLAN.md",
@@ -100918,9 +100919,11 @@
         "scenes/battle/BattleBoardView.gd",
         "scenes/battle/BattleShell.gd",
         "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Resumed after the owner-directed Overworld world-scale correction completed. Refine the current terrain-edge underlay around the unchanged tactical grid and retain the authored wide System frame while preserving compact commands, rules, geometry, input, focus, save, and accessibility authority."
+      "notes": "Completed from direct 1280/1920 captures and source-backed runtime. The Battle board paints a subdued full-field terrain context beneath all 77 unchanged authoritative per-hex samples, and wide layouts restore the authored SystemPanel frame while compact Save/Settings/Menu commands remain borderless, visible, ordered, and contained. Focused roundtrip/session authority, Town/Battle visual, 1280 layout/routing, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Battle interaction and release-readiness claims remain excluded.",
+      "completedAt": "2026-08-25T04:46:32Z"
     },
     {
       "id": "ux-overworld-world-scale-hierarchy-correction-10184",
@@ -100949,7 +100952,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Finish and validate the selected Battle terrain-edge/System-frame polish, then select the next source-backed graphical-polish or release-readiness slice. Broader graphical polish and the remaining production gaps continue.",
+  "remainingWork": "Select the next source-backed graphical-polish or release-readiness slice from fresh live captures. Broader graphical polish and the remaining production gaps continue.",
   "reportOnlyEvidence": [
     {
       "entries": [

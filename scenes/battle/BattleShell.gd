@@ -149,6 +149,7 @@ var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 var _compact_layout_active := false
 var _compact_system_panel_style := StyleBoxEmpty.new()
+var _wide_system_panel_style: StyleBox = null
 var _action_guide_source_text := ""
 
 func _ready() -> void:
@@ -3710,6 +3711,8 @@ func _apply_responsive_layout() -> void:
 	_action_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)
 	if compact_layout:
 		_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)
+	elif _wide_system_panel_style != null:
+		_system_panel.add_theme_stylebox_override("panel", _wide_system_panel_style)
 	else:
 		_system_panel.remove_theme_stylebox_override("panel")
 	_system_panel.visible = true
@@ -4196,6 +4199,9 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_BATTLE_FOOTER_PANEL, "ink", 62, 12, Color(0.62, 0.60, 0.56, 1.0))
 	FrontierVisualKit.apply_art_panel(_action_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "gold", 54, 10, Color(0.58, 0.52, 0.46, 1.0))
 	FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "ink", 54, 10, Color(0.50, 0.50, 0.48, 1.0))
+	var system_panel_style := _system_panel.get_theme_stylebox("panel")
+	if system_panel_style != null:
+		_wide_system_panel_style = system_panel_style.duplicate()
 	FrontierVisualKit.apply_tab_container(_battle_tabs)
 	for index in range(min(_battle_tabs.get_tab_count(), BATTLE_INFO_TAB_VISIBLE_TITLES.size())):
 		_battle_tabs.set_tab_title(index, String(BATTLE_INFO_TAB_VISIBLE_TITLES[index]))
