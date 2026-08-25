@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness slice before changing another product surface.
+- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from fresh direct runtime evidence.
+
+- Previous completed implementation slice: `ux-town-banner-stockpile-ledger-chip-10184`. The Town banner's detached stockpile text now sits inside a responsive resource-ledger chip that reuses the authored Town art at exact 96px compact / 226px wide frame budgets around the unchanged 80px / 210px native menu. Direct inspected 1280x720 and 1920x1080 captures preserve the scenic stage and town identity; focused runtime proves the exact `Stores`/full summary modes, nine ordered resource rows/icons/amounts/tooltips, public open/Escape/focus return, containment, and unchanged session/economy/save/action authority. Supported-layout, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-town-banner-stockpile-ledger-chip-10184`
 
 - Previous completed implementation slice: `ux-overworld-object-screen-scale-normalization-10184`. The freshly reproduced oversized Overworld composition is replaced by a restrained screen-scale ladder: 0.26-tile artifacts, 0.32 pickups, 0.40 encounters/defaults, 0.44 waypoints, 0.46 durable structures/blockers, 0.50 landmarks, a 0.54 multi-tile cap, 0.56 heroes, and 0.96-tile towns. Direct inspected River Pass 1280x720 and 1920x1080 captures now keep the terrain grid primary while towns remain larger than heroes and loose props remain readable. Exact alpha cropping/aspect, grounding, logical footprints, town body/entry masks, ids/content, hit areas, passability, routes/movement, selection/focus, fog, accessibility, camera, session/save authority, generated placement, and Native RMG remain unchanged. Focused small-map scale, six-faction hero/town, broad Overworld, generated movement/save, full-route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-overworld-object-screen-scale-normalization-10184`
@@ -10461,6 +10464,32 @@ Non-goals:
 - no logical town/object footprint, entry tile, hit area, passability, pathing, content id, asset replacement, map generation, density, AI, economy, battle, save schema, or Native-RMG change;
 - no camera/whole-map fit, terrain/fog/road, shell/sidebar/footer layout, input mapping, focus order, accessibility semantic, animation/audio, or VFX change;
 - no packaged Overworld interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
+
+## Town Banner Stockpile Ledger Chip
+
+id: `ux-town-banner-stockpile-ledger-chip-10184`
+
+Status: completed.
+
+Implementation boundary:
+- wrap the existing Town `%Resources` native `ResourceStockpileMenu` in one compact edge-owned ledger chip so the stockpile reads as an intentional banner control rather than tiny detached text;
+- reuse the existing Town resource-ledger art and exact 80px compact / 210px full menu budgets, with a 96px compact / 226px full framed allocation that remains contained at 1280x720 and 1920x1080;
+- preserve the exact `Stores` compact label, full visible summary, nine ordered native popup rows/icons/amounts/tooltips, focus return, and full-ledger tooltip.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Town captures show a legible framed stockpile control integrated into the top banner without covering the scenic stage or crowding the town identity;
+- focused stockpile interaction and supported-viewport geometry prove the exact frame/menu containment, responsive widths, popup content/order/icons, Escape focus return, and unchanged session/economy/save/action authority;
+- broad Town/Battle visual, keyboard/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completed implementation:
+- wrapped the unchanged Town `%Resources` native menu in a `ResourceChip`/`ResourcePad` frame that reuses `resource_ledger.png`, with exact 96px compact / 226px wide frame and 80px / 210px menu allocations;
+- retained the exact compact `Stores` label, full Gold/Wood/Ore summary, full tooltip, nine ordered icon-backed popup rows, public keyboard open/Escape close/focus return, and all session/economy/save/town-action authority;
+- direct inspected 1280x720 and 1920x1080 captures plus focused stockpile, supported-layout, Town/Battle, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green.
+
+Non-goals:
+- no resource amount/order/registry/icon asset, economy, market, build/recruit, town action, session, save, or gameplay change;
+- no Town stage/sidebar/footer/tab composition, scenic art, header/status/event copy, input mapping, focus policy, accessibility semantic, animation/audio, or VFX change;
+- no packaged Town interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 

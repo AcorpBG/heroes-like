@@ -144,6 +144,7 @@ func _check_town(viewport_size: Vector2) -> bool:
 	var narrow := viewport_size.x < 1100.0
 	var ok := _inside(frame, shell.get_node("%Banner"), "town banner", viewport_size)
 	ok = _inside(frame, shell.get_node("%Header"), "town header", viewport_size) and ok
+	ok = _inside(frame, shell.get_node("%ResourceChip"), "town resource chip", viewport_size) and ok
 	ok = _inside(frame, shell.get_node("%Resources"), "town resources", viewport_size) and ok
 	ok = _inside(frame, shell.get_node("%TownStage"), "town stage", viewport_size) and ok
 	ok = _inside(frame, shell.get_node("%FooterPanel"), "town footer", viewport_size) and ok
@@ -223,17 +224,28 @@ func _expect_town_build_plan(shell: Node, session, initial_built_buildings: Arra
 	return true
 
 func _expect_town_banner_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:
+	var banner := shell.get_node("%Banner") as PanelContainer
 	var header := shell.get_node("%Header") as Label
+	var resource_chip := shell.get_node("%ResourceChip") as PanelContainer
 	var resources := shell.get_node("%Resources") as ResourceStockpileMenu
-	if header == null or resources == null:
+	if banner == null or header == null or resource_chip == null or resources == null:
 		return _fail("town banner controls are missing at %s" % viewport_size)
 	if header.text.is_empty() or header.tooltip_text != header.text:
 		return _fail("town header lost its exact full tooltip at %s: %s" % [viewport_size, header.tooltip_text])
 	if header.clip_text != compact:
 		return _fail("town header clipping at %s expected %s but got %s" % [viewport_size, compact, header.clip_text])
 	var expected_resource_width := 80.0 if compact else 210.0
+	var expected_chip_width := 96.0 if compact else 226.0
+	if not is_equal_approx(resource_chip.custom_minimum_size.x, expected_chip_width) or not is_equal_approx(resource_chip.size.x, expected_chip_width):
+		return _fail("town resource chip width at %s expected %s but got %s / %s" % [viewport_size, expected_chip_width, resource_chip.custom_minimum_size.x, resource_chip.size.x])
 	if not is_equal_approx(resources.custom_minimum_size.x, expected_resource_width):
 		return _fail("town resource menu width at %s expected %s but got %s" % [viewport_size, expected_resource_width, resources.custom_minimum_size.x])
+	if not banner.get_global_rect().encloses(resource_chip.get_global_rect()) or not resource_chip.get_global_rect().encloses(resources.get_global_rect()):
+		return _fail("town resource chip/menu escaped the banner frame at %s" % viewport_size)
+	var chip_style := resource_chip.get_theme_stylebox("panel")
+	var chip_texture_path := (chip_style as StyleBoxTexture).texture.resource_path if chip_style is StyleBoxTexture and (chip_style as StyleBoxTexture).texture != null else ""
+	if chip_texture_path != "res://art/ui/runtime/town/resource_ledger.png":
+		return _fail("town resource chip lost its authored ledger art at %s: %s" % [viewport_size, chip_texture_path])
 	var resource_snapshot: Dictionary = resources.validation_snapshot()
 	if bool(resource_snapshot.get("compact", false)) != compact:
 		return _fail("town resource compact mode at %s expected %s: %s" % [viewport_size, compact, resource_snapshot])

@@ -43149,12 +43149,30 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
                 ensure(token in menu_match.group("body"), errors, f"{label} resource MenuButton is missing compact/focus ownership: {token}")
         ensure('path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"' in scene_text, errors, f"{label} must reuse the shared stockpile component")
 
+    town_chip_match = re.search(r'\[node name="ResourceChip" type="PanelContainer"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', town_scene_text, re.DOTALL)
+    town_pad_match = re.search(r'\[node name="ResourcePad" type="MarginContainer"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', town_scene_text, re.DOTALL)
+    ensure(town_chip_match is not None and town_pad_match is not None, errors, "Town stockpile must own one authored ResourceChip/ResourcePad frame")
+    if town_chip_match is not None:
+        for token in ('unique_name_in_owner = true', 'custom_minimum_size = Vector2(226, 0)', 'layout_mode = 2'):
+            ensure(token in town_chip_match.group("body"), errors, f"Town ResourceChip is missing exact authored frame token: {token}")
+    if town_pad_match is not None:
+        for token in (
+            'theme_override_constants/margin_left = 0',
+            'theme_override_constants/margin_top = 4',
+            'theme_override_constants/margin_right = 0',
+            'theme_override_constants/margin_bottom = 4',
+        ):
+            ensure(token in town_pad_match.group("body"), errors, f"Town ResourcePad is missing exact compact ledger inset: {token}")
+    ensure('[node name="Resources" type="MenuButton" parent="ContentMargin/Content/Banner/BannerPad/TopBar/ResourceChip/ResourcePad"]' in town_scene_text, errors, "Town resource menu must remain nested in the authored ledger frame")
+
     for shell_label, shell_text in (("Overworld", overworld_shell_text), ("Town", town_shell_text)):
         ensure("@onready var _resource_label: ResourceStockpileMenu = %Resources" in shell_text, errors, f"{shell_label} must type the shared resource control")
         ensure("_resource_label.sync_stockpile(" in shell_text, errors, f"{shell_label} refresh must feed detached live stockpile values into the shared menu")
         ensure('"resource_stockpile_menu": _resource_label.validation_snapshot()' in shell_text, errors, f"{shell_label} validation must expose the detached menu")
         ensure('FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)' in shell_text, errors, f"{shell_label} must keep the stockpile menu bounded in the existing visual language")
         ensure("FrontierVisualKit.apply_label(_resource_label" not in shell_text, errors, f"{shell_label} must not style the MenuButton through the old Label API")
+    ensure("@onready var _resource_chip_panel: PanelContainer = %ResourceChip" in town_shell_text, errors, "Town shell must type the authored stockpile ledger frame")
+    ensure('FrontierVisualKit.apply_art_panel(_resource_chip_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 8, Color(0.70, 0.62, 0.48, 1.0))' in town_shell_text, errors, "Town stockpile frame must reuse the exact authored resource-ledger art and single horizontal inset")
 
     responsive = block(overworld_shell_text, "_apply_responsive_layout")
     responsive_order = [
@@ -43174,7 +43192,24 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         'const RESOURCE_IDS := [',
         'load("res://scenes/town/TownShell.tscn").instantiate()',
         'load("res://scenes/overworld/OverworldShell.tscn").instantiate()',
+		'var host := _case_host(viewport_size, "TownCaseHost")',
+		'var host := _case_host(viewport_size, "OverworldCaseHost")',
+		'host.add_child(shell)',
+		'var layout_size_exact: bool = shell.size == Vector2(viewport_size)',
+		'"layout_size_exact": layout_size_exact',
+		'func _case_host(viewport_size: Vector2i, host_name: String) -> Control:',
+		'host.custom_minimum_size = Vector2(viewport_size)',
+		'host.size = Vector2(viewport_size)',
         'shell.get_node_or_null("%Resources") as ResourceStockpileMenu',
+        'var resource_chip := shell.get_node_or_null("%ResourceChip") as PanelContainer',
+        'var chip_style := resource_chip.get_theme_stylebox("panel")',
+        'chip_texture_path == "res://art/ui/runtime/town/resource_ledger.png"',
+		'String(menu_before.get("visible_text", "")) == String(shell_snapshot_before.get("resources_visible_text", ""))',
+        'banner.get_global_rect().encloses(resource_chip.get_global_rect()) and resource_chip.get_global_rect().encloses(menu.get_global_rect())',
+        'is_equal_approx(resource_chip.custom_minimum_size.x, 96.0 if compact_expected else 226.0)',
+        'is_equal_approx(resource_chip.size.x, 96.0 if compact_expected else 226.0)',
+        'is_equal_approx(menu.custom_minimum_size.x, 80.0 if compact_expected else 210.0)',
+        'is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)',
         'var authority_before: Dictionary = live_session.to_dict()',
         'var authority_after: Dictionary = SessionState.ensure_active_session().to_dict()',
         'var town_signature_before: Dictionary = TownRules.town_action_consequence_signature(live_session)',
@@ -43189,7 +43224,6 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         'texture.get_size() == Vector2(128.0, 128.0)',
         'command_band.get_global_rect().encloses(resource_chip.get_global_rect())',
         'var bounded_width_exact: bool = is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)',
-        'top_bar.get_global_rect().encloses(menu.get_global_rect())',
         'SessionStateStore.SAVE_VERSION',
     ):
         ensure(token in report_text, errors, f"Focused stockpile popover report is missing real interaction/authority proof: {token}")
@@ -43250,6 +43284,7 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         town_responsive.find("var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0"),
         town_responsive.find("var narrow_layout := available_size.x < 1100.0"),
         town_responsive.find("_header_label.clip_text = compact_layout"),
+        town_responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0"),
         town_responsive.find("_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0"),
         town_responsive.find("_resource_label.set_compact_mode(compact_layout)"),
         town_responsive.find("_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0"),
@@ -43258,6 +43293,7 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
     ensure(all(index >= 0 for index in required_town_source_order) and required_town_source_order == sorted(required_town_source_order), errors, "Town compact Header/resource and management-rail budgets must be applied before retaining narrow Town Orders ownership")
     for token in (
         "_header_label.clip_text = compact_layout",
+        "_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0",
         "_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0",
         "_resource_label.set_compact_mode(compact_layout)",
         "_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0",
@@ -43301,6 +43337,7 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         "ok = _expect_unchanged_opening_session(session, initial_position, initial_movement, initial_resources, viewport_size) and ok",
         'var ok := _inside(frame, shell.get_node("%Banner"), "town banner", viewport_size)',
         'ok = _inside(frame, shell.get_node("%Header"), "town header", viewport_size) and ok',
+        'ok = _inside(frame, shell.get_node("%ResourceChip"), "town resource chip", viewport_size) and ok',
         'ok = _inside(frame, shell.get_node("%Resources"), "town resources", viewport_size) and ok',
         'ok = _inside(frame, shell.get_node("%TownStage"), "town stage", viewport_size) and ok',
         'ok = _inside(frame, shell.get_node("%FooterPanel"), "town footer", viewport_size) and ok',
@@ -43312,11 +43349,19 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         'ok = _inside(frame, shell.get_node("%TownOrdersToggle"), "town narrow orders switch", viewport_size) and ok',
         'ok = _expect_command_available(shell.get_node("%TownOrdersToggle"), "town narrow orders switch", viewport_size) and ok',
         "func _expect_town_banner_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:",
+        'var banner := shell.get_node("%Banner") as PanelContainer',
         'var header := shell.get_node("%Header") as Label',
+        'var resource_chip := shell.get_node("%ResourceChip") as PanelContainer',
         'var resources := shell.get_node("%Resources") as ResourceStockpileMenu',
         "if header.text.is_empty() or header.tooltip_text != header.text:",
         "if header.clip_text != compact:",
         "var expected_resource_width := 80.0 if compact else 210.0",
+        "var expected_chip_width := 96.0 if compact else 226.0",
+        "resource_chip.custom_minimum_size.x, expected_chip_width",
+        "resource_chip.size.x, expected_chip_width",
+        "banner.get_global_rect().encloses(resource_chip.get_global_rect())",
+        "resource_chip.get_global_rect().encloses(resources.get_global_rect())",
+        'chip_texture_path != "res://art/ui/runtime/town/resource_ledger.png"',
         "var resource_snapshot: Dictionary = resources.validation_snapshot()",
         'if bool(resource_snapshot.get("compact", false)) != compact:',
         'if String(resource_snapshot.get("tooltip_text", "")) != String(resource_snapshot.get("full_summary", "")):',

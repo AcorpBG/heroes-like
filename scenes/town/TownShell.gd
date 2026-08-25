@@ -35,6 +35,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _crest_label: Label = %CrestLabel
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
+@onready var _resource_chip_panel: PanelContainer = %ResourceChip
 @onready var _resource_label: ResourceStockpileMenu = %Resources
 @onready var _event_label: Label = %Event
 @onready var _town_stage_view = %TownStage
@@ -196,6 +197,7 @@ func _apply_responsive_layout() -> void:
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	var narrow_layout := available_size.x < 1100.0
 	_header_label.clip_text = compact_layout
+	_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0
 	_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0
 	_resource_label.set_compact_mode(compact_layout)
 	_narrow_layout_active = narrow_layout
@@ -5401,6 +5403,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_town_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 12, Color(0.56, 0.50, 0.44, 1.0))
 	FrontierVisualKit.apply_art_panel(_outlook_panel, UI_ART_TOWN_RESOURCE_LEDGER, "teal", 62, 12, Color(0.50, 0.56, 0.54, 1.0))
 	FrontierVisualKit.apply_art_panel(_command_ledger_panel, UI_ART_TOWN_RESOURCE_LEDGER, "earth", 62, 12, Color(0.52, 0.50, 0.46, 1.0))
+	FrontierVisualKit.apply_art_panel(_resource_chip_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 8, Color(0.70, 0.62, 0.48, 1.0))
 	FrontierVisualKit.apply_art_panel(_build_panel, UI_ART_TOWN_BUILD_PANEL, "earth", 58, 12, Color(0.58, 0.52, 0.46, 1.0))
 	FrontierVisualKit.apply_art_panel(_recruit_panel, UI_ART_TOWN_RECRUIT_ROW, "green", 62, 12, Color(0.58, 0.62, 0.52, 1.0))
 	FrontierVisualKit.apply_art_panel(_study_panel, UI_ART_TOWN_PARCHMENT_PANEL, "blue", 66, 12, Color(0.42, 0.44, 0.52, 1.0))
