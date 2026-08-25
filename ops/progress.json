@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld town selection cartographic perimeter is completed with direct visual proof and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
+  "currentNotes": "Overworld settlement/prop scale separation is completed with direct inspected 1280/1920 captures and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-town-selection-cartographic-perimeter-10184",
-  "currentSliceId": "ux-overworld-town-selection-cartographic-perimeter-10184",
-  "currentSliceNotes": "Completed: selected towns retain their exact 3x2 footprint and interaction authority through an open cartographic corner-and-midpoint cue with no continuous box or fill.",
+  "currentSlice": "ux-overworld-settlement-prop-scale-separation-10184",
+  "currentSliceId": "ux-overworld-settlement-prop-scale-separation-10184",
+  "currentSliceNotes": "Completed: settlements, heroes, sites, and props now occupy visibly distinct painted extents while every logical footprint and gameplay authority remains exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld town selection cartographic perimeter",
-  "currentSliceUpdatedAt": "2026-08-25T10:06:49Z",
+  "currentSliceTitle": "Overworld settlement and prop scale separation",
+  "currentSliceUpdatedAt": "2026-08-25T10:40:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101115,6 +101115,7 @@
         "PLAN.md",
         "ops/progress.json",
         "scenes/overworld/OverworldMapView.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
         "tests/overworld_faction_hero_sprite_runtime_report.gd",
         "tests/overworld_visual_smoke.gd",
         "tests/overworld_small_map_visual_scale_runtime_report.gd",
@@ -101224,6 +101225,28 @@
       "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Selected towns now use one open cartographic footprint cue with eight short warm corner strokes and four subtle midpoint survey ticks, no continuous rectangle, and no fill. Exact selection/hover geometry, compact hero focus, ordinary selection, route, interaction, accessibility, gameplay, session/save authority, object scale, and Native-RMG behavior remain unchanged. Focused geometry, broad visual, six-faction town/hero art, full-route movement, object focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged interaction and release-readiness claims remain excluded.",
       "blockedReason": null,
       "completedAt": "2026-08-25T10:06:49Z"
+    },
+    {
+      "id": "ux-overworld-settlement-prop-scale-separation-10184",
+      "title": "Overworld settlement and prop scale separation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T10:40:51Z",
+      "startedAt": "2026-08-25T10:10:26Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct owner feedback and inspected current River Pass 1280x720/1920x1080 captures. Painted extents are now artifact0.26, pickup0.32, encounter/default0.44, waypoint0.48, durable/blocker0.52, landmark0.58, multi-tile cap0.64, hero0.68, and town1.40. Exact alpha cropping/aspect, grounding, logical footprints, town body/entry masks, hit areas, passability, routes, movement, selection/focus, fog memory, accessibility, session/save authority, content, generated placement, and Native-RMG behavior remain unchanged. Focused scale, small/large-map, six-faction hero/town, artifact, broad Overworld, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T10:40:51Z"
     }
   ],
   "project": "heroes-like",
