@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next source-backed graphical-polish or release-readiness slice from fresh live captures and a non-overlapping production owner."
+    "Select the next fresh, bounded, source-backed graphical-polish slice from direct runtime captures."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-town-scenic-overlay-glass-integration-10184",
-    "title": "Town scenic overlay glass integration",
+    "id": "ux-town-command-watchplate-visual-hierarchy-10184",
+    "title": "Town command watchplate visual hierarchy",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T04:51:32Z",
-    "updatedAt": "2026-08-25T05:07:45Z",
+    "startedAt": "2026-08-25T05:13:05Z",
+    "updatedAt": "2026-08-25T05:40:25Z",
+    "completedAt": "2026-08-25T05:40:25Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct 1280/1920 captures. Town status and district overlays now use responsive translucent glass edge rails with narrow live-color accents instead of opaque saturated cards and a beige slab. Exact ordered payloads, contextual occupation/retake state, command/header/action overlays, input/focus, rules, and session/save authority remain exact. Town/Battle visual, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Town interaction and release-readiness claims remain excluded.",
-    "completedAt": "2026-08-25T05:07:45Z"
+    "notes": "Completed from direct 1280x720 and 1920x1080 captures. The opaque 156x114 bullet-list command marker is now a responsive translucent five-cell Town Watch plate with exact Heroes, Build, Recruit, Response, and Threat values, live colors, contained cells, and a lower footprint. Status/district/backdrop/header/action overlays, shell/sidebar/tabs/footer, input/focus/accessibility, rules, and session/save authority remain exact. Focused Town/Battle, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Town interaction and release readiness remain excluded."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Town scenic overlay glass integration completed; select the next source-backed graphical-polish slice from fresh live captures.",
+  "currentNotes": "Town command watchplate visual hierarchy is completed from direct 1280/1920 captures; no blocker is active and the next bounded graphical-polish slice has not yet been selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-scenic-overlay-glass-integration-10184",
-  "currentSliceId": "ux-town-scenic-overlay-glass-integration-10184",
-  "currentSliceNotes": "Completed: responsive translucent status and district edge rails preserve exact live payloads while keeping the Town panorama dominant.",
+  "currentSlice": "ux-town-command-watchplate-visual-hierarchy-10184",
+  "currentSliceId": "ux-town-command-watchplate-visual-hierarchy-10184",
+  "currentSliceNotes": "Completed: the opaque Town command-marker bullet list is now a compact translucent five-cell watchplate with exact live values, responsive containment, and unchanged Town authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town scenic overlay glass integration",
-  "currentSliceUpdatedAt": "2026-08-25T05:07:45Z",
+  "currentSliceTitle": "Town command watchplate visual hierarchy",
+  "currentSliceUpdatedAt": "2026-08-25T05:40:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19650,7 +19650,7 @@
       }
     }
   },
-  "guardrailNote": "Change only Battle presentation beneath/outside the playable hex grid and restore the existing wide System frame. Preserve exact per-hex terrain, grid/stack/VFX geometry, compact commands, rules, input/focus, save, and accessibility authority.",
+  "guardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a non-overlapping source boundary. Preserve gameplay, input/focus/accessibility, save/session authority, platform parity, and bounded release claims.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19860,9 +19860,28 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh live visual defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Town scenic-overlay glass integration is complete. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
+  "notes": "The Town command watchplate visual-hierarchy slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
+    {
+    "id": "ux-town-command-watchplate-visual-hierarchy-10184",
+    "title": "Town command watchplate visual hierarchy",
+    "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+    "updatedAt": "2026-08-25T05:40:25Z",
+    "startedAt": "2026-08-25T05:13:05Z",
+    "completedAt": "2026-08-25T05:40:25Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownStageView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+    "notes": "Completed from direct 1280x720 and 1920x1080 captures. The opaque 156x114 command-marker bullet list is now a responsive translucent five-cell Town Watch plate with exact live values/order, contained cells, and a lower footprint. Focused Town/Battle, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction and release readiness remain unclaimed.",
+      "blockedReason": null
+    },
     {
       "id": "ux-town-scenic-overlay-glass-integration-10184",
       "title": "Town scenic overlay glass integration",
@@ -100970,7 +100989,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next source-backed graphical-polish or release-readiness slice from fresh live captures. Broader graphical polish and the remaining production gaps continue.",
+  "remainingWork": "Select the next fresh bounded graphical-polish defect; do not infer a new implementation slice from tracker prose alone.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101401,7 +101420,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_generated_map_blocker_composition_polish_in_progress",
+  "result": "town_command_watchplate_visual_hierarchy_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -101502,9 +101521,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Generated-map blocker composition polish is the selected presentation slice; native generation, body masks, passability, pathing, content, and save authority remain unchanged.",
+  "summary": "Town command telemetry is now a compact responsive translucent five-cell watchplate; exact live payloads and all Town/session authority remain unchanged.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T01:40:46Z",
+  "updatedAt": "2026-08-25T05:40:25Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next source-backed graphical-polish or release-readiness slice from fresh live captures and a non-overlapping production owner.
+- Selected implementation slice: none. Select the next fresh, bounded, source-backed graphical-polish defect from direct runtime captures before changing production behavior.
+
+- Previous completed implementation slice: `ux-town-command-watchplate-visual-hierarchy-10184`. The opaque 156x114 Town command-marker bullet list is now a responsive translucent five-cell Town Watch plate with the exact live Heroes, Build, Recruit, Response, and Threat values, authored labels and colors, contained cells, and a materially smaller footprint. Direct 1280x720 and 1920x1080 captures keep the faction panorama dominant while status/district rails, scenic header/action overlays, shell/sidebar/tabs/footer, input/focus, accessibility, Town rules, and session/save authority remain exact. Focused Town/Battle, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-town-command-watchplate-visual-hierarchy-10184`
 
 - Previous completed implementation slice: `ux-town-scenic-overlay-glass-integration-10184`. Town status and district overlays now use responsive translucent glass edge rails with narrow live-color accents instead of opaque saturated cards and a beige slab. Direct 1280x720 and 1920x1080 captures preserve the faction panorama as the dominant surface while all four ordered status values, all five ordered district values, contextual occupation/retake states, command/header/action overlays, input/focus, rules, and session/save authority remain exact. Town/Battle visual, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-town-scenic-overlay-glass-integration-10184`
@@ -10138,6 +10141,31 @@ Completion result:
 
 Non-goals:
 - no new art asset, scenic backdrop/crop, Town header/sidebar/tabs/footer, status/district meaning or ordering, contextual occupation/retake behavior, command marker, action presentation, input/focus, accessibility, TownRules/OverworldRules/economy/content, save schema, packaged Town interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, Native RMG, or release-readiness change or claim.
+
+## Town Command Watchplate Visual Hierarchy
+
+id: `ux-town-command-watchplate-visual-hierarchy-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the TownStageView command marker's opaque 156x114 bullet-list treatment with a responsive translucent glass watchplate containing the same exact ordered Heroes, Build, Recruit, Response, and Threat values;
+- use five compact live-color cells and a small Town Watch heading so the surface reads as an authored scenic instrument instead of developer telemetry, while materially reducing its vertical footprint at 1280x720 and 1920x1080;
+- retain the exact command-marker payload calculations, status and district rails, scenic backdrop/crop/header/action overlays, shell/sidebar/tabs/footer, focus/input, Town rules, and session/save authority.
+
+Completion criteria:
+- fresh 1280x720 and 1920x1080 Town captures show a compact translucent watchplate with all five labels and values readable, the panorama visible around it, and no overlap with the status rail, scenic header, or district rail;
+- focused runtime proves exact five-item order/value authority, responsive compact/wide watchplate geometry, five-cell containment/non-overlap, reduced painted area, detached summaries, and unchanged whole-session authority across 1280 -> 1920 -> 1280 plus ordinary and captured Town states;
+- Town/Battle visual, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new art asset, scenic backdrop/crop, status/district treatment or meaning, command-marker values/order, Town header/sidebar/tabs/footer, action presentation, input/focus, accessibility, TownRules/OverworldRules/economy/content, save schema, or other-screen redesign;
+- no packaged Town interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, Native RMG, or release-readiness change or claim.
+
+Completion result:
+- direct 1280x720 and 1920x1080 Town captures show the compact five-cell watchplate readable and contained without obscuring the panorama or overlapping the status, header, or district surfaces;
+- focused Town/Battle validation proves exact live and fixture values, responsive compact/wide geometry, compact -> wide -> compact restoration, detached summaries, and unchanged whole-session authority;
+- Town action presentation, exit routing, active focus, accessibility, core, exact/generic editor parsing, repository validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Town interaction and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 
