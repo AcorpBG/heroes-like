@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-continuous-terrain-grain-overlay-10184",
-    "title": "Overworld continuous terrain grain overlay",
+    "id": "ux-overworld-map-object-tile-scale-convergence-10184",
+    "title": "Overworld map-object tile-scale convergence",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T20:26:24Z",
-    "updatedAt": "2026-08-25T20:49:14Z",
-    "completedAt": "2026-08-25T20:49:14Z",
+    "startedAt": "2026-08-25T20:59:12Z",
+    "updatedAt": "2026-08-25T21:16:38Z",
+    "completedAt": "2026-08-25T21:16:38Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed: one original seamless 1024x1024 RGBA painterly microtexture is rendered once over the whole terrain board below macro lighting, roads, objects, selection, and fog. Inspected authored 1280/1920 and generated natural-fog/reveal-all captures retain clear terrain identity and object readability without visible seams or per-tile repetition. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and broader release claims remain unclaimed."
+    "notes": "Completed from direct user playtest feedback and inspected River Pass 1280/1920 captures. The semantic map-object ladder now spans 0.38 through 0.60 tiles while hero0.62 and town1.12 remain exact. Focused authored scale/commander/artifact, broad Overworld, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Overworld interaction and broader release claims remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The continuous terrain grain overlay is complete with inspected authored/generated captures and focused, compatibility, static/editor, and bounded platform validation; select the next source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld map-object tile-scale convergence is complete with inspected native 1280/1920 captures and focused, compatibility, static/editor, and bounded platform validation; select the next source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-continuous-terrain-grain-overlay-10184",
-  "currentSliceId": "ux-overworld-continuous-terrain-grain-overlay-10184",
-  "currentSliceNotes": "Completed one seamless original microtexture as a subtle continuous map-space terrain layer beneath lighting, roads, objects, selection, and fog, with exact map and gameplay authority preserved.",
+  "currentSlice": "ux-overworld-map-object-tile-scale-convergence-10184",
+  "currentSliceId": "ux-overworld-map-object-tile-scale-convergence-10184",
+  "currentSliceNotes": "Converge only the semantic visible extents of Overworld map objects toward the live tile/road scale; preserve exact hero/town ranks, alpha-bound rendering, footprints, interaction, movement, and authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld continuous terrain grain overlay",
-  "currentSliceUpdatedAt": "2026-08-25T20:49:14Z",
+  "currentSliceTitle": "Overworld map-object tile-scale convergence",
+  "currentSliceUpdatedAt": "2026-08-25T21:16:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19689,7 +19689,7 @@
       }
     }
   },
-  "guardrailNote": "Change only the Overworld revealed-terrain presentation grain. Preserve exact terrain ids/order, source frames, transitions, passability, movement, roads, objects, selection, fog/reveal authority, routes, session/save authority, generated placement, and Native RMG behavior.",
+  "guardrailNote": "Change only semantic visible extents for Overworld map objects. Preserve exact object identities/assets/classification, hero/town scale, alpha crop/aspect/grounding, logical footprints, passability, movement, interaction, camera, session/save authority, generated placement, and Native RMG behavior.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19900,8 +19900,37 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
-  "notes": "The continuous terrain grain overlay is completed and blockers are empty; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "notes": "The Overworld map-object tile-scale convergence is completed and blockers are empty; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-map-object-tile-scale-convergence-10184",
+      "title": "Overworld map-object tile-scale convergence",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T20:59:12Z",
+      "updatedAt": "2026-08-25T21:16:38Z",
+      "completedAt": "2026-08-25T21:16:38Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the directly rejected visual spread between tiny loose props and larger world actors by converging the existing semantic map-object visible extents around the live tile and road scale without changing map authority.",
+      "completionCriteria": "Fresh inspected authored 1280x720 and 1920x1080 captures show artifacts, pickups, encounters, structures, blockers, waypoints, and landmarks at a coherent readable world scale beside unchanged hero/town ranks; focused runtime proves exact semantic ordering, alpha-cropped aspect/containment, unchanged logical footprints and session/save authority; authored/generated compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No object id/family/profile, asset replacement, alpha crop, grounding, marker/focus cue, hero/town scale, map zoom, camera, terrain, road, fog, selection, UI, animation/audio/VFX, or gameplay rule change.",
+        "No logical footprint, body/visit mask, collision, passability, pathing, interaction, route, content, generated placement, save/schema, AI, economy, battle, or Native RMG change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct user feedback and inspected native River Pass 1280/1920 captures. Artifacts, pickups, encounters, decorations, ordinary objects, waypoints, structures, blockers, and landmarks now occupy a restrained 0.38-0.60 tile ladder beside the unchanged hero0.62 and town1.12 ranks. Focused two-width scale, six-faction commander, artifact, broad Overworld, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Object identities/assets/classification, alpha crop/aspect/grounding, footprints, pathing, interaction, camera, content, save/session, generated placement, and Native RMG behavior remain unchanged; packaged Overworld interaction and broader release claims remain unclaimed.",
+      "blockedReason": null,
+      "remainingWork": "None for this slice; select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "ux-overworld-continuous-terrain-grain-overlay-10184",
       "title": "Overworld continuous terrain grain overlay",
@@ -101826,7 +101855,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "No remaining work for the completed continuous terrain grain overlay; select the next tracker-approved source-backed graphical-polish or release-readiness slice. Broader graphical polish and product gaps remain.",
+  "remainingWork": "No remaining work for the completed Overworld map-object tile-scale convergence; select the next tracker-approved source-backed graphical-polish or release-readiness slice. Broader graphical polish and product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
