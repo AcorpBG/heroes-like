@@ -26,7 +26,15 @@ const SCENIC_GLASS_CARD_FILL := Color(0.045, 0.058, 0.066, 0.72)
 const SCENIC_GLASS_SHADOW := Color(0.0, 0.0, 0.0, 0.28)
 const SCENIC_GLASS_BORDER := Color(0.86, 0.72, 0.40, 0.70)
 const STATUS_ACCENT_WIDTH := 5.0
-const DISTRICT_ACCENT_HEIGHT := 3.0
+const DISTRICT_RIBBON_MODEL := "compact_scenic_district_readiness_ribbon"
+const DISTRICT_RIBBON_FILL := Color(0.025, 0.035, 0.042, 0.56)
+const DISTRICT_RIBBON_CARD_FILL := Color(0.045, 0.058, 0.066, 0.30)
+const DISTRICT_RIBBON_BORDER := Color(0.86, 0.72, 0.40, 0.52)
+const DISTRICT_RIBBON_COMPACT_WIDTH := 540.0
+const DISTRICT_RIBBON_WIDE_WIDTH := 620.0
+const DISTRICT_RIBBON_COMPACT_HEIGHT := 34.0
+const DISTRICT_RIBBON_WIDE_HEIGHT := 36.0
+const DISTRICT_ACCENT_HEIGHT := 2.0
 const COMMAND_WATCH_MODEL := "responsive_translucent_five_cell_watchplate"
 const COMMAND_WATCH_FILL := Color(0.025, 0.035, 0.042, 0.72)
 const COMMAND_WATCH_CELL_FILL := Color(0.045, 0.058, 0.066, 0.64)
@@ -66,11 +74,11 @@ const FACTION_BACKDROP_TEXTURES := {
 }
 const DISTRICT_ORDER := ["military", "economy", "spellcraft", "logistics", "defense"]
 const DISTRICT_LABELS := {
-	"military": "WAR",
-	"economy": "COIN",
-	"spellcraft": "MAG",
-	"logistics": "ROAD",
-	"defense": "WALL",
+	"military": "Military",
+	"economy": "Economy",
+	"spellcraft": "Magic",
+	"logistics": "Roads",
+	"defense": "Walls",
 }
 const DISTRICT_COLORS := {
 	"military": Color(0.71, 0.34, 0.28, 0.94),
@@ -1102,6 +1110,12 @@ func validation_scenic_overlay_summary() -> Dictionary:
 		"status_district_nonoverlap": status_district_nonoverlap,
 		"glass_fill_alpha": SCENIC_GLASS_FILL.a,
 		"glass_card_fill_alpha": SCENIC_GLASS_CARD_FILL.a,
+		"district_ribbon_model": DISTRICT_RIBBON_MODEL,
+		"district_ribbon_fill_alpha": DISTRICT_RIBBON_FILL.a,
+		"district_ribbon_card_fill_alpha": DISTRICT_RIBBON_CARD_FILL.a,
+		"district_ribbon_border_alpha": DISTRICT_RIBBON_BORDER.a,
+		"district_ribbon_preferred_width": DISTRICT_RIBBON_COMPACT_WIDTH if _scenic_overlay_compact(scene_rect) else DISTRICT_RIBBON_WIDE_WIDTH,
+		"district_ribbon_span_ratio": district_strip_rect.size.x / maxf(1.0, scene_rect.size.x),
 		"status_accent_width": STATUS_ACCENT_WIDTH,
 		"district_accent_height": DISTRICT_ACCENT_HEIGHT,
 		"overlay_area_ratio": overlay_area / scene_area,
@@ -1400,18 +1414,18 @@ func _draw_district_strip(scene_rect: Rect2) -> void:
 	var strip_rect := _district_strip_rect(scene_rect)
 	var payloads := _district_strip_payloads()
 	var card_rects := _district_card_rects(strip_rect, payloads.size())
-	draw_rect(Rect2(strip_rect.position + Vector2(2.0, 2.0), strip_rect.size), SCENIC_GLASS_SHADOW, true)
-	draw_rect(strip_rect, SCENIC_GLASS_FILL, true)
-	draw_rect(strip_rect, SCENIC_GLASS_BORDER, false, 1.5)
+	draw_rect(Rect2(strip_rect.position + Vector2(1.0, 1.0), strip_rect.size), SCENIC_GLASS_SHADOW, true)
+	draw_rect(strip_rect, DISTRICT_RIBBON_FILL, true)
+	draw_rect(strip_rect, DISTRICT_RIBBON_BORDER, false, 1.0)
 	for index in range(payloads.size()):
 		var payload: Dictionary = payloads[index] if payloads[index] is Dictionary else {}
 		var card_rect: Rect2 = card_rects[index]
 		var accent: Color = payload.get("color", FRAME_COLOR)
-		draw_rect(card_rect, SCENIC_GLASS_CARD_FILL, true)
-		draw_rect(card_rect, Color(accent.r, accent.g, accent.b, 0.50), false, 1.0)
-		draw_rect(Rect2(card_rect.position, Vector2(card_rect.size.x, DISTRICT_ACCENT_HEIGHT)), Color(accent.r, accent.g, accent.b, 0.92), true)
-		_draw_text(String(payload.get("label", "")), card_rect.position + Vector2(8.0, 16.0), Color(accent.r, accent.g, accent.b, 1.0).lightened(0.26), 10)
-		_draw_text("%d" % int(payload.get("value", 0)), card_rect.position + Vector2(8.0, card_rect.size.y - 5.0), TEXT_COLOR, 15)
+		draw_rect(card_rect, DISTRICT_RIBBON_CARD_FILL, true)
+		draw_rect(card_rect, Color(accent.r, accent.g, accent.b, 0.38), false, 1.0)
+		draw_rect(Rect2(card_rect.position, Vector2(card_rect.size.x, DISTRICT_ACCENT_HEIGHT)), Color(accent.r, accent.g, accent.b, 0.82), true)
+		_draw_text(String(payload.get("label", "")), card_rect.position + Vector2(6.0, card_rect.size.y * 0.5 + 4.0), Color(accent.r, accent.g, accent.b, 1.0).lightened(0.30), 9)
+		_draw_text("%d" % int(payload.get("value", 0)), card_rect.position + Vector2(maxf(8.0, card_rect.size.x - 24.0), card_rect.size.y * 0.5 + 5.0), TEXT_COLOR, 13)
 
 func _district_strip_payloads() -> Array:
 	var payloads: Array = []
@@ -1428,23 +1442,25 @@ func _district_strip_payloads() -> Array:
 
 func _district_strip_rect(scene_rect: Rect2) -> Rect2:
 	var compact := _scenic_overlay_compact(scene_rect)
-	var height := 40.0 if compact else 44.0
+	var preferred_width := DISTRICT_RIBBON_COMPACT_WIDTH if compact else DISTRICT_RIBBON_WIDE_WIDTH
+	var width := minf(preferred_width, maxf(0.0, scene_rect.size.x - 32.0))
+	var height := DISTRICT_RIBBON_COMPACT_HEIGHT if compact else DISTRICT_RIBBON_WIDE_HEIGHT
 	return Rect2(
 		Vector2(scene_rect.position.x + 16.0, scene_rect.end.y - height - 14.0),
-		Vector2(scene_rect.size.x - 32.0, height)
+		Vector2(width, height)
 	)
 
 func _district_card_rects(strip_rect: Rect2, card_count: int) -> Array:
 	var rects: Array = []
 	if card_count <= 0:
 		return rects
-	var gap := 6.0
-	var inset := 7.0
+	var gap := 3.0
+	var inset := 5.0
 	var card_width := (strip_rect.size.x - inset * 2.0 - gap * float(card_count - 1)) / float(card_count)
 	for index in range(card_count):
 		rects.append(Rect2(
-			strip_rect.position + Vector2(inset + float(index) * (card_width + gap), 6.0),
-			Vector2(card_width, strip_rect.size.y - 12.0)
+			strip_rect.position + Vector2(inset + float(index) * (card_width + gap), 5.0),
+			Vector2(card_width, strip_rect.size.y - 10.0)
 		))
 	return rects
 

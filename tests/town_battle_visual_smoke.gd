@@ -302,20 +302,33 @@ func _scenic_overlay_contract_exact(summary: Dictionary, compact_expected: bool)
 		if payload_value is Dictionary:
 			district_ids.append(String(payload_value.get("id", "")))
 			district_labels.append(String(payload_value.get("label", "")))
-	var max_area_ratio := 0.28 if compact_expected else 0.13
+	var scene_rect: Rect2 = summary.get("scene_rect", Rect2()) if summary.get("scene_rect", Rect2()) is Rect2 else Rect2()
+	var district_strip_rect: Rect2 = summary.get("district_strip_rect", Rect2()) if summary.get("district_strip_rect", Rect2()) is Rect2 else Rect2()
+	var expected_preferred_width := 540.0 if compact_expected else 620.0
+	var expected_ribbon_width := minf(expected_preferred_width, maxf(0.0, scene_rect.size.x - 32.0))
+	var expected_ribbon_height := 34.0 if compact_expected else 36.0
+	var max_area_ratio := 0.25 if compact_expected else 0.08
 	return String(summary.get("model", "")) == "responsive_translucent_glass_edge_rails" \
 		and bool(summary.get("compact", not compact_expected)) == compact_expected \
 		and int(summary.get("status_count", 0)) == 4 \
 		and status_kinds == ["guard", "spell", "pressure", "routes"] \
 		and int(summary.get("district_count", 0)) == 5 \
 		and district_ids == ["military", "economy", "spellcraft", "logistics", "defense"] \
-		and district_labels == ["WAR", "COIN", "MAG", "ROAD", "WALL"] \
+		and district_labels == ["Military", "Economy", "Magic", "Roads", "Walls"] \
 		and bool(summary.get("contained", false)) \
 		and bool(summary.get("status_district_nonoverlap", false)) \
 		and is_equal_approx(float(summary.get("glass_fill_alpha", 0.0)), 0.78) \
 		and is_equal_approx(float(summary.get("glass_card_fill_alpha", 0.0)), 0.72) \
+		and String(summary.get("district_ribbon_model", "")) == "compact_scenic_district_readiness_ribbon" \
+		and is_equal_approx(float(summary.get("district_ribbon_fill_alpha", 0.0)), 0.56) \
+		and is_equal_approx(float(summary.get("district_ribbon_card_fill_alpha", 0.0)), 0.30) \
+		and is_equal_approx(float(summary.get("district_ribbon_border_alpha", 0.0)), 0.52) \
+		and is_equal_approx(float(summary.get("district_ribbon_preferred_width", 0.0)), expected_preferred_width) \
+		and is_equal_approx(district_strip_rect.size.x, expected_ribbon_width) \
+		and is_equal_approx(district_strip_rect.size.y, expected_ribbon_height) \
+		and is_equal_approx(float(summary.get("district_ribbon_span_ratio", -1.0)), expected_ribbon_width / maxf(1.0, scene_rect.size.x)) \
 		and is_equal_approx(float(summary.get("status_accent_width", 0.0)), 5.0) \
-		and is_equal_approx(float(summary.get("district_accent_height", 0.0)), 3.0) \
+		and is_equal_approx(float(summary.get("district_accent_height", 0.0)), 2.0) \
 		and float(summary.get("overlay_area_ratio", 1.0)) > 0.0 \
 		and float(summary.get("overlay_area_ratio", 1.0)) <= max_area_ratio \
 		and String(summary.get("payload_authority", "")) == "existing_status_and_district_builders"

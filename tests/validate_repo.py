@@ -29579,11 +29579,26 @@ def validate_town_scenic_overlay_glass_integration(errors: list[str]) -> None:
         'const SCENIC_GLASS_SHADOW := Color(0.0, 0.0, 0.0, 0.28)',
         'const SCENIC_GLASS_BORDER := Color(0.86, 0.72, 0.40, 0.70)',
         "const STATUS_ACCENT_WIDTH := 5.0",
-        "const DISTRICT_ACCENT_HEIGHT := 3.0",
+        'const DISTRICT_RIBBON_MODEL := "compact_scenic_district_readiness_ribbon"',
+        'const DISTRICT_RIBBON_FILL := Color(0.025, 0.035, 0.042, 0.56)',
+        'const DISTRICT_RIBBON_CARD_FILL := Color(0.045, 0.058, 0.066, 0.30)',
+        'const DISTRICT_RIBBON_BORDER := Color(0.86, 0.72, 0.40, 0.52)',
+        "const DISTRICT_RIBBON_COMPACT_WIDTH := 540.0",
+        "const DISTRICT_RIBBON_WIDE_WIDTH := 620.0",
+        "const DISTRICT_RIBBON_COMPACT_HEIGHT := 34.0",
+        "const DISTRICT_RIBBON_WIDE_HEIGHT := 36.0",
+        "const DISTRICT_ACCENT_HEIGHT := 2.0",
+        '"military": "Military"',
+        '"economy": "Economy"',
+        '"spellcraft": "Magic"',
+        '"logistics": "Roads"',
+        '"defense": "Walls"',
         "func validation_scenic_overlay_summary() -> Dictionary:",
         '"payload_authority": "existing_status_and_district_builders"',
         '"overlay_area_ratio": overlay_area / scene_area',
         '"status_district_nonoverlap": status_district_nonoverlap',
+        '"district_ribbon_model": DISTRICT_RIBBON_MODEL',
+        '"district_ribbon_span_ratio": district_strip_rect.size.x / maxf(1.0, scene_rect.size.x)',
     ):
         ensure(required_token in stage_text, errors, f"Town scenic glass integration is missing exact source token: {required_token}")
 
@@ -29616,10 +29631,12 @@ def validate_town_scenic_overlay_glass_integration(errors: list[str]) -> None:
         "var strip_rect := _district_strip_rect(scene_rect)",
         "var payloads := _district_strip_payloads()",
         "var card_rects := _district_card_rects(strip_rect, payloads.size())",
-        "draw_rect(strip_rect, SCENIC_GLASS_FILL, true)",
-        "draw_rect(card_rect, SCENIC_GLASS_CARD_FILL, true)",
+        "draw_rect(strip_rect, DISTRICT_RIBBON_FILL, true)",
+        "draw_rect(strip_rect, DISTRICT_RIBBON_BORDER, false, 1.0)",
+        "draw_rect(card_rect, DISTRICT_RIBBON_CARD_FILL, true)",
         "Vector2(card_rect.size.x, DISTRICT_ACCENT_HEIGHT)",
-        "TEXT_COLOR, 15",
+        "card_rect.size.y * 0.5 + 4.0",
+        "TEXT_COLOR, 13",
     ):
         ensure(required_token in district_body, errors, f"Town district ribbon is missing glass/accent typography token: {required_token}")
     for draw_body, owner in ((plaque_body, "status plaque"), (district_body, "district ribbon")):
@@ -29646,14 +29663,26 @@ def validate_town_scenic_overlay_glass_integration(errors: list[str]) -> None:
     card_rect_body = gdscript_function_block(stage_text, "_district_card_rects")
     for required_token in ("118.0 if compact else 132.0", "40.0 if compact else 44.0"):
         ensure(required_token in status_rect_body, errors, f"Town status-plaque geometry is missing responsive footprint token: {required_token}")
-    ensure("var height := 40.0 if compact else 44.0" in district_rect_body, errors, "Town district ribbon must retain its exact compact/wide height")
-    for required_token in ("var gap := 6.0", "var inset := 7.0", "strip_rect.size.y - 12.0"):
+    for required_token in (
+        "var preferred_width := DISTRICT_RIBBON_COMPACT_WIDTH if compact else DISTRICT_RIBBON_WIDE_WIDTH",
+        "var width := minf(preferred_width, maxf(0.0, scene_rect.size.x - 32.0))",
+        "var height := DISTRICT_RIBBON_COMPACT_HEIGHT if compact else DISTRICT_RIBBON_WIDE_HEIGHT",
+        "Vector2(width, height)",
+    ):
+        ensure(required_token in district_rect_body, errors, f"Town district ribbon is missing compact bounded-width geometry token: {required_token}")
+    for required_token in ("var gap := 3.0", "var inset := 5.0", "strip_rect.size.y - 10.0"):
         ensure(required_token in card_rect_body, errors, f"Town district cells are missing bounded shared-ribbon geometry token: {required_token}")
     for obsolete_token in (
         "draw_rect(strip_rect, Color(0.88, 0.85, 0.78, 0.95), true)",
         "draw_rect(card_rect, card_color, true)",
         "var fill: Color = data.get(\"color\", FRAME_COLOR)",
         "draw_rect(rect, fill, true)",
+        "Vector2(scene_rect.size.x - 32.0, height)",
+        '"WAR"',
+        '"COIN"',
+        '"MAG"',
+        '"ROAD"',
+        '"WALL"',
     ):
         ensure(obsolete_token not in stage_text, errors, f"Town scenic overlays must not retain opaque debug-card paint: {obsolete_token}")
 
@@ -29678,12 +29707,19 @@ def validate_town_scenic_overlay_glass_integration(errors: list[str]) -> None:
         '"responsive_translucent_glass_edge_rails"',
         '["guard", "spell", "pressure", "routes"]',
         '["military", "economy", "spellcraft", "logistics", "defense"]',
-        '["WAR", "COIN", "MAG", "ROAD", "WALL"]',
-        "0.28 if compact_expected else 0.13",
+        '["Military", "Economy", "Magic", "Roads", "Walls"]',
+        '"compact_scenic_district_readiness_ribbon"',
+        "540.0 if compact_expected else 620.0",
+        "34.0 if compact_expected else 36.0",
+        "0.25 if compact_expected else 0.08",
         'summary.get("contained", false)',
         'summary.get("status_district_nonoverlap", false)',
         'summary.get("glass_fill_alpha", 0.0)), 0.78',
         'summary.get("glass_card_fill_alpha", 0.0)), 0.72',
+        'summary.get("district_ribbon_fill_alpha", 0.0)), 0.56',
+        'summary.get("district_ribbon_card_fill_alpha", 0.0)), 0.30',
+        'summary.get("district_ribbon_border_alpha", 0.0)), 0.52',
+        'summary.get("district_ribbon_span_ratio", -1.0)',
         'summary.get("payload_authority", "")) == "existing_status_and_district_builders"',
     ):
         ensure(required_token in helper_body, errors, f"Town scenic overlay focused contract is missing exact proof token: {required_token}")
