@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: **none**. Select the next tracker-approved graphical-polish or release-readiness slice from current direct evidence.
+- Selected implementation slice: **None**. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+
+- Previous completed implementation slice: `presentation-battle-initiative-portrait-ribbon-10184`. The BattleBoard's five flat initiative rectangles are now one compact art-backed ribbon that reuses each live stack's exact shipped battle icon, a dark scenic chip body, retained side accent, and distinct current-stack frame. Inspected 1280x720 and 1920x1080 captures show a cohesive capped ribbon without board or chip overlap. Exact five-entry turn order, portrait paths/textures, iconless fallback, complete-word fitted labels, full tooltips, Board navigation, Town/Battle visuals, animation, accessibility, keyboard focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Initiative rules, stack identity/state, combat, AI, content, balance, save/session authority, and Native RMG remain unchanged. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `presentation-battle-initiative-portrait-ribbon-10184`
 
 - Previous completed implementation slice: `ux-overworld-map-object-tile-scale-convergence-10184`. Direct user playtest feedback and inspected River Pass captures identified the tiny end of the existing semantic object ladder as disconnected from the live tile/road scale. Artifacts, pickups, encounters, decorations, ordinary objects, waypoints, structures, blockers, and landmarks now occupy a restrained 0.38 through 0.60 tile ladder, while the hero remains 0.62 and the town remains 1.12 tiles. Fresh 1280x720 and 1920x1080 captures show readable props and sites without detached oversized tokens. Authored/generated scale, six-faction commander, artifact, broad Overworld, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Object identity/assets/classification, cached alpha crop/aspect/grounding, logical footprints, passability, movement, interaction, camera, content, session/save authority, generated placement, and Native RMG behavior remain unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-overworld-map-object-tile-scale-convergence-10184`
@@ -10168,6 +10171,33 @@ Non-goals:
 - no terrain id/order, base/source frame or transition selection, map topology, passability, movement cost, road, object, selection, fog/reveal rule, route, camera/map-fit, content, save/session, generated placement, density, or Native RMG data/behavior change;
 - no terrain tile replacement, object/hero/town asset or scale, UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change;
 - no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+## Battle Initiative Portrait Ribbon
+
+id: `presentation-battle-initiative-portrait-ribbon-10184`
+
+Status: completed.
+
+Implementation boundary:
+- restyle only the existing five-entry BattleBoard initiative strip as one compact dark scenic ribbon with a bounded portrait for each stack, a retained faction-side accent, and a distinct current-stack frame;
+- reuse each unit's exact existing `battle_icon` through the established BattleBoard texture loader, with a fail-closed iconless chip when an asset is unavailable;
+- keep one shared responsive geometry source for drawing, tooltip hit testing, and validation, and preserve the established complete-word Unicode-ellipsis label fitter and full identity tooltip;
+- leave board hexes, stack tokens/captions, action controls, tab summaries, focus/navigation, turn order/index, battle state, combat rules, AI, and session/save authority unchanged.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Battle captures show a cohesive art-backed initiative ribbon rather than flat debug-like rectangles, with readable names/counts, visible side accents, distinct current state, and no overlap with the board or adjacent chips;
+- focused runtime proves exact five-entry live turn-order identity, shared contained/nonoverlapping geometry, loaded exact portrait path/texture per stack, icon containment, iconless fallback, readable width-fitted labels, full tooltips, and unchanged battle/session/save/settings authority;
+- Battle Board navigation, broad Town/Battle visual, animation, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion evidence:
+- native 1280x720 and 1920x1080 captures were inspected and show a compact 620-pixel-capped portrait ribbon with exact shipped unit art, restrained faction accents, a distinct active frame, and no chip or battlefield overlap;
+- the focused Battle Board navigation smoke passes with exact five-stack order/identity, exact loaded portrait paths and textures, contained shared draw/hit-test geometry, fail-closed iconless control, complete-word/character-fallback label modes, full tooltips, and unchanged battle/session authority;
+- Battle animation, Town/Battle visual composition, accessibility semantics, active-play keyboard focus, core systems, repository validation, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no turn order/index, initiative rule, stack/unit identity, count, stats, ability, combat math, action, target, movement, objective, AI, content, balance, save/schema, map, or Native RMG change;
+- no stack-token/caption, hex-field, terrain, footer, banner, sidebar, command-dock, global theme, animation/audio/VFX, or other screen redesign;
+- no packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Map-Object Tile-Scale Convergence
 

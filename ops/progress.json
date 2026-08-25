@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from current direct evidence."
+    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-map-object-tile-scale-convergence-10184",
-    "title": "Overworld map-object tile-scale convergence",
+    "id": "presentation-battle-initiative-portrait-ribbon-10184",
+    "title": "Battle initiative portrait ribbon",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T20:59:12Z",
-    "updatedAt": "2026-08-25T21:16:38Z",
-    "completedAt": "2026-08-25T21:16:38Z",
+    "startedAt": "2026-08-25T21:18:57Z",
+    "updatedAt": "2026-08-25T21:39:00Z",
+    "completedAt": "2026-08-25T21:39:00Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct user playtest feedback and inspected River Pass 1280/1920 captures. The semantic map-object ladder now spans 0.38 through 0.60 tiles while hero0.62 and town1.12 remain exact. Focused authored scale/commander/artifact, broad Overworld, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Overworld interaction and broader release claims remain unclaimed."
+    "notes": "Completed from direct cross-screen capture review. The exact five-stack Battle initiative strip now uses shipped unit battle icons inside a compact dark 620px-capped ribbon with restrained faction accents and a distinct active frame. Inspected 1280/1920 captures, focused Board navigation/identity/portrait/fallback/label/tooltip authority, Battle animation, Town/Battle visuals, accessibility, keyboard focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Initiative, combat, AI, content, balance, save/session, and Native RMG remain unchanged; packaged Battle interaction and broader release claims remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld map-object tile-scale convergence is complete with inspected native 1280/1920 captures and focused, compatibility, static/editor, and bounded platform validation; select the next source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Battle initiative portrait ribbon is completed with inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform validation. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-map-object-tile-scale-convergence-10184",
-  "currentSliceId": "ux-overworld-map-object-tile-scale-convergence-10184",
-  "currentSliceNotes": "Converge only the semantic visible extents of Overworld map objects toward the live tile/road scale; preserve exact hero/town ranks, alpha-bound rendering, footprints, interaction, movement, and authority.",
+  "currentSlice": "presentation-battle-initiative-portrait-ribbon-10184",
+  "currentSliceId": "presentation-battle-initiative-portrait-ribbon-10184",
+  "currentSliceNotes": "Restyle only the exact existing five-chip Battle initiative strip with shipped unit battle icons, a dark scenic body, side accents, and current-state frame; preserve all initiative, input, combat, and authority surfaces.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld map-object tile-scale convergence",
-  "currentSliceUpdatedAt": "2026-08-25T21:16:38Z",
+  "currentSliceTitle": "Battle initiative portrait ribbon",
+  "currentSliceUpdatedAt": "2026-08-25T21:39:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19689,7 +19689,7 @@
       }
     }
   },
-  "guardrailNote": "Change only semantic visible extents for Overworld map objects. Preserve exact object identities/assets/classification, hero/town scale, alpha crop/aspect/grounding, logical footprints, passability, movement, interaction, camera, session/save authority, generated placement, and Native RMG behavior.",
+  "guardrailNote": "Change only the Battle initiative strip's presentation and shared painted/hit geometry. Preserve exact turn order/index, stacks/counts, labels/tooltips, board tokens/hexes, focus/input, combat, session/save/settings authority, and gameplay.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19900,8 +19900,35 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
-  "notes": "The Overworld map-object tile-scale convergence is completed and blockers are empty; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "notes": "The Battle initiative portrait ribbon is the sole selected in-progress graphical-polish slice; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-initiative-portrait-ribbon-10184",
+      "title": "Battle initiative portrait ribbon",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T21:18:57Z",
+      "updatedAt": "2026-08-25T21:39:00Z",
+      "completedAt": "2026-08-25T21:39:00Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the flat debug-like Battle initiative rectangles with a compact art-backed ribbon using exact shipped unit icons while preserving live initiative and battle authority.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 captures show a cohesive portrait ribbon with readable names/counts, side accents, distinct current state, and no overlap; focused runtime proves exact five-entry turn-order identity, shared contained geometry, exact loaded portrait paths/textures, icon containment and missing-icon fallback, unchanged labels/tooltips and battle/session/save/settings authority; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No turn order/index, initiative rule, stack/unit identity, count, stats, ability, combat math, action, target, movement, objective, AI, content, balance, save/schema, map, or Native RMG change.",
+        "No stack-token/caption, hex-field, terrain, footer, banner, sidebar, command-dock, global theme, animation/audio/VFX, or other screen redesign.",
+        "No packaged Battle interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct 1280/1920 capture review. The exact five-entry initiative strip is now a compact art-backed portrait ribbon using shipped unit icons, a dark scenic foundation, restrained side accents, and a distinct current-stack frame. Focused exact identity/portrait/fallback/label/tooltip and battle authority, proportional compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass; packaged Battle interaction and broader release claims remain unclaimed.",
+      "blockedReason": null,
+      "remainingWork": "None for this slice; select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "ux-overworld-map-object-tile-scale-convergence-10184",
       "title": "Overworld map-object tile-scale convergence",
@@ -101855,7 +101882,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "No remaining work for the completed Overworld map-object tile-scale convergence; select the next tracker-approved source-backed graphical-polish or release-readiness slice. Broader graphical polish and product gaps remain.",
+  "remainingWork": "Implement and inspect the Battle initiative portrait ribbon, then run focused identity/geometry/authority, compatibility, static/editor, and bounded platform gates; broader graphical polish and product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102387,9 +102414,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The continuous Overworld terrain macro-lighting slice is in progress from direct authored/generated visual evidence; terrain/source/fog/gameplay/RMG authority remains unchanged.",
+  "summary": "The Battle initiative portrait ribbon is completed; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T19:05:02Z",
+  "updatedAt": "2026-08-25T21:39:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

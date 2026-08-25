@@ -975,6 +975,22 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 	if expected_ids.is_empty() or rows.size() != expected_ids.size() or int(surface.get("visible_count", 0)) != expected_ids.size() or int(surface.get("visible_cap", 0)) != 5:
 		return _fail_bool("Battle initiative strip did not expose the exact visible live turn-order count at %d: expected=%s surface=%s." % [width, expected_ids, surface])
 	var field_rect: Rect2 = surface.get("field_rect", Rect2())
+	var strip_rect: Rect2 = surface.get("strip_rect", Rect2())
+	var missing_portrait: Dictionary = surface.get("missing_portrait_control", {}) if surface.get("missing_portrait_control", {}) is Dictionary else {}
+	if String(surface.get("presentation_model", "")) != "compact_art_backed_unit_portrait_ribbon" \
+		or not is_equal_approx(float(surface.get("portrait_extent", 0.0)), 22.0) \
+		or not is_equal_approx(float(surface.get("label_left_inset", 0.0)), 32.0) \
+		or strip_rect.size.x <= 0.0 \
+		or strip_rect.size.y <= 0.0 \
+		or not field_rect.encloses(strip_rect) \
+		or String(missing_portrait.get("model", "")) != "compact_art_backed_unit_portrait_ribbon" \
+		or String(missing_portrait.get("unit_id", "")) != "unit_missing_turn_strip_portrait" \
+		or String(missing_portrait.get("path", "")) != "" \
+		or bool(missing_portrait.get("loaded", true)) \
+		or not bool(missing_portrait.get("iconless_fallback", false)) \
+		or not bool(missing_portrait.get("contained", false)) \
+		or missing_portrait.get("texture", null) != null:
+		return _fail_bool("Battle initiative ribbon model/fallback geometry changed at %d: surface=%s." % [width, surface])
 	var previous_rect := Rect2()
 	var saw_full_fit := false
 	var saw_word_boundary_fit := false
@@ -987,6 +1003,11 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 			full_name = "Stack"
 		var alive_count := _stack_alive_count_for_test(stack)
 		var side := String(stack.get("side", ""))
+		var unit_id := String(stack.get("unit_id", ""))
+		var unit_art: Dictionary = ContentService.get_unit_art(unit_id)
+		var expected_portrait_path := String(unit_art.get("battle_icon", ""))
+		var portrait: Dictionary = row.get("portrait", {}) if row.get("portrait", {}) is Dictionary else {}
+		var portrait_rect: Rect2 = portrait.get("rect", Rect2())
 		var current := expected_ids[index] == String(session.battle.get("active_stack_id", ""))
 		var expected_tooltip := "Initiative Strip\n- Visible slot: %d of %d\n- Stack: %s x%d\n- Side: %s\n- State: %s\n- Inspection: hovering this chip does not advance initiative or spend an action." % [
 			index + 1,
@@ -1011,6 +1032,7 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 			or String(row.get("full_name", "")) != full_name
 			or int(row.get("alive_count", -1)) != alive_count
 			or String(row.get("side", "")) != side
+			or String(row.get("unit_id", "")) != unit_id
 			or bool(row.get("current", not current)) != current
 			or String(row.get("tooltip", "")) != expected_tooltip
 			or visible_label == initials_label
@@ -1018,12 +1040,25 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 			or not visible_label.begins_with(full_name.left(3))
 			or not visible_label.ends_with(" x%d" % alive_count)
 			or float(row.get("visible_label_width", INF)) > float(row.get("visible_label_max_width", 0.0)) + 0.01
+			or not is_equal_approx(float(row.get("visible_label_max_width", 0.0)), maxf(24.0, rect.size.x - 32.0 - 6.0))
+			or String(portrait.get("model", "")) != "compact_art_backed_unit_portrait_ribbon"
+			or String(portrait.get("unit_id", "")) != unit_id
+			or expected_portrait_path == ""
+			or String(portrait.get("path", "")) != expected_portrait_path
+			or not ResourceLoader.exists(expected_portrait_path)
+			or not (load(expected_portrait_path) is Texture2D)
+			or not bool(portrait.get("loaded", false))
+			or bool(portrait.get("iconless_fallback", true))
+			or not bool(portrait.get("contained", false))
+			or portrait_rect.size.x <= 0.0
+			or portrait_rect.size.y <= 0.0
+			or not rect.encloses(portrait_rect)
 			or rect.size.x <= 0.0
 			or rect.size.y <= 0.0
 			or not field_rect.encloses(rect)
 			or (index > 0 and previous_rect.intersects(rect))
 		):
-			return _fail_bool("Battle initiative chip identity/fit/geometry mismatch at %d row %d: expected_tooltip=%s label_control=%s row=%s field=%s previous=%s." % [width, index, expected_tooltip, label_control, row, field_rect, previous_rect])
+			return _fail_bool("Battle initiative portrait-chip identity/fit/geometry mismatch at %d row %d: expected_tooltip=%s label_control=%s row=%s field=%s previous=%s." % [width, index, expected_tooltip, label_control, row, field_rect, previous_rect])
 		previous_rect = rect
 	if not saw_full_fit or not saw_word_boundary_fit or not saw_character_fallback:
 		return _fail_bool("Battle initiative strip did not exercise full, complete-word, and unbreakable-word fitting at %d: full=%s word=%s character=%s rows=%s." % [width, saw_full_fit, saw_word_boundary_fit, saw_character_fallback, rows])
