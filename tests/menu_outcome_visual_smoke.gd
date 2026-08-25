@@ -2,6 +2,7 @@ extends Node
 
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const OutcomeScenicBackdropViewScript = preload("res://scenes/results/OutcomeScenicBackdropView.gd")
+const OutcomeBannerViewScript = preload("res://scenes/results/OutcomeBannerView.gd")
 const CAMPAIGN_SMOKE_ID := "campaign_reedfall"
 const OUTCOME_SCENIC_BACKDROP_PATHS := {
 	"victory": "res://art/results/runtime/backdrops/outcome_victory.png",
@@ -24,6 +25,11 @@ const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
 	"SavePanel": 0.86,
 }
 const OUTCOME_SCENIC_STAGE_SIZES := [Vector2(1280.0, 720.0), Vector2(1920.0, 1080.0)]
+const OUTCOME_STATUS_EMBLEM_PATHS := {
+	"victory": "res://art/results/runtime/emblems/outcome_victory_emblem.png",
+	"defeat": "res://art/results/runtime/emblems/outcome_defeat_emblem.png",
+}
+const OUTCOME_STATUS_EMBLEM_STAGE_SIZES := [Vector2(300.0, 112.0), Vector2(356.0, 220.0)]
 
 var _original_campaign_profile := {}
 
@@ -1369,6 +1375,22 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		get_tree().quit(1)
 		return false
 	var authority_before: Dictionary = session.to_dict()
+	var live_banner = shell.get_node_or_null("%OutcomeBanner")
+	if live_banner == null or not live_banner.has_method("validation_summary"):
+		push_error("Outcome smoke: live result banner does not expose authored-emblem validation.")
+		get_tree().quit(1)
+		return false
+	var live_emblem_summary: Dictionary = live_banner.call("validation_summary")
+	if not _outcome_status_emblem_geometry_exact(live_emblem_summary, "victory"):
+		push_error("Outcome smoke: live victory result emblem contract failed: %s." % live_emblem_summary)
+		get_tree().quit(1)
+		return false
+	var fresh_live_emblem_summary := live_emblem_summary.duplicate(true)
+	live_emblem_summary["destination_rect"] = Rect2()
+	if session.to_dict() != authority_before or live_banner.call("validation_summary") != fresh_live_emblem_summary:
+		push_error("Outcome smoke: detached result-emblem validation changed live session or banner authority.")
+		get_tree().quit(1)
+		return false
 	var live_summary: Dictionary = shell.call("validation_scenic_epilogue_summary")
 	if (
 		String(live_summary.get("status", "")) != "victory"
@@ -1430,8 +1452,55 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		return false
 	fixture.queue_free()
 	await get_tree().process_frame
+
+	var emblem_fixture = OutcomeBannerViewScript.new()
+	add_child(emblem_fixture)
+	await get_tree().process_frame
+	var compact_initial: Dictionary = {}
+	for stage_size in OUTCOME_STATUS_EMBLEM_STAGE_SIZES:
+		emblem_fixture.size = stage_size
+		for status in OUTCOME_STATUS_EMBLEM_PATHS:
+			emblem_fixture.set_outcome(String(status))
+			var summary: Dictionary = emblem_fixture.validation_summary()
+			if not _outcome_status_emblem_geometry_exact(summary, String(status)):
+				push_error("Outcome smoke: %s authored status emblem contract failed at %s: %s." % [status, stage_size, summary])
+				emblem_fixture.queue_free()
+				get_tree().quit(1)
+				return false
+			if not _outcome_status_emblem_alpha_exact(String(OUTCOME_STATUS_EMBLEM_PATHS[status])):
+				push_error("Outcome smoke: %s authored status emblem lost transparent-corner authority." % status)
+				emblem_fixture.queue_free()
+				get_tree().quit(1)
+				return false
+			if stage_size == OUTCOME_STATUS_EMBLEM_STAGE_SIZES[0] and String(status) == "victory":
+				compact_initial = summary.duplicate(true)
+	emblem_fixture.size = OUTCOME_STATUS_EMBLEM_STAGE_SIZES[0]
+	emblem_fixture.set_outcome("victory")
+	if emblem_fixture.validation_summary() != compact_initial:
+		push_error("Outcome smoke: authored status emblem did not restore exact compact geometry after the wide layout.")
+		emblem_fixture.queue_free()
+		get_tree().quit(1)
+		return false
+	emblem_fixture.set_outcome("unmapped_outcome")
+	var emblem_fallback: Dictionary = emblem_fixture.validation_summary()
+	if (
+		bool(emblem_fallback.get("texture_loaded", true))
+		or not bool(emblem_fallback.get("fallback", false))
+		or String(emblem_fallback.get("rendering_mode", "")) != "procedural_status_fallback"
+		or String(emblem_fallback.get("expected_path", "")) != ""
+	):
+		push_error("Outcome smoke: unmapped result status did not retain the procedural banner fallback: %s." % emblem_fallback)
+		emblem_fixture.queue_free()
+		get_tree().quit(1)
+		return false
+	emblem_fixture.queue_free()
+	await get_tree().process_frame
+	if FileAccess.get_file_as_bytes(OUTCOME_STATUS_EMBLEM_PATHS["victory"]) == FileAccess.get_file_as_bytes(OUTCOME_STATUS_EMBLEM_PATHS["defeat"]):
+		push_error("Outcome smoke: victory and defeat authored status emblems are not byte-distinct.")
+		get_tree().quit(1)
+		return false
 	if session.to_dict() != authority_before:
-		push_error("Outcome smoke: scenic epilogue selection changed live session authority.")
+		push_error("Outcome smoke: scenic epilogue or authored status-emblem selection changed live session authority.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -1469,6 +1538,41 @@ func _outcome_scenic_geometry_exact(summary: Dictionary) -> bool:
 		and source_rect.size.x > 0.0
 		and source_rect.size.y > 0.0
 		and is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
+	)
+
+
+func _outcome_status_emblem_geometry_exact(summary: Dictionary, status: String) -> bool:
+	var destination_rect: Rect2 = summary.get("destination_rect", Rect2()) if summary.get("destination_rect", Rect2()) is Rect2 else Rect2()
+	var texture_size: Vector2 = summary.get("texture_size", Vector2.ZERO) if summary.get("texture_size", Vector2.ZERO) is Vector2 else Vector2.ZERO
+	return (
+		String(summary.get("status", "")) == status
+		and String(summary.get("expected_path", "")) == String(OUTCOME_STATUS_EMBLEM_PATHS[status])
+		and String(summary.get("texture_path", "")) == String(OUTCOME_STATUS_EMBLEM_PATHS[status])
+		and bool(summary.get("texture_loaded", false))
+		and texture_size == Vector2(1024.0, 896.0)
+		and destination_rect.size.x > 0.0
+		and destination_rect.size.y > 0.0
+		and String(summary.get("rendering_mode", "")) == "contained_authored_status_emblem"
+		and bool(summary.get("aspect_preserved", false))
+		and bool(summary.get("destination_contained", false))
+		and bool(summary.get("centered", false))
+		and is_equal_approx(float(summary.get("inset", 0.0)), 8.0)
+		and not bool(summary.get("fallback", true))
+	)
+
+
+func _outcome_status_emblem_alpha_exact(path: String) -> bool:
+	var image := Image.new()
+	if image.load_png_from_buffer(FileAccess.get_file_as_bytes(path)) != OK \
+			or image.is_empty() \
+			or image.get_width() != 1024 \
+			or image.get_height() != 896:
+		return false
+	return (
+		is_zero_approx(image.get_pixel(0, 0).a)
+		and is_zero_approx(image.get_pixel(image.get_width() - 1, 0).a)
+		and is_zero_approx(image.get_pixel(0, image.get_height() - 1).a)
+		and is_zero_approx(image.get_pixel(image.get_width() - 1, image.get_height() - 1).a)
 	)
 
 func _run_outcome_smoke() -> bool:

@@ -1,5 +1,15 @@
 extends Control
 
+const STATUS_EMBLEM_PATHS := {
+	"victory": "res://art/results/runtime/emblems/outcome_victory_emblem.png",
+	"defeat": "res://art/results/runtime/emblems/outcome_defeat_emblem.png",
+}
+const STATUS_EMBLEMS := {
+	"victory": preload("res://art/results/runtime/emblems/outcome_victory_emblem.png"),
+	"defeat": preload("res://art/results/runtime/emblems/outcome_defeat_emblem.png"),
+}
+const EMBLEM_INSET := 8.0
+
 var _status := "victory"
 
 func _ready() -> void:
@@ -16,6 +26,62 @@ func set_outcome(status: String) -> void:
 func _draw() -> void:
 	if size.x <= 0.0 or size.y <= 0.0:
 		return
+	var emblem := _status_emblem()
+	if emblem != null:
+		draw_texture_rect(emblem, _emblem_destination_rect(emblem), false)
+		return
+	_draw_procedural_banner()
+
+
+func validation_summary() -> Dictionary:
+	var emblem := _status_emblem()
+	var texture_size := Vector2.ZERO
+	var destination_rect := Rect2()
+	if emblem != null:
+		texture_size = Vector2(emblem.get_width(), emblem.get_height())
+		destination_rect = _emblem_destination_rect(emblem)
+	var destination_aspect := destination_rect.size.x / destination_rect.size.y if destination_rect.size.y > 0.0 else 0.0
+	var texture_aspect := texture_size.x / texture_size.y if texture_size.y > 0.0 else 0.0
+	return {
+		"status": _status,
+		"expected_path": String(STATUS_EMBLEM_PATHS.get(_status, "")),
+		"texture_path": String(emblem.resource_path) if emblem != null else "",
+		"texture_loaded": emblem != null,
+		"texture_size": texture_size,
+		"destination_rect": destination_rect,
+		"rendering_mode": "contained_authored_status_emblem" if emblem != null else "procedural_status_fallback",
+		"aspect_preserved": is_equal_approx(destination_aspect, texture_aspect) if emblem != null else true,
+		"destination_contained": _rect_contained(destination_rect, Rect2(Vector2.ZERO, size)) if emblem != null else true,
+		"centered": destination_rect.get_center().is_equal_approx(size * 0.5) if emblem != null else true,
+		"inset": EMBLEM_INSET,
+		"fallback": emblem == null,
+	}
+
+
+func _status_emblem() -> Texture2D:
+	return STATUS_EMBLEMS.get(_status, null) as Texture2D
+
+
+func _emblem_destination_rect(emblem: Texture2D) -> Rect2:
+	var available_size := Vector2(maxf(0.0, size.x - EMBLEM_INSET * 2.0), maxf(0.0, size.y - EMBLEM_INSET * 2.0))
+	var texture_size := Vector2(emblem.get_width(), emblem.get_height())
+	if available_size.x <= 0.0 or available_size.y <= 0.0 or texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return Rect2(size * 0.5, Vector2.ZERO)
+	var scale := minf(available_size.x / texture_size.x, available_size.y / texture_size.y)
+	var draw_size := texture_size * scale
+	return Rect2((size - draw_size) * 0.5, draw_size)
+
+
+func _rect_contained(inner: Rect2, outer: Rect2) -> bool:
+	return (
+		inner.position.x >= outer.position.x - 0.01
+		and inner.position.y >= outer.position.y - 0.01
+		and inner.end.x <= outer.end.x + 0.01
+		and inner.end.y <= outer.end.y + 0.01
+	)
+
+
+func _draw_procedural_banner() -> void:
 
 	var palette := _palette()
 	draw_rect(Rect2(Vector2.ZERO, size), palette.background)
