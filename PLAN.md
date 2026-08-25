@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved implementation slice from direct current behavior evidence before making further product changes.
+- Selected implementation slice: none. Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence before implementation.
+
+- Previous completed implementation slice: `ux-generated-map-blocker-composition-polish-10184`. Generated decorative blocker bodies now select existing terrain-biome art in deterministic 16x16 spatial clusters and apply bounded per-cell scale, offset, and grounding while remaining inside the owning tile. Direct Small and Medium captures at 1280x720 and 1920x1080, 15–22 distinct live blocker assets, repeated-definition variation, exact rebuild/movement/save authority, the unchanged Medium 1920 performance floor, authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability, pathfinding, content, packaged generated-map interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unchanged or unclaimed.
+  id: `ux-generated-map-blocker-composition-polish-10184`
 
 - Previous completed implementation slice: `ux-generated-map-object-scale-and-blocker-body-coherence-10184`. Generated decorative blocker bodies now render every exact in-bounds package body cell with deterministic terrain-matched original obstacle art at a bounded 0.72-tile extent, while multi-tile interactive resource/site art is capped at one tile independently from unchanged logical footprints. Direct Small and Medium captures at 1280x720 and 1920x1080, four supported generated-package seeds, exact body-union/collision/terrain matching, real movement, exact semantic save/reload authority, authored-map and sprite compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Native generation, body/visit masks, passability, pathfinding, density, content, packaged generated-map interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unchanged or unclaimed.
   id: `ux-generated-map-object-scale-and-blocker-body-coherence-10184`
@@ -10002,6 +10005,27 @@ Completion criteria:
 
 Non-goals:
 - no native/H3MapEd recovery or parity claim; no generator density, terrain, placement, body-mask, visit-mask, passability, pathfinding, object-count, retry, heuristic, content, asset-generation, save-schema, battle, economy, AI, input, camera-policy, packaged generated-map interaction, certification, signing/publication, whole-game validation, or release-readiness change or claim.
+
+## Generated-Map Blocker Composition Polish
+
+id: `ux-generated-map-blocker-composition-polish-10184`
+
+Status: completed.
+
+Implementation boundary:
+- preserve the completed exact generated decorative body-cell index, but choose the existing terrain-biome blocker asset per bounded spatial cluster rather than globally per H3M definition so repeated records do not stamp one sprite across the map or thrash texture state per cell;
+- apply deterministic, bounded per-body scale, horizontal offset, and vertical settling inside the same cell, with matching localized grounding and no animation or frame-to-frame randomness;
+- keep every body cell visibly represented, retain the 0.72-tile authored composition target, and constrain the transformed sprite inside its owning tile so routes and interactive objects remain visually legible;
+- leave towns, heroes, resources/sites, authored non-generated objects, terrain, roads, fog, camera, selection, focus, and input unchanged.
+
+Completion criteria:
+- direct Small and Medium 1280x720 and 1920x1080 captures show materially less repeated stamping, coherent biome palettes, grounded obstacle clusters, and unchanged hero/town/site hierarchy;
+- focused authority proves multiple source placements using the same H3M definition can select deterministic palette variants, all assets remain terrain-biome eligible, transform bounds remain inside the owning tile, and identical session rebuilds reproduce exact asset/transform payloads;
+- generated package fields, exact body union, passability, path results, movement, object/resource/town/encounter order, session normalization, and save/reload authority remain unchanged;
+- generated live render/move, authored Overworld compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new art, asset generation, manifest/content edits, terrain or road rendering change, native generator/RMG recovery/parity, object placement/count/density, body/visit masks, passability/pathfinding, gameplay, save schema, packaged generated-map interaction, certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 
