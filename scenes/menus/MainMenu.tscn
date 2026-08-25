@@ -761,7 +761,66 @@ size_flags_horizontal = 3
 horizontal_alignment = 2
 text = "Autosave and three manual slots."
 
+[node name="SaveEmptyPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 214)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SaveEmptyPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="SaveEmptyRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SaveEmptyCrest" type="TextureRect" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad/SaveEmptyRow"]
+custom_minimum_size = Vector2(76, 76)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("6_crest")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SaveEmptyCopy" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad/SaveEmptyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 7
+
+[node name="SaveEmptyEyebrow" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad/SaveEmptyRow/SaveEmptyCopy"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "EXPEDITION ARCHIVE"
+
+[node name="SaveEmptyTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad/SaveEmptyRow/SaveEmptyCopy"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No expedition records yet"
+
+[node name="SaveEmptyRule" type="HSeparator" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad/SaveEmptyRow/SaveEmptyCopy"]
+layout_mode = 2
+
+[node name="SaveEmptyBody" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad/SaveEmptyRow/SaveEmptyCopy"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Begin a Campaign or Skirmish expedition. This archive will keep one autosave and three manual slots ready for your return."
+
+[node name="SaveEmptyCue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveEmptyPanel/SaveEmptyPad/SaveEmptyRow/SaveEmptyCopy"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Close this board, then choose Campaign or Skirmish."
+
 [node name="SaveSplit" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
