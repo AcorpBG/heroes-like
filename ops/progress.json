@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-battle-movement-range-overlay-restraint-10184",
-    "title": "Battle movement-range overlay restraint",
+    "id": "ux-overworld-town-selection-cartographic-perimeter-10184",
+    "title": "Overworld town selection cartographic perimeter",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T09:31:16Z",
-    "updatedAt": "2026-08-25T09:44:53Z",
-    "completedAt": "2026-08-25T09:44:53Z",
+    "startedAt": "2026-08-25T09:48:25Z",
+    "updatedAt": "2026-08-25T10:06:49Z",
+    "completedAt": "2026-08-25T10:06:49Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspected Battle 1280x720 and 1920x1080 captures. Every exact legal destination remains visible with a thin inset outline and near-transparent fill, while terrain, stack silhouettes, active state, and targets retain the intended hierarchy. Exact legal cells/order, actions, pathing, hit geometry, input/focus, combat, objectives, VFX, accessibility, and session authority remain unchanged."
+    "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Selected towns now use an open cartographic footprint cue with short warm corner marks and subtle midpoint survey ticks instead of a continuous bright box. Exact selected/hover footprint, town entry, ordinary tile selection, compact hero focus, route, interaction, accessibility, gameplay, session/save authority, and Native-RMG behavior remain unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Battle movement-range overlay restraint is completed with direct visual proof and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
+  "currentNotes": "Overworld town selection cartographic perimeter is completed with direct visual proof and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-movement-range-overlay-restraint-10184",
-  "currentSliceId": "ux-battle-movement-range-overlay-restraint-10184",
-  "currentSliceNotes": "Completed: every exact legal movement destination remains visible with a restrained inset outline and near-transparent fill, preserving all gameplay and interaction authority.",
+  "currentSlice": "ux-overworld-town-selection-cartographic-perimeter-10184",
+  "currentSliceId": "ux-overworld-town-selection-cartographic-perimeter-10184",
+  "currentSliceNotes": "Completed: selected towns retain their exact 3x2 footprint and interaction authority through an open cartographic corner-and-midpoint cue with no continuous box or fill.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle movement-range overlay restraint",
-  "currentSliceUpdatedAt": "2026-08-25T09:44:53Z",
+  "currentSliceTitle": "Overworld town selection cartographic perimeter",
+  "currentSliceUpdatedAt": "2026-08-25T10:06:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101204,6 +101204,26 @@
       "notes": "Completed from direct inspected 1280x720 and 1920x1080 Battle captures. Every exact legal destination remains drawn using a thin inset outline and near-transparent fill beneath unchanged active, target, and stack presentation. Exact movement authority, actions, pathing, hit geometry, input/focus, combat, objectives, tokens, VFX, accessibility, and session authority remain unchanged. Focused visual, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Battle interaction and release-readiness claims remain excluded.",
       "blockedReason": null,
       "completedAt": "2026-08-25T09:44:53Z"
+    },
+    {
+      "id": "ux-overworld-town-selection-cartographic-perimeter-10184",
+      "title": "Overworld town selection cartographic perimeter",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T10:06:49Z",
+      "startedAt": "2026-08-25T09:48:25Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Selected towns now use one open cartographic footprint cue with eight short warm corner strokes and four subtle midpoint survey ticks, no continuous rectangle, and no fill. Exact selection/hover geometry, compact hero focus, ordinary selection, route, interaction, accessibility, gameplay, session/save authority, object scale, and Native-RMG behavior remain unchanged. Focused geometry, broad visual, six-faction town/hero art, full-route movement, object focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged interaction and release-readiness claims remain excluded.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T10:06:49Z"
     }
   ],
   "project": "heroes-like",
@@ -101645,7 +101665,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "battle_movement_range_overlay_restraint_completed",
+  "result": "overworld_town_selection_cartographic_perimeter_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -101746,9 +101766,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Battle movement-range overlay restraint is completed with direct 1280/1920 visual proof, exact movement/gameplay authority, and green focused, compatibility, static/editor, Linux, and Windows startup gates; the next graphical-polish slice is not selected.",
+  "summary": "Overworld town selection cartographic perimeter is completed with direct 1280/1920 visual proof, exact selection/route/gameplay authority, and green focused, compatibility, static/editor, Linux, and Windows startup gates; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T09:44:53Z",
+  "updatedAt": "2026-08-25T10:06:49Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
