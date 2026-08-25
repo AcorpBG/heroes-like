@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from current direct evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-soft-cartographic-fog-frontier-10184",
-    "title": "Overworld soft cartographic fog frontier",
+    "id": "ux-overworld-continuous-terrain-grain-overlay-10184",
+    "title": "Overworld continuous terrain grain overlay",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T19:45:36Z",
-    "updatedAt": "2026-08-25T20:19:36Z",
-    "completedAt": "2026-08-25T20:19:36Z",
+    "startedAt": "2026-08-25T20:26:24Z",
+    "updatedAt": "2026-08-25T20:49:14Z",
+    "completedAt": "2026-08-25T20:49:14Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with a cardinal explored-state-only inward fog gradient and a compressed 0.30-to-1.12-tile object hierarchy. Inspected authored and generated captures plus focused scale, movement/save, route/input/focus, accessibility, core, static/editor, Linux, and Windows startup gates are green; hidden identity, logical footprints, and gameplay/RMG authority remain exact."
+    "notes": "Completed: one original seamless 1024x1024 RGBA painterly microtexture is rendered once over the whole terrain board below macro lighting, roads, objects, selection, and fog. Inspected authored 1280/1920 and generated natural-fog/reveal-all captures retain clear terrain identity and object readability without visible seams or per-tile repetition. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and broader release claims remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld fog-frontier and object-scale polish slice is completed with inspected authored/generated captures and bounded runtime/platform evidence. Select the next tracker-approved source-backed slice.",
+  "currentNotes": "The continuous terrain grain overlay is complete with inspected authored/generated captures and focused, compatibility, static/editor, and bounded platform validation; select the next source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-soft-cartographic-fog-frontier-10184",
-  "currentSliceId": "ux-overworld-soft-cartographic-fog-frontier-10184",
-  "currentSliceNotes": "Completed: the unexplored boundary now uses a bounded inward vertex gradient with no hidden identity sampling, and direct playtest scale feedback is resolved by compressing the visual hierarchy from 0.26-1.44 to 0.30-1.12 tile extents while preserving exact logical footprints and gameplay authority.",
+  "currentSlice": "ux-overworld-continuous-terrain-grain-overlay-10184",
+  "currentSliceId": "ux-overworld-continuous-terrain-grain-overlay-10184",
+  "currentSliceNotes": "Completed one seamless original microtexture as a subtle continuous map-space terrain layer beneath lighting, roads, objects, selection, and fog, with exact map and gameplay authority preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld soft cartographic fog frontier",
-  "currentSliceUpdatedAt": "2026-08-25T20:19:36Z",
+  "currentSliceTitle": "Overworld continuous terrain grain overlay",
+  "currentSliceUpdatedAt": "2026-08-25T20:49:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19689,7 +19689,7 @@
       }
     }
   },
-  "guardrailNote": "Change only the Overworld terrain presentation light field. Preserve exact terrain ids/order, source frames, transitions, passability, movement, roads, objects, fog/reveal authority, routes, session/save authority, generated placement, and Native RMG behavior.",
+  "guardrailNote": "Change only the Overworld revealed-terrain presentation grain. Preserve exact terrain ids/order, source frames, transitions, passability, movement, roads, objects, selection, fog/reveal authority, routes, session/save authority, generated placement, and Native RMG behavior.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19900,8 +19900,37 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
-  "notes": "Soft cartographic fog and user-reported map-object scale coherence are completed. The tracker is neutral and awaiting the next approved source-backed slice.",
+  "notes": "The continuous terrain grain overlay is completed and blockers are empty; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-continuous-terrain-grain-overlay-10184",
+      "title": "Overworld continuous terrain grain overlay",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T20:26:24Z",
+      "updatedAt": "2026-08-25T20:49:14Z",
+      "completedAt": "2026-08-25T20:49:14Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the Overworld terrain a cohesive painterly material grain that breaks flat digital color fields without changing the authoritative tile art, transitions, or map rules.",
+      "completionCriteria": "Fresh inspected authored and generated natural-fog/reveal-all captures at 1280x720 and 1920x1080 show subtle organic surface richness without mudding terrain identity, obscuring roads/objects/selection, visible texture seams, or per-tile repetition; focused runtime proves one seamless deterministic map-space layer, exact asset identity/draw order, bounded opacity, hidden-by-fog ownership, stable movement/resize/save behavior, and unchanged terrain/map/session authority; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No terrain id/order, base/source frame or transition selection, map topology, passability, movement cost, road, object, selection, fog/reveal rule, route, camera/map-fit, content, save/session, generated placement, density, or Native RMG data/behavior change.",
+        "No terrain tile replacement, object/hero/town asset or scale, UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current-capture evidence. One original seamless 1024x1024 RGBA grain texture is drawn once in normalized whole-board space after terrain/transitions and before macro lighting, roads, objects, selection, and fog. Inspected River Pass 1280x720 and 1920x1080 plus generated natural-fog/reveal-all captures retain terrain/object/road/selection readability without visible seams or tile repetition. Focused Ninefold and generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No terrain, map, gameplay, session/save, generated-placement, or Native RMG authority changed; packaged Overworld interaction and broader release claims remain unclaimed.",
+      "blockedReason": null,
+      "remainingWork": "None for this slice; select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "ux-overworld-soft-cartographic-fog-frontier-10184",
       "title": "Overworld soft cartographic fog frontier",
@@ -101797,7 +101826,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Implement and inspect continuous terrain macro-lighting, then run focused continuity, movement, compatibility, static/editor, and bounded platform gates; broader graphical polish and product gaps remain.",
+  "remainingWork": "No remaining work for the completed continuous terrain grain overlay; select the next tracker-approved source-backed graphical-polish or release-readiness slice. Broader graphical polish and product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

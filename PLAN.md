@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: **none**. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+- Selected implementation slice: **none**. Select the next tracker-approved graphical-polish or release-readiness slice from current direct evidence.
+
+- Previous completed implementation slice: `ux-overworld-continuous-terrain-grain-overlay-10184`. Authored and generated Overworld terrain now receives one original seamless low-contrast painterly microtexture as a single normalized map-space layer after base terrain/transitions and below macro lighting, roads, objects, selection, and fog. Inspected River Pass 1280x720 and 1920x1080 plus generated natural-fog and reveal-all captures show subtle organic surface richness without visible seams, per-tile repetition, muddied terrain identity, or lost road/object/selection readability. Focused Ninefold and generated movement/save proof, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Terrain identity/order/source frames/transitions, topology, passability, movement, roads, objects, selection, fog authority, session/save, generated placement, and Native RMG data/behavior remain unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-overworld-continuous-terrain-grain-overlay-10184`
 
 - Previous completed implementation slice: `ux-overworld-soft-cartographic-fog-frontier-10184`. The live Overworld now feathers opaque unexplored territory into explored terrain with a restrained inward vertex gradient driven only by cardinal explored-state booleans. Direct playtest feedback also produced a compressed visual hierarchy: handheld artifacts, pickups, encounters, structures, heroes, and towns now span 0.30 through 1.12 tile extents instead of 0.26 through 1.44, while the authored 3x2 town footprint and every blocking/visit tile remain exact. Inspected River Pass 1280x720 and 1920x1080 plus generated natural-fog and reveal-all captures show a softer frontier and less extreme town/hero/object scale without hidden identity exposure, interior seams, or generated-map clutter. Focused scale, Ninefold, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Fog state, terrain/roads, object identity/content, passability, movement, selection/routes, session/save, generated placement, and Native RMG data/behavior remain unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-overworld-soft-cartographic-fog-frontier-10184`
@@ -10134,6 +10137,34 @@ Completion criteria:
 
 Non-goals:
 - no new art, asset generation, manifest/content edits, terrain or road rendering change, native generator/RMG recovery/parity, object placement/count/density, body/visit masks, passability/pathfinding, gameplay, save schema, packaged generated-map interaction, certification, signing/publication, whole-game validation, or release-readiness claim.
+
+## Overworld Continuous Terrain Grain Overlay
+
+id: `ux-overworld-continuous-terrain-grain-overlay-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one original seamless low-contrast painterly microtexture under `art/overworld/runtime/terrain_tiles/detail/` and render it as one deterministic map-space layer over the complete terrain board;
+- draw the layer after authoritative base terrain and transitions but before the existing macro lighting, roads, objects, selection cues, and explored/unexplored fog;
+- use a bounded neutral transparent treatment that enriches material detail without replacing terrain art or changing terrain identity;
+- keep the asset source, draw coverage, opacity, continuity model, and presentation-only ownership observable through existing terrain presentation authority.
+
+Completion criteria:
+- direct authored and generated natural-fog/reveal-all 1280x720 and 1920x1080 captures show subtle organic surface richness without muddy terrain identity, obscuring roads/objects/selection, visible seams, or per-tile repetition;
+- focused runtime proves one loaded seamless texture, one map-space draw over the exact board rectangle, bounded opacity, stable deterministic presentation across movement and save/reload, and unexplored fog remaining fully authoritative;
+- terrain ids/order, source frames, transitions, topology, passability, path results, roads, objects, selection, movement, session/save authority, generated package payloads, and Native RMG behavior remain exact;
+- Overworld authored/generated compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion evidence:
+- direct River Pass 1280x720 and 1920x1080 captures plus generated natural-fog and reveal-all captures were inspected and retain terrain, road, object, selection, and fog readability without visible seams or per-tile repetition;
+- focused presentation proof reports one exact 1024x1024 RGBA texture, one whole-board normalized draw, 0.72 authored opacity, exact draw order, 1,296/1,296 reveal-all tiles, deterministic movement/save presentation, and unexplored-shroud authority;
+- Ninefold, generated movement/save, full-route movement, gameplay input ownership, keyboard focus, accessibility semantics, core systems, repository validation, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no terrain id/order, base/source frame or transition selection, map topology, passability, movement cost, road, object, selection, fog/reveal rule, route, camera/map-fit, content, save/session, generated placement, density, or Native RMG data/behavior change;
+- no terrain tile replacement, object/hero/town asset or scale, UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Terrain Transition Overlay Restoration
 

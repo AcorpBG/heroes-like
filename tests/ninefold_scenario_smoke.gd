@@ -338,10 +338,12 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var south_east_presentation: Dictionary = shell.call("validation_tile_presentation", south_east_tile.x, south_east_tile.y)
 	var presentations := [north_west_presentation, east_presentation, south_presentation, south_east_presentation]
 	var lighting_rows: Array = []
+	var grain_rows: Array = []
 	for presentation_value in presentations:
 		var presentation: Dictionary = presentation_value
 		var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
 		var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
+		var grain: Dictionary = terrain.get("terrain_grain_overlay", {}) if terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
 		var samples: Array = lighting.get("corner_samples", []) if lighting.get("corner_samples", []) is Array else []
 		if (
 			String(lighting.get("model", "")) != "continuous_shared_corner_bilinear_field"
@@ -362,11 +364,33 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 				_fail("Ninefold smoke: terrain macro-lighting sample escaped its bounded field: %s." % JSON.stringify(lighting))
 				return false
 		lighting_rows.append(lighting)
+		if (
+			String(grain.get("model", "")) != "single_normalized_map_space_seamless_painterly_microtexture"
+			or String(grain.get("source_model", "")) != "original_generated_neutral_grain_mirrored_seamless_alpha"
+			or not bool(grain.get("drawn", false))
+			or not bool(grain.get("texture_loaded", false))
+			or String(grain.get("texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"
+			or grain.get("texture_size", {}) != {"x": 1024, "y": 1024}
+			or not is_equal_approx(float(grain.get("modulate_alpha", 0.0)), 0.72)
+			or String(grain.get("mapping", "")) != "whole_board_normalized_once"
+			or bool(grain.get("repeated_per_tile", true))
+			or not bool(grain.get("seamless_outer_edges", false))
+			or bool(grain.get("terrain_identity_sampled", true))
+			or String(grain.get("draw_order", "")) != "after_terrain_transitions_before_macro_lighting_and_roads"
+			or not bool(grain.get("hidden_by_unexplored_shroud", false))
+		):
+			_fail("Ninefold smoke: explored terrain grain contract is incomplete: %s." % JSON.stringify(grain))
+			return false
+		grain_rows.append(grain)
 	var north_west_lighting: Dictionary = lighting_rows[0]
 	var repeated_terrain: Dictionary = repeated_presentation.get("terrain_presentation", {}) if repeated_presentation.get("terrain_presentation", {}) is Dictionary else {}
 	var repeated_lighting: Dictionary = repeated_terrain.get("terrain_macro_lighting", {}) if repeated_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 	if repeated_lighting != north_west_lighting:
 		_fail("Ninefold smoke: terrain macro-lighting changed across repeated observation.")
+		return false
+	var repeated_grain: Dictionary = repeated_terrain.get("terrain_grain_overlay", {}) if repeated_terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
+	if repeated_grain != grain_rows[0]:
+		_fail("Ninefold smoke: terrain grain changed across repeated observation.")
 		return false
 	var north_west_samples: Array = north_west_lighting.get("corner_samples", [])
 	var east_samples: Array = (lighting_rows[1] as Dictionary).get("corner_samples", [])
@@ -396,8 +420,12 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var hidden_presentation: Dictionary = shell.call("validation_tile_presentation", hidden_tile.x, hidden_tile.y)
 	var hidden_terrain: Dictionary = hidden_presentation.get("terrain_presentation", {}) if hidden_presentation.get("terrain_presentation", {}) is Dictionary else {}
 	var hidden_lighting: Dictionary = hidden_terrain.get("terrain_macro_lighting", {}) if hidden_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
+	var hidden_grain: Dictionary = hidden_terrain.get("terrain_grain_overlay", {}) if hidden_terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
 	if String(hidden_lighting.get("model", "")) != "continuous_shared_corner_bilinear_field" or bool(hidden_lighting.get("drawn", true)) or not bool(hidden_lighting.get("hidden_by_unexplored_shroud", false)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain macro-lighting: %s." % JSON.stringify(hidden_lighting))
+		return false
+	if String(hidden_grain.get("model", "")) != "single_normalized_map_space_seamless_painterly_microtexture" or bool(hidden_grain.get("drawn", true)) or not bool(hidden_grain.get("hidden_by_unexplored_shroud", false)) or bool(hidden_grain.get("terrain_identity_sampled", true)):
+		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain grain: %s." % JSON.stringify(hidden_grain))
 		return false
 	if not _assert_soft_fog_frontier(shell, session, north_west_tile):
 		return false
