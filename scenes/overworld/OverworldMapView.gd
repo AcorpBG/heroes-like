@@ -60,6 +60,16 @@ const TILE_SELECTION_CORNER_WIDTH_FACTOR := 0.022
 const TILE_SELECTION_MIDPOINT_ALPHA := 0.42
 const TILE_SELECTION_MIDPOINT_LENGTH_FACTOR := 0.08
 const TILE_SELECTION_MIDPOINT_WIDTH_FACTOR := 0.016
+const HERO_COMMAND_FOCUS_VISUAL_MODEL := "open_lateral_command_wings_and_ground_tick"
+const HERO_COMMAND_FOCUS_INSET_FACTOR := 0.08
+const HERO_COMMAND_FOCUS_CENTER_Y_FACTOR := 0.48
+const HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR := 0.12
+const HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR := 0.11
+const HERO_COMMAND_FOCUS_GROUND_Y_FACTOR := 0.82
+const HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR := 0.18
+const HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR := 0.035
+const HERO_COMMAND_FOCUS_ALPHA := 0.82
+const HERO_COMMAND_FOCUS_SHADOW_ALPHA := 0.40
 const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
 const HERO_FILL_COLOR := Color(0.88, 0.32, 0.21, 1.0)
@@ -2299,13 +2309,9 @@ func _draw_route_segment(board_rect: Rect2, tiles: Array, line_color: Color) -> 
 		_canvas_draw_circle(point, 4.0, line_color)
 
 func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
-	var extent := minf(rect.size.x, rect.size.y)
-	var focus_width := maxf(3.0, extent * FOCUS_RING_WIDTH_FACTOR)
 	var layout := _tile_focus_layout(tile, rect)
 	if tile == _hero_tile:
-		var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", rect)
-		_canvas_draw_rect(hero_focus_rect.grow(-1.0), Color(0.03, 0.025, 0.015, 0.50), false, focus_width + 2.0)
-		_canvas_draw_rect(hero_focus_rect.grow(-3.0), HERO_RING_COLOR, false, focus_width)
+		_draw_hero_command_focus_marker(layout.get("hero_command_marker_profile", {}))
 
 	if tile == _selected_tile:
 		var selection_rect: Rect2 = layout.get("selection_rect", rect)
@@ -2318,6 +2324,66 @@ func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
 		var hover_rect: Rect2 = layout.get("hover_rect", rect)
 		_canvas_draw_rect(hover_rect.grow(-7.0), HOVER_COLOR, false, 2.0)
 
+func _hero_command_focus_profile(rect: Rect2) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var inset := maxf(3.0, extent * HERO_COMMAND_FOCUS_INSET_FACTOR)
+	var marker_rect := rect.grow(-inset)
+	var line_width := maxf(1.25, extent * FOCUS_RING_WIDTH_FACTOR * 0.58)
+	return {
+		"model": HERO_COMMAND_FOCUS_VISUAL_MODEL,
+		"focus_rect": rect,
+		"marker_rect": marker_rect,
+		"center_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_CENTER_Y_FACTOR,
+		"wing_length_px": maxf(4.5, extent * HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR),
+		"wing_depth_px": maxf(4.0, extent * HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR),
+		"ground_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_GROUND_Y_FACTOR,
+		"ground_tick_length_px": maxf(6.0, extent * HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR),
+		"ground_notch_px": maxf(1.5, extent * HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR),
+		"line_width_px": line_width,
+		"shadow_width_px": line_width + 1.5,
+		"marker_alpha": HERO_COMMAND_FOCUS_ALPHA,
+		"shadow_alpha": HERO_COMMAND_FOCUS_SHADOW_ALPHA,
+		"antialiased": true,
+		"continuous_outline": false,
+		"interior_fill_alpha": 0.0,
+	}
+
+func _draw_hero_command_focus_marker(profile: Dictionary) -> void:
+	var marker_rect: Rect2 = profile.get("marker_rect", Rect2())
+	if marker_rect.size.x <= 0.0 or marker_rect.size.y <= 0.0:
+		return
+	var center_y := float(profile.get("center_y", marker_rect.get_center().y))
+	var wing_length := float(profile.get("wing_length_px", 4.5))
+	var wing_depth := float(profile.get("wing_depth_px", 4.0))
+	var ground_y := float(profile.get("ground_y", marker_rect.end.y))
+	var tick_length := float(profile.get("ground_tick_length_px", 6.0))
+	var notch := float(profile.get("ground_notch_px", 1.5))
+	var line_width := float(profile.get("line_width_px", 1.25))
+	var shadow_width := float(profile.get("shadow_width_px", line_width + 1.5))
+	var left_wing := PackedVector2Array([
+		Vector2(marker_rect.position.x, center_y - wing_depth),
+		Vector2(marker_rect.position.x + wing_length, center_y),
+		Vector2(marker_rect.position.x, center_y + wing_depth),
+	])
+	var right_wing := PackedVector2Array([
+		Vector2(marker_rect.end.x, center_y - wing_depth),
+		Vector2(marker_rect.end.x - wing_length, center_y),
+		Vector2(marker_rect.end.x, center_y + wing_depth),
+	])
+	var ground_center := Vector2(marker_rect.get_center().x, ground_y)
+	var ground_tick := PackedVector2Array([
+		ground_center + Vector2(-tick_length * 0.5, 0.0),
+		ground_center + Vector2(-notch, 0.0),
+		ground_center + Vector2(0.0, -notch),
+		ground_center + Vector2(notch, 0.0),
+		ground_center + Vector2(tick_length * 0.5, 0.0),
+	])
+	var shadow_color := Color(0.03, 0.025, 0.015, float(profile.get("shadow_alpha", HERO_COMMAND_FOCUS_SHADOW_ALPHA)))
+	var marker_color := Color(HERO_RING_COLOR.r, HERO_RING_COLOR.g, HERO_RING_COLOR.b, float(profile.get("marker_alpha", HERO_COMMAND_FOCUS_ALPHA)))
+	for points in [left_wing, right_wing, ground_tick]:
+		_canvas_draw_polyline(points, shadow_color, shadow_width, true)
+		_canvas_draw_polyline(points, marker_color, line_width, true)
+
 func _tile_focus_layout(tile: Vector2i, tile_rect: Rect2) -> Dictionary:
 	var town_presentation := _town_presentation_at(tile)
 	var town: Dictionary = town_presentation.get("town", {}) if town_presentation.get("town", {}) is Dictionary else {}
@@ -2325,9 +2391,11 @@ func _tile_focus_layout(tile: Vector2i, tile_rect: Rect2) -> Dictionary:
 	var town_rect := tile_rect
 	if uses_town_footprint:
 		town_rect = _town_footprint_rect_for_entry(_town_entry_tile(town))
+	var hero_focus_rect := _hero_draw_rect(tile_rect, tile, true) if uses_town_footprint else tile_rect
 	return {
 		"tile_rect": tile_rect,
-		"hero_focus_rect": _hero_draw_rect(tile_rect, tile, true) if uses_town_footprint else tile_rect,
+		"hero_focus_rect": hero_focus_rect,
+		"hero_command_marker_profile": _hero_command_focus_profile(hero_focus_rect),
 		"hero_uses_compact_town_footprint_rect": uses_town_footprint,
 		"selection_rect": town_rect,
 		"selection_uses_town_footprint_rect": uses_town_footprint,
@@ -5424,6 +5492,10 @@ func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:
 	var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", tile_rect)
 	var selection_rect: Rect2 = layout.get("selection_rect", tile_rect)
 	var hover_rect: Rect2 = layout.get("hover_rect", tile_rect)
+	var hero_command_marker_profile: Dictionary = layout.get("hero_command_marker_profile", {}).duplicate(true)
+	if not hero_command_marker_profile.is_empty():
+		hero_command_marker_profile["focus_rect"] = _rect_payload(hero_command_marker_profile.get("focus_rect", hero_focus_rect))
+		hero_command_marker_profile["marker_rect"] = _rect_payload(hero_command_marker_profile.get("marker_rect", hero_focus_rect))
 	var town_selection_visual_profile := _town_selection_visual_profile(selection_rect) if bool(layout.get("selection_uses_cartographic_town_perimeter", false)) else {}
 	if not town_selection_visual_profile.is_empty():
 		town_selection_visual_profile["perimeter_rect"] = _rect_payload(town_selection_visual_profile.get("perimeter_rect", selection_rect))
@@ -5434,6 +5506,7 @@ func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:
 		"tile": _vector2i_payload(tile),
 		"tile_rect": _rect_payload(tile_rect),
 		"hero_focus_rect": _rect_payload(hero_focus_rect),
+		"hero_command_marker_profile": hero_command_marker_profile,
 		"hero_uses_compact_town_footprint_rect": bool(layout.get("hero_uses_compact_town_footprint_rect", false)),
 		"selection_rect": _rect_payload(selection_rect),
 		"selection_uses_town_footprint_rect": bool(layout.get("selection_uses_town_footprint_rect", false)),
@@ -6278,6 +6351,9 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"hero_foot_anchor_width_fraction": hero_anchor_half_width_fraction * 2.0 if has_visible_hero else 0.0,
 		"hero_foot_anchor_height_fraction": hero_anchor_half_height_fraction * 2.0 if has_visible_hero else 0.0,
 		"hero_selection_ring_source": "tile_focus" if has_visible_hero else "",
+		"hero_focus_visual_model": HERO_COMMAND_FOCUS_VISUAL_MODEL if has_visible_hero else "",
+		"hero_focus_continuous_outline": false if has_visible_hero else null,
+		"hero_focus_interior_fill_alpha": 0.0 if has_visible_hero else null,
 		"selection_emphasis": tile == _selected_tile,
 		"focus_ring_width_px": maxf(3.0, extent * FOCUS_RING_WIDTH_FACTOR),
 		"tile_extent_px": extent,

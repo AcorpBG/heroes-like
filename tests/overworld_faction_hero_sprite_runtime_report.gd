@@ -238,12 +238,17 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 	var town_tile_selection_visual_profile: Dictionary = town_layout.get("tile_selection_visual_profile", {})
 	var ordinary_town_selection_visual_profile: Dictionary = ordinary_layout.get("town_selection_visual_profile", {})
 	var ordinary_tile_selection_visual_profile: Dictionary = ordinary_layout.get("tile_selection_visual_profile", {})
+	var town_command_marker_profile: Dictionary = town_layout.get("hero_command_marker_profile", {})
+	var ordinary_command_marker_profile: Dictionary = ordinary_layout.get("hero_command_marker_profile", {})
 	var town_hero_focus_rect := _rect_from_payload(town_layout.get("hero_focus_rect", {}))
 	var town_selection_rect := _rect_from_payload(town_layout.get("selection_rect", {}))
 	var town_hover_rect := _rect_from_payload(town_layout.get("hover_rect", {}))
 	var ordinary_hero_focus_rect := _rect_from_payload(ordinary_layout.get("hero_focus_rect", {}))
 	var ordinary_selection_rect := _rect_from_payload(ordinary_layout.get("selection_rect", {}))
 	var ordinary_hover_rect := _rect_from_payload(ordinary_layout.get("hover_rect", {}))
+	var town_hero_sprite_rect := _rect_from_payload(hero_layout.get("sprite_rect", {}))
+	var town_command_marker_exact := _hero_command_marker_profile_exact(town_command_marker_profile, town_hero_focus_rect, town_hero_sprite_rect)
+	var ordinary_command_marker_exact := _hero_command_marker_profile_exact(ordinary_command_marker_profile, ordinary_hero_focus_rect)
 	var expected_town_selection_extent := minf(expected_town_rect.size.x, expected_town_rect.size.y)
 	var expected_town_selection_inset := maxf(4.0, expected_town_selection_extent * 0.045)
 	var expected_town_selection_perimeter := expected_town_rect.grow(-expected_town_selection_inset)
@@ -251,6 +256,7 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 	var expected_tile_selection_inset := maxf(4.0, expected_tile_selection_extent * 0.085)
 	var expected_tile_selection_perimeter := ordinary_tile_rect.grow(-expected_tile_selection_inset)
 	var town_focus_layout_exact: bool = bool(town_layout.get("hero_uses_compact_town_footprint_rect", false)) \
+		and town_command_marker_exact \
 		and town_hero_focus_rect == _rect_from_payload(hero_layout.get("hero_rect", {})) \
 		and active_tile_rect.encloses(town_hero_focus_rect) \
 		and bool(town_layout.get("selection_uses_town_footprint_rect", false)) \
@@ -275,6 +281,7 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 		and town_selection_rect.size == active_tile_rect.size * Vector2(3.0, 2.0) \
 		and town_layout.get("town_entry_tile", {}) == town_presentation.get("entry_tile", {})
 	var ordinary_focus_layout_exact: bool = not bool(ordinary_layout.get("hero_uses_compact_town_footprint_rect", true)) \
+		and ordinary_command_marker_exact \
 		and ordinary_hero_focus_rect == ordinary_tile_rect \
 		and not bool(ordinary_layout.get("selection_uses_town_footprint_rect", true)) \
 		and not bool(ordinary_layout.get("selection_uses_interior_fill", true)) \
@@ -300,6 +307,8 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 		"ok": town_focus_layout_exact and ordinary_focus_layout_exact,
 		"town_focus_layout_exact": town_focus_layout_exact,
 		"ordinary_focus_layout_exact": ordinary_focus_layout_exact,
+		"town_command_marker_exact": town_command_marker_exact,
+		"ordinary_command_marker_exact": ordinary_command_marker_exact,
 		"town_selection_interior_fill": bool(town_layout.get("selection_uses_interior_fill", true)),
 		"town_selection_visual_model": String(town_layout.get("selection_visual_model", "")),
 		"town_selection_visual_profile": town_selection_visual_profile.duplicate(true),
@@ -330,6 +339,45 @@ func _rect_from_payload(value: Variant) -> Rect2:
 		float(payload.get("width", 0.0)),
 		float(payload.get("height", 0.0))
 	)
+
+func _hero_command_marker_profile_exact(profile: Dictionary, focus_rect: Rect2, sprite_rect: Rect2 = Rect2()) -> bool:
+	var extent := minf(focus_rect.size.x, focus_rect.size.y)
+	var marker_rect := _rect_from_payload(profile.get("marker_rect", {}))
+	var wing_length := float(profile.get("wing_length_px", 0.0))
+	var wing_depth := float(profile.get("wing_depth_px", 0.0))
+	var center_y := float(profile.get("center_y", 0.0))
+	var ground_y := float(profile.get("ground_y", 0.0))
+	var tick_length := float(profile.get("ground_tick_length_px", 0.0))
+	var notch := float(profile.get("ground_notch_px", 0.0))
+	var clears_sprite := true
+	if sprite_rect.has_area():
+		clears_sprite = marker_rect.position.x + wing_length <= sprite_rect.position.x \
+			and marker_rect.end.x - wing_length >= sprite_rect.end.x \
+			and ground_y > sprite_rect.end.y
+	return String(profile.get("model", "")) == "open_lateral_command_wings_and_ground_tick" \
+		and _rect_from_payload(profile.get("focus_rect", {})) == focus_rect \
+		and marker_rect == focus_rect.grow(-maxf(3.0, extent * 0.08)) \
+		and focus_rect.encloses(marker_rect) \
+		and is_equal_approx(center_y, focus_rect.position.y + focus_rect.size.y * 0.48) \
+		and is_equal_approx(wing_length, maxf(4.5, extent * 0.12)) \
+		and is_equal_approx(wing_depth, maxf(4.0, extent * 0.11)) \
+		and center_y - wing_depth >= marker_rect.position.y \
+		and center_y + wing_depth <= marker_rect.end.y \
+		and is_equal_approx(ground_y, focus_rect.position.y + focus_rect.size.y * 0.82) \
+		and is_equal_approx(tick_length, maxf(6.0, extent * 0.18)) \
+		and is_equal_approx(notch, maxf(1.5, extent * 0.035)) \
+		and marker_rect.position.x <= marker_rect.get_center().x - tick_length * 0.5 \
+		and marker_rect.end.x >= marker_rect.get_center().x + tick_length * 0.5 \
+		and ground_y - notch >= marker_rect.position.y \
+		and ground_y <= marker_rect.end.y \
+		and float(profile.get("line_width_px", 0.0)) >= 1.25 \
+		and float(profile.get("shadow_width_px", 0.0)) > float(profile.get("line_width_px", 0.0)) \
+		and is_equal_approx(float(profile.get("marker_alpha", 0.0)), 0.82) \
+		and is_equal_approx(float(profile.get("shadow_alpha", 0.0)), 0.40) \
+		and bool(profile.get("antialiased", false)) \
+		and not bool(profile.get("continuous_outline", true)) \
+		and is_zero_approx(float(profile.get("interior_fill_alpha", -1.0))) \
+		and clears_sprite
 
 func _tile_rect_from_metrics(board_rect: Rect2, map_size: Vector2i, tile: Vector2i) -> Rect2:
 	var cell_size := board_rect.size / Vector2(float(maxi(map_size.x, 1)), float(maxi(map_size.y, 1)))

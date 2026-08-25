@@ -42981,6 +42981,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     draw_rect_block = function_block(map_text, "_hero_draw_rect")
     layout_block = function_block(map_text, "_hero_draw_layout_payload")
     focus_draw_block = function_block(map_text, "_draw_tile_focus")
+    command_profile_block = function_block(map_text, "_hero_command_focus_profile")
+    command_draw_block = function_block(map_text, "_draw_hero_command_focus_marker")
     focus_layout_block = function_block(map_text, "_tile_focus_layout")
     focus_validation_block = function_block(map_text, "validation_tile_focus_layout")
     reserve_block = function_block(map_text, "_draw_hero_reserve_badge")
@@ -43043,8 +43045,50 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure("_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))" in movement_block, errors, "Hero movement interpolation must retain the authoritative active hero sprite across intermediate tiles")
     ensure('func validation_hero_draw_layout(tile: Vector2i, moving: bool = false) -> Dictionary:' in map_text and '_hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, not moving)' in map_text, errors, "Focused validation must expose the exact static-versus-moving hero layout decision without mutating it")
     for token in (
+        'const HERO_COMMAND_FOCUS_VISUAL_MODEL := "open_lateral_command_wings_and_ground_tick"',
+        "const HERO_COMMAND_FOCUS_INSET_FACTOR := 0.08",
+        "const HERO_COMMAND_FOCUS_CENTER_Y_FACTOR := 0.48",
+        "const HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR := 0.12",
+        "const HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR := 0.11",
+        "const HERO_COMMAND_FOCUS_GROUND_Y_FACTOR := 0.82",
+        "const HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR := 0.18",
+        "const HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR := 0.035",
+        "const HERO_COMMAND_FOCUS_ALPHA := 0.82",
+        "const HERO_COMMAND_FOCUS_SHADOW_ALPHA := 0.40",
+    ):
+        ensure(token in map_text, errors, f"Active hero command marker constant drifted: {token}")
+    for token in (
+        "var inset := maxf(3.0, extent * HERO_COMMAND_FOCUS_INSET_FACTOR)",
+        "var marker_rect := rect.grow(-inset)",
+        "var line_width := maxf(1.25, extent * FOCUS_RING_WIDTH_FACTOR * 0.58)",
+        '"model": HERO_COMMAND_FOCUS_VISUAL_MODEL', '"focus_rect": rect', '"marker_rect": marker_rect',
+        '"center_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_CENTER_Y_FACTOR',
+        '"wing_length_px": maxf(4.5, extent * HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR)',
+        '"wing_depth_px": maxf(4.0, extent * HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR)',
+        '"ground_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_GROUND_Y_FACTOR',
+        '"ground_tick_length_px": maxf(6.0, extent * HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR)',
+        '"ground_notch_px": maxf(1.5, extent * HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR)',
+        '"shadow_width_px": line_width + 1.5', '"antialiased": true', '"continuous_outline": false', '"interior_fill_alpha": 0.0',
+    ):
+        ensure(token in command_profile_block, errors, f"Active hero command marker profile is missing exact detached geometry: {token}")
+    for forbidden in ("session.", "_session.", "_hero_tile", "_selected_tile", "await ", "create_timer", "create_tween", "queue_redraw", "draw_"):
+        ensure(forbidden not in command_profile_block, errors, f"Active hero command marker profile must remain pure geometry: {forbidden}")
+    for token in (
+        'var marker_rect: Rect2 = profile.get("marker_rect", Rect2())',
+        "var left_wing := PackedVector2Array([", "var right_wing := PackedVector2Array([", "var ground_tick := PackedVector2Array([",
+        "Vector2(marker_rect.position.x + wing_length, center_y)", "Vector2(marker_rect.end.x - wing_length, center_y)",
+        "ground_center + Vector2(0.0, -notch)",
+        "for points in [left_wing, right_wing, ground_tick]:",
+        "_canvas_draw_polyline(points, shadow_color, shadow_width, true)",
+        "_canvas_draw_polyline(points, marker_color, line_width, true)",
+    ):
+        ensure(token in command_draw_block, errors, f"Active hero command marker draw path is missing symmetric antialiased open strokes: {token}")
+    ensure(command_draw_block.find("var left_wing :=") < command_draw_block.find("var right_wing :=") < command_draw_block.find("var ground_tick :=") < command_draw_block.find("for points in"), errors, "Active hero command marker must build symmetric wings then the ground tick before one shared draw loop")
+    for forbidden in ("_canvas_draw_rect", "_canvas_draw_circle", "_canvas_draw_colored_polygon", "_canvas_draw_polygon", "filled", "await ", "create_timer", "create_tween", "queue_redraw", "session.", "_session."):
+        ensure(forbidden not in command_draw_block, errors, f"Active hero command marker must remain fill-free, synchronous, and presentation-only: {forbidden}")
+    for token in (
         "var layout := _tile_focus_layout(tile, rect)",
-        'var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", rect)',
+        '_draw_hero_command_focus_marker(layout.get("hero_command_marker_profile", {}))',
         'var selection_rect: Rect2 = layout.get("selection_rect", rect)',
         'elif bool(layout.get("selection_uses_cartographic_tile_reticle", false)):',
         '_draw_tile_selection_reticle(selection_rect)',
@@ -43052,12 +43096,18 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ):
         ensure(token in focus_draw_block, errors, f"Town-footprint focus draw path is missing shared resolved geometry: {token}")
     ensure(focus_draw_block.find("var layout :=") < focus_draw_block.find("if tile == _hero_tile:") < focus_draw_block.find("if tile == _selected_tile:") < focus_draw_block.find("if tile == _hover_tile:"), errors, "Focus drawing must resolve one layout before preserving hero, selected, then hover ownership")
+    for forbidden in (
+        "_canvas_draw_rect(hero_focus_rect", "hero_focus_rect.grow(-1.0)", "hero_focus_rect.grow(-3.0)",
+        "Color(0.03, 0.025, 0.015, 0.50)", "focus_width + 2.0",
+    ):
+        ensure(forbidden not in focus_draw_block, errors, f"Active hero focus must not restore the former continuous rectangular cage: {forbidden}")
     for token in (
         "var town_presentation := _town_presentation_at(tile)",
         'var town: Dictionary = town_presentation.get("town", {}) if town_presentation.get("town", {}) is Dictionary else {}',
         "var uses_town_footprint := not town.is_empty()",
         "town_rect = _town_footprint_rect_for_entry(_town_entry_tile(town))",
-        '"hero_focus_rect": _hero_draw_rect(tile_rect, tile, true) if uses_town_footprint else tile_rect',
+        "var hero_focus_rect := _hero_draw_rect(tile_rect, tile, true) if uses_town_footprint else tile_rect",
+        '"hero_focus_rect": hero_focus_rect', '"hero_command_marker_profile": _hero_command_focus_profile(hero_focus_rect)',
         '"selection_rect": town_rect', '"selection_uses_town_footprint_rect": uses_town_footprint',
         '"selection_uses_interior_fill": false',
         '"selection_uses_cartographic_tile_reticle": not uses_town_footprint', '"hover_rect": town_rect',
@@ -43070,7 +43120,11 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for token in (
         "func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:",
         "var layout := _tile_focus_layout(tile, tile_rect)",
+        'var hero_command_marker_profile: Dictionary = layout.get("hero_command_marker_profile", {}).duplicate(true)',
+        'hero_command_marker_profile["focus_rect"] = _rect_payload(hero_command_marker_profile.get("focus_rect", hero_focus_rect))',
+        'hero_command_marker_profile["marker_rect"] = _rect_payload(hero_command_marker_profile.get("marker_rect", hero_focus_rect))',
         '"hero_focus_rect": _rect_payload(hero_focus_rect)',
+        '"hero_command_marker_profile": hero_command_marker_profile',
         '"selection_rect": _rect_payload(selection_rect)',
         '"selection_uses_interior_fill": bool(layout.get("selection_uses_interior_fill", true))',
         '"hover_rect": _rect_payload(hover_rect)',
@@ -43105,6 +43159,14 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'var focus_exact: Dictionary = _validate_focus_layouts(map_view, exact)',
         'var town_layout: Dictionary = map_view.call("validation_tile_focus_layout", active_tile)',
         'var ordinary_layout: Dictionary = map_view.call("validation_tile_focus_layout", ordinary_tile)',
+        'var town_command_marker_profile: Dictionary = town_layout.get("hero_command_marker_profile", {})',
+        'var ordinary_command_marker_profile: Dictionary = ordinary_layout.get("hero_command_marker_profile", {})',
+        'var town_command_marker_exact := _hero_command_marker_profile_exact(town_command_marker_profile, town_hero_focus_rect, town_hero_sprite_rect)',
+        'var ordinary_command_marker_exact := _hero_command_marker_profile_exact(ordinary_command_marker_profile, ordinary_hero_focus_rect)',
+        'String(profile.get("model", "")) == "open_lateral_command_wings_and_ground_tick"',
+        'not bool(profile.get("continuous_outline", true))',
+        'is_zero_approx(float(profile.get("interior_fill_alpha", -1.0)))',
+        'bool(profile.get("antialiased", false))',
         'var town_focus_layout_exact: bool = bool(town_layout.get("hero_uses_compact_town_footprint_rect", false))',
         'var ordinary_focus_layout_exact: bool = not bool(ordinary_layout.get("hero_uses_compact_town_footprint_rect", true))',
         'town_hero_focus_rect == _rect_from_payload(hero_layout.get("hero_rect", {}))',
@@ -43156,6 +43218,11 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'bool(hero_layout.get("town_footprint_colocated", true))',
         'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0)',
         'map_view.call("validation_tile_focus_layout", hero_tile)',
+        'var hero_command_marker_profile: Dictionary = focus_layout.get("hero_command_marker_profile", {})',
+        '_hero_command_marker_profile_exact(hero_command_marker_profile, hero_focus_rect, hero_sprite_rect)',
+        'String(readability.get("hero_focus_visual_model", "")) != "open_lateral_command_wings_and_ground_tick"',
+        'bool(readability.get("hero_focus_continuous_outline", true))',
+        'not is_zero_approx(float(readability.get("hero_focus_interior_fill_alpha", -1.0)))',
         'hero_focus_rect != _focus_rect_from_payload(hero_layout.get("hero_rect", {}))',
         'not bool(focus_layout.get("selection_uses_town_footprint_rect", false))',
         'bool(focus_layout.get("selection_uses_interior_fill", true))',
@@ -43167,7 +43234,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'hover_focus_rect != focus_tile_rect',
     ):
         ensure(token in visual_text, errors, f"Broad Overworld visual gate is missing town-entry visitor composition: {token}")
-    for forbidden in ("_tile_focus_layout(", "_draw_tile_focus(", "create_timer", "create_tween"):
+    for forbidden in ("_tile_focus_layout(", "_draw_tile_focus(", "_hero_command_focus_profile(", "_draw_hero_command_focus_marker(", "create_timer", "create_tween"):
         ensure(forbidden not in visual_text, errors, f"Broad focus geometry gate must observe only the public validation surface: {forbidden}")
 
 

@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Next action is to select the next tracker-approved source-backed graphical-polish or release-readiness slice.
 
+## Overworld Active Hero Command Marker
+
+id: `ux-overworld-active-hero-command-marker-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the active-hero focus drawing with symmetric open lateral command wings and a compact ground registration tick derived from the existing hero focus rectangle;
+- retain the exact active hero identity, full-tile or town-visitor focus geometry, selected-tile reticle, hover outline, draw order, focus/input ownership, and accessibility semantics;
+- keep the marker fill-free, contained, scalable at 1280x720 and 1920x1080, and visually subordinate to the hero sprite.
+
+Completion criteria:
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show the active hero without the former full rectangular cage, with the open command marker distinct from the selected-tile reticle and readable over land and town-entry contexts;
+- focused runtime proves exact marker model, symmetric contained wing/tick geometry, no continuous outline or interior fill, exact hero/town focus rectangles, selected/hover ownership, and unchanged session authority;
+- Overworld visual, six-faction hero, movement/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no hero identity, sprite, scale, animation, movement, route, selection destination, hover, focus ownership, input, tooltip, accessibility, town footprint, map content, session/save, gameplay, AI, battle, balance, or Native RMG change;
+- no new bitmap asset, filled badge, portrait plate, halo, animation, audio, VFX, or broad Overworld redesign;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the former dark-backed double rectangular active-hero frame is replaced by antialiased open lateral brass command wings and a compact notched ground tick, with no continuous outline or interior fill;
+- inspected 1280x720 and 1920x1080 River Pass captures plus focused six-faction/town-entry geometry, full Overworld visual, movement/input ownership, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- hero identity/art/scale/movement, selected-tile and town-footprint reticles, hover, focus/input/accessibility ownership, session/save authority, gameplay, and Native RMG remain unchanged. Packaged Overworld interaction and whole-release readiness remain unclaimed.
+
 ## Overworld Physical Object Proportion Rebalance
 
 id: `ux-overworld-physical-object-proportion-rebalance-10184`
