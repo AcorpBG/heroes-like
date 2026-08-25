@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. The next graphical-polish slice will address the newly reported Overworld object-scale mismatch after a fresh current capture and bounded non-overlap audit.
+- Selected implementation slice: none. Select the next tracker-approved release-readiness slice before changing another product surface.
+
+- Previous completed implementation slice: `ux-overworld-object-screen-scale-normalization-10184`. The freshly reproduced oversized Overworld composition is replaced by a restrained screen-scale ladder: 0.26-tile artifacts, 0.32 pickups, 0.40 encounters/defaults, 0.44 waypoints, 0.46 durable structures/blockers, 0.50 landmarks, a 0.54 multi-tile cap, 0.56 heroes, and 0.96-tile towns. Direct inspected River Pass 1280x720 and 1920x1080 captures now keep the terrain grid primary while towns remain larger than heroes and loose props remain readable. Exact alpha cropping/aspect, grounding, logical footprints, town body/entry masks, ids/content, hit areas, passability, routes/movement, selection/focus, fog, accessibility, camera, session/save authority, generated placement, and Native RMG remain unchanged. Focused small-map scale, six-faction hero/town, broad Overworld, generated movement/save, full-route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-overworld-object-screen-scale-normalization-10184`
 
 - Previous completed implementation slice: `ux-main-menu-skirmish-map-forge-disclosure-10184`. Skirmish now enters with a compact authored Map Forge header and an explicit Open Forge action instead of permanently expanding every generated-map control over the selected-front dossier. Opening the forge reveals the exact existing controls and a real Build & Play route still launches the generated Skirmish; generation keeps the forge open while active. Direct inspected collapsed/expanded 1280x720 captures, focused disclosure geometry/state/authority, real generated launch, broad Menu/Outcome, keyboard navigation, repository validation, and exact editor parsing pass. Generator configuration, retry/package/native-RMG behavior, authored front content/order, saves/session, packaged interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
   id: `ux-main-menu-skirmish-map-forge-disclosure-10184`
@@ -10432,6 +10435,32 @@ Completion result:
 - Skirmish first entry now keeps the exact generated-map form collapsed behind a compact `MAP FORGE / Build a New Map / Open Forge` header, returning the authored front list and opening brief to the initial viewport;
 - Open Forge / Close Forge preserves every generated input and its exact setup/status/provenance authority, returns focus safely when collapsing, and forces the form open only while generation is active;
 - direct collapsed/expanded 1280x720 capture, focused disclosure geometry and state round trip, a real generated-map button launch, broad Menu/Outcome, physical keyboard navigation, repository validation, and exact editor parsing are green.
+
+## Overworld Object Screen-Scale Normalization
+
+id: `ux-overworld-object-screen-scale-normalization-10184`
+
+Status: completed.
+
+Implementation boundary:
+- correct the direct user-reported and freshly captured mismatch in which the 3x2 town and selected hero dominate the board while smaller interactives fall into a disconnected token scale;
+- normalize painted town and field-hero visual mass against the existing one-tile terrain extent, then keep artifacts, pickups, encounters, services, waypoints, landmarks, and multi-tile interactives on a readable monotonic ladder;
+- keep alpha-bound cropping, aspect ratio, grounding, fog treatment, selection visibility, and existing imported/procedural asset fallback ownership intact.
+
+Completion criteria:
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show towns larger than heroes, heroes clearly larger than loose props, and readable interactives without any sprite appearing to occupy an implausible share of its logical footprint;
+- focused scale payloads prove the exact normalized ladder and containment for town, hero, artifact, pickup, encounter, service, landmark, and multi-tile cases while preserving cached alpha bounds and authored semantic profiles;
+- town body/entry masks, hero/town co-location, selection/hover, routes/movement, object interaction, session/save authority, generated maps, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completed implementation:
+- replaced the rejected 0.32/0.40/0.48-0.60/0.66/0.68/1.28 painted-extent ladder with exact 0.26 artifacts, 0.32 pickups, 0.40 encounters/defaults, 0.44 waypoints, 0.46 structures/blockers, 0.50 landmarks, a 0.54 multi-tile cap, 0.56 heroes, and 0.96 towns;
+- preserved the exact 3x2 logical town footprint, bottom-middle entry, object profiles, painted-alpha bounds/aspect, hero/town co-location, grounding, selection/focus, routes, movement, session/save authority, generated placement, and gameplay;
+- direct inspected 1280x720 and 1920x1080 captures plus focused scale, hero, broad Overworld, generated movement/save, route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates are green.
+
+Non-goals:
+- no logical town/object footprint, entry tile, hit area, passability, pathing, content id, asset replacement, map generation, density, AI, economy, battle, save schema, or Native-RMG change;
+- no camera/whole-map fit, terrain/fog/road, shell/sidebar/footer layout, input mapping, focus order, accessibility semantic, animation/audio, or VFX change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 
