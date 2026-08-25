@@ -37,6 +37,7 @@ const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 @onready var _player_panel: PanelContainer = %PlayerPanel
 @onready var _enemy_panel: PanelContainer = %EnemyPanel
 @onready var _footer_panel: PanelContainer = %Footer
+@onready var _footer_pad: MarginContainer = %FooterPad
 @onready var _footer_row: GridContainer = %FooterRow
 @onready var _action_panel: PanelContainer = %ActionPanel
 @onready var _action_pad: MarginContainer = %ActionPad
@@ -3653,7 +3654,7 @@ func _refit_battle_action_guide() -> void:
 		var line := String(raw_line).strip_edges()
 		if line != "":
 			visible_lines.append(_battle_action_context_word_text(line, 96))
-	var line_limit := 2 if _compact_layout_active else 3
+	var line_limit := 1 if _compact_layout_active else 3
 	_action_guide.text = "\n".join(visible_lines.slice(0, min(line_limit, visible_lines.size())))
 
 func _set_battle_event_compact_label(full_text: String, max_lines: int) -> void:
@@ -3699,6 +3700,7 @@ func _apply_responsive_layout() -> void:
 		available_size = parent_control.size
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	var banner_details_visible := not compact_layout or available_size.x >= 1180.0
+	var horizontal_footer := not compact_layout or available_size.x >= 1180.0
 	_compact_layout_active = compact_layout
 	_refit_battle_action_guide()
 	_sidebar_shell_panel.visible = not compact_layout
@@ -3706,8 +3708,10 @@ func _apply_responsive_layout() -> void:
 	_event_label.visible = not compact_layout
 	_status_label.visible = banner_details_visible
 	_pressure_label.visible = banner_details_visible
-	_footer_row.columns = 1 if compact_layout else 2
-	_footer_row.add_theme_constant_override("v_separation", 0 if compact_layout else 8)
+	_footer_row.columns = 2 if horizontal_footer else 1
+	_footer_row.add_theme_constant_override("v_separation", 8 if horizontal_footer else 0)
+	_footer_pad.add_theme_constant_override("margin_top", 2 if compact_layout else 6)
+	_footer_pad.add_theme_constant_override("margin_bottom", 2 if compact_layout else 6)
 	_action_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)
 	_action_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)
 	if compact_layout:

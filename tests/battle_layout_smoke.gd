@@ -74,6 +74,41 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		push_error("Battle layout smoke: tactical board collapsed below a usable surface at %s." % [viewport_size])
 		get_tree().quit(1)
 		return false
+	var footer_row := shell.get_node_or_null("%FooterRow") as GridContainer
+	var action_panel := shell.get_node_or_null("%ActionPanel") as Control
+	var system_panel := shell.get_node_or_null("%SystemPanel") as Control
+	var action_guide := shell.get_node_or_null("%ActionGuide") as Label
+	if footer_row == null or action_panel == null or system_panel == null or action_guide == null:
+		push_error("Battle layout smoke: responsive command-dock nodes are missing at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var horizontal_footer := viewport_size.x >= 1180.0
+	var footer_row_rect := footer_row.get_global_rect()
+	var action_panel_rect := action_panel.get_global_rect()
+	var system_panel_rect := system_panel.get_global_rect()
+	var command_dock_contained := (
+		viewport_rect.grow(1.0).encloses(footer_row_rect)
+		and footer_row_rect.grow(1.0).encloses(action_panel_rect)
+		and footer_row_rect.grow(1.0).encloses(system_panel_rect)
+	)
+	var command_dock_ordered := (
+		system_panel_rect.position.x >= action_panel_rect.end.x - 1.0
+		if horizontal_footer
+		else system_panel_rect.position.y >= action_panel_rect.end.y - 1.0
+	)
+	if footer_row.columns != (2 if horizontal_footer else 1) or not command_dock_contained or not command_dock_ordered:
+		push_error("Battle layout smoke: command dock did not retain its contained responsive order at %s: footer=%s action=%s system=%s columns=%d." % [viewport_size, footer_row_rect, action_panel_rect, system_panel_rect, footer_row.columns])
+		get_tree().quit(1)
+		return false
+	var expected_action_guide_lines := 1 if viewport_size.y < 760.0 else 3
+	if action_guide.text.split("\n", false).size() != expected_action_guide_lines or action_guide.tooltip_text.strip_edges().is_empty():
+		push_error("Battle layout smoke: compact ActionGuide did not preserve its fitted first view and full tooltip at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	if viewport_size == TARGET_VIEWPORT_SIZES[1] and board_rect.size.y < 365.0:
+		push_error("Battle layout smoke: standard 1280 Battle stage did not reclaim enough height from the compact command dock: %s." % board_rect)
+		get_tree().quit(1)
+		return false
 	if board_rect.position.x < viewport_rect.position.x - 1.0 or board_rect.position.y < viewport_rect.position.y - 1.0:
 		push_error("Battle layout smoke: tactical board rendered outside the viewport at %s." % [viewport_size])
 		get_tree().quit(1)

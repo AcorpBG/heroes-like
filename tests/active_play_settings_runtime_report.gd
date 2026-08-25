@@ -323,7 +323,7 @@ func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
 		and (system_panel.get_theme_stylebox("panel") is StyleBoxEmpty) == compact
 		and system_body.is_visible_in_tree() == not compact
 		and speed_bar.is_visible_in_tree() == not compact
-		and action_guide.text.split("\n", false).size() == (2 if compact else 3)
+		and action_guide.text.split("\n", false).size() == (1 if compact else 3)
 		and not action_guide.tooltip_text.strip_edges().is_empty()
 		and action_guide_word_safe
 		and required_visible_and_contained
