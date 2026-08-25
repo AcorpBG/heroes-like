@@ -5,6 +5,8 @@ const CAMPAIGN_ID := "campaign_reedfall"
 const START_SCENARIO_ID := "river-pass"
 const CAMPAIGN_DIFFICULTY := "hard"
 const CAMPAIGN_LAYOUT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
+const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
+const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
 
 var _original_profile := {}
 
@@ -420,6 +422,7 @@ func _settle_frames(frame_count: int) -> void:
 
 func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: Dictionary) -> bool:
 	var original_window_size := get_window().size
+	var original_content_scale_size := get_window().content_scale_size
 	var authority_before := {
 		"profile": CampaignProgression.ensure_profile().duplicate(true),
 		"session": SessionState.ensure_active_session().to_dict(),
@@ -437,6 +440,7 @@ func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: D
 		return false
 
 	for target_size in CAMPAIGN_LAYOUT_SIZES:
+		get_window().content_scale_size = target_size
 		get_window().size = target_size
 		await get_tree().process_frame
 		await get_tree().process_frame
@@ -482,6 +486,7 @@ func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: D
 	if not await _validate_distinct_chapter_action(shell, authority_before):
 		return false
 
+	get_window().content_scale_size = original_content_scale_size
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -494,13 +499,22 @@ func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expec
 	var primary_action: Dictionary = snapshot.get("primary_campaign_action", {}) if snapshot.get("primary_campaign_action", {}) is Dictionary else {}
 	var chapter_action: Dictionary = snapshot.get("selected_chapter_action", {}) if snapshot.get("selected_chapter_action", {}) is Dictionary else {}
 	var expected_toggle_text := "Hide Intel" if expanded else "Show Intel"
+	var viewport_size: Dictionary = layout.get("viewport_size", {}) if layout.get("viewport_size", {}) is Dictionary else {}
+	var viewport_width := maxf(float(viewport_size.get("x", 0.0)), 1.0)
+	var viewport_height := maxf(float(viewport_size.get("y", 0.0)), 1.0)
+	var first_view_height_ratio := minf(
+		CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height,
+		CAMPAIGN_DOCK_MAX_HEIGHT_RATIO
+	)
+	var expected_height_ratio := maxf(0.60 if expanded else 0.44, first_view_height_ratio)
+	var max_width_ratio := 0.76 if viewport_width < 1600.0 else 0.56
+	var min_uncovered_right_ratio := 0.20 if viewport_width < 1600.0 else 0.40
 	var height_ratio := float(layout.get("height_ratio", 1.0))
 	if not bool(snapshot.get("stage_dock_visible", false)) \
 			or int(snapshot.get("current_tab", -1)) != 0 \
-			or float(layout.get("width_ratio", 1.0)) > 0.56 \
-			or height_ratio > (0.60 if expanded else 0.46) \
-			or (expanded and height_ratio < 0.58) \
-			or float(layout.get("uncovered_right_ratio", 0.0)) < 0.40 \
+			or float(layout.get("width_ratio", 1.0)) > max_width_ratio \
+			or not is_equal_approx(height_ratio, expected_height_ratio) \
+			or float(layout.get("uncovered_right_ratio", 0.0)) < min_uncovered_right_ratio \
 			or bool(layout.get("intel_expanded", not expanded)) != expanded \
 			or String(layout.get("intel_toggle_text", "")) != expected_toggle_text:
 		_fail("Campaign rail did not preserve its scenery-first viewport contract: %s" % JSON.stringify(layout))
@@ -520,6 +534,14 @@ func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expec
 			or (layout.get("chapter_items", []) as Array) != expected_chapter_rows:
 		_fail("Campaign rail changed ordered arc/chapter row identity or full tooltips: %s" % JSON.stringify(layout))
 		return false
+	if not expanded:
+		var first_view_visibility: Dictionary = layout.get("first_view_visibility", {}) if layout.get("first_view_visibility", {}) is Dictionary else {}
+		if int(layout.get("scroll_vertical", -1)) != 0 \
+				or not bool(first_view_visibility.get("arc_list", false)) \
+				or not bool(first_view_visibility.get("chapter_list", false)) \
+				or not bool(first_view_visibility.get("intel_toggle", false)):
+			_fail("Collapsed Campaign rail did not expose Arc, Chapter, and Show Intel in its initial unscrolled view: %s" % JSON.stringify(layout))
+			return false
 	if not expanded and not _visible_campaign_controls_contained(layout):
 		return false
 	var control_rects: Dictionary = layout.get("control_rects", {}) if layout.get("control_rects", {}) is Dictionary else {}

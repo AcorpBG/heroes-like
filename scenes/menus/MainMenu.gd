@@ -15,6 +15,8 @@ const STAGE_DOCK_TEXTURE_MARGIN := 56.0
 const STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
 const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
+const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
+const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const SETTINGS_SUMMARY_MAX_LINES := 4
 const SETTINGS_SUMMARY_MAX_CHARS := 84
@@ -77,6 +79,7 @@ const TAB_HELP_TOPIC := {
 @onready var _campaign_details_panel: PanelContainer = %CampaignDetailsPanel
 @onready var _campaign_details_label: Label = %CampaignDetails
 @onready var _campaign_arc_status_label: Label = %CampaignArcStatus
+@onready var _campaign_scroll: ScrollContainer = %CampaignScroll
 @onready var _chapter_list: ItemList = %ChapterList
 @onready var _previous_campaign_chapter_button: Button = %PreviousCampaignChapter
 @onready var _next_campaign_chapter_button: Button = %NextCampaignChapter
@@ -240,6 +243,7 @@ func _ready() -> void:
 	_configure_destructive_confirmations()
 	_configure_settings_focus_visibility()
 	_configure_credits_notices()
+	resized.connect(_apply_stage_dock_layout)
 	phase_started = ProfileLogScript.begin_usec()
 	_apply_visual_theme()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -3166,11 +3170,21 @@ func _refresh_stage_accessibility() -> void:
 func _apply_stage_dock_layout() -> void:
 	var anchors := STANDARD_DOCK_ANCHORS
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
-		anchors = CAMPAIGN_EXPANDED_DOCK_ANCHORS if _campaign_intel_expanded else CAMPAIGN_COMPACT_DOCK_ANCHORS
+		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
 	_stage_dock_panel.anchor_left = anchors.position.x
 	_stage_dock_panel.anchor_top = anchors.position.y
 	_stage_dock_panel.anchor_right = anchors.end.x
 	_stage_dock_panel.anchor_bottom = anchors.end.y
+
+func _campaign_stage_dock_anchors(expanded: bool) -> Rect2:
+	var base_anchors := CAMPAIGN_EXPANDED_DOCK_ANCHORS if expanded else CAMPAIGN_COMPACT_DOCK_ANCHORS
+	var viewport_height := maxf(get_viewport().get_visible_rect().size.y, 1.0)
+	var first_view_height_ratio := minf(
+		CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height,
+		CAMPAIGN_DOCK_MAX_HEIGHT_RATIO
+	)
+	var height_ratio := maxf(base_anchors.size.y, first_view_height_ratio)
+	return Rect2(base_anchors.position, Vector2(base_anchors.size.x, height_ratio))
 
 func _hide_stage_dock() -> void:
 	if SettingsService.display_change_pending() or _display_change_ui_active:
@@ -3789,6 +3803,7 @@ func _editor_utility_frame_snapshot() -> Dictionary:
 func _campaign_layout_snapshot() -> Dictionary:
 	var viewport_size := get_viewport().get_visible_rect().size
 	var stage_rect := _stage_dock_panel.get_global_rect()
+	var scroll_rect := _campaign_scroll.get_global_rect()
 	var surface_visibility := {
 		"arc": _campaign_details_label.is_visible_in_tree(),
 		"arc_status": _campaign_arc_status_label.is_visible_in_tree(),
@@ -3825,11 +3840,25 @@ func _campaign_layout_snapshot() -> Dictionary:
 		"intel_toggle_text": _campaign_intel_toggle.text,
 		"intel_toggle_tooltip": _campaign_intel_toggle.tooltip_text,
 		"launch_row_visible": _campaign_launch_row.is_visible_in_tree(),
+		"scroll_rect": _rect_snapshot(scroll_rect),
+		"scroll_vertical": _campaign_scroll.scroll_vertical,
+		"first_view_visibility": {
+			"arc_list": _campaign_control_fully_visible_in_scroll(_campaign_list, scroll_rect),
+			"chapter_list": _campaign_control_fully_visible_in_scroll(_chapter_list, scroll_rect),
+			"intel_toggle": _campaign_control_fully_visible_in_scroll(_campaign_intel_toggle, scroll_rect),
+		},
 		"detail_surface_visibility": surface_visibility,
 		"control_rects": control_rects,
 		"campaign_items": _campaign_item_rows(),
 		"chapter_items": _chapter_item_rows(),
 	}
+
+func _campaign_control_fully_visible_in_scroll(control: Control, scroll_rect: Rect2) -> bool:
+	if control == null or not control.is_visible_in_tree():
+		return false
+	var control_rect := control.get_global_rect()
+	return control_rect.position.y >= scroll_rect.position.y - 1.0 \
+		and control_rect.end.y <= scroll_rect.end.y + 1.0
 
 func _skirmish_layout_snapshot() -> Dictionary:
 	var viewport_size := get_viewport().get_visible_rect().size
