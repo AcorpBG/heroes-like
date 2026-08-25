@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner.
 
+- Previous completed implementation slice: `ux-town-management-card-height-cap-10184`. Town management now stays in one exact 460px Build/Muster/Spells/Trade/Log card instead of stretching its opaque inner panel through the full 1920/2560 sidebar. The previously unbounded Log page now uses the same native vertical-scroll pattern as Spells, keeping Artifacts through Response actions reachable without changing their content or order. Direct inspected 1280x720 and 1600x900 captures retain complete compact/standard content, while 1920x1080 and 2560x1440 preserve 239px and 599px of art-backed rail negative space. Focused runtime proves stable five-tab height, readiness-count titles, complete visible-control containment, top-to-end Log scrolling, selection/scroll restoration, and unchanged town/economy/session/save/settings authority; Town/Battle visual, 100/130% settings, keyboard/controller focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-town-management-card-height-cap-10184`
+
 - Previous completed implementation slice: `ux-battle-sidebar-tactical-card-height-cap-10184`. Wide Battle layouts now keep the unchanged Order/Focus/Spell/Timing body in one exact 248px tactical card instead of stretching its inner frame through the full sidebar height. Direct inspected 1600x900, 1920x1080, and 2560x1440 captures retain 87px, 267px, and 627px of art-backed rail negative space respectively, while the true 1280x720 SubViewport keeps the existing sidebar-hidden compact composition. Focused runtime proves stable four-tab height, complete page/label containment, native titles/tooltips/selection restoration, and unchanged battle/session/save/settings authority; Board navigation, 100/130% active settings, Town/Battle visual, keyboard/controller focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-battle-sidebar-tactical-card-height-cap-10184`
 
@@ -10519,6 +10522,32 @@ Non-goals:
 - no tab title, visible summary, tooltip, commander, initiative, focus, spell, timing, action, combat, AI, balance, content, session, save/schema, or settings change;
 - no SidebarShell/CommandPanel width or art, board/banner/footer/action/system allocation, font/theme/UI-scale, input mapping, focus order, accessibility semantic, animation/audio, or VFX change;
 - no packaged Battle interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
+
+## Town Management Card Height Cap
+
+id: `ux-town-management-card-height-cap-10184`
+
+Status: completed.
+
+Completed implementation:
+- `%ManagementTabs` now owns an exact 460px minimum with horizontal fill and vertical fill-only sizing, preserving the existing `parchment_panel.png` SidebarShell while preventing the selected inner page from consuming the remaining wide rail;
+- `%LogisticsScroll` gives the content-heavy Log page one native vertical-scroll owner, retaining all existing labels/actions in exact order and making both the top Artifacts section and final Response actions reachable inside the stable card;
+- focused and all-size runtime traverse all five native tabs, prove stable height, visible content/card/Command containment, readiness-title semantics, scroll and selected-tab restoration, and whole authority; the bounded compatibility, static/editor, Linux, and Windows startup chain passes.
+
+Implementation boundary:
+- replace `%ManagementTabs` full-height vertical expansion with one 460px content-safe management-card allocation, preserving the existing `parchment_panel.png` SidebarShell and leaving the remaining 1920/2560 rail as intentional negative space;
+- preserve the exact Command card, Build/Muster/Spells/Trade/Log native headers/pages, selected tab, visible summaries/actions, full tooltips, focus/controller/mouse traversal, and 1280/1600 content containment;
+- keep the Town panorama, banner, stockpile ledger, stage overlays, district strip, footer actions, economy, town/session/save/settings authority unchanged.
+
+Completion criteria:
+- fresh inspected 1280x720, 1600x900, 1920x1080, and 2560x1440 Town captures show a bounded management card with complete content at compact/standard sizes and deliberate art-backed rail space at wide sizes;
+- focused runtime traverses all five native pages and proves exact authored/actual allocation, complete label/action containment or existing Study scrolling, Command/card separation, SidebarShell containment, tab/title/tooltip/selection restoration, and unchanged town/economy/session/save/settings authority;
+- broad Town/Battle visual, active-play keyboard/controller focus, Town action presentation, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tab title/content/tooltip, hero/army/build/recruit/spell/market/logistics/action, economy, town-rule, content, session, save/schema, settings, or gameplay change;
+- no SidebarShell/CommandPanel width or art, panorama/banner/stockpile/stage/district/footer allocation, font/theme/UI-scale, input mapping, focus order, accessibility semantic, animation/audio, or VFX change;
+- no packaged Town interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 

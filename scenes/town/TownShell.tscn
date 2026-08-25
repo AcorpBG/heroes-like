@@ -418,9 +418,10 @@ text = "Army"
 
 [node name="ManagementTabs" type="TabContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 460)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 1
 
 [node name="BuildPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs"]
 unique_name_in_owner = true
@@ -578,64 +579,71 @@ theme_override_constants/v_separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LogisticsPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel"]
+[node name="LogisticsScroll" type="ScrollContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="LogisticsPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="LogisticsBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad"]
+[node name="LogisticsBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="LogisticsTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="LogisticsTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 text = "Logistics"
 
-[node name="Artifacts" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Artifacts" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Artifacts"
 
-[node name="ArtifactActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="ArtifactActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 
-[node name="Tavern" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Tavern" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Tavern"
 
-[node name="TavernActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="TavernActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 
-[node name="Transfer" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Transfer" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Transfer"
 
-[node name="TransferActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="TransferActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 
-[node name="Responses" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Responses" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Responses"
 
-[node name="ResponseActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="ResponseActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 6
