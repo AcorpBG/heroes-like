@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-battle-initiative-portrait-ribbon-10184",
-    "title": "Battle initiative portrait ribbon",
+    "id": "presentation-overworld-painterly-water-tile-bank-10184",
+    "title": "Overworld painterly water tile bank",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T21:18:57Z",
-    "updatedAt": "2026-08-25T21:39:00Z",
-    "completedAt": "2026-08-25T21:39:00Z",
+    "startedAt": "2026-08-25T21:45:14Z",
+    "updatedAt": "2026-08-25T22:12:00Z",
+    "completedAt": "2026-08-25T22:12:00Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct cross-screen capture review. The exact five-stack Battle initiative strip now uses shipped unit battle icons inside a compact dark 620px-capped ribbon with restrained faction accents and a distinct active frame. Inspected 1280/1920 captures, focused Board navigation/identity/portrait/fallback/label/tooltip authority, Battle animation, Town/Battle visuals, accessibility, keyboard focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Initiative, combat, AI, content, balance, save/session, and Native RMG remain unchanged; packaged Battle interaction and broader release claims remain unclaimed."
+    "notes": "Completed with three original quiet painterly 64x64 water base textures and four directional overlays routed through the existing terrain renderer. Inspected 1280x720 and 1920x1080 River Pass captures show cohesive blue-green water without distracting bank-value seams; full Overworld visual, generated render/movement, route, Ninefold, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Water topology, impassability, causeways, gameplay, save/session, generated maps, and Native RMG remain unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle initiative portrait ribbon is completed with inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform validation. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld painterly water tile bank is completed with inspected 1280x720 and 1920x1080 captures plus focused, compatibility, static/editor, and bounded Linux/Windows package-startup evidence; select the next approved slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-initiative-portrait-ribbon-10184",
-  "currentSliceId": "presentation-battle-initiative-portrait-ribbon-10184",
-  "currentSliceNotes": "Restyle only the exact existing five-chip Battle initiative strip with shipped unit battle icons, a dark scenic body, side accents, and current-state frame; preserve all initiative, input, combat, and authority surfaces.",
+  "currentSlice": "presentation-overworld-painterly-water-tile-bank-10184",
+  "currentSliceId": "presentation-overworld-painterly-water-tile-bank-10184",
+  "currentSliceNotes": "Completed three-base/four-edge original water art through the existing renderer with exact texture, selection, impassability, authority, visual, movement, breadth, core, static/editor, and bounded platform gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle initiative portrait ribbon",
-  "currentSliceUpdatedAt": "2026-08-25T21:39:00Z",
+  "currentSliceTitle": "Overworld painterly water tile bank",
+  "currentSliceUpdatedAt": "2026-08-25T22:12:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19900,8 +19900,42 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
-  "notes": "The Battle initiative portrait ribbon is the sole selected in-progress graphical-polish slice; blockers are empty.",
+  "notes": "The Overworld painterly water tile bank is completed; blockers are empty and no new implementation slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-painterly-water-tile-bank-10184",
+      "title": "Overworld painterly water tile bank",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T21:45:14Z",
+      "updatedAt": "2026-08-25T22:12:00Z",
+      "completedAt": "2026-08-25T22:12:00Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "content/terrain_grammar.json",
+        "art/overworld/runtime/terrain_tiles/base/water_deep.png",
+        "art/overworld/runtime/terrain_tiles/base/water_current.png",
+        "art/overworld/runtime/terrain_tiles/base/water_blocked.png",
+        "art/overworld/runtime/terrain_tiles/edges/water_edge_n.png",
+        "art/overworld/runtime/terrain_tiles/edges/water_edge_e.png",
+        "art/overworld/runtime/terrain_tiles/edges/water_edge_s.png",
+        "art/overworld/runtime/terrain_tiles/edges/water_edge_w.png",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the flat procedural water blocks visible in current Overworld captures with an original quiet painterly three-tile bank while preserving exact water and gameplay authority.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 River Pass captures show painted water without distracting seams; focused runtime proves exact three base paths and four directional overlay textures, deterministic stable selection, transition directions and causeway ownership, water impassability, and unchanged session/save authority; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No water identity, topology, impassability, pathfinding, shoreline or transition rule, road or causeway connectivity, map cell, object, fog, camera, gameplay, content, save, generated placement, density, or Native RMG change.",
+        "No land-terrain replacement, animation, audio, VFX, shader, particle, weather, UI, or broad terrain rewrite.",
+        "No packaged Overworld interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current River Pass capture evidence. Three cohesive 64x64 original painterly water bases and four directional overlays now ship through the existing deterministic renderer. Fresh inspected 1280x720 and 1920x1080 captures, full Overworld visual smoke, generated render/movement, full-route movement, Ninefold breadth, core systems, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "presentation-battle-initiative-portrait-ribbon-10184",
       "title": "Battle initiative portrait ribbon",
@@ -101882,7 +101916,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Implement and inspect the Battle initiative portrait ribbon, then run focused identity/geometry/authority, compatibility, static/editor, and bounded platform gates; broader graphical polish and product gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; broader graphical polish and product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102314,7 +102348,7 @@
     }
   ],
   "result": "overworld_soft_cartographic_fog_frontier_in_progress",
-  "status": "in_progress",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -102414,9 +102448,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Battle initiative portrait ribbon is completed; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "summary": "The Overworld painterly water tile bank is in progress from direct current River Pass visual evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T21:39:00Z",
+  "updatedAt": "2026-08-25T22:12:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -39566,6 +39566,35 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                             ensure(art_path.exists(), errors, f"Terrain grammar {terrain_id} edge overlay {direction} references missing texture {edge_overlays.get(direction)}")
                             if art_path.exists():
                                 ensure(png_size(art_path) == (64, 64), errors, f"Terrain grammar {terrain_id} edge overlay {direction} must be 64x64 PNG, found {png_size(art_path)}")
+                    if terrain_id == "water":
+                        ensure(
+                            [
+                                (str(entry.get("variant_key", "")), str(entry.get("path", "")))
+                                for entry in base_tiles
+                                if isinstance(entry, dict)
+                            ]
+                            == [
+                                ("deep", "res://art/overworld/runtime/terrain_tiles/base/water_deep.png"),
+                                ("current", "res://art/overworld/runtime/terrain_tiles/base/water_current.png"),
+                                ("blocked", "res://art/overworld/runtime/terrain_tiles/base/water_blocked.png"),
+                            ],
+                            errors,
+                            "Water terrain must retain the exact ordered original painterly three-tile bank.",
+                        )
+                        ensure(
+                            {
+                                str(direction): str(edge_overlays.get(direction, ""))
+                                for direction in ("N", "E", "S", "W")
+                            }
+                            == {
+                                "N": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_n.png",
+                                "E": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_e.png",
+                                "S": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_s.png",
+                                "W": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_w.png",
+                            },
+                            errors,
+                            "Water terrain must retain the exact four directional painterly edge overlays.",
+                        )
     ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(terrain_class_ids), errors, "Terrain grammar must author canonical base terrain ids plus special water/rock")
     ensure(TERRAIN_GRAMMAR_ROAD_ENABLED_TERRAIN_IDS.issubset(road_enabled_terrain_ids), errors, "Canonical base terrain ids must support structural road overlays")
     editor_options = terrain_grammar.get("editor_base_terrain_options", [])
@@ -40292,7 +40321,31 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "Ninefold explicit road control must restore the prototype immediately after its single observation.",
     )
 
-    visual_road_block = gd_function_block((ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8"), "_assert_water_causeway_render_model")
+    visual_smoke_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    water_bank_block = gd_function_block(visual_smoke_text, "_assert_water_tile_bank")
+    for token in (
+        '"res://art/overworld/runtime/terrain_tiles/base/water_deep.png"',
+        '"res://art/overworld/runtime/terrain_tiles/base/water_current.png"',
+        '"res://art/overworld/runtime/terrain_tiles/base/water_blocked.png"',
+        '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_n.png"',
+        '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_e.png"',
+        '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_s.png"',
+        '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_w.png"',
+        'ResourceLoader.exists(path, "Texture2D")',
+        'texture.get_size() != Vector2(64.0, 64.0)',
+        'shell.call("validation_tile_presentation", 1, 3)',
+        'String(water_terrain.get("terrain", "")) != "water"',
+        'not bool(water_terrain.get("uses_authored_tile_art", false))',
+        'String(water_terrain.get("rendering_mode", "")) != "original_quiet_tile_bank"',
+        'String(water_terrain.get("texture_path", "")) != String(repeated_terrain.get("texture_path", ""))',
+        'OverworldRules.terrain_id_is_passable("water")',
+        'session.to_dict() != authority_before',
+    ):
+        ensure(token in water_bank_block, errors, f"Overworld painterly water owner is missing exact texture, runtime, impassability, or authority proof: {token}")
+    ensure(water_bank_block.count('shell.call("validation_tile_presentation", 1, 3)') == 2, errors, "Overworld painterly water owner must compare exactly two stable observations of the same live water tile.")
+    for forbidden in ("map_row[", 'set("_map_data"', "terrain_id_is_passable =", "sort(", "erase(", "create_timer", "call_deferred"):
+        ensure(forbidden not in water_bank_block, errors, f"Overworld painterly water proof must remain observational and avoid {forbidden}")
+    visual_road_block = gd_function_block(visual_smoke_text, "_assert_water_causeway_render_model")
     for token in (
         "var session_authority_before: Dictionary = session.to_dict()",
         'map_row[road_tile.x] = "water"',

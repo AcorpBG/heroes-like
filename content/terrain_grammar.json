@@ -432,6 +432,7 @@
       "readability_role": "blocked water",
       "supports": [
         "authored_variants",
+        "authored_tile_art",
         "edge_transitions",
         "homm3_local_prototype"
       ],
@@ -439,7 +440,30 @@
         "deep",
         "current",
         "blocked"
-      ]
+      ],
+      "tile_art": {
+        "source_basis": "original_procedural_reference_informed",
+        "base_tiles": [
+          {
+            "variant_key": "deep",
+            "path": "res://art/overworld/runtime/terrain_tiles/base/water_deep.png"
+          },
+          {
+            "variant_key": "current",
+            "path": "res://art/overworld/runtime/terrain_tiles/base/water_current.png"
+          },
+          {
+            "variant_key": "blocked",
+            "path": "res://art/overworld/runtime/terrain_tiles/base/water_blocked.png"
+          }
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/water_edge_w.png"
+        }
+      }
     },
     {
       "id": "coast",
