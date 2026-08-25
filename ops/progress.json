@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next fresh, bounded, source-backed graphical-polish slice from direct runtime captures."
+    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-small-map-cartographic-matte-10184",
-    "title": "Overworld small-map cartographic matte",
+    "id": "ux-battle-movement-range-overlay-restraint-10184",
+    "title": "Battle movement-range overlay restraint",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T09:09:20Z",
-    "updatedAt": "2026-08-25T09:28:35Z",
-    "completedAt": "2026-08-25T09:28:35Z",
+    "startedAt": "2026-08-25T09:31:16Z",
+    "updatedAt": "2026-08-25T09:44:53Z",
+    "completedAt": "2026-08-25T09:44:53Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. The passive small-map survey field makes material wide gutters intentional while preserving exact scale, board geometry, terrain, objects, input, accessibility, gameplay, save/session authority, and the large-map tactical presentation."
+    "notes": "Completed from direct inspected Battle 1280x720 and 1920x1080 captures. Every exact legal destination remains visible with a thin inset outline and near-transparent fill, while terrain, stack silhouettes, active state, and targets retain the intended hierarchy. Exact legal cells/order, actions, pathing, hit geometry, input/focus, combat, objectives, VFX, accessibility, and session authority remain unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld small-map cartographic matte is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
+  "currentNotes": "Battle movement-range overlay restraint is completed with direct visual proof and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-small-map-cartographic-matte-10184",
-  "currentSliceId": "presentation-overworld-small-map-cartographic-matte-10184",
-  "currentSliceNotes": "Completed: a passive small-map survey field makes material wide gutters intentional while preserving exact board scale/layout, terrain, objects, input, accessibility, gameplay, save, and session authority.",
+  "currentSlice": "ux-battle-movement-range-overlay-restraint-10184",
+  "currentSliceId": "ux-battle-movement-range-overlay-restraint-10184",
+  "currentSliceNotes": "Completed: every exact legal movement destination remains visible with a restrained inset outline and near-transparent fill, preserving all gameplay and interaction authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld small-map cartographic matte",
-  "currentSliceUpdatedAt": "2026-08-25T09:28:35Z",
+  "currentSliceTitle": "Battle movement-range overlay restraint",
+  "currentSliceUpdatedAt": "2026-08-25T09:44:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101184,6 +101184,26 @@
       "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Whole-map-fit boards with material gutters now use a quiet dark-teal survey field, low-contrast 72px grid, corner contours, bounded compass ornament, soft board shadow, and mounting brackets beneath the unchanged terrain layer. The exact 104px cap, centered board, terrain/fog/routes, object/hero/town scale and footprints, large-map tactical presentation, movement/input/focus, accessibility, save/session authority, and gameplay remain exact. Focused scale/matte, broad Overworld visual, real movement/input, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T09:28:35Z"
+    },
+    {
+      "id": "ux-battle-movement-range-overlay-restraint-10184",
+      "title": "Battle movement-range overlay restraint",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T09:44:53Z",
+      "startedAt": "2026-08-25T09:31:16Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected 1280x720 and 1920x1080 Battle captures. Every exact legal destination remains drawn using a thin inset outline and near-transparent fill beneath unchanged active, target, and stack presentation. Exact movement authority, actions, pathing, hit geometry, input/focus, combat, objectives, tokens, VFX, accessibility, and session authority remain unchanged. Focused visual, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Battle interaction and release-readiness claims remain excluded.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T09:44:53Z"
     }
   ],
   "project": "heroes-like",
@@ -101194,7 +101214,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next fresh bounded visual defect before continuing graphical polish; broader product and release-readiness gaps remain.",
+  "remainingWork": "Select the next fresh bounded graphical-polish defect; broader product and release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -101625,8 +101645,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_small_map_cartographic_matte_completed",
-  "status": "in_progress",
+  "result": "battle_movement_range_overlay_restraint_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -101726,9 +101746,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld small-map cartographic matte is completed with direct 1280/1920 visual proof, exact board/gameplay authority, and green focused/compatibility/platform gates; the next graphical-polish slice is not selected.",
+  "summary": "Battle movement-range overlay restraint is completed with direct 1280/1920 visual proof, exact movement/gameplay authority, and green focused, compatibility, static/editor, Linux, and Windows startup gates; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T09:28:35Z",
+  "updatedAt": "2026-08-25T09:44:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

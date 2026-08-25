@@ -859,6 +859,22 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board did not render through the hex-field presentation.")
 		get_tree().quit(1)
 		return false
+	if (
+		String(hex_summary.get("movement_range_visual_model", "")) != "thin_inset_outline_near_transparent_fill"
+		or int(hex_summary.get("movement_range_cell_count", -1)) != int(hex_summary.get("legal_destination_count", -2))
+		or int(hex_summary.get("movement_range_cell_count", 0)) <= 0
+		or not is_equal_approx(float(hex_summary.get("movement_range_radius_factor", 0.0)), 0.72)
+		or not is_equal_approx(float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.045)
+		or not is_equal_approx(float(hex_summary.get("movement_range_outline_alpha", 0.0)), 0.48)
+		or not is_equal_approx(float(hex_summary.get("movement_range_outline_width", 0.0)), 1.15)
+		or not bool(hex_summary.get("movement_range_all_legal_cells_drawn", false))
+		or bool(hex_summary.get("movement_range_hover_only", true))
+		or not bool(hex_summary.get("movement_range_below_active_targets_and_stacks", false))
+		or String(hex_summary.get("movement_range_action_authority", "")) != "legal_destinations_for_active_stack"
+	):
+		push_error("Battle smoke: legal movement range did not retain every destination through the restrained terrain-subordinate visual profile: %s." % hex_summary)
+		get_tree().quit(1)
+		return false
 	if not bool(hex_summary.get("terrain_texture_loaded", false)):
 		push_error("Battle smoke: terrain texture was not loaded for the active battlefield: %s." % hex_summary)
 		get_tree().quit(1)

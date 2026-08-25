@@ -33,7 +33,11 @@ const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
 const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
 const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96
 const STACK_ICON_ART_EXTENT_FACTOR := 1.86
-const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.76)
+const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.48)
+const MOVE_RANGE_VISUAL_MODEL := "thin_inset_outline_near_transparent_fill"
+const MOVE_RANGE_RADIUS_FACTOR := 0.72
+const MOVE_RANGE_FILL_ALPHA := 0.045
+const MOVE_RANGE_OUTLINE_WIDTH := 1.15
 const LEGAL_MELEE_COLOR := Color(1.0, 0.78, 0.36, 0.90)
 const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
 const HEALTH_COLOR := Color(0.95, 0.79, 0.35, 0.96)
@@ -821,6 +825,16 @@ func validation_hex_layout_summary() -> Dictionary:
 		"occupied_hexes": hex_state.get("occupied_hexes", {}),
 		"legal_destinations": legal_destinations,
 		"legal_destination_count": legal_destinations.size(),
+		"movement_range_visual_model": MOVE_RANGE_VISUAL_MODEL,
+		"movement_range_cell_count": legal_destinations.size(),
+		"movement_range_radius_factor": MOVE_RANGE_RADIUS_FACTOR,
+		"movement_range_fill_alpha": MOVE_RANGE_FILL_ALPHA,
+		"movement_range_outline_alpha": MOVE_COLOR.a,
+		"movement_range_outline_width": MOVE_RANGE_OUTLINE_WIDTH,
+		"movement_range_all_legal_cells_drawn": true,
+		"movement_range_hover_only": false,
+		"movement_range_below_active_targets_and_stacks": true,
+		"movement_range_action_authority": "legal_destinations_for_active_stack",
 		"legal_movement_intents": legal_movement_intents,
 		"hovered_destination_preview": hovered_destination_preview,
 		"hovered_destination_detail": String(hovered_destination_preview.get("destination_detail", "")),
@@ -2104,7 +2118,13 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 			var cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
 			if not _cell_in_bounds(cell):
 				continue
-			_draw_hex(_hex_center(cell, hex_layout), radius * 0.78, Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, 0.16), MOVE_COLOR, 1.8)
+			_draw_hex(
+				_hex_center(cell, hex_layout),
+				radius * MOVE_RANGE_RADIUS_FACTOR,
+				Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_FILL_ALPHA),
+				MOVE_COLOR,
+				MOVE_RANGE_OUTLINE_WIDTH
+			)
 
 	_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)
 
