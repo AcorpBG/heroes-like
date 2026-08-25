@@ -15178,6 +15178,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
         )
     campaign_actions_block = scene_node_block(main_menu_scene_text, "CampaignActions", "GridContainer")
     ensure("columns = 2" in campaign_actions_block, errors, "MainMenu CampaignActions must use the bounded two-column command grid")
+    campaign_scroll_block = scene_node_block(main_menu_scene_text, "CampaignScroll", "ScrollContainer")
+    ensure("unique_name_in_owner = true" in campaign_scroll_block, errors, "MainMenu CampaignScroll must retain one scene-owned runtime observation identity")
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -15218,16 +15220,21 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "_campaign_journal_label",
         "CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)",
         "CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)",
+        "CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0",
+        "CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640",
         "STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
         "_campaign_details_panel",
         "_chapter_details_panel",
         "_campaign_intel_row",
         "_campaign_intel_toggle",
+        "@onready var _campaign_scroll: ScrollContainer = %CampaignScroll",
         "@onready var _campaign_launch_row: HBoxContainer = %CampaignLaunchRow",
         "func _on_campaign_intel_toggle_pressed",
         "func _set_campaign_intel_expanded(expanded: bool)",
         '"Hide Intel" if expanded else "Show Intel"',
         "func _apply_stage_dock_layout",
+        "func _campaign_stage_dock_anchors(expanded: bool) -> Rect2:",
+        "resized.connect(_apply_stage_dock_layout)",
         "func _refresh_campaign_row_tooltips",
         "func _campaign_launch_actions_are_exact(chapter_action: Dictionary, primary_action: Dictionary) -> bool",
         "_start_chapter_button.visible = not _campaign_launch_actions_are_exact(chapter_action, primary_action)",
@@ -15241,6 +15248,9 @@ def validate_campaign_browser(errors: list[str]) -> None:
         '"detail_surface_visibility"',
         '"uncovered_right_ratio"',
         '"launch_row_visible": _campaign_launch_row.is_visible_in_tree()',
+        '"scroll_vertical": _campaign_scroll.scroll_vertical',
+        '"first_view_visibility"',
+        "func _campaign_control_fully_visible_in_scroll(control: Control, scroll_rect: Rect2) -> bool:",
         "func _on_campaign_selected",
         "func _on_chapter_selected",
         "func _on_campaign_primary_pressed() -> void:",
@@ -15365,6 +15375,14 @@ def validate_campaign_browser(errors: list[str]) -> None:
     if layout_snapshot_match is not None:
         for control_token in ("_previous_campaign_arc_button", "_next_campaign_arc_button", "_previous_campaign_chapter_button", "_next_campaign_chapter_button", "_campaign_launch_row", "_campaign_difficulty_picker", "_campaign_primary_button", "_start_chapter_button"):
             ensure(control_token in layout_snapshot_match.group("body"), errors, f"Campaign layout containment must include native navigation control {control_token}")
+        for first_view_token in (
+            "var scroll_rect := _campaign_scroll.get_global_rect()",
+            '"scroll_vertical": _campaign_scroll.scroll_vertical',
+            '"arc_list": _campaign_control_fully_visible_in_scroll(_campaign_list, scroll_rect)',
+            '"chapter_list": _campaign_control_fully_visible_in_scroll(_chapter_list, scroll_rect)',
+            '"intel_toggle": _campaign_control_fully_visible_in_scroll(_campaign_intel_toggle, scroll_rect)',
+        ):
+            ensure(first_view_token in layout_snapshot_match.group("body"), errors, f"Campaign layout snapshot must observe the exact initial scroll surface: {first_view_token}")
     stage_header_match = re.search(r"func _refresh_stage_dock_header\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
     ensure(stage_header_match is not None, errors, "MainMenu.gd is missing the isolated secondary-board command-rail header refresh")
     if stage_header_match is not None:
@@ -15533,10 +15551,35 @@ def validate_campaign_browser(errors: list[str]) -> None:
     campaign_layout_end = main_menu_script_text.find("\nfunc ", campaign_layout_start + 1) if campaign_layout_start >= 0 else -1
     campaign_layout_block = main_menu_script_text[campaign_layout_start:campaign_layout_end] if campaign_layout_start >= 0 and campaign_layout_end > campaign_layout_start else ""
     ensure(
-        "anchors = CAMPAIGN_EXPANDED_DOCK_ANCHORS if _campaign_intel_expanded else CAMPAIGN_COMPACT_DOCK_ANCHORS" in campaign_layout_block,
+        "anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)" in campaign_layout_block,
         errors,
-        "MainMenu Campaign layout must choose exact expanded or compact anchors from the live Intel disclosure state",
+        "MainMenu Campaign layout must derive responsive anchors from the live Intel disclosure state",
     )
+    campaign_anchor_match = re.search(r"func _campaign_stage_dock_anchors\(expanded: bool\) -> Rect2:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(campaign_anchor_match is not None, errors, "MainMenu.gd is missing the isolated standard-height Campaign anchor allocator")
+    if campaign_anchor_match is not None:
+        campaign_anchor_body = campaign_anchor_match.group("body")
+        ordered_tokens = (
+            "var base_anchors := CAMPAIGN_EXPANDED_DOCK_ANCHORS if expanded else CAMPAIGN_COMPACT_DOCK_ANCHORS",
+            "var viewport_height := maxf(get_viewport().get_visible_rect().size.y, 1.0)",
+            "CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height",
+            "CAMPAIGN_DOCK_MAX_HEIGHT_RATIO",
+            "var height_ratio := maxf(base_anchors.size.y, first_view_height_ratio)",
+            "return Rect2(base_anchors.position, Vector2(base_anchors.size.x, height_ratio))",
+        )
+        positions = [campaign_anchor_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Campaign anchor allocator must preserve authored width/position while applying the capped first-view height in exact order")
+        for forbidden_token in ("await ", "create_timer", "call_deferred", ".visible", ".hide", ".show", "scroll_vertical =", "SessionState", "CampaignProgression", "SaveService"):
+            ensure(forbidden_token not in campaign_anchor_body, errors, f"Campaign anchor allocator must remain synchronous presentation-only via {forbidden_token}")
+    campaign_visibility_match = re.search(r"func _campaign_control_fully_visible_in_scroll\(control: Control, scroll_rect: Rect2\) -> bool:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(campaign_visibility_match is not None, errors, "MainMenu.gd is missing the detached Campaign first-view observer")
+    if campaign_visibility_match is not None:
+        visibility_body = campaign_visibility_match.group("body")
+        for required_token in ("control == null or not control.is_visible_in_tree()", "control.get_global_rect()", "control_rect.position.y >= scroll_rect.position.y - 1.0", "control_rect.end.y <= scroll_rect.end.y + 1.0"):
+            ensure(required_token in visibility_body, errors, f"Campaign first-view observer must fail closed against the real scroll rectangle: {required_token}")
+        for forbidden_token in ("await ", "create_timer", "call_deferred", ".visible =", ".hide", ".show", "scroll_vertical =", "set_deferred"):
+            ensure(forbidden_token not in visibility_body, errors, f"Campaign first-view observer must not mutate layout or timing via {forbidden_token}")
+    ensure(main_menu_script_text.count("resized.connect(_apply_stage_dock_layout)") == 1, errors, "MainMenu must own exactly one resize-to-Campaign-layout connection")
     ensure("CAMPAIGN_DOCK_ANCHORS" not in main_menu_script_text, errors, "MainMenu must not retain the old single-height Campaign dock anchor")
 
     for path in (CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH, CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH):
@@ -15732,6 +15775,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "latest_save_resume_target",
             "saved_from_launch_mode",
             "CAMPAIGN_LAYOUT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+            "CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0",
+            "CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640",
             "func _validate_scenery_first_campaign_layout",
             "CampaignIntelToggle",
             'intel_toggle.emit_signal("pressed")',
@@ -15747,11 +15792,25 @@ def validate_campaign_browser(errors: list[str]) -> None:
             'bool(distinct_snapshot.get("start_chapter_visible", false))',
             'bool(distinct_snapshot.get("start_chapter_disabled", false))',
             'shell.call("validation_select_campaign_chapter", START_SCENARIO_ID)',
-            'float(layout.get("width_ratio", 1.0)) > 0.56',
+            "var original_content_scale_size := get_window().content_scale_size",
+            "get_window().content_scale_size = target_size",
+            "get_window().content_scale_size = original_content_scale_size",
+            'var viewport_size: Dictionary = layout.get("viewport_size", {})',
+            "var first_view_height_ratio := minf(",
+            "CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height",
+            "CAMPAIGN_DOCK_MAX_HEIGHT_RATIO",
+            "var expected_height_ratio := maxf(0.60 if expanded else 0.44, first_view_height_ratio)",
+            "var max_width_ratio := 0.76 if viewport_width < 1600.0 else 0.56",
+            "var min_uncovered_right_ratio := 0.20 if viewport_width < 1600.0 else 0.40",
+            'float(layout.get("width_ratio", 1.0)) > max_width_ratio',
             'var height_ratio := float(layout.get("height_ratio", 1.0))',
-            'height_ratio > (0.60 if expanded else 0.46)',
-            '(expanded and height_ratio < 0.58)',
-            'float(layout.get("uncovered_right_ratio", 0.0)) < 0.40',
+            "not is_equal_approx(height_ratio, expected_height_ratio)",
+            'float(layout.get("uncovered_right_ratio", 0.0)) < min_uncovered_right_ratio',
+            'var first_view_visibility: Dictionary = layout.get("first_view_visibility", {})',
+            'int(layout.get("scroll_vertical", -1)) != 0',
+            'bool(first_view_visibility.get("arc_list", false))',
+            'bool(first_view_visibility.get("chapter_list", false))',
+            'bool(first_view_visibility.get("intel_toggle", false))',
             'for key in ["arc", "arc_status", "chapter", "commander", "operational", "journal"]',
             "func _visible_campaign_controls_contained",
             "if not expanded and not _visible_campaign_controls_contained(layout):",
@@ -15833,6 +15892,11 @@ def validate_campaign_browser(errors: list[str]) -> None:
             'shell.call("_on_campaign_difficulty_selected"',
             "remove_item",
             "sort_custom",
+            'shell.call("_campaign_stage_dock_anchors"',
+            "scroll_vertical =",
+            ".visible = true",
+            "set_deferred",
+            "create_timer",
         ):
             ensure(forbidden_token not in smoke_text, errors, f"player-facing campaign layout smoke must remain observation/action-only: {forbidden_token}")
 

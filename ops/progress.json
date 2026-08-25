@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Completed from direct user feedback and inspected current River Pass captures. The painted range is now a moderate 0.40 artifact through 0.96 town hierarchy; focused, compatibility, static/editor, Linux, and Windows gates pass while logical map and gameplay authority remain unchanged.",
+  "currentNotes": "Completed from direct 1280x720 and 1920x1080 inspection. The standard collapsed Campaign board now exposes Arc, Chapter, and Show Intel at scroll zero; wide layout stays compact and campaign, launch, focus, accessibility, save, and gameplay authority remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-proportional-object-scale-correction-10184",
-  "currentSliceId": "ux-overworld-proportional-object-scale-correction-10184",
-  "currentSliceNotes": "Completed: River Pass now uses a moderate 0.40 artifact through 0.96 town painted hierarchy at 1280 and 1920, with exact footprints, movement, session/save, generated-map, accessibility, and platform startup authority retained.",
+  "currentSlice": "ux-main-menu-standard-campaign-first-view-completeness-10184",
+  "currentSliceId": "ux-main-menu-standard-campaign-first-view-completeness-10184",
+  "currentSliceNotes": "Completed: standard 1280 Campaign first view is complete at scroll zero, 1920 stays compact, constrained layouts remain scrollable, and focused/compat/static/platform gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld proportional object scale correction",
-  "currentSliceUpdatedAt": "2026-08-25T12:34:01Z",
+  "currentSliceTitle": "Main Menu standard Campaign first-view completeness",
+  "currentSliceUpdatedAt": "2026-08-25T12:55:43Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101359,6 +101359,33 @@
       "notes": "Completed from direct user feedback and inspected before/after River Pass captures at 1280x720 and 1920x1080. The prior 1.40 town versus 0.26 artifact range is replaced by exact painted extents artifact0.40, pickup0.46, encounter/default0.56, waypoint0.62, blocker0.64, durable0.66, landmark0.70, multi-tile cap0.76, hero0.82, and town0.96. Alpha cropping/aspect, grounding, logical footprints, town body/entry masks, ids/content, hit areas, passability, route/movement, selection/focus, fog, accessibility, camera, session/save authority, generated placement, and Native RMG remain exact. Focused scale, six-faction hero/town, artifact, broad Overworld, generated movement/save, full-route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T12:34:01Z"
+    },
+    {
+      "id": "ux-main-menu-standard-campaign-first-view-completeness-10184",
+      "title": "Main Menu standard Campaign first-view completeness",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T12:55:43Z",
+      "startedAt": "2026-08-25T12:36:49Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make the collapsed Campaign secondary board immediately complete at standard 1280x720 by showing both selection levels and the contextual Intel disclosure before scrolling.",
+      "completionCriteria": "Direct current 1280x720 capture shows the authored Arc list, Chapter list, and Show Intel disclosure fully visible in the initial collapsed Campaign board without scrolling, while the stage/right command rail remain contained and scenery remains visible; 1920x1080 retains its compact collapsed rail and expanded Intel height; genuinely constrained layouts retain scroll access; compact-expanded-compact restoration preserves exact geometry per size, ordered rows/tooltips/selection, launch action deduplication, difficulty, focus, native navigation, profile/session/save authority, and gameplay; focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No CampaignRules, CampaignProgression, campaign content, arc/chapter order, unlocks, difficulty, launch, restart, outcome, profile, session, save/schema, or gameplay changes.",
+        "No first-view command rail, backdrop, logo, footer, Campaign Intel content, control removal/reparenting, input, focus, navigation, accessibility, theme, font, or asset changes.",
+        "No packaged Campaign interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected current-HEAD captures. At 1280x720, the responsive collapsed board is 460px high with a 331px ScrollContainer, and Arc, Chapter, and Show Intel are all fully visible at scroll zero; at 1920x1080, the authored compact 0.44-height board and broad scenic field remain. Exact campaigns/chapters/order/tooltips/selection, difficulty, launch deduplication, expanded/restored geometry, focus/navigation, restart, profile/session/save, accessibility, and gameplay authority remain exact. Focused public Campaign launch/autosave, broad menu keyboard/layout, restart, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Campaign interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T12:55:43Z"
     }
   ],
   "project": "heroes-like",
@@ -101369,7 +101396,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next bounded graphical-polish slice from fresh direct runtime evidence; broader product and release-readiness gaps remain.",
+  "remainingWork": "Select the next bounded graphical-polish slice from fresh direct runtime evidence; broader graphical polish and product/release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
