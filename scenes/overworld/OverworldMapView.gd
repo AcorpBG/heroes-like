@@ -26,6 +26,15 @@ const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.24)
 const EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH := 1.0
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
+const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"
+const SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER := 48.0
+const SMALL_MAP_CARTOGRAPHIC_MATTE_GRID_SPACING := 72.0
+const SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_SHADOW_EXTENT := 14.0
+const SMALL_MAP_CARTOGRAPHIC_MATTE_FILL := Color(0.055, 0.085, 0.082, 1.0)
+const SMALL_MAP_CARTOGRAPHIC_MATTE_GRID := Color(0.42, 0.52, 0.42, 0.075)
+const SMALL_MAP_CARTOGRAPHIC_MATTE_CONTOUR := Color(0.64, 0.57, 0.38, 0.10)
+const SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT := Color(0.77, 0.67, 0.43, 0.25)
+const SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_EDGE := Color(0.79, 0.69, 0.46, 0.34)
 const UNEXPLORED_COLOR := Color(0.04, 0.05, 0.06, 1.0)
 const MEMORY_OBJECT_COLOR := Color(0.72, 0.80, 0.82, 0.84)
 const MEMORY_OBJECT_OUTLINE := Color(0.92, 0.96, 0.91, 0.76)
@@ -1333,6 +1342,7 @@ func _draw_session_static_layer() -> void:
 	_canvas_draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
 	_canvas_draw_rect(frame_rect, Color(0.02, 0.03, 0.04, 0.85), true)
 	_canvas_draw_rect(viewport_rect, FRAME_FILL, true)
+	_draw_small_map_cartographic_matte(viewport_rect, board_rect)
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
@@ -3869,6 +3879,83 @@ func _draw_viewport_mask(viewport_rect: Rect2) -> void:
 	_canvas_draw_rect(Rect2(Vector2(0.0, 0.0), Vector2(viewport_rect.position.x, size.y)), FRAME_FILL, true)
 	_canvas_draw_rect(Rect2(Vector2(viewport_rect.end.x, 0.0), Vector2(max(size.x - viewport_rect.end.x, 0.0), size.y)), FRAME_FILL, true)
 
+func _small_map_cartographic_matte_gutters(viewport_rect: Rect2, board_rect: Rect2) -> Dictionary:
+	return {
+		"left": maxf(board_rect.position.x - viewport_rect.position.x, 0.0),
+		"top": maxf(board_rect.position.y - viewport_rect.position.y, 0.0),
+		"right": maxf(viewport_rect.end.x - board_rect.end.x, 0.0),
+		"bottom": maxf(viewport_rect.end.y - board_rect.end.y, 0.0),
+	}
+
+func _small_map_cartographic_matte_active(viewport_rect: Rect2, board_rect: Rect2) -> bool:
+	if not _should_fit_entire_map() or not viewport_rect.encloses(board_rect):
+		return false
+	var gutters := _small_map_cartographic_matte_gutters(viewport_rect, board_rect)
+	return maxf(
+		maxf(float(gutters.get("left", 0.0)), float(gutters.get("right", 0.0))),
+		maxf(float(gutters.get("top", 0.0)), float(gutters.get("bottom", 0.0)))
+	) >= SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER
+
+func _draw_small_map_cartographic_matte(viewport_rect: Rect2, board_rect: Rect2) -> void:
+	if not _small_map_cartographic_matte_active(viewport_rect, board_rect):
+		return
+	_canvas_draw_rect(viewport_rect, SMALL_MAP_CARTOGRAPHIC_MATTE_FILL, true)
+	var column_count := int(ceil(viewport_rect.size.x / SMALL_MAP_CARTOGRAPHIC_MATTE_GRID_SPACING))
+	var row_count := int(ceil(viewport_rect.size.y / SMALL_MAP_CARTOGRAPHIC_MATTE_GRID_SPACING))
+	for column in range(1, column_count):
+		var x := viewport_rect.position.x + float(column) * SMALL_MAP_CARTOGRAPHIC_MATTE_GRID_SPACING
+		_canvas_draw_line(Vector2(x, viewport_rect.position.y), Vector2(x, viewport_rect.end.y), SMALL_MAP_CARTOGRAPHIC_MATTE_GRID, 1.0)
+	for row in range(1, row_count):
+		var y := viewport_rect.position.y + float(row) * SMALL_MAP_CARTOGRAPHIC_MATTE_GRID_SPACING
+		_canvas_draw_line(Vector2(viewport_rect.position.x, y), Vector2(viewport_rect.end.x, y), SMALL_MAP_CARTOGRAPHIC_MATTE_GRID, 1.0)
+	var contour_centers := [viewport_rect.position, viewport_rect.end, Vector2(viewport_rect.end.x, viewport_rect.position.y), Vector2(viewport_rect.position.x, viewport_rect.end.y)]
+	for contour_center in contour_centers:
+		for radius in [88.0, 146.0, 214.0]:
+			_canvas_draw_circle(contour_center, radius, SMALL_MAP_CARTOGRAPHIC_MATTE_CONTOUR, false, 1.0, true)
+	for shadow_extent in [SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_SHADOW_EXTENT, 9.0, 5.0]:
+		var alpha := 0.07 if is_equal_approx(shadow_extent, SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_SHADOW_EXTENT) else (0.10 if is_equal_approx(shadow_extent, 9.0) else 0.16)
+		_canvas_draw_rect(board_rect.grow(shadow_extent), Color(0.01, 0.015, 0.012, alpha), false, 2.0)
+	_canvas_draw_rect(board_rect.grow(3.0), SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_EDGE, false, 1.5)
+	_draw_small_map_board_corner_brackets(board_rect)
+	_draw_small_map_compass_ornament(viewport_rect, board_rect)
+
+func _draw_small_map_board_corner_brackets(board_rect: Rect2) -> void:
+	var arm := 22.0
+	var inset := 7.0
+	var corners := [
+		{"point": board_rect.position - Vector2(inset, inset), "x": 1.0, "y": 1.0},
+		{"point": Vector2(board_rect.end.x + inset, board_rect.position.y - inset), "x": -1.0, "y": 1.0},
+		{"point": Vector2(board_rect.position.x - inset, board_rect.end.y + inset), "x": 1.0, "y": -1.0},
+		{"point": board_rect.end + Vector2(inset, inset), "x": -1.0, "y": -1.0},
+	]
+	for corner_value in corners:
+		var corner: Dictionary = corner_value
+		var point: Vector2 = corner.get("point", Vector2.ZERO)
+		_canvas_draw_line(point, point + Vector2(float(corner.get("x", 0.0)) * arm, 0.0), SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT, 2.0, true)
+		_canvas_draw_line(point, point + Vector2(0.0, float(corner.get("y", 0.0)) * arm), SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT, 2.0, true)
+
+func _draw_small_map_compass_ornament(viewport_rect: Rect2, board_rect: Rect2) -> void:
+	var gutters := _small_map_cartographic_matte_gutters(viewport_rect, board_rect)
+	var left_gutter := float(gutters.get("left", 0.0))
+	var right_gutter := float(gutters.get("right", 0.0))
+	var use_left := left_gutter >= right_gutter
+	var available_gutter := left_gutter if use_left else right_gutter
+	if available_gutter < 132.0:
+		return
+	var center_x := viewport_rect.position.x + available_gutter * 0.42 if use_left else viewport_rect.end.x - available_gutter * 0.42
+	var center := Vector2(center_x, viewport_rect.get_center().y)
+	var radius := minf(34.0, available_gutter * 0.18)
+	_canvas_draw_circle(center, radius, SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT, false, 1.5, true)
+	_canvas_draw_circle(center, radius * 0.30, SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT, false, 1.0, true)
+	_canvas_draw_line(center - Vector2(radius * 1.25, 0.0), center + Vector2(radius * 1.25, 0.0), SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT, 1.0, true)
+	_canvas_draw_line(center - Vector2(0.0, radius * 1.25), center + Vector2(0.0, radius * 1.25), SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT, 1.0, true)
+	var north := PackedVector2Array([
+		center - Vector2(radius * 0.20, radius * 0.12),
+		center + Vector2(0.0, -radius * 0.92),
+		center + Vector2(radius * 0.20, -radius * 0.12),
+	])
+	_canvas_draw_colored_polygon(north, SMALL_MAP_CARTOGRAPHIC_MATTE_ORNAMENT)
+
 func validation_reset_profile() -> void:
 	_validation_profile.clear()
 
@@ -4185,6 +4272,8 @@ func _visible_object_presentation_count(tile: Vector2i) -> int:
 func validation_view_metrics() -> Dictionary:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect := _board_rect()
+	var small_map_matte_gutters := _small_map_cartographic_matte_gutters(viewport_rect, board_rect)
+	var small_map_matte_active := _small_map_cartographic_matte_active(viewport_rect, board_rect)
 	var uncapped_whole_map_fit_tile_extent := _uncapped_whole_map_fit_tile_extent(viewport_rect.size)
 	var cell_size: Vector2 = board_rect.size / Vector2(float(max(_map_size.x, 1)), float(max(_map_size.y, 1)))
 	var visible_columns: float = min(float(_map_size.x), viewport_rect.size.x / max(cell_size.x, 1.0))
@@ -4207,6 +4296,15 @@ func validation_view_metrics() -> Dictionary:
 		"uncapped_whole_map_fit_tile_extent": uncapped_whole_map_fit_tile_extent,
 		"small_map_fit_extent_capped": _should_fit_entire_map() and uncapped_whole_map_fit_tile_extent > cell_size.x,
 		"whole_map_fit_scale_policy": "bounded_small_map_fit_extent",
+		"small_map_cartographic_matte_active": small_map_matte_active,
+		"small_map_cartographic_matte_model": SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL,
+		"small_map_cartographic_matte_minimum_gutter": SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER,
+		"small_map_cartographic_matte_grid_spacing": SMALL_MAP_CARTOGRAPHIC_MATTE_GRID_SPACING,
+		"small_map_cartographic_matte_board_shadow_extent": SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_SHADOW_EXTENT,
+		"small_map_cartographic_matte_gutters": small_map_matte_gutters.duplicate(true),
+		"small_map_cartographic_matte_below_terrain": true,
+		"small_map_cartographic_matte_noninteractive": true,
+		"small_map_cartographic_matte_fake_tiles": false,
 		"visible_tile_columns": visible_columns,
 		"visible_tile_rows": visible_rows,
 		"visible_tile_area": visible_columns * visible_rows,

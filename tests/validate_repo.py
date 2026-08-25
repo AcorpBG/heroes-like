@@ -31785,10 +31785,18 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     report_text = report_path.read_text(encoding="utf-8")
     scene_text = scene_path.read_text(encoding="utf-8")
     ensure(map_text.count("const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0") == 1, errors, "Small-map fit must own one exact 104px visual extent cap")
+    ensure(map_text.count('const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"') == 1, errors, "Small-map surround must own one exact quiet cartographic matte model")
+    ensure(map_text.count("const SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER := 48.0") == 1, errors, "Small-map cartographic matte must require one exact 48px material gutter")
     ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.48") == 1, errors, "Town art must own one exact proportional 48% visual-footprint scale")
     extent_block = gd_function_block(map_text, "_tile_extent_for_viewport")
     uncapped_block = gd_function_block(map_text, "_uncapped_whole_map_fit_tile_extent")
     metrics_block = gd_function_block(map_text, "validation_view_metrics")
+    static_draw_block = gd_function_block(map_text, "_draw_session_static_layer")
+    gutters_block = gd_function_block(map_text, "_small_map_cartographic_matte_gutters")
+    matte_active_block = gd_function_block(map_text, "_small_map_cartographic_matte_active")
+    matte_draw_block = gd_function_block(map_text, "_draw_small_map_cartographic_matte")
+    matte_corner_block = gd_function_block(map_text, "_draw_small_map_board_corner_brackets")
+    matte_compass_block = gd_function_block(map_text, "_draw_small_map_compass_ornament")
     town_draw_block = gd_function_block(map_text, "_draw_town_sprite")
     town_payload_block = gd_function_block(map_text, "_town_presentation_payload_for_town")
     extent_order = tuple(extent_block.find(token) for token in (
@@ -31815,6 +31823,56 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         '"whole_map_fit_scale_policy": "bounded_small_map_fit_extent"',
     ):
         ensure(token in metrics_block, errors, f"View metrics must expose truthful small-map scale policy evidence: {token}")
+    static_matte_order = tuple(static_draw_block.find(token) for token in (
+        "var viewport_rect := _map_viewport_rect()",
+        "var board_rect = _board_rect()",
+        "_canvas_draw_rect(viewport_rect, FRAME_FILL, true)",
+        "_draw_small_map_cartographic_matte(viewport_rect, board_rect)",
+        "var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)",
+        "_draw_tile_session_static_background(tile, rect)",
+    ))
+    ensure(all(index >= 0 for index in static_matte_order) and list(static_matte_order) == sorted(static_matte_order), errors, "Small-map cartographic matte must draw below every authoritative terrain tile")
+    for token in (
+        '"left": maxf(board_rect.position.x - viewport_rect.position.x, 0.0)',
+        '"top": maxf(board_rect.position.y - viewport_rect.position.y, 0.0)',
+        '"right": maxf(viewport_rect.end.x - board_rect.end.x, 0.0)',
+        '"bottom": maxf(viewport_rect.end.y - board_rect.end.y, 0.0)',
+    ):
+        ensure(token in gutters_block, errors, f"Small-map matte gutter ownership is missing exact live geometry: {token}")
+    matte_active_order = tuple(matte_active_block.find(token) for token in (
+        "if not _should_fit_entire_map() or not viewport_rect.encloses(board_rect):",
+        "var gutters := _small_map_cartographic_matte_gutters(viewport_rect, board_rect)",
+        ") >= SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER",
+    ))
+    ensure(all(index >= 0 for index in matte_active_order) and list(matte_active_order) == sorted(matte_active_order), errors, "Cartographic matte activation must require whole-map containment and a material live gutter")
+    matte_draw_order = tuple(matte_draw_block.find(token) for token in (
+        "if not _small_map_cartographic_matte_active(viewport_rect, board_rect):",
+        "_canvas_draw_rect(viewport_rect, SMALL_MAP_CARTOGRAPHIC_MATTE_FILL, true)",
+        "for column in range(1, column_count):",
+        "for row in range(1, row_count):",
+        "for contour_center in contour_centers:",
+        "for shadow_extent in [SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_SHADOW_EXTENT, 9.0, 5.0]:",
+        "_canvas_draw_rect(board_rect.grow(3.0), SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_EDGE, false, 1.5)",
+        "_draw_small_map_board_corner_brackets(board_rect)",
+        "_draw_small_map_compass_ornament(viewport_rect, board_rect)",
+    ))
+    ensure(all(index >= 0 for index in matte_draw_order) and list(matte_draw_order) == sorted(matte_draw_order), errors, "Cartographic matte must retain its restrained field-to-mounted-board draw order")
+    for token in ("var arm := 22.0", "var inset := 7.0", "_canvas_draw_line(point", "available_gutter < 132.0", "var radius := minf(34.0", "_canvas_draw_colored_polygon(north"):
+        ensure(token in matte_corner_block + matte_compass_block, errors, f"Cartographic matte ornament is missing bounded source token: {token}")
+    for forbidden in ("_session", "SessionState", "OverworldRules", "set_meta", "position =", "size =", "queue_redraw", "await ", "create_timer", "tile_pressed", "pan_tiles"):
+        ensure(forbidden not in gutters_block + matte_active_block + matte_draw_block + matte_corner_block + matte_compass_block, errors, f"Cartographic matte must remain passive below-board presentation only: {forbidden}")
+    for token in (
+        '"small_map_cartographic_matte_active": small_map_matte_active',
+        '"small_map_cartographic_matte_model": SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL',
+        '"small_map_cartographic_matte_minimum_gutter": SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER',
+        '"small_map_cartographic_matte_grid_spacing": SMALL_MAP_CARTOGRAPHIC_MATTE_GRID_SPACING',
+        '"small_map_cartographic_matte_board_shadow_extent": SMALL_MAP_CARTOGRAPHIC_MATTE_BOARD_SHADOW_EXTENT',
+        '"small_map_cartographic_matte_gutters": small_map_matte_gutters.duplicate(true)',
+        '"small_map_cartographic_matte_below_terrain": true',
+        '"small_map_cartographic_matte_noninteractive": true',
+        '"small_map_cartographic_matte_fake_tiles": false',
+    ):
+        ensure(token in metrics_block, errors, f"View metrics must expose exact passive cartographic matte evidence: {token}")
     town_draw_order = tuple(town_draw_block.find(token) for token in (
         "var footprint := _object_profile_footprint(profile)",
         "var extent := minf(rect.size.x, rect.size.y)",
@@ -31845,6 +31903,8 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'const LARGE_SCENARIO_ID := "ninefold-confluence"',
         "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
         "const MAX_SMALL_MAP_TILE_EXTENT := 104.0",
+        'const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"',
+        "const SMALL_MAP_MATTE_MIN_GUTTER := 48.0",
         "const TOWN_VISUAL_EXTENT_TILES := 0.96",
         'var metrics: Dictionary = map_view.call("validation_view_metrics")',
         "var expected_capped := uncapped_extent > MAX_SMALL_MAP_TILE_EXTENT",
@@ -31852,6 +31912,13 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'bool(metrics.get("fit_entire_map", false))',
         'bool(metrics.get("full_map_visible", false))',
         'not bool(metrics.get("pan_supported", true))',
+        'var matte_gutters: Dictionary = metrics.get("small_map_cartographic_matte_gutters", {})',
+        'var matte_expected := maximum_gutter >= SMALL_MAP_MATTE_MIN_GUTTER',
+        'bool(metrics.get("small_map_cartographic_matte_active", false)) == matte_expected',
+        'String(metrics.get("small_map_cartographic_matte_model", "")) == SMALL_MAP_MATTE_MODEL',
+        'bool(metrics.get("small_map_cartographic_matte_below_terrain", false))',
+        'bool(metrics.get("small_map_cartographic_matte_noninteractive", false))',
+        'not bool(metrics.get("small_map_cartographic_matte_fake_tiles", true))',
         "var town_exact := _town_footprint_exact(shell)",
         "var hero_exact := _hero_scale_exact(map_view, tile_extent)",
         "var object_exact := _one_tile_object_footprints_exact(shell, session)",
@@ -31862,6 +31929,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     ):
         ensure(token in report_text, errors, f"Focused small-map scale report is missing exact live proof: {token}")
     ensure(report_text.count("await _small_map_row(viewport_size)") == 1 and report_text.count("await _large_map_control(Vector2i(1920, 1080))") == 1, errors, "Focused scale report must run exactly two small-map viewport rows then one large-map control")
+    ensure(report_text.count('if bool(row.get("cartographic_matte_active", false)):') == 1 and 'if matte_active_rows != VIEWPORT_SIZES.size():' in report_text, errors, "Focused scale report must require the matte for both material-gutter logical viewports")
     for token in (
         'int(profile.get("footprint_width_tiles", 0)) != 3',
         'int(profile.get("footprint_height_tiles", 0)) != 2',
@@ -31878,6 +31946,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "HERO_FIELD_SPRITE_EXTENT_FACTOR =", "OBJECT_SPRITE_EXTENT_FACTOR =", "TOWN_PRESENTATION_FOOTPRINT =", "TOWN_SPRITE_EXTENT_FACTOR =",
         "session.overworld.erase", "queue_redraw", "_tile_extent_for_viewport(", "large_map_visible_tile_span_override =",
         "sort(", ".erase(", "create_timer",
+        "_draw_small_map_cartographic_matte(", "_small_map_cartographic_matte_active(", "SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER =",
     ):
         ensure(forbidden not in report_text, errors, f"Focused scale report must observe public live geometry without changing renderer/game authority: {forbidden}")
     ensure('script = ExtResource("1")' in scene_text and 'overworld_small_map_visual_scale_runtime_report.gd' in scene_text, errors, "Small-map scale report scene must own the exact focused script")
