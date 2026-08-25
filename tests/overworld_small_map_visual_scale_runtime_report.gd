@@ -4,6 +4,8 @@ const SMALL_SCENARIO_ID := "prismhearth-watch"
 const LARGE_SCENARIO_ID := "ninefold-confluence"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const MAX_SMALL_MAP_TILE_EXTENT := 104.0
+const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"
+const SMALL_MAP_MATTE_MIN_GUTTER := 48.0
 const TOWN_VISUAL_EXTENT_TILES := 0.96
 
 func _ready() -> void:
@@ -12,12 +14,18 @@ func _ready() -> void:
 func _run() -> void:
 	var original_window_size := get_window().size
 	var small_rows: Array = []
+	var matte_active_rows := 0
 	for viewport_size in VIEWPORT_SIZES:
 		var row := await _small_map_row(viewport_size)
 		small_rows.append(row)
+		if bool(row.get("cartographic_matte_active", false)):
+			matte_active_rows += 1
 		if not bool(row.get("ok", false)):
 			_fail("Small-map visual scale row failed: %s" % row)
 			return
+	if matte_active_rows != VIEWPORT_SIZES.size():
+		_fail("Small-map cartographic matte must activate for every material-gutter viewport: %s" % [small_rows])
+		return
 	var large_row := await _large_map_control(Vector2i(1920, 1080))
 	if not bool(large_row.get("ok", false)):
 		_fail("Large-map tactical camera control failed: %s" % large_row)
@@ -29,6 +37,8 @@ func _run() -> void:
 		"small_scenario_id": SMALL_SCENARIO_ID,
 		"large_scenario_id": LARGE_SCENARIO_ID,
 		"maximum_small_map_tile_extent": MAX_SMALL_MAP_TILE_EXTENT,
+		"small_map_cartographic_matte_model": SMALL_MAP_MATTE_MODEL,
+		"cartographic_matte_active_rows": matte_active_rows,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"small_rows": small_rows,
 		"large_row": large_row,
@@ -73,6 +83,20 @@ func _small_map_row(viewport_size: Vector2i) -> Dictionary:
 		and bool(metrics.get("fit_entire_map", false)) \
 		and bool(metrics.get("full_map_visible", false)) \
 		and not bool(metrics.get("pan_supported", true))
+	var matte_gutters: Dictionary = metrics.get("small_map_cartographic_matte_gutters", {})
+	var maximum_gutter := maxf(
+		maxf(float(matte_gutters.get("left", 0.0)), float(matte_gutters.get("right", 0.0))),
+		maxf(float(matte_gutters.get("top", 0.0)), float(matte_gutters.get("bottom", 0.0)))
+	)
+	var matte_expected := maximum_gutter >= SMALL_MAP_MATTE_MIN_GUTTER
+	var matte_exact := bool(metrics.get("small_map_cartographic_matte_active", false)) == matte_expected \
+		and String(metrics.get("small_map_cartographic_matte_model", "")) == SMALL_MAP_MATTE_MODEL \
+		and is_equal_approx(float(metrics.get("small_map_cartographic_matte_minimum_gutter", 0.0)), SMALL_MAP_MATTE_MIN_GUTTER) \
+		and is_equal_approx(float(metrics.get("small_map_cartographic_matte_grid_spacing", 0.0)), 72.0) \
+		and is_equal_approx(float(metrics.get("small_map_cartographic_matte_board_shadow_extent", 0.0)), 14.0) \
+		and bool(metrics.get("small_map_cartographic_matte_below_terrain", false)) \
+		and bool(metrics.get("small_map_cartographic_matte_noninteractive", false)) \
+		and not bool(metrics.get("small_map_cartographic_matte_fake_tiles", true))
 	var town_exact := _town_footprint_exact(shell)
 	var hero_exact := _hero_scale_exact(map_view, tile_extent)
 	var object_exact := _one_tile_object_footprints_exact(shell, session)
@@ -82,12 +106,15 @@ func _small_map_row(viewport_size: Vector2i) -> Dictionary:
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
-		"ok": scale_exact and centered_exact and town_exact and hero_exact and object_exact and authority_exact and containment_exact,
+		"ok": scale_exact and centered_exact and matte_exact and town_exact and hero_exact and object_exact and authority_exact and containment_exact,
 		"viewport": [viewport_size.x, viewport_size.y],
 		"tile_extent": tile_extent,
 		"uncapped_extent": uncapped_extent,
 		"fit_extent_capped": metrics.get("small_map_fit_extent_capped", false),
 		"board_centered": centered_exact,
+		"cartographic_matte_active": metrics.get("small_map_cartographic_matte_active", false),
+		"cartographic_matte_exact": matte_exact,
+		"maximum_gutter": maximum_gutter,
 		"town_3x2_exact": town_exact,
 		"hero_scale_bounded": hero_exact,
 		"one_tile_objects_exact": object_exact,
@@ -118,6 +145,7 @@ func _large_map_control(viewport_size: Vector2i) -> Dictionary:
 		and bool(metrics.get("pan_supported", false)) \
 		and not bool(metrics.get("small_map_fit_extent_capped", true)) \
 		and tile_extent > 0.0 and tile_extent < MAX_SMALL_MAP_TILE_EXTENT \
+		and not bool(metrics.get("small_map_cartographic_matte_active", true)) \
 		and session.to_dict() == authority_before
 	shell.queue_free()
 	await get_tree().process_frame
@@ -127,6 +155,7 @@ func _large_map_control(viewport_size: Vector2i) -> Dictionary:
 		"tile_extent": tile_extent,
 		"fit_entire_map": metrics.get("fit_entire_map", true),
 		"pan_supported": metrics.get("pan_supported", false),
+		"cartographic_matte_active": metrics.get("small_map_cartographic_matte_active", true),
 		"authority_exact": session.to_dict() == authority_before,
 	}
 

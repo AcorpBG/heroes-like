@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
-    "title": "Overworld semantic object scale hierarchy",
+    "id": "presentation-overworld-small-map-cartographic-matte-10184",
+    "title": "Overworld small-map cartographic matte",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T07:12:11Z",
-    "updatedAt": "2026-08-25T07:27:46Z",
-    "completedAt": "2026-08-25T07:27:46Z",
+    "startedAt": "2026-08-25T09:09:20Z",
+    "updatedAt": "2026-08-25T09:28:35Z",
+    "completedAt": "2026-08-25T09:28:35Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Painted sprite extents now follow semantic ranks for handheld artifacts, loose pickups, landmarks, durable structures, multi-tile structures, and towns. Focused visual/small-map/artifact, broad Overworld, generated-map move/save, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; alpha/aspect/grounding/fog memory and all logical footprint/passability/interaction/content/camera/save/session authority remain unchanged."
+    "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. The passive small-map survey field makes material wide gutters intentional while preserving exact scale, board geometry, terrain, objects, input, accessibility, gameplay, save/session authority, and the large-map tactical presentation."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Outcome scenic-epilogue command ribbon is completed from direct inspected victory/defeat 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
+  "currentNotes": "Overworld small-map cartographic matte is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-outcome-scenic-epilogue-command-ribbon-10184",
-  "currentSliceId": "ux-outcome-scenic-epilogue-command-ribbon-10184",
-  "currentSliceNotes": "Completed: one-line Outcome status/action ribbons and lighter scenic panel backgrounds preserve complete tooltip/recap, save, action, focus, accessibility, and session authority.",
+  "currentSlice": "presentation-overworld-small-map-cartographic-matte-10184",
+  "currentSliceId": "presentation-overworld-small-map-cartographic-matte-10184",
+  "currentSliceNotes": "Completed: a passive small-map survey field makes material wide gutters intentional while preserving exact board scale/layout, terrain, objects, input, accessibility, gameplay, save, and session authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Outcome scenic epilogue command ribbon",
-  "currentSliceUpdatedAt": "2026-08-25T09:04:08Z",
+  "currentSliceTitle": "Overworld small-map cartographic matte",
+  "currentSliceUpdatedAt": "2026-08-25T09:28:35Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101165,6 +101165,25 @@
       "notes": "Completed from direct inspected victory/defeat 1280/1920 captures. The live Outcome shows one concise status and action ribbon, retains complete retry/save/continuity detail in tooltips and recap tabs, compacts the emblem stage to 260x104/300x176, and uses lighter 0.66-0.82 scenic panel opacity while preserving fully opaque text. Commander/army/reward/recap/save/action surfaces, Outcome models/actions, saves, routing, focus/navigation, accessibility, backdrop/emblem assets, and session authority remain exact. Focused visual, normal-entry focus, safe cancel, autosave recovery, save/load confidence, active keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T09:04:08Z"
+    },
+    {
+      "id": "presentation-overworld-small-map-cartographic-matte-10184",
+      "title": "Overworld small-map cartographic matte",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T09:28:35Z",
+      "startedAt": "2026-08-25T09:09:20Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Whole-map-fit boards with material gutters now use a quiet dark-teal survey field, low-contrast 72px grid, corner contours, bounded compass ornament, soft board shadow, and mounting brackets beneath the unchanged terrain layer. The exact 104px cap, centered board, terrain/fog/routes, object/hero/town scale and footprints, large-map tactical presentation, movement/input/focus, accessibility, save/session authority, and gameplay remain exact. Focused scale/matte, broad Overworld visual, real movement/input, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T09:28:35Z"
     }
   ],
   "project": "heroes-like",
@@ -101606,7 +101625,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "scenario_outcome_authored_status_emblem_adoption_in_progress",
+  "result": "overworld_small_map_cartographic_matte_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -101707,9 +101726,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld semantic object scale hierarchy is completed with direct 1280/1920 visual proof, exact logical object authority, and green focused/compatibility/platform gates; the next graphical-polish slice is not selected.",
+  "summary": "Overworld small-map cartographic matte is completed with direct 1280/1920 visual proof, exact board/gameplay authority, and green focused/compatibility/platform gates; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T07:27:46Z",
+  "updatedAt": "2026-08-25T09:28:35Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

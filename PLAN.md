@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next fresh, bounded, source-backed graphical-polish defect from direct runtime captures before changing production behavior.
 
+- Previous completed implementation slice: `presentation-overworld-small-map-cartographic-matte-10184`. Whole-map-fit Overworld boards with material gutters now sit on a quiet dark-teal cartographic survey field with a low-contrast 72px grid, corner contours, one compact compass ornament, a soft shadow, and restrained mounting brackets. Direct inspected River Pass 1280x720 and 1920x1080 captures preserve board dominance at compact size and make the wide layout intentional without suggesting extra playable tiles. The exact 104px cap, centered board rectangle, terrain/fog/routes, object/hero/town scales and footprints, camera/pan, movement/input/focus, accessibility, save/session authority, and large-map tactical presentation remain exact. Focused scale/matte, broad Overworld visual, real movement/input, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `presentation-overworld-small-map-cartographic-matte-10184`
+
 - Previous completed implementation slice: `ux-outcome-scenic-epilogue-command-ribbon-10184`. The victory/defeat Outcome now presents one concise status ribbon and one concise action ribbon instead of repeating the same follow-up prose across broad opaque cards. Complete retry/save/continuity detail remains exact in existing tooltips and recap tabs; the emblem stage is compacted to 260x104 at 1280 and 300x176 at wide layouts, and main-surface panel backgrounds use lighter 0.66-0.82 scenic opacity while text stays fully opaque. Direct inspected victory and defeat captures at 1280x720 and 1920x1080 make the authored panorama dominant without removing commander, army, reward, recap, save, or action surfaces. Outcome models/actions, saves, routing, focus/navigation, accessibility, backdrop/emblem assets, and session authority remain exact. Focused Outcome visual, normal-entry focus, safe cancel, autosave recovery, save/load confidence, active keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Outcome interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-outcome-scenic-epilogue-command-ribbon-10184`
 
@@ -10290,6 +10293,31 @@ Completion result:
 - one original reviewed 1024x1024 RGB cartographic surface is applied only to the shared Stage Dock with exact 56px nine-slice edges, zero content-margin drift, and the prior smoke style retained for high contrast and missing assets;
 - direct inspected 1280x720 and 1920x1080 captures for Campaign, Skirmish, Saves, Guide, and Settings preserve the dominant scenic backdrop, exact anchors/combined-minimum containment, readable controls, and exact compact-wide-compact restoration;
 - focused visual, keyboard navigation, settings-defaults, save/load-confidence, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with unchanged Menu/settings/save/session authority.
+
+## Overworld Small-Map Cartographic Matte
+
+id: `presentation-overworld-small-map-cartographic-matte-10184`
+
+Status: completed.
+
+Implementation boundary:
+- draw one restrained cartographic survey field only behind whole-map-fit Overworld boards whose capped board leaves material viewport gutters;
+- use subtle gutter grid/contour marks, a compact compass ornament, and a soft board shadow/frame so the centered playable board reads as an intentional mounted map rather than a small image floating in black;
+- keep every decorative mark below the terrain layer and outside gameplay authority, and retain the existing flat frame for large tactical maps.
+
+Completion criteria:
+- direct inspected River Pass 1280x720 and 1920x1080 captures show an intentional quiet cartographic surround without suggesting additional playable tiles or competing with the board;
+- focused runtime proves exact 104px tile cap, board/viewport rectangles, centered fit, no pan, object/town/hero scale, session authority, and the small-map-only matte contract at both widths, with the large-map control inactive;
+- broad Overworld visual/input/save compatibility, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tile extent, board rectangle, map layout, camera, pan, input, terrain, fog, road, route, object, hero, town, footprint, passability, interaction, gameplay, content, save schema, AI, balance, generation, Native RMG, or package-content change;
+- no fake navigable terrain outside the board, text panel, new asset dependency, animation, timer/deferred workaround, packaged Overworld interaction claim, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- material-gutter whole-map-fit boards use one passive static-layer survey field with exact 72px spacing, 48px activation threshold, low-alpha corner contours, a bounded compass ornament, and a 14px board-shadow extent; terrain draws after and fully covers the playable board;
+- direct inspected 1280x720 and 1920x1080 captures retain the compact board-first composition and replace the wide untreated gutter with an intentional, quiet map-table surround;
+- focused scale/matte, broad Overworld visual, movement/input ownership, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green with unchanged gameplay and session authority.
 
 ## Progress Reconciliation
 
