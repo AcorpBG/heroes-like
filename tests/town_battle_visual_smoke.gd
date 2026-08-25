@@ -163,6 +163,9 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	if not live_board.has_method("validation_scenic_overlay_summary"):
 		push_error("Town smoke: town stage does not expose scenic-overlay validation.")
 		return false
+	if not live_board.has_method("validation_command_watch_summary"):
+		push_error("Town smoke: town stage does not expose command-watch validation.")
+		return false
 	var session_before: Dictionary = session.to_dict()
 	var live_summary: Dictionary = live_board.call("validation_scenic_backdrop_summary")
 	if String(live_summary.get("faction_id", "")) != "faction_embercourt" \
@@ -185,12 +188,21 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	if not _scenic_overlay_contract_exact(live_overlay_summary, live_overlay_compact_expected):
 		push_error("Town smoke: live scenic overlays are not integrated into method-matched bounded glass edge rails: %s." % live_overlay_summary)
 		return false
+	var live_watch_summary: Dictionary = live_board.call("validation_command_watch_summary")
+	var live_watch_values := _expected_live_command_watch_values(session)
+	if not _command_watch_contract_exact(live_watch_summary, live_overlay_compact_expected, live_watch_values):
+		push_error("Town smoke: live command marker is not the bounded five-cell Town Watch plate: %s." % live_watch_summary)
+		return false
 	var fresh_live_overlay_summary := live_overlay_summary.duplicate(true)
+	var fresh_live_watch_summary := live_watch_summary.duplicate(true)
 	var live_authority_before_detach: Dictionary = session.to_dict()
 	live_overlay_summary["status_payloads"][0]["value"] = "999"
 	live_overlay_summary["district_payloads"][0]["value"] = 999
-	if session.to_dict() != live_authority_before_detach or live_board.call("validation_scenic_overlay_summary") != fresh_live_overlay_summary:
-		push_error("Town smoke: detached scenic-overlay validation changed live Town/session authority.")
+	live_watch_summary["payloads"][0]["value"] = 999
+	if session.to_dict() != live_authority_before_detach \
+			or live_board.call("validation_scenic_overlay_summary") != fresh_live_overlay_summary \
+			or live_board.call("validation_command_watch_summary") != fresh_live_watch_summary:
+		push_error("Town smoke: detached scenic-overlay or command-watch validation changed live Town/session authority.")
 		return false
 
 	var fixture = TownStageViewScript.new()
@@ -200,12 +212,17 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 		for faction_id_value in TOWN_SCENIC_BACKDROP_PATHS.keys():
 			var faction_id := String(faction_id_value)
 			fixture.set_precomputed_town_state(null, {
-				"town": {"town_id": "validation_town", "built_buildings": [], "garrison": [], "available_recruits": {}},
+				"town": {"town_id": "validation_town", "built_buildings": [], "garrison": [], "available_recruits": {"unit_a": 4, "unit_b": 3}},
 				"town_template": {"id": "validation_town", "name": "Validation Town", "faction_id": faction_id},
 				"faction": {"id": faction_id, "name": faction_id},
+				"stationed": [{"hero_id": "hero_a"}, {"hero_id": "hero_b"}],
+				"build_actions": [{"id": "build_a"}, {"id": "build_b"}],
+				"response_actions": [{"id": "response_a"}],
+				"threat": {"visible_marching": 2, "visible_pressuring": 1},
 			})
 			var summary: Dictionary = fixture.validation_scenic_backdrop_summary()
 			var overlay_summary: Dictionary = fixture.validation_scenic_overlay_summary()
+			var watch_summary: Dictionary = fixture.validation_command_watch_summary()
 			if String(summary.get("faction_id", "")) != faction_id \
 					or String(summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get(faction_id, "")) \
 					or not bool(summary.get("texture_loaded", false)) \
@@ -221,6 +238,25 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 				push_error("Town smoke: %s scenic glass overlay contract failed at %s: %s." % [faction_id, stage_size, overlay_summary])
 				fixture.queue_free()
 				return false
+			if not _command_watch_contract_exact(watch_summary, stage_size == Vector2(620.0, 320.0), [2, 2, 7, 1, 3]):
+				push_error("Town smoke: %s command watchplate contract failed at %s: %s." % [faction_id, stage_size, watch_summary])
+				fixture.queue_free()
+				return false
+
+	fixture.size = Vector2(620.0, 320.0)
+	var compact_watch_initial: Dictionary = fixture.validation_command_watch_summary()
+	fixture.size = Vector2(1180.0, 640.0)
+	var wide_watch: Dictionary = fixture.validation_command_watch_summary()
+	fixture.size = Vector2(620.0, 320.0)
+	var compact_watch_restored: Dictionary = fixture.validation_command_watch_summary()
+	if compact_watch_initial != compact_watch_restored \
+			or compact_watch_initial == wide_watch \
+			or not _command_watch_contract_exact(compact_watch_initial, true, [2, 2, 7, 1, 3]) \
+			or not _command_watch_contract_exact(wide_watch, false, [2, 2, 7, 1, 3]):
+		push_error("Town smoke: command watchplate did not preserve exact compact -> wide -> compact geometry and payload authority.")
+		fixture.queue_free()
+		return false
+	fixture.size = Vector2(1180.0, 640.0)
 
 	fixture.set_precomputed_town_state(null, {
 		"town": {"town_id": "validation_unknown", "built_buildings": [], "garrison": [], "available_recruits": {}},
@@ -229,6 +265,7 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	})
 	var fallback_summary: Dictionary = fixture.validation_scenic_backdrop_summary()
 	var fallback_overlay_summary: Dictionary = fixture.validation_scenic_overlay_summary()
+	var fallback_watch_summary: Dictionary = fixture.validation_command_watch_summary()
 	if String(fallback_summary.get("mapped_path", "")) != "" \
 			or bool(fallback_summary.get("texture_loaded", true)) \
 			or String(fallback_summary.get("rendering_mode", "")) != "procedural_geometry_fallback" \
@@ -239,6 +276,10 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 		return false
 	if not _scenic_overlay_contract_exact(fallback_overlay_summary, false):
 		push_error("Town smoke: procedural fallback lost the scenic glass overlay contract: %s." % fallback_overlay_summary)
+		fixture.queue_free()
+		return false
+	if not _command_watch_contract_exact(fallback_watch_summary, false, [0, 0, 0, 0, 0]):
+		push_error("Town smoke: procedural fallback lost the command watchplate contract: %s." % fallback_watch_summary)
 		fixture.queue_free()
 		return false
 	fixture.queue_free()
@@ -278,6 +319,56 @@ func _scenic_overlay_contract_exact(summary: Dictionary, compact_expected: bool)
 		and float(summary.get("overlay_area_ratio", 1.0)) > 0.0 \
 		and float(summary.get("overlay_area_ratio", 1.0)) <= max_area_ratio \
 		and String(summary.get("payload_authority", "")) == "existing_status_and_district_builders"
+
+func _expected_live_command_watch_values(session) -> Array:
+	var town: Dictionary = TownRules.get_active_town(session)
+	var recruit_total := 0
+	for value in town.get("available_recruits", {}).values():
+		recruit_total += maxi(0, int(value))
+	var threat: Dictionary = OverworldRules.town_public_threat_state(session, town)
+	return [
+		HeroCommandRules.stationed_heroes(session, town).size(),
+		TownRules.get_build_actions(session).size(),
+		recruit_total,
+		TownRules.get_response_actions(session).size(),
+		int(threat.get("visible_marching", 0)) + int(threat.get("visible_pressuring", 0)),
+	]
+
+func _command_watch_contract_exact(summary: Dictionary, compact_expected: bool, expected_values: Array) -> bool:
+	var payloads: Array = summary.get("payloads", []) if summary.get("payloads", []) is Array else []
+	var ids: Array = []
+	var labels: Array = []
+	var values: Array = []
+	for payload_value in payloads:
+		if payload_value is Dictionary:
+			ids.append(String(payload_value.get("id", "")))
+			labels.append(String(payload_value.get("display_label", "")))
+			values.append(int(payload_value.get("value", -1)))
+	var watch_rect: Rect2 = summary.get("watch_rect", Rect2()) if summary.get("watch_rect", Rect2()) is Rect2 else Rect2()
+	var expected_size := Vector2(242.0, 60.0) if compact_expected else Vector2(260.0, 62.0)
+	var max_legacy_ratio := 0.82 if compact_expected else 0.91
+	return String(summary.get("model", "")) == "responsive_translucent_five_cell_watchplate" \
+		and String(summary.get("heading", "")) == "TOWN WATCH" \
+		and bool(summary.get("compact", not compact_expected)) == compact_expected \
+		and int(summary.get("payload_count", 0)) == 5 \
+		and int(summary.get("cell_count", 0)) == 5 \
+		and ids == ["heroes", "build", "recruit", "response", "threat"] \
+		and labels == ["HERO", "BUILD", "MUSTER", "ORDERS", "THREAT"] \
+		and values == expected_values \
+		and watch_rect.size == expected_size \
+		and bool(summary.get("contained", false)) \
+		and bool(summary.get("cells_nonoverlap", false)) \
+		and bool(summary.get("status_nonoverlap", false)) \
+		and bool(summary.get("district_nonoverlap", false)) \
+		and bool(summary.get("header_nonoverlap", false)) \
+		and is_equal_approx(float(summary.get("glass_fill_alpha", 0.0)), 0.72) \
+		and is_equal_approx(float(summary.get("cell_fill_alpha", 0.0)), 0.64) \
+		and is_equal_approx(float(summary.get("accent_height", 0.0)), 3.0) \
+		and is_equal_approx(float(summary.get("legacy_area", 0.0)), 156.0 * 114.0) \
+		and float(summary.get("watch_area", 0.0)) > 0.0 \
+		and float(summary.get("watch_area", 0.0)) < float(summary.get("legacy_area", 0.0)) \
+		and float(summary.get("legacy_area_ratio", 1.0)) <= max_legacy_ratio \
+		and String(summary.get("payload_authority", "")) == "existing_town_command_marker_calculations"
 
 func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:
 	var texture_size: Vector2 = summary.get("texture_size", Vector2.ZERO)

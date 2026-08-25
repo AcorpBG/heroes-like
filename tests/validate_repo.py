@@ -29384,6 +29384,158 @@ def validate_town_scenic_overlay_glass_integration(errors: list[str]) -> None:
         ensure(forbidden_token not in helper_body, errors, f"Town scenic overlay oracle must remain passive and source-independent: {forbidden_token}")
 
 
+def validate_town_command_watchplate_visual_hierarchy(errors: list[str]) -> None:
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    required_paths = (TOWN_STAGE_SCRIPT_PATH, smoke_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town command-watchplate file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        match = re.search(
+            rf"^func {re.escape(name)}\([^\n]*\)[^\n]*:\n[\s\S]*?(?=^func |\Z)",
+            text,
+            re.MULTILINE,
+        )
+        return match.group(0) if match else ""
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const COMMAND_WATCH_MODEL := "responsive_translucent_five_cell_watchplate"',
+        'const COMMAND_WATCH_FILL := Color(0.025, 0.035, 0.042, 0.72)',
+        'const COMMAND_WATCH_CELL_FILL := Color(0.045, 0.058, 0.066, 0.64)',
+        'const COMMAND_WATCH_BORDER := Color(0.86, 0.72, 0.40, 0.68)',
+        'const COMMAND_WATCH_ACCENT_HEIGHT := 3.0',
+        'const COMMAND_WATCH_ORDER := ["heroes", "build", "recruit", "response", "threat"]',
+        '"heroes": "HERO"',
+        '"recruit": "MUSTER"',
+        '"response": "ORDERS"',
+        'func validation_command_watch_summary() -> Dictionary:',
+        '"payload_authority": "existing_town_command_marker_calculations"',
+    ):
+        ensure(required_token in stage_text, errors, f"Town command watchplate is missing exact source token: {required_token}")
+
+    payload_body = gdscript_function_block(stage_text, "_command_watch_payloads")
+    payload_order = tuple(payload_body.find(token) for token in (
+        'var threat_count := int(_threat.get("visible_marching", 0)) + int(_threat.get("visible_pressuring", 0))',
+        '"heroes": _stationed.size()',
+        '"build": _build_actions.size()',
+        '"recruit": _available_recruit_total()',
+        '"response": _response_actions.size()',
+        '"threat": threat_count',
+        'for id_value in COMMAND_WATCH_ORDER:',
+        '"display_label": String(COMMAND_WATCH_LABELS.get(id, id.to_upper()))',
+        '"value": int(values.get(id, 0))',
+    ))
+    ensure(all(index >= 0 for index in payload_order) and list(payload_order) == sorted(payload_order), errors, "Town command watchplate must preserve the exact legacy marker calculations and fixed order")
+    for forbidden_token in ("sort(", "erase(", "reverse(", "shuffle(", "TownRules", "OverworldRules", "session", "await ", "Timer"):
+        ensure(forbidden_token not in payload_body, errors, f"Town command-watch payload materializer must remain local and order-preserving: {forbidden_token}")
+
+    rect_body = gdscript_function_block(stage_text, "_command_watch_rect")
+    for required_token in (
+        'Vector2(242.0, 60.0) if compact else Vector2(260.0, 62.0)',
+        'scene_rect.end.x - watch_size.x - 18.0',
+        'scene_rect.position.y + 72.0',
+    ):
+        ensure(required_token in rect_body, errors, f"Town command watchplate is missing responsive bounded geometry token: {required_token}")
+    cell_body = gdscript_function_block(stage_text, "_command_watch_cell_rects")
+    for required_token in (
+        'var inset := 6.0',
+        'var gap := 4.0',
+        'var top := 20.0',
+        'float(cell_count - 1)',
+        'watch_rect.size.y - top - 6.0',
+    ):
+        ensure(required_token in cell_body, errors, f"Town command watchplate cells are missing exact contained geometry token: {required_token}")
+
+    draw_body = gdscript_function_block(stage_text, "_draw_command_markers")
+    for required_token in (
+        'var payloads := _command_watch_payloads()',
+        'var watch_rect := _command_watch_rect(scene_rect)',
+        'var cell_rects := _command_watch_cell_rects(watch_rect, payloads.size())',
+        'draw_rect(watch_rect, COMMAND_WATCH_FILL, true)',
+        'draw_rect(watch_rect, COMMAND_WATCH_BORDER, false, 1.5)',
+        'Vector2(watch_rect.size.x, COMMAND_WATCH_ACCENT_HEIGHT)',
+        '_draw_text("TOWN WATCH"',
+        'draw_rect(cell_rect, COMMAND_WATCH_CELL_FILL, true)',
+        'String(payload.get("display_label", ""))',
+        'int(payload.get("value", 0))',
+    ):
+        ensure(required_token in draw_body, errors, f"Town command watchplate painter is missing glass/cell typography token: {required_token}")
+    for forbidden_token in ("await ", "Timer", "queue_redraw", "set_town_state", "TownRules", "OverworldRules", "Input.", "grab_focus", "call_deferred"):
+        ensure(forbidden_token not in draw_body, errors, f"Town command watchplate painter must remain draw-only: {forbidden_token}")
+    for obsolete_token in (
+        'Vector2(156.0, 114.0)',
+        'Color(0.15, 0.17, 0.20, 0.90)',
+        'draw_circle(Vector2(rect.position.x + 10.0, y - 4.0), 3.0, FRAME_COLOR)',
+        '"HEROES %d" % _stationed.size()',
+        '"RESPONSE %d" % _response_actions.size()',
+    ):
+        ensure(obsolete_token not in draw_body, errors, f"Town command watchplate must not retain the opaque bullet-list treatment: {obsolete_token}")
+
+    summary_body = gdscript_function_block(stage_text, "validation_command_watch_summary")
+    summary_order = tuple(summary_body.find(token) for token in (
+        'var payloads := _command_watch_payloads()',
+        'var watch_rect := _command_watch_rect(scene_rect)',
+        'var cell_rects := _command_watch_cell_rects(watch_rect, payloads.size())',
+        'var status_rects := _status_plaque_rects(scene_rect, _status_plaque_payloads().size())',
+        'var district_rect := _district_strip_rect(scene_rect)',
+        'var header_rect := _header_stage_rect(scene_rect)',
+        'var legacy_area := 156.0 * 114.0',
+        'return {',
+    ))
+    ensure(all(index >= 0 for index in summary_order) and list(summary_order) == sorted(summary_order), errors, "Town command-watch summary must observe exact production payload and geometry builders in order")
+    for required_token in (
+        '"cells_nonoverlap": cells_nonoverlap',
+        '"status_nonoverlap": status_nonoverlap',
+        '"district_nonoverlap": not watch_rect.intersects(district_rect)',
+        '"header_nonoverlap": not watch_rect.intersects(header_rect)',
+        '"legacy_area_ratio": (watch_rect.size.x * watch_rect.size.y) / legacy_area',
+    ):
+        ensure(required_token in summary_body, errors, f"Town command-watch summary is missing fail-closed geometry token: {required_token}")
+    for forbidden_token in ("await ", "Timer", "queue_redraw", "set_town_state", "TownRules", "OverworldRules", "session.", "sort(", "erase("):
+        ensure(forbidden_token not in summary_body, errors, f"Town command-watch summary must remain detached observation only: {forbidden_token}")
+
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    scenic_body = gdscript_function_block(smoke_text, "_assert_town_scenic_backdrop_contract")
+    helper_body = gdscript_function_block(smoke_text, "_command_watch_contract_exact")
+    for required_token in (
+        'live_board.has_method("validation_command_watch_summary")',
+        'var live_watch_summary: Dictionary = live_board.call("validation_command_watch_summary")',
+        'var live_watch_values := _expected_live_command_watch_values(session)',
+        '_command_watch_contract_exact(live_watch_summary, live_overlay_compact_expected, live_watch_values)',
+        'var fresh_live_watch_summary := live_watch_summary.duplicate(true)',
+        'live_watch_summary["payloads"][0]["value"] = 999',
+        'live_board.call("validation_command_watch_summary") != fresh_live_watch_summary',
+        '"stationed": [{"hero_id": "hero_a"}, {"hero_id": "hero_b"}]',
+        '"build_actions": [{"id": "build_a"}, {"id": "build_b"}]',
+        '"response_actions": [{"id": "response_a"}]',
+        '"threat": {"visible_marching": 2, "visible_pressuring": 1}',
+        '_command_watch_contract_exact(watch_summary, stage_size == Vector2(620.0, 320.0), [2, 2, 7, 1, 3])',
+        'compact_watch_initial != compact_watch_restored',
+        'compact_watch_initial == wide_watch',
+        '_command_watch_contract_exact(fallback_watch_summary, false, [0, 0, 0, 0, 0])',
+    ):
+        ensure(required_token in scenic_body, errors, f"Town command-watch focused owner is missing lifecycle/authority token: {required_token}")
+    for required_token in (
+        '"responsive_translucent_five_cell_watchplate"',
+        '["heroes", "build", "recruit", "response", "threat"]',
+        '["HERO", "BUILD", "MUSTER", "ORDERS", "THREAT"]',
+        'Vector2(242.0, 60.0) if compact_expected else Vector2(260.0, 62.0)',
+        '0.82 if compact_expected else 0.91',
+        'summary.get("cells_nonoverlap", false)',
+        'summary.get("status_nonoverlap", false)',
+        'summary.get("district_nonoverlap", false)',
+        'summary.get("header_nonoverlap", false)',
+        'summary.get("watch_area", 0.0)) < float(summary.get("legacy_area", 0.0))',
+        'summary.get("payload_authority", "")) == "existing_town_command_marker_calculations"',
+    ):
+        ensure(required_token in helper_body, errors, f"Town command-watch focused contract is missing exact proof token: {required_token}")
+    for forbidden_token in ("sort(", "erase(", "set_town_state", "queue_redraw", "call_deferred", "Timer", "await "):
+        ensure(forbidden_token not in helper_body, errors, f"Town command-watch oracle must remain passive and source-independent: {forbidden_token}")
+
+
 def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
     town_visual_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
     required_paths = (TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, OVERWORLD_RULES_PATH, town_visual_path)
@@ -63733,6 +63885,7 @@ def main() -> int:
     validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)
     validate_town_scenic_overlay_glass_integration(errors)
+    validate_town_command_watchplate_visual_hierarchy(errors)
     validate_town_capture_frontier_first_view_status(errors)
     validate_town_header_player_facing_control_label(errors)
     validate_overworld_town_control_label_consistency(errors)

@@ -27,6 +27,19 @@ const SCENIC_GLASS_SHADOW := Color(0.0, 0.0, 0.0, 0.28)
 const SCENIC_GLASS_BORDER := Color(0.86, 0.72, 0.40, 0.70)
 const STATUS_ACCENT_WIDTH := 5.0
 const DISTRICT_ACCENT_HEIGHT := 3.0
+const COMMAND_WATCH_MODEL := "responsive_translucent_five_cell_watchplate"
+const COMMAND_WATCH_FILL := Color(0.025, 0.035, 0.042, 0.72)
+const COMMAND_WATCH_CELL_FILL := Color(0.045, 0.058, 0.066, 0.64)
+const COMMAND_WATCH_BORDER := Color(0.86, 0.72, 0.40, 0.68)
+const COMMAND_WATCH_ACCENT_HEIGHT := 3.0
+const COMMAND_WATCH_ORDER := ["heroes", "build", "recruit", "response", "threat"]
+const COMMAND_WATCH_LABELS := {
+	"heroes": "HERO",
+	"build": "BUILD",
+	"recruit": "MUSTER",
+	"response": "ORDERS",
+	"threat": "THREAT",
+}
 const FACTION_COLORS := {
 	"faction_embercourt": Color(0.86, 0.48, 0.23, 1.0),
 	"faction_mireclaw": Color(0.39, 0.69, 0.30, 1.0),
@@ -1095,6 +1108,54 @@ func validation_scenic_overlay_summary() -> Dictionary:
 		"payload_authority": "existing_status_and_district_builders",
 	}
 
+func validation_command_watch_summary() -> Dictionary:
+	var scene_size := Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0))
+	var scene_rect := Rect2(Vector2(26.0, 26.0), scene_size)
+	var payloads := _command_watch_payloads()
+	var watch_rect := _command_watch_rect(scene_rect)
+	var cell_rects := _command_watch_cell_rects(watch_rect, payloads.size())
+	var status_rects := _status_plaque_rects(scene_rect, _status_plaque_payloads().size())
+	var district_rect := _district_strip_rect(scene_rect)
+	var header_rect := _header_stage_rect(scene_rect)
+	var contained := scene_rect.encloses(watch_rect) and cell_rects.size() == payloads.size()
+	var cells_nonoverlap := true
+	for index in range(cell_rects.size()):
+		var cell_rect: Rect2 = cell_rects[index] if cell_rects[index] is Rect2 else Rect2()
+		if not watch_rect.encloses(cell_rect):
+			contained = false
+		for prior_index in range(index):
+			var prior_rect: Rect2 = cell_rects[prior_index] if cell_rects[prior_index] is Rect2 else Rect2()
+			if cell_rect.intersects(prior_rect):
+				cells_nonoverlap = false
+	var status_nonoverlap := true
+	for status_rect_value in status_rects:
+		if status_rect_value is Rect2 and watch_rect.intersects(status_rect_value):
+			status_nonoverlap = false
+	var legacy_area := 156.0 * 114.0
+	return {
+		"model": COMMAND_WATCH_MODEL,
+		"heading": "TOWN WATCH",
+		"compact": _scenic_overlay_compact(scene_rect),
+		"scene_rect": scene_rect,
+		"payloads": payloads.duplicate(true),
+		"payload_count": payloads.size(),
+		"watch_rect": watch_rect,
+		"cell_rects": cell_rects.duplicate(true),
+		"cell_count": cell_rects.size(),
+		"contained": contained,
+		"cells_nonoverlap": cells_nonoverlap,
+		"status_nonoverlap": status_nonoverlap,
+		"district_nonoverlap": not watch_rect.intersects(district_rect),
+		"header_nonoverlap": not watch_rect.intersects(header_rect),
+		"glass_fill_alpha": COMMAND_WATCH_FILL.a,
+		"cell_fill_alpha": COMMAND_WATCH_CELL_FILL.a,
+		"accent_height": COMMAND_WATCH_ACCENT_HEIGHT,
+		"legacy_area": legacy_area,
+		"watch_area": watch_rect.size.x * watch_rect.size.y,
+		"legacy_area_ratio": (watch_rect.size.x * watch_rect.size.y) / legacy_area,
+		"payload_authority": "existing_town_command_marker_calculations",
+	}
+
 func validation_header_action_count_summary() -> Dictionary:
 	var scene_rect := Rect2(Vector2(26.0, 26.0), Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0)))
 	var max_width := maxf(0.0, scene_rect.size.x - 36.0)
@@ -1391,28 +1452,84 @@ func _scenic_overlay_compact(scene_rect: Rect2) -> bool:
 	return scene_rect.size.x < 1000.0 or scene_rect.size.y < 520.0
 
 func _draw_command_markers(scene_rect: Rect2) -> void:
-	var rect := Rect2(
-		Vector2(scene_rect.end.x - 174.0, scene_rect.position.y + 72.0),
-		Vector2(156.0, 114.0)
+	var payloads := _command_watch_payloads()
+	var watch_rect := _command_watch_rect(scene_rect)
+	var cell_rects := _command_watch_cell_rects(watch_rect, payloads.size())
+	var compact := _scenic_overlay_compact(scene_rect)
+	draw_rect(Rect2(watch_rect.position + Vector2(2.0, 2.0), watch_rect.size), SCENIC_GLASS_SHADOW, true)
+	draw_rect(watch_rect, COMMAND_WATCH_FILL, true)
+	draw_rect(watch_rect, COMMAND_WATCH_BORDER, false, 1.5)
+	var faction_accent := _accent_color()
+	draw_rect(Rect2(watch_rect.position, Vector2(watch_rect.size.x, COMMAND_WATCH_ACCENT_HEIGHT)), Color(faction_accent.r, faction_accent.g, faction_accent.b, 0.94), true)
+	_draw_text("TOWN WATCH", watch_rect.position + Vector2(7.0, 15.0), TEXT_COLOR, 9 if compact else 10)
+	for index in range(payloads.size()):
+		var payload: Dictionary = payloads[index] if payloads[index] is Dictionary else {}
+		var cell_rect: Rect2 = cell_rects[index]
+		var accent: Color = payload.get("color", FRAME_COLOR)
+		draw_rect(cell_rect, COMMAND_WATCH_CELL_FILL, true)
+		draw_rect(cell_rect, Color(accent.r, accent.g, accent.b, 0.58), false, 1.0)
+		_draw_text(String(payload.get("display_label", "")), cell_rect.position + Vector2(4.0, 11.0), Color(accent.r, accent.g, accent.b, 1.0).lightened(0.24), 8)
+		_draw_text("%d" % int(payload.get("value", 0)), cell_rect.position + Vector2(4.0, cell_rect.size.y - 5.0), TEXT_COLOR, 14 if compact else 15)
+
+func _command_watch_payloads() -> Array:
+	var threat_count := int(_threat.get("visible_marching", 0)) + int(_threat.get("visible_pressuring", 0))
+	var values := {
+		"heroes": _stationed.size(),
+		"build": _build_actions.size(),
+		"recruit": _available_recruit_total(),
+		"response": _response_actions.size(),
+		"threat": threat_count,
+	}
+	var colors := {
+		"heroes": _accent_color(),
+		"build": DISTRICT_COLORS["economy"],
+		"recruit": DISTRICT_COLORS["military"],
+		"response": DISTRICT_COLORS["logistics"],
+		"threat": Color(0.76, 0.34, 0.30, 0.94) if threat_count > 0 else DISTRICT_COLORS["defense"],
+	}
+	var payloads: Array = []
+	for id_value in COMMAND_WATCH_ORDER:
+		var id := String(id_value)
+		payloads.append({
+			"id": id,
+			"display_label": String(COMMAND_WATCH_LABELS.get(id, id.to_upper())),
+			"value": int(values.get(id, 0)),
+			"color": colors.get(id, FRAME_COLOR),
+		})
+	return payloads
+
+func _command_watch_rect(scene_rect: Rect2) -> Rect2:
+	var compact := _scenic_overlay_compact(scene_rect)
+	var watch_size := Vector2(242.0, 60.0) if compact else Vector2(260.0, 62.0)
+	return Rect2(
+		Vector2(scene_rect.end.x - watch_size.x - 18.0, scene_rect.position.y + 72.0),
+		watch_size
 	)
-	draw_rect(rect, Color(0.15, 0.17, 0.20, 0.90), true)
-	draw_rect(rect, FRAME_COLOR, false, 2.0)
-	var lines := [
-		"HEROES %d" % _stationed.size(),
-		"BUILD %d" % _build_actions.size(),
-		"RECRUIT %d" % _available_recruit_total(),
-		"RESPONSE %d" % _response_actions.size(),
-		"THREAT %d" % (int(_threat.get("visible_marching", 0)) + int(_threat.get("visible_pressuring", 0))),
-	]
-	for index in range(lines.size()):
-		var y := rect.position.y + 18.0 + float(index) * 18.0
-		draw_circle(Vector2(rect.position.x + 10.0, y - 4.0), 3.0, FRAME_COLOR)
-		_draw_text(lines[index], Vector2(rect.position.x + 20.0, y), SUBTEXT_COLOR, 12)
+
+func _command_watch_cell_rects(watch_rect: Rect2, cell_count: int) -> Array:
+	var rects: Array = []
+	if cell_count <= 0:
+		return rects
+	var inset := 6.0
+	var gap := 4.0
+	var top := 20.0
+	var cell_width := (watch_rect.size.x - inset * 2.0 - gap * float(cell_count - 1)) / float(cell_count)
+	var cell_height := watch_rect.size.y - top - 6.0
+	for index in range(cell_count):
+		rects.append(Rect2(
+			watch_rect.position + Vector2(inset + float(index) * (cell_width + gap), top),
+			Vector2(cell_width, cell_height)
+		))
+	return rects
+
+func _header_stage_rect(scene_rect: Rect2) -> Rect2:
+	var label_y: float = minf(scene_rect.end.y - 104.0, scene_rect.position.y + scene_rect.size.y * 0.66)
+	return Rect2(Vector2(scene_rect.position.x + 18.0, label_y - 20.0), Vector2(maxf(0.0, scene_rect.size.x - 36.0), 50.0))
 
 func _draw_header(scene_rect: Rect2) -> void:
 	var max_width := maxf(0.0, scene_rect.size.x - 36.0)
 	var line := _fit_stage_header_text(_header_title_text(), max_width, 20)
-	var label_y: float = minf(scene_rect.end.y - 104.0, scene_rect.position.y + scene_rect.size.y * 0.66)
+	var label_y := _header_stage_rect(scene_rect).position.y + 20.0
 	_draw_text(line, scene_rect.position + Vector2(18.0, label_y), TEXT_COLOR, 20)
 	var subline := _fit_stage_header_text(_header_action_count_text(), max_width, 13)
 	_draw_text(subline, scene_rect.position + Vector2(18.0, label_y + 22.0), SUBTEXT_COLOR, 13)
