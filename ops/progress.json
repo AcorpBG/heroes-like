@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle sidebar tactical-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "currentNotes": "The Town management-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-sidebar-tactical-card-height-cap-10184",
-  "currentSliceId": "ux-battle-sidebar-tactical-card-height-cap-10184",
-  "currentSliceNotes": "Completed with exact 248px four-tab containment, inspected 1280/1600/1920/2560 captures, focused authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "ux-town-management-card-height-cap-10184",
+  "currentSliceId": "ux-town-management-card-height-cap-10184",
+  "currentSliceNotes": "Completed with exact 460px five-tab containment, bounded native Log scrolling, inspected 1280/1600/1920/2560 captures, focused authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle sidebar tactical card height cap",
-  "currentSliceUpdatedAt": "2026-08-25T16:07:52Z",
+  "currentSliceTitle": "Town management card height cap",
+  "currentSliceUpdatedAt": "2026-08-25T16:34:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19900,7 +19900,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Battle sidebar tactical-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "notes": "The Town management-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
@@ -101442,6 +101442,34 @@
       "notes": "Completed from direct inspected 1280x720 and 1920x1080 captures. With all four slots unavailable, Load now uses a compact 920x360 archival card with the reused frontier crest, an exact empty-state title/body/cue hierarchy, and Close as the safe entry focus; the underlying four ordered unavailable summaries remain exact. The existing broad populated-save owner explicitly proves that any loadable slot retains the standard dock, two-column browser, preview, naming/deletion/load actions, and authority. Focused keyboard/destructive-dialog, lean boot, save/load confidence, broad Menu/Outcome, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Save schema/paths/content/actions, packaged Load interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T14:18:48Z"
+    },
+    {
+      "id": "ux-town-management-card-height-cap-10184",
+      "title": "Town management card height cap",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T16:34:10Z",
+      "startedAt": "2026-08-25T16:11:28Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownShell.tscn",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Turn the wide Town management page into a content-safe card inside the existing sidebar art so the rail keeps deliberate negative space instead of a tall empty inner panel.",
+      "completionCriteria": "Direct inspected 1280x720, 1600x900, 1920x1080, and 2560x1440 captures show a bounded management card with exact content containment; focused runtime proves stable Build/Muster/Spells/Trade/Log allocation, native titles/actions/tooltips/focus/selection and unchanged town/economy/session/save/settings authority; broad visual/focus/action/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No tab title/content/tooltip, hero/army/build/recruit/spell/market/logistics/action, economy, town-rule, content, session, save/schema, settings, or gameplay changes.",
+        "No SidebarShell/CommandPanel width or art, panorama/banner/stockpile/stage/district/footer allocation, font/theme/UI scale, input mapping, focus order, accessibility semantic, animation/audio, or VFX changes.",
+        "No packaged Town interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected 1280x720, 1600x900, 1920x1080, and 2560x1440 Town captures. ManagementTabs now keeps one exact 460px allocation across Build/Muster/Spells/Trade/Log; compact/standard content remains complete while wide rails retain 239px/599px of art-backed negative space. The formerly unbounded Log page now uses one native vertical ScrollContainer and runtime proves Artifacts and final Response actions are both reachable, readiness-count titles remain authored, all visible controls/pages are contained, and tab/scroll plus whole town/economy/session/save/settings authority restore exactly. Town/Battle visual, 100/130% settings, keyboard/controller focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Native content/order/actions, panorama/banner/stockpile/stage/district/footer, packaged Town interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T16:34:10Z"
     },
     {
       "id": "ux-battle-sidebar-tactical-card-height-cap-10184",

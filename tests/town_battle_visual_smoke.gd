@@ -120,6 +120,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_command_tab_readiness_cues(shell):
 		get_tree().quit(1)
 		return false
+	if not await _assert_town_management_card_contract(shell, session):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_muster_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
@@ -1236,6 +1239,56 @@ func _assert_town_command_tab_readiness_cues(shell: Node) -> bool:
 		if cue_text.contains(leak_token):
 			push_error("Town smoke: command-tab readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
 			return false
+	return true
+
+func _assert_town_management_card_contract(shell: Node, session) -> bool:
+	var authority_before: Dictionary = session.to_dict()
+	var tabs: TabContainer = shell.get_node("%ManagementTabs")
+	var rows := [
+		{"title": "Build", "page": shell.get_node("%BuildPanel")},
+		{"title": "Muster", "page": shell.get_node("%RecruitPanel")},
+		{"title": "Spells", "page": shell.get_node("%StudyPanel")},
+		{"title": "Trade", "page": shell.get_node("%MarketPanel")},
+		{"title": "Log", "page": shell.get_node("%LogisticsPanel")},
+	]
+	if not is_equal_approx(tabs.custom_minimum_size.y, 460.0) \
+			or tabs.size_flags_vertical != Control.SIZE_FILL:
+		push_error("Town smoke: ManagementTabs lost its exact 460px fill-only card policy: minimum=%s flags=%s." % [tabs.custom_minimum_size, tabs.size_flags_vertical])
+		return false
+	var original_tab := tabs.current_tab
+	for index in range(rows.size()):
+		var row: Dictionary = rows[index]
+		tabs.current_tab = index
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var page: Control = row.get("page")
+		var expected_title := String(row.get("title", ""))
+		var actual_title := tabs.get_tab_title(index)
+		if actual_title != expected_title and not actual_title.begins_with("%s " % expected_title) \
+				or not is_equal_approx(tabs.size.y, 460.0) \
+				or not tabs.get_global_rect().encloses(page.get_global_rect()):
+			push_error("Town smoke: management card title/height/page containment mismatch at tab %s: title=%s tabs=%s page=%s." % [index, actual_title, tabs.get_global_rect(), page.get_global_rect()])
+			return false
+	var logistics_scroll: ScrollContainer = shell.get_node("%LogisticsScroll")
+	var artifacts: Control = shell.get_node("%Artifacts")
+	var response_actions: Control = shell.get_node("%ResponseActions")
+	if not logistics_scroll.get_global_rect().encloses(artifacts.get_global_rect()) \
+			or logistics_scroll.get_v_scroll_bar().max_value <= logistics_scroll.get_v_scroll_bar().page + 0.01:
+		push_error("Town smoke: Log card did not expose its top content and a real bounded vertical scroll range.")
+		return false
+	logistics_scroll.scroll_vertical = int(logistics_scroll.get_v_scroll_bar().max_value)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not logistics_scroll.get_global_rect().encloses(response_actions.get_global_rect()):
+		push_error("Town smoke: Log card could not reach its final response actions through native scrolling.")
+		return false
+	logistics_scroll.scroll_vertical = 0
+	tabs.current_tab = original_tab
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if session.to_dict() != authority_before:
+		push_error("Town smoke: inspecting management-card geometry changed Town/session authority.")
+		return false
 	return true
 
 func _assert_battle_command_tab_readiness_cues(shell: Node) -> bool:

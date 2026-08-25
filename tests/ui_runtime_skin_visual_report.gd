@@ -159,6 +159,11 @@ func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> 
 		shell_report["battle_sidebar_tactical_card"] = sidebar_contract
 		if not bool(sidebar_contract.get("ok", false)):
 			_error("Battle sidebar tactical-card containment failed at %s: %s" % [_viewport_key(viewport_size), sidebar_contract])
+	elif shell_id == "town":
+		var management_contract := await _town_management_card_contract(shell, viewport_size)
+		shell_report["town_management_card"] = management_contract
+		if not bool(management_contract.get("ok", false)):
+			_error("Town management-card containment failed at %s: %s" % [_viewport_key(viewport_size), management_contract])
 	for panel_name in Dictionary(spec["panels"]).keys():
 		var expected_path := _expected_panel_style(shell_id, String(panel_name), viewport_size, String(spec["panels"][panel_name]))
 		var actual_path := _panel_texture_path(shell, String(panel_name))
@@ -341,6 +346,97 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 		"command_rect": command_rect,
 		"tabs_rect": tabs_rect,
 		"pages_contained": pages_contained,
+		"remaining_rail_gutter": remaining_rail_gutter,
+		"authority_exact": authority_exact,
+	}
+
+func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dictionary:
+	var sidebar_shell := shell.get_node_or_null("%SidebarShell") as PanelContainer
+	var command_panel := shell.get_node_or_null("%CommandPanel") as PanelContainer
+	var tabs := shell.get_node_or_null("%ManagementTabs") as TabContainer
+	var rows := [
+		{"title": "Build", "page": shell.get_node_or_null("%BuildPanel"), "controls": [shell.get_node_or_null("%Buildings"), shell.get_node_or_null("%BuildActions"), shell.get_node_or_null("%BuildPlan"), shell.get_node_or_null("%ConfirmBuild")]},
+		{"title": "Muster", "page": shell.get_node_or_null("%RecruitPanel"), "controls": [shell.get_node_or_null("%Recruitment"), shell.get_node_or_null("%RecruitActions")]},
+		{"title": "Spells", "page": shell.get_node_or_null("%StudyPanel"), "controls": [shell.get_node_or_null("%StudyScroll")]},
+		{"title": "Trade", "page": shell.get_node_or_null("%MarketPanel"), "controls": [shell.get_node_or_null("%Market"), shell.get_node_or_null("%MarketActions")]},
+		{"title": "Log", "page": shell.get_node_or_null("%LogisticsPanel"), "controls": [shell.get_node_or_null("%LogisticsScroll")]},
+	]
+	if sidebar_shell == null or command_panel == null or tabs == null:
+		return {"ok": false, "missing_authored_control": true}
+	for row_value in rows:
+		var row: Dictionary = row_value
+		if not (row.get("page") is Control) or Array(row.get("controls", [])).any(func(control): return not (control is Control)):
+			return {"ok": false, "missing_page_control": row.get("title", "")}
+	var session = SessionState.active_session
+	var authority_before: Dictionary = session.to_dict()
+	var original_tab := tabs.current_tab
+	var titles: Array[String] = []
+	var heights: Array[float] = []
+	var pages_contained := true
+	var controls_contained := true
+	var overflow_controls: Array[Dictionary] = []
+	for index in range(rows.size()):
+		var row: Dictionary = rows[index]
+		tabs.current_tab = index
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var page: Control = row.get("page")
+		titles.append(tabs.get_tab_title(index))
+		heights.append(tabs.size.y)
+		pages_contained = pages_contained and tabs.get_global_rect().encloses(page.get_global_rect())
+		for control_value in Array(row.get("controls", [])):
+			var control: Control = control_value
+			if control.is_visible_in_tree() and not page.get_global_rect().encloses(control.get_global_rect()):
+				controls_contained = false
+				overflow_controls.append({"tab": row.get("title", ""), "control": control.name, "page_rect": page.get_global_rect(), "control_rect": control.get_global_rect()})
+	var logistics_scroll: ScrollContainer = shell.get_node("%LogisticsScroll")
+	var artifacts: Control = shell.get_node("%Artifacts")
+	var response_actions: Control = shell.get_node("%ResponseActions")
+	var logistics_scroll_rect := logistics_scroll.get_global_rect()
+	var logistics_top_reachable := logistics_scroll_rect.encloses(artifacts.get_global_rect())
+	var logistics_scroll_required := logistics_scroll.get_v_scroll_bar().max_value > logistics_scroll.get_v_scroll_bar().page + 0.01
+	logistics_scroll.scroll_vertical = int(logistics_scroll.get_v_scroll_bar().max_value)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var logistics_end_reachable := logistics_scroll.get_global_rect().encloses(response_actions.get_global_rect())
+	logistics_scroll.scroll_vertical = 0
+	await get_tree().process_frame
+	var sidebar_rect := sidebar_shell.get_global_rect()
+	var command_rect := command_panel.get_global_rect()
+	var tabs_rect := tabs.get_global_rect()
+	var compact := viewport_size.x < 1360 or viewport_size.y < 760
+	var remaining_rail_gutter := sidebar_rect.end.y - tabs_rect.end.y
+	var authored_height_exact := is_equal_approx(tabs.custom_minimum_size.y, 460.0) \
+		and tabs.size_flags_vertical == Control.SIZE_FILL
+	var geometry_exact := heights.all(func(height): return is_equal_approx(height, 460.0)) \
+		and sidebar_rect.encloses(tabs_rect) \
+		and pages_contained \
+		and controls_contained \
+		and logistics_top_reachable \
+		and logistics_scroll_required \
+		and logistics_end_reachable \
+		and ((not command_panel.is_visible_in_tree()) if compact else (sidebar_rect.encloses(command_rect) and command_rect.end.y <= tabs_rect.position.y + 0.01 and not command_rect.intersects(tabs_rect) and remaining_rail_gutter >= 32.0))
+	tabs.current_tab = original_tab
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var authority_exact := session.to_dict() == authority_before
+	var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]
+	return {
+		"ok": authored_height_exact and geometry_exact and titles == expected_titles and authority_exact,
+		"compact": compact,
+		"authored_height_exact": authored_height_exact,
+		"titles": titles,
+		"heights": heights,
+		"sidebar_rect": sidebar_rect,
+		"command_rect": command_rect,
+		"tabs_rect": tabs_rect,
+		"command_visible": command_panel.is_visible_in_tree(),
+		"pages_contained": pages_contained,
+		"controls_contained": controls_contained,
+		"overflow_controls": overflow_controls,
+		"logistics_top_reachable": logistics_top_reachable,
+		"logistics_scroll_required": logistics_scroll_required,
+		"logistics_end_reachable": logistics_end_reachable,
 		"remaining_rail_gutter": remaining_rail_gutter,
 		"authority_exact": authority_exact,
 	}

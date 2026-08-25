@@ -32533,6 +32533,139 @@ def validate_battle_sidebar_tactical_card_height_cap(errors: list[str]) -> None:
         ensure(all(index >= 0 for index in visual_run_order) and list(visual_run_order) == sorted(visual_run_order), errors, "Battle tactical-card all-size contract must pass before every captured screenshot")
 
 
+def validate_town_management_card_height_cap(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
+    for path in (TOWN_SCENE_PATH, smoke_path, visual_path):
+        ensure(path.exists(), errors, f"Missing Town management-card owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (TOWN_SCENE_PATH, smoke_path, visual_path)):
+        return
+
+    scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    tabs_match = re.search(
+        r'\[node name="ManagementTabs" type="TabContainer"[^\n]*\]\n(?P<body>.*?)(?=\n\[node name="BuildPanel")',
+        scene_text,
+        re.S,
+    )
+    ensure(tabs_match is not None, errors, "Could not isolate authored Town ManagementTabs card")
+    if tabs_match is not None:
+        tabs_body = tabs_match.group("body")
+        ensure(tabs_body.count("custom_minimum_size = Vector2(0, 460)") == 1, errors, "Town ManagementTabs must own one exact 460px content-safe minimum")
+        ensure(tabs_body.count("size_flags_horizontal = 3") == 1 and tabs_body.count("size_flags_vertical = 1") == 1, errors, "Town ManagementTabs must fill horizontally without vertically expanding through the wide rail")
+        ensure("size_flags_vertical = 3" not in tabs_body, errors, "Town ManagementTabs must not retain the full-height vertical expand flag")
+    ensure(scene_text.count('[node name="LogisticsScroll" type="ScrollContainer"') == 1, errors, "Town Log page must own one native ScrollContainer")
+    logistics_scroll_match = re.search(
+        r'\[node name="LogisticsScroll" type="ScrollContainer"[^\n]*\]\n(?P<body>.*?)(?=\n\[node name="LogisticsPad")',
+        scene_text,
+        re.S,
+    )
+    ensure(logistics_scroll_match is not None, errors, "Could not isolate Town Log native scroll owner")
+    if logistics_scroll_match is not None:
+        scroll_body = logistics_scroll_match.group("body")
+        for token in ("unique_name_in_owner = true", "size_flags_horizontal = 3", "size_flags_vertical = 3", "horizontal_scroll_mode = 0"):
+            ensure(token in scroll_body, errors, f"Town Log native scroll owner is missing exact bounded-scroll token: {token}")
+    ensure(scene_text.count("/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox") == 9, errors, "All nine Town Log labels/action surfaces must remain in exact source order beneath the one native scroll owner")
+    for forbidden in ("LogisticsPanel/LogisticsPad/LogisticsBox", "vertical_scroll_mode = 0", "clip_contents = false"):
+        ensure(forbidden not in scene_text, errors, f"Town Log page must not bypass bounded native vertical scrolling via {forbidden}")
+
+    focused = gd_function_block(smoke_text, "_assert_town_management_card_contract")
+    run_town = gd_function_block(smoke_text, "_run_town_smoke")
+    ensure(focused and run_town, errors, "Could not isolate focused Town management-card runtime owner")
+    if focused:
+        focused_order = tuple(focused.find(token) for token in (
+            "var authority_before: Dictionary = session.to_dict()",
+            'shell.get_node("%ManagementTabs")',
+            '"title": "Build"',
+            '"title": "Muster"',
+            '"title": "Spells"',
+            '"title": "Trade"',
+            '"title": "Log"',
+            "tabs.custom_minimum_size.y, 460.0",
+            "tabs.size_flags_vertical != Control.SIZE_FILL",
+            "for index in range(rows.size()):",
+            "tabs.get_tab_title(index)",
+            "is_equal_approx(tabs.size.y, 460.0)",
+            "tabs.get_global_rect().encloses(page.get_global_rect())",
+            'shell.get_node("%LogisticsScroll")',
+            "logistics_scroll.get_v_scroll_bar().max_value <= logistics_scroll.get_v_scroll_bar().page + 0.01",
+            "logistics_scroll.scroll_vertical = int(logistics_scroll.get_v_scroll_bar().max_value)",
+            "logistics_scroll.get_global_rect().encloses(response_actions.get_global_rect())",
+            "logistics_scroll.scroll_vertical = 0",
+            "tabs.current_tab = original_tab",
+            "session.to_dict() != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Town management-card proof must traverse five native pages, prove real Log scrolling, restore UI state, then verify authority")
+        for forbidden in ("custom_minimum_size =", "tabs.size_flags_vertical = Control.SIZE", "set_deferred", "call_deferred", "create_timer", "queue_sort", "sort(", "erase("):
+            ensure(forbidden not in focused, errors, f"Focused Town management-card proof must not mutate layout/content authority via {forbidden}")
+        ensure('actual_title != expected_title and not actual_title.begins_with("%s " % expected_title)' in focused, errors, "Focused Town management-card proof must preserve exact native base titles plus authored readiness-count suffixes")
+    if run_town:
+        readiness_call = run_town.find("_assert_town_command_tab_readiness_cues(shell)")
+        card_call = run_town.find("await _assert_town_management_card_contract(shell, session)")
+        return_handoff = run_town.find('shell.call("validation_prepare_town_return_handoff")')
+        ensure(0 <= readiness_call < card_call < return_handoff and run_town.count("await _assert_town_management_card_contract(shell, session)") == 1, errors, "Town management-card proof must run once after readiness semantics and before return routing")
+
+    visual = gd_function_block(visual_text, "_town_management_card_contract")
+    visual_run = gd_function_block(visual_text, "_run_shell")
+    ensure(visual and visual_run, errors, "Could not isolate all-size Town management-card capture owner")
+    if visual:
+        visual_order = tuple(visual.find(token) for token in (
+            'shell.get_node_or_null("%SidebarShell")',
+            'shell.get_node_or_null("%CommandPanel")',
+            'shell.get_node_or_null("%ManagementTabs")',
+            '"title": "Build"',
+            '"title": "Muster"',
+            '"title": "Spells"',
+            '"title": "Trade"',
+            '"title": "Log"',
+            "var authority_before: Dictionary = session.to_dict()",
+            "for index in range(rows.size()):",
+            "control.is_visible_in_tree() and not page.get_global_rect().encloses(control.get_global_rect())",
+            'shell.get_node("%LogisticsScroll")',
+            "var logistics_top_reachable",
+            "var logistics_scroll_required",
+            "logistics_scroll.scroll_vertical = int(logistics_scroll.get_v_scroll_bar().max_value)",
+            "var logistics_end_reachable",
+            "logistics_scroll.scroll_vertical = 0",
+            "tabs.custom_minimum_size.y, 460.0",
+            "heights.all(func(height): return is_equal_approx(height, 460.0))",
+            "remaining_rail_gutter >= 32.0",
+            "tabs.current_tab = original_tab",
+            "var authority_exact := session.to_dict() == authority_before",
+        ))
+        ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "All-size Town management-card owner must inspect every page/control, prove top-to-end Log reachability, wide geometry, restore, then verify authority")
+        for token in (
+            'var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]',
+            "sidebar_rect.encloses(tabs_rect)",
+            "sidebar_rect.encloses(command_rect)",
+            "not command_rect.intersects(tabs_rect)",
+            "not command_panel.is_visible_in_tree()) if compact",
+            "logistics_top_reachable",
+            "logistics_scroll_required",
+            "logistics_end_reachable",
+        ):
+            ensure(token in visual, errors, f"All-size Town management-card proof is missing exact responsive/native-scroll token: {token}")
+        for forbidden in ("custom_minimum_size =", "tabs.size_flags_vertical = Control.SIZE", "set_deferred", "call_deferred", "create_timer", "queue_sort", "sort(", "erase("):
+            ensure(forbidden not in visual, errors, f"All-size Town management-card proof must remain passive and avoid {forbidden}")
+    if visual_run:
+        visual_run_order = tuple(visual_run.find(token) for token in (
+            'elif shell_id == "town":',
+            "var management_contract := await _town_management_card_contract(shell, viewport_size)",
+            'shell_report["town_management_card"] = management_contract',
+            'if not bool(management_contract.get("ok", false)):',
+            "var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)",
+        ))
+        ensure(all(index >= 0 for index in visual_run_order) and list(visual_run_order) == sorted(visual_run_order), errors, "Town management-card all-size contract must pass before every captured screenshot")
+
+
 def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     def gd_function_block(text: str, name: str) -> str:
         start = text.find(f"func {name}(")
@@ -65371,6 +65504,7 @@ def main() -> int:
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)
+    validate_town_management_card_height_cap(errors)
     validate_town_scenic_overlay_glass_integration(errors)
     validate_town_command_watchplate_visual_hierarchy(errors)
     validate_town_capture_frontier_first_view_status(errors)
