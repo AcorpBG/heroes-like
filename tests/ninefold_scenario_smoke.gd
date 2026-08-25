@@ -270,8 +270,11 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		or String(terrain.get("homm3_bridge_family", "")) != "dirt"
 		or String(terrain.get("transition_shape_model", "")) != "procedural_strip_fallback"
 		or String(terrain.get("transition_edge_treatment", "")) != "procedural_strip_fallback"
+		or String(terrain.get("transition_draw_policy", "")) != "active_homm3_self_contained_else_generic_overlay"
+		or bool(terrain.get("homm3_transition_self_contained", true))
+		or not bool(terrain.get("generic_transition_overlay_active", false))
 	):
-		_fail("Ninefold smoke: canonical grass/dirt boundary did not keep original-bank transition rendering with inactive relation metadata: %s." % presentation)
+		_fail("Ninefold smoke: canonical grass/dirt boundary did not render the original-bank generic transition overlay with inactive HoMM3 relation metadata: %s." % presentation)
 		return false
 	if not _assert_full_receiver_stamp_payload(terrain, {
 		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
@@ -298,6 +301,8 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	if not found_east_dirt:
 		_fail("Ninefold smoke: terrain transition did not expose its neighboring source terrain and direction: %s." % presentation)
 		return false
+	if not _assert_enabled_homm3_transition_ownership(shell, session, receiver_tile):
+		return false
 	var shoreline_tile := Vector2i(49, 0)
 	var shoreline_source := Vector2i(48, 0)
 	_reveal_validation_tiles(session, [shoreline_tile, shoreline_source])
@@ -307,6 +312,32 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		_fail("Ninefold smoke: water/coast terrain did not use shoreline-specific HoMM3 lookup beside land: %s." % shoreline_presentation)
 		return false
 	if not _assert_direct_dirt_sand_transition(shell, session):
+		return false
+	return true
+
+func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_tile: Vector2i) -> bool:
+	var map_view = shell.get_node_or_null("%Map")
+	if map_view == null:
+		_fail("Ninefold smoke: enabled HoMM3 transition ownership fixture could not resolve MapView.")
+		return false
+	var session_authority_before: Dictionary = session.to_dict()
+	var original_prototype: Dictionary = map_view.get("_homm3_prototype").duplicate(true)
+	var enabled_prototype := original_prototype.duplicate(true)
+	enabled_prototype["enabled"] = true
+	map_view.set("_homm3_prototype", enabled_prototype)
+	var enabled_presentation: Dictionary = shell.call("validation_tile_presentation", receiver_tile.x, receiver_tile.y)
+	map_view.set("_homm3_prototype", original_prototype)
+	var terrain: Dictionary = enabled_presentation.get("terrain_presentation", {}) if enabled_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	if session.to_dict() != session_authority_before:
+		_fail("Ninefold smoke: enabled HoMM3 transition ownership fixture changed session authority.")
+		return false
+	if (
+		not bool(terrain.get("uses_homm3_local_prototype", false))
+		or not bool(terrain.get("homm3_transition_self_contained", false))
+		or bool(terrain.get("generic_transition_overlay_active", true))
+		or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
+	):
+		_fail("Ninefold smoke: enabled and loaded HoMM3 receiver did not exclusively own its self-contained transition art: %s." % enabled_presentation)
 		return false
 	return true
 

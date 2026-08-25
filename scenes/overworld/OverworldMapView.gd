@@ -169,6 +169,7 @@ const TERRAIN_DEPRECATED_GENERATED_SOURCE_BASIS := "generated_overworld_terrain_
 const TERRAIN_TRANSITION_SELECTION_MODEL := "accepted_web_prototype_relation_class_row_lookup"
 const TERRAIN_TRANSITION_EDGE_MODEL := "bridge_or_shoreline_atlas_frame_lookup"
 const TERRAIN_TRANSITION_CORNER_MODEL := "diagonal_context_in_atlas_lookup"
+const TERRAIN_TRANSITION_DRAW_POLICY := "active_homm3_self_contained_else_generic_overlay"
 const TERRAIN_HOMM3_SOURCE_BASIS := "homm3_extracted_local_reference_prototype"
 const TERRAIN_HOMM3_UNSUPPORTED_POLICY := "explicit_grammar_fallback"
 const TERRAIN_HOMM3_INTERIOR_SELECTION_MODEL := "accepted_web_full_row_bucket_selection"
@@ -1598,9 +1599,9 @@ func _draw_tile_variant_marks(tile: Vector2i, rect: Rect2, terrain: String, visi
 		_canvas_draw_line(second, second + Vector2(rect.size.x * 0.16, -rect.size.y * 0.04), color, 1.4)
 
 func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> void:
-	if not _homm3_terrain_config(terrain).is_empty():
+	if _terrain_uses_self_contained_homm3_transition(tile, terrain):
 		return
-	var transition_payload := _terrain_transition_payload(tile)
+	var transition_payload := _terrain_generic_transition_payload(tile)
 	var cardinal_sources = transition_payload.get("cardinal_sources", [])
 	if cardinal_sources is Array:
 		for source_value in cardinal_sources:
@@ -1618,6 +1619,12 @@ func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> 
 				continue
 			var source: Dictionary = source_value
 			_draw_terrain_corner_hint(String(source.get("source_terrain", terrain)), String(source.get("direction", "")), rect)
+
+func _terrain_uses_self_contained_homm3_transition(tile: Vector2i, terrain: String) -> bool:
+	if not _homm3_runtime_rendering_enabled():
+		return false
+	var entry := _homm3_terrain_art_entry(terrain, tile)
+	return not entry.is_empty() and _terrain_art_texture_for_entry(entry) is Texture2D
 
 func _draw_terrain_edge_fallback(source_terrain: String, direction: String, rect: Rect2) -> void:
 	var edge_color := _terrain_color(source_terrain, "edge_color", Color(0.24, 0.26, 0.18, 1.0))
@@ -4768,6 +4775,14 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var edge_transition_count := _transition_source_count(transition_payload, "cardinal_sources")
 	var corner_transition_count := _transition_source_count(transition_payload, "corner_sources")
 	var propagated_transition_count := _transition_source_count(transition_payload, "propagated_sources")
+	var transition_relationship_count := edge_transition_count + corner_transition_count + propagated_transition_count
+	var homm3_transition_self_contained := _terrain_uses_self_contained_homm3_transition(tile, terrain)
+	var generic_transition_payload := _terrain_generic_transition_payload(tile)
+	var generic_transition_overlay_relationship_count := (
+		_transition_source_count(generic_transition_payload, "cardinal_sources")
+		+ _transition_source_count(generic_transition_payload, "corner_sources")
+	)
+	var generic_transition_overlay_active := generic_transition_overlay_relationship_count > 0 and not homm3_transition_self_contained
 	var road_neighbor_directions := _road_neighbor_directions(tile) if not road_payload.is_empty() else []
 	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
 	var road_connection_piece_loaded := _road_connection_piece_loaded(road_payload, tile)
@@ -4958,7 +4973,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"transition_cardinal_sources": transition_payload.get("cardinal_sources", []),
 		"transition_corner_sources": transition_payload.get("corner_sources", []),
 		"transition_propagated_sources": transition_payload.get("propagated_sources", []),
-		"transition_relationship_count": edge_transition_count + corner_transition_count + propagated_transition_count,
+		"transition_relationship_count": transition_relationship_count,
+		"transition_draw_policy": TERRAIN_TRANSITION_DRAW_POLICY,
+		"homm3_transition_self_contained": homm3_transition_self_contained,
+		"generic_transition_overlay_relationship_count": generic_transition_overlay_relationship_count,
+		"generic_transition_overlay_active": generic_transition_overlay_active,
 		"edge_transition_count": edge_transition_count,
 		"corner_transition_count": corner_transition_count,
 		"propagated_transition_count": propagated_transition_count,
@@ -6714,6 +6733,10 @@ func _terrain_transition_payload(tile: Vector2i) -> Dictionary:
 			"homm3_selection_kind": String(homm3_selection.get("selection_kind", "")),
 			"homm3_frame_id": String(homm3_selection.get("frame_id", "")),
 		}
+	return _terrain_generic_transition_payload(tile)
+
+func _terrain_generic_transition_payload(tile: Vector2i) -> Dictionary:
+	var terrain := _terrain_at(tile)
 	var payload := {
 		"model": TERRAIN_TRANSITION_SELECTION_MODEL,
 		"edge_model": TERRAIN_TRANSITION_EDGE_MODEL,

@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-generated-map-blocker-composition-polish-10184",
-    "title": "Generated-map blocker composition polish",
+    "id": "ux-overworld-terrain-transition-overlay-restoration-10184",
+    "title": "Overworld terrain transition overlay restoration",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T01:40:46Z",
-    "updatedAt": "2026-08-25T02:31:16Z",
+    "startedAt": "2026-08-25T02:35:29Z",
+    "updatedAt": "2026-08-25T03:04:34Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15–22 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
-    "completedAt": "2026-08-25T02:31:16Z"
+    "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+    "completedAt": "2026-08-25T03:04:34Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Generated-map blocker composition polish is completed with direct Small/Medium 1280/1920 visual, authority, compatibility, performance, static/editor, and bounded platform evidence.",
+  "currentNotes": "Overworld terrain transition overlay restoration is completed with direct authored/generated visual, authority, performance, compatibility, static/editor, and bounded platform evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-generated-map-blocker-composition-polish-10184",
-  "currentSliceId": "ux-generated-map-blocker-composition-polish-10184",
-  "currentSliceNotes": "Completed: deterministic terrain-cluster blocker composition preserves every exact body/passability/save field and passes the bounded visual, performance, compatibility, static/editor, and platform gates.",
+  "currentSlice": "ux-overworld-terrain-transition-overlay-restoration-10184",
+  "currentSliceId": "ux-overworld-terrain-transition-overlay-restoration-10184",
+  "currentSliceNotes": "Completed: disabled HoMM3 metadata now renders the fast generic edge/corner overlay while enabled loaded HoMM3 tiles retain self-contained transition ownership.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated-map blocker composition polish",
-  "currentSliceUpdatedAt": "2026-08-25T02:31:16Z",
+  "currentSliceTitle": "Overworld terrain transition overlay restoration",
+  "currentSliceUpdatedAt": "2026-08-25T03:04:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19860,7 +19860,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Implement and visually validate deterministic generated blocker composition without changing native generation, placement, density, body masks, passability, content, or save authority.",
+  "nextActionGuardrailNote": "Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence; preserve terrain topology, native generation, passability, content, and save authority unless a separately registered slice explicitly owns them.",
   "notes": "The completed generated-map correction is live presentation behavior, not a report-only change: exact blocker-body cells now render bounded terrain-matched art and multi-tile interactive sprites are capped independently from unchanged logical footprints.",
   "plannedSlices": [
     {
@@ -100865,6 +100865,25 @@
       ],
       "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15–22 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-25T02:31:16Z"
+    },
+    {
+      "id": "ux-overworld-terrain-transition-overlay-restoration-10184",
+      "title": "Overworld terrain transition overlay restoration",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T03:04:34Z",
+      "startedAt": "2026-08-25T02:35:29Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "completedAt": "2026-08-25T03:04:34Z"
     }
   ],
   "project": "heroes-like",

@@ -36999,6 +36999,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     if not all(path.exists() for path in required_paths):
         return
 
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
     grastl_report_text = GENERATED_GRASTL_RUNTIME_ASSET_REPORT_PATH.read_text(encoding="utf-8")
     ninefold_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
     for required_token in (
@@ -37046,6 +37053,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(terrain.get("transition_edge_treatment", "")) != "procedural_strip_fallback"',
     ):
         ensure(required_token in ninefold_text, errors, f"Ninefold large-map terrain gate must retain the shippable original tile-bank contract: {required_token}")
+    enabled_homm3_transition_control = gd_function_block(ninefold_text, "_assert_enabled_homm3_transition_ownership")
+    ninefold_shipped_contract_text = ninefold_text.replace(enabled_homm3_transition_control, "")
     for forbidden_token in (
         'rendering_mode", "")) != "homm3_local_reference_prototype"',
         'primary_base_model", "")) != "homm3_local_reference_prototype"',
@@ -37054,7 +37063,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'not bool(terrain_presentation.get("uses_homm3_local_prototype", false))',
         'String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"',
     ):
-        ensure(forbidden_token not in ninefold_text, errors, f"Ninefold large-map terrain gate must not restore the retired local prototype oracle: {forbidden_token}")
+        ensure(forbidden_token not in ninefold_shipped_contract_text, errors, f"Ninefold shipped terrain gate must not restore the retired local prototype oracle outside the isolated enabled-ownership control: {forbidden_token}")
 
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     terrain_rendering = manifest.get("terrain_rendering", {})
@@ -37740,6 +37749,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "TERRAIN_TRANSITION_SELECTION_MODEL",
 	        "TERRAIN_TRANSITION_EDGE_MODEL",
 	        "TERRAIN_TRANSITION_CORNER_MODEL",
+	        'const TERRAIN_TRANSITION_DRAW_POLICY := "active_homm3_self_contained_else_generic_overlay"',
 	        "func _load_terrain_grammar",
 	        "func _load_homm3_prototype",
 	        "func _homm3_runtime_rendering_enabled",
@@ -37755,6 +37765,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _load_overworld_art_manifest",
         "func _draw_authored_terrain_pattern",
         "func _draw_terrain_transitions",
+        "func _terrain_uses_self_contained_homm3_transition",
+        "func _terrain_generic_transition_payload",
         "func _terrain_transition_payload",
         "func _draw_road_overlay",
         "func _draw_road_overlay_art",
@@ -37830,6 +37842,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        '"homm3_uses_interior_variant_cycle"',
 	        '"homm3_shoreline_specific"',
 	        '"transition_shape_model"',
+	        '"transition_draw_policy"',
+	        '"homm3_transition_self_contained"',
+	        '"generic_transition_overlay_active"',
 	        '"road_overlay"',
 	        '"road_overlay_art"',
 	        '"road_shape_model"',
@@ -37857,6 +37872,111 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "ghosted_sprite_without_echo_plate",
     ):
         ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing overworld art token {required_token}")
+
+    transition_draw_block = gd_function_block(map_view_text, "_draw_terrain_transitions")
+    transition_owner_block = gd_function_block(map_view_text, "_terrain_uses_self_contained_homm3_transition")
+    transition_payload_block = gd_function_block(map_view_text, "_terrain_transition_payload")
+    generic_transition_payload_block = gd_function_block(map_view_text, "_terrain_generic_transition_payload")
+    terrain_payload_block = gd_function_block(map_view_text, "_terrain_visual_payload")
+    ensure(
+        transition_draw_block.find("_terrain_uses_self_contained_homm3_transition(tile, terrain)")
+        < transition_draw_block.find("_terrain_generic_transition_payload(tile)"),
+        errors,
+        "Terrain transitions must suppress generic overlays only through the effective self-contained HoMM3 draw owner before materializing the fast generic relation payload.",
+    )
+    ensure(
+        'if not _homm3_terrain_config(terrain).is_empty()' not in transition_draw_block,
+        errors,
+        "Inactive HoMM3 configuration records must not suppress the active generic terrain overlay path.",
+    )
+    for token in (
+        "if not _homm3_runtime_rendering_enabled():",
+        "var entry := _homm3_terrain_art_entry(terrain, tile)",
+        "return not entry.is_empty() and _terrain_art_texture_for_entry(entry) is Texture2D",
+    ):
+        ensure(token in transition_owner_block, errors, f"HoMM3 terrain transition ownership must require an enabled, loaded self-contained tile: {token}")
+    for forbidden in ("session", "_session", "await ", "create_timer", "queue_redraw", "terrain[", "map["):
+        ensure(forbidden not in transition_owner_block, errors, f"Transition draw ownership must remain presentation-local and read-only: {forbidden}")
+    ensure(
+        "return _terrain_generic_transition_payload(tile)" in transition_payload_block,
+        errors,
+        "Terrain relation metadata must retain the exact generic fallback when no HoMM3 selection is active.",
+    )
+    for token in (
+        "var terrain := _terrain_at(tile)",
+        "for check in _terrain_cardinal_transition_checks():",
+        "for check in _terrain_diagonal_transition_checks():",
+        'payload["cardinal_sources"] = cardinal_sources',
+        'payload["corner_sources"] = corner_sources',
+    ):
+        ensure(token in generic_transition_payload_block, errors, f"Generic transition draw payload must retain the existing priority/neighbor relation construction: {token}")
+    for forbidden in ("_homm3_terrain_selection_payload", "TerrainPlacementRules", "rand", "session.overworld[", "map[", "await ", "create_timer"):
+        ensure(forbidden not in generic_transition_payload_block, errors, f"Generic transition drawing must not recompute disabled HoMM3 selection or mutate authority: {forbidden}")
+    for token in (
+        "var transition_relationship_count := edge_transition_count + corner_transition_count + propagated_transition_count",
+        "var homm3_transition_self_contained := _terrain_uses_self_contained_homm3_transition(tile, terrain)",
+        "var generic_transition_payload := _terrain_generic_transition_payload(tile)",
+        'var generic_transition_overlay_relationship_count := (',
+        "var generic_transition_overlay_active := generic_transition_overlay_relationship_count > 0 and not homm3_transition_self_contained",
+        '"transition_draw_policy": TERRAIN_TRANSITION_DRAW_POLICY',
+        '"homm3_transition_self_contained": homm3_transition_self_contained',
+        '"generic_transition_overlay_relationship_count": generic_transition_overlay_relationship_count',
+        '"generic_transition_overlay_active": generic_transition_overlay_active',
+    ):
+        ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose the effective transition draw policy: {token}")
+
+    ninefold_transition_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
+    for token in (
+        'String(terrain.get("transition_draw_policy", "")) != "active_homm3_self_contained_else_generic_overlay"',
+        'bool(terrain.get("homm3_transition_self_contained", true))',
+        'not bool(terrain.get("generic_transition_overlay_active", false))',
+    ):
+        ensure(token in ninefold_transition_text, errors, f"Ninefold terrain boundary owner must require the real disabled-HoMM3 generic overlay: {token}")
+    enabled_homm3_owner_block = gd_function_block(ninefold_transition_text, "_assert_enabled_homm3_transition_ownership")
+    for token in (
+        'var original_prototype: Dictionary = map_view.get("_homm3_prototype").duplicate(true)',
+        'enabled_prototype["enabled"] = true',
+        'map_view.set("_homm3_prototype", enabled_prototype)',
+        'shell.call("validation_tile_presentation", receiver_tile.x, receiver_tile.y)',
+        'map_view.set("_homm3_prototype", original_prototype)',
+        'session.to_dict() != session_authority_before',
+        'not bool(terrain.get("homm3_transition_self_contained", false))',
+        'bool(terrain.get("generic_transition_overlay_active", true))',
+        'String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"',
+    ):
+        ensure(token in enabled_homm3_owner_block, errors, f"Ninefold transition owner must prove enabled loaded HoMM3 tiles suppress the generic overlay without authority mutation: {token}")
+    ensure(
+        enabled_homm3_owner_block.find('map_view.set("_homm3_prototype", enabled_prototype)')
+        < enabled_homm3_owner_block.find('shell.call("validation_tile_presentation", receiver_tile.x, receiver_tile.y)')
+        < enabled_homm3_owner_block.find('map_view.set("_homm3_prototype", original_prototype)'),
+        errors,
+        "Ninefold enabled HoMM3 transition fixture must restore the presentation prototype immediately after its single observation.",
+    )
+
+    generated_live_text = (ROOT / "tests" / "random_map_live_overworld_render_move_report.gd").read_text(encoding="utf-8")
+    generated_transition_block = gd_function_block(generated_live_text, "_terrain_transition_summary")
+    generated_transition_assert_block = gd_function_block(generated_live_text, "_assert_terrain_transition_summary")
+    for token in (
+        'map_view.call("validation_tile_presentation", Vector2i(x, y))',
+        'int(terrain.get("generic_transition_overlay_relationship_count", 0))',
+        'bool(terrain.get("generic_transition_overlay_active", false))',
+        'bool(terrain.get("homm3_transition_self_contained", false))',
+        '"inactive_homm3_overlay_tile_count"',
+    ):
+        ensure(token in generated_transition_block, errors, f"Generated live visual owner must inspect real terrain transition presentation: {token}")
+    for token in (
+        'relationship_count <= 0',
+        'int(summary.get("generic_overlay_tile_count", 0)) != relationship_count',
+        'int(summary.get("inactive_homm3_overlay_tile_count", 0)) != relationship_count',
+        'int(summary.get("self_contained_tile_count", -1)) != 0',
+        '["active_homm3_self_contained_else_generic_overlay"]',
+    ):
+        ensure(token in generated_transition_assert_block, errors, f"Generated live visual owner must fail closed on missing or mismatched generic transition overlays: {token}")
+    ensure(
+        'terrain_transition_after != terrain_transition_before' in generated_live_text,
+        errors,
+        "Generated live movement must preserve exact terrain transition draw authority across redraw.",
+    )
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
