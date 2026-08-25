@@ -28,6 +28,11 @@ const NEUTRAL_COLOR := Color(0.68, 0.72, 0.78, 0.94)
 const ACTIVE_COLOR := Color(0.99, 0.88, 0.48, 1.0)
 const TARGET_COLOR := Color(0.97, 0.64, 0.38, 0.98)
 const BLOCKED_TARGET_COLOR := Color(0.78, 0.20, 0.18, 0.96)
+const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)
+const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
+const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
+const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96
+const STACK_ICON_ART_EXTENT_FACTOR := 1.86
 const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.76)
 const LEGAL_MELEE_COLOR := Color(1.0, 0.78, 0.36, 0.90)
 const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
@@ -939,7 +944,25 @@ func validation_unit_art_summary() -> Dictionary:
 		"camera_playback": validation_camera_playback_summary(),
 		"presentation_motion_count": presentation_motion_count,
 		"presentation_motion_roles": presentation_motion_roles,
+		"token_visual_contract": _stack_token_visual_contract(hex_layout),
 		"stacks": stack_entries,
+	}
+
+func _stack_token_visual_contract(hex_layout: Dictionary) -> Dictionary:
+	var hex_radius := float(hex_layout.get("radius", 1.0))
+	var token_radius := _stack_token_radius(hex_radius)
+	return {
+		"presentation_model": "character_first_dark_medallion_side_rim",
+		"token_radius": token_radius,
+		"hit_radius": _stack_hit_shape_radius(hex_radius),
+		"inner_fill": STACK_TOKEN_INNER_FILL,
+		"side_rim_alpha": STACK_TOKEN_SIDE_RIM_ALPHA,
+		"side_rim_width": maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR),
+		"animation_art_extent_factor": STACK_ANIMATION_ART_EXTENT_FACTOR,
+		"icon_art_extent_factor": STACK_ICON_ART_EXTENT_FACTOR,
+		"animation_art_diameter_fraction": STACK_ANIMATION_ART_EXTENT_FACTOR * 0.5,
+		"icon_art_diameter_fraction": STACK_ICON_ART_EXTENT_FACTOR * 0.5,
+		"art_contained_within_token": STACK_ANIMATION_ART_EXTENT_FACTOR <= 2.0 and STACK_ICON_ART_EXTENT_FACTOR <= 2.0,
 	}
 
 func validation_stack_caption_summary() -> Array:
@@ -2150,16 +2173,18 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 			fill = fill.lightened(0.16)
 		draw_circle(center + Vector2(2.0, 3.0), token_radius + 4.0, SHADOW_COLOR)
 		draw_circle(center, token_radius + 3.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else (TARGET_COLOR if is_target else Color(0.11, 0.13, 0.15, 0.90))))
-		draw_circle(center, token_radius, fill)
+		draw_circle(center, token_radius, STACK_TOKEN_INNER_FILL)
+		var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)
+		draw_circle(center, token_radius - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)
 		var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
 		if animation_sheet != null:
-			var frame_size := token_radius * 1.76
+			var frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR
 			var frame_rect := Rect2(center - Vector2(frame_size * 0.5, frame_size * 0.55), Vector2(frame_size, frame_size))
 			draw_texture_rect_region(animation_sheet, frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96))
 		else:
 			var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
 			if battle_icon != null:
-				var icon_size := token_radius * 1.62
+				var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR
 				var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
 				draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.96))
 			else:

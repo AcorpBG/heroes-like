@@ -807,6 +807,24 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: assisted player/enemy palette is not blue/orange separated: %s." % battle_color_cues)
 		get_tree().quit(1)
 		return false
+	var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")
+	var token_visual: Dictionary = unit_art_summary.get("token_visual_contract", {})
+	var inner_fill: Color = token_visual.get("inner_fill", Color.WHITE)
+	if (
+		String(token_visual.get("presentation_model", "")) != "character_first_dark_medallion_side_rim"
+		or not is_equal_approx(float(token_visual.get("animation_art_extent_factor", 0.0)), 1.96)
+		or not is_equal_approx(float(token_visual.get("icon_art_extent_factor", 0.0)), 1.86)
+		or not is_equal_approx(float(token_visual.get("animation_art_diameter_fraction", 0.0)), 0.98)
+		or not is_equal_approx(float(token_visual.get("icon_art_diameter_fraction", 0.0)), 0.93)
+		or not is_equal_approx(float(token_visual.get("side_rim_alpha", 0.0)), 0.92)
+		or float(token_visual.get("side_rim_width", 0.0)) < 2.4
+		or inner_fill.get_luminance() >= 0.08
+		or not bool(token_visual.get("art_contained_within_token", false))
+		or float(token_visual.get("hit_radius", 0.0)) <= float(token_visual.get("token_radius", 0.0))
+	):
+		push_error("Battle smoke: stack art did not retain the character-first medallion hierarchy inside unchanged hit geometry: %s." % token_visual)
+		get_tree().quit(1)
+		return false
 	if not await _capture_color_cue_frame("battle_color_cues"):
 		get_tree().quit(1)
 		return false
