@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner.
 
+- Previous completed implementation slice: `ux-overworld-town-selection-cartographic-perimeter-10184`. Selected towns now use an open cartographic footprint cue with short warm corner marks and subtle midpoint survey ticks instead of a continuous bright 3x2 rectangle and long debug-like brackets. Direct inspected River Pass 1280x720 and 1920x1080 captures keep the town, terrain, route endpoint, and compact co-located hero primary while preserving unmistakable selection. The exact selected/hover footprint, town entry, ordinary tile selection, route, confirmation, pathing, input/focus, interaction, accessibility, gameplay, session/save authority, object scale, and Native-RMG behavior remain unchanged. Focused two-resolution geometry, broad Overworld visual, six-faction town/hero art, full-route movement, object focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-overworld-town-selection-cartographic-perimeter-10184`
+
 - Previous completed implementation slice: `ux-battle-movement-range-overlay-restraint-10184`. Every exact legal movement destination remains visible, but the repeated range treatment now uses a thin inset outline and near-transparent fill instead of painting the reachable battlefield as a broad cyan surface. Direct inspected 1280x720 and 1920x1080 captures keep terrain and stack silhouettes primary while active and target cues remain dominant. Exact legal cells/order, actions, pathing, hit geometry, input/focus, combat, objectives, tokens, VFX, accessibility, and session authority remain unchanged. Focused Town/Battle visual, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-battle-movement-range-overlay-restraint-10184`
 
@@ -10346,6 +10349,31 @@ Completion result:
 - every exact legal destination is still drawn from `legal_destinations_for_active_stack`, using a 0.72-radius inset hex, 0.045 fill alpha, 0.48 outline alpha, and 1.15px outline below active, target, and stack presentation;
 - direct inspected 1280x720 and 1920x1080 captures retain clear movement affordance without obscuring terrain or tactical hierarchy;
 - focused visual, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green.
+
+## Overworld Town Selection Cartographic Perimeter
+
+id: `ux-overworld-town-selection-cartographic-perimeter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- retain the exact selected town 3x2 footprint and existing fill-free composite ownership;
+- replace only the selected-town full-strength rectangle and long corner brackets with an open footprint cue made from short warm cartographic corner marks and subtle midpoint survey ticks;
+- keep ordinary tile selection, hero focus, hover, route, town/hero/object art, terrain/fog, interaction, input/focus, accessibility, gameplay, and session/save authority unchanged.
+
+Completion criteria:
+- direct inspected River Pass captures at 1280x720 and 1920x1080 keep the selected town unmistakable without visually boxing over its painted art;
+- focused runtime proves the exact 3x2 selected/hover footprint, fill-free town treatment, compact co-located hero focus, one exact cartographic visual profile, and unchanged ordinary-tile treatment;
+- Overworld visual, faction hero/town, route movement/input, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no selected tile, footprint, town entry, hover, route, confirmation, pathing, passability, input/focus, accessibility semantics, town/hero/object art or scale, terrain/fog, map layout/camera, content, gameplay, AI, save schema, generated map, or Native-RMG behavior change;
+- no animation, timer/deferred workaround, packaged Overworld interaction claim, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- the exact 3x2 selected-town footprint now derives an inset open cue with eight short corner strokes and four low-alpha edge-midpoint survey ticks, no continuous outline, and no interior fill;
+- direct inspected 1280x720 and 1920x1080 captures keep the selected town unmistakable without boxing over its painted art, terrain, route, or compact hero;
+- focused geometry, broad Overworld visual, six-faction town/hero art, real route movement, object-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green.
 
 ## Progress Reconciliation
 

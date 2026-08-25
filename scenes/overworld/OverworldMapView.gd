@@ -39,6 +39,14 @@ const UNEXPLORED_COLOR := Color(0.04, 0.05, 0.06, 1.0)
 const MEMORY_OBJECT_COLOR := Color(0.72, 0.80, 0.82, 0.84)
 const MEMORY_OBJECT_OUTLINE := Color(0.92, 0.96, 0.91, 0.76)
 const SELECTION_COLOR := Color(0.98, 0.87, 0.46, 1.0)
+const TOWN_SELECTION_VISUAL_MODEL := "open_cartographic_footprint_corner_and_midpoint_ticks"
+const TOWN_SELECTION_PERIMETER_INSET_FACTOR := 0.045
+const TOWN_SELECTION_CORNER_ALPHA := 0.78
+const TOWN_SELECTION_CORNER_LENGTH_FACTOR := 0.10
+const TOWN_SELECTION_CORNER_WIDTH_FACTOR := 0.010
+const TOWN_SELECTION_MIDPOINT_ALPHA := 0.34
+const TOWN_SELECTION_MIDPOINT_LENGTH_FACTOR := 0.035
+const TOWN_SELECTION_MIDPOINT_WIDTH_FACTOR := 0.008
 const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
 const HERO_FILL_COLOR := Color(0.88, 0.32, 0.21, 1.0)
@@ -1832,10 +1840,13 @@ func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
 
 	if tile == _selected_tile:
 		var selection_rect: Rect2 = layout.get("selection_rect", rect)
-		if bool(layout.get("selection_uses_interior_fill", true)):
-			_canvas_draw_rect(selection_rect.grow(-5.0), Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10), true)
-		_canvas_draw_rect(selection_rect.grow(-5.0), SELECTION_COLOR, false, focus_width)
-		_draw_selection_corners(selection_rect, SELECTION_COLOR, focus_width)
+		if bool(layout.get("selection_uses_cartographic_town_perimeter", false)):
+			_draw_town_selection_perimeter(selection_rect)
+		else:
+			if bool(layout.get("selection_uses_interior_fill", true)):
+				_canvas_draw_rect(selection_rect.grow(-5.0), Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10), true)
+			_canvas_draw_rect(selection_rect.grow(-5.0), SELECTION_COLOR, false, focus_width)
+			_draw_selection_corners(selection_rect, SELECTION_COLOR, focus_width)
 
 	if tile == _hover_tile:
 		var hover_rect: Rect2 = layout.get("hover_rect", rect)
@@ -1855,6 +1866,8 @@ func _tile_focus_layout(tile: Vector2i, tile_rect: Rect2) -> Dictionary:
 		"selection_rect": town_rect,
 		"selection_uses_town_footprint_rect": uses_town_footprint,
 		"selection_uses_interior_fill": not uses_town_footprint,
+		"selection_uses_cartographic_town_perimeter": uses_town_footprint,
+		"selection_visual_model": TOWN_SELECTION_VISUAL_MODEL if uses_town_footprint else "filled_tile_outline_long_corner_brackets",
 		"hover_rect": town_rect,
 		"hover_uses_town_footprint_rect": uses_town_footprint,
 		"town_entry_tile": _vector2i_payload(_town_entry_tile(town)) if uses_town_footprint else {},
@@ -3449,6 +3462,64 @@ func _draw_selection_corners(rect: Rect2, color: Color, width: float) -> void:
 	_canvas_draw_line(bottom_right, bottom_right + Vector2(-length, 0.0), color, width)
 	_canvas_draw_line(bottom_right, bottom_right + Vector2(0.0, -length), color, width)
 
+func _town_selection_visual_profile(rect: Rect2) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var perimeter_inset := maxf(4.0, extent * TOWN_SELECTION_PERIMETER_INSET_FACTOR)
+	var corner_length := maxf(10.0, extent * TOWN_SELECTION_CORNER_LENGTH_FACTOR)
+	var corner_width := maxf(1.5, extent * TOWN_SELECTION_CORNER_WIDTH_FACTOR)
+	var midpoint_length := maxf(6.0, extent * TOWN_SELECTION_MIDPOINT_LENGTH_FACTOR)
+	var midpoint_width := maxf(1.25, extent * TOWN_SELECTION_MIDPOINT_WIDTH_FACTOR)
+	return {
+		"model": TOWN_SELECTION_VISUAL_MODEL,
+		"perimeter_rect": rect.grow(-perimeter_inset),
+		"perimeter_inset_px": perimeter_inset,
+		"corner_alpha": TOWN_SELECTION_CORNER_ALPHA,
+		"corner_length_px": corner_length,
+		"corner_width_px": corner_width,
+		"midpoint_alpha": TOWN_SELECTION_MIDPOINT_ALPHA,
+		"midpoint_length_px": midpoint_length,
+		"midpoint_width_px": midpoint_width,
+		"continuous_outline": false,
+		"interior_fill_alpha": 0.0,
+	}
+
+func _draw_town_selection_perimeter(rect: Rect2) -> void:
+	var profile := _town_selection_visual_profile(rect)
+	var perimeter_rect: Rect2 = profile.get("perimeter_rect", rect)
+	var corner_length := float(profile.get("corner_length_px", 10.0))
+	var corner_width := float(profile.get("corner_width_px", 1.5))
+	var midpoint_length := float(profile.get("midpoint_length_px", 6.0))
+	var midpoint_width := float(profile.get("midpoint_width_px", 1.25))
+	var corner_color := Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, TOWN_SELECTION_CORNER_ALPHA)
+	var midpoint_color := Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, TOWN_SELECTION_MIDPOINT_ALPHA)
+	_draw_cartographic_selection_corners(perimeter_rect, corner_color, corner_width, corner_length)
+	_draw_cartographic_selection_midpoints(perimeter_rect, midpoint_color, midpoint_width, midpoint_length)
+
+func _draw_cartographic_selection_corners(rect: Rect2, color: Color, width: float, length: float) -> void:
+	var top_left := rect.position
+	var top_right := Vector2(rect.end.x, rect.position.y)
+	var bottom_left := Vector2(rect.position.x, rect.end.y)
+	var bottom_right := rect.end
+	_canvas_draw_line(top_left, top_left + Vector2(length, 0.0), color, width)
+	_canvas_draw_line(top_left, top_left + Vector2(0.0, length), color, width)
+	_canvas_draw_line(top_right, top_right + Vector2(-length, 0.0), color, width)
+	_canvas_draw_line(top_right, top_right + Vector2(0.0, length), color, width)
+	_canvas_draw_line(bottom_left, bottom_left + Vector2(length, 0.0), color, width)
+	_canvas_draw_line(bottom_left, bottom_left + Vector2(0.0, -length), color, width)
+	_canvas_draw_line(bottom_right, bottom_right + Vector2(-length, 0.0), color, width)
+	_canvas_draw_line(bottom_right, bottom_right + Vector2(0.0, -length), color, width)
+
+func _draw_cartographic_selection_midpoints(rect: Rect2, color: Color, width: float, length: float) -> void:
+	var half_length := length * 0.5
+	var top_center := Vector2(rect.get_center().x, rect.position.y)
+	var bottom_center := Vector2(rect.get_center().x, rect.end.y)
+	var left_center := Vector2(rect.position.x, rect.get_center().y)
+	var right_center := Vector2(rect.end.x, rect.get_center().y)
+	_canvas_draw_line(top_center - Vector2(half_length, 0.0), top_center + Vector2(half_length, 0.0), color, width)
+	_canvas_draw_line(bottom_center - Vector2(half_length, 0.0), bottom_center + Vector2(half_length, 0.0), color, width)
+	_canvas_draw_line(left_center - Vector2(0.0, half_length), left_center + Vector2(0.0, half_length), color, width)
+	_canvas_draw_line(right_center - Vector2(0.0, half_length), right_center + Vector2(0.0, half_length), color, width)
+
 func _remembered_marker_color(color: Color) -> Color:
 	return Color(
 		(color.r * 0.55) + (MEMORY_OBJECT_COLOR.r * 0.45),
@@ -4868,6 +4939,9 @@ func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:
 	var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", tile_rect)
 	var selection_rect: Rect2 = layout.get("selection_rect", tile_rect)
 	var hover_rect: Rect2 = layout.get("hover_rect", tile_rect)
+	var town_selection_visual_profile := _town_selection_visual_profile(selection_rect) if bool(layout.get("selection_uses_cartographic_town_perimeter", false)) else {}
+	if not town_selection_visual_profile.is_empty():
+		town_selection_visual_profile["perimeter_rect"] = _rect_payload(town_selection_visual_profile.get("perimeter_rect", selection_rect))
 	return {
 		"tile": _vector2i_payload(tile),
 		"tile_rect": _rect_payload(tile_rect),
@@ -4876,6 +4950,9 @@ func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:
 		"selection_rect": _rect_payload(selection_rect),
 		"selection_uses_town_footprint_rect": bool(layout.get("selection_uses_town_footprint_rect", false)),
 		"selection_uses_interior_fill": bool(layout.get("selection_uses_interior_fill", true)),
+		"selection_uses_cartographic_town_perimeter": bool(layout.get("selection_uses_cartographic_town_perimeter", false)),
+		"selection_visual_model": String(layout.get("selection_visual_model", "")),
+		"town_selection_visual_profile": town_selection_visual_profile.duplicate(true),
 		"hover_rect": _rect_payload(hover_rect),
 		"hover_uses_town_footprint_rect": bool(layout.get("hover_uses_town_footprint_rect", false)),
 		"town_entry_tile": layout.get("town_entry_tile", {}).duplicate(true),
