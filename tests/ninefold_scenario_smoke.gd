@@ -426,6 +426,8 @@ func _assert_homm_road_topology(shell: Node, session) -> bool:
 	shell.call("validation_select_tile", vertical_tile.x, vertical_tile.y)
 	var vertical_presentation: Dictionary = shell.call("validation_tile_presentation", vertical_tile.x, vertical_tile.y)
 	var vertical_terrain: Dictionary = vertical_presentation.get("terrain_presentation", {})
+	if not _assert_land_road_render_model(vertical_terrain, vertical_presentation, "vertical"):
+		return false
 	if String(vertical_terrain.get("road_connection_source", "")) != "orthogonal_same_type_road_tiles" or not bool(vertical_terrain.get("road_same_type_adjacency", false)):
 		_fail("Ninefold smoke: vertical road did not rebuild from 4-neighbor same-type road tiles: %s." % vertical_presentation)
 		return false
@@ -442,6 +444,8 @@ func _assert_homm_road_topology(shell: Node, session) -> bool:
 	shell.call("validation_select_tile", horizontal_tile.x, horizontal_tile.y)
 	var horizontal_presentation: Dictionary = shell.call("validation_tile_presentation", horizontal_tile.x, horizontal_tile.y)
 	var horizontal_terrain: Dictionary = horizontal_presentation.get("terrain_presentation", {})
+	if not _assert_land_road_render_model(horizontal_terrain, horizontal_presentation, "horizontal"):
+		return false
 	if String(horizontal_terrain.get("road_connection_source", "")) != "orthogonal_same_type_road_tiles" or String(horizontal_terrain.get("road_connection_key", "")) != "E+W":
 		_fail("Ninefold smoke: horizontal road run did not use same-type E+W topology: %s." % horizontal_presentation)
 		return false
@@ -455,6 +459,8 @@ func _assert_homm_road_topology(shell: Node, session) -> bool:
 	shell.call("validation_select_tile", intersection_tile.x, intersection_tile.y)
 	var intersection_presentation: Dictionary = shell.call("validation_tile_presentation", intersection_tile.x, intersection_tile.y)
 	var intersection_terrain: Dictionary = intersection_presentation.get("terrain_presentation", {})
+	if not _assert_land_road_render_model(intersection_terrain, intersection_presentation, "intersection"):
+		return false
 	if String(intersection_terrain.get("road_connection_key", "")) != "N+E" or int(intersection_terrain.get("road_connection_count", 0)) != 2:
 		_fail("Ninefold smoke: road corner tile did not select from orthogonal same-type neighbors only: %s." % intersection_presentation)
 		return false
@@ -465,6 +471,8 @@ func _assert_homm_road_topology(shell: Node, session) -> bool:
 	shell.call("validation_select_tile", straight_tile.x, straight_tile.y)
 	var straight_presentation: Dictionary = shell.call("validation_tile_presentation", straight_tile.x, straight_tile.y)
 	var straight_terrain: Dictionary = straight_presentation.get("terrain_presentation", {})
+	if not _assert_land_road_render_model(straight_terrain, straight_presentation, "isolated"):
+		return false
 	if String(straight_terrain.get("road_connection_source", "")) != "orthogonal_same_type_road_tiles" or String(straight_terrain.get("road_connection_key", "")) != "":
 		_fail("Ninefold smoke: diagonal-only neighboring road tiles were not suppressed by 4-neighbor topology: %s." % straight_presentation)
 		return false
@@ -473,6 +481,50 @@ func _assert_homm_road_topology(shell: Node, session) -> bool:
 		return false
 	if not bool(straight_terrain.get("road_joint_cap", false)) or bool(straight_terrain.get("road_diagonal_connections", true)):
 		_fail("Ninefold smoke: isolated 4-neighbor road tile did not report diagonal suppression cleanly: %s." % straight_presentation)
+		return false
+	if not _assert_explicit_road_frame_ownership(shell, session, vertical_tile):
+		return false
+	return true
+
+func _assert_land_road_render_model(terrain: Dictionary, presentation: Dictionary, label: String) -> bool:
+	if String(terrain.get("terrain", "")) == "water":
+		_fail("Ninefold smoke: %s land-road fixture unexpectedly uses water terrain: %s." % [label, presentation])
+		return false
+	if String(terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path" or String(terrain.get("road_shape_model", "")) != "terrain_integrated_4_neighbor_surface":
+		_fail("Ninefold smoke: %s road did not use the terrain-integrated wheel-rutted surface: %s." % [label, presentation])
+		return false
+	if String(terrain.get("road_surface_material", "")) != "packed_earth_with_twin_wheel_ruts" or String(terrain.get("road_surface_detail", "")) != "soft_shoulders_twin_ruts_and_dust_center":
+		_fail("Ninefold smoke: %s road did not expose the packed-earth/rut treatment: %s." % [label, presentation])
+		return false
+	if not bool(terrain.get("road_ordinary_tile_art_bypassed", false)) or bool(terrain.get("road_explicit_source_frame_rendered", true)):
+		_fail("Ninefold smoke: %s ordinary road did not bypass the timber-bar art while retaining source-frame separation: %s." % [label, presentation])
+		return false
+	return true
+
+func _assert_explicit_road_frame_ownership(shell: Node, session, road_tile: Vector2i) -> bool:
+	var map_view = shell.get_node_or_null("%Map")
+	if map_view == null:
+		_fail("Ninefold smoke: explicit road-frame fixture could not resolve MapView.")
+		return false
+	var session_authority_before: Dictionary = session.to_dict()
+	var original_prototype: Dictionary = map_view.get("_homm3_prototype").duplicate(true)
+	var enabled_prototype := original_prototype.duplicate(true)
+	enabled_prototype["enabled"] = true
+	map_view.set("_homm3_prototype", enabled_prototype)
+	var source_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)
+	map_view.set("_homm3_prototype", original_prototype)
+	if session.to_dict() != session_authority_before:
+		_fail("Ninefold smoke: explicit road-frame observation changed session authority.")
+		return false
+	var terrain: Dictionary = source_presentation.get("terrain_presentation", {})
+	if String(terrain.get("road_render_model", "")) != "explicit_source_frame" or not bool(terrain.get("road_explicit_source_frame_rendered", false)) or bool(terrain.get("road_ordinary_tile_art_bypassed", true)):
+		_fail("Ninefold smoke: enabled loaded road frame did not retain explicit source ownership: %s." % source_presentation)
+		return false
+	if String(terrain.get("road_shape_model", "")) != "homm3_4_neighbor_overlay_lookup" or String(terrain.get("road_source_frame_path", "")) != "res://art/overworld/runtime/homm3_local_prototype/roads/dirtrd/00_10.png":
+		_fail("Ninefold smoke: N+S source road did not resolve the exact dirtrd 00_10 frame: %s." % source_presentation)
+		return false
+	if String(terrain.get("road_connection_key", "")) != "N+S" or int(terrain.get("road_connection_count", 0)) != 2:
+		_fail("Ninefold smoke: enabling source road art changed the N+S topology: %s." % source_presentation)
 		return false
 	return true
 
@@ -530,8 +582,10 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if String(terrain_presentation.get("visible_terrain_grid_mode", "")) != "fog_boundary_only" or float(terrain_presentation.get("visible_terrain_grid_alpha", 1.0)) > 0.01 or bool(terrain_presentation.get("explored_intertile_seams", true)):
 		_fail("Ninefold smoke: large-map visible terrain still reports per-cell black grid seams: %s." % town_presentation)
 		return false
-	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)) or String(terrain_presentation.get("road_shape_model", "")) != "homm3_4_neighbor_overlay_lookup":
-		_fail("Ninefold smoke: large-map starting road is not represented as a HoMM3 4-neighbor overlay: %s." % town_presentation)
+	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)) or String(terrain_presentation.get("road_shape_model", "")) != "terrain_integrated_4_neighbor_surface":
+		_fail("Ninefold smoke: large-map starting road does not retain its ordinary art availability while rendering through the terrain-integrated 4-neighbor surface: %s." % town_presentation)
+		return false
+	if not _assert_land_road_render_model(terrain_presentation, town_presentation, "starting town"):
 		return false
 	if String(terrain_presentation.get("road_connection_source", "")) != "orthogonal_same_type_road_tiles" or not bool(terrain_presentation.get("road_same_type_adjacency", false)) or not bool(terrain_presentation.get("road_orthogonal_mask_only", false)):
 		_fail("Ninefold smoke: large-map starting road is not using 4-neighbor same-type adjacency topology: %s." % town_presentation)
