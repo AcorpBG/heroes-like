@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
-    "title": "Battle terrain edge and System frame polish",
+    "id": "ux-town-scenic-overlay-glass-integration-10184",
+    "title": "Town scenic overlay glass integration",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T04:08:21Z",
-    "updatedAt": "2026-08-25T04:46:32Z",
+    "startedAt": "2026-08-25T04:51:32Z",
+    "updatedAt": "2026-08-25T05:07:45Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct 1280/1920 captures and source-backed runtime. The Battle board paints a subdued full-field terrain context beneath all 77 unchanged authoritative per-hex samples, and wide layouts restore the authored SystemPanel frame while compact Save/Settings/Menu commands remain borderless, visible, ordered, and contained. Focused roundtrip/session authority, Town/Battle visual, 1280 layout/routing, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Battle interaction and release-readiness claims remain excluded.",
-    "completedAt": "2026-08-25T04:46:32Z"
+    "notes": "Completed from direct 1280/1920 captures. Town status and district overlays now use responsive translucent glass edge rails with narrow live-color accents instead of opaque saturated cards and a beige slab. Exact ordered payloads, contextual occupation/retake state, command/header/action overlays, input/focus, rules, and session/save authority remain exact. Town/Battle visual, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Town interaction and release-readiness claims remain excluded.",
+    "completedAt": "2026-08-25T05:07:45Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Battle terrain context and responsive System-frame polish completed; select the next source-backed graphical-polish or release-readiness slice from fresh live captures.",
+  "currentNotes": "Town scenic overlay glass integration completed; select the next source-backed graphical-polish slice from fresh live captures.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
-  "currentSliceId": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
-  "currentSliceNotes": "Completed: subdued full-field terrain context sits beneath the unchanged 77-sample hex grid; wide System frame and compact command row roundtrip exactly with session authority preserved.",
+  "currentSlice": "ux-town-scenic-overlay-glass-integration-10184",
+  "currentSliceId": "ux-town-scenic-overlay-glass-integration-10184",
+  "currentSliceNotes": "Completed: responsive translucent status and district edge rails preserve exact live payloads while keeping the Town panorama dominant.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle terrain edge and System frame polish",
-  "currentSliceUpdatedAt": "2026-08-25T04:46:32Z",
+  "currentSliceTitle": "Town scenic overlay glass integration",
+  "currentSliceUpdatedAt": "2026-08-25T05:07:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19861,8 +19861,26 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh live visual defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Battle terrain-context/System-frame polish is complete. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "notes": "The Town scenic-overlay glass integration is complete. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
+    {
+      "id": "ux-town-scenic-overlay-glass-integration-10184",
+      "title": "Town scenic overlay glass integration",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T05:07:45Z",
+      "startedAt": "2026-08-25T04:51:32Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownStageView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct 1280/1920 captures. Town status and district overlays now use responsive translucent glass edge rails with narrow live-color accents instead of opaque saturated cards and a beige slab. Exact ordered payloads, contextual occupation/retake state, command/header/action overlays, input/focus, rules, and session/save authority remain exact. Town/Battle visual, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Town interaction and release-readiness claims remain excluded.",
+      "completedAt": "2026-08-25T05:07:45Z"
+    },
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
       "title": "Veilmourn Complete Authored Town Building Icons",

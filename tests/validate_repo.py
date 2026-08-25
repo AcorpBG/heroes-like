@@ -29248,6 +29248,142 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         ensure(required_token in active_play_focus_text, errors, f"active_play_keyboard_focus_smoke.gd is missing Return-to-Field controller token: {required_token}")
 
 
+def validate_town_scenic_overlay_glass_integration(errors: list[str]) -> None:
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    required_paths = (TOWN_STAGE_SCRIPT_PATH, smoke_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town scenic-overlay integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        match = re.search(
+            rf"^func {re.escape(name)}\([^\n]*\)[^\n]*:\n[\s\S]*?(?=^func |\Z)",
+            text,
+            re.MULTILINE,
+        )
+        return match.group(0) if match else ""
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const SCENIC_OVERLAY_MODEL := "responsive_translucent_glass_edge_rails"',
+        'const SCENIC_GLASS_FILL := Color(0.025, 0.035, 0.042, 0.78)',
+        'const SCENIC_GLASS_CARD_FILL := Color(0.045, 0.058, 0.066, 0.72)',
+        'const SCENIC_GLASS_SHADOW := Color(0.0, 0.0, 0.0, 0.28)',
+        'const SCENIC_GLASS_BORDER := Color(0.86, 0.72, 0.40, 0.70)',
+        "const STATUS_ACCENT_WIDTH := 5.0",
+        "const DISTRICT_ACCENT_HEIGHT := 3.0",
+        "func validation_scenic_overlay_summary() -> Dictionary:",
+        '"payload_authority": "existing_status_and_district_builders"',
+        '"overlay_area_ratio": overlay_area / scene_area',
+        '"status_district_nonoverlap": status_district_nonoverlap',
+    ):
+        ensure(required_token in stage_text, errors, f"Town scenic glass integration is missing exact source token: {required_token}")
+
+    summary_body = gdscript_function_block(stage_text, "validation_scenic_overlay_summary")
+    summary_order = tuple(summary_body.find(token) for token in (
+        "var status_payloads := _status_plaque_payloads()",
+        "var status_rects := _status_plaque_rects(scene_rect, status_payloads.size())",
+        "var district_payloads := _district_strip_payloads()",
+        "var district_strip_rect := _district_strip_rect(scene_rect)",
+        "var district_rects := _district_card_rects(district_strip_rect, district_payloads.size())",
+        "var contained := scene_rect.encloses(district_strip_rect)",
+        "return {",
+    ))
+    ensure(all(index >= 0 for index in summary_order) and list(summary_order) == sorted(summary_order), errors, "Town scenic-overlay summary must consume the exact production payload and geometry builders in order")
+    for forbidden_token in ("await ", "Timer", "queue_redraw", "set_town_state", "TownRules", "OverworldRules", "session.", "sort(", "erase("):
+        ensure(forbidden_token not in summary_body, errors, f"Town scenic-overlay summary must remain detached observation only: {forbidden_token}")
+
+    plaque_body = gdscript_function_block(stage_text, "_draw_plaque")
+    for required_token in (
+        "draw_rect(rect, SCENIC_GLASS_FILL, true)",
+        "draw_rect(rect, SCENIC_GLASS_BORDER, false, 1.5)",
+        "Vector2(STATUS_ACCENT_WIDTH, rect.size.y)",
+        "Color(accent.r, accent.g, accent.b, 0.92)",
+        "Color(accent.r, accent.g, accent.b, 1.0).lightened(0.24)",
+        "TEXT_COLOR, 14",
+    ):
+        ensure(required_token in plaque_body, errors, f"Town scenic status plaque is missing glass/accent typography token: {required_token}")
+    district_body = gdscript_function_block(stage_text, "_draw_district_strip")
+    for required_token in (
+        "var strip_rect := _district_strip_rect(scene_rect)",
+        "var payloads := _district_strip_payloads()",
+        "var card_rects := _district_card_rects(strip_rect, payloads.size())",
+        "draw_rect(strip_rect, SCENIC_GLASS_FILL, true)",
+        "draw_rect(card_rect, SCENIC_GLASS_CARD_FILL, true)",
+        "Vector2(card_rect.size.x, DISTRICT_ACCENT_HEIGHT)",
+        "TEXT_COLOR, 15",
+    ):
+        ensure(required_token in district_body, errors, f"Town district ribbon is missing glass/accent typography token: {required_token}")
+    for draw_body, owner in ((plaque_body, "status plaque"), (district_body, "district ribbon")):
+        for forbidden_token in ("await ", "Timer", "queue_redraw", "session", "TownRules", "OverworldRules", "Input.", "grab_focus", "call_deferred"):
+            ensure(forbidden_token not in draw_body, errors, f"Town scenic {owner} painter must remain draw-only: {forbidden_token}")
+
+    payload_body = gdscript_function_block(stage_text, "_district_strip_payloads")
+    for required_token in (
+        "var district_counts := _district_counts()",
+        "for key_value in DISTRICT_ORDER:",
+        '"id": key',
+        '"label": String(DISTRICT_LABELS.get(key, key.to_upper()))',
+        '"value": int(district_counts.get(key, 0))',
+        '"color": DISTRICT_COLORS.get(key, FRAME_COLOR)',
+    ):
+        ensure(required_token in payload_body, errors, f"Town district ribbon must preserve exact existing ordered payload authority: {required_token}")
+    for forbidden_token in ("sort(", "erase(", "reverse(", "shuffle(", "session", "TownRules", "OverworldRules"):
+        ensure(forbidden_token not in payload_body, errors, f"Town district payload materializer must not alter order or authority: {forbidden_token}")
+
+    compact_body = gdscript_function_block(stage_text, "_scenic_overlay_compact")
+    ensure("return scene_rect.size.x < 1000.0 or scene_rect.size.y < 520.0" in compact_body, errors, "Town scenic overlays must use the exact bounded live scene-rectangle breakpoint")
+    status_rect_body = gdscript_function_block(stage_text, "_status_plaque_rects")
+    district_rect_body = gdscript_function_block(stage_text, "_district_strip_rect")
+    card_rect_body = gdscript_function_block(stage_text, "_district_card_rects")
+    for required_token in ("118.0 if compact else 132.0", "40.0 if compact else 44.0"):
+        ensure(required_token in status_rect_body, errors, f"Town status-plaque geometry is missing responsive footprint token: {required_token}")
+    ensure("var height := 40.0 if compact else 44.0" in district_rect_body, errors, "Town district ribbon must retain its exact compact/wide height")
+    for required_token in ("var gap := 6.0", "var inset := 7.0", "strip_rect.size.y - 12.0"):
+        ensure(required_token in card_rect_body, errors, f"Town district cells are missing bounded shared-ribbon geometry token: {required_token}")
+    for obsolete_token in (
+        "draw_rect(strip_rect, Color(0.88, 0.85, 0.78, 0.95), true)",
+        "draw_rect(card_rect, card_color, true)",
+        "var fill: Color = data.get(\"color\", FRAME_COLOR)",
+        "draw_rect(rect, fill, true)",
+    ):
+        ensure(obsolete_token not in stage_text, errors, f"Town scenic overlays must not retain opaque debug-card paint: {obsolete_token}")
+
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    scenic_test_body = gdscript_function_block(smoke_text, "_assert_town_scenic_backdrop_contract")
+    helper_body = gdscript_function_block(smoke_text, "_scenic_overlay_contract_exact")
+    for required_token in (
+        'live_board.has_method("validation_scenic_overlay_summary")',
+        'var live_overlay_summary: Dictionary = live_board.call("validation_scenic_overlay_summary")',
+        'var live_overlay_scene_rect: Rect2 = live_overlay_summary.get("scene_rect", Rect2()) if live_overlay_summary.get("scene_rect", Rect2()) is Rect2 else Rect2()',
+        "var live_overlay_compact_expected := live_overlay_scene_rect.size.x < 1000.0 or live_overlay_scene_rect.size.y < 520.0",
+        "_scenic_overlay_contract_exact(live_overlay_summary, live_overlay_compact_expected)",
+        "var fresh_live_overlay_summary := live_overlay_summary.duplicate(true)",
+        'live_overlay_summary["status_payloads"][0]["value"] = "999"',
+        'live_overlay_summary["district_payloads"][0]["value"] = 999',
+        'live_board.call("validation_scenic_overlay_summary") != fresh_live_overlay_summary',
+        'fixture.validation_scenic_overlay_summary()',
+        "stage_size == Vector2(620.0, 320.0)",
+    ):
+        ensure(required_token in scenic_test_body, errors, f"Town scenic focused owner is missing exact lifecycle/detach token: {required_token}")
+    for required_token in (
+        '"responsive_translucent_glass_edge_rails"',
+        '["guard", "spell", "pressure", "routes"]',
+        '["military", "economy", "spellcraft", "logistics", "defense"]',
+        '["WAR", "COIN", "MAG", "ROAD", "WALL"]',
+        "0.28 if compact_expected else 0.13",
+        'summary.get("contained", false)',
+        'summary.get("status_district_nonoverlap", false)',
+        'summary.get("glass_fill_alpha", 0.0)), 0.78',
+        'summary.get("glass_card_fill_alpha", 0.0)), 0.72',
+        'summary.get("payload_authority", "")) == "existing_status_and_district_builders"',
+    ):
+        ensure(required_token in helper_body, errors, f"Town scenic overlay focused contract is missing exact proof token: {required_token}")
+    for forbidden_token in ("sort(", "erase(", "set_town_state", "queue_redraw", "call_deferred", "Timer", "await "):
+        ensure(forbidden_token not in helper_body, errors, f"Town scenic overlay oracle must remain passive and source-independent: {forbidden_token}")
+
+
 def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
     town_visual_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
     required_paths = (TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, OVERWORLD_RULES_PATH, town_visual_path)
@@ -63596,6 +63732,7 @@ def main() -> int:
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)
+    validate_town_scenic_overlay_glass_integration(errors)
     validate_town_capture_frontier_first_view_status(errors)
     validate_town_header_player_facing_control_label(errors)
     validate_overworld_town_control_label_consistency(errors)
