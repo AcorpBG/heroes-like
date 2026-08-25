@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Completed from direct inspected current-HEAD 1280x720 and 1920x1080 Battle captures. Standard 1280 now keeps action and system commands in one horizontal dock and reduces compact footer padding, increasing the tactical board from 347px to 369px while preserving constrained stacking and exact gameplay authority.",
+  "currentNotes": "Completed from direct user feedback and inspected current River Pass captures. The painted range is now a moderate 0.40 artifact through 0.96 town hierarchy; focused, compatibility, static/editor, Linux, and Windows gates pass while logical map and gameplay authority remain unchanged.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-standard-compact-command-dock-stage-reclamation-10184",
-  "currentSliceId": "ux-battle-standard-compact-command-dock-stage-reclamation-10184",
-  "currentSliceNotes": "Completed: standard 1280 Battle uses one contained horizontal command dock and gains 22px/6.3% stage height; constrained 1024 and 130%-scaled layouts remain stacked; focused, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
+  "currentSlice": "ux-overworld-proportional-object-scale-correction-10184",
+  "currentSliceId": "ux-overworld-proportional-object-scale-correction-10184",
+  "currentSliceNotes": "Completed: River Pass now uses a moderate 0.40 artifact through 0.96 town painted hierarchy at 1280 and 1920, with exact footprints, movement, session/save, generated-map, accessibility, and platform startup authority retained.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle standard compact command dock stage reclamation",
-  "currentSliceUpdatedAt": "2026-08-25T12:04:17Z",
+  "currentSliceTitle": "Overworld proportional object scale correction",
+  "currentSliceUpdatedAt": "2026-08-25T12:34:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101330,6 +101330,35 @@
       "notes": "Completed from direct inspected current-HEAD Battle captures. Standard 1280x720/100% now keeps ActionPanel and SystemPanel side by side, uses one whole-word-safe ActionGuide line with the exact full tooltip, and reduces compact footer edge padding; the live BattleBoard grows from the measured 347px stacked baseline to 369px, a 22px/6.3% gain. 1024x600 and 1280x720/130% remain stacked and contained, while 1920x1080 remains two-column/full-detail. Exact command/action order, labels, tooltips, focus, Board hit geometry, combat/session/save authority, and gameplay remain unchanged. Focused 1920/1280/1024 layout, active settings, Board navigation, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T12:04:17Z"
+    },
+    {
+      "id": "ux-overworld-proportional-object-scale-correction-10184",
+      "title": "Overworld proportional object scale correction",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T12:34:01Z",
+      "startedAt": "2026-08-25T12:19:31Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the directly rejected Overworld scale mismatch by narrowing the painted-size gap between towns, heroes, structures, pickups, and artifacts without changing logical map authority.",
+      "completionCriteria": "Direct current 1280x720 and 1920x1080 River Pass captures show a coherent moderate painted hierarchy at exact artifact0.40, pickup0.46, encounter/default0.56, waypoint0.62, blocker0.64, durable0.66, landmark0.70, multi-tile cap0.76, hero0.82, and town0.96 extents; exact alpha cropping/aspect, grounding, logical footprints, town body/entry masks, ids/content, hit areas, passability, routes, movement, selection/focus, fog memory, accessibility, camera, session/save authority, generated placement, and Native-RMG behavior remain unchanged; focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No map size, camera zoom, tile extent, object footprint, body/visit mask, passability, collision, route, movement, interaction, content, economy, balance, session, save/schema, generated placement, or Native RMG changes.",
+        "No sprite asset repaint/replacement, alpha-crop algorithm, aspect, grounding, selection cue, fog, terrain, road, UI panel, input, focus, accessibility, VFX, or audio changes.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct user feedback and inspected before/after River Pass captures at 1280x720 and 1920x1080. The prior 1.40 town versus 0.26 artifact range is replaced by exact painted extents artifact0.40, pickup0.46, encounter/default0.56, waypoint0.62, blocker0.64, durable0.66, landmark0.70, multi-tile cap0.76, hero0.82, and town0.96. Alpha cropping/aspect, grounding, logical footprints, town body/entry masks, ids/content, hit areas, passability, route/movement, selection/focus, fog, accessibility, camera, session/save authority, generated placement, and Native RMG remain exact. Focused scale, six-faction hero/town, artifact, broad Overworld, generated movement/save, full-route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T12:34:01Z"
     }
   ],
   "project": "heroes-like",
