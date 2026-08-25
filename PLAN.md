@@ -24,7 +24,10 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from fresh direct runtime evidence.
+- Selected implementation slice: none. Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner.
+
+- Previous completed implementation slice: `ux-battle-sidebar-tactical-card-height-cap-10184`. Wide Battle layouts now keep the unchanged Order/Focus/Spell/Timing body in one exact 248px tactical card instead of stretching its inner frame through the full sidebar height. Direct inspected 1600x900, 1920x1080, and 2560x1440 captures retain 87px, 267px, and 627px of art-backed rail negative space respectively, while the true 1280x720 SubViewport keeps the existing sidebar-hidden compact composition. Focused runtime proves stable four-tab height, complete page/label containment, native titles/tooltips/selection restoration, and unchanged battle/session/save/settings authority; Board navigation, 100/130% active settings, Town/Battle visual, keyboard/controller focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-battle-sidebar-tactical-card-height-cap-10184`
 
 - Previous completed implementation slice: `ux-town-banner-stockpile-ledger-chip-10184`. The Town banner's detached stockpile text now sits inside a responsive resource-ledger chip that reuses the authored Town art at exact 96px compact / 226px wide frame budgets around the unchanged 80px / 210px native menu. Direct inspected 1280x720 and 1920x1080 captures preserve the scenic stage and town identity; focused runtime proves the exact `Stores`/full summary modes, nine ordered resource rows/icons/amounts/tooltips, public open/Escape/focus return, containment, and unchanged session/economy/save/action authority. Supported-layout, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-town-banner-stockpile-ledger-chip-10184`
@@ -10490,6 +10493,32 @@ Non-goals:
 - no resource amount/order/registry/icon asset, economy, market, build/recruit, town action, session, save, or gameplay change;
 - no Town stage/sidebar/footer/tab composition, scenic art, header/status/event copy, input mapping, focus policy, accessibility semantic, animation/audio, or VFX change;
 - no packaged Town interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
+
+## Battle Sidebar Tactical Card Height Cap
+
+id: `ux-battle-sidebar-tactical-card-height-cap-10184`
+
+Status: completed.
+
+Completed implementation:
+- `%BattleTabs` now owns an exact 248px minimum with horizontal fill and vertical fill-only sizing, preserving the existing `unit_card.png` SidebarShell while preventing the selected inner page from consuming the remaining wide rail;
+- focused and all-size runtime owners traverse all four native tabs, prove exact stable height, content/label containment, Command-card separation, SidebarShell containment, at least 80px of wide-layout negative space, true compact hiding, selection restoration, and whole session authority;
+- direct captures and the full bounded compatibility, static/editor, Linux, and Windows startup chain pass without changing tab content, combat, navigation, saves, settings, or packaged interaction claims.
+
+Implementation boundary:
+- replace the native `%BattleTabs` vertical expand flag with one 248px content-sized tactical-card allocation, leaving the remaining wide-screen rail as intentional negative space inside the existing `unit_card.png` sidebar art;
+- preserve the exact Command card, four native tab headers/pages, selected tab, visible summaries, full tooltips, focus/controller/mouse traversal, and responsive 1280 compact behavior;
+- keep the Battle board, banner, footer, action/system controls, combat, session, save, and settings authority unchanged.
+
+Completion criteria:
+- fresh inspected 1600x900, 1920x1080, and 2560x1440 Battle captures show a bounded tactical information card rather than a mostly empty full-height inner panel, while 1280x720 retains its existing compact sidebar-hidden composition;
+- focused runtime proves exact 248px authored/actual BattleTabs height, stable allocation across Order/Focus/Spell/Timing, complete label containment, exact native tab geometry/navigation/tooltips, SidebarShell containment, and unchanged battle/session/save/settings authority;
+- broad Town/Battle visual, active-play keyboard/controller focus, animation, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tab title, visible summary, tooltip, commander, initiative, focus, spell, timing, action, combat, AI, balance, content, session, save/schema, or settings change;
+- no SidebarShell/CommandPanel width or art, board/banner/footer/action/system allocation, font/theme/UI-scale, input mapping, focus order, accessibility semantic, animation/audio, or VFX change;
+- no packaged Battle interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 

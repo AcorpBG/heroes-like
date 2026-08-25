@@ -401,9 +401,10 @@ text = "Enemy command"
 
 [node name="BattleTabs" type="TabContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 248)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 1
 
 [node name="InitiativePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs"]
 unique_name_in_owner = true

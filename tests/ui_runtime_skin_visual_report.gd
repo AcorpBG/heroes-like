@@ -155,6 +155,10 @@ func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> 
 		shell_report["battle_movement_range"] = movement_range_contract
 		if not bool(movement_range_contract.get("ok", false)):
 			_error("Battle movement-range visual restraint failed at %s: %s" % [_viewport_key(viewport_size), movement_range_contract])
+		var sidebar_contract := await _battle_sidebar_tactical_card_contract(shell, viewport_size)
+		shell_report["battle_sidebar_tactical_card"] = sidebar_contract
+		if not bool(sidebar_contract.get("ok", false)):
+			_error("Battle sidebar tactical-card containment failed at %s: %s" % [_viewport_key(viewport_size), sidebar_contract])
 	for panel_name in Dictionary(spec["panels"]).keys():
 		var expected_path := _expected_panel_style(shell_id, String(panel_name), viewport_size, String(spec["panels"][panel_name]))
 		var actual_path := _panel_texture_path(shell, String(panel_name))
@@ -274,6 +278,71 @@ func _battle_movement_range_contract(shell: Node) -> Dictionary:
 		"all_legal_cells_drawn": summary.get("movement_range_all_legal_cells_drawn", false),
 		"hover_only": summary.get("movement_range_hover_only", true),
 		"below_active_targets_and_stacks": summary.get("movement_range_below_active_targets_and_stacks", false),
+	}
+
+func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i) -> Dictionary:
+	var sidebar_shell := shell.get_node_or_null("%SidebarShell") as PanelContainer
+	var command_panel := shell.get_node_or_null("%CommandPanel") as PanelContainer
+	var tabs := shell.get_node_or_null("%BattleTabs") as TabContainer
+	var panels: Array[Control] = [
+		shell.get_node_or_null("%InitiativePanel") as Control,
+		shell.get_node_or_null("%ContextPanel") as Control,
+		shell.get_node_or_null("%SpellPanel") as Control,
+		shell.get_node_or_null("%TimingPanel") as Control,
+	]
+	if sidebar_shell == null or command_panel == null or tabs == null or panels.any(func(panel): return panel == null):
+		return {"ok": false, "missing_authored_control": true}
+	var session = SessionState.active_session
+	var authority_before: Dictionary = session.to_dict()
+	var original_tab := tabs.current_tab
+	var expected_titles := ["Order", "Focus", "Spell", "Timing"]
+	var titles: Array[String] = []
+	var heights: Array[float] = []
+	var pages_contained := true
+	for index in range(panels.size()):
+		tabs.current_tab = index
+		await get_tree().process_frame
+		await get_tree().process_frame
+		titles.append(tabs.get_tab_title(index))
+		heights.append(tabs.size.y)
+		pages_contained = pages_contained and tabs.get_global_rect().encloses(panels[index].get_global_rect())
+	var sidebar_rect := sidebar_shell.get_global_rect()
+	var command_rect := command_panel.get_global_rect()
+	var tabs_rect := tabs.get_global_rect()
+	var compact := viewport_size.x < 1360 or viewport_size.y < 760
+	var remaining_rail_gutter := sidebar_rect.end.y - tabs_rect.end.y
+	var authored_height_exact := is_equal_approx(tabs.custom_minimum_size.y, 248.0) \
+		and tabs.size_flags_vertical == Control.SIZE_FILL
+	var wide_geometry_exact := sidebar_shell.is_visible_in_tree() \
+		and heights.all(func(height): return is_equal_approx(height, 248.0)) \
+		and sidebar_rect.encloses(command_rect) \
+		and sidebar_rect.encloses(tabs_rect) \
+		and command_rect.end.y <= tabs_rect.position.y + 0.01 \
+		and not command_rect.intersects(tabs_rect) \
+		and pages_contained \
+		and remaining_rail_gutter >= 80.0
+	var compact_geometry_exact := not sidebar_shell.is_visible_in_tree()
+	tabs.current_tab = original_tab
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var authority_exact := session.to_dict() == authority_before
+	var ok := authored_height_exact \
+		and titles == expected_titles \
+		and authority_exact \
+		and (compact_geometry_exact if compact else wide_geometry_exact)
+	return {
+		"ok": ok,
+		"compact": compact,
+		"authored_height_exact": authored_height_exact,
+		"titles": titles,
+		"heights": heights,
+		"sidebar_visible": sidebar_shell.is_visible_in_tree(),
+		"sidebar_rect": sidebar_rect,
+		"command_rect": command_rect,
+		"tabs_rect": tabs_rect,
+		"pages_contained": pages_contained,
+		"remaining_rail_gutter": remaining_rail_gutter,
+		"authority_exact": authority_exact,
 	}
 
 func _prepare_session(shell_id: String) -> void:

@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from fresh direct runtime evidence."
+    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Town banner stockpile ledger chip is complete. Fresh inspected 1280x720 and 1920x1080 captures, exact native popup interaction, supported layout, Town/Battle, focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Select the next graphical-polish slice only from fresh direct runtime evidence.",
+  "currentNotes": "The Battle sidebar tactical-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-banner-stockpile-ledger-chip-10184",
-  "currentSliceId": "ux-town-banner-stockpile-ledger-chip-10184",
-  "currentSliceNotes": "Completed with an exact responsive ledger frame around the unchanged native stockpile menu; presentation, interaction, gameplay authority, and bounded platform gates are green.",
+  "currentSlice": "ux-battle-sidebar-tactical-card-height-cap-10184",
+  "currentSliceId": "ux-battle-sidebar-tactical-card-height-cap-10184",
+  "currentSliceNotes": "Completed with exact 248px four-tab containment, inspected 1280/1600/1920/2560 captures, focused authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town banner stockpile ledger chip",
-  "currentSliceUpdatedAt": "2026-08-25T15:42:03Z",
+  "currentSliceTitle": "Battle sidebar tactical card height cap",
+  "currentSliceUpdatedAt": "2026-08-25T16:07:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19900,7 +19900,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Overworld semantic object scale hierarchy slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "notes": "The Battle sidebar tactical-card height cap is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
@@ -101444,6 +101444,34 @@
       "completedAt": "2026-08-25T14:18:48Z"
     },
     {
+      "id": "ux-battle-sidebar-tactical-card-height-cap-10184",
+      "title": "Battle sidebar tactical card height cap",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T16:07:52Z",
+      "startedAt": "2026-08-25T15:49:33Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Turn the wide Battle information page into a content-sized tactical card inside the existing sidebar art so the rail keeps deliberate negative space instead of a tall empty inner frame.",
+      "completionCriteria": "Direct inspected 1600x900, 1920x1080, and 2560x1440 captures show an exact 248px BattleTabs card while 1280 remains compact/sidebar-hidden; focused runtime proves stable Order/Focus/Spell/Timing allocation, exact content/tooltips/navigation/containment and unchanged battle/session/save/settings authority; broad visual/focus/animation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No tab title/content/tooltip, commander, initiative, focus, spell, timing, combat, AI, balance, session, save/schema, settings, or gameplay changes.",
+        "No SidebarShell/CommandPanel width or art, board/banner/footer/action/system allocation, font/theme/UI scale, input mapping, focus order, accessibility semantic, animation/audio, or VFX changes.",
+        "No packaged Battle interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected 1280x720, 1600x900, 1920x1080, and 2560x1440 Battle captures. BattleTabs now uses one exact 248px content-sized allocation with native Order/Focus/Spell/Timing titles, pages, summaries, tooltips, and selection restoration; the true 1280 SubViewport stays sidebar-hidden while wide rails retain 87px/267px/627px of art-backed negative space. Focused Board navigation and whole authority, 100/130% active settings, Town/Battle visual, keyboard/controller focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Tab content, combat, input/focus semantics, saves/settings, packaged Battle interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T16:07:52Z"
+    },
+    {
       "id": "ux-town-banner-stockpile-ledger-chip-10184",
       "title": "Town banner stockpile ledger chip",
       "status": "completed",
@@ -101568,7 +101596,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next evidence-backed graphical-polish slice; broader graphical polish and product/release-readiness gaps remain.",
+  "remainingWork": "Select the next tracker-approved graphical-polish slice from fresh direct runtime evidence; broader graphical polish and product/release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
