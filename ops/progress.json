@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence."
+    "Complete the selected Battle terrain-edge and System-frame polish slice, then select the next source-backed graphical-polish or release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-visible-sprite-scale-normalization-10184",
-    "title": "Overworld visible sprite scale normalization",
-    "status": "completed",
+    "id": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
+    "title": "Battle terrain edge and System frame polish",
+    "status": "in_progress",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T03:11:26Z",
-    "updatedAt": "2026-08-25T04:01:42Z",
+    "startedAt": "2026-08-25T04:08:21Z",
+    "updatedAt": "2026-08-25T04:28:00Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct captures and source-backed alpha-bound measurements. Mapped interactive/authored sprites cache non-transparent painted bounds plus cropped render textures and use family-owned visible extents; pickups remain subordinate, encounters and structures are legible, generated blocker bodies retain their uncropped 0.72-tile fast path, and towns remain dominant. Authored/generated 1280/1920 captures, exact aspect/cache/session authority, generated movement/save-reload, 1920 software-rendering at 9.21/9.18 FPS, Overworld visual, object assets, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Gameplay/logical geometry, content, Native RMG, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
-    "completedAt": "2026-08-25T04:01:42Z"
+    "notes": "Resumed after completing the owner-directed Overworld scale correction. Refine the current terrain-edge underlay so no flat gaps remain around the unchanged 11x7 hex hull, retain exact per-hex terrain authority, and restore the authored wide SystemPanel frame while preserving compact commands, rules, geometry, input, focus, save, and accessibility."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14337,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld visible sprite scale normalization is completed with direct authored/generated captures, exact presentation/gameplay authority, performance, compatibility, static/editor, and bounded platform evidence.",
+  "currentNotes": "Battle terrain-edge refinement and wide System frame restoration resumed after the owner-directed Overworld world-scale hierarchy correction completed and passed focused/platform gates.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-visible-sprite-scale-normalization-10184",
-  "currentSliceId": "ux-overworld-visible-sprite-scale-normalization-10184",
-  "currentSliceNotes": "Completed: mapped objects use cached painted bounds and cropped textures for family-owned visible extents while generated blocker composition and gameplay authority remain exact.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld visible sprite scale normalization",
-  "currentSliceUpdatedAt": "2026-08-25T04:01:42Z",
+  "currentSlice": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
+  "currentSliceId": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
+  "currentSliceNotes": "In progress: refine the Battle terrain underlay beneath the unchanged hex grid and preserve the authored System frame across wide responsive refits.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Battle terrain edge and System frame polish",
+  "currentSliceUpdatedAt": "2026-08-25T04:28:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19650,7 +19649,7 @@
       }
     }
   },
-  "guardrailNote": "Change generated blocker composition only: use existing terrain-biome assets and deterministic bounded transforms inside each exact body cell. Preserve native payloads, object/body/visit tiles, passability, routes, interactions, content, saves, camera behavior, and the completed object-scale cap; do not add generation heuristics or claim Native-RMG parity or release readiness.",
+  "guardrailNote": "Change only Battle presentation beneath/outside the playable hex grid and restore the existing wide System frame. Preserve exact per-hex terrain, grid/stack/VFX geometry, compact commands, rules, input/focus, save, and accessibility authority.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19860,8 +19859,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence before implementation.",
-  "notes": "The completed Overworld sprite-scale correction is live presentation behavior, not report-only work: mapped objects use cached painted bounds and cropped render textures for a coherent family hierarchy while gameplay geometry and generated blocker composition remain unchanged.",
+  "nextActionGuardrailNote": "Refine only the Battle terrain underlay beneath the authoritative per-hex grid and restore the existing wide System frame. Preserve exact grid/stack/VFX geometry, compact commands, rules, input/focus, save, and accessibility authority.",
+  "notes": "The active Battle polish slice is live presentation work driven by fresh captures and the failing wide SystemPanel art contract, not report-only activity.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100898,10 +100897,48 @@
         "ops/progress.json",
         "scenes/overworld/OverworldMapView.gd",
         "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
       "notes": "Completed from direct captures and source-backed alpha-bound measurements. Mapped interactive/authored sprites cache non-transparent painted bounds plus cropped render textures and use family-owned visible extents; pickups remain subordinate, encounters and structures are legible, generated blocker bodies retain their uncropped 0.72-tile fast path, and towns remain dominant. Authored/generated 1280/1920 captures, exact aspect/cache/session authority, generated movement/save-reload, 1920 software-rendering at 9.21/9.18 FPS, Overworld visual, object assets, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Gameplay/logical geometry, content, Native RMG, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-25T04:01:42Z"
+    },
+    {
+      "id": "ux-battlefield-terrain-edge-and-system-frame-polish-10184",
+      "title": "Battle terrain edge and System frame polish",
+      "status": "in_progress",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T04:28:00Z",
+      "startedAt": "2026-08-25T04:08:21Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Resumed after the owner-directed Overworld world-scale correction completed. Refine the current terrain-edge underlay around the unchanged tactical grid and retain the authored wide System frame while preserving compact commands, rules, geometry, input, focus, save, and accessibility authority."
+    },
+    {
+      "id": "ux-overworld-world-scale-hierarchy-correction-10184",
+      "title": "Overworld world-scale hierarchy correction",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T04:28:00Z",
+      "startedAt": "2026-08-25T04:14:56Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from owner feedback and direct 1280/1920 captures. The live painted-bound scale ladder now uses 0.50 pickup, 0.60 encounter, 0.72 objective/waypoint, 0.78 durable structure, 0.84 multi-footprint cap, and 1.28 town visual extents. Exact 3x2 town/entry and one-tile object geometry, ids, body/visit masks, routes, movement, fog, interactions, generated placement, session/save authority, and Native RMG remain unchanged. Focused scale captures, small/large map control, town/artifact assets, generated-map movement, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Overworld interaction and whole-release claims remain excluded.",
+      "completedAt": "2026-08-25T04:28:00Z"
     }
   ],
   "project": "heroes-like",
@@ -100912,7 +100949,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next source-backed graphical-polish or release-readiness slice from direct current behavior evidence. Broader graphical polish and the remaining production gaps continue.",
+  "remainingWork": "Finish and validate the selected Battle terrain-edge/System-frame polish, then select the next source-backed graphical-polish or release-readiness slice. Broader graphical polish and the remaining production gaps continue.",
   "reportOnlyEvidence": [
     {
       "entries": [

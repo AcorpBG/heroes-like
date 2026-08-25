@@ -4,7 +4,7 @@ const SMALL_SCENARIO_ID := "prismhearth-watch"
 const LARGE_SCENARIO_ID := "ninefold-confluence"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const MAX_SMALL_MAP_TILE_EXTENT := 104.0
-const TOWN_VISUAL_EXTENT_TILES := 1.6
+const TOWN_VISUAL_EXTENT_TILES := 1.28
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -141,7 +141,7 @@ func _town_footprint_exact(shell: Node) -> bool:
 		if int(profile.get("footprint_width_tiles", 0)) != 3 \
 			or int(profile.get("footprint_height_tiles", 0)) != 2 \
 			or int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5 \
-			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.80) \
+			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.64) \
 			or not is_equal_approx(float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
 			or String(profile.get("entry_role", "")) != "bottom_middle_visit_approach" \
 			or not bool(profile.get("entry_is_visit_tile", false)) \

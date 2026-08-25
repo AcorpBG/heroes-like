@@ -31081,7 +31081,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     report_text = report_path.read_text(encoding="utf-8")
     scene_text = scene_path.read_text(encoding="utf-8")
     ensure(map_text.count("const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0") == 1, errors, "Small-map fit must own one exact 104px visual extent cap")
-    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.80") == 1, errors, "Town art must own one exact 80% visual-footprint scale")
+    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.64") == 1, errors, "Town art must own one exact 64% visual-footprint scale")
     extent_block = gd_function_block(map_text, "_tile_extent_for_viewport")
     uncapped_block = gd_function_block(map_text, "_uncapped_whole_map_fit_tile_extent")
     metrics_block = gd_function_block(map_text, "validation_view_metrics")
@@ -31116,7 +31116,9 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "var extent := minf(rect.size.x, rect.size.y)",
         "var sprite_fraction := TOWN_SPRITE_EXTENT_FACTOR",
         "var sprite_extent := maxf(12.0, extent * sprite_fraction)",
-        "_canvas_draw_texture_rect(texture, sprite_rect, false",
+        "var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)",
+        'var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)',
+        "_canvas_draw_texture_rect(draw_texture, sprite_rect, false",
     ))
     ensure(all(index >= 0 for index in town_draw_order) and list(town_draw_order) == sorted(town_draw_order), errors, "Town drawing must apply the visual-only extent after retaining logical footprint/grounding ownership")
     for token in (
@@ -31127,7 +31129,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     for preserved_token in (
         "const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
         "const TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.80",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.64",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.96",
         "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
         'const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"',
@@ -31139,7 +31141,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'const LARGE_SCENARIO_ID := "ninefold-confluence"',
         "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
         "const MAX_SMALL_MAP_TILE_EXTENT := 104.0",
-        "const TOWN_VISUAL_EXTENT_TILES := 1.6",
+        "const TOWN_VISUAL_EXTENT_TILES := 1.28",
         'var metrics: Dictionary = map_view.call("validation_view_metrics")',
         "var expected_capped := uncapped_extent > MAX_SMALL_MAP_TILE_EXTENT",
         "viewport_rect.get_center().distance_to(board_rect.get_center()) <= 1.5",
@@ -31160,7 +31162,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'int(profile.get("footprint_width_tiles", 0)) != 3',
         'int(profile.get("footprint_height_tiles", 0)) != 2',
         'int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5',
-        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.80',
+        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.64',
         'float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES',
         'String(profile.get("entry_role", "")) != "bottom_middle_visit_approach"',
         'int(readability.get("footprint_width_tiles", 0)) == 1',
@@ -31194,7 +31196,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     report_text = report_path.read_text(encoding="utf-8")
     for token in (
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84",
         "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
         "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
         'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_family_visible_extent"',
@@ -31473,13 +31475,24 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
 
     extent_block = gd_function_block(map_text, "_sprite_extent_fraction")
     for token in (
+        "const OBJECT_PICKUP_VISIBLE_EXTENT_TILES := 0.50",
+        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.60",
+        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.78",
+        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.72",
+        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.82",
+        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.68",
+        "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.72",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84",
+    ):
+        ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
+    for token in (
         '"artifact", "pickup":',
-        "base = 0.62",
+        "base = OBJECT_PICKUP_VISIBLE_EXTENT_TILES",
         '"encounter", "neutral_encounter":',
-        "base = 0.72",
-        '"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site":',
-        "base = 0.96",
-        "return clampf(base, 0.58, 1.10)",
+        "base = OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES",
+        '"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site", "support_producer", "staged_resource_front", "faction_outpost":',
+        "base = OBJECT_DURABLE_VISIBLE_EXTENT_TILES",
+        "return clampf(base, OBJECT_PICKUP_VISIBLE_EXTENT_TILES, 0.94)",
     ):
         ensure(token in extent_block, errors, f"Visible sprite hierarchy is missing an exact family-owned scale boundary: {token}")
     for forbidden in ("asset_id", "texture", "get_image", "session", "_session", "runtime_object_role"):
@@ -31500,6 +31513,21 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     for forbidden in ("session", "_session", "queue_redraw", "await ", "create_timer", "draw_texture", "save_png"):
         ensure(forbidden not in validation_scale_block, errors, f"Visible sprite validation payload must remain a read-only presentation observer: {forbidden}")
 
+    validation_town_scale_block = gd_function_block(map_text, "validation_town_sprite_scale_payload")
+    for token in (
+        'asset_id: String = "town_faction_embercourt"',
+        "Vector2(TOWN_PRESENTATION_FOOTPRINT) * single_tile_extent",
+        "minf(footprint_rect.size.x, footprint_rect.size.y) * TOWN_SPRITE_EXTENT_FACTOR",
+        "var first_region := _object_texture_visible_region(asset_id, texture)",
+        "var second_region := _object_texture_visible_region(asset_id, texture)",
+        "var draw_payload := _object_painted_sprite_draw_payload(",
+        '"visible_extent_tiles": visible_extent_px / single_tile_extent',
+        '"cache_repeat_exact": first_region == second_region and cache_size_after_first == cache_size_after_second',
+    ):
+        ensure(token in validation_town_scale_block, errors, f"Town scale validation payload is missing exact painted-bound hierarchy evidence: {token}")
+    for forbidden in ("session", "_session", "queue_redraw", "await ", "create_timer", "draw_texture", "save_png"):
+        ensure(forbidden not in validation_town_scale_block, errors, f"Town scale validation payload must remain a read-only presentation observer: {forbidden}")
+
     visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
     scale_test_block = gd_function_block(visual_text, "_assert_visible_sprite_scale_contract")
     for token in (
@@ -31507,14 +31535,18 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i.ONE)',
         'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "scenario_objective", Vector2i.ONE)',
         'map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(2, 2))',
+        'map_node.call("validation_town_sprite_scale_payload", "town_faction_embercourt")',
         'String(payload.get("visible_scale_model", "")) != "cached_alpha_bounds_family_visible_extent"',
         'not bool(payload.get("uses_painted_bounds", false))',
         'not bool(payload.get("cache_repeat_exact", false))',
         'not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
-        'float(pickup.get("visible_extent_tiles", 0.0)), 0.62',
-        'float(service.get("visible_extent_tiles", 0.0)), 0.96',
-        'float(objective.get("visible_extent_tiles", 0.0)), 0.88',
-        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 1.0',
+        'float(pickup.get("visible_extent_tiles", 0.0)), 0.50',
+        'float(service.get("visible_extent_tiles", 0.0)), 0.78',
+        'float(objective.get("visible_extent_tiles", 0.0)), 0.72',
+        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.84',
+        'float(town.get("visible_extent_tiles", 0.0)), 1.28',
+        'float(service.get("visible_extent_tiles", 0.0))',
+        '< float(town.get("visible_extent_tiles", 0.0))',
         "SessionState.ensure_active_session().to_dict() != authority_before",
     ):
         ensure(token in scale_test_block, errors, f"Overworld visual smoke is missing exact painted-bound scale hierarchy proof: {token}")
@@ -40098,7 +40130,14 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ensure(all(index >= 0 for index in resolver_order) and resolver_order == sorted(resolver_order), errors, "Overworld faction town resolver must prefer exact faction texture, then default texture, then empty")
     for forbidden in ("_session.", "session.", "await ", "create_timer", "create_tween", "queue_free", "match faction_id"):
         ensure(forbidden not in resolver_block, errors, f"Overworld faction town resolver must remain synchronous, manifest-owned, and read-only: {forbidden}")
-    ensure("_object_texture_for_asset(_town_sprite_asset_id(_town_at(tile)))" in draw_block, errors, "Live town drawing must resolve the exact current town sprite")
+    town_sprite_order = tuple(draw_block.find(token) for token in (
+        "var asset_id := _town_sprite_asset_id(_town_at(tile))",
+        "var texture = _object_texture_for_asset(asset_id)",
+        "var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)",
+        'var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)',
+        "_canvas_draw_texture_rect(draw_texture, sprite_rect, false",
+    ))
+    ensure(all(index >= 0 for index in town_sprite_order) and list(town_sprite_order) == sorted(town_sprite_order), errors, "Live town drawing must resolve the exact current town sprite through the shared painted-bound world-scale path")
     for token in (
         '"faction_id": faction_id', '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
         '"uses_faction_sprite": faction_id != ""', '"uses_default_sprite": sprite_asset_id == _town_default_asset_id',
