@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Battle banner compact status containment is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
+  "currentNotes": "Overworld proportional object-scale coherence is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-banner-compact-status-containment-10184",
-  "currentSliceId": "ux-battle-banner-compact-status-containment-10184",
-  "currentSliceNotes": "Completed: normal 1280/1920 Battle banners retain exact Header/Status/Pressure semantics and responsive containment while genuinely constrained logical widths keep the reduced banner.",
+  "currentSlice": "ux-overworld-proportional-object-scale-coherence-10184",
+  "currentSliceId": "ux-overworld-proportional-object-scale-coherence-10184",
+  "currentSliceNotes": "Completed: compact ordered painted extents keep props legible and hero/town art proportional while all logical map geometry and behavior remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle banner compact status containment",
-  "currentSliceUpdatedAt": "2026-08-25T07:52:11Z",
+  "currentSliceTitle": "Overworld proportional object scale coherence",
+  "currentSliceUpdatedAt": "2026-08-25T08:28:37Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101102,6 +101102,28 @@
       "notes": "Completed from direct real-render evidence. At 1280x720 the existing Header/Status/Pressure are all visible and contained with Status allocated 535px and genuinely natively ellipsized; at 1920x1080 Status receives 835px and the complete 672px authored value fits. The 1180 logical-width banner-detail boundary retains the reduced banner at genuinely constrained layouts such as 1280 at 130% UI scale. Focused visual report, Board navigation, active settings, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The controller test's stale requested-window overflow oracle and the active-settings test's stale override-presence oracle were corrected to observe actual geometry/style type. Gameplay, text/rules, input/focus, session/settings authority, and broader package/release claims remain unchanged or unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T07:52:11Z"
+    },
+    {
+      "id": "ux-overworld-proportional-object-scale-coherence-10184",
+      "title": "Overworld proportional object scale coherence",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T08:28:37Z",
+      "startedAt": "2026-08-25T07:57:18Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct owner feedback and inspected 1280/1920 River Pass captures. The live painted ladder is now artifact0.40, pickup0.46, encounter0.56, waypoint/structure/landmark0.62-0.70, multi-tile cap0.76, hero0.82, town0.96. Focused scale, small/large map, six-faction hero/town, generated movement/save, full-route, broad Overworld, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Alpha cropping, aspect, grounding, fog, logical footprints, body/visit masks, passability, routes, interactions, generated placement, session/save authority, and Native RMG behavior remain exact. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T08:28:37Z"
     }
   ],
   "project": "heroes-like",

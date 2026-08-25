@@ -76,7 +76,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var moving_layout_exact: bool = String(moving_layout.get("mode", "")) == "full_tile_world_hero" \
 		and not bool(moving_layout.get("town_footprint_colocated", true)) \
 		and is_equal_approx(float(moving_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.96)
+		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.82)
 	if not moving_layout_exact:
 		shell.queue_free()
 		return {"ok": false, "failure": "moving_layout_control", "layout": moving_layout}
@@ -203,7 +203,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 			geometry_exact = geometry_exact \
 				and String(layout.get("mode", "")) == "full_tile_world_hero" \
 				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.96)
+				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.82)
 	return {
 		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1 and grounding_exact and town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact,
 		"asset_ids": seen_assets.keys(),
