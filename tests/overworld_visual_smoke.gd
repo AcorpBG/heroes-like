@@ -7,6 +7,7 @@ func _run() -> void:
 	var end_turn_dialog_only := OS.get_environment("OVERWORLD_END_TURN_DIALOG_ONLY") == "1"
 	var objective_brief_only := OS.get_environment("OVERWORLD_OBJECTIVE_BRIEF_ONLY") == "1"
 	var hero_card_only := OS.get_environment("OVERWORLD_HERO_CARD_ONLY") == "1"
+	var object_scale_capture_only := OS.get_environment("OVERWORLD_OBJECT_SCALE_CAPTURE_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
 	elif objective_brief_only or hero_card_only:
@@ -27,6 +28,17 @@ func _run() -> void:
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
+		return
+	if object_scale_capture_only:
+		if not _assert_overworld_art_contract(shell):
+			return
+		if not _assert_visible_sprite_scale_contract(map_node):
+			return
+		if not await _capture_object_scale_viewports(shell):
+			return
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if not await _assert_objective_brief_native_ellipsis_contract(shell):
 		return
@@ -72,6 +84,8 @@ func _run() -> void:
 	if not _assert_marker_readability_contract(shell):
 		return
 	if not _assert_overworld_art_contract(shell):
+		return
+	if not _assert_visible_sprite_scale_contract(map_node):
 		return
 	if not _assert_object_economy_ui_contract(shell):
 		return
@@ -3289,6 +3303,103 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: procedural fallback object did not report localized contact shadow grounding. presentation=%s" % fallback_presentation)
 		get_tree().quit(1)
 		return false
+	return true
+
+func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
+	if not map_node.has_method("validation_object_sprite_scale_payload"):
+		push_error("Overworld smoke: map is missing visible sprite scale validation authority.")
+		get_tree().quit(1)
+		return false
+	var authority_before: Dictionary = SessionState.ensure_active_session().to_dict()
+	var pickup: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_road_writ_purse", "pickup", Vector2i.ONE)
+	var service: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i.ONE)
+	var objective: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "scenario_objective", Vector2i.ONE)
+	var multi_tile_service: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(2, 2))
+	for payload in [pickup, service, objective, multi_tile_service]:
+		if (
+			payload.is_empty()
+			or String(payload.get("visible_scale_model", "")) != "cached_alpha_bounds_family_visible_extent"
+			or not bool(payload.get("uses_painted_bounds", false))
+			or not bool(payload.get("cache_repeat_exact", false))
+			or not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))
+			or int(payload.get("cache_size_after_second", -1)) != int(payload.get("cache_size_after_first", -2))
+		):
+			push_error("Overworld smoke: mapped sprite did not preserve cached painted bounds/aspect authority. payload=%s" % payload)
+			get_tree().quit(1)
+			return false
+	if not is_equal_approx(float(pickup.get("visible_extent_tiles", 0.0)), 0.62):
+		push_error("Overworld smoke: pickup visible scale no longer remains subordinate. payload=%s" % pickup)
+		get_tree().quit(1)
+		return false
+	if not is_equal_approx(float(service.get("visible_extent_tiles", 0.0)), 0.96):
+		push_error("Overworld smoke: durable service visible scale is not readable at one-tile presentation. payload=%s" % service)
+		get_tree().quit(1)
+		return false
+	if not is_equal_approx(float(objective.get("visible_extent_tiles", 0.0)), 0.88):
+		push_error("Overworld smoke: scenario objective visible scale changed outside its family hierarchy. payload=%s" % objective)
+		get_tree().quit(1)
+		return false
+	if (
+		not bool(multi_tile_service.get("uses_multi_tile_visual_cap", false))
+		or not is_equal_approx(float(multi_tile_service.get("cap_tiles", 0.0)), 1.0)
+		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 1.0)
+	):
+		push_error("Overworld smoke: multi-tile interactive art escaped the one-tile visible cap. payload=%s" % multi_tile_service)
+		get_tree().quit(1)
+		return false
+	if (
+		float(pickup.get("painted_extent_fraction", 1.0)) >= 0.60
+		or float(service.get("painted_extent_fraction", 1.0)) >= 0.70
+		or float(objective.get("painted_extent_fraction", 1.0)) >= 0.70
+	):
+		push_error("Overworld smoke: scale fixture no longer proves transparent-canvas variance. pickup=%s service=%s objective=%s" % [pickup, service, objective])
+		get_tree().quit(1)
+		return false
+	if SessionState.ensure_active_session().to_dict() != authority_before:
+		push_error("Overworld smoke: visible sprite scale observation changed session authority.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _capture_object_scale_viewports(shell: Node) -> bool:
+	var output_dir := OS.get_environment("OVERWORLD_OBJECT_SCALE_CAPTURE_DIR").strip_edges()
+	if output_dir == "":
+		push_error("Overworld smoke: object-scale capture requires OVERWORLD_OBJECT_SCALE_CAPTURE_DIR.")
+		get_tree().quit(1)
+		return false
+	var absolute_dir := ProjectSettings.globalize_path(output_dir)
+	if DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
+		push_error("Overworld smoke: could not create object-scale capture directory %s." % absolute_dir)
+		get_tree().quit(1)
+		return false
+	var original_window_size := get_window().size
+	var captures := []
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if get_window().size != viewport_size:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: object-scale capture did not reach %s." % viewport_size)
+			get_tree().quit(1)
+			return false
+		await RenderingServer.frame_post_draw
+		var image := get_viewport().get_texture().get_image()
+		if image == null or image.is_empty() or image.get_size() != viewport_size:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: object-scale capture returned an invalid %s image." % viewport_size)
+			get_tree().quit(1)
+			return false
+		var path := absolute_dir.path_join("overworld_object_scale_%dx%d.png" % [viewport_size.x, viewport_size.y])
+		if image.save_png(path) != OK:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: object-scale capture could not save %s." % path)
+			get_tree().quit(1)
+			return false
+		captures.append({"width": viewport_size.x, "height": viewport_size.y, "path": path})
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	print("OVERWORLD_OBJECT_SCALE_CAPTURE %s" % JSON.stringify({"ok": true, "captures": captures, "session_exact": shell != null}))
 	return true
 
 func _assert_legacy_forest_degradation(shell: Node, session) -> bool:

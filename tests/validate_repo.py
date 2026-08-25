@@ -31195,6 +31195,9 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     report_text = report_path.read_text(encoding="utf-8")
     for token in (
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00",
+        "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
+        "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
+        'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_family_visible_extent"',
         "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08",
@@ -31206,6 +31209,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "var _generated_decorative_bodies_by_tile: Dictionary = {}",
         "var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}",
         "var _generated_decorative_blocker_fallback_asset_ids: Array = []",
+        "var _object_texture_visible_regions: Dictionary = {}",
     ):
         ensure(map_text.count(token) == 1, errors, f"Generated-map visual source must own exactly one token: {token}")
     for terrain_token in (
@@ -31312,9 +31316,59 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'object.get("generated_body_sprite_center_tiles", {})',
         "rect.size.x * float(center_payload.get(\"x\", 0.5))",
         "rect.size.y * float(center_payload.get(\"y\", 0.5))",
+        "var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))",
         "_canvas_draw_texture_rect(texture, sprite_rect, false, base_modulate)",
     ):
         ensure(token in generated_draw_block, errors, f"Generated body cells must draw bounded original blocker sprites with normal world grounding: {token}")
+
+    object_draw_block = gd_function_block(map_text, "_draw_object_sprite")
+    object_draw_order = tuple(object_draw_block.find(token) for token in (
+        "var metrics := _object_sprite_visual_metrics(rect, profile)",
+        "var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)",
+        'var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)',
+        'var sprite_rect: Rect2 = draw_payload.get("draw_rect",',
+        "_canvas_draw_texture_rect(draw_texture, sprite_rect, false",
+    ))
+    ensure(all(index >= 0 for index in object_draw_order) and list(object_draw_order) == sorted(object_draw_order), errors, "Mapped objects must reuse the cached cropped texture and painted geometry through the fast draw path")
+    for forbidden in ("texture.get_image", "image.get_used_rect", "session", "_session", "await ", "create_timer"):
+        ensure(forbidden not in object_draw_block + generated_draw_block, errors, f"Hot mapped-object draw paths must reuse cached bounds without image scans or gameplay mutation: {forbidden}")
+
+    visible_region_block = gd_function_block(map_text, "_object_texture_visible_region")
+    visible_region_order = tuple(visible_region_block.find(token) for token in (
+        "if cache_key != \"\" and _object_texture_visible_regions.has(cache_key):",
+        "var full_rect := Rect2(Vector2.ZERO, texture_size)",
+        "var image := texture.get_image()",
+        "var used_rect: Rect2i = image.get_used_rect()",
+        "used_rect.position.x - OBJECT_PAINTED_BOUNDS_PADDING_PIXELS",
+        "used_rect.end.x + OBJECT_PAINTED_BOUNDS_PADDING_PIXELS",
+        "source_rect = Rect2(Vector2(left, top), Vector2(right - left, bottom - top))",
+        "var cropped_image := image.get_region(Rect2i(source_rect))",
+        "draw_texture = ImageTexture.create_from_image(cropped_image)",
+        '"draw_texture": draw_texture',
+        '"painted_extent_fraction": maxf(',
+        "_object_texture_visible_regions[cache_key] = payload.duplicate(true)",
+    ))
+    ensure(all(index >= 0 for index in visible_region_order) and list(visible_region_order) == sorted(visible_region_order), errors, "Painted-bound extraction must fail closed to the full texture, derive one padded alpha rect, publish normalized scale evidence, and cache by asset")
+    for forbidden in ("session", "_session", "map_objects", "footprint", "passable", "RandomMapGeneratorRules", "await ", "create_timer", "queue_redraw"):
+        ensure(forbidden not in visible_region_block, errors, f"Painted-bound extraction must remain texture-local presentation work: {forbidden}")
+    draw_rect_block = gd_function_block(map_text, "_object_canvas_draw_rect")
+    for token in (
+        "var region := preloaded_region if not preloaded_region.is_empty() else _object_texture_visible_region(asset_id, texture)",
+        'float(region.get("painted_extent_fraction", 1.0))',
+        "OBJECT_MIN_PAINTED_EXTENT_FRACTION",
+        "var canvas_extent := visible_extent_px / painted_extent_fraction",
+        "return Rect2(sprite_center - Vector2(canvas_extent, canvas_extent) * 0.5, Vector2(canvas_extent, canvas_extent))",
+    ):
+        ensure(token in draw_rect_block, errors, f"Mapped sprite geometry must calibrate the full canvas from the cached painted extent: {token}")
+    painted_draw_block = gd_function_block(map_text, "_object_painted_sprite_draw_payload")
+    for token in (
+        "var region := _object_texture_visible_region(asset_id, texture)",
+        "_object_canvas_draw_rect(asset_id, texture, sprite_center, visible_extent_px, region)",
+        '"draw_texture": region.get("draw_texture", texture)',
+        '"draw_rect": draw_rect',
+    ):
+        ensure(token in painted_draw_block, errors, f"Mapped sprite draw payload must preserve full-canvas placement while using the cached cropped texture: {token}")
+    ensure("_object_texture_visible_regions.clear()" in gd_function_block(map_text, "_load_overworld_art_manifest"), errors, "Reloading Overworld art must invalidate cached painted bounds")
 
     metrics_block = gd_function_block(map_text, "_object_sprite_visual_metrics")
     metrics_order = tuple(metrics_block.find(token) for token in (
@@ -31416,6 +31470,56 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "package_block_tiles =", "body_tiles =", "blocking_body =", "session.overworld.erase", "RandomMapGeneratorRules", "set_tile", "sort(", ".erase(", "create_timer",
     ):
         ensure(forbidden not in report_text, errors, f"Generated visual report must observe production output without altering generation/passability: {forbidden}")
+
+    extent_block = gd_function_block(map_text, "_sprite_extent_fraction")
+    for token in (
+        '"artifact", "pickup":',
+        "base = 0.62",
+        '"encounter", "neutral_encounter":',
+        "base = 0.72",
+        '"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site":',
+        "base = 0.96",
+        "return clampf(base, 0.58, 1.10)",
+    ):
+        ensure(token in extent_block, errors, f"Visible sprite hierarchy is missing an exact family-owned scale boundary: {token}")
+    for forbidden in ("asset_id", "texture", "get_image", "session", "_session", "runtime_object_role"):
+        ensure(forbidden not in extent_block, errors, f"Family scale selection must not inspect assets or gameplay state: {forbidden}")
+
+    validation_scale_block = gd_function_block(map_text, "validation_object_sprite_scale_payload")
+    for token in (
+        "var normalized_footprint := _normalized_footprint(footprint)",
+        "var first_region := _object_texture_visible_region(asset_id, texture)",
+        "var second_region := _object_texture_visible_region(asset_id, texture)",
+        "var draw_payload := _object_painted_sprite_draw_payload(",
+        '"source_aspect": float(draw_payload.get("source_aspect", 0.0))',
+        '"draw_aspect": float(draw_payload.get("draw_aspect", 0.0))',
+        '"visible_extent_tiles": visible_extent_px / single_tile_extent',
+        '"cache_repeat_exact": first_region == second_region and cache_size_after_first == cache_size_after_second',
+    ):
+        ensure(token in validation_scale_block, errors, f"Visible sprite validation payload is missing detached scale/cache evidence: {token}")
+    for forbidden in ("session", "_session", "queue_redraw", "await ", "create_timer", "draw_texture", "save_png"):
+        ensure(forbidden not in validation_scale_block, errors, f"Visible sprite validation payload must remain a read-only presentation observer: {forbidden}")
+
+    visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    scale_test_block = gd_function_block(visual_text, "_assert_visible_sprite_scale_contract")
+    for token in (
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_road_writ_purse", "pickup", Vector2i.ONE)',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i.ONE)',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "scenario_objective", Vector2i.ONE)',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(2, 2))',
+        'String(payload.get("visible_scale_model", "")) != "cached_alpha_bounds_family_visible_extent"',
+        'not bool(payload.get("uses_painted_bounds", false))',
+        'not bool(payload.get("cache_repeat_exact", false))',
+        'not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
+        'float(pickup.get("visible_extent_tiles", 0.0)), 0.62',
+        'float(service.get("visible_extent_tiles", 0.0)), 0.96',
+        'float(objective.get("visible_extent_tiles", 0.0)), 0.88',
+        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 1.0',
+        "SessionState.ensure_active_session().to_dict() != authority_before",
+    ):
+        ensure(token in scale_test_block, errors, f"Overworld visual smoke is missing exact painted-bound scale hierarchy proof: {token}")
+    for forbidden in ("session.overworld[", ".erase(", "sort(", "queue_redraw", "get_image", "draw_texture", "create_timer", "await "):
+        ensure(forbidden not in scale_test_block, errors, f"Focused scale proof must not mutate game/render authority: {forbidden}")
 
 
 def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:

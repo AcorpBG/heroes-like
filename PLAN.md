@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence before implementation.
 
+- Previous completed implementation slice: `ux-overworld-visible-sprite-scale-normalization-10184`. Mapped Overworld objects now cache their non-transparent painted bounds and a cropped render texture, then draw pickups, encounters, structures, and objectives to explicit family-owned visible extents without letting 512px transparent-canvas padding dictate apparent size. Direct authored/generated 1280x720 and 1920x1080 captures preserve the intended pickup < encounter < durable structure < town hierarchy; the generated 1920 software-rendering floor remains 9.21/9.18 FPS with movement and save/reload exact. Overworld visual, object assets, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Object ids/order, footprints, body/visit masks, passability/pathfinding, input/gameplay, content, save schema, generated blocker composition, Native RMG, packaged Overworld interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
+  id: `ux-overworld-visible-sprite-scale-normalization-10184`
+
 - Previous completed implementation slice: `ux-overworld-terrain-transition-overlay-restoration-10184`. The original quiet-tile renderer now suppresses generic terrain edge/corner overlays only when an enabled and loaded HoMM3 tile actually owns self-contained transition art. Disabled HoMM3 metadata no longer erases the active fallback layer; direct Small/Medium 1280x720 and 1920x1080 captures render 119–291 deterministic boundary tiles, with a controlled 7,934-pixel visual delta and the Medium 1920 performance floor preserved at 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Terrain topology, ids, priorities, generation, passability/pathfinding, roads, fog, content, Native-RMG parity, packaged Overworld interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
   id: `ux-overworld-terrain-transition-overlay-restoration-10184`
 
@@ -10050,6 +10053,32 @@ Completion criteria:
 
 Non-goals:
 - no terrain generation, smoothing, topology, terrain-id, transition-priority, source/receiver relationship, passability/pathfinding, native RMG recovery/parity, new art, asset replacement, road/fog/camera/input/gameplay/save-schema, packaged Overworld interaction, certification, signing/publication, whole-game validation, or release-readiness change or claim.
+
+## Overworld Visible Sprite Scale Normalization
+
+id: `ux-overworld-visible-sprite-scale-normalization-10184`
+
+Status: completed.
+
+Implementation boundary:
+- derive and cache each loaded interactive or authored mapped object texture's non-transparent painted bounds and cropped render texture once, then size its fast draw so the painted region reaches a family-owned visible extent while preserving source aspect, transparent-edge placement, and the existing center/ground-contact anchor;
+- retain small pickup/artifact scale, readable hero-adjacent encounter scale, durable structure scale, the existing 1.6-tile town hierarchy, the generated blocker body's established uncropped 0.72-tile fast path, and the existing one-tile cap for multi-tile interactive objects;
+- keep procedural fallbacks and sprites without a usable alpha region on the existing draw path;
+- expose the effective source bounds, calibrated full-canvas draw, aspect-preserving painted size, and visible extent through focused presentation authority.
+
+Completion criteria:
+- direct authored and generated 1280x720 and 1920x1080 captures show a coherent hierarchy: pickups remain subordinate, durable structures are legible, blockers read as terrain mass, encounters/heroes remain distinct, and towns remain dominant;
+- focused runtime proves painted-bound extraction is detached/cached, source aspect ratio is preserved, family visible extents are bounded, transparent-canvas padding no longer controls apparent scale, and invalid/empty bounds fail closed to the full texture;
+- object ids/order, logical footprints, body/visit masks, passability/pathfinding, selection/focus/click behavior, movement, content, session/save authority, generated package payloads, and the established generated-map performance floor remain exact;
+- Overworld visual, generated live render/move, object interaction, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion result:
+- direct authored and generated captures at 1280x720 and 1920x1080 show pickups subordinate to encounters and durable structures while towns remain dominant; painted source aspect and transparent-edge placement are exact;
+- cached alpha extraction and cached cropped textures remove repeated image scans and avoid scaling transparent canvas pixels; the generated blocker-body 0.72-tile fast path remains unchanged;
+- focused scale/session authority, generated movement/save-reload, the 1920 software-rendering floor at 9.21/9.18 FPS, broad Overworld visual, object assets, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green.
+
+Non-goals:
+- no asset generation/replacement, manifest/content/schema change, town/hero redesign, generated blocker-body draw/scale change, object placement/count/density, native generation/RMG recovery/parity, terrain/road/fog/camera/input/gameplay/economy/AI/save-schema change, packaged Overworld interaction, certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Progress Reconciliation
 

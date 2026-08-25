@@ -69,6 +69,9 @@ const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00
+const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
+const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
+const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_family_visible_extent"
 const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08
@@ -274,6 +277,7 @@ var _overworld_vfx_texture_missing: Dictionary = {}
 var _object_asset_paths: Dictionary = {}
 var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
+var _object_texture_visible_regions: Dictionary = {}
 var _unit_art_textures: Dictionary = {}
 var _unit_art_texture_missing: Dictionary = {}
 var _resource_site_asset_ids: Dictionary = {}
@@ -2337,7 +2341,8 @@ func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered:
 	return _draw_object_sprite(_decorative_object_asset_id(object), rect, remembered, _decorative_object_profile(object), tile)
 
 func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	var texture = _object_texture_for_asset(_decorative_object_asset_id(object))
+	var asset_id := _decorative_object_asset_id(object)
+	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
 	var tile_extent := minf(rect.size.x, rect.size.y)
@@ -2410,9 +2415,94 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	var metrics := _object_sprite_visual_metrics(rect, profile)
 	var sprite_extent := float(metrics.get("sprite_extent_px", 12.0))
 	var sprite_center: Vector2 = metrics.get("sprite_center", rect.get_center())
-	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)
+	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
+	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center, Vector2.ZERO))
+	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	return true
+
+func _object_canvas_draw_rect(asset_id: String, texture: Texture2D, sprite_center: Vector2, visible_extent_px: float, preloaded_region: Dictionary = {}) -> Rect2:
+	var region := preloaded_region if not preloaded_region.is_empty() else _object_texture_visible_region(asset_id, texture)
+	var painted_extent_fraction := clampf(
+		float(region.get("painted_extent_fraction", 1.0)),
+		OBJECT_MIN_PAINTED_EXTENT_FRACTION,
+		1.0
+	)
+	var canvas_extent := visible_extent_px / painted_extent_fraction
+	return Rect2(sprite_center - Vector2(canvas_extent, canvas_extent) * 0.5, Vector2(canvas_extent, canvas_extent))
+
+func _object_painted_sprite_draw_payload(asset_id: String, texture: Texture2D, sprite_center: Vector2, visible_extent_px: float) -> Dictionary:
+	var region := _object_texture_visible_region(asset_id, texture)
+	var source_rect: Rect2 = region.get("source_rect", Rect2(Vector2.ZERO, texture.get_size()))
+	if source_rect.size.x <= 0.0 or source_rect.size.y <= 0.0:
+		source_rect = Rect2(Vector2.ZERO, texture.get_size())
+	var canvas_draw_rect := _object_canvas_draw_rect(asset_id, texture, sprite_center, visible_extent_px, region)
+	var normalized_source_rect: Rect2 = region.get("normalized_source_rect", Rect2(Vector2.ZERO, Vector2.ONE))
+	var draw_rect := Rect2(
+		canvas_draw_rect.position + normalized_source_rect.position * canvas_draw_rect.size,
+		normalized_source_rect.size * canvas_draw_rect.size
+	)
+	var draw_size := draw_rect.size
+	var source_aspect := source_rect.size.x / maxf(source_rect.size.y, 1.0)
+	return {
+		"draw_texture": region.get("draw_texture", texture),
+		"draw_rect": draw_rect,
+		"draw_size": draw_size,
+		"canvas_draw_rect": canvas_draw_rect,
+		"canvas_extent_px": canvas_draw_rect.size.x,
+		"draw_aspect": draw_size.x / maxf(draw_size.y, 0.0001),
+		"source_rect": source_rect,
+		"source_aspect": source_aspect,
+		"uses_painted_bounds": bool(region.get("uses_painted_bounds", false)),
+		"visible_scale_model": OBJECT_VISIBLE_SCALE_MODEL,
+	}
+
+func _object_texture_visible_region(asset_id: String, texture: Texture2D) -> Dictionary:
+	var cache_key := asset_id.strip_edges()
+	if cache_key != "" and _object_texture_visible_regions.has(cache_key):
+		return _object_texture_visible_regions.get(cache_key, {})
+	var texture_size := texture.get_size()
+	var full_rect := Rect2(Vector2.ZERO, texture_size)
+	var source_rect := full_rect
+	var uses_painted_bounds := false
+	var draw_texture: Texture2D = texture
+	var image := texture.get_image()
+	if image != null and not image.is_empty():
+		var used_rect: Rect2i = image.get_used_rect()
+		if used_rect.size.x > 0 and used_rect.size.y > 0:
+			var left := maxi(0, used_rect.position.x - OBJECT_PAINTED_BOUNDS_PADDING_PIXELS)
+			var top := maxi(0, used_rect.position.y - OBJECT_PAINTED_BOUNDS_PADDING_PIXELS)
+			var right := mini(image.get_width(), used_rect.end.x + OBJECT_PAINTED_BOUNDS_PADDING_PIXELS)
+			var bottom := mini(image.get_height(), used_rect.end.y + OBJECT_PAINTED_BOUNDS_PADDING_PIXELS)
+			if right > left and bottom > top:
+				source_rect = Rect2(Vector2(left, top), Vector2(right - left, bottom - top))
+				uses_painted_bounds = source_rect != full_rect
+				if uses_painted_bounds:
+					var cropped_image := image.get_region(Rect2i(source_rect))
+					if cropped_image != null and not cropped_image.is_empty():
+						draw_texture = ImageTexture.create_from_image(cropped_image)
+	var payload := {
+		"draw_texture": draw_texture,
+		"source_rect": source_rect,
+		"texture_size": texture_size,
+		"normalized_source_rect": Rect2(
+			Vector2(source_rect.position.x / maxf(texture_size.x, 1.0), source_rect.position.y / maxf(texture_size.y, 1.0)),
+			Vector2(source_rect.size.x / maxf(texture_size.x, 1.0), source_rect.size.y / maxf(texture_size.y, 1.0))
+		),
+		"painted_extent_fraction": maxf(source_rect.size.x / maxf(texture_size.x, 1.0), source_rect.size.y / maxf(texture_size.y, 1.0)),
+		"uses_painted_bounds": uses_painted_bounds,
+		"visible_scale_model": OBJECT_VISIBLE_SCALE_MODEL,
+	}
+	if cache_key != "":
+		_object_texture_visible_regions[cache_key] = payload.duplicate(true)
+	return payload
+
+func _object_texture_visible_source_rect(asset_id: String, texture: Texture2D) -> Rect2:
+	var region := _object_texture_visible_region(asset_id, texture)
+	var source_rect: Rect2 = region.get("source_rect", Rect2(Vector2.ZERO, texture.get_size()))
+	if source_rect.size.x <= 0.0 or source_rect.size.y <= 0.0:
+		return Rect2(Vector2.ZERO, texture.get_size())
+	return source_rect
 
 func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictionary:
 	var footprint := _object_profile_footprint(profile)
@@ -3516,6 +3606,10 @@ func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 	var family := String(profile.get("family", "pickup"))
 	var base := OBJECT_SPRITE_EXTENT_FACTOR
 	match family:
+		"artifact", "pickup":
+			base = 0.62
+		"encounter", "neutral_encounter":
+			base = 0.72
 		"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site":
 			base = 0.96
 		"scouting_structure", "transit_object":
@@ -3528,7 +3622,7 @@ func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 			base = OBJECT_SPRITE_EXTENT_FACTOR
 	base += float(maxi(footprint.x - 1, 0)) * 0.08
 	base += float(maxi(footprint.y - 1, 0)) * 0.04
-	return clampf(base, 0.82, 1.10)
+	return clampf(base, 0.58, 1.10)
 
 func _object_lift_fraction(family: String, footprint: Vector2i) -> float:
 	var lift := 0.05
@@ -3910,6 +4004,53 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"capped_resource_count": capped_resource_count,
 		"max_capped_resource_extent_tiles": max_capped_extent_tiles,
 		"resource_entries": resource_entries,
+	}
+
+func validation_object_sprite_scale_payload(asset_id: String, family: String, footprint: Vector2i = Vector2i.ONE) -> Dictionary:
+	var texture = _object_texture_for_asset(asset_id)
+	if not (texture is Texture2D):
+		return {}
+	var normalized_footprint := _normalized_footprint(footprint)
+	var profile := _default_object_profile(family, normalized_footprint)
+	var single_tile_extent := 100.0
+	var footprint_rect := Rect2(Vector2.ZERO, Vector2(normalized_footprint) * single_tile_extent)
+	var metrics := _object_sprite_visual_metrics(footprint_rect, profile)
+	var cache_size_before := _object_texture_visible_regions.size()
+	var first_region := _object_texture_visible_region(asset_id, texture)
+	var cache_size_after_first := _object_texture_visible_regions.size()
+	var second_region := _object_texture_visible_region(asset_id, texture)
+	var cache_size_after_second := _object_texture_visible_regions.size()
+	var visible_extent_px := float(metrics.get("sprite_extent_px", 0.0))
+	var draw_payload := _object_painted_sprite_draw_payload(
+		asset_id,
+		texture,
+		metrics.get("sprite_center", footprint_rect.get_center()),
+		visible_extent_px
+	)
+	var source_rect: Rect2 = first_region.get("source_rect", Rect2())
+	var normalized_source_rect: Rect2 = first_region.get("normalized_source_rect", Rect2())
+	var draw_rect: Rect2 = draw_payload.get("draw_rect", Rect2())
+	var draw_size: Vector2 = draw_payload.get("draw_size", Vector2.ZERO)
+	return {
+		"asset_id": asset_id,
+		"family": family,
+		"footprint": {"width": normalized_footprint.x, "height": normalized_footprint.y},
+		"visible_scale_model": String(draw_payload.get("visible_scale_model", "")),
+		"uses_painted_bounds": bool(first_region.get("uses_painted_bounds", false)),
+		"painted_extent_fraction": float(first_region.get("painted_extent_fraction", 0.0)),
+		"source_rect": {"x": source_rect.position.x, "y": source_rect.position.y, "width": source_rect.size.x, "height": source_rect.size.y},
+		"normalized_source_rect": {"x": normalized_source_rect.position.x, "y": normalized_source_rect.position.y, "width": normalized_source_rect.size.x, "height": normalized_source_rect.size.y},
+		"source_aspect": float(draw_payload.get("source_aspect", 0.0)),
+		"draw_aspect": float(draw_payload.get("draw_aspect", 0.0)),
+		"draw_rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
+		"draw_size_tiles": {"x": draw_size.x / single_tile_extent, "y": draw_size.y / single_tile_extent},
+		"visible_extent_tiles": visible_extent_px / single_tile_extent,
+		"uses_multi_tile_visual_cap": bool(metrics.get("uses_multi_tile_visual_cap", false)),
+		"cap_tiles": float(metrics.get("cap_tiles", 0.0)),
+		"cache_size_before": cache_size_before,
+		"cache_size_after_first": cache_size_after_first,
+		"cache_size_after_second": cache_size_after_second,
+		"cache_repeat_exact": first_region == second_region and cache_size_after_first == cache_size_after_second,
 	}
 
 func _profile_begin(_name: String) -> int:
@@ -7411,6 +7552,7 @@ func _load_overworld_art_manifest() -> void:
 	_object_asset_paths.clear()
 	_object_textures.clear()
 	_object_texture_missing.clear()
+	_object_texture_visible_regions.clear()
 	_resource_site_asset_ids.clear()
 	_resource_site_object_profiles.clear()
 	_map_object_asset_ids.clear()
