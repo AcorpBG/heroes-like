@@ -1911,17 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-organic-terrain-edge-blending-10184",
-    "title": "Overworld organic terrain edge blending",
+    "id": "ux-overworld-continuous-terrain-macro-lighting-10184",
+    "title": "Overworld continuous terrain macro-lighting",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T18:29:34Z",
-    "updatedAt": "2026-08-25T18:59:10Z",
+    "startedAt": "2026-08-25T19:05:02Z",
+    "updatedAt": "2026-08-25T19:43:03Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the presentation-only organic terrain-edge correction. Direct inspected authored 1280x720 and 1920x1080 plus generated before/after captures show deterministic shallow feathering; all 202 generated transition tiles retain the exact two-band model across movement. Focused ownership, movement, compatibility, static/editor, and bounded Linux/Windows startup gates pass. Terrain/gameplay/RMG authority is unchanged."
+    "notes": "Completed the presentation-only continuous terrain macro-lighting correction. Direct inspected authored 1280x720 and 1920x1080 plus generated before/after captures show restrained broad terrain depth without seams or reduced road/object readability. Focused continuity, batching, fog/source-frame/session authority, movement, compatibility, static/editor, and bounded Linux/Windows startup gates pass; terrain/gameplay/RMG authority is unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14376,14 +14376,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld organic terrain edge blending slice is completed; select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence.",
+  "currentNotes": "The Overworld continuous terrain macro-lighting slice is completed; select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-organic-terrain-edge-blending-10184",
-  "currentSliceId": "ux-overworld-organic-terrain-edge-blending-10184",
-  "currentSliceNotes": "Completed the presentation-only organic terrain-edge correction. Direct inspected River Pass 1280x720 and 1920x1080 X11 captures show a soft irregular water/grass shoreline; generated before/after captures show badlands, dirt, rough, swamp, and grass borders with shallow feathered silhouettes instead of pure right-angle strips. All 202 generated transition tiles report the exact deterministic two-band layered_feathered_organic_intrusion model before and after movement. Ninefold proves generic cardinal/corner ownership plus enabled exact self-contained H3MapEd/source-frame bypass and whole session authority. Normal tactical static rendering remained non-regressed at 8655 usec versus the prior 10501 usec control. Generated movement/save, full-route, input ownership, active focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The known unrelated broad visual-smoke objective-header pixel oracle and packaged Overworld interaction remain unclaimed; no terrain/gameplay/RMG data changed.",
+  "currentSlice": "ux-overworld-continuous-terrain-macro-lighting-10184",
+  "currentSliceId": "ux-overworld-continuous-terrain-macro-lighting-10184",
+  "currentSliceNotes": "Completed a deterministic 12-tile continuous warm/cool macro-light field drawn below roads, objects, selection cues, and unexplored fog. Direct inspected River Pass 1280x720 and 1920x1080 plus generated before/after captures preserve scenery and readability. The generated owner proves 1296 lit tiles, 3815 shared-corner observations, zero mismatches, and six live polygons for 350 visible tiles; the no-light control was slower under the same llvmpipe/X11 path, so the measured static-draw spread is host variance rather than a lighting regression. Ninefold proves deterministic shared corners, exact source-frame coexistence, fog ownership, and whole-session authority. Generated movement/save, full route, input ownership, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and broader release claims remain unclaimed; terrain/gameplay/RMG authority is unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld organic terrain edge blending",
-  "currentSliceUpdatedAt": "2026-08-25T18:59:10Z",
+  "currentSliceTitle": "Overworld continuous terrain macro-lighting",
+  "currentSliceUpdatedAt": "2026-08-25T19:43:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19688,7 +19688,7 @@
       }
     }
   },
-  "guardrailNote": "Change only generic terrain transition rendering. Preserve exact terrain ids/order, source frames, passability, movement, roads, objects, fog, routes, session/save authority, generated placement, and Native RMG behavior.",
+  "guardrailNote": "Change only the Overworld terrain presentation light field. Preserve exact terrain ids/order, source frames, transitions, passability, movement, roads, objects, fog/reveal authority, routes, session/save authority, generated placement, and Native RMG behavior.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19899,8 +19899,36 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Register the next bounded slice from direct current behavior evidence before changing production; preserve gameplay authority and bounded release claims.",
-  "notes": "Organic generic terrain-edge blending is completed. The next graphical-polish or release-readiness slice has not been selected.",
+  "notes": "Continuous Overworld terrain macro-lighting is completed. The next graphical-polish or release-readiness slice has not been selected.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-continuous-terrain-macro-lighting-10184",
+      "title": "Overworld continuous terrain macro-lighting",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T19:05:02Z",
+      "updatedAt": "2026-08-25T19:43:03Z",
+      "completedAt": "2026-08-25T19:43:03Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give authored and generated Overworld terrain subtle continuous depth by applying a deterministic low-frequency light-and-shade field whose samples meet exactly at tile corners.",
+      "completionCriteria": "Fresh inspected authored 1280x720 and 1920x1080 plus generated before/after captures show restrained broad terrain depth without checkerboarding, seams, texture washout, or reduced object/road readability; focused runtime proves exact shared-corner continuity, deterministic tile-only sampling, bounded highlight/shadow alpha, presentation below roads/objects and beneath unexplored fog, exact terrain/source-frame/transition ownership, movement/session/save authority, and generated-map stability; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No terrain id/order, map payload, source-frame or transition selection, passability, movement cost, road, object, fog/reveal rule, route, input/focus, camera/map-fit, content, save/session, generated placement, density, or Native RMG data/behavior change.",
+        "No terrain or object asset replacement, object/hero/town scale, UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with one deterministic continuous shared-corner warm/cool macro-light field over authored and generated terrain. Direct inspected River Pass 1280x720 and 1920x1080 plus generated before/after captures retain scenery, roads, objects, selection, and fog readability without visible seams. Focused runtime proves 1296 lit generated tiles, 3815 shared-corner observations, zero mismatches, six live macro polygons for 350 visible tiles, exact source-frame/fog/session authority, and movement/save stability. Route, input/focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.",
+      "blockedReason": null,
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved source-backed graphical-polish or release-readiness slice; packaged Overworld interaction, certification, signing/publication, whole-game validation, and overall release readiness remain open."
+    },
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
       "title": "Overworld semantic object scale hierarchy",
@@ -101736,7 +101764,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved graphical-polish or release-readiness slice; broader graphical polish and product gaps remain.",
+  "remainingWork": "Implement and inspect continuous terrain macro-lighting, then run focused continuity, movement, compatibility, static/editor, and bounded platform gates; broader graphical polish and product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102167,7 +102195,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_organic_terrain_edge_blending_completed",
+  "result": "overworld_continuous_terrain_macro_lighting_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102268,9 +102296,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld generic terrain boundaries now use deterministic two-band organic feathering with exact source-frame bypass and unchanged gameplay authority. Direct authored/generated visual proof and focused, compatibility, static/editor, Linux, and Windows startup gates pass; the next graphical-polish slice is not selected.",
+  "summary": "The continuous Overworld terrain macro-lighting slice is in progress from direct authored/generated visual evidence; terrain/source/fog/gameplay/RMG authority remains unchanged.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T18:59:10Z",
+  "updatedAt": "2026-08-25T19:05:02Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

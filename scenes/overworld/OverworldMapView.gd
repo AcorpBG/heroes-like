@@ -223,6 +223,13 @@ const GENERIC_TERRAIN_EDGE_INNER_ALPHA := 0.15
 const GENERIC_TERRAIN_EDGE_SEAM_ALPHA := 0.30
 const GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR := 0.34
 const GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR := 0.18
+const TERRAIN_MACRO_LIGHTING_MODEL := "continuous_shared_corner_bilinear_field"
+const TERRAIN_MACRO_LIGHTING_CELL_TILES := 12
+const TERRAIN_MACRO_LIGHTING_CELL_SUBDIVISIONS := 1
+const TERRAIN_MACRO_LIGHTING_SHADOW_MAX_ALPHA := 0.075
+const TERRAIN_MACRO_LIGHTING_HIGHLIGHT_MAX_ALPHA := 0.040
+const TERRAIN_MACRO_LIGHTING_SHADOW_COLOR := Color(0.025, 0.045, 0.060, 1.0)
+const TERRAIN_MACRO_LIGHTING_HIGHLIGHT_COLOR := Color(0.96, 0.82, 0.56, 1.0)
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
 const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
@@ -1273,6 +1280,9 @@ func _canvas_draw_circle(
 func _canvas_draw_colored_polygon(points: PackedVector2Array, color: Color) -> void:
 	_current_draw_canvas_item().draw_colored_polygon(points, color)
 
+func _canvas_draw_polygon(points: PackedVector2Array, colors: PackedColorArray) -> void:
+	_current_draw_canvas_item().draw_polygon(points, colors)
+
 func _canvas_draw_polyline(points: PackedVector2Array, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
 	_current_draw_canvas_item().draw_polyline(points, color, width, antialiased)
 
@@ -1387,15 +1397,23 @@ func _draw_session_static_layer() -> void:
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			terrain_draws += 1
+			_draw_tile_terrain_surface(tile, rect)
+	var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)
+	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
+		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
+			var tile = Vector2i(x, y)
+			var rect = _tile_rect(board_rect, tile)
 			if not _road_tile_payload(tile).is_empty():
 				road_draws += 1
-			_draw_tile_session_static_background(tile, rect)
+			_draw_road_overlay(tile, rect)
 	_draw_canvas_item = previous_target
 	_profile_add("terrain_tile_draws", terrain_draws)
 	_profile_add("road_tile_draws", road_draws)
+	_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)
 	_profile_end("draw_session_static", profile_start, {
 		"terrain_tile_draws": terrain_draws,
 		"road_tile_draws": road_draws,
+		"terrain_macro_lighting_polygon_draws": macro_lighting_polygon_draws,
 		"visible_bounds": _rect2i_payload(visible_bounds),
 	})
 
@@ -1493,6 +1511,11 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 	_draw_tile_state_overlay(tile, rect)
 
 func _draw_tile_session_static_background(tile: Vector2i, rect: Rect2) -> void:
+	_draw_tile_terrain_surface(tile, rect)
+	_draw_terrain_macro_lighting(tile, rect)
+	_draw_road_overlay(tile, rect)
+
+func _draw_tile_terrain_surface(tile: Vector2i, rect: Rect2) -> void:
 	var terrain = _terrain_at(tile)
 	if terrain == "":
 		return
@@ -1501,7 +1524,6 @@ func _draw_tile_session_static_background(tile: Vector2i, rect: Rect2) -> void:
 		_canvas_draw_rect(rect, base_color, true)
 		_draw_authored_terrain_pattern(tile, rect, terrain, true)
 	_draw_terrain_transitions(tile, rect, terrain)
-	_draw_road_overlay(tile, rect)
 
 func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
@@ -1648,6 +1670,150 @@ func _draw_tile_variant_marks(tile: Vector2i, rect: Rect2, terrain: String, visi
 	if seed % 2 == 0:
 		var second := rect.position + rect.size * Vector2(0.22 + (float((seed / 3) % 50) / 100.0), 0.56 + (float((seed / 11) % 28) / 100.0))
 		_canvas_draw_line(second, second + Vector2(rect.size.x * 0.16, -rect.size.y * 0.04), color, 1.4)
+
+func _draw_terrain_macro_lighting(tile: Vector2i, rect: Rect2) -> void:
+	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return
+	var samples := _terrain_macro_lighting_corner_samples(tile)
+	if samples.size() != 4:
+		return
+	var points := PackedVector2Array([
+		rect.position,
+		Vector2(rect.end.x, rect.position.y),
+		rect.end,
+		Vector2(rect.position.x, rect.end.y),
+	])
+	var colors := PackedColorArray()
+	for sample_value in samples:
+		colors.append(_terrain_macro_lighting_color(float(sample_value)))
+	_canvas_draw_polygon(points, colors)
+
+func _draw_terrain_macro_lighting_field(board_rect: Rect2, visible_bounds: Rect2i) -> int:
+	if board_rect.size.x <= 0.0 or board_rect.size.y <= 0.0 or visible_bounds.size.x <= 0 or visible_bounds.size.y <= 0:
+		return 0
+	var tile_extent := board_rect.size.x / float(maxi(_map_size.x, 1))
+	var cell_size := float(TERRAIN_MACRO_LIGHTING_CELL_TILES)
+	var first_cell := Vector2i(
+		floori(float(visible_bounds.position.x) / cell_size),
+		floori(float(visible_bounds.position.y) / cell_size)
+	)
+	var last_cell := Vector2i(
+		floori((float(visible_bounds.end.x) - 0.001) / cell_size),
+		floori((float(visible_bounds.end.y) - 0.001) / cell_size)
+	)
+	var polygon_draws := 0
+	for cell_y in range(first_cell.y, last_cell.y + 1):
+		for cell_x in range(first_cell.x, last_cell.x + 1):
+			var cell_origin := Vector2(float(cell_x), float(cell_y)) * cell_size
+			var cell_end := cell_origin + Vector2.ONE * cell_size
+			var clipped_origin := Vector2(
+				maxf(cell_origin.x, float(visible_bounds.position.x)),
+				maxf(cell_origin.y, float(visible_bounds.position.y))
+			)
+			var clipped_end := Vector2(
+				minf(cell_end.x, float(visible_bounds.end.x)),
+				minf(cell_end.y, float(visible_bounds.end.y))
+			)
+			var x_steps: Array[float] = [clipped_origin.x]
+			var y_steps: Array[float] = [clipped_origin.y]
+			for subdivision in range(1, TERRAIN_MACRO_LIGHTING_CELL_SUBDIVISIONS):
+				var fraction := float(subdivision) / float(TERRAIN_MACRO_LIGHTING_CELL_SUBDIVISIONS)
+				var split_x := lerpf(cell_origin.x, cell_end.x, fraction)
+				var split_y := lerpf(cell_origin.y, cell_end.y, fraction)
+				if split_x > clipped_origin.x and split_x < clipped_end.x:
+					x_steps.append(split_x)
+				if split_y > clipped_origin.y and split_y < clipped_end.y:
+					y_steps.append(split_y)
+			x_steps.append(clipped_end.x)
+			y_steps.append(clipped_end.y)
+			for y_index in range(y_steps.size() - 1):
+				for x_index in range(x_steps.size() - 1):
+					var map_north_west := Vector2(x_steps[x_index], y_steps[y_index])
+					var map_south_east := Vector2(x_steps[x_index + 1], y_steps[y_index + 1])
+					var map_north_east := Vector2(map_south_east.x, map_north_west.y)
+					var map_south_west := Vector2(map_north_west.x, map_south_east.y)
+					var points := PackedVector2Array([
+						board_rect.position + map_north_west * tile_extent,
+						board_rect.position + map_north_east * tile_extent,
+						board_rect.position + map_south_east * tile_extent,
+						board_rect.position + map_south_west * tile_extent,
+					])
+					var colors := PackedColorArray([
+						_terrain_macro_lighting_color(_terrain_macro_lighting_sample_at(map_north_west)),
+						_terrain_macro_lighting_color(_terrain_macro_lighting_sample_at(map_north_east)),
+						_terrain_macro_lighting_color(_terrain_macro_lighting_sample_at(map_south_east)),
+						_terrain_macro_lighting_color(_terrain_macro_lighting_sample_at(map_south_west)),
+					])
+					_canvas_draw_polygon(points, colors)
+					polygon_draws += 1
+	return polygon_draws
+
+func _terrain_macro_lighting_color(sample_value: float) -> Color:
+	var sample := clampf(sample_value, 0.0, 1.0)
+	if sample < 0.50:
+		return Color(
+			TERRAIN_MACRO_LIGHTING_SHADOW_COLOR.r,
+			TERRAIN_MACRO_LIGHTING_SHADOW_COLOR.g,
+			TERRAIN_MACRO_LIGHTING_SHADOW_COLOR.b,
+			clampf((0.50 - sample) * 2.0, 0.0, 1.0) * TERRAIN_MACRO_LIGHTING_SHADOW_MAX_ALPHA
+		)
+	return Color(
+		TERRAIN_MACRO_LIGHTING_HIGHLIGHT_COLOR.r,
+		TERRAIN_MACRO_LIGHTING_HIGHLIGHT_COLOR.g,
+		TERRAIN_MACRO_LIGHTING_HIGHLIGHT_COLOR.b,
+		clampf((sample - 0.50) * 2.0, 0.0, 1.0) * TERRAIN_MACRO_LIGHTING_HIGHLIGHT_MAX_ALPHA
+	)
+
+func _terrain_macro_lighting_corner_samples(tile: Vector2i) -> Array:
+	return [
+		_terrain_macro_lighting_sample(tile),
+		_terrain_macro_lighting_sample(tile + Vector2i.RIGHT),
+		_terrain_macro_lighting_sample(tile + Vector2i(1, 1)),
+		_terrain_macro_lighting_sample(tile + Vector2i.DOWN),
+	]
+
+func _terrain_macro_lighting_sample(lattice_point: Vector2i) -> float:
+	return _terrain_macro_lighting_sample_at(Vector2(lattice_point))
+
+func _terrain_macro_lighting_sample_at(map_point: Vector2) -> float:
+	var cell_size := TERRAIN_MACRO_LIGHTING_CELL_TILES
+	var macro_cell := Vector2i(
+		floori(map_point.x / float(cell_size)),
+		floori(map_point.y / float(cell_size))
+	)
+	var local_x := (map_point.x - float(macro_cell.x * cell_size)) / float(cell_size)
+	var local_y := (map_point.y - float(macro_cell.y * cell_size)) / float(cell_size)
+	var smooth_x := local_x * local_x * (3.0 - 2.0 * local_x)
+	var smooth_y := local_y * local_y * (3.0 - 2.0 * local_y)
+	var north_west := _terrain_macro_lighting_anchor_value(macro_cell)
+	var north_east := _terrain_macro_lighting_anchor_value(macro_cell + Vector2i.RIGHT)
+	var south_west := _terrain_macro_lighting_anchor_value(macro_cell + Vector2i.DOWN)
+	var south_east := _terrain_macro_lighting_anchor_value(macro_cell + Vector2i(1, 1))
+	return lerpf(lerpf(north_west, north_east, smooth_x), lerpf(south_west, south_east, smooth_x), smooth_y)
+
+func _terrain_macro_lighting_anchor_value(anchor: Vector2i) -> float:
+	var value := sin(float(anchor.x) * 12.9898 + float(anchor.y) * 78.233 + 31.416) * 43758.5453
+	return value - floor(value)
+
+func _terrain_macro_lighting_payload(tile: Vector2i) -> Dictionary:
+	var samples := _terrain_macro_lighting_corner_samples(tile)
+	return {
+		"model": TERRAIN_MACRO_LIGHTING_MODEL,
+		"cell_tiles": TERRAIN_MACRO_LIGHTING_CELL_TILES,
+		"shadow_max_alpha": TERRAIN_MACRO_LIGHTING_SHADOW_MAX_ALPHA,
+		"highlight_max_alpha": TERRAIN_MACRO_LIGHTING_HIGHLIGHT_MAX_ALPHA,
+		"corner_order": ["NW", "NE", "SE", "SW"],
+		"corner_keys": [
+			"%d,%d" % [tile.x, tile.y],
+			"%d,%d" % [tile.x + 1, tile.y],
+			"%d,%d" % [tile.x + 1, tile.y + 1],
+			"%d,%d" % [tile.x, tile.y + 1],
+		],
+		"corner_samples": samples.duplicate(),
+		"continuous_shared_corners": true,
+		"draw_order": "after_terrain_transitions_before_roads",
+		"hidden_by_unexplored_shroud": true,
+	}
 
 func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> void:
 	if _terrain_uses_self_contained_homm3_transition(tile, terrain):
@@ -5351,6 +5517,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 			"unexplored_shroud_seed_basis": "none_contiguous",
 			"unexplored_shroud_repeated_stamps": false,
 			"fog_boundary_alpha": 0.0,
+			"terrain_macro_lighting": {
+				"model": TERRAIN_MACRO_LIGHTING_MODEL,
+				"drawn": false,
+				"hidden_by_unexplored_shroud": true,
+			},
 			"rendering_mode": "hidden_fog",
 		}
 	var terrain := _terrain_at(tile)
@@ -5389,6 +5560,8 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var road_has_horizontal := _road_has_horizontal_connections(road_neighbor_directions)
 	var road_has_vertical := _road_has_vertical_connections(road_neighbor_directions)
 	var road_has_diagonal := _road_has_diagonal_connections(road_neighbor_directions)
+	var terrain_macro_lighting := _terrain_macro_lighting_payload(tile)
+	terrain_macro_lighting["drawn"] = true
 	var primary_base_model := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE if homm3_rendering_active else (TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern"))
 	return {
 		"terrain": terrain,
@@ -5414,6 +5587,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"unexplored_shroud_seed_basis": "",
 		"unexplored_shroud_repeated_stamps": false,
 		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
+		"terrain_macro_lighting": terrain_macro_lighting,
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,
 		"uses_original_tile_bank": tile_art_loaded and not homm3_rendering_active,
