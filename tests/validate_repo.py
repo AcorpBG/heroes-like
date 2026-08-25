@@ -40274,6 +40274,20 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "const TERRAIN_MACRO_LIGHTING_HIGHLIGHT_COLOR := Color(0.96, 0.82, 0.56, 1.0)",
     ):
         ensure(map_view_text.count(token) == 1, errors, f"Terrain macro-lighting must own one exact bounded presentation constant: {token}")
+    terrain_grain_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_grain_overlay.png"
+    ensure(terrain_grain_path.is_file(), errors, "Overworld terrain grain must ship one project-local runtime texture.")
+    if terrain_grain_path.is_file():
+        terrain_grain_bytes = terrain_grain_path.read_bytes()
+        ensure(png_size(terrain_grain_path) == (1024, 1024), errors, "Overworld terrain grain must remain the exact 1024x1024 seamless source.")
+        ensure(len(terrain_grain_bytes) > 25 and terrain_grain_bytes[:8] == b"\x89PNG\r\n\x1a\n" and terrain_grain_bytes[25] == 6, errors, "Overworld terrain grain must remain an RGBA PNG with presentation-only alpha.")
+    for token in (
+        'const TERRAIN_GRAIN_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"',
+        'const TERRAIN_GRAIN_MODEL := "single_normalized_map_space_seamless_painterly_microtexture"',
+        'const TERRAIN_GRAIN_SOURCE_MODEL := "original_generated_neutral_grain_mirrored_seamless_alpha"',
+        "const TERRAIN_GRAIN_MODULATE := Color(1.0, 1.0, 1.0, 0.72)",
+        "const TERRAIN_GRAIN_EXPECTED_SIZE := Vector2i(1024, 1024)",
+    ):
+        ensure(map_view_text.count(token) == 1, errors, f"Terrain grain must own one exact bounded presentation constant: {token}")
     static_draw_block = gd_function_block(map_view_text, "_draw_session_static_layer")
     tile_static_block = gd_function_block(map_view_text, "_draw_tile_session_static_background")
     ensure(
@@ -40285,11 +40299,44 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     )
     ensure(
         static_draw_block.find("_draw_tile_terrain_surface(tile, rect)")
+        < static_draw_block.find("_draw_terrain_grain_overlay(board_rect)")
         < static_draw_block.find("_draw_terrain_macro_lighting_field(board_rect, visible_bounds)")
         < static_draw_block.find("_draw_road_overlay(tile, rect)"),
         errors,
         "Live static rendering must batch the macro-light field between complete terrain and road passes.",
     )
+    for token in (
+        "var terrain_grain_drawn := _draw_terrain_grain_overlay(board_rect)",
+        '_profile_add("terrain_grain_overlay_draws", 1 if terrain_grain_drawn else 0)',
+        '"terrain_grain_overlay_draws": 1 if terrain_grain_drawn else 0',
+    ):
+        ensure(token in static_draw_block, errors, f"Live static rendering must expose the single terrain-grain draw: {token}")
+    terrain_grain_draw_block = gd_function_block(map_view_text, "_draw_terrain_grain_overlay")
+    terrain_grain_payload_block = gd_function_block(map_view_text, "_terrain_grain_overlay_payload")
+    for token in (
+        "var texture = _terrain_art_texture(TERRAIN_GRAIN_TEXTURE_PATH)",
+        "Vector2i(texture.get_size()) != TERRAIN_GRAIN_EXPECTED_SIZE",
+        "_canvas_draw_texture_rect(texture, board_rect, false, TERRAIN_GRAIN_MODULATE)",
+        "return true",
+    ):
+        ensure(token in terrain_grain_draw_block, errors, f"Terrain grain must draw once over the normalized whole-board surface: {token}")
+    for token in (
+        '"model": TERRAIN_GRAIN_MODEL',
+        '"source_model": TERRAIN_GRAIN_SOURCE_MODEL',
+        '"texture_path": TERRAIN_GRAIN_TEXTURE_PATH if texture_loaded else ""',
+        '"texture_size": {"x": TERRAIN_GRAIN_EXPECTED_SIZE.x, "y": TERRAIN_GRAIN_EXPECTED_SIZE.y}',
+        '"modulate_alpha": TERRAIN_GRAIN_MODULATE.a',
+        '"mapping": "whole_board_normalized_once"',
+        '"repeated_per_tile": false',
+        '"seamless_outer_edges": true',
+        '"terrain_identity_sampled": false',
+        '"draw_order": "after_terrain_transitions_before_macro_lighting_and_roads"',
+        '"hidden_by_unexplored_shroud": true',
+    ):
+        ensure(token in terrain_grain_payload_block, errors, f"Terrain grain payload must expose exact detached presentation evidence: {token}")
+    for block_name, block in (("terrain-grain draw", terrain_grain_draw_block), ("terrain-grain payload", terrain_grain_payload_block)):
+        for forbidden in ("rand", "Time.", "session.", "_map_data", "_terrain_at", "set_map_state", "queue_redraw", "await ", "create_timer"):
+            ensure(forbidden not in block, errors, f"{block_name} must remain deterministic and presentation-only: {forbidden}")
     for token in (
         'var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)',
         '_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)',
@@ -40381,6 +40428,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "var terrain_macro_lighting := _terrain_macro_lighting_payload(tile)",
         'terrain_macro_lighting["drawn"] = true',
         '"terrain_macro_lighting": terrain_macro_lighting',
+        '"terrain_grain_overlay": _terrain_grain_overlay_payload(false)',
+        '"terrain_grain_overlay": _terrain_grain_overlay_payload(true)',
     ):
         ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose explored and unexplored macro-lighting ownership: {token}")
 
@@ -40401,6 +40450,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "not OverworldRules.is_tile_explored(session, x, y)",
         'bool(hidden_lighting.get("drawn", true))',
         "session.to_dict() != session_authority_before",
+        'String(grain.get("model", "")) != "single_normalized_map_space_seamless_painterly_microtexture"',
+        'String(grain.get("source_model", "")) != "original_generated_neutral_grain_mirrored_seamless_alpha"',
+        'String(grain.get("texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"',
+        'grain.get("texture_size", {}) != {"x": 1024, "y": 1024}',
+        'float(grain.get("modulate_alpha", 0.0)), 0.72',
+        'String(grain.get("mapping", "")) != "whole_board_normalized_once"',
+        'bool(grain.get("repeated_per_tile", true))',
+        'repeated_grain != grain_rows[0]',
+        'bool(hidden_grain.get("drawn", true))',
     ):
         ensure(token in ninefold_macro_block, errors, f"Ninefold macro-lighting owner must prove determinism, shared edges, fog ownership, and authority: {token}")
     for forbidden in ("map_node.set", "_draw_terrain_macro_lighting", "_terrain_macro_lighting_sample", "sort(", "erase(", "rand", "create_timer"):
@@ -40435,6 +40493,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"macro_lighting_shared_corner_observation_count"',
         '"macro_lighting_unique_corner_count"',
         '"macro_lighting_corner_mismatch_count"',
+        'var grain: Dictionary = terrain.get("terrain_grain_overlay", {})',
+        'terrain_grain_model_ids[String(grain.get("model", ""))] = true',
+        '"terrain_grain_tile_count": terrain_grain_tile_count',
+        '"terrain_grain_exact_count": terrain_grain_exact_count',
+        '"terrain_grain_texture_paths": terrain_grain_texture_paths.keys()',
     ):
         ensure(token in generated_transition_block, errors, f"Generated live visual owner must inspect real terrain transition presentation: {token}")
     for token in (
@@ -40456,12 +40519,22 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'summary.get("macro_lighting_cell_sizes", []) != [12]',
         'summary.get("macro_lighting_shadow_alphas", []) != [0.075]',
         'summary.get("macro_lighting_highlight_alphas", []) != [0.04]',
+        'int(summary.get("terrain_grain_tile_count", 0)) != explored_tile_count',
+        'int(summary.get("terrain_grain_exact_count", 0)) != explored_tile_count',
+        '["single_normalized_map_space_seamless_painterly_microtexture"]',
+        '["original_generated_neutral_grain_mirrored_seamless_alpha"]',
+        '["res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"]',
+        'var terrain_grain_modulate_alphas: Array = summary.get("terrain_grain_modulate_alphas", []) if summary.get("terrain_grain_modulate_alphas", []) is Array else []',
+        'terrain_grain_modulate_alphas.size() != 1',
+        'float(terrain_grain_modulate_alphas[0]), 0.72',
     ):
         ensure(token in generated_transition_assert_block, errors, f"Generated live visual owner must fail closed on missing or mismatched generic transition overlays: {token}")
     for token in (
         'profile.get("last_draw_session_static", {})',
         'int(last_static.get("terrain_tile_draws", 0))',
         'int(last_static.get("terrain_macro_lighting_polygon_draws", 0))',
+        'int(last_static.get("terrain_grain_overlay_draws", 0))',
+        "grain_draws != 1",
         "macro_polygon_draws > 12",
         "macro_polygon_draws * 8 >= terrain_draws",
     ):
@@ -40489,10 +40562,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'int(summary.get("macro_lighting_continuous_count", -1)) != explored_count',
         'int(summary.get("macro_lighting_bounded_count", -1)) != explored_count',
         'int(summary.get("macro_lighting_corner_mismatch_count", -1)) != 0',
+        'int(summary.get("terrain_grain_tile_count", -1)) != explored_count',
+        'int(summary.get("terrain_grain_exact_count", -1)) != explored_count',
         'int(summary.get("irregular_inner_edge_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
         'int(summary.get("deterministic_seed_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
         '"draw_policy_ids"',
         '"macro_lighting_highlight_alphas"',
+        '"terrain_grain_model_ids"',
+        '"terrain_grain_texture_paths"',
         'after.get(key, []) != before.get(key, [])',
         "return true",
     ):

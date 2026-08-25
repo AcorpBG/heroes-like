@@ -235,6 +235,11 @@ const TERRAIN_MACRO_LIGHTING_SHADOW_MAX_ALPHA := 0.075
 const TERRAIN_MACRO_LIGHTING_HIGHLIGHT_MAX_ALPHA := 0.040
 const TERRAIN_MACRO_LIGHTING_SHADOW_COLOR := Color(0.025, 0.045, 0.060, 1.0)
 const TERRAIN_MACRO_LIGHTING_HIGHLIGHT_COLOR := Color(0.96, 0.82, 0.56, 1.0)
+const TERRAIN_GRAIN_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"
+const TERRAIN_GRAIN_MODEL := "single_normalized_map_space_seamless_painterly_microtexture"
+const TERRAIN_GRAIN_SOURCE_MODEL := "original_generated_neutral_grain_mirrored_seamless_alpha"
+const TERRAIN_GRAIN_MODULATE := Color(1.0, 1.0, 1.0, 0.72)
+const TERRAIN_GRAIN_EXPECTED_SIZE := Vector2i(1024, 1024)
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
 const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
@@ -1403,6 +1408,7 @@ func _draw_session_static_layer() -> void:
 			var rect = _tile_rect(board_rect, tile)
 			terrain_draws += 1
 			_draw_tile_terrain_surface(tile, rect)
+	var terrain_grain_drawn := _draw_terrain_grain_overlay(board_rect)
 	var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
@@ -1413,10 +1419,12 @@ func _draw_session_static_layer() -> void:
 			_draw_road_overlay(tile, rect)
 	_draw_canvas_item = previous_target
 	_profile_add("terrain_tile_draws", terrain_draws)
+	_profile_add("terrain_grain_overlay_draws", 1 if terrain_grain_drawn else 0)
 	_profile_add("road_tile_draws", road_draws)
 	_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)
 	_profile_end("draw_session_static", profile_start, {
 		"terrain_tile_draws": terrain_draws,
+		"terrain_grain_overlay_draws": 1 if terrain_grain_drawn else 0,
 		"road_tile_draws": road_draws,
 		"terrain_macro_lighting_polygon_draws": macro_lighting_polygon_draws,
 		"visible_bounds": _rect2i_payload(visible_bounds),
@@ -1786,6 +1794,41 @@ func _draw_terrain_macro_lighting(tile: Vector2i, rect: Rect2) -> void:
 	for sample_value in samples:
 		colors.append(_terrain_macro_lighting_color(float(sample_value)))
 	_canvas_draw_polygon(points, colors)
+
+func _draw_terrain_grain_overlay(board_rect: Rect2) -> bool:
+	if board_rect.size.x <= 0.0 or board_rect.size.y <= 0.0:
+		return false
+	var texture = _terrain_art_texture(TERRAIN_GRAIN_TEXTURE_PATH)
+	if not (texture is Texture2D) or Vector2i(texture.get_size()) != TERRAIN_GRAIN_EXPECTED_SIZE:
+		return false
+	_canvas_draw_texture_rect(texture, board_rect, false, TERRAIN_GRAIN_MODULATE)
+	return true
+
+func _terrain_grain_overlay_payload(explored: bool) -> Dictionary:
+	if not explored:
+		return {
+			"model": TERRAIN_GRAIN_MODEL,
+			"drawn": false,
+			"hidden_by_unexplored_shroud": true,
+			"terrain_identity_sampled": false,
+		}
+	var texture = _terrain_art_texture(TERRAIN_GRAIN_TEXTURE_PATH)
+	var texture_loaded := texture is Texture2D and Vector2i(texture.get_size()) == TERRAIN_GRAIN_EXPECTED_SIZE
+	return {
+		"model": TERRAIN_GRAIN_MODEL,
+		"source_model": TERRAIN_GRAIN_SOURCE_MODEL,
+		"drawn": texture_loaded,
+		"texture_loaded": texture_loaded,
+		"texture_path": TERRAIN_GRAIN_TEXTURE_PATH if texture_loaded else "",
+		"texture_size": {"x": TERRAIN_GRAIN_EXPECTED_SIZE.x, "y": TERRAIN_GRAIN_EXPECTED_SIZE.y},
+		"modulate_alpha": TERRAIN_GRAIN_MODULATE.a,
+		"mapping": "whole_board_normalized_once",
+		"repeated_per_tile": false,
+		"seamless_outer_edges": true,
+		"terrain_identity_sampled": false,
+		"draw_order": "after_terrain_transitions_before_macro_lighting_and_roads",
+		"hidden_by_unexplored_shroud": true,
+	}
 
 func _draw_terrain_macro_lighting_field(board_rect: Rect2, visible_bounds: Rect2i) -> int:
 	if board_rect.size.x <= 0.0 or board_rect.size.y <= 0.0 or visible_bounds.size.x <= 0 or visible_bounds.size.y <= 0:
@@ -5627,6 +5670,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 				"drawn": false,
 				"hidden_by_unexplored_shroud": true,
 			},
+			"terrain_grain_overlay": _terrain_grain_overlay_payload(false),
 			"rendering_mode": "hidden_fog",
 		}
 	var terrain := _terrain_at(tile)
@@ -5695,6 +5739,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"fog_frontier": fog_frontier,
 		"terrain_macro_lighting": terrain_macro_lighting,
+		"terrain_grain_overlay": _terrain_grain_overlay_payload(true),
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,
 		"uses_original_tile_bank": tile_art_loaded and not homm3_rendering_active,
