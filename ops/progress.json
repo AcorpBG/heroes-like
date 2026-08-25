@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-painterly-water-tile-bank-10184",
-    "title": "Overworld painterly water tile bank",
+    "id": "presentation-overworld-cartographic-command-rail-ornament-10184",
+    "title": "Overworld cartographic command rail ornament",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T21:45:14Z",
-    "updatedAt": "2026-08-25T22:12:00Z",
-    "completedAt": "2026-08-25T22:12:00Z",
+    "startedAt": "2026-08-25T22:18:33Z",
+    "updatedAt": "2026-08-25T22:37:27Z",
+    "completedAt": "2026-08-25T22:37:27Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with three original quiet painterly 64x64 water base textures and four directional overlays routed through the existing terrain renderer. Inspected 1280x720 and 1920x1080 River Pass captures show cohesive blue-green water without distracting bank-value seams; full Overworld visual, generated render/movement, route, Ninefold, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Water topology, impassability, causeways, gameplay, save/session, generated maps, and Native RMG remain unchanged."
+    "notes": "Completed with a passive inset grid, route trace, compass rose, and registration marks behind the existing Overworld rail cards. Inspected 1280x720 and 1920x1080 captures plus focused geometry, full visual, route, movement/input, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld painterly water tile bank is completed with inspected 1280x720 and 1920x1080 captures plus focused, compatibility, static/editor, and bounded Linux/Windows package-startup evidence; select the next approved slice.",
+  "currentNotes": "The Overworld cartographic command rail ornament is completed with inspected two-width captures and focused, compatibility, static/editor, and bounded Linux/Windows package-startup evidence; select the next approved slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-painterly-water-tile-bank-10184",
-  "currentSliceId": "presentation-overworld-painterly-water-tile-bank-10184",
-  "currentSliceNotes": "Completed three-base/four-edge original water art through the existing renderer with exact texture, selection, impassability, authority, visual, movement, breadth, core, static/editor, and bounded platform gates.",
+  "currentSlice": "presentation-overworld-cartographic-command-rail-ornament-10184",
+  "currentSliceId": "presentation-overworld-cartographic-command-rail-ornament-10184",
+  "currentSliceNotes": "Completed the passive inset cartographic ornament with exact card geometry, focus/input/accessibility, map/session authority, and bounded platform validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld painterly water tile bank",
-  "currentSliceUpdatedAt": "2026-08-25T22:12:00Z",
+  "currentSliceTitle": "Overworld cartographic command rail ornament",
+  "currentSliceUpdatedAt": "2026-08-25T22:37:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19899,9 +19899,37 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
-  "notes": "The Overworld painterly water tile bank is completed; blockers are empty and no new implementation slice is selected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed Overworld rail, fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
+  "notes": "The Overworld cartographic command rail ornament is completed; blockers are empty and no new implementation slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-cartographic-command-rail-ornament-10184",
+      "title": "Overworld cartographic command rail ornament",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T22:18:33Z",
+      "updatedAt": "2026-08-25T22:37:27Z",
+      "completedAt": "2026-08-25T22:37:27Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/overworld/OverworldSidebarOrnament.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Turn the visibly flat unused lower field of the shipped Overworld command rail into quiet scenery-supporting cartography without adding information or changing the live rail layout.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 captures show a subdued map-ink ornament behind the existing cards without reducing text or map readability; focused runtime proves full-rail containment, zero mouse/focus/accessibility ownership, exact card/control rectangles and visibility, narrow-layout hiding, and unchanged session authority; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No rail card, label, tooltip, action, control, focus, accessibility, input, layout, spacing, width, visibility, drawer, map, route, session, save, content, gameplay, AI, or Native RMG change.",
+        "No new information panel, dashboard content, modal, animation, audio, VFX, shader, or broad UI redesign.",
+        "No packaged Overworld interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current-screen comparison. The shipped flat sidebar field now carries restrained background cartography below the unchanged live card layer. Inspected two-width captures, focused/passive geometry, broad Overworld compatibility, static/editor, and bounded platform startup gates pass.",
+      "blockedReason": null,
+      "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "presentation-overworld-painterly-water-tile-bank-10184",
       "title": "Overworld painterly water tile bank",
@@ -102347,7 +102375,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_soft_cartographic_fog_frontier_in_progress",
+  "result": "overworld_cartographic_command_rail_ornament_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102448,9 +102476,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld painterly water tile bank is in progress from direct current River Pass visual evidence.",
+  "summary": "The Overworld cartographic command rail ornament is completed with inspected two-width visual evidence and focused, compatibility, static/editor, and bounded platform gates.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T22:12:00Z",
+  "updatedAt": "2026-08-25T22:37:27Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://overworld_scene"]
+[gd_scene load_steps=9 format=3 uid="uid://overworld_scene"]
 
 [ext_resource type="Script" path="res://scenes/overworld/OverworldShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/overworld/OverworldMapView.gd" id="2"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/shared/ActivePlaySettingsDialog.tscn" id="5_active_settings"]
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="6_hero_portrait"]
 [ext_resource type="Script" path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"]
+[ext_resource type="Script" path="res://scenes/overworld/OverworldSidebarOrnament.gd" id="8_sidebar_ornament"]
 
 [node name="OverworldShell" type="Control"]
 layout_mode = 3
@@ -114,6 +115,17 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="SidebarOrnament" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("8_sidebar_ornament")
 
 [node name="SidebarPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell"]
 layout_mode = 2
