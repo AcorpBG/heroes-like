@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-terrain-transition-overlay-restoration-10184",
-    "title": "Overworld terrain transition overlay restoration",
+    "id": "ux-overworld-visible-sprite-scale-normalization-10184",
+    "title": "Overworld visible sprite scale normalization",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T02:35:29Z",
-    "updatedAt": "2026-08-25T03:04:34Z",
+    "startedAt": "2026-08-25T03:11:26Z",
+    "updatedAt": "2026-08-25T04:01:42Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
-    "completedAt": "2026-08-25T03:04:34Z"
+    "notes": "Completed from direct captures and source-backed alpha-bound measurements. Mapped interactive/authored sprites cache non-transparent painted bounds plus cropped render textures and use family-owned visible extents; pickups remain subordinate, encounters and structures are legible, generated blocker bodies retain their uncropped 0.72-tile fast path, and towns remain dominant. Authored/generated 1280/1920 captures, exact aspect/cache/session authority, generated movement/save-reload, 1920 software-rendering at 9.21/9.18 FPS, Overworld visual, object assets, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Gameplay/logical geometry, content, Native RMG, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+    "completedAt": "2026-08-25T04:01:42Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14338,14 +14338,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld terrain transition overlay restoration is completed with direct authored/generated visual, authority, performance, compatibility, static/editor, and bounded platform evidence.",
+  "currentNotes": "Overworld visible sprite scale normalization is completed with direct authored/generated captures, exact presentation/gameplay authority, performance, compatibility, static/editor, and bounded platform evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-terrain-transition-overlay-restoration-10184",
-  "currentSliceId": "ux-overworld-terrain-transition-overlay-restoration-10184",
-  "currentSliceNotes": "Completed: disabled HoMM3 metadata now renders the fast generic edge/corner overlay while enabled loaded HoMM3 tiles retain self-contained transition ownership.",
+  "currentSlice": "ux-overworld-visible-sprite-scale-normalization-10184",
+  "currentSliceId": "ux-overworld-visible-sprite-scale-normalization-10184",
+  "currentSliceNotes": "Completed: mapped objects use cached painted bounds and cropped textures for family-owned visible extents while generated blocker composition and gameplay authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld terrain transition overlay restoration",
-  "currentSliceUpdatedAt": "2026-08-25T03:04:34Z",
+  "currentSliceTitle": "Overworld visible sprite scale normalization",
+  "currentSliceUpdatedAt": "2026-08-25T04:01:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19860,8 +19860,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence; preserve terrain topology, native generation, passability, content, and save authority unless a separately registered slice explicitly owns them.",
-  "notes": "The completed generated-map correction is live presentation behavior, not a report-only change: exact blocker-body cells now render bounded terrain-matched art and multi-tile interactive sprites are capped independently from unchanged logical footprints.",
+  "nextActionGuardrailNote": "Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence before implementation.",
+  "notes": "The completed Overworld sprite-scale correction is live presentation behavior, not report-only work: mapped objects use cached painted bounds and cropped render textures for a coherent family hierarchy while gameplay geometry and generated blocker composition remain unchanged.",
   "plannedSlices": [
     {
       "id": "presentation-veilmourn-complete-authored-town-building-icons-10184",
@@ -100884,6 +100884,24 @@
       ],
       "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-25T03:04:34Z"
+    },
+    {
+      "id": "ux-overworld-visible-sprite-scale-normalization-10184",
+      "title": "Overworld visible sprite scale normalization",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T04:01:42Z",
+      "startedAt": "2026-08-25T03:11:26Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct captures and source-backed alpha-bound measurements. Mapped interactive/authored sprites cache non-transparent painted bounds plus cropped render textures and use family-owned visible extents; pickups remain subordinate, encounters and structures are legible, generated blocker bodies retain their uncropped 0.72-tile fast path, and towns remain dominant. Authored/generated 1280/1920 captures, exact aspect/cache/session authority, generated movement/save-reload, 1920 software-rendering at 9.21/9.18 FPS, Overworld visual, object assets, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Gameplay/logical geometry, content, Native RMG, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "completedAt": "2026-08-25T04:01:42Z"
     }
   ],
   "project": "heroes-like",
