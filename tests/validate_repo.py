@@ -17572,7 +17572,10 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     function_names = (
         "_get_tooltip",
         "_draw_turn_strip",
+        "_turn_strip_rect",
         "_turn_strip_entries",
+        "_turn_strip_portrait_rect",
+        "_turn_strip_portrait_payload",
         "_turn_strip_entry_at_position",
         "_turn_strip_entry_tooltip",
         "_turn_strip_chip_label",
@@ -17625,14 +17628,56 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ensure(tooltip_body.count("_turn_strip_entry_at_position(at_position)") == 1 and tooltip_body.count("_turn_strip_entry_tooltip(") == 1, errors, "BattleBoard tooltip routing must probe and return one initiative-chip tooltip exactly once")
 
     draw_turn_body = bodies.get("_draw_turn_strip", "")
+    ensure(draw_turn_body.count("_turn_strip_rect(field_rect)") == 1, errors, "Battle initiative drawing must consume the shared ribbon foundation geometry exactly once")
     ensure(draw_turn_body.count("_turn_strip_entries(field_rect)") == 1, errors, "Battle initiative drawing must consume the shared chip geometry exactly once")
+    ensure(draw_turn_body.count("_turn_strip_portrait_payload(stack, rect)") == 1, errors, "Battle initiative drawing must consume each stack's exact shared portrait payload once")
     ensure(draw_turn_body.count("_turn_strip_chip_label(stack, rect.size.x)") == 1, errors, "Battle initiative drawing must use the width-fitted readable stack label exactly once")
+    draw_turn_order = tuple(draw_turn_body.find(token) for token in (
+        "var strip_rect := _turn_strip_rect(field_rect)",
+        "draw_rect(strip_rect, TURN_STRIP_FOUNDATION_FILL, true)",
+        "for entry_value in _turn_strip_entries(field_rect):",
+        'var current := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))',
+        "draw_rect(rect, TURN_STRIP_ACTIVE_FILL if current else TURN_STRIP_CHIP_FILL, true)",
+        "draw_rect(accent_rect, side_color, true)",
+        "var portrait := _turn_strip_portrait_payload(stack, rect)",
+        "draw_rect(portrait_rect, TURN_STRIP_PORTRAIT_FILL, true)",
+        "if portrait_texture is Texture2D:",
+        "draw_texture_rect(portrait_texture, portrait_rect, false",
+        "draw_rect(rect, ACTIVE_COLOR if current else TURN_STRIP_QUEUED_FRAME",
+        "_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(TURN_STRIP_LABEL_LEFT_INSET, 18.0), TEXT_COLOR, 10)",
+    ))
+    ensure(all(index >= 0 for index in draw_turn_order) and list(draw_turn_order) == sorted(draw_turn_order), errors, "Battle initiative portrait ribbon must draw foundation, dark chips, side accents, portraits, state frames, then readable labels in exact order")
     for forbidden_token in ("_stack_initials", '"%s x%d" % [_stack_initials', "turn_order =", "chip_width:", "drawn :="):
         ensure(forbidden_token not in draw_turn_body, errors, f"Battle initiative drawing must not retain duplicate/initial-only geometry via {forbidden_token}")
+    for forbidden_token in ('_side_color(String(stack.get("side", ""))).darkened(0.14)', "fill = ACTIVE_COLOR", "Color(0.10, 0.12, 0.14, 0.96)"):
+        ensure(forbidden_token not in draw_turn_body, errors, f"Battle initiative ribbon must not retain the rejected flat colored chip paint via {forbidden_token}")
     ensure("func _stack_initials(" not in board_text, errors, "BattleBoardView must not retain the opaque initials-only initiative-label helper")
+
+    for token in (
+        'const TURN_STRIP_PRESENTATION_MODEL := "compact_art_backed_unit_portrait_ribbon"',
+        "const TURN_STRIP_MAX_WIDTH := 620.0",
+        "const TURN_STRIP_HEIGHT := 36.0",
+        "const TURN_STRIP_MARGIN := 10.0",
+        "const TURN_STRIP_PORTRAIT_EXTENT := 22.0",
+        "const TURN_STRIP_LABEL_LEFT_INSET := 32.0",
+    ):
+        ensure(board_text.count(token) == 1, errors, f"Battle initiative portrait ribbon is missing exact bounded presentation constant: {token}")
+
+    strip_rect_body = bodies.get("_turn_strip_rect", "")
+    strip_rect_order = tuple(strip_rect_body.find(token) for token in (
+        "field_rect.size.x - TURN_STRIP_MARGIN * 2.0",
+        "TURN_STRIP_MAX_WIDTH",
+        "field_rect.position + Vector2(TURN_STRIP_MARGIN, TURN_STRIP_MARGIN)",
+        "Vector2(strip_width, TURN_STRIP_HEIGHT)",
+    ))
+    ensure(all(index >= 0 for index in strip_rect_order) and list(strip_rect_order) == sorted(strip_rect_order), errors, "Battle initiative ribbon geometry must derive one bounded foundation from the live field rectangle")
+    for forbidden_token in ("_battle", "turn_order", "Input.", "draw_", "queue_redraw", "await ", "create_timer", "position =", "size ="):
+        ensure(forbidden_token not in strip_rect_body, errors, f"Battle initiative ribbon foundation geometry must remain pure and avoid {forbidden_token}")
 
     entries_body = bodies.get("_turn_strip_entries", "")
     for required_token in (
+        "var strip_rect := _turn_strip_rect(field_rect)",
+        "minf(122.0, (strip_rect.size.x - 14.0)",
         "if entries.size() >= 5:",
         "if stack.is_empty() or _stack_alive_count(stack) <= 0:",
         '"slot": entries.size() + 1',
@@ -17643,6 +17688,34 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ):
         ensure(required_token in entries_body, errors, f"Battle initiative shared geometry is missing exact token: {required_token}")
     ensure(entries_body.count("_stack_by_id(") == 1 and entries_body.count("entries.append({") == 1, errors, "Battle initiative shared geometry must materialize each ordered live stack through one path")
+    ensure("430.0" not in entries_body and "92.0" not in entries_body, errors, "Battle initiative chip geometry must not retain the rejected narrow text-only dimensions")
+
+    portrait_rect_body = bodies.get("_turn_strip_portrait_rect", "")
+    portrait_rect_order = tuple(portrait_rect_body.find(token) for token in (
+        "minf(TURN_STRIP_PORTRAIT_EXTENT, maxf(0.0, chip_rect.size.y - 6.0))",
+        "chip_rect.position + Vector2(4.0 + extent * 0.5, chip_rect.size.y * 0.5)",
+        "return Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))",
+    ))
+    ensure(all(index >= 0 for index in portrait_rect_order) and list(portrait_rect_order) == sorted(portrait_rect_order), errors, "Battle initiative portrait geometry must stay bounded and centered within its chip")
+    for forbidden_token in ("_battle", "ContentService", "load(", "Input.", "draw_", "queue_redraw", "await ", "create_timer"):
+        ensure(forbidden_token not in portrait_rect_body, errors, f"Battle initiative portrait geometry must remain pure and avoid {forbidden_token}")
+
+    portrait_payload_body = bodies.get("_turn_strip_portrait_payload", "")
+    portrait_payload_order = tuple(portrait_payload_body.find(token) for token in (
+        'String(stack.get("unit_id", "")).strip_edges()',
+        "ContentService.get_unit_art(unit_id) if unit_id != \"\" else {}",
+        'String(art.get("battle_icon", "")).strip_edges()',
+        "_unit_battle_icon_for_stack(stack) if unit_id != \"\" else null",
+        "_turn_strip_portrait_rect(chip_rect)",
+        '"model": TURN_STRIP_PRESENTATION_MODEL',
+        '"path": path',
+        '"loaded": texture != null',
+        '"iconless_fallback": texture == null',
+        '"contained": chip_rect.encloses(portrait_rect)',
+    ))
+    ensure(all(index >= 0 for index in portrait_payload_order) and list(portrait_payload_order) == sorted(portrait_payload_order), errors, "Battle initiative portrait payload must resolve exact content art through the established loader before exposing fail-closed geometry")
+    for forbidden_token in ("BattleRules", "advance_turn", "Input.", "emit_signal", "queue_redraw", "sort(", "erase(", "await ", "create_timer"):
+        ensure(forbidden_token not in portrait_payload_body, errors, f"Battle initiative portrait payload must remain presentation-only and avoid {forbidden_token}")
 
     hit_body = bodies.get("_turn_strip_entry_at_position", "")
     ensure(hit_body.count("_turn_strip_entries(_current_field_rect())") == 1 and hit_body.count("rect.has_point(position)") == 1, errors, "Battle initiative hit testing must reuse the exact current painted geometry and native Rect2 containment")
@@ -17671,6 +17744,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         'var word_prefix := " ".join(words.slice(0, word_count))',
         'candidate = "%s…%s" % [word_prefix, suffix]',
         'var compact_name := String(words[0]) if not words.is_empty() else full_name',
+        "maxf(24.0, chip_width - TURN_STRIP_LABEL_LEFT_INSET - 6.0)",
         "while compact_name.length() > 3:",
         'return "%s…%s" % [full_name.left(3), suffix]',
     ):
@@ -17729,13 +17803,17 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     validation_surface_body = bodies.get("validation_turn_strip_identity_surface", "")
     validation_order = tuple(validation_surface_body.find(token) for token in (
         "_current_field_rect()",
+        "var strip_rect := _turn_strip_rect(field_rect)",
         "_turn_strip_entries(field_rect)",
         "for entry_value in entries:",
         "var center := rect.get_center()",
         "var visible_label := _turn_strip_chip_label(stack, rect.size.x)",
+        "var portrait := _turn_strip_portrait_payload(stack, rect)",
         '"visible_label": visible_label',
         '"visible_label_width": font.get_string_size(visible_label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x if font != null else 0.0',
         '"tooltip": _get_tooltip(center)',
+        '"presentation_model": TURN_STRIP_PRESENTATION_MODEL',
+        '"missing_portrait_control": _turn_strip_portrait_payload({"unit_id": "unit_missing_turn_strip_portrait"}',
         '"turn_order":',
     ))
     ensure(all(index >= 0 for index in validation_order) and list(validation_order) == sorted(validation_order), errors, "Battle initiative validation must capture shared geometry, then exact painted labels and native center tooltips in order")
@@ -17958,8 +18036,13 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             '_battle_background_authority(session)',
             'board.call("validation_turn_strip_identity_surface")',
             'for battle_id_value in turn_order:',
+            'var strip_rect: Rect2 = surface.get("strip_rect", Rect2())',
+            'var missing_portrait: Dictionary =',
+            'String(surface.get("presentation_model", "")) != "compact_art_backed_unit_portrait_ribbon"',
             'var saw_full_fit := false',
             'for index in range(rows.size()):',
+            'var unit_art: Dictionary = ContentService.get_unit_art(unit_id)',
+            'var portrait: Dictionary = row.get("portrait", {})',
             'var expected_tooltip := "Initiative Strip',
             '_turn_strip_label_control(board, full_name, alive_count, float(row.get("visible_label_max_width", 0.0)))',
             'visible_label == initials_label',
@@ -17975,12 +18058,28 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             'visible_label.begins_with(full_name.left(3))',
             'visible_label.ends_with(" x%d" % alive_count)',
             'float(row.get("visible_label_width", INF)) > float(row.get("visible_label_max_width", 0.0)) + 0.01',
+            'maxf(24.0, rect.size.x - 32.0 - 6.0)',
+            'String(portrait.get("path", "")) != expected_portrait_path',
+            'not ResourceLoader.exists(expected_portrait_path)',
+            'not (load(expected_portrait_path) is Texture2D)',
+            'not bool(portrait.get("contained", false))',
             'String(row.get("tooltip", "")) != expected_tooltip',
             '(index > 0 and previous_rect.intersects(rect))',
             'saw_word_boundary_fit = saw_word_boundary_fit or fit_mode == "word_boundary"',
             'saw_character_fallback = saw_character_fallback or fit_mode == "character_fallback"',
         ):
             ensure(required_token in focused_body, errors, f"Focused initiative-strip proof is missing exact token: {required_token}")
+        for required_token in (
+            'String(missing_portrait.get("path", "")) != ""',
+            'bool(missing_portrait.get("loaded", true))',
+            'not bool(missing_portrait.get("iconless_fallback", false))',
+            'missing_portrait.get("texture", null) != null',
+            'String(row.get("unit_id", "")) != unit_id',
+            'not bool(portrait.get("loaded", false))',
+            'bool(portrait.get("iconless_fallback", true))',
+            'not rect.encloses(portrait_rect)',
+        ):
+            ensure(required_token in focused_body, errors, f"Focused initiative portrait proof is missing exact loaded/fallback token: {required_token}")
         for forbidden_token in ("board.call(\"_draw", "Input.", "queue_redraw", "BattleRules.advance", "sort", "erase"):
             ensure(forbidden_token not in focused_body, errors, f"Focused initiative-strip proof must remain public/read-only and avoid {forbidden_token}")
     turn_label_control_match = re.search(

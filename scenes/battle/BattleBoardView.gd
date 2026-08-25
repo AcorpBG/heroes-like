@@ -28,6 +28,17 @@ const NEUTRAL_COLOR := Color(0.68, 0.72, 0.78, 0.94)
 const ACTIVE_COLOR := Color(0.99, 0.88, 0.48, 1.0)
 const TARGET_COLOR := Color(0.97, 0.64, 0.38, 0.98)
 const BLOCKED_TARGET_COLOR := Color(0.78, 0.20, 0.18, 0.96)
+const TURN_STRIP_PRESENTATION_MODEL := "compact_art_backed_unit_portrait_ribbon"
+const TURN_STRIP_MAX_WIDTH := 620.0
+const TURN_STRIP_HEIGHT := 36.0
+const TURN_STRIP_MARGIN := 10.0
+const TURN_STRIP_PORTRAIT_EXTENT := 22.0
+const TURN_STRIP_LABEL_LEFT_INSET := 32.0
+const TURN_STRIP_FOUNDATION_FILL := Color(0.025, 0.032, 0.038, 0.92)
+const TURN_STRIP_CHIP_FILL := Color(0.055, 0.066, 0.072, 0.96)
+const TURN_STRIP_ACTIVE_FILL := Color(0.115, 0.102, 0.060, 0.98)
+const TURN_STRIP_PORTRAIT_FILL := Color(0.018, 0.024, 0.028, 0.96)
+const TURN_STRIP_QUEUED_FRAME := Color(0.45, 0.49, 0.48, 0.78)
 const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)
 const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
 const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
@@ -1550,6 +1561,7 @@ func validation_board_fallback_tooltip() -> Dictionary:
 
 func validation_turn_strip_identity_surface() -> Dictionary:
 	var field_rect := _current_field_rect()
+	var strip_rect := _turn_strip_rect(field_rect)
 	var entries := _turn_strip_entries(field_rect)
 	var rows: Array = []
 	for entry_value in entries:
@@ -1560,6 +1572,7 @@ func validation_turn_strip_identity_surface() -> Dictionary:
 		var rect: Rect2 = entry.get("rect", Rect2())
 		var center := rect.get_center()
 		var visible_label := _turn_strip_chip_label(stack, rect.size.x)
+		var portrait := _turn_strip_portrait_payload(stack, rect)
 		var font = get_theme_default_font()
 		rows.append({
 			"slot": int(entry.get("slot", 0)),
@@ -1567,10 +1580,12 @@ func validation_turn_strip_identity_surface() -> Dictionary:
 			"full_name": _stack_full_name(stack),
 			"alive_count": _stack_alive_count(stack),
 			"side": String(stack.get("side", "")),
+			"unit_id": String(stack.get("unit_id", "")),
 			"current": String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", "")),
 			"visible_label": visible_label,
 			"visible_label_width": font.get_string_size(visible_label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x if font != null else 0.0,
-			"visible_label_max_width": maxf(24.0, rect.size.x - 12.0),
+			"visible_label_max_width": maxf(24.0, rect.size.x - TURN_STRIP_LABEL_LEFT_INSET - 6.0),
+			"portrait": portrait,
 			"tooltip": _get_tooltip(center),
 			"rect": rect,
 			"center": center,
@@ -1579,6 +1594,11 @@ func validation_turn_strip_identity_surface() -> Dictionary:
 		"rows": rows,
 		"visible_count": rows.size(),
 		"visible_cap": 5,
+		"presentation_model": TURN_STRIP_PRESENTATION_MODEL,
+		"strip_rect": strip_rect,
+		"portrait_extent": TURN_STRIP_PORTRAIT_EXTENT,
+		"label_left_inset": TURN_STRIP_LABEL_LEFT_INSET,
+		"missing_portrait_control": _turn_strip_portrait_payload({"unit_id": "unit_missing_turn_strip_portrait"}, Rect2(Vector2.ZERO, Vector2(112.0, 28.0))),
 		"field_rect": field_rect,
 		"active_stack_id": String(_battle.get("active_stack_id", "")),
 		"turn_order": (_battle.get("turn_order", []) as Array).duplicate(true) if _battle.get("turn_order", []) is Array else [],
@@ -3347,31 +3367,41 @@ func _active_audio_player_count() -> int:
 	return _active_audio_players.size()
 
 func _draw_turn_strip(field_rect: Rect2) -> void:
-	var strip_width: float = minf(field_rect.size.x - 20.0, 430.0)
-	var strip_rect := Rect2(field_rect.position + Vector2(10.0, 10.0), Vector2(strip_width, 30.0))
-	draw_rect(strip_rect, Color(0.08, 0.10, 0.12, 0.82), true)
-	draw_rect(strip_rect, FRAME_COLOR, false, 1.4)
+	var strip_rect := _turn_strip_rect(field_rect)
+	draw_rect(strip_rect, TURN_STRIP_FOUNDATION_FILL, true)
+	draw_rect(strip_rect, FRAME_COLOR.darkened(0.22), false, 1.4)
 	for entry_value in _turn_strip_entries(field_rect):
 		if not (entry_value is Dictionary):
 			continue
 		var entry: Dictionary = entry_value
 		var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
 		var rect: Rect2 = entry.get("rect", Rect2())
-		var fill := _side_color(String(stack.get("side", ""))).darkened(0.14)
-		if String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", "")):
-			fill = ACTIVE_COLOR
-		draw_rect(rect, fill, true)
-		draw_rect(rect, Color(0.10, 0.13, 0.16, 0.84), false, 1.4)
-		_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(6.0, 15.0), Color(0.10, 0.12, 0.14, 0.96), 10)
+		var current := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))
+		var side_color := _side_color(String(stack.get("side", "")))
+		draw_rect(rect, TURN_STRIP_ACTIVE_FILL if current else TURN_STRIP_CHIP_FILL, true)
+		var accent_rect := Rect2(rect.position + Vector2(0.0, rect.size.y - 3.0), Vector2(rect.size.x, 3.0))
+		draw_rect(accent_rect, side_color, true)
+		var portrait := _turn_strip_portrait_payload(stack, rect)
+		var portrait_rect: Rect2 = portrait.get("rect", Rect2())
+		draw_rect(portrait_rect, TURN_STRIP_PORTRAIT_FILL, true)
+		var portrait_texture = portrait.get("texture", null)
+		if portrait_texture is Texture2D:
+			draw_texture_rect(portrait_texture, portrait_rect, false, Color(0.96, 0.97, 0.92, 1.0))
+		draw_rect(portrait_rect, side_color.darkened(0.14), false, 1.0)
+		draw_rect(rect, ACTIVE_COLOR if current else TURN_STRIP_QUEUED_FRAME, false, 2.0 if current else 1.0)
+		_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(TURN_STRIP_LABEL_LEFT_INSET, 18.0), TEXT_COLOR, 10)
+
+func _turn_strip_rect(field_rect: Rect2) -> Rect2:
+	var strip_width := maxf(0.0, minf(field_rect.size.x - TURN_STRIP_MARGIN * 2.0, TURN_STRIP_MAX_WIDTH))
+	return Rect2(field_rect.position + Vector2(TURN_STRIP_MARGIN, TURN_STRIP_MARGIN), Vector2(strip_width, TURN_STRIP_HEIGHT))
 
 func _turn_strip_entries(field_rect: Rect2) -> Array:
 	var entries: Array = []
 	var turn_order = _battle.get("turn_order", [])
 	if not (turn_order is Array):
 		return entries
-	var strip_width: float = minf(field_rect.size.x - 20.0, 430.0)
-	var strip_rect := Rect2(field_rect.position + Vector2(10.0, 10.0), Vector2(strip_width, 30.0))
-	var chip_width: float = minf(92.0, (strip_rect.size.x - 14.0) / float(maxi(1, mini(turn_order.size(), 5))))
+	var strip_rect := _turn_strip_rect(field_rect)
+	var chip_width: float = minf(122.0, (strip_rect.size.x - 14.0) / float(maxi(1, mini(turn_order.size(), 5))))
 	for battle_id_value in turn_order:
 		if entries.size() >= 5:
 			break
@@ -3387,6 +3417,28 @@ func _turn_strip_entries(field_rect: Rect2) -> Array:
 			),
 		})
 	return entries
+
+func _turn_strip_portrait_rect(chip_rect: Rect2) -> Rect2:
+	var extent := minf(TURN_STRIP_PORTRAIT_EXTENT, maxf(0.0, chip_rect.size.y - 6.0))
+	var center := chip_rect.position + Vector2(4.0 + extent * 0.5, chip_rect.size.y * 0.5)
+	return Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+
+func _turn_strip_portrait_payload(stack: Dictionary, chip_rect: Rect2) -> Dictionary:
+	var unit_id := String(stack.get("unit_id", "")).strip_edges()
+	var art := ContentService.get_unit_art(unit_id) if unit_id != "" else {}
+	var path := String(art.get("battle_icon", "")).strip_edges()
+	var texture: Texture2D = _unit_battle_icon_for_stack(stack) if unit_id != "" else null
+	var portrait_rect := _turn_strip_portrait_rect(chip_rect)
+	return {
+		"model": TURN_STRIP_PRESENTATION_MODEL,
+		"unit_id": unit_id,
+		"path": path,
+		"loaded": texture != null,
+		"iconless_fallback": texture == null,
+		"rect": portrait_rect,
+		"contained": chip_rect.encloses(portrait_rect),
+		"texture": texture,
+	}
 
 func _turn_strip_entry_at_position(position: Vector2) -> Dictionary:
 	if _battle.is_empty():
@@ -3421,7 +3473,7 @@ func _turn_strip_chip_label(stack: Dictionary, chip_width: float) -> String:
 	if font == null:
 		var fallback_name := full_name if full_name.length() <= 6 else full_name.left(6)
 		return "%s%s" % [fallback_name, suffix] if fallback_name == full_name else "%s…%s" % [fallback_name, suffix]
-	var max_text_width := maxf(24.0, chip_width - 12.0)
+	var max_text_width := maxf(24.0, chip_width - TURN_STRIP_LABEL_LEFT_INSET - 6.0)
 	var candidate := "%s%s" % [full_name, suffix]
 	if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
 		return candidate
