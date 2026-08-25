@@ -25274,14 +25274,26 @@ def validate_overworld_fog(errors: list[str]) -> None:
 
     map_view_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
     visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    ninefold_path = ROOT / "tests" / "ninefold_scenario_smoke.gd"
+    generated_live_path = ROOT / "tests" / "random_map_live_overworld_render_move_report.gd"
     ensure(map_view_path.exists(), errors, "Missing OverworldMapView.gd fog-shroud renderer")
     ensure(visual_smoke_path.exists(), errors, "Missing Overworld visual fog-shroud owner")
-    if not map_view_path.exists() or not visual_smoke_path.exists():
+    ensure(ninefold_path.exists(), errors, "Missing Ninefold soft fog-frontier owner")
+    ensure(generated_live_path.exists(), errors, "Missing generated natural-fog frontier owner")
+    if not all(path.exists() for path in (map_view_path, visual_smoke_path, ninefold_path, generated_live_path)):
         return
     map_view_text = map_view_path.read_text(encoding="utf-8")
     visual_smoke_text = visual_smoke_path.read_text(encoding="utf-8")
+    ninefold_text = ninefold_path.read_text(encoding="utf-8")
+    generated_live_text = generated_live_path.read_text(encoding="utf-8")
     overlay_block = fog_function_block(map_view_text, "_draw_tile_state_overlay")
     shroud_block = fog_function_block(map_view_text, "_draw_unexplored_shroud")
+    frontier_draw_block = fog_function_block(map_view_text, "_draw_explored_terrain_boundary")
+    frontier_directions_block = fog_function_block(map_view_text, "_explored_fog_frontier_directions")
+    frontier_gradient_points_block = fog_function_block(map_view_text, "_explored_fog_frontier_gradient_points")
+    frontier_gradient_colors_block = fog_function_block(map_view_text, "_explored_fog_frontier_gradient_colors")
+    frontier_edge_block = fog_function_block(map_view_text, "_draw_explored_fog_frontier_edge")
+    frontier_payload_block = fog_function_block(map_view_text, "_explored_fog_frontier_payload")
     terrain_payload_block = fog_function_block(map_view_text, "_terrain_visual_payload")
     fog_case_block = fog_function_block(visual_smoke_text, "_assert_explored_terrain_presentation")
     for required_token in (
@@ -25330,6 +25342,138 @@ def validate_overworld_fog(errors: list[str]) -> None:
         ensure(required_token in visual_smoke_text, errors, f"Overworld visual smoke is missing fail-closed fog-shroud proof: {required_token}")
     for forbidden_token in ("_draw_unexplored_shroud(", "_draw_tile_state_overlay(", "set_tile_explored", "erase("):
         ensure(forbidden_token not in fog_case_block, errors, f"Overworld visual fog owner must observe public presentation without private rendering or state mutation: {forbidden_token}")
+
+    for required_token in (
+        'const EXPLORED_FOG_FRONTIER_MODEL := "inward_vertex_gradient_cartographic_frontier"',
+        "const EXPLORED_FOG_FRONTIER_DEPTH_FACTOR := 0.32",
+        "const EXPLORED_FOG_FRONTIER_EDGE_ALPHA := 0.24",
+        "const EXPLORED_FOG_FRONTIER_INNER_ALPHA := 0.0",
+        "const EXPLORED_FOG_FRONTIER_COLOR := Color(0.025, 0.035, 0.045, 1.0)",
+        "const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.16)",
+    ):
+        ensure(map_view_text.count(required_token) == 1, errors, f"Soft fog frontier must own one exact bounded presentation constant: {required_token}")
+    ensure(
+        overlay_block.find("_canvas_draw_rect(rect, UNEXPLORED_COLOR, true)")
+        < overlay_block.find("_draw_unexplored_shroud(tile, rect)")
+        < overlay_block.find("return")
+        < overlay_block.find("_draw_explored_terrain_boundary(tile, rect)"),
+        errors,
+        "Hidden fog must return before the explored-side frontier can draw.",
+    )
+    for required_token in (
+        "for direction_value in _explored_fog_frontier_directions(tile):",
+        "var gradient_points := _explored_fog_frontier_gradient_points(rect, direction)",
+        "if gradient_points.size() == 4:",
+        "_canvas_draw_polygon(gradient_points, _explored_fog_frontier_gradient_colors())",
+        "_draw_explored_fog_frontier_edge(rect, direction)",
+    ):
+        ensure(required_token in frontier_draw_block, errors, f"Explored fog frontier must draw one exact inward vertex gradient and edge: {required_token}")
+    for required_token in (
+        'for direction in ["N", "E", "S", "W"]:',
+        "var neighbor: Vector2i = tile + checks[direction]",
+        "OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y)",
+        "directions.append(direction)",
+        "return directions",
+    ):
+        ensure(required_token in frontier_directions_block, errors, f"Fog frontier directions must derive only from ordered cardinal explored booleans: {required_token}")
+    for forbidden_token in ("_terrain_at", "_road_tile_payload", "_visible_object", "_map_data", "content", "texture", "rand", "Time.", "await ", "create_timer", "queue_redraw"):
+        ensure(forbidden_token not in frontier_directions_block, errors, f"Fog frontier direction ownership must never sample hidden identity or mutate timing: {forbidden_token}")
+    for required_token in (
+        '"N":',
+        '"S":',
+        '"W":',
+        '"E":',
+        "rect.size.x * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR",
+        "rect.size.y * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR",
+        "return PackedVector2Array([",
+    ):
+        ensure(required_token in frontier_gradient_points_block, errors, f"Fog frontier gradient geometry must stay contained on the explored side: {required_token}")
+    for required_token in (
+        "EXPLORED_FOG_FRONTIER_EDGE_ALPHA",
+        "EXPLORED_FOG_FRONTIER_INNER_ALPHA",
+        "return PackedColorArray([edge_color, edge_color, inner_color, inner_color])",
+    ):
+        ensure(required_token in frontier_gradient_colors_block, errors, f"Fog frontier must interpolate from two opaque-edge vertices to two transparent-inner vertices: {required_token}")
+    ensure(frontier_edge_block.count("_canvas_draw_line") == 4, errors, "Fog frontier must retain exactly four cardinal edge-line branches.")
+    for required_token in (
+        '"model": EXPLORED_FOG_FRONTIER_MODEL',
+        '"drawn": not directions.is_empty()',
+        '"directions": directions.duplicate()',
+        '"direction_order": ["N", "E", "S", "W"]',
+        '"softened_corners": softened_corners',
+        '"gradient_stop_count": 2',
+        '"gradient_depth_factor": EXPLORED_FOG_FRONTIER_DEPTH_FACTOR',
+        '"gradient_edge_alpha": EXPLORED_FOG_FRONTIER_EDGE_ALPHA',
+        '"gradient_inner_alpha": EXPLORED_FOG_FRONTIER_INNER_ALPHA',
+        '"draw_side": "explored_inward"',
+        '"neighbor_basis": "cardinal_explored_boolean_only"',
+        '"hidden_identity_sampled": false',
+        '"interior_explored_seams": false',
+    ):
+        ensure(required_token in frontier_payload_block, errors, f"Fog frontier payload must expose exact detached continuity and identity-isolation evidence: {required_token}")
+    for forbidden_token in ("_terrain_at", "_road_tile_payload", "_visible_object", "_map_data", "set_map_state", "queue_redraw", "await ", "create_timer"):
+        ensure(forbidden_token not in frontier_payload_block, errors, f"Fog frontier payload must remain presentation-only and identity-silent: {forbidden_token}")
+    for required_token in (
+        '"fog_frontier": {',
+        '"drawn": false',
+        '"hidden_identity_sampled": false',
+        "var fog_frontier := _explored_fog_frontier_payload(tile)",
+        '"fog_frontier": fog_frontier',
+    ):
+        ensure(required_token in terrain_payload_block, errors, f"Terrain presentation must distinguish hidden ownership from explored fog-frontier evidence: {required_token}")
+
+    ninefold_frontier_block = fog_function_block(ninefold_text, "_assert_soft_fog_frontier")
+    for required_token in (
+        "var session_authority_before: Dictionary = session.to_dict()",
+        '"directions": ["N", "W"], "corners": ["NW"]',
+        '"directions": ["N", "E"], "corners": ["NE"]',
+        '"directions": ["E", "S"], "corners": ["SE"]',
+        '"directions": ["S", "W"], "corners": ["SW"]',
+        '"directions": [], "corners": []',
+        'String(frontier.get("model", "")) != "inward_vertex_gradient_cartographic_frontier"',
+        'float(frontier.get("gradient_depth_factor", 0.0)), 0.32',
+        'float(frontier.get("gradient_edge_alpha", 0.0)), 0.24',
+        'float(frontier.get("gradient_inner_alpha", -1.0)), 0.0',
+        'String(frontier.get("neighbor_basis", "")) != "cardinal_explored_boolean_only"',
+        'String(hidden_terrain.get("terrain", "leaked")) != ""',
+        "session.to_dict() != session_authority_before",
+    ):
+        ensure(required_token in ninefold_frontier_block, errors, f"Ninefold fog-frontier owner must prove four corners, interior, hidden isolation, and session authority: {required_token}")
+    for forbidden_token in ("_explored_fog_frontier", "_draw_", "_terrain_at", "set_map_state", "sort(", "erase(", "await ", "create_timer"):
+        ensure(forbidden_token not in ninefold_frontier_block, errors, f"Ninefold fog-frontier owner must use only public presentation observation: {forbidden_token}")
+    ensure("not _assert_soft_fog_frontier(shell, session, north_west_tile)" in fog_function_block(ninefold_text, "_assert_terrain_macro_lighting"), errors, "Ninefold terrain flow must run the soft fog-frontier owner on its real 3x3 explored fixture.")
+
+    generated_frontier_block = fog_function_block(generated_live_text, "_fog_frontier_summary")
+    generated_frontier_assert_block = fog_function_block(generated_live_text, "_assert_fog_frontier_summary")
+    for required_token in (
+        'map_view.call("validation_tile_presentation", tile)',
+        "not OverworldRules.is_tile_explored(session, x, y)",
+        'String(terrain.get("terrain", "leaked")) == ""',
+        'not bool(frontier.get("hidden_identity_sampled", true))',
+        "direction_observation_count += directions.size()",
+        "invalid_direction_count += 1",
+        '"exact_frontier_tile_count"',
+        '"hidden_exact_count"',
+        '"model_ids": model_ids.keys()',
+    ):
+        ensure(required_token in generated_frontier_block, errors, f"Generated natural-fog owner must inspect every public explored/hidden frontier consequence: {required_token}")
+    for required_token in (
+        "explored_count <= 0",
+        "hidden_count <= 0",
+        "active_count <= 0",
+        'int(summary.get("exact_frontier_tile_count", 0)) != active_count',
+        'int(summary.get("hidden_exact_count", 0)) != hidden_count',
+        'int(summary.get("invalid_direction_count", -1)) != 0',
+        '["inward_vertex_gradient_cartographic_frontier"]',
+    ):
+        ensure(required_token in generated_frontier_assert_block, errors, f"Generated natural-fog assertion must fail closed on continuity or hidden-identity drift: {required_token}")
+    for required_token in (
+        'not _assert_fog_frontier_summary(fog_frontier_before, "before_move")',
+        'not _assert_fog_frontier_summary(fog_frontier_after, "after_move")',
+        '"fog_frontier_before": fog_frontier_before',
+        '"fog_frontier_after": fog_frontier_after',
+    ):
+        ensure(required_token in generated_live_text, errors, f"Generated movement report must gate and publish natural fog-frontier evidence: {required_token}")
 
 
 def validate_battle_deterministic_rng_state(errors: list[str]) -> None:
@@ -32687,7 +32831,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     ensure(map_text.count("const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0") == 1, errors, "Small-map fit must own one exact 104px visual extent cap")
     ensure(map_text.count('const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"') == 1, errors, "Small-map surround must own one exact quiet cartographic matte model")
     ensure(map_text.count("const SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER := 48.0") == 1, errors, "Small-map cartographic matte must require one exact 48px material gutter")
-    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.72") == 1, errors, "Town art must own one exact proportional 72% visual-footprint scale")
+    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.56") == 1, errors, "Town art must own one exact proportional 56% visual-footprint scale")
     extent_block = gd_function_block(map_text, "_tile_extent_for_viewport")
     uncapped_block = gd_function_block(map_text, "_uncapped_whole_map_fit_tile_extent")
     metrics_block = gd_function_block(map_text, "validation_view_metrics")
@@ -32791,8 +32935,8 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     for preserved_token in (
         "const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
         "const TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.72",
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.56",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.62",
         "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
         'const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"',
     ):
@@ -32805,7 +32949,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "const MAX_SMALL_MAP_TILE_EXTENT := 104.0",
         'const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"',
         "const SMALL_MAP_MATTE_MIN_GUTTER := 48.0",
-        "const TOWN_VISUAL_EXTENT_TILES := 1.44",
+        "const TOWN_VISUAL_EXTENT_TILES := 1.12",
         'var metrics: Dictionary = map_view.call("validation_view_metrics")',
         "var expected_capped := uncapped_extent > MAX_SMALL_MAP_TILE_EXTENT",
         "viewport_rect.get_center().distance_to(board_rect.get_center()) <= 1.5",
@@ -32834,7 +32978,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'int(profile.get("footprint_width_tiles", 0)) != 3',
         'int(profile.get("footprint_height_tiles", 0)) != 2',
         'int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5',
-        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.72',
+        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.56',
         'float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES',
         'String(profile.get("entry_role", "")) != "bottom_middle_visit_approach"',
         'int(readability.get("footprint_width_tiles", 0)) == 1',
@@ -32869,7 +33013,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     report_text = report_path.read_text(encoding="utf-8")
     for token in (
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.60",
         "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
         "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
         'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"',
@@ -33099,7 +33243,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'int(summary.get("distinct_body_asset_count", 0)) < 8',
         'int(summary.get("repeated_def_multi_asset_count", 0)) <= 0',
         'String(summary.get("composition_signature", "")).length() != 64',
-        'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.54',
+        'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.60',
         'float(metrics.get("sprite_extent_tiles", 99.0)) > 1.0001',
         'not is_equal_approx(float(metrics.get("uncapped_sprite_extent_px", 0.0)), float(metrics.get("sprite_extent_px", -1.0)))',
         '"map_objects": session.overworld.get("map_objects", []).duplicate(true)',
@@ -33151,18 +33295,18 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     extent_block = gd_function_block(map_text, "_sprite_extent_fraction")
     semantic_class_block = gd_function_block(map_text, "_semantic_visual_scale_class")
     for token in (
-        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.26",
-        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.32",
-        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.40",
-        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.46",
-        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.44",
-        "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.50",
-        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.46",
-        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.36",
-        "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.40",
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54",
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.72",
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36",
+        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46",
+        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.52",
+        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.50",
+        "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.56",
+        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.52",
+        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.40",
+        "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.44",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.60",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.62",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.56",
     ):
         ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
     for rejected_token in (
@@ -33297,19 +33441,19 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(payload.get("cache_repeat_exact", false))',
         'not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
         'String(artifact.get("semantic_scale_class", "")) != "handheld_artifact"',
-        'float(artifact.get("visible_extent_tiles", 0.0)), 0.26',
+        'float(artifact.get("visible_extent_tiles", 0.0)), 0.30',
         'String(pickup.get("semantic_scale_class", "")) != "loose_pickup"',
-        'float(pickup.get("visible_extent_tiles", 0.0)), 0.32',
-        'float(service.get("visible_extent_tiles", 0.0)), 0.46',
-        'float(objective.get("visible_extent_tiles", 0.0)), 0.50',
-        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.54',
-        'float(hero.get("sprite_extent_fraction", 0.0)), 0.56',
-        'float(town.get("visible_extent_tiles", 0.0)), 1.44',
+        'float(pickup.get("visible_extent_tiles", 0.0)), 0.36',
+        'float(service.get("visible_extent_tiles", 0.0)), 0.52',
+        'float(objective.get("visible_extent_tiles", 0.0)), 0.56',
+        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.60',
+        'float(hero.get("sprite_extent_fraction", 0.0)), 0.62',
+        'float(town.get("visible_extent_tiles", 0.0)), 1.12',
         '"id": "object_wood_wagon"',
         '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
         '"id": "object_contract_scribe_booth"',
         '"map_roles": ["route_pacing", "world_lore", "repeatable_service"]',
-        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.52',
+        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.58',
         'float(service.get("visible_extent_tiles", 0.0))',
         '< float(town.get("visible_extent_tiles", 0.0))',
         "SessionState.ensure_active_session().to_dict() != authority_before",
@@ -40330,10 +40474,31 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for forbidden in ("await ", "create_timer", "queue_redraw", "set_map_state", "draw_polygon"):
         ensure(forbidden not in generated_macro_profile_block, errors, f"Generated macro-lighting render-profile assertion must remain observation-only: {forbidden}")
     ensure(
-        'terrain_transition_after != terrain_transition_before' in generated_live_text,
+        'OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1"' in generated_live_text
+        and 'terrain_transition_after != terrain_transition_before' in generated_live_text
+        and "_assert_natural_fog_terrain_transition_progression(terrain_transition_before, terrain_transition_after)" in generated_live_text,
         errors,
-        "Generated live movement must preserve exact terrain transition draw authority across redraw.",
+        "Generated live movement must preserve exact reveal-all terrain authority while allowing only fail-closed exploration growth under natural fog.",
     )
+    natural_transition_block = gd_function_block(generated_live_text, "_assert_natural_fog_terrain_transition_progression")
+    for token in (
+        '"explored_tile_count"',
+        '"relationship_tile_count"',
+        'int(after.get(key, -1)) < int(before.get(key, 0))',
+        'int(summary.get("macro_lighting_tile_count", -1)) != explored_count',
+        'int(summary.get("macro_lighting_continuous_count", -1)) != explored_count',
+        'int(summary.get("macro_lighting_bounded_count", -1)) != explored_count',
+        'int(summary.get("macro_lighting_corner_mismatch_count", -1)) != 0',
+        'int(summary.get("irregular_inner_edge_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
+        'int(summary.get("deterministic_seed_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
+        '"draw_policy_ids"',
+        '"macro_lighting_highlight_alphas"',
+        'after.get(key, []) != before.get(key, [])',
+        "return true",
+    ):
+        ensure(token in natural_transition_block, errors, f"Natural-fog terrain progression must preserve exact presentation contracts while allowing newly explored counts: {token}")
+    for forbidden in ("session", "_session", "set_map_state", "queue_redraw", "await ", "create_timer", ".erase(", "sort("):
+        ensure(forbidden not in natural_transition_block, errors, f"Natural-fog terrain progression must remain a detached read-only comparison: {forbidden}")
     generated_road_block = gd_function_block(generated_live_text, "_road_surface_summary")
     generated_road_assert_block = gd_function_block(generated_live_text, "_assert_generated_road_surface")
     for token in (
@@ -42552,7 +42717,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for token in (
         'const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"',
         'const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"',
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.62",
         "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.64",
         "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.66",
     ):

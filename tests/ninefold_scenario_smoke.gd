@@ -325,7 +325,11 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var east_tile := north_west_tile + Vector2i.RIGHT
 	var south_tile := north_west_tile + Vector2i.DOWN
 	var south_east_tile := north_west_tile + Vector2i(1, 1)
-	_reveal_validation_tiles(session, [north_west_tile, east_tile, south_tile, south_east_tile])
+	var revealed_tiles: Array = []
+	for y_offset in range(3):
+		for x_offset in range(3):
+			revealed_tiles.append(north_west_tile + Vector2i(x_offset, y_offset))
+	_reveal_validation_tiles(session, revealed_tiles)
 	var session_authority_before: Dictionary = session.to_dict()
 	var north_west_presentation: Dictionary = shell.call("validation_tile_presentation", north_west_tile.x, north_west_tile.y)
 	var repeated_presentation: Dictionary = shell.call("validation_tile_presentation", north_west_tile.x, north_west_tile.y)
@@ -395,8 +399,70 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	if String(hidden_lighting.get("model", "")) != "continuous_shared_corner_bilinear_field" or bool(hidden_lighting.get("drawn", true)) or not bool(hidden_lighting.get("hidden_by_unexplored_shroud", false)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain macro-lighting: %s." % JSON.stringify(hidden_lighting))
 		return false
+	if not _assert_soft_fog_frontier(shell, session, north_west_tile):
+		return false
 	if session.to_dict() != session_authority_before:
 		_fail("Ninefold smoke: terrain macro-lighting observation changed session authority.")
+		return false
+	return true
+
+func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) -> bool:
+	var session_authority_before: Dictionary = session.to_dict()
+	var cases := [
+		{"tile": north_west_tile, "directions": ["N", "W"], "corners": ["NW"]},
+		{"tile": north_west_tile + Vector2i(2, 0), "directions": ["N", "E"], "corners": ["NE"]},
+		{"tile": north_west_tile + Vector2i(2, 2), "directions": ["E", "S"], "corners": ["SE"]},
+		{"tile": north_west_tile + Vector2i(0, 2), "directions": ["S", "W"], "corners": ["SW"]},
+		{"tile": north_west_tile + Vector2i(1, 1), "directions": [], "corners": []},
+	]
+	var observed_rows: Array = []
+	for case_value in cases:
+		var case_row: Dictionary = case_value
+		var tile: Vector2i = case_row.get("tile", Vector2i(-1, -1))
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
+		var frontier: Dictionary = terrain.get("fog_frontier", {}) if terrain.get("fog_frontier", {}) is Dictionary else {}
+		if (
+			String(frontier.get("model", "")) != "inward_vertex_gradient_cartographic_frontier"
+			or frontier.get("direction_order", []) != ["N", "E", "S", "W"]
+			or frontier.get("directions", []) != case_row.get("directions", [])
+			or frontier.get("softened_corners", []) != case_row.get("corners", [])
+			or bool(frontier.get("drawn", false)) != not (case_row.get("directions", []) as Array).is_empty()
+			or int(frontier.get("gradient_stop_count", 0)) != 2
+			or not is_equal_approx(float(frontier.get("gradient_depth_factor", 0.0)), 0.32)
+			or not is_equal_approx(float(frontier.get("gradient_edge_alpha", 0.0)), 0.24)
+			or not is_equal_approx(float(frontier.get("gradient_inner_alpha", -1.0)), 0.0)
+			or not is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.16)
+			or not is_equal_approx(float(frontier.get("edge_width", 0.0)), 1.0)
+			or String(frontier.get("draw_side", "")) != "explored_inward"
+			or String(frontier.get("neighbor_basis", "")) != "cardinal_explored_boolean_only"
+			or bool(frontier.get("hidden_identity_sampled", true))
+			or bool(frontier.get("interior_explored_seams", true))
+		):
+			_fail("Ninefold smoke: explored fog frontier contract changed: %s." % JSON.stringify({"case": case_row, "frontier": frontier}))
+			return false
+		observed_rows.append(frontier)
+	var repeated_presentation: Dictionary = shell.call("validation_tile_presentation", north_west_tile.x, north_west_tile.y)
+	var repeated_terrain: Dictionary = repeated_presentation.get("terrain_presentation", {}) if repeated_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	if repeated_terrain.get("fog_frontier", {}) != observed_rows[0]:
+		_fail("Ninefold smoke: fog frontier changed across repeated public observation.")
+		return false
+	var hidden_tile := north_west_tile + Vector2i(3, 0)
+	var hidden_presentation: Dictionary = shell.call("validation_tile_presentation", hidden_tile.x, hidden_tile.y)
+	var hidden_terrain: Dictionary = hidden_presentation.get("terrain_presentation", {}) if hidden_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	var hidden_frontier: Dictionary = hidden_terrain.get("fog_frontier", {}) if hidden_terrain.get("fog_frontier", {}) is Dictionary else {}
+	if (
+		not bool(hidden_terrain.get("unexplored_hidden", false))
+		or String(hidden_terrain.get("terrain", "leaked")) != ""
+		or String(hidden_frontier.get("model", "")) != "inward_vertex_gradient_cartographic_frontier"
+		or bool(hidden_frontier.get("drawn", true))
+		or String(hidden_frontier.get("draw_side", "")) != "explored_inward"
+		or bool(hidden_frontier.get("hidden_identity_sampled", true))
+	):
+		_fail("Ninefold smoke: hidden tile identity or fog-frontier ownership leaked: %s." % JSON.stringify(hidden_terrain))
+		return false
+	if session.to_dict() != session_authority_before:
+		_fail("Ninefold smoke: fog-frontier observation changed session authority.")
 		return false
 	return true
 
