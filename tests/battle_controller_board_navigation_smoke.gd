@@ -223,7 +223,7 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 	if semantic_timer == null or not semantic_timer.one_shot or not is_equal_approx(semantic_timer.wait_time, 1.0):
 		shell.queue_free()
 		return _fail_bool("Battle semantic Timer was not a configured one-shot before use at %d: %s." % [width, semantic_timer])
-	if not _validate_battle_status_native_ellipsis(shell, session, width, width == 1280):
+	if not _validate_battle_status_native_ellipsis(shell, session):
 		shell.queue_free()
 		return false
 	if not _validate_board_footer_pixel_ellipsis(board, session, width, false):
@@ -839,7 +839,7 @@ func _stack_caption_word_text_control(full_name: String) -> String:
 		return "…"
 	return "%s…" % prefix.left(boundary).strip_edges()
 
-func _validate_battle_status_native_ellipsis(shell: Control, session, width: int, expect_overflow: bool) -> bool:
+func _validate_battle_status_native_ellipsis(shell: Control, session) -> bool:
 	var authority_before := _battle_background_authority(session)
 	var header: Label = shell.get_node("%Header")
 	var status: Label = shell.get_node("%Status")
@@ -863,8 +863,10 @@ func _validate_battle_status_native_ellipsis(shell: Control, session, width: int
 			or not status.clip_text \
 			or status.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
 			or status.autowrap_mode != TextServer.AUTOWRAP_OFF \
+			or not header.is_visible_in_tree() \
+			or not status.is_visible_in_tree() \
+			or not pressure.is_visible_in_tree() \
 			or font == null \
-			or (full_width > status.size.x + 0.5) != expect_overflow \
 			or not top_rect.encloses(header_rect) \
 			or not top_rect.encloses(status_rect) \
 			or not top_rect.encloses(pressure_rect) \
@@ -872,9 +874,9 @@ func _validate_battle_status_native_ellipsis(shell: Control, session, width: int
 			or status_rect.end.x > pressure_rect.position.x + 0.5 \
 			or header_rect.intersects(status_rect) \
 			or status_rect.intersects(pressure_rect):
-		return _fail_bool("Battle status did not preserve the exact full value behind native responsive pixel fit inside the authored TopBar at %d: expected=%s overflow=%s text=%s tooltip=%s full_width=%s status_rect=%s header=%s pressure=%s top=%s overrun=%s." % [width, expected_full, expect_overflow, status.text, status.tooltip_text, full_width, status_rect, header_rect, pressure_rect, top_rect, status.text_overrun_behavior])
+		return _fail_bool("Battle status did not preserve the exact full value behind native responsive pixel fit inside the authored TopBar: expected=%s text=%s tooltip=%s full_width=%s status_rect=%s header=%s pressure=%s top=%s overrun=%s." % [expected_full, status.text, status.tooltip_text, full_width, status_rect, header_rect, pressure_rect, top_rect, status.text_overrun_behavior])
 	if _battle_background_authority(session) != authority_before:
-		return _fail_bool("Inspecting Battle status native ellipsis changed session/save/settings authority at %d." % width)
+		return _fail_bool("Inspecting Battle status native ellipsis changed session/save/settings authority.")
 	return true
 
 func _validate_board_footer_pixel_ellipsis(board: Control, session, width: int, expect_cursor: bool) -> bool:

@@ -3698,13 +3698,14 @@ func _apply_responsive_layout() -> void:
 	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
 		available_size = parent_control.size
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	var banner_details_visible := not compact_layout or available_size.x >= 1180.0
 	_compact_layout_active = compact_layout
 	_refit_battle_action_guide()
 	_sidebar_shell_panel.visible = not compact_layout
 	_battle_context_label.visible = not compact_layout
 	_event_label.visible = not compact_layout
-	_status_label.visible = not compact_layout
-	_pressure_label.visible = not compact_layout
+	_status_label.visible = banner_details_visible
+	_pressure_label.visible = banner_details_visible
 	_footer_row.columns = 1 if compact_layout else 2
 	_footer_row.add_theme_constant_override("v_separation", 0 if compact_layout else 8)
 	_action_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)

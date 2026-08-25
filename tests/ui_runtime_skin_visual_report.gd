@@ -146,6 +146,11 @@ func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> 
 		"screenshot": "",
 		"screenshot_size": {},
 	}
+	if shell_id == "battle":
+		var banner_contract := _battle_banner_contract(shell, viewport_size)
+		shell_report["battle_banner"] = banner_contract
+		if not bool(banner_contract.get("ok", false)):
+			_error("Battle banner status containment failed at %s: %s" % [_viewport_key(viewport_size), banner_contract])
 	for panel_name in Dictionary(spec["panels"]).keys():
 		var expected_path := _expected_panel_style(shell_id, String(panel_name), viewport_size, String(spec["panels"][panel_name]))
 		var actual_path := _panel_texture_path(shell, String(panel_name))
@@ -179,6 +184,62 @@ func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> 
 	render_viewport.queue_free()
 	await get_tree().process_frame
 	return shell_report
+
+func _battle_banner_contract(shell: Node, viewport_size: Vector2i) -> Dictionary:
+	var header := shell.get_node_or_null("%Header") as Label
+	var status := shell.get_node_or_null("%Status") as Label
+	var pressure := shell.get_node_or_null("%Pressure") as Label
+	if header == null or status == null or pressure == null:
+		return {"ok": false, "missing_authored_label": true}
+	var top_bar := status.get_parent() as Control
+	if top_bar == null:
+		return {"ok": false, "missing_top_bar": true}
+	var session = SessionState.active_session
+	var expected_header := BattleRules.describe_header(session)
+	var expected_status := BattleRules.describe_status(session)
+	var expected_pressure := BattleRules.describe_pressure(session)
+	var font := status.get_theme_font("font")
+	var font_size := status.get_theme_font_size("font_size")
+	var full_status_width := font.get_string_size(expected_status, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x if font != null else 0.0
+	var top_rect := top_bar.get_global_rect()
+	var header_rect := header.get_global_rect()
+	var status_rect := status.get_global_rect()
+	var pressure_rect := pressure.get_global_rect()
+	var status_overflow := full_status_width > status_rect.size.x + 0.5
+	var width_fit_exact := status_overflow if viewport_size.x == 1280 else (not status_overflow if viewport_size.x >= 1920 else true)
+	var ok := header.is_visible_in_tree() \
+		and status.is_visible_in_tree() \
+		and pressure.is_visible_in_tree() \
+		and header.text == expected_header \
+		and status.text == expected_status \
+		and status.tooltip_text == expected_status \
+		and pressure.tooltip_text == expected_pressure \
+		and status.clip_text \
+		and pressure.clip_text \
+		and status.text_overrun_behavior == TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
+		and top_rect.encloses(header_rect) \
+		and top_rect.encloses(status_rect) \
+		and top_rect.encloses(pressure_rect) \
+		and header_rect.end.x <= status_rect.position.x + 0.5 \
+		and status_rect.end.x <= pressure_rect.position.x + 0.5 \
+		and not header_rect.intersects(status_rect) \
+		and not status_rect.intersects(pressure_rect) \
+		and width_fit_exact
+	return {
+		"ok": ok,
+		"expected_header": expected_header,
+		"expected_status": expected_status,
+		"expected_pressure": expected_pressure,
+		"header_visible": header.is_visible_in_tree(),
+		"status_visible": status.is_visible_in_tree(),
+		"pressure_visible": pressure.is_visible_in_tree(),
+		"status_overflow": status_overflow,
+		"full_status_width": full_status_width,
+		"top_rect": top_rect,
+		"header_rect": header_rect,
+		"status_rect": status_rect,
+		"pressure_rect": pressure_rect,
+	}
 
 func _prepare_session(shell_id: String) -> void:
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)

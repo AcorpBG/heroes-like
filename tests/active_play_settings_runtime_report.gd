@@ -320,8 +320,7 @@ func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
 		structural_nodes_present
 		and footer_row.columns == (1 if compact else 2)
 		and system_panel.is_visible_in_tree()
-		and system_panel.has_theme_stylebox_override("panel") == compact
-		and (not compact or system_panel.get_theme_stylebox("panel") is StyleBoxEmpty)
+		and (system_panel.get_theme_stylebox("panel") is StyleBoxEmpty) == compact
 		and system_body.is_visible_in_tree() == not compact
 		and speed_bar.is_visible_in_tree() == not compact
 		and action_guide.text.split("\n", false).size() == (2 if compact else 3)
@@ -344,7 +343,7 @@ func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
 		"action_guide_line_count": action_guide.text.split("\n", false).size() if action_guide != null else 0,
 		"action_guide_word_safe": action_guide_word_safe,
 		"system_panel_rect": system_panel.get_global_rect() if system_panel != null else Rect2(),
-		"system_panel_compact_style": system_panel.has_theme_stylebox_override("panel") if system_panel != null else false,
+		"system_panel_compact_style": system_panel.get_theme_stylebox("panel") is StyleBoxEmpty if system_panel != null else false,
 		"system_actions_rect": system_actions.get_global_rect() if system_actions != null else Rect2(),
 		"system_body_visible": system_body.is_visible_in_tree() if system_body != null else false,
 		"speed_visible": speed_bar.is_visible_in_tree() if speed_bar != null else false,

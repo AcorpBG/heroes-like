@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next fresh, bounded, source-backed graphical-polish defect from direct runtime captures before changing production behavior.
 
+- Previous completed implementation slice: `ux-battle-banner-compact-status-containment-10184`. The live Battle banner now keeps its existing Header, Status, and Pressure visible at normal 1280x720 instead of hiding the latter two through the height-only compact breakpoint. Authored flexible shares give Status 535px with native word ellipsis at 1280 and 835px for the complete value at 1920, while genuinely constrained logical widths such as 1280 at 130% UI scale retain the reduced banner. Direct inspected 1280/1920 captures, exact banner geometry/semantics, Board navigation, 130%-scale active settings, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-battle-banner-compact-status-containment-10184`
+
 - Previous completed implementation slice: `presentation-overworld-semantic-object-scale-hierarchy-10184`. The Overworld now scales painted sprites by semantic presentation rank instead of collapsing handheld artifacts, loose pickups, landmarks, and structures into nearly the same family extent. Direct inspected River Pass 1280x720 and 1920x1080 captures show the Trailsinger Boots and Wood Wagon as compact props while objectives, services, multi-tile structures, heroes, and towns retain distinct readable ranks. Alpha cropping, aspect, grounding, fog memory, logical footprints, passability, interactions, content, camera, save/session authority, and generated-map behavior remain exact. Focused visual/small-map/artifact, broad Overworld, generated-map move/save, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `presentation-overworld-semantic-object-scale-hierarchy-10184`
 
@@ -10226,6 +10229,32 @@ Completion result:
 - handheld artifacts now paint at 0.30 tile, loose pickups at 0.36, landmarks at 0.62, one-tile durable structures at 0.66, multi-tile interactive art at a 0.76 cap, and towns at 1.12 tiles; alpha-bound cropping and original aspect authority are retained;
 - live content profiles carry the existing primary class, footprint tier, secondary tags, passability, visitability, and map roles into presentation classification without changing any of those authored values;
 - direct inspected River Pass 1280x720 and 1920x1080 captures, focused and broad Overworld tests, artifact and generated-map compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green.
+
+## Battle Banner Compact Status Containment
+
+id: `ux-battle-banner-compact-status-containment-10184`
+
+Status: completed.
+
+Implementation boundary:
+- derive one banner-detail visibility predicate from the live logical width, independently from the existing height-sensitive compact footer/sidebar breakpoint;
+- keep the existing Header, Status, and Pressure nodes visible, ordered, clipped, and contained at normal 1280x720 and 1920x1080, while retaining the reduced banner when 130% UI scale makes the logical width genuinely constrained;
+- give the existing Status label the larger flexible stretch share so the full authored status fits at 1920 while remaining natively ellipsized at 1280;
+- preserve the exact full Status/Pressure tooltips and existing native word-ellipsis policy.
+
+Completion criteria:
+- fresh inspected Battle captures at normal 1280x720 and 1920x1080 visibly retain Header, Status, and Pressure without overlap or banner overflow;
+- focused 1280/1920 runtime proves exact full values/tooltips, native ellipsis, sibling order/containment, genuinely constrained-width fallback, and unchanged battle/session/settings authority;
+- Battle layout/navigation, active 130%-scale settings, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no BattleRules text/order, banner art, fonts, node hierarchy, sidebar/footer/board geometry, command visibility, action/input/focus, combat, AI, balance, content, save schema, accessibility semantics, Native RMG, or package-content change;
+- no new panel, copied label, fixed-character truncation, timer/deferred layout workaround, packaged Battle interaction claim, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- the banner detail breakpoint now follows live logical width rather than inheriting the height-sensitive footer/sidebar compact state, so normal 1280 restores both existing information fields and 130%-scale constrained layout stays reduced;
+- exact authored 0.8 / 1.4 / 0.8 flexible shares keep Header and Pressure readable, Status natively ellipsized at 1280, and the complete 672px Status value visible inside its 835px allocation at 1920;
+- direct inspected captures, focused banner/Board/active-settings proof, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green with unchanged battle/session/settings authority.
 
 ## Main Menu Stage Dock Authored Cartography Surface
 
