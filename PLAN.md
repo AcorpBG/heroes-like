@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next fresh, bounded, source-backed graphical-polish defect from direct runtime captures before changing production behavior.
 
+- Previous completed implementation slice: `presentation-overworld-semantic-object-scale-hierarchy-10184`. The Overworld now scales painted sprites by semantic presentation rank instead of collapsing handheld artifacts, loose pickups, landmarks, and structures into nearly the same family extent. Direct inspected River Pass 1280x720 and 1920x1080 captures show the Trailsinger Boots and Wood Wagon as compact props while objectives, services, multi-tile structures, heroes, and towns retain distinct readable ranks. Alpha cropping, aspect, grounding, fog memory, logical footprints, passability, interactions, content, camera, save/session authority, and generated-map behavior remain exact. Focused visual/small-map/artifact, broad Overworld, generated-map move/save, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `presentation-overworld-semantic-object-scale-hierarchy-10184`
+
 - Previous completed implementation slice: `ux-main-menu-stage-dock-authored-cartography-surface-10184`. Campaign, Skirmish, Saves, Guide, and Settings now share one original low-contrast cartographic campaign-table surface instead of a generic smoke-black slab. Direct inspected 1280x720 and 1920x1080 captures preserve the scenic backdrop, exact live dock anchors/minimum-size behavior, every control and board action, navigation/focus/accessibility, settings/save/session authority, and the solid smoke fallback for high contrast or missing art. Focused Menu visual, keyboard navigation, settings defaults, save/load confidence, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged secondary-board interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-main-menu-stage-dock-authored-cartography-surface-10184`
 
@@ -10198,6 +10201,31 @@ Completion result:
 - two original byte-distinct 1024x896 transparent status emblems now map exactly to victory and defeat; the renderer contains them with preserved aspect ratio and centered transparent negative space at compact and wide sizes, while unsupported states retain the procedural fallback;
 - direct inspected 1280x720 and 1920x1080 victory/defeat captures, focused live/fixture validation, normal-entry focus, safe-cancel, autosave-recovery, active-focus, accessibility, and core gates are green with unchanged Outcome/session authority;
 - repository validation, Python compilation, exact/generic Godot editor parsing, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. The platform evidence is export/startup only; packaged Outcome interaction and release readiness remain unclaimed.
+
+## Overworld Semantic Object Scale Hierarchy
+
+id: `presentation-overworld-semantic-object-scale-hierarchy-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace the current family-only painted-extent normalization with a semantic visual-scale class derived from existing authored object identity, family, primary class, footprint tier, and map role;
+- make handheld artifacts and loose pickups materially subordinate to waypoints and durable structures, while keeping towns at the top of the presentation hierarchy;
+- retain alpha-bounds cropping, aspect ratio, grounding, fog-memory modulation, and the existing missing-art procedural fallbacks.
+
+Completion criteria:
+- River Pass 1280x720 and 1920x1080 captures show the Trailsinger Boots and Wood Wagon as compact pickups rather than structure-sized props, with readable encounter, service, waypoint, durable-site, hero, and town ranks;
+- focused validation proves exact semantic classes and ordered extents across representative artifact, pickup, waypoint, durable structure, multi-tile structure, and town assets while preserving authored footprint/passability/visitable/map-role data and session authority;
+- small-map scale, Overworld visual/input/save compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no asset redraw, content identity, gameplay footprint, passability, pathfinding, interaction, reward, map generation, camera, layout, UI, input/focus, accessibility, save schema, combat, AI, balance, Native RMG, or package-content change;
+- no per-scenario hardcoded coordinate override, asset-specific arbitrary scale table, packaged Overworld interaction claim, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- handheld artifacts now paint at 0.30 tile, loose pickups at 0.36, landmarks at 0.62, one-tile durable structures at 0.66, multi-tile interactive art at a 0.76 cap, and towns at 1.12 tiles; alpha-bound cropping and original aspect authority are retained;
+- live content profiles carry the existing primary class, footprint tier, secondary tags, passability, visitability, and map roles into presentation classification without changing any of those authored values;
+- direct inspected River Pass 1280x720 and 1920x1080 captures, focused and broad Overworld tests, artifact and generated-map compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green.
 
 ## Main Menu Stage Dock Authored Cartography Surface
 
