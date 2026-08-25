@@ -216,6 +216,13 @@ const TERRAIN_TRANSITION_ALPHA := 0.42
 const TERRAIN_TRANSITION_WIDTH_FACTOR := 0.16
 const TERRAIN_TRANSITION_CORNER_ALPHA := 0.34
 const TERRAIN_TRANSITION_CORNER_FACTOR := 0.24
+const GENERIC_TERRAIN_EDGE_SURFACE_MODEL := "layered_feathered_organic_intrusion"
+const GENERIC_TERRAIN_EDGE_FEATHER_BAND_COUNT := 2
+const GENERIC_TERRAIN_EDGE_OUTER_ALPHA := 0.30
+const GENERIC_TERRAIN_EDGE_INNER_ALPHA := 0.15
+const GENERIC_TERRAIN_EDGE_SEAM_ALPHA := 0.30
+const GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR := 0.34
+const GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR := 0.18
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
 const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
@@ -1655,14 +1662,14 @@ func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> 
 			var direction := String(source.get("direction", ""))
 			var source_terrain := String(source.get("source_terrain", terrain))
 			if not _draw_terrain_edge_art(source_terrain, direction, rect):
-				_draw_terrain_edge_fallback(source_terrain, direction, rect)
+				_draw_terrain_edge_fallback(tile, source_terrain, direction, rect)
 	var corner_sources = transition_payload.get("corner_sources", [])
 	if corner_sources is Array:
 		for source_value in corner_sources:
 			if not (source_value is Dictionary):
 				continue
 			var source: Dictionary = source_value
-			_draw_terrain_corner_hint(String(source.get("source_terrain", terrain)), String(source.get("direction", "")), rect)
+			_draw_terrain_corner_hint(tile, String(source.get("source_terrain", terrain)), String(source.get("direction", "")), rect)
 
 func _terrain_uses_self_contained_homm3_transition(tile: Vector2i, terrain: String) -> bool:
 	if not _homm3_runtime_rendering_enabled():
@@ -1670,21 +1677,75 @@ func _terrain_uses_self_contained_homm3_transition(tile: Vector2i, terrain: Stri
 	var entry := _homm3_terrain_art_entry(terrain, tile)
 	return not entry.is_empty() and _terrain_art_texture_for_entry(entry) is Texture2D
 
-func _draw_terrain_edge_fallback(source_terrain: String, direction: String, rect: Rect2) -> void:
+func _draw_terrain_edge_fallback(tile: Vector2i, source_terrain: String, direction: String, rect: Rect2) -> void:
 	var edge_color := _terrain_color(source_terrain, "edge_color", Color(0.24, 0.26, 0.18, 1.0))
-	var color := Color(edge_color.r, edge_color.g, edge_color.b, TERRAIN_TRANSITION_ALPHA)
-	var width := maxf(3.0, minf(rect.size.x, rect.size.y) * TERRAIN_TRANSITION_WIDTH_FACTOR)
+	var detail_color := _terrain_color(source_terrain, "detail_color", edge_color)
+	var outer_profile := _terrain_edge_profile_points(tile, direction, rect, GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR)
+	var inner_profile := _terrain_edge_profile_points(tile, direction, rect, GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR)
+	if outer_profile.is_empty() or inner_profile.is_empty():
+		return
+	_canvas_draw_colored_polygon(
+		_terrain_edge_band_polygon(direction, rect, outer_profile),
+		Color(edge_color.r, edge_color.g, edge_color.b, GENERIC_TERRAIN_EDGE_OUTER_ALPHA)
+	)
+	_canvas_draw_colored_polygon(
+		_terrain_edge_band_polygon(direction, rect, inner_profile),
+		Color(detail_color.r, detail_color.g, detail_color.b, GENERIC_TERRAIN_EDGE_INNER_ALPHA)
+	)
+	_canvas_draw_polyline(
+		outer_profile,
+		Color(edge_color.r, edge_color.g, edge_color.b, GENERIC_TERRAIN_EDGE_SEAM_ALPHA),
+		maxf(1.0, minf(rect.size.x, rect.size.y) * 0.018),
+		true
+	)
+
+func _terrain_edge_profile_points(tile: Vector2i, direction: String, rect: Rect2, depth_factor: float) -> PackedVector2Array:
+	if direction not in ["N", "S", "W", "E"]:
+		return PackedVector2Array()
+	var extent := minf(rect.size.x, rect.size.y)
+	var direction_seed: int = int({"N": 11, "E": 23, "S": 37, "W": 53}.get(direction, 0))
+	var seed: int = absi((tile.x * 37) + (tile.y * 71) + int(direction_seed))
+	var depth_weights := [0.78, 1.08, 0.88, 1.14, 0.82]
+	var points := PackedVector2Array()
+	for index in range(5):
+		var fraction := float(index) / 4.0
+		var weight := float(depth_weights[(index + seed) % depth_weights.size()])
+		var depth := minf(maxf(2.0, extent * depth_factor * weight), maxf(4.0, 18.0 * weight))
+		match direction:
+			"N":
+				points.append(Vector2(lerpf(rect.position.x, rect.end.x, fraction), rect.position.y + depth))
+			"S":
+				points.append(Vector2(lerpf(rect.position.x, rect.end.x, fraction), rect.end.y - depth))
+			"W":
+				points.append(Vector2(rect.position.x + depth, lerpf(rect.position.y, rect.end.y, fraction)))
+			"E":
+				points.append(Vector2(rect.end.x - depth, lerpf(rect.position.y, rect.end.y, fraction)))
+	return points
+
+func _terrain_edge_band_polygon(direction: String, rect: Rect2, inner_profile: PackedVector2Array) -> PackedVector2Array:
+	if inner_profile.size() != 5:
+		return PackedVector2Array()
+	var polygon := PackedVector2Array()
 	match direction:
 		"N":
-			_canvas_draw_rect(Rect2(rect.position, Vector2(rect.size.x, width)), color, true)
+			polygon.append(rect.position)
+			polygon.append(Vector2(rect.end.x, rect.position.y))
 		"S":
-			_canvas_draw_rect(Rect2(Vector2(rect.position.x, rect.end.y - width), Vector2(rect.size.x, width)), color, true)
+			polygon.append(Vector2(rect.position.x, rect.end.y))
+			polygon.append(rect.end)
 		"W":
-			_canvas_draw_rect(Rect2(rect.position, Vector2(width, rect.size.y)), color, true)
+			polygon.append(rect.position)
+			polygon.append(Vector2(rect.position.x, rect.end.y))
 		"E":
-			_canvas_draw_rect(Rect2(Vector2(rect.end.x - width, rect.position.y), Vector2(width, rect.size.y)), color, true)
+			polygon.append(Vector2(rect.end.x, rect.position.y))
+			polygon.append(rect.end)
+		_:
+			return PackedVector2Array()
+	for index in range(inner_profile.size() - 1, -1, -1):
+		polygon.append(inner_profile[index])
+	return polygon
 
-func _draw_terrain_corner_hint(source_terrain: String, direction: String, rect: Rect2) -> void:
+func _draw_terrain_corner_hint(tile: Vector2i, source_terrain: String, direction: String, rect: Rect2) -> void:
 	if direction == "":
 		return
 	var edge_color := _terrain_color(source_terrain, "edge_color", Color(0.24, 0.26, 0.18, 1.0))
@@ -1692,7 +1753,9 @@ func _draw_terrain_corner_hint(source_terrain: String, direction: String, rect: 
 	var detail := _terrain_color(source_terrain, "detail_color", edge_color)
 	var detail_color := Color(detail.r, detail.g, detail.b, TERRAIN_TRANSITION_CORNER_ALPHA * 0.58)
 	var extent := minf(rect.size.x, rect.size.y)
-	var corner := maxf(4.0, extent * TERRAIN_TRANSITION_CORNER_FACTOR)
+	var seed: int = absi((tile.x * 43) + (tile.y * 61) + direction.hash())
+	var corner_variation := 0.92 + (float(seed % 5) * 0.04)
+	var corner := maxf(4.0, extent * TERRAIN_TRANSITION_CORNER_FACTOR * corner_variation)
 	var points := PackedVector2Array()
 	var accent_start := Vector2.ZERO
 	var accent_end := Vector2.ZERO
@@ -5515,6 +5578,10 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_transition_self_contained": homm3_transition_self_contained,
 		"generic_transition_overlay_relationship_count": generic_transition_overlay_relationship_count,
 		"generic_transition_overlay_active": generic_transition_overlay_active,
+		"generic_transition_surface_model": GENERIC_TERRAIN_EDGE_SURFACE_MODEL if generic_transition_overlay_active else "",
+		"generic_transition_feather_band_count": GENERIC_TERRAIN_EDGE_FEATHER_BAND_COUNT if generic_transition_overlay_active else 0,
+		"generic_transition_irregular_inner_edge": generic_transition_overlay_active,
+		"generic_transition_deterministic_seed_basis": "tile_and_direction_only" if generic_transition_overlay_active else "",
 		"edge_transition_count": edge_transition_count,
 		"corner_transition_count": corner_transition_count,
 		"propagated_transition_count": propagated_transition_count,
@@ -5522,8 +5589,8 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"transition_diagonal_policy": String(homm3_selection.get("diagonal_policy", "")),
 		"edge_transition_art_count": edge_art_count,
 		"edge_transition_art_loaded": edge_transition_count > 0 and edge_art_count == edge_transition_count,
-		"transition_shape_model": "homm3_base_atlas_frame" if homm3_rendering_active else ("jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
-		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if homm3_rendering_active else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
+		"transition_shape_model": "homm3_base_atlas_frame" if homm3_rendering_active else ("jagged_directional_overlay" if edge_art_count > 0 else GENERIC_TERRAIN_EDGE_SURFACE_MODEL),
+		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if homm3_rendering_active else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "shallow_irregular_feather_bands"),
 		"transition_selection_rule": "settled_owner_relation_classes_select_recovered_row_buckets" if homm3_rendering_active else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
 		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0 or propagated_transition_count > 0,
 		"same_group_transition_suppressed": true,

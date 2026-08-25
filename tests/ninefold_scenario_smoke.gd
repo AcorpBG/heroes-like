@@ -268,11 +268,15 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		or int(terrain.get("edge_transition_count", 0)) != 1
 		or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
 		or String(terrain.get("homm3_bridge_family", "")) != "dirt"
-		or String(terrain.get("transition_shape_model", "")) != "procedural_strip_fallback"
-		or String(terrain.get("transition_edge_treatment", "")) != "procedural_strip_fallback"
+		or String(terrain.get("transition_shape_model", "")) != "layered_feathered_organic_intrusion"
+		or String(terrain.get("transition_edge_treatment", "")) != "shallow_irregular_feather_bands"
 		or String(terrain.get("transition_draw_policy", "")) != "active_homm3_self_contained_else_generic_overlay"
 		or bool(terrain.get("homm3_transition_self_contained", true))
 		or not bool(terrain.get("generic_transition_overlay_active", false))
+		or String(terrain.get("generic_transition_surface_model", "")) != "layered_feathered_organic_intrusion"
+		or int(terrain.get("generic_transition_feather_band_count", 0)) != 2
+		or not bool(terrain.get("generic_transition_irregular_inner_edge", false))
+		or String(terrain.get("generic_transition_deterministic_seed_basis", "")) != "tile_and_direction_only"
 	):
 		_fail("Ninefold smoke: canonical grass/dirt boundary did not render the original-bank generic transition overlay with inactive HoMM3 relation metadata: %s." % presentation)
 		return false
@@ -336,6 +340,9 @@ func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_t
 		or not bool(terrain.get("homm3_transition_self_contained", false))
 		or bool(terrain.get("generic_transition_overlay_active", true))
 		or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
+		or String(terrain.get("generic_transition_surface_model", "leaked")) != ""
+		or int(terrain.get("generic_transition_feather_band_count", -1)) != 0
+		or bool(terrain.get("generic_transition_irregular_inner_edge", true))
 	):
 		_fail("Ninefold smoke: enabled and loaded HoMM3 receiver did not exclusively own its self-contained transition art: %s." % enabled_presentation)
 		return false

@@ -222,7 +222,11 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var generic_overlay_tile_count := 0
 	var self_contained_tile_count := 0
 	var inactive_homm3_overlay_tile_count := 0
+	var irregular_inner_edge_count := 0
+	var deterministic_seed_count := 0
 	var policy_ids: Dictionary = {}
+	var surface_model_ids: Dictionary = {}
+	var feather_band_counts: Dictionary = {}
 	var session = SessionState.active_session
 	var map_size := OverworldRules.derive_map_size(session)
 	for y in range(map_size.y):
@@ -241,6 +245,14 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 				self_contained_tile_count += 1
 			elif bool(terrain.get("generic_transition_overlay_active", false)):
 				generic_overlay_tile_count += 1
+				var surface_model := String(terrain.get("generic_transition_surface_model", ""))
+				if surface_model != "":
+					surface_model_ids[surface_model] = true
+				feather_band_counts[int(terrain.get("generic_transition_feather_band_count", 0))] = true
+				if bool(terrain.get("generic_transition_irregular_inner_edge", false)):
+					irregular_inner_edge_count += 1
+				if String(terrain.get("generic_transition_deterministic_seed_basis", "")) == "tile_and_direction_only":
+					deterministic_seed_count += 1
 				if not bool(terrain.get("uses_homm3_local_prototype", false)):
 					inactive_homm3_overlay_tile_count += 1
 	return {
@@ -248,7 +260,11 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"generic_overlay_tile_count": generic_overlay_tile_count,
 		"self_contained_tile_count": self_contained_tile_count,
 		"inactive_homm3_overlay_tile_count": inactive_homm3_overlay_tile_count,
+		"irregular_inner_edge_count": irregular_inner_edge_count,
+		"deterministic_seed_count": deterministic_seed_count,
 		"draw_policy_ids": policy_ids.keys(),
+		"surface_model_ids": surface_model_ids.keys(),
+		"feather_band_counts": feather_band_counts.keys(),
 	}
 
 func _road_surface_summary(overworld: Node) -> Dictionary:
@@ -321,6 +337,10 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or int(summary.get("inactive_homm3_overlay_tile_count", 0)) != relationship_count
 		or int(summary.get("self_contained_tile_count", -1)) != 0
 		or summary.get("draw_policy_ids", []) != ["active_homm3_self_contained_else_generic_overlay"]
+		or summary.get("surface_model_ids", []) != ["layered_feathered_organic_intrusion"]
+		or summary.get("feather_band_counts", []) != [2]
+		or int(summary.get("irregular_inner_edge_count", 0)) != relationship_count
+		or int(summary.get("deterministic_seed_count", 0)) != relationship_count
 	):
 		_fail("%s generated terrain transitions did not use the disabled-HoMM3 generic overlay path: %s" % [label, JSON.stringify(summary)])
 		return false
