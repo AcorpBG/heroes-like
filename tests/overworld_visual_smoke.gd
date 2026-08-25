@@ -2831,6 +2831,9 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	var selection_focus_rect := _focus_rect_from_payload(focus_layout.get("selection_rect", {}))
 	var hover_focus_rect := _focus_rect_from_payload(focus_layout.get("hover_rect", {}))
 	var town_selection_visual_profile: Dictionary = focus_layout.get("town_selection_visual_profile", {})
+	var tile_selection_visual_profile: Dictionary = focus_layout.get("tile_selection_visual_profile", {})
+	var tile_selection_extent := minf(selection_focus_rect.size.x, selection_focus_rect.size.y)
+	var expected_tile_selection_inset := maxf(4.0, tile_selection_extent * 0.085)
 	if hero_on_town_footprint:
 		var town_selection_extent := minf(selection_focus_rect.size.x, selection_focus_rect.size.y)
 		var expected_town_selection_inset := maxf(4.0, town_selection_extent * 0.045)
@@ -2849,6 +2852,7 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 			or not bool(focus_layout.get("selection_uses_town_footprint_rect", false)) \
 			or bool(focus_layout.get("selection_uses_interior_fill", true)) \
 			or not bool(focus_layout.get("selection_uses_cartographic_town_perimeter", false)) \
+			or bool(focus_layout.get("selection_uses_cartographic_tile_reticle", true)) \
 			or String(focus_layout.get("selection_visual_model", "")) != "open_cartographic_footprint_corner_and_midpoint_ticks" \
 			or _focus_rect_from_payload(town_selection_visual_profile.get("perimeter_rect", {})) != selection_focus_rect.grow(-expected_town_selection_inset) \
 			or not is_equal_approx(float(town_selection_visual_profile.get("corner_alpha", 0.0)), 0.78) \
@@ -2859,6 +2863,7 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 			or not is_equal_approx(float(town_selection_visual_profile.get("midpoint_width_px", 0.0)), maxf(1.25, town_selection_extent * 0.008)) \
 			or bool(town_selection_visual_profile.get("continuous_outline", true)) \
 			or not is_zero_approx(float(town_selection_visual_profile.get("interior_fill_alpha", -1.0))) \
+			or not tile_selection_visual_profile.is_empty() \
 			or not bool(focus_layout.get("hover_uses_town_footprint_rect", false)) \
 			or selection_focus_rect != hover_focus_rect \
 			or not selection_focus_rect.encloses(focus_tile_rect) \
@@ -2876,10 +2881,21 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	elif bool(focus_layout.get("hero_uses_compact_town_footprint_rect", true)) \
 		or hero_focus_rect != focus_tile_rect \
 		or bool(focus_layout.get("selection_uses_town_footprint_rect", true)) \
-		or not bool(focus_layout.get("selection_uses_interior_fill", false)) \
+		or bool(focus_layout.get("selection_uses_interior_fill", true)) \
 		or bool(focus_layout.get("selection_uses_cartographic_town_perimeter", true)) \
-		or String(focus_layout.get("selection_visual_model", "")) != "filled_tile_outline_long_corner_brackets" \
+		or not bool(focus_layout.get("selection_uses_cartographic_tile_reticle", false)) \
+		or String(focus_layout.get("selection_visual_model", "")) != "open_cartographic_tile_corner_and_midpoint_ticks" \
 		or not town_selection_visual_profile.is_empty() \
+		or _focus_rect_from_payload(tile_selection_visual_profile.get("perimeter_rect", {})) != selection_focus_rect.grow(-expected_tile_selection_inset) \
+		or not is_equal_approx(float(tile_selection_visual_profile.get("perimeter_inset_px", 0.0)), expected_tile_selection_inset) \
+		or not is_equal_approx(float(tile_selection_visual_profile.get("corner_alpha", 0.0)), 0.82) \
+		or not is_equal_approx(float(tile_selection_visual_profile.get("corner_length_px", 0.0)), maxf(8.0, tile_selection_extent * 0.18)) \
+		or not is_equal_approx(float(tile_selection_visual_profile.get("corner_width_px", 0.0)), maxf(1.5, tile_selection_extent * 0.022)) \
+		or not is_equal_approx(float(tile_selection_visual_profile.get("midpoint_alpha", 0.0)), 0.42) \
+		or not is_equal_approx(float(tile_selection_visual_profile.get("midpoint_length_px", 0.0)), maxf(5.0, tile_selection_extent * 0.08)) \
+		or not is_equal_approx(float(tile_selection_visual_profile.get("midpoint_width_px", 0.0)), maxf(1.25, tile_selection_extent * 0.016)) \
+		or bool(tile_selection_visual_profile.get("continuous_outline", true)) \
+		or not is_zero_approx(float(tile_selection_visual_profile.get("interior_fill_alpha", -1.0))) \
 		or selection_focus_rect != focus_tile_rect \
 		or bool(focus_layout.get("hover_uses_town_footprint_rect", true)) \
 		or hover_focus_rect != focus_tile_rect:

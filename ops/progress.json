@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-physical-object-scale-hierarchy-correction-10184",
-    "title": "Overworld physical object scale hierarchy correction",
+    "id": "ux-overworld-selected-tile-cartographic-reticle-10184",
+    "title": "Overworld selected-tile cartographic reticle",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T16:39:05Z",
-    "updatedAt": "2026-08-25T17:20:00Z",
+    "startedAt": "2026-08-25T17:24:30Z",
+    "updatedAt": "2026-08-25T17:43:07Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct owner feedback and inspected real X11 authored/generated captures. The unchanged 3x2 town now paints at 1.44 tiles above the unchanged 0.56 hero; enemy commander/unit encounters use the ordinary 0.40 encounter rank and generated decorative blocker cells use the ordinary 0.46 blocker rank. Focused scale, route movement, broad Overworld visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Logical map/gameplay authority is unchanged; packaged interaction and release readiness remain unclaimed.",
-    "completedAt": "2026-08-25T17:20:00Z"
+    "notes": "Completed from direct inspected real authored and generated captures. Ordinary selection now uses a fill-free open cartographic reticle with short corner and edge-midpoint ticks; the existing town perimeter and all selection/input/route/gameplay authority remain exact. Focused selection, generated movement/save, full-route, controller/input/focus, accessibility, broad Overworld visual, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged interaction and release readiness remain unclaimed.",
+    "completedAt": "2026-08-25T17:43:07Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld physical-scale hierarchy correction is completed with inspected authored/generated captures and focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence; select the next tracker-approved graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld selected-tile cartographic reticle is completed with direct authored/generated captures plus focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence; select the next tracker-approved polish slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-physical-object-scale-hierarchy-correction-10184",
-  "currentSliceId": "ux-overworld-physical-object-scale-hierarchy-correction-10184",
-  "currentSliceNotes": "Completed: the town now paints at 1.44 tiles above the unchanged 0.56 hero, encounter actors use 0.40, and generated blockers use 0.46. Real authored/generated captures and focused, broad, static/editor, and bounded platform gates pass with logical map/gameplay authority unchanged.",
+  "currentSlice": "ux-overworld-selected-tile-cartographic-reticle-10184",
+  "currentSliceId": "ux-overworld-selected-tile-cartographic-reticle-10184",
+  "currentSliceNotes": "Completed: ordinary selection is a fill-free open corner/midpoint reticle with terrain readability preserved; town selection, focus geometry, pointer/controller/keyboard input, routes, movement, session/save, and gameplay authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld physical object scale hierarchy correction",
-  "currentSliceUpdatedAt": "2026-08-25T17:20:00Z",
+  "currentSliceTitle": "Overworld selected-tile cartographic reticle",
+  "currentSliceUpdatedAt": "2026-08-25T17:43:07Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19899,8 +19899,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next bounded graphical-polish or release-readiness slice from direct current evidence; preserve the completed Overworld physical-scale hierarchy and logical map authority.",
-  "notes": "The Overworld physical object-scale hierarchy correction is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "nextActionGuardrailNote": "Select the next bounded graphical-polish or release-readiness slice from direct current evidence; preserve the completed Overworld reticle, scale hierarchy, and logical map authority.",
+  "notes": "The selected-tile cartographic reticle and physical object-scale hierarchy are completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
@@ -101644,6 +101644,33 @@
       "notes": "Completed from direct owner feedback and inspected current real X11 captures. At 1280x720 and 1920x1080 the unchanged 3x2 town now reads as a 1.44-tile landmark above the unchanged 0.56 hero; commander/unit encounters share the ordinary 0.40 encounter rank and generated decorative blocker cells share the ordinary 0.46 blocker rank. Authored route and generated before/after captures are coherent. Focused small-map/commander/generated owners, faction heroes, full-route movement, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Logical footprints, body/entry masks, hit areas, passability, routes, movement, camera/map fit, content, saves, generated placement, and Native RMG are unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T17:20:00Z"
+    },
+    {
+      "id": "ux-overworld-selected-tile-cartographic-reticle-10184",
+      "title": "Overworld selected-tile cartographic reticle",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T17:43:07Z",
+      "startedAt": "2026-08-25T17:24:30Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make ordinary map selection legible without covering terrain by replacing the filled yellow tile box with the same restrained open cartographic visual language already used for town footprints.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 authored and generated Overworld captures show one open ordinary selected-tile reticle with short corner and edge-midpoint ticks, no interior fill or continuous outline, and clear terrain/object readability; focused runtime proves exact reticle geometry plus unchanged selected tile, town-footprint perimeter, hero/hover focus, click/keyboard/controller selection, route preview, movement, interaction, camera/map fit, accessibility semantics, content, session/save authority, generated placement, and Native RMG behavior; broad Overworld, route/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No selected tile identity, town selection footprint, hover/hero focus geometry, hit area, click/keyboard/controller input, route preview, movement, interaction, camera/map fit, accessibility semantic, content, save/session, generated placement, or Native RMG change.",
+        "No terrain/fog/road, object/hero/town scale or asset, shell layout, UI command, animation/audio/VFX, AI, economy, battle, or gameplay change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected real authored route captures at 1280x720 and 1920x1080 plus generated-map before/after captures. Ordinary selection is now a fill-free open cartographic reticle with short corner and edge-midpoint ticks; terrain and objects remain readable beneath it. The existing open town-footprint perimeter, selected tile/geometry, hero/hover focus, pointer/controller route selection, keyboard focus, movement/input ownership, accessibility semantics, content, session/save authority, generated placement, and gameplay remain exact. Focused faction/selection, generated movement/save, full-route, controller/input/focus, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T17:43:07Z"
     }
   ],
   "project": "heroes-like",

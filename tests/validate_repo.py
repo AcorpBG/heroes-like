@@ -42088,8 +42088,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         "var layout := _tile_focus_layout(tile, rect)",
         'var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", rect)',
         'var selection_rect: Rect2 = layout.get("selection_rect", rect)',
-        'if bool(layout.get("selection_uses_interior_fill", true)):',
-        '_draw_selection_corners(selection_rect, SELECTION_COLOR, focus_width)',
+        'elif bool(layout.get("selection_uses_cartographic_tile_reticle", false)):',
+        '_draw_tile_selection_reticle(selection_rect)',
         'var hover_rect: Rect2 = layout.get("hover_rect", rect)',
     ):
         ensure(token in focus_draw_block, errors, f"Town-footprint focus draw path is missing shared resolved geometry: {token}")
@@ -42101,7 +42101,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         "town_rect = _town_footprint_rect_for_entry(_town_entry_tile(town))",
         '"hero_focus_rect": _hero_draw_rect(tile_rect, tile, true) if uses_town_footprint else tile_rect',
         '"selection_rect": town_rect', '"selection_uses_town_footprint_rect": uses_town_footprint',
-        '"selection_uses_interior_fill": not uses_town_footprint', '"hover_rect": town_rect',
+        '"selection_uses_interior_fill": false',
+        '"selection_uses_cartographic_tile_reticle": not uses_town_footprint', '"hover_rect": town_rect',
         '"hover_uses_town_footprint_rect": uses_town_footprint',
     ):
         ensure(token in focus_layout_block, errors, f"Town-footprint focus layout is missing exact composite ownership: {token}")
@@ -42151,11 +42152,15 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'town_hero_focus_rect == _rect_from_payload(hero_layout.get("hero_rect", {}))',
         'active_tile_rect.encloses(town_hero_focus_rect)',
         'not bool(town_layout.get("selection_uses_interior_fill", true))',
+        'not bool(town_layout.get("selection_uses_cartographic_tile_reticle", true))',
         'town_selection_rect == expected_town_rect',
         'town_hover_rect == expected_town_rect',
         'town_selection_rect.size == active_tile_rect.size * Vector2(3.0, 2.0)',
         'ordinary_hero_focus_rect == ordinary_tile_rect',
-        'bool(ordinary_layout.get("selection_uses_interior_fill", false))',
+        'not bool(ordinary_layout.get("selection_uses_interior_fill", true))',
+        'bool(ordinary_layout.get("selection_uses_cartographic_tile_reticle", false))',
+        'String(ordinary_layout.get("selection_visual_model", "")) == "open_cartographic_tile_corner_and_midpoint_ticks"',
+        'var ordinary_tile_selection_visual_profile: Dictionary = ordinary_layout.get("tile_selection_visual_profile", {})',
         'ordinary_selection_rect == ordinary_tile_rect',
         'ordinary_hover_rect == ordinary_tile_rect',
         'var restored_focus_exact: bool = map_view.call("validation_tile_focus_layout", active_tile) == focus_exact.get("town_layout", {})',
@@ -42196,6 +42201,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'hero_focus_rect != _focus_rect_from_payload(hero_layout.get("hero_rect", {}))',
         'not bool(focus_layout.get("selection_uses_town_footprint_rect", false))',
         'bool(focus_layout.get("selection_uses_interior_fill", true))',
+        'bool(focus_layout.get("selection_uses_cartographic_tile_reticle", true))',
         'selection_focus_rect != hover_focus_rect',
         'not selection_focus_rect.encloses(focus_tile_rect)',
         'hero_focus_rect != focus_tile_rect',
@@ -42235,6 +42241,14 @@ def validate_overworld_town_selection_cartographic_perimeter(errors: list[str]) 
         "const TOWN_SELECTION_MIDPOINT_ALPHA := 0.34",
         "const TOWN_SELECTION_MIDPOINT_LENGTH_FACTOR := 0.035",
         "const TOWN_SELECTION_MIDPOINT_WIDTH_FACTOR := 0.008",
+        'const TILE_SELECTION_VISUAL_MODEL := "open_cartographic_tile_corner_and_midpoint_ticks"',
+        "const TILE_SELECTION_PERIMETER_INSET_FACTOR := 0.085",
+        "const TILE_SELECTION_CORNER_ALPHA := 0.82",
+        "const TILE_SELECTION_CORNER_LENGTH_FACTOR := 0.18",
+        "const TILE_SELECTION_CORNER_WIDTH_FACTOR := 0.022",
+        "const TILE_SELECTION_MIDPOINT_ALPHA := 0.42",
+        "const TILE_SELECTION_MIDPOINT_LENGTH_FACTOR := 0.08",
+        "const TILE_SELECTION_MIDPOINT_WIDTH_FACTOR := 0.016",
     ):
         ensure(map_text.count(token) == 1, errors, f"Town-selection cartographic perimeter must own one exact visual constant: {token}")
 
@@ -42242,29 +42256,32 @@ def validate_overworld_town_selection_cartographic_perimeter(errors: list[str]) 
     layout_block = gd_function_block(map_text, "_tile_focus_layout")
     profile_block = gd_function_block(map_text, "_town_selection_visual_profile")
     perimeter_block = gd_function_block(map_text, "_draw_town_selection_perimeter")
+    tile_profile_block = gd_function_block(map_text, "_tile_selection_visual_profile")
+    tile_reticle_block = gd_function_block(map_text, "_draw_tile_selection_reticle")
     corners_block = gd_function_block(map_text, "_draw_cartographic_selection_corners")
     midpoints_block = gd_function_block(map_text, "_draw_cartographic_selection_midpoints")
     validation_block = gd_function_block(map_text, "validation_tile_focus_layout")
-    ensure(all((draw_block, layout_block, profile_block, perimeter_block, corners_block, midpoints_block, validation_block)), errors, "Could not isolate Overworld town-selection cartographic production ownership")
+    ensure(all((draw_block, layout_block, profile_block, perimeter_block, tile_profile_block, tile_reticle_block, corners_block, midpoints_block, validation_block)), errors, "Could not isolate Overworld cartographic selection production ownership")
     if draw_block:
         order = tuple(draw_block.find(token) for token in (
             'var selection_rect: Rect2 = layout.get("selection_rect", rect)',
             'if bool(layout.get("selection_uses_cartographic_town_perimeter", false)):',
             "_draw_town_selection_perimeter(selection_rect)",
-            "else:",
-            'if bool(layout.get("selection_uses_interior_fill", true)):',
-            '_canvas_draw_rect(selection_rect.grow(-5.0), SELECTION_COLOR, false, focus_width)',
-            '_draw_selection_corners(selection_rect, SELECTION_COLOR, focus_width)',
+            'elif bool(layout.get("selection_uses_cartographic_tile_reticle", false)):',
+            "_draw_tile_selection_reticle(selection_rect)",
             'if tile == _hover_tile:',
         ))
-        ensure(all(index >= 0 for index in order) and list(order) == sorted(order), errors, "Town selection must branch to its cartographic perimeter while preserving the ordinary selected-tile and hover draw order")
+        ensure(all(index >= 0 for index in order) and list(order) == sorted(order), errors, "Selection drawing must choose the town perimeter or ordinary tile reticle before hover drawing")
+        for forbidden in ('Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10)', '_canvas_draw_rect(selection_rect.grow(-5.0)', '_draw_selection_corners('):
+            ensure(forbidden not in draw_block, errors, f"Ordinary selected-tile drawing must not retain the dominant filled/continuous treatment: {forbidden}")
     if layout_block:
         for token in (
             '"selection_rect": town_rect',
             '"selection_uses_town_footprint_rect": uses_town_footprint',
-            '"selection_uses_interior_fill": not uses_town_footprint',
+            '"selection_uses_interior_fill": false',
             '"selection_uses_cartographic_town_perimeter": uses_town_footprint',
-            '"selection_visual_model": TOWN_SELECTION_VISUAL_MODEL if uses_town_footprint else "filled_tile_outline_long_corner_brackets"',
+            '"selection_uses_cartographic_tile_reticle": not uses_town_footprint',
+            '"selection_visual_model": TOWN_SELECTION_VISUAL_MODEL if uses_town_footprint else TILE_SELECTION_VISUAL_MODEL',
             '"hover_rect": town_rect',
         ):
             ensure(token in layout_block, errors, f"Town focus layout is missing exact geometry/visual ownership: {token}")
@@ -42296,6 +42313,34 @@ def validate_overworld_town_selection_cartographic_perimeter(errors: list[str]) 
             ensure(token in perimeter_block, errors, f"Town selection perimeter draw is missing exact visual ownership: {token}")
         for forbidden in ("_canvas_draw_rect(", "await ", "create_timer", "create_tween", "Input.", "session.", "_session"):
             ensure(forbidden not in perimeter_block, errors, f"Town selection perimeter must remain fill-free and presentation-only: {forbidden}")
+    if tile_profile_block:
+        for token in (
+            "minf(rect.size.x, rect.size.y)",
+            "maxf(4.0, extent * TILE_SELECTION_PERIMETER_INSET_FACTOR)",
+            "maxf(8.0, extent * TILE_SELECTION_CORNER_LENGTH_FACTOR)",
+            "maxf(1.5, extent * TILE_SELECTION_CORNER_WIDTH_FACTOR)",
+            "maxf(5.0, extent * TILE_SELECTION_MIDPOINT_LENGTH_FACTOR)",
+            "maxf(1.25, extent * TILE_SELECTION_MIDPOINT_WIDTH_FACTOR)",
+            '"perimeter_rect": rect.grow(-perimeter_inset)',
+            '"corner_alpha": TILE_SELECTION_CORNER_ALPHA',
+            '"midpoint_alpha": TILE_SELECTION_MIDPOINT_ALPHA',
+            '"continuous_outline": false',
+            '"interior_fill_alpha": 0.0',
+        ):
+            ensure(token in tile_profile_block, errors, f"Ordinary tile selection profile is missing exact open-reticle geometry: {token}")
+        for forbidden in ("_session", "session.", "_selected_tile", "_hero_tile", "Input.", "await ", "create_timer", "queue_redraw", ".erase("):
+            ensure(forbidden not in tile_profile_block, errors, f"Ordinary tile selection profile must remain pure and read-only: {forbidden}")
+    if tile_reticle_block:
+        for token in (
+            "var profile := _tile_selection_visual_profile(rect)",
+            "TILE_SELECTION_CORNER_ALPHA",
+            "TILE_SELECTION_MIDPOINT_ALPHA",
+            "_draw_cartographic_selection_corners(perimeter_rect, corner_color",
+            "_draw_cartographic_selection_midpoints(perimeter_rect, midpoint_color",
+        ):
+            ensure(token in tile_reticle_block, errors, f"Ordinary tile reticle draw is missing exact visual ownership: {token}")
+        for forbidden in ("_canvas_draw_rect(", "await ", "create_timer", "create_tween", "Input.", "session.", "_session"):
+            ensure(forbidden not in tile_reticle_block, errors, f"Ordinary tile reticle must remain fill-free and presentation-only: {forbidden}")
     if corners_block:
         ensure(corners_block.count("_canvas_draw_line(") == 8, errors, "Town cartographic selection must draw exactly two short ticks at each of four corners")
         for forbidden in ("0.22", "0.075", "_draw_selection_corners", "await ", "create_timer"):
@@ -42304,13 +42349,18 @@ def validate_overworld_town_selection_cartographic_perimeter(errors: list[str]) 
         ensure(midpoints_block.count("_canvas_draw_line(") == 4, errors, "Town cartographic selection must draw exactly one subtle registration tick at each footprint edge midpoint")
         for forbidden in ("_canvas_draw_rect(", "_draw_selection_corners", "await ", "create_timer"):
             ensure(forbidden not in midpoints_block, errors, f"Town cartographic midpoint ticks must remain open and timing-free: {forbidden}")
+    ensure("func _draw_selection_corners(" not in map_text, errors, "The superseded long-corner ordinary selection helper must be removed")
     if validation_block:
         for token in (
             'var town_selection_visual_profile := _town_selection_visual_profile(selection_rect) if bool(layout.get("selection_uses_cartographic_town_perimeter", false)) else {}',
             'town_selection_visual_profile["perimeter_rect"] = _rect_payload(town_selection_visual_profile.get("perimeter_rect", selection_rect))',
+            'var tile_selection_visual_profile := _tile_selection_visual_profile(selection_rect) if bool(layout.get("selection_uses_cartographic_tile_reticle", false)) else {}',
+            'tile_selection_visual_profile["perimeter_rect"] = _rect_payload(tile_selection_visual_profile.get("perimeter_rect", selection_rect))',
             '"selection_uses_cartographic_town_perimeter": bool(layout.get("selection_uses_cartographic_town_perimeter", false))',
+            '"selection_uses_cartographic_tile_reticle": bool(layout.get("selection_uses_cartographic_tile_reticle", false))',
             '"selection_visual_model": String(layout.get("selection_visual_model", ""))',
             '"town_selection_visual_profile": town_selection_visual_profile.duplicate(true)',
+            '"tile_selection_visual_profile": tile_selection_visual_profile.duplicate(true)',
         ):
             ensure(token in validation_block, errors, f"Public focus validation is missing detached town-selection visual evidence: {token}")
         for forbidden in ("_draw_town_selection_perimeter(", "_draw_cartographic_selection_corners(", "_draw_cartographic_selection_midpoints(", "await ", "create_timer", "Input."):
@@ -42330,12 +42380,22 @@ def validate_overworld_town_selection_cartographic_perimeter(errors: list[str]) 
             '0.008',
             'continuous_outline',
             'interior_fill_alpha',
+            '"open_cartographic_tile_corner_and_midpoint_ticks"',
+            'selection_uses_cartographic_tile_reticle',
+            'tile_selection_visual_profile',
+            '0.085',
+            '0.82',
+            '0.18',
+            '0.022',
+            '0.42',
+            '0.08',
+            '0.016',
         ):
             ensure(token in text, errors, f"{owner} is missing exact town-selection cartographic proof: {token}")
         for forbidden in ("_draw_town_selection_perimeter(", "_draw_cartographic_selection_corners(", "_draw_cartographic_selection_midpoints(", "_town_selection_visual_profile(", "create_timer", "create_tween"):
             ensure(forbidden not in text, errors, f"{owner} must observe only public production geometry and avoid {forbidden}")
-    ensure('String(ordinary_layout.get("selection_visual_model", "")) == "filled_tile_outline_long_corner_brackets"' in focused_text, errors, "Focused owner must retain exact ordinary selected-tile visual control")
-    ensure('String(focus_layout.get("selection_visual_model", "")) != "filled_tile_outline_long_corner_brackets"' in visual_text, errors, "Broad Overworld visual owner must retain exact ordinary selected-tile visual control")
+    ensure('String(ordinary_layout.get("selection_visual_model", "")) == "open_cartographic_tile_corner_and_midpoint_ticks"' in focused_text, errors, "Focused owner must require the exact ordinary open selected-tile reticle")
+    ensure('String(focus_layout.get("selection_visual_model", "")) != "open_cartographic_tile_corner_and_midpoint_ticks"' in visual_text, errors, "Broad Overworld visual owner must require the exact ordinary open selected-tile reticle")
 
 
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
