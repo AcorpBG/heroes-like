@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
+    "Select the next owner-directed graphical-polish slice from a fresh direct runtime defect with a bounded production owner."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Completed from direct 1280x720 and 1920x1080 inspection. The standard collapsed Campaign board now exposes Arc, Chapter, and Show Intel at scroll zero; wide layout stays compact and campaign, launch, focus, accessibility, save, and gameplay authority remain exact.",
+  "currentNotes": "The owner-rejected Overworld near-peer scale is corrected and validated. Select the next graphical-polish slice from fresh direct runtime evidence; the compact Field Manual remains paused.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-standard-campaign-first-view-completeness-10184",
-  "currentSliceId": "ux-main-menu-standard-campaign-first-view-completeness-10184",
-  "currentSliceNotes": "Completed: standard 1280 Campaign first view is complete at scroll zero, 1920 stays compact, constrained layouts remain scrollable, and focused/compat/static/platform gates pass.",
+  "currentSlice": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",
+  "currentSliceId": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",
+  "currentSliceNotes": "Completed: towns now materially outrank heroes, structures, and loose props while exact logical map and gameplay authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu standard Campaign first-view completeness",
-  "currentSliceUpdatedAt": "2026-08-25T12:55:43Z",
+  "currentSliceTitle": "Overworld town, hero, and prop scale hierarchy correction",
+  "currentSliceUpdatedAt": "2026-08-25T13:24:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101386,6 +101386,61 @@
       "notes": "Completed from direct inspected current-HEAD captures. At 1280x720, the responsive collapsed board is 460px high with a 331px ScrollContainer, and Arc, Chapter, and Show Intel are all fully visible at scroll zero; at 1920x1080, the authored compact 0.44-height board and broad scenic field remain. Exact campaigns/chapters/order/tooltips/selection, difficulty, launch deduplication, expanded/restored geometry, focus/navigation, restart, profile/session/save, accessibility, and gameplay authority remain exact. Focused public Campaign launch/autosave, broad menu keyboard/layout, restart, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Campaign interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T12:55:43Z"
+    },
+    {
+      "id": "ux-main-menu-field-manual-compact-reference-card-10184",
+      "title": "Main Menu Field Manual compact reference card",
+      "status": "paused",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T13:07:45Z",
+      "startedAt": "2026-08-25T12:59:59Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Turn the oversized sparse Field Manual into a responsive compact reference card that uses its space intentionally while preserving the scenic Main Menu.",
+      "completionCriteria": "Direct current 1280x720 and 1920x1080 captures show a contained Field Manual with exact topic rows and a selected-topic crest, eyebrow, title, and article hierarchy; the 1920 board is capped near 1024x460 instead of 1407x670 while 1280 and constrained layouts remain contained; whole topic order/content/tooltips/selection and topic-title parity, contextual Back/Close, Credits & Notices, focus/navigation/accessibility, campaign/profile/session/save/settings authority, and gameplay remain exact; focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No SettingsService help-topic ids, order, labels, descriptions, default topic, handoff semantics, credits/legal content, or tooltip changes.",
+        "No Main Menu first-view commands, Campaign/Skirmish/Save/Settings boards, backdrop, command rail, input mapping, focus policy, accessibility semantics, profile/session/save/settings schema, or gameplay changes.",
+        "No new generated artwork, packaged Field Manual interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Paused by owner reprioritization after an unvalidated source draft and direct current-HEAD 1280x720/1920x1080 captures. The draft was withdrawn from the current tree; the evidence and bounded direction remain recorded for a future fresh implementation/validation pass after the live Overworld scale hierarchy correction.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",
+      "title": "Overworld town, hero, and prop scale hierarchy correction",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T13:24:44Z",
+      "startedAt": "2026-08-25T13:07:45Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Restore a coherent live world-scale hierarchy after direct owner feedback that towns, heroes, structures, and props read at incompatible physical scales.",
+      "completionCriteria": "Direct current 1280x720 and 1920x1080 River Pass captures show the unchanged 3x2 town materially larger than a one-tile hero, the hero distinct from durable structures, and artifacts/pickups/encounters subordinate but legible; exact painted bounds/aspect, grounding, logical footprints, town body/entry masks, ids/content, hit areas, passability, routes, movement, selection/focus, fog, accessibility, camera, session/save authority, generated placement, and Native RMG behavior remain unchanged; focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No object assets, content ids, logical footprints, town body/entry masks, passability, pathfinding, hit geometry, route, movement, interaction, selection, fog, camera, save/session, generated placement, or Native RMG changes.",
+        "No new artwork, procedural object replacement, map layout, terrain, UI shell, input/focus, accessibility semantics, or gameplay changes.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct owner feedback and inspected current-HEAD River Pass captures. Painted extents now form a 0.32 artifact, 0.40 pickup, 0.48 encounter/default, 0.52 waypoint, 0.56 durable/blocker, 0.60 landmark, 0.66 multi-tile cap, 0.68 hero, and 1.28 town ladder; the unchanged 3x2 town is materially larger than the hero while props remain legible and subordinate. Focused small-map, six-faction hero, artifact, broad headless Overworld, generated movement/save, full-route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The X11 broad Overworld owner remains excluded because its pre-scale rail word-ellipsis pixel oracle differed under that renderer while the normal headless owner passed. Logical footprints, body/entry masks, passability, routes, movement, content, saves, generated placement, and Native RMG are unchanged. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T13:24:44Z"
     }
   ],
   "project": "heroes-like",
@@ -101396,7 +101451,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next bounded graphical-polish slice from fresh direct runtime evidence; broader graphical polish and product/release-readiness gaps remain.",
+  "remainingWork": "Select the next owner-directed graphical-polish slice; the compact Field Manual remains paused and broader product/release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
