@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld settlement/prop scale separation is completed with direct inspected 1280/1920 captures and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
+  "currentNotes": "Town scenic district readiness ribbon is completed with direct inspected 1280x720 and 1920x1080 captures and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-settlement-prop-scale-separation-10184",
-  "currentSliceId": "ux-overworld-settlement-prop-scale-separation-10184",
-  "currentSliceNotes": "Completed: settlements, heroes, sites, and props now occupy visibly distinct painted extents while every logical footprint and gameplay authority remains exact.",
+  "currentSlice": "ux-town-scenic-district-readiness-ribbon-10184",
+  "currentSliceId": "ux-town-scenic-district-readiness-ribbon-10184",
+  "currentSliceNotes": "Completed: the exact five district values now occupy a compact lower-left scenic ribbon while every Town authority and interaction remains exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld settlement and prop scale separation",
-  "currentSliceUpdatedAt": "2026-08-25T10:40:51Z",
+  "currentSliceTitle": "Town scenic district readiness ribbon",
+  "currentSliceUpdatedAt": "2026-08-25T11:14:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101247,6 +101247,33 @@
       "notes": "Completed from direct owner feedback and inspected current River Pass 1280x720/1920x1080 captures. Painted extents are now artifact0.26, pickup0.32, encounter/default0.44, waypoint0.48, durable/blocker0.52, landmark0.58, multi-tile cap0.64, hero0.68, and town1.40. Exact alpha cropping/aspect, grounding, logical footprints, town body/entry masks, hit areas, passability, routes, movement, selection/focus, fog memory, accessibility, session/save authority, content, generated placement, and Native-RMG behavior remain unchanged. Focused scale, small/large-map, six-faction hero/town, artifact, broad Overworld, generated movement/save, route/input/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T10:40:51Z"
+    },
+    {
+      "id": "ux-town-scenic-district-readiness-ribbon-10184",
+      "title": "Town scenic district readiness ribbon",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T11:14:29Z",
+      "startedAt": "2026-08-25T10:44:27Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownStageView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make the authored Town panorama primary by replacing the broad district dashboard with a compact scenic readiness ribbon.",
+      "completionCriteria": "Direct current 1280x720 and 1920x1080 Town captures show a compact lower-opacity readiness ribbon with exact ordered military/economy/spellcraft/logistics/defense values and readable labels; focused Town visual proof retains exact payload authority, responsive containment, detach safety, overlay order, and compact-wide-compact restoration; Town actions, build state, command watch, status/header overlays, input/focus, accessibility, session/save authority, scenic assets, and gameplay remain exact; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No TownRules, OverworldRules, economy, build, recruitment, spell, response, threat, occupation, or district-count changes.",
+        "No input, focus, accessibility, navigation, session, save, route, scenic asset, command-watch, status-plaque, header, or action-presentation changes.",
+        "No packaged Town interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected current-HEAD Town captures at 1280x720 and 1920x1080. The exact five ordered district values now use readable Military/Economy/Magic/Roads/Walls labels inside a lower-left ribbon capped at 540px compact and 620px wide, with 0.56 outer/0.30 cell opacity and a two-pixel accent. Exact district payload authority, responsive containment, compact-wide-compact restoration, detached validation safety, Town rules/actions, build state, command watch, status/header overlays, input/focus, accessibility, session/save authority, scenic assets, and gameplay remain unchanged. Focused Town visual, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T11:14:29Z"
     }
   ],
   "project": "heroes-like",
