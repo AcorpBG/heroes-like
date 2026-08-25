@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: **none**. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+- Selected implementation slice: none. Next action is to select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+
+## Overworld Physical Object Proportion Rebalance
+
+id: `ux-overworld-physical-object-proportion-rebalance-10184`
+
+Status: completed.
+
+Implementation boundary:
+- adjust only the existing semantic visible-extent constants and multi-tile interactive clamp, retaining the exact classifier, alpha-bounds crop, aspect, bottom-anchor placement, grounding, and draw path;
+- restore a physical silhouette ladder: compact portable props below the hero, the hero below durable structures and landmarks, multi-tile structures above one-tile structures, and every object below the unchanged town;
+- keep encounters readable, keep the town at its existing 1.12-tile visual extent, and keep generated decorative body-cell presentation at its existing 0.56-tile extent.
+
+Completion criteria:
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show portable loot, the hero, one-tile sites, multi-tile structures, and towns reading at coherent physical proportions without overlap or loss of terrain and route readability;
+- focused runtime proves the exact semantic and 1x1 through 3x2 ranks, contained draw rectangles, exact alpha-cropped aspect and cache authority, and unchanged logical footprints, body/visit masks, passability, interaction, and session/save authority;
+- authored/generated Overworld visual, movement/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object identity, family/profile, asset, crop, logical footprint, body/visit mask, collision, passability, pathing, route, interaction, content, generated placement, session/save, camera, tile size, terrain, road, fog, selection, UI, AI, battle, balance, or Native RMG change;
+- no town, encounter, generated decorative body, procedural fallback, animation, audio, VFX, or broad map redesign;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- portable props now sit below the 0.56-tile hero, durable one-tile structures span 0.60 through 0.70 tile, and multi-tile interactive structures retain a bounded 0.72 through 0.84 tile extent below the unchanged 1.12-tile town;
+- inspected 1280x720 and 1920x1080 River Pass captures, the full Overworld visual matrix, six-faction hero geometry, generated-map render/move/save, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- logical footprints, body/visit masks, collision, passability, pathing, interaction, content, generated placement, session/save authority, gameplay, and Native RMG behavior remain unchanged. Packaged Overworld interaction and whole-release readiness remain unclaimed.
 
 - Previous completed implementation slice: `presentation-overworld-cartographic-command-rail-ornament-10184`. The large unused lower field of the live Overworld command rail now carries a quiet inset cartographic grid, route trace, compass rose, and registration marks behind the unchanged cards. Inspected 1280x720 and 1920x1080 captures replace the flat brown void with restrained scenery-supporting detail while map and text remain dominant. Exact card/control geometry and visibility, focus/input/accessibility ownership, labels/tooltips, map/routes, session/save authority, gameplay, and inherited narrow-layout hiding remain unchanged. Focused rail geometry, full Overworld visual, route, movement/input, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `presentation-overworld-cartographic-command-rail-ornament-10184`

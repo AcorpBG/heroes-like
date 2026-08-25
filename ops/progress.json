@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-cartographic-command-rail-ornament-10184",
-    "title": "Overworld cartographic command rail ornament",
+    "id": "ux-overworld-physical-object-proportion-rebalance-10184",
+    "title": "Overworld physical object proportion rebalance",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T22:18:33Z",
-    "updatedAt": "2026-08-25T22:37:27Z",
-    "completedAt": "2026-08-25T22:37:27Z",
+    "startedAt": "2026-08-25T22:45:14Z",
+    "updatedAt": "2026-08-25T23:05:51Z",
+    "completedAt": "2026-08-25T23:05:51Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with a passive inset grid, route trace, compass rose, and registration marks behind the existing Overworld rail cards. Inspected 1280x720 and 1920x1080 captures plus focused geometry, full visual, route, movement/input, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass."
+    "notes": "Completed from direct capture review. Portable props now sit below the hero, durable structures sit above it, and multi-tile structures retain 0.72-to-0.84-tile presence below the unchanged town. Two-width captures, focused and compatibility runtime, repository/editor, and bounded Linux/Windows startup gates pass; gameplay authority is unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld cartographic command rail ornament is completed with inspected two-width captures and focused, compatibility, static/editor, and bounded Linux/Windows package-startup evidence; select the next approved slice.",
+  "currentNotes": "The Overworld physical object proportion rebalance is completed. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-cartographic-command-rail-ornament-10184",
-  "currentSliceId": "presentation-overworld-cartographic-command-rail-ornament-10184",
-  "currentSliceNotes": "Completed the passive inset cartographic ornament with exact card geometry, focus/input/accessibility, map/session authority, and bounded platform validation.",
+  "currentSlice": "ux-overworld-physical-object-proportion-rebalance-10184",
+  "currentSliceId": "ux-overworld-physical-object-proportion-rebalance-10184",
+  "currentSliceNotes": "Restore a visual-only prop-to-actor-to-structure-to-town hierarchy while preserving all logical map authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld cartographic command rail ornament",
-  "currentSliceUpdatedAt": "2026-08-25T22:37:27Z",
+  "currentSliceTitle": "Overworld physical object proportion rebalance",
+  "currentSliceUpdatedAt": "2026-08-25T23:05:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19899,9 +19899,38 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed Overworld rail, fog, scale, terrain, road, reticle, gameplay, and RMG authority.",
-  "notes": "The Overworld cartographic command rail ornament is completed; blockers are empty and no new implementation slice is selected.",
+  "nextActionGuardrailNote": "Select the next source-backed graphical-polish or release-readiness slice; preserve the completed Overworld object hierarchy and exact gameplay authority.",
+  "notes": "The Overworld physical object proportion rebalance is completed; blockers are empty and the next slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-physical-object-proportion-rebalance-10184",
+      "title": "Overworld physical object proportion rebalance",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T22:45:14Z",
+      "updatedAt": "2026-08-25T23:05:51Z",
+      "completedAt": "2026-08-25T23:05:51Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Restore a coherent physical silhouette ladder from portable props through heroes and structures to towns without changing any gameplay footprint.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 captures show coherent prop, hero, one-tile structure, multi-tile structure, and town proportions; focused runtime proves exact semantic and 1x1 through 3x2 ranks, containment, alpha-cropped aspect/cache authority, logical footprint/passability/interaction/session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No object identity, family/profile, asset, logical footprint, body/visit mask, collision, passability, pathing, interaction, content, generated placement, session/save, camera, terrain, UI, gameplay, or Native RMG change.",
+        "No town, encounter, generated decorative body, procedural fallback, animation, audio, VFX, or broad map redesign.",
+        "No packaged Overworld interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current-capture evidence. The shipped visual hierarchy now keeps portable props below the 0.56-tile hero, durable structures above it, bounded multi-tile structures at 0.72 through 0.84 tile, and the unchanged town at 1.12 tile. Inspected two-width captures plus focused, compatibility, static/editor, and bounded platform startup gates pass.",
+      "blockedReason": null,
+      "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "presentation-overworld-cartographic-command-rail-ornament-10184",
       "title": "Overworld cartographic command rail ornament",
@@ -101944,7 +101973,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; broader graphical polish and product gaps remain.",
+  "remainingWork": "Implement and validate the selected visual-only multi-footprint object scale correction; broader graphical polish and product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102375,7 +102404,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_cartographic_command_rail_ornament_completed",
+  "result": "overworld_physical_object_proportion_rebalance_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102476,9 +102505,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld cartographic command rail ornament is completed with inspected two-width visual evidence and focused, compatibility, static/editor, and bounded platform gates.",
+  "summary": "The Overworld physical object proportion rebalance is in progress from a directly inspected shipped visual defect.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T22:37:27Z",
+  "updatedAt": "2026-08-25T22:45:14Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

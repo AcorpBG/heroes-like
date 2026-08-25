@@ -98,20 +98,21 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
-const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.38
-const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.44
+const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30
+const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.38
 const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.50
-const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.56
-const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.54
-const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.58
-const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.56
-const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.46
+const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.66
+const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.60
+const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.70
+const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.58
+const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.42
 const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.48
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.60
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.72
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
-const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := OBJECT_BLOCKER_VISIBLE_EXTENT_TILES
+const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.56
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08
 const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 16
@@ -162,7 +163,7 @@ const HERO_ANCHOR_STYLE := "hero_foot_contact_shadow"
 const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
 const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"
 const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"
-const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.62
+const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56
 const HERO_SPRITE_LIFT_FACTOR := 0.30
 const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.64
@@ -3013,7 +3014,11 @@ func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictiona
 	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
 	var uncapped_sprite_extent := maxf(12.0, extent * sprite_fraction)
 	var uses_multi_tile_cap := (footprint.x > 1 or footprint.y > 1) and family not in ["blocker", "decoration", "town"]
-	var sprite_extent := minf(uncapped_sprite_extent, single_tile_extent * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES) if uses_multi_tile_cap else uncapped_sprite_extent
+	var sprite_extent := clampf(
+		uncapped_sprite_extent,
+		single_tile_extent * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES,
+		single_tile_extent * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES
+	) if uses_multi_tile_cap else uncapped_sprite_extent
 	var sprite_center := rect.get_center()
 	if uses_multi_tile_cap:
 		sprite_center.y = rect.end.y - single_tile_extent * 0.5
@@ -3025,6 +3030,7 @@ func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictiona
 		"uncapped_sprite_extent_px": uncapped_sprite_extent,
 		"sprite_extent_px": maxf(12.0, sprite_extent),
 		"sprite_extent_tiles": maxf(12.0, sprite_extent) / maxf(single_tile_extent, 1.0),
+		"min_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES if uses_multi_tile_cap else 0.0,
 		"cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES if uses_multi_tile_cap else 0.0,
 		"uses_multi_tile_visual_cap": uses_multi_tile_cap,
 		"sprite_center": sprite_center,
@@ -4732,6 +4738,7 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 		"draw_size_tiles": {"x": draw_size.x / single_tile_extent, "y": draw_size.y / single_tile_extent},
 		"visible_extent_tiles": visible_extent_px / single_tile_extent,
 		"uses_multi_tile_visual_cap": bool(metrics.get("uses_multi_tile_visual_cap", false)),
+		"min_tiles": float(metrics.get("min_tiles", 0.0)),
 		"cap_tiles": float(metrics.get("cap_tiles", 0.0)),
 		"cache_size_before": cache_size_before,
 		"cache_size_after_first": cache_size_after_first,
