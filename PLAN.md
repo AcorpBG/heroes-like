@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved graphical-polish or release-readiness slice from direct current behavior evidence before implementation.
 
+- Previous completed implementation slice: `ux-overworld-terrain-transition-overlay-restoration-10184`. The original quiet-tile renderer now suppresses generic terrain edge/corner overlays only when an enabled and loaded HoMM3 tile actually owns self-contained transition art. Disabled HoMM3 metadata no longer erases the active fallback layer; direct Small/Medium 1280x720 and 1920x1080 captures render 119–291 deterministic boundary tiles, with a controlled 7,934-pixel visual delta and the Medium 1920 performance floor preserved at 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Terrain topology, ids, priorities, generation, passability/pathfinding, roads, fog, content, Native-RMG parity, packaged Overworld interaction, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.
+  id: `ux-overworld-terrain-transition-overlay-restoration-10184`
+
 - Previous completed implementation slice: `ux-generated-map-blocker-composition-polish-10184`. Generated decorative blocker bodies now select existing terrain-biome art in deterministic 16x16 spatial clusters and apply bounded per-cell scale, offset, and grounding while remaining inside the owning tile. Direct Small and Medium captures at 1280x720 and 1920x1080, 15–22 distinct live blocker assets, repeated-definition variation, exact rebuild/movement/save authority, the unchanged Medium 1920 performance floor, authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability, pathfinding, content, packaged generated-map interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unchanged or unclaimed.
   id: `ux-generated-map-blocker-composition-polish-10184`
 
@@ -10026,6 +10029,27 @@ Completion criteria:
 
 Non-goals:
 - no new art, asset generation, manifest/content edits, terrain or road rendering change, native generator/RMG recovery/parity, object placement/count/density, body/visit masks, passability/pathfinding, gameplay, save schema, packaged generated-map interaction, certification, signing/publication, whole-game validation, or release-readiness claim.
+
+## Overworld Terrain Transition Overlay Restoration
+
+id: `ux-overworld-terrain-transition-overlay-restoration-10184`
+
+Status: completed.
+
+Implementation boundary:
+- suppress generic edge/corner overlays only when the HoMM3 prototype renderer is actually enabled for the receiver terrain, rather than whenever an inactive HoMM3 configuration record merely exists;
+- retain the existing source/receiver priority, same-group suppression, edge-art lookup, bounded fallback strip, corner hint, tile texture, road, fog, and draw order exactly;
+- expose the effective transition draw policy through the existing terrain presentation authority so focused authored and generated-map tests distinguish a rendered fallback overlay from inactive relation metadata;
+- keep the correction presentation-only and local to each visible terrain tile.
+
+Completion criteria:
+- direct Small and Medium 1280x720 and 1920x1080 captures show softened, readable terrain boundaries without obscuring roads, objects, heroes, towns, or route cues;
+- focused authority proves disabled HoMM3 terrain configurations use the generic overlay, enabled self-contained HoMM3 tiles remain overlay-free, and tiles without transition relationships draw no overlay;
+- terrain ids/order, map topology, passability, path results, objects, movement, session/save authority, and the generated-map performance floor remain exact;
+- authored Overworld visual, generated live render/move, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain generation, smoothing, topology, terrain-id, transition-priority, source/receiver relationship, passability/pathfinding, native RMG recovery/parity, new art, asset replacement, road/fog/camera/input/gameplay/save-schema, packaged Overworld interaction, certification, signing/publication, whole-game validation, or release-readiness change or claim.
 
 ## Progress Reconciliation
 

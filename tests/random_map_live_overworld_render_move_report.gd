@@ -84,6 +84,9 @@ func _run() -> void:
 	var map_visual_before := _map_visual_summary(overworld)
 	if not _assert_generated_visual_summary(map_visual_before, "before_move"):
 		return
+	var terrain_transition_before := _terrain_transition_summary(overworld)
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_terrain_transition_summary(terrain_transition_before, "before_move"):
+		return
 	var generated_presentation_authority_before := _generated_presentation_authority(SessionState.active_session)
 	if not await _capture_if_requested("before_move"):
 		return
@@ -96,6 +99,12 @@ func _run() -> void:
 	var after_snapshot: Dictionary = overworld.validation_snapshot()
 	var map_visual_after := _map_visual_summary(overworld)
 	if not _assert_generated_visual_summary(map_visual_after, "after_move"):
+		return
+	var terrain_transition_after := _terrain_transition_summary(overworld)
+	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_terrain_transition_summary(terrain_transition_after, "after_move"):
+		return
+	if terrain_transition_after != terrain_transition_before:
+		_fail("Generated terrain transition draw authority changed across movement/redraw.")
 		return
 	if map_visual_after.get("body_entries", []) != map_visual_before.get("body_entries", []):
 		_fail("Generated blocker composition changed across movement/redraw.")
@@ -157,6 +166,7 @@ func _run() -> void:
 		"map_viewport": after_snapshot.get("map_viewport", {}),
 		"generated_visual_before": _compact_generated_visual_summary(map_visual_before),
 		"generated_visual_after": _compact_generated_visual_summary(map_visual_after),
+		"terrain_transition": terrain_transition_after,
 		"save_reload_authority_exact": true,
 	})])
 	get_tree().quit(0)
@@ -193,6 +203,56 @@ func _map_visual_summary(overworld: Node) -> Dictionary:
 	if map_view == null or not map_view.has_method("validation_generated_object_visual_summary"):
 		return {}
 	return map_view.call("validation_generated_object_visual_summary")
+
+func _terrain_transition_summary(overworld: Node) -> Dictionary:
+	var map_view := overworld.get_node_or_null("%Map")
+	if map_view == null or not map_view.has_method("validation_tile_presentation"):
+		return {}
+	var relationship_tile_count := 0
+	var generic_overlay_tile_count := 0
+	var self_contained_tile_count := 0
+	var inactive_homm3_overlay_tile_count := 0
+	var policy_ids: Dictionary = {}
+	var session = SessionState.active_session
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			if not OverworldRules.is_tile_explored(session, x, y):
+				continue
+			var presentation: Dictionary = map_view.call("validation_tile_presentation", Vector2i(x, y))
+			var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
+			if int(terrain.get("generic_transition_overlay_relationship_count", 0)) <= 0:
+				continue
+			relationship_tile_count += 1
+			var policy := String(terrain.get("transition_draw_policy", ""))
+			if policy != "":
+				policy_ids[policy] = true
+			if bool(terrain.get("homm3_transition_self_contained", false)):
+				self_contained_tile_count += 1
+			elif bool(terrain.get("generic_transition_overlay_active", false)):
+				generic_overlay_tile_count += 1
+				if not bool(terrain.get("uses_homm3_local_prototype", false)):
+					inactive_homm3_overlay_tile_count += 1
+	return {
+		"relationship_tile_count": relationship_tile_count,
+		"generic_overlay_tile_count": generic_overlay_tile_count,
+		"self_contained_tile_count": self_contained_tile_count,
+		"inactive_homm3_overlay_tile_count": inactive_homm3_overlay_tile_count,
+		"draw_policy_ids": policy_ids.keys(),
+	}
+
+func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> bool:
+	var relationship_count := int(summary.get("relationship_tile_count", 0))
+	if (
+		relationship_count <= 0
+		or int(summary.get("generic_overlay_tile_count", 0)) != relationship_count
+		or int(summary.get("inactive_homm3_overlay_tile_count", 0)) != relationship_count
+		or int(summary.get("self_contained_tile_count", -1)) != 0
+		or summary.get("draw_policy_ids", []) != ["active_homm3_self_contained_else_generic_overlay"]
+	):
+		_fail("%s generated terrain transitions did not use the disabled-HoMM3 generic overlay path: %s" % [label, JSON.stringify(summary)])
+		return false
+	return true
 
 func _assert_generated_visual_summary(summary: Dictionary, label: String) -> bool:
 	if summary.is_empty():
