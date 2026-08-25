@@ -20,6 +20,7 @@ const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
 const GUIDE_DOCK_COMPACT_VIEWPORT := Vector2(1280.0, 720.0)
+const SAVE_EMPTY_DOCK_MAX_SIZE := Vector2(920.0, 360.0)
 const SETTINGS_SUMMARY_MAX_LINES := 4
 const SETTINGS_SUMMARY_MAX_CHARS := 84
 const TAB_STAGE_COPY := {
@@ -164,6 +165,12 @@ const TAB_HELP_TOPIC := {
 @onready var _settings_restore_defaults_dialog: ConfirmationDialog = $SettingsRestoreDefaultsDialog
 @onready var _display_change_confirmation_dialog: ConfirmationDialog = $DisplayChangeConfirmationDialog
 @onready var _save_list: ItemList = %SaveList
+@onready var _save_empty_panel: PanelContainer = %SaveEmptyPanel
+@onready var _save_empty_eyebrow_label: Label = %SaveEmptyEyebrow
+@onready var _save_empty_title_label: Label = %SaveEmptyTitle
+@onready var _save_empty_body_label: Label = %SaveEmptyBody
+@onready var _save_empty_cue_label: Label = %SaveEmptyCue
+@onready var _save_split: HBoxContainer = %SaveSplit
 @onready var _save_commander_portrait: HeroPortraitView = %SaveCommanderPortrait
 @onready var _save_details_label: Label = %SaveDetails
 @onready var _save_name_edit: LineEdit = %SaveNameEdit
@@ -2295,6 +2302,22 @@ func _rebuild_save_browser() -> void:
 		_selected_save_key = ""
 
 	_refresh_selected_save()
+	_refresh_save_browser_presentation()
+
+func _save_browser_is_empty() -> bool:
+	if not _save_browser_loaded:
+		return false
+	for summary in _save_summaries:
+		if summary is Dictionary and SaveService.can_load_summary(summary):
+			return false
+	return true
+
+func _refresh_save_browser_presentation() -> void:
+	var empty := _save_browser_is_empty()
+	_save_empty_panel.visible = empty
+	_save_split.visible = not empty
+	if _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SAVES:
+		_apply_stage_dock_layout()
 
 func _refresh_selected_save() -> void:
 	var summary := _selected_summary()
@@ -2396,6 +2419,10 @@ func _reset_save_browser_placeholder() -> void:
 	_selected_save_key = ""
 	if _save_list != null:
 		_save_list.clear()
+	if _save_empty_panel != null:
+		_save_empty_panel.visible = false
+	if _save_split != null:
+		_save_split.visible = true
 	if _save_details_label != null:
 		_set_compact_label(_save_details_label, "Open Load to choose a saved expedition.", 3, 84)
 	if _save_commander_portrait != null:
@@ -3179,6 +3206,8 @@ func _apply_stage_dock_layout() -> void:
 	var anchors := STANDARD_DOCK_ANCHORS
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
 		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
+	elif _menu_tabs.current_tab == TAB_SAVES and _save_browser_is_empty():
+		anchors = _save_empty_stage_dock_anchors()
 	elif _menu_tabs.current_tab == TAB_GUIDE:
 		anchors = _guide_stage_dock_anchors()
 	_stage_dock_panel.anchor_left = anchors.position.x
@@ -3202,6 +3231,12 @@ func _guide_stage_dock_anchors() -> Rect2:
 		return STANDARD_DOCK_ANCHORS
 	var width_ratio := minf(STANDARD_DOCK_ANCHORS.size.x, GUIDE_DOCK_MAX_SIZE.x / viewport_size.x)
 	var height_ratio := minf(STANDARD_DOCK_ANCHORS.size.y, GUIDE_DOCK_MAX_SIZE.y / viewport_size.y)
+	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(width_ratio, height_ratio))
+
+func _save_empty_stage_dock_anchors() -> Rect2:
+	var viewport_size := get_viewport().get_visible_rect().size
+	var width_ratio := minf(STANDARD_DOCK_ANCHORS.size.x, SAVE_EMPTY_DOCK_MAX_SIZE.x / maxf(viewport_size.x, 1.0))
+	var height_ratio := minf(STANDARD_DOCK_ANCHORS.size.y, SAVE_EMPTY_DOCK_MAX_SIZE.y / maxf(viewport_size.y, 1.0))
 	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(width_ratio, height_ratio))
 
 func _hide_stage_dock() -> void:
@@ -3332,7 +3367,7 @@ func _focus_stage_entry() -> void:
 		TAB_SKIRMISH:
 			target = _skirmish_list if _skirmish_list.item_count > 0 else _difficulty_picker
 		TAB_SAVES:
-			target = _save_list if _save_list.item_count > 0 else _close_stage_dock_button
+			target = _close_stage_dock_button if _save_browser_is_empty() else (_save_list if _save_list.item_count > 0 else _close_stage_dock_button)
 		TAB_GUIDE:
 			target = _help_list if _help_list.item_count > 0 else _stage_help_button
 		TAB_SETTINGS:
@@ -3613,6 +3648,14 @@ func validation_snapshot() -> Dictionary:
 		"start_skirmish_enabled": not _start_skirmish_button.disabled,
 		"selected_save_key": _selected_save_key,
 		"save_browser_loaded": _save_browser_loaded,
+		"save_empty_state": _save_browser_is_empty(),
+		"save_empty_panel_visible": _save_empty_panel.visible,
+		"save_split_visible": _save_split.visible,
+		"save_empty_title": _save_empty_title_label.text,
+		"save_empty_body": _save_empty_body_label.text,
+		"save_empty_cue": _save_empty_cue_label.text,
+		"save_empty_panel_rect": _save_empty_panel.get_global_rect(),
+		"save_split_rect": _save_split.get_global_rect(),
 		"latest_save_summary": latest_summary,
 		"selected_save_summary": selected_save_summary.duplicate(true),
 		"latest_play_check": SaveService.describe_summary_play_check(latest_summary),
@@ -3801,6 +3844,9 @@ func validation_stage_dock_surface_summary() -> Dictionary:
 		"dock_combined_minimum_size": _stage_dock_panel.get_combined_minimum_size(),
 		"dock_visible": _stage_dock_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
+		"save_empty_state": _save_browser_is_empty(),
+		"save_empty_panel_visible": _save_empty_panel.visible,
+		"save_split_visible": _save_split.visible,
 		"high_contrast": FrontierVisualKit.high_contrast_enabled(),
 		"rendering_mode": "authored_cartography_surface" if style is StyleBoxTexture else "smoke_fallback",
 		"high_contrast_fallback_class": high_contrast_fallback.get_class(),
@@ -4923,6 +4969,7 @@ func _apply_visual_theme() -> void:
 		"SkirmishOperationalPanel": "smoke",
 		"SaveListPanel": "smoke",
 		"SaveDetailPanel": "smoke",
+		"SaveEmptyPanel": "smoke",
 		"GuidePanel": "smoke",
 		"CreditsNoticesPanel": "ink",
 		"SettingsPanel": "smoke",
@@ -4947,6 +4994,14 @@ func _apply_visual_theme() -> void:
 	_help_topic_title_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("title"))
 	_help_details_label.add_theme_font_size_override("font_size", 15)
 	_help_details_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("body"))
+	_save_empty_eyebrow_label.add_theme_font_size_override("font_size", 11)
+	_save_empty_eyebrow_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("gold"))
+	_save_empty_title_label.add_theme_font_size_override("font_size", 24)
+	_save_empty_title_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("title"))
+	_save_empty_body_label.add_theme_font_size_override("font_size", 15)
+	_save_empty_body_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("body"))
+	_save_empty_cue_label.add_theme_font_size_override("font_size", 13)
+	_save_empty_cue_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("gold"))
 
 	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_open_credits_notices_button, "secondary", 220.0, 38.0, 13)

@@ -1062,6 +1062,13 @@ func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
 			await get_tree().process_frame
 			var summary: Dictionary = shell.call("validation_stage_dock_surface_summary")
 			var anchors: Rect2 = board.get("anchors", Rect2())
+			if String(board.get("label", "")) == "Saves" and (
+				bool(summary.get("save_empty_state", true))
+				or bool(summary.get("save_empty_panel_visible", true))
+				or not bool(summary.get("save_split_visible", false))
+			):
+				failure = "Populated Saves board did not retain its exact two-column surface at %s: %s" % [requested_size, summary]
+				break
 			var anchored_rect := Rect2(
 				Vector2(shell.size.x * anchors.position.x, shell.size.y * anchors.position.y),
 				Vector2(shell.size.x * anchors.size.x, shell.size.y * anchors.size.y)

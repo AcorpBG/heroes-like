@@ -11,6 +11,10 @@ const FIELD_MANUAL_WIDE_MAX_SIZE := Vector2(1024.0, 460.0)
 const FIELD_MANUAL_CREST_PATH := "res://art/ui/branding/aurelion_reach_frontier_crest.png"
 const FIELD_MANUAL_TOPIC_IDS := ["campaign", "skirmish", "overworld", "town", "battle", "outcome", "saves", "credits_notices"]
 const FIELD_MANUAL_TOPIC_LABELS := ["Campaign", "Skirmish", "Overworld", "Town", "Battle", "Outcome", "Save Flow", "Credits & Notices"]
+const EMPTY_SAVE_VIEWPORTS := [Vector2i(1280, 720), Vector2i(1920, 1080)]
+const EMPTY_SAVE_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
+const EMPTY_SAVE_DOCK_MAX_SIZE := Vector2(920.0, 360.0)
+const EMPTY_SAVE_SLOT_ROWS := ["Autosave | Unavailable", "Manual 1 | Unavailable", "Manual 2 | Unavailable", "Manual 3 | Unavailable"]
 const SETTINGS_SCROLL_FOCUS_NAMES := [
 	"PresentationModePicker",
 	"RenderQualityPicker",
@@ -106,6 +110,9 @@ func _run() -> void:
 	if not await _check_field_manual_reference_card():
 		return
 	_expect_focus("OpenCampaign", "first-view return after Field Manual reference-card validation")
+	if not await _check_empty_save_scenic_card():
+		return
+	_expect_focus("OpenCampaign", "first-view return after empty-save scenic-card validation")
 	if not await _check_destructive_dialog_controller_cancel(shell):
 		return
 	if not await _check_display_change_exclusive_parent_input(shell):
@@ -372,6 +379,103 @@ func _field_manual_rect_contains(outer: Rect2, inner: Rect2, tolerance: float = 
 		and inner.position.y >= outer.position.y - tolerance \
 		and inner.end.x <= outer.end.x + tolerance \
 		and inner.end.y <= outer.end.y + tolerance
+
+func _check_empty_save_scenic_card() -> bool:
+	var original_window_size: Vector2i = get_window().size
+	var original_focus := get_viewport().gui_get_focus_owner()
+	var summary_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	var authority_before: Dictionary = _destructive_protected_state()
+	var layout_host := Control.new()
+	layout_host.name = "MainMenuEmptySaveScenicCardHost"
+	layout_host.size = Vector2(EMPTY_SAVE_VIEWPORTS[0])
+	add_child(layout_host)
+	var save_shell: Control = load("res://scenes/menus/MainMenu.tscn").instantiate()
+	layout_host.add_child(save_shell)
+	await _settle()
+	var failure := ""
+	for viewport_size in EMPTY_SAVE_VIEWPORTS:
+		SettingsService.call("_set_runtime_window_size", viewport_size)
+		layout_host.size = Vector2(viewport_size)
+		await _settle()
+		save_shell.call("validation_open_saves_stage")
+		await _settle()
+		var snapshot: Dictionary = save_shell.call("validation_snapshot")
+		var surface: Dictionary = save_shell.call("validation_stage_dock_surface_summary")
+		failure = _empty_save_scenic_card_error(snapshot, surface, viewport_size)
+		if failure != "":
+			break
+		if _focus_name() != "CloseStageDock":
+			failure = "Empty Load board entry focus was %s instead of CloseStageDock at %s." % [_focus_name(), viewport_size]
+			break
+		var active_session = SessionState.active_session
+		var active_session_state: Dictionary = active_session.to_dict() if active_session != null else {}
+		if active_session_state != authority_before.get("active_session", {}):
+			failure = "Empty Load board changed active-session authority at %s." % [viewport_size]
+			break
+	layout_host.queue_free()
+	SettingsService.call("_set_runtime_window_size", original_window_size)
+	SaveService._slot_summary_cache = summary_cache_before.duplicate(true)
+	await _settle()
+	if is_instance_valid(original_focus):
+		(original_focus as Control).grab_focus()
+		await _settle()
+	if failure == "" and _destructive_protected_state() != authority_before:
+		failure = "Empty Load board width round trip changed campaign/session/save/settings authority."
+	if failure != "":
+		return _fail_bool(failure)
+	if get_viewport().gui_get_focus_owner() != original_focus:
+		return _fail_bool("Empty-save scenic-card validation did not restore the original focus owner.")
+	return true
+
+func _empty_save_scenic_card_error(snapshot: Dictionary, surface: Dictionary, viewport_size: Vector2i) -> String:
+	if (
+		int(snapshot.get("current_tab", -1)) != 2
+		or not bool(snapshot.get("stage_dock_visible", false))
+		or not bool(snapshot.get("save_empty_state", false))
+		or not bool(snapshot.get("save_empty_panel_visible", false))
+		or bool(snapshot.get("save_split_visible", true))
+		or snapshot.get("save_browser_items", []) != EMPTY_SAVE_SLOT_ROWS
+		or String(snapshot.get("save_empty_title", "")) != "No expedition records yet"
+		or String(snapshot.get("save_empty_body", "")) != "Begin a Campaign or Skirmish expedition. This archive will keep one autosave and three manual slots ready for your return."
+		or String(snapshot.get("save_empty_cue", "")) != "Close this board, then choose Campaign or Skirmish."
+		or bool(snapshot.get("load_selected_enabled", true))
+		or not bool(surface.get("save_empty_state", false))
+		or not bool(surface.get("save_empty_panel_visible", false))
+		or bool(surface.get("save_split_visible", true))
+	):
+		return "Empty Load board content/state contract failed at %s: snapshot=%s surface=%s." % [viewport_size, snapshot, surface]
+	var expected_anchors := Rect2(
+		EMPTY_SAVE_STANDARD_ANCHORS.position,
+		Vector2(
+			minf(EMPTY_SAVE_STANDARD_ANCHORS.size.x, EMPTY_SAVE_DOCK_MAX_SIZE.x / float(viewport_size.x)),
+			minf(EMPTY_SAVE_STANDARD_ANCHORS.size.y, EMPTY_SAVE_DOCK_MAX_SIZE.y / float(viewport_size.y))
+		)
+	)
+	var stage_rect: Rect2 = surface.get("dock_rect", Rect2())
+	var actual_anchors: Rect2 = surface.get("dock_anchors", Rect2())
+	var combined_minimum: Vector2 = surface.get("dock_combined_minimum_size", Vector2.ZERO)
+	var card_rect: Rect2 = snapshot.get("save_empty_panel_rect", Rect2())
+	var viewport_rect := Rect2(Vector2.ZERO, Vector2(viewport_size))
+	var expected_position := Vector2(viewport_size) * expected_anchors.position
+	var anchored_size := Vector2(viewport_size) * expected_anchors.size
+	var expected_size := Vector2(maxf(anchored_size.x, combined_minimum.x), maxf(anchored_size.y, combined_minimum.y))
+	var uncovered_right_ratio := (float(viewport_size.x) - stage_rect.end.x) / float(viewport_size.x)
+	if (
+		actual_anchors.position.distance_to(expected_anchors.position) > 0.0001
+		or actual_anchors.size.distance_to(expected_anchors.size) > 0.0001
+		or stage_rect.position.distance_to(expected_position) > 1.0
+		or stage_rect.size.x < expected_size.x - 1.0
+		or stage_rect.size.y < expected_size.y - 1.0
+		or stage_rect.size.x > expected_size.x + 3.0
+		or stage_rect.size.y > expected_size.y + 3.0
+		or not _field_manual_rect_contains(viewport_rect, stage_rect)
+		or not _field_manual_rect_contains(stage_rect, card_rect)
+		or card_rect.size.x < 560.0
+		or card_rect.size.y < 210.0
+		or uncovered_right_ratio < (0.24 if viewport_size.x == 1280 else 0.48)
+	):
+		return "Empty Load board geometry escaped its compact scenic-card contract at %s: snapshot=%s surface=%s." % [viewport_size, snapshot, surface]
+	return ""
 
 func _check_settings_focus_visibility() -> bool:
 	var original_window_size: Vector2i = get_window().size

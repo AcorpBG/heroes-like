@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Completed from direct 1280x720 and 1920x1080 inspection. The Field Manual keeps its contained standard footprint, caps the wide board near 1024x460, and adds a restrained crest/eyebrow/live-title/article hierarchy while exact help, navigation, accessibility, state, and gameplay authority remain unchanged.",
+  "currentNotes": "Completed from direct 1280x720 and 1920x1080 inspection. The all-slots-unavailable Load board is now a compact authored archive card; any occupied slot retains the exact original populated browser and save authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-field-manual-compact-reference-card-10184",
-  "currentSliceId": "ux-main-menu-field-manual-compact-reference-card-10184",
-  "currentSliceNotes": "Completed: the responsive compact Field Manual and selected-topic reference card pass focused geometry/content/authority, broad menu, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates.",
+  "currentSlice": "ux-main-menu-empty-save-browser-scenic-card-10184",
+  "currentSliceId": "ux-main-menu-empty-save-browser-scenic-card-10184",
+  "currentSliceNotes": "Completed: the empty Load archive card passes focused two-resolution geometry/content/focus/authority, populated save workflow, broad menu, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Field Manual compact reference card",
-  "currentSliceUpdatedAt": "2026-08-25T13:51:04Z",
+  "currentSliceTitle": "Main Menu empty-save scenic card",
+  "currentSliceUpdatedAt": "2026-08-25T14:18:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101414,6 +101414,34 @@
       "notes": "Completed from direct inspected captures and live public navigation. The standard 1280 Field Manual remains contained at roughly 938x448, while 1920 is capped near 1024x460 instead of the prior sparse 1407x670 board. The unchanged eight-topic list now shares the authored cartographic surface with a compact selected-topic card that reuses the frontier crest and adds an eyebrow, live title, separator, and article hierarchy. Exact topic ids/order/content/tooltips/selection, contextual handoff, Back/Close/focus, Credits & Notices, profile/session/save/settings authority, accessibility, and gameplay remain exact. The focused keyboard owner, broad Menu/Outcome width round-trip, Credits & Notices, global keyboard layout, accessibility semantics, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. A stale broad-test Campaign anchor oracle was aligned to the already-shipped 460px production minimum without changing Campaign behavior. Packaged Field Manual interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T13:51:04Z"
+    },
+    {
+      "id": "ux-main-menu-empty-save-browser-scenic-card-10184",
+      "title": "Main Menu empty-save scenic card",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T14:18:48Z",
+      "startedAt": "2026-08-25T13:56:44Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the oversized all-slots-unavailable Load board with a compact, intentional empty-expedition presentation that gives the scenic Main Menu back its visual priority.",
+      "completionCriteria": "Direct current 1280x720 and 1920x1080 captures show an authored compact empty-save card rather than a large vacant two-column panel; the empty state clearly explains that no expedition is available and points to Campaign or Skirmish without adding a new launch path; any occupied slot restores the exact existing two-column browser, ordered rows/tooltips/selection, commander preview, naming/deletion/load actions, and full dock geometry; empty-populated-empty transitions, focus/navigation/accessibility, profile/campaign/session/save/settings authority, and gameplay remain exact; focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No SaveService behavior, save paths, schema/version, slot identities/order/labels/tooltips, preview text, naming, deletion, load consequences, autosave/manual-save policy, or session authority changes.",
+        "No Main Menu first-view commands, Campaign/Skirmish/Guide/Settings boards, shared cartography surface, backdrop, command rail, input mapping, focus policy, accessibility semantics, profile/campaign/settings state, or gameplay changes.",
+        "No new generated artwork, packaged Load-board interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected 1280x720 and 1920x1080 captures. With all four slots unavailable, Load now uses a compact 920x360 archival card with the reused frontier crest, an exact empty-state title/body/cue hierarchy, and Close as the safe entry focus; the underlying four ordered unavailable summaries remain exact. The existing broad populated-save owner explicitly proves that any loadable slot retains the standard dock, two-column browser, preview, naming/deletion/load actions, and authority. Focused keyboard/destructive-dialog, lean boot, save/load confidence, broad Menu/Outcome, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Save schema/paths/content/actions, packaged Load interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T14:18:48Z"
     },
     {
       "id": "ux-overworld-town-hero-prop-scale-hierarchy-correction-10184",

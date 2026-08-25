@@ -19388,6 +19388,131 @@ def validate_main_menu_field_manual_reference_card(errors: list[str]) -> None:
         ensure(forbidden not in broad_anchor_body, errors, f"Broad Guide anchor oracle must remain source-independent and passive: {forbidden}")
 
 
+def validate_main_menu_empty_save_scenic_card(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    for path in (MAIN_MENU_SCENE_PATH, MAIN_MENU_SCRIPT_PATH, MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH, MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH):
+        ensure(path.exists(), errors, f"Missing Main Menu empty-save scenic-card owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (MAIN_MENU_SCENE_PATH, MAIN_MENU_SCRIPT_PATH, MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH, MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH)):
+        return
+
+    scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    keyboard_text = MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.read_text(encoding="utf-8")
+    visual_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+
+    ensure(
+        scene_node_parent(scene_text, "SaveEmptyPanel", "PanelContainer")
+        == "StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves",
+        errors,
+        "Main Menu empty-save card must remain the alternate sibling of the populated save split",
+    )
+    ensure(
+        scene_node_parent(scene_text, "SaveSplit", "HBoxContainer")
+        == "StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves",
+        errors,
+        "Main Menu populated save split must retain its original Saves owner",
+    )
+    empty_panel_block = scene_node_block(scene_text, "SaveEmptyPanel", "PanelContainer")
+    for token in ("unique_name_in_owner = true", "visible = false", "custom_minimum_size = Vector2(0, 214)", "size_flags_vertical = 3"):
+        ensure(token in empty_panel_block, errors, f"Main Menu empty-save card is missing fail-closed scene token: {token}")
+    crest_block = scene_node_block(scene_text, "SaveEmptyCrest", "TextureRect")
+    for token in ("custom_minimum_size = Vector2(76, 76)", "mouse_filter = 2", 'texture = ExtResource("6_crest")', "expand_mode = 1", "stretch_mode = 5"):
+        ensure(token in crest_block, errors, f"Main Menu empty-save card must reuse the aspect-preserved frontier crest: {token}")
+    for forbidden in ("script =", "glyph_id =", "stretch_mode = 0"):
+        ensure(forbidden not in crest_block, errors, f"Main Menu empty-save crest must remain passive reused art: {forbidden}")
+    exact_scene_copy = {
+        "SaveEmptyEyebrow": "EXPEDITION ARCHIVE",
+        "SaveEmptyTitle": "No expedition records yet",
+        "SaveEmptyBody": "Begin a Campaign or Skirmish expedition. This archive will keep one autosave and three manual slots ready for your return.",
+        "SaveEmptyCue": "Close this board, then choose Campaign or Skirmish.",
+    }
+    for node_name, expected_text in exact_scene_copy.items():
+        block = scene_node_block(scene_text, node_name, "Label")
+        ensure("unique_name_in_owner = true" in block, errors, f"Main Menu empty-save copy must remain directly observable: {node_name}")
+        ensure(f'text = "{expected_text}"' in block, errors, f"Main Menu empty-save copy changed for {node_name}")
+    ensure(scene_has_node(scene_text, "SaveEmptyRule", "HSeparator"), errors, "Main Menu empty-save card is missing its restrained hierarchy separator")
+
+    for token in (
+        "const SAVE_EMPTY_DOCK_MAX_SIZE := Vector2(920.0, 360.0)",
+        "@onready var _save_empty_panel: PanelContainer = %SaveEmptyPanel",
+        "@onready var _save_empty_eyebrow_label: Label = %SaveEmptyEyebrow",
+        "@onready var _save_empty_title_label: Label = %SaveEmptyTitle",
+        "@onready var _save_empty_body_label: Label = %SaveEmptyBody",
+        "@onready var _save_empty_cue_label: Label = %SaveEmptyCue",
+        "@onready var _save_split: HBoxContainer = %SaveSplit",
+        '"save_empty_state": _save_browser_is_empty()',
+        '"save_empty_panel_visible": _save_empty_panel.visible',
+        '"save_split_visible": _save_split.visible',
+        '"save_empty_panel_rect": _save_empty_panel.get_global_rect()',
+        '"SaveEmptyPanel": "smoke"',
+    ):
+        ensure(token in menu_text, errors, f"MainMenu.gd is missing empty-save scenic-card token: {token}")
+    rebuild_body = gd_function_block(menu_text, "_rebuild_save_browser")
+    ensure(
+        rebuild_body.find("_refresh_selected_save()") < rebuild_body.find("_refresh_save_browser_presentation()"),
+        errors,
+        "Save browser must retain selection/action refresh before applying its empty/populated presentation",
+    )
+    empty_body = gd_function_block(menu_text, "_save_browser_is_empty")
+    for token in ("if not _save_browser_loaded:", "for summary in _save_summaries:", "summary is Dictionary", "SaveService.can_load_summary(summary)", "return false", "return true"):
+        ensure(token in empty_body, errors, f"Empty-save state must derive only from the live ordered loadability summaries: {token}")
+    for forbidden in ("validity", 'get("valid"', "FileAccess", "DirAccess", "sort(", "erase(", ".visible =", "duplicate("):
+        ensure(forbidden not in empty_body, errors, f"Empty-save state must not infer, mutate, reorder, or copy save authority: {forbidden}")
+    presentation_body = gd_function_block(menu_text, "_refresh_save_browser_presentation")
+    ordered_presentation = ("var empty := _save_browser_is_empty()", "_save_empty_panel.visible = empty", "_save_split.visible = not empty", "if _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SAVES:", "_apply_stage_dock_layout()")
+    positions = [presentation_body.find(token) for token in ordered_presentation]
+    ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Empty-save presentation must switch only the two sibling surfaces before live dock reallocation")
+    for forbidden in ("SaveService", "SessionState", "AppRouter", ".text =", "queue_free", "create_timer", "await "):
+        ensure(forbidden not in presentation_body, errors, f"Empty-save presentation switch must remain visual-only: {forbidden}")
+    anchors_body = gd_function_block(menu_text, "_save_empty_stage_dock_anchors")
+    for token in ("var viewport_size := get_viewport().get_visible_rect().size", "SAVE_EMPTY_DOCK_MAX_SIZE.x / maxf(viewport_size.x, 1.0)", "SAVE_EMPTY_DOCK_MAX_SIZE.y / maxf(viewport_size.y, 1.0)", "return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(width_ratio, height_ratio))"):
+        ensure(token in anchors_body, errors, f"Empty-save dock allocator is missing exact bounded geometry token: {token}")
+    for forbidden in ("SaveService", "SessionState", ".visible =", ".text =", "grab_focus", "create_timer", "await "):
+        ensure(forbidden not in anchors_body, errors, f"Empty-save dock allocator must remain geometry-only: {forbidden}")
+    apply_body = gd_function_block(menu_text, "_apply_stage_dock_layout")
+    ensure("elif _menu_tabs.current_tab == TAB_SAVES and _save_browser_is_empty():\n\t\tanchors = _save_empty_stage_dock_anchors()" in apply_body, errors, "Main Menu must delegate only the proven empty Saves state to the compact allocator")
+    focus_body = gd_function_block(menu_text, "_focus_stage_entry")
+    ensure("target = _close_stage_dock_button if _save_browser_is_empty() else (_save_list if _save_list.item_count > 0 else _close_stage_dock_button)" in focus_body, errors, "Empty Load board must focus Close while populated saves retain native list entry focus")
+
+    for token in (
+        "const EMPTY_SAVE_VIEWPORTS := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        "const EMPTY_SAVE_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
+        "const EMPTY_SAVE_DOCK_MAX_SIZE := Vector2(920.0, 360.0)",
+        'const EMPTY_SAVE_SLOT_ROWS := ["Autosave | Unavailable", "Manual 1 | Unavailable", "Manual 2 | Unavailable", "Manual 3 | Unavailable"]',
+        "if not await _check_empty_save_scenic_card():",
+        'save_shell.call("validation_open_saves_stage")',
+        'save_shell.call("validation_stage_dock_surface_summary")',
+        'SettingsService.call("_set_runtime_window_size", viewport_size)',
+        'SettingsService.call("_set_runtime_window_size", original_window_size)',
+        'SaveService._slot_summary_cache = summary_cache_before.duplicate(true)',
+        'String(snapshot.get("save_empty_title", "")) != "No expedition records yet"',
+        'snapshot.get("save_browser_items", []) != EMPTY_SAVE_SLOT_ROWS',
+        'if _focus_name() != "CloseStageDock":',
+        'uncovered_right_ratio < (0.24 if viewport_size.x == 1280 else 0.48)',
+        '_destructive_protected_state() != authority_before',
+    ):
+        ensure(token in keyboard_text, errors, f"Main Menu keyboard owner is missing empty-save focused proof token: {token}")
+    focused_body = gd_function_block(keyboard_text, "_check_empty_save_scenic_card")
+    ensure(focused_body.count('SettingsService.call("_set_runtime_window_size", viewport_size)') == 1, errors, "Empty-save proof must resize each target through the production runtime boundary once")
+    ensure(
+        focused_body.find("summary_cache_before") < focused_body.find("authority_before") < focused_body.find("for viewport_size in EMPTY_SAVE_VIEWPORTS") < focused_body.find('validation_open_saves_stage') < focused_body.find("layout_host.queue_free()") < focused_body.find("SaveService._slot_summary_cache") < focused_body.rfind("_destructive_protected_state()"),
+        errors,
+        "Empty-save proof must bracket public loading and both widths with exact cache/state restoration",
+    )
+    for forbidden in ("_save_browser_is_empty", "_save_empty_stage_dock_anchors", "_refresh_save_browser_presentation", ".visible =", ".anchor_left =", ".anchor_top =", ".anchor_right =", ".anchor_bottom =", ".text =", "create_timer", "sort(", "erase("):
+        ensure(forbidden not in focused_body, errors, f"Empty-save focused proof must not mutate or circularly call production presentation internals: {forbidden}")
+    ensure('{"label": "Saves", "tab": 2, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS}' in visual_text, errors, "Broad populated-save owner must retain the exact standard dock geometry")
+    ensure('shell.call("validation_open_saves_stage")' in visual_text, errors, "Broad populated-save owner must continue exercising the public Load board")
+    for token in ('bool(summary.get("save_empty_state", true))', 'bool(summary.get("save_empty_panel_visible", true))', 'not bool(summary.get("save_split_visible", false))', '"Populated Saves board did not retain its exact two-column surface'):
+        ensure(token in visual_text, errors, f"Broad populated-save owner is missing empty-state exclusion token: {token}")
+
+
 def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> None:
     required_paths = (
         MAIN_MENU_SCENE_PATH,
@@ -64920,6 +65045,7 @@ def main() -> int:
     validate_main_menu_first_view(errors)
     validate_main_menu_stage_dock_cartography_surface(errors)
     validate_main_menu_field_manual_reference_card(errors)
+    validate_main_menu_empty_save_scenic_card(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_main_menu_battle_shake_picker_theme_parity(errors)
