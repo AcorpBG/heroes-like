@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
+    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Completed from direct inspected current-HEAD 1280x720 and 1920x1080 Overworld captures. Unexplored territory now reads as one continuous identity-silent dark cartographic veil without repeated per-tile stamps, while fog authority and hidden world state remain exact.",
+  "currentNotes": "Completed from direct inspected current-HEAD 1280x720 and 1920x1080 Battle captures. Standard 1280 now keeps action and system commands in one horizontal dock and reduces compact footer padding, increasing the tactical board from 347px to 369px while preserving constrained stacking and exact gameplay authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-unexplored-fog-cartographic-continuity-10184",
-  "currentSliceId": "ux-overworld-unexplored-fog-cartographic-continuity-10184",
-  "currentSliceNotes": "Completed: one continuous unexplored cartographic veil replaces repeated per-tile stamps; focused, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
+  "currentSlice": "ux-battle-standard-compact-command-dock-stage-reclamation-10184",
+  "currentSliceId": "ux-battle-standard-compact-command-dock-stage-reclamation-10184",
+  "currentSliceNotes": "Completed: standard 1280 Battle uses one contained horizontal command dock and gains 22px/6.3% stage height; constrained 1024 and 130%-scaled layouts remain stacked; focused, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld unexplored fog cartographic continuity",
-  "currentSliceUpdatedAt": "2026-08-25T11:33:28Z",
+  "currentSliceTitle": "Battle standard compact command dock stage reclamation",
+  "currentSliceUpdatedAt": "2026-08-25T12:04:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101301,6 +101301,35 @@
       "notes": "Completed from direct inspected current-HEAD Overworld captures at 1280x720 and 1920x1080. One continuous low-detail identity-silent dark veil replaces three repeated circular stamps per tile, removing the dot-grid effect while preserving exact hidden terrain, texture, object, road, route, explored-boundary, reveal, movement, input/focus, camera, session/save, content, AI, generated-map, and Native-RMG authority. Focused fog/visual, route/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T11:33:28Z"
+    },
+    {
+      "id": "ux-battle-standard-compact-command-dock-stage-reclamation-10184",
+      "title": "Battle standard compact command dock stage reclamation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T12:04:17Z",
+      "startedAt": "2026-08-25T11:41:56Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_layout_smoke.gd",
+        "tests/active_play_settings_runtime_report.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Return standard 1280x720 Battle height to the tactical field by keeping existing action and system commands in one compact horizontal dock.",
+      "completionCriteria": "Direct current 1280x720 capture shows the action and system groups side by side, a one-line whole-word-safe ActionGuide with exact full tooltip, materially taller BattleBoard and larger live hex radius than the stacked baseline, and all actions/system commands visible and contained; 1024x600 and 1280x720 at 130 percent remain stacked and contained; 1920x1080 remains two-column with full wide detail; compact-wide-compact roundtrip preserves exact labels, tooltips, metadata, focus, command order, Board hit geometry, combat/session/save authority, and gameplay; focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No BattleRules, BattleAiRules, action legality, initiative, movement, attack, spell, target, objective, withdrawal, quick-resolve, damage, RNG, VFX, audio, or combat-balance changes.",
+        "No command removal, reordering, reparenting, new control, sidebar/tab/banner redesign, Board cell count, hit-shape, terrain, stack-token, content, input, focus, accessibility, session, save/schema, route, or settings-semantics changes.",
+        "No packaged Battle interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected current-HEAD Battle captures. Standard 1280x720/100% now keeps ActionPanel and SystemPanel side by side, uses one whole-word-safe ActionGuide line with the exact full tooltip, and reduces compact footer edge padding; the live BattleBoard grows from the measured 347px stacked baseline to 369px, a 22px/6.3% gain. 1024x600 and 1280x720/130% remain stacked and contained, while 1920x1080 remains two-column/full-detail. Exact command/action order, labels, tooltips, focus, Board hit geometry, combat/session/save authority, and gameplay remain unchanged. Focused 1920/1280/1024 layout, active settings, Board navigation, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T12:04:17Z"
     }
   ],
   "project": "heroes-like",
@@ -101311,7 +101340,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next fresh bounded graphical-polish defect; broader product and release-readiness gaps remain.",
+  "remainingWork": "Select the next bounded graphical-polish slice from fresh direct runtime evidence; broader product and release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

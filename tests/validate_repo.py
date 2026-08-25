@@ -16182,6 +16182,10 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
     ensure("not battle_settings_control.is_visible_in_tree()" not in active_play_report_text, errors, "Active-play Settings compact focus oracle must require the now-visible Settings origin instead of accepting a hidden-origin fallback")
 
     footer_row_header = '[node name="FooterRow" type="GridContainer" parent="ContentMargin/Content/Footer/FooterPad"]'
+    footer_pad_header = '[node name="FooterPad" type="MarginContainer" parent="ContentMargin/Content/Footer"]'
+    footer_pad_match = re.search(re.escape(footer_pad_header) + r"\n(?P<body>.*?)(?=\n\[node )", battle_scene_text, flags=re.DOTALL)
+    ensure(footer_pad_match is not None and "unique_name_in_owner = true" in footer_pad_match.group("body"), errors, "Battle footer pad must remain uniquely owned for compact edge-spacing reclamation")
+    ensure("@onready var _footer_pad: MarginContainer = %FooterPad" in battle_shell_text, errors, "BattleShell must own the authored FooterPad without path-coupled replacement")
     ensure(battle_scene_text.count(footer_row_header) == 1, errors, "Battle footer must own one responsive GridContainer row")
     footer_row_match = re.search(re.escape(footer_row_header) + r"\n(?P<body>.*?)(?=\n\[node )", battle_scene_text, flags=re.DOTALL)
     ensure(footer_row_match is not None, errors, "Could not isolate the responsive Battle FooterRow")
@@ -16212,12 +16216,15 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         responsive_order = tuple(responsive_layout_body.find(token) for token in (
             "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
             "var banner_details_visible := not compact_layout or available_size.x >= 1180.0",
+            "var horizontal_footer := not compact_layout or available_size.x >= 1180.0",
             "_compact_layout_active = compact_layout",
             "_refit_battle_action_guide()",
             "_status_label.visible = banner_details_visible",
             "_pressure_label.visible = banner_details_visible",
-            "_footer_row.columns = 1 if compact_layout else 2",
-            '_footer_row.add_theme_constant_override("v_separation", 0 if compact_layout else 8)',
+            "_footer_row.columns = 2 if horizontal_footer else 1",
+            '_footer_row.add_theme_constant_override("v_separation", 8 if horizontal_footer else 0)',
+            '_footer_pad.add_theme_constant_override("margin_top", 2 if compact_layout else 6)',
+            '_footer_pad.add_theme_constant_override("margin_bottom", 2 if compact_layout else 6)',
             '_action_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)',
             '_action_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)',
             "if compact_layout:",
@@ -16235,7 +16242,9 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ))
         ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Battle responsive layout must reflow the existing footer, retain essential commands, compact only spacing/speed, and then preserve existing target/board contracts in order")
         ensure("_system_panel.visible = not compact_layout" not in responsive_layout_body, errors, "Battle compact layout must not hide the existing essential system commands")
+        ensure("_footer_row.columns = 1 if compact_layout else 2" not in responsive_layout_body, errors, "Battle standard-height compact layout must not stack the command dock solely because of height")
         ensure(responsive_layout_body.count("banner_details_visible") == 3, errors, "Battle responsive layout must derive one logical-width banner-detail predicate and apply it only to Status and Pressure")
+        ensure(responsive_layout_body.count("horizontal_footer") == 3, errors, "Battle responsive layout must derive one logical-width command-dock predicate and apply it only to FooterRow columns and separation")
         ensure("_status_label.visible = not compact_layout" not in responsive_layout_body and "_pressure_label.visible = not compact_layout" not in responsive_layout_body, errors, "Battle banner details must not remain coupled to the height-sensitive compact breakpoint")
         for forbidden_token in ("reparent", "remove_child", "add_child", "queue_free", "new()", "call_deferred", "create_timer"):
             ensure(forbidden_token not in responsive_layout_body, errors, f"Battle compact footer reflow must not add, replace, or defer UI through {forbidden_token}")
@@ -16257,7 +16266,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
             '(system_panel.get_theme_stylebox("panel") is StyleBoxEmpty) == compact',
             "system_body.is_visible_in_tree() == not compact",
             "speed_bar.is_visible_in_tree() == not compact",
-            'action_guide.text.split("\\n", false).size() == (2 if compact else 3)',
+            'action_guide.text.split("\\n", false).size() == (1 if compact else 3)',
             "not action_guide.tooltip_text.strip_edges().is_empty()",
             "action_guide_word_safe",
             "command.focus_mode != Control.FOCUS_NONE",
@@ -16279,7 +16288,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
     for forbidden_token in ("_system_body_label.text = \"\"", "_system_body_label.tooltip_text = \"\"", "status_lines.clear()", "status_lines.erase("):
         ensure(forbidden_token not in battle_shell_text, errors, f"Battle compact layout must preserve the full supplemental save summary behind the existing tooltip rather than deleting it via {forbidden_token}")
     action_guide_setter_match = re.search(r"func _set_battle_action_guide\(full_text: String\) -> void:(?P<body>.*?)(?=\nfunc )", battle_shell_text, flags=re.DOTALL)
-    ensure(action_guide_setter_match is not None, errors, "BattleShell must own one compact-only two-line ActionGuide setter")
+    ensure(action_guide_setter_match is not None, errors, "BattleShell must own one compact-only fitted ActionGuide setter")
     if action_guide_setter_match is not None:
         action_guide_setter_body = action_guide_setter_match.group("body")
         action_guide_order = tuple(action_guide_setter_body.find(token) for token in (
@@ -16302,10 +16311,10 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
             "var line := String(raw_line).strip_edges()",
             'if line != "":',
             "visible_lines.append(_battle_action_context_word_text(line, 96))",
-            "var line_limit := 2 if _compact_layout_active else 3",
+            "var line_limit := 1 if _compact_layout_active else 3",
             '_action_guide.text = "\\n".join(visible_lines.slice(0, min(line_limit, visible_lines.size())))',
         ))
-        ensure(all(index >= 0 for index in action_guide_refit_order) and list(action_guide_refit_order) == sorted(action_guide_refit_order), errors, "Battle ActionGuide refit must preserve source order, apply the established whole-word ellipsis per line, and select exactly two compact or three wide lines")
+        ensure(all(index >= 0 for index in action_guide_refit_order) and list(action_guide_refit_order) == sorted(action_guide_refit_order), errors, "Battle ActionGuide refit must preserve source order, apply the established whole-word ellipsis per line, and select exactly one compact or three wide lines")
         ensure("tooltip_text" not in action_guide_refit_body, errors, "Responsive ActionGuide refit must not replace the already-enriched exact tooltip")
         for forbidden_token in ("FrontierVisualKit.compact_text", '"..."', "left(", "substr(", "replace(", "erase(", "normalize", "BattleRules", "SettingsService", "custom_minimum_size", "visible =", "await ", "call_deferred", "create_timer"):
             ensure(forbidden_token not in action_guide_refit_body, errors, f"Battle ActionGuide responsive refit must not rewrite semantics, mutate layout, or add timing via {forbidden_token}")
@@ -17373,6 +17382,25 @@ def validate_battle_layout_detached_route_compatibility(errors: list[str]) -> No
         viewport_end = viewport_body.find('_battle_layout_stage("viewport_end", viewport_size, false, false)', first_fixture)
         final_return = viewport_body.rfind("return true")
         ensure(-1 < viewport_start < first_fixture < viewport_end < final_return and viewport_body.count('stage("viewport_start"') == 1 and viewport_body.count('stage("viewport_end"') == 1, errors, "Battle layout viewport diagnostics must uniquely bracket the unchanged viewport matrix")
+        command_dock_tokens = (
+            'shell.get_node_or_null("%FooterRow") as GridContainer',
+            'shell.get_node_or_null("%ActionPanel") as Control',
+            'shell.get_node_or_null("%SystemPanel") as Control',
+            'shell.get_node_or_null("%ActionGuide") as Label',
+            "var horizontal_footer := viewport_size.x >= 1180.0",
+            "viewport_rect.grow(1.0).encloses(footer_row_rect)",
+            "footer_row_rect.grow(1.0).encloses(action_panel_rect)",
+            "footer_row_rect.grow(1.0).encloses(system_panel_rect)",
+            "footer_row.columns != (2 if horizontal_footer else 1)",
+            'var expected_action_guide_lines := 1 if viewport_size.y < 760.0 else 3',
+            'action_guide.text.split("\\n", false).size() != expected_action_guide_lines',
+            "action_guide.tooltip_text.strip_edges().is_empty()",
+            "viewport_size == TARGET_VIEWPORT_SIZES[1] and board_rect.size.y < 365.0",
+        )
+        command_dock_order = tuple(viewport_body.find(token) for token in command_dock_tokens)
+        ensure(all(index >= 0 for index in command_dock_order) and list(command_dock_order) == sorted(command_dock_order), errors, "Battle layout smoke must prove the standard-width horizontal dock, constrained stacked dock, exact compact guide, and reclaimed 1280 stage height in order")
+        for forbidden_token in ('footer_row.columns =', 'action_panel.reparent', 'system_panel.reparent', 'action_guide.text =', 'action_guide.tooltip_text =', 'board.custom_minimum_size ='):
+            ensure(forbidden_token not in viewport_body, errors, f"Battle layout command-dock oracle must remain read-only and source-independent: {forbidden_token}")
     if stage_helper_match is not None:
         stage_helper_body = stage_helper_match.group("body")
         ensure(stage_helper_body.count("print(") == 1 and 'BATTLE_LAYOUT_STAGE msec=%d stage=%s viewport=%dx%d use_button=%s outcome=%s' in stage_helper_body and "Time.get_ticks_msec()" in stage_helper_body, errors, "Battle layout diagnostic helper must emit one compact monotonic labeled stage line")

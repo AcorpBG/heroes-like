@@ -522,6 +522,7 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="FooterPad" type="MarginContainer" parent="ContentMargin/Content/Footer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 6
