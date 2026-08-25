@@ -235,7 +235,9 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 	var town_layout: Dictionary = map_view.call("validation_tile_focus_layout", active_tile)
 	var ordinary_layout: Dictionary = map_view.call("validation_tile_focus_layout", ordinary_tile)
 	var town_selection_visual_profile: Dictionary = town_layout.get("town_selection_visual_profile", {})
-	var ordinary_selection_visual_profile: Dictionary = ordinary_layout.get("town_selection_visual_profile", {})
+	var town_tile_selection_visual_profile: Dictionary = town_layout.get("tile_selection_visual_profile", {})
+	var ordinary_town_selection_visual_profile: Dictionary = ordinary_layout.get("town_selection_visual_profile", {})
+	var ordinary_tile_selection_visual_profile: Dictionary = ordinary_layout.get("tile_selection_visual_profile", {})
 	var town_hero_focus_rect := _rect_from_payload(town_layout.get("hero_focus_rect", {}))
 	var town_selection_rect := _rect_from_payload(town_layout.get("selection_rect", {}))
 	var town_hover_rect := _rect_from_payload(town_layout.get("hover_rect", {}))
@@ -245,12 +247,16 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 	var expected_town_selection_extent := minf(expected_town_rect.size.x, expected_town_rect.size.y)
 	var expected_town_selection_inset := maxf(4.0, expected_town_selection_extent * 0.045)
 	var expected_town_selection_perimeter := expected_town_rect.grow(-expected_town_selection_inset)
+	var expected_tile_selection_extent := minf(ordinary_tile_rect.size.x, ordinary_tile_rect.size.y)
+	var expected_tile_selection_inset := maxf(4.0, expected_tile_selection_extent * 0.085)
+	var expected_tile_selection_perimeter := ordinary_tile_rect.grow(-expected_tile_selection_inset)
 	var town_focus_layout_exact: bool = bool(town_layout.get("hero_uses_compact_town_footprint_rect", false)) \
 		and town_hero_focus_rect == _rect_from_payload(hero_layout.get("hero_rect", {})) \
 		and active_tile_rect.encloses(town_hero_focus_rect) \
 		and bool(town_layout.get("selection_uses_town_footprint_rect", false)) \
 		and not bool(town_layout.get("selection_uses_interior_fill", true)) \
 		and bool(town_layout.get("selection_uses_cartographic_town_perimeter", false)) \
+		and not bool(town_layout.get("selection_uses_cartographic_tile_reticle", true)) \
 		and String(town_layout.get("selection_visual_model", "")) == "open_cartographic_footprint_corner_and_midpoint_ticks" \
 		and town_selection_rect == expected_town_rect \
 		and _rect_from_payload(town_selection_visual_profile.get("perimeter_rect", {})) == expected_town_selection_perimeter \
@@ -263,6 +269,7 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 		and is_equal_approx(float(town_selection_visual_profile.get("midpoint_width_px", 0.0)), maxf(1.25, expected_town_selection_extent * 0.008)) \
 		and not bool(town_selection_visual_profile.get("continuous_outline", true)) \
 		and is_zero_approx(float(town_selection_visual_profile.get("interior_fill_alpha", -1.0))) \
+		and town_tile_selection_visual_profile.is_empty() \
 		and bool(town_layout.get("hover_uses_town_footprint_rect", false)) \
 		and town_hover_rect == expected_town_rect \
 		and town_selection_rect.size == active_tile_rect.size * Vector2(3.0, 2.0) \
@@ -270,10 +277,21 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 	var ordinary_focus_layout_exact: bool = not bool(ordinary_layout.get("hero_uses_compact_town_footprint_rect", true)) \
 		and ordinary_hero_focus_rect == ordinary_tile_rect \
 		and not bool(ordinary_layout.get("selection_uses_town_footprint_rect", true)) \
-		and bool(ordinary_layout.get("selection_uses_interior_fill", false)) \
+		and not bool(ordinary_layout.get("selection_uses_interior_fill", true)) \
 		and not bool(ordinary_layout.get("selection_uses_cartographic_town_perimeter", true)) \
-		and String(ordinary_layout.get("selection_visual_model", "")) == "filled_tile_outline_long_corner_brackets" \
-		and ordinary_selection_visual_profile.is_empty() \
+		and bool(ordinary_layout.get("selection_uses_cartographic_tile_reticle", false)) \
+		and String(ordinary_layout.get("selection_visual_model", "")) == "open_cartographic_tile_corner_and_midpoint_ticks" \
+		and ordinary_town_selection_visual_profile.is_empty() \
+		and _rect_from_payload(ordinary_tile_selection_visual_profile.get("perimeter_rect", {})) == expected_tile_selection_perimeter \
+		and is_equal_approx(float(ordinary_tile_selection_visual_profile.get("perimeter_inset_px", 0.0)), expected_tile_selection_inset) \
+		and is_equal_approx(float(ordinary_tile_selection_visual_profile.get("corner_alpha", 0.0)), 0.82) \
+		and is_equal_approx(float(ordinary_tile_selection_visual_profile.get("corner_length_px", 0.0)), maxf(8.0, expected_tile_selection_extent * 0.18)) \
+		and is_equal_approx(float(ordinary_tile_selection_visual_profile.get("corner_width_px", 0.0)), maxf(1.5, expected_tile_selection_extent * 0.022)) \
+		and is_equal_approx(float(ordinary_tile_selection_visual_profile.get("midpoint_alpha", 0.0)), 0.42) \
+		and is_equal_approx(float(ordinary_tile_selection_visual_profile.get("midpoint_length_px", 0.0)), maxf(5.0, expected_tile_selection_extent * 0.08)) \
+		and is_equal_approx(float(ordinary_tile_selection_visual_profile.get("midpoint_width_px", 0.0)), maxf(1.25, expected_tile_selection_extent * 0.016)) \
+		and not bool(ordinary_tile_selection_visual_profile.get("continuous_outline", true)) \
+		and is_zero_approx(float(ordinary_tile_selection_visual_profile.get("interior_fill_alpha", -1.0))) \
 		and ordinary_selection_rect == ordinary_tile_rect \
 		and not bool(ordinary_layout.get("hover_uses_town_footprint_rect", true)) \
 		and ordinary_hover_rect == ordinary_tile_rect \
@@ -285,6 +303,7 @@ func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dict
 		"town_selection_interior_fill": bool(town_layout.get("selection_uses_interior_fill", true)),
 		"town_selection_visual_model": String(town_layout.get("selection_visual_model", "")),
 		"town_selection_visual_profile": town_selection_visual_profile.duplicate(true),
+		"ordinary_tile_selection_visual_profile": ordinary_tile_selection_visual_profile.duplicate(true),
 		"town_layout": town_layout.duplicate(true),
 		"ordinary_layout": ordinary_layout.duplicate(true),
 		"ordinary_tile": ordinary_tile,
