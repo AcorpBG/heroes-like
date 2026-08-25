@@ -31196,7 +31196,13 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     for token in (
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00",
         "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72",
-        'const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_package_body_cell_terrain_matched_original_sprite"',
+        "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88",
+        "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08",
+        "const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 16",
+        "const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.055",
+        "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.018",
+        "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.038",
+        'const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cell_biome_palette_clustered_original_sprite"',
         "var _generated_decorative_bodies_by_tile: Dictionary = {}",
         "var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}",
         "var _generated_decorative_blocker_fallback_asset_ids: Array = []",
@@ -31245,6 +31251,12 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'presentation["generated_body_presentation_model"] = GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL',
         'presentation["generated_body_source_placement_ids"]',
         'existing["generated_body_source_count"] = placement_ids.size()',
+        'var composition := _generated_decorative_body_composition(object, body_tile)',
+        'presentation["generated_body_scale_factor"] = float(composition.get("scale_factor", 1.0))',
+        'presentation["generated_body_offset_tiles"] = composition.get("offset_tiles", {}).duplicate(true)',
+        'presentation["generated_body_sprite_extent_tiles"] = float(composition.get("sprite_extent_tiles", GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES))',
+        'presentation["generated_body_sprite_center_tiles"] = composition.get("sprite_center_tiles", {}).duplicate(true)',
+        'presentation["generated_body_composition_key"] = String(composition.get("composition_key", ""))',
     ):
         ensure(token in index_block, errors, f"Generated blocker body index is missing deterministic collision/source evidence: {token}")
     for forbidden in ("object[", "package_block_tiles.append", "package_block_tiles.erase", "OverworldRules", "RandomMapGeneratorRules", "await ", "create_timer"):
@@ -31257,20 +31269,50 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "_generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])",
         "candidates = _generated_decorative_blocker_fallback_asset_ids",
         "terrain_id,",
-        'String(object.get("h3m_def_name", ""))',
+        'var cluster_x := floori(float(tile.x) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))',
+        'var cluster_y := floori(float(tile.y) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))',
+        '"%d,%d" % [cluster_x, cluster_y]',
         "absi(stable_key.hash()) % candidates.size()",
     ):
         ensure(token in asset_block, errors, f"Generated blocker asset choice is missing stable terrain-matched selection: {token}")
-    for forbidden in ('String(object.get("placement_id", ""))', "tile.x", "tile.y", "rand", "randi", "seed(", "session", "_session", "sort(", "erase(", "package_block_tiles"):
+    for forbidden in ("rand", "randi", "seed(", "session", "_session", "sort(", "erase(", "package_block_tiles"):
         ensure(forbidden not in asset_block, errors, f"Generated blocker asset choice must remain deterministic and presentation-only: {forbidden}")
+
+    composition_block = gd_function_block(map_text, "_generated_decorative_body_composition")
+    for token in (
+        'var placement_id := String(object.get("placement_id", "")).strip_edges()',
+        'var composition_key := "%s|%s|%d,%d"',
+        'var scale_factor := lerpf(',
+        'GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN',
+        'GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX',
+        'var offset_tiles := Vector2(',
+        '-GENERATED_DECORATIVE_BODY_OFFSET_X_TILES',
+        'GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES',
+        'GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES',
+        'var sprite_extent_tiles := GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES * scale_factor',
+        'var sprite_center_tiles := Vector2(',
+        'clampf(0.5 + offset_tiles.x, half_extent, 1.0 - half_extent)',
+        '"sprite_extent_tiles": sprite_extent_tiles',
+        '"sprite_center_tiles": {"x": sprite_center_tiles.x, "y": sprite_center_tiles.y}',
+    ):
+        ensure(token in composition_block, errors, f"Generated blocker composition must own deterministic bounded variation: {token}")
+    stable_fraction_block = gd_function_block(map_text, "_stable_unit_fraction")
+    ensure('float(posmod(stable_key.hash(), 1000003)) / 1000002.0' in stable_fraction_block, errors, "Generated blocker composition must derive a deterministic unit fraction without RNG state")
+    for forbidden in ("rand", "randi", "seed(", "Time.", "session", "_session", "await ", "create_timer"):
+        ensure(forbidden not in composition_block + stable_fraction_block, errors, f"Generated blocker composition must be frame-stable and presentation-local: {forbidden}")
 
     lookup_block = gd_function_block(map_text, "_decorative_object_at")
     ensure(lookup_block.find("_generated_decorative_bodies_by_tile.get") < lookup_block.find("_decorative_objects_by_tile.get"), errors, "Exact generated body-cell presentation must precede legacy anchor-only decorative lookup")
     generated_draw_block = gd_function_block(map_text, "_draw_generated_decorative_body_sprite")
     for token in (
-        "_draw_mapped_sprite_grounding_anchor(rect, tile, \"blocker\", Vector2i(1, 1), remembered)",
-        "tile_extent * GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES",
-        "_canvas_draw_texture_rect(texture, sprite_rect, false",
+        'object.get("generated_body_offset_tiles", {})',
+        "var composed_rect := Rect2(rect.position + offset_px, rect.size)",
+        "_draw_mapped_sprite_grounding_anchor(composed_rect, tile, \"blocker\", Vector2i(1, 1), remembered)",
+        'float(object.get("generated_body_sprite_extent_tiles", GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES))',
+        'object.get("generated_body_sprite_center_tiles", {})',
+        "rect.size.x * float(center_payload.get(\"x\", 0.5))",
+        "rect.size.y * float(center_payload.get(\"y\", 0.5))",
+        "_canvas_draw_texture_rect(texture, sprite_rect, false, base_modulate)",
     ):
         ensure(token in generated_draw_block, errors, f"Generated body cells must draw bounded original blocker sprites with normal world grounding: {token}")
 
@@ -31294,6 +31336,11 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         '"body_tile_keys_exact": indexed_keys == expected_keys',
         '"all_body_assets_loaded": loaded_asset_count == indexed_keys.size()',
         '"all_body_assets_terrain_matched": terrain_matched_asset_count == indexed_keys.size()',
+        '"distinct_body_asset_count": distinct_asset_ids.size()',
+        '"repeated_def_multi_asset_count": repeated_def_multi_asset_count',
+        '"composition_key_count": composition_key_count',
+        '"all_transformed_bounds_within_tile": transformed_bounds_within_tile_count == indexed_keys.size()',
+        '"composition_signature": JSON.stringify(entries).sha256_text()',
         '"multi_tile_interactive_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES',
         '"resource_entries": resource_entries',
     ):
@@ -31313,11 +31360,16 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'var save_reload_restored_authority := _generated_save_reload_authority(restored_session)',
         'not _save_authority_values_equal(save_reload_restored_authority, save_reload_source_authority)',
         '"save_reload_authority_exact": true',
-        'String(summary.get("presentation_model", "")) != "exact_package_body_cell_terrain_matched_original_sprite"',
+        'String(summary.get("presentation_model", "")) != "exact_body_cell_biome_palette_clustered_original_sprite"',
         'int(summary.get("expected_body_tile_count", 0)) != 464',
         'not bool(summary.get("body_tile_keys_exact", false))',
         'not bool(summary.get("all_body_assets_loaded", false))',
         'not bool(summary.get("all_body_assets_terrain_matched", false))',
+        'int(summary.get("composition_key_count", 0)) != int(summary.get("indexed_body_tile_count", -1))',
+        'not bool(summary.get("all_transformed_bounds_within_tile", false))',
+        'int(summary.get("distinct_body_asset_count", 0)) < 8',
+        'int(summary.get("repeated_def_multi_asset_count", 0)) <= 0',
+        'String(summary.get("composition_signature", "")).length() != 64',
         'float(metrics.get("sprite_extent_tiles", 99.0)) > 1.0001',
         'not is_equal_approx(float(metrics.get("uncapped_sprite_extent_px", 0.0)), float(metrics.get("sprite_extent_px", -1.0)))',
         '"map_objects": session.overworld.get("map_objects", []).duplicate(true)',
@@ -31325,6 +31377,11 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'func _generated_save_reload_authority(session) -> Dictionary:',
         '"generated_random_map_provenance": flags.get("generated_random_map_provenance", {}).duplicate(true)',
         '"generated_random_map_replay_metadata": flags.get("generated_random_map_replay_metadata", {}).duplicate(true)',
+        'map_visual_after.get("body_entries", []) != map_visual_before.get("body_entries", [])',
+        'var rebuilt_map_view = load("res://scenes/overworld/OverworldMapView.gd").new()',
+        'rebuilt_map_view.set_map_state(',
+        'var rebuilt_visual_summary: Dictionary = rebuilt_map_view.validation_generated_object_visual_summary()',
+        'rebuilt_visual_summary.get("body_entries", []) != map_visual_before.get("body_entries", [])',
     ):
         ensure(token in report_text, errors, f"Generated live render/move report is missing exact body/scale/authority proof: {token}")
     save_reload_order = tuple(report_text.find(token) for token in (

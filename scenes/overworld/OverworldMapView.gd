@@ -70,7 +70,13 @@ const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 1.00
 const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72
-const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_package_body_cell_terrain_matched_original_sprite"
+const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88
+const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08
+const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 16
+const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.055
+const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.018
+const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.038
+const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cell_biome_palette_clustered_original_sprite"
 const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := {
 	"grass": "biome_grasslands",
 	"forest": "biome_deep_forest",
@@ -2327,12 +2333,24 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 	var texture = _object_texture_for_asset(_decorative_object_asset_id(object))
 	if not (texture is Texture2D):
 		return false
-	_draw_mapped_sprite_grounding_anchor(rect, tile, "blocker", Vector2i(1, 1), remembered)
 	var tile_extent := minf(rect.size.x, rect.size.y)
-	var sprite_extent := maxf(12.0, tile_extent * GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES)
-	var sprite_center := rect.get_center() + Vector2(0.0, -tile_extent * _object_lift_fraction("blocker", Vector2i(1, 1)))
+	var offset_payload: Dictionary = object.get("generated_body_offset_tiles", {}) if object.get("generated_body_offset_tiles", {}) is Dictionary else {}
+	var offset_tiles := Vector2(
+		clampf(float(offset_payload.get("x", 0.0)), -GENERATED_DECORATIVE_BODY_OFFSET_X_TILES, GENERATED_DECORATIVE_BODY_OFFSET_X_TILES),
+		clampf(float(offset_payload.get("y", 0.0)), GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES, GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES)
+	)
+	var offset_px := offset_tiles * tile_extent
+	var composed_rect := Rect2(rect.position + offset_px, rect.size)
+	_draw_mapped_sprite_grounding_anchor(composed_rect, tile, "blocker", Vector2i(1, 1), remembered)
+	var sprite_extent := maxf(12.0, tile_extent * float(object.get("generated_body_sprite_extent_tiles", GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES)))
+	var center_payload: Dictionary = object.get("generated_body_sprite_center_tiles", {}) if object.get("generated_body_sprite_center_tiles", {}) is Dictionary else {}
+	var sprite_center := rect.position + Vector2(
+		rect.size.x * float(center_payload.get("x", 0.5)),
+		rect.size.y * float(center_payload.get("y", 0.5))
+	)
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	var base_modulate := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+	_canvas_draw_texture_rect(texture, sprite_rect, false, base_modulate)
 	return true
 
 func _draw_standalone_map_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
@@ -3750,6 +3768,17 @@ func validation_generated_object_visual_summary() -> Dictionary:
 	var loaded_asset_count := 0
 	var terrain_matched_asset_count := 0
 	var collision_tile_count := 0
+	var distinct_asset_ids: Dictionary = {}
+	var h3m_def_asset_ids: Dictionary = {}
+	var h3m_def_placement_ids: Dictionary = {}
+	var composition_key_count := 0
+	var transformed_bounds_within_tile_count := 0
+	var scale_factor_min := GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX
+	var scale_factor_max := GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN
+	var offset_x_min := GENERATED_DECORATIVE_BODY_OFFSET_X_TILES
+	var offset_x_max := -GENERATED_DECORATIVE_BODY_OFFSET_X_TILES
+	var offset_y_min := GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES
+	var offset_y_max := GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES
 	for key_value in indexed_keys:
 		var key := String(key_value)
 		var presentation: Dictionary = _generated_decorative_bodies_by_tile.get(key, {})
@@ -3766,6 +3795,35 @@ func validation_generated_object_visual_summary() -> Dictionary:
 			terrain_matched_asset_count += 1
 		if int(presentation.get("generated_body_source_count", 0)) > 1:
 			collision_tile_count += 1
+		if asset_id != "":
+			distinct_asset_ids[asset_id] = true
+		var h3m_def_name := String(presentation.get("h3m_def_name", "")).strip_edges()
+		if h3m_def_name != "":
+			var def_asset_ids: Dictionary = h3m_def_asset_ids.get(h3m_def_name, {})
+			def_asset_ids[asset_id] = true
+			h3m_def_asset_ids[h3m_def_name] = def_asset_ids
+			var def_placement_ids: Dictionary = h3m_def_placement_ids.get(h3m_def_name, {})
+			for source_id_value in presentation.get("generated_body_source_placement_ids", []):
+				var source_id := String(source_id_value).strip_edges()
+				if source_id != "":
+					def_placement_ids[source_id] = true
+			h3m_def_placement_ids[h3m_def_name] = def_placement_ids
+		var composition_key := String(presentation.get("generated_body_composition_key", ""))
+		if composition_key != "":
+			composition_key_count += 1
+		var scale_factor := float(presentation.get("generated_body_scale_factor", 1.0))
+		var offset_payload: Dictionary = presentation.get("generated_body_offset_tiles", {}) if presentation.get("generated_body_offset_tiles", {}) is Dictionary else {}
+		var offset_x := float(offset_payload.get("x", 0.0))
+		var offset_y := float(offset_payload.get("y", 0.0))
+		var sprite_bounds := _generated_body_normalized_sprite_bounds(presentation)
+		if bool(sprite_bounds.get("within_tile", false)):
+			transformed_bounds_within_tile_count += 1
+		scale_factor_min = minf(scale_factor_min, scale_factor)
+		scale_factor_max = maxf(scale_factor_max, scale_factor)
+		offset_x_min = minf(offset_x_min, offset_x)
+		offset_x_max = maxf(offset_x_max, offset_x)
+		offset_y_min = minf(offset_y_min, offset_y)
+		offset_y_max = maxf(offset_y_max, offset_y)
 		entries.append({
 			"tile_key": key,
 			"x": int(presentation.get("x", -1)),
@@ -3776,7 +3834,21 @@ func validation_generated_object_visual_summary() -> Dictionary:
 			"asset_loaded": loaded,
 			"terrain_matched_asset": terrain_matched,
 			"source_placement_ids": presentation.get("generated_body_source_placement_ids", []).duplicate(true),
+			"h3m_def_name": h3m_def_name,
+			"composition_key": composition_key,
+			"scale_factor": scale_factor,
+			"offset_tiles": offset_payload.duplicate(true),
+			"sprite_extent_tiles": float(presentation.get("generated_body_sprite_extent_tiles", 0.0)),
+			"sprite_center_tiles": presentation.get("generated_body_sprite_center_tiles", {}).duplicate(true),
+			"sprite_bounds": sprite_bounds,
 		})
+	var repeated_def_multi_asset_count := 0
+	for h3m_def_name_value in h3m_def_asset_ids.keys():
+		var h3m_def_name := String(h3m_def_name_value)
+		var def_asset_ids: Dictionary = h3m_def_asset_ids.get(h3m_def_name, {})
+		var def_placement_ids: Dictionary = h3m_def_placement_ids.get(h3m_def_name, {})
+		if def_placement_ids.size() > 1 and def_asset_ids.size() > 1:
+			repeated_def_multi_asset_count += 1
 	var resource_entries: Array = []
 	var capped_resource_count := 0
 	var max_capped_extent_tiles := 0.0
@@ -3814,6 +3886,18 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"all_body_assets_terrain_matched": terrain_matched_asset_count == indexed_keys.size(),
 		"collision_tile_count": collision_tile_count,
 		"body_sprite_extent_tiles": GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES,
+		"distinct_body_asset_count": distinct_asset_ids.size(),
+		"repeated_def_multi_asset_count": repeated_def_multi_asset_count,
+		"composition_key_count": composition_key_count,
+		"transformed_bounds_within_tile_count": transformed_bounds_within_tile_count,
+		"all_transformed_bounds_within_tile": transformed_bounds_within_tile_count == indexed_keys.size(),
+		"scale_factor_min": scale_factor_min if not indexed_keys.is_empty() else 0.0,
+		"scale_factor_max": scale_factor_max if not indexed_keys.is_empty() else 0.0,
+		"offset_x_min": offset_x_min if not indexed_keys.is_empty() else 0.0,
+		"offset_x_max": offset_x_max if not indexed_keys.is_empty() else 0.0,
+		"offset_y_min": offset_y_min if not indexed_keys.is_empty() else 0.0,
+		"offset_y_max": offset_y_max if not indexed_keys.is_empty() else 0.0,
+		"composition_signature": JSON.stringify(entries).sha256_text(),
 		"body_entries": entries,
 		"multi_tile_interactive_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES,
 		"capped_resource_count": capped_resource_count,
@@ -7060,6 +7144,12 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		presentation["primary_tile"] = {"x": body_tile.x, "y": body_tile.y, "level": int(object.get("level", 0))}
 		presentation["footprint"] = {"width": 1, "height": 1, "anchor": "bottom_center"}
 		presentation["overworld_sprite_asset_id"] = _generated_decorative_body_asset_id(object, body_tile)
+		var composition := _generated_decorative_body_composition(object, body_tile)
+		presentation["generated_body_scale_factor"] = float(composition.get("scale_factor", 1.0))
+		presentation["generated_body_offset_tiles"] = composition.get("offset_tiles", {}).duplicate(true)
+		presentation["generated_body_sprite_extent_tiles"] = float(composition.get("sprite_extent_tiles", GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES))
+		presentation["generated_body_sprite_center_tiles"] = composition.get("sprite_center_tiles", {}).duplicate(true)
+		presentation["generated_body_composition_key"] = String(composition.get("composition_key", ""))
 		presentation["generated_decorative_body_cell"] = true
 		presentation["generated_body_presentation_model"] = GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL
 		presentation["generated_body_source_placement_ids"] = [source_placement_id] if source_placement_id != "" else []
@@ -7074,11 +7164,77 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 		candidates = _generated_decorative_blocker_fallback_asset_ids
 	if candidates.is_empty():
 		return ""
+	var cluster_x := floori(float(tile.x) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))
+	var cluster_y := floori(float(tile.y) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))
 	var stable_key := "%s|%s" % [
 		terrain_id,
-		String(object.get("h3m_def_name", "")),
+		"%d,%d" % [cluster_x, cluster_y],
 	]
 	return String(candidates[absi(stable_key.hash()) % candidates.size()])
+
+func _generated_decorative_body_composition(object: Dictionary, tile: Vector2i) -> Dictionary:
+	var placement_id := String(object.get("placement_id", "")).strip_edges()
+	if placement_id == "":
+		placement_id = String(object.get("h3m_def_name", "")).strip_edges()
+	var composition_key := "%s|%s|%d,%d" % [
+		placement_id,
+		String(object.get("h3m_def_name", "")),
+		tile.x,
+		tile.y,
+	]
+	var scale_factor := lerpf(
+		GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN,
+		GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX,
+		_stable_unit_fraction("%s|scale" % composition_key)
+	)
+	var offset_tiles := Vector2(
+		lerpf(-GENERATED_DECORATIVE_BODY_OFFSET_X_TILES, GENERATED_DECORATIVE_BODY_OFFSET_X_TILES, _stable_unit_fraction("%s|offset_x" % composition_key)),
+		lerpf(GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES, GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES, _stable_unit_fraction("%s|offset_y" % composition_key))
+	)
+	var sprite_extent_tiles := GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES * scale_factor
+	var half_extent := sprite_extent_tiles * 0.5
+	var sprite_center_tiles := Vector2(
+		clampf(0.5 + offset_tiles.x, half_extent, 1.0 - half_extent),
+		clampf(0.5 + offset_tiles.y - _object_lift_fraction("blocker", Vector2i(1, 1)), half_extent, 1.0 - half_extent)
+	)
+	return {
+		"composition_key": composition_key,
+		"scale_factor": scale_factor,
+		"offset_tiles": {"x": offset_tiles.x, "y": offset_tiles.y},
+		"sprite_extent_tiles": sprite_extent_tiles,
+		"sprite_center_tiles": {"x": sprite_center_tiles.x, "y": sprite_center_tiles.y},
+	}
+
+func _generated_body_normalized_sprite_bounds(presentation: Dictionary) -> Dictionary:
+	var scale_factor := clampf(
+		float(presentation.get("generated_body_scale_factor", 1.0)),
+		GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN,
+		GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX
+	)
+	var offset_payload: Dictionary = presentation.get("generated_body_offset_tiles", {}) if presentation.get("generated_body_offset_tiles", {}) is Dictionary else {}
+	var offset_x := clampf(float(offset_payload.get("x", 0.0)), -GENERATED_DECORATIVE_BODY_OFFSET_X_TILES, GENERATED_DECORATIVE_BODY_OFFSET_X_TILES)
+	var offset_y := clampf(float(offset_payload.get("y", 0.0)), GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES, GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES)
+	var sprite_extent := GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES * scale_factor
+	var half_extent := sprite_extent * 0.5
+	var center := Vector2(
+		clampf(0.5 + offset_x, half_extent, 1.0 - half_extent),
+		clampf(0.5 + offset_y - _object_lift_fraction("blocker", Vector2i(1, 1)), half_extent, 1.0 - half_extent)
+	)
+	var left := center.x - half_extent
+	var top := center.y - half_extent
+	var right := center.x + half_extent
+	var bottom := center.y + half_extent
+	return {
+		"left": left,
+		"top": top,
+		"right": right,
+		"bottom": bottom,
+		"extent_tiles": sprite_extent,
+		"within_tile": left >= -0.0001 and top >= -0.0001 and right <= 1.0001 and bottom <= 1.0001,
+	}
+
+func _stable_unit_fraction(stable_key: String) -> float:
+	return float(posmod(stable_key.hash(), 1000003)) / 1000002.0
 
 func _rebuild_hero_index() -> void:
 	_heroes_by_tile.clear()

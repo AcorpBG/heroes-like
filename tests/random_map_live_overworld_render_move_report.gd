@@ -97,6 +97,9 @@ func _run() -> void:
 	var map_visual_after := _map_visual_summary(overworld)
 	if not _assert_generated_visual_summary(map_visual_after, "after_move"):
 		return
+	if map_visual_after.get("body_entries", []) != map_visual_before.get("body_entries", []):
+		_fail("Generated blocker composition changed across movement/redraw.")
+		return
 	if _generated_presentation_authority(SessionState.active_session) != generated_presentation_authority_before:
 		_fail("Generated object/body/map authority changed during presentation and movement validation.")
 		return
@@ -119,6 +122,22 @@ func _run() -> void:
 	if not _save_authority_values_equal(save_reload_restored_authority, save_reload_source_authority):
 		_fail("Generated object/body/package authority changed across save and restore.")
 		return
+	var rebuilt_map_view = load("res://scenes/overworld/OverworldMapView.gd").new()
+	add_child(rebuilt_map_view)
+	rebuilt_map_view.set_map_state(
+		restored_session,
+		restored_session.overworld.get("map", []),
+		OverworldRules.derive_map_size(restored_session),
+		OverworldRules.hero_position(restored_session)
+	)
+	await get_tree().process_frame
+	var rebuilt_visual_summary: Dictionary = rebuilt_map_view.validation_generated_object_visual_summary()
+	if not _assert_generated_visual_summary(rebuilt_visual_summary, "save_restore_rebuild"):
+		return
+	if rebuilt_visual_summary.get("body_entries", []) != map_visual_before.get("body_entries", []):
+		_fail("Generated blocker composition changed after a real save/restore session rebuild.")
+		return
+	rebuilt_map_view.queue_free()
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -179,7 +198,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if summary.is_empty():
 		_fail("%s generated visual summary is unavailable." % label)
 		return false
-	if String(summary.get("presentation_model", "")) != "exact_package_body_cell_terrain_matched_original_sprite":
+	if String(summary.get("presentation_model", "")) != "exact_body_cell_biome_palette_clustered_original_sprite":
 		_fail("%s generated body presentation model is not exact: %s" % [label, JSON.stringify(summary)])
 		return false
 	var is_default_fixture := _active_size_class_id == SIZE_CLASS_ID and _active_seed == EXPLICIT_SEED
@@ -197,6 +216,26 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		return false
 	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.72):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
+		return false
+	if int(summary.get("composition_key_count", 0)) != int(summary.get("indexed_body_tile_count", -1)):
+		_fail("%s generated body composition keys are incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	if not bool(summary.get("all_transformed_bounds_within_tile", false)):
+		_fail("%s generated body composition escaped its owning tiles: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	if int(summary.get("distinct_body_asset_count", 0)) < 8 or int(summary.get("repeated_def_multi_asset_count", 0)) <= 0:
+		_fail("%s generated body palette did not break repeated-definition stamping: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	if (
+		float(summary.get("scale_factor_min", 1.0)) >= 0.95
+		or float(summary.get("scale_factor_max", 1.0)) <= 1.01
+		or float(summary.get("offset_x_min", 0.0)) >= -0.02
+		or float(summary.get("offset_x_max", 0.0)) <= 0.02
+	):
+		_fail("%s generated body composition does not exercise its bounded visual range: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	if String(summary.get("composition_signature", "")).length() != 64:
+		_fail("%s generated body composition signature is missing: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 1.0):
 		_fail("%s multi-tile visual cap changed: %s" % [label, summary.get("multi_tile_interactive_cap_tiles", -1.0)])
@@ -290,6 +329,17 @@ func _compact_generated_visual_summary(summary: Dictionary) -> Dictionary:
 		"all_body_assets_terrain_matched": bool(summary.get("all_body_assets_terrain_matched", false)),
 		"collision_tile_count": int(summary.get("collision_tile_count", 0)),
 		"body_sprite_extent_tiles": float(summary.get("body_sprite_extent_tiles", 0.0)),
+		"distinct_body_asset_count": int(summary.get("distinct_body_asset_count", 0)),
+		"repeated_def_multi_asset_count": int(summary.get("repeated_def_multi_asset_count", 0)),
+		"composition_key_count": int(summary.get("composition_key_count", 0)),
+		"all_transformed_bounds_within_tile": bool(summary.get("all_transformed_bounds_within_tile", false)),
+		"scale_factor_min": float(summary.get("scale_factor_min", 0.0)),
+		"scale_factor_max": float(summary.get("scale_factor_max", 0.0)),
+		"offset_x_min": float(summary.get("offset_x_min", 0.0)),
+		"offset_x_max": float(summary.get("offset_x_max", 0.0)),
+		"offset_y_min": float(summary.get("offset_y_min", 0.0)),
+		"offset_y_max": float(summary.get("offset_y_max", 0.0)),
+		"composition_signature": String(summary.get("composition_signature", "")),
 		"multi_tile_interactive_cap_tiles": float(summary.get("multi_tile_interactive_cap_tiles", 0.0)),
 		"capped_resource_count": int(summary.get("capped_resource_count", 0)),
 		"max_capped_resource_extent_tiles": float(summary.get("max_capped_resource_extent_tiles", 0.0)),
