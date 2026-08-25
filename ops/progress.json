@@ -1911,21 +1911,41 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
-    "title": "Main Menu Stage Dock authored cartography surface",
+    "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
+    "title": "Overworld semantic object scale hierarchy",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T06:27:46Z",
-    "updatedAt": "2026-08-25T07:08:38Z",
-    "completedAt": "2026-08-25T07:08:38Z",
+    "startedAt": "2026-08-25T07:12:11Z",
+    "updatedAt": "2026-08-25T07:27:46Z",
+    "completedAt": "2026-08-25T07:27:46Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspected 1280x720 and 1920x1080 captures of Campaign, Skirmish, Saves, Guide, and Settings. One original 1024x1024 low-contrast cartographic campaign-table surface now replaces only the shared smoke-black Stage Dock slab, with exact live anchor/combined-minimum containment and the prior smoke style retained for high-contrast or missing-asset fallback. Focused visual, keyboard navigation, settings defaults, save/load confidence, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; board actions, navigation/focus/accessibility, settings/save/session authority remain unchanged."
+    "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Painted sprite extents now follow semantic ranks for handheld artifacts, loose pickups, landmarks, durable structures, multi-tile structures, and towns. Focused visual/small-map/artifact, broad Overworld, generated-map move/save, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; alpha/aspect/grounding/fog memory and all logical footprint/passability/interaction/content/camera/save/session authority remain unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-semantic-object-scale-hierarchy-20260825",
+      "title": "Overworld semantic object scale hierarchy",
+      "sliceId": "presentation-overworld-semantic-object-scale-hierarchy-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-25T07:27:46Z",
+      "updatedAt": "2026-08-25T07:27:46Z",
+      "latestFinding": "Direct inspected River Pass 1280x720 and 1920x1080 captures show compact handheld and loose-pickup props beneath landmark, structure, hero, and town ranks. Focused and broad Overworld, artifact, generated-map move/save, core, static/editor, and bounded Linux/Windows startup gates are green with exact logical object and session authority.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-semantic-scale-focused.7tAoy4",
+        "/tmp/heroes-semantic-scale-compat.OBtD3N",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ]
+    },
     {
       "id": "ux-main-menu-stage-dock-authored-cartography-surface-20260825",
       "title": "Main Menu Stage Dock authored cartography surface",
@@ -14357,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Main Menu Stage Dock authored cartography surface is completed from direct 1280/1920 captures and focused/compatibility/platform gates; no blocker is active and the next graphical-polish slice is not yet selected.",
+  "currentNotes": "Overworld semantic object scale hierarchy is completed from direct River Pass captures and focused/compatibility/platform gates; no blocker is active and the next graphical-polish slice is not yet selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
-  "currentSliceId": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
-  "currentSliceNotes": "Completed: the shared Main Menu secondary-board surface now uses one original low-contrast cartographic texture with exact fallback, responsive containment, and unchanged board authority.",
+  "currentSlice": "presentation-overworld-semantic-object-scale-hierarchy-10184",
+  "currentSliceId": "presentation-overworld-semantic-object-scale-hierarchy-10184",
+  "currentSliceNotes": "Completed: painted Overworld sprites now follow semantic object ranks while every logical footprint and gameplay authority remains exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Stage Dock authored cartography surface",
-  "currentSliceUpdatedAt": "2026-08-25T07:08:38Z",
+  "currentSliceTitle": "Overworld semantic object scale hierarchy",
+  "currentSliceUpdatedAt": "2026-08-25T07:27:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19880,8 +19900,29 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Main Menu Stage Dock authored cartography-surface slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "notes": "The Overworld semantic object scale hierarchy slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
+      "title": "Overworld semantic object scale hierarchy",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T07:27:46Z",
+      "startedAt": "2026-08-25T07:12:11Z",
+      "completedAt": "2026-08-25T07:27:46Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected River Pass 1280x720 and 1920x1080 captures. Semantic painted extents make handheld artifacts and loose pickups subordinate to landmarks, durable structures, multi-tile structures, and towns while preserving alpha/aspect/grounding/fog memory, authored logical object authority, generated-map behavior, save/session authority, and bounded Linux/Windows startup.",
+      "blockedReason": null
+    },
     {
       "id": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
       "title": "Main Menu Stage Dock authored cartography surface",
@@ -101581,9 +101622,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Main Menu Stage Dock authored cartography surface is completed with one original shared texture, exact fallback and responsive containment, and unchanged secondary-board authority; the next graphical-polish slice is not selected.",
+  "summary": "Overworld semantic object scale hierarchy is completed with direct 1280/1920 visual proof, exact logical object authority, and green focused/compatibility/platform gates; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T07:08:38Z",
+  "updatedAt": "2026-08-25T07:27:46Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

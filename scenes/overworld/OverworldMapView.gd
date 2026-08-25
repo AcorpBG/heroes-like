@@ -68,17 +68,19 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
-const OBJECT_PICKUP_VISIBLE_EXTENT_TILES := 0.50
-const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.60
-const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.78
-const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.72
-const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.82
-const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.68
-const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.72
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84
+const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30
+const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36
+const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.54
+const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.66
+const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.56
+const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.62
+const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.64
+const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.46
+const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.56
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.76
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
-const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_family_visible_extent"
+const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
 const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.72
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08
@@ -144,7 +146,7 @@ const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
-const TOWN_SPRITE_EXTENT_FACTOR := 0.64
+const TOWN_SPRITE_EXTENT_FACTOR := 0.56
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -2275,7 +2277,7 @@ func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if node.is_empty():
 		return false
-	return _draw_object_sprite(_artifact_sprite_asset_id(node), rect, remembered, _artifact_object_profile(), tile)
+	return _draw_object_sprite(_artifact_sprite_asset_id(node), rect, remembered, _artifact_object_profile(node), tile)
 
 func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var asset_id := _town_sprite_asset_id(_town_at(tile))
@@ -3613,26 +3615,59 @@ func _procedural_resource_marker_color(family: String, remembered: bool) -> Colo
 	return _remembered_marker_color(color) if remembered else color
 
 func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
-	var family := String(profile.get("family", "pickup"))
+	var scale_class := _semantic_visual_scale_class(profile)
 	var base := OBJECT_DEFAULT_VISIBLE_EXTENT_TILES
-	match family:
-		"artifact", "pickup":
-			base = OBJECT_PICKUP_VISIBLE_EXTENT_TILES
-		"encounter", "neutral_encounter":
+	match scale_class:
+		"handheld_artifact":
+			base = OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES
+		"loose_pickup":
+			base = OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES
+		"encounter":
 			base = OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES
-		"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site", "support_producer", "staged_resource_front", "faction_outpost":
+		"durable_structure":
 			base = OBJECT_DURABLE_VISIBLE_EXTENT_TILES
-		"scouting_structure", "transit_object", "frontier_shrine", "sign_waypoint":
+		"waypoint":
 			base = OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES
-		"blocker":
+		"landmark":
+			base = OBJECT_LANDMARK_VISIBLE_EXTENT_TILES
+		"terrain_blocker":
 			base = OBJECT_BLOCKER_VISIBLE_EXTENT_TILES
-		"decoration":
+		"ground_detail":
 			base = OBJECT_DECORATION_VISIBLE_EXTENT_TILES
 		_:
 			base = OBJECT_DEFAULT_VISIBLE_EXTENT_TILES
-	base += float(maxi(footprint.x - 1, 0)) * 0.08
-	base += float(maxi(footprint.y - 1, 0)) * 0.04
-	return clampf(base, OBJECT_PICKUP_VISIBLE_EXTENT_TILES, 0.94)
+	if scale_class in ["durable_structure", "waypoint", "landmark", "terrain_blocker"]:
+		base += float(maxi(footprint.x - 1, 0)) * 0.06
+		base += float(maxi(footprint.y - 1, 0)) * 0.03
+	return clampf(base, OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES, 0.84)
+
+func _semantic_visual_scale_class(profile: Dictionary) -> String:
+	var family := String(profile.get("family", "pickup")).strip_edges()
+	var primary_class := String(profile.get("primary_class", "")).strip_edges()
+	match family:
+		"artifact":
+			return "handheld_artifact"
+		"pickup":
+			return "loose_pickup"
+		"encounter", "neutral_encounter":
+			return "encounter"
+		"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site", "support_producer", "staged_resource_front", "faction_outpost":
+			return "durable_structure"
+		"scouting_structure", "transit_object", "frontier_shrine", "sign_waypoint", "shrine":
+			return "waypoint"
+		"scenario_objective", "faction_landmark":
+			return "landmark"
+		"blocker":
+			return "terrain_blocker"
+		"decoration":
+			return "ground_detail"
+	if primary_class in ["persistent_economy_site", "neutral_dwelling", "interactable_site"]:
+		return "durable_structure"
+	if primary_class in ["transit_route_object", "scouting_structure"]:
+		return "waypoint"
+	if primary_class in ["scenario_objective", "faction_landmark"]:
+		return "landmark"
+	return "map_object"
 
 func _object_lift_fraction(family: String, footprint: Vector2i) -> float:
 	var lift := 0.05
@@ -4016,12 +4051,14 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"resource_entries": resource_entries,
 	}
 
-func validation_object_sprite_scale_payload(asset_id: String, family: String, footprint: Vector2i = Vector2i.ONE) -> Dictionary:
+func validation_object_sprite_scale_payload(asset_id: String, family: String, footprint: Vector2i = Vector2i.ONE, profile_overrides: Dictionary = {}) -> Dictionary:
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return {}
 	var normalized_footprint := _normalized_footprint(footprint)
 	var profile := _default_object_profile(family, normalized_footprint)
+	for key in profile_overrides.keys():
+		profile[key] = profile_overrides.get(key)
 	var single_tile_extent := 100.0
 	var footprint_rect := Rect2(Vector2.ZERO, Vector2(normalized_footprint) * single_tile_extent)
 	var metrics := _object_sprite_visual_metrics(footprint_rect, profile)
@@ -4044,6 +4081,9 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 	return {
 		"asset_id": asset_id,
 		"family": family,
+		"primary_class": String(profile.get("primary_class", "")),
+		"footprint_tier": String(profile.get("footprint_tier", "")),
+		"semantic_scale_class": _semantic_visual_scale_class(profile),
 		"footprint": {"width": normalized_footprint.x, "height": normalized_footprint.y},
 		"visible_scale_model": String(draw_payload.get("visible_scale_model", "")),
 		"uses_painted_bounds": bool(first_region.get("uses_painted_bounds", false)),
@@ -4062,6 +4102,25 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 		"cache_size_after_second": cache_size_after_second,
 		"cache_repeat_exact": first_region == second_region and cache_size_after_first == cache_size_after_second,
 	}
+
+func validation_content_object_sprite_scale_payload(object_id: String, asset_id: String) -> Dictionary:
+	var profile_value = _map_object_content_profiles.get(object_id, {})
+	if not (profile_value is Dictionary) or profile_value.is_empty():
+		return {}
+	var profile: Dictionary = profile_value.duplicate(true)
+	var footprint := _object_profile_footprint(profile)
+	var payload := validation_object_sprite_scale_payload(asset_id, String(profile.get("family", "pickup")), footprint, profile)
+	payload["content_profile"] = {
+		"id": String(profile.get("id", "")),
+		"family": String(profile.get("family", "")),
+		"primary_class": String(profile.get("primary_class", "")),
+		"footprint_tier": String(profile.get("footprint_tier", "")),
+		"footprint": {"width": footprint.x, "height": footprint.y},
+		"passable": bool(profile.get("passable", true)),
+		"visitable": bool(profile.get("visitable", true)),
+		"map_roles": profile.get("map_roles", []).duplicate(true),
+	}
+	return payload
 
 func validation_town_sprite_scale_payload(asset_id: String = "town_faction_embercourt") -> Dictionary:
 	var texture = _object_texture_for_asset(asset_id)
@@ -4656,7 +4715,8 @@ func _artifact_presentation_payload(tile: Vector2i, explored: bool) -> Dictionar
 	var icon_path := ArtifactRules.artifact_icon_path(artifact_id)
 	var sprite_asset_id := _artifact_sprite_asset_id(node)
 	var field_sprite_path := String(_object_asset_paths.get(sprite_asset_id, ""))
-	var field_sprite_extent_fraction := _sprite_extent_fraction(_artifact_object_profile(), Vector2i(1, 1))
+	var artifact_profile := _artifact_object_profile(node)
+	var field_sprite_extent_fraction := _sprite_extent_fraction(artifact_profile, Vector2i(1, 1))
 	var expected_field_asset_id := String(_artifact_field_asset_ids.get(artifact_id, ""))
 	return {
 		"artifact_id": artifact_id,
@@ -4670,6 +4730,7 @@ func _artifact_presentation_payload(tile: Vector2i, explored: bool) -> Dictionar
 		"field_sprite_matches_artifact": expected_field_asset_id != "" and sprite_asset_id == expected_field_asset_id,
 		"inventory_icon_separate_from_field_sprite": icon_path != "" and field_sprite_path != "" and icon_path != field_sprite_path,
 		"field_sprite_extent_fraction": field_sprite_extent_fraction,
+		"semantic_scale_class": _semantic_visual_scale_class(artifact_profile),
 		"field_sprite_contained_in_tile": field_sprite_extent_fraction <= 1.0,
 		"footprint_width_tiles": 1,
 		"footprint_height_tiles": 1,
@@ -7801,7 +7862,10 @@ func _load_map_object_profiles() -> void:
 		var profile := {
 			"id": String(object_value.get("id", "")),
 			"family": String(object_value.get("family", "pickup")),
+			"primary_class": String(object_value.get("primary_class", "")),
+			"secondary_tags": object_value.get("secondary_tags", []),
 			"footprint": _normalized_footprint(footprint_size),
+			"footprint_tier": String(footprint.get("tier", "")) if footprint is Dictionary else "",
 			"footprint_anchor": String(footprint.get("anchor", "bottom_center")) if footprint is Dictionary else "bottom_center",
 			"passable": bool(object_value.get("passable", true)),
 			"visitable": bool(object_value.get("visitable", true)),
@@ -7999,8 +8063,12 @@ func _decorative_object_family(object: Dictionary, fallback: String = "blocker")
 	var family := fallback.strip_edges()
 	return family if family != "" else "blocker"
 
-func _artifact_object_profile() -> Dictionary:
-	return _default_object_profile("artifact", Vector2i(1, 1))
+func _artifact_object_profile(node: Dictionary = {}) -> Dictionary:
+	var profile := _default_object_profile("artifact", Vector2i(1, 1))
+	profile["id"] = String(node.get("artifact_id", "")).strip_edges()
+	profile["primary_class"] = "handheld_artifact"
+	profile["footprint_tier"] = "micro"
+	return profile
 
 func _town_object_profile() -> Dictionary:
 	return {
