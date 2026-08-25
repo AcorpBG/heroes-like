@@ -16211,8 +16211,11 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         responsive_layout_body = responsive_layout_match.group("body")
         responsive_order = tuple(responsive_layout_body.find(token) for token in (
             "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
+            "var banner_details_visible := not compact_layout or available_size.x >= 1180.0",
             "_compact_layout_active = compact_layout",
             "_refit_battle_action_guide()",
+            "_status_label.visible = banner_details_visible",
+            "_pressure_label.visible = banner_details_visible",
             "_footer_row.columns = 1 if compact_layout else 2",
             '_footer_row.add_theme_constant_override("v_separation", 0 if compact_layout else 8)',
             '_action_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)',
@@ -16232,6 +16235,8 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ))
         ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Battle responsive layout must reflow the existing footer, retain essential commands, compact only spacing/speed, and then preserve existing target/board contracts in order")
         ensure("_system_panel.visible = not compact_layout" not in responsive_layout_body, errors, "Battle compact layout must not hide the existing essential system commands")
+        ensure(responsive_layout_body.count("banner_details_visible") == 3, errors, "Battle responsive layout must derive one logical-width banner-detail predicate and apply it only to Status and Pressure")
+        ensure("_status_label.visible = not compact_layout" not in responsive_layout_body and "_pressure_label.visible = not compact_layout" not in responsive_layout_body, errors, "Battle banner details must not remain coupled to the height-sensitive compact breakpoint")
         for forbidden_token in ("reparent", "remove_child", "add_child", "queue_free", "new()", "call_deferred", "create_timer"):
             ensure(forbidden_token not in responsive_layout_body, errors, f"Battle compact footer reflow must not add, replace, or defer UI through {forbidden_token}")
 
@@ -16249,8 +16254,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
             'for node_name in ["Advance", "Strike", "Shoot", "Defend", "QuickResolve", "Retreat", "Surrender"]:',
             "footer_row.columns == (1 if compact else 2)",
             "system_panel.is_visible_in_tree()",
-            'system_panel.has_theme_stylebox_override("panel") == compact',
-            '(not compact or system_panel.get_theme_stylebox("panel") is StyleBoxEmpty)',
+            '(system_panel.get_theme_stylebox("panel") is StyleBoxEmpty) == compact',
             "system_body.is_visible_in_tree() == not compact",
             "speed_bar.is_visible_in_tree() == not compact",
             'action_guide.text.split("\\n", false).size() == (2 if compact else 3)',
@@ -17426,6 +17430,18 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ensure(status_helper_match is not None, errors, "BattleShell must own one full-status native pixel-ellipsis helper")
     ensure(shell_text.count("_set_battle_status_text(BattleRules.describe_status(_session))") == 1, errors, "Battle refresh must pass the exact full BattleRules status to native ellipsis once")
     ensure("FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)" not in shell_text, errors, "Battle Status must not retain the fixed 62-character visible cut")
+    for label_name, stretch_ratio in (("Header", "0.8"), ("Status", "1.4"), ("Pressure", "0.8")):
+        label_match = re.search(
+            rf'\[node name="{label_name}" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"\]\n(?P<body>.*?)(?=\n\[node )',
+            scene_text,
+            re.S,
+        )
+        ensure(label_match is not None, errors, f"Battle banner must retain the authored {label_name} Label")
+        if label_match is not None:
+            label_body = label_match.group("body")
+            ensure("size_flags_horizontal = 3" in label_body, errors, f"Battle banner {label_name} must remain flexible")
+            ensure(f"size_flags_stretch_ratio = {stretch_ratio}" in label_body, errors, f"Battle banner {label_name} must retain its responsive stretch share {stretch_ratio}")
+            ensure("custom_minimum_size" not in label_body, errors, f"Battle banner {label_name} must not impose a fixed width")
     if status_helper_match is not None:
         status_helper_body = status_helper_match.group("body")
         status_helper_order = tuple(status_helper_body.find(token) for token in (
@@ -17743,7 +17759,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             ensure(forbidden_token not in footer_distance_body, errors, f"Independent Battle footer distance control must avoid circular dependency: {forbidden_token}")
 
     status_focused_match = re.search(
-        r"func _validate_battle_status_native_ellipsis\(shell: Control, session, width: int, expect_overflow: bool\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        r"func _validate_battle_status_native_ellipsis\(shell: Control, session\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
         smoke_text,
         re.S,
     )
@@ -17762,7 +17778,9 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             "status.text != expected_full",
             "status.tooltip_text != expected_full",
             "status.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
-            "(full_width > status.size.x + 0.5) != expect_overflow",
+            "not header.is_visible_in_tree()",
+            "not status.is_visible_in_tree()",
+            "not pressure.is_visible_in_tree()",
             "top_rect.encloses(header_rect)",
             "header_rect.intersects(status_rect)",
             "_battle_background_authority(session) != authority_before",
@@ -17783,6 +17801,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             ensure(required_token in status_focused_body, errors, f"Focused Battle Status proof is missing exact token: {required_token}")
         for forbidden_token in ('shell.call("_set_battle_status', 'shell.call("_refresh', "set_text", ".text =", "Input.", "queue_redraw", "sort(", "erase(", "custom_minimum_size"):
             ensure(forbidden_token not in status_focused_body, errors, f"Focused Battle Status proof must remain public/read-only and avoid {forbidden_token}")
+        ensure("expect_overflow" not in status_focused_body and "width == 1280" not in status_focused_body, errors, "Battle controller semantic proof must not infer live pixel geometry from a requested headless window size")
 
     scale_fit_match = re.search(
         r"func _validate_battle_focus_spell_tab_body_fit\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
@@ -17901,14 +17920,14 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     if width_case_match is not None:
         width_body = width_case_match.group("body")
         timer_call = width_body.find("if semantic_timer == null")
-        status_call = width_body.find("if not _validate_battle_status_native_ellipsis(shell, session, width, width == 1280):")
+        status_call = width_body.find("if not _validate_battle_status_native_ellipsis(shell, session):")
         unfocused_footer_call = width_body.find("if not _validate_board_footer_pixel_ellipsis(board, session, width, false):")
         strip_call = width_body.find("if not _validate_turn_strip_identity_surface(board, session, width):")
         focus_call = width_body.find("board.grab_focus()")
         focused_footer_call = width_body.find("if not _validate_board_footer_pixel_ellipsis(board, session, width, true):", focus_call)
         live_empty_gate = width_body.find('if live.text != "":', focused_footer_call)
         ensure(0 <= timer_call < status_call < unfocused_footer_call < strip_call < focus_call < focused_footer_call < live_empty_gate, errors, "Battle Status/footer proofs must run on exact live rows before strip/focus mutation at each existing 1280/1920 width")
-        ensure(width_body.count("_validate_battle_status_native_ellipsis(shell, session, width, width == 1280)") == 1, errors, "Battle Status proof must require native overflow at 1280 and a full fit at 1920 exactly once per width")
+        ensure(width_body.count("_validate_battle_status_native_ellipsis(shell, session)") == 1, errors, "Battle controller smoke must validate exact Status semantics and sibling geometry once per navigation fixture")
         ensure(width_body.count("_validate_board_footer_pixel_ellipsis(board, session, width, false)") == 1 and width_body.count("_validate_board_footer_pixel_ellipsis(board, session, width, true)") == 1, errors, "Battle footer focused owner must execute exactly one fitting and one ellipsized live row at each width")
         ensure(0 <= strip_call < focus_call and width_body.count("_validate_turn_strip_identity_surface(board, session, width)") == 1, errors, "Battle initiative-strip proof must run exactly once at each existing 1280/1920 width before controller focus mutation")
 
@@ -26658,6 +26677,30 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         ensure(required_token in smoke_text, errors, f"Battle focused terrain-context proof is missing token: {required_token}")
 
     visual_text = visual_report_path.read_text(encoding="utf-8")
+    banner_contract = gdscript_function_block(visual_text, "_battle_banner_contract")
+    for required_token in (
+        'shell.get_node_or_null("%Header") as Label',
+        'shell.get_node_or_null("%Status") as Label',
+        'shell.get_node_or_null("%Pressure") as Label',
+        "BattleRules.describe_header(session)",
+        "BattleRules.describe_status(session)",
+        "BattleRules.describe_pressure(session)",
+        "font.get_string_size(expected_status",
+        "status_overflow if viewport_size.x == 1280 else (not status_overflow if viewport_size.x >= 1920 else true)",
+        "header.is_visible_in_tree()",
+        "status.is_visible_in_tree()",
+        "pressure.is_visible_in_tree()",
+        "top_rect.encloses(header_rect)",
+        "top_rect.encloses(status_rect)",
+        "top_rect.encloses(pressure_rect)",
+        "not header_rect.intersects(status_rect)",
+        "not status_rect.intersects(pressure_rect)",
+    ):
+        ensure(required_token in banner_contract, errors, f"UI visual report Battle-banner contract is missing exact token: {required_token}")
+    for forbidden_token in ("visible =", "custom_minimum_size", "size_flags", "sort(", "erase(", "queue_free", "call_deferred"):
+        ensure(forbidden_token not in banner_contract, errors, f"UI visual report Battle-banner contract must remain observational: {forbidden_token}")
+    ensure(re.search(r"\.text\s*=(?!=)", banner_contract) is None, errors, "UI visual report Battle-banner contract must not assign visible text")
+    ensure(visual_text.count('shell_report["battle_banner"] = banner_contract') == 1 and visual_text.count('if shell_id == "battle":') >= 1, errors, "UI visual report must fail closed on one Battle-banner contract per selected Battle viewport")
     expected_style = gdscript_function_block(visual_text, "_expected_panel_style")
     for required_token in (
         'shell_id == "battle" and panel_name == "SystemPanel"',

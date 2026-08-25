@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld semantic object scale hierarchy is completed from direct River Pass captures and focused/compatibility/platform gates; no blocker is active and the next graphical-polish slice is not yet selected.",
+  "currentNotes": "Battle banner compact status containment is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-semantic-object-scale-hierarchy-10184",
-  "currentSliceId": "presentation-overworld-semantic-object-scale-hierarchy-10184",
-  "currentSliceNotes": "Completed: painted Overworld sprites now follow semantic object ranks while every logical footprint and gameplay authority remains exact.",
+  "currentSlice": "ux-battle-banner-compact-status-containment-10184",
+  "currentSliceId": "ux-battle-banner-compact-status-containment-10184",
+  "currentSliceNotes": "Completed: normal 1280/1920 Battle banners retain exact Header/Status/Pressure semantics and responsive containment while genuinely constrained logical widths keep the reduced banner.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld semantic object scale hierarchy",
-  "currentSliceUpdatedAt": "2026-08-25T07:27:46Z",
+  "currentSliceTitle": "Battle banner compact status containment",
+  "currentSliceUpdatedAt": "2026-08-25T07:52:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101080,6 +101080,28 @@
       ],
       "notes": "Completed from owner feedback and direct 1280/1920 captures. The live painted-bound scale ladder now uses 0.50 pickup, 0.60 encounter, 0.72 objective/waypoint, 0.78 durable structure, 0.84 multi-footprint cap, and 1.28 town visual extents. Exact 3x2 town/entry and one-tile object geometry, ids, body/visit masks, routes, movement, fog, interactions, generated placement, session/save authority, and Native RMG remain unchanged. Focused scale captures, small/large map control, town/artifact assets, generated-map movement, full-route movement, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Overworld interaction and whole-release claims remain excluded.",
       "completedAt": "2026-08-25T04:28:00Z"
+    },
+    {
+      "id": "ux-battle-banner-compact-status-containment-10184",
+      "title": "Battle banner compact status containment",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T07:52:11Z",
+      "startedAt": "2026-08-25T07:34:53Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/active_play_settings_runtime_report.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct real-render evidence. At 1280x720 the existing Header/Status/Pressure are all visible and contained with Status allocated 535px and genuinely natively ellipsized; at 1920x1080 Status receives 835px and the complete 672px authored value fits. The 1180 logical-width banner-detail boundary retains the reduced banner at genuinely constrained layouts such as 1280 at 130% UI scale. Focused visual report, Board navigation, active settings, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The controller test's stale requested-window overflow oracle and the active-settings test's stale override-presence oracle were corrected to observe actual geometry/style type. Gameplay, text/rules, input/focus, session/settings authority, and broader package/release claims remain unchanged or unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T07:52:11Z"
     }
   ],
   "project": "heroes-like",
