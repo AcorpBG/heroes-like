@@ -1143,8 +1143,13 @@ func _validate_battle_info_tab_header_fit(shell: Control, session, width: int) -
 
 func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: int) -> bool:
 	var authority_before := _battle_background_authority(session)
+	var sidebar_shell: PanelContainer = shell.get_node("%SidebarShell")
+	var command_panel: PanelContainer = shell.get_node("%CommandPanel")
 	var tabs: TabContainer = shell.get_node("%BattleTabs")
 	var footer: Control = shell.get_node("%Footer")
+	if not is_equal_approx(tabs.custom_minimum_size.y, 248.0) \
+		or tabs.size_flags_vertical != Control.SIZE_FILL:
+		return _fail_bool("Battle tactical-card authored height policy mismatch at %d: minimum=%s vertical_flags=%s." % [width, tabs.custom_minimum_size, tabs.size_flags_vertical])
 	var commander_labels: Array[Label] = [shell.get_node("%PlayerCommand"), shell.get_node("%EnemyCommand")]
 	var commander_full_values := [
 		BattleRules.describe_commander_summary(session, "player"),
@@ -1177,6 +1182,20 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 	tabs.current_tab = 0
 	await _settle()
 	var contained_tabs_height := tabs.size.y
+	if sidebar_shell.is_visible_in_tree():
+		var sidebar_rect := sidebar_shell.get_global_rect()
+		var command_rect := command_panel.get_global_rect()
+		var tabs_rect := tabs.get_global_rect()
+		var remaining_rail_gutter := sidebar_rect.end.y - tabs_rect.end.y
+		if not is_equal_approx(contained_tabs_height, 248.0) \
+			or not sidebar_rect.encloses(command_rect) \
+			or not sidebar_rect.encloses(tabs_rect) \
+			or command_rect.end.y > tabs_rect.position.y + 0.01 \
+			or command_rect.intersects(tabs_rect) \
+			or remaining_rail_gutter < 80.0:
+			return _fail_bool("Battle tactical-card containment/negative-space mismatch at %d: sidebar=%s command=%s tabs=%s height=%s remaining_gutter=%s." % [width, sidebar_rect, command_rect, tabs_rect, contained_tabs_height, remaining_rail_gutter])
+	elif width >= 1360:
+		return _fail_bool("Battle wide layout unexpectedly hides the tactical sidebar at requested width %d." % width)
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var stack_check: Dictionary = snapshot.get("stack_check", {}) if snapshot.get("stack_check", {}) is Dictionary else {}
 	var engagement_check: Dictionary = snapshot.get("engagement_check", {}) if snapshot.get("engagement_check", {}) is Dictionary else {}
@@ -1222,7 +1241,7 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 		var texts: Array = row.get("texts", [])
 		var tooltips: Array = row.get("tooltips", [])
 		var line_counts: Array = row.get("line_counts", [])
-		var geometry_exact := tabs.size.y <= contained_tabs_height + 0.01 \
+		var geometry_exact := is_equal_approx(tabs.size.y, contained_tabs_height) \
 			and shell.get_global_rect().encloses(footer.get_global_rect()) \
 			and tabs.get_global_rect().encloses(panel.get_global_rect())
 		for index in range(labels.size()):
@@ -1262,7 +1281,7 @@ func _validate_battle_timing_tab_body_fit(shell: Control, session, width: int) -
 	var expected_visible := "\n".join(expected_lines)
 	var expected_tooltip := "%s\n\n%s" % [String(timing_check.get("tooltip_text", "")), full_board]
 	var widest_line := _widest_themed_label_line_for_test(timing_label)
-	var geometry_exact := tabs.size.y <= contained_tabs_height + 0.01 \
+	var geometry_exact := is_equal_approx(tabs.size.y, contained_tabs_height) \
 		and shell.get_global_rect().encloses(footer.get_global_rect()) \
 		and tabs.get_global_rect().encloses(panel.get_global_rect()) \
 		and panel.get_global_rect().encloses(timing_label.get_global_rect()) \

@@ -17923,7 +17923,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             'shell.get_node("%Settings")',
             'shell.get_node("%Menu")',
             "system_actions_rect.encloses(control_rect)",
-            "tabs.size.y <= contained_tabs_height + 0.01",
+            "is_equal_approx(tabs.size.y, contained_tabs_height)",
             "_battle_background_authority(session) != authority_before",
         ))
         ensure(all(index >= 0 for index in scale_fit_order) and list(scale_fit_order) == sorted(scale_fit_order), errors, "Battle 100/130-scale proof must preserve independent summaries, native two-line policy, system-row geometry, tab containment, then authority")
@@ -25897,13 +25897,13 @@ def validate_battle_focus_spell_tab_body_containment(errors: list[str]) -> None:
         for required_token in (
             '"line_counts": [4, 4]',
             '"line_counts": [3, 2]',
-            'tabs.size.y <= contained_tabs_height + 0.01',
+            'is_equal_approx(tabs.size.y, contained_tabs_height)',
             'tabs.get_global_rect().encloses(panel.get_global_rect())',
             'panel.get_global_rect().encloses(label.get_global_rect())',
             'label.tooltip_text == String(tooltips[index])',
         ):
             ensure(required_token in body, errors, f"Focused Battle body proof is missing exact token: {required_token}")
-        for forbidden_token in ("_battle_focus_visible_surface", "_battle_spellbook_visible_surface", "_battle_effect_visible_surface", "custom_minimum_size", "set_text", "sort(", "erase(", "create_timer", "Input."):
+        for forbidden_token in ("_battle_focus_visible_surface", "_battle_spellbook_visible_surface", "_battle_effect_visible_surface", "custom_minimum_size =", "set_text", "sort(", "erase(", "create_timer", "Input."):
             ensure(forbidden_token not in body, errors, f"Focused Battle body proof must remain independent/read-only and avoid {forbidden_token}")
     width_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", board_smoke_text, re.S)
     ensure(width_match is not None, errors, "Could not isolate Battle two-width owner for Focus/Spell body containment")
@@ -26038,7 +26038,7 @@ def validate_battle_timing_tab_compact_summary(errors: list[str]) -> None:
             'not timing_label.text.contains("...")',
             'not timing_label.text.contains("Spell and Ability Timing")',
             'timing_label.tooltip_text.contains("Spell and Ability Timing")',
-            "tabs.size.y <= contained_tabs_height + 0.01",
+            "is_equal_approx(tabs.size.y, contained_tabs_height)",
             "shell.get_global_rect().encloses(footer.get_global_rect())",
             "tabs.get_global_rect().encloses(panel.get_global_rect())",
             "panel.get_global_rect().encloses(timing_label.get_global_rect())",
@@ -32413,6 +32413,124 @@ def validate_battle_movement_range_overlay_restraint(errors: list[str]) -> None:
             "var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)",
         ))
         ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "Captured Battle movement-range contract must pass before each unchanged screenshot")
+
+
+def validate_battle_sidebar_tactical_card_height_cap(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    controller_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
+    for path in (BATTLE_SCENE_PATH, controller_path, visual_path):
+        ensure(path.exists(), errors, f"Missing Battle sidebar tactical-card owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCENE_PATH, controller_path, visual_path)):
+        return
+
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    controller_text = controller_path.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    tabs_match = re.search(
+        r'\[node name="BattleTabs" type="TabContainer"[^\n]*\]\n(?P<body>.*?)(?=\n\[node name="InitiativePanel")',
+        scene_text,
+        re.S,
+    )
+    ensure(tabs_match is not None, errors, "Could not isolate the authored BattleTabs tactical-card node")
+    if tabs_match is not None:
+        tabs_body = tabs_match.group("body")
+        ensure(tabs_body.count("custom_minimum_size = Vector2(0, 248)") == 1, errors, "BattleTabs must own one exact 248px tactical-card minimum")
+        ensure(tabs_body.count("size_flags_horizontal = 3") == 1 and tabs_body.count("size_flags_vertical = 1") == 1, errors, "BattleTabs must fill horizontally without vertically expanding through the sidebar")
+        ensure("size_flags_vertical = 3" not in tabs_body, errors, "BattleTabs must not retain the full-height vertical expand flag")
+        for forbidden in ("visible = false", "clip_contents", "position =", "offset_", "anchor_", "grow_", "script ="):
+            ensure(forbidden not in tabs_body, errors, f"BattleTabs height cap must remain one container-owned sizing policy without {forbidden}")
+
+    controller = gd_function_block(controller_text, "_validate_battle_focus_spell_tab_body_fit")
+    ensure(controller, errors, "Could not isolate focused Battle tactical-card geometry owner")
+    if controller:
+        controller_order = tuple(controller.find(token) for token in (
+            '_battle_background_authority(session)',
+            'shell.get_node("%SidebarShell")',
+            'shell.get_node("%CommandPanel")',
+            'shell.get_node("%BattleTabs")',
+            "tabs.custom_minimum_size.y, 248.0",
+            "tabs.size_flags_vertical != Control.SIZE_FILL",
+            "tabs.current_tab = 0",
+            "var contained_tabs_height := tabs.size.y",
+            "if sidebar_shell.is_visible_in_tree():",
+            "var remaining_rail_gutter := sidebar_rect.end.y - tabs_rect.end.y",
+            "not is_equal_approx(contained_tabs_height, 248.0)",
+            "not sidebar_rect.encloses(command_rect)",
+            "not sidebar_rect.encloses(tabs_rect)",
+            "command_rect.intersects(tabs_rect)",
+            "remaining_rail_gutter < 80.0",
+            "elif width >= 1360:",
+            "for row_value in rows:",
+            "is_equal_approx(tabs.size.y, contained_tabs_height)",
+            "tabs.current_tab = initial_tab",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in controller_order) and list(controller_order) == sorted(controller_order), errors, "Focused Battle tactical-card proof must validate authored sizing, wide/compact geometry, stable page height, restore, then whole authority in order")
+        for token in (
+            'return _fail_bool("Battle wide layout unexpectedly hides the tactical sidebar at requested width %d." % width)',
+            "command_rect.end.y > tabs_rect.position.y + 0.01",
+            "tabs.get_global_rect().encloses(panel.get_global_rect())",
+            "panel.get_global_rect().encloses(label.get_global_rect())",
+            "label.get_visible_line_count() == int(line_counts[index])",
+        ):
+            ensure(token in controller, errors, f"Focused Battle tactical-card proof is missing exact containment/content token: {token}")
+        for forbidden in ("custom_minimum_size =", "size_flags_vertical =", "set_deferred", "call_deferred", "create_timer", "await get_tree().create_timer", "queue_sort", "sort(", "erase("):
+            ensure(forbidden not in controller, errors, f"Focused Battle tactical-card proof must remain observational and avoid {forbidden}")
+
+    visual_helper = gd_function_block(visual_text, "_battle_sidebar_tactical_card_contract")
+    visual_run = gd_function_block(visual_text, "_run_shell")
+    ensure(visual_helper and visual_run, errors, "Could not isolate all-size Battle tactical-card visual owner")
+    if visual_helper:
+        visual_order = tuple(visual_helper.find(token) for token in (
+            'shell.get_node_or_null("%SidebarShell")',
+            'shell.get_node_or_null("%CommandPanel")',
+            'shell.get_node_or_null("%BattleTabs")',
+            'shell.get_node_or_null("%InitiativePanel")',
+            'shell.get_node_or_null("%ContextPanel")',
+            'shell.get_node_or_null("%SpellPanel")',
+            'shell.get_node_or_null("%TimingPanel")',
+            "var authority_before: Dictionary = session.to_dict()",
+            'var expected_titles := ["Order", "Focus", "Spell", "Timing"]',
+            "for index in range(panels.size()):",
+            "titles.append(tabs.get_tab_title(index))",
+            "heights.append(tabs.size.y)",
+            "pages_contained = pages_contained and tabs.get_global_rect().encloses(panels[index].get_global_rect())",
+            "var compact := viewport_size.x < 1360 or viewport_size.y < 760",
+            "tabs.custom_minimum_size.y, 248.0",
+            "tabs.size_flags_vertical == Control.SIZE_FILL",
+            "heights.all(func(height): return is_equal_approx(height, 248.0))",
+            "remaining_rail_gutter >= 80.0",
+            "var compact_geometry_exact := not sidebar_shell.is_visible_in_tree()",
+            "tabs.current_tab = original_tab",
+            "var authority_exact := session.to_dict() == authority_before",
+        ))
+        ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "All-size Battle tactical-card proof must traverse all native pages, inspect wide/compact geometry, restore selection, then verify authority")
+        for token in (
+            "sidebar_rect.encloses(command_rect)",
+            "sidebar_rect.encloses(tabs_rect)",
+            "command_rect.end.y <= tabs_rect.position.y + 0.01",
+            "not command_rect.intersects(tabs_rect)",
+            "and titles == expected_titles",
+            "compact_geometry_exact if compact else wide_geometry_exact",
+        ):
+            ensure(token in visual_helper, errors, f"All-size Battle tactical-card proof is missing exact native geometry/title token: {token}")
+        for forbidden in ("custom_minimum_size =", "tabs.size_flags_vertical = Control.SIZE", "set_deferred", "call_deferred", "create_timer", "await get_tree().create_timer", "minimum_size_changed", "queue_sort", "sort(", "erase("):
+            ensure(forbidden not in visual_helper, errors, f"All-size Battle tactical-card proof must remain passive and avoid {forbidden}")
+    if visual_run:
+        visual_run_order = tuple(visual_run.find(token) for token in (
+            "var sidebar_contract := await _battle_sidebar_tactical_card_contract(shell, viewport_size)",
+            'shell_report["battle_sidebar_tactical_card"] = sidebar_contract',
+            'if not bool(sidebar_contract.get("ok", false)):',
+            "var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)",
+        ))
+        ensure(all(index >= 0 for index in visual_run_order) and list(visual_run_order) == sorted(visual_run_order), errors, "Battle tactical-card all-size contract must pass before every captured screenshot")
 
 
 def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
@@ -65232,6 +65350,7 @@ def main() -> int:
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
     validate_battle_movement_range_overlay_restraint(errors)
+    validate_battle_sidebar_tactical_card_height_cap(errors)
     validate_battle_terrain_context_and_system_frame(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)
