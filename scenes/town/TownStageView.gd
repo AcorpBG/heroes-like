@@ -20,6 +20,13 @@ const WINDOW_GLOW := Color(0.99, 0.86, 0.52, 0.95)
 const TEXT_COLOR := Color(0.96, 0.94, 0.88, 1.0)
 const SUBTEXT_COLOR := Color(0.84, 0.87, 0.90, 0.96)
 const PANEL_TEXT := Color(0.17, 0.21, 0.25, 0.92)
+const SCENIC_OVERLAY_MODEL := "responsive_translucent_glass_edge_rails"
+const SCENIC_GLASS_FILL := Color(0.025, 0.035, 0.042, 0.78)
+const SCENIC_GLASS_CARD_FILL := Color(0.045, 0.058, 0.066, 0.72)
+const SCENIC_GLASS_SHADOW := Color(0.0, 0.0, 0.0, 0.28)
+const SCENIC_GLASS_BORDER := Color(0.86, 0.72, 0.40, 0.70)
+const STATUS_ACCENT_WIDTH := 5.0
+const DISTRICT_ACCENT_HEIGHT := 3.0
 const FACTION_COLORS := {
 	"faction_embercourt": Color(0.86, 0.48, 0.23, 1.0),
 	"faction_mireclaw": Color(0.39, 0.69, 0.30, 1.0),
@@ -1044,6 +1051,50 @@ func validation_status_plaques_summary() -> Dictionary:
 		"scene_rect": scene_rect,
 	}
 
+func validation_scenic_overlay_summary() -> Dictionary:
+	var scene_size := Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0))
+	var scene_rect := Rect2(Vector2(26.0, 26.0), scene_size)
+	var status_payloads := _status_plaque_payloads()
+	var status_rects := _status_plaque_rects(scene_rect, status_payloads.size())
+	var district_payloads := _district_strip_payloads()
+	var district_strip_rect := _district_strip_rect(scene_rect)
+	var district_rects := _district_card_rects(district_strip_rect, district_payloads.size())
+	var contained := scene_rect.encloses(district_strip_rect)
+	var status_district_nonoverlap := true
+	for rect_value in status_rects:
+		if not (rect_value is Rect2) or not scene_rect.encloses(rect_value):
+			contained = false
+		elif district_strip_rect.intersects(rect_value):
+			status_district_nonoverlap = false
+	for rect_value in district_rects:
+		if not (rect_value is Rect2) or not district_strip_rect.encloses(rect_value):
+			contained = false
+	var scene_area := maxf(1.0, scene_rect.size.x * scene_rect.size.y)
+	var overlay_area := district_strip_rect.size.x * district_strip_rect.size.y
+	for rect_value in status_rects:
+		if rect_value is Rect2:
+			overlay_area += rect_value.size.x * rect_value.size.y
+	return {
+		"model": SCENIC_OVERLAY_MODEL,
+		"compact": _scenic_overlay_compact(scene_rect),
+		"scene_rect": scene_rect,
+		"status_payloads": status_payloads.duplicate(true),
+		"status_rects": status_rects.duplicate(true),
+		"status_count": status_payloads.size(),
+		"district_payloads": district_payloads.duplicate(true),
+		"district_strip_rect": district_strip_rect,
+		"district_rects": district_rects.duplicate(true),
+		"district_count": district_payloads.size(),
+		"contained": contained,
+		"status_district_nonoverlap": status_district_nonoverlap,
+		"glass_fill_alpha": SCENIC_GLASS_FILL.a,
+		"glass_card_fill_alpha": SCENIC_GLASS_CARD_FILL.a,
+		"status_accent_width": STATUS_ACCENT_WIDTH,
+		"district_accent_height": DISTRICT_ACCENT_HEIGHT,
+		"overlay_area_ratio": overlay_area / scene_area,
+		"payload_authority": "existing_status_and_district_builders",
+	}
+
 func validation_header_action_count_summary() -> Dictionary:
 	var scene_rect := Rect2(Vector2(26.0, 26.0), Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0)))
 	var max_width := maxf(0.0, scene_rect.size.x - 36.0)
@@ -1262,42 +1313,82 @@ func _status_plaque_rects(scene_rect: Rect2, plaque_count: int) -> Array:
 	var rects := []
 	if plaque_count <= 0:
 		return rects
-	var plaque_width: float = min(132.0, (scene_rect.size.x - 54.0) / float(plaque_count))
+	var compact := _scenic_overlay_compact(scene_rect)
+	var gap := 8.0 if compact else 10.0
+	var side_margin := 12.0
+	var preferred_width := 118.0 if compact else 132.0
+	var plaque_width: float = min(preferred_width, (scene_rect.size.x - side_margin * 2.0 - gap * float(plaque_count - 1)) / float(plaque_count))
+	var plaque_height := 40.0 if compact else 44.0
 	for index in range(plaque_count):
 		rects.append(Rect2(
-			Vector2(scene_rect.position.x + 12.0 + float(index) * (plaque_width + 10.0), scene_rect.position.y + 12.0),
-			Vector2(plaque_width, 48.0)
+			Vector2(scene_rect.position.x + side_margin + float(index) * (plaque_width + gap), scene_rect.position.y + 12.0),
+			Vector2(plaque_width, plaque_height)
 		))
 	return rects
 
 func _draw_plaque(rect: Rect2, data: Dictionary) -> void:
-	var fill: Color = data.get("color", FRAME_COLOR)
-	draw_rect(rect, fill, true)
-	draw_rect(rect, Color(0.10, 0.13, 0.16, 0.86), false, 2.0)
-	_draw_text(String(data.get("title", "")), rect.position + Vector2(10.0, 18.0), TEXT_COLOR, 12)
-	_draw_text(String(data.get("value", "")), rect.position + Vector2(10.0, 36.0), Color(0.13, 0.16, 0.19, 0.96), 15)
+	var accent: Color = data.get("color", FRAME_COLOR)
+	draw_rect(Rect2(rect.position + Vector2(2.0, 2.0), rect.size), SCENIC_GLASS_SHADOW, true)
+	draw_rect(rect, SCENIC_GLASS_FILL, true)
+	draw_rect(rect, SCENIC_GLASS_BORDER, false, 1.5)
+	draw_rect(Rect2(rect.position, Vector2(STATUS_ACCENT_WIDTH, rect.size.y)), Color(accent.r, accent.g, accent.b, 0.92), true)
+	_draw_text(String(data.get("title", "")), rect.position + Vector2(12.0, 16.0), Color(accent.r, accent.g, accent.b, 1.0).lightened(0.24), 11)
+	_draw_text(String(data.get("value", "")), rect.position + Vector2(12.0, rect.size.y - 7.0), TEXT_COLOR, 14)
 
 func _draw_district_strip(scene_rect: Rect2) -> void:
-	var strip_rect := Rect2(
-		Vector2(scene_rect.position.x + 16.0, scene_rect.end.y - 66.0),
-		Vector2(scene_rect.size.x - 32.0, 50.0)
-	)
-	draw_rect(strip_rect, Color(0.88, 0.85, 0.78, 0.95), true)
-	draw_rect(strip_rect, FRAME_COLOR, false, 2.0)
+	var strip_rect := _district_strip_rect(scene_rect)
+	var payloads := _district_strip_payloads()
+	var card_rects := _district_card_rects(strip_rect, payloads.size())
+	draw_rect(Rect2(strip_rect.position + Vector2(2.0, 2.0), strip_rect.size), SCENIC_GLASS_SHADOW, true)
+	draw_rect(strip_rect, SCENIC_GLASS_FILL, true)
+	draw_rect(strip_rect, SCENIC_GLASS_BORDER, false, 1.5)
+	for index in range(payloads.size()):
+		var payload: Dictionary = payloads[index] if payloads[index] is Dictionary else {}
+		var card_rect: Rect2 = card_rects[index]
+		var accent: Color = payload.get("color", FRAME_COLOR)
+		draw_rect(card_rect, SCENIC_GLASS_CARD_FILL, true)
+		draw_rect(card_rect, Color(accent.r, accent.g, accent.b, 0.50), false, 1.0)
+		draw_rect(Rect2(card_rect.position, Vector2(card_rect.size.x, DISTRICT_ACCENT_HEIGHT)), Color(accent.r, accent.g, accent.b, 0.92), true)
+		_draw_text(String(payload.get("label", "")), card_rect.position + Vector2(8.0, 16.0), Color(accent.r, accent.g, accent.b, 1.0).lightened(0.26), 10)
+		_draw_text("%d" % int(payload.get("value", 0)), card_rect.position + Vector2(8.0, card_rect.size.y - 5.0), TEXT_COLOR, 15)
 
-	var card_width := (strip_rect.size.x - 24.0) / float(DISTRICT_ORDER.size())
+func _district_strip_payloads() -> Array:
+	var payloads: Array = []
 	var district_counts := _district_counts()
-	for index in range(DISTRICT_ORDER.size()):
-		var key: String = String(DISTRICT_ORDER[index])
-		var card_rect := Rect2(
-			strip_rect.position + Vector2(12.0 + float(index) * card_width, 8.0),
-			Vector2(card_width - 8.0, strip_rect.size.y - 16.0)
-		)
-		var card_color: Color = DISTRICT_COLORS.get(key, Color(0.48, 0.56, 0.64, 0.94))
-		draw_rect(card_rect, card_color, true)
-		draw_rect(card_rect, Color(0.12, 0.15, 0.19, 0.88), false, 2.0)
-		_draw_text(String(DISTRICT_LABELS.get(key, key.to_upper())), card_rect.position + Vector2(8.0, 17.0), TEXT_COLOR, 11)
-		_draw_text("%d" % int(district_counts.get(key, 0)), card_rect.position + Vector2(8.0, 34.0), PANEL_TEXT, 18)
+	for key_value in DISTRICT_ORDER:
+		var key := String(key_value)
+		payloads.append({
+			"id": key,
+			"label": String(DISTRICT_LABELS.get(key, key.to_upper())),
+			"value": int(district_counts.get(key, 0)),
+			"color": DISTRICT_COLORS.get(key, FRAME_COLOR),
+		})
+	return payloads
+
+func _district_strip_rect(scene_rect: Rect2) -> Rect2:
+	var compact := _scenic_overlay_compact(scene_rect)
+	var height := 40.0 if compact else 44.0
+	return Rect2(
+		Vector2(scene_rect.position.x + 16.0, scene_rect.end.y - height - 14.0),
+		Vector2(scene_rect.size.x - 32.0, height)
+	)
+
+func _district_card_rects(strip_rect: Rect2, card_count: int) -> Array:
+	var rects: Array = []
+	if card_count <= 0:
+		return rects
+	var gap := 6.0
+	var inset := 7.0
+	var card_width := (strip_rect.size.x - inset * 2.0 - gap * float(card_count - 1)) / float(card_count)
+	for index in range(card_count):
+		rects.append(Rect2(
+			strip_rect.position + Vector2(inset + float(index) * (card_width + gap), 6.0),
+			Vector2(card_width, strip_rect.size.y - 12.0)
+		))
+	return rects
+
+func _scenic_overlay_compact(scene_rect: Rect2) -> bool:
+	return scene_rect.size.x < 1000.0 or scene_rect.size.y < 520.0
 
 func _draw_command_markers(scene_rect: Rect2) -> void:
 	var rect := Rect2(

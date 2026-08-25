@@ -160,6 +160,9 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	if not live_board.has_method("validation_scenic_backdrop_summary"):
 		push_error("Town smoke: town stage does not expose scenic-backdrop validation.")
 		return false
+	if not live_board.has_method("validation_scenic_overlay_summary"):
+		push_error("Town smoke: town stage does not expose scenic-overlay validation.")
+		return false
 	var session_before: Dictionary = session.to_dict()
 	var live_summary: Dictionary = live_board.call("validation_scenic_backdrop_summary")
 	if String(live_summary.get("faction_id", "")) != "faction_embercourt" \
@@ -176,6 +179,19 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	if Array(live_summary.get("overlay_order", [])) != expected_overlay_order:
 		push_error("Town smoke: scenic layer no longer precedes every live Town overlay: %s." % live_summary)
 		return false
+	var live_overlay_summary: Dictionary = live_board.call("validation_scenic_overlay_summary")
+	var live_overlay_scene_rect: Rect2 = live_overlay_summary.get("scene_rect", Rect2()) if live_overlay_summary.get("scene_rect", Rect2()) is Rect2 else Rect2()
+	var live_overlay_compact_expected := live_overlay_scene_rect.size.x < 1000.0 or live_overlay_scene_rect.size.y < 520.0
+	if not _scenic_overlay_contract_exact(live_overlay_summary, live_overlay_compact_expected):
+		push_error("Town smoke: live scenic overlays are not integrated into method-matched bounded glass edge rails: %s." % live_overlay_summary)
+		return false
+	var fresh_live_overlay_summary := live_overlay_summary.duplicate(true)
+	var live_authority_before_detach: Dictionary = session.to_dict()
+	live_overlay_summary["status_payloads"][0]["value"] = "999"
+	live_overlay_summary["district_payloads"][0]["value"] = 999
+	if session.to_dict() != live_authority_before_detach or live_board.call("validation_scenic_overlay_summary") != fresh_live_overlay_summary:
+		push_error("Town smoke: detached scenic-overlay validation changed live Town/session authority.")
+		return false
 
 	var fixture = TownStageViewScript.new()
 	add_child(fixture)
@@ -189,6 +205,7 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 				"faction": {"id": faction_id, "name": faction_id},
 			})
 			var summary: Dictionary = fixture.validation_scenic_backdrop_summary()
+			var overlay_summary: Dictionary = fixture.validation_scenic_overlay_summary()
 			if String(summary.get("faction_id", "")) != faction_id \
 					or String(summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get(faction_id, "")) \
 					or not bool(summary.get("texture_loaded", false)) \
@@ -200,6 +217,10 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 				push_error("Town smoke: %s scenic backdrop contract failed at %s: %s." % [faction_id, stage_size, summary])
 				fixture.queue_free()
 				return false
+			if not _scenic_overlay_contract_exact(overlay_summary, stage_size == Vector2(620.0, 320.0)):
+				push_error("Town smoke: %s scenic glass overlay contract failed at %s: %s." % [faction_id, stage_size, overlay_summary])
+				fixture.queue_free()
+				return false
 
 	fixture.set_precomputed_town_state(null, {
 		"town": {"town_id": "validation_unknown", "built_buildings": [], "garrison": [], "available_recruits": {}},
@@ -207,6 +228,7 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 		"faction": {"id": "faction_unmapped", "name": "Unmapped"},
 	})
 	var fallback_summary: Dictionary = fixture.validation_scenic_backdrop_summary()
+	var fallback_overlay_summary: Dictionary = fixture.validation_scenic_overlay_summary()
 	if String(fallback_summary.get("mapped_path", "")) != "" \
 			or bool(fallback_summary.get("texture_loaded", true)) \
 			or String(fallback_summary.get("rendering_mode", "")) != "procedural_geometry_fallback" \
@@ -215,12 +237,47 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 		push_error("Town smoke: unmapped faction did not fail safely to the procedural stage: %s." % fallback_summary)
 		fixture.queue_free()
 		return false
+	if not _scenic_overlay_contract_exact(fallback_overlay_summary, false):
+		push_error("Town smoke: procedural fallback lost the scenic glass overlay contract: %s." % fallback_overlay_summary)
+		fixture.queue_free()
+		return false
 	fixture.queue_free()
 	await get_tree().process_frame
 	if session.to_dict() != session_before:
 		push_error("Town smoke: scenic-backdrop selection changed live session authority.")
 		return false
 	return true
+
+func _scenic_overlay_contract_exact(summary: Dictionary, compact_expected: bool) -> bool:
+	var status_payloads: Array = summary.get("status_payloads", []) if summary.get("status_payloads", []) is Array else []
+	var district_payloads: Array = summary.get("district_payloads", []) if summary.get("district_payloads", []) is Array else []
+	var status_kinds: Array = []
+	for payload_value in status_payloads:
+		if payload_value is Dictionary:
+			status_kinds.append(String(payload_value.get("kind", "")))
+	var district_ids: Array = []
+	var district_labels: Array = []
+	for payload_value in district_payloads:
+		if payload_value is Dictionary:
+			district_ids.append(String(payload_value.get("id", "")))
+			district_labels.append(String(payload_value.get("label", "")))
+	var max_area_ratio := 0.28 if compact_expected else 0.13
+	return String(summary.get("model", "")) == "responsive_translucent_glass_edge_rails" \
+		and bool(summary.get("compact", not compact_expected)) == compact_expected \
+		and int(summary.get("status_count", 0)) == 4 \
+		and status_kinds == ["guard", "spell", "pressure", "routes"] \
+		and int(summary.get("district_count", 0)) == 5 \
+		and district_ids == ["military", "economy", "spellcraft", "logistics", "defense"] \
+		and district_labels == ["WAR", "COIN", "MAG", "ROAD", "WALL"] \
+		and bool(summary.get("contained", false)) \
+		and bool(summary.get("status_district_nonoverlap", false)) \
+		and is_equal_approx(float(summary.get("glass_fill_alpha", 0.0)), 0.78) \
+		and is_equal_approx(float(summary.get("glass_card_fill_alpha", 0.0)), 0.72) \
+		and is_equal_approx(float(summary.get("status_accent_width", 0.0)), 5.0) \
+		and is_equal_approx(float(summary.get("district_accent_height", 0.0)), 3.0) \
+		and float(summary.get("overlay_area_ratio", 1.0)) > 0.0 \
+		and float(summary.get("overlay_area_ratio", 1.0)) <= max_area_ratio \
+		and String(summary.get("payload_authority", "")) == "existing_status_and_district_builders"
 
 func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:
 	var texture_size: Vector2 = summary.get("texture_size", Vector2.ZERO)

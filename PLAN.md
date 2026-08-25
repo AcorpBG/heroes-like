@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next source-backed graphical-polish or release-readiness slice from fresh live captures and a non-overlapping production owner.
 
+- Previous completed implementation slice: `ux-town-scenic-overlay-glass-integration-10184`. Town status and district overlays now use responsive translucent glass edge rails with narrow live-color accents instead of opaque saturated cards and a beige slab. Direct 1280x720 and 1920x1080 captures preserve the faction panorama as the dominant surface while all four ordered status values, all five ordered district values, contextual occupation/retake states, command/header/action overlays, input/focus, rules, and session/save authority remain exact. Town/Battle visual, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-town-scenic-overlay-glass-integration-10184`
+
 - Previous completed implementation slice: `ux-battlefield-terrain-edge-and-system-frame-polish-10184`. The Battle board now paints a subdued full-field terrain context beneath the unchanged authoritative 11x7 per-hex texture grid, eliminating flat gaps around the staggered hull without changing terrain ids, samples, cells, stacks, targets, or VFX. Wide layouts restore the authored System command frame; compact layouts keep the existing borderless visible Save/Settings/Menu row. Direct 1280x720 and 1920x1080 captures, exact responsive roundtrip/session authority, Town/Battle visual, 1280 Battle layout/routing, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `ux-battlefield-terrain-edge-and-system-frame-polish-10184`
 
@@ -10110,6 +10113,31 @@ Completion result:
 
 Non-goals:
 - no new art, terrain id/source/UV change, playable hex/grid/stack/token/VFX geometry, BattleRules/AI/balance/content, sidebar/footer allocation, compact command visibility, input/focus, accessibility semantics, save schema, packaged Battle interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, Native RMG, or release-readiness change or claim.
+
+## Town Scenic Overlay Glass Integration
+
+id: `ux-town-scenic-overlay-glass-integration-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the TownStageView status-plaque and district-strip paint treatment with compact translucent glass edge rails, narrow live-color accents, and light high-contrast typography so the scenic faction panorama remains the dominant surface;
+- make the treatment responsive to the existing live scene rectangle: retain all four ordered status values and all five ordered district values while reducing their painted footprint and opacity at 1280 without hiding, collapsing, or moving information into another screen;
+- retain the existing exact status/district payload builders, contextual Front/Occupation/Retake selection, scene draw order, command markers, scenic header, action presentation, focus/input, Town rules, and session/save authority.
+
+Completion criteria:
+- fresh 1280x720 and 1920x1080 Town captures show the panorama through and around the edge rails, with no opaque beige district slab or full-surface saturated status cards and with every label/value readable;
+- focused runtime proves exact four-plaque and five-district order/value authority, bounded responsive rectangles, non-overlap and containment, glass/accent geometry, and unchanged whole session authority across 1280 -> 1920 -> 1280;
+- ordinary, occupation-only, retake-only, and combined capture states retain exact public payloads while the presentation helpers remain draw-only;
+- Town/Battle visual, Town actions, active focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion result:
+- direct 1280x720 and 1920x1080 captures replace the four opaque status cards and full-width beige district slab with compact translucent glass rails, narrow live-color accents, and high-contrast text while exposing substantially more scenic art;
+- focused runtime proves exact four-status/five-district order and values, responsive compact/wide geometry, containment, non-overlap, bounded overlay area, detached summaries, ordinary and captured occupation/retake state, and unchanged whole session authority;
+- Town/Battle visual, Town artifact action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green.
+
+Non-goals:
+- no new art asset, scenic backdrop/crop, Town header/sidebar/tabs/footer, status/district meaning or ordering, contextual occupation/retake behavior, command marker, action presentation, input/focus, accessibility, TownRules/OverworldRules/economy/content, save schema, packaged Town interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, Native RMG, or release-readiness change or claim.
 
 ## Progress Reconciliation
 
