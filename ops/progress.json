@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
+    "Select the next graphical-polish slice from a fresh direct runtime defect with a bounded non-overlapping production owner."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Town scenic district readiness ribbon is completed with direct inspected 1280x720 and 1920x1080 captures and green focused, compatibility, static/editor, Linux, and Windows startup gates. No implementation slice is currently selected and no blocker is active.",
+  "currentNotes": "Completed from direct inspected current-HEAD 1280x720 and 1920x1080 Overworld captures. Unexplored territory now reads as one continuous identity-silent dark cartographic veil without repeated per-tile stamps, while fog authority and hidden world state remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-scenic-district-readiness-ribbon-10184",
-  "currentSliceId": "ux-town-scenic-district-readiness-ribbon-10184",
-  "currentSliceNotes": "Completed: the exact five district values now occupy a compact lower-left scenic ribbon while every Town authority and interaction remains exact.",
+  "currentSlice": "ux-overworld-unexplored-fog-cartographic-continuity-10184",
+  "currentSliceId": "ux-overworld-unexplored-fog-cartographic-continuity-10184",
+  "currentSliceNotes": "Completed: one continuous unexplored cartographic veil replaces repeated per-tile stamps; focused, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town scenic district readiness ribbon",
-  "currentSliceUpdatedAt": "2026-08-25T11:14:29Z",
+  "currentSliceTitle": "Overworld unexplored fog cartographic continuity",
+  "currentSliceUpdatedAt": "2026-08-25T11:33:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101274,6 +101274,33 @@
       "notes": "Completed from direct inspected current-HEAD Town captures at 1280x720 and 1920x1080. The exact five ordered district values now use readable Military/Economy/Magic/Roads/Walls labels inside a lower-left ribbon capped at 540px compact and 620px wide, with 0.56 outer/0.30 cell opacity and a two-pixel accent. Exact district payload authority, responsive containment, compact-wide-compact restoration, detached validation safety, Town rules/actions, build state, command watch, status/header overlays, input/focus, accessibility, session/save authority, scenic assets, and gameplay remain unchanged. Focused Town visual, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T11:14:29Z"
+    },
+    {
+      "id": "ux-overworld-unexplored-fog-cartographic-continuity-10184",
+      "title": "Overworld unexplored fog cartographic continuity",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T11:33:28Z",
+      "startedAt": "2026-08-25T11:19:27Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make unexplored territory read as one calm cartographic veil rather than a grid of repeated circular stamps.",
+      "completionCriteria": "Direct current 1280x720 and 1920x1080 Overworld captures show one continuous low-detail unexplored field with no per-tile circle stamps, crosses, seams, or hidden identity leakage; focused visual proof retains the exact opaque hidden fill, explored boundary, reveal transition, hidden terrain/texture/object/road/route state, and session/save authority; movement, route legality, input/focus, accessibility, camera, content, generated maps, AI, and Native RMG remain unchanged; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No fog-of-war, visibility radius, exploration, scouting, pathing, movement, route, terrain, road, object, hero, encounter, camera, session, save/schema, content, AI, balance, or Native RMG changes.",
+        "No bitmap asset, terrain repaint, animation, audio, panel, map-layout redesign, transient memory-fog layer, theme, font, or UI-scale change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspected current-HEAD Overworld captures at 1280x720 and 1920x1080. One continuous low-detail identity-silent dark veil replaces three repeated circular stamps per tile, removing the dot-grid effect while preserving exact hidden terrain, texture, object, road, route, explored-boundary, reveal, movement, input/focus, camera, session/save, content, AI, generated-map, and Native-RMG authority. Focused fog/visual, route/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T11:33:28Z"
     }
   ],
   "project": "heroes-like",
