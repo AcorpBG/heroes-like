@@ -9,9 +9,10 @@ func _run() -> void:
 	var hero_card_only := OS.get_environment("OVERWORLD_HERO_CARD_ONLY") == "1"
 	var object_scale_capture_only := OS.get_environment("OVERWORLD_OBJECT_SCALE_CAPTURE_ONLY") == "1"
 	var road_surface_capture_only := OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_ONLY") == "1"
+	var sidebar_ornament_only := OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only or hero_card_only or road_surface_capture_only:
+	elif objective_brief_only or hero_card_only or road_surface_capture_only or sidebar_ornament_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -29,6 +30,15 @@ func _run() -> void:
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
+		return
+	if sidebar_ornament_only:
+		if not await _assert_sidebar_ornament_contract(shell, session):
+			return
+		if OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_CAPTURE_DIR").strip_edges() != "" and not await _capture_sidebar_ornament_viewports(shell):
+			return
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if road_surface_capture_only:
 		if not _assert_overworld_art_contract(shell):
@@ -67,6 +77,8 @@ func _run() -> void:
 		get_tree().quit(0)
 		return
 	if not _assert_wireframe_contract(shell):
+		return
+	if not await _assert_sidebar_ornament_contract(shell, session):
 		return
 	if not await _assert_objective_stakes_ui_contract(shell):
 		return
@@ -3605,6 +3617,88 @@ func _capture_object_scale_viewports(shell: Node) -> bool:
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	print("OVERWORLD_OBJECT_SCALE_CAPTURE %s" % JSON.stringify({"ok": true, "captures": captures, "session_exact": shell != null}))
+	return true
+
+func _assert_sidebar_ornament_contract(shell: Control, session) -> bool:
+	var ornament: Control = shell.get_node_or_null("%SidebarOrnament")
+	var sidebar: Control = shell.get_node_or_null("%SidebarShell")
+	var sidebar_pad: Control = shell.get_node_or_null("ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad")
+	if ornament == null or sidebar == null or sidebar_pad == null or not ornament.has_method("visual_contract"):
+		push_error("Overworld smoke: cartographic rail ornament did not load.")
+		get_tree().quit(1)
+		return false
+	var authority_before: Dictionary = session.to_dict()
+	var original_window_size := get_window().size
+	var exact_layouts := true
+	var layout_rows := []
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		shell.call("_apply_responsive_layout")
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var card_rects_before := {}
+		for node_name in ["TopStrip", "HeroPanel", "EventPanel", "BriefingPanel", "ActionPanel"]:
+			var card: Control = shell.get_node_or_null("%%%s" % node_name)
+			if card != null:
+				card_rects_before[node_name] = {"rect": Rect2(card.global_position, card.size), "visible": card.visible}
+		var contract: Dictionary = ornament.call("visual_contract")
+		var inset_rail_exact := ornament.position == sidebar_pad.position and ornament.size == sidebar_pad.size and ornament.get_parent() == sidebar
+		var passive_exact := ornament.mouse_filter == Control.MOUSE_FILTER_IGNORE and ornament.focus_mode == Control.FOCUS_NONE
+		ornament.visible = false
+		await get_tree().process_frame
+		var card_rects_hidden := {}
+		for node_name in card_rects_before.keys():
+			var card: Control = shell.get_node_or_null("%%%s" % String(node_name))
+			card_rects_hidden[node_name] = {"rect": Rect2(card.global_position, card.size), "visible": card.visible}
+		ornament.visible = true
+		await get_tree().process_frame
+		var card_rects_restored := {}
+		for node_name in card_rects_before.keys():
+			var card: Control = shell.get_node_or_null("%%%s" % String(node_name))
+			card_rects_restored[node_name] = {"rect": Rect2(card.global_position, card.size), "visible": card.visible}
+		exact_layouts = exact_layouts and get_window().size == viewport_size and bool(contract.get("passive", false)) and bool(contract.get("contained", false)) and String(contract.get("model", "")) == "quiet_cartographic_rail" and int(contract.get("grid_lines", 0)) == 9 and int(contract.get("route_points", 0)) == 5 and int(contract.get("compass_spokes", 0)) == 8 and float(contract.get("maximum_alpha", 1.0)) <= 0.13 and inset_rail_exact and passive_exact and card_rects_before == card_rects_hidden and card_rects_before == card_rects_restored
+		layout_rows.append({"viewport": viewport_size, "window": get_window().size, "shell": shell.size, "sidebar_visible": sidebar.visible, "sidebar_size": sidebar.size, "ornament_position": ornament.position, "ornament_size": ornament.size, "contract": contract, "cards_hidden_exact": card_rects_before == card_rects_hidden, "cards_restored_exact": card_rects_before == card_rects_restored})
+	get_window().size = original_window_size
+	shell.call("_apply_responsive_layout")
+	await get_tree().process_frame
+	if not exact_layouts or session.to_dict() != authority_before:
+		push_error("Overworld smoke: cartographic rail ornament changed layout, authority, or passive ownership. layouts=%s authority=%s rows=%s shell=%s" % [exact_layouts, session.to_dict() == authority_before, layout_rows, shell.size])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _capture_sidebar_ornament_viewports(shell: Node) -> bool:
+	var output_dir := OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_CAPTURE_DIR").strip_edges()
+	var absolute_dir := ProjectSettings.globalize_path(output_dir)
+	if output_dir == "" or DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
+		push_error("Overworld smoke: cartographic rail capture requires a writable output directory.")
+		get_tree().quit(1)
+		return false
+	var original_window_size := get_window().size
+	var captures := []
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		shell.call("_apply_responsive_layout")
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await RenderingServer.frame_post_draw
+		var image := get_viewport().get_texture().get_image()
+		if image == null or image.is_empty() or image.get_size() != viewport_size:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: cartographic rail capture returned an invalid %s image." % viewport_size)
+			get_tree().quit(1)
+			return false
+		var path := absolute_dir.path_join("overworld_sidebar_ornament_%dx%d.png" % [viewport_size.x, viewport_size.y])
+		if image.save_png(path) != OK:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: cartographic rail capture could not save %s." % path)
+			get_tree().quit(1)
+			return false
+		captures.append({"width": viewport_size.x, "height": viewport_size.y, "path": path})
+	get_window().size = original_window_size
+	shell.call("_apply_responsive_layout")
+	await get_tree().process_frame
+	print("OVERWORLD_SIDEBAR_ORNAMENT_CAPTURE %s" % JSON.stringify({"ok": true, "captures": captures}))
 	return true
 
 func _capture_road_surface_comparison(shell: Node, map_node: Node, session) -> bool:

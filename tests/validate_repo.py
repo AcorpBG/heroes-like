@@ -34072,7 +34072,16 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
 
 
 def validate_overworld_shell_release_polish(errors: list[str]) -> None:
-    required_paths = (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, OVERWORLD_RULES_PATH)
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    sidebar_ornament_path = ROOT / "scenes" / "overworld" / "OverworldSidebarOrnament.gd"
+    visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    required_paths = (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, OVERWORLD_RULES_PATH, sidebar_ornament_path, visual_smoke_path)
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing overworld-shell polish file: {path.relative_to(ROOT)}")
     if not all(path.exists() for path in required_paths):
@@ -34160,6 +34169,52 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         errors,
         "OverworldShell.tscn must keep one fixed right-side command spine beside the map",
     )
+    ensure_scene_nodes(overworld_scene_text, errors, "OverworldShell.tscn", [("SidebarOrnament", "Control")])
+    ornament_scene_block = scene_node_block(overworld_scene_text, "SidebarOrnament", "Control")
+    for required_token in (
+        'parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell"',
+        "anchors_preset = 15",
+        "anchor_right = 1.0",
+        "anchor_bottom = 1.0",
+        "mouse_filter = 2",
+        'script = ExtResource("8_sidebar_ornament")',
+    ):
+        ensure(required_token in ornament_scene_block, errors, f"Overworld rail ornament scene ownership is missing: {required_token}")
+    ensure(overworld_scene_text.find('name="SidebarOrnament"') < overworld_scene_text.find('name="SidebarPad"'), errors, "Overworld rail ornament must draw behind every existing rail card")
+    ornament_text = sidebar_ornament_path.read_text(encoding="utf-8")
+    for required_token in (
+        'const MODEL := "quiet_cartographic_rail"',
+        "const INK := Color(0.72, 0.58, 0.30, 0.13)",
+        "mouse_filter = Control.MOUSE_FILTER_IGNORE",
+        "focus_mode = Control.FOCUS_NONE",
+        "_draw_chart_grid()",
+        "_draw_route_trace()",
+        "_draw_compass_rose()",
+        "_draw_corner_registration()",
+        '"grid_lines": 9',
+        '"route_points": 5',
+        '"compass_spokes": 8',
+    ):
+        ensure(required_token in ornament_text, errors, f"Overworld rail ornament is missing bounded passive visual token: {required_token}")
+    for forbidden_token in ("_process", "_input", "_gui_input", "Input.", "SessionState", "OverworldRules", "set_process", "create_timer", "Tween", "Button", "Label", "TextureRect"):
+        ensure(forbidden_token not in ornament_text, errors, f"Overworld rail ornament must remain passive and authority-free: {forbidden_token}")
+    visual_smoke_text = visual_smoke_path.read_text(encoding="utf-8")
+    ornament_test_block = gd_function_block(visual_smoke_text, "_assert_sidebar_ornament_contract")
+    for required_token in (
+        'shell.get_node_or_null("%SidebarOrnament")',
+        '[Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'String(contract.get("model", "")) == "quiet_cartographic_rail"',
+        'float(contract.get("maximum_alpha", 1.0)) <= 0.13',
+        "ornament.position == sidebar_pad.position",
+        "ornament.size == sidebar_pad.size",
+        "ornament.get_parent() == sidebar",
+        "card_rects_before == card_rects_hidden",
+        "card_rects_before == card_rects_restored",
+        "session.to_dict() != authority_before",
+    ):
+        ensure(required_token in ornament_test_block, errors, f"Overworld rail ornament focused owner is missing exact geometry/authority token: {required_token}")
+    for forbidden_token in ("ornament.set_position", "ornament.set_size", "queue_redraw", "create_timer", "Input.", "SessionState.set", "sort(", "erase("):
+        ensure(forbidden_token not in ornament_test_block, errors, f"Overworld rail ornament focused owner must remain observational: {forbidden_token}")
     ensure(
         scene_node_parent(overworld_scene_text, "CommandBand", "PanelContainer")
         == "ShellMargin/Shell/ShellPad/Content",
