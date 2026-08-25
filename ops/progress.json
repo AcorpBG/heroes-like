@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-physical-object-proportion-rebalance-10184",
-    "title": "Overworld physical object proportion rebalance",
+    "id": "ux-overworld-active-hero-command-marker-10184",
+    "title": "Overworld active hero command marker",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T22:45:14Z",
-    "updatedAt": "2026-08-25T23:05:51Z",
-    "completedAt": "2026-08-25T23:05:51Z",
+    "startedAt": "2026-08-25T23:12:00Z",
+    "updatedAt": "2026-08-25T23:38:59Z",
+    "completedAt": "2026-08-25T23:38:59Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct capture review. Portable props now sit below the hero, durable structures sit above it, and multi-tile structures retain 0.72-to-0.84-tile presence below the unchanged town. Two-width captures, focused and compatibility runtime, repository/editor, and bounded Linux/Windows startup gates pass; gameplay authority is unchanged."
+    "notes": "Completed from direct inspection. The active hero now uses antialiased open lateral brass command wings and a compact notched ground tick instead of the former continuous rectangular cage. Two-width captures, focused and compatibility runtime, static/editor, and bounded platform startup gates pass; gameplay authority is unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld physical object proportion rebalance is completed. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld active-hero command marker polish is completed. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-physical-object-proportion-rebalance-10184",
-  "currentSliceId": "ux-overworld-physical-object-proportion-rebalance-10184",
-  "currentSliceNotes": "Restore a visual-only prop-to-actor-to-structure-to-town hierarchy while preserving all logical map authority.",
+  "currentSlice": "ux-overworld-active-hero-command-marker-10184",
+  "currentSliceId": "ux-overworld-active-hero-command-marker-10184",
+  "currentSliceNotes": "Replace only the active hero's full rectangular cage with a contained fill-free command marker while preserving focus, selection, input, accessibility, and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld physical object proportion rebalance",
-  "currentSliceUpdatedAt": "2026-08-25T23:05:51Z",
+  "currentSliceTitle": "Overworld active hero command marker",
+  "currentSliceUpdatedAt": "2026-08-25T23:38:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19899,9 +19899,37 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next source-backed graphical-polish or release-readiness slice; preserve the completed Overworld object hierarchy and exact gameplay authority.",
-  "notes": "The Overworld physical object proportion rebalance is completed; blockers are empty and the next slice is not yet selected.",
+  "nextActionGuardrailNote": "Select the next source-backed graphical-polish or release-readiness slice; preserve the completed active-hero command marker and exact gameplay authority.",
+  "notes": "The Overworld active-hero command marker polish is completed; blockers are empty and the next slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-active-hero-command-marker-10184",
+      "title": "Overworld active hero command marker",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-25T23:12:00Z",
+      "updatedAt": "2026-08-25T23:38:59Z",
+      "completedAt": "2026-08-25T23:38:59Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the active hero's visually dominant double rectangular frame with a restrained open command marker while preserving the independent selected-tile reticle and all gameplay authority.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 captures show a contained fill-free command marker distinct from the selected-tile reticle; focused runtime proves exact symmetric wing/tick geometry, full-tile and town-visitor focus rectangles, selected/hover ownership and session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No hero identity, sprite, scale, animation, movement, route, selection, hover, focus ownership, input, tooltip, accessibility, town footprint, map content, session/save, gameplay, AI, battle, balance, or Native RMG change.",
+        "No bitmap asset, filled badge, portrait plate, halo, animation, audio, VFX, or broad Overworld redesign.",
+        "No packaged Overworld interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current-screen inspection. The active hero now uses antialiased fill-free lateral command wings plus a notched ground tick, strictly contained outside the hero sprite and distinct from selected-tile/town-footprint reticles. Two-width captures, focused, compatibility, static/editor, and bounded platform startup gates pass.",
+      "blockedReason": null,
+      "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "ux-overworld-physical-object-proportion-rebalance-10184",
       "title": "Overworld physical object proportion rebalance",
@@ -102404,7 +102432,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_physical_object_proportion_rebalance_completed",
+  "result": "overworld_active_hero_command_marker_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

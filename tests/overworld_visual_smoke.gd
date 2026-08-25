@@ -54,6 +54,8 @@ func _run() -> void:
 			return
 		if not _assert_visible_sprite_scale_contract(map_node):
 			return
+		if not _assert_active_hero_command_marker_contract(shell, map_node, session):
+			return
 		if not await _capture_object_scale_viewports(shell):
 			return
 		shell.queue_free()
@@ -2850,12 +2852,18 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	var focus_layout: Dictionary = map_view.call("validation_tile_focus_layout", hero_tile)
 	var focus_tile_rect := _focus_rect_from_payload(focus_layout.get("tile_rect", {}))
 	var hero_focus_rect := _focus_rect_from_payload(focus_layout.get("hero_focus_rect", {}))
+	var hero_command_marker_profile: Dictionary = focus_layout.get("hero_command_marker_profile", {})
+	var hero_sprite_rect := _focus_rect_from_payload(hero_layout.get("sprite_rect", {}))
 	var selection_focus_rect := _focus_rect_from_payload(focus_layout.get("selection_rect", {}))
 	var hover_focus_rect := _focus_rect_from_payload(focus_layout.get("hover_rect", {}))
 	var town_selection_visual_profile: Dictionary = focus_layout.get("town_selection_visual_profile", {})
 	var tile_selection_visual_profile: Dictionary = focus_layout.get("tile_selection_visual_profile", {})
 	var tile_selection_extent := minf(selection_focus_rect.size.x, selection_focus_rect.size.y)
 	var expected_tile_selection_inset := maxf(4.0, tile_selection_extent * 0.085)
+	if not _hero_command_marker_profile_exact(hero_command_marker_profile, hero_focus_rect, hero_sprite_rect):
+		push_error("Overworld smoke: active hero command marker escaped its open contained geometry. focus=%s presentation=%s" % [focus_layout, hero_presentation])
+		get_tree().quit(1)
+		return false
 	if hero_on_town_footprint:
 		var town_selection_extent := minf(selection_focus_rect.size.x, selection_focus_rect.size.y)
 		var expected_town_selection_inset := maxf(4.0, town_selection_extent * 0.045)
@@ -2945,6 +2953,19 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 			return false
 	return true
 
+func _assert_active_hero_command_marker_contract(shell: Node, map_node: Node, session) -> bool:
+	var hero_tile := OverworldRules.hero_position(session)
+	var hero_presentation: Dictionary = shell.call("validation_tile_presentation", hero_tile.x, hero_tile.y)
+	var hero_layout: Dictionary = hero_presentation.get("hero_presentation", {}).get("layout", {})
+	var focus_layout: Dictionary = map_node.call("validation_tile_focus_layout", hero_tile)
+	var focus_rect := _focus_rect_from_payload(focus_layout.get("hero_focus_rect", {}))
+	var sprite_rect := _focus_rect_from_payload(hero_layout.get("sprite_rect", {}))
+	if not _hero_command_marker_profile_exact(focus_layout.get("hero_command_marker_profile", {}), focus_rect, sprite_rect):
+		push_error("Overworld smoke: active hero command marker did not preserve exact open contained geometry. focus=%s presentation=%s" % [focus_layout, hero_presentation])
+		get_tree().quit(1)
+		return false
+	return true
+
 func _focus_rect_from_payload(value: Variant) -> Rect2:
 	var payload: Dictionary = value if value is Dictionary else {}
 	return Rect2(
@@ -2953,6 +2974,43 @@ func _focus_rect_from_payload(value: Variant) -> Rect2:
 		float(payload.get("width", 0.0)),
 		float(payload.get("height", 0.0))
 	)
+
+func _hero_command_marker_profile_exact(profile: Dictionary, focus_rect: Rect2, sprite_rect: Rect2) -> bool:
+	var extent := minf(focus_rect.size.x, focus_rect.size.y)
+	var expected_inset := maxf(3.0, extent * 0.08)
+	var marker_rect := _focus_rect_from_payload(profile.get("marker_rect", {}))
+	var wing_length := float(profile.get("wing_length_px", 0.0))
+	var wing_depth := float(profile.get("wing_depth_px", 0.0))
+	var center_y := float(profile.get("center_y", 0.0))
+	var ground_y := float(profile.get("ground_y", 0.0))
+	var tick_length := float(profile.get("ground_tick_length_px", 0.0))
+	var notch := float(profile.get("ground_notch_px", 0.0))
+	return String(profile.get("model", "")) == "open_lateral_command_wings_and_ground_tick" \
+		and _focus_rect_from_payload(profile.get("focus_rect", {})) == focus_rect \
+		and marker_rect == focus_rect.grow(-expected_inset) \
+		and focus_rect.encloses(marker_rect) \
+		and is_equal_approx(center_y, focus_rect.position.y + focus_rect.size.y * 0.48) \
+		and is_equal_approx(wing_length, maxf(4.5, extent * 0.12)) \
+		and is_equal_approx(wing_depth, maxf(4.0, extent * 0.11)) \
+		and marker_rect.position.x + wing_length <= sprite_rect.position.x \
+		and marker_rect.end.x - wing_length >= sprite_rect.end.x \
+		and center_y - wing_depth >= marker_rect.position.y \
+		and center_y + wing_depth <= marker_rect.end.y \
+		and is_equal_approx(ground_y, focus_rect.position.y + focus_rect.size.y * 0.82) \
+		and ground_y > sprite_rect.end.y \
+		and is_equal_approx(tick_length, maxf(6.0, extent * 0.18)) \
+		and is_equal_approx(notch, maxf(1.5, extent * 0.035)) \
+		and marker_rect.position.x <= marker_rect.get_center().x - tick_length * 0.5 \
+		and marker_rect.end.x >= marker_rect.get_center().x + tick_length * 0.5 \
+		and ground_y - notch >= marker_rect.position.y \
+		and ground_y <= marker_rect.end.y \
+		and float(profile.get("line_width_px", 0.0)) >= 1.25 \
+		and float(profile.get("shadow_width_px", 0.0)) > float(profile.get("line_width_px", 0.0)) \
+		and is_equal_approx(float(profile.get("marker_alpha", 0.0)), 0.82) \
+		and is_equal_approx(float(profile.get("shadow_alpha", 0.0)), 0.40) \
+		and bool(profile.get("antialiased", false)) \
+		and not bool(profile.get("continuous_outline", true)) \
+		and is_zero_approx(float(profile.get("interior_fill_alpha", -1.0)))
 
 func _assert_marker_style(presentation: Dictionary, expected_kind: String, remembered: bool) -> bool:
 	var readability: Dictionary = presentation.get("marker_readability", {})
@@ -3184,6 +3242,12 @@ func _assert_hero_presence_correction(readability: Dictionary, presentation: Dic
 		return false
 	if String(readability.get("hero_selection_ring_source", "")) != "tile_focus":
 		push_error("Overworld smoke: active hero selection readability is no longer tied to the tile focus ring. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if String(readability.get("hero_focus_visual_model", "")) != "open_lateral_command_wings_and_ground_tick" \
+		or bool(readability.get("hero_focus_continuous_outline", true)) \
+		or not is_zero_approx(float(readability.get("hero_focus_interior_fill_alpha", -1.0))):
+		push_error("Overworld smoke: active hero focus regressed to a continuous or filled cage. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
 	return true
