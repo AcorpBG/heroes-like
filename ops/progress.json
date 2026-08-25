@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld proportional object-scale coherence is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
+  "currentNotes": "Battle stack character-medallion hierarchy is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-proportional-object-scale-coherence-10184",
-  "currentSliceId": "ux-overworld-proportional-object-scale-coherence-10184",
-  "currentSliceNotes": "Completed: compact ordered painted extents keep props legible and hero/town art proportional while all logical map geometry and behavior remain exact.",
+  "currentSlice": "presentation-battle-stack-character-medallion-hierarchy-10184",
+  "currentSliceId": "presentation-battle-stack-character-medallion-hierarchy-10184",
+  "currentSliceNotes": "Completed: curated Battle stack art is character-first inside a dark medallion and explicit faction rim, with unchanged token/hit/input/combat/accessibility authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld proportional object scale coherence",
-  "currentSliceUpdatedAt": "2026-08-25T08:28:37Z",
+  "currentSliceTitle": "Battle stack character medallion hierarchy",
+  "currentSliceUpdatedAt": "2026-08-25T08:45:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101124,6 +101124,28 @@
       "notes": "Completed from direct owner feedback and inspected 1280/1920 River Pass captures. The live painted ladder is now artifact0.40, pickup0.46, encounter0.56, waypoint/structure/landmark0.62-0.70, multi-tile cap0.76, hero0.82, town0.96. Focused scale, small/large map, six-faction hero/town, generated movement/save, full-route, broad Overworld, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Alpha cropping, aspect, grounding, fog, logical footprints, body/visit masks, passability, routes, interactions, generated placement, session/save authority, and Native RMG behavior remain exact. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T08:28:37Z"
+    },
+    {
+      "id": "presentation-battle-stack-character-medallion-hierarchy-10184",
+      "title": "Battle stack character medallion hierarchy",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T08:45:41Z",
+      "startedAt": "2026-08-25T08:31:30Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected 1280/1920 Battle captures. Live stack presentation now uses a dark inner medallion, explicit side-color rim, and contained animation/icon art at 98%/93% of the unchanged token diameter. P/E cues, active/target/blocked rings, count/health/captions, centers, token/hit radii, hex layout, input, combat, save/session, accessibility, and VFX order remain exact. Focused Town/Battle, animation, Board navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T08:45:41Z"
     }
   ],
   "project": "heroes-like",

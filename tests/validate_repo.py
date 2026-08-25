@@ -46324,6 +46324,10 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
 
 
 def validate_unit_art_assets(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
+        return match.group(0) if match is not None else ""
+
     required_paths = (
         CONTENT_DIR / "units.json",
         UNIT_ART_MANIFEST_PATH,
@@ -50528,6 +50532,72 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "animation_sheet_loaded_count",
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
+    for required_token in (
+        "const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)",
+        "const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92",
+        "const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15",
+        "const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96",
+        "const STACK_ICON_ART_EXTENT_FACTOR := 1.86",
+    ):
+        ensure(battle_board_text.count(required_token) == 1, errors, f"Battle character medallion must own one exact production constant: {required_token}")
+    stack_token_draw_block = gd_function_block(battle_board_text, "_draw_stack_tokens")
+    stack_token_draw_order = tuple(stack_token_draw_block.find(token) for token in (
+        "var token_radius: float = _stack_token_radius(radius)",
+        "draw_circle(center + Vector2(2.0, 3.0), token_radius + 4.0, SHADOW_COLOR)",
+        "draw_circle(center, token_radius + 3.0, ACTIVE_COLOR if is_active else",
+        "draw_circle(center, token_radius, STACK_TOKEN_INNER_FILL)",
+        "var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)",
+        "draw_circle(center, token_radius - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)",
+        "var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)",
+        "var frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR",
+        "var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)",
+        "var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR",
+        "_draw_stack_side_cue(center, token_radius, side)",
+        "_draw_stack_health_bar(center, radius, stack)",
+        "_draw_count_badge(center, token_radius, stack)",
+        "_draw_stack_caption(center, radius, stack)",
+        '"radius": _stack_hit_shape_radius(radius)',
+    ))
+    ensure(all(index >= 0 for index in stack_token_draw_order) and list(stack_token_draw_order) == sorted(stack_token_draw_order), errors, "Battle stack medallion must preserve shadow/state ring, dark plate, side rim, contained art, overlays, and unchanged hit geometry in exact draw order")
+    for forbidden_token in (
+        "draw_circle(center, token_radius, fill)",
+        "token_radius * 1.76",
+        "token_radius * 1.62",
+        "_stack_hit_shape_radius(radius) =",
+        "_stack_token_radius(radius) =",
+    ):
+        ensure(forbidden_token not in stack_token_draw_block, errors, f"Battle stack medallion must not retain the opaque disk/old art scale or mutate geometry: {forbidden_token}")
+    token_contract_block = gd_function_block(battle_board_text, "_stack_token_visual_contract")
+    for required_token in (
+        '"presentation_model": "character_first_dark_medallion_side_rim"',
+        '"token_radius": token_radius',
+        '"hit_radius": _stack_hit_shape_radius(hex_radius)',
+        '"inner_fill": STACK_TOKEN_INNER_FILL',
+        '"side_rim_alpha": STACK_TOKEN_SIDE_RIM_ALPHA',
+        '"animation_art_diameter_fraction": STACK_ANIMATION_ART_EXTENT_FACTOR * 0.5',
+        '"icon_art_diameter_fraction": STACK_ICON_ART_EXTENT_FACTOR * 0.5',
+        '"art_contained_within_token": STACK_ANIMATION_ART_EXTENT_FACTOR <= 2.0 and STACK_ICON_ART_EXTENT_FACTOR <= 2.0',
+    ):
+        ensure(required_token in token_contract_block, errors, f"Battle token visual contract is missing exact medallion evidence: {required_token}")
+    for forbidden_token in ("session", "_battle", "set(", "queue_redraw", "await ", "create_timer"):
+        ensure(forbidden_token not in token_contract_block, errors, f"Battle token visual contract must remain a detached geometry observer: {forbidden_token}")
+    town_battle_text = (ROOT / "tests" / "town_battle_visual_smoke.gd").read_text(encoding="utf-8")
+    battle_smoke_block = gd_function_block(town_battle_text, "_run_battle_smoke")
+    for required_token in (
+        'var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")',
+        'var token_visual: Dictionary = unit_art_summary.get("token_visual_contract", {})',
+        'String(token_visual.get("presentation_model", "")) != "character_first_dark_medallion_side_rim"',
+        'float(token_visual.get("animation_art_extent_factor", 0.0)), 1.96',
+        'float(token_visual.get("icon_art_extent_factor", 0.0)), 1.86',
+        'float(token_visual.get("side_rim_alpha", 0.0)), 0.92',
+        'inner_fill.get_luminance() >= 0.08',
+        'not bool(token_visual.get("art_contained_within_token", false))',
+        'float(token_visual.get("hit_radius", 0.0)) <= float(token_visual.get("token_radius", 0.0))',
+        'await _capture_color_cue_frame("battle_color_cues")',
+    ):
+        ensure(required_token in battle_smoke_block, errors, f"Battle visual smoke is missing exact character-medallion runtime proof: {required_token}")
+    for forbidden_token in ("board.set(", "_draw_stack_tokens", "queue_redraw", "create_timer"):
+        ensure(forbidden_token not in battle_smoke_block, errors, f"Battle medallion runtime proof must not mutate renderer/combat authority: {forbidden_token}")
     for required_mapping in (
         '"spell_prism_bastion":\n\t\t\treturn "vfx_spell_prism_bastion"',
         '"spell_resonant_chorus":\n\t\t\treturn "vfx_spell_resonant_chorus"',
