@@ -2771,9 +2771,11 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 	if (
 		String(unexplored_terrain.get("visible_terrain_grid_mode", "")) != "hidden_fog_shroud"
 		or not bool(unexplored_terrain.get("unexplored_shroud", false))
-		or int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 3
+		or String(unexplored_terrain.get("unexplored_shroud_model", "")) != "continuous_identity_silent_cartographic_veil"
+		or int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 1
 		or not bool(unexplored_terrain.get("unexplored_shroud_contained", false))
-		or String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "tile_coordinates"
+		or String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "none_contiguous"
+		or bool(unexplored_terrain.get("unexplored_shroud_repeated_stamps", true))
 		or String(unexplored_terrain.get("terrain", "leaked")) != ""
 		or bool(unexplored_terrain.get("texture_loaded", true))
 		or String(unexplored_terrain.get("texture_path", "leaked")) != ""

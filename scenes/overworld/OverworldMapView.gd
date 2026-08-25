@@ -17,9 +17,9 @@ const TACTICAL_VISIBLE_TILE_SPAN := 16.0
 const TACTICAL_VISIBLE_TILE_AREA := TACTICAL_VISIBLE_TILE_SPAN * TACTICAL_VISIBLE_TILE_SPAN
 const MIN_TILE_EXTENT := 24.0
 const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0
-const UNEXPLORED_SHROUD_BASE := Color(0.13, 0.15, 0.16, 0.10)
-const UNEXPLORED_SHROUD_MIST := Color(0.30, 0.32, 0.33, 0.055)
-const UNEXPLORED_SHROUD_LAYER_COUNT := 3
+const UNEXPLORED_SHROUD_MODEL := "continuous_identity_silent_cartographic_veil"
+const UNEXPLORED_SHROUD_BASE := Color(0.13, 0.16, 0.16, 0.16)
+const UNEXPLORED_SHROUD_LAYER_COUNT := 1
 const EXPLORED_TERRAIN_GRID_ALPHA := 0.0
 const EXPLORED_TERRAIN_GRID_MODE := "fog_boundary_only"
 const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.24)
@@ -1480,20 +1480,10 @@ func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
 		return
 	_draw_explored_terrain_boundary(tile, rect)
 
-func _draw_unexplored_shroud(tile: Vector2i, rect: Rect2) -> void:
-	var extent := minf(rect.size.x, rect.size.y)
-	if extent <= 0.0:
+func _draw_unexplored_shroud(_tile: Vector2i, rect: Rect2) -> void:
+	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return
 	_canvas_draw_rect(rect, UNEXPLORED_SHROUD_BASE, true)
-	var seed := absi((tile.x * 92821) + (tile.y * 68917) + (tile.x * tile.y * 37))
-	for layer in range(UNEXPLORED_SHROUD_LAYER_COUNT):
-		var layer_seed := seed + (layer * 7919)
-		var x_ratio := 0.28 + (float(layer_seed % 43) / 100.0)
-		var y_bucket := floori(float(layer_seed) / 47.0) % 43
-		var radius_bucket := floori(float(layer_seed) / 97.0) % 7
-		var y_ratio := 0.28 + (float(y_bucket) / 100.0)
-		var radius := extent * (0.14 + (float(radius_bucket) / 100.0))
-		_canvas_draw_circle(rect.position + rect.size * Vector2(x_ratio, y_ratio), radius, UNEXPLORED_SHROUD_MIST)
 
 func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> bool:
 	if not _terrain_art_can_be_primary(terrain):
@@ -5169,9 +5159,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 			"unexplored_wireframe": false,
 			"unexplored_wireframe_alpha": 0.0,
 			"unexplored_shroud": true,
+			"unexplored_shroud_model": UNEXPLORED_SHROUD_MODEL,
 			"unexplored_shroud_layer_count": UNEXPLORED_SHROUD_LAYER_COUNT,
 			"unexplored_shroud_contained": true,
-			"unexplored_shroud_seed_basis": "tile_coordinates",
+			"unexplored_shroud_seed_basis": "none_contiguous",
+			"unexplored_shroud_repeated_stamps": false,
 			"fog_boundary_alpha": 0.0,
 			"rendering_mode": "hidden_fog",
 		}
@@ -5227,9 +5219,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"unexplored_wireframe": false,
 		"unexplored_wireframe_alpha": 0.0,
 		"unexplored_shroud": false,
+		"unexplored_shroud_model": "",
 		"unexplored_shroud_layer_count": 0,
 		"unexplored_shroud_contained": false,
 		"unexplored_shroud_seed_basis": "",
+		"unexplored_shroud_repeated_stamps": false,
 		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,

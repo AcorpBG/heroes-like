@@ -24781,9 +24781,9 @@ def validate_overworld_fog(errors: list[str]) -> None:
     terrain_payload_block = fog_function_block(map_view_text, "_terrain_visual_payload")
     fog_case_block = fog_function_block(visual_smoke_text, "_assert_explored_terrain_presentation")
     for required_token in (
+        'const UNEXPLORED_SHROUD_MODEL := "continuous_identity_silent_cartographic_veil"',
         "const UNEXPLORED_SHROUD_BASE",
-        "const UNEXPLORED_SHROUD_MIST",
-        "const UNEXPLORED_SHROUD_LAYER_COUNT := 3",
+        "const UNEXPLORED_SHROUD_LAYER_COUNT := 1",
     ):
         ensure(required_token in map_view_text, errors, f"Overworld fog shroud is missing exact renderer token: {required_token}")
     ensure(
@@ -24793,30 +24793,32 @@ def validate_overworld_fog(errors: list[str]) -> None:
     )
     ensure("_canvas_draw_line" not in overlay_block, errors, "Unexplored fog overlay must not retain diagonal wireframe lines")
     for required_token in (
-        "var extent := minf(rect.size.x, rect.size.y)",
+        "func _draw_unexplored_shroud(_tile: Vector2i, rect: Rect2) -> void:",
+        "if rect.size.x <= 0.0 or rect.size.y <= 0.0:",
         "_canvas_draw_rect(rect, UNEXPLORED_SHROUD_BASE, true)",
-        "tile.x * 92821",
-        "tile.y * 68917",
-        "for layer in range(UNEXPLORED_SHROUD_LAYER_COUNT)",
-        "_canvas_draw_circle(rect.position + rect.size * Vector2(x_ratio, y_ratio), radius, UNEXPLORED_SHROUD_MIST)",
     ):
-        ensure(required_token in shroud_block, errors, f"Overworld fog shroud helper is missing contained deterministic behavior: {required_token}")
-    for forbidden_token in ("rect.grow(", "_terrain_at(", "_road_tile_payload(", "_draw_tile_icon(", "create_timer", "create_tween", "RandomNumberGenerator"):
+        ensure(required_token in shroud_block, errors, f"Overworld fog shroud helper is missing continuous identity-silent behavior: {required_token}")
+    for forbidden_token in ("_canvas_draw_circle", "tile.x", "tile.y", "for layer", "rect.grow(", "_terrain_at(", "_road_tile_payload(", "_draw_tile_icon(", "create_timer", "create_tween", "RandomNumberGenerator"):
         ensure(forbidden_token not in shroud_block, errors, f"Overworld fog shroud must not inspect hidden identity, animate, or use unstable randomness: {forbidden_token}")
     for required_token in (
         '"visible_terrain_grid_mode": "hidden_fog_shroud"',
         '"unexplored_wireframe": false',
         '"unexplored_wireframe_alpha": 0.0',
         '"unexplored_shroud": true',
+        '"unexplored_shroud_model": UNEXPLORED_SHROUD_MODEL',
         '"unexplored_shroud_layer_count": UNEXPLORED_SHROUD_LAYER_COUNT',
         '"unexplored_shroud_contained": true',
-        '"unexplored_shroud_seed_basis": "tile_coordinates"',
+        '"unexplored_shroud_seed_basis": "none_contiguous"',
+        '"unexplored_shroud_repeated_stamps": false',
     ):
         ensure(required_token in terrain_payload_block, errors, f"Overworld fog validation payload is missing exact shroud contract: {required_token}")
     for required_token in (
         'String(unexplored_terrain.get("visible_terrain_grid_mode", "")) != "hidden_fog_shroud"',
         'not bool(unexplored_terrain.get("unexplored_shroud", false))',
-        'int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 3',
+        'String(unexplored_terrain.get("unexplored_shroud_model", "")) != "continuous_identity_silent_cartographic_veil"',
+        'int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 1',
+        'String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "none_contiguous"',
+        'bool(unexplored_terrain.get("unexplored_shroud_repeated_stamps", true))',
         'String(unexplored_terrain.get("terrain", "leaked")) != ""',
         'bool(unexplored_terrain.get("texture_loaded", true))',
         'String(unexplored_terrain.get("texture_path", "leaked")) != ""',
