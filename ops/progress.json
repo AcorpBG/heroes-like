@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Battle stack character-medallion hierarchy is completed from direct inspected 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
+  "currentNotes": "Outcome scenic-epilogue command ribbon is completed from direct inspected victory/defeat 1280/1920 captures and focused, compatibility, static/editor, and bounded platform gates. No blocker is active; select the next fresh graphical-polish defect from direct runtime evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-stack-character-medallion-hierarchy-10184",
-  "currentSliceId": "presentation-battle-stack-character-medallion-hierarchy-10184",
-  "currentSliceNotes": "Completed: curated Battle stack art is character-first inside a dark medallion and explicit faction rim, with unchanged token/hit/input/combat/accessibility authority.",
+  "currentSlice": "ux-outcome-scenic-epilogue-command-ribbon-10184",
+  "currentSliceId": "ux-outcome-scenic-epilogue-command-ribbon-10184",
+  "currentSliceNotes": "Completed: one-line Outcome status/action ribbons and lighter scenic panel backgrounds preserve complete tooltip/recap, save, action, focus, accessibility, and session authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle stack character medallion hierarchy",
-  "currentSliceUpdatedAt": "2026-08-25T08:45:41Z",
+  "currentSliceTitle": "Outcome scenic epilogue command ribbon",
+  "currentSliceUpdatedAt": "2026-08-25T09:04:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101146,6 +101146,25 @@
       "notes": "Completed from direct inspected 1280/1920 Battle captures. Live stack presentation now uses a dark inner medallion, explicit side-color rim, and contained animation/icon art at 98%/93% of the unchanged token diameter. P/E cues, active/target/blocked rings, count/health/captions, centers, token/hit radii, hex layout, input, combat, save/session, accessibility, and VFX order remain exact. Focused Town/Battle, animation, Board navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T08:45:41Z"
+    },
+    {
+      "id": "ux-outcome-scenic-epilogue-command-ribbon-10184",
+      "title": "Outcome scenic epilogue command ribbon",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T09:04:08Z",
+      "startedAt": "2026-08-25T08:49:35Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected victory/defeat 1280/1920 captures. The live Outcome shows one concise status and action ribbon, retains complete retry/save/continuity detail in tooltips and recap tabs, compacts the emblem stage to 260x104/300x176, and uses lighter 0.66-0.82 scenic panel opacity while preserving fully opaque text. Commander/army/reward/recap/save/action surfaces, Outcome models/actions, saves, routing, focus/navigation, accessibility, backdrop/emblem assets, and session authority remain exact. Focused visual, normal-entry focus, safe cancel, autosave recovery, save/load confidence, active keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T09:04:08Z"
     }
   ],
   "project": "heroes-like",

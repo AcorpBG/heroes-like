@@ -8,21 +8,26 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
 const OUTCOME_NEW_SESSION_CANCEL_TEXT := "Keep Outcome"
 const OUTCOME_NEW_SESSION_STALE_MESSAGE := "That follow-up changed. Review the outcome and try again."
+const OUTCOME_PRESENTATION_MODEL := "scenery_first_compact_command_ribbons"
+const OUTCOME_COMPACT_BANNER_ART_WIDTH := 260.0
+const OUTCOME_WIDE_BANNER_ART_WIDTH := 300.0
+const OUTCOME_COMPACT_EMBLEM_HEIGHT := 104.0
+const OUTCOME_WIDE_EMBLEM_HEIGHT := 176.0
 const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
-	"Banner": 0.90,
-	"BannerArtPanel": 0.84,
-	"ActionStatusPanel": 0.84,
-	"HeroPanel": 0.86,
-	"ArmyPanel": 0.86,
-	"ResourcePanel": 0.86,
-	"ActionsPanel": 0.86,
-	"SidebarShell": 0.88,
-	"ProgressionPanel": 0.84,
-	"AftermathPanel": 0.84,
-	"CampaignArcPanel": 0.84,
-	"CarryoverPanel": 0.84,
-	"JournalPanel": 0.84,
-	"SavePanel": 0.86,
+	"Banner": 0.78,
+	"BannerArtPanel": 0.66,
+	"ActionStatusPanel": 0.68,
+	"HeroPanel": 0.72,
+	"ArmyPanel": 0.72,
+	"ResourcePanel": 0.72,
+	"ActionsPanel": 0.70,
+	"SidebarShell": 0.82,
+	"ProgressionPanel": 0.78,
+	"AftermathPanel": 0.78,
+	"CampaignArcPanel": 0.78,
+	"CarryoverPanel": 0.78,
+	"JournalPanel": 0.78,
+	"SavePanel": 0.80,
 }
 
 @onready var _backdrop: Control = %Backdrop
@@ -311,9 +316,9 @@ func _apply_responsive_layout() -> void:
 	_content_box.add_theme_constant_override("separation", 6 if compact_layout else 8)
 	_set_margin(_banner_pad, 6 if compact_layout else 10)
 	_banner_columns.add_theme_constant_override("separation", 8 if compact_layout else 10)
-	_banner_art_panel.custom_minimum_size.x = 300.0 if compact_layout else 356.0
+	_banner_art_panel.custom_minimum_size.x = OUTCOME_COMPACT_BANNER_ART_WIDTH if compact_layout else OUTCOME_WIDE_BANNER_ART_WIDTH
 	_set_margin(_banner_art_pad, 4 if compact_layout else 8)
-	_outcome_banner.custom_minimum_size.y = 112.0 if compact_layout else 220.0
+	_outcome_banner.custom_minimum_size.y = OUTCOME_COMPACT_EMBLEM_HEIGHT if compact_layout else OUTCOME_WIDE_EMBLEM_HEIGHT
 	_banner_info.add_theme_constant_override("separation", 4 if compact_layout else 6)
 	_main_row.add_theme_constant_override("separation", 6 if compact_layout else 8)
 	_command_column.add_theme_constant_override("separation", 6 if compact_layout else 8)
@@ -325,7 +330,7 @@ func _apply_responsive_layout() -> void:
 	_sidebar_box.add_theme_constant_override("separation", 4 if compact_layout else 8)
 	_set_margin(_save_pad, 6 if compact_layout else 10, 4 if compact_layout else 8)
 	_save_box.add_theme_constant_override("separation", 2 if compact_layout else 4)
-	_actions_hint_label.visible = not compact_layout
+	_actions_hint_label.visible = true
 	_return_cue_label.visible = not compact_layout
 	if layout_changed and _session != null:
 		call_deferred("_refresh")
@@ -410,29 +415,26 @@ func _refresh() -> void:
 		action_status_lines.append(continuity_choice_summary)
 	if next_play_action_summary != "":
 		action_status_lines.append(next_play_action_summary)
-	var visible_action_hint := action_cue_summary
-	if retry_visible != "":
-		visible_action_hint = "%s\n%s" % [retry_visible, visible_action_hint] if visible_action_hint != "" else retry_visible
-	if follow_up_visible != "":
-		visible_action_hint = "%s\n%s" % [follow_up_visible, visible_action_hint] if visible_action_hint != "" else follow_up_visible
-	if post_result_handoff != "":
-		visible_action_hint = "%s\n%s" % [post_result_handoff, action_cue_summary] if action_cue_summary != "" else post_result_handoff
-		if retry_visible != "":
-			visible_action_hint = "%s\n%s" % [retry_visible, visible_action_hint]
-		if follow_up_visible != "":
-			visible_action_hint = "%s\n%s" % [follow_up_visible, visible_action_hint]
-	var action_status_text := "\n".join(action_status_lines)
+	var visible_status_line := (
+		_last_action_message
+		if _last_action_message != ""
+		else (next_step_summary if next_step_summary != "" else (action_cue_summary if action_cue_summary != "" else "Review the outcome, then choose the next step."))
+	)
 	_set_compact_label(
 		_action_status_label,
-		_last_action_message if _last_action_message != "" else (action_status_text if action_status_text != "" else "Review the outcome, then choose the next step."),
-		1 if _compact_layout_active else 3
+		visible_status_line,
+		1,
+		156
 	)
+	_action_status_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, retry_tooltip]).strip_edges()
+	var visible_action_hint := action_cue_summary if action_cue_summary != "" else (next_play_action_summary if next_play_action_summary != "" else visible_status_line)
 	_set_compact_label(
 		_actions_hint_label,
-		visible_action_hint if visible_action_hint != "" else "Action cue: choose the follow-up action that matches the saved outcome you want to keep.",
-		3
+		visible_action_hint,
+		1,
+		148
 	)
-	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, retry_tooltip, action_cue_summary]).strip_edges()
+	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, retry_tooltip, action_cue_summary, visible_action_hint]).strip_edges()
 	_refresh_guide_surface()
 	_rebuild_actions()
 
@@ -1182,6 +1184,7 @@ func validation_snapshot() -> Dictionary:
 		"actions_hint": _actions_hint_label.text,
 		"actions_hint_tooltip": _actions_hint_label.tooltip_text,
 		"action_status": _action_status_label.text,
+		"action_status_tooltip": _action_status_label.tooltip_text,
 		"action_ids": action_ids,
 		"action_tooltips": _outcome_action_tooltip_snapshot(),
 		"actions": action_payloads,
@@ -1233,8 +1236,15 @@ func validation_scenic_epilogue_summary() -> Dictionary:
 		Vector2(command_rect.position.x, action_rect.end.y),
 		Vector2(command_rect.size.x, maxf(0.0, command_rect.end.y - action_rect.end.y))
 	)
+	var viewport_size := get_viewport_rect().size
+	var scenic_window_area_fraction := (
+		scenic_window.size.x * scenic_window.size.y / (viewport_size.x * viewport_size.y)
+		if viewport_size.x > 0.0 and viewport_size.y > 0.0
+		else 0.0
+	)
 	backdrop_summary.merge({
-		"viewport_size": get_viewport_rect().size,
+		"presentation_model": OUTCOME_PRESENTATION_MODEL,
+		"viewport_size": viewport_size,
 		"content_above_backdrop": _content_margin.get_index() > _backdrop.get_index(),
 		"draw_order": ["scenic_backdrop", "scenic_veil", "outcome_content"],
 		"actions_panel_rect": action_rect,
@@ -1242,6 +1252,14 @@ func validation_scenic_epilogue_summary() -> Dictionary:
 		"command_column_rect": command_rect,
 		"scenic_window_rect": scenic_window,
 		"scenic_window_positive": scenic_window.size.x > 0.0 and scenic_window.size.y > 0.0,
+		"scenic_window_area_fraction": scenic_window_area_fraction,
+		"content_overlay_bottom_fraction": action_rect.end.y / viewport_size.y if viewport_size.y > 0.0 else 1.0,
+		"banner_art_width": _banner_art_panel.custom_minimum_size.x,
+		"emblem_height": _outcome_banner.custom_minimum_size.y,
+		"action_status_visible_line_count": _action_status_label.text.split("\n", false).size(),
+		"actions_hint_visible_line_count": _actions_hint_label.text.split("\n", false).size(),
+		"action_status_tooltip": _action_status_label.tooltip_text,
+		"actions_hint_tooltip": _actions_hint_label.tooltip_text,
 		"panel_alphas": panel_alphas,
 		"panel_alpha_contract": OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME.duplicate(true),
 	})

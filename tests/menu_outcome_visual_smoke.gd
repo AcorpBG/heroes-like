@@ -9,27 +9,27 @@ const OUTCOME_SCENIC_BACKDROP_PATHS := {
 	"defeat": "res://art/results/runtime/backdrops/outcome_defeat.png",
 }
 const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
-	"Banner": 0.90,
-	"BannerArtPanel": 0.84,
-	"ActionStatusPanel": 0.84,
-	"HeroPanel": 0.86,
-	"ArmyPanel": 0.86,
-	"ResourcePanel": 0.86,
-	"ActionsPanel": 0.86,
-	"SidebarShell": 0.88,
-	"ProgressionPanel": 0.84,
-	"AftermathPanel": 0.84,
-	"CampaignArcPanel": 0.84,
-	"CarryoverPanel": 0.84,
-	"JournalPanel": 0.84,
-	"SavePanel": 0.86,
+	"Banner": 0.78,
+	"BannerArtPanel": 0.66,
+	"ActionStatusPanel": 0.68,
+	"HeroPanel": 0.72,
+	"ArmyPanel": 0.72,
+	"ResourcePanel": 0.72,
+	"ActionsPanel": 0.70,
+	"SidebarShell": 0.82,
+	"ProgressionPanel": 0.78,
+	"AftermathPanel": 0.78,
+	"CampaignArcPanel": 0.78,
+	"CarryoverPanel": 0.78,
+	"JournalPanel": 0.78,
+	"SavePanel": 0.80,
 }
 const OUTCOME_SCENIC_STAGE_SIZES := [Vector2(1280.0, 720.0), Vector2(1920.0, 1080.0)]
 const OUTCOME_STATUS_EMBLEM_PATHS := {
 	"victory": "res://art/results/runtime/emblems/outcome_victory_emblem.png",
 	"defeat": "res://art/results/runtime/emblems/outcome_defeat_emblem.png",
 }
-const OUTCOME_STATUS_EMBLEM_STAGE_SIZES := [Vector2(300.0, 112.0), Vector2(356.0, 220.0)]
+const OUTCOME_STATUS_EMBLEM_STAGE_SIZES := [Vector2(260.0, 104.0), Vector2(300.0, 176.0)]
 const MAIN_MENU_STAGE_DOCK_ASSET_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"
 const MAIN_MENU_STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)
 const MAIN_MENU_STAGE_DOCK_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)
@@ -1534,6 +1534,7 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		or live_summary.get("draw_order", []) != ["scenic_backdrop", "scenic_veil", "outcome_content"]
 		or not _outcome_panel_alphas_exact(live_summary.get("panel_alphas", {}), OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME)
 		or live_summary.get("panel_alpha_contract", {}) != OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME
+		or not _outcome_compact_ribbon_contract_exact(live_summary)
 	):
 		push_error("Outcome smoke: live victory scenic epilogue contract failed: %s." % live_summary)
 		get_tree().quit(1)
@@ -1544,9 +1545,10 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 	if (
 		viewport_size.x <= 0.0
 		or viewport_size.y <= 0.0
-		or scenic_window.size.y < viewport_size.y * 0.30
-		or scenic_window.size.x * scenic_window.size.y < viewport_size.x * viewport_size.y * 0.25
-		or action_rect.end.y > viewport_size.y * 0.65
+		or scenic_window.size.y < viewport_size.y * 0.38
+		or float(live_summary.get("scenic_window_area_fraction", 0.0)) < 0.31
+		or float(live_summary.get("content_overlay_bottom_fraction", 1.0)) > 0.61
+		or action_rect.end.y > viewport_size.y * 0.61
 	):
 		push_error("Outcome smoke: compact action dock did not preserve the dominant scenic stage: %s." % live_summary)
 		get_tree().quit(1)
@@ -1648,6 +1650,28 @@ func _outcome_panel_alphas_exact(actual_value, expected: Dictionary) -> bool:
 		if not actual.has(panel_name) or not is_equal_approx(float(actual[panel_name]), float(expected[panel_name])):
 			return false
 	return true
+
+
+func _outcome_compact_ribbon_contract_exact(summary: Dictionary) -> bool:
+	var viewport_size: Vector2 = summary.get("viewport_size", Vector2.ZERO)
+	var compact := viewport_size.x < 1360.0 or viewport_size.y < 760.0
+	var expected_banner_width := 260.0 if compact else 300.0
+	var expected_emblem_height := 104.0 if compact else 176.0
+	var action_status_tooltip := String(summary.get("action_status_tooltip", ""))
+	var actions_hint_tooltip := String(summary.get("actions_hint_tooltip", ""))
+	return (
+		String(summary.get("presentation_model", "")) == "scenery_first_compact_command_ribbons"
+		and is_equal_approx(float(summary.get("banner_art_width", 0.0)), expected_banner_width)
+		and is_equal_approx(float(summary.get("emblem_height", 0.0)), expected_emblem_height)
+		and int(summary.get("action_status_visible_line_count", 0)) == 1
+		and int(summary.get("actions_hint_visible_line_count", 0)) == 1
+		and action_status_tooltip.contains("Next step:")
+		and action_status_tooltip.contains("Follow-up check:")
+		and action_status_tooltip.contains("Retry check:")
+		and actions_hint_tooltip.contains("Action cue:")
+		and actions_hint_tooltip.contains("Outcome Follow-up Check")
+		and actions_hint_tooltip.contains("Outcome Retry Check")
+	)
 
 
 func _outcome_scenic_geometry_exact(summary: Dictionary) -> bool:
