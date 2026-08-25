@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish or release-readiness slice from current direct evidence."
+    "Select the next tracker-approved graphical-polish or release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-selected-tile-cartographic-reticle-10184",
-    "title": "Overworld selected-tile cartographic reticle",
+    "id": "ux-overworld-terrain-integrated-road-surface-10184",
+    "title": "Overworld terrain-integrated road surface",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T17:24:30Z",
-    "updatedAt": "2026-08-25T17:43:07Z",
+    "startedAt": "2026-08-25T17:46:30Z",
+    "updatedAt": "2026-08-25T18:25:57Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspected real authored and generated captures. Ordinary selection now uses a fill-free open cartographic reticle with short corner and edge-midpoint ticks; the existing town perimeter and all selection/input/route/gameplay authority remain exact. Focused selection, generated movement/save, full-route, controller/input/focus, accessibility, broad Overworld visual, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged interaction and release readiness remain unclaimed.",
-    "completedAt": "2026-08-25T17:43:07Z"
+    "notes": "Completed the presentation-only road surface correction. Inspected authored 1280x720 and 1920x1080 captures plus generated before/after captures show narrower low-contrast wheel-rutted land paths and flat cross-planked water causeways; explicit H3MapEd/source-frame ownership, road topology, movement, session/save authority, generated placement, and Native RMG behavior remain exact. Focused road, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. The unrelated broad visual-smoke objective-header oracle and packaged Overworld interaction remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14376,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld selected-tile cartographic reticle is completed with direct authored/generated captures plus focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence; select the next tracker-approved polish slice.",
+  "currentNotes": "The Overworld terrain-integrated road surface is in progress from direct current captures and source/asset inspection; replace timber-bar ordinary overlays without changing road topology or movement authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-selected-tile-cartographic-reticle-10184",
-  "currentSliceId": "ux-overworld-selected-tile-cartographic-reticle-10184",
-  "currentSliceNotes": "Completed: ordinary selection is a fill-free open corner/midpoint reticle with terrain readability preserved; town selection, focus geometry, pointer/controller/keyboard input, routes, movement, session/save, and gameplay authority remain exact.",
+  "currentSlice": "ux-overworld-terrain-integrated-road-surface-10184",
+  "currentSliceId": "ux-overworld-terrain-integrated-road-surface-10184",
+  "currentSliceNotes": "Completed the presentation-only road surface correction. Inspected authored 1280x720 and 1920x1080 captures plus generated before/after captures show narrower low-contrast wheel-rutted land paths and flat cross-planked water causeways; explicit H3MapEd/source-frame control retained exact N+S frame res://art/overworld/runtime/homm3_local_prototype/roads/dirtrd/00_10.png. Focused land/water render-model, Ninefold topology/source ownership, generated movement/save, full-route, input/focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The broad Overworld visual smoke was not authoritative because an unrelated pre-existing objective-header pixel-width oracle failed before road checks; it is not claimed green. Packaged Overworld road interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld selected-tile cartographic reticle",
-  "currentSliceUpdatedAt": "2026-08-25T17:43:07Z",
+  "currentSliceTitle": "Overworld terrain-integrated road surface",
+  "currentSliceUpdatedAt": "2026-08-25T17:46:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19899,8 +19898,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next bounded graphical-polish or release-readiness slice from direct current evidence; preserve the completed Overworld reticle, scale hierarchy, and logical map authority.",
-  "notes": "The selected-tile cartographic reticle and physical object-scale hierarchy are completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "nextActionGuardrailNote": "Inspect authored land/water and generated road surfaces before broad validation; do not alter road payloads, topology, movement, terrain, or Native RMG authority.",
+  "notes": "The terrain-integrated road surface is the current bounded graphical-polish slice. Completed reticle and object-scale hierarchy remain frozen.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-10184",
@@ -19965,14 +19964,14 @@
       "blockedReason": null
     },
     {
-    "id": "ux-town-command-watchplate-visual-hierarchy-10184",
-    "title": "Town command watchplate visual hierarchy",
-    "status": "completed",
+      "id": "ux-town-command-watchplate-visual-hierarchy-10184",
+      "title": "Town command watchplate visual hierarchy",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-    "updatedAt": "2026-08-25T05:40:25Z",
-    "startedAt": "2026-08-25T05:13:05Z",
-    "completedAt": "2026-08-25T05:40:25Z",
+      "updatedAt": "2026-08-25T05:40:25Z",
+      "startedAt": "2026-08-25T05:13:05Z",
+      "completedAt": "2026-08-25T05:40:25Z",
       "implementationTargets": [
         "PLAN.md",
         "ops/progress.json",
@@ -19980,7 +19979,7 @@
         "tests/town_battle_visual_smoke.gd",
         "tests/validate_repo.py"
       ],
-    "notes": "Completed from direct 1280x720 and 1920x1080 captures. The opaque 156x114 command-marker bullet list is now a responsive translucent five-cell Town Watch plate with exact live values/order, contained cells, and a lower footprint. Focused Town/Battle, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction and release readiness remain unclaimed.",
+      "notes": "Completed from direct 1280x720 and 1920x1080 captures. The opaque 156x114 command-marker bullet list is now a responsive translucent five-cell Town Watch plate with exact live values/order, contained cells, and a lower footprint. Focused Town/Battle, Town action presentation, exit routing, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction and release readiness remain unclaimed.",
       "blockedReason": null
     },
     {
@@ -101671,6 +101670,34 @@
       "notes": "Completed from direct inspected real authored route captures at 1280x720 and 1920x1080 plus generated-map before/after captures. Ordinary selection is now a fill-free open cartographic reticle with short corner and edge-midpoint ticks; terrain and objects remain readable beneath it. The existing open town-footprint perimeter, selected tile/geometry, hero/hover focus, pointer/controller route selection, keyboard focus, movement/input ownership, accessibility semantics, content, session/save authority, generated placement, and gameplay remain exact. Focused faction/selection, generated movement/save, full-route, controller/input/focus, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T17:43:07Z"
+    },
+    {
+      "id": "ux-overworld-terrain-integrated-road-surface-10184",
+      "title": "Overworld terrain-integrated road surface",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T18:25:57Z",
+      "startedAt": "2026-08-25T17:46:30Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make roads read as terrain-integrated travel surfaces rather than timber pipes by rendering ordinary road_dirt as rutted land paths or top-down water causeways while preserving explicit recovered/source frame ownership.",
+      "completionCriteria": "Fresh inspected authored 1280x720 and 1920x1080 plus generated-map captures show ordinary roads as continuous layered wheel-rutted paths on passable terrain and weathered cross-planked causeways on water, without upright-post joints or broken seams; explicit H3MapEd/source-frame payloads retain exact frame rendering; focused runtime proves exact per-terrain render model, orthogonal connection keys/order, joint decisions, placement, ids, passability, movement costs, route/input/focus, terrain, content, session/save authority, generated placement, and Native RMG behavior; broad Overworld, generated movement/save, route movement, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No road id, payload, ordered connection, topology, joint decision, placement, passability, movement cost, route, input/focus, camera/map-fit, terrain id, content, save/session, generated placement, H3MapEd frame, or Native RMG data/behavior change.",
+        "No terrain base/transition/fog, object/hero/town scale or asset, shell/UI layout, animation/audio/VFX, AI, economy, battle, or gameplay change.",
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed the presentation-only road surface correction. Inspected authored 1280x720 and 1920x1080 captures plus generated before/after captures show narrower low-contrast wheel-rutted land paths and flat cross-planked water causeways; explicit H3MapEd/source-frame control retained exact N+S frame res://art/overworld/runtime/homm3_local_prototype/roads/dirtrd/00_10.png. Focused land/water render-model, Ninefold topology/source ownership, generated movement/save, full-route, input/focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The broad Overworld visual smoke was not authoritative because an unrelated pre-existing objective-header pixel-width oracle failed before road checks; it is not claimed green. Packaged Overworld road interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T18:25:49Z"
     }
   ],
   "project": "heroes-like",
@@ -101681,7 +101708,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved graphical-polish or release-readiness slice from direct current evidence; broader graphical polish and product/release-readiness gaps remain.",
+  "remainingWork": "Select the next tracker-approved graphical-polish or release-readiness slice; broader product and release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102215,7 +102242,7 @@
   ],
   "summary": "Overworld town selection cartographic perimeter is completed with direct 1280/1920 visual proof, exact selection/route/gameplay authority, and green focused, compatibility, static/editor, Linux, and Windows startup gates; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T16:39:05Z",
+  "updatedAt": "2026-08-25T18:25:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

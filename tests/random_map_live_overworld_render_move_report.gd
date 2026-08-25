@@ -87,6 +87,9 @@ func _run() -> void:
 	var terrain_transition_before := _terrain_transition_summary(overworld)
 	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_terrain_transition_summary(terrain_transition_before, "before_move"):
 		return
+	var road_surface_before := _road_surface_summary(overworld)
+	if not _assert_generated_road_surface(road_surface_before, "before_move"):
+		return
 	var generated_presentation_authority_before := _generated_presentation_authority(SessionState.active_session)
 	if not await _capture_if_requested("before_move"):
 		return
@@ -103,8 +106,14 @@ func _run() -> void:
 	var terrain_transition_after := _terrain_transition_summary(overworld)
 	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1" and not _assert_terrain_transition_summary(terrain_transition_after, "after_move"):
 		return
+	var road_surface_after := _road_surface_summary(overworld)
+	if not _assert_generated_road_surface(road_surface_after, "after_move"):
+		return
 	if terrain_transition_after != terrain_transition_before:
 		_fail("Generated terrain transition draw authority changed across movement/redraw.")
+		return
+	if road_surface_after != road_surface_before:
+		_fail("Generated terrain-integrated road surface authority changed across movement/redraw.")
 		return
 	if map_visual_after.get("body_entries", []) != map_visual_before.get("body_entries", []):
 		_fail("Generated blocker composition changed across movement/redraw.")
@@ -167,6 +176,7 @@ func _run() -> void:
 		"generated_visual_before": _compact_generated_visual_summary(map_visual_before),
 		"generated_visual_after": _compact_generated_visual_summary(map_visual_after),
 		"terrain_transition": terrain_transition_after,
+		"road_surface": road_surface_after,
 		"save_reload_authority_exact": true,
 	})])
 	get_tree().quit(0)
@@ -240,6 +250,68 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"inactive_homm3_overlay_tile_count": inactive_homm3_overlay_tile_count,
 		"draw_policy_ids": policy_ids.keys(),
 	}
+
+func _road_surface_summary(overworld: Node) -> Dictionary:
+	var map_view := overworld.get_node_or_null("%Map")
+	if map_view == null or not map_view.has_method("validation_tile_presentation"):
+		return {}
+	var session = SessionState.active_session
+	var map_size := OverworldRules.derive_map_size(session)
+	var road_tiles := []
+	var render_models := []
+	var ordinary_bypass_count := 0
+	var explicit_source_count := 0
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			if not OverworldRules.is_tile_explored(session, x, y):
+				continue
+			var presentation: Dictionary = map_view.call("validation_tile_presentation", Vector2i(x, y))
+			var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
+			if not bool(terrain.get("road_overlay", false)):
+				continue
+			var render_model := String(terrain.get("road_render_model", ""))
+			if render_model not in render_models:
+				render_models.append(render_model)
+			if bool(terrain.get("road_ordinary_tile_art_bypassed", false)):
+				ordinary_bypass_count += 1
+			if bool(terrain.get("road_explicit_source_frame_rendered", false)):
+				explicit_source_count += 1
+			road_tiles.append({
+				"x": x,
+				"y": y,
+				"terrain": String(terrain.get("terrain", "")),
+				"render_model": render_model,
+				"connection_key": String(terrain.get("road_connection_key", "")),
+				"connection_count": int(terrain.get("road_connection_count", 0)),
+			})
+	return {
+		"road_tile_count": road_tiles.size(),
+		"render_models": render_models,
+		"ordinary_bypass_count": ordinary_bypass_count,
+		"explicit_source_count": explicit_source_count,
+		"road_tiles": road_tiles,
+	}
+
+func _assert_generated_road_surface(summary: Dictionary, label: String) -> bool:
+	var road_tile_count := int(summary.get("road_tile_count", 0))
+	if road_tile_count <= 0:
+		_fail("%s generated map exposed no explored road surface fixture: %s" % [label, JSON.stringify(summary)])
+		return false
+	if summary.get("render_models", []) != ["layered_wheel_rutted_dirt_path"]:
+		_fail("%s generated land roads did not use only the wheel-rutted terrain surface: %s" % [label, JSON.stringify(summary)])
+		return false
+	if int(summary.get("ordinary_bypass_count", 0)) != road_tile_count or int(summary.get("explicit_source_count", -1)) != 0:
+		_fail("%s generated ordinary roads did not bypass timber-bar art exactly: %s" % [label, JSON.stringify(summary)])
+		return false
+	for tile_value in summary.get("road_tiles", []):
+		if not (tile_value is Dictionary):
+			_fail("%s generated road summary contains a malformed tile: %s" % [label, JSON.stringify(summary)])
+			return false
+		var tile: Dictionary = tile_value
+		if String(tile.get("terrain", "")) == "water" or String(tile.get("render_model", "")) != "layered_wheel_rutted_dirt_path" or int(tile.get("connection_count", -1)) < 0:
+			_fail("%s generated land road tile has invalid terrain/render/topology metadata: %s" % [label, JSON.stringify(tile)])
+			return false
+	return true
 
 func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> bool:
 	var relationship_count := int(summary.get("relationship_tile_count", 0))

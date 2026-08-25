@@ -8,9 +8,10 @@ func _run() -> void:
 	var objective_brief_only := OS.get_environment("OVERWORLD_OBJECTIVE_BRIEF_ONLY") == "1"
 	var hero_card_only := OS.get_environment("OVERWORLD_HERO_CARD_ONLY") == "1"
 	var object_scale_capture_only := OS.get_environment("OVERWORLD_OBJECT_SCALE_CAPTURE_ONLY") == "1"
+	var road_surface_capture_only := OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only or hero_card_only:
+	elif objective_brief_only or hero_card_only or road_surface_capture_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -28,6 +29,15 @@ func _run() -> void:
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
+		return
+	if road_surface_capture_only:
+		if not _assert_overworld_art_contract(shell):
+			return
+		if not await _capture_road_surface_comparison(shell, map_node, session):
+			return
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if object_scale_capture_only:
 		if not _assert_overworld_art_contract(shell):
@@ -3266,8 +3276,16 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: visible grass terrain still reports per-cell black grid seams. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "homm3_4_neighbor_overlay_lookup":
-		push_error("Overworld smoke: authored River Pass road overlay is not using HoMM3 4-neighbor road art. presentation=%s" % grass_presentation)
+	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "terrain_integrated_4_neighbor_surface":
+		push_error("Overworld smoke: authored River Pass road did not retain ordinary art availability while using the terrain-integrated 4-neighbor surface. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if String(grass_terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path" or String(grass_terrain.get("road_surface_material", "")) != "packed_earth_with_twin_wheel_ruts" or String(grass_terrain.get("road_surface_detail", "")) != "soft_shoulders_twin_ruts_and_dust_center":
+		push_error("Overworld smoke: authored River Pass land road did not expose the wheel-rutted packed-earth treatment. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if not bool(grass_terrain.get("road_ordinary_tile_art_bypassed", false)) or bool(grass_terrain.get("road_explicit_source_frame_rendered", true)):
+		push_error("Overworld smoke: authored ordinary road did not bypass the timber-bar tile art while keeping explicit source-frame ownership separate. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("road_connection_source", "")) != "orthogonal_same_type_road_tiles" or not bool(grass_terrain.get("road_same_type_adjacency", false)) or not bool(grass_terrain.get("road_orthogonal_mask_only", false)):
@@ -3284,6 +3302,8 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 
 	var session = SessionState.ensure_active_session()
+	if not _assert_water_causeway_render_model(shell, session):
+		return false
 	if not _assert_legacy_forest_degradation(shell, session):
 		return false
 	if not _assert_bridge_material_resolver_payloads(shell, session):
@@ -3337,6 +3357,46 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	if String(fallback_art.get("fallback_contact_shadow_model", "")) != "localized_object_contact_shadow":
 		push_error("Overworld smoke: procedural fallback object did not report localized contact shadow grounding. presentation=%s" % fallback_presentation)
+		get_tree().quit(1)
+		return false
+	return true
+
+func _assert_water_causeway_render_model(shell: Node, session) -> bool:
+	var road_tile := Vector2i(1, 2)
+	var session_authority_before: Dictionary = session.to_dict()
+	var land_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)
+	var land_terrain: Dictionary = land_presentation.get("terrain_presentation", {})
+	var connection_key_before := String(land_terrain.get("road_connection_key", ""))
+	var connection_count_before := int(land_terrain.get("road_connection_count", -1))
+	var map_rows = session.overworld.get("map", [])
+	if not (map_rows is Array) or map_rows.size() <= road_tile.y or not (map_rows[road_tile.y] is Array) or map_rows[road_tile.y].size() <= road_tile.x:
+		push_error("Overworld smoke: River Pass water-causeway fixture could not resolve its live map tile.")
+		get_tree().quit(1)
+		return false
+	var map_row: Array = map_rows[road_tile.y]
+	var original_terrain = map_row[road_tile.x]
+	map_row[road_tile.x] = "water"
+	var water_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)
+	map_row[road_tile.x] = original_terrain
+	if session.to_dict() != session_authority_before:
+		push_error("Overworld smoke: water-causeway presentation fixture did not restore exact session authority.")
+		get_tree().quit(1)
+		return false
+	var water_terrain: Dictionary = water_presentation.get("terrain_presentation", {})
+	if String(water_terrain.get("terrain", "")) != "water" or String(water_terrain.get("road_render_model", "")) != "weathered_cross_planked_causeway":
+		push_error("Overworld smoke: water road did not select the weathered cross-planked causeway model. presentation=%s" % water_presentation)
+		get_tree().quit(1)
+		return false
+	if String(water_terrain.get("road_surface_material", "")) != "weathered_cross_planked_timber" or String(water_terrain.get("road_surface_detail", "")) != "cross_plank_seams_and_longitudinal_grain":
+		push_error("Overworld smoke: water causeway did not expose its top-down plank surface treatment. presentation=%s" % water_presentation)
+		get_tree().quit(1)
+		return false
+	if not bool(water_terrain.get("road_ordinary_tile_art_bypassed", false)) or bool(water_terrain.get("road_explicit_source_frame_rendered", true)):
+		push_error("Overworld smoke: water causeway did not bypass ordinary timber-bar art while preserving explicit source-frame separation. presentation=%s" % water_presentation)
+		get_tree().quit(1)
+		return false
+	if String(water_terrain.get("road_connection_key", "")) != connection_key_before or int(water_terrain.get("road_connection_count", -1)) != connection_count_before:
+		push_error("Overworld smoke: water-causeway fixture changed road topology unexpectedly. presentation=%s" % water_presentation)
 		get_tree().quit(1)
 		return false
 	return true
@@ -3502,6 +3562,71 @@ func _capture_object_scale_viewports(shell: Node) -> bool:
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	print("OVERWORLD_OBJECT_SCALE_CAPTURE %s" % JSON.stringify({"ok": true, "captures": captures, "session_exact": shell != null}))
+	return true
+
+func _capture_road_surface_comparison(shell: Node, map_node: Node, session) -> bool:
+	var output_dir := OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_DIR").strip_edges()
+	if output_dir == "":
+		push_error("Overworld smoke: road-surface capture requires OVERWORLD_ROAD_SURFACE_CAPTURE_DIR.")
+		get_tree().quit(1)
+		return false
+	var absolute_dir := ProjectSettings.globalize_path(output_dir)
+	if DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
+		push_error("Overworld smoke: could not create road-surface capture directory %s." % absolute_dir)
+		get_tree().quit(1)
+		return false
+	var road_tile := Vector2i(4, 2)
+	var session_authority_before: Dictionary = session.to_dict()
+	var land_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)
+	var land_terrain: Dictionary = land_presentation.get("terrain_presentation", {})
+	if String(land_terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path":
+		push_error("Overworld smoke: road-surface capture land fixture is not using the wheel-rutted path.")
+		get_tree().quit(1)
+		return false
+	await RenderingServer.frame_post_draw
+	var land_image := get_viewport().get_texture().get_image()
+	var land_path := absolute_dir.path_join("overworld_road_land_1280x720.png")
+	if land_image == null or land_image.is_empty() or land_image.save_png(land_path) != OK:
+		push_error("Overworld smoke: could not save land road-surface capture.")
+		get_tree().quit(1)
+		return false
+	var original_view_map = map_node.get("_map_data")
+	if not (original_view_map is Array) or original_view_map.size() <= road_tile.y or not (original_view_map[road_tile.y] is Array) or original_view_map[road_tile.y].size() <= road_tile.x:
+		push_error("Overworld smoke: road-surface capture could not resolve the live road tile.")
+		get_tree().quit(1)
+		return false
+	var water_view_map: Array = original_view_map.duplicate(true)
+	water_view_map[road_tile.y][road_tile.x] = "water"
+	map_node.set("_map_data", water_view_map)
+	map_node.call("_invalidate_session_static_cache", "road_surface_water_capture")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var water_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)
+	var water_terrain: Dictionary = water_presentation.get("terrain_presentation", {})
+	await RenderingServer.frame_post_draw
+	var water_image := get_viewport().get_texture().get_image()
+	var water_path := absolute_dir.path_join("overworld_road_water_1280x720.png")
+	var water_capture_ok := water_image != null and not water_image.is_empty() and water_image.save_png(water_path) == OK
+	map_node.set("_map_data", original_view_map)
+	map_node.call("_invalidate_session_static_cache", "road_surface_restore")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not water_capture_ok:
+		push_error("Overworld smoke: could not save water causeway capture.")
+		get_tree().quit(1)
+		return false
+	if String(water_terrain.get("road_render_model", "")) != "weathered_cross_planked_causeway" or session.to_dict() != session_authority_before:
+		push_error("Overworld smoke: road-surface capture did not observe the causeway and restore exact session authority. model=%s session_exact=%s" % [String(water_terrain.get("road_render_model", "")), session.to_dict() == session_authority_before])
+		get_tree().quit(1)
+		return false
+	print("OVERWORLD_ROAD_SURFACE_CAPTURE %s" % JSON.stringify({
+		"ok": true,
+		"land_path": land_path,
+		"water_path": water_path,
+		"land_render_model": String(land_terrain.get("road_render_model", "")),
+		"water_render_model": String(water_terrain.get("road_render_model", "")),
+		"session_exact": true,
+	}))
 	return true
 
 func _assert_legacy_forest_degradation(shell: Node, session) -> bool:

@@ -39749,12 +39749,28 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        '"road_overlay"',
 	        '"road_overlay_art"',
 	        '"road_shape_model"',
+	        '"road_render_model"',
+	        '"road_explicit_source_frame_rendered"',
+	        '"road_ordinary_tile_art_bypassed"',
+	        '"road_surface_material"',
+	        '"road_surface_detail"',
 	        '"road_same_type_adjacency"',
 	        '"road_orthogonal_mask_only"',
 	        '"orthogonal_same_type_road_tiles"',
 	        "ROAD_LANE_MODEL",
 	        "ROAD_PIECE_SELECTION_MODEL",
 	        "ROAD_CARDINAL_DIRECTIONS",
+	        'const ROAD_SOURCE_FRAME_RENDER_MODEL := "explicit_source_frame"',
+	        'const ROAD_LAND_RENDER_MODEL := "layered_wheel_rutted_dirt_path"',
+	        'const ROAD_WATER_RENDER_MODEL := "weathered_cross_planked_causeway"',
+	        "func _road_render_model",
+	        "func _road_explicit_source_frame_loaded",
+	        "func _road_explicit_source_frame_path",
+	        "func _draw_road_land_path",
+	        "func _road_land_path_points",
+	        "func _draw_road_land_ruts",
+	        "func _draw_road_water_causeway",
+	        "func _draw_road_causeway_planks",
         '"fallback_procedural_marker"',
         "ghosted_sprite_with_ground_anchor",
         "TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
@@ -39826,6 +39842,185 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ):
         ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose the effective transition draw policy: {token}")
 
+    road_draw_block = gd_function_block(map_view_text, "_draw_road_overlay")
+    road_model_block = gd_function_block(map_view_text, "_road_render_model")
+    road_source_block = gd_function_block(map_view_text, "_road_explicit_source_frame_loaded")
+    road_source_path_block = gd_function_block(map_view_text, "_road_explicit_source_frame_path")
+    road_land_block = gd_function_block(map_view_text, "_draw_road_land_path")
+    road_land_points_block = gd_function_block(map_view_text, "_road_land_path_points")
+    road_ruts_block = gd_function_block(map_view_text, "_draw_road_land_ruts")
+    road_water_block = gd_function_block(map_view_text, "_draw_road_water_causeway")
+    road_planks_block = gd_function_block(map_view_text, "_draw_road_causeway_planks")
+    for token in (
+        "var render_model := _road_render_model(tile, road)",
+        "render_model == ROAD_SOURCE_FRAME_RENDER_MODEL and _draw_road_overlay_art(tile, rect, road)",
+        "if render_model == ROAD_WATER_RENDER_MODEL:",
+        "_draw_road_water_causeway(tile, rect)",
+        "_draw_road_land_path(tile, rect)",
+    ):
+        ensure(token in road_draw_block, errors, f"Road drawing must select exact source, water, then land presentation ownership: {token}")
+    ensure(
+        road_draw_block.find("render_model == ROAD_SOURCE_FRAME_RENDER_MODEL")
+        < road_draw_block.find("if render_model == ROAD_WATER_RENDER_MODEL:")
+        < road_draw_block.find("_draw_road_land_path(tile, rect)"),
+        errors,
+        "Road drawing must preserve explicit source-frame priority before water and ordinary land surfaces.",
+    )
+    for token in (
+        "if _road_explicit_source_frame_loaded(tile, road):",
+        "return ROAD_SOURCE_FRAME_RENDER_MODEL",
+        'if _terrain_at(tile).strip_edges().to_lower() == "water":',
+        "return ROAD_WATER_RENDER_MODEL",
+        "return ROAD_LAND_RENDER_MODEL",
+    ):
+        ensure(token in road_model_block, errors, f"Road render-model selection must remain terrain-local and fail over to the land surface: {token}")
+    ensure(
+        road_model_block.find("_road_explicit_source_frame_loaded")
+        < road_model_block.find('_terrain_at(tile).strip_edges().to_lower() == "water"')
+        < road_model_block.find("return ROAD_LAND_RENDER_MODEL"),
+        errors,
+        "Road render-model selection must retain source-frame priority and water-specific causeways before land fallback.",
+    )
+    ensure('return _road_explicit_source_frame_path(tile, road) != ""' in road_source_block, errors, "Road source ownership must derive from the exact loaded source-frame path.")
+    for token in (
+        "_h3maped_road_art_path_from_payload(road)",
+        "_homm3_road_art_path",
+        "_terrain_art_texture(source_path) is Texture2D",
+        "_terrain_art_texture(homm3_path) is Texture2D",
+        "return source_path",
+        "return homm3_path",
+    ):
+        ensure(token in road_source_path_block, errors, f"Road source ownership must require and expose a real loaded explicit frame: {token}")
+    for token in (
+        "ROAD_LAND_SHADOW_COLOR",
+        "ROAD_LAND_SHOULDER_COLOR",
+        "ROAD_LAND_EARTH_COLOR",
+        "ROAD_LAND_DUST_COLOR",
+        "var path_points := _road_land_path_points(tile, direction, start, end, width)",
+        "_draw_road_land_ruts(path_points, width)",
+    ):
+        ensure(token in road_land_block, errors, f"Land roads must retain layered shoulders, earth, dust, and wheel ruts: {token}")
+    for token in (
+        "var bend_seed: int = absi((tile.x * 37) + (tile.y * 71)",
+        "var bend_sign := -1.0 if bend_seed % 2 == 0 else 1.0",
+        "PackedVector2Array([start, start.lerp(end, 0.52)",
+    ):
+        ensure(token in road_land_points_block, errors, f"Land road meanders must remain bounded and deterministic: {token}")
+    ensure(road_ruts_block.count("ROAD_LAND_RUT_COLOR") == 2, errors, "Land road segments must draw exactly two wheel ruts.")
+    for token in (
+        "ROAD_CAUSEWAY_SHADOW_COLOR",
+        "ROAD_CAUSEWAY_EDGE_COLOR",
+        "ROAD_CAUSEWAY_DECK_COLOR",
+        "_draw_road_causeway_planks(start, end, width)",
+    ):
+        ensure(token in road_water_block, errors, f"Water roads must retain the flat layered causeway deck: {token}")
+    for token in (
+        "for fraction in [0.16, 0.38, 0.60, 0.82]:",
+        "ROAD_CAUSEWAY_SEAM_COLOR",
+        "ROAD_CAUSEWAY_GRAIN_COLOR",
+    ):
+        ensure(token in road_planks_block, errors, f"Water causeways must retain cross-plank seams and longitudinal grain: {token}")
+    for block_name, block in (
+        ("road model", road_model_block),
+        ("road source", road_source_block),
+        ("road source path", road_source_path_block),
+        ("land road", road_land_block),
+        ("land path points", road_land_points_block),
+        ("land ruts", road_ruts_block),
+        ("water causeway", road_water_block),
+        ("causeway planks", road_planks_block),
+    ):
+        for forbidden in ("await ", "create_timer", "rand", "session.overworld", "_session.overworld", "set_map_state", "queue_redraw"):
+            ensure(forbidden not in block, errors, f"{block_name} presentation must remain deterministic and authority-read-only: {forbidden}")
+    for token in (
+        "var road_render_model := _road_render_model(tile, road_payload)",
+        "var road_explicit_source_frame_rendered := road_render_model == ROAD_SOURCE_FRAME_RENDER_MODEL",
+        'var road_source_frame_path := _road_explicit_source_frame_path(tile, road_payload) if road_explicit_source_frame_rendered else ""',
+        '"road_render_model": road_render_model',
+        '"road_explicit_source_frame_rendered": road_explicit_source_frame_rendered',
+        '"road_source_frame_path": road_source_frame_path',
+        '"road_ordinary_tile_art_bypassed": not road_payload.is_empty() and not road_explicit_source_frame_rendered',
+        '"road_surface_material": "weathered_cross_planked_timber" if road_render_model == ROAD_WATER_RENDER_MODEL else ("packed_earth_with_twin_wheel_ruts" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_frame")',
+        '"road_shape_model": "homm3_4_neighbor_overlay_lookup" if road_explicit_source_frame_rendered else ("terrain_integrated_4_neighbor_surface" if not road_payload.is_empty() else "")',
+    ):
+        ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose the actual road renderer instead of art availability alone: {token}")
+
+    ninefold_road_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
+    ninefold_road_block = gd_function_block(ninefold_road_text, "_assert_homm_road_topology")
+    ninefold_land_model_block = gd_function_block(ninefold_road_text, "_assert_land_road_render_model")
+    ensure(ninefold_road_block.count("_assert_land_road_render_model") == 4, errors, "Ninefold road topology must validate the real land surface across straight, corner, and isolated cases.")
+    ensure('_assert_explicit_road_frame_ownership(shell, session, vertical_tile)' in ninefold_road_block, errors, "Ninefold road topology must retain an enabled exact source-frame control.")
+    for token in (
+        'String(terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path"',
+        'String(terrain.get("road_shape_model", "")) != "terrain_integrated_4_neighbor_surface"',
+        'String(terrain.get("road_surface_material", "")) != "packed_earth_with_twin_wheel_ruts"',
+        'not bool(terrain.get("road_ordinary_tile_art_bypassed", false))',
+        'bool(terrain.get("road_explicit_source_frame_rendered", true))',
+    ):
+        ensure(token in ninefold_land_model_block, errors, f"Ninefold road owner must fail closed on the terrain-integrated land model: {token}")
+    ninefold_source_road_block = gd_function_block(ninefold_road_text, "_assert_explicit_road_frame_ownership")
+    for token in (
+        'var original_prototype: Dictionary = map_view.get("_homm3_prototype").duplicate(true)',
+        'enabled_prototype["enabled"] = true',
+        'map_view.set("_homm3_prototype", enabled_prototype)',
+        'shell.call("validation_tile_presentation", road_tile.x, road_tile.y)',
+        'map_view.set("_homm3_prototype", original_prototype)',
+        'session.to_dict() != session_authority_before',
+        'String(terrain.get("road_render_model", "")) != "explicit_source_frame"',
+        'String(terrain.get("road_source_frame_path", "")) != "res://art/overworld/runtime/homm3_local_prototype/roads/dirtrd/00_10.png"',
+        'String(terrain.get("road_connection_key", "")) != "N+S"',
+    ):
+        ensure(token in ninefold_source_road_block, errors, f"Ninefold explicit road control must prove exact loaded frame ownership without topology/session drift: {token}")
+    ensure(
+        ninefold_source_road_block.find('map_view.set("_homm3_prototype", enabled_prototype)')
+        < ninefold_source_road_block.find('shell.call("validation_tile_presentation", road_tile.x, road_tile.y)')
+        < ninefold_source_road_block.find('map_view.set("_homm3_prototype", original_prototype)'),
+        errors,
+        "Ninefold explicit road control must restore the prototype immediately after its single observation.",
+    )
+
+    visual_road_block = gd_function_block((ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8"), "_assert_water_causeway_render_model")
+    for token in (
+        "var session_authority_before: Dictionary = session.to_dict()",
+        'map_row[road_tile.x] = "water"',
+        'var water_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)',
+        'map_row[road_tile.x] = original_terrain',
+        "session.to_dict() != session_authority_before",
+        'String(water_terrain.get("road_render_model", "")) != "weathered_cross_planked_causeway"',
+        'String(water_terrain.get("road_surface_material", "")) != "weathered_cross_planked_timber"',
+        'String(water_terrain.get("road_connection_key", "")) != connection_key_before',
+        'int(water_terrain.get("road_connection_count", -1)) != connection_count_before',
+    ):
+        ensure(token in visual_road_block, errors, f"Overworld visual owner must prove the water causeway with exact restored authority and topology: {token}")
+    ensure(
+        visual_road_block.find('map_row[road_tile.x] = "water"')
+        < visual_road_block.find('var water_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)')
+        < visual_road_block.find("map_row[road_tile.x] = original_terrain")
+        < visual_road_block.find("session.to_dict() != session_authority_before"),
+        errors,
+        "Water-causeway observation must restore the live terrain before checking whole session authority.",
+    )
+    visual_road_capture_block = gd_function_block((ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8"), "_capture_road_surface_comparison")
+    for token in (
+        'OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_DIR")',
+        'var session_authority_before: Dictionary = session.to_dict()',
+        '"overworld_road_land_1280x720.png"',
+        'var water_view_map: Array = original_view_map.duplicate(true)',
+        'water_view_map[road_tile.y][road_tile.x] = "water"',
+        'map_node.set("_map_data", water_view_map)',
+        'map_node.call("_invalidate_session_static_cache", "road_surface_water_capture")',
+        '"overworld_road_water_1280x720.png"',
+        'map_node.set("_map_data", original_view_map)',
+        'String(water_terrain.get("road_render_model", "")) != "weathered_cross_planked_causeway"',
+        "session.to_dict() != session_authority_before",
+        'print("OVERWORLD_ROAD_SURFACE_CAPTURE %s"',
+    ):
+        ensure(token in visual_road_capture_block, errors, f"Road visual capture must use the real land/causeway renderer and restore authority: {token}")
+    ensure(visual_road_capture_block.count('map_node.set("_map_data"') == 2, errors, "Road visual capture must install one detached water view map and restore the exact original view map.")
+    ensure(visual_road_capture_block.count('map_node.call("_invalidate_session_static_cache"') == 2, errors, "Road visual capture must invalidate only the presentation cache once after water view setup and once after restoration.")
+    for forbidden in ("set_map_state", "_draw_road_overlay", "_draw_road_land_path", "_draw_road_water_causeway", "create_timer", "erase(", "sort("):
+        ensure(forbidden not in visual_road_capture_block, errors, f"Road visual capture must not bypass production rendering or normalize authority: {forbidden}")
+
     ninefold_transition_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
     for token in (
         'String(terrain.get("transition_draw_policy", "")) != "active_homm3_self_contained_else_generic_overlay"',
@@ -39877,6 +40072,45 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'terrain_transition_after != terrain_transition_before' in generated_live_text,
         errors,
         "Generated live movement must preserve exact terrain transition draw authority across redraw.",
+    )
+    generated_road_block = gd_function_block(generated_live_text, "_road_surface_summary")
+    generated_road_assert_block = gd_function_block(generated_live_text, "_assert_generated_road_surface")
+    for token in (
+        'map_view.call("validation_tile_presentation", Vector2i(x, y))',
+        'bool(terrain.get("road_overlay", false))',
+        'String(terrain.get("road_render_model", ""))',
+        'String(terrain.get("road_connection_key", ""))',
+        'int(terrain.get("road_connection_count", 0))',
+        '"ordinary_bypass_count"',
+        '"explicit_source_count"',
+    ):
+        ensure(token in generated_road_block, errors, f"Generated live road owner must inspect actual explored road presentation and topology: {token}")
+    for token in (
+        "road_tile_count <= 0",
+        '["layered_wheel_rutted_dirt_path"]',
+        'int(summary.get("ordinary_bypass_count", 0)) != road_tile_count',
+        'int(summary.get("explicit_source_count", -1)) != 0',
+        'String(tile.get("terrain", "")) == "water"',
+        'String(tile.get("render_model", "")) != "layered_wheel_rutted_dirt_path"',
+    ):
+        ensure(token in generated_road_assert_block, errors, f"Generated live road owner must fail closed on missing or non-land ordinary road surfaces: {token}")
+    for token in (
+        'var road_surface_before := _road_surface_summary(overworld)',
+        'if not _assert_generated_road_surface(road_surface_before, "before_move"):',
+        'var road_surface_after := _road_surface_summary(overworld)',
+        'if not _assert_generated_road_surface(road_surface_after, "after_move"):',
+        "if road_surface_after != road_surface_before:",
+        '"road_surface": road_surface_after',
+    ):
+        ensure(token in generated_live_text, errors, f"Generated live movement must retain exact terrain-integrated road authority: {token}")
+    ensure(
+        generated_live_text.find("var road_surface_before := _road_surface_summary(overworld)")
+        < generated_live_text.find("var generated_presentation_authority_before :=")
+        < generated_live_text.find("var move_result: Dictionary =")
+        < generated_live_text.find("var road_surface_after := _road_surface_summary(overworld)")
+        < generated_live_text.find("if road_surface_after != road_surface_before:"),
+        errors,
+        "Generated road surface capture must bracket the real movement and compare exact post-redraw authority.",
     )
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")

@@ -221,6 +221,21 @@ const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
 const ROAD_DEFAULT_CENTER_COLOR := Color(0.86, 0.74, 0.48, 0.55)
 const ROAD_DEFAULT_WIDTH_FACTOR := 0.14
+const ROAD_SOURCE_FRAME_RENDER_MODEL := "explicit_source_frame"
+const ROAD_LAND_RENDER_MODEL := "layered_wheel_rutted_dirt_path"
+const ROAD_WATER_RENDER_MODEL := "weathered_cross_planked_causeway"
+const ROAD_LAND_WIDTH_FACTOR := 0.16
+const ROAD_LAND_SHADOW_COLOR := Color(0.10, 0.07, 0.04, 0.22)
+const ROAD_LAND_SHOULDER_COLOR := Color(0.34, 0.23, 0.13, 0.38)
+const ROAD_LAND_EARTH_COLOR := Color(0.57, 0.42, 0.24, 0.58)
+const ROAD_LAND_DUST_COLOR := Color(0.76, 0.62, 0.39, 0.16)
+const ROAD_LAND_RUT_COLOR := Color(0.24, 0.16, 0.09, 0.48)
+const ROAD_CAUSEWAY_WIDTH_FACTOR := 0.22
+const ROAD_CAUSEWAY_SHADOW_COLOR := Color(0.055, 0.045, 0.035, 0.52)
+const ROAD_CAUSEWAY_EDGE_COLOR := Color(0.24, 0.17, 0.10, 0.88)
+const ROAD_CAUSEWAY_DECK_COLOR := Color(0.48, 0.34, 0.19, 0.96)
+const ROAD_CAUSEWAY_GRAIN_COLOR := Color(0.67, 0.49, 0.27, 0.64)
+const ROAD_CAUSEWAY_SEAM_COLOR := Color(0.18, 0.12, 0.075, 0.78)
 const ROAD_LANE_MODEL := "homm3_orthogonal_overlay_mask"
 const ROAD_PIECE_SELECTION_MODEL := "homm3_4_neighbor_mask_lookup"
 const ROAD_VERTICAL_LANE := "orthogonal_mask_frame"
@@ -1722,34 +1737,99 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 	var road := _road_tile_payload(tile)
 	if road.is_empty():
 		return
-	if _draw_road_overlay_art(tile, rect, road):
+	var render_model := _road_render_model(tile, road)
+	if render_model == ROAD_SOURCE_FRAME_RENDER_MODEL and _draw_road_overlay_art(tile, rect, road):
 		return
-	var style := _road_overlay_style(String(road.get("overlay_id", "road_dirt")))
+	if render_model == ROAD_WATER_RENDER_MODEL:
+		_draw_road_water_causeway(tile, rect)
+		return
+	_draw_road_land_path(tile, rect)
+
+func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var center := rect.get_center()
-	var width := maxf(4.0, extent * float(style.get("width_fraction", ROAD_DEFAULT_WIDTH_FACTOR)))
-	var road_color: Color = style.get("color", ROAD_DEFAULT_COLOR)
-	var edge_color: Color = style.get("edge_color", ROAD_DEFAULT_EDGE_COLOR)
-	var shadow_color: Color = style.get("shadow_color", ROAD_DEFAULT_SHADOW_COLOR)
-	var center_color: Color = style.get("center_color", ROAD_DEFAULT_CENTER_COLOR)
-	var connector_count := 0
-	for direction in _road_neighbor_directions(tile):
-		connector_count += 1
+	var width := maxf(5.0, extent * ROAD_LAND_WIDTH_FACTOR)
+	var neighbor_directions := _road_neighbor_directions(tile)
+	for direction in neighbor_directions:
 		var start := _road_connector_start(rect, direction)
 		var end := _road_connector_end(rect, direction)
-		_canvas_draw_line(start, end, shadow_color, width * 1.45)
-		_canvas_draw_line(start, end, edge_color, width * 1.12)
-		_canvas_draw_line(start, end, road_color, width)
-		_canvas_draw_line(start, end, center_color, maxf(1.4, width * 0.22))
-	if _road_needs_joint_cap(_road_neighbor_directions(tile)) and _road_has_horizontal_connections(_road_neighbor_directions(tile)):
-		var edge_center := Vector2(center.x, _road_horizontal_lane_y(rect))
-		_canvas_draw_line(center, edge_center, shadow_color, width * 1.45)
-		_canvas_draw_line(center, edge_center, edge_color, width * 1.12)
-		_canvas_draw_line(center, edge_center, road_color, width)
-	if connector_count == 0:
-		_canvas_draw_circle(center, width * 0.72, shadow_color)
-		_canvas_draw_circle(center, width * 0.58, edge_color)
-		_canvas_draw_circle(center, width * 0.46, road_color)
+		var path_points := _road_land_path_points(tile, direction, start, end, width)
+		_canvas_draw_polyline(path_points, ROAD_LAND_SHADOW_COLOR, width * 1.34, true)
+		_canvas_draw_polyline(path_points, ROAD_LAND_SHOULDER_COLOR, width * 1.12, true)
+		_canvas_draw_polyline(path_points, ROAD_LAND_EARTH_COLOR, width, true)
+		_draw_road_land_ruts(path_points, width)
+	if neighbor_directions.is_empty():
+		_canvas_draw_circle(center, width * 0.68, ROAD_LAND_SHADOW_COLOR)
+		_canvas_draw_circle(center, width * 0.57, ROAD_LAND_SHOULDER_COLOR)
+		_canvas_draw_circle(center, width * 0.48, ROAD_LAND_EARTH_COLOR)
+		_canvas_draw_line(center - Vector2(width * 0.26, 0.0), center + Vector2(width * 0.26, 0.0), ROAD_LAND_RUT_COLOR, maxf(1.0, width * 0.09), true)
+	elif _road_needs_joint_cap(neighbor_directions):
+		_canvas_draw_circle(center, width * 0.52, ROAD_LAND_SHOULDER_COLOR)
+		_canvas_draw_circle(center, width * 0.43, ROAD_LAND_EARTH_COLOR)
+		_canvas_draw_circle(center, width * 0.19, ROAD_LAND_DUST_COLOR)
+
+func _road_land_path_points(tile: Vector2i, direction: Vector2i, start: Vector2, end: Vector2, width: float) -> PackedVector2Array:
+	var delta := end - start
+	if delta.length_squared() <= 0.001:
+		return PackedVector2Array([start, end])
+	var normal := Vector2(-delta.y, delta.x).normalized()
+	var bend_seed: int = absi((tile.x * 37) + (tile.y * 71) + (direction.x * 11) + (direction.y * 19))
+	var bend_sign := -1.0 if bend_seed % 2 == 0 else 1.0
+	var bend_strength := (0.045 + (float(bend_seed % 4) * 0.012)) * width
+	return PackedVector2Array([start, start.lerp(end, 0.52) + (normal * bend_strength * bend_sign), end])
+
+func _draw_road_land_ruts(path_points: PackedVector2Array, width: float) -> void:
+	if path_points.size() < 2:
+		return
+	var delta := path_points[path_points.size() - 1] - path_points[0]
+	if delta.length_squared() <= 0.001:
+		return
+	var normal := Vector2(-delta.y, delta.x).normalized()
+	var offset := normal * width * 0.23
+	var rut_width := maxf(1.0, width * 0.085)
+	var left_rut := PackedVector2Array()
+	var right_rut := PackedVector2Array()
+	for point in path_points:
+		left_rut.append(point + offset)
+		right_rut.append(point - offset)
+	_canvas_draw_polyline(left_rut, ROAD_LAND_RUT_COLOR, rut_width, true)
+	_canvas_draw_polyline(right_rut, ROAD_LAND_RUT_COLOR, rut_width, true)
+
+func _draw_road_water_causeway(tile: Vector2i, rect: Rect2) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var center := rect.get_center()
+	var width := maxf(6.0, extent * ROAD_CAUSEWAY_WIDTH_FACTOR)
+	var neighbor_directions := _road_neighbor_directions(tile)
+	for direction in neighbor_directions:
+		var start := _road_connector_start(rect, direction)
+		var end := _road_connector_end(rect, direction)
+		_canvas_draw_line(start, end, ROAD_CAUSEWAY_SHADOW_COLOR, width * 1.34, true)
+		_canvas_draw_line(start, end, ROAD_CAUSEWAY_EDGE_COLOR, width * 1.12, true)
+		_canvas_draw_line(start, end, ROAD_CAUSEWAY_DECK_COLOR, width, true)
+		_draw_road_causeway_planks(start, end, width)
+	if neighbor_directions.is_empty():
+		var isolated_size := Vector2(width * 1.16, width * 0.92)
+		_canvas_draw_rect(Rect2(center - isolated_size * 0.5, isolated_size), ROAD_CAUSEWAY_EDGE_COLOR)
+		_canvas_draw_rect(Rect2(center - isolated_size * 0.42, isolated_size * 0.84), ROAD_CAUSEWAY_DECK_COLOR)
+	elif _road_needs_joint_cap(neighbor_directions):
+		var joint_size := Vector2(width * 0.96, width * 0.96)
+		_canvas_draw_rect(Rect2(center - joint_size * 0.5, joint_size), ROAD_CAUSEWAY_EDGE_COLOR)
+		_canvas_draw_rect(Rect2(center - joint_size * 0.42, joint_size * 0.84), ROAD_CAUSEWAY_DECK_COLOR)
+		_canvas_draw_line(center - Vector2(width * 0.34, 0.0), center + Vector2(width * 0.34, 0.0), ROAD_CAUSEWAY_GRAIN_COLOR, maxf(1.0, width * 0.07), true)
+
+func _draw_road_causeway_planks(start: Vector2, end: Vector2, width: float) -> void:
+	var delta := end - start
+	var length := delta.length()
+	if length <= 0.001:
+		return
+	var direction := delta / length
+	var normal := Vector2(-direction.y, direction.x)
+	var half_plank := normal * width * 0.43
+	for fraction in [0.16, 0.38, 0.60, 0.82]:
+		var plank_center := start.lerp(end, float(fraction))
+		_canvas_draw_line(plank_center - half_plank, plank_center + half_plank, ROAD_CAUSEWAY_SEAM_COLOR, maxf(1.0, width * 0.075), true)
+	var grain_offset := normal * width * 0.18
+	_canvas_draw_line(start + grain_offset, end + grain_offset, ROAD_CAUSEWAY_GRAIN_COLOR, maxf(1.0, width * 0.055), true)
 
 func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bool:
 	var source_path := _h3maped_road_art_path_from_payload(road)
@@ -1799,6 +1879,25 @@ func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bo
 			_canvas_draw_texture_rect(center_texture, rect, false)
 			drew_any = true
 	return drew_any
+
+func _road_render_model(tile: Vector2i, road: Dictionary) -> String:
+	if _road_explicit_source_frame_loaded(tile, road):
+		return ROAD_SOURCE_FRAME_RENDER_MODEL
+	if _terrain_at(tile).strip_edges().to_lower() == "water":
+		return ROAD_WATER_RENDER_MODEL
+	return ROAD_LAND_RENDER_MODEL
+
+func _road_explicit_source_frame_loaded(tile: Vector2i, road: Dictionary) -> bool:
+	return _road_explicit_source_frame_path(tile, road) != ""
+
+func _road_explicit_source_frame_path(tile: Vector2i, road: Dictionary) -> String:
+	var source_path := _h3maped_road_art_path_from_payload(road)
+	if source_path != "" and _terrain_art_texture(source_path) is Texture2D:
+		return source_path
+	var homm3_path := _homm3_road_art_path(String(road.get("overlay_id", "road_dirt")), tile)
+	if homm3_path != "" and _terrain_art_texture(homm3_path) is Texture2D:
+		return homm3_path
+	return ""
 
 func _draw_route(board_rect: Rect2) -> void:
 	if _path_tiles.size() <= 1:
@@ -5219,6 +5318,9 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var road_neighbor_directions := _road_neighbor_directions(tile) if not road_payload.is_empty() else []
 	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
 	var road_connection_piece_loaded := _road_connection_piece_loaded(road_payload, tile)
+	var road_render_model := _road_render_model(tile, road_payload) if not road_payload.is_empty() else ""
+	var road_explicit_source_frame_rendered := road_render_model == ROAD_SOURCE_FRAME_RENDER_MODEL
+	var road_source_frame_path := _road_explicit_source_frame_path(tile, road_payload) if road_explicit_source_frame_rendered else ""
 	var road_joint_cap := _road_needs_joint_cap(road_neighbor_directions) if not road_payload.is_empty() else false
 	var road_connection_key := _road_connection_key_from_directions(road_neighbor_directions) if not road_payload.is_empty() else ""
 	var road_has_horizontal := _road_has_horizontal_connections(road_neighbor_directions)
@@ -5429,7 +5531,13 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"road_overlay_id": String(road_payload.get("overlay_id", "")),
 		"road_role": String(road_payload.get("role", "")),
 		"road_overlay_art": road_art_loaded,
-		"road_shape_model": "homm3_4_neighbor_overlay_lookup" if road_art_loaded else ("homm3_4_neighbor_procedural_connectors" if not road_payload.is_empty() else ""),
+		"road_render_model": road_render_model,
+		"road_explicit_source_frame_rendered": road_explicit_source_frame_rendered,
+		"road_source_frame_path": road_source_frame_path,
+		"road_ordinary_tile_art_bypassed": not road_payload.is_empty() and not road_explicit_source_frame_rendered,
+		"road_surface_material": "weathered_cross_planked_timber" if road_render_model == ROAD_WATER_RENDER_MODEL else ("packed_earth_with_twin_wheel_ruts" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_frame"),
+		"road_surface_detail": "cross_plank_seams_and_longitudinal_grain" if road_render_model == ROAD_WATER_RENDER_MODEL else ("soft_shoulders_twin_ruts_and_dust_center" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_owned"),
+		"road_shape_model": "homm3_4_neighbor_overlay_lookup" if road_explicit_source_frame_rendered else ("terrain_integrated_4_neighbor_surface" if not road_payload.is_empty() else ""),
 		"road_lane_model": ROAD_LANE_MODEL if not road_payload.is_empty() else "",
 		"road_piece_selection_model": String(road_payload.get("piece_selection_model", "")),
 		"road_same_type_adjacency": bool(road_payload.get("same_type_adjacency", false)),
