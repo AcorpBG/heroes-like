@@ -30,6 +30,13 @@ const OUTCOME_STATUS_EMBLEM_PATHS := {
 	"defeat": "res://art/results/runtime/emblems/outcome_defeat_emblem.png",
 }
 const OUTCOME_STATUS_EMBLEM_STAGE_SIZES := [Vector2(300.0, 112.0), Vector2(356.0, 220.0)]
+const MAIN_MENU_STAGE_DOCK_ASSET_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"
+const MAIN_MENU_STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)
+const MAIN_MENU_STAGE_DOCK_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)
+const MAIN_MENU_STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
+const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]
+const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
+const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 
 var _original_campaign_profile := {}
 
@@ -601,6 +608,8 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: contextual Field Manual did not return to the save board: %s." % [save_snapshot])
 		get_tree().quit(1)
 		return false
+	if not await _assert_main_menu_stage_dock_surface(shell, session):
+		return false
 
 	var inactive_settings_text_color := (settings_button as Button).get_theme_color("font_color")
 	shell.call("validation_open_settings_stage")
@@ -917,6 +926,17 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: high-contrast mode did not apply solid dark controls, bright borders, and a strong focus ring: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
+	var contrast_stage_surface: Dictionary = shell.call("validation_stage_dock_surface_summary")
+	if String(contrast_stage_surface.get("style_class", "")) != "StyleBoxFlat" \
+			or String(contrast_stage_surface.get("rendering_mode", "")) != "smoke_fallback" \
+			or String(contrast_stage_surface.get("texture_path", "")) != "" \
+			or not bool(contrast_stage_surface.get("high_contrast", false)) \
+			or not bool(contrast_stage_surface.get("fallbacks_texture_free", false)):
+		if not original_high_contrast:
+			shell.call("validation_set_high_contrast", false)
+		push_error("Main menu smoke: high-contrast mode did not replace the cartographic Stage Dock with the exact smoke fallback: %s." % [contrast_stage_surface])
+		get_tree().quit(1)
+		return false
 	if not bool(shell.call("validation_select_color_cue_mode", "assisted")):
 		if not original_high_contrast:
 			shell.call("validation_set_high_contrast", false)
@@ -940,6 +960,15 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	if not original_high_contrast and not bool(shell.call("validation_set_high_contrast", false)):
 		push_error("Main menu smoke: high-contrast toggle could not restore the original setting.")
+		get_tree().quit(1)
+		return false
+	var restored_stage_surface: Dictionary = shell.call("validation_stage_dock_surface_summary")
+	var expected_restored_mode := "smoke_fallback" if original_high_contrast else "authored_cartography_surface"
+	var expected_restored_class := "StyleBoxFlat" if original_high_contrast else "StyleBoxTexture"
+	if String(restored_stage_surface.get("rendering_mode", "")) != expected_restored_mode \
+			or String(restored_stage_surface.get("style_class", "")) != expected_restored_class \
+			or (not original_high_contrast and String(restored_stage_surface.get("texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH):
+		push_error("Main menu smoke: Stage Dock surface did not restore its original contrast-dependent rendering mode: %s." % [restored_stage_surface])
 		get_tree().quit(1)
 		return false
 
@@ -983,6 +1012,109 @@ func _run_main_menu_smoke() -> bool:
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
+	if not shell.has_method("validation_stage_dock_surface_summary"):
+		push_error("Main menu smoke: Stage Dock surface validation summary is missing.")
+		get_tree().quit(1)
+		return false
+	var original_window_size: Vector2i = get_window().size
+	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
+	var session_before: Dictionary = session.to_dict()
+	var compact_contracts: Dictionary = {}
+	var failure := ""
+	if original_high_contrast and not bool(shell.call("validation_set_high_contrast", false)):
+		failure = "could not establish the authored standard-contrast surface"
+	for width_index in range(MAIN_MENU_STAGE_DOCK_WINDOW_SIZES.size()):
+		if failure != "":
+			break
+		var requested_size: Vector2i = MAIN_MENU_STAGE_DOCK_WINDOW_SIZES[width_index]
+		SettingsService.call("_set_runtime_window_size", requested_size)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if get_window().size != requested_size or get_tree().root.size != requested_size:
+			failure = "window/root did not reach %s" % [requested_size]
+			break
+		for board in [
+			{"label": "Campaign", "tab": 0, "anchors": MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS},
+			{"label": "Skirmish", "tab": 1, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
+			{"label": "Saves", "tab": 2, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
+			{"label": "Settings", "tab": 4, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
+			{"label": "Guide", "tab": 3, "anchors": MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS},
+		]:
+			match String(board.get("label", "")):
+				"Campaign":
+					shell.call("validation_open_campaign_stage")
+				"Skirmish":
+					shell.call("validation_open_skirmish_stage")
+				"Saves":
+					shell.call("validation_open_saves_stage")
+				"Settings":
+					shell.call("validation_open_settings_stage")
+				"Guide":
+					shell.call("validation_open_contextual_guide_stage")
+			await get_tree().process_frame
+			await get_tree().process_frame
+			var summary: Dictionary = shell.call("validation_stage_dock_surface_summary")
+			var anchors: Rect2 = board.get("anchors", Rect2())
+			var anchored_rect := Rect2(
+				Vector2(shell.size.x * anchors.position.x, shell.size.y * anchors.position.y),
+				Vector2(shell.size.x * anchors.size.x, shell.size.y * anchors.size.y)
+			)
+			if not _main_menu_stage_dock_summary_exact(summary, int(board.get("tab", -1)), anchors, anchored_rect, shell.size):
+				failure = "%s surface contract failed at %s: %s" % [board.get("label", ""), requested_size, summary]
+				break
+			var contract_key := String(board.get("label", ""))
+			if width_index == 0:
+				compact_contracts[contract_key] = summary.duplicate(true)
+			elif width_index == MAIN_MENU_STAGE_DOCK_WINDOW_SIZES.size() - 1 and summary != compact_contracts.get(contract_key, {}):
+				failure = "%s surface did not restore exactly after compact-wide-compact: before=%s after=%s" % [contract_key, compact_contracts.get(contract_key, {}), summary]
+				break
+	SettingsService.call("_set_runtime_window_size", original_window_size)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if SettingsService.high_contrast_ui_enabled() != original_high_contrast:
+		if not bool(shell.call("validation_set_high_contrast", original_high_contrast)) and failure == "":
+			failure = "could not restore the original high-contrast setting"
+	if session.to_dict() != session_before and failure == "":
+		failure = "session authority changed during the Stage Dock width/tab round trip"
+	if failure != "":
+		push_error("Main menu smoke: Stage Dock cartography surface validation failed: %s." % failure)
+		get_tree().quit(1)
+		return false
+	return true
+
+func _main_menu_stage_dock_summary_exact(summary: Dictionary, expected_tab: int, expected_anchors: Rect2, anchored_rect: Rect2, viewport_size: Vector2) -> bool:
+	var dock_rect: Rect2 = summary.get("dock_rect", Rect2())
+	var actual_anchors: Rect2 = summary.get("dock_anchors", Rect2())
+	var combined_minimum: Vector2 = summary.get("dock_combined_minimum_size", Vector2.ZERO)
+	var expected_rect := Rect2(anchored_rect.position, Vector2(
+		maxf(anchored_rect.size.x, combined_minimum.x),
+		maxf(anchored_rect.size.y, combined_minimum.y)
+	))
+	var checks := {
+		"asset_path": String(summary.get("asset_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
+		"asset_exists": bool(summary.get("asset_exists", false)),
+		"style_class": String(summary.get("style_class", "")) == "StyleBoxTexture",
+		"texture_path": String(summary.get("texture_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
+		"texture_size": summary.get("texture_size", Vector2.ZERO) == MAIN_MENU_STAGE_DOCK_TEXTURE_SIZE,
+		"texture_margins": summary.get("texture_margins", Vector4.ZERO) == MAIN_MENU_STAGE_DOCK_TEXTURE_MARGINS,
+		"content_margins": summary.get("content_margins", Vector4.ONE) == Vector4.ZERO,
+		"modulate": summary.get("modulate", Color.WHITE) == MAIN_MENU_STAGE_DOCK_TEXTURE_MODULATE,
+		"dock_visible": bool(summary.get("dock_visible", false)),
+		"current_tab": int(summary.get("current_tab", -1)) == expected_tab,
+		"standard_contrast": not bool(summary.get("high_contrast", true)),
+		"rendering_mode": String(summary.get("rendering_mode", "")) == "authored_cartography_surface",
+		"high_contrast_fallback": String(summary.get("high_contrast_fallback_class", "")) == "StyleBoxFlat",
+		"missing_asset_fallback": String(summary.get("missing_asset_fallback_class", "")) == "StyleBoxFlat",
+		"fallbacks_texture_free": bool(summary.get("fallbacks_texture_free", false)),
+		"anchors": actual_anchors.position.distance_to(expected_anchors.position) <= 0.0001 and actual_anchors.size.distance_to(expected_anchors.size) <= 0.0001,
+		"minimum_positive": combined_minimum.x > 0.0 and combined_minimum.y > 0.0,
+		"position": dock_rect.position.distance_to(expected_rect.position) <= 1.0,
+		"size": dock_rect.size.distance_to(expected_rect.size) <= 1.0,
+		"contained": _rect_is_contained(Rect2(Vector2.ZERO, viewport_size), dock_rect, 1.0),
+	}
+	return not checks.values().has(false)
 
 func _focus_settings_scroll_control(shell: Node, control_name: StringName) -> bool:
 	await get_tree().process_frame

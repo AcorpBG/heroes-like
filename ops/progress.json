@@ -1911,21 +1911,40 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
-    "title": "Scenario Outcome authored status emblem adoption",
+    "id": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
+    "title": "Main Menu Stage Dock authored cartography surface",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T05:49:31Z",
-    "updatedAt": "2026-08-25T06:13:13Z",
-    "completedAt": "2026-08-25T06:13:13Z",
+    "startedAt": "2026-08-25T06:27:46Z",
+    "updatedAt": "2026-08-25T07:08:38Z",
+    "completedAt": "2026-08-25T07:08:38Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspected 1280x720 and 1920x1080 victory/defeat captures. Distinct original transparent status emblems now replace the flat procedural diagram while preserving aspect ratio, centered containment, transparent negative space, and the existing procedural fallback. Focused visual, Outcome routing/focus/safe-cancel/autosave-recovery, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The unrelated manual-save matrix produced no selected result because its whole-Shell observer captured a live audio crossfade completing; save/dialog/session/router authority was exact. Packaged Outcome interaction and release readiness remain unclaimed."
+    "notes": "Completed from direct inspected 1280x720 and 1920x1080 captures of Campaign, Skirmish, Saves, Guide, and Settings. One original 1024x1024 low-contrast cartographic campaign-table surface now replaces only the shared smoke-black Stage Dock slab, with exact live anchor/combined-minimum containment and the prior smoke style retained for high-contrast or missing-asset fallback. Focused visual, keyboard navigation, settings defaults, save/load confidence, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; board actions, navigation/focus/accessibility, settings/save/session authority remain unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-main-menu-stage-dock-authored-cartography-surface-20260825",
+      "title": "Main Menu Stage Dock authored cartography surface",
+      "sliceId": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-25T07:08:38Z",
+      "updatedAt": "2026-08-25T07:08:38Z",
+      "latestFinding": "Direct inspected 1280x720 and 1920x1080 captures for all five secondary boards, focused Menu visual, keyboard navigation, settings defaults, save/load confidence, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. The exact shared authored cartographic surface is visual-only, preserves live anchor/minimum-size layout and all Menu/settings/save/session authority, and fails closed to the prior smoke style for high contrast or missing art.",
+      "artifacts": [
+        "art/ui/runtime/main_menu/stage_dock_cartography.png",
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-stage-dock-final-captures.TGAPGH",
+        "/tmp/heroes-stage-dock-focused3.MXp8d0",
+        "/tmp/heroes-stage-dock-compat.s25umt",
+        "/tmp/heroes-stage-dock-platform.A0wngB"
+      ]
+    },
     {
       "id": "native-rmg-4602c1-entry-handler-20260706",
       "title": "Recovered direct-entry optional handler for 0x49d914 setup",
@@ -14338,14 +14357,14 @@
       }
     }
   ],
-  "currentNotes": "Scenario Outcome authored status emblem adoption is completed from direct 1280/1920 captures; no blocker is active and the next bounded graphical-polish slice has not yet been selected.",
+  "currentNotes": "Main Menu Stage Dock authored cartography surface is completed from direct 1280/1920 captures and focused/compatibility/platform gates; no blocker is active and the next graphical-polish slice is not yet selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
-  "currentSliceId": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
-  "currentSliceNotes": "Completed: exact authored transparent victory/defeat emblems replace the flat procedural Outcome art while preserving fallback, responsive containment, and all Outcome authority.",
+  "currentSlice": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
+  "currentSliceId": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
+  "currentSliceNotes": "Completed: the shared Main Menu secondary-board surface now uses one original low-contrast cartographic texture with exact fallback, responsive containment, and unchanged board authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Scenario Outcome authored status emblem adoption",
-  "currentSliceUpdatedAt": "2026-08-25T06:13:13Z",
+  "currentSliceTitle": "Main Menu Stage Dock authored cartography surface",
+  "currentSliceUpdatedAt": "2026-08-25T07:08:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19861,8 +19880,28 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from a fresh direct runtime defect with a bounded non-overlapping production owner; preserve gameplay, save, input/focus, accessibility, and platform authority.",
-  "notes": "The Scenario Outcome authored status emblem adoption slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
+  "notes": "The Main Menu Stage Dock authored cartography-surface slice is completed. Broader graphical polish remains open and must continue through bounded source-backed slices.",
   "plannedSlices": [
+    {
+      "id": "ux-main-menu-stage-dock-authored-cartography-surface-10184",
+      "title": "Main Menu Stage Dock authored cartography surface",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T07:08:38Z",
+      "startedAt": "2026-08-25T06:27:46Z",
+      "completedAt": "2026-08-25T07:08:38Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/ui/runtime/main_menu/stage_dock_cartography.png",
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "notes": "Completed from direct inspected 1280x720 and 1920x1080 captures for Campaign, Skirmish, Saves, Guide, and Settings. One original 1024x1024 low-contrast cartographic surface replaces only the shared Stage Dock slab; exact live anchors/combined-minimum containment, high-contrast and missing-asset smoke fallback, all board actions, input/focus/accessibility, settings/save/session authority, compatibility, static/editor, and Linux/Windows startup gates pass.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-scenario-outcome-authored-status-emblem-adoption-10184",
       "title": "Scenario Outcome authored status emblem adoption",
@@ -101542,9 +101581,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Scenario Outcome authored status emblem adoption is completed with exact transparent victory/defeat art, retained procedural fallback, responsive visual proof, and unchanged Outcome authority; the next graphical-polish slice is not selected.",
+  "summary": "Main Menu Stage Dock authored cartography surface is completed with one original shared texture, exact fallback and responsive containment, and unchanged secondary-board authority; the next graphical-polish slice is not selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T06:13:13Z",
+  "updatedAt": "2026-08-25T07:08:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

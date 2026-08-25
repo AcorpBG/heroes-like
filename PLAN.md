@@ -26,6 +26,9 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next fresh, bounded, source-backed graphical-polish defect from direct runtime captures before changing production behavior.
 
+- Previous completed implementation slice: `ux-main-menu-stage-dock-authored-cartography-surface-10184`. Campaign, Skirmish, Saves, Guide, and Settings now share one original low-contrast cartographic campaign-table surface instead of a generic smoke-black slab. Direct inspected 1280x720 and 1920x1080 captures preserve the scenic backdrop, exact live dock anchors/minimum-size behavior, every control and board action, navigation/focus/accessibility, settings/save/session authority, and the solid smoke fallback for high contrast or missing art. Focused Menu visual, keyboard navigation, settings defaults, save/load confidence, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged secondary-board interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+  id: `ux-main-menu-stage-dock-authored-cartography-surface-10184`
+
 - Previous completed implementation slice: `presentation-scenario-outcome-authored-status-emblem-adoption-10184`. The remaining flat procedural Outcome diagram is replaced by distinct original transparent victory and defeat emblems, aspect-preserved inside the existing upper-left art panel, with the procedural renderer retained for missing or unsupported status art. Direct inspected 1280x720 and 1920x1080 captures now read as a coherent scenic epilogue while the panorama, cards, action dock, sidebar, tabs, model, save, routing, focus, accessibility, and session authority remain unchanged. Focused visual, normal-entry focus, safe-cancel, autosave-recovery, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The unrelated manual-save matrix produced no selected result because its whole-Shell observer captured an ambient/music crossfade completing during blocked-click frames; dialog/save/session/router authority remained exact and that owner was not changed. Packaged Outcome interaction, controller hardware, accessibility certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
   id: `presentation-scenario-outcome-authored-status-emblem-adoption-10184`
 
@@ -10195,6 +10198,32 @@ Completion result:
 - two original byte-distinct 1024x896 transparent status emblems now map exactly to victory and defeat; the renderer contains them with preserved aspect ratio and centered transparent negative space at compact and wide sizes, while unsupported states retain the procedural fallback;
 - direct inspected 1280x720 and 1920x1080 victory/defeat captures, focused live/fixture validation, normal-entry focus, safe-cancel, autosave-recovery, active-focus, accessibility, and core gates are green with unchanged Outcome/session authority;
 - repository validation, Python compilation, exact/generic Godot editor parsing, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. The platform evidence is export/startup only; packaged Outcome interaction and release readiness remain unclaimed.
+
+## Main Menu Stage Dock Authored Cartography Surface
+
+id: `ux-main-menu-stage-dock-authored-cartography-surface-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the shared `StageDockPanel` smoke-black fill with one original stretch-tolerant, low-contrast dark cartographic campaign-table texture and restrained antique-metal edge treatment;
+- reuse the same surface for Campaign, Skirmish, Saves, Guide, and Settings so every secondary board belongs to the authored scenic menu without adding panels or covering more scenery;
+- retain the existing smoke panel as the missing-asset and high-contrast fallback.
+
+Completion criteria:
+- the runtime asset contains no text, numerals, logos, characters, or copyrighted heraldry and keeps a large quiet center beneath live UI copy;
+- direct inspected 1280x720 and 1920x1080 captures for all five boards prove readable content, contained frame treatment, unchanged dock rectangles, preserved scenic negative space, and a materially less generic surface;
+- focused Menu validation proves exact asset/style selection, fallback/high-contrast behavior, compact-wide-compact restoration, whole tab/list/control geometry, navigation/focus/accessibility, settings/save/session/router authority, and no action mutation;
+- Main Menu keyboard/layout/settings/save compatibility, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no Main Menu backdrop, logo pocket, command-spine art, dock anchors/size, panel hierarchy, tab content, labels, lists, buttons, settings behavior, save behavior, editor routing, campaign/skirmish launch logic, input/focus, accessibility semantics, theme-wide style, gameplay, content, save schema, map, combat, AI, balance, or Native RMG change;
+- no extra text panel, new overlay, animation, parallax, packaged secondary-board interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion result:
+- one original reviewed 1024x1024 RGB cartographic surface is applied only to the shared Stage Dock with exact 56px nine-slice edges, zero content-margin drift, and the prior smoke style retained for high contrast and missing assets;
+- direct inspected 1280x720 and 1920x1080 captures for Campaign, Skirmish, Saves, Guide, and Settings preserve the dominant scenic backdrop, exact anchors/combined-minimum containment, readable controls, and exact compact-wide-compact restoration;
+- focused visual, keyboard navigation, settings-defaults, save/load-confidence, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with unchanged Menu/settings/save/session authority.
 
 ## Progress Reconciliation
 
