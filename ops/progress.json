@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness slice."
+    "Select the next tracker-approved graphical-polish slice from fresh direct runtime evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the direct user-reported Overworld scale correction with a restrained 0.26 artifact through 0.96 town screen-space ladder. Direct inspected 1280x720 and 1920x1080 captures, focused and broad runtime, generated-map, route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. Logical footprints, gameplay, content, and Native RMG remain unchanged.",
+  "currentNotes": "The Town banner stockpile ledger chip is complete. Fresh inspected 1280x720 and 1920x1080 captures, exact native popup interaction, supported layout, Town/Battle, focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Select the next graphical-polish slice only from fresh direct runtime evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-object-screen-scale-normalization-10184",
-  "currentSliceId": "ux-overworld-object-screen-scale-normalization-10184",
-  "currentSliceNotes": "Completed from fresh direct inspected 1280x720 and 1920x1080 River Pass captures. Town art is now 0.96 tiles, field heroes 0.56, and semantic objects use an exact 0.26-0.54 ladder while all logical footprints, interaction, route, save, generated-map, accessibility, and gameplay authority remain unchanged. Focused/broad runtime, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and release readiness remain unclaimed.",
+  "currentSlice": "ux-town-banner-stockpile-ledger-chip-10184",
+  "currentSliceId": "ux-town-banner-stockpile-ledger-chip-10184",
+  "currentSliceNotes": "Completed with an exact responsive ledger frame around the unchanged native stockpile menu; presentation, interaction, gameplay authority, and bounded platform gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld object screen-scale normalization",
-  "currentSliceUpdatedAt": "2026-08-25T15:13:44Z",
+  "currentSliceTitle": "Town banner stockpile ledger chip",
+  "currentSliceUpdatedAt": "2026-08-25T15:42:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101442,6 +101442,35 @@
       "notes": "Completed from direct inspected 1280x720 and 1920x1080 captures. With all four slots unavailable, Load now uses a compact 920x360 archival card with the reused frontier crest, an exact empty-state title/body/cue hierarchy, and Close as the safe entry focus; the underlying four ordered unavailable summaries remain exact. The existing broad populated-save owner explicitly proves that any loadable slot retains the standard dock, two-column browser, preview, naming/deletion/load actions, and authority. Focused keyboard/destructive-dialog, lean boot, save/load confidence, broad Menu/Outcome, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Save schema/paths/content/actions, packaged Load interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T14:18:48Z"
+    },
+    {
+      "id": "ux-town-banner-stockpile-ledger-chip-10184",
+      "title": "Town banner stockpile ledger chip",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T15:42:03Z",
+      "startedAt": "2026-08-25T15:19:16Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "tests/resource_stockpile_icon_popover_runtime_report.gd",
+        "tests/player_comprehension_layout_smoke.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Integrate the Town stockpile control into the authored banner as a framed responsive ledger chip so its existing native interaction reads clearly without competing with the scenic stage.",
+      "completionCriteria": "Direct inspected 1280x720 and 1920x1080 Town captures show a contained 96px compact / 226px full ledger frame around the unchanged 80px / 210px stockpile menu; focused runtime proves exact frame/menu containment, popup rows/order/icons/amounts/tooltips, focus return, responsive restoration, and unchanged session/economy/save/action authority; broad Town/Battle visual, keyboard/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No resource values/order/registry/icon asset, economy, market, build/recruit, town action, session, save, or gameplay changes.",
+        "No Town stage/sidebar/footer/tab composition, scenic art, header/status/event copy, input mapping, focus policy, accessibility semantics, animation/audio, or VFX changes.",
+        "No packaged Town interaction, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from fresh direct inspected 1280x720 and 1920x1080 Town captures. The unchanged native stockpile menu now sits inside a responsive resource-ledger frame using existing Town art at exact 96px compact / 226px wide frame and 80px / 210px menu budgets. Focused runtime proves exact Stores/full-summary modes, all nine ordered resource rows/icons/amounts/tooltips, public open/Escape/focus return, containment, and unchanged session/economy/save/town-action authority. Supported-layout, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T15:42:03Z"
     },
     {
       "id": "ux-overworld-object-screen-scale-normalization-10184",

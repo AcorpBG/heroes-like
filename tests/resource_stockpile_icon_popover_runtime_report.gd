@@ -52,34 +52,50 @@ func _run_town_case(viewport_size: Vector2i) -> Dictionary:
 		return {"ok": false, "shell": "town", "failure": "player_town_missing"}
 	_move_active_hero_to_town(session, town)
 	SessionState.set_active_session(session)
+	var host := _case_host(viewport_size, "TownCaseHost")
 	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
-	add_child(shell)
+	host.add_child(shell)
 	await _settle()
 	var menu := shell.get_node_or_null("%Resources") as ResourceStockpileMenu
-	var top_bar := menu.get_parent() as Control if menu != null else null
-	if menu == null or top_bar == null:
-		return await _finish_case(shell, {"ok": false, "shell": "town", "failure": "menu_missing"})
+	var banner := shell.get_node_or_null("%Banner") as Control
+	var resource_chip := shell.get_node_or_null("%ResourceChip") as PanelContainer
+	if menu == null or banner == null or resource_chip == null:
+		return await _finish_case(host, {"ok": false, "shell": "town", "failure": "menu_missing"})
 	var live_session = SessionState.ensure_active_session()
 	var authority_before: Dictionary = live_session.to_dict()
 	var town_signature_before: Dictionary = TownRules.town_action_consequence_signature(live_session)
 	var shell_snapshot_before: Dictionary = shell.validation_snapshot()
 	var menu_before: Dictionary = menu.validation_snapshot()
 	var contract: Dictionary = _menu_contract(menu_before, live_session.overworld.get("resources", {}))
-	var visible_summary_exact: bool = String(menu_before.get("visible_text", "")) == String(shell_snapshot_before.get("resources_text", ""))
+	var compact_expected: bool = viewport_size.x < 1360 or viewport_size.y < 760
+	var layout_size_exact: bool = shell.size == Vector2(viewport_size)
+	var visible_summary_exact: bool = String(menu_before.get("visible_text", "")) == String(shell_snapshot_before.get("resources_visible_text", ""))
 	var tooltip_exact: bool = String(menu_before.get("tooltip_text", "")) == String(shell_snapshot_before.get("resources_tooltip_text", ""))
-	var contained: bool = top_bar.get_global_rect().encloses(menu.get_global_rect())
+	var chip_style := resource_chip.get_theme_stylebox("panel")
+	var chip_texture_path := (chip_style as StyleBoxTexture).texture.resource_path if chip_style is StyleBoxTexture and (chip_style as StyleBoxTexture).texture != null else ""
+	var chip_art_exact: bool = chip_texture_path == "res://art/ui/runtime/town/resource_ledger.png"
+	var contained: bool = banner.get_global_rect().encloses(resource_chip.get_global_rect()) and resource_chip.get_global_rect().encloses(menu.get_global_rect())
+	var frame_width_exact: bool = is_equal_approx(resource_chip.custom_minimum_size.x, 96.0 if compact_expected else 226.0) and is_equal_approx(resource_chip.size.x, 96.0 if compact_expected else 226.0)
+	var menu_width_exact: bool = is_equal_approx(menu.custom_minimum_size.x, 80.0 if compact_expected else 210.0) and is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)
 	var interaction: Dictionary = await _open_and_close_menu(menu)
 	var authority_after: Dictionary = SessionState.ensure_active_session().to_dict()
 	var town_signature_after: Dictionary = TownRules.town_action_consequence_signature(SessionState.ensure_active_session())
 	var shell_snapshot_after: Dictionary = shell.validation_snapshot()
-	return await _finish_case(shell, {
-		"ok": bool(contract.get("ok", false)) and visible_summary_exact and tooltip_exact and contained and bool(interaction.get("ok", false)) and authority_after == authority_before and town_signature_after == town_signature_before and _town_surface_authority(shell_snapshot_after) == _town_surface_authority(shell_snapshot_before),
+	return await _finish_case(host, {
+		"ok": bool(contract.get("ok", false)) and layout_size_exact and bool(resource_chip.visible) and bool(menu_before.get("compact", false)) == compact_expected and visible_summary_exact and tooltip_exact and chip_art_exact and contained and frame_width_exact and menu_width_exact and bool(interaction.get("ok", false)) and authority_after == authority_before and town_signature_after == town_signature_before and _town_surface_authority(shell_snapshot_after) == _town_surface_authority(shell_snapshot_before),
 		"shell": "town",
 		"viewport_size": viewport_size,
+		"layout_size_exact": layout_size_exact,
 		"contract": contract,
+		"resource_chip_visible": resource_chip.visible,
+		"compact_exact": bool(menu_before.get("compact", false)) == compact_expected,
 		"visible_summary_exact": visible_summary_exact,
 		"tooltip_exact": tooltip_exact,
+		"chip_art_exact": chip_art_exact,
+		"chip_texture_path": chip_texture_path,
 		"contained": contained,
+		"frame_width_exact": frame_width_exact,
+		"menu_width_exact": menu_width_exact,
 		"interaction": interaction,
 		"session_authority_exact": authority_after == authority_before,
 		"town_consequence_authority_exact": town_signature_after == town_signature_before,
@@ -93,20 +109,22 @@ func _run_overworld_case(viewport_size: Vector2i) -> Dictionary:
 		return {"ok": false, "shell": "overworld", "failure": "window_size", "actual": get_window().size}
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	SessionState.set_active_session(session)
+	var host := _case_host(viewport_size, "OverworldCaseHost")
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
-	add_child(shell)
+	host.add_child(shell)
 	await _settle()
 	var menu := shell.get_node_or_null("%Resources") as ResourceStockpileMenu
 	var command_band := shell.get_node_or_null("%CommandBand") as Control
 	var resource_chip := shell.get_node_or_null("%ResourceChip") as Control
 	if menu == null or command_band == null or resource_chip == null:
-		return await _finish_case(shell, {"ok": false, "shell": "overworld", "failure": "menu_missing"})
+		return await _finish_case(host, {"ok": false, "shell": "overworld", "failure": "menu_missing"})
 	var live_session = SessionState.ensure_active_session()
 	var authority_before: Dictionary = live_session.to_dict()
 	var shell_snapshot_before: Dictionary = shell.validation_snapshot()
 	var menu_before: Dictionary = menu.validation_snapshot()
 	var contract: Dictionary = _menu_contract(menu_before, live_session.overworld.get("resources", {}))
 	var compact_expected: bool = viewport_size.x < 1360 or viewport_size.y < 760
+	var layout_size_exact: bool = shell.size == Vector2(viewport_size)
 	var visible_summary_exact: bool = String(menu_before.get("visible_text", "")) == (ResourceStockpileMenu.COMPACT_LABEL if compact_expected else OverworldRules.describe_resources(live_session))
 	var tooltip_exact: bool = String(menu_before.get("tooltip_text", "")) == OverworldRules.describe_resources(live_session)
 	var contained: bool = command_band.get_global_rect().encloses(resource_chip.get_global_rect()) and resource_chip.get_global_rect().encloses(menu.get_global_rect())
@@ -114,10 +132,11 @@ func _run_overworld_case(viewport_size: Vector2i) -> Dictionary:
 	var interaction: Dictionary = await _open_and_close_menu(menu)
 	var authority_after: Dictionary = SessionState.ensure_active_session().to_dict()
 	var shell_snapshot_after: Dictionary = shell.validation_snapshot()
-	return await _finish_case(shell, {
-		"ok": bool(contract.get("ok", false)) and bool(menu_before.get("visible", false)) and bool(menu_before.get("compact", false)) == compact_expected and visible_summary_exact and tooltip_exact and contained and bounded_width_exact and bool(interaction.get("ok", false)) and authority_after == authority_before and _overworld_surface_authority(shell_snapshot_after) == _overworld_surface_authority(shell_snapshot_before),
+	return await _finish_case(host, {
+		"ok": bool(contract.get("ok", false)) and layout_size_exact and bool(menu_before.get("visible", false)) and bool(menu_before.get("compact", false)) == compact_expected and visible_summary_exact and tooltip_exact and contained and bounded_width_exact and bool(interaction.get("ok", false)) and authority_after == authority_before and _overworld_surface_authority(shell_snapshot_after) == _overworld_surface_authority(shell_snapshot_before),
 		"shell": "overworld",
 		"viewport_size": viewport_size,
+		"layout_size_exact": layout_size_exact,
 		"contract": contract,
 		"resource_chip_visible": resource_chip.visible,
 		"compact_exact": bool(menu_before.get("compact", false)) == compact_expected,
@@ -266,6 +285,15 @@ func _set_window_size(viewport_size: Vector2i) -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	return get_window().size == viewport_size
+
+
+func _case_host(viewport_size: Vector2i, host_name: String) -> Control:
+	var host := Control.new()
+	host.name = host_name
+	host.custom_minimum_size = Vector2(viewport_size)
+	host.size = Vector2(viewport_size)
+	add_child(host)
+	return host
 
 
 func _settle() -> void:
