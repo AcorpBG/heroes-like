@@ -25375,10 +25375,14 @@ def validate_overworld_fog(errors: list[str]) -> None:
     visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
     ninefold_path = ROOT / "tests" / "ninefold_scenario_smoke.gd"
     generated_live_path = ROOT / "tests" / "random_map_live_overworld_render_move_report.gd"
+    unexplored_shroud_texture_path = ROOT / "art" / "overworld" / "runtime" / "fog" / "unexplored_cartographic_veil.png"
     ensure(map_view_path.exists(), errors, "Missing OverworldMapView.gd fog-shroud renderer")
     ensure(visual_smoke_path.exists(), errors, "Missing Overworld visual fog-shroud owner")
     ensure(ninefold_path.exists(), errors, "Missing Ninefold soft fog-frontier owner")
     ensure(generated_live_path.exists(), errors, "Missing generated natural-fog frontier owner")
+    ensure(unexplored_shroud_texture_path.exists(), errors, "Missing original Overworld unexplored cartographic veil texture")
+    if unexplored_shroud_texture_path.exists():
+        ensure(png_size(unexplored_shroud_texture_path) == (1024, 1024), errors, "Overworld unexplored cartographic veil must remain an exact 1024x1024 PNG")
     if not all(path.exists() for path in (map_view_path, visual_smoke_path, ninefold_path, generated_live_path)):
         return
     map_view_text = map_view_path.read_text(encoding="utf-8")
@@ -25387,6 +25391,9 @@ def validate_overworld_fog(errors: list[str]) -> None:
     generated_live_text = generated_live_path.read_text(encoding="utf-8")
     overlay_block = fog_function_block(map_view_text, "_draw_tile_state_overlay")
     shroud_block = fog_function_block(map_view_text, "_draw_unexplored_shroud")
+    shroud_texture_block = fog_function_block(map_view_text, "_unexplored_shroud_texture")
+    shroud_source_rect_block = fog_function_block(map_view_text, "_unexplored_shroud_source_rect")
+    texture_region_block = fog_function_block(map_view_text, "_canvas_draw_texture_rect_region")
     frontier_draw_block = fog_function_block(map_view_text, "_draw_explored_terrain_boundary")
     frontier_directions_block = fog_function_block(map_view_text, "_explored_fog_frontier_directions")
     frontier_gradient_points_block = fog_function_block(map_view_text, "_explored_fog_frontier_gradient_points")
@@ -25396,9 +25403,12 @@ def validate_overworld_fog(errors: list[str]) -> None:
     terrain_payload_block = fog_function_block(map_view_text, "_terrain_visual_payload")
     fog_case_block = fog_function_block(visual_smoke_text, "_assert_explored_terrain_presentation")
     for required_token in (
-        'const UNEXPLORED_SHROUD_MODEL := "continuous_identity_silent_cartographic_veil"',
+        'const UNEXPLORED_SHROUD_MODEL := "continuous_identity_silent_textured_cartographic_veil"',
         "const UNEXPLORED_SHROUD_BASE",
-        "const UNEXPLORED_SHROUD_LAYER_COUNT := 1",
+        "const UNEXPLORED_SHROUD_LAYER_COUNT := 2",
+        'const UNEXPLORED_SHROUD_TEXTURE_PATH := "res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"',
+        "const UNEXPLORED_SHROUD_TEXTURE_SIZE := Vector2i(1024, 1024)",
+        "const UNEXPLORED_SHROUD_TEXTURE_MODULATE := Color(0.80, 0.88, 0.82, 0.80)",
     ):
         ensure(required_token in map_view_text, errors, f"Overworld fog shroud is missing exact renderer token: {required_token}")
     ensure(
@@ -25408,13 +25418,30 @@ def validate_overworld_fog(errors: list[str]) -> None:
     )
     ensure("_canvas_draw_line" not in overlay_block, errors, "Unexplored fog overlay must not retain diagonal wireframe lines")
     for required_token in (
-        "func _draw_unexplored_shroud(_tile: Vector2i, rect: Rect2) -> void:",
+        "func _draw_unexplored_shroud(tile: Vector2i, rect: Rect2) -> void:",
         "if rect.size.x <= 0.0 or rect.size.y <= 0.0:",
         "_canvas_draw_rect(rect, UNEXPLORED_SHROUD_BASE, true)",
+        "var texture = _unexplored_shroud_texture()",
+        "_canvas_draw_texture_rect_region(texture, rect, _unexplored_shroud_source_rect(tile), UNEXPLORED_SHROUD_TEXTURE_MODULATE)",
     ):
         ensure(required_token in shroud_block, errors, f"Overworld fog shroud helper is missing continuous identity-silent behavior: {required_token}")
     for forbidden_token in ("_canvas_draw_circle", "tile.x", "tile.y", "for layer", "rect.grow(", "_terrain_at(", "_road_tile_payload(", "_draw_tile_icon(", "create_timer", "create_tween", "RandomNumberGenerator"):
         ensure(forbidden_token not in shroud_block, errors, f"Overworld fog shroud must not inspect hidden identity, animate, or use unstable randomness: {forbidden_token}")
+    for required_token in (
+        "draw_texture_rect_region(texture, rect, source_rect, modulate, false, true)",
+        "var texture = _terrain_art_texture(UNEXPLORED_SHROUD_TEXTURE_PATH)",
+        "Vector2i(texture.get_size()) == UNEXPLORED_SHROUD_TEXTURE_SIZE",
+        "float(UNEXPLORED_SHROUD_TEXTURE_SIZE.x) / float(maxi(_map_size.x, 1))",
+        "float(UNEXPLORED_SHROUD_TEXTURE_SIZE.y) / float(maxi(_map_size.y, 1))",
+        "return Rect2(Vector2(tile) * normalized_size, normalized_size)",
+    ):
+        ensure(
+            required_token in texture_region_block or required_token in shroud_texture_block or required_token in shroud_source_rect_block,
+            errors,
+            f"Overworld fog shroud is missing exact continuous board-space texture behavior: {required_token}",
+        )
+    for forbidden_token in ("_terrain_at(", "_road_tile_payload(", "_object_at(", "rand", "hash(", "tile %", "fmod("):
+        ensure(forbidden_token not in shroud_source_rect_block, errors, f"Overworld fog texture coordinates must remain identity-silent and non-repeating: {forbidden_token}")
     for required_token in (
         '"visible_terrain_grid_mode": "hidden_fog_shroud"',
         '"unexplored_wireframe": false',
@@ -25425,15 +25452,27 @@ def validate_overworld_fog(errors: list[str]) -> None:
         '"unexplored_shroud_contained": true',
         '"unexplored_shroud_seed_basis": "none_contiguous"',
         '"unexplored_shroud_repeated_stamps": false',
+        '"unexplored_shroud_texture_loaded": unexplored_texture_loaded',
+        '"unexplored_shroud_texture_path": UNEXPLORED_SHROUD_TEXTURE_PATH if unexplored_texture_loaded else ""',
+        '"unexplored_shroud_texture_size": {"x": UNEXPLORED_SHROUD_TEXTURE_SIZE.x, "y": UNEXPLORED_SHROUD_TEXTURE_SIZE.y}',
+        '"unexplored_shroud_texture_modulate_alpha": UNEXPLORED_SHROUD_TEXTURE_MODULATE.a',
+        '"unexplored_shroud_texture_mapping": "whole_board_normalized_once_clipped_by_hidden_cells"',
+        '"unexplored_shroud_texture_source_rect": _rect_payload(_unexplored_shroud_source_rect(tile))',
+        '"unexplored_shroud_texture_terrain_identity_sampled": false',
     ):
         ensure(required_token in terrain_payload_block, errors, f"Overworld fog validation payload is missing exact shroud contract: {required_token}")
     for required_token in (
         'String(unexplored_terrain.get("visible_terrain_grid_mode", "")) != "hidden_fog_shroud"',
         'not bool(unexplored_terrain.get("unexplored_shroud", false))',
-        'String(unexplored_terrain.get("unexplored_shroud_model", "")) != "continuous_identity_silent_cartographic_veil"',
-        'int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 1',
+        'String(unexplored_terrain.get("unexplored_shroud_model", "")) != "continuous_identity_silent_textured_cartographic_veil"',
+        'int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 2',
         'String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "none_contiguous"',
         'bool(unexplored_terrain.get("unexplored_shroud_repeated_stamps", true))',
+        'not bool(unexplored_terrain.get("unexplored_shroud_texture_loaded", false))',
+        'String(unexplored_terrain.get("unexplored_shroud_texture_path", "")) != "res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"',
+        'unexplored_terrain.get("unexplored_shroud_texture_size", {}) != {"x": 1024, "y": 1024}',
+        'String(unexplored_terrain.get("unexplored_shroud_texture_mapping", "")) != "whole_board_normalized_once_clipped_by_hidden_cells"',
+        'bool(unexplored_terrain.get("unexplored_shroud_texture_terrain_identity_sampled", true))',
         'String(unexplored_terrain.get("terrain", "leaked")) != ""',
         'bool(unexplored_terrain.get("texture_loaded", true))',
         'String(unexplored_terrain.get("texture_path", "leaked")) != ""',
@@ -25553,7 +25592,15 @@ def validate_overworld_fog(errors: list[str]) -> None:
         "invalid_direction_count += 1",
         '"exact_frontier_tile_count"',
         '"hidden_exact_count"',
+        '"hidden_textured_shroud_exact_count"',
         '"model_ids": model_ids.keys()',
+        '"hidden_shroud_model_ids": hidden_shroud_model_ids.keys()',
+        '"hidden_shroud_texture_paths": hidden_shroud_texture_paths.keys()',
+        '"hidden_shroud_mapping_ids": hidden_shroud_mapping_ids.keys()',
+        'bool(terrain.get("unexplored_shroud_texture_loaded", false))',
+        'not bool(terrain.get("unexplored_shroud_texture_terrain_identity_sampled", true))',
+        'float(source_rect.get("x", -1.0)), float(x) * expected_source_size.x',
+        'float(source_rect.get("y", -1.0)), float(y) * expected_source_size.y',
     ):
         ensure(required_token in generated_frontier_block, errors, f"Generated natural-fog owner must inspect every public explored/hidden frontier consequence: {required_token}")
     for required_token in (
@@ -25562,8 +25609,12 @@ def validate_overworld_fog(errors: list[str]) -> None:
         "active_count <= 0",
         'int(summary.get("exact_frontier_tile_count", 0)) != active_count',
         'int(summary.get("hidden_exact_count", 0)) != hidden_count',
+        'int(summary.get("hidden_textured_shroud_exact_count", 0)) != hidden_count',
         'int(summary.get("invalid_direction_count", -1)) != 0',
         '["inward_vertex_gradient_cartographic_frontier"]',
+        '["continuous_identity_silent_textured_cartographic_veil"]',
+        '["res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"]',
+        '["whole_board_normalized_once_clipped_by_hidden_cells"]',
     ):
         ensure(required_token in generated_frontier_assert_block, errors, f"Generated natural-fog assertion must fail closed on continuity or hidden-identity drift: {required_token}")
     for required_token in (

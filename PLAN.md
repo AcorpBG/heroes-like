@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Next action is to select the next tracker-approved source-backed graphical-polish or release-readiness slice.
 
+## Overworld Textured Cartographic Unexplored Shroud
+
+id: `ux-overworld-textured-cartographic-unexplored-shroud-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one original low-contrast 1024x1024 dark cartographic veil texture under the shipped Overworld art root and sample it in normalized whole-board coordinates only inside authoritative unexplored cells;
+- retain the exact opaque hidden base, explored-side soft frontier, continuous non-repeating treatment, and identity-silent fog contract with no terrain, road, object, hero, encounter, route, or selection sampling;
+- keep reveal transitions, exploration/visibility arrays, movement, input/focus, camera/map fit, session/save authority, generated packages, and Native RMG behavior unchanged.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 River Pass captures show mysterious intentional cartographic material instead of a flat black void, with no tile stamps, seams, recognizable geography, or hidden-content leakage;
+- focused runtime proves the exact original texture loads at 1024x1024, each hidden cell samples its matching normalized board-space region once, explored cells never draw it, revealed cells expose the unchanged existing surface, and session/save/fog authority remains exact;
+- authored/generated Overworld visual, movement/route/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no fog-of-war, visibility radius, exploration, scouting, terrain, road, object, hero, encounter, route, selection, movement, interaction, camera, content, session, save/schema, AI, balance, generated placement, or Native RMG change;
+- no terrain repaint, object/hero/town asset or scale, shell/UI layout, animation/audio/VFX, theme, font, or UI-scale change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- added one original 1024x1024 dark cartographic veil and sampled it in exact normalized board coordinates only through authoritative unexplored cells, with no repeated tile stamps or hidden identity sampling;
+- inspected 1280x720 and 1920x1080 River Pass captures now read as intentional mysterious map material instead of a flat black void, while the existing reveal frontier and visible map remain primary;
+- focused authored fog, generated reveal/movement/save, full-route movement, active keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
+
 ## Overworld Active Hero Command Marker
 
 id: `ux-overworld-active-hero-command-marker-10184`

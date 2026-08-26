@@ -2772,6 +2772,10 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		push_error("Overworld smoke: explored terrain retained hidden-territory shroud state at %s. presentation=%s" % [remembered_tile, remembered_presentation])
 		get_tree().quit(1)
 		return false
+	if bool(terrain_presentation.get("unexplored_shroud_texture_loaded", false)) or String(terrain_presentation.get("unexplored_shroud_texture_path", "")) != "":
+		push_error("Overworld smoke: explored terrain retained the hidden cartographic texture at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		get_tree().quit(1)
+		return false
 
 	var session = SessionState.ensure_active_session()
 	var unexplored_tile := _first_unexplored_tile(session)
@@ -2781,6 +2785,9 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		return false
 	var unexplored_presentation: Dictionary = shell.call("validation_tile_presentation", unexplored_tile.x, unexplored_tile.y)
 	var unexplored_terrain: Dictionary = unexplored_presentation.get("terrain_presentation", {})
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	var shroud_source_rect: Dictionary = unexplored_terrain.get("unexplored_shroud_texture_source_rect", {})
+	var expected_source_size := Vector2(1024.0 / float(map_size.x), 1024.0 / float(map_size.y))
 	if bool(unexplored_presentation.get("explored", true)) or not bool(unexplored_terrain.get("unexplored_hidden", false)):
 		push_error("Overworld smoke: unscouted terrain is not staying hidden at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
 		get_tree().quit(1)
@@ -2796,11 +2803,21 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 	if (
 		String(unexplored_terrain.get("visible_terrain_grid_mode", "")) != "hidden_fog_shroud"
 		or not bool(unexplored_terrain.get("unexplored_shroud", false))
-		or String(unexplored_terrain.get("unexplored_shroud_model", "")) != "continuous_identity_silent_cartographic_veil"
-		or int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 1
+		or String(unexplored_terrain.get("unexplored_shroud_model", "")) != "continuous_identity_silent_textured_cartographic_veil"
+		or int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 2
 		or not bool(unexplored_terrain.get("unexplored_shroud_contained", false))
 		or String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "none_contiguous"
 		or bool(unexplored_terrain.get("unexplored_shroud_repeated_stamps", true))
+		or not bool(unexplored_terrain.get("unexplored_shroud_texture_loaded", false))
+		or String(unexplored_terrain.get("unexplored_shroud_texture_path", "")) != "res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"
+		or unexplored_terrain.get("unexplored_shroud_texture_size", {}) != {"x": 1024, "y": 1024}
+		or not is_equal_approx(float(unexplored_terrain.get("unexplored_shroud_texture_modulate_alpha", 0.0)), 0.80)
+		or String(unexplored_terrain.get("unexplored_shroud_texture_mapping", "")) != "whole_board_normalized_once_clipped_by_hidden_cells"
+		or bool(unexplored_terrain.get("unexplored_shroud_texture_terrain_identity_sampled", true))
+		or not is_equal_approx(float(shroud_source_rect.get("x", -1.0)), float(unexplored_tile.x) * expected_source_size.x)
+		or not is_equal_approx(float(shroud_source_rect.get("y", -1.0)), float(unexplored_tile.y) * expected_source_size.y)
+		or not is_equal_approx(float(shroud_source_rect.get("width", -1.0)), expected_source_size.x)
+		or not is_equal_approx(float(shroud_source_rect.get("height", -1.0)), expected_source_size.y)
 		or String(unexplored_terrain.get("terrain", "leaked")) != ""
 		or bool(unexplored_terrain.get("texture_loaded", true))
 		or String(unexplored_terrain.get("texture_path", "leaked")) != ""
