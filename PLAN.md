@@ -24,7 +24,28 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none; select the next graphical-polish slice from fresh inspected evidence.
+- Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
+
+## Main Menu Item-List Selection Inlay
+
+id: `presentation-main-menu-item-list-selection-inlay-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the Main Menu ItemList default flat gray selected/hover/focus rows with compact dark enamel inlays, a restrained gold registration edge, and a clear keyboard-focus ring through the existing shared visual kit;
+- apply the same row language to the existing Campaign arc/chapter, Skirmish front, Save archive, and Field Manual topic lists without adding containers, labels, icons, or duplicate controls;
+- preserve every item string, metadata payload, selected index, navigation, scrolling, focus order, launch/load/help actions, accessibility semantics, settings, save, and session authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Main Menu Campaign, Skirmish, and Field Manual captures show selected rows integrated with the ornate cartographic board instead of default gray bars;
+- focused runtime proves the five existing ItemLists own exact normal/hover/selected/focused style classes, restrained palette/border/spacing contracts, full containment, and unchanged item arrays, metadata, selection, focus, scroll, menu actions, settings, save, and session authority;
+- broad Main Menu/Outcome, keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no list item identity/text/order/metadata, selected index, row height budget, scroll range, focus order, navigation, launch/load/help action, settings, save/session/schema, content, campaign/skirmish rules, or Native RMG change;
+- no Main Menu backdrop, logo pocket, command spine, Stage Dock art/layout, board disclosure, portrait, button/tab/slider style, typography, UI scale, animation/audio/VFX, or broad menu redesign;
+- no packaged Main Menu interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Battle Stack Caption Nameplate
 
