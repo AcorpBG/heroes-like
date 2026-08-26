@@ -62,15 +62,15 @@ const STACK_CAPTION_PLATE_FRAME := Color(0.80, 0.74, 0.57, 0.30)
 const STACK_CAPTION_PLATE_SHADOW := Color(0.01, 0.014, 0.018, 0.42)
 const STACK_CAPTION_ACCENT_ALPHA := 0.82
 const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.58)
-const MOVE_RANGE_VISUAL_MODEL := "alternating_edge_ticks_center_pip_near_transparent_fill"
-const MOVE_RANGE_FILL_RADIUS_FACTOR := 0.66
-const MOVE_RANGE_FILL_ALPHA := 0.020
-const MOVE_RANGE_TICK_RADIUS_FACTOR := 0.74
-const MOVE_RANGE_TICK_SEGMENT_FACTOR := 0.36
-const MOVE_RANGE_TICK_WIDTH := 1.4
-const MOVE_RANGE_TICK_EDGE_COUNT := 3
-const MOVE_RANGE_PIP_RADIUS_FACTOR := 0.045
-const MOVE_RANGE_PIP_ALPHA := 0.52
+const MOVE_RANGE_VISUAL_MODEL := "broken_exposed_edge_perimeter_center_pips_near_transparent_fill"
+const MOVE_RANGE_FILL_RADIUS_FACTOR := 0.58
+const MOVE_RANGE_FILL_ALPHA := 0.012
+const MOVE_RANGE_CONTOUR_RADIUS_FACTOR := 0.90
+const MOVE_RANGE_CONTOUR_SEGMENT_FACTOR := 0.72
+const MOVE_RANGE_CONTOUR_ALPHA := 0.48
+const MOVE_RANGE_CONTOUR_WIDTH := 1.6
+const MOVE_RANGE_PIP_RADIUS_FACTOR := 0.040
+const MOVE_RANGE_PIP_ALPHA := 0.46
 const LEGAL_MELEE_COLOR := Color(1.0, 0.78, 0.36, 0.90)
 const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
 const HEALTH_COLOR := Color(0.95, 0.79, 0.35, 0.96)
@@ -782,6 +782,7 @@ func validation_hex_layout_summary() -> Dictionary:
 			selected_click_intent["blocked"] = false
 			selected_click_intent["message"] = "Input locked: it is not the player's turn."
 	var hovered_destination_preview := _hover_destination_preview()
+	var movement_range_region := _movement_range_contour_summary(legal_destinations)
 	var selected_target_id := String(_battle.get("selected_target_id", ""))
 	var selected_target_blocked := selected_target_id != "" and bool(selected_legality.get("blocked", false))
 	var stack_entries := []
@@ -862,14 +863,18 @@ func validation_hex_layout_summary() -> Dictionary:
 		"movement_range_cell_count": legal_destinations.size(),
 		"movement_range_fill_radius_factor": MOVE_RANGE_FILL_RADIUS_FACTOR,
 		"movement_range_fill_alpha": MOVE_RANGE_FILL_ALPHA,
-		"movement_range_tick_radius_factor": MOVE_RANGE_TICK_RADIUS_FACTOR,
-		"movement_range_tick_segment_factor": MOVE_RANGE_TICK_SEGMENT_FACTOR,
-		"movement_range_tick_alpha": MOVE_COLOR.a,
-		"movement_range_tick_width": MOVE_RANGE_TICK_WIDTH,
-		"movement_range_tick_edge_count": MOVE_RANGE_TICK_EDGE_COUNT,
+		"movement_range_contour_radius_factor": MOVE_RANGE_CONTOUR_RADIUS_FACTOR,
+		"movement_range_contour_segment_factor": MOVE_RANGE_CONTOUR_SEGMENT_FACTOR,
+		"movement_range_contour_alpha": MOVE_RANGE_CONTOUR_ALPHA,
+		"movement_range_contour_width": MOVE_RANGE_CONTOUR_WIDTH,
+		"movement_range_boundary_segment_count": int(movement_range_region.get("boundary_segment_count", 0)),
+		"movement_range_internal_shared_edge_count": int(movement_range_region.get("internal_shared_edge_count", 0)),
+		"movement_range_region_edge_balance_exact": bool(movement_range_region.get("edge_balance_exact", false)),
+		"movement_range_internal_edges_drawn": false,
+		"movement_range_destination_pip_count": legal_destinations.size(),
 		"movement_range_pip_radius_factor": MOVE_RANGE_PIP_RADIUS_FACTOR,
 		"movement_range_pip_alpha": MOVE_RANGE_PIP_ALPHA,
-		"movement_range_complete_outline": false,
+		"movement_range_complete_cell_outlines": false,
 		"movement_range_all_legal_cells_drawn": true,
 		"movement_range_hover_only": false,
 		"movement_range_below_active_targets_and_stacks": true,
@@ -2202,13 +2207,16 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 	var player_input_active := String(_active_stack.get("side", "")) == "player"
 
 	if player_input_active:
-		for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):
+		var legal_destinations: Array = BattleRulesScript.legal_destinations_for_active_stack(_battle)
+		var movement_range_region := _movement_range_contour_summary(legal_destinations)
+		var legal_cell_keys: Dictionary = movement_range_region.get("cell_keys", {})
+		for destination in legal_destinations:
 			if not (destination is Dictionary):
 				continue
 			var cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
 			if not _cell_in_bounds(cell):
 				continue
-			_draw_movement_destination_cue(_hex_center(cell, hex_layout), radius)
+			_draw_movement_destination_cue(cell, _hex_center(cell, hex_layout), radius, legal_cell_keys)
 
 	_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)
 
@@ -2245,7 +2253,7 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 				_draw_hex_outline(target_center, radius * 1.02, TARGET_COLOR, 3.2)
 				_draw_focus_link(active_center, target_center, String(_active_stack.get("side", "")))
 
-func _draw_movement_destination_cue(center: Vector2, radius: float) -> void:
+func _draw_movement_destination_cue(cell: Vector2i, center: Vector2, radius: float, legal_cell_keys: Dictionary) -> void:
 	_draw_hex(
 		center,
 		radius * MOVE_RANGE_FILL_RADIUS_FACTOR,
@@ -2253,16 +2261,19 @@ func _draw_movement_destination_cue(center: Vector2, radius: float) -> void:
 		Color(0.0, 0.0, 0.0, 0.0),
 		0.0
 	)
-	var tick_points := _hex_points(center, radius * MOVE_RANGE_TICK_RADIUS_FACTOR)
-	var inset := (1.0 - MOVE_RANGE_TICK_SEGMENT_FACTOR) * 0.5
-	for edge_index in [0, 2, 4]:
-		var edge_start: Vector2 = tick_points[edge_index]
-		var edge_end: Vector2 = tick_points[(edge_index + 1) % tick_points.size()]
+	var contour_points := _hex_points(center, radius * MOVE_RANGE_CONTOUR_RADIUS_FACTOR)
+	var inset := (1.0 - MOVE_RANGE_CONTOUR_SEGMENT_FACTOR) * 0.5
+	for edge_index in range(6):
+		var neighbor := _movement_range_neighbor_for_edge(cell, edge_index)
+		if legal_cell_keys.has(_movement_range_cell_key(neighbor)):
+			continue
+		var edge_start: Vector2 = contour_points[edge_index]
+		var edge_end: Vector2 = contour_points[(edge_index + 1) % contour_points.size()]
 		draw_line(
 			edge_start.lerp(edge_end, inset),
 			edge_start.lerp(edge_end, 1.0 - inset),
-			MOVE_COLOR,
-			MOVE_RANGE_TICK_WIDTH,
+			Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_CONTOUR_ALPHA),
+			MOVE_RANGE_CONTOUR_WIDTH,
 			true
 		)
 	draw_circle(
@@ -2271,6 +2282,61 @@ func _draw_movement_destination_cue(center: Vector2, radius: float) -> void:
 		Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_PIP_ALPHA),
 		true
 	)
+
+func _movement_range_contour_summary(legal_destinations: Array) -> Dictionary:
+	var cells: Array[Vector2i] = []
+	var cell_keys := {}
+	for destination in legal_destinations:
+		if not (destination is Dictionary):
+			continue
+		var cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
+		if not _cell_in_bounds(cell):
+			continue
+		var key := _movement_range_cell_key(cell)
+		if cell_keys.has(key):
+			continue
+		cell_keys[key] = true
+		cells.append(cell)
+	var boundary_segment_count := 0
+	var internal_directed_edge_count := 0
+	for cell in cells:
+		for edge_index in range(6):
+			var neighbor := _movement_range_neighbor_for_edge(cell, edge_index)
+			if cell_keys.has(_movement_range_cell_key(neighbor)):
+				internal_directed_edge_count += 1
+			else:
+				boundary_segment_count += 1
+	var internal_shared_edge_count := int(internal_directed_edge_count / 2)
+	return {
+		"cells": cells,
+		"cell_keys": cell_keys,
+		"boundary_segment_count": boundary_segment_count,
+		"internal_shared_edge_count": internal_shared_edge_count,
+		"edge_balance_exact": boundary_segment_count + internal_shared_edge_count * 2 == cells.size() * 6,
+	}
+
+func _movement_range_cell_key(cell: Vector2i) -> String:
+	return "%d,%d" % [cell.x, cell.y]
+
+func _movement_range_neighbor_for_edge(cell: Vector2i, edge_index: int) -> Vector2i:
+	var even_row_offsets := [
+		Vector2i(0, -1),
+		Vector2i(-1, -1),
+		Vector2i(-1, 0),
+		Vector2i(-1, 1),
+		Vector2i(0, 1),
+		Vector2i(1, 0),
+	]
+	var odd_row_offsets := [
+		Vector2i(1, -1),
+		Vector2i(0, -1),
+		Vector2i(-1, 0),
+		Vector2i(0, 1),
+		Vector2i(1, 1),
+		Vector2i(1, 0),
+	]
+	var offsets := even_row_offsets if cell.y % 2 == 0 else odd_row_offsets
+	return cell + offsets[clampi(edge_index, 0, 5)]
 
 func _draw_controller_cursor(hex_layout: Dictionary) -> void:
 	if not has_focus() or not _cell_in_bounds(_controller_cursor_cell):

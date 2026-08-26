@@ -264,19 +264,27 @@ func _battle_movement_range_contract(shell: Node) -> Dictionary:
 		return {"ok": false, "missing_board_summary": true}
 	var summary: Dictionary = board.call("validation_hex_layout_summary")
 	var legal_destination_count := int(summary.get("legal_destination_count", -1))
+	var boundary_segment_count := int(summary.get("movement_range_boundary_segment_count", -1))
+	var internal_shared_edge_count := int(summary.get("movement_range_internal_shared_edge_count", -1))
 	var ok := legal_destination_count > 0 \
 		and int(summary.get("movement_range_cell_count", -2)) == legal_destination_count \
-		and String(summary.get("movement_range_visual_model", "")) == "alternating_edge_ticks_center_pip_near_transparent_fill" \
-		and is_equal_approx(float(summary.get("movement_range_fill_radius_factor", 0.0)), 0.66) \
-		and is_equal_approx(float(summary.get("movement_range_fill_alpha", 0.0)), 0.020) \
-		and is_equal_approx(float(summary.get("movement_range_tick_radius_factor", 0.0)), 0.74) \
-		and is_equal_approx(float(summary.get("movement_range_tick_segment_factor", 0.0)), 0.36) \
-		and is_equal_approx(float(summary.get("movement_range_tick_alpha", 0.0)), 0.58) \
-		and is_equal_approx(float(summary.get("movement_range_tick_width", 0.0)), 1.4) \
-		and int(summary.get("movement_range_tick_edge_count", 0)) == 3 \
-		and is_equal_approx(float(summary.get("movement_range_pip_radius_factor", 0.0)), 0.045) \
-		and is_equal_approx(float(summary.get("movement_range_pip_alpha", 0.0)), 0.52) \
-		and not bool(summary.get("movement_range_complete_outline", true)) \
+		and String(summary.get("movement_range_visual_model", "")) == "broken_exposed_edge_perimeter_center_pips_near_transparent_fill" \
+		and is_equal_approx(float(summary.get("movement_range_fill_radius_factor", 0.0)), 0.58) \
+		and is_equal_approx(float(summary.get("movement_range_fill_alpha", 0.0)), 0.012) \
+		and is_equal_approx(float(summary.get("movement_range_contour_radius_factor", 0.0)), 0.90) \
+		and is_equal_approx(float(summary.get("movement_range_contour_segment_factor", 0.0)), 0.72) \
+		and is_equal_approx(float(summary.get("movement_range_contour_alpha", 0.0)), 0.48) \
+		and is_equal_approx(float(summary.get("movement_range_contour_width", 0.0)), 1.6) \
+		and boundary_segment_count > 0 \
+		and internal_shared_edge_count > 0 \
+		and boundary_segment_count < legal_destination_count * 3 \
+		and boundary_segment_count + internal_shared_edge_count * 2 == legal_destination_count * 6 \
+		and bool(summary.get("movement_range_region_edge_balance_exact", false)) \
+		and not bool(summary.get("movement_range_internal_edges_drawn", true)) \
+		and int(summary.get("movement_range_destination_pip_count", -2)) == legal_destination_count \
+		and is_equal_approx(float(summary.get("movement_range_pip_radius_factor", 0.0)), 0.040) \
+		and is_equal_approx(float(summary.get("movement_range_pip_alpha", 0.0)), 0.46) \
+		and not bool(summary.get("movement_range_complete_cell_outlines", true)) \
 		and bool(summary.get("movement_range_all_legal_cells_drawn", false)) \
 		and not bool(summary.get("movement_range_hover_only", true)) \
 		and bool(summary.get("movement_range_below_active_targets_and_stacks", false)) \
@@ -288,14 +296,18 @@ func _battle_movement_range_contract(shell: Node) -> Dictionary:
 		"visual_model": summary.get("movement_range_visual_model", ""),
 		"fill_radius_factor": summary.get("movement_range_fill_radius_factor", 0.0),
 		"fill_alpha": summary.get("movement_range_fill_alpha", 0.0),
-		"tick_radius_factor": summary.get("movement_range_tick_radius_factor", 0.0),
-		"tick_segment_factor": summary.get("movement_range_tick_segment_factor", 0.0),
-		"tick_alpha": summary.get("movement_range_tick_alpha", 0.0),
-		"tick_width": summary.get("movement_range_tick_width", 0.0),
-		"tick_edge_count": summary.get("movement_range_tick_edge_count", 0),
+		"contour_radius_factor": summary.get("movement_range_contour_radius_factor", 0.0),
+		"contour_segment_factor": summary.get("movement_range_contour_segment_factor", 0.0),
+		"contour_alpha": summary.get("movement_range_contour_alpha", 0.0),
+		"contour_width": summary.get("movement_range_contour_width", 0.0),
+		"boundary_segment_count": boundary_segment_count,
+		"internal_shared_edge_count": internal_shared_edge_count,
+		"region_edge_balance_exact": summary.get("movement_range_region_edge_balance_exact", false),
+		"internal_edges_drawn": summary.get("movement_range_internal_edges_drawn", true),
+		"destination_pip_count": summary.get("movement_range_destination_pip_count", -1),
 		"pip_radius_factor": summary.get("movement_range_pip_radius_factor", 0.0),
 		"pip_alpha": summary.get("movement_range_pip_alpha", 0.0),
-		"complete_outline": summary.get("movement_range_complete_outline", true),
+		"complete_cell_outlines": summary.get("movement_range_complete_cell_outlines", true),
 		"all_legal_cells_drawn": summary.get("movement_range_all_legal_cells_drawn", false),
 		"hover_only": summary.get("movement_range_hover_only", true),
 		"below_active_targets_and_stacks": summary.get("movement_range_below_active_targets_and_stacks", false),

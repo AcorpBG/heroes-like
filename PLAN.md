@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none; select the next tracker-approved graphical-polish slice from fresh playtest evidence.
+- Selected implementation slice: none; select the next graphical-polish slice from fresh playtest evidence.
+
+## Battle Movement-Range Perimeter Contour
+
+id: `presentation-battle-movement-range-perimeter-contour-10184`
+
+Status: completed.
+
+Result:
+- the live 32-cell movement region now retains 32 subtle destination pips while replacing 96 repeated per-cell ticks with 50 exposed-edge contour segments and omitting 71 shared internal edges;
+- inspected 1280x720 and 1920x1080 captures show materially clearer terrain and stack silhouettes, with movement authority, input, focus, combat, session, accessibility, and animation behavior unchanged;
+- focused/live compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Battle captures show every legal movement hex repeating three cyan edge ticks, producing a dense screen-wide hatch over the scenic battlefield;
+- the exact destination set is already available once per draw, so shared internal edges can be omitted without changing movement authority or hiding any destination.
+
+Implementation boundary:
+- replace repeated per-cell edge ticks with a broken contour drawn only on exposed edges of the exact legal-destination region, while retaining one restrained center pip and near-transparent fill for every legal cell;
+- keep the contour below active, target, attack, cursor, token, caption, VFX, and objective cues and preserve the exact legal destination list/order and all input/combat/session authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 Battle captures show a readable movement region that preserves scenic terrain and stack silhouettes instead of a repeated cyan hatch;
+- focused runtime proves every legal cell keeps one pip, only exposed region edges draw contour segments, internal shared edges are omitted, and exact movement/click/focus/combat/session authority remains unchanged;
+- Battle visual/navigation/animation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no legal destination, movement cost/path, active/target/attack/cursor/objective cue, hex/grid/token/caption/VFX, hit geometry, input/focus/accessibility semantic, combat, AI, balance, content, save/session/schema, or Native RMG change;
+- no packaged Battle interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Footprint-Proportional Overworld Object Scale
 

@@ -888,20 +888,30 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board did not render through the hex-field presentation.")
 		get_tree().quit(1)
 		return false
+	var independent_movement_region := _independent_movement_range_region_summary(hex_summary.get("legal_destinations", []))
 	if (
-		String(hex_summary.get("movement_range_visual_model", "")) != "alternating_edge_ticks_center_pip_near_transparent_fill"
+		String(hex_summary.get("movement_range_visual_model", "")) != "broken_exposed_edge_perimeter_center_pips_near_transparent_fill"
 		or int(hex_summary.get("movement_range_cell_count", -1)) != int(hex_summary.get("legal_destination_count", -2))
 		or int(hex_summary.get("movement_range_cell_count", 0)) <= 0
-		or not is_equal_approx(float(hex_summary.get("movement_range_fill_radius_factor", 0.0)), 0.66)
-		or not is_equal_approx(float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.020)
-		or not is_equal_approx(float(hex_summary.get("movement_range_tick_radius_factor", 0.0)), 0.74)
-		or not is_equal_approx(float(hex_summary.get("movement_range_tick_segment_factor", 0.0)), 0.36)
-		or not is_equal_approx(float(hex_summary.get("movement_range_tick_alpha", 0.0)), 0.58)
-		or not is_equal_approx(float(hex_summary.get("movement_range_tick_width", 0.0)), 1.4)
-		or int(hex_summary.get("movement_range_tick_edge_count", 0)) != 3
-		or not is_equal_approx(float(hex_summary.get("movement_range_pip_radius_factor", 0.0)), 0.045)
-		or not is_equal_approx(float(hex_summary.get("movement_range_pip_alpha", 0.0)), 0.52)
-		or bool(hex_summary.get("movement_range_complete_outline", true))
+		or not is_equal_approx(float(hex_summary.get("movement_range_fill_radius_factor", 0.0)), 0.58)
+		or not is_equal_approx(float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.012)
+		or not is_equal_approx(float(hex_summary.get("movement_range_contour_radius_factor", 0.0)), 0.90)
+		or not is_equal_approx(float(hex_summary.get("movement_range_contour_segment_factor", 0.0)), 0.72)
+		or not is_equal_approx(float(hex_summary.get("movement_range_contour_alpha", 0.0)), 0.48)
+		or not is_equal_approx(float(hex_summary.get("movement_range_contour_width", 0.0)), 1.6)
+		or int(hex_summary.get("movement_range_boundary_segment_count", -1)) != int(independent_movement_region.get("boundary_segment_count", -2))
+		or int(hex_summary.get("movement_range_internal_shared_edge_count", -1)) != int(independent_movement_region.get("internal_shared_edge_count", -2))
+		or int(hex_summary.get("movement_range_boundary_segment_count", 0)) <= 0
+		or int(hex_summary.get("movement_range_internal_shared_edge_count", 0)) <= 0
+		or int(hex_summary.get("movement_range_boundary_segment_count", 0)) >= int(hex_summary.get("movement_range_cell_count", 0)) * 3
+		or not bool(hex_summary.get("movement_range_region_edge_balance_exact", false))
+		or not bool(independent_movement_region.get("edge_balance_exact", false))
+		or bool(independent_movement_region.get("duplicate_cell", true))
+		or bool(hex_summary.get("movement_range_internal_edges_drawn", true))
+		or int(hex_summary.get("movement_range_destination_pip_count", -1)) != int(hex_summary.get("legal_destination_count", -2))
+		or not is_equal_approx(float(hex_summary.get("movement_range_pip_radius_factor", 0.0)), 0.040)
+		or not is_equal_approx(float(hex_summary.get("movement_range_pip_alpha", 0.0)), 0.46)
+		or bool(hex_summary.get("movement_range_complete_cell_outlines", true))
 		or not bool(hex_summary.get("movement_range_all_legal_cells_drawn", false))
 		or bool(hex_summary.get("movement_range_hover_only", true))
 		or not bool(hex_summary.get("movement_range_below_active_targets_and_stacks", false))
@@ -1095,6 +1105,45 @@ func _run_battle_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _independent_movement_range_region_summary(destinations_value: Variant) -> Dictionary:
+	var destinations: Array = destinations_value if destinations_value is Array else []
+	var cells: Array[Vector2i] = []
+	var cell_keys := {}
+	var duplicate_cell := false
+	for destination in destinations:
+		if not (destination is Dictionary):
+			continue
+		var cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
+		var key := "%d,%d" % [cell.x, cell.y]
+		if cell_keys.has(key):
+			duplicate_cell = true
+			continue
+		cell_keys[key] = true
+		cells.append(cell)
+	var boundary_segment_count := 0
+	var internal_directed_edge_count := 0
+	for cell in cells:
+		var offsets := [
+			Vector2i(0, -1), Vector2i(-1, -1), Vector2i(-1, 0),
+			Vector2i(-1, 1), Vector2i(0, 1), Vector2i(1, 0),
+		] if cell.y % 2 == 0 else [
+			Vector2i(1, -1), Vector2i(0, -1), Vector2i(-1, 0),
+			Vector2i(0, 1), Vector2i(1, 1), Vector2i(1, 0),
+		]
+		for offset_value in offsets:
+			var neighbor: Vector2i = cell + offset_value
+			if cell_keys.has("%d,%d" % [neighbor.x, neighbor.y]):
+				internal_directed_edge_count += 1
+			else:
+				boundary_segment_count += 1
+	var internal_shared_edge_count := int(internal_directed_edge_count / 2)
+	return {
+		"duplicate_cell": duplicate_cell,
+		"boundary_segment_count": boundary_segment_count,
+		"internal_shared_edge_count": internal_shared_edge_count,
+		"edge_balance_exact": boundary_segment_count + internal_shared_edge_count * 2 == cells.size() * 6,
+	}
 
 func _assert_battle_system_frame_roundtrip(shell: Node, session) -> bool:
 	var window := get_window()
