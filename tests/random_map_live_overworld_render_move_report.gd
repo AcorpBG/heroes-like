@@ -503,6 +503,12 @@ func _fog_frontier_summary(overworld: Node) -> Dictionary:
 				and is_equal_approx(float(frontier.get("gradient_edge_alpha", 0.0)), 0.24)
 				and is_equal_approx(float(frontier.get("gradient_inner_alpha", -1.0)), 0.0)
 				and is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.16)
+				and int(frontier.get("contour_point_count", 0)) == 5
+				and is_equal_approx(float(frontier.get("contour_min_inset_factor", 0.0)), 0.018)
+				and is_equal_approx(float(frontier.get("contour_max_inset_factor", 0.0)), 0.060)
+				and bool(frontier.get("contour_endpoints_on_boundary", false))
+				and not bool(frontier.get("contour_hidden_side_intrusion", true))
+				and String(frontier.get("contour_variation_basis", "")) == "explored_tile_direction_only"
 				and String(frontier.get("draw_side", "")) == "explored_inward"
 				and String(frontier.get("neighbor_basis", "")) == "cardinal_explored_boolean_only"
 				and not bool(frontier.get("hidden_identity_sampled", true))
@@ -541,7 +547,7 @@ func _assert_fog_frontier_summary(summary: Dictionary, label: String) -> bool:
 		or int(summary.get("hidden_exact_count", 0)) != hidden_count
 		or int(summary.get("hidden_textured_shroud_exact_count", 0)) != hidden_count
 		or int(summary.get("invalid_direction_count", -1)) != 0
-		or summary.get("model_ids", []) != ["inward_vertex_gradient_cartographic_frontier"]
+		or summary.get("model_ids", []) != ["inward_gradient_irregular_cartographic_contour"]
 		or summary.get("hidden_shroud_model_ids", []) != ["continuous_identity_silent_textured_cartographic_veil"]
 		or summary.get("hidden_shroud_texture_paths", []) != ["res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"]
 		or summary.get("hidden_shroud_mapping_ids", []) != ["whole_board_normalized_once_clipped_by_hidden_cells"]
