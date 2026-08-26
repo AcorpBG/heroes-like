@@ -1911,20 +1911,55 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-physical-object-scale-separation-10184",
-    "title": "Overworld physical object-scale separation",
+    "id": "presentation-town-build-faction-crest-watermark-10184",
+    "title": "Town Build faction-crest watermark",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T12:51:44Z",
-    "updatedAt": "2026-08-26T13:15:15Z",
+    "startedAt": "2026-08-26T13:21:38Z",
+    "updatedAt": "2026-08-26T13:55:14Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the physical role separation: collectibles are compact, actors remain readable, structures gain presence, and towns are dominant without the rejected overlap. Exact map, route, interaction, session, and save authority remain unchanged."
+    "notes": "Completed the passive live-faction crest reuse in the default Build page with inspected 1280x720 and 1920x1080 captures and exact layout/focus/session authority preserved."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-town-build-faction-crest-watermark-20260826",
+      "title": "Town Build faction-crest watermark",
+      "sliceId": "presentation-town-build-faction-crest-watermark-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T13:55:14Z",
+      "updatedAt": "2026-08-26T13:55:14Z",
+      "latestFinding": "The default Town Build page now reuses the active faction's live crest as a subdued passive seal below construction controls while preserving exact management geometry, focus, gameplay, session, and save authority.",
+      "artifacts": [
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py",
+        ".artifacts/graphical_polish_audit/captures/active_town_1280x720.png",
+        ".artifacts/graphical_polish_audit/captures/active_town_1920x1080.png",
+        "/tmp/heroes-town-watermark-focused.BOHALP",
+        "/tmp/heroes-town-watermark-chain.Ncw3d2",
+        "/tmp/heroes-town-watermark-compat.cBXcM0",
+        "/tmp/heroes-town-watermark-final-editor.ZXSw9p",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "watermark_alpha": 0.22,
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "shared_live_faction_crest": true,
+        "high_contrast_hidden": true,
+        "management_focus_session_save_exact": true,
+        "focused_visual_and_crest_runtime_ok": true,
+        "keyboard_accessibility_core_ok": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "shared_skin_matrix_timeout_no_result": true
+      }
+    },
     {
       "id": "ux-overworld-physical-object-scale-separation-20260826",
       "title": "Overworld physical object-scale separation",
@@ -15086,14 +15121,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld physical object-scale separation is completed with inspected 1280x720 and 1920x1080 captures, exact world-authority proof, generated-map and compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Town Build faction-crest watermark is completed with inspected two-size captures, focused live crest/layout/authority proof, compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-physical-object-scale-separation-10184",
-  "currentSliceId": "ux-overworld-physical-object-scale-separation-10184",
-  "currentSliceNotes": "Completed the role-separated painted hierarchy while preserving exact logical footprints, routes, interactions, content, session/save authority, and Native RMG behavior.",
+  "currentSlice": "presentation-town-build-faction-crest-watermark-10184",
+  "currentSliceId": "presentation-town-build-faction-crest-watermark-10184",
+  "currentSliceNotes": "Completed the subdued passive Build-page crest reuse while preserving exact Town layout, controls, focus, gameplay, session, and save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "ux overworld physical object scale separation 10184",
-  "currentSliceUpdatedAt": "2026-08-26T13:15:15Z",
+  "currentSliceTitle": "presentation town build faction crest watermark 10184",
+  "currentSliceUpdatedAt": "2026-08-26T13:55:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20609,8 +20644,34 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The Overworld physical object-scale separation slice is completed and blockers are empty.",
+  "notes": "The Town Build faction-crest watermark slice is completed and blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-town-build-faction-crest-watermark-10184",
+      "title": "Town Build faction-crest watermark",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T13:21:38Z",
+      "updatedAt": "2026-08-26T13:55:14Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Fill the direct capture-backed empty lower region in the default Town Build page with a quiet reuse of the live faction crest, without adding another panel or changing controls.",
+      "completionCriteria": "Inspected 1280x720 and 1920x1080 Town captures show a subdued contained crest below Build controls; focused runtime proves exact crest reuse/passive behavior/high-contrast hiding and unchanged management/session authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new panel, text, action, tab/page, focus target, crest asset, faction/content identity, layout, Town stage art, economy/gameplay, session/save/schema, AI, battle, balance, or Native RMG change.",
+        "No animation/audio/VFX/shader, packaged Town interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current 1280x720 and 1920x1080 Town captures. Focused visual/crest runtime, keyboard/accessibility/core, static/editor, and bounded platform startup gates pass; the silent shared-skin matrix timeout is excluded as no-result.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
     {
       "id": "ux-overworld-physical-object-scale-separation-10184",
       "title": "Overworld physical object-scale separation",
@@ -103956,7 +104017,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_layered_cartographic_route_preview_completed",
+  "result": "town_build_faction_crest_watermark_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

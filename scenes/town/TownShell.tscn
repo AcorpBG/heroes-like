@@ -466,6 +466,16 @@ layout_mode = 2
 disabled = true
 text = "Select Construction"
 
+[node name="BuildFactionWatermark" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+self_modulate = Color(1, 1, 1, 0.22)
+expand_mode = 1
+stretch_mode = 5
+
 [node name="RecruitPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs"]
 unique_name_in_owner = true
 layout_mode = 2

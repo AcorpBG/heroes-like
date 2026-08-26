@@ -24,7 +24,32 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. `ux-overworld-physical-object-scale-separation-10184` is completed; select the next graphical-polish slice from direct current capture or playtest evidence.
+- Selected implementation slice: `presentation-town-build-faction-crest-watermark-10184` (in progress).
+
+## Town Build Faction-Crest Watermark
+
+id: `presentation-town-build-faction-crest-watermark-10184`
+
+Status: completed.
+
+Result:
+- the default Town Build page now reuses its active faction's live crest as a centered 22%-alpha seal in the flexible space below construction controls, with no new asset, panel, text, action, focus target, or minimum-size pressure;
+- fresh inspected 1280x720 and 1920x1080 Town captures show the subdued seal contained below the Build button while the scenic settlement remains dominant; high-contrast mode hides only the decorative copy;
+- focused Town/Battle visual and six-faction crest runtime, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The broader shared-skin matrix timed out silently and is not counted as evidence; packaged Town interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Implementation boundary:
+- use the existing active-faction crest texture as one subdued, centered, aspect-preserving watermark in the flexible unused area below the default Build page controls;
+- keep the ornament zero-minimum-size, noninteractive, unfocusable, tooltip-free, hidden when the crest is unavailable or high-contrast mode is active, and contained after the existing Build controls;
+- preserve the exact management-card height, tab titles/order/pages, command rail width, Town stage composition, focus/navigation, actions, economy, session, save, and route authority.
+
+Completion criteria:
+- fresh inspected Town captures at 1280x720 and 1920x1080 show a quiet faction anchor in the Build page's unused lower space without obscuring controls or reducing the scenic Town stage;
+- focused runtime proves the live watermark uses the same faction crest as the header, remains passive and contained below Build controls at both widths, hides in high-contrast mode, and leaves management/session authority unchanged;
+- Town visual/action/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new panel, text, action, tab/page, focus target, crest asset, faction/content identity, management-card or sidebar geometry, Town stage art, economy/gameplay, session/save/schema, AI, battle, balance, or Native RMG change;
+- no animation/audio/VFX/shader, packaged Town interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Physical Object-Scale Separation
 
