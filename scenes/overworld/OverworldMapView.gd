@@ -17,9 +17,12 @@ const TACTICAL_VISIBLE_TILE_SPAN := 16.0
 const TACTICAL_VISIBLE_TILE_AREA := TACTICAL_VISIBLE_TILE_SPAN * TACTICAL_VISIBLE_TILE_SPAN
 const MIN_TILE_EXTENT := 24.0
 const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0
-const UNEXPLORED_SHROUD_MODEL := "continuous_identity_silent_cartographic_veil"
+const UNEXPLORED_SHROUD_MODEL := "continuous_identity_silent_textured_cartographic_veil"
 const UNEXPLORED_SHROUD_BASE := Color(0.13, 0.16, 0.16, 0.16)
-const UNEXPLORED_SHROUD_LAYER_COUNT := 1
+const UNEXPLORED_SHROUD_LAYER_COUNT := 2
+const UNEXPLORED_SHROUD_TEXTURE_PATH := "res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"
+const UNEXPLORED_SHROUD_TEXTURE_SIZE := Vector2i(1024, 1024)
+const UNEXPLORED_SHROUD_TEXTURE_MODULATE := Color(0.80, 0.88, 0.82, 0.80)
 const EXPLORED_TERRAIN_GRID_ALPHA := 0.0
 const EXPLORED_TERRAIN_GRID_MODE := "fog_boundary_only"
 const EXPLORED_FOG_FRONTIER_MODEL := "inward_vertex_gradient_cartographic_frontier"
@@ -1316,6 +1319,14 @@ func _canvas_draw_texture_rect(
 ) -> void:
 	_current_draw_canvas_item().draw_texture_rect(texture, rect, tile, modulate, transpose)
 
+func _canvas_draw_texture_rect_region(
+	texture: Texture2D,
+	rect: Rect2,
+	source_rect: Rect2,
+	modulate: Color = Color(1.0, 1.0, 1.0, 1.0)
+) -> void:
+	_current_draw_canvas_item().draw_texture_rect_region(texture, rect, source_rect, modulate, false, true)
+
 func _canvas_draw_texture_rect_flipped(
 	texture: Texture2D,
 	rect: Rect2,
@@ -1556,10 +1567,26 @@ func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
 		return
 	_draw_explored_terrain_boundary(tile, rect)
 
-func _draw_unexplored_shroud(_tile: Vector2i, rect: Rect2) -> void:
+func _draw_unexplored_shroud(tile: Vector2i, rect: Rect2) -> void:
 	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return
 	_canvas_draw_rect(rect, UNEXPLORED_SHROUD_BASE, true)
+	var texture = _unexplored_shroud_texture()
+	if texture is Texture2D:
+		_canvas_draw_texture_rect_region(texture, rect, _unexplored_shroud_source_rect(tile), UNEXPLORED_SHROUD_TEXTURE_MODULATE)
+
+func _unexplored_shroud_texture():
+	var texture = _terrain_art_texture(UNEXPLORED_SHROUD_TEXTURE_PATH)
+	if texture is Texture2D and Vector2i(texture.get_size()) == UNEXPLORED_SHROUD_TEXTURE_SIZE:
+		return texture
+	return null
+
+func _unexplored_shroud_source_rect(tile: Vector2i) -> Rect2:
+	var normalized_size := Vector2(
+		float(UNEXPLORED_SHROUD_TEXTURE_SIZE.x) / float(maxi(_map_size.x, 1)),
+		float(UNEXPLORED_SHROUD_TEXTURE_SIZE.y) / float(maxi(_map_size.y, 1))
+	)
+	return Rect2(Vector2(tile) * normalized_size, normalized_size)
 
 func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> bool:
 	if not _terrain_art_can_be_primary(terrain):
@@ -5715,6 +5742,8 @@ func _town_footprint_cell_payloads(entry: Vector2i) -> Array:
 
 func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> Dictionary:
 	if not explored:
+		var unexplored_texture = _unexplored_shroud_texture()
+		var unexplored_texture_loaded := unexplored_texture is Texture2D
 		return {
 			"terrain": "",
 			"state": "unexplored_hidden",
@@ -5738,6 +5767,13 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 			"unexplored_shroud_contained": true,
 			"unexplored_shroud_seed_basis": "none_contiguous",
 			"unexplored_shroud_repeated_stamps": false,
+			"unexplored_shroud_texture_loaded": unexplored_texture_loaded,
+			"unexplored_shroud_texture_path": UNEXPLORED_SHROUD_TEXTURE_PATH if unexplored_texture_loaded else "",
+			"unexplored_shroud_texture_size": {"x": UNEXPLORED_SHROUD_TEXTURE_SIZE.x, "y": UNEXPLORED_SHROUD_TEXTURE_SIZE.y},
+			"unexplored_shroud_texture_modulate_alpha": UNEXPLORED_SHROUD_TEXTURE_MODULATE.a,
+			"unexplored_shroud_texture_mapping": "whole_board_normalized_once_clipped_by_hidden_cells",
+			"unexplored_shroud_texture_source_rect": _rect_payload(_unexplored_shroud_source_rect(tile)),
+			"unexplored_shroud_texture_terrain_identity_sampled": false,
 			"fog_boundary_alpha": 0.0,
 			"fog_frontier": {
 				"model": EXPLORED_FOG_FRONTIER_MODEL,

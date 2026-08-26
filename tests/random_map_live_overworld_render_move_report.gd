@@ -426,8 +426,13 @@ func _fog_frontier_summary(overworld: Node) -> Dictionary:
 	var direction_observation_count := 0
 	var softened_corner_count := 0
 	var hidden_exact_count := 0
+	var hidden_textured_shroud_exact_count := 0
 	var invalid_direction_count := 0
 	var model_ids: Dictionary = {}
+	var hidden_shroud_model_ids: Dictionary = {}
+	var hidden_shroud_texture_paths: Dictionary = {}
+	var hidden_shroud_mapping_ids: Dictionary = {}
+	var expected_source_size := Vector2(1024.0 / float(map_size.x), 1024.0 / float(map_size.y))
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			var tile := Vector2i(x, y)
@@ -436,6 +441,10 @@ func _fog_frontier_summary(overworld: Node) -> Dictionary:
 			var frontier: Dictionary = terrain.get("fog_frontier", {}) if terrain.get("fog_frontier", {}) is Dictionary else {}
 			if not OverworldRules.is_tile_explored(session, x, y):
 				hidden_tile_count += 1
+				var source_rect: Dictionary = terrain.get("unexplored_shroud_texture_source_rect", {}) if terrain.get("unexplored_shroud_texture_source_rect", {}) is Dictionary else {}
+				hidden_shroud_model_ids[String(terrain.get("unexplored_shroud_model", ""))] = true
+				hidden_shroud_texture_paths[String(terrain.get("unexplored_shroud_texture_path", ""))] = true
+				hidden_shroud_mapping_ids[String(terrain.get("unexplored_shroud_texture_mapping", ""))] = true
 				if (
 					bool(terrain.get("unexplored_hidden", false))
 					and String(terrain.get("terrain", "leaked")) == ""
@@ -443,6 +452,17 @@ func _fog_frontier_summary(overworld: Node) -> Dictionary:
 					and not bool(frontier.get("hidden_identity_sampled", true))
 				):
 					hidden_exact_count += 1
+				if (
+					bool(terrain.get("unexplored_shroud_texture_loaded", false))
+					and terrain.get("unexplored_shroud_texture_size", {}) == {"x": 1024, "y": 1024}
+					and not bool(terrain.get("unexplored_shroud_repeated_stamps", true))
+					and not bool(terrain.get("unexplored_shroud_texture_terrain_identity_sampled", true))
+					and is_equal_approx(float(source_rect.get("x", -1.0)), float(x) * expected_source_size.x)
+					and is_equal_approx(float(source_rect.get("y", -1.0)), float(y) * expected_source_size.y)
+					and is_equal_approx(float(source_rect.get("width", -1.0)), expected_source_size.x)
+					and is_equal_approx(float(source_rect.get("height", -1.0)), expected_source_size.y)
+				):
+					hidden_textured_shroud_exact_count += 1
 				continue
 			explored_tile_count += 1
 			var directions: Array = frontier.get("directions", []) if frontier.get("directions", []) is Array else []
@@ -481,8 +501,12 @@ func _fog_frontier_summary(overworld: Node) -> Dictionary:
 		"direction_observation_count": direction_observation_count,
 		"softened_corner_count": softened_corner_count,
 		"hidden_exact_count": hidden_exact_count,
+		"hidden_textured_shroud_exact_count": hidden_textured_shroud_exact_count,
 		"invalid_direction_count": invalid_direction_count,
 		"model_ids": model_ids.keys(),
+		"hidden_shroud_model_ids": hidden_shroud_model_ids.keys(),
+		"hidden_shroud_texture_paths": hidden_shroud_texture_paths.keys(),
+		"hidden_shroud_mapping_ids": hidden_shroud_mapping_ids.keys(),
 	}
 
 func _assert_fog_frontier_summary(summary: Dictionary, label: String) -> bool:
@@ -498,8 +522,12 @@ func _assert_fog_frontier_summary(summary: Dictionary, label: String) -> bool:
 		or int(summary.get("direction_observation_count", 0)) < active_count
 		or int(summary.get("softened_corner_count", 0)) <= 0
 		or int(summary.get("hidden_exact_count", 0)) != hidden_count
+		or int(summary.get("hidden_textured_shroud_exact_count", 0)) != hidden_count
 		or int(summary.get("invalid_direction_count", -1)) != 0
 		or summary.get("model_ids", []) != ["inward_vertex_gradient_cartographic_frontier"]
+		or summary.get("hidden_shroud_model_ids", []) != ["continuous_identity_silent_textured_cartographic_veil"]
+		or summary.get("hidden_shroud_texture_paths", []) != ["res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"]
+		or summary.get("hidden_shroud_mapping_ids", []) != ["whole_board_normalized_once_clipped_by_hidden_cells"]
 	):
 		_fail("%s generated natural-fog frontier contract changed: %s" % [label, JSON.stringify(summary)])
 		return false

@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-active-hero-command-marker-10184",
-    "title": "Overworld active hero command marker",
+    "id": "ux-overworld-textured-cartographic-unexplored-shroud-10184",
+    "title": "Overworld textured cartographic unexplored shroud",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T23:12:00Z",
-    "updatedAt": "2026-08-25T23:38:59Z",
-    "completedAt": "2026-08-25T23:38:59Z",
+    "startedAt": "2026-08-25T23:43:50Z",
+    "updatedAt": "2026-08-25T23:59:42Z",
+    "completedAt": "2026-08-25T23:59:42Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct inspection. The active hero now uses antialiased open lateral brass command wings and a compact notched ground tick instead of the former continuous rectangular cage. Two-width captures, focused and compatibility runtime, static/editor, and bounded platform startup gates pass; gameplay authority is unchanged."
+    "notes": "Completed from direct 1280x720 and 1920x1080 capture inspection. One original subtle whole-board cartographic texture replaces the flat hidden void without changing fog secrecy, reveal behavior, session/save, or gameplay authority; focused, compatibility, static/editor, and bounded platform startup gates pass."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14377,14 +14377,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld active-hero command marker polish is completed. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld textured cartographic unexplored-shroud polish is completed. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-active-hero-command-marker-10184",
-  "currentSliceId": "ux-overworld-active-hero-command-marker-10184",
-  "currentSliceNotes": "Replace only the active hero's full rectangular cage with a contained fill-free command marker while preserving focus, selection, input, accessibility, and gameplay authority.",
+  "currentSlice": "ux-overworld-textured-cartographic-unexplored-shroud-10184",
+  "currentSliceId": "ux-overworld-textured-cartographic-unexplored-shroud-10184",
+  "currentSliceNotes": "One original subtle normalized board-space texture now renders only in authoritative unexplored cells while exact fog secrecy, reveal, session, save, and gameplay authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld active hero command marker",
-  "currentSliceUpdatedAt": "2026-08-25T23:38:59Z",
+  "currentSliceTitle": "Overworld textured cartographic unexplored shroud",
+  "currentSliceUpdatedAt": "2026-08-25T23:59:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -101991,6 +101991,50 @@
       "notes": "Completed the presentation-only organic terrain-edge correction. Direct inspected River Pass 1280x720 and 1920x1080 X11 captures show a soft irregular water/grass shoreline; generated before/after captures show badlands, dirt, rough, swamp, and grass borders with shallow feathered silhouettes instead of pure right-angle strips. All 202 generated transition tiles report the exact deterministic two-band layered_feathered_organic_intrusion model before and after movement. Ninefold proves generic cardinal/corner ownership plus enabled exact self-contained H3MapEd/source-frame bypass and whole session authority. Normal tactical static rendering remained non-regressed at 8655 usec versus the prior 10501 usec control. Generated movement/save, full-route, input ownership, active focus, accessibility, and core gates pass. Repository validation, Python compile, JSON, diff-check, exact-owner and generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The known unrelated broad visual-smoke objective-header pixel oracle and packaged Overworld interaction remain unclaimed; no terrain/gameplay/RMG data changed.",
       "blockedReason": null,
       "completedAt": "2026-08-25T18:58:02Z"
+    },
+    {
+      "id": "ux-overworld-textured-cartographic-unexplored-shroud-10184",
+      "title": "Overworld textured cartographic unexplored shroud",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-25T23:59:42Z",
+      "startedAt": "2026-08-25T23:43:50Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/runtime/fog/unexplored_cartographic_veil.png",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the flat near-black unexplored field with one subtle original continuous cartographic material without revealing hidden map identity.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 River Pass captures show an intentional mysterious unexplored field with no repeated tile stamps, seams, recognizable geography, or hidden-content leakage; focused runtime proves one exact 1024x1024 original texture sampled in normalized whole-board coordinates only inside authoritative unexplored cells, exact reveal transition and unchanged fog/session/save authority; authored/generated Overworld visual, movement/route/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No fog-of-war, visibility radius, exploration, scouting, terrain, road, object, hero, encounter, route, selection, movement, interaction, camera, content, session, save/schema, AI, balance, generated placement, or Native RMG change.",
+        "No terrain repaint, object/hero/town asset or scale, shell/UI layout, animation/audio/VFX, theme, font, or UI-scale change.",
+        "No packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct inspection. The original 1024x1024 veil is sampled in normalized whole-board coordinates and clipped by exact hidden cells, so it has no per-tile repetition or content lookup. River Pass captures at 1280x720 and 1920x1080 show intentional subtle cartographic material instead of a black void. The authored focused owner, generated 36x36 reveal/movement/save owner, full-route movement, active keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-25T23:59:42Z",
+      "validation": {
+        "focusedArtifact": "/tmp/heroes-textured-shroud-focused.FcSACc",
+        "captureArtifact": "/tmp/heroes-textured-shroud-capture.CONgU0",
+        "generatedArtifact": "/tmp/heroes-textured-shroud-generated.BltHdT",
+        "compatibilityArtifact": "/tmp/heroes-textured-shroud-compat.X58J5E",
+        "captureWidths": [1280, 1920],
+        "textureSize": [1024, 1024],
+        "generatedHiddenBefore": 1271,
+        "generatedHiddenAfter": 1264,
+        "hiddenTextureExactBefore": 1271,
+        "hiddenTextureExactAfter": 1264,
+        "sessionSaveAuthorityExact": true,
+        "linuxExportHeadlessStartup": true,
+        "windowsExportWineStartup": true,
+        "packagedOverworldInteractionClaimed": false
+      }
     }
   ],
   "project": "heroes-like",
@@ -102001,7 +102045,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Implement and validate the selected visual-only multi-footprint object scale correction; broader graphical polish and product gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102432,7 +102476,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_active_hero_command_marker_completed",
+  "result": "overworld_textured_cartographic_unexplored_shroud_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102533,9 +102577,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld physical object proportion rebalance is in progress from a directly inspected shipped visual defect.",
+  "summary": "The Overworld textured cartographic unexplored-shroud polish is completed with focused, compatibility, static/editor, and bounded platform-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T22:45:14Z",
+  "updatedAt": "2026-08-25T23:59:42Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
