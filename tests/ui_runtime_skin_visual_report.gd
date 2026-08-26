@@ -301,6 +301,7 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 	var authority_before: Dictionary = session.to_dict()
 	var original_tab := tabs.current_tab
 	var expected_titles := ["Order", "Focus", "Spell", "Timing"]
+	var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles)
 	var titles: Array[String] = []
 	var heights: Array[float] = []
 	var pages_contained := true
@@ -333,6 +334,7 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 	var authority_exact := session.to_dict() == authority_before
 	var ok := authored_height_exact \
 		and titles == expected_titles \
+		and bool(tab_plaque_contract.get("ok", false)) \
 		and authority_exact \
 		and (compact_geometry_exact if compact else wide_geometry_exact)
 	return {
@@ -340,6 +342,7 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 		"compact": compact,
 		"authored_height_exact": authored_height_exact,
 		"titles": titles,
+		"tab_plaques": tab_plaque_contract,
 		"heights": heights,
 		"sidebar_visible": sidebar_shell.is_visible_in_tree(),
 		"sidebar_rect": sidebar_rect,
@@ -370,6 +373,8 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 	var session = SessionState.active_session
 	var authority_before: Dictionary = session.to_dict()
 	var original_tab := tabs.current_tab
+	var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]
+	var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles)
 	var titles: Array[String] = []
 	var heights: Array[float] = []
 	var pages_contained := true
@@ -420,12 +425,12 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var authority_exact := session.to_dict() == authority_before
-	var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]
 	return {
-		"ok": authored_height_exact and geometry_exact and titles == expected_titles and authority_exact,
+		"ok": authored_height_exact and geometry_exact and titles == expected_titles and bool(tab_plaque_contract.get("ok", false)) and authority_exact,
 		"compact": compact,
 		"authored_height_exact": authored_height_exact,
 		"titles": titles,
+		"tab_plaques": tab_plaque_contract,
 		"heights": heights,
 		"sidebar_rect": sidebar_rect,
 		"command_rect": command_rect,
@@ -439,6 +444,91 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 		"logistics_end_reachable": logistics_end_reachable,
 		"remaining_rail_gutter": remaining_rail_gutter,
 		"authority_exact": authority_exact,
+	}
+
+func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> Dictionary:
+	var current_tab_before := tabs.current_tab
+	var tab_bar := tabs.get_tab_bar()
+	if tab_bar == null or tabs.get_tab_count() != expected_titles.size():
+		return {"ok": false, "missing_tab_bar": tab_bar == null, "tab_count": tabs.get_tab_count()}
+	var titles: Array[String] = []
+	var rects: Array[Rect2] = []
+	var live_fit_required := tabs.is_visible_in_tree()
+	var contained := true
+	var ordered_without_overlap := true
+	for index in range(tabs.get_tab_count()):
+		titles.append(tabs.get_tab_title(index))
+		var tab_rect: Rect2 = tab_bar.get_tab_rect(index)
+		rects.append(tab_rect)
+		contained = contained \
+			and tab_rect.size.x > 0.0 \
+			and tab_rect.size.y > 0.0 \
+			and tab_rect.position.x >= -0.5 \
+			and tab_rect.position.y >= -0.5 \
+			and tab_rect.end.x <= tab_bar.size.x + 0.5 \
+			and tab_rect.end.y <= tab_bar.size.y + 0.5
+		if index > 0:
+			ordered_without_overlap = ordered_without_overlap and rects[index - 1].end.x <= tab_rect.position.x + 0.5
+	var expected_paths := {
+		"tab_selected": "res://art/ui/runtime/shared/button_primary_pressed.png",
+		"tab_hovered": "res://art/ui/runtime/shared/button_secondary_hover.png",
+		"tab_unselected": "res://art/ui/runtime/shared/button_secondary_normal.png",
+		"tab_disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png",
+	}
+	var style_paths := {}
+	var styles_exact := true
+	for style_name_value in expected_paths:
+		var style_name := String(style_name_value)
+		var style := tabs.get_theme_stylebox(style_name)
+		if not (style is StyleBoxTexture):
+			styles_exact = false
+			style_paths[style_name] = "<not texture stylebox>"
+			continue
+		var texture_style := style as StyleBoxTexture
+		var texture := texture_style.texture
+		var texture_path := texture.resource_path if texture != null else ""
+		style_paths[style_name] = texture_path
+		styles_exact = styles_exact \
+			and texture_path == String(expected_paths[style_name]) \
+			and is_equal_approx(texture_style.texture_margin_left, 6.0) \
+			and is_equal_approx(texture_style.texture_margin_top, 6.0) \
+			and is_equal_approx(texture_style.texture_margin_right, 6.0) \
+			and is_equal_approx(texture_style.texture_margin_bottom, 6.0) \
+			and is_equal_approx(texture_style.content_margin_left, 1.0) \
+			and is_equal_approx(texture_style.content_margin_top, 2.0) \
+			and is_equal_approx(texture_style.content_margin_right, 1.0) \
+			and is_equal_approx(texture_style.content_margin_bottom, 2.0)
+		if style_name == "tab_disabled":
+			styles_exact = styles_exact and texture_style.modulate_color.is_equal_approx(Color(0.72, 0.72, 0.72, 0.76))
+	var focus := tabs.get_theme_stylebox("tab_focus")
+	var focus_exact := focus is StyleBoxFlat
+	if focus_exact:
+		var focus_flat := focus as StyleBoxFlat
+		focus_exact = focus_flat.bg_color.a <= 0.001 \
+			and focus_flat.border_color.is_equal_approx(Color(0.97, 0.88, 0.61, 1.0)) \
+			and focus_flat.border_width_left == 2 \
+			and focus_flat.border_width_top == 2 \
+			and focus_flat.border_width_right == 2 \
+			and focus_flat.border_width_bottom == 2 \
+			and focus_flat.corner_radius_top_left == 6 \
+			and focus_flat.corner_radius_top_right == 6 \
+			and focus_flat.corner_radius_bottom_left == 6 \
+			and focus_flat.corner_radius_bottom_right == 6
+	return {
+		"ok": titles == expected_titles \
+			and styles_exact \
+			and focus_exact \
+			and (not live_fit_required or (contained and ordered_without_overlap)) \
+			and tabs.current_tab == current_tab_before,
+		"titles": titles,
+		"style_paths": style_paths,
+		"focus_exact": focus_exact,
+		"tab_rects": rects,
+		"live_fit_required": live_fit_required,
+		"contained": contained,
+		"ordered_without_overlap": ordered_without_overlap,
+		"tab_bar_size": tab_bar.size,
+		"current_tab_unchanged": tabs.current_tab == current_tab_before,
 	}
 
 func _prepare_session(shell_id: String) -> void:

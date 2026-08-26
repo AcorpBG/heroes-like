@@ -19507,6 +19507,169 @@ def validate_main_menu_item_list_selection_inlay(errors: list[str]) -> None:
                 ensure(forbidden_token not in helper_body, errors, f"Main Menu ItemList focused {label} observer must remain source-independent and passive: {forbidden_token}")
 
 
+def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
+    visual_kit_path = ROOT / "scripts" / "ui" / "FrontierVisualKit.gd"
+    visual_report_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
+    town_path = ROOT / "scenes" / "town" / "TownShell.gd"
+    battle_path = ROOT / "scenes" / "battle" / "BattleShell.gd"
+    outcome_path = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
+    required_paths = (
+        visual_kit_path,
+        visual_report_path,
+        MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH,
+        town_path,
+        battle_path,
+        outcome_path,
+        MAIN_MENU_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing shared cartographic tab-plaque owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def gd_block(text: str, prefix: str) -> str:
+        start = text.find(prefix)
+        if start < 0:
+            return ""
+        end = text.find("\nstatic func ", start + 1)
+        if not prefix.startswith("static func "):
+            end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    visual_text = visual_kit_path.read_text(encoding="utf-8")
+    report_text = visual_report_path.read_text(encoding="utf-8")
+    smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const TAB_PLAQUE_MODEL := "shared_imported_rectangular_cartographic_plaque"',
+        "const TAB_PLAQUE_TEXTURE_MARGIN := 6",
+        "const TAB_PLAQUE_CORNER_RADIUS := 6",
+        "const TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL := 1.0",
+        "const TAB_PLAQUE_CONTENT_MARGIN_VERTICAL := 2.0",
+        'const TAB_PLAQUE_SELECTED_PATH := "res://art/ui/runtime/shared/button_primary_pressed.png"',
+        'const TAB_PLAQUE_HOVER_PATH := "res://art/ui/runtime/shared/button_secondary_hover.png"',
+        'const TAB_PLAQUE_UNSELECTED_PATH := "res://art/ui/runtime/shared/button_secondary_normal.png"',
+        'const TAB_PLAQUE_DISABLED_PATH := "res://art/ui/runtime/shared/button_secondary_disabled.png"',
+    ):
+        ensure(visual_text.count(required_token) == 1, errors, f"Shared tab plaques must own one exact source constant: {required_token}")
+    for asset in (
+        ROOT / "art" / "ui" / "runtime" / "shared" / "button_primary_pressed.png",
+        ROOT / "art" / "ui" / "runtime" / "shared" / "button_secondary_hover.png",
+        ROOT / "art" / "ui" / "runtime" / "shared" / "button_secondary_normal.png",
+        ROOT / "art" / "ui" / "runtime" / "shared" / "button_secondary_disabled.png",
+    ):
+        ensure(asset.exists(), errors, f"Shared tab plaque asset is missing: {asset.relative_to(ROOT)}")
+
+    apply_body = gd_block(visual_text, "static func apply_tab_container(")
+    style_body = gd_block(visual_text, "static func _tab_plaque_style(")
+    focus_body = gd_block(visual_text, "static func _tab_plaque_focus_style(")
+    ensure(apply_body != "" and style_body != "" and focus_body != "", errors, "Could not isolate shared TabContainer plaque source helpers")
+    if apply_body:
+        ordered_tokens = (
+            'tabs.add_theme_stylebox_override("panel", panel_style(tone, 18))',
+            'tabs.add_theme_stylebox_override("tab_selected", _tab_plaque_style(TAB_PLAQUE_SELECTED_PATH, "gold"))',
+            'tabs.add_theme_stylebox_override("tab_hovered", _tab_plaque_style(TAB_PLAQUE_HOVER_PATH, "teal"))',
+            'tabs.add_theme_stylebox_override("tab_unselected", _tab_plaque_style(TAB_PLAQUE_UNSELECTED_PATH, "ink"))',
+            'tabs.add_theme_stylebox_override("tab_disabled", _tab_plaque_style(TAB_PLAQUE_DISABLED_PATH, "ink", true))',
+            'tabs.add_theme_stylebox_override("tab_focus", _tab_plaque_focus_style())',
+            'tabs.add_theme_color_override("font_selected_color", text_color("title"))',
+            'tabs.add_theme_color_override("font_unselected_color", text_color("muted"))',
+            'tabs.add_theme_color_override("font_hovered_color", text_color("body"))',
+            'tabs.add_theme_color_override("font_disabled_color", text_color("muted").darkened(0.28))',
+        )
+        indexes = [apply_body.find(token) for token in ordered_tokens]
+        ensure(all(index >= 0 for index in indexes) and indexes == sorted(indexes), errors, "Shared tab plaques must apply panel, four states, focus, then font states in exact order")
+        for forbidden in ("current_tab =", "set_tab_", "move_child", "reparent", "custom_minimum_size", "focus_neighbor", "grab_focus", "Input.", "await ", "call_deferred"):
+            ensure(forbidden not in apply_body, errors, f"Shared tab-plaque application must remain presentation-only: {forbidden}")
+    if style_body:
+        for required_token in (
+            "if high_contrast_enabled() or not ResourceLoader.exists(path):",
+            "style = panel_style(fallback_tone, TAB_PLAQUE_CORNER_RADIUS)",
+            "style = texture_panel_style(path, fallback_tone, TAB_PLAQUE_TEXTURE_MARGIN, int(TAB_PLAQUE_CONTENT_MARGIN_VERTICAL))",
+            "style.content_margin_left = TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL",
+            "style.content_margin_right = TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL",
+            "style.content_margin_top = TAB_PLAQUE_CONTENT_MARGIN_VERTICAL",
+            "style.content_margin_bottom = TAB_PLAQUE_CONTENT_MARGIN_VERTICAL",
+            "if disabled and style is StyleBoxTexture:",
+            "(style as StyleBoxTexture).modulate_color = Color(0.72, 0.72, 0.72, 0.76)",
+        ):
+            ensure(required_token in style_body, errors, f"Shared tab plaque style helper is missing exact fallback/geometry token: {required_token}")
+    if focus_body:
+        for required_token in (
+            "style.bg_color = Color.TRANSPARENT",
+            'style.border_color = text_color("gold")',
+            "style.set_border_width_all(2)",
+            "style.set_corner_radius_all(TAB_PLAQUE_CORNER_RADIUS)",
+        ):
+            ensure(required_token in focus_body, errors, f"Shared tab focus helper is missing exact restrained focus token: {required_token}")
+    for helper_body, label in ((style_body, "state"), (focus_body, "focus")):
+        for forbidden in ("TabContainer", "TabBar", "current_tab", "set_tab_", "Input.", "SettingsService", "SaveService", "SessionState", "AppRouter", "await ", "call_deferred"):
+            ensure(forbidden not in helper_body, errors, f"Shared tab plaque {label} style helper must remain detached: {forbidden}")
+
+    for path, token, label in (
+        (town_path, "FrontierVisualKit.apply_tab_container(_management_tabs)", "Town"),
+        (battle_path, "FrontierVisualKit.apply_tab_container(_battle_tabs)", "Battle"),
+        (outcome_path, "FrontierVisualKit.apply_tab_container(_recap_tabs)", "Outcome"),
+        (MAIN_MENU_SCRIPT_PATH, 'FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")', "Main Menu high-contrast owner"),
+    ):
+        owner_text = path.read_text(encoding="utf-8")
+        ensure(owner_text.count(token) == 1, errors, f"{label} must apply the shared TabContainer presentation exactly once")
+
+    for required_token in (
+        'var expected_titles := ["Order", "Focus", "Spell", "Timing"]',
+        'var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]',
+        "var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles)",
+        'and bool(tab_plaque_contract.get("ok", false))',
+        '"tab_plaques": tab_plaque_contract',
+        "func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> Dictionary:",
+        "var current_tab_before := tabs.current_tab",
+        "var tab_bar := tabs.get_tab_bar()",
+        "var live_fit_required := tabs.is_visible_in_tree()",
+        "var tab_rect: Rect2 = tab_bar.get_tab_rect(index)",
+        "tab_rect.end.x <= tab_bar.size.x + 0.5",
+        "ordered_without_overlap = ordered_without_overlap and rects[index - 1].end.x <= tab_rect.position.x + 0.5",
+        '"tab_selected": "res://art/ui/runtime/shared/button_primary_pressed.png"',
+        '"tab_hovered": "res://art/ui/runtime/shared/button_secondary_hover.png"',
+        '"tab_unselected": "res://art/ui/runtime/shared/button_secondary_normal.png"',
+        '"tab_disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png"',
+        "texture_style.modulate_color.is_equal_approx(Color(0.72, 0.72, 0.72, 0.76))",
+        "focus_flat.border_color.is_equal_approx(Color(0.97, 0.88, 0.61, 1.0))",
+        "and (not live_fit_required or (contained and ordered_without_overlap))",
+        "and tabs.current_tab == current_tab_before",
+    ):
+        ensure(required_token in report_text, errors, f"Town/Battle shared tab focused proof is missing exact token: {required_token}")
+    report_helper = gd_block(report_text, "func _shared_tab_plaque_contract(")
+    ensure(report_helper != "", errors, "Could not isolate Town/Battle shared tab focused observer")
+    for forbidden in ("FrontierVisualKit", "apply_tab_container", "add_theme_", "remove_theme_", "set_tab_", "grab_focus", "SettingsService", "SaveService", "SessionState", "sort(", "erase(", "await "):
+        ensure(forbidden not in report_helper, errors, f"Town/Battle shared tab focused observer must remain passive and source-independent: {forbidden}")
+    ensure(re.search(r"tabs\.current_tab\s*=(?!=)", report_helper) is None, errors, "Town/Battle shared tab focused observer must not mutate the current tab")
+
+    for required_token in (
+        'shell.get_node_or_null("%RecapTabs") as TabContainer',
+        '["Progress", "Arc", "Carry", "After", "Journal"]',
+        "func _shared_tab_plaque_standard_exact(tabs: TabContainer, expected_titles: Array) -> bool:",
+        "var current_tab_before := tabs.current_tab",
+        "var tab_rect: Rect2 = tab_bar.get_tab_rect(index)",
+        "or tab_rect.end.x > tab_bar.size.x + 0.5",
+        '"tab_selected": "res://art/ui/runtime/shared/button_primary_pressed.png"',
+        '"tab_hovered": "res://art/ui/runtime/shared/button_secondary_hover.png"',
+        '"tab_unselected": "res://art/ui/runtime/shared/button_secondary_normal.png"',
+        '"tab_disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png"',
+        "func _shared_tab_plaque_high_contrast_exact(tabs: TabContainer) -> bool:",
+        'for style_name in ["tab_selected", "tab_hovered", "tab_unselected", "tab_disabled"]:',
+        "if not (style is StyleBoxFlat):",
+        "focus_flat.border_color.is_equal_approx(Color(1.0, 0.91, 0.32, 1.0))",
+        "contrast_menu_tabs == null or not _shared_tab_plaque_high_contrast_exact(contrast_menu_tabs)",
+    ):
+        ensure(required_token in smoke_text, errors, f"Outcome/high-contrast shared tab focused proof is missing exact token: {required_token}")
+    standard_helper = gd_block(smoke_text, "func _shared_tab_plaque_standard_exact(")
+    contrast_helper = gd_block(smoke_text, "func _shared_tab_plaque_high_contrast_exact(")
+    ensure(standard_helper != "" and contrast_helper != "", errors, "Could not isolate Outcome/high-contrast shared tab observers")
+    for helper_body, label in ((standard_helper, "standard"), (contrast_helper, "high-contrast")):
+        for forbidden in ("FrontierVisualKit", "apply_tab_container", "add_theme_", "remove_theme_", "set_tab_", "grab_focus", "SettingsService", "SaveService", "SessionState", "sort(", "erase(", "await "):
+            ensure(forbidden not in helper_body, errors, f"Outcome shared tab {label} observer must remain passive and source-independent: {forbidden}")
+        ensure(re.search(r"tabs\.current_tab\s*=(?!=)", helper_body) is None, errors, f"Outcome shared tab {label} observer must not mutate the current tab")
+
+
 def validate_main_menu_field_manual_reference_card(errors: list[str]) -> None:
     def gd_function_block(text: str, name: str) -> str:
         start = text.find(f"func {name}(")
@@ -67414,6 +67577,7 @@ def main() -> int:
     validate_main_menu_first_view(errors)
     validate_main_menu_stage_dock_cartography_surface(errors)
     validate_main_menu_item_list_selection_inlay(errors)
+    validate_shared_cartographic_tab_plaques(errors)
     validate_main_menu_field_manual_reference_card(errors)
     validate_main_menu_empty_save_scenic_card(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)

@@ -1911,20 +1911,60 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-main-menu-item-list-selection-inlay-10184",
-    "title": "Main Menu item-list selection inlay",
+    "id": "presentation-shared-cartographic-tab-plaques-10184",
+    "title": "Shared cartographic tab plaques",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T04:50:31Z",
-    "updatedAt": "2026-08-26T05:20:34Z",
+    "startedAt": "2026-08-26T05:25:39Z",
+    "updatedAt": "2026-08-26T05:58:41Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from fresh inspected 1280x720 and 1920x1080 captures: Campaign, Skirmish, Save, and Field Manual selections now use one compact enamel-and-gold row language while exact list/menu authority and compatibility gates remain green."
+    "notes": "Completed with inspected two-width Town and Outcome plus visible wide-Battle captures, exact shared asset-backed and high-contrast style proof, unchanged tab/page/game authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup gates."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-shared-cartographic-tab-plaques-20260826",
+      "title": "Shared cartographic tab plaques",
+      "sliceId": "presentation-shared-cartographic-tab-plaques-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T05:58:41Z",
+      "updatedAt": "2026-08-26T05:58:41Z",
+      "latestFinding": "Town management, Battle tactical, Outcome recap, and the hidden Main Menu tab owner now use one compact rectangular cartographic plaque language backed by existing imported button-state assets, with exact texture-free high-contrast fallbacks; all visible labels fit and exact tab/page/focus/settings/save/route/session authority remains unchanged.",
+      "artifacts": [
+        "scripts/ui/FrontierVisualKit.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-shared-tab-focused.RRUQPZ",
+        "/tmp/heroes-shared-tab-outcome-runtime.v3aTm1",
+        "/tmp/heroes-shared-tab-outcome-captures.UahpdS",
+        "/tmp/heroes-shared-tab-compat.tgf4rs",
+        "/tmp/heroes-shared-tab-final-static.Ty5fgO",
+        "/tmp/heroes-shared-tab-linux-package.IAJAXh",
+        "/tmp/heroes-shared-tab-windows-package.3CuxdO",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "shared_tab_owners": 4,
+        "standard_texture_states": 4,
+        "texture_margin_px": 6,
+        "content_margin_horizontal_px": 1,
+        "content_margin_vertical_px": 2,
+        "visible_tab_labels_contained": true,
+        "compact_battle_sidebar_intentionally_hidden": true,
+        "tab_and_game_authority_unchanged": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "nonClaims": [
+        "No packaged Town/Battle/Outcome tab interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-main-menu-item-list-selection-inlay-20260826",
       "title": "Main Menu item-list selection inlay",
@@ -14729,14 +14769,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu item-list selection inlay is completed; no implementation slice is currently selected.",
+  "currentNotes": "The shared cartographic tab-plaque polish is completed; no implementation slice is currently selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-main-menu-item-list-selection-inlay-10184",
-  "currentSliceId": "presentation-main-menu-item-list-selection-inlay-10184",
-  "currentSliceNotes": "Replace only default Main Menu ItemList selected/hover/focus rows with compact enamel-and-gold inlays while preserving exact list and menu authority.",
+  "currentSlice": "presentation-shared-cartographic-tab-plaques-10184",
+  "currentSliceId": "presentation-shared-cartographic-tab-plaques-10184",
+  "currentSliceNotes": "Replace only shared rounded flat tab capsules with compact existing-asset cartographic plaques while preserving exact tab/page/focus/action and game authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu item-list selection inlay",
-  "currentSliceUpdatedAt": "2026-08-26T05:20:34Z",
+  "currentSliceTitle": "Shared cartographic tab plaques",
+  "currentSliceUpdatedAt": "2026-08-26T05:58:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20251,9 +20291,36 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; preserve completed Main Menu list and menu authority.",
-  "notes": "The Main Menu item-list selection inlay slice is completed; blockers are empty and no next slice is selected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; preserve the completed shared tab-plaque and exact tab/page/game authority.",
+  "notes": "The shared cartographic tab-plaque slice is completed; blockers are empty and no next slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-shared-cartographic-tab-plaques-10184",
+      "title": "Shared cartographic tab plaques",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T05:25:39Z",
+      "updatedAt": "2026-08-26T05:58:41Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scripts/ui/FrontierVisualKit.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace generic rounded Town, Battle, and Outcome tab capsules with compact engraved plaques using the existing imported shared button-state art while preserving every tab and page behavior.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 Town and Outcome captures plus the visible 1920x1080 Battle sidebar show integrated tab plaques while the intentionally hidden compact Battle sidebar remains unchanged; focused runtime proves exact standard/high-contrast style states and unchanged tab/page/focus/action/geometry/settings/save/route/session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No tab title/order/count/current index, page identity/content/visibility, layout dimensions, focus/navigation, actions/cues, settings, save/session/schema, route, gameplay, content, rules, AI, balance, or Native RMG change.",
+        "No other control, panel, portrait, board/stage/backdrop, font/UI-scale, animation/audio/VFX, or broad shell redesign.",
+        "No packaged interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with compact existing-asset plaque states across the four shared owners, inspected visible two-width captures, exact standard/high-contrast and authority proof, broad compatibility, static/editor, and bounded Linux/Windows export-startup gates.",
+      "blockedReason": null,
+      "remainingWork": "Completed: inspected captures, focused style/fit/high-contrast and authority proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green."
+    },
     {
       "id": "presentation-main-menu-item-list-selection-inlay-10184",
       "title": "Main Menu item-list selection inlay",
