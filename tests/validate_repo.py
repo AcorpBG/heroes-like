@@ -28156,21 +28156,33 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
 
     board_text = BATTLE_BOARD_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
-        'const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.56, 0.60, 0.52, 0.72)',
-        'const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.24)',
-        'const TERRAIN_CONTEXT_MODEL := "subdued_full_field_underlay_beneath_authoritative_hex_grid"',
+        'const TERRAIN_TEXTURE_MODULATE := Color(0.84, 0.86, 0.80, 0.24)',
+        'const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.78, 0.81, 0.75, 0.92)',
+        'const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.10)',
+        'const TERRAIN_CONTEXT_MODEL := "continuous_primary_field_with_subordinate_hex_variation"',
         '"terrain_context_underlay_enabled": texture != null',
         '"terrain_context_covers_full_field": texture != null and field_rect.size.x > 0.0 and field_rect.size.y > 0.0',
         '"terrain_context_preserves_hex_authority": texture != null and int(sampling_summary.get("texture_source_sample_count", 0)) == _terrain_hex_tile_count()',
-        '"single_board_backdrop": false',
+        '"terrain_context_primary": texture != null and TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a',
+        '"terrain_hex_variation_subordinate": texture != null and TERRAIN_TEXTURE_MODULATE.a >= 0.18 and TERRAIN_TEXTURE_MODULATE.a <= 0.30',
+        '"single_board_backdrop": texture != null',
+        '"terrain_single_board_backdrop": terrain_texture != null',
+        '"texture_sample_mode": "continuous_field_plus_subordinate_per_hex_variation" if texture != null else ""',
     ):
         ensure(required_token in board_text, errors, f"BattleBoardView terrain context is missing exact authority token: {required_token}")
+    for rejected_token in (
+        'const TERRAIN_TEXTURE_MODULATE := Color(0.98, 0.99, 0.95, 0.98)',
+        'const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.56, 0.60, 0.52, 0.72)',
+        'const TERRAIN_CONTEXT_MODEL := "subdued_full_field_underlay_beneath_authoritative_hex_grid"',
+        '"texture_sample_mode": "per_hex_clipped" if texture != null else ""',
+    ):
+        ensure(rejected_token not in board_text, errors, f"BattleBoardView must not retain the rejected disconnected terrain blend: {rejected_token}")
     draw_terrain = gdscript_function_block(board_text, "_draw_terrain")
     ensure(draw_terrain != "", errors, "Could not isolate BattleBoardView _draw_terrain")
     if draw_terrain:
         context_index = draw_terrain.find("_draw_terrain_context_underlay(field_rect, terrain_texture)")
         hex_index = draw_terrain.find("_draw_hex_snapped_terrain_texture(hex_layout, terrain_texture)")
-        ensure(context_index >= 0 and hex_index > context_index, errors, "Battle terrain context must draw before the unchanged authoritative per-hex texture pass")
+        ensure(context_index >= 0 and hex_index > context_index, errors, "Battle continuous terrain field must draw before the subordinate authoritative per-hex variation pass")
         ensure('_draw_terrain_context_underlay(field_rect, terrain_texture)' in draw_terrain.split("else:", 1)[0], errors, "Battle texture context must be confined to the loaded-texture branch")
     context_helper = gdscript_function_block(board_text, "_draw_terrain_context_underlay")
     for required_token in (
@@ -28183,6 +28195,16 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         ensure(forbidden_token not in context_helper, errors, f"Battle terrain context helper must remain a passive full-field underlay: {forbidden_token}")
     for obsolete_token in ("TERRAIN_EDGE_CONTEXT", "_draw_terrain_edge_context", "_terrain_edge_context_rects", "_terrain_edge_source_rect"):
         ensure(obsolete_token not in board_text, errors, f"BattleBoardView must not retain the incomplete rectangular-edge terrain model: {obsolete_token}")
+    rendering_mode = gdscript_function_block(board_text, "_terrain_rendering_mode")
+    ensure('return "continuous_field_with_hex_variation" if texture_loaded else "hex_snapped_color_fallback"' in rendering_mode, errors, "Battle terrain rendering mode must distinguish the cohesive textured field from the procedural fallback")
+    texture_visible = gdscript_function_block(board_text, "_terrain_texture_visible")
+    for required_token in (
+        "TERRAIN_CONTEXT_TEXTURE_MODULATE.a >= 0.88",
+        "TERRAIN_TEXTURE_MODULATE.a >= 0.18",
+        "TERRAIN_TEXTURE_MODULATE.a <= 0.30",
+        "TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a",
+    ):
+        ensure(required_token in texture_visible, errors, f"Battle cohesive terrain visibility guard is missing exact blend bound: {required_token}")
 
     shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -28227,8 +28249,14 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         ensure(required_token in smoke_helper, errors, f"Battle focused System-frame roundtrip is missing token: {required_token}")
     ensure(smoke_text.count("await _assert_battle_system_frame_roundtrip(shell, session)") == 1, errors, "Town/Battle visual smoke must run the responsive System-frame roundtrip exactly once")
     for required_token in (
-        'String(terrain_summary.get("terrain_context_model", "")) != "subdued_full_field_underlay_beneath_authoritative_hex_grid"',
+        'String(terrain_summary.get("rendering_mode", "")) != "continuous_field_with_hex_variation"',
+        'String(terrain_summary.get("texture_sample_mode", "")) != "continuous_field_plus_subordinate_per_hex_variation"',
+        'String(terrain_summary.get("terrain_context_model", "")) != "continuous_primary_field_with_subordinate_hex_variation"',
         'terrain_summary.get("terrain_context_preserves_hex_authority", false)',
+        'terrain_summary.get("terrain_context_primary", false)',
+        'terrain_summary.get("terrain_hex_variation_subordinate", false)',
+        'terrain_summary.get("terrain_context_texture_modulate_alpha", 0.0)), 0.92',
+        'terrain_summary.get("texture_modulate_alpha", 0.0)), 0.24',
         'String(missing_summary.get("terrain_context_model", "")) != "disabled_for_texture_fallback"',
     ):
         ensure(required_token in smoke_text, errors, f"Battle focused terrain-context proof is missing token: {required_token}")
@@ -28258,6 +28286,25 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         ensure(forbidden_token not in banner_contract, errors, f"UI visual report Battle-banner contract must remain observational: {forbidden_token}")
     ensure(re.search(r"\.text\s*=(?!=)", banner_contract) is None, errors, "UI visual report Battle-banner contract must not assign visible text")
     ensure(visual_text.count('shell_report["battle_banner"] = banner_contract') == 1 and visual_text.count('if shell_id == "battle":') >= 1, errors, "UI visual report must fail closed on one Battle-banner contract per selected Battle viewport")
+    terrain_contract = gdscript_function_block(visual_text, "_battle_terrain_cohesion_contract")
+    for required_token in (
+        'board.has_method("validation_hex_layout_summary")',
+        'board.has_method("validation_terrain_rendering_summary")',
+        'var authority_before: Dictionary = session.to_dict()',
+        'String(terrain_summary.get("rendering_mode", "")) == "continuous_field_with_hex_variation"',
+        'String(terrain_summary.get("texture_sample_mode", "")) == "continuous_field_plus_subordinate_per_hex_variation"',
+        'String(terrain_summary.get("terrain_context_model", "")) == "continuous_primary_field_with_subordinate_hex_variation"',
+        'bool(terrain_summary.get("terrain_context_primary", false))',
+        'bool(terrain_summary.get("terrain_hex_variation_subordinate", false))',
+        'is_equal_approx(context_alpha, 0.92)',
+        'is_equal_approx(variation_alpha, 0.24)',
+        'int(terrain_summary.get("texture_source_sample_count", 0)) == 77',
+        'session.to_dict() == authority_before',
+    ):
+        ensure(required_token in terrain_contract, errors, f"UI visual report Battle terrain-cohesion contract is missing exact token: {required_token}")
+    for forbidden_token in ("set_battle_state", "queue_redraw", "await ", "create_timer", "sort(", "erase("):
+        ensure(forbidden_token not in terrain_contract, errors, f"UI visual report Battle terrain-cohesion contract must remain observational: {forbidden_token}")
+    ensure(visual_text.count('shell_report["battle_terrain_cohesion"] = terrain_cohesion_contract') == 1, errors, "UI visual report must run one Battle terrain-cohesion contract per selected Battle viewport")
     expected_style = gdscript_function_block(visual_text, "_expected_panel_style")
     for required_token in (
         'shell_id == "battle" and panel_name == "SystemPanel"',

@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish implementation slice."
+    "Select the next tracker-approved graphical-polish slice from fresh current pixels."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-object-scale-overcorrection-10184",
-    "title": "Overworld object scale overcorrection",
+    "id": "ux-battlefield-continuous-terrain-cohesion-10184",
+    "title": "Battle continuous terrain cohesion",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T15:08:01Z",
-    "updatedAt": "2026-08-26T17:29:30Z",
+    "startedAt": "2026-08-26T17:34:03Z",
+    "updatedAt": "2026-08-26T17:51:09Z",
+    "completedAt": "2026-08-26T17:51:09Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the reopened scale correction from fresh authored and generated pixels. The live hierarchy now spans artifact 0.34, pickup 0.38, ordinary 0.40, blocker 0.42, encounter 0.44, waypoint 0.48, hero 0.50, durable 0.52, landmark 0.56, multi-tile 0.58-to-0.72, and town 0.84 tile extents. Focused visual/scale/generated, route/controller/focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
-    "completedAt": "2026-08-26T17:29:30Z"
+    "notes": "Completed the Battle terrain-cohesion correction. The existing full-field texture is now primary and the exact 77 per-cell samples are subordinate, producing one continuous forest battlefield while preserving terrain identity, UV containment, the 11x7 grid, fallback, tactics, combat, input, session, and save authority. Fresh 1280/1920 captures and focused runtime are green; Board navigation, animation/VFX, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG are unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15285,14 +15285,14 @@
       }
     }
   ],
-  "currentNotes": "The reopened Overworld object-scale correction is completed from fresh authored and generated pixels, exact logical authority, compatibility/static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "Battle terrain cohesion is completed; select the next bounded graphical-polish slice from fresh current pixels.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-object-scale-overcorrection-10184",
-  "currentSliceId": "ux-overworld-object-scale-overcorrection-10184",
-  "currentSliceNotes": "Completed from fresh 1280/1920 authored and generated captures with a coherent 0.34-to-0.84 tile-relative hierarchy and exact movement/session/save authority.",
+  "currentSlice": "ux-battlefield-continuous-terrain-cohesion-10184",
+  "currentSliceId": "ux-battlefield-continuous-terrain-cohesion-10184",
+  "currentSliceNotes": "The existing continuous Battle terrain layer is now primary, with exact subordinate 77-cell variation and unchanged tactical authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld object scale overcorrection",
-  "currentSliceUpdatedAt": "2026-08-26T17:29:30Z",
+  "currentSliceTitle": "Battle continuous terrain cohesion",
+  "currentSliceUpdatedAt": "2026-08-26T17:51:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -103904,6 +103904,32 @@
       "blockedReason": null,
       "notes": "Completed after direct playtest rejected the prior scale ladder. Fresh authored 1280/1920 captures prove distinct adjacent towns, subordinate actors, and legible portable props; generated captures prove restrained bodies and capped multi-tile structures with exact movement/save authority. Focused scale/visual/generated, route/controller/focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-26T17:29:30Z"
+    },
+    {
+      "id": "ux-battlefield-continuous-terrain-cohesion-10184",
+      "title": "Battle continuous terrain cohesion",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T17:51:09Z",
+      "startedAt": "2026-08-26T17:34:03Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the visible 77-cell terrain texture quilt with one cohesive existing full-field terrain surface and subordinate per-hex variation.",
+      "completionCriteria": "Inspected 1280/1920 Battle captures show cohesive terrain and clearer stacks with legible hex/tactical cues; focused runtime proves one continuous layer, exact 77 bounded per-cell samples, texture/UV/fallback and whole battle/session/save authority; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No terrain asset/id/path/source image, cell count/order/geometry, movement/pathing, deployment, target/action legality, objective, stack/token/portrait, VFX/audio/animation, layout, input/focus/accessibility, AI, combat, balance, content, save/schema, or Native RMG change.",
+        "No shader, weather, parallax, animated terrain, additional battlefield prop, camera redesign, packaged Battle interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed the Battle terrain-cohesion correction. The existing full-field texture is now primary and exact per-cell samples are subordinate, removing the 77-cell quilt while preserving texture identity, grid, fallback, cues, combat, input, session, and save authority. Fresh inspected 1280/1920 captures, focused terrain and rendered-viewport owners, Board navigation, animation/VFX, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-26T17:51:09Z"
     }
   ],
   "project": "heroes-like",
@@ -104345,8 +104371,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_object_scale_overcorrection_completed",
-  "status": "completed",
+  "result": "battlefield_continuous_terrain_cohesion_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -104446,9 +104472,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld objects now use a coherent 0.34-to-0.84 tile-relative painted hierarchy: portable props remain legible, actors stay subordinate to sites, and adjacent towns remain distinct while logical gameplay authority is unchanged.",
+  "summary": "Selected a bounded Battle terrain blend correction so the authored texture reads as one field rather than 77 nearly opaque disconnected hex samples.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T17:29:30Z",
+  "updatedAt": "2026-08-26T17:34:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

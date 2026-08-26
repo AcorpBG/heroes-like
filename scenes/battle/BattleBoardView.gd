@@ -96,11 +96,11 @@ const TERRAIN_TEXTURE_PATHS := {
 	"road": "res://art/battle/terrain/road.png",
 	"mire": "res://art/battle/terrain/mire.png",
 }
-const TERRAIN_TEXTURE_MODULATE := Color(0.98, 0.99, 0.95, 0.98)
+const TERRAIN_TEXTURE_MODULATE := Color(0.84, 0.86, 0.80, 0.24)
 const TERRAIN_TEXTURE_READABILITY_WASH := Color(0.02, 0.025, 0.022, 0.045)
-const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.56, 0.60, 0.52, 0.72)
-const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.24)
-const TERRAIN_CONTEXT_MODEL := "subdued_full_field_underlay_beneath_authoritative_hex_grid"
+const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.78, 0.81, 0.75, 0.92)
+const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.10)
+const TERRAIN_CONTEXT_MODEL := "continuous_primary_field_with_subordinate_hex_variation"
 const TERRAIN_HEX_TEXTURE_INSET := 1.0
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
 const TEXTURED_HEX_LINE_COLOR := Color(0.98, 0.89, 0.62, 0.18)
@@ -833,7 +833,7 @@ func validation_hex_layout_summary() -> Dictionary:
 		"terrain_rendering_mode": _terrain_rendering_mode(terrain_texture != null),
 		"terrain_hex_snapped": true,
 		"terrain_hex_tile_count": _terrain_hex_tile_count(),
-		"terrain_single_board_backdrop": false,
+		"terrain_single_board_backdrop": terrain_texture != null,
 		"terrain_texture_visible": _terrain_texture_visible(terrain_texture != null),
 		"terrain_grid_fill_mode": _terrain_grid_fill_mode(terrain_texture != null),
 		"terrain_grid_max_fill_alpha": _terrain_grid_max_fill_alpha(terrain_texture != null),
@@ -1306,9 +1306,9 @@ func validation_terrain_rendering_summary() -> Dictionary:
 		"texture_height": texture_size.y,
 		"rendering_mode": _terrain_rendering_mode(texture != null),
 		"hex_snapped": true,
-		"single_board_backdrop": false,
+		"single_board_backdrop": texture != null,
 		"hex_tile_count": _terrain_hex_tile_count(),
-		"texture_sample_mode": "per_hex_clipped" if texture != null else "",
+		"texture_sample_mode": "continuous_field_plus_subordinate_per_hex_variation" if texture != null else "",
 		"source_tile_width": source_size.x,
 		"source_tile_height": source_size.y,
 		"texture_modulate_alpha": TERRAIN_TEXTURE_MODULATE.a if texture != null else 0.0,
@@ -1319,6 +1319,8 @@ func validation_terrain_rendering_summary() -> Dictionary:
 		"terrain_context_covers_full_field": texture != null and field_rect.size.x > 0.0 and field_rect.size.y > 0.0,
 		"terrain_context_texture_modulate_alpha": TERRAIN_CONTEXT_TEXTURE_MODULATE.a if texture != null else 0.0,
 		"terrain_context_readability_wash_alpha": TERRAIN_CONTEXT_READABILITY_WASH.a if texture != null else 0.0,
+		"terrain_context_primary": texture != null and TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a,
+		"terrain_hex_variation_subordinate": texture != null and TERRAIN_TEXTURE_MODULATE.a >= 0.18 and TERRAIN_TEXTURE_MODULATE.a <= 0.30,
 		"terrain_context_preserves_hex_authority": texture != null and int(sampling_summary.get("texture_source_sample_count", 0)) == _terrain_hex_tile_count(),
 		"texture_hex_inset": TERRAIN_HEX_TEXTURE_INSET if texture != null else TERRAIN_HEX_FALLBACK_INSET,
 		"texture_visible": _terrain_texture_visible(texture != null),
@@ -4014,7 +4016,7 @@ func _terrain_hex_tile_count() -> int:
 	return HEX_COLUMNS * HEX_ROWS
 
 func _terrain_rendering_mode(texture_loaded: bool) -> String:
-	return "hex_snapped_texture" if texture_loaded else "hex_snapped_color_fallback"
+	return "continuous_field_with_hex_variation" if texture_loaded else "hex_snapped_color_fallback"
 
 func _hex_field_rect(field_rect: Rect2) -> Rect2:
 	return Rect2(
@@ -4068,7 +4070,10 @@ func _cell_fill_color(column: int, player_front: int, enemy_front: int, terrain_
 func _terrain_texture_visible(texture_loaded: bool) -> bool:
 	return texture_loaded \
 		and not _terrain_grid_repaints_texture_cells(texture_loaded) \
-		and TERRAIN_TEXTURE_MODULATE.a >= 0.94 \
+		and TERRAIN_CONTEXT_TEXTURE_MODULATE.a >= 0.88 \
+		and TERRAIN_TEXTURE_MODULATE.a >= 0.18 \
+		and TERRAIN_TEXTURE_MODULATE.a <= 0.30 \
+		and TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a \
 		and TERRAIN_TEXTURE_READABILITY_WASH.a <= 0.08 \
 		and TERRAIN_HEX_TEXTURE_INSET >= 0.995
 
