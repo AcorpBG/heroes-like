@@ -11135,6 +11135,32 @@ Non-goals:
 - no SidebarShell/CommandPanel width or art, panorama/banner/stockpile/stage/district/footer allocation, font/theme/UI-scale, input mapping, focus order, accessibility semantic, animation/audio, or VFX change;
 - no packaged Town interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
 
+## Overworld Footprint-Faithful World Scale
+
+id: `ux-overworld-footprint-faithful-world-scale-10184`
+
+Status: completed.
+
+Implementation boundary:
+- correct the direct user-reported scale mismatch caused by an overly aggressive multi-tile growth ladder and by partially off-map objects being centered against invisible footprint cells;
+- derive painted object extent from the live world-tile size, center clipped art within its visible footprint, and restrain two- and three-span sites below the town tier while retaining the established one-tile prop/hero scale, cached alpha cropping, sprite aspect, grounding, draw order, and imported/procedural fallback ownership;
+- keep every logical footprint, body/visit tile, hit area, passability, route, interaction, content identity, and session/save authority exact.
+
+Completion criteria:
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show the edge-placed Embergrain Warm Granary fully legible at the same scale as an equivalent interior footprint, clearly below the selected town and without overpowering the adjacent route or terrain;
+- focused runtime proves full-versus-clipped footprint scale equality, exact bounded two-/three-span growth, monotonic town/hero/site ordering, cached alpha-bound/aspect preservation, and unchanged session/save authority;
+- authored and generated Overworld movement/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no logical footprint, body/visit mask, object id/family/profile, asset replacement, placement/count/density, passability, pathfinding, route, interaction, camera/map fit, terrain/road/fog, gameplay, economy, AI, battle, save schema, generated-map, or Native-RMG behavior change;
+- no shell/sidebar/footer layout, selection/hover/tooltip semantics, input mapping, focus order, accessibility semantics, animation/audio/VFX, shader, font, or UI-scale change;
+- no packaged Overworld interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Completion evidence:
+- inspected capture-only runtime at 1280x720 and 1920x1080 preserves the one-tile ladder while reducing two-span sites to 0.62-0.69 tiles and three-span sites to 0.74-0.84 tiles; the edge-clipped Granary is centered inside its visible world footprint and remains below the 1.04-tile town tier;
+- full Overworld visual, small-map scale, generated-map render/move, faction-hero, enemy-commander, and core runtime owners exited naturally with no selected diagnostics; repository validation, Python compilation, diff checks, exact/generic editor parses, and official Linux/Windows export-startup smokes are green;
+- platform evidence is bounded to Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup; packaged Overworld interaction and hardware/accessibility certification remain unclaimed.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

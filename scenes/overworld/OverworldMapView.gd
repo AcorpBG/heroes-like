@@ -173,10 +173,10 @@ const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.44
 const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.34
 const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.38
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.50
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_STEP_TILES := 0.16
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_STEP_TILES := 0.12
 const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES := 0.54
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_STEP_TILES := 0.20
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 0.94
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_STEP_TILES := 0.15
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 0.84
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
@@ -3855,11 +3855,12 @@ func _object_texture_visible_source_rect(asset_id: String, texture: Texture2D) -
 		return Rect2(Vector2.ZERO, texture.get_size())
 	return source_rect
 
-func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictionary:
+func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary, world_tile_extent_override: float = 0.0, visible_footprint_rect_override: Rect2 = Rect2()) -> Dictionary:
 	var footprint := _object_profile_footprint(profile)
 	var family := String(profile.get("family", "pickup"))
 	var extent := minf(rect.size.x, rect.size.y)
-	var single_tile_extent := minf(rect.size.x / float(maxi(footprint.x, 1)), rect.size.y / float(maxi(footprint.y, 1)))
+	var single_tile_extent := world_tile_extent_override if world_tile_extent_override > 0.0 else _object_world_tile_extent(rect, footprint)
+	var visible_footprint_rect := visible_footprint_rect_override if visible_footprint_rect_override.size.x > 0.0 and visible_footprint_rect_override.size.y > 0.0 else _object_visible_footprint_rect(rect)
 	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
 	var uncapped_sprite_extent := maxf(12.0, extent * sprite_fraction)
 	var uses_multi_tile_cap := (footprint.x > 1 or footprint.y > 1) and family not in ["blocker", "decoration", "town"]
@@ -3869,9 +3870,9 @@ func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictiona
 		single_tile_extent * multi_tile_bounds.x,
 		single_tile_extent * multi_tile_bounds.y
 	) if uses_multi_tile_cap else uncapped_sprite_extent
-	var sprite_center := rect.get_center()
+	var sprite_center := visible_footprint_rect.get_center()
 	if uses_multi_tile_cap:
-		sprite_center.y = rect.end.y - single_tile_extent * 0.5
+		sprite_center.y = visible_footprint_rect.end.y - single_tile_extent * 0.5
 	sprite_center.y -= single_tile_extent * _object_lift_fraction(family, footprint)
 	return {
 		"family": family,
@@ -3883,8 +3884,29 @@ func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictiona
 		"min_tiles": multi_tile_bounds.x if uses_multi_tile_cap else 0.0,
 		"cap_tiles": multi_tile_bounds.y if uses_multi_tile_cap else 0.0,
 		"uses_multi_tile_visual_cap": uses_multi_tile_cap,
+		"visible_footprint_rect": visible_footprint_rect,
+		"footprint_clipped": visible_footprint_rect != rect,
 		"sprite_center": sprite_center,
 	}
+
+func _object_world_tile_extent(rect: Rect2, footprint: Vector2i) -> float:
+	var board_rect := _board_rect()
+	if _map_size.x > 0 and _map_size.y > 0 and board_rect.size.x > 0.0 and board_rect.size.y > 0.0:
+		var board_tile_size := board_rect.size / Vector2(_map_size)
+		var board_tile_extent := minf(board_tile_size.x, board_tile_size.y)
+		if board_tile_extent > 0.0:
+			return board_tile_extent
+	return minf(
+		rect.size.x / float(maxi(footprint.x, 1)),
+		rect.size.y / float(maxi(footprint.y, 1))
+	)
+
+func _object_visible_footprint_rect(rect: Rect2) -> Rect2:
+	var board_rect := _board_rect()
+	if board_rect.size.x <= 0.0 or board_rect.size.y <= 0.0 or not board_rect.intersects(rect):
+		return rect
+	var visible_rect := board_rect.intersection(rect)
+	return visible_rect if visible_rect.size.x > 0.0 and visible_rect.size.y > 0.0 else rect
 
 func _multi_tile_interactive_sprite_extent_bounds(footprint: Vector2i) -> Vector2:
 	var normalized_footprint := _normalized_footprint(footprint)
@@ -5562,7 +5584,7 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"resource_entries": resource_entries,
 	}
 
-func validation_object_sprite_scale_payload(asset_id: String, family: String, footprint: Vector2i = Vector2i.ONE, profile_overrides: Dictionary = {}) -> Dictionary:
+func validation_object_sprite_scale_payload(asset_id: String, family: String, footprint: Vector2i = Vector2i.ONE, profile_overrides: Dictionary = {}, visible_footprint_span: Vector2i = Vector2i.ZERO) -> Dictionary:
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return {}
@@ -5571,8 +5593,12 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 	for key in profile_overrides.keys():
 		profile[key] = profile_overrides.get(key)
 	var single_tile_extent := 100.0
-	var footprint_rect := Rect2(Vector2.ZERO, Vector2(normalized_footprint) * single_tile_extent)
-	var metrics := _object_sprite_visual_metrics(footprint_rect, profile)
+	var normalized_visible_span := normalized_footprint if visible_footprint_span == Vector2i.ZERO else _normalized_footprint(visible_footprint_span)
+	var footprint_rect := Rect2(Vector2.ZERO, Vector2(normalized_visible_span) * single_tile_extent)
+	var logical_footprint_rect := Rect2(Vector2.ZERO, Vector2(normalized_footprint) * single_tile_extent)
+	var visible_offset := normalized_footprint - normalized_visible_span
+	var visible_footprint_rect := Rect2(Vector2(visible_offset) * single_tile_extent, Vector2(normalized_visible_span) * single_tile_extent)
+	var metrics := _object_sprite_visual_metrics(logical_footprint_rect, profile, single_tile_extent, visible_footprint_rect)
 	var cache_size_before := _object_texture_visible_regions.size()
 	var first_region := _object_texture_visible_region(asset_id, texture)
 	var cache_size_after_first := _object_texture_visible_regions.size()
@@ -5589,6 +5615,7 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 	var normalized_source_rect: Rect2 = first_region.get("normalized_source_rect", Rect2())
 	var draw_rect: Rect2 = draw_payload.get("draw_rect", Rect2())
 	var draw_size: Vector2 = draw_payload.get("draw_size", Vector2.ZERO)
+	var sprite_center: Vector2 = metrics.get("sprite_center", visible_footprint_rect.get_center())
 	return {
 		"asset_id": asset_id,
 		"family": family,
@@ -5596,6 +5623,12 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 		"footprint_tier": String(profile.get("footprint_tier", "")),
 		"semantic_scale_class": _semantic_visual_scale_class(profile),
 		"footprint": {"width": normalized_footprint.x, "height": normalized_footprint.y},
+		"visible_footprint_span": {"width": normalized_visible_span.x, "height": normalized_visible_span.y},
+		"world_tile_extent_px": float(metrics.get("single_tile_extent_px", 0.0)),
+		"footprint_clipped": bool(metrics.get("footprint_clipped", false)),
+		"visible_footprint_rect": {"x": visible_footprint_rect.position.x, "y": visible_footprint_rect.position.y, "width": visible_footprint_rect.size.x, "height": visible_footprint_rect.size.y},
+		"sprite_center": {"x": sprite_center.x, "y": sprite_center.y},
+		"sprite_contained_in_visible_footprint": visible_footprint_rect.encloses(draw_rect),
 		"visible_scale_model": String(draw_payload.get("visible_scale_model", "")),
 		"uses_painted_bounds": bool(first_region.get("uses_painted_bounds", false)),
 		"painted_extent_fraction": float(first_region.get("painted_extent_fraction", 0.0)),

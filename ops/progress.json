@@ -1946,7 +1946,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "visual_model": "contained_cartographic_hover_card",
         "content_width_min_px": 280.0,
         "content_width_max_px": 420.0,
@@ -1986,7 +1989,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "visual_model": "open_cartographic_hover_corners",
         "continuous_outline": false,
         "interior_fill_alpha": 0.0,
@@ -2021,7 +2027,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "two_span_min_tiles": 0.66,
         "two_span_cap_tiles": 0.74,
         "three_span_min_tiles": 0.82,
@@ -2061,7 +2070,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "shared_tab_owners": 4,
         "standard_texture_states": 4,
         "texture_margin_px": 6,
@@ -2099,7 +2111,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "styled_item_list_owners": 5,
         "selected_hover_focus_style_states": 8,
         "selected_accent_width_px": 4,
@@ -2134,7 +2149,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "caption_plate_height_px": 16,
         "caption_side_accent_width_px": 2,
         "caption_fill_alpha": 0.78,
@@ -2176,13 +2194,16 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "handheld_artifact_extent_tiles": 0.24,
-        "loose_pickup_extent_tiles": 0.30,
+        "loose_pickup_extent_tiles": 0.3,
         "decoration_extent_tiles": 0.34,
         "encounter_extent_tiles": 0.42,
         "generated_decorative_body_extent_tiles": 0.44,
-        "durable_structure_extent_tiles": 0.50,
+        "durable_structure_extent_tiles": 0.5,
         "landmark_extent_tiles": 0.54,
         "hero_extent_tiles": 0.56,
         "town_extent_tiles": 1.04,
@@ -2219,9 +2240,15 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "ripple_density_modulus": 3,
-        "active_residues": [0, 1],
+        "active_residues": [
+          0,
+          1
+        ],
         "ripples_per_active_tile": 2,
         "points_per_ripple": 5,
         "generated_explored_tiles": 1296,
@@ -2261,7 +2288,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "contour_point_count": 5,
         "contour_min_inset_factor": 0.018,
         "contour_max_inset_factor": 0.06,
@@ -2298,7 +2328,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "visual_model": "layered_cartographic_trail_open_waypoints_destination_chevron",
         "shadow_width_factor": 0.04,
         "core_width_factor": 0.018,
@@ -2338,7 +2371,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "town_visible_extent_tiles": 1.04,
         "town_visitor_visible_extent_tiles": 0.4484,
         "field_hero_visible_extent_tiles": 0.56,
@@ -2374,7 +2410,10 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "capture_widths": [1280, 1920],
+        "capture_widths": [
+          1280,
+          1920
+        ],
         "foam_segments_per_edge": 2,
         "continuous_bright_outline": false,
         "full_tile_fill": false,
@@ -14881,14 +14920,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld contained hover-card slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld footprint-faithful scale slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-contained-hover-card-10184",
-  "currentSliceId": "presentation-overworld-contained-hover-card-10184",
-  "currentSliceNotes": "Completed with inspected 1280/1920 real-pointer captures, exact responsive card/full-text semantics, unchanged game authority, compatibility/static/editor, and bounded export-startup evidence.",
+  "currentSlice": "ux-overworld-footprint-faithful-world-scale-10184",
+  "currentSliceId": "ux-overworld-footprint-faithful-world-scale-10184",
+  "currentSliceNotes": "Completed: restrained multi-tile growth to 0.62/0.69 for two-span and 0.74/0.84 for three-span sites, centered clipped art on the live visible footprint at exact world-tile scale, preserved logical/game/save authority, inspected 1280/1920 captures, and passed focused/generated/hero/core/static/editor plus bounded Linux and Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld contained hover card",
-  "currentSliceUpdatedAt": "2026-08-26T07:03:09Z",
+  "currentSliceTitle": "Overworld footprint-faithful world scale",
+  "currentSliceUpdatedAt": "2026-08-26T07:50:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -102799,8 +102838,14 @@
         "captureArtifact": "/tmp/heroes-textured-shroud-capture.CONgU0",
         "generatedArtifact": "/tmp/heroes-textured-shroud-generated.BltHdT",
         "compatibilityArtifact": "/tmp/heroes-textured-shroud-compat.X58J5E",
-        "captureWidths": [1280, 1920],
-        "textureSize": [1024, 1024],
+        "captureWidths": [
+          1280,
+          1920
+        ],
+        "textureSize": [
+          1024,
+          1024
+        ],
         "generatedHiddenBefore": 1271,
         "generatedHiddenAfter": 1264,
         "hiddenTextureExactBefore": 1271,
@@ -102843,9 +102888,18 @@
         "compatibilityArtifact": "/tmp/heroes-signal-post-compat.wLpdzY",
         "editorArtifact": "/tmp/heroes-signal-post-editor.VK2Gvz",
         "platformArtifact": "/tmp/heroes-signal-post-platform.26nGUI",
-        "captureWidths": [1280, 1920],
-        "sourceSize": [1248, 1254],
-        "runtimeSize": [512, 512],
+        "captureWidths": [
+          1280,
+          1920
+        ],
+        "sourceSize": [
+          1248,
+          1254
+        ],
+        "runtimeSize": [
+          512,
+          512
+        ],
         "exactSiteAssetMapping": true,
         "proceduralFallback": false,
         "sessionAuthorityExact": true,
@@ -102887,10 +102941,13 @@
         "editorArtifact": "/tmp/heroes-hostile-marker-editor.oiOkBd",
         "staticArtifact": "/tmp/heroes-hostile-marker-static.vLQlum",
         "platformArtifact": "/tmp/heroes-hostile-marker-platform.vI9uhh",
-        "captureWidths": [1280, 1920],
+        "captureWidths": [
+          1280,
+          1920
+        ],
         "factionCount": 6,
         "fallbackCaseCount": 4,
-        "visibleExtentTiles": 0.50,
+        "visibleExtentTiles": 0.5,
         "flankChevronCount": 2,
         "threatNotchCount": 1,
         "continuousRing": false,
@@ -102935,7 +102992,10 @@
         "captureArtifact": "/tmp/heroes-shoreline-capture-refined.8M72YX",
         "compatibilityArtifact": "/tmp/heroes-shoreline-compat.gK3qcp",
         "platformArtifact": "/tmp/heroes-shoreline-platform.fa2yCP",
-        "captureWidths": [1280, 1920],
+        "captureWidths": [
+          1280,
+          1920
+        ],
         "shorelineModel": "deterministic_shallow_wet_edge_and_broken_foam",
         "foamSegmentsPerEdge": 2,
         "continuousBrightOutline": false,
@@ -103004,6 +103064,53 @@
       "notes": "Completed from direct two-width capture inspection: the old solid five-pixel line and filled four-pixel nodes are replaced by a fine layered cartographic trail with open waypoints and a direction-aware destination cue.",
       "blockedReason": null,
       "completedAt": "2026-08-26T02:03:59Z",
+      "remainingWork": "Select the next tracker-approved release-readiness slice."
+    },
+    {
+      "id": "ux-overworld-footprint-faithful-world-scale-10184",
+      "title": "Overworld footprint-faithful world scale",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T07:50:58Z",
+      "startedAt": "2026-08-26T07:15:42Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the user-reported Overworld scale mismatch by restraining multi-tile site growth and centering edge-clipped art within its visible world footprint without changing gameplay geometry.",
+      "completionCriteria": "Inspected 1280/1920 captures show a coherent prop/hero/site/town hierarchy; focused and generated runtime prove exact scale, clipping, cache/aspect, and authority contracts; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No logical footprint, body/visit mask, placement, identity, asset, passability, pathfinding, interaction, gameplay, save schema, generated-map, or Native RMG behavior change.",
+        "No shell/UI layout, selection/hover semantics, input/focus/accessibility semantics, animation/audio/VFX, shader, font, or UI-scale change.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed: restrained multi-tile growth to 0.62/0.69 for two-span and 0.74/0.84 for three-span sites, centered clipped art on the live visible footprint at exact world-tile scale, preserved logical/game/save authority, inspected 1280/1920 captures, and passed focused/generated/hero/core/static/editor plus bounded Linux and Windows export-startup gates.",
+      "evidence": [
+        "/tmp/heroes-footprint-balanced.id0OYb",
+        "/tmp/heroes-footprint-runtime.sZEf7b",
+        "/tmp/heroes-footprint-final-static.K4PHxW",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [
+          1280,
+          1920
+        ],
+        "two_span_min_tiles": 0.62,
+        "two_span_cap_tiles": 0.69,
+        "three_span_min_tiles": 0.74,
+        "three_span_cap_tiles": 0.84,
+        "town_extent_tiles": 1.04,
+        "logical_authority_exact": true
+      },
+      "blockedReason": null,
+      "completedAt": "2026-08-26T07:50:58Z",
       "remainingWork": "Select the next tracker-approved release-readiness slice."
     }
   ],
@@ -103547,9 +103654,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld route preview now uses a fine layered cartographic trail with open waypoints and a compact directional destination cue; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "summary": "The Overworld now keeps multi-tile sites visibly subordinate to towns and centers edge-clipped art within its live visible footprint; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T02:03:59Z",
+  "updatedAt": "2026-08-26T07:50:58Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

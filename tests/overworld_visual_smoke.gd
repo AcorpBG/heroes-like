@@ -3695,11 +3695,12 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 	var tall_waypoint: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "transit_object", Vector2i(1, 2), {"primary_class": "transit_route_object", "footprint_tier": "small"})
 	var multi_tile_service: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(2, 2), {"primary_class": "interactable_site", "footprint_tier": "medium"})
 	var large_service: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(3, 2), {"primary_class": "interactable_site", "footprint_tier": "large"})
+	var clipped_large_service: Dictionary = map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(3, 2), {"primary_class": "interactable_site", "footprint_tier": "large"}, Vector2i(1, 2))
 	var hero: Dictionary = map_node.call("validation_hero_draw_layout", Vector2i(7, 4), true)
 	var town: Dictionary = map_node.call("validation_town_sprite_scale_payload", "town_faction_embercourt")
 	var authored_pickup: Dictionary = map_node.call("validation_content_object_sprite_scale_payload", "object_wood_wagon", "lumber_wagon")
 	var authored_service: Dictionary = map_node.call("validation_content_object_sprite_scale_payload", "object_contract_scribe_booth", "mapobj_contract_scribe_booth")
-	for payload in [artifact, pickup, decoration, generic_object, encounter, blocker, waypoint, service, objective, wide_service, tall_waypoint, multi_tile_service, large_service, town]:
+	for payload in [artifact, pickup, decoration, generic_object, encounter, blocker, waypoint, service, objective, wide_service, tall_waypoint, multi_tile_service, large_service, clipped_large_service, town]:
 		if (
 			payload.is_empty()
 			or String(payload.get("visible_scale_model", "")) != "cached_alpha_bounds_semantic_visible_extent"
@@ -3742,16 +3743,16 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not bool(tall_waypoint.get("uses_multi_tile_visual_cap", false))
 		or not bool(multi_tile_service.get("uses_multi_tile_visual_cap", false))
 		or not bool(large_service.get("uses_multi_tile_visual_cap", false))
-		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 0.66)
-		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 0.74)
-		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.66)
-		or not is_equal_approx(float(tall_waypoint.get("min_tiles", 0.0)), 0.66)
-		or not is_equal_approx(float(tall_waypoint.get("cap_tiles", 0.0)), 0.74)
-		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.66)
-		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.74)
-		or not is_equal_approx(float(large_service.get("min_tiles", 0.0)), 0.82)
-		or not is_equal_approx(float(large_service.get("cap_tiles", 0.0)), 0.94)
-		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 0.94)
+		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 0.62)
+		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 0.69)
+		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.62)
+		or not is_equal_approx(float(tall_waypoint.get("min_tiles", 0.0)), 0.62)
+		or not is_equal_approx(float(tall_waypoint.get("cap_tiles", 0.0)), 0.69)
+		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.62)
+		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.69)
+		or not is_equal_approx(float(large_service.get("min_tiles", 0.0)), 0.74)
+		or not is_equal_approx(float(large_service.get("cap_tiles", 0.0)), 0.84)
+		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 0.84)
 		or not (
 			float(wide_service.get("visible_extent_tiles", 0.0))
 			< float(multi_tile_service.get("visible_extent_tiles", 0.0))
@@ -3762,6 +3763,21 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		)
 	):
 		push_error("Overworld smoke: multi-tile interactive art no longer follows the bounded footprint-span ladder below towns. wide=%s tall=%s multi=%s large=%s town=%s" % [wide_service, tall_waypoint, multi_tile_service, large_service, town])
+		get_tree().quit(1)
+		return false
+	if clipped_large_service.get("footprint", {}) != {"width": 3, "height": 2} \
+		or clipped_large_service.get("visible_footprint_span", {}) != {"width": 1, "height": 2} \
+		or not is_equal_approx(float(clipped_large_service.get("world_tile_extent_px", 0.0)), 100.0) \
+		or not bool(clipped_large_service.get("footprint_clipped", false)) \
+		or clipped_large_service.get("visible_footprint_rect", {}) != {"x": 200.0, "y": 0.0, "width": 100.0, "height": 200.0} \
+		or clipped_large_service.get("sprite_center", {}) != {"x": 250.0, "y": 140.0} \
+		or not bool(clipped_large_service.get("sprite_contained_in_visible_footprint", false)) \
+		or bool(large_service.get("footprint_clipped", true)) \
+		or not is_equal_approx(float(clipped_large_service.get("visible_extent_tiles", 0.0)), float(large_service.get("visible_extent_tiles", -1.0))) \
+		or not is_equal_approx(float(clipped_large_service.get("min_tiles", 0.0)), float(large_service.get("min_tiles", -1.0))) \
+		or not is_equal_approx(float(clipped_large_service.get("cap_tiles", 0.0)), float(large_service.get("cap_tiles", -1.0))) \
+		or clipped_large_service.get("draw_size_tiles", {}) != large_service.get("draw_size_tiles", {}):
+		push_error("Overworld smoke: clipped multi-tile object no longer retains the full-footprint world scale. full=%s clipped=%s" % [large_service, clipped_large_service])
 		get_tree().quit(1)
 		return false
 	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 0.56) or not bool(hero.get("sprite_contained_in_tile", false)):
@@ -3798,7 +3814,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			"map_roles": ["route_pacing", "world_lore", "repeatable_service"],
 		}
 		or String(authored_service.get("semantic_scale_class", "")) != "durable_structure"
-		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.66)
+		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.62)
 	):
 		push_error("Overworld smoke: authored semantic profiles drifted from logical footprint/passability/role authority. pickup=%s service=%s" % [authored_pickup, authored_service])
 		get_tree().quit(1)
