@@ -252,6 +252,18 @@ const GENERIC_TERRAIN_EDGE_INNER_ALPHA := 0.15
 const GENERIC_TERRAIN_EDGE_SEAM_ALPHA := 0.30
 const GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR := 0.34
 const GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR := 0.18
+const WATER_SHORELINE_CONTOUR_MODEL := "deterministic_shallow_wet_edge_and_broken_foam"
+const WATER_SHORELINE_SHALLOW_DEPTH_FACTOR := 0.285
+const WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR := 0.245
+const WATER_SHORELINE_FOAM_DEPTH_FACTOR := 0.205
+const WATER_SHORELINE_SHALLOW_COLOR := Color(0.30, 0.58, 0.62, 0.10)
+const WATER_SHORELINE_WET_EDGE_COLOR := Color(0.39, 0.34, 0.20, 0.26)
+const WATER_SHORELINE_FOAM_SHADOW_COLOR := Color(0.035, 0.10, 0.12, 0.30)
+const WATER_SHORELINE_FOAM_COLOR := Color(0.76, 0.89, 0.86, 0.36)
+const WATER_SHORELINE_WET_EDGE_WIDTH_FACTOR := 0.014
+const WATER_SHORELINE_FOAM_SHADOW_WIDTH_FACTOR := 0.024
+const WATER_SHORELINE_FOAM_WIDTH_FACTOR := 0.012
+const WATER_SHORELINE_FOAM_SEGMENTS_PER_EDGE := 2
 const TERRAIN_MACRO_LIGHTING_MODEL := "continuous_shared_corner_bilinear_field"
 const TERRAIN_MACRO_LIGHTING_CELL_TILES := 12
 const TERRAIN_MACRO_LIGHTING_CELL_SUBDIVISIONS := 1
@@ -2019,6 +2031,8 @@ func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> 
 			var source_terrain := String(source.get("source_terrain", terrain))
 			if not _draw_terrain_edge_art(source_terrain, direction, rect):
 				_draw_terrain_edge_fallback(tile, source_terrain, direction, rect)
+			if _terrain_group(source_terrain) == "water" and _terrain_group(terrain) != "water":
+				_draw_water_shoreline_contour(tile, direction, rect)
 	var corner_sources = transition_payload.get("corner_sources", [])
 	if corner_sources is Array:
 		for source_value in corner_sources:
@@ -2100,6 +2114,152 @@ func _terrain_edge_band_polygon(direction: String, rect: Rect2, inner_profile: P
 	for index in range(inner_profile.size() - 1, -1, -1):
 		polygon.append(inner_profile[index])
 	return polygon
+
+func _draw_water_shoreline_contour(tile: Vector2i, direction: String, rect: Rect2) -> void:
+	var profile := _water_shoreline_contour_profile(tile, direction, rect)
+	if profile.is_empty():
+		return
+	var shallow_band: PackedVector2Array = profile.get("shallow_band", PackedVector2Array())
+	var wet_edge: PackedVector2Array = profile.get("wet_edge", PackedVector2Array())
+	var foam_segments: Array = profile.get("foam_segments", [])
+	if shallow_band.size() >= 3:
+		_canvas_draw_colored_polygon(shallow_band, WATER_SHORELINE_SHALLOW_COLOR)
+	if wet_edge.size() >= 2:
+		_canvas_draw_polyline(
+			wet_edge,
+			WATER_SHORELINE_WET_EDGE_COLOR,
+			maxf(1.0, minf(rect.size.x, rect.size.y) * WATER_SHORELINE_WET_EDGE_WIDTH_FACTOR),
+			true
+		)
+	for segment_value in foam_segments:
+		if not (segment_value is PackedVector2Array):
+			continue
+		var segment: PackedVector2Array = segment_value
+		if segment.size() != 3:
+			continue
+		_canvas_draw_polyline(
+			segment,
+			WATER_SHORELINE_FOAM_SHADOW_COLOR,
+			maxf(1.4, minf(rect.size.x, rect.size.y) * WATER_SHORELINE_FOAM_SHADOW_WIDTH_FACTOR),
+			true
+		)
+		_canvas_draw_polyline(
+			segment,
+			WATER_SHORELINE_FOAM_COLOR,
+			maxf(1.0, minf(rect.size.x, rect.size.y) * WATER_SHORELINE_FOAM_WIDTH_FACTOR),
+			true
+		)
+
+func _water_shoreline_contour_profile(tile: Vector2i, direction: String, rect: Rect2) -> Dictionary:
+	if direction not in ["N", "E", "S", "W"] or rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return {}
+	var shallow_profile := _terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_SHALLOW_DEPTH_FACTOR)
+	var wet_edge := _terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR)
+	var foam_profile := _terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_FOAM_DEPTH_FACTOR)
+	if shallow_profile.size() != 5 or wet_edge.size() != 5 or foam_profile.size() != 5:
+		return {}
+	return {
+		"model": WATER_SHORELINE_CONTOUR_MODEL,
+		"direction": direction,
+		"receiver_tile": tile,
+		"shallow_band": _terrain_edge_band_polygon(direction, rect, shallow_profile),
+		"wet_edge": wet_edge,
+		"foam_segments": _water_shoreline_foam_segments(tile, direction, foam_profile),
+	}
+
+func _water_shoreline_foam_segments(tile: Vector2i, direction: String, foam_profile: PackedVector2Array) -> Array:
+	if foam_profile.size() != 5:
+		return []
+	var direction_seed := int({"N": 3, "E": 7, "S": 11, "W": 17}.get(direction, 0))
+	var seed := absi((tile.x * 29) + (tile.y * 47) + direction_seed)
+	var first_interval := seed % 2
+	var interval_indices: Array = []
+	for segment_index in range(WATER_SHORELINE_FOAM_SEGMENTS_PER_EDGE):
+		interval_indices.append(first_interval + (segment_index * 2))
+	var segments: Array = []
+	for interval_value in interval_indices:
+		var interval := int(interval_value)
+		var start_ratio := 0.14 + (float((seed + interval) % 3) * 0.04)
+		var end_ratio := 0.58 + (float((seed + interval + 1) % 3) * 0.04)
+		var segment_start := foam_profile[interval].lerp(foam_profile[interval + 1], start_ratio)
+		var segment_end := foam_profile[interval].lerp(foam_profile[interval + 1], end_ratio)
+		var inward_normal := Vector2.ZERO
+		match direction:
+			"N":
+				inward_normal = Vector2.DOWN
+			"E":
+				inward_normal = Vector2.LEFT
+			"S":
+				inward_normal = Vector2.UP
+			"W":
+				inward_normal = Vector2.RIGHT
+		var wave_sign := -1.0 if ((seed + interval) % 2) == 0 else 1.0
+		var segment_mid := segment_start.lerp(segment_end, 0.5) + (inward_normal * segment_start.distance_to(segment_end) * 0.055 * wave_sign)
+		segments.append(PackedVector2Array([
+			segment_start,
+			segment_mid,
+			segment_end,
+		]))
+	return segments
+
+func _water_shoreline_contour_payload(tile: Vector2i, transition_payload: Dictionary) -> Dictionary:
+	var source_directions: Array = []
+	var profiles: Array = []
+	var validation_rect := Rect2(Vector2.ZERO, Vector2(100.0, 100.0))
+	var cardinal_sources = transition_payload.get("cardinal_sources", [])
+	if cardinal_sources is Array:
+		for source_value in cardinal_sources:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			var source_terrain := String(source.get("source_terrain", ""))
+			if _terrain_group(source_terrain) != "water" or _terrain_group(_terrain_at(tile)) == "water":
+				continue
+			var direction := String(source.get("direction", ""))
+			var profile := _water_shoreline_contour_profile(tile, direction, validation_rect)
+			if profile.is_empty():
+				continue
+			var shallow_band: PackedVector2Array = profile.get("shallow_band", PackedVector2Array())
+			var wet_edge: PackedVector2Array = profile.get("wet_edge", PackedVector2Array())
+			var foam_segments: Array = profile.get("foam_segments", [])
+			var foam_contained := true
+			for segment_value in foam_segments:
+				if not (segment_value is PackedVector2Array) or not _shoreline_points_contained(segment_value, validation_rect):
+					foam_contained = false
+					break
+			source_directions.append(direction)
+			profiles.append({
+				"direction": direction,
+				"source_terrain": source_terrain,
+				"shallow_band_point_count": shallow_band.size(),
+				"wet_edge_point_count": wet_edge.size(),
+				"foam_segment_count": foam_segments.size(),
+				"geometry_contained": _shoreline_points_contained(shallow_band, validation_rect) and _shoreline_points_contained(wet_edge, validation_rect) and foam_contained,
+			})
+	return {
+		"model": WATER_SHORELINE_CONTOUR_MODEL,
+		"active": not profiles.is_empty(),
+		"source_count": profiles.size(),
+		"source_directions": source_directions,
+		"direction_order": ["N", "E", "S", "W"],
+		"profiles": profiles,
+		"shallow_band_alpha": WATER_SHORELINE_SHALLOW_COLOR.a,
+		"wet_edge_alpha": WATER_SHORELINE_WET_EDGE_COLOR.a,
+		"foam_alpha": WATER_SHORELINE_FOAM_COLOR.a,
+		"foam_segments_per_edge": WATER_SHORELINE_FOAM_SEGMENTS_PER_EDGE,
+		"continuous_bright_outline": false,
+		"full_tile_fill": false,
+		"deterministic_seed_basis": "receiver_tile_and_cardinal_direction_only",
+		"draw_order": "after_authored_transition_overlay_before_macro_lighting_and_roads",
+	}
+
+func _shoreline_points_contained(points: PackedVector2Array, rect: Rect2) -> bool:
+	if points.is_empty():
+		return false
+	for point in points:
+		if point.x < rect.position.x or point.y < rect.position.y or point.x > rect.end.x or point.y > rect.end.y:
+			return false
+	return true
 
 func _draw_terrain_corner_hint(tile: Vector2i, source_terrain: String, direction: String, rect: Rect2) -> void:
 	if direction == "":
@@ -5883,6 +6043,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 				"drawn": false,
 				"hidden_by_unexplored_shroud": true,
 			},
+			"water_shoreline_contour": {
+				"model": WATER_SHORELINE_CONTOUR_MODEL,
+				"active": false,
+				"source_count": 0,
+				"hidden_by_unexplored_shroud": true,
+			},
 			"terrain_grain_overlay": _terrain_grain_overlay_payload(false),
 			"rendering_mode": "hidden_fog",
 		}
@@ -5911,6 +6077,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		+ _transition_source_count(generic_transition_payload, "corner_sources")
 	)
 	var generic_transition_overlay_active := generic_transition_overlay_relationship_count > 0 and not homm3_transition_self_contained
+	var water_shoreline_contour := _water_shoreline_contour_payload(tile, generic_transition_payload) if generic_transition_overlay_active else {
+		"model": WATER_SHORELINE_CONTOUR_MODEL,
+		"active": false,
+		"source_count": 0,
+	}
 	var road_neighbor_directions := _road_neighbor_directions(tile) if not road_payload.is_empty() else []
 	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
 	var road_connection_piece_loaded := _road_connection_piece_loaded(road_payload, tile)
@@ -5952,6 +6123,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"fog_frontier": fog_frontier,
 		"terrain_macro_lighting": terrain_macro_lighting,
+		"water_shoreline_contour": water_shoreline_contour,
 		"terrain_grain_overlay": _terrain_grain_overlay_payload(true),
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,

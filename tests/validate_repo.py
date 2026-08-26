@@ -40102,6 +40102,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "GENERIC_TERRAIN_EDGE_FEATHER_BAND_COUNT",
 	        "GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR",
 	        "GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR",
+	        'const WATER_SHORELINE_CONTOUR_MODEL := "deterministic_shallow_wet_edge_and_broken_foam"',
+	        "WATER_SHORELINE_SHALLOW_DEPTH_FACTOR",
+	        "WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR",
+	        "WATER_SHORELINE_FOAM_DEPTH_FACTOR",
 	        "func _load_terrain_grammar",
 	        "func _load_homm3_prototype",
 	        "func _homm3_runtime_rendering_enabled",
@@ -40120,6 +40124,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "func _draw_terrain_edge_fallback",
 	        "func _terrain_edge_profile_points",
 	        "func _terrain_edge_band_polygon",
+	        "func _draw_water_shoreline_contour",
+	        "func _water_shoreline_contour_profile",
+	        "func _water_shoreline_foam_segments",
+	        "func _water_shoreline_contour_payload",
+	        "func _shoreline_points_contained",
 	        "func _draw_terrain_corner_hint",
         "func _terrain_uses_self_contained_homm3_transition",
         "func _terrain_generic_transition_payload",
@@ -40252,6 +40261,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     generic_edge_fallback_block = gd_function_block(map_view_text, "_draw_terrain_edge_fallback")
     generic_edge_profile_block = gd_function_block(map_view_text, "_terrain_edge_profile_points")
     generic_edge_polygon_block = gd_function_block(map_view_text, "_terrain_edge_band_polygon")
+    shoreline_draw_block = gd_function_block(map_view_text, "_draw_water_shoreline_contour")
+    shoreline_profile_block = gd_function_block(map_view_text, "_water_shoreline_contour_profile")
+    shoreline_foam_block = gd_function_block(map_view_text, "_water_shoreline_foam_segments")
+    shoreline_payload_block = gd_function_block(map_view_text, "_water_shoreline_contour_payload")
+    shoreline_containment_block = gd_function_block(map_view_text, "_shoreline_points_contained")
     generic_corner_block = gd_function_block(map_view_text, "_draw_terrain_corner_hint")
     terrain_payload_block = gd_function_block(map_view_text, "_terrain_visual_payload")
     ensure(
@@ -40267,6 +40281,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     )
     for token in (
         "_draw_terrain_edge_fallback(tile, source_terrain, direction, rect)",
+		'_terrain_group(source_terrain) == "water" and _terrain_group(terrain) != "water"',
+		"_draw_water_shoreline_contour(tile, direction, rect)",
         '_draw_terrain_corner_hint(tile, String(source.get("source_terrain", terrain)), String(source.get("direction", "")), rect)',
     ):
         ensure(token in transition_draw_block, errors, f"Generic terrain transitions must pass only tile-local presentation inputs into organic edge rendering: {token}")
@@ -40320,6 +40336,57 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "polygon.append(inner_profile[index])",
     ):
         ensure(token in generic_edge_polygon_block, errors, f"Organic terrain-edge polygons must close the exact five-sample inner profile against the tile edge: {token}")
+    ensure(
+        transition_draw_block.find("_draw_terrain_edge_art(source_terrain, direction, rect)")
+        < transition_draw_block.find("_draw_terrain_edge_fallback(tile, source_terrain, direction, rect)")
+        < transition_draw_block.find('_terrain_group(source_terrain) == "water" and _terrain_group(terrain) != "water"')
+        < transition_draw_block.find("_draw_water_shoreline_contour(tile, direction, rect)"),
+        errors,
+        "Water shoreline detail must follow the existing authored/fallback transition surface and remain restricted to water sources on land receivers.",
+    )
+    for token in (
+        'var profile := _water_shoreline_contour_profile(tile, direction, rect)',
+        "_canvas_draw_colored_polygon(shallow_band, WATER_SHORELINE_SHALLOW_COLOR)",
+        "_canvas_draw_polyline(",
+        "WATER_SHORELINE_WET_EDGE_COLOR",
+        "WATER_SHORELINE_FOAM_SHADOW_COLOR",
+        "WATER_SHORELINE_FOAM_COLOR",
+    ):
+        ensure(token in shoreline_draw_block, errors, f"Water shoreline drawing must retain the shallow, wet-edge, shadow, and broken-foam layers: {token}")
+    for token in (
+        'if direction not in ["N", "E", "S", "W"] or rect.size.x <= 0.0 or rect.size.y <= 0.0:',
+        "_terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_SHALLOW_DEPTH_FACTOR)",
+        "_terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR)",
+        "_terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_FOAM_DEPTH_FACTOR)",
+        '"shallow_band": _terrain_edge_band_polygon(direction, rect, shallow_profile)',
+        '"foam_segments": _water_shoreline_foam_segments(tile, direction, foam_profile)',
+    ):
+        ensure(token in shoreline_profile_block, errors, f"Water shoreline geometry must derive all layers from the existing deterministic transition profile: {token}")
+    for token in (
+        'var direction_seed := int({"N": 3, "E": 7, "S": 11, "W": 17}.get(direction, 0))',
+        "var seed := absi((tile.x * 29) + (tile.y * 47) + direction_seed)",
+		"for segment_index in range(WATER_SHORELINE_FOAM_SEGMENTS_PER_EDGE):",
+		"interval_indices.append(first_interval + (segment_index * 2))",
+        "segments.append(PackedVector2Array([",
+    ):
+        ensure(token in shoreline_foam_block, errors, f"Broken shoreline foam must remain deterministic, sparse, and direction-local: {token}")
+    for token in (
+        'var validation_rect := Rect2(Vector2.ZERO, Vector2(100.0, 100.0))',
+        'var cardinal_sources = transition_payload.get("cardinal_sources", [])',
+        'if _terrain_group(source_terrain) != "water" or _terrain_group(_terrain_at(tile)) == "water":',
+        '"foam_segments_per_edge": WATER_SHORELINE_FOAM_SEGMENTS_PER_EDGE',
+        '"continuous_bright_outline": false',
+        '"full_tile_fill": false',
+        '"deterministic_seed_basis": "receiver_tile_and_cardinal_direction_only"',
+        '"draw_order": "after_authored_transition_overlay_before_macro_lighting_and_roads"',
+    ):
+        ensure(token in shoreline_payload_block, errors, f"Public shoreline evidence must stay source-owned, contained, deterministic, and fill-free: {token}")
+    for token in (
+        "if points.is_empty():",
+        "point.x < rect.position.x",
+        "point.x > rect.end.x",
+    ):
+        ensure(token in shoreline_containment_block, errors, f"Shoreline geometry containment must fail closed on empty or out-of-bounds points: {token}")
     for token in (
         "var seed: int = absi((tile.x * 43) + (tile.y * 61) + direction.hash())",
         "var corner_variation := 0.92 + (float(seed % 5) * 0.04)",
@@ -40331,6 +40398,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ("generic edge profile", generic_edge_profile_block),
         ("generic edge polygon", generic_edge_polygon_block),
         ("generic corner", generic_corner_block),
+		("water shoreline draw", shoreline_draw_block),
+		("water shoreline profile", shoreline_profile_block),
+		("water shoreline foam", shoreline_foam_block),
+		("water shoreline payload", shoreline_payload_block),
+		("water shoreline containment", shoreline_containment_block),
     ):
         for forbidden in ("rand", "await ", "create_timer", "queue_redraw", "_session", "session.overworld", "set_map_state", "map["):
             ensure(forbidden not in block, errors, f"{block_name} must remain deterministic presentation-only geometry: {forbidden}")
@@ -40340,6 +40412,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "var generic_transition_payload := _terrain_generic_transition_payload(tile)",
         'var generic_transition_overlay_relationship_count := (',
         "var generic_transition_overlay_active := generic_transition_overlay_relationship_count > 0 and not homm3_transition_self_contained",
+		"var water_shoreline_contour := _water_shoreline_contour_payload(tile, generic_transition_payload) if generic_transition_overlay_active else {",
         '"transition_draw_policy": TERRAIN_TRANSITION_DRAW_POLICY',
         '"homm3_transition_self_contained": homm3_transition_self_contained',
         '"generic_transition_overlay_relationship_count": generic_transition_overlay_relationship_count',
@@ -40348,6 +40421,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"generic_transition_feather_band_count": GENERIC_TERRAIN_EDGE_FEATHER_BAND_COUNT if generic_transition_overlay_active else 0',
         '"generic_transition_irregular_inner_edge": generic_transition_overlay_active',
         '"generic_transition_deterministic_seed_basis": "tile_and_direction_only" if generic_transition_overlay_active else ""',
+		'"water_shoreline_contour": water_shoreline_contour',
         'else GENERIC_TERRAIN_EDGE_SURFACE_MODEL)',
         'else "shallow_irregular_feather_bands")',
     ):
@@ -40508,10 +40582,21 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(water_terrain.get("rendering_mode", "")) != "original_quiet_tile_bank"',
         'String(water_terrain.get("texture_path", "")) != String(repeated_terrain.get("texture_path", ""))',
         'OverworldRules.terrain_id_is_passable("water")',
+		'shell.call("validation_tile_presentation", 0, 3)',
+		'String(shoreline.get("model", "")) != "deterministic_shallow_wet_edge_and_broken_foam"',
+		'shoreline.get("source_directions", []) != ["E"]',
+		'int(shoreline_profiles[0].get("shallow_band_point_count", 0)) != 7',
+		'int(shoreline_profiles[0].get("wet_edge_point_count", 0)) != 5',
+		'int(shoreline_profiles[0].get("foam_segment_count", 0)) != 2',
+		'not bool(shoreline_profiles[0].get("geometry_contained", false))',
+		'bool(shoreline.get("continuous_bright_outline", true))',
+		'bool(shoreline.get("full_tile_fill", true))',
+		'String(shoreline.get("draw_order", "")) != "after_authored_transition_overlay_before_macro_lighting_and_roads"',
         'session.to_dict() != authority_before',
     ):
         ensure(token in water_bank_block, errors, f"Overworld painterly water owner is missing exact texture, runtime, impassability, or authority proof: {token}")
     ensure(water_bank_block.count('shell.call("validation_tile_presentation", 1, 3)') == 2, errors, "Overworld painterly water owner must compare exactly two stable observations of the same live water tile.")
+    ensure(water_bank_block.count('shell.call("validation_tile_presentation", 0, 3)') == 1, errors, "Overworld shoreline owner must observe the exact live east-water River Pass receiver once.")
     for forbidden in ("map_row[", 'set("_map_data"', "terrain_id_is_passable =", "sort(", "erase(", "create_timer", "call_deferred"):
         ensure(forbidden not in water_bank_block, errors, f"Overworld painterly water proof must remain observational and avoid {forbidden}")
     visual_road_block = gd_function_block(visual_smoke_text, "_assert_water_causeway_render_model")
@@ -40577,6 +40662,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(terrain.get("generic_transition_surface_model", "leaked")) != ""',
         'int(terrain.get("generic_transition_feather_band_count", -1)) != 0',
         'bool(terrain.get("generic_transition_irregular_inner_edge", true))',
+		'String(shoreline.get("model", "")) != "deterministic_shallow_wet_edge_and_broken_foam"',
+		'bool(shoreline.get("active", true))',
+		'int(shoreline.get("source_count", -1)) != 0',
     ):
         ensure(token in enabled_homm3_owner_block, errors, f"Ninefold transition owner must prove enabled loaded HoMM3 tiles suppress the generic overlay without authority mutation: {token}")
     ensure(
@@ -40821,6 +40909,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"terrain_grain_tile_count": terrain_grain_tile_count',
         '"terrain_grain_exact_count": terrain_grain_exact_count',
         '"terrain_grain_texture_paths": terrain_grain_texture_paths.keys()',
+		'var shoreline: Dictionary = terrain.get("water_shoreline_contour", {})',
+		'"shoreline_tile_count": shoreline_tile_count',
+		'"shoreline_source_count": shoreline_source_count',
+		'"shoreline_exact_count": shoreline_exact_count',
+		'String(shoreline.get("model", "")) == "deterministic_shallow_wet_edge_and_broken_foam"',
+		'not bool(shoreline.get("continuous_bright_outline", true))',
+		'not bool(shoreline.get("full_tile_fill", true))',
     ):
         ensure(token in generated_transition_block, errors, f"Generated live visual owner must inspect real terrain transition presentation: {token}")
     for token in (
@@ -40850,6 +40945,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'var terrain_grain_modulate_alphas: Array = summary.get("terrain_grain_modulate_alphas", []) if summary.get("terrain_grain_modulate_alphas", []) is Array else []',
         'terrain_grain_modulate_alphas.size() != 1',
         'float(terrain_grain_modulate_alphas[0]), 0.72',
+		'int(summary.get("shoreline_exact_count", -1)) != int(summary.get("shoreline_tile_count", -2))',
+		'int(summary.get("shoreline_source_count", 0)) < int(summary.get("shoreline_tile_count", 0))',
     ):
         ensure(token in generated_transition_assert_block, errors, f"Generated live visual owner must fail closed on missing or mismatched generic transition overlays: {token}")
     for token in (

@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next source-backed graphical-polish or release-readiness slice.
 
+## Overworld Organic Water Shoreline Contours
+
+id: `presentation-overworld-organic-water-shoreline-contours-10184`
+
+Status: completed.
+
+Implementation boundary:
+- enrich only the existing water-to-land transition presentation with deterministic shallow-water tint, an irregular wet-edge contour, and restrained broken foam highlights derived from the current transition geometry;
+- retain the exact authored water and land tile textures, topology, terrain ids, transition source/direction selection, roads/causeways, draw order, fog ownership, and whole map/session authority;
+- expose detached public shoreline geometry evidence for focused 1280x720 and 1920x1080 validation, including containment, bounded alpha/line widths, direction symmetry, and deliberately discontinuous foam segments.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show a softer organic shoreline instead of a hard stair-step water block while preserving water/road/object readability;
+- focused runtime proves exact cardinal transition ownership, contained shallow/wet/foam geometry, deterministic variants, no full-tile fill or continuous bright outline, and unchanged terrain/map/session/save authority;
+- broad authored/generated Overworld, route/movement/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain id, topology, tile texture replacement, transition selection, water passability, movement cost, route/pathfinding, road/causeway connectivity, fog/reveal, map content, generated placement, session/save/schema, AI, economy, battle, balance, or Native RMG change;
+- no object/hero/town asset or scale, selection/focus marker, shell/UI layout, input, animation/audio/VFX, shader, weather, or broad terrain rewrite;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- water-to-land transitions in the original quiet tile-bank renderer now layer a translucent shallow tint, irregular muted wet-edge contour, and two short bent foam highlights over the existing authored directional overlay;
+- inspected River Pass 1280x720 and 1920x1080 captures show a softer painterly lake boundary without the former hard stair-step block or an intrusive continuous bright outline;
+- focused Overworld visual, Ninefold self-contained transition ownership, generated-map reveal/movement, full-route movement, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
+
 ## Overworld Hostile Commander Open Threat Marker
 
 id: `ux-overworld-hostile-commander-open-threat-marker-10184`

@@ -3489,6 +3489,10 @@ func _assert_water_tile_bank(shell: Node, session) -> bool:
 	var water_terrain: Dictionary = water_presentation.get("terrain_presentation", {})
 	var repeated_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 3)
 	var repeated_terrain: Dictionary = repeated_presentation.get("terrain_presentation", {})
+	var shoreline_presentation: Dictionary = shell.call("validation_tile_presentation", 0, 3)
+	var shoreline_terrain: Dictionary = shoreline_presentation.get("terrain_presentation", {})
+	var shoreline: Dictionary = shoreline_terrain.get("water_shoreline_contour", {})
+	var shoreline_profiles: Array = shoreline.get("profiles", [])
 	if String(water_terrain.get("terrain", "")) != "water" \
 			or not bool(water_terrain.get("texture_loaded", false)) \
 			or not bool(water_terrain.get("uses_authored_tile_art", false)) \
@@ -3502,6 +3506,30 @@ func _assert_water_tile_bank(shell: Node, session) -> bool:
 			or OverworldRules.terrain_id_is_passable("water") \
 			or session.to_dict() != authority_before:
 		push_error("Overworld smoke: River Pass water did not use the stable original painterly bank while preserving impassability and session authority. presentation=%s repeated=%s" % [water_presentation, repeated_presentation])
+		get_tree().quit(1)
+		return false
+	if String(shoreline_terrain.get("terrain", "")) != "grass" \
+			or String(shoreline.get("model", "")) != "deterministic_shallow_wet_edge_and_broken_foam" \
+			or not bool(shoreline.get("active", false)) \
+			or int(shoreline.get("source_count", 0)) != 1 \
+			or shoreline.get("source_directions", []) != ["E"] \
+			or shoreline_profiles.size() != 1 \
+			or String(shoreline_profiles[0].get("source_terrain", "")) != "water" \
+			or String(shoreline_profiles[0].get("direction", "")) != "E" \
+			or int(shoreline_profiles[0].get("shallow_band_point_count", 0)) != 7 \
+			or int(shoreline_profiles[0].get("wet_edge_point_count", 0)) != 5 \
+			or int(shoreline_profiles[0].get("foam_segment_count", 0)) != 2 \
+			or not bool(shoreline_profiles[0].get("geometry_contained", false)) \
+			or not is_equal_approx(float(shoreline.get("shallow_band_alpha", 0.0)), 0.10) \
+			or not is_equal_approx(float(shoreline.get("wet_edge_alpha", 0.0)), 0.26) \
+			or not is_equal_approx(float(shoreline.get("foam_alpha", 0.0)), 0.36) \
+			or int(shoreline.get("foam_segments_per_edge", 0)) != 2 \
+			or bool(shoreline.get("continuous_bright_outline", true)) \
+			or bool(shoreline.get("full_tile_fill", true)) \
+			or String(shoreline.get("deterministic_seed_basis", "")) != "receiver_tile_and_cardinal_direction_only" \
+			or String(shoreline.get("draw_order", "")) != "after_authored_transition_overlay_before_macro_lighting_and_roads" \
+			or session.to_dict() != authority_before:
+		push_error("Overworld smoke: River Pass water boundary did not expose the contained organic shallow/wet/broken-foam contour while preserving terrain authority. presentation=%s" % shoreline_presentation)
 		get_tree().quit(1)
 		return false
 	return true

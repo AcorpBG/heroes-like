@@ -247,6 +247,9 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var macro_lighting_corner_mismatch_count := 0
 	var terrain_grain_tile_count := 0
 	var terrain_grain_exact_count := 0
+	var shoreline_tile_count := 0
+	var shoreline_source_count := 0
+	var shoreline_exact_count := 0
 	var policy_ids: Dictionary = {}
 	var surface_model_ids: Dictionary = {}
 	var feather_band_counts: Dictionary = {}
@@ -270,6 +273,7 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 			var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
 			var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 			var grain: Dictionary = terrain.get("terrain_grain_overlay", {}) if terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
+			var shoreline: Dictionary = terrain.get("water_shoreline_contour", {}) if terrain.get("water_shoreline_contour", {}) is Dictionary else {}
 			var lighting_keys: Array = lighting.get("corner_keys", []) if lighting.get("corner_keys", []) is Array else []
 			var lighting_samples: Array = lighting.get("corner_samples", []) if lighting.get("corner_samples", []) is Array else []
 			if bool(lighting.get("drawn", false)):
@@ -309,6 +313,16 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 					and bool(grain.get("hidden_by_unexplored_shroud", false))
 				):
 					terrain_grain_exact_count += 1
+			if bool(shoreline.get("active", false)):
+				shoreline_tile_count += 1
+				shoreline_source_count += int(shoreline.get("source_count", 0))
+				var shoreline_profiles: Array = shoreline.get("profiles", []) if shoreline.get("profiles", []) is Array else []
+				var profiles_exact := shoreline_profiles.size() == int(shoreline.get("source_count", -1))
+				for profile_value in shoreline_profiles:
+					var shoreline_profile: Dictionary = profile_value if profile_value is Dictionary else {}
+					profiles_exact = profiles_exact and int(shoreline_profile.get("shallow_band_point_count", 0)) == 7 and int(shoreline_profile.get("wet_edge_point_count", 0)) == 5 and int(shoreline_profile.get("foam_segment_count", 0)) == 2 and bool(shoreline_profile.get("geometry_contained", false))
+				if String(shoreline.get("model", "")) == "deterministic_shallow_wet_edge_and_broken_foam" and profiles_exact and not bool(shoreline.get("continuous_bright_outline", true)) and not bool(shoreline.get("full_tile_fill", true)):
+					shoreline_exact_count += 1
 			if int(terrain.get("generic_transition_overlay_relationship_count", 0)) <= 0:
 				continue
 			relationship_tile_count += 1
@@ -345,6 +359,9 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"macro_lighting_corner_mismatch_count": macro_lighting_corner_mismatch_count,
 		"terrain_grain_tile_count": terrain_grain_tile_count,
 		"terrain_grain_exact_count": terrain_grain_exact_count,
+		"shoreline_tile_count": shoreline_tile_count,
+		"shoreline_source_count": shoreline_source_count,
+		"shoreline_exact_count": shoreline_exact_count,
 		"draw_policy_ids": policy_ids.keys(),
 		"surface_model_ids": surface_model_ids.keys(),
 		"feather_band_counts": feather_band_counts.keys(),
@@ -622,6 +639,8 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or summary.get("macro_lighting_highlight_alphas", []) != [0.04]
 		or int(summary.get("terrain_grain_tile_count", 0)) != explored_tile_count
 		or int(summary.get("terrain_grain_exact_count", 0)) != explored_tile_count
+		or int(summary.get("shoreline_exact_count", -1)) != int(summary.get("shoreline_tile_count", -2))
+		or int(summary.get("shoreline_source_count", 0)) < int(summary.get("shoreline_tile_count", 0))
 		or summary.get("terrain_grain_model_ids", []) != ["single_normalized_map_space_seamless_painterly_microtexture"]
 		or summary.get("terrain_grain_source_model_ids", []) != ["original_generated_neutral_grain_mirrored_seamless_alpha"]
 		or summary.get("terrain_grain_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"]

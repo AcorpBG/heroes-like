@@ -1911,21 +1911,54 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-hostile-commander-open-threat-marker-10184",
-    "title": "Overworld hostile commander open threat marker",
+    "id": "presentation-overworld-organic-water-shoreline-contours-10184",
+    "title": "Overworld organic water shoreline contours",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T00:22:55Z",
-    "updatedAt": "2026-08-26T00:37:08Z",
-    "completedAt": "2026-08-26T00:37:08Z",
+    "startedAt": "2026-08-26T00:40:46Z",
+    "updatedAt": "2026-08-26T00:59:54Z",
+    "completedAt": "2026-08-26T00:59:54Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "The filled hostile commander/unit encounter plate is replaced by two open flank chevrons and one compact threat notch. Focused six-faction/fallback, inspected 1280x720 and 1920x1080 visual, compatibility, static/editor, and bounded Linux/Windows startup gates are green; packaged Overworld interaction and whole-release readiness remain unclaimed."
+    "notes": "Completed: the original-bank water edge now adds contained shallow tint, muted irregular wet contour, and two bent broken-foam accents. Inspected 1280x720 and 1920x1080 captures, focused/generated compatibility, static/editor, and bounded Linux/Windows startup gates are green; packaged Overworld interaction and whole-release readiness remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-organic-water-shoreline-contours-20260826",
+      "title": "Overworld organic water shoreline contours",
+      "sliceId": "presentation-overworld-organic-water-shoreline-contours-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T00:59:54Z",
+      "updatedAt": "2026-08-26T00:59:54Z",
+      "latestFinding": "Fresh River Pass 1280x720 and 1920x1080 captures show a softer painterly lake edge using a shallow tint, muted irregular wet contour, and short bent foam accents with no continuous bright outline. Focused/generated terrain, route, focus, accessibility, core, static/editor, Linux, and Windows startup gates are green.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-shoreline-focused.0rsgme",
+        "/tmp/heroes-shoreline-final-runtime.QeyFxi",
+        "/tmp/heroes-shoreline-capture-refined.8M72YX",
+        "/tmp/heroes-shoreline-compat.gK3qcp",
+        "/tmp/heroes-shoreline-platform.fa2yCP",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "foam_segments_per_edge": 2,
+        "continuous_bright_outline": false,
+        "full_tile_fill": false,
+        "session_authority_exact": true,
+        "linux_export_headless_startup": true,
+        "windows_export_wine_startup": true,
+        "packaged_overworld_interaction_claimed": false
+      }
+    },
     {
       "id": "ux-overworld-hostile-commander-open-threat-marker-20260826",
       "title": "Overworld hostile commander open threat marker",
@@ -14423,14 +14456,14 @@
       }
     }
   ],
-  "currentNotes": "The hostile commander now uses a compact open threat marker that keeps the actor primary; select the next source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The organic shoreline contour polish is completed; select the next source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-hostile-commander-open-threat-marker-10184",
-  "currentSliceId": "ux-overworld-hostile-commander-open-threat-marker-10184",
-  "currentSliceNotes": "Replace only the hostile encounter ring/plate with contained open flank chevrons and a threat notch; preserve actor/fallback identity, 0.50-tile extent, grounding, session, save, and gameplay authority.",
+  "currentSlice": "presentation-overworld-organic-water-shoreline-contours-10184",
+  "currentSliceId": "presentation-overworld-organic-water-shoreline-contours-10184",
+  "currentSliceNotes": "Add deterministic shallow tint, wet-edge contour, and broken foam to existing water-to-land transition geometry; preserve topology, passability, transition selection, map/session/save, and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld hostile commander open threat marker",
-  "currentSliceUpdatedAt": "2026-08-26T00:37:08Z",
+  "currentSliceTitle": "Overworld organic water shoreline contours",
+  "currentSliceUpdatedAt": "2026-08-26T00:59:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19945,8 +19978,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next source-backed graphical-polish or release-readiness slice; preserve the completed active-hero command marker and exact gameplay authority.",
-  "notes": "The Overworld active-hero command marker polish is completed; blockers are empty and the next slice is not yet selected.",
+  "nextActionGuardrailNote": "Select the next source-backed graphical-polish or release-readiness slice; preserve the completed shoreline, terrain, fog, movement, session/save, and Native RMG authority.",
+  "notes": "The organic shoreline contour polish is completed; blockers are empty and the next slice is not yet selected.",
   "plannedSlices": [
     {
       "id": "ux-overworld-active-hero-command-marker-10184",
@@ -102173,6 +102206,51 @@
         "packagedOverworldInteractionClaimed": false
       },
       "blockedReason": null
+    },
+    {
+      "id": "presentation-overworld-organic-water-shoreline-contours-10184",
+      "title": "Overworld organic water shoreline contours",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T00:59:54Z",
+      "startedAt": "2026-08-26T00:40:46Z",
+      "completedAt": "2026-08-26T00:59:54Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the remaining hard stair-step look of live water-to-land boundaries with restrained deterministic shallow-water, wet-edge, and broken-foam contours without changing terrain authority.",
+      "completionCriteria": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show an organic readable shoreline; focused runtime proves exact transition ownership, contained deterministic shallow/wet/foam geometry, no full-tile fill or continuous bright outline, and unchanged terrain/map/session/save authority; broad compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No terrain id, topology, tile texture replacement, transition selection, water passability, movement cost, route/pathfinding, road/causeway connectivity, fog/reveal, map content, generated placement, session/save/schema, AI, economy, battle, balance, or Native RMG change.",
+        "No object/hero/town asset or scale, selection/focus marker, shell/UI layout, input, animation/audio/VFX, shader, weather, or broad terrain rewrite.",
+        "No packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current-capture inspection. The existing authored water transition now adds a restrained shallow tint, muted irregular wet contour, and two short bent foam accents per water edge. Focused and generated runtime, inspected 1280x720 and 1920x1080 captures, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Overworld interaction and whole-release readiness remain unclaimed.",
+      "validation": {
+        "focusedArtifact": "/tmp/heroes-shoreline-focused.0rsgme",
+        "finalRuntimeArtifact": "/tmp/heroes-shoreline-final-runtime.QeyFxi",
+        "captureArtifact": "/tmp/heroes-shoreline-capture-refined.8M72YX",
+        "compatibilityArtifact": "/tmp/heroes-shoreline-compat.gK3qcp",
+        "platformArtifact": "/tmp/heroes-shoreline-platform.fa2yCP",
+        "captureWidths": [1280, 1920],
+        "shorelineModel": "deterministic_shallow_wet_edge_and_broken_foam",
+        "foamSegmentsPerEdge": 2,
+        "continuousBrightOutline": false,
+        "fullTileFill": false,
+        "sessionAuthorityExact": true,
+        "linuxExportHeadlessStartup": true,
+        "windowsExportWineStartup": true,
+        "packagedOverworldInteractionClaimed": false
+      },
+      "blockedReason": null,
+      "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
     }
   ],
   "project": "heroes-like",
