@@ -46202,6 +46202,8 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
     town_responsive_start = town_text.find("func _apply_responsive_layout() -> void:")
     town_responsive_end = town_text.find("\nfunc ", town_responsive_start + 1)
     town_responsive = town_text[town_responsive_start:] if town_responsive_end < 0 else town_text[town_responsive_start:town_responsive_end]
+    ensure(town_text.count("const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 304.0") == 1, errors, "Town must own one exact 304px compact management-rail budget")
+    ensure(town_text.count("const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 400.0") == 1, errors, "Town must retain one exact 400px wide management-rail budget")
     required_town_source_order = [
         town_responsive.find("var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0"),
         town_responsive.find("var narrow_layout := available_size.x < 1100.0"),
@@ -46209,7 +46211,7 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         town_responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0"),
         town_responsive.find("_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0"),
         town_responsive.find("_resource_label.set_compact_mode(compact_layout)"),
-        town_responsive.find("_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0"),
+        town_responsive.find("_sidebar_shell_panel.custom_minimum_size.x = TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH"),
         town_responsive.find("_town_orders_toggle_button.visible = narrow_layout"),
     ]
     ensure(all(index >= 0 for index in required_town_source_order) and required_town_source_order == sorted(required_town_source_order), errors, "Town compact Header/resource and management-rail budgets must be applied before retaining narrow Town Orders ownership")
@@ -46218,7 +46220,7 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         "_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0",
         "_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0",
         "_resource_label.set_compact_mode(compact_layout)",
-        "_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0",
+        "_sidebar_shell_panel.custom_minimum_size.x = TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH",
     ):
         ensure(town_responsive.count(token) == 1, errors, f"Town responsive layout must own exactly one compact edge-label assignment: {token}")
     refresh_start = town_text.find("func _refresh(first_render_minimal: bool = false) -> void:")
@@ -46289,9 +46291,22 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         'if String(resource_snapshot.get("tooltip_text", "")) != String(resource_snapshot.get("full_summary", "")):',
         "func _expect_town_sidebar_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:",
         'var sidebar := shell.get_node("%SidebarShell") as PanelContainer',
-        "var expected_width := 272.0 if compact else 400.0",
+        "var expected_width := 304.0 if compact else 400.0",
         "if not is_equal_approx(sidebar.custom_minimum_size.x, expected_width):",
         "if sidebar.visible and sidebar.size.x + 0.01 < sidebar.get_combined_minimum_size().x:",
+        'var management_tabs := shell.get_node("%ManagementTabs") as TabContainer',
+        'var stage_column := shell.get_node("%StageColumn") as Control',
+        "if sidebar.visible and stage_column.visible and stage_column.size.x <= sidebar.size.x * 2.0:",
+        "var tab_bar := management_tabs.get_tab_bar()",
+        "tab_bar.tab_count != 5",
+        "tab_bar.size.x + 0.01 < tab_bar.get_combined_minimum_size().x",
+        'var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]',
+        "for tab_index in range(tab_bar.tab_count):",
+        "var tab_rect := tab_bar.get_tab_rect(tab_index)",
+        "tab_bar.get_tab_title(tab_index) != expected_titles[tab_index]",
+        "tab_rect.position.x < prior_end_x - 0.01",
+        "tab_rect.end.x > tab_bar.size.x + 0.01",
+        "prior_end_x = tab_rect.end.x",
     )
     for token in required_test_tokens:
         ensure(token in layout_text, errors, f"Player-comprehension owner is missing exact active-play supported-viewport containment proof: {token}")
@@ -46309,6 +46324,8 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         "minimum_size_changed.emit(",
         "get_window().size =",
         "DisplayServer.window_set_size",
+        "set_tab_title(",
+        "set_tab_disabled(",
     ):
         ensure(forbidden not in layout_text, errors, f"Player-comprehension owner must observe live responsive layout without mutation shortcuts: {forbidden}")
 
