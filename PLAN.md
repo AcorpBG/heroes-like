@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
 
+## Town Management Rail Heraldic Fill
+
+id: `presentation-town-management-rail-heraldic-fill-10184`
+
+Status: completed.
+
+Result:
+- the existing five-page management panel now expands from its exact 460px content-safe minimum through the remaining Town sidebar height, removing the tall-screen dead zone without adding UI;
+- the existing live faction crest remains the Build page's only decorative fill at a restrained 0.14 opacity, stays below the controls, and remains hidden in high-contrast mode;
+- inspected 1280x720 and 1920x1080 pixels, five-page/Log geometry, crest/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Town captures show the scenic city stage is strong, but the management rail ends at a fixed 460px card and leaves a large flat brown void on taller screens;
+- the Build page already owns the correct live faction crest watermark, but the fixed fill-only tab container prevents the panel and watermark from using the available rail height.
+
+Implementation boundary:
+- let the existing five-page ManagementTabs expand through the remaining sidebar height while retaining its 460px content-safe minimum, exact page/tab order, native Log scrolling, and all controls;
+- keep the existing live faction watermark as the Build page's only decorative fill, enlarging it through real layout space and reducing its opacity for a restrained heraldic presence;
+- preserve all town art, controls, text, focus/action/input, high-contrast suppression, gameplay, session/save, route, and Native RMG authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 Town captures show a visually complete management rail without adding panels, text, or crowding the scenic city;
+- focused runtime proves exact minimum-plus-expand geometry, full rail containment, five-page control containment, Log reachability, passive watermark layout, high-contrast behavior, and unchanged session/save authority;
+- Town visual/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new panel, tab, control, text, art asset, town-stage/city art, resource/header/footer geometry, command behavior, input/focus/accessibility semantic, gameplay, content, save/schema, route, or Native RMG change;
+- no packaged Town interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Object Scale Coherence
 
 id: `presentation-overworld-object-scale-coherence-10184`

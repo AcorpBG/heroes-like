@@ -419,6 +419,7 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 	var sidebar_shell := shell.get_node_or_null("%SidebarShell") as PanelContainer
 	var command_panel := shell.get_node_or_null("%CommandPanel") as PanelContainer
 	var tabs := shell.get_node_or_null("%ManagementTabs") as TabContainer
+	var sidebar_box := tabs.get_parent() as VBoxContainer if tabs != null else null
 	var rows := [
 		{"title": "Build", "page": shell.get_node_or_null("%BuildPanel"), "controls": [shell.get_node_or_null("%Buildings"), shell.get_node_or_null("%BuildActions"), shell.get_node_or_null("%BuildPlan"), shell.get_node_or_null("%ConfirmBuild")]},
 		{"title": "Muster", "page": shell.get_node_or_null("%RecruitPanel"), "controls": [shell.get_node_or_null("%Recruitment"), shell.get_node_or_null("%RecruitActions")]},
@@ -426,7 +427,7 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 		{"title": "Trade", "page": shell.get_node_or_null("%MarketPanel"), "controls": [shell.get_node_or_null("%Market"), shell.get_node_or_null("%MarketActions")]},
 		{"title": "Log", "page": shell.get_node_or_null("%LogisticsPanel"), "controls": [shell.get_node_or_null("%LogisticsScroll")]},
 	]
-	if sidebar_shell == null or command_panel == null or tabs == null:
+	if sidebar_shell == null or command_panel == null or tabs == null or sidebar_box == null:
 		return {"ok": false, "missing_authored_control": true}
 	for row_value in rows:
 		var row: Dictionary = row_value
@@ -475,20 +476,23 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 	logistics_scroll.scroll_vertical = 0
 	await get_tree().process_frame
 	var sidebar_rect := sidebar_shell.get_global_rect()
+	var sidebar_box_rect := sidebar_box.get_global_rect()
 	var command_rect := command_panel.get_global_rect()
 	var tabs_rect := tabs.get_global_rect()
 	var compact := viewport_size.x < 1360 or viewport_size.y < 760
-	var remaining_rail_gutter := sidebar_rect.end.y - tabs_rect.end.y
+	var remaining_rail_gutter := sidebar_box_rect.end.y - tabs_rect.end.y
 	var authored_height_exact := is_equal_approx(tabs.custom_minimum_size.y, 460.0) \
-		and tabs.size_flags_vertical == Control.SIZE_FILL
-	var geometry_exact := heights.all(func(height): return is_equal_approx(height, 460.0)) \
-		and sidebar_rect.encloses(tabs_rect) \
+		and tabs.size_flags_vertical == Control.SIZE_EXPAND_FILL
+	var geometry_exact := heights.all(func(height): return height + 0.01 >= 460.0) \
+		and sidebar_box_rect.encloses(tabs_rect) \
+		and absf(remaining_rail_gutter) <= 1.0 \
+		and (viewport_size.y < 1080 or tabs_rect.size.y >= 600.0) \
 		and pages_contained \
 		and controls_contained \
 		and logistics_top_reachable \
 		and logistics_scroll_required \
 		and logistics_end_reachable \
-		and ((not command_panel.is_visible_in_tree()) if compact else (sidebar_rect.encloses(command_rect) and command_rect.end.y <= tabs_rect.position.y + 0.01 and not command_rect.intersects(tabs_rect) and remaining_rail_gutter >= 32.0))
+		and ((not command_panel.is_visible_in_tree()) if compact else (sidebar_box_rect.encloses(command_rect) and command_rect.end.y <= tabs_rect.position.y + 0.01 and not command_rect.intersects(tabs_rect)))
 	tabs.current_tab = original_tab
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -502,6 +506,7 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 		"tab_group_centered": tab_group_centered,
 		"heights": heights,
 		"sidebar_rect": sidebar_rect,
+		"sidebar_box_rect": sidebar_box_rect,
 		"command_rect": command_rect,
 		"tabs_rect": tabs_rect,
 		"command_visible": command_panel.is_visible_in_tree(),

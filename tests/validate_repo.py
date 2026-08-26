@@ -34064,9 +34064,9 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
     if tabs_match is not None:
         tabs_body = tabs_match.group("body")
         ensure(tabs_body.count("custom_minimum_size = Vector2(0, 460)") == 1, errors, "Town ManagementTabs must own one exact 460px content-safe minimum")
-        ensure(tabs_body.count("size_flags_horizontal = 3") == 1 and tabs_body.count("size_flags_vertical = 1") == 1, errors, "Town ManagementTabs must fill horizontally without vertically expanding through the wide rail")
+        ensure(tabs_body.count("size_flags_horizontal = 3") == 1 and tabs_body.count("size_flags_vertical = 3") == 1, errors, "Town ManagementTabs must fill the remaining management rail from its content-safe minimum")
         ensure(tabs_body.count("tab_alignment = 1") == 1, errors, "Town ManagementTabs must center its five native command plaques inside the compact and wide rails")
-        ensure("size_flags_vertical = 3" not in tabs_body, errors, "Town ManagementTabs must not retain the full-height vertical expand flag")
+        ensure("size_flags_vertical = 1" not in tabs_body, errors, "Town ManagementTabs must not leave the taller management rail unfilled")
     watermark_match = re.search(
         r'\[node name="BuildFactionWatermark" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"\]\n(?P<body>.*?)(?=\n\[node name="RecruitPanel")',
         scene_text,
@@ -34081,7 +34081,7 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             "layout_mode = 2",
             "size_flags_vertical = 3",
             "mouse_filter = 2",
-            "self_modulate = Color(1, 1, 1, 0.22)",
+            "self_modulate = Color(1, 1, 1, 0.14)",
             "expand_mode = 1",
             "stretch_mode = 5",
         ):
@@ -34154,10 +34154,10 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             '"title": "Trade"',
             '"title": "Log"',
             "tabs.custom_minimum_size.y, 460.0",
-            "tabs.size_flags_vertical != Control.SIZE_FILL",
+            "tabs.size_flags_vertical != Control.SIZE_EXPAND_FILL",
             "for index in range(rows.size()):",
             "tabs.get_tab_title(index)",
-            "is_equal_approx(tabs.size.y, 460.0)",
+            "tabs.size.y + 0.01 < 460.0",
             "tabs.get_global_rect().encloses(page.get_global_rect())",
             'shell.get_node("%LogisticsScroll")',
             "logistics_scroll.get_v_scroll_bar().max_value <= logistics_scroll.get_v_scroll_bar().page + 0.01",
@@ -34182,7 +34182,7 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             "watermark.focus_mode != Control.FOCUS_NONE",
             "watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE",
             "watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED",
-            "not is_equal_approx(watermark.self_modulate.a, 0.22)",
+            "not is_equal_approx(watermark.self_modulate.a, 0.14)",
             "for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
             "not build_box_rect.encloses(watermark_rect)",
             "watermark_rect.intersects(confirm_rect)",
@@ -34210,6 +34210,7 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             'shell.get_node_or_null("%SidebarShell")',
             'shell.get_node_or_null("%CommandPanel")',
             'shell.get_node_or_null("%ManagementTabs")',
+            "var sidebar_box := tabs.get_parent() as VBoxContainer if tabs != null else null",
             '"title": "Build"',
             '"title": "Muster"',
             '"title": "Spells"',
@@ -34225,8 +34226,8 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             "var logistics_end_reachable",
             "logistics_scroll.scroll_vertical = 0",
             "tabs.custom_minimum_size.y, 460.0",
-            "heights.all(func(height): return is_equal_approx(height, 460.0))",
-            "remaining_rail_gutter >= 32.0",
+            "heights.all(func(height): return height + 0.01 >= 460.0)",
+            "absf(remaining_rail_gutter) <= 1.0",
             "tabs.current_tab = original_tab",
             "var authority_exact := session.to_dict() == authority_before",
         ))
@@ -34236,8 +34237,8 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             "var tab_bar := tabs.get_tab_bar()",
             "tabs.tab_alignment == HORIZONTAL_ALIGNMENT_CENTER",
             "absf(first_tab_rect.position.x - (tab_bar.size.x - last_tab_rect.end.x)) <= 1.0",
-            "sidebar_rect.encloses(tabs_rect)",
-            "sidebar_rect.encloses(command_rect)",
+            "sidebar_box_rect.encloses(tabs_rect)",
+            "sidebar_box_rect.encloses(command_rect)",
             "not command_rect.intersects(tabs_rect)",
             "not command_panel.is_visible_in_tree()) if compact",
             "logistics_top_reachable",
