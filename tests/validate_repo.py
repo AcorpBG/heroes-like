@@ -19875,6 +19875,53 @@ def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
         owner_text = path.read_text(encoding="utf-8")
         ensure(owner_text.count(token) == 1, errors, f"{label} must apply the shared TabContainer presentation exactly once")
 
+    town_text = town_path.read_text(encoding="utf-8")
+    for required_token in (
+        "const TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0",
+        'const TOWN_MANAGEMENT_TAB_STATE_STYLES := [\n\t&"tab_selected",\n\t&"tab_hovered",\n\t&"tab_unselected",\n\t&"tab_disabled",\n]',
+    ):
+        ensure(town_text.count(required_token) == 1, errors, f"Town management tabs must own one exact local breathing-room source token: {required_token}")
+    town_theme_body = gd_block(town_text, "func _apply_visual_theme(")
+    town_breathing_body = gd_block(town_text, "func _apply_town_management_tab_breathing_room(")
+    ensure(town_theme_body != "" and town_breathing_body != "", errors, "Could not isolate Town management-tab breathing-room source")
+    town_theme_order = [
+        town_theme_body.find("FrontierVisualKit.apply_tab_container(_management_tabs)"),
+        town_theme_body.find("_apply_town_management_tab_breathing_room()"),
+        town_theme_body.find('_management_tabs.set_tab_title(0, "Build")'),
+        town_theme_body.find('_management_tabs.set_tab_title(4, "Log")'),
+    ]
+    ensure(all(index >= 0 for index in town_theme_order) and town_theme_order == sorted(town_theme_order), errors, "Town must apply the shared plaque theme, local breathing room, then retain all exact native tab titles")
+    for required_token in (
+        "for style_name in TOWN_MANAGEMENT_TAB_STATE_STYLES:",
+        "var shared_style := _management_tabs.get_theme_stylebox(style_name)",
+        "var town_style := shared_style.duplicate() as StyleBox",
+        "if town_style == null:",
+        "town_style.content_margin_left = TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL",
+        "town_style.content_margin_right = TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL",
+        "_management_tabs.add_theme_stylebox_override(style_name, town_style)",
+    ):
+        ensure(required_token in town_breathing_body, errors, f"Town management-tab breathing-room helper is missing exact local style token: {required_token}")
+    for forbidden in (
+        "FrontierVisualKit",
+        "TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL",
+        "content_margin_top",
+        "content_margin_bottom",
+        "texture_margin",
+        "current_tab",
+        "set_tab_",
+        "custom_minimum_size",
+        "size_flags",
+        "grab_focus",
+        "Input.",
+        "SettingsService",
+        "SaveService",
+        "SessionState",
+        "AppRouter",
+        "await ",
+        "call_deferred",
+    ):
+        ensure(forbidden not in town_breathing_body, errors, f"Town management-tab breathing room must remain local and presentation-only: {forbidden}")
+
     outcome_text = outcome_path.read_text(encoding="utf-8")
     ensure(outcome_text.count("const OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0") == 1, errors, "Outcome must own one exact local 4px recap-tab content margin")
     ensure(outcome_text.count('const OUTCOME_RECAP_TAB_STATE_STYLES := [\n\t&"tab_selected",\n\t&"tab_hovered",\n\t&"tab_unselected",\n\t&"tab_disabled",\n]') == 1, errors, "Outcome must enumerate the exact four local recap-tab state styles once")
@@ -19922,12 +19969,16 @@ def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
     for required_token in (
         'var expected_titles := ["Order", "Focus", "Spell", "Timing"]',
         'var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]',
-        "var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles)",
+        "var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles, 1.0)",
+        "var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles, 4.0)",
         'and bool(tab_plaque_contract.get("ok", false))',
         '"tab_plaques": tab_plaque_contract',
-        "func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> Dictionary:",
+        "func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array, expected_horizontal_content_margin: float) -> Dictionary:",
         "var current_tab_before := tabs.current_tab",
         "var tab_bar := tabs.get_tab_bar()",
+        'var font := tab_bar.get_theme_font("font")',
+        'var font_size := tab_bar.get_theme_font_size("font_size")',
+        "var text_safe_insets := font != null and font_size > 0",
         "var live_fit_required := tabs.is_visible_in_tree()",
         "var tab_rect: Rect2 = tab_bar.get_tab_rect(index)",
         "tab_rect.end.x <= tab_bar.size.x + 0.5",
@@ -19936,9 +19987,14 @@ def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
         '"tab_hovered": "res://art/ui/runtime/shared/button_secondary_hover.png"',
         '"tab_unselected": "res://art/ui/runtime/shared/button_secondary_normal.png"',
         '"tab_disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png"',
+        "is_equal_approx(texture_style.content_margin_left, expected_horizontal_content_margin)",
+        "is_equal_approx(texture_style.content_margin_right, expected_horizontal_content_margin)",
+        "text_width + expected_horizontal_content_margin * 2.0",
         "texture_style.modulate_color.is_equal_approx(Color(0.72, 0.72, 0.72, 0.76))",
         "focus_flat.border_color.is_equal_approx(Color(0.97, 0.88, 0.61, 1.0))",
         "and (not live_fit_required or (contained and ordered_without_overlap))",
+        '"text_safe_insets": text_safe_insets',
+        '"horizontal_content_margin": expected_horizontal_content_margin',
         "and tabs.current_tab == current_tab_before",
     ):
         ensure(required_token in report_text, errors, f"Town/Battle shared tab focused proof is missing exact token: {required_token}")
@@ -33865,6 +33921,7 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
         tabs_body = tabs_match.group("body")
         ensure(tabs_body.count("custom_minimum_size = Vector2(0, 460)") == 1, errors, "Town ManagementTabs must own one exact 460px content-safe minimum")
         ensure(tabs_body.count("size_flags_horizontal = 3") == 1 and tabs_body.count("size_flags_vertical = 1") == 1, errors, "Town ManagementTabs must fill horizontally without vertically expanding through the wide rail")
+        ensure(tabs_body.count("tab_alignment = 1") == 1, errors, "Town ManagementTabs must center its five native command plaques inside the compact and wide rails")
         ensure("size_flags_vertical = 3" not in tabs_body, errors, "Town ManagementTabs must not retain the full-height vertical expand flag")
     watermark_match = re.search(
         r'\[node name="BuildFactionWatermark" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"\]\n(?P<body>.*?)(?=\n\[node name="RecruitPanel")',
@@ -33927,6 +33984,23 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
     run_town = gd_function_block(smoke_text, "_run_town_smoke")
     ensure(focused and run_town, errors, "Could not isolate focused Town management-card runtime owner")
     if focused:
+        for token in (
+            "var tab_bar := tabs.get_tab_bar()",
+            "tabs.tab_alignment != HORIZONTAL_ALIGNMENT_CENTER",
+            'for style_name in ["tab_selected", "tab_hovered", "tab_unselected", "tab_disabled"]:',
+            "is_equal_approx(style.content_margin_left, 4.0)",
+            "is_equal_approx(style.content_margin_right, 4.0)",
+            'var tab_font := tab_bar.get_theme_font("font")',
+            'var tab_font_size := tab_bar.get_theme_font_size("font_size")',
+            "for tab_index in range(rows.size()):",
+            "var tab_rect := tab_bar.get_tab_rect(tab_index)",
+            "var text_width := tab_font.get_string_size(tab_title, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tab_font_size).x if tab_font != null and tab_font_size > 0 else INF",
+            "tab_rect.position.x + 0.01 < prior_tab_end",
+            "tab_rect.end.x > tab_bar.size.x + 0.01",
+            "tab_rect.size.x + 0.5 < text_width + 8.0",
+            "absf(first_tab_start - (tab_bar.size.x - prior_tab_end)) > 1.0",
+        ):
+            ensure(token in focused, errors, f"Focused Town management-tab breathing-room proof is missing exact passive geometry token: {token}")
         focused_order = tuple(focused.find(token) for token in (
             "var authority_before: Dictionary = session.to_dict()",
             'shell.get_node("%ManagementTabs")',
@@ -34015,6 +34089,9 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
         ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "All-size Town management-card owner must inspect every page/control, prove top-to-end Log reachability, wide geometry, restore, then verify authority")
         for token in (
             'var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]',
+            "var tab_bar := tabs.get_tab_bar()",
+            "tabs.tab_alignment == HORIZONTAL_ALIGNMENT_CENTER",
+            "absf(first_tab_rect.position.x - (tab_bar.size.x - last_tab_rect.end.x)) <= 1.0",
             "sidebar_rect.encloses(tabs_rect)",
             "sidebar_rect.encloses(command_rect)",
             "not command_rect.intersects(tabs_rect)",
@@ -34022,6 +34099,7 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             "logistics_top_reachable",
             "logistics_scroll_required",
             "logistics_end_reachable",
+            "tab_group_centered",
         ):
             ensure(token in visual, errors, f"All-size Town management-card proof is missing exact responsive/native-scroll token: {token}")
         for forbidden in ("custom_minimum_size =", "tabs.size_flags_vertical = Control.SIZE", "set_deferred", "call_deferred", "create_timer", "queue_sort", "sort(", "erase("):
