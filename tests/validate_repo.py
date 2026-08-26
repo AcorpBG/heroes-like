@@ -14758,6 +14758,15 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ensure(required_token in scenario_rules_text, errors, f"ScenarioRules.gd is missing required skirmish/session token: {required_token}")
 
     main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    logo_pocket_block = scene_node_block(main_menu_scene_text, "LogoPocketPanel", "PanelContainer")
+    for required_token in (
+        "anchor_left = 0.032",
+        "anchor_top = 0.028",
+        "anchor_right = 0.362",
+        "anchor_bottom = 0.18",
+    ):
+        ensure(required_token in logo_pocket_block, errors, f"Main Menu compact title pocket is missing exact anchor token: {required_token}")
+    ensure("anchor_bottom = 0.228" not in logo_pocket_block, errors, "Main Menu scene must not reserve the expanded notice height before a notice exists")
     for node_name, node_type in (
         ("ModeSplit", "HBoxContainer"),
         ("CampaignPanel", "VBoxContainer"),
@@ -19556,12 +19565,38 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         'var pocket_style := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())',
         '_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)',
         '_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())',
+        "const MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM := 0.180",
+        "const MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM := 0.228",
+        "func _sync_logo_pocket_notice_height(has_notice: bool) -> void:",
+        "_logo_pocket_panel.anchor_bottom = MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM if has_notice else MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM",
+        '"summary_visible": _summary_label.is_visible_in_tree()',
+        '"summary_text": _summary_label.text',
+        '"summary_rect": _summary_label.get_global_rect()',
     ):
         ensure(required_token in menu_text, errors, f"MainMenu.gd is missing cartographic pocket-frame token: {required_token}")
     ensure(menu_text.count("func _main_menu_pocket_surface_style(") == 1, errors, "MainMenu.gd must own exactly one first-view pocket surface factory")
     ensure(menu_text.count("func validation_main_menu_pocket_surface_summary()") == 1, errors, "MainMenu.gd must own exactly one first-view pocket surface summary")
     ensure(menu_text.count('_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)') == 1, errors, "MainMenu.gd must apply the cartographic logo-pocket surface exactly once")
     ensure(menu_text.count('_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())') == 1, errors, "MainMenu.gd must apply one detached cartographic footer-pocket surface")
+    refresh_summary_match = re.search(r"func _refresh_summary\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
+    adaptive_height_match = re.search(r"func _sync_logo_pocket_notice_height\(has_notice: bool\) -> void:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
+    ensure(refresh_summary_match is not None and adaptive_height_match is not None, errors, "Main Menu adaptive title-pocket refresh/helper could not be isolated")
+    if refresh_summary_match is not None:
+        refresh_body = refresh_summary_match.group("body")
+        refresh_order = tuple(refresh_body.find(token) for token in (
+            "var lead := _menu_notice",
+            '_summary_label.visible = lead != ""',
+            "_set_compact_label(_summary_label, lead, 3, 84)",
+            "_sync_logo_pocket_notice_height(_summary_label.visible)",
+            "_set_compact_label(\n\t\t_active_expedition_label,",
+        ))
+        ensure(all(index >= 0 for index in refresh_order) and list(refresh_order) == sorted(refresh_order), errors, "Main Menu summary refresh must set exact notice content/visibility, sync adaptive height, then retain footer copy")
+        ensure(refresh_body.count("_sync_logo_pocket_notice_height(_summary_label.visible)") == 1, errors, "Main Menu summary refresh must sync adaptive title-pocket height exactly once")
+    if adaptive_height_match is not None:
+        adaptive_body = adaptive_height_match.group("body")
+        ensure(adaptive_body.strip() == "_logo_pocket_panel.anchor_bottom = MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM if has_notice else MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM", errors, "Main Menu adaptive title-pocket helper must change only the bottom anchor through the exact notice predicate")
+        for forbidden_token in ("anchor_left", "anchor_top", "anchor_right", "offset_", ".visible", ".text", "SettingsService", "AppRouter", "SessionState", "create_timer", "call_deferred"):
+            ensure(forbidden_token not in adaptive_body, errors, f"Main Menu adaptive title-pocket helper must not mutate content, authority, timing, or other geometry through {forbidden_token}")
     pocket_factory_match = re.search(r"func _main_menu_pocket_surface_style\([^\n]*\) -> StyleBox:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
     pocket_summary_match = re.search(r"func validation_main_menu_pocket_surface_summary\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
     ensure(pocket_factory_match is not None and pocket_summary_match is not None, errors, "Main Menu pocket surface factory/summary could not be isolated")
@@ -19660,10 +19695,12 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         'const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"',
         "const MAIN_MENU_POCKET_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)",
         "const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)",
-        "const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)",
+        "const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.152)",
+        "const MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)",
         "const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.895, 0.340, 0.080)",
         'var pocket_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
         "if not _main_menu_pocket_summary_exact(pocket_summary, viewport_size):",
+        "if not await _assert_main_menu_adaptive_logo_pocket(shell, viewport_size):",
         "func _main_menu_pocket_summary_exact(summary: Dictionary, viewport_size: Vector2) -> bool:",
         'String(summary.get("model", "")) == MAIN_MENU_POCKET_FRAME_MODEL',
         '(summary.get("logo_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_LOGO_POCKET_ANCHORS.position) <= 0.0001',
@@ -19675,6 +19712,20 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         'String(contrast_pocket_surface.get("rendering_mode", "")) != "smoke_fallback"',
         'var restored_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
         'String(restored_pocket_surface.get("rendering_mode", "")) != expected_restored_pocket_mode',
+        "func _assert_main_menu_adaptive_logo_pocket(shell: Control, viewport_size: Vector2) -> bool:",
+        'var original_notice := String(shell.get("_menu_notice"))',
+        'var notice := "Frontier route restored. Review the latest expedition before marching."',
+        'shell.set("_menu_notice", notice)',
+        'shell.call("_refresh_summary")',
+        "not _main_menu_pocket_anchor_exact(compact_summary, MAIN_MENU_LOGO_POCKET_ANCHORS)",
+        "not _main_menu_pocket_anchor_exact(notice_summary, MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS)",
+        "notice_rect.size.y <= compact_rect.size.y + 1.0",
+        "not notice_rect.encloses(summary_label.get_global_rect())",
+        'shell.set("_menu_notice", original_notice)',
+        "restored_rect.is_equal_approx(compact_rect)",
+        "session.to_dict() == authority_before",
+        "SettingsService.settings == settings_before",
+        "func _main_menu_pocket_anchor_exact(summary: Dictionary, expected: Rect2) -> bool:",
     ):
         ensure(required_token in smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Stage Dock cartography proof token: {required_token}")
     stage_helper_match = re.search(r"func _assert_main_menu_stage_dock_surface\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
@@ -19707,6 +19758,19 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         pocket_oracle_body = pocket_oracle_match.group("body")
         for forbidden_token in ("shell", "MainMenu", "SettingsService", "load(", "ResourceLoader", "sort(", "erase(", "duplicate(", "add_theme_stylebox_override", ".anchor_left =", ".visible =", ".text ="):
             ensure(forbidden_token not in pocket_oracle_body, errors, f"Main Menu cartographic pocket oracle must remain source-independent and passive: {forbidden_token}")
+    adaptive_oracle_match = re.search(r"func _assert_main_menu_adaptive_logo_pocket\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    anchor_oracle_match = re.search(r"func _main_menu_pocket_anchor_exact\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    ensure(adaptive_oracle_match is not None and anchor_oracle_match is not None, errors, "Main Menu adaptive title-pocket runtime/oracle helpers could not be isolated")
+    if adaptive_oracle_match is not None:
+        adaptive_oracle_body = adaptive_oracle_match.group("body")
+        ensure(adaptive_oracle_body.count('shell.set("_menu_notice", notice)') == 1 and adaptive_oracle_body.count('shell.set("_menu_notice", original_notice)') == 2, errors, "Main Menu adaptive title-pocket proof must apply one notice and restore it on both failure and success paths")
+        ensure(adaptive_oracle_body.count('shell.call("_refresh_summary")') == 3, errors, "Main Menu adaptive title-pocket proof must use the real summary refresh for apply, failure cleanup, and successful restoration")
+        for forbidden_token in ("anchor_bottom =", "offset_", "custom_minimum_size =", "queue_sort", "create_timer", "AppRouter", "SaveService", "sort(", "erase("):
+            ensure(forbidden_token not in adaptive_oracle_body, errors, f"Main Menu adaptive title-pocket runtime proof must not bypass production layout or mutate external authority through {forbidden_token}")
+    if anchor_oracle_match is not None:
+        anchor_oracle_body = anchor_oracle_match.group("body")
+        for forbidden_token in ("shell", "MainMenu", "SettingsService", "AppRouter", "SessionState", "duplicate(", "sort(", "erase("):
+            ensure(forbidden_token not in anchor_oracle_body, errors, f"Main Menu title-pocket anchor oracle must remain detached and source-independent: {forbidden_token}")
 
 
 def validate_main_menu_item_list_selection_inlay(errors: list[str]) -> None:
