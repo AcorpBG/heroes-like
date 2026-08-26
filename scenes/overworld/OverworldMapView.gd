@@ -145,8 +145,11 @@ const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.54
 const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.44
 const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.34
 const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.38
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.50
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.50
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_STEP_TILES := 0.16
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES := 0.54
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_STEP_TILES := 0.20
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 0.94
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
@@ -3720,10 +3723,11 @@ func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictiona
 	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
 	var uncapped_sprite_extent := maxf(12.0, extent * sprite_fraction)
 	var uses_multi_tile_cap := (footprint.x > 1 or footprint.y > 1) and family not in ["blocker", "decoration", "town"]
+	var multi_tile_bounds := _multi_tile_interactive_sprite_extent_bounds(footprint) if uses_multi_tile_cap else Vector2.ZERO
 	var sprite_extent := clampf(
 		uncapped_sprite_extent,
-		single_tile_extent * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES,
-		single_tile_extent * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES
+		single_tile_extent * multi_tile_bounds.x,
+		single_tile_extent * multi_tile_bounds.y
 	) if uses_multi_tile_cap else uncapped_sprite_extent
 	var sprite_center := rect.get_center()
 	if uses_multi_tile_cap:
@@ -3736,11 +3740,24 @@ func _object_sprite_visual_metrics(rect: Rect2, profile: Dictionary) -> Dictiona
 		"uncapped_sprite_extent_px": uncapped_sprite_extent,
 		"sprite_extent_px": maxf(12.0, sprite_extent),
 		"sprite_extent_tiles": maxf(12.0, sprite_extent) / maxf(single_tile_extent, 1.0),
-		"min_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES if uses_multi_tile_cap else 0.0,
-		"cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES if uses_multi_tile_cap else 0.0,
+		"min_tiles": multi_tile_bounds.x if uses_multi_tile_cap else 0.0,
+		"cap_tiles": multi_tile_bounds.y if uses_multi_tile_cap else 0.0,
 		"uses_multi_tile_visual_cap": uses_multi_tile_cap,
 		"sprite_center": sprite_center,
 	}
+
+func _multi_tile_interactive_sprite_extent_bounds(footprint: Vector2i) -> Vector2:
+	var normalized_footprint := _normalized_footprint(footprint)
+	var span_steps := float(maxi(maxi(normalized_footprint.x, normalized_footprint.y) - 1, 0))
+	var min_tiles := minf(
+		MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES + span_steps * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_STEP_TILES,
+		MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES
+	)
+	var cap_tiles := minf(
+		MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES + span_steps * MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_STEP_TILES,
+		MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES
+	)
+	return Vector2(min_tiles, maxf(min_tiles, cap_tiles))
 
 func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool, owner: String) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -4912,7 +4929,7 @@ func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 	if scale_class in ["durable_structure", "waypoint", "landmark", "terrain_blocker"]:
 		base += float(maxi(footprint.x - 1, 0)) * 0.06
 		base += float(maxi(footprint.y - 1, 0)) * 0.03
-	return clampf(base, OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES, MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES)
+	return clampf(base, OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES, OBJECT_LANDMARK_VISIBLE_EXTENT_TILES)
 
 func _semantic_visual_scale_class(profile: Dictionary) -> String:
 	var family := String(profile.get("family", "pickup")).strip_edges()
@@ -5395,7 +5412,11 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"offset_y_max": offset_y_max if not indexed_keys.is_empty() else 0.0,
 		"composition_signature": JSON.stringify(entries).sha256_text(),
 		"body_entries": entries,
-		"multi_tile_interactive_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES,
+		"multi_tile_interactive_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES,
+		"multi_tile_interactive_base_min_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES,
+		"multi_tile_interactive_min_step_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_STEP_TILES,
+		"multi_tile_interactive_base_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES,
+		"multi_tile_interactive_cap_step_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_STEP_TILES,
 		"capped_resource_count": capped_resource_count,
 		"max_capped_resource_extent_tiles": max_capped_extent_tiles,
 		"resource_entries": resource_entries,

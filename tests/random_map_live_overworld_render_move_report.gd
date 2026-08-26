@@ -847,7 +847,13 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if String(summary.get("composition_signature", "")).length() != 64:
 		_fail("%s generated body composition signature is missing: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.54):
+	if (
+		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.94)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_min_tiles", 0.0)), 0.50)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_min_step_tiles", 0.0)), 0.16)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_cap_tiles", 0.0)), 0.54)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_cap_step_tiles", 0.0)), 0.20)
+	):
 		_fail("%s multi-tile visual cap changed: %s" % [label, summary.get("multi_tile_interactive_cap_tiles", -1.0)])
 		return false
 	var corrected_multi_tile_count := 0
@@ -860,11 +866,19 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		var footprint: Dictionary = metrics.get("footprint", {}) if metrics.get("footprint", {}) is Dictionary else {}
 		var multi_tile := int(footprint.get("width", 1)) > 1 or int(footprint.get("height", 1)) > 1
 		if multi_tile:
+			var footprint_span := maxi(int(footprint.get("width", 1)), int(footprint.get("height", 1)))
+			var expected_min_tiles := minf(0.50 + float(footprint_span - 1) * 0.16, 0.94)
+			var expected_cap_tiles := minf(0.54 + float(footprint_span - 1) * 0.20, 0.94)
 			if not bool(metrics.get("uses_multi_tile_visual_cap", false)):
 				_fail("%s multi-tile resource did not use the visual cap: %s" % [label, JSON.stringify(entry)])
 				return false
-			if float(metrics.get("sprite_extent_tiles", 99.0)) > 1.0001:
-				_fail("%s multi-tile resource exceeded the visual cap: %s" % [label, JSON.stringify(entry)])
+			if (
+				not is_equal_approx(float(metrics.get("min_tiles", 0.0)), expected_min_tiles)
+				or not is_equal_approx(float(metrics.get("cap_tiles", 0.0)), expected_cap_tiles)
+				or float(metrics.get("sprite_extent_tiles", 0.0)) < expected_min_tiles - 0.0001
+				or float(metrics.get("sprite_extent_tiles", 99.0)) > expected_cap_tiles + 0.0001
+			):
+				_fail("%s multi-tile resource escaped its footprint-span bounds: %s" % [label, JSON.stringify(entry)])
 				return false
 			if float(metrics.get("uncapped_sprite_extent_px", 0.0)) > float(metrics.get("sprite_extent_px", 0.0)) + 0.01:
 				corrected_multi_tile_count += 1

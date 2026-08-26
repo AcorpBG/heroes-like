@@ -1911,20 +1911,54 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-shared-cartographic-tab-plaques-10184",
-    "title": "Shared cartographic tab plaques",
+    "id": "presentation-overworld-footprint-aware-site-scale-10184",
+    "title": "Footprint-aware Overworld site scale",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T05:25:39Z",
-    "updatedAt": "2026-08-26T05:58:41Z",
+    "startedAt": "2026-08-26T06:03:13Z",
+    "updatedAt": "2026-08-26T06:23:46Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with inspected two-width Town and Outcome plus visible wide-Battle captures, exact shared asset-backed and high-contrast style proof, unchanged tab/page/game authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup gates."
+    "notes": "Completed with graduated exact footprint-span bounds, inspected authored/generated captures, exact scale and gameplay authority, route/focus/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup gates."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-footprint-aware-site-scale-20260826",
+      "title": "Footprint-aware Overworld site scale",
+      "sliceId": "presentation-overworld-footprint-aware-site-scale-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T06:23:46Z",
+      "updatedAt": "2026-08-26T06:23:46Z",
+      "latestFinding": "Multi-tile interactive art now derives restrained 0.66-0.94 tile visual bounds from exact authored footprint span instead of one fixed 0.50-0.54 clamp; towns remain the largest 1.04-tile anchor and all logical footprint, map, route, interaction, session, and save authority remains unchanged.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-footprint-scale.em5uFs",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "two_span_min_tiles": 0.66,
+        "two_span_cap_tiles": 0.74,
+        "three_span_min_tiles": 0.82,
+        "three_span_cap_tiles": 0.94,
+        "town_extent_tiles": 1.04,
+        "single_tile_scale_unchanged": true,
+        "logical_footprints_unchanged": true,
+        "generated_save_reload_authority_exact": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "nonClaims": [
+        "No packaged Overworld interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-shared-cartographic-tab-plaques-20260826",
       "title": "Shared cartographic tab plaques",
@@ -14769,14 +14803,14 @@
       }
     }
   ],
-  "currentNotes": "The shared cartographic tab-plaque polish is completed; no implementation slice is currently selected.",
+  "currentNotes": "The footprint-aware Overworld site-scale correction is completed; no implementation slice is currently selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-shared-cartographic-tab-plaques-10184",
-  "currentSliceId": "presentation-shared-cartographic-tab-plaques-10184",
-  "currentSliceNotes": "Replace only shared rounded flat tab capsules with compact existing-asset cartographic plaques while preserving exact tab/page/focus/action and game authority.",
+  "currentSlice": "presentation-overworld-footprint-aware-site-scale-10184",
+  "currentSliceId": "presentation-overworld-footprint-aware-site-scale-10184",
+  "currentSliceNotes": "Graduate only multi-tile interactive art from exact logical footprint span while preserving all single-tile/town/hero and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Shared cartographic tab plaques",
-  "currentSliceUpdatedAt": "2026-08-26T05:58:41Z",
+  "currentSliceTitle": "Footprint-aware Overworld site scale",
+  "currentSliceUpdatedAt": "2026-08-26T06:23:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20291,9 +20325,36 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; preserve the completed shared tab-plaque and exact tab/page/game authority.",
-  "notes": "The shared cartographic tab-plaque slice is completed; blockers are empty and no next slice is selected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; preserve the completed footprint-aware scale and exact map/game authority.",
+  "notes": "The footprint-aware Overworld site-scale slice is completed; blockers are empty and no next slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-footprint-aware-site-scale-10184",
+      "title": "Footprint-aware Overworld site scale",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T06:03:13Z",
+      "updatedAt": "2026-08-26T06:23:46Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Restore restrained footprint-proportional visual presence to authored multi-tile Overworld sites instead of collapsing every interactive footprint to one fixed half-tile icon scale.",
+      "completionCriteria": "Inspected 1280x720 and 1920x1080 captures show proportional multi-tile sites below the town anchor; focused authored/generated runtime proves exact graduated extents and unchanged single-tile/town/hero/decorative scale plus map/path/interaction/session/save authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No object identity/assets/content, logical footprint/body/entry/hit/passability/visit/placement/path/interaction, session/save/schema, rules, AI, battle, balance, or Native RMG change.",
+        "No town, hero, single-tile object, generated decorative-body, camera/UI, font/UI-scale, animation/audio/VFX, shader, or broad Overworld redesign.",
+        "No packaged interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with graduated footprint-span visual bounds, inspected authored/generated captures, exact scale/game authority, compatibility, static/editor, and bounded Linux/Windows startup proof.",
+      "blockedReason": null,
+      "remainingWork": "Completed: inspected captures, focused authored/generated runtime, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green."
+    },
     {
       "id": "presentation-shared-cartographic-tab-plaques-10184",
       "title": "Shared cartographic tab plaques",
