@@ -10,6 +10,7 @@ const UI_ART_BATTLE_INITIATIVE_BAR := "res://art/ui/runtime/battle/initiative_ba
 const UI_ART_BATTLE_COMBAT_LOG_PANEL := "res://art/ui/runtime/battle/combat_log_panel.png"
 const UI_ART_BATTLE_UNIT_CARD := "res://art/ui/runtime/battle/unit_card.png"
 const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_panel.png"
+const BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT := 1000.0
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Press Save to retry the checkpoint."
 const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
@@ -30,6 +31,7 @@ const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 @onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
 @onready var _command_panel: PanelContainer = %CommandPanel
 @onready var _battle_tabs: TabContainer = %BattleTabs
+@onready var _sidebar_watermark: TextureRect = %SidebarWatermark
 @onready var _initiative_panel: PanelContainer = %InitiativePanel
 @onready var _context_panel: PanelContainer = %ContextPanel
 @onready var _spell_panel: PanelContainer = %SpellPanel
@@ -3704,6 +3706,7 @@ func _apply_responsive_layout() -> void:
 	_compact_layout_active = compact_layout
 	_refit_battle_action_guide()
 	_sidebar_shell_panel.visible = not compact_layout
+	_sidebar_watermark.visible = not compact_layout and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT
 	_battle_context_label.visible = not compact_layout
 	_event_label.visible = not compact_layout
 	_status_label.visible = banner_details_visible

@@ -18605,7 +18605,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ensure('board.call("_exit_tree")' not in smoke_text, errors, "Battle controller semantic smoke must exercise tree cancellation through a real detach instead of invoking _exit_tree directly")
     ensure('is_same(pending.get("battle_ref"), session.battle)' not in smoke_text, errors, "Battle controller semantic smoke must not assert external Dictionary property identity")
     ensure('is_same(pending.get("battle_ref"), board.get("_battle"))' not in smoke_text, errors, "Battle controller semantic smoke must not assert reflective Dictionary property identity")
-    ensure(smoke_text.count("session = SessionState.set_active_session(session)") == 3, errors, "Battle controller semantic smoke must retain exactly three canonical active-session assignments")
+    ensure(smoke_text.count("session = SessionState.set_active_session(session)") == 4, errors, "Battle controller semantic smoke must retain exactly four canonical active-session assignments, including the sidebar presentation fixture")
     ensure(re.search(r"(?m)^\s*SessionState\.set_active_session\(session\)$", smoke_text) is None, errors, "Battle controller semantic smoke must not discard the canonical active-session return value")
     ensure("normalize_overworld_state" not in smoke_text and ".erase(" not in smoke_text, errors, "Battle controller semantic smoke must not normalize or erase authority to make comparisons pass")
     cancel_delivery_match = re.search(
@@ -33424,6 +33424,123 @@ def validate_battle_sidebar_tactical_card_height_cap(errors: list[str]) -> None:
             "var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)",
         ))
         ensure(all(index >= 0 for index in visual_run_order) and list(visual_run_order) == sorted(visual_run_order), errors, "Battle tactical-card all-size contract must pass before every captured screenshot")
+
+
+def validate_battle_sidebar_heraldic_watermark(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    asset_path = ROOT / "art" / "ui" / "runtime" / "battle" / "sidebar_heraldic_watermark.png"
+    controller_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    for path in (asset_path, BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path):
+        ensure(path.exists(), errors, f"Missing Battle sidebar watermark owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (asset_path, BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path)):
+        return
+
+    asset_bytes = asset_path.read_bytes()
+    ensure(png_size(asset_path) == (512, 512), errors, "Battle sidebar heraldic watermark must remain an exact 512x512 PNG")
+    ensure(len(asset_bytes) > 25 and asset_bytes[:8] == b"\x89PNG\r\n\x1a\n" and asset_bytes[25] == 6, errors, "Battle sidebar heraldic watermark must retain its RGBA transparency")
+
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    controller_text = controller_path.read_text(encoding="utf-8")
+    resource_token = '[ext_resource type="Texture2D" path="res://art/ui/runtime/battle/sidebar_heraldic_watermark.png" id="7_sidebar_watermark"]'
+    ensure(scene_text.count(resource_token) == 1, errors, "BattleShell must import exactly one authored sidebar heraldic watermark texture")
+    watermark_node = scene_node_block(scene_text, "SidebarWatermark", "TextureRect")
+    ensure(watermark_node, errors, "BattleShell must author one SidebarWatermark TextureRect")
+    if watermark_node:
+        ensure(scene_node_parent(scene_text, "SidebarWatermark", "TextureRect") == "ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox", errors, "Battle sidebar watermark must remain inside the existing flexible SidebarBox negative-space owner")
+        for token in (
+            "unique_name_in_owner = true",
+            "visible = false",
+            "layout_mode = 2",
+            "size_flags_vertical = 3",
+            "mouse_filter = 2",
+            "self_modulate = Color(0.82, 0.72, 0.52, 0.20)",
+            'texture = ExtResource("7_sidebar_watermark")',
+            "expand_mode = 1",
+            "stretch_mode = 5",
+        ):
+            ensure(watermark_node.count(token) == 1, errors, f"Battle sidebar watermark is missing exact passive presentation token: {token}")
+        for forbidden in ("custom_minimum_size", "offset_", "anchor_", "grow_", "script =", "text =", "tooltip_text", "focus_mode", "clip_contents"):
+            ensure(forbidden not in watermark_node, errors, f"Battle sidebar watermark must not add layout, focus, text, or behavior through {forbidden}")
+    watermark_index = scene_text.find('[node name="SidebarWatermark" type="TextureRect"')
+    tabs_index = scene_text.find('[node name="BattleTabs" type="TabContainer"')
+    footer_index = scene_text.find('[node name="Footer" type="PanelContainer" parent="ContentMargin/Content"]')
+    ensure(0 <= tabs_index < watermark_index < footer_index, errors, "Battle sidebar watermark must remain the final flexible SidebarBox child after BattleTabs and before the existing Footer")
+
+    ensure(script_text.count("const BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT := 1000.0") == 1, errors, "BattleShell must own one exact tall-rail watermark threshold")
+    ensure(script_text.count("@onready var _sidebar_watermark: TextureRect = %SidebarWatermark") == 1, errors, "BattleShell must bind the authored watermark exactly once")
+    responsive = gd_function_block(script_text, "_apply_responsive_layout")
+    ensure(responsive, errors, "Could not isolate BattleShell responsive layout for watermark validation")
+    if responsive:
+        responsive_order = tuple(responsive.find(token) for token in (
+            "var available_size := size",
+            "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
+            "_sidebar_shell_panel.visible = not compact_layout",
+            "_sidebar_watermark.visible = not compact_layout and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT",
+            "_battle_context_label.visible = not compact_layout",
+        ))
+        ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "BattleShell must derive watermark visibility from the existing logical responsive layout after sidebar visibility")
+        ensure(responsive.count("_sidebar_watermark.visible =") == 1, errors, "BattleShell responsive layout must own exactly one watermark visibility assignment")
+        for forbidden in ("get_window()", "DisplayServer", "_sidebar_watermark.custom_minimum_size", "_sidebar_watermark.size_flags_", "_sidebar_watermark.texture =", "_sidebar_watermark.self_modulate =", "queue_sort", "call_deferred", "create_timer"):
+            ensure(forbidden not in responsive, errors, f"Battle watermark responsive policy must not mutate layout/art/timing through {forbidden}")
+
+    run_block = gd_function_block(controller_text, "_run")
+    focused = gd_function_block(controller_text, "_validate_battle_sidebar_watermark_responsiveness")
+    ensure(run_block and focused, errors, "Battle controller smoke must own the focused sidebar watermark runtime proof")
+    if run_block:
+        watermark_call = run_block.find("if not await _validate_battle_sidebar_watermark_responsiveness():")
+        width_loop = run_block.find("for width in [1280, 1920]:")
+        ensure(0 <= watermark_call < width_loop and run_block.count("_validate_battle_sidebar_watermark_responsiveness()") == 1, errors, "Battle watermark proof must run exactly once before existing board input fixtures")
+    if focused:
+        focused_order = tuple(focused.find(token) for token in (
+            "var frame := Control.new()",
+            'frame.name = "BattleSidebarWatermarkFrame"',
+            "frame.size = Vector2(1920.0, 1080.0)",
+            "frame.add_child(shell)",
+            "await _settle()",
+            "var authority_before := _battle_background_authority(session)",
+            'var watermark: TextureRect = shell.get_node("%SidebarWatermark")',
+            "var watermark_texture: Texture2D = watermark.texture",
+            "var watermark_image: Image = watermark_texture.get_image() if watermark_texture != null else null",
+            "watermark_image.get_format() != Image.FORMAT_RGBA8",
+            "not is_zero_approx(watermark_image.get_pixel(0, 0).a)",
+            "watermark_image.get_pixel(256, 256).a < 0.95",
+            "for viewport_size in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:",
+            "frame.size = Vector2(viewport_size)",
+            "var expected_sidebar_visible: bool = viewport_size.x >= 1360 and viewport_size.y >= 760",
+            "var expected_watermark_visible: bool = expected_sidebar_visible and viewport_size.y >= 1000",
+            "sidebar.visible != expected_sidebar_visible or watermark.visible != expected_watermark_visible",
+            "tabs.size.y, 248.0",
+            "var watermark_rect := watermark.get_global_rect()",
+            "not sidebar_rect.encloses(watermark_rect)",
+            "watermark_rect.intersects(command_rect)",
+            "watermark_rect.intersects(tabs_rect)",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle watermark proof must validate authority, real asset alpha, four logical sizes, containment, and cleanup in order")
+        ensure(focused.rfind("frame.queue_free()") > focused_order[-1], errors, "Focused Battle watermark proof must free its whole logical host after the final authority gate")
+        for token in (
+            'watermark_texture.resource_path != "res://art/ui/runtime/battle/sidebar_heraldic_watermark.png"',
+            "Vector2i(watermark_texture.get_size()) != Vector2i(512, 512)",
+            "watermark.custom_minimum_size != Vector2.ZERO",
+            "watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL",
+            "watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE",
+            "watermark.focus_mode != Control.FOCUS_NONE",
+            "watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE",
+            "watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED",
+            "not is_equal_approx(watermark.self_modulate.a, 0.20)",
+            "watermark.size.x <= 0.0 or watermark.size.y <= 0.0",
+            "watermark_rect.position.y + 0.01 < tabs_rect.end.y",
+        ):
+            ensure(token in focused, errors, f"Focused Battle watermark proof is missing exact passive asset/geometry token: {token}")
+        for forbidden in ("get_window().size = viewport_size", "watermark.visible =", "watermark.texture =", "watermark.self_modulate =", "custom_minimum_size =", "size_flags_vertical =", "grab_focus", "Input.", "push_input", "create_timer", "sort(", "erase("):
+            ensure(forbidden not in focused, errors, f"Focused Battle watermark proof must remain observational and avoid {forbidden}")
 
 
 def validate_town_management_card_height_cap(errors: list[str]) -> None:
@@ -68217,6 +68334,7 @@ def main() -> int:
     validate_battle_shell_release_polish(errors)
     validate_battle_movement_range_overlay_restraint(errors)
     validate_battle_sidebar_tactical_card_height_cap(errors)
+    validate_battle_sidebar_heraldic_watermark(errors)
     validate_battle_terrain_context_and_system_frame(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)
