@@ -3,6 +3,40 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 const REPORT_ID := "MAP_EDITOR_LOAD_MAP_PACKAGE_REPORT"
+const WORKBENCH_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]
+const WORKBENCH_PANEL_PATHS := {
+	"RootMargin/Shell": "res://art/ui/runtime/main_menu/stage_dock_cartography.png",
+	"RootMargin/Shell/ShellPad/ShellBox/TopPanel": "res://art/ui/runtime/battle/battle_footer_panel.png",
+	"RootMargin/Shell/ShellPad/ShellBox/BodyRow/MapPanel": "res://art/ui/runtime/battle/combat_log_panel.png",
+	"RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail": "res://art/ui/runtime/overworld/sidebar_frame.png",
+}
+const WORKBENCH_PRIMARY_BUTTONS := ["LoadMap", "SaveCopy", "PlayWorkingCopy", "ApplyObjectProperties"]
+const WORKBENCH_SECONDARY_BUTTONS := [
+	"InspectTool",
+	"TerrainTool",
+	"TerrainLineTool",
+	"TerrainRectangleTool",
+	"RoadTool",
+	"RoadPathTool",
+	"HeroStartTool",
+	"PlaceObjectTool",
+	"RemoveObjectTool",
+	"MoveObjectTool",
+	"DuplicateObjectTool",
+	"RethemeObjectTool",
+	"FillTerrain",
+	"RestoreSelectedTile",
+	"Menu",
+]
+const WORKBENCH_PICKERS := [
+	"MapPackagePicker",
+	"TerrainPicker",
+	"ObjectFamilyPicker",
+	"ObjectContentPicker",
+	"SelectedObjectPicker",
+	"PropertyOwnerPicker",
+	"PropertyDifficultyPicker",
+]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -117,6 +151,9 @@ func _run() -> void:
 		_cleanup(map_path, scenario_path)
 		_fail("Loaded editor UI still exposed old scenario dropdown copy: %s" % JSON.stringify(loaded))
 		return
+	if not await _assert_cartographic_workbench_skin(shell, package_id):
+		_cleanup(map_path, scenario_path)
+		return
 	var initial_overlay: Dictionary = shell.call("validation_placement_debug_overlay_snapshot") if shell.has_method("validation_placement_debug_overlay_snapshot") else {}
 	if bool(initial_overlay.get("enabled", true)):
 		_cleanup(map_path, scenario_path)
@@ -156,6 +193,173 @@ func _run() -> void:
 		"authored_json_scenarios_used": false,
 	})])
 	get_tree().quit(0)
+
+
+func _assert_cartographic_workbench_skin(shell: Control, package_id: String) -> bool:
+	var editor_session = shell.get("_session")
+	if editor_session == null or not editor_session.has_method("to_dict"):
+		_fail("Map Editor workbench skin proof could not capture the loaded editor session authority.")
+		return false
+	var editor_authority_before: Dictionary = editor_session.to_dict()
+	var active_authority_before: Dictionary = SessionState.ensure_active_session().to_dict()
+	var control_contract_before := _workbench_control_contract(shell)
+	if control_contract_before.is_empty():
+		_fail("Map Editor workbench skin proof could not capture its native control contract.")
+		return false
+	var first_layout: Dictionary = {}
+	for index in range(WORKBENCH_WINDOW_SIZES.size()):
+		var requested_size: Vector2i = WORKBENCH_WINDOW_SIZES[index]
+		get_window().size = requested_size
+		shell.size = Vector2(requested_size)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var layout := _workbench_layout_contract(shell, requested_size)
+		if not bool(layout.get("ok", false)):
+			_fail("Map Editor cartographic workbench did not retain authored frame/control containment at %s: %s" % [requested_size, layout])
+			return false
+		var control_contract_now := _workbench_control_contract(shell)
+		if control_contract_now != control_contract_before:
+			_fail("Map Editor cartographic skin changed native text, items, metadata, selection, state, font, focusability, or minimum-size authority at %s: before=%s now=%s" % [requested_size, control_contract_before, control_contract_now])
+			return false
+		if index == 0:
+			first_layout = layout.duplicate(true)
+		elif index == WORKBENCH_WINDOW_SIZES.size() - 1 and layout != first_layout:
+			_fail("Map Editor cartographic workbench did not restore exact 1280 layout after the wide pass: first=%s restored=%s" % [first_layout, layout])
+			return false
+	var picker := shell.get_node_or_null("%MapPackagePicker") as OptionButton
+	if picker == null or package_id not in _option_metadata(picker):
+		_fail("Map Editor cartographic skin lost the loaded package picker item/metadata authority.")
+		return false
+	if editor_session.to_dict() != editor_authority_before or SessionState.ensure_active_session().to_dict() != active_authority_before:
+		_fail("Map Editor cartographic skin changed the loaded editor or active playable session authority.")
+		return false
+	return true
+
+
+func _workbench_layout_contract(shell: Control, expected_size: Vector2i) -> Dictionary:
+	var failures: Array[String] = []
+	var shell_rect := shell.get_global_rect()
+	var top_panel := shell.get_node("RootMargin/Shell/ShellPad/ShellBox/TopPanel") as PanelContainer
+	var map_panel := shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/MapPanel") as PanelContainer
+	var tool_rail := shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail") as PanelContainer
+	var map_rect := map_panel.get_global_rect()
+	var rail_rect := tool_rail.get_global_rect()
+	if get_window().size != expected_size or shell.size != Vector2(expected_size):
+		failures.append("requested_window")
+	if not shell_rect.encloses(top_panel.get_global_rect()) or not shell_rect.encloses(map_rect) or not shell_rect.encloses(rail_rect):
+		failures.append("shell_containment")
+	if map_rect.end.x > rail_rect.position.x + 0.01 or map_rect.position.y < top_panel.get_global_rect().end.y - 0.01:
+		failures.append("body_order")
+	if map_rect.size.x < 820.0 or rail_rect.size.x < 340.0 or map_rect.size.x / maxf(shell_rect.size.x, 1.0) < 0.64:
+		failures.append("map_dominance")
+	for panel_path in WORKBENCH_PANEL_PATHS:
+		var panel := shell.get_node(String(panel_path)) as PanelContainer
+		if not _style_box_texture_exact(panel.get_theme_stylebox("panel"), String(WORKBENCH_PANEL_PATHS[panel_path])):
+			failures.append("panel:%s" % panel_path)
+	for button_name in WORKBENCH_PRIMARY_BUTTONS:
+		if not _button_art_states_exact(shell.get_node("%%%s" % button_name) as BaseButton, "primary"):
+			failures.append("primary:%s" % button_name)
+	for button_name in WORKBENCH_SECONDARY_BUTTONS:
+		if not _button_art_states_exact(shell.get_node("%%%s" % button_name) as BaseButton, "secondary"):
+			failures.append("secondary:%s" % button_name)
+	for picker_name in WORKBENCH_PICKERS:
+		if not _button_art_states_exact(shell.get_node("%%%s" % picker_name) as OptionButton, "secondary"):
+			failures.append("picker:%s" % picker_name)
+	return {
+		"ok": failures.is_empty(),
+		"failures": failures,
+		"window_size": get_window().size,
+		"shell_rect": shell_rect,
+		"top_rect": top_panel.get_global_rect(),
+		"map_rect": map_rect,
+		"tool_rail_rect": rail_rect,
+	}
+
+
+func _style_box_texture_exact(style: StyleBox, expected_path: String) -> bool:
+	if not (style is StyleBoxTexture):
+		return false
+	var textured := style as StyleBoxTexture
+	return textured.texture != null \
+		and textured.texture.resource_path == expected_path \
+		and is_equal_approx(textured.texture_margin_left, 24.0) \
+		and is_equal_approx(textured.texture_margin_top, 24.0) \
+		and is_equal_approx(textured.texture_margin_right, 24.0) \
+		and is_equal_approx(textured.texture_margin_bottom, 24.0) \
+		and is_equal_approx(textured.content_margin_left, 8.0) \
+		and is_equal_approx(textured.content_margin_top, 8.0) \
+		and is_equal_approx(textured.content_margin_right, 8.0) \
+		and is_equal_approx(textured.content_margin_bottom, 8.0)
+
+
+func _button_art_states_exact(button: BaseButton, role: String) -> bool:
+	if button == null or button.focus_mode != Control.FOCUS_ALL or not (button.get_theme_stylebox("focus") is StyleBoxFlat):
+		return false
+	for state in ["normal", "hover", "pressed", "disabled"]:
+		var expected_path := "res://art/ui/runtime/shared/button_%s_%s.png" % [role, state]
+		var style := button.get_theme_stylebox(state)
+		if not (style is StyleBoxTexture):
+			return false
+		var textured := style as StyleBoxTexture
+		if textured.texture == null or textured.texture.resource_path != expected_path:
+			return false
+	return true
+
+
+func _workbench_control_contract(shell: Control) -> Dictionary:
+	var contract := {}
+	for button_name in WORKBENCH_PRIMARY_BUTTONS + WORKBENCH_SECONDARY_BUTTONS:
+		var button := shell.get_node_or_null("%%%s" % button_name) as BaseButton
+		if button == null:
+			return {}
+		contract[button_name] = {
+			"text": button.text,
+			"disabled": button.disabled,
+			"pressed": button.button_pressed,
+			"focus_mode": button.focus_mode,
+			"custom_minimum_size": button.custom_minimum_size,
+			"font_size": button.get_theme_font_size("font_size"),
+		}
+	for picker_name in WORKBENCH_PICKERS:
+		var picker := shell.get_node_or_null("%%%s" % picker_name) as OptionButton
+		if picker == null:
+			return {}
+		contract[picker_name] = {
+			"items": _option_items(picker),
+			"popup_items": _popup_items(picker),
+			"metadata": _option_metadata(picker),
+			"selected": picker.selected,
+			"text": picker.text,
+			"disabled": picker.disabled,
+			"focus_mode": picker.focus_mode,
+			"font_size": picker.get_theme_font_size("font_size"),
+			"fit_to_longest_item": picker.fit_to_longest_item,
+			"clip_text": picker.clip_text,
+		}
+	return contract
+
+
+func _option_items(picker: OptionButton) -> Array:
+	var items := []
+	for index in range(picker.item_count):
+		items.append(picker.get_item_text(index))
+	return items
+
+
+func _option_metadata(picker: OptionButton) -> Array:
+	var metadata := []
+	for index in range(picker.item_count):
+		metadata.append(picker.get_item_metadata(index))
+	return metadata
+
+
+func _popup_items(picker: OptionButton) -> Array:
+	var items := []
+	var popup := picker.get_popup()
+	for index in range(popup.item_count):
+		items.append(popup.get_item_text(index))
+	return items
 
 func _f4_event() -> InputEventKey:
 	var event := InputEventKey.new()

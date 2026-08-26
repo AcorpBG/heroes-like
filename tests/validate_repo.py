@@ -162,6 +162,7 @@ MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
 MAP_EDITOR_SMOKE_SCRIPT_PATH = ROOT / "tests" / "map_editor_smoke.gd"
+MAP_EDITOR_LOAD_MAP_PACKAGE_REPORT_SCRIPT_PATH = ROOT / "tests" / "map_editor_load_map_package_report.gd"
 MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.gd"
 MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.tscn"
 MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCRIPT_PATH = ROOT / "tests" / "map_editor_canvas_failed_action_audio_report.gd"
@@ -23043,6 +23044,15 @@ def validate_map_editor_canvas_failed_action_audio(errors: list[str]) -> None:
 
 
 def validate_map_editor_shell_slice(errors: list[str]) -> None:
+    def map_editor_function_block(text: str, name: str) -> str:
+        match = re.search(
+            rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)",
+            text,
+            re.S,
+        )
+        ensure(match is not None, errors, f"Could not isolate Map Editor workbench function {name}")
+        return match.group("body") if match is not None else ""
+
     required_paths = (
         APP_ROUTER_PATH,
         MAIN_MENU_SCENE_PATH,
@@ -23184,6 +23194,131 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
     ensure("_load_scenario_working_copy" not in editor_script_text, errors, "MapEditorShell.gd must quarantine the old scenario loader behind explicit legacy/package names")
     ensure("ScenarioPicker" not in editor_scene_text, errors, "MapEditorShell.tscn must not keep the old scenario dropdown in the active editor UI")
     ensure("Map Package |" in editor_script_text, errors, "MapEditorShell.gd must label active editor load entries as map packages")
+
+    for required_token in (
+        'const EDITOR_WORKBENCH_SKIN_MODEL := "shared_cartographic_frame_and_control_art"',
+        'const EDITOR_SHELL_FRAME_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
+        'const EDITOR_TOP_FRAME_PATH := "res://art/ui/runtime/battle/battle_footer_panel.png"',
+        'const EDITOR_MAP_FRAME_PATH := "res://art/ui/runtime/battle/combat_log_panel.png"',
+        'const EDITOR_TOOL_RAIL_FRAME_PATH := "res://art/ui/runtime/overworld/sidebar_frame.png"',
+        '@onready var _editor_shell_panel: PanelContainer = $RootMargin/Shell',
+        '@onready var _editor_top_panel: PanelContainer = $RootMargin/Shell/ShellPad/ShellBox/TopPanel',
+        '@onready var _editor_map_panel: PanelContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/MapPanel',
+        '@onready var _editor_tool_rail: PanelContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail',
+        'FrontierVisualKit.apply_art_panel(_editor_shell_panel, EDITOR_SHELL_FRAME_PATH, "frame", 24, 8, Color(0.90, 0.92, 0.94, 0.96))',
+        'FrontierVisualKit.apply_art_panel(_editor_top_panel, EDITOR_TOP_FRAME_PATH, "banner", 24, 8)',
+        'FrontierVisualKit.apply_art_panel(_editor_map_panel, EDITOR_MAP_FRAME_PATH, "frame", 24, 8)',
+        'FrontierVisualKit.apply_art_panel(_editor_tool_rail, EDITOR_TOOL_RAIL_FRAME_PATH, "earth", 24, 8)',
+        'var primary_buttons := [_load_map_button, _save_copy_button, _play_button, _property_apply_button]',
+        'var secondary_buttons := [',
+        '_apply_editor_button_surface(button, "primary")',
+        '_apply_editor_button_surface(button, "secondary")',
+        'func _apply_editor_button_surface(button: BaseButton, role: String) -> void:',
+        'FrontierVisualKit.apply_button(button, role, minimum.x, minimum.y, font_size)',
+        'func _apply_editor_option_surface(picker: OptionButton) -> void:',
+        'FrontierVisualKit.apply_option_button(picker, "secondary", minimum.x, minimum.y, font_size)',
+    ):
+        ensure(required_token in editor_script_text, errors, f"MapEditorShell.gd is missing cartographic workbench-skin token: {required_token}")
+    ensure(editor_script_text.count("FrontierVisualKit.apply_art_panel(") == 4, errors, "Map Editor workbench skin must apply exactly four existing authored frame surfaces")
+    visual_theme_block = map_editor_function_block(editor_script_text, "_apply_visual_theme")
+    visual_frame_order = tuple(visual_theme_block.find(token) for token in (
+        "_editor_shell_panel, EDITOR_SHELL_FRAME_PATH",
+        "_editor_top_panel, EDITOR_TOP_FRAME_PATH",
+        "_editor_map_panel, EDITOR_MAP_FRAME_PATH",
+        "_editor_tool_rail, EDITOR_TOOL_RAIL_FRAME_PATH",
+        "var primary_buttons :=",
+        "var secondary_buttons :=",
+        "for button in primary_buttons:",
+        "for button in secondary_buttons:",
+        "for picker in [",
+    ))
+    ensure(all(index >= 0 for index in visual_frame_order) and list(visual_frame_order) == sorted(visual_frame_order), errors, "Map Editor workbench skin must apply exact frame, button-role, then picker surfaces in stable order")
+    for exact_control in (
+        "_inspect_tool_button",
+        "_terrain_tool_button",
+        "_terrain_line_tool_button",
+        "_terrain_rectangle_tool_button",
+        "_road_tool_button",
+        "_road_path_tool_button",
+        "_hero_start_tool_button",
+        "_place_object_tool_button",
+        "_remove_object_tool_button",
+        "_move_object_tool_button",
+        "_duplicate_object_tool_button",
+        "_retheme_object_tool_button",
+        "_fill_terrain_button",
+        "_restore_tile_button",
+        "_menu_button",
+        "_map_package_picker",
+        "_terrain_picker",
+        "_object_family_picker",
+        "_object_content_picker",
+        "_selected_object_picker",
+        "_property_owner_picker",
+        "_property_difficulty_picker",
+    ):
+        ensure(visual_theme_block.count(exact_control) == 1, errors, f"Map Editor workbench skin must theme exact existing control once: {exact_control}")
+    for helper_name, expected_apply in (
+        ("_apply_editor_button_surface", "FrontierVisualKit.apply_button(button, role, minimum.x, minimum.y, font_size)"),
+        ("_apply_editor_option_surface", 'FrontierVisualKit.apply_option_button(picker, "secondary", minimum.x, minimum.y, font_size)'),
+    ):
+        helper_block = map_editor_function_block(editor_script_text, helper_name)
+        ensure(expected_apply in helper_block, errors, f"Map Editor {helper_name} must delegate to the shared authored control surface")
+        for forbidden in (".text =", ".disabled =", ".button_pressed =", ".selected =", ".clear(", ".add_item(", ".set_item_metadata(", ".connect(", "queue_free", "add_child", "remove_child", "size_flags", "position =", "anchor_"):
+            ensure(forbidden not in helper_block, errors, f"Map Editor {helper_name} must not change control content, state, signals, ownership, or layout through {forbidden}")
+    ensure("func _panel_style(" not in editor_script_text, errors, "Map Editor must not retain its superseded flat prototype panel factory")
+    ensure("add_theme_stylebox_override" not in visual_theme_block, errors, "Map Editor workbench skin must use the shared authored visual kit instead of local flat style overrides")
+
+    ensure(MAP_EDITOR_LOAD_MAP_PACKAGE_REPORT_SCRIPT_PATH.exists(), errors, "Missing Map Editor package/load workbench visual owner")
+    if MAP_EDITOR_LOAD_MAP_PACKAGE_REPORT_SCRIPT_PATH.exists():
+        load_report_text = MAP_EDITOR_LOAD_MAP_PACKAGE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "const WORKBENCH_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]",
+            '"RootMargin/Shell": "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
+            '"RootMargin/Shell/ShellPad/ShellBox/TopPanel": "res://art/ui/runtime/battle/battle_footer_panel.png"',
+            '"RootMargin/Shell/ShellPad/ShellBox/BodyRow/MapPanel": "res://art/ui/runtime/battle/combat_log_panel.png"',
+            '"RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail": "res://art/ui/runtime/overworld/sidebar_frame.png"',
+            'const WORKBENCH_PRIMARY_BUTTONS := ["LoadMap", "SaveCopy", "PlayWorkingCopy", "ApplyObjectProperties"]',
+            "const WORKBENCH_SECONDARY_BUTTONS := [",
+            "const WORKBENCH_PICKERS := [",
+            "if not await _assert_cartographic_workbench_skin(shell, package_id):",
+            "func _assert_cartographic_workbench_skin(shell: Control, package_id: String) -> bool:",
+            "var editor_authority_before: Dictionary = editor_session.to_dict()",
+            "var active_authority_before: Dictionary = SessionState.ensure_active_session().to_dict()",
+            "for index in range(WORKBENCH_WINDOW_SIZES.size()):",
+            "get_window().size = requested_size",
+            "shell.size = Vector2(requested_size)",
+            "elif index == WORKBENCH_WINDOW_SIZES.size() - 1 and layout != first_layout:",
+            "var control_contract_now := _workbench_control_contract(shell)",
+            "control_contract_now != control_contract_before",
+            "package_id not in _option_metadata(picker)",
+            "editor_session.to_dict() != editor_authority_before",
+            "SessionState.ensure_active_session().to_dict() != active_authority_before",
+            "func _workbench_layout_contract(shell: Control, expected_size: Vector2i) -> Dictionary:",
+            "map_rect.size.x / maxf(shell_rect.size.x, 1.0) < 0.64",
+            "for panel_path in WORKBENCH_PANEL_PATHS:",
+            "for button_name in WORKBENCH_PRIMARY_BUTTONS:",
+            "for button_name in WORKBENCH_SECONDARY_BUTTONS:",
+            "for picker_name in WORKBENCH_PICKERS:",
+            "func _style_box_texture_exact(style: StyleBox, expected_path: String) -> bool:",
+            "func _button_art_states_exact(button: BaseButton, role: String) -> bool:",
+            'for state in ["normal", "hover", "pressed", "disabled"]:',
+            '"res://art/ui/runtime/shared/button_%s_%s.png" % [role, state]',
+            "func _workbench_control_contract(shell: Control) -> Dictionary:",
+            '"items": _option_items(picker)',
+            '"popup_items": _popup_items(picker)',
+            '"metadata": _option_metadata(picker)',
+            '"selected": picker.selected',
+            '"fit_to_longest_item": picker.fit_to_longest_item',
+            '"clip_text": picker.clip_text',
+        ):
+            ensure(required_token in load_report_text, errors, f"Map Editor package/load report is missing workbench-skin proof token: {required_token}")
+        skin_proof = map_editor_function_block(load_report_text, "_assert_cartographic_workbench_skin")
+        layout_proof = map_editor_function_block(load_report_text, "_workbench_layout_contract")
+        control_proof = map_editor_function_block(load_report_text, "_workbench_control_contract")
+        ensure(skin_proof.count("await get_tree().process_frame") == 3, errors, "Map Editor workbench proof must use exactly three passive frames per requested layout")
+        for forbidden in ("shell.call(\"_apply_visual_theme\"", "add_theme_", "set_item_", ".add_item(", ".clear(", ".text =", ".disabled =", ".button_pressed =", "sort(", "erase(", "create_timer", "OS.delay"):
+            ensure(forbidden not in skin_proof + layout_proof + control_proof, errors, f"Map Editor workbench runtime proof must remain passive and source-independent: {forbidden}")
 
     smoke_text = MAP_EDITOR_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
     smoke_stage_names = (

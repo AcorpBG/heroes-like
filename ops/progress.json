@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next bounded source-backed graphical-polish slice."
+    "Select another bounded, tracker-approved graphical-polish slice from fresh inspected pixels."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu title pocket now stays compact while Summary is hidden and restores its full existing height only for a real notice; inspected pixels and focused, compatibility, static/editor, and bounded platform gates are green.",
+  "currentNotes": "The Map Editor cartographic workbench skin is completed from inspected 1280x720 and 1920x1080 pixels, focused visual/authority runtime, compatibility, static/editor, and bounded Linux/Windows package startup evidence; blockers are empty.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-main-menu-adaptive-title-pocket-10184",
-  "currentSliceId": "presentation-main-menu-adaptive-title-pocket-10184",
-  "currentSliceNotes": "Completed from inspected 1280x720 and 1920x1080 pixels. The title pocket uses the compact 0.180 bottom anchor while Summary is hidden, expands to the prior 0.228 anchor for a real notice, and roundtrips with exact content and authority.",
+  "currentSlice": "presentation-map-editor-cartographic-workbench-skin-10184",
+  "currentSliceId": "presentation-map-editor-cartographic-workbench-skin-10184",
+  "currentSliceNotes": "Completed: the exact live editor shell, command bar, map frame, tool rail, actions, and pickers use existing exported cartographic frame and shared button-state art while preserving layout, focus, package, session, save, and editor authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu adaptive title pocket",
-  "currentSliceUpdatedAt": "2026-08-26T21:07:33Z",
+  "currentSliceTitle": "Map Editor cartographic workbench skin",
+  "currentSliceUpdatedAt": "2026-08-26T21:48:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20849,9 +20849,34 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
-  "notes": "The adaptive Main Menu title pocket is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "nextActionGuardrailNote": "Select the next bounded graphical-polish slice from fresh inspected pixels; do not broaden completed presentation work or claim packaged interaction, hardware certification, Native RMG parity, or release readiness.",
+  "notes": "The Map Editor cartographic workbench skin is completed with blockers empty. Fresh inspected pixels and focused runtime own the editor interaction claim; official Linux and Windows evidence remains bounded to export and startup.",
   "plannedSlices": [
+    {
+      "id": "presentation-map-editor-cartographic-workbench-skin-10184",
+      "title": "Map Editor cartographic workbench skin",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T21:18:12Z",
+      "updatedAt": "2026-08-26T21:48:05Z",
+      "completedAt": "2026-08-26T21:48:05Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/editor/MapEditorShell.gd",
+        "tests/map_editor_load_map_package_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the loaded Map Editor's remaining flat prototype framing and controls with the game's existing authored cartographic frame and shared button-state art without changing the workbench layout or behavior.",
+      "completionCriteria": "Inspected 1280/1920 loaded-editor captures and focused runtime prove exact authored frame/button assets and states, native picker authority, responsive containment/roundtrip, and unchanged editor/session/save authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new panel, control, text, icon, art asset, map/canvas/terrain/object visual, layout, breakpoint, top-bar/tool-rail allocation, scroll, action, package/index, focus/input/accessibility semantic, gameplay, content, save/schema, route, or Native RMG change.",
+        "No packaged Map Editor interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed from fresh inspected 1280x720 and 1920x1080 loaded-editor pixels. Exact authored frame/button/picker surfaces, responsive layout and native control authority, dirty/package/load/focus/accessibility/core behavior, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Map Editor interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain excluded."
+    },
     {
       "id": "presentation-main-menu-adaptive-title-pocket-10184",
       "title": "Main Menu adaptive title pocket",
