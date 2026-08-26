@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
+- Selected implementation slice: none. Next: select another bounded, tracker-approved graphical-polish slice from fresh inspected pixels.
+
+## Map Editor Cartographic Workbench Skin
+
+id: `presentation-map-editor-cartographic-workbench-skin-10184`
+
+Status: completed.
+
+Result:
+- the loaded Map Editor now uses the game's existing cartographic frame and shared control-state art across its shell, command bar, map frame, tool rail, actions, and native pickers, while keeping the map as the dominant surface;
+- fresh inspected 1280x720 and 1920x1080 captures, focused exact visual/authority checks, the full dirty-state transition regression, package/load/focus/accessibility/core compatibility, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup all pass;
+- packaged Map Editor interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 loaded-editor captures show the authored terrain and objects clearly, but the surrounding Shell, top command bar, map frame, tool rail, tool buttons, and pickers still read as flat prototype geometry beside the game's art-backed Main Menu, Overworld, Town, Battle, and Outcome surfaces;
+- the shared runtime visual kit already owns suitable exported frame and button-state assets, so the editor can join the shipped visual language without adding panels, changing layout, or generating new art.
+
+Implementation boundary:
+- apply existing authored cartographic/frame textures to the existing Shell, TopPanel, MapPanel, and ToolRail, with the established flat high-contrast fallback;
+- apply the existing shared primary/secondary button-state art to the current top commands, tool actions, property action, and native OptionButton pickers while preserving each control's exact minimum size, font size, state, text, items, metadata, focus, and signal ownership;
+- preserve the exact map canvas, tool rail geometry, top-bar allocator, scroll behavior, editor actions, package/session/save authority, gameplay, content, and Native RMG behavior.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 loaded-editor captures read as one coherent cartographic workbench, with the map remaining dominant and every existing command contained;
+- focused runtime proves exact frame/button assets and states, native picker/item authority, responsive 1280-to-1920 roundtrip, and unchanged tool/focus/editor/session authority;
+- Map Editor package/load/dirty/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new panel, control, text, icon, art asset, map/canvas/terrain/object visual, layout, breakpoint, top-bar/tool-rail allocation, scroll, action, package/index, focus/input/accessibility semantic, gameplay, content, save/schema, route, or Native RMG change;
+- no packaged Map Editor interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Main Menu Adaptive Title Pocket
 

@@ -56,6 +56,11 @@ const EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS := 0.09
 const EDITOR_MAP_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42
 const EDITOR_MAP_CURSOR_RESULT_VISIBLE_SECONDS := 1.20
 const EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS := 320
+const EDITOR_WORKBENCH_SKIN_MODEL := "shared_cartographic_frame_and_control_art"
+const EDITOR_SHELL_FRAME_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"
+const EDITOR_TOP_FRAME_PATH := "res://art/ui/runtime/battle/battle_footer_panel.png"
+const EDITOR_MAP_FRAME_PATH := "res://art/ui/runtime/battle/combat_log_panel.png"
+const EDITOR_TOOL_RAIL_FRAME_PATH := "res://art/ui/runtime/overworld/sidebar_frame.png"
 
 @onready var _header_label: Label = %Header
 @onready var _map_package_picker: OptionButton = %MapPackagePicker
@@ -63,6 +68,10 @@ const EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS := 320
 @onready var _save_copy_button: Button = %SaveCopy
 @onready var _editor_top_pad: MarginContainer = $RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad
 @onready var _editor_top_bar: HBoxContainer = $RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar
+@onready var _editor_shell_panel: PanelContainer = $RootMargin/Shell
+@onready var _editor_top_panel: PanelContainer = $RootMargin/Shell/ShellPad/ShellBox/TopPanel
+@onready var _editor_map_panel: PanelContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/MapPanel
+@onready var _editor_tool_rail: PanelContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail
 @onready var _terrain_picker: OptionButton = %TerrainPicker
 @onready var _inspect_tool_button: Button = %InspectTool
 @onready var _terrain_tool_button: Button = %TerrainTool
@@ -8076,35 +8085,59 @@ func _set_compact_label(label: Label, text: String, max_lines: int) -> void:
 	label.max_lines_visible = max_lines
 
 func _apply_visual_theme() -> void:
-	var panel_style := _panel_style(Color(0.08, 0.10, 0.11, 0.94), Color(0.50, 0.44, 0.30, 0.72), 1)
-	for panel in get_tree().get_nodes_in_group("map_editor_panel"):
-		if panel is PanelContainer:
-			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
-	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
-	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _terrain_line_tool_button, _terrain_rectangle_tool_button, _road_tool_button, _road_path_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _save_copy_button, _play_button, _menu_button]:
-		if button == null:
-			continue
-		button.focus_mode = Control.FOCUS_ALL
-		button.add_theme_stylebox_override("normal", button_style.duplicate())
-		button.add_theme_stylebox_override("pressed", button_hover.duplicate())
-		button.add_theme_stylebox_override("hover", button_hover.duplicate())
-	_load_map_button.focus_mode = Control.FOCUS_ALL
+	FrontierVisualKit.apply_art_panel(_editor_shell_panel, EDITOR_SHELL_FRAME_PATH, "frame", 24, 8, Color(0.90, 0.92, 0.94, 0.96))
+	FrontierVisualKit.apply_art_panel(_editor_top_panel, EDITOR_TOP_FRAME_PATH, "banner", 24, 8)
+	FrontierVisualKit.apply_art_panel(_editor_map_panel, EDITOR_MAP_FRAME_PATH, "frame", 24, 8)
+	FrontierVisualKit.apply_art_panel(_editor_tool_rail, EDITOR_TOOL_RAIL_FRAME_PATH, "earth", 24, 8)
+	var primary_buttons := [_load_map_button, _save_copy_button, _play_button, _property_apply_button]
+	var secondary_buttons := [
+		_inspect_tool_button,
+		_terrain_tool_button,
+		_terrain_line_tool_button,
+		_terrain_rectangle_tool_button,
+		_road_tool_button,
+		_road_path_tool_button,
+		_hero_start_tool_button,
+		_place_object_tool_button,
+		_remove_object_tool_button,
+		_move_object_tool_button,
+		_duplicate_object_tool_button,
+		_retheme_object_tool_button,
+		_fill_terrain_button,
+		_restore_tile_button,
+		_menu_button,
+	]
+	for button in primary_buttons:
+		_apply_editor_button_surface(button, "primary")
+	for button in secondary_buttons:
+		_apply_editor_button_surface(button, "secondary")
+	for picker in [
+		_map_package_picker,
+		_terrain_picker,
+		_object_family_picker,
+		_object_content_picker,
+		_selected_object_picker,
+		_property_owner_picker,
+		_property_difficulty_picker,
+	]:
+		_apply_editor_option_surface(picker)
 
-func _panel_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = fill
-	style.border_color = border
-	style.set_border_width_all(border_width)
-	style.corner_radius_top_left = 6
-	style.corner_radius_top_right = 6
-	style.corner_radius_bottom_left = 6
-	style.corner_radius_bottom_right = 6
-	style.content_margin_left = 8
-	style.content_margin_top = 8
-	style.content_margin_right = 8
-	style.content_margin_bottom = 8
-	return style
+
+func _apply_editor_button_surface(button: BaseButton, role: String) -> void:
+	if button == null:
+		return
+	var minimum := button.custom_minimum_size
+	var font_size := button.get_theme_font_size("font_size")
+	button.focus_mode = Control.FOCUS_ALL
+	FrontierVisualKit.apply_button(button, role, minimum.x, minimum.y, font_size)
+
+
+func _apply_editor_option_surface(picker: OptionButton) -> void:
+	if picker == null:
+		return
+	var minimum := picker.custom_minimum_size
+	var font_size := picker.get_theme_font_size("font_size")
+	FrontierVisualKit.apply_option_button(picker, "secondary", minimum.x, minimum.y, font_size)
 
 func validation_request_dirty_transition(action: String, target_package_id: String = "") -> Dictionary:
 	match action:
