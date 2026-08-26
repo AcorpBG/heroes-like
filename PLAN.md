@@ -26,6 +26,27 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
 
+## Town Compact Management Tab Breathing Room
+
+id: `ux-town-compact-management-tab-breathing-room-10184`
+
+Status: completed.
+
+Implementation boundary:
+- widen only the compact 1100–1359px Town management rail so the existing Build, Muster, Spells, Trade, and Log cartographic tabs gain readable title breathing room instead of visually running together;
+- retain the existing 400px wide-layout rail, 1024px narrow Town/Orders switch, 460px management-card cap, shared tab art, exact titles/order/current tab, and scenic Town stage as the dominant surface;
+- preserve all tab actions, focus/controller traversal, page geometry, build/recruit/study/trade/log content, economy, session, save, and route authority.
+
+Completion criteria:
+- fresh inspected Town captures at 1280x720 and 1920x1080 show five distinct non-overlapping tab plaques, with the scenic stage still materially wider than the compact management rail;
+- focused responsive runtime proves the exact compact/wide rail budgets, live tab-bar containment and ordered non-overlap, unchanged titles/order/current page/focus, and exact Town/session/save authority;
+- Town/Battle visual, keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tab title/order/count/current index, page identity/content, command/action, focus order, controller input, economy, town rule, route, session/save/schema, AI, battle, balance, content, or Native RMG change;
+- no tab asset/state style or theme spacing, wide or narrow layout breakpoint, management-card height, Town stage art/overlay, footer/banner, font family/UI scale, animation/audio/VFX, shader, or broad Town redesign;
+- no packaged Town interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Compressed World-Scale Ladder
 
 id: `presentation-overworld-compressed-world-scale-ladder-10184`

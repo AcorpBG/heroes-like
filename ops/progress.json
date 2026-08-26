@@ -14921,14 +14921,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld compressed world-scale ladder is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
+  "currentNotes": "The Town compact management-tab breathing-room slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-compressed-world-scale-ladder-10184",
-  "currentSliceId": "presentation-overworld-compressed-world-scale-ladder-10184",
-  "currentSliceNotes": "Completed the presentation-only Overworld scale correction. Fresh 1280x720 and 1920x1080 captures show adjacent towns separated and small props legible. Focused/broad scale, generated movement/save, full-route movement, active keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Logical footprints, hit areas, passability, placement, routes, fog, session/save, and Native RMG behavior remain unchanged.",
+  "currentSlice": "ux-town-compact-management-tab-breathing-room-10184",
+  "currentSliceId": "ux-town-compact-management-tab-breathing-room-10184",
+  "currentSliceNotes": "Completed the compact Town management-rail correction. The compact rail is 304px while the wide rail remains 400px; fresh 1280x720 and 1920x1080 captures retain the scenic Town stage as the dominant surface and give all five existing tab titles readable room. Focused responsive, Town/Battle visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Tab semantics, pages, actions, focus, economy, session/save, route authority, and Native RMG remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation overworld compressed world scale ladder 10184",
-  "currentSliceUpdatedAt": "2026-08-26T10:01:31Z",
+  "currentSliceTitle": "ux town compact management tab breathing room 10184",
+  "currentSliceUpdatedAt": "2026-08-26T10:21:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20444,8 +20444,35 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
-  "notes": "The Overworld compressed world-scale ladder is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "notes": "The compact Town management-tab breathing-room slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "ux-town-compact-management-tab-breathing-room-10184",
+      "title": "Town compact management tab breathing room",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T10:05:03Z",
+      "updatedAt": "2026-08-26T10:21:05Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownShell.gd",
+        "tests/player_comprehension_layout_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the existing five Town management tab plaques enough compact-width title breathing room to remain distinct at 1280x720 without changing their semantics or reducing the scenic stage below dominance.",
+      "completionCriteria": "Fresh 1280x720 and 1920x1080 Town captures show distinct ordered tabs; focused runtime proves exact responsive rail budgets, tab containment/non-overlap, scenic-stage dominance, and unchanged tab/Town/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No tab titles/order/count/current page, actions, focus/controller input, content, economy, route, session/save/schema, AI, battle, balance, or Native RMG change.",
+        "No tab asset/state style or theme spacing, wide/narrow breakpoint, card height, Town stage art, shell/footer/banner, font/UI-scale, animation/audio/VFX, shader, or broad Town redesign.",
+        "No packaged Town interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from fresh Town evidence. The compact management rail is now 304px instead of 272px while the wide rail remains 400px. Inspected 1280x720 and 1920x1080 captures keep the scenic stage dominant and give Build/Muster/Spells/Trade/Log readable title room. Focused `/tmp/heroes-town-tab-width-final.EMRjiw` and compatibility `/tmp/heroes-town-tab-compat.ZjUaeL` are green. Repository/editor validation passes. Official Linux and Windows exports pass; Linux boots headlessly, and fresh Wine reaches Godot, Boot, MainMenu, and the native DLL. Packaged Town interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-26T10:21:05Z",
+      "remainingWork": "None for this bounded slice."
+    },
     {
       "id": "presentation-overworld-compressed-world-scale-ladder-10184",
       "title": "Overworld compressed world-scale ladder",

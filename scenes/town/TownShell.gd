@@ -11,6 +11,8 @@ const UI_ART_TOWN_PARCHMENT_PANEL := "res://art/ui/runtime/town/parchment_panel.
 const UI_ART_TOWN_RECRUIT_ROW := "res://art/ui/runtime/town/recruit_row.png"
 const UI_ART_TOWN_RESOURCE_LEDGER := "res://art/ui/runtime/town/resource_ledger.png"
 const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
+const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 304.0
+const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 400.0
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 
 @onready var _banner_panel: PanelContainer = %Banner
@@ -206,7 +208,7 @@ func _apply_responsive_layout() -> void:
 	_stage_column.visible = not narrow_layout or not _narrow_orders_open
 	_sidebar_shell_panel.visible = not narrow_layout or _narrow_orders_open
 	_sidebar_shell_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL if narrow_layout and _narrow_orders_open else Control.SIZE_FILL
-	_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0
+	_sidebar_shell_panel.custom_minimum_size.x = TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH
 	_town_orders_toggle_button.visible = narrow_layout
 	_town_orders_toggle_button.text = "View Town" if _narrow_orders_open else "Town Orders"
 	_town_orders_toggle_button.tooltip_text = "Return to the scenic town view." if _narrow_orders_open else "Open construction, muster, spells, trade, and town-log orders."
