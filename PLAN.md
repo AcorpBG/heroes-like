@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
 
+## Outcome Recap Tab Plaque Breathing Room
+
+id: `presentation-outcome-recap-tab-plaque-breathing-room-10184`
+
+Status: completed.
+
+Implementation boundary:
+- retain the existing shared cartographic tab artwork but give only the five Outcome recap tab states a restrained 4px horizontal content margin so Progress, Arc, Carry, After, and Journal read as distinct plaques instead of a single joined word strip;
+- keep the exact 320px compact and 332px wide sidebar budgets, panel geometry, titles/order/current page, focus ring, native TabBar ownership, and scenery-first Outcome composition;
+- preserve all recap copy, campaign/skirmish results, actions, save/overwrite/recovery, routing, focus/controller navigation, accessibility, session, and progression authority.
+
+Completion criteria:
+- fresh inspected victory and defeat captures at 1280x720 and 1920x1080 show five readable, contained recap plaques without reducing the scenic panorama or clipping Journal;
+- focused runtime proves exact local four-state 4px margins, unchanged shared textures/vertical margins/focus styling, ordered contained tab rectangles, exact titles/current page/focus, and unchanged Outcome/session/save/progression authority;
+- menu/outcome visual, normal-entry focus, safe-cancel/recovery, keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no shared tab style, global theme spacing, sidebar width, responsive breakpoint, panel/card geometry, font/UI scale, panorama/emblem art, opacity, animation/audio/VFX, shader, or broad Outcome redesign;
+- no recap title/order/count/current page, copy/content, actions, focus order, controller input, campaign/scenario result, reward, save/overwrite/recovery, route, session/progression/schema, AI, battle, balance, content, or Native RMG change;
+- no packaged Outcome interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- all four Outcome-local recap plaque state styles retain the shared cartographic assets, vertical margins, disabled modulation, and focus ring while using 4px horizontal content margins instead of the shared 1px default;
+- the five-tab strip grows from 241px to 271px inside the unchanged 296px live compact TabBar, and fresh victory/defeat captures at 1280x720 and 1920x1080 show distinct readable controls with Journal contained and the scenic panorama unchanged;
+- focused Outcome visual, normal-entry focus, safe-cancel, autosave recovery, shared keyboard/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass.
+
 ## Town Compact Management Tab Breathing Room
 
 id: `ux-town-compact-management-tab-breathing-room-10184`

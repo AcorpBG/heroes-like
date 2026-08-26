@@ -13,6 +13,13 @@ const OUTCOME_COMPACT_BANNER_ART_WIDTH := 260.0
 const OUTCOME_WIDE_BANNER_ART_WIDTH := 300.0
 const OUTCOME_COMPACT_EMBLEM_HEIGHT := 104.0
 const OUTCOME_WIDE_EMBLEM_HEIGHT := 176.0
+const OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0
+const OUTCOME_RECAP_TAB_STATE_STYLES := [
+	&"tab_selected",
+	&"tab_hovered",
+	&"tab_unselected",
+	&"tab_disabled",
+]
 const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
 	"Banner": 0.78,
 	"BannerArtPanel": 0.66,
@@ -1979,6 +1986,7 @@ func _apply_visual_theme() -> void:
 				panel.self_modulate = Color(1.0, 1.0, 1.0, float(OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME[panel.name]))
 
 	FrontierVisualKit.apply_tab_container(_recap_tabs)
+	_apply_outcome_recap_tab_breathing_room()
 	_recap_tabs.set_tab_title(0, "Progress")
 	_recap_tabs.set_tab_title(1, "Arc")
 	_recap_tabs.set_tab_title(2, "Carry")
@@ -2001,6 +2009,14 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_header_label, "title", 24)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
 	FrontierVisualKit.apply_label(_return_cue_label, "muted", 12)
+
+func _apply_outcome_recap_tab_breathing_room() -> void:
+	for style_name in OUTCOME_RECAP_TAB_STATE_STYLES:
+		var shared_style := _recap_tabs.get_theme_stylebox(style_name)
+		var outcome_style := shared_style.duplicate() as StyleBox
+		outcome_style.content_margin_left = OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL
+		outcome_style.content_margin_right = OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL
+		_recap_tabs.add_theme_stylebox_override(style_name, outcome_style)
 
 func _refresh_guide_surface() -> void:
 	if _guide_button == null or _guide_label == null or _guide_panel == null:
