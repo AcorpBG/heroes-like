@@ -24,7 +24,31 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `presentation-shared-heraldic-hardware-cursor-10184` (completed).
+- Selected implementation slice: `presentation-main-menu-stage-dock-reveal-transition-10184` (completed).
+
+## Main Menu Stage-Dock Reveal Transition
+
+id: `presentation-main-menu-stage-dock-reveal-transition-10184`
+
+Status: completed.
+
+Result:
+- Campaign, Skirmish, Load, Field Manual, and Settings now reveal their existing stage dock through a restrained 160 ms quadratic opacity ease instead of snapping fully visible;
+- the tween processes correctly while the Main Menu tree is paused, close/replacement resets synchronously, and Reduced Motion keeps the exact immediate presentation and existing entry-focus timing;
+- focused transition/authority, full Main Menu navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged transition interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Implementation boundary:
+- reveal the existing Campaign, Skirmish, Load, Field Manual, and Settings stage dock with one short opacity ease after its exact layout/content refresh;
+- keep Reduced Motion immediate, cancel/reset the presentation on close or replacement, and preserve existing focus timing, controls, tabs, geometry, actions, settings, save, campaign, session, and route authority.
+
+Completion criteria:
+- focused runtime proves standard-mode start/mid/end opacity, exact duration/easing, immediate Reduced Motion fallback, close/reset/reopen behavior, and unchanged settings/save/campaign/session authority;
+- inspected desktop transition reads as a restrained board reveal without dimming scenery or delaying interaction;
+- Main Menu navigation/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new panel, art, text, command, tab, focus target, geometry, input blocker, close delay, scene-router transition, gameplay, session/save/schema, campaign, generated-map, or Native RMG change;
+- no packaged interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Shared Heraldic Hardware Cursor
 

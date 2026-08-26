@@ -68505,6 +68505,63 @@ def validate_nightglass_redoubt_chapter_three_sequential_viability(errors: list[
         ensure('res://tests/nightglass_redoubt_chapter_three_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Nightglass chapter-three scene must load its exact report script")
 
 
+def validate_main_menu_stage_dock_reveal_transition(errors: list[str]) -> None:
+    menu_path = ROOT / "scenes" / "menus" / "MainMenu.gd"
+    report_path = ROOT / "tests" / "main_menu_stage_dock_reveal_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "main_menu_stage_dock_reveal_runtime_report.tscn"
+    ensure(menu_path.exists(), errors, "Missing Main Menu stage-dock reveal owner")
+    if menu_path.exists():
+        menu_text = menu_path.read_text(encoding="utf-8")
+        for token in (
+            "const STAGE_DOCK_REVEAL_DURATION_SECONDS := 0.16",
+            "const STAGE_DOCK_REVEAL_START_ALPHA := 0.12",
+            "var _stage_dock_reveal_tween: Tween = null",
+            "func _play_stage_dock_reveal() -> void:",
+            "if SettingsService.reduced_motion_enabled():",
+            "_stage_dock_reveal_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)",
+            "_stage_dock_reveal_tween.set_trans(Tween.TRANS_QUAD)",
+            "_stage_dock_reveal_tween.set_ease(Tween.EASE_OUT)",
+            '_stage_dock_reveal_tween.tween_property(_stage_dock_panel, "modulate:a", 1.0, STAGE_DOCK_REVEAL_DURATION_SECONDS)',
+            "func _reset_stage_dock_reveal() -> void:",
+            "func validation_stage_dock_reveal_snapshot() -> Dictionary:",
+            '"transition": "quad_out"',
+        ):
+            ensure(token in menu_text, errors, f"Main Menu stage-dock reveal is missing token: {token}")
+        show_block = menu_text[menu_text.find("func _show_stage_dock() -> void:"):menu_text.find("func _queue_stage_accessibility_refresh() -> void:")]
+        ensure(show_block.count("_play_stage_dock_reveal()") == 1, errors, "Stage dock must reveal exactly once after becoming visible")
+        ensure(show_block.find("_stage_dock_panel.visible = true") < show_block.find("_play_stage_dock_reveal()") < show_block.find("call_deferred(\"_focus_stage_entry\")"), errors, "Stage-dock reveal must preserve visible-before-focus ownership")
+        hide_block = menu_text[menu_text.find("func _hide_stage_dock() -> void:"):menu_text.find("func _first_view_buttons() -> Array[BaseButton]:")]
+        ensure(hide_block.count("_reset_stage_dock_reveal()") == 1, errors, "Stage-dock close must reset the reveal exactly once")
+        for forbidden in ("await ", "create_timer", "mouse_filter", "disabled =", "set_process", "position", "scale", "custom_minimum_size", "grab_focus"):
+            ensure(forbidden not in hide_block, errors, f"Stage-dock reveal/close must not alter layout or interaction timing: {forbidden}")
+
+    ensure(report_path.exists(), errors, "Missing Main Menu stage-dock reveal focused report")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            'const REPORT_ID := "MAIN_MENU_STAGE_DOCK_REVEAL_RUNTIME_REPORT"',
+            'shell.call("validation_open_campaign_stage")',
+            'await get_tree().create_timer(0.08).timeout',
+            'await get_tree().create_timer(0.08).timeout\n\tawait get_tree().process_frame\n\tvar middle:',
+            'await get_tree().create_timer(0.12).timeout',
+            'await get_tree().create_timer(0.12).timeout\n\tawait get_tree().process_frame\n\tvar completed:',
+            'String(completed.get("focus_owner", "")) == "CampaignList"',
+            'close_button.pressed.emit()',
+            '_set_memory_reduced_motion(true)',
+            'shell.call("validation_open_settings_stage")',
+            'String(reduced_after_frame.get("focus_owner", "")) == "PresentationModePicker"',
+            'authority_after == _authority_before',
+            '"reduced_motion_immediate": true',
+            '"close_reset_exact": true',
+        ):
+            ensure(token in report_text, errors, f"Main Menu stage-dock reveal report is missing token: {token}")
+        for forbidden in ("_play_stage_dock_reveal", "_reset_stage_dock_reveal", "modulate.a =", "Tween.new", "set_process"):
+            ensure(forbidden not in report_text, errors, f"Stage-dock focused report must not bypass production reveal behavior: {forbidden}")
+    ensure(report_scene_path.exists(), errors, "Missing Main Menu stage-dock reveal focused scene")
+    if report_scene_path.exists():
+        ensure('path="res://tests/main_menu_stage_dock_reveal_runtime_report.gd"' in report_scene_path.read_text(encoding="utf-8"), errors, "Stage-dock reveal scene must load its focused report")
+
+
 def validate_shared_heraldic_hardware_cursor(errors: list[str]) -> None:
     cursor_asset_path = ROOT / "art" / "ui" / "runtime" / "cursors" / "aurelion_pointer.svg"
     visual_kit_path = ROOT / "scripts" / "ui" / "FrontierVisualKit.gd"
@@ -68649,6 +68706,7 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
+    validate_main_menu_stage_dock_reveal_transition(errors)
     validate_shared_heraldic_hardware_cursor(errors)
     validate_progress_tracker_state(errors)
     validate_strategic_ai_medium_long_run_adoption(errors)
