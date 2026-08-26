@@ -16369,7 +16369,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ensure("_system_panel.visible = not compact_layout" not in responsive_layout_body, errors, "Battle compact layout must not hide the existing essential system commands")
         ensure("_footer_row.columns = 1 if compact_layout else 2" not in responsive_layout_body, errors, "Battle standard-height compact layout must not stack the command dock solely because of height")
         ensure(responsive_layout_body.count("banner_details_visible") == 3, errors, "Battle responsive layout must derive one logical-width banner-detail predicate and apply it only to Status and Pressure")
-        ensure(responsive_layout_body.count("horizontal_footer") == 3, errors, "Battle responsive layout must derive one logical-width command-dock predicate and apply it only to FooterRow columns and separation")
+        ensure(responsive_layout_body.count("horizontal_footer") == 4, errors, "Battle responsive layout must derive one logical-width command-dock predicate and apply it only to FooterRow columns, the passive watermark, and separation")
         ensure("_status_label.visible = not compact_layout" not in responsive_layout_body and "_pressure_label.visible = not compact_layout" not in responsive_layout_body, errors, "Battle banner details must not remain coupled to the height-sensitive compact breakpoint")
         for forbidden_token in ("reparent", "remove_child", "add_child", "queue_free", "new()", "call_deferred", "create_timer"):
             ensure(forbidden_token not in responsive_layout_body, errors, f"Battle compact footer reflow must not add, replace, or defer UI through {forbidden_token}")
@@ -33651,6 +33651,103 @@ def validate_battle_sidebar_heraldic_watermark(errors: list[str]) -> None:
             ensure(token in focused, errors, f"Focused Battle watermark proof is missing exact passive asset/geometry token: {token}")
         for forbidden in ("get_window().size = viewport_size", "watermark.visible =", "watermark.texture =", "watermark.self_modulate =", "custom_minimum_size =", "size_flags_vertical =", "grab_focus", "Input.", "push_input", "create_timer", "sort(", "erase("):
             ensure(forbidden not in focused, errors, f"Focused Battle watermark proof must remain observational and avoid {forbidden}")
+
+
+def validate_battle_footer_heraldic_watermark(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path):
+        ensure(path.exists(), errors, f"Missing Battle footer watermark owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path)):
+        return
+
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    resource_token = '[ext_resource type="Texture2D" path="res://art/ui/runtime/battle/sidebar_heraldic_watermark.png" id="7_sidebar_watermark"]'
+    ensure(scene_text.count(resource_token) == 1, errors, "Battle footer watermark must reuse the one existing imported heraldic texture")
+    footer_node = scene_node_block(scene_text, "FooterWatermark", "TextureRect")
+    ensure(scene_text.count('[node name="FooterWatermark" type="TextureRect"') == 1 and footer_node, errors, "BattleShell must author exactly one FooterWatermark TextureRect")
+    if footer_node:
+        ensure(scene_node_parent(scene_text, "FooterWatermark", "TextureRect") == "ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox", errors, "Battle footer watermark must remain in the existing flexible SystemBox rest field")
+        for token in (
+            "unique_name_in_owner = true",
+            "visible = false",
+            "layout_mode = 2",
+            "size_flags_horizontal = 3",
+            "size_flags_vertical = 3",
+            "mouse_filter = 2",
+            "self_modulate = Color(0.82, 0.72, 0.52, 0.18)",
+            'texture = ExtResource("7_sidebar_watermark")',
+            "expand_mode = 1",
+            "stretch_mode = 5",
+        ):
+            ensure(footer_node.count(token) == 1, errors, f"Battle footer watermark is missing exact passive scene token: {token}")
+        for forbidden in ("custom_minimum_size", "offset_", "anchor_", "grow_", "script =", "text =", "tooltip_text", "focus_mode", "clip_contents"):
+            ensure(forbidden not in footer_node, errors, f"Battle footer watermark must not add layout, focus, text, or behavior through {forbidden}")
+    menu_index = scene_text.find('[node name="Menu" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]')
+    footer_index = scene_text.find('[node name="FooterWatermark" type="TextureRect"')
+    dialog_index = scene_text.find('[node name="QuickResolveConfirmationDialog" type="ConfirmationDialog"')
+    ensure(0 <= menu_index < footer_index < dialog_index, errors, "Battle footer watermark must remain the final SystemBox child after all existing System actions")
+
+    ensure(script_text.count("@onready var _footer_watermark: TextureRect = %FooterWatermark") == 1, errors, "BattleShell must bind the footer watermark exactly once")
+    responsive = gd_function_block(script_text, "_apply_responsive_layout")
+    ensure(responsive, errors, "Could not isolate Battle responsive footer watermark policy")
+    if responsive:
+        responsive_order = tuple(responsive.find(token) for token in (
+            "var horizontal_footer := not compact_layout or available_size.x >= 1180.0",
+            "_footer_row.columns = 2 if horizontal_footer else 1",
+            "_footer_watermark.visible = horizontal_footer and not FrontierVisualKit.high_contrast_enabled()",
+            '_footer_row.add_theme_constant_override("v_separation", 8 if horizontal_footer else 0)',
+        ))
+        ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Battle footer watermark visibility must follow the existing horizontal-footer decision before unchanged spacing")
+        ensure(responsive.count("_footer_watermark.visible =") == 1, errors, "Battle responsive layout must own exactly one footer-watermark visibility assignment")
+        for forbidden in ("_footer_watermark.custom_minimum_size", "_footer_watermark.size_flags_", "_footer_watermark.texture =", "_footer_watermark.self_modulate =", "_footer_watermark.tooltip_text", "_footer_watermark.grab_focus", "call_deferred", "create_timer"):
+            ensure(forbidden not in responsive, errors, f"Battle footer watermark policy must not mutate layout, art, focus, text, or timing through {forbidden}")
+
+    focused = gd_function_block(smoke_text, "_assert_battle_system_frame_roundtrip")
+    ensure(focused, errors, "Could not isolate focused Battle System/footer roundtrip proof")
+    if focused:
+        focused_order = tuple(focused.find(token) for token in (
+            'var footer_row := shell.get_node_or_null("%FooterRow") as GridContainer',
+            'var footer_watermark := shell.get_node_or_null("%FooterWatermark") as TextureRect',
+            'var sidebar_watermark := shell.get_node_or_null("%SidebarWatermark") as TextureRect',
+            "footer_watermark.texture != sidebar_watermark.texture",
+            'footer_watermark.texture.resource_path != "res://art/ui/runtime/battle/sidebar_heraldic_watermark.png"',
+            "footer_watermark.custom_minimum_size != Vector2.ZERO",
+            "footer_watermark.size_flags_horizontal != Control.SIZE_EXPAND_FILL",
+            "footer_watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL",
+            "footer_watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE",
+            "footer_watermark.focus_mode != Control.FOCUS_NONE",
+            "not is_equal_approx(footer_watermark.self_modulate.a, 0.18)",
+            "window.size = Vector2i(1280, 720)",
+            "not compact_system_box_rect.encloses(compact_watermark_rect)",
+            "compact_watermark_rect.intersects(compact_system_actions_rect)",
+            "window.size = Vector2i(1920, 1080)",
+            "not wide_system_box_rect.encloses(wide_watermark_rect)",
+            "wide_watermark_rect.intersects(wide_system_actions_rect)",
+            "FrontierVisualKitScript.set_high_contrast_enabled(true)",
+            'shell.call("_apply_responsive_layout")',
+            "if footer_watermark.visible:",
+            "FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)",
+            "if not footer_watermark.visible:",
+            "window.size = Vector2i(1024, 720)",
+            "footer_row.columns != 1 or footer_watermark.visible",
+            "footer_row.columns != 2 or not footer_watermark.visible",
+            "session.to_dict() != session_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle footer watermark proof must validate shared art, passive properties, two horizontal sizes, high contrast, vertical hiding, roundtrip, and authority in order")
+        ensure(focused.count("window.size = Vector2i(1280, 720)") == 2, errors, "Focused Battle footer watermark proof must return to the exact 1280 horizontal layout after its wide, high-contrast, and vertical checks")
+        ensure(re.search(r"^\s*footer_watermark\.texture\s*=(?!=)", focused, re.M) is None, errors, "Focused Battle footer watermark proof must not assign its production texture")
+        ensure(re.search(r"^\s*footer_watermark\.size_flags_\w+\s*=(?!=)", focused, re.M) is None, errors, "Focused Battle footer watermark proof must not assign production size flags")
+        for forbidden in ("footer_watermark.visible =", "footer_watermark.self_modulate =", "footer_watermark.custom_minimum_size =", "footer_watermark.grab_focus", "footer_watermark.tooltip_text ="):
+            ensure(forbidden not in focused, errors, f"Focused Battle footer watermark proof must remain observational and avoid {forbidden}")
 
 
 def validate_town_management_card_height_cap(errors: list[str]) -> None:
@@ -68510,6 +68607,7 @@ def main() -> int:
     validate_battle_movement_range_overlay_restraint(errors)
     validate_battle_sidebar_tactical_card_height_cap(errors)
     validate_battle_sidebar_heraldic_watermark(errors)
+    validate_battle_footer_heraldic_watermark(errors)
     validate_battle_terrain_context_and_system_frame(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)

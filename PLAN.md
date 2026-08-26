@@ -24,7 +24,32 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `presentation-town-build-faction-crest-watermark-10184` (in progress).
+- Selected implementation slice: `presentation-battle-footer-heraldic-watermark-10184` (completed).
+
+## Battle Footer Heraldic Watermark
+
+id: `presentation-battle-footer-heraldic-watermark-10184`
+
+Status: completed.
+
+Result:
+- the Battle horizontal footer now reuses its existing heraldic watermark as a centered 18%-alpha ornament in the flexible System field below the existing controls, with no new asset, panel, text, command, focus target, or minimum-size pressure;
+- fresh inspected 1280x720 and 1920x1080 Battle captures show a quiet visual anchor that preserves the command hierarchy and keeps the battlefield dominant; compact vertical layout and high-contrast mode hide only the decorative copy;
+- focused Battle visual/authority, controller navigation, event animation, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Implementation boundary:
+- reuse the existing original Battle heraldic watermark texture as one subdued, centered, aspect-preserving ornament in the flexible unused area below the existing System buttons;
+- keep the ornament zero-minimum-size, noninteractive, unfocusable, tooltip-free, and visible only for the established horizontal footer when high-contrast mode is off;
+- preserve exact Action/System panel ownership, footer columns and responsive breakpoints, command/button order, Battle board allocation, focus/navigation, battle rules, session, save, and route authority.
+
+Completion criteria:
+- fresh inspected Battle captures at 1280x720 and 1920x1080 show a quiet heraldic anchor in the empty System field without obscuring commands or competing with the battlefield;
+- focused runtime proves exact existing-texture reuse, passive flexible geometry, two-width containment below System controls, vertical-layout/high-contrast hiding, and unchanged footer/battle/session authority;
+- Battle visual/action/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new asset, panel, text, command, focus target, footer column/breakpoint, Action/System geometry, board/sidebar/banner art, battle rule, AI, balance, content, session/save/schema, or Native RMG change;
+- no animation/audio/VFX/shader, packaged Battle interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Town Build Faction-Crest Watermark
 

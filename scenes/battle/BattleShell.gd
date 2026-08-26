@@ -46,6 +46,7 @@ const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 @onready var _system_panel: PanelContainer = %SystemPanel
 @onready var _system_pad: MarginContainer = %SystemPad
 @onready var _speed_bar: HBoxContainer = %SpeedBar
+@onready var _footer_watermark: TextureRect = %FooterWatermark
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
 @onready var _pressure_label: Label = %Pressure
@@ -3712,6 +3713,7 @@ func _apply_responsive_layout() -> void:
 	_status_label.visible = banner_details_visible
 	_pressure_label.visible = banner_details_visible
 	_footer_row.columns = 2 if horizontal_footer else 1
+	_footer_watermark.visible = horizontal_footer and not FrontierVisualKit.high_contrast_enabled()
 	_footer_row.add_theme_constant_override("v_separation", 8 if horizontal_footer else 0)
 	_footer_pad.add_theme_constant_override("margin_top", 2 if compact_layout else 6)
 	_footer_pad.add_theme_constant_override("margin_bottom", 2 if compact_layout else 6)
