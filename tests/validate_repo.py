@@ -68519,6 +68519,35 @@ def validate_nightglass_redoubt_chapter_three_sequential_viability(errors: list[
         ensure('res://tests/nightglass_redoubt_chapter_three_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Nightglass chapter-three scene must load its exact report script")
 
 
+def validate_main_menu_painted_torch_ambient_glow(errors: list[str]) -> None:
+    scene_path = ROOT / "scenes" / "menus" / "MainMenu.tscn"
+    glow_path = ROOT / "scenes" / "menus" / "MainMenuTorchGlow.gd"
+    report_path = ROOT / "tests" / "main_menu_torch_glow_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "main_menu_torch_glow_runtime_report.tscn"
+    ensure(glow_path.exists(), errors, "Missing Main Menu painted-torch glow owner")
+    if glow_path.exists():
+        text = glow_path.read_text(encoding="utf-8")
+        for token in ("const LEFT_FLAME_ANCHOR := Vector2(0.829, 0.426)", "const RIGHT_FLAME_ANCHOR := Vector2(0.996, 0.426)", "const BASE_RADIUS_AT_1080 := 62.0", "const PULSE_MIN := 0.82", "const PULSE_MAX := 1.0", "const RING_COUNT := 10", "SettingsService.settings_changed.connect(_on_settings_changed)", "mouse_filter = Control.MOUSE_FILTER_IGNORE", "focus_mode = Control.FOCUS_NONE", "visible = not SettingsService.high_contrast_ui_enabled()", "set_process(visible and not SettingsService.reduced_motion_enabled())", "draw_circle(center, radius * ring_ratio", "func validation_snapshot() -> Dictionary:"):
+            ensure(token in text, errors, f"Main Menu painted-torch glow is missing token: {token}")
+        for forbidden in ("Input.", "grab_focus", "Button", "TextureRect", "load(", "ResourceLoader", "SessionState", "SaveService", "AppRouter", "CampaignProgression", "create_timer", "await "):
+            ensure(forbidden not in text, errors, f"Painted-torch glow must remain passive presentation: {forbidden}")
+    ensure(scene_path.exists(), errors, "Missing Main Menu scene for painted-torch glow")
+    if scene_path.exists():
+        scene = scene_path.read_text(encoding="utf-8")
+        for token in ('path="res://scenes/menus/MainMenuTorchGlow.gd"', '[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_torch_glow"]', "blend_mode = 1", '[node name="TorchGlow" type="Control" parent="."]', 'script = ExtResource("7_torch_glow")'):
+            ensure(token in scene, errors, f"Main Menu scene is missing painted-torch glow token: {token}")
+        ensure(scene.count('[node name="TorchGlow" type="Control" parent="."]') == 1, errors, "Main Menu must own exactly one painted-torch glow layer")
+        ensure(scene.find('[node name="HeroStage"') < scene.find('[node name="TorchGlow"') < scene.find('[node name="LogoPocketPanel"'), errors, "Torch glow must remain directly above scenery and below all UI panels")
+    ensure(report_path.exists(), errors, "Missing Main Menu painted-torch glow focused report")
+    if report_path.exists():
+        report = report_path.read_text(encoding="utf-8")
+        for token in ('const REPORT_ID := "MAIN_MENU_TORCH_GLOW_RUNTIME_REPORT"', 'shell.get_node_or_null("%TorchGlow")', '_set_accessibility(true, false)', '_set_accessibility(false, true)', 'reduced_after == reduced', '(anchors[0] as Vector2).is_equal_approx(Vector2(0.829, 0.426))', '(centers[1] as Vector2).is_equal_approx(Vector2(glow.size.x * 0.996, glow.size.y * 0.426))', 'int(restored.get("signal_connection_count", 0)) == 1', '_authority_snapshot() == _authority_before', '"high_contrast_hidden": true'):
+            ensure(token in report, errors, f"Main Menu torch-glow report is missing token: {token}")
+        for forbidden in ("_sync_presentation", "_draw()", "queue_redraw", "set_process("):
+            ensure(forbidden not in report, errors, f"Torch-glow report must exercise the production settings signal: {forbidden}")
+    ensure(report_scene_path.exists(), errors, "Missing Main Menu painted-torch glow report scene")
+
+
 def validate_main_menu_stage_dock_reveal_transition(errors: list[str]) -> None:
     menu_path = ROOT / "scenes" / "menus" / "MainMenu.gd"
     report_path = ROOT / "tests" / "main_menu_stage_dock_reveal_runtime_report.gd"
@@ -68720,6 +68749,7 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
+    validate_main_menu_painted_torch_ambient_glow(errors)
     validate_main_menu_stage_dock_reveal_transition(errors)
     validate_shared_heraldic_hardware_cursor(errors)
     validate_progress_tracker_state(errors)
