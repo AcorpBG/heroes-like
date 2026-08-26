@@ -33663,11 +33663,12 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
 
     smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
     visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
-    for path in (TOWN_SCENE_PATH, smoke_path, visual_path):
+    for path in (TOWN_SCRIPT_PATH, TOWN_SCENE_PATH, smoke_path, visual_path):
         ensure(path.exists(), errors, f"Missing Town management-card owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (TOWN_SCENE_PATH, smoke_path, visual_path)):
+    if not all(path.exists() for path in (TOWN_SCRIPT_PATH, TOWN_SCENE_PATH, smoke_path, visual_path)):
         return
 
+    script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
     smoke_text = smoke_path.read_text(encoding="utf-8")
     visual_text = visual_path.read_text(encoding="utf-8")
@@ -33682,6 +33683,48 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
         ensure(tabs_body.count("custom_minimum_size = Vector2(0, 460)") == 1, errors, "Town ManagementTabs must own one exact 460px content-safe minimum")
         ensure(tabs_body.count("size_flags_horizontal = 3") == 1 and tabs_body.count("size_flags_vertical = 1") == 1, errors, "Town ManagementTabs must fill horizontally without vertically expanding through the wide rail")
         ensure("size_flags_vertical = 3" not in tabs_body, errors, "Town ManagementTabs must not retain the full-height vertical expand flag")
+    watermark_match = re.search(
+        r'\[node name="BuildFactionWatermark" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"\]\n(?P<body>.*?)(?=\n\[node name="RecruitPanel")',
+        scene_text,
+        re.S,
+    )
+    ensure(scene_text.count('[node name="BuildFactionWatermark" type="TextureRect"') == 1 and watermark_match is not None, errors, "Town Build page must author exactly one faction watermark after its controls")
+    if watermark_match is not None:
+        watermark_body = watermark_match.group("body")
+        for token in (
+            "unique_name_in_owner = true",
+            "visible = false",
+            "layout_mode = 2",
+            "size_flags_vertical = 3",
+            "mouse_filter = 2",
+            "self_modulate = Color(1, 1, 1, 0.22)",
+            "expand_mode = 1",
+            "stretch_mode = 5",
+        ):
+            ensure(watermark_body.count(token) == 1, errors, f"Town Build faction watermark is missing exact passive scene token: {token}")
+        for forbidden in ("custom_minimum_size", "tooltip_text", "texture =", "script =", "focus_mode = 1", "focus_mode = 2"):
+            ensure(forbidden not in watermark_body, errors, f"Town Build faction watermark must not add layout, text, authored art, script, or focus through {forbidden}")
+    confirm_index = scene_text.find('[node name="ConfirmBuild" type="Button"')
+    watermark_index = scene_text.find('[node name="BuildFactionWatermark" type="TextureRect"')
+    recruit_index = scene_text.find('[node name="RecruitPanel" type="PanelContainer"')
+    ensure(0 <= confirm_index < watermark_index < recruit_index, errors, "Town Build faction watermark must remain the final BuildBox child after ConfirmBuild and before the next native page")
+
+    ensure(script_text.count("@onready var _build_faction_watermark: TextureRect = %BuildFactionWatermark") == 1, errors, "TownShell must bind the Build faction watermark exactly once")
+    refresh_crest = gd_function_block(script_text, "_refresh_faction_crest")
+    ensure(refresh_crest, errors, "Could not isolate TownShell faction-crest refresh for Build watermark validation")
+    if refresh_crest:
+        refresh_order = tuple(refresh_crest.find(token) for token in (
+            "var texture: Texture2D = load(icon_path) as Texture2D if icon_path != \"\" else null",
+            "_crest_icon.texture = texture",
+            "_crest_icon.visible = texture != null",
+            "_build_faction_watermark.texture = texture",
+            "_build_faction_watermark.visible = texture != null and not FrontierVisualKit.high_contrast_enabled()",
+            "_crest_glyph.visible = texture == null",
+        ))
+        ensure(all(index >= 0 for index in refresh_order) and list(refresh_order) == sorted(refresh_order), errors, "TownShell must derive both crest surfaces from one loaded faction texture and hide only the decorative watermark in high contrast")
+        ensure(refresh_crest.count("load(icon_path)") == 1 and refresh_crest.count("_build_faction_watermark.texture =") == 1 and refresh_crest.count("_build_faction_watermark.visible =") == 1, errors, "Town Build watermark lifecycle must have one shared texture load and one fail-closed texture/visibility assignment")
+        for forbidden in ("_build_faction_watermark.custom_minimum_size", "_build_faction_watermark.size_flags_", "_build_faction_watermark.self_modulate", "_build_faction_watermark.tooltip_text", "_build_faction_watermark.grab_focus", "call_deferred", "create_timer"):
+            ensure(forbidden not in refresh_crest, errors, f"Town Build watermark refresh must not mutate layout, focus, timing, or semantic text through {forbidden}")
     ensure(scene_text.count('[node name="LogisticsScroll" type="ScrollContainer"') == 1, errors, "Town Log page must own one native ScrollContainer")
     logistics_scroll_match = re.search(
         r'\[node name="LogisticsScroll" type="ScrollContainer"[^\n]*\]\n(?P<body>.*?)(?=\n\[node name="LogisticsPad")',
@@ -33727,6 +33770,31 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
         for forbidden in ("custom_minimum_size =", "tabs.size_flags_vertical = Control.SIZE", "set_deferred", "call_deferred", "create_timer", "queue_sort", "sort(", "erase("):
             ensure(forbidden not in focused, errors, f"Focused Town management-card proof must not mutate layout/content authority via {forbidden}")
         ensure('actual_title != expected_title and not actual_title.begins_with("%s " % expected_title)' in focused, errors, "Focused Town management-card proof must preserve exact native base titles plus authored readiness-count suffixes")
+        watermark_order = tuple(focused.find(token) for token in (
+            'var watermark: TextureRect = shell.get_node("%BuildFactionWatermark")',
+            'var crest_icon: TextureRect = shell.get_node("%CrestIcon")',
+            "watermark.texture != crest_icon.texture",
+            'watermark.texture.resource_path != TownRules.faction_crest_icon_path("faction_embercourt")',
+            "watermark.custom_minimum_size != Vector2.ZERO",
+            "watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL",
+            "watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE",
+            "watermark.focus_mode != Control.FOCUS_NONE",
+            "watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE",
+            "watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED",
+            "not is_equal_approx(watermark.self_modulate.a, 0.22)",
+            "for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
+            "not build_box_rect.encloses(watermark_rect)",
+            "watermark_rect.intersects(confirm_rect)",
+            "FrontierVisualKitScript.set_high_contrast_enabled(true)",
+            'shell.call("_refresh_faction_crest")',
+            "if watermark.visible:",
+            "FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)",
+            "if not watermark.visible:",
+        ))
+        ensure(all(index >= 0 for index in watermark_order) and list(watermark_order) == sorted(watermark_order), errors, "Focused Town watermark proof must validate shared live art, passive properties, two-size containment, high-contrast hiding, and restoration in order")
+        ensure(re.search(r"^\s*watermark\.texture\s*=(?!=)", focused, re.M) is None, errors, "Focused Town watermark proof must not assign its production texture")
+        for forbidden in ("watermark.visible =", "watermark.self_modulate =", "watermark.custom_minimum_size =", "watermark.size_flags_vertical =", "watermark.grab_focus", "watermark.tooltip_text ="):
+            ensure(forbidden not in focused, errors, f"Focused Town watermark proof must remain observational and avoid {forbidden}")
     if run_town:
         readiness_call = run_town.find("_assert_town_command_tab_readiness_cues(shell)")
         card_call = run_town.find("await _assert_town_management_card_contract(shell, session)")

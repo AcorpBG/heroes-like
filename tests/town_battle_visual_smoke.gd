@@ -1244,6 +1244,11 @@ func _assert_town_command_tab_readiness_cues(shell: Node) -> bool:
 func _assert_town_management_card_contract(shell: Node, session) -> bool:
 	var authority_before: Dictionary = session.to_dict()
 	var tabs: TabContainer = shell.get_node("%ManagementTabs")
+	var shell_control := shell as Control
+	var watermark: TextureRect = shell.get_node("%BuildFactionWatermark")
+	var crest_icon: TextureRect = shell.get_node("%CrestIcon")
+	var build_box: VBoxContainer = shell.get_node("%BuildFactionWatermark").get_parent()
+	var confirm_build: Button = shell.get_node("%ConfirmBuild")
 	var rows := [
 		{"title": "Build", "page": shell.get_node("%BuildPanel")},
 		{"title": "Muster", "page": shell.get_node("%RecruitPanel")},
@@ -1255,7 +1260,65 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 			or tabs.size_flags_vertical != Control.SIZE_FILL:
 		push_error("Town smoke: ManagementTabs lost its exact 460px fill-only card policy: minimum=%s flags=%s." % [tabs.custom_minimum_size, tabs.size_flags_vertical])
 		return false
+	if shell_control == null \
+			or watermark.texture == null \
+			or watermark.texture != crest_icon.texture \
+			or watermark.texture.resource_path != TownRules.faction_crest_icon_path("faction_embercourt") \
+			or watermark.custom_minimum_size != Vector2.ZERO \
+			or watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL \
+			or watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE \
+			or watermark.focus_mode != Control.FOCUS_NONE \
+			or watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE \
+			or watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED \
+			or not is_equal_approx(watermark.self_modulate.a, 0.22) \
+			or watermark.tooltip_text != "" \
+			or not watermark.visible:
+		push_error("Town smoke: Build faction watermark lost its exact passive live-crest contract.")
+		return false
+	var window := get_window()
+	var original_window_size := window.size
+	var original_shell_size := shell_control.size
 	var original_tab := tabs.current_tab
+	tabs.current_tab = 0
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		window.size = viewport_size
+		shell_control.size = Vector2(viewport_size)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var watermark_rect := watermark.get_global_rect()
+		var build_box_rect := build_box.get_global_rect()
+		var confirm_rect := confirm_build.get_global_rect()
+		if window.size != viewport_size \
+				or not watermark.is_visible_in_tree() \
+				or watermark_rect.size.x <= 0.0 \
+				or watermark_rect.size.y <= 0.0 \
+				or not build_box_rect.encloses(watermark_rect) \
+				or watermark_rect.intersects(confirm_rect) \
+				or watermark_rect.position.y + 0.01 < confirm_rect.end.y:
+			push_error("Town smoke: Build faction watermark is not contained below Build controls at %s: watermark=%s build=%s confirm=%s." % [viewport_size, watermark_rect, build_box_rect, confirm_rect])
+			window.size = original_window_size
+			shell_control.size = original_shell_size
+			return false
+	var original_high_contrast := FrontierVisualKitScript.high_contrast_enabled()
+	FrontierVisualKitScript.set_high_contrast_enabled(true)
+	shell.call("_refresh_faction_crest")
+	await get_tree().process_frame
+	if watermark.visible:
+		push_error("Town smoke: decorative Build faction watermark remained visible in high-contrast mode.")
+		FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)
+		window.size = original_window_size
+		shell_control.size = original_shell_size
+		return false
+	FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)
+	shell.call("_refresh_faction_crest")
+	window.size = original_window_size
+	shell_control.size = original_shell_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not watermark.visible:
+		push_error("Town smoke: Build faction watermark did not restore with the live crest after high-contrast validation.")
+		return false
 	for index in range(rows.size()):
 		var row: Dictionary = rows[index]
 		tabs.current_tab = index

@@ -34,6 +34,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _footer_panel: PanelContainer = %FooterPanel
 @onready var _crest_glyph = %CrestGlyph
 @onready var _crest_icon: TextureRect = %CrestIcon
+@onready var _build_faction_watermark: TextureRect = %BuildFactionWatermark
 @onready var _crest_label: Label = %CrestLabel
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
@@ -5354,6 +5355,8 @@ func _refresh_faction_crest() -> void:
 	_crest_icon.texture = texture
 	_crest_icon.visible = texture != null
 	_crest_icon.tooltip_text = "%s crest" % String(faction.get("name", faction_id)) if texture != null else ""
+	_build_faction_watermark.texture = texture
+	_build_faction_watermark.visible = texture != null and not FrontierVisualKit.high_contrast_enabled()
 	_crest_glyph.visible = texture == null
 	if _crest_glyph.has_method("set_glyph"):
 		_crest_glyph.call("set_glyph", "town", _faction_accent())
