@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Register the directly observed Overworld object-scale hierarchy correction before changing live presentation."
+    "Select the next tracker-approved graphical-polish slice from fresh inspected runtime evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,20 +1911,65 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-broken-water-current-ripples-10184",
-    "title": "Overworld broken water current ripples",
+    "id": "presentation-overworld-map-object-world-scale-hierarchy-10184",
+    "title": "Overworld map-object world-scale hierarchy",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T02:58:57Z",
-    "updatedAt": "2026-08-26T03:32:33Z",
+    "startedAt": "2026-08-26T03:34:13Z",
+    "updatedAt": "2026-08-26T03:54:08Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with inspected two-width captures plus authored, generated reveal-all, broad compatibility, static/editor, Linux, and Windows startup evidence; packaged Overworld interaction remains unclaimed."
+    "notes": "Completed from direct user feedback and inspected River Pass captures: non-town, non-hero painted extents now form a subordinate world-scale ladder while every logical footprint, interaction, and map/session authority remains exact."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-map-object-world-scale-hierarchy-20260826",
+      "title": "Overworld map-object world-scale hierarchy",
+      "sliceId": "presentation-overworld-map-object-world-scale-hierarchy-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T03:54:08Z",
+      "updatedAt": "2026-08-26T03:54:08Z",
+      "latestFinding": "Fresh inspected 1280x720 and 1920x1080 River Pass captures show towns and heroes as clear visual anchors over a monotonic subordinate object ladder; authored/generated scale, hostile commander containment, logical footprints, interactions, route/focus/accessibility/core authority, static/editor, and bounded Linux/Windows startup gates pass.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-object-scale-capture.qUDnIH",
+        "/tmp/heroes-object-scale-generated.ZI10QY",
+        "/tmp/heroes-object-scale-small-map.8AmGWI",
+        "/tmp/heroes-object-scale-commander.xmehqJ",
+        "/tmp/heroes-object-scale-visual-final.yIAYeE",
+        "/tmp/heroes-object-scale-compat.oi1saJ",
+        "/tmp/heroes-object-scale-static.maqA3k",
+        "/tmp/heroes-object-scale-linux-package.4oMBTx",
+        "/tmp/heroes-object-scale-windows-package.oPQkTm",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "handheld_artifact_extent_tiles": 0.24,
+        "loose_pickup_extent_tiles": 0.30,
+        "decoration_extent_tiles": 0.34,
+        "encounter_extent_tiles": 0.42,
+        "generated_decorative_body_extent_tiles": 0.44,
+        "durable_structure_extent_tiles": 0.50,
+        "landmark_extent_tiles": 0.54,
+        "hero_extent_tiles": 0.56,
+        "town_extent_tiles": 1.04,
+        "logical_footprints_unchanged": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "nonClaims": [
+        "No packaged Overworld interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-overworld-broken-water-current-ripples-20260826",
       "title": "Overworld broken water current ripples",
@@ -14612,14 +14657,14 @@
       }
     }
   ],
-  "currentNotes": "The broken-water-current ripple pass is completed; the next directly observed graphical-polish gap is the Overworld object-scale hierarchy.",
+  "currentNotes": "The map-object world-scale hierarchy is completed; select the next graphical-polish slice from fresh inspected evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-broken-water-current-ripples-10184",
-  "currentSliceId": "presentation-overworld-broken-water-current-ripples-10184",
-  "currentSliceNotes": "Deterministic sparse water-only ripple geometry now renders after macro lighting and below causeways, objects, routes, and fog with exact topology and gameplay authority preserved.",
+  "currentSlice": "presentation-overworld-map-object-world-scale-hierarchy-10184",
+  "currentSliceId": "presentation-overworld-map-object-world-scale-hierarchy-10184",
+  "currentSliceNotes": "Tighten only painted non-town, non-hero object extents into one world-scale ladder while preserving alpha crop, anchoring, footprints, interactions, and authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld broken water current ripples",
-  "currentSliceUpdatedAt": "2026-08-26T03:32:33Z",
+  "currentSliceTitle": "Overworld map-object world-scale hierarchy",
+  "currentSliceUpdatedAt": "2026-08-26T03:54:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20134,9 +20179,37 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Register the directly observed Overworld object-scale hierarchy correction before implementation; preserve logical footprints, hit areas, pathing, interactions, content identity, and session/save authority.",
-  "notes": "The broken-water-current ripple slice is completed; blockers are empty and the next object-scale polish slice is not yet registered.",
+  "nextActionGuardrailNote": "Select the next graphical-polish slice from fresh inspected evidence; preserve completed map-object scale, footprints, interactions, content identity, and session/save authority.",
+  "notes": "The map-object world-scale hierarchy slice is completed; blockers are empty and no next slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-map-object-world-scale-hierarchy-10184",
+      "title": "Overworld map-object world-scale hierarchy",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T03:34:13Z",
+      "updatedAt": "2026-08-26T03:54:08Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the directly observed icon-like map-object proportions by tightening only non-town, non-hero painted extents into one monotonic world-scale hierarchy.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 captures show towns and heroes dominant over readable but subordinate props; focused/generated runtime proves exact monotonic extents, generated blocker coherence, alpha crop/aspect/grounding, logical footprints and authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No object identity/asset/content, logical footprint/body mask/hit area, passability/visitability, placement/density, terrain/road/fog/route/pathing/interaction, session/save/schema, AI, battle, balance, or Native RMG change.",
+        "No town/hero scale, camera/map fit, shell/UI layout, animation/audio/VFX, shader, font/UI-scale, or broad Overworld redesign.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct user feedback and fresh inspected River Pass captures: non-town map props now read as subordinate world objects while towns and heroes retain exact visual anchors.",
+      "blockedReason": null,
+      "remainingWork": "Completed: inspected two-width captures, focused/generated and compatibility runtime, static/editor, and bounded Linux/Windows export-startup gates are green."
+    },
     {
       "id": "presentation-overworld-broken-water-current-ripples-10184",
       "title": "Overworld broken water current ripples",

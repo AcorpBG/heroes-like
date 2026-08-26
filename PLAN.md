@@ -24,7 +24,28 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Next: register the directly observed Overworld object-scale hierarchy correction.
+- Selected implementation slice: none; select the next graphical-polish slice from fresh inspected evidence.
+
+## Overworld Map-Object World-Scale Hierarchy
+
+id: `presentation-overworld-map-object-world-scale-hierarchy-10184`
+
+Status: completed.
+
+Implementation boundary:
+- tighten only the painted presentation extents for non-town, non-hero map objects so the live board reads as a world instead of a collection of near-character-sized icons;
+- establish one monotonic ladder from handheld artifacts and loose pickups through decorations, encounters, blockers, waypoints, durable structures, and landmarks, with generated decorative bodies using the same blocker-scale neighborhood;
+- retain the existing alpha-bounds crop, aspect ratio, bottom anchoring, grounding, and multi-tile containment paths while leaving towns and heroes as unchanged visual anchors.
+
+Completion criteria:
+- fresh inspected River Pass object-scale captures at 1280x720 and 1920x1080 show towns and heroes clearly dominant over props, with boots, wagons, sites, encounters, and landmarks readable but no longer token-like or physically disconnected from the terrain grid;
+- focused authored/generated runtime proves an exact monotonic painted-size ladder, consistent generated blocker sizing, unchanged alpha crop/aspect/grounding, exact logical footprints/body masks/hit areas, and unchanged movement, interaction, map/session/save authority;
+- broad Overworld visual/route/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object id, asset, content profile, footprint, body/entry mask, passability, visitability, hit area, placement, density, terrain, road, fog, route, pathing, interaction, session/save/schema, AI, battle, balance, or Native RMG change;
+- no town or hero scale, camera/map fit, shell/UI layout, animation/audio/VFX, shader, font, UI-scale, or broad Overworld redesign;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Broken Water Current Ripples
 
