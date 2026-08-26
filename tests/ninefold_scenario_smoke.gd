@@ -507,6 +507,7 @@ func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_t
 	var enabled_presentation: Dictionary = shell.call("validation_tile_presentation", receiver_tile.x, receiver_tile.y)
 	map_view.set("_homm3_prototype", original_prototype)
 	var terrain: Dictionary = enabled_presentation.get("terrain_presentation", {}) if enabled_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	var shoreline: Dictionary = terrain.get("water_shoreline_contour", {}) if terrain.get("water_shoreline_contour", {}) is Dictionary else {}
 	if session.to_dict() != session_authority_before:
 		_fail("Ninefold smoke: enabled HoMM3 transition ownership fixture changed session authority.")
 		return false
@@ -518,6 +519,9 @@ func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_t
 		or String(terrain.get("generic_transition_surface_model", "leaked")) != ""
 		or int(terrain.get("generic_transition_feather_band_count", -1)) != 0
 		or bool(terrain.get("generic_transition_irregular_inner_edge", true))
+		or String(shoreline.get("model", "")) != "deterministic_shallow_wet_edge_and_broken_foam"
+		or bool(shoreline.get("active", true))
+		or int(shoreline.get("source_count", -1)) != 0
 		or String((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("model", "")) != "continuous_shared_corner_bilinear_field"
 		or not bool((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("drawn", false))
 	):
