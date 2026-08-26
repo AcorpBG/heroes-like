@@ -707,7 +707,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if String(summary.get("composition_signature", "")).length() != 64:
 		_fail("%s generated body composition signature is missing: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.84):
+	if not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.76):
 		_fail("%s multi-tile visual cap changed: %s" % [label, summary.get("multi_tile_interactive_cap_tiles", -1.0)])
 		return false
 	var corrected_multi_tile_count := 0

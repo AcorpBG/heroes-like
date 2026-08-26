@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next source-backed graphical-polish or release-readiness slice.
+- Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
+
+## Overworld Coherent Screen Object Proportions
+
+id: `ux-overworld-coherent-screen-object-proportions-10184`
+
+Status: completed.
+
+Implementation boundary:
+- tighten only the existing visual extent ladder for mapped Overworld props, heroes, structures, landmarks, multi-tile sites, and towns so they read as one coherent screen-space system at 1280x720 and 1920x1080;
+- remove the double-shrink of a hero standing on a town entrance while retaining the exact town-entry anchor, hero focus geometry, town footprint, alpha-bounds crop, sprite aspect, grounding, and draw order;
+- preserve every logical footprint, body/visit mask, hit target, route, movement, interaction, object identity, and session/save authority.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show the selected town, co-located hero, pickups, sites, landmarks, and dwellings sharing a restrained readable scale range without tile overflow or terrain/road loss;
+- focused runtime proves the exact visual ranks, town-visitor hero readability, containment, alpha-cropped aspect/cache authority, and unchanged logical footprints, passability, interaction, map/session/save authority;
+- authored/generated Overworld visual, movement/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object, hero, town, encounter, terrain, road, fog, route, content, generated placement, asset, identity, family/profile, logical footprint, body/visit mask, collision, pathfinding, interaction, session/save/schema, AI, economy, battle, balance, or Native RMG change;
+- no shell/UI layout, camera/tile extent, selection marker, animation, audio, VFX, shader, font, or broad Overworld redesign;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the live visual ladder now keeps handheld artifacts, pickups, encounters, durable sites, landmarks, blockers, decorations, heroes, multi-tile sites, and towns within a tighter readable screen-space range while preserving their semantic rank;
+- town sprites are slightly restrained and co-located town visitors use a dedicated contained sprite factor instead of inheriting the field-hero reduction twice, restoring readable hero presence without changing the town-entry anchor or logical footprint;
+- inspected River Pass 1280x720 and 1920x1080 captures, focused authored/generated Overworld runtime, Ninefold breadth, movement/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
 
 ## Overworld Organic Water Shoreline Contours
 
