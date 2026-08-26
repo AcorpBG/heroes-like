@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    "Select the next tracker-approved graphical-polish or release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,44 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-textured-cartographic-unexplored-shroud-10184",
-    "title": "Overworld textured cartographic unexplored shroud",
+    "id": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
+    "title": "Overworld Ember Signal Post distinct field sprite",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-25T23:43:50Z",
-    "updatedAt": "2026-08-25T23:59:42Z",
-    "completedAt": "2026-08-25T23:59:42Z",
+    "startedAt": "2026-08-26T00:04:47Z",
+    "updatedAt": "2026-08-26T00:19:05Z",
+    "completedAt": "2026-08-26T00:19:05Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct 1280x720 and 1920x1080 capture inspection. One original subtle whole-board cartographic texture replaces the flat hidden void without changing fog secrecy, reveal behavior, session/save, or gameplay authority; focused, compatibility, static/editor, and bounded platform startup gates pass."
+    "notes": "The shipped Ember Signal Post now uses one original transparent, compact one-tile Embercourt signal-outpost sprite instead of the generic procedural house marker. Focused visual, generated-map movement/save, route, focus, accessibility, core, static/editor, and bounded Linux/Windows export-startup gates are green; packaged Overworld interaction and whole-release readiness remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-ember-signal-post-distinct-field-sprite-20260826",
+      "title": "Overworld Ember Signal Post distinct field sprite",
+      "sliceId": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T00:19:05Z",
+      "updatedAt": "2026-08-26T00:19:05Z",
+      "latestFinding": "Fresh 1280x720 and 1920x1080 River Pass captures show the original transparent Embercourt signal outpost contained at compact one-tile structure scale instead of the generic procedural house marker. Focused public presentation proves exact site mapping, no fallback, stable repeat observation, and unchanged session authority; generated-map, route, focus, accessibility, core, static/editor, Linux, and Windows startup gates are green.",
+      "artifacts": [
+        "art/overworld/source/trimmed/map_objects/distinct/ember_signal_post-trimmed.png",
+        "art/overworld/runtime/objects/landmarks/ember_signal_post.png",
+        "art/overworld/manifest.json",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-signal-post-focused.0Yj5cC",
+        "/tmp/heroes-signal-post-capture.fdAjBu",
+        "/tmp/heroes-signal-post-compat.wLpdzY",
+        "/tmp/heroes-signal-post-editor.VK2Gvz",
+        "/tmp/heroes-signal-post-platform.26nGUI",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ]
+    },
     {
       "id": "presentation-overworld-semantic-object-scale-hierarchy-20260825",
       "title": "Overworld semantic object scale hierarchy",
@@ -14377,14 +14400,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld textured cartographic unexplored-shroud polish is completed. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld Ember Signal Post now has a distinct original compact field sprite; select the next source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-textured-cartographic-unexplored-shroud-10184",
-  "currentSliceId": "ux-overworld-textured-cartographic-unexplored-shroud-10184",
-  "currentSliceNotes": "One original subtle normalized board-space texture now renders only in authoritative unexplored cells while exact fog secrecy, reveal, session, save, and gameplay authority remain unchanged.",
+  "currentSlice": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
+  "currentSliceId": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
+  "currentSliceNotes": "Map only site_ember_signal_post to one original loaded transparent outpost sprite while preserving exact placement, scale path, interaction, session, save, and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld textured cartographic unexplored shroud",
-  "currentSliceUpdatedAt": "2026-08-25T23:59:42Z",
+  "currentSliceTitle": "Overworld Ember Signal Post distinct field sprite",
+  "currentSliceUpdatedAt": "2026-08-26T00:19:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -102035,6 +102058,50 @@
         "windowsExportWineStartup": true,
         "packagedOverworldInteractionClaimed": false
       }
+    },
+    {
+      "id": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
+      "title": "Overworld Ember Signal Post distinct field sprite",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T00:19:05Z",
+      "startedAt": "2026-08-26T00:04:47Z",
+      "completedAt": "2026-08-26T00:19:05Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "art/overworld/source/trimmed/map_objects/distinct/ember_signal_post-trimmed.png",
+        "art/overworld/runtime/objects/landmarks/ember_signal_post.png",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the visible Ember Signal Post's generic procedural house marker with one distinct original Embercourt outpost sprite.",
+      "completionCriteria": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a readable Embercourt brazier-and-signal outpost at river_signal_post; focused runtime proves exact site-to-asset mapping, loaded transparent 512x512 texture, semantic scale/containment/grounding, no procedural fallback, stable refresh and unchanged site/session/save authority; compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No resource-site id, placement, footprint, passability, interaction, control, income, vision, pressure, response, route, movement, session, save/schema, scenario, content-rule, generated placement, AI, balance, or Native RMG change.",
+        "No other object asset/mapping/scale, terrain, fog, road, shell/UI layout, animation/audio/VFX, theme, font, or UI-scale change.",
+        "No packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with one original transparent signal-outpost sprite mapped only to site_ember_signal_post. Inspected 1280x720 and 1920x1080 captures, focused public presentation/session authority, generated-map movement/save, route, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Overworld interaction and whole-release readiness remain unclaimed.",
+      "validation": {
+        "focusedArtifact": "/tmp/heroes-signal-post-focused.0Yj5cC",
+        "captureArtifact": "/tmp/heroes-signal-post-capture.fdAjBu",
+        "compatibilityArtifact": "/tmp/heroes-signal-post-compat.wLpdzY",
+        "editorArtifact": "/tmp/heroes-signal-post-editor.VK2Gvz",
+        "platformArtifact": "/tmp/heroes-signal-post-platform.26nGUI",
+        "captureWidths": [1280, 1920],
+        "sourceSize": [1248, 1254],
+        "runtimeSize": [512, 512],
+        "exactSiteAssetMapping": true,
+        "proceduralFallback": false,
+        "sessionAuthorityExact": true,
+        "linuxExportHeadlessStartup": true,
+        "windowsExportWineStartup": true,
+        "packagedOverworldInteractionClaimed": false
+      },
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -102045,7 +102112,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; broader product gaps remain.",
+  "remainingWork": "Select the next source-backed graphical-polish or release-readiness slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102476,7 +102543,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_textured_cartographic_unexplored_shroud_completed",
+  "result": "overworld_ember_signal_post_distinct_field_sprite_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102577,9 +102644,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld textured cartographic unexplored-shroud polish is completed with focused, compatibility, static/editor, and bounded platform-startup validation.",
+  "summary": "The Overworld Ember Signal Post now uses one original transparent, compact one-tile Embercourt outpost sprite instead of the generic procedural house marker; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "taskId": "10184",
-  "updatedAt": "2026-08-25T23:59:42Z",
+  "updatedAt": "2026-08-26T00:19:05Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

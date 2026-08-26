@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Next action is to select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+- Selected implementation slice: none. Select the next source-backed graphical-polish or release-readiness slice.
+
+## Overworld Ember Signal Post Distinct Field Sprite
+
+id: `presentation-overworld-ember-signal-post-distinct-field-sprite-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one original transparent Ember Signal Post source cutout and one 512x512 runtime field sprite, then map only `site_ember_signal_post` to that exact asset through the existing Overworld art manifest;
+- preserve the established semantic structure scale, alpha-bounds crop, aspect, bottom anchoring, localized grounding, tile containment, and resource-site rendering path;
+- keep exact placements, footprint, collection/control state, income, vision, pressure guard, response action, route interaction, session/save authority, scenario content, and generated-map behavior unchanged.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show a readable Embercourt brazier-and-signal outpost at `river_signal_post` instead of the generic procedural brown house;
+- focused runtime proves exact site-to-asset mapping, loaded transparent 512x512 texture, semantic scale/containment/grounding, no procedural fallback, stable presentation across refresh, and unchanged site/session/save authority;
+- Overworld visual, generated-map movement/save, route/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no resource-site id, placement, footprint, passability, interaction, control, income, vision, pressure, response, route, movement, session, save/schema, scenario, content-rule, generated placement, AI, balance, or Native RMG change;
+- no other object asset/mapping/scale, terrain, fog, road, shell/UI layout, animation/audio/VFX, theme, font, or UI-scale change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- replaced the River Pass Ember Signal Post's generic procedural house marker with one original transparent Embercourt signal-outpost sprite, mapped only to `site_ember_signal_post` through the existing manifest-driven resource-site renderer;
+- inspected 1280x720 and 1920x1080 captures show a compact one-tile brazier-and-mirror outpost beneath the hero/town scale ranks, with no procedural fallback, support stack, or tile overflow;
+- focused Overworld visual, generated-map movement/save, full-route movement, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
 
 ## Overworld Textured Cartographic Unexplored Shroud
 
