@@ -24,7 +24,52 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from direct current capture evidence.
+- Selected implementation slice: none. `presentation-overworld-coherent-object-scale-ladder-10184` is completed; select the next graphical-polish slice from direct current capture or playtest evidence.
+
+## Overworld Coherent Object-Scale Ladder
+
+id: `presentation-overworld-coherent-object-scale-ladder-10184`
+
+Status: completed.
+
+Result:
+- the live Overworld now uses one coherent painted scale ladder: small artifacts and pickups are legible at 0.36-0.42 tiles, ordinary props progress through 0.44-0.55 tiles beneath the unchanged 0.56-tile hero anchor, footprint-bearing sites are bounded to 0.64-0.88 tiles, and town art is restrained from 1.20 to 1.04 tiles;
+- inspected River Pass 1280x720 and 1920x1080 captures show clear town anchors without adjacent-cell crowding and readable small world objects, while focused runtime preserves exact object/town/hero assets, logical footprints, routes, interactions, movement, session, and save authority;
+- Overworld visual/generated-map/route/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Implementation boundary:
+- compress the direct user-reported visual gap by reducing the existing town painted extent from 1.20 tiles to 1.04 tiles while increasing the smallest one-tile artifact, pickup, decoration, encounter, blocker, waypoint, structure, and landmark extents into a restrained monotonic 0.36-0.64 tile band;
+- keep field heroes at the existing 0.56-tile anchor and restrain footprint-bearing interactive art below the town tier, preserving cached alpha cropping, source aspect, bottom grounding, draw order, fog/memory treatment, and generated decorative-body variation;
+- preserve every object/town id, asset, logical footprint, body/entry tile, hit area, passability, placement, route, interaction, content, session, and save authority.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show towns as clear anchors without overwhelming adjacent cells and show small props as legible world objects rather than detached specks;
+- focused runtime proves the exact monotonic painted scale ladder, bounded multi-tile containment, town/hero/object geometry, and unchanged logical footprints, routes, interaction, session, and save authority;
+- broad Overworld visual, generated movement/save, route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object/town/hero identity, asset, content profile, logical footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, pathing, interaction, session/save/schema, AI, battle, balance, or Native RMG change;
+- no camera/map-fit, shell/UI, selection cue, grounding/contact model, animation/audio/VFX, shader, font, UI scale, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+## Main Menu Gilded Title Wordmark
+
+id: `presentation-main-menu-gilded-title-wordmark-10184`
+
+Status: pending.
+
+Implementation boundary:
+- give the existing `AURELION REACH` title one fixed warm-gold face, dark outline, and restrained shadow, with a lighter matching edge on the existing `KINGDOM FRONT` eyebrow;
+- preserve exact public title/eyebrow/subtitle text, font sizes, crest asset, title-pocket anchors/margins, summary/footer pockets, first-view command plaques, scenic backdrop, focus/navigation, routing, settings, session, and save authority;
+- keep the treatment readable at 1280x720 and 1920x1080 and compatible with the existing high-contrast/accessibility surface without adding a logo image, shader, animation, or another panel.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 first-view captures show a title that belongs to the surrounding gold heraldic frame and sunset lighting while preserving scenery-first composition and exact pocket containment;
+- focused runtime proves the exact title/eyebrow face, outline, shadow, sizes, text, crest and pocket geometry at both widths, plus unchanged menu/session/save/settings/input authority;
+- Main Menu/Outcome visual, physical keyboard/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no title/eyebrow/subtitle copy, crest/backdrop/plaque/panel asset, pocket/footer/stage/command geometry, font family/size, UI scale, focus/input/accessibility semantic, campaign/skirmish/load/settings/editor route, session/save/schema, gameplay, content, AI, balance, or Native RMG change;
+- no new image asset, shader, animation/audio/VFX, packaged Main Menu interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Battle Sidebar Heraldic Watermark
 
