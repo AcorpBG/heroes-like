@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
 
+## Overworld Compressed World-Scale Ladder
+
+id: `presentation-overworld-compressed-world-scale-ladder-10184`
+
+Status: completed.
+
+Implementation boundary:
+- narrow only the live painted-size spread between towns, field heroes, handheld artifacts, loose pickups, and the existing semantic map-object families so settlements stop overpowering neighboring cells while small interactables remain legible;
+- keep towns as the largest visual anchor and preserve the existing semantic order, alpha-bounds crop, source aspect, bottom anchoring, grounding/contact treatment, generated blocker variation, and footprint-aware multi-tile containment;
+- preserve every logical footprint, town body/entry mask, hit area, passability, object placement, route, interaction, fog/memory state, camera, session, and save authority.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show one coherent world-scale band: adjacent towns no longer visually collide, heroes remain distinct, and pickups/sites no longer read as disconnected specks;
+- focused small-map runtime proves the exact compressed monotonic scale ladder, town and hero containment, unchanged logical footprints/body masks/hit areas, and exact map/session/save authority;
+- broad Overworld visual, generated movement/save, route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object/town/hero id, asset, content profile, logical footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, pathing, interaction, session/save/schema, AI, battle, balance, or Native RMG change;
+- no camera/map-fit, shell/UI, tooltip/reticle/selection cue, grounding/contact model, animation/audio/VFX, shader, font, UI-scale, or broad Overworld redesign;
+- no packaged Overworld interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the live painted-size spread is compressed from a 0.24-to-1.04-tile extreme to a 0.28-to-0.88-tile band: handheld artifacts and pickups gain restrained presence, intermediate semantic families retain a strict readable order, heroes stay at 0.56, and towns remain the largest anchor without visually merging across neighboring cells;
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show separated adjacent settlements and legible props, while focused and broad runtime preserve exact 3x2 town footprints, one-tile object footprints, multi-tile containment, generated movement/save, routes, focus, accessibility, session, and core authority;
+- repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; packaged Overworld interaction, hardware certification, whole-game validation, and release readiness remain unclaimed.
+
 ## Main Menu Cartographic Pocket Frame Integration
 
 id: `presentation-main-menu-cartographic-pocket-frame-integration-10184`
