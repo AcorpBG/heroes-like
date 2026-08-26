@@ -1911,20 +1911,58 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-coherent-screen-object-proportions-10184",
-    "title": "Overworld coherent screen object proportions",
+    "id": "ux-overworld-layered-cartographic-route-preview-10184",
+    "title": "Overworld layered cartographic route preview",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T01:10:19Z",
-    "updatedAt": "2026-08-26T01:38:41Z",
+    "startedAt": "2026-08-26T01:42:25Z",
+    "updatedAt": "2026-08-26T02:03:59Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct user playtest feedback: the live screen-space object hierarchy is tighter and the town-entry hero double-shrink is removed without changing logical map or gameplay authority."
+    "notes": "Completed from direct capture inspection: the solid debug-like route bar and filled dots are replaced by a layered cartographic trail while exact route and session authority remain unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-overworld-layered-cartographic-route-preview-20260826",
+      "title": "Overworld layered cartographic route preview",
+      "sliceId": "ux-overworld-layered-cartographic-route-preview-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T02:03:59Z",
+      "updatedAt": "2026-08-26T02:03:59Z",
+      "latestFinding": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a fine layered gold route with cartographic stitches, open waypoint diamonds, and one compact direction-aware destination chevron instead of the former solid five-pixel bar and filled dots. Focused reachable/blocked geometry and movement, route cache/controller/input/focus/accessibility/generated-map/core, static/editor, Linux, and Windows startup gates are green.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-route-focused.hRg7qT",
+        "/tmp/heroes-route-capture-final.tbc0aT",
+        "/tmp/heroes-route-compat.V0L1yR",
+        "/tmp/heroes-route-static.3cbwqk",
+        "/tmp/heroes-route-packaging.kmNPYb",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "visual_model": "layered_cartographic_trail_open_waypoints_destination_chevron",
+        "shadow_width_factor": 0.04,
+        "core_width_factor": 0.018,
+        "highlight_width_factor": 0.006,
+        "continuous_debug_bar": false,
+        "filled_node_count": 0,
+        "waypoints_open": true,
+        "destination_direction_exact": true,
+        "route_source_tiles_exact": true,
+        "session_authority_exact": true,
+        "linux_export_headless_startup": true,
+        "windows_export_wine_startup": true,
+        "packaged_overworld_interaction_claimed": false
+      }
+    },
     {
       "id": "ux-overworld-coherent-screen-object-proportions-20260826",
       "title": "Overworld coherent screen object proportions",
@@ -14492,14 +14530,14 @@
       }
     }
   ],
-  "currentNotes": "The coherent Overworld object-proportion correction is completed with inspected two-width captures and focused, compatibility, static/editor, and bounded platform evidence.",
+  "currentNotes": "The layered cartographic Overworld route-preview polish is completed with inspected two-width captures and focused, compatibility, static/editor, and bounded platform evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-coherent-screen-object-proportions-10184",
-  "currentSliceId": "ux-overworld-coherent-screen-object-proportions-10184",
-  "currentSliceNotes": "Tighten only mapped Overworld visual extents and correct the town-entry hero double-shrink; preserve logical footprints, interaction, content, and session/save authority.",
+  "currentSlice": "ux-overworld-layered-cartographic-route-preview-10184",
+  "currentSliceId": "ux-overworld-layered-cartographic-route-preview-10184",
+  "currentSliceNotes": "Change only the route preview's layered visual geometry; preserve exact route tiles, movement, actions, cues, input, and session/save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld coherent screen object proportions",
-  "currentSliceUpdatedAt": "2026-08-26T01:38:41Z",
+  "currentSliceTitle": "Overworld layered cartographic route preview",
+  "currentSliceUpdatedAt": "2026-08-26T02:03:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19952,7 +19990,7 @@
     ".artifacts/rmg_native_4a901a_identity/final_payload_compare.json"
   ],
   "latestEvidenceId": "native-rmg-4a7605-source-owned-monolith-dispatch-20260714",
-  "latestFinding": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a tighter readable object hierarchy: the town is slightly restrained, its co-located visitor hero is legible instead of double-shrunk, compact pickups remain distinct, and sites/landmarks no longer dominate adjacent roads or terrain. Logical footprint, movement, interaction, and session/save authority remain exact.",
+  "latestFinding": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a fine layered gold route with cartographic stitches, open waypoint diamonds, and one compact direction-aware destination chevron instead of the former solid five-pixel bar and filled dots. Exact route tiles, movement, actions, cues, and session/save authority remain unchanged.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -20014,8 +20052,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; preserve completed Overworld visual and logical authority.",
-  "notes": "The coherent Overworld object-proportion correction is completed; blockers are empty and the next slice remains unselected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; preserve completed Overworld route and logical authority.",
+  "notes": "The layered cartographic Overworld route-preview polish is completed; blockers are empty and the next slice remains unselected.",
   "plannedSlices": [
     {
       "id": "ux-overworld-active-hero-command-marker-10184",
@@ -102317,6 +102355,34 @@
       "blockedReason": null,
       "completedAt": "2026-08-26T01:38:41Z",
       "remainingWork": "Select the next tracker-approved release-readiness slice."
+    },
+    {
+      "id": "ux-overworld-layered-cartographic-route-preview-10184",
+      "title": "Overworld layered cartographic route preview",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T02:03:59Z",
+      "startedAt": "2026-08-26T01:42:25Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the live Overworld's solid debug-like route bar and filled node dots with a fine layered cartographic trail while preserving route and gameplay authority.",
+      "completionCriteria": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a restrained readable route trail; focused runtime proves exact layered geometry, open waypoints, destination orientation, and unchanged route/session authority; route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No route/pathfinding/movement/action/interaction/cue/input/focus/session/save/schema/content/AI/battle/balance or Native RMG change.",
+        "No terrain/road/fog/object/hero/town/selection/hover/shell/UI/camera/animation/shader/font or broad Overworld redesign.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct two-width capture inspection: the old solid five-pixel line and filled four-pixel nodes are replaced by a fine layered cartographic trail with open waypoints and a direction-aware destination cue.",
+      "blockedReason": null,
+      "completedAt": "2026-08-26T02:03:59Z",
+      "remainingWork": "Select the next tracker-approved release-readiness slice."
     }
   ],
   "project": "heroes-like",
@@ -102758,7 +102824,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_coherent_screen_object_proportions_completed",
+  "result": "overworld_layered_cartographic_route_preview_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102859,9 +102925,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld towns, town visitors, heroes, pickups, sites, landmarks, blockers, and decorations now share a tighter readable visual hierarchy; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "summary": "The Overworld route preview now uses a fine layered cartographic trail with open waypoints and a compact directional destination cue; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T01:38:41Z",
+  "updatedAt": "2026-08-26T02:03:59Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

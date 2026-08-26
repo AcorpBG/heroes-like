@@ -41109,6 +41109,14 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure(refresh_route_block.find("_record_route_blocked_presentation(reason)") < refresh_route_block.find("_refresh_with_request"), errors, "Blocked-route presentation must publish before the selected-route map refresh consumes it")
 
     for required_token in (
+        'const ROUTE_VISUAL_MODEL := "layered_cartographic_trail_open_waypoints_destination_chevron"',
+        "const ROUTE_SHADOW_WIDTH_FACTOR := 0.040",
+        "const ROUTE_CORE_WIDTH_FACTOR := 0.018",
+        "const ROUTE_HIGHLIGHT_WIDTH_FACTOR := 0.006",
+        "const ROUTE_STITCH_LENGTH_FACTOR := 0.045",
+        "const ROUTE_WAYPOINT_RADIUS_FACTOR := 0.030",
+        "const ROUTE_DESTINATION_LENGTH_FACTOR := 0.075",
+        "const ROUTE_DESTINATION_DEPTH_FACTOR := 0.045",
         "HERO_MOVEMENT_MIN_DURATION_MSEC := 80",
         "HERO_MOVEMENT_MAX_DURATION_MSEC := 700",
         "movement_presentation: Dictionary = {}",
@@ -41129,6 +41137,9 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         "func _draw_route_blocked_presentation",
         "func validation_route_blocked_presentation",
         '"route_blocked_presentation": validation_route_blocked_presentation()',
+        "func _route_segment_visual_profile",
+        "func validation_route_visual_profile",
+        '"route_visual_profile": validation_route_visual_profile()',
     ):
         ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing hero-route locomotion token {required_token}")
     sync_block = gdscript_function_block(map_view_text, "_sync_hero_movement_presentation")
@@ -41150,7 +41161,54 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure('_invalidate_dynamic_layer("route_blocked_started")' in blocked_sync_block and "_invalidate_session_static_cache" not in blocked_sync_block and "_invalidate_state_cache" not in blocked_sync_block, errors, "Blocked-route playback must invalidate only the dynamic layer")
     ensure("session" not in blocked_draw_block and "create_tween" not in blocked_sync_block + blocked_draw_block and "create_timer" not in blocked_sync_block + blocked_draw_block and "await " not in blocked_sync_block + blocked_draw_block, errors, "Blocked-route view helpers must not mutate gameplay or add hidden timing")
 
+    route_draw_block = gdscript_function_block(map_view_text, "_draw_route")
+    route_segment_block = gdscript_function_block(map_view_text, "_draw_route_segment")
+    route_profile_block = gdscript_function_block(map_view_text, "_route_segment_visual_profile")
+    route_validation_block = gdscript_function_block(map_view_text, "validation_route_visual_profile")
+    ensure('_tiles_from_payloads(_route_preview.get("reachable_tiles", []))' in route_draw_block and '_tiles_from_payloads(_route_preview.get("unreachable_tiles", []))' in route_draw_block, errors, "Cartographic route drawing must retain the exact production reachable/unreachable arrays")
+    ensure('_draw_route_segment(board_rect, reachable_tiles, ROUTE_COLOR, false)' in route_draw_block and '_draw_route_segment(board_rect, blocked_segment, ROUTE_BLOCKED_COLOR, true)' in route_draw_block, errors, "Cartographic route drawing must preserve reachable versus blocked segment ownership")
+    for ordered_tokens in (
+        ("_canvas_draw_polyline(points, ROUTE_SHADOW_COLOR, shadow_width, true)", "_canvas_draw_polyline(points, line_color, core_width, true)", "_canvas_draw_polyline(points, highlight_color, highlight_width, true)"),
+        ("for stitch_value in profile.get(\"stitches\", [])", "for waypoint_value in profile.get(\"waypoints\", [])", 'var destination: PackedVector2Array = profile.get("destination_chevron", PackedVector2Array())'),
+    ):
+        positions = [route_segment_block.find(token) for token in ordered_tokens]
+        ensure(all(position >= 0 for position in positions) and positions == sorted(positions), errors, f"Cartographic route drawing order drifted: {ordered_tokens}")
+    ensure("_canvas_draw_circle" not in route_segment_block and ", 5.0)" not in route_segment_block and ", 4.0," not in route_segment_block, errors, "Cartographic route drawing must not restore the solid five-pixel bar or filled four-pixel nodes")
+    ensure('"waypoint_fill_alpha": 0.0' in route_profile_block and '"filled_node_count": 0' in route_profile_block and '"continuous_debug_bar": false' in route_profile_block, errors, "Cartographic route geometry must remain open and explicitly reject the old debug-bar model")
+    for token in (
+        "board_rect.size.x / float(maxi(_map_size.x, 1))",
+        "board_rect.size.y / float(maxi(_map_size.y, 1))",
+        "start.direction_to(finish)",
+        "var midpoint := start.lerp(finish, 0.5)",
+        "var normal := Vector2(-direction.y, direction.x)",
+        '"stitch_count": stitches.size()',
+        '"waypoint_count": waypoints.size()',
+        '"destination_chevron_count": 1 if destination_chevron.size() == 3 else 0',
+        '"destination_source_tile": source_tiles[source_tiles.size() - 1].duplicate(true) if not source_tiles.is_empty() else {}',
+    ):
+        ensure(token in route_profile_block, errors, f"Cartographic route profile is missing exact tile-derived geometry token {token}")
+    ensure("session" not in route_profile_block and "_route_preview" not in route_profile_block and "await " not in route_profile_block and "create_timer" not in route_profile_block and "queue_redraw" not in route_profile_block, errors, "Route geometry helper must remain detached, synchronous, and presentation-only")
+    ensure(route_validation_block.find('reachable_tiles := _tiles_from_payloads(_route_preview.get("reachable_tiles", []))') < route_validation_block.find('unreachable_tiles := _tiles_from_payloads(_route_preview.get("unreachable_tiles", []))') < route_validation_block.find("blocked_segment.append_array(unreachable_tiles)"), errors, "Route validation must retain production reachable then blocked source order")
+    ensure('"draw_order": "before_focus_and_dynamic_icons"' in route_validation_block and '"continuous_debug_bar": false' in route_validation_block and '"filled_node_count": 0' in route_validation_block, errors, "Route validation must expose the exact visual/draw-order boundary")
+    ensure("session.overworld" not in route_validation_block + route_profile_block and "session.flags" not in route_validation_block + route_profile_block, errors, "Route visual observation must not mutate session authority")
+
     for required_token in (
+        "func _assert_cartographic_route_visual",
+        "func _cartographic_route_segment_exact",
+        "func _cartographic_route_segment_summary",
+        'String(live_profile.get("model", "")) != "layered_cartographic_trail_open_waypoints_destination_chevron"',
+        'live_profile.get("reachable_source_tiles", []) != reachable_tiles',
+        'live_profile.get("unreachable_source_tiles", []) != unreachable_tiles',
+        'String(live_profile.get("draw_order", "")) != "before_focus_and_dynamic_icons"',
+        'not _cartographic_route_segment_exact(reachable, reachable_tiles, tile_extent, false)',
+        'not _cartographic_route_segment_exact(blocked, blocked_tiles, tile_extent, true)',
+        'session.to_dict() != authority_before',
+        'not is_equal_approx(float(segment.get("shadow_width_px", 0.0)), maxf(2.8, tile_extent * 0.040))',
+        'not is_equal_approx(float(segment.get("core_width_px", 0.0)), maxf(1.3, tile_extent * 0.018))',
+        'not is_equal_approx(float(segment.get("highlight_width_px", 0.0)), maxf(0.65, tile_extent * 0.006))',
+        'not is_equal_approx(float(segment.get("core_alpha", 0.0)), 0.86 if blocked else 0.82)',
+        'or destination[1] != points[points.size() - 1]',
+        'expected_direction.dot(actual_direction) > 0.9999',
         "func _assert_reduced_motion_route_endpoint_snap",
         'String(movement_start.get("animation_state", "")) != "map_step"',
         'String(movement.get("animation_state", "")) == "route_endpoint_snap"',
@@ -41187,6 +41245,11 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ):
         ensure(required_token in test_text, errors, f"Full-route movement regression is missing locomotion proof token {required_token}")
     ensure(test_text.count("func _assert_reduced_motion_route_endpoint_snap") == 1, errors, "Full-route movement regression must define one reduced-motion endpoint-snap case")
+    ensure(test_text.count("func _assert_cartographic_route_visual") == 1 and test_text.count("func _cartographic_route_segment_exact") == 1, errors, "Full-route movement regression must define one independent cartographic route visual owner")
+    partial_case = gdscript_function_block(test_text, "_assert_partial_full_route_execution")
+    ensure(partial_case.find('String(route_decision.get("status", "")) != "not_today"') < partial_case.find("_assert_cartographic_route_visual(shell, session, selection, route_preview)") < partial_case.find('shell.call("validation_perform_primary_action")'), errors, "Cartographic route visual must be observed after exact route authority and before movement mutates it")
+    route_test_block = gdscript_function_block(test_text, "_assert_cartographic_route_visual") + gdscript_function_block(test_text, "_cartographic_route_segment_exact")
+    ensure("_route_segment_visual_profile" not in route_test_block and "_draw_route_segment" not in route_test_block and "_draw_route(" not in route_test_block, errors, "Focused route test must observe the public detached profile rather than call production drawing helpers")
     ensure(test_text.count("func _route_blocked_presentation") == 1, errors, "Full-route movement regression must define one detached blocked-route presentation observer")
     blocked_case = gdscript_function_block(test_text, "_assert_route_does_not_pass_through_interaction")
     ensure(blocked_case.find('String(route_decision.get("status", "")) != "blocked"') < blocked_case.find("_route_blocked_presentation(shell)"), errors, "Blocked-route case must establish exact route authority before presentation observation")
@@ -41209,6 +41272,29 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         '"Victory 0/4"',
     ):
         ensure(stale_token not in visual_smoke_text, errors, f"Overworld visual smoke must not retain stale River Pass victory token {stale_token}")
+    for required_token in (
+        'var route_visual_capture_only := OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_ONLY") == "1"',
+        "func _capture_route_visual_viewports",
+        "func _route_visual_capture_goal",
+        'OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_DIR")',
+        'map_node.call("validation_route_visual_profile")',
+        'String(route_profile.get("model", "")) != "layered_cartographic_trail_open_waypoints_destination_chevron"',
+        'bool(reachable.get("continuous_debug_bar", true))',
+        'int(reachable.get("filled_node_count", -1)) != 0',
+        'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'overworld_route_visual_%dx%d.png',
+        'print("OVERWORLD_ROUTE_VISUAL_CAPTURE %s"',
+        'session.to_dict() != authority_before',
+    ):
+        ensure(required_token in visual_smoke_text, errors, f"Overworld visual smoke is missing route-capture proof token {required_token}")
+    route_capture_block = gdscript_function_block(visual_smoke_text, "_capture_route_visual_viewports")
+    ensure(route_capture_block.find('shell.call("validation_select_tile", route_goal.x, route_goal.y)') < route_capture_block.find('map_node.call("validation_route_visual_profile")') < route_capture_block.find("get_viewport().get_texture().get_image()"), errors, "Route capture must establish live selection, observe production geometry, then capture it")
+    route_capture_selection = route_capture_block.find('shell.call("validation_select_tile", route_goal.x, route_goal.y)')
+    route_capture_second_frame = route_capture_block.find("await get_tree().process_frame", route_capture_block.find("await get_tree().process_frame", route_capture_selection) + 1)
+    route_capture_authority = route_capture_block.find("var authority_before: Dictionary = session.to_dict()", route_capture_second_frame)
+    route_capture_profile = route_capture_block.find('map_node.call("validation_route_visual_profile")', route_capture_authority)
+    ensure(0 <= route_capture_selection < route_capture_second_frame < route_capture_authority < route_capture_profile, errors, "Route capture must settle initial shell/selection effects before baselining authority and observing presentation")
+    ensure("_draw_route_segment" not in route_capture_block and "_route_segment_visual_profile" not in route_capture_block and "session.overworld[" not in route_capture_block, errors, "Route capture must not invoke drawing helpers or mutate session authority")
 
 
 def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:

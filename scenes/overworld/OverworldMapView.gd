@@ -87,8 +87,20 @@ const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
 const HERO_FILL_COLOR := Color(0.88, 0.32, 0.21, 1.0)
 const RESERVE_HERO_COLOR := Color(0.87, 0.90, 0.94, 1.0)
-const ROUTE_COLOR := Color(0.97, 0.86, 0.43, 0.92)
-const ROUTE_BLOCKED_COLOR := Color(0.87, 0.43, 0.33, 0.92)
+const ROUTE_COLOR := Color(0.97, 0.86, 0.43, 0.82)
+const ROUTE_BLOCKED_COLOR := Color(0.87, 0.43, 0.33, 0.86)
+const ROUTE_VISUAL_MODEL := "layered_cartographic_trail_open_waypoints_destination_chevron"
+const ROUTE_SHADOW_COLOR := Color(0.035, 0.028, 0.018, 0.50)
+const ROUTE_SHADOW_WIDTH_FACTOR := 0.040
+const ROUTE_CORE_WIDTH_FACTOR := 0.018
+const ROUTE_HIGHLIGHT_WIDTH_FACTOR := 0.006
+const ROUTE_HIGHLIGHT_ALPHA := 0.42
+const ROUTE_STITCH_LENGTH_FACTOR := 0.045
+const ROUTE_STITCH_WIDTH_FACTOR := 0.010
+const ROUTE_STITCH_ALPHA := 0.64
+const ROUTE_WAYPOINT_RADIUS_FACTOR := 0.030
+const ROUTE_DESTINATION_LENGTH_FACTOR := 0.075
+const ROUTE_DESTINATION_DEPTH_FACTOR := 0.045
 const PLACEMENT_DEBUG_BLOCKER_FILL := Color(1.0, 0.06, 0.04, 0.36)
 const PLACEMENT_DEBUG_BLOCKER_BORDER := Color(1.0, 0.17, 0.12, 0.86)
 const PLACEMENT_DEBUG_INTERACTABLE_FILL := Color(1.0, 0.86, 0.08, 0.38)
@@ -2485,26 +2497,135 @@ func _draw_route(board_rect: Rect2) -> void:
 	var reachable_tiles := _tiles_from_payloads(_route_preview.get("reachable_tiles", []))
 	var unreachable_tiles := _tiles_from_payloads(_route_preview.get("unreachable_tiles", []))
 	if reachable_tiles.size() > 1:
-		_draw_route_segment(board_rect, reachable_tiles, ROUTE_COLOR)
+		_draw_route_segment(board_rect, reachable_tiles, ROUTE_COLOR, false)
 	if unreachable_tiles.size() > 0:
 		var blocked_segment := []
 		if reachable_tiles.size() > 0:
 			blocked_segment.append(reachable_tiles[reachable_tiles.size() - 1])
 		blocked_segment.append_array(unreachable_tiles)
 		if blocked_segment.size() > 1:
-			_draw_route_segment(board_rect, blocked_segment, ROUTE_BLOCKED_COLOR)
+			_draw_route_segment(board_rect, blocked_segment, ROUTE_BLOCKED_COLOR, true)
 
-func _draw_route_segment(board_rect: Rect2, tiles: Array, line_color: Color) -> void:
-	var points = PackedVector2Array()
+func _draw_route_segment(board_rect: Rect2, tiles: Array, line_color: Color, blocked: bool) -> void:
+	var profile := _route_segment_visual_profile(board_rect, tiles, line_color, blocked)
+	var points: PackedVector2Array = profile.get("points", PackedVector2Array())
+	if points.size() <= 1:
+		return
+	var shadow_width := float(profile.get("shadow_width_px", 2.8))
+	var core_width := float(profile.get("core_width_px", 1.3))
+	var highlight_width := float(profile.get("highlight_width_px", 0.65))
+	var highlight_color := Color(1.0, 0.96, 0.74, ROUTE_HIGHLIGHT_ALPHA) if not blocked else Color(1.0, 0.72, 0.62, ROUTE_HIGHLIGHT_ALPHA)
+	_canvas_draw_polyline(points, ROUTE_SHADOW_COLOR, shadow_width, true)
+	_canvas_draw_polyline(points, line_color, core_width, true)
+	_canvas_draw_polyline(points, highlight_color, highlight_width, true)
+	for stitch_value in profile.get("stitches", []):
+		if not (stitch_value is PackedVector2Array):
+			continue
+		var stitch: PackedVector2Array = stitch_value
+		_canvas_draw_polyline(stitch, ROUTE_SHADOW_COLOR, float(profile.get("stitch_shadow_width_px", 1.8)), true)
+		_canvas_draw_polyline(stitch, Color(line_color.r, line_color.g, line_color.b, ROUTE_STITCH_ALPHA), float(profile.get("stitch_width_px", 1.0)), true)
+	for waypoint_value in profile.get("waypoints", []):
+		if not (waypoint_value is PackedVector2Array):
+			continue
+		var waypoint: PackedVector2Array = waypoint_value
+		_canvas_draw_polyline(waypoint, ROUTE_SHADOW_COLOR, shadow_width, true)
+		_canvas_draw_polyline(waypoint, line_color, core_width, true)
+	var destination: PackedVector2Array = profile.get("destination_chevron", PackedVector2Array())
+	if destination.size() == 3:
+		_canvas_draw_polyline(destination, ROUTE_SHADOW_COLOR, shadow_width, true)
+		_canvas_draw_polyline(destination, line_color, core_width, true)
+		_canvas_draw_polyline(destination, highlight_color, highlight_width, true)
+
+func _route_segment_visual_profile(board_rect: Rect2, tiles: Array, line_color: Color, blocked: bool) -> Dictionary:
+	var points := PackedVector2Array()
+	var source_tiles: Array = []
 	for tile_value in tiles:
 		if not (tile_value is Vector2i):
 			continue
-		points.append(_tile_rect(board_rect, tile_value).get_center())
-	if points.size() <= 1:
-		return
-	_canvas_draw_polyline(points, line_color, 5.0)
-	for point in points:
-		_canvas_draw_circle(point, 4.0, line_color)
+		var tile: Vector2i = tile_value
+		source_tiles.append(_vector2i_payload(tile))
+		points.append(_tile_rect(board_rect, tile).get_center())
+	var tile_extent := minf(
+		board_rect.size.x / float(maxi(_map_size.x, 1)),
+		board_rect.size.y / float(maxi(_map_size.y, 1))
+	)
+	var shadow_width := maxf(2.8, tile_extent * ROUTE_SHADOW_WIDTH_FACTOR)
+	var core_width := maxf(1.3, tile_extent * ROUTE_CORE_WIDTH_FACTOR)
+	var highlight_width := maxf(0.65, tile_extent * ROUTE_HIGHLIGHT_WIDTH_FACTOR)
+	var stitch_length := maxf(3.0, tile_extent * ROUTE_STITCH_LENGTH_FACTOR)
+	var stitch_width := maxf(0.85, tile_extent * ROUTE_STITCH_WIDTH_FACTOR)
+	var waypoint_radius := maxf(2.25, tile_extent * ROUTE_WAYPOINT_RADIUS_FACTOR)
+	var destination_length := maxf(5.0, tile_extent * ROUTE_DESTINATION_LENGTH_FACTOR)
+	var destination_depth := maxf(3.0, tile_extent * ROUTE_DESTINATION_DEPTH_FACTOR)
+	var stitches: Array = []
+	for index in range(1, points.size()):
+		var start := points[index - 1]
+		var finish := points[index]
+		var direction := start.direction_to(finish)
+		if direction == Vector2.ZERO:
+			continue
+		var normal := Vector2(-direction.y, direction.x)
+		var midpoint := start.lerp(finish, 0.5)
+		stitches.append(PackedVector2Array([
+			midpoint - normal * stitch_length * 0.5,
+			midpoint + normal * stitch_length * 0.5,
+		]))
+	var waypoints: Array = []
+	for index in range(1, maxi(points.size() - 1, 1)):
+		var center := points[index]
+		waypoints.append(PackedVector2Array([
+			center + Vector2(0.0, -waypoint_radius),
+			center + Vector2(waypoint_radius, 0.0),
+			center + Vector2(0.0, waypoint_radius),
+			center + Vector2(-waypoint_radius, 0.0),
+			center + Vector2(0.0, -waypoint_radius),
+		]))
+	var destination_chevron := PackedVector2Array()
+	var destination_direction := Vector2.ZERO
+	if points.size() > 1:
+		var tip := points[points.size() - 1]
+		var direction := points[points.size() - 2].direction_to(tip)
+		if direction != Vector2.ZERO:
+			destination_direction = direction
+			var normal := Vector2(-direction.y, direction.x)
+			var wing_center := tip - direction * destination_length
+			destination_chevron = PackedVector2Array([
+				wing_center + normal * destination_depth,
+				tip,
+				wing_center - normal * destination_depth,
+			])
+	return {
+		"model": ROUTE_VISUAL_MODEL,
+		"blocked": blocked,
+		"source_tiles": source_tiles,
+		"points": points,
+		"point_count": points.size(),
+		"shadow_width_px": shadow_width,
+		"core_width_px": core_width,
+		"highlight_width_px": highlight_width,
+		"shadow_alpha": ROUTE_SHADOW_COLOR.a,
+		"core_alpha": line_color.a,
+		"highlight_alpha": ROUTE_HIGHLIGHT_ALPHA,
+		"stitches": stitches,
+		"stitch_count": stitches.size(),
+		"stitch_length_px": stitch_length,
+		"stitch_width_px": stitch_width,
+		"stitch_shadow_width_px": stitch_width + 1.0,
+		"stitch_alpha": ROUTE_STITCH_ALPHA,
+		"waypoints": waypoints,
+		"waypoint_count": waypoints.size(),
+		"waypoint_radius_px": waypoint_radius,
+		"waypoint_fill_alpha": 0.0,
+		"destination_chevron": destination_chevron,
+		"destination_chevron_count": 1 if destination_chevron.size() == 3 else 0,
+		"destination_tip": _vector2_payload(points[points.size() - 1]) if points.size() > 1 else {},
+		"destination_direction": _vector2_payload(destination_direction),
+		"destination_source_tile": source_tiles[source_tiles.size() - 1].duplicate(true) if not source_tiles.is_empty() else {},
+		"destination_length_px": destination_length,
+		"destination_depth_px": destination_depth,
+		"continuous_debug_bar": false,
+		"filled_node_count": 0,
+	}
 
 func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
 	var layout := _tile_focus_layout(tile, rect)
@@ -5223,6 +5344,7 @@ func validation_view_metrics() -> Dictionary:
 		"camera_focus_tile": {"x": int(round(focus_tile.x)), "y": int(round(focus_tile.y))},
 		"camera_focus_tile_precise": {"x": focus_tile.x, "y": focus_tile.y},
 		"route_preview": _route_preview.duplicate(true),
+		"route_visual_profile": validation_route_visual_profile(),
 		"visible_bounds": {
 			"x": visible_bounds.position.x,
 			"y": visible_bounds.position.y,
@@ -5259,6 +5381,33 @@ func validation_view_metrics() -> Dictionary:
 		"guarded_site_presentation": validation_guarded_site_presentation(),
 		"object_focus_presentation": validation_object_focus_presentation(),
 		"spell_cast_presentation": validation_spell_cast_presentation(),
+	}
+
+func validation_route_visual_profile() -> Dictionary:
+	var board_rect := _board_rect()
+	var reachable_tiles := _tiles_from_payloads(_route_preview.get("reachable_tiles", []))
+	var unreachable_tiles := _tiles_from_payloads(_route_preview.get("unreachable_tiles", []))
+	var reachable_profile := {}
+	var blocked_profile := {}
+	if reachable_tiles.size() > 1:
+		reachable_profile = _route_segment_visual_profile(board_rect, reachable_tiles, ROUTE_COLOR, false)
+	if unreachable_tiles.size() > 0:
+		var blocked_segment: Array = []
+		if reachable_tiles.size() > 0:
+			blocked_segment.append(reachable_tiles[reachable_tiles.size() - 1])
+		blocked_segment.append_array(unreachable_tiles)
+		if blocked_segment.size() > 1:
+			blocked_profile = _route_segment_visual_profile(board_rect, blocked_segment, ROUTE_BLOCKED_COLOR, true)
+	return {
+		"model": ROUTE_VISUAL_MODEL,
+		"reachable": reachable_profile.duplicate(true),
+		"blocked": blocked_profile.duplicate(true),
+		"reachable_source_tiles": _vector2i_payloads(reachable_tiles),
+		"unreachable_source_tiles": _vector2i_payloads(unreachable_tiles),
+		"draw_order": "before_focus_and_dynamic_icons",
+		"route_preview_enabled": _route_preview_enabled,
+		"continuous_debug_bar": false,
+		"filled_node_count": 0,
 	}
 
 func validation_hero_movement_presentation() -> Dictionary:
@@ -7445,6 +7594,16 @@ func _homm3_stamp_source_matches_offset(terrain_payload: Dictionary, expected_so
 
 func _vector2i_payload(value: Vector2i) -> Dictionary:
 	return {"x": value.x, "y": value.y}
+
+func _vector2_payload(value: Vector2) -> Dictionary:
+	return {"x": value.x, "y": value.y}
+
+func _vector2i_payloads(values: Array) -> Array:
+	var payloads: Array = []
+	for value in values:
+		if value is Vector2i:
+			payloads.append(_vector2i_payload(value))
+	return payloads
 
 func _homm3_terrain_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
 	if not _homm3_runtime_rendering_enabled():

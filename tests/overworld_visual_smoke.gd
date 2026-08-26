@@ -8,11 +8,12 @@ func _run() -> void:
 	var objective_brief_only := OS.get_environment("OVERWORLD_OBJECTIVE_BRIEF_ONLY") == "1"
 	var hero_card_only := OS.get_environment("OVERWORLD_HERO_CARD_ONLY") == "1"
 	var object_scale_capture_only := OS.get_environment("OVERWORLD_OBJECT_SCALE_CAPTURE_ONLY") == "1"
+	var route_visual_capture_only := OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_ONLY") == "1"
 	var road_surface_capture_only := OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_ONLY") == "1"
 	var sidebar_ornament_only := OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only or hero_card_only or road_surface_capture_only or sidebar_ornament_only:
+	elif objective_brief_only or hero_card_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -30,6 +31,15 @@ func _run() -> void:
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
+		return
+	if route_visual_capture_only:
+		if not _assert_overworld_art_contract(shell):
+			return
+		if not await _capture_route_visual_viewports(shell, map_node, session):
+			return
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if sidebar_ornament_only:
 		if not await _assert_sidebar_ornament_contract(shell, session):
@@ -3748,6 +3758,105 @@ func _capture_object_scale_viewports(shell: Node) -> bool:
 	await get_tree().process_frame
 	print("OVERWORLD_OBJECT_SCALE_CAPTURE %s" % JSON.stringify({"ok": true, "captures": captures, "session_exact": shell != null}))
 	return true
+
+func _capture_route_visual_viewports(shell: Node, map_node: Node, session) -> bool:
+	var output_dir := OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_DIR").strip_edges()
+	if output_dir == "":
+		push_error("Overworld smoke: route-visual capture requires OVERWORLD_ROUTE_VISUAL_CAPTURE_DIR.")
+		get_tree().quit(1)
+		return false
+	var route_goal := _route_visual_capture_goal(session, map_node)
+	if route_goal.x < 0:
+		push_error("Overworld smoke: route-visual capture could not find a visible multi-step route.")
+		get_tree().quit(1)
+		return false
+	var selection: Dictionary = shell.call("validation_select_tile", route_goal.x, route_goal.y)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var authority_before: Dictionary = session.to_dict()
+	var route_profile: Dictionary = map_node.call("validation_route_visual_profile")
+	var reachable: Dictionary = route_profile.get("reachable", {}) if route_profile.get("reachable", {}) is Dictionary else {}
+	if (
+		String(route_profile.get("model", "")) != "layered_cartographic_trail_open_waypoints_destination_chevron"
+		or int(reachable.get("point_count", 0)) < 3
+		or int(reachable.get("stitch_count", 0)) != int(reachable.get("point_count", 0)) - 1
+		or int(reachable.get("waypoint_count", -1)) != int(reachable.get("point_count", 0)) - 2
+		or int(reachable.get("destination_chevron_count", 0)) != 1
+		or bool(reachable.get("continuous_debug_bar", true))
+		or int(reachable.get("filled_node_count", -1)) != 0
+		or not is_zero_approx(float(reachable.get("waypoint_fill_alpha", 1.0)))
+		or session.to_dict() != authority_before
+	):
+		push_error("Overworld smoke: route-visual capture did not establish the layered live route contract. selection=%s profile=%s" % [selection, route_profile])
+		get_tree().quit(1)
+		return false
+	var absolute_dir := ProjectSettings.globalize_path(output_dir)
+	if DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
+		push_error("Overworld smoke: could not create route-visual capture directory %s." % absolute_dir)
+		get_tree().quit(1)
+		return false
+	var original_window_size := get_window().size
+	var captures := []
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if get_window().size != viewport_size:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: route-visual capture did not reach %s." % viewport_size)
+			get_tree().quit(1)
+			return false
+		var width_profile: Dictionary = map_node.call("validation_route_visual_profile")
+		var width_reachable: Dictionary = width_profile.get("reachable", {}) if width_profile.get("reachable", {}) is Dictionary else {}
+		if int(width_reachable.get("point_count", 0)) != int(reachable.get("point_count", 0)) or int(width_reachable.get("destination_chevron_count", 0)) != 1:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: route-visual capture lost route geometry at %s. profile=%s" % [viewport_size, width_profile])
+			get_tree().quit(1)
+			return false
+		await RenderingServer.frame_post_draw
+		var image := get_viewport().get_texture().get_image()
+		if image == null or image.is_empty() or image.get_size() != viewport_size:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: route-visual capture returned an invalid %s image." % viewport_size)
+			get_tree().quit(1)
+			return false
+		var path := absolute_dir.path_join("overworld_route_visual_%dx%d.png" % [viewport_size.x, viewport_size.y])
+		if image.save_png(path) != OK:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: route-visual capture could not save %s." % path)
+			get_tree().quit(1)
+			return false
+		captures.append({"width": viewport_size.x, "height": viewport_size.y, "path": path})
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	if session.to_dict() != authority_before:
+		push_error("Overworld smoke: route-visual capture changed session authority.")
+		get_tree().quit(1)
+		return false
+	print("OVERWORLD_ROUTE_VISUAL_CAPTURE %s" % JSON.stringify({
+		"ok": true,
+		"captures": captures,
+		"route_goal": {"x": route_goal.x, "y": route_goal.y},
+		"point_count": int(reachable.get("point_count", 0)),
+		"session_exact": true,
+	}))
+	return true
+
+func _route_visual_capture_goal(session, map_node: Node) -> Vector2i:
+	var origin := OverworldRules.hero_position(session)
+	var map_size := OverworldRules.derive_map_size(session)
+	var best_goal := Vector2i(-1, -1)
+	var best_path_size := 0
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var tile := Vector2i(x, y)
+			if tile == origin or not OverworldRules.is_tile_explored(session, tile.x, tile.y) or OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+				continue
+			var route: Array = map_node.call("_build_path", origin, tile)
+			if route.size() >= 3 and route.size() > best_path_size:
+				best_path_size = route.size()
+				best_goal = tile
+	return best_goal
 
 func _assert_sidebar_ornament_contract(shell: Control, session) -> bool:
 	var ornament: Control = shell.get_node_or_null("%SidebarOrnament")
