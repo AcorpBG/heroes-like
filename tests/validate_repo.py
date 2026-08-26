@@ -17583,6 +17583,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         "_turn_strip_chip_label",
         "validation_turn_strip_identity_surface",
         "_draw_stack_caption",
+        "_stack_caption_layout",
         "_stack_caption_label",
         "validation_stack_caption_summary",
         "_draw_footer_line",
@@ -17758,7 +17759,59 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         ensure(forbidden_token not in chip_label_body, errors, f"Battle initiative word-boundary label fitter must preserve source identity and avoid {forbidden_token}")
 
     draw_caption_body = bodies.get("_draw_stack_caption", "")
-    ensure(draw_caption_body.count("_stack_caption_label(stack)") == 1 and "_stack_short_label(stack)" not in draw_caption_body, errors, "Painted BattleBoard stack captions must use only the dedicated word-boundary label")
+    ensure(draw_caption_body.count("_stack_caption_layout(center, radius, stack)") == 1 and "_stack_short_label(stack)" not in draw_caption_body, errors, "Painted BattleBoard stack captions must use only the shared nameplate layout")
+    for required_token in (
+        'const STACK_CAPTION_PLATE_MODEL := "compact_translucent_side_accent_nameplate"',
+        "const STACK_CAPTION_FONT_SIZE := 10",
+        "const STACK_CAPTION_HORIZONTAL_PADDING := 5.0",
+        "const STACK_CAPTION_PLATE_HEIGHT := 16.0",
+        "const STACK_CAPTION_TOKEN_GAP := 2.0",
+        "const STACK_CAPTION_ACCENT_WIDTH := 2.0",
+        "const STACK_CAPTION_PLATE_FILL := Color(0.018, 0.024, 0.029, 0.78)",
+        "const STACK_CAPTION_PLATE_FRAME := Color(0.80, 0.74, 0.57, 0.30)",
+        "const STACK_CAPTION_PLATE_SHADOW := Color(0.01, 0.014, 0.018, 0.42)",
+        "const STACK_CAPTION_ACCENT_ALPHA := 0.82",
+    ):
+        ensure(board_text.count(required_token) == 1, errors, f"Battle stack nameplate must own one exact restrained presentation constant: {required_token}")
+    for required_token in (
+        'var layout := _stack_caption_layout(center, radius, stack)',
+        'draw_rect(Rect2(plate_rect.position + Vector2(1.0, 2.0), plate_rect.size), STACK_CAPTION_PLATE_SHADOW, true)',
+        "draw_rect(plate_rect, STACK_CAPTION_PLATE_FILL, true)",
+        "draw_rect(plate_rect, STACK_CAPTION_PLATE_FRAME, false, 1.0)",
+        "draw_rect(accent_rect, accent_color, true)",
+        '_draw_text(String(layout.get("label", "")), text_position, TEXT_COLOR, STACK_CAPTION_FONT_SIZE)',
+    ):
+        ensure(required_token in draw_caption_body, errors, f"Painted Battle stack caption is missing exact nameplate draw order: {required_token}")
+    draw_caption_order = tuple(draw_caption_body.find(token) for token in (
+        "STACK_CAPTION_PLATE_SHADOW",
+        "STACK_CAPTION_PLATE_FILL",
+        "STACK_CAPTION_PLATE_FRAME",
+        "draw_rect(accent_rect, accent_color, true)",
+        "_draw_text(",
+    ))
+    ensure(all(index >= 0 for index in draw_caption_order) and list(draw_caption_order) == sorted(draw_caption_order), errors, "Battle stack nameplate must paint shadow, plate, frame, side accent, then exact caption text")
+    for forbidden_token in ("_battle", "BattleRules", "Input.", "emit_signal", "queue_redraw", "await ", "create_timer", "create_tween"):
+        ensure(forbidden_token not in draw_caption_body, errors, f"Battle stack nameplate drawing must remain presentation-only and avoid {forbidden_token}")
+
+    caption_layout_body = bodies.get("_stack_caption_layout", "")
+    ensure(caption_layout_body.count("_stack_caption_label(stack)") == 1 and "_stack_short_label(stack)" not in caption_layout_body, errors, "Battle stack nameplate layout must retain the dedicated word-boundary caption label")
+    caption_layout_order = tuple(caption_layout_body.find(token) for token in (
+        "var label := _stack_caption_label(stack)",
+        "get_theme_default_font()",
+        "font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE)",
+        "var token_radius := _stack_token_radius(radius)",
+        "center.y - token_radius - STACK_CAPTION_TOKEN_GAP - plate_size.y",
+        "var plate_rect := Rect2(plate_position, plate_size)",
+        "var text_rect := Rect2(Vector2(text_position.x, plate_position.y + 2.0), text_size)",
+        "var accent_rect := Rect2(plate_position, Vector2(STACK_CAPTION_ACCENT_WIDTH, plate_size.y))",
+        'var side_color := _side_color(String(stack.get("side", "")))',
+        "var accent_color := Color(side_color.r, side_color.g, side_color.b, STACK_CAPTION_ACCENT_ALPHA)",
+        '"model": STACK_CAPTION_PLATE_MODEL',
+    ))
+    ensure(all(index >= 0 for index in caption_layout_order) and list(caption_layout_order) == sorted(caption_layout_order), errors, "Battle stack nameplate geometry must derive exact text size, token clearance, contained plate/text/accent, and live side accent in order")
+    for forbidden_token in ("_battle", "BattleRules", "_stack_cells", "Input.", "draw_", "queue_redraw", "sort(", "erase(", "await ", "create_timer"):
+        ensure(forbidden_token not in caption_layout_body, errors, f"Battle stack nameplate layout must stay detached, local, and avoid {forbidden_token}")
+
     caption_label_body = bodies.get("_stack_caption_label", "")
     caption_order = tuple(caption_label_body.find(token) for token in (
         "var full_name := _stack_full_name(stack)",
@@ -17774,14 +17827,24 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         ensure(forbidden_token not in caption_label_body, errors, f"BattleBoard caption fitting must remain local, deterministic, and caption-only: {forbidden_token}")
     caption_surface_body = bodies.get("validation_stack_caption_summary", "")
     caption_surface_order = tuple(caption_surface_body.find(token) for token in (
+        "var field_rect := _current_field_rect()",
+        "var hex_layout := _hex_layout(field_rect)",
+        "var stack_cells := _stack_cells()",
         "for stack in _all_visible_stacks():",
         'var battle_id := String(stack.get("battle_id", ""))',
+        "var center := _stack_presentation_center(stack, cell, hex_layout, stack_cells)",
+        "var layout := _stack_caption_layout(center, radius, stack)",
         '"full_name": _stack_full_name(stack)',
         '"visible_caption": _stack_caption_label(stack)',
         '"tooltip": _stack_board_tooltip(battle_id)',
+        '"plate_model": STACK_CAPTION_PLATE_MODEL',
+        '"text_contained": plate_rect.encloses(text_rect)',
+        '"accent_contained": plate_rect.encloses(accent_rect)',
+        '"plate_above_token": plate_rect.end.y <= center.y - token_radius + 0.01',
+        '"field_contained": field_rect.encloses(plate_rect)',
         "return rows",
     ))
-    ensure(all(index >= 0 for index in caption_surface_order) and list(caption_surface_order) == sorted(caption_surface_order), errors, "BattleBoard caption validation must expose exact painted/full/tooltip identity in live stack order")
+    ensure(all(index >= 0 for index in caption_surface_order) and list(caption_surface_order) == sorted(caption_surface_order), errors, "BattleBoard caption validation must expose exact painted/full/tooltip identity and nameplate geometry in live stack order")
     for forbidden_token in ("Input.", "emit_signal", "queue_redraw", "sort(", "erase(", "BattleRules"):
         ensure(forbidden_token not in caption_surface_body, errors, f"BattleBoard caption validation must remain observation-only: {forbidden_token}")
 
@@ -17789,7 +17852,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ensure(caption_test_match is not None, errors, "Battle controller owner must independently prove painted stack-caption word boundaries")
     if caption_test_match is not None:
         caption_test_body = caption_test_match.group("body")
-        for required_token in ("validation_stack_caption_summary", "rows.size() != visible_stack_count", "_stack_by_battle_id(session.battle, battle_id)", "_stack_caption_word_text_control(full_name)", 'visible_caption.contains("...")', 'String(row.get("tooltip", "")).contains(full_name)', 'visible_caption.ends_with("…")', 'full_name.substr(prefix.length(), 1) != " "', "if not saw_overflow:"):
+        for required_token in ("var battle_authority_before: Dictionary = session.battle.duplicate(true)", "validation_stack_caption_summary", "rows.size() != visible_stack_count", "_stack_by_battle_id(session.battle, battle_id)", "_stack_caption_word_text_control(full_name)", 'visible_caption.contains("...")', 'String(row.get("tooltip", "")).contains(full_name)', 'String(row.get("plate_model", "")) != "compact_translucent_side_accent_nameplate"', "plate_rect.encloses(text_rect)", "plate_rect.encloses(accent_rect)", "field_rect.encloses(plate_rect)", "plate_rect.end.y > token_center.y - token_radius + 0.01", "actual_accent.is_equal_approx(expected_accent)", 'visible_caption.ends_with("…")', 'full_name.substr(prefix.length(), 1) != " "', "if not saw_overflow:", "if session.battle != battle_authority_before:"):
             ensure(required_token in caption_test_body, errors, f"Battle stack-caption owner is missing exact independent/full-identity token: {required_token}")
         for forbidden_token in ("_stack_caption_label", "_draw_stack_caption", ".text =", "queue_redraw", "Input.", "sort(", "erase("):
             ensure(forbidden_token not in caption_test_body, errors, f"Battle stack-caption owner must remain independent and read-only: {forbidden_token}")
