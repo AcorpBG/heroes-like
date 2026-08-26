@@ -251,6 +251,19 @@ const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
 const TOWN_SPRITE_EXTENT_FACTOR := 0.82
 const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18
+const TOWN_OWNER_PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"
+const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.115
+const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.078
+const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.185
+const TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR := 0.17
+const TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR := 0.12
+const TOWN_OWNER_PENNANT_CLOTH_ALPHA := 0.86
+const TOWN_OWNER_PENNANT_MEMORY_ALPHA := 0.68
+const TOWN_OWNER_PENNANT_SHADOW_ALPHA := 0.30
+const TOWN_OWNER_PENNANT_FOLD_ALPHA := 0.34
+const TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA := 0.42
+const TOWN_OWNER_PENNANT_SHADOW_OFFSET_FACTOR := 0.010
+const TOWN_OWNER_PENNANT_OUTLINE_WIDTH_FACTOR := 0.010
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -3945,46 +3958,148 @@ func _multi_tile_interactive_sprite_extent_bounds(footprint: Vector2i) -> Vector
 	return Vector2(min_tiles, maxf(min_tiles, cap_tiles))
 
 func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool, owner: String) -> void:
+	var profile := _town_owner_pennant_profile(
+		rect,
+		color,
+		remembered,
+		owner,
+		FrontierVisualKitScript.color_cue_assist_enabled()
+	)
+	var extent := float(profile.get("extent", 0.0))
+	var pole_top: Vector2 = profile.get("pole_top", Vector2.ZERO)
+	var pole_bottom: Vector2 = profile.get("pole_bottom", Vector2.ZERO)
+	var shadow_offset: Vector2 = profile.get("shadow_offset", Vector2.ZERO)
+	var cloth_points: PackedVector2Array = profile.get("cloth_points", PackedVector2Array())
+	var shadow_points: PackedVector2Array = profile.get("shadow_points", PackedVector2Array())
+	var outline_points := PackedVector2Array(cloth_points)
+	if not cloth_points.is_empty():
+		outline_points.append(cloth_points[0])
+	_canvas_draw_line(
+		pole_bottom + shadow_offset,
+		pole_top + shadow_offset,
+		Color(0.01, 0.012, 0.009, TOWN_OWNER_PENNANT_SHADOW_ALPHA),
+		maxf(1.0, extent * 0.017)
+	)
+	_canvas_draw_colored_polygon(shadow_points, Color(0.01, 0.012, 0.009, TOWN_OWNER_PENNANT_SHADOW_ALPHA))
+	_canvas_draw_line(pole_bottom, pole_top, profile.get("pole_color", Color.WHITE), maxf(1.2, extent * 0.015))
+	_canvas_draw_colored_polygon(cloth_points, profile.get("cloth_color", Color.WHITE))
+	_canvas_draw_polyline(outline_points, profile.get("outline_color", MARKER_OUTLINE_COLOR), maxf(1.0, extent * TOWN_OWNER_PENNANT_OUTLINE_WIDTH_FACTOR))
+	var fold_line: PackedVector2Array = profile.get("fold_line", PackedVector2Array())
+	if fold_line.size() == 2:
+		_canvas_draw_line(fold_line[0], fold_line[1], profile.get("fold_color", MARKER_OUTLINE_COLOR), maxf(1.0, extent * 0.007))
+	var highlight_line: PackedVector2Array = profile.get("highlight_line", PackedVector2Array())
+	if highlight_line.size() == 2:
+		_canvas_draw_line(highlight_line[0], highlight_line[1], profile.get("highlight_color", Color.WHITE), maxf(1.0, extent * 0.006))
+	_canvas_draw_circle(pole_top, maxf(1.2, extent * 0.010), profile.get("pole_color", Color.WHITE))
+	if bool(profile.get("color_cue_assist", false)):
+		_draw_town_owner_flag_mark(profile.get("mark_center", pole_top), extent, owner, profile.get("mark_color", MARKER_OUTLINE_COLOR))
+
+func _town_owner_pennant_profile(
+	rect: Rect2,
+	color: Color,
+	remembered: bool,
+	owner: String,
+	color_cue_assist: bool
+) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
-	var pole_top := rect.position + rect.size * Vector2(0.74, 0.18)
-	var pole_bottom := rect.position + rect.size * Vector2(0.74, 0.42)
-	var pole_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.97, 0.94, 0.82, 0.90)
-	var flag_color := _remembered_marker_color(color) if remembered else color
-	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	_canvas_draw_line(pole_bottom, pole_top, pole_color, maxf(1.6, extent * 0.024))
-	var flag := PackedVector2Array()
-	if not FrontierVisualKitScript.color_cue_assist_enabled():
-		flag = PackedVector2Array([
+	var width := extent * TOWN_OWNER_PENNANT_WIDTH_FACTOR
+	var height := extent * TOWN_OWNER_PENNANT_HEIGHT_FACTOR
+	var pole_top := rect.position + rect.size * Vector2(0.755, 0.205)
+	var pole_bottom := pole_top + Vector2(0.0, extent * TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR)
+	var cloth_points := PackedVector2Array()
+	var shape_id := "compact_forked"
+	if not color_cue_assist:
+		cloth_points = PackedVector2Array([
 			pole_top,
-			pole_top + Vector2(extent * 0.16, extent * 0.045),
-			pole_top + Vector2(extent * 0.02, extent * 0.12),
+			pole_top + Vector2(width, height * 0.16),
+			pole_top + Vector2(width * 0.76, height * 0.50),
+			pole_top + Vector2(width, height * 0.84),
+			pole_top + Vector2(0.0, height),
 		])
 	elif owner == "player":
-		flag = PackedVector2Array([
+		shape_id = "compact_square_folded"
+		cloth_points = PackedVector2Array([
 			pole_top,
-			pole_top + Vector2(extent * 0.15, 0.0),
-			pole_top + Vector2(extent * 0.15, extent * 0.10),
-			pole_top + Vector2(0.0, extent * 0.10),
+			pole_top + Vector2(width, height * 0.10),
+			pole_top + Vector2(width * 0.88, height * 0.50),
+			pole_top + Vector2(width, height * 0.90),
+			pole_top + Vector2(0.0, height),
 		])
 	elif owner == "enemy":
-		flag = PackedVector2Array([
+		shape_id = "compact_tapered"
+		cloth_points = PackedVector2Array([
 			pole_top,
-			pole_top + Vector2(extent * 0.17, extent * 0.05),
-			pole_top + Vector2(0.0, extent * 0.11),
+			pole_top + Vector2(width, height * 0.50),
+			pole_top + Vector2(0.0, height),
 		])
 	else:
-		flag = PackedVector2Array([
-			pole_top + Vector2(0.0, extent * 0.05),
-			pole_top + Vector2(extent * 0.075, 0.0),
-			pole_top + Vector2(extent * 0.15, extent * 0.05),
-			pole_top + Vector2(extent * 0.075, extent * 0.10),
+		shape_id = "compact_diamond"
+		cloth_points = PackedVector2Array([
+			pole_top + Vector2(0.0, height * 0.50),
+			pole_top + Vector2(width * 0.50, 0.0),
+			pole_top + Vector2(width, height * 0.50),
+			pole_top + Vector2(width * 0.50, height),
 		])
-	_canvas_draw_colored_polygon(flag, flag_color)
-	var outline_points := flag.duplicate()
-	outline_points.append(flag[0])
-	_canvas_draw_polyline(outline_points, outline_color, maxf(1.0, extent * 0.014))
-	if FrontierVisualKitScript.color_cue_assist_enabled():
-		_draw_town_owner_flag_mark(pole_top + Vector2(extent * 0.075, extent * 0.05), extent, owner, outline_color)
+	var shadow_offset := Vector2.ONE * maxf(1.0, extent * TOWN_OWNER_PENNANT_SHADOW_OFFSET_FACTOR)
+	var shadow_points := PackedVector2Array()
+	for point in cloth_points:
+		shadow_points.append(point + shadow_offset)
+	var source_color := _remembered_marker_color(color) if remembered else color
+	var cloth_alpha := TOWN_OWNER_PENNANT_MEMORY_ALPHA if remembered else TOWN_OWNER_PENNANT_CLOTH_ALPHA
+	var cloth_color := Color(source_color.r, source_color.g, source_color.b, minf(source_color.a, cloth_alpha))
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	var pole_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.92, 0.84, 0.62, 0.88)
+	var fold_color := Color(outline_color.r, outline_color.g, outline_color.b, minf(outline_color.a, TOWN_OWNER_PENNANT_FOLD_ALPHA))
+	var highlight_source := cloth_color.lightened(0.42)
+	var highlight_color := Color(highlight_source.r, highlight_source.g, highlight_source.b, TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA if not remembered else TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA * 0.70)
+	return {
+		"model": TOWN_OWNER_PENNANT_MODEL,
+		"owner": owner,
+		"remembered": remembered,
+		"color_cue_assist": color_cue_assist,
+		"shape_id": shape_id,
+		"extent": extent,
+		"pole_top": pole_top,
+		"pole_bottom": pole_bottom,
+		"pole_color": pole_color,
+		"cloth_points": cloth_points,
+		"shadow_points": shadow_points,
+		"cloth_bounds": _points_bounds(cloth_points),
+		"cloth_color": cloth_color,
+		"outline_color": outline_color,
+		"shadow_offset": shadow_offset,
+		"fold_line": PackedVector2Array([
+			pole_top + Vector2(width * 0.08, height * 0.68),
+			pole_top + Vector2(width * 0.70, height * 0.48),
+		]),
+		"fold_color": fold_color,
+		"highlight_line": PackedVector2Array([
+			pole_top + Vector2(width * 0.08, height * 0.18),
+			pole_top + Vector2(width * 0.66, height * 0.27),
+		]),
+		"highlight_color": highlight_color,
+		"mark_center": pole_top + Vector2(width * 0.48, height * 0.50),
+		"mark_color": outline_color,
+		"single_pass_draw_count": 1,
+		"cloth_layer_count": 1,
+		"width_factor": TOWN_OWNER_PENNANT_WIDTH_FACTOR,
+		"height_factor": TOWN_OWNER_PENNANT_HEIGHT_FACTOR,
+		"legacy_width_factor": TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR,
+		"legacy_height_factor": TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR,
+		"painted_area_ratio_to_legacy": (TOWN_OWNER_PENNANT_WIDTH_FACTOR * TOWN_OWNER_PENNANT_HEIGHT_FACTOR) / (TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR * TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR),
+	}
+
+func _points_bounds(points: PackedVector2Array) -> Rect2:
+	if points.is_empty():
+		return Rect2()
+	var min_position := points[0]
+	var max_position := points[0]
+	for point in points:
+		min_position.x = minf(min_position.x, point.x)
+		min_position.y = minf(min_position.y, point.y)
+		max_position.x = maxf(max_position.x, point.x)
+		max_position.y = maxf(max_position.y, point.y)
+	return Rect2(min_position, max_position - min_position)
 
 func _draw_town_owner_flag_mark(center: Vector2, extent: float, owner: String, color: Color) -> void:
 	var mark_radius := maxf(1.8, extent * 0.022)
@@ -6365,6 +6480,72 @@ func validation_town_presentation_profiles() -> Array:
 		profiles.append(_town_presentation_payload_for_town(town, true))
 	return profiles
 
+func validation_town_owner_pennant_variants(tile: Vector2i) -> Dictionary:
+	var presentation := _town_presentation_at(tile)
+	if presentation.is_empty():
+		return {}
+	var town: Dictionary = presentation.get("town", {})
+	if town.is_empty():
+		return {}
+	var entry := _town_entry_tile(town)
+	var rect := _town_footprint_rect_for_entry(entry)
+	var variants := []
+	for remembered in [false, true]:
+		for color_cue_assist in [false, true]:
+			for owner in ["player", "enemy", "neutral"]:
+				var color := PLAYER_TOWN_COLOR if owner == "player" else (ENEMY_TOWN_COLOR if owner == "enemy" else NEUTRAL_TOWN_COLOR)
+				variants.append(_town_owner_pennant_validation_payload(
+					_town_owner_pennant_profile(rect, color, remembered, owner, color_cue_assist),
+					rect
+				))
+	return {
+		"model": TOWN_OWNER_PENNANT_MODEL,
+		"tile": _vector2i_payload(tile),
+		"entry_tile": _vector2i_payload(entry),
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"live_owner": _town_owner_id(town),
+		"footprint_rect": _rect_payload(rect),
+		"variant_count": variants.size(),
+		"variants": variants,
+	}
+
+func _town_owner_pennant_validation_payload(profile: Dictionary, rect: Rect2) -> Dictionary:
+	var cloth_points: PackedVector2Array = profile.get("cloth_points", PackedVector2Array())
+	var shadow_points: PackedVector2Array = profile.get("shadow_points", PackedVector2Array())
+	var fold_line: PackedVector2Array = profile.get("fold_line", PackedVector2Array())
+	var highlight_line: PackedVector2Array = profile.get("highlight_line", PackedVector2Array())
+	return {
+		"model": String(profile.get("model", "")),
+		"owner": String(profile.get("owner", "")),
+		"remembered": bool(profile.get("remembered", false)),
+		"color_cue_assist": bool(profile.get("color_cue_assist", false)),
+		"shape_id": String(profile.get("shape_id", "")),
+		"single_pass_draw_count": int(profile.get("single_pass_draw_count", 0)),
+		"cloth_layer_count": int(profile.get("cloth_layer_count", 0)),
+		"point_count": cloth_points.size(),
+		"cloth_points": _vector2_array_payload(cloth_points),
+		"shadow_points": _vector2_array_payload(shadow_points),
+		"fold_line": _vector2_array_payload(fold_line),
+		"highlight_line": _vector2_array_payload(highlight_line),
+		"pole_top": _vector2_payload(profile.get("pole_top", Vector2.ZERO)),
+		"pole_bottom": _vector2_payload(profile.get("pole_bottom", Vector2.ZERO)),
+		"mark_center": _vector2_payload(profile.get("mark_center", Vector2.ZERO)),
+		"cloth_bounds": _rect_payload(profile.get("cloth_bounds", Rect2())),
+		"cloth_contained": rect.encloses(_points_bounds(cloth_points)),
+		"shadow_contained": rect.encloses(_points_bounds(shadow_points)),
+		"pole_contained": rect.has_point(profile.get("pole_top", Vector2.ZERO)) and rect.has_point(profile.get("pole_bottom", Vector2.ZERO)),
+		"mark_contained": _points_bounds(cloth_points).has_point(profile.get("mark_center", Vector2.ZERO)),
+		"cloth_color": _color_payload(profile.get("cloth_color", Color.TRANSPARENT)),
+		"outline_color": _color_payload(profile.get("outline_color", Color.TRANSPARENT)),
+		"pole_color": _color_payload(profile.get("pole_color", Color.TRANSPARENT)),
+		"width_factor": float(profile.get("width_factor", 0.0)),
+		"height_factor": float(profile.get("height_factor", 0.0)),
+		"legacy_width_factor": float(profile.get("legacy_width_factor", 0.0)),
+		"legacy_height_factor": float(profile.get("legacy_height_factor", 0.0)),
+		"painted_area_ratio_to_legacy": float(profile.get("painted_area_ratio_to_legacy", 1.0)),
+	}
+
 func validation_hero_presentation_profiles() -> Array:
 	var profiles := []
 	if _session == null:
@@ -6585,6 +6766,17 @@ func _town_presentation_payload(tile: Vector2i, explored: bool, visible: bool) -
 	var payload := _town_presentation_payload_for_town(town, true)
 	payload["visible"] = visible
 	payload["remembered"] = not visible
+	var footprint_rect := _town_footprint_rect_for_entry(_town_entry_tile(town))
+	payload["owner_pennant"] = _town_owner_pennant_validation_payload(
+		_town_owner_pennant_profile(
+			footprint_rect,
+			_town_owner_color(town),
+			not visible,
+			_town_owner_id(town),
+			FrontierVisualKitScript.color_cue_assist_enabled()
+		),
+		footprint_rect
+	)
 	payload["tile"] = {"x": tile.x, "y": tile.y}
 	var cell_offset: Vector2i = presentation.get("cell_offset", Vector2i.ZERO)
 	payload["cell_offset"] = {"x": cell_offset.x, "y": cell_offset.y}
@@ -6650,6 +6842,10 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"uses_default_sprite": sprite_asset_id == _town_default_asset_id,
 		"visual_sprite_extent_fraction_of_footprint": TOWN_SPRITE_EXTENT_FACTOR,
 		"visual_sprite_extent_tiles": TOWN_SPRITE_EXTENT_FACTOR * float(mini(TOWN_PRESENTATION_FOOTPRINT.x, TOWN_PRESENTATION_FOOTPRINT.y)),
+		"owner_pennant_model": TOWN_OWNER_PENNANT_MODEL,
+		"owner_pennant_single_pass": true,
+		"owner_pennant_width_factor": TOWN_OWNER_PENNANT_WIDTH_FACTOR,
+		"owner_pennant_height_factor": TOWN_OWNER_PENNANT_HEIGHT_FACTOR,
 		"owner": String(town.get("owner", "neutral")),
 		"footprint_cells": cells,
 		"blocked_footprint_cells": blocked_cells,
@@ -8138,6 +8334,12 @@ func _vector2i_payload(value: Vector2i) -> Dictionary:
 
 func _vector2_payload(value: Vector2) -> Dictionary:
 	return {"x": value.x, "y": value.y}
+
+func _vector2_array_payload(values: PackedVector2Array) -> Array:
+	var payloads: Array = []
+	for value in values:
+		payloads.append(_vector2_payload(value))
+	return payloads
 
 func _vector2i_payloads(values: Array) -> Array:
 	var payloads: Array = []

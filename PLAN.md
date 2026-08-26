@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next graphical-polish slice from fresh playtest evidence.
 
+## Compact Heraldic Overworld Town Pennants
+
+id: `presentation-overworld-compact-heraldic-town-pennants-10184`
+
+Status: completed.
+
+Result:
+- the two broad flat owner triangles are replaced by one compact, translucent cloth pennant per town, with a slim pole, restrained shadow, fold and highlight stitching, and owner-distinct accessibility silhouettes;
+- painted cloth area is 43.97% of the superseded overlay at both 1280x720 and 1920x1080, while exact owner color, remembered treatment, town footprint/entry/passability, selection, routes, and session authority remain unchanged;
+- focused, small/generated-map, route, keyboard/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The broad Overworld smoke completed its town-marker checks before exposing an unrelated pre-existing enlarged-hero/open-wing overlap, retained as separate follow-up evidence rather than weakening that assertion.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Overworld captures show the newly coherent town-scale art carrying a large flat triangular ownership flag whose heavy fill and outline compete with roofs, towers, and the selected-town perimeter;
+- the cue is presentation-only and already derives from exact town owner/color authority, so its cloth silhouette can be refined without changing town identity, footprint, selection, or interaction.
+
+Implementation boundary:
+- replace the broad flat triangle with one single-pass compact cloth pennant: a slimmer pole, restrained drop shadow, owner-distinct contained silhouette, short fork/fold detail, and subtle highlight stitching;
+- keep the exact player/enemy/neutral owner colors and color-cue-assist shape distinctions, with remembered towns using the existing memory treatment;
+- preserve town sprite, footprint, grounding, entry tile, draw order, selection/hover, passability, routes, content, session/save authority, and Native RMG behavior.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 River Pass captures show ownership as a subordinate heraldic accent instead of a flat marker covering the town art;
+- focused runtime proves one pennant draw per visible/remembered town, bounded pole/cloth/mark geometry, exact player/enemy/neutral shape ownership, reduced painted footprint, color-cue/high-contrast behavior, and unchanged town/map/session authority;
+- Overworld visual/generated-map/route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no town sprite/scale/footprint/entry/passability/selection/hover, owner/faction identity, object/hero/terrain/road/fog/route, content, gameplay, session/save/schema, generated placement, AI, balance, or Native RMG change;
+- no new bitmap asset, animation/audio/VFX, shell/UI layout, font/UI scale, packaged Overworld interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Battle Movement-Range Perimeter Contour
 
 id: `presentation-battle-movement-range-perimeter-contour-10184`
