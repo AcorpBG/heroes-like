@@ -940,10 +940,17 @@ func _run_main_menu_smoke() -> bool:
 	settings_snapshot = shell.call("validation_snapshot")
 	var contrast_normal = (close_stage_button as Button).get_theme_stylebox("normal")
 	var contrast_focus = (close_stage_button as Button).get_theme_stylebox("focus")
+	var contrast_menu_tabs := shell.get_node_or_null("%MenuTabs") as TabContainer
 	if not bool(settings_snapshot.get("high_contrast_enabled", false)) or not String(settings_snapshot.get("settings_summary_full", "")).contains("High contrast On") or not (contrast_normal is StyleBoxFlat) or not (contrast_focus is StyleBoxFlat) or (contrast_normal as StyleBoxFlat).bg_color.get_luminance() > 0.08 or (contrast_normal as StyleBoxFlat).border_color.get_luminance() < 0.80 or (contrast_focus as StyleBoxFlat).border_width_left < 4:
 		if not original_high_contrast:
 			shell.call("validation_set_high_contrast", false)
 		push_error("Main menu smoke: high-contrast mode did not apply solid dark controls, bright borders, and a strong focus ring: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+	if contrast_menu_tabs == null or not _shared_tab_plaque_high_contrast_exact(contrast_menu_tabs):
+		if not original_high_contrast:
+			shell.call("validation_set_high_contrast", false)
+		push_error("Main menu smoke: high-contrast tabs did not use exact texture-free plaque fallbacks.")
 		get_tree().quit(1)
 		return false
 	var contrast_stage_surface: Dictionary = shell.call("validation_stage_dock_surface_summary")
@@ -1679,6 +1686,100 @@ func _assert_no_score_leak(label: String, texts: Array) -> bool:
 			return false
 	return true
 
+func _shared_tab_plaque_standard_exact(tabs: TabContainer, expected_titles: Array) -> bool:
+	var current_tab_before := tabs.current_tab
+	var tab_bar := tabs.get_tab_bar()
+	if tab_bar == null or tabs.get_tab_count() != expected_titles.size():
+		return false
+	var titles: Array[String] = []
+	var prior_rect := Rect2()
+	for index in range(tabs.get_tab_count()):
+		titles.append(tabs.get_tab_title(index))
+		var tab_rect: Rect2 = tab_bar.get_tab_rect(index)
+		if tab_rect.size.x <= 0.0 \
+				or tab_rect.size.y <= 0.0 \
+				or tab_rect.position.x < -0.5 \
+				or tab_rect.position.y < -0.5 \
+				or tab_rect.end.x > tab_bar.size.x + 0.5 \
+				or tab_rect.end.y > tab_bar.size.y + 0.5 \
+				or (index > 0 and prior_rect.end.x > tab_rect.position.x + 0.5):
+			return false
+		prior_rect = tab_rect
+	var expected_paths := {
+		"tab_selected": "res://art/ui/runtime/shared/button_primary_pressed.png",
+		"tab_hovered": "res://art/ui/runtime/shared/button_secondary_hover.png",
+		"tab_unselected": "res://art/ui/runtime/shared/button_secondary_normal.png",
+		"tab_disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png",
+	}
+	for style_name_value in expected_paths:
+		var style_name := String(style_name_value)
+		var style := tabs.get_theme_stylebox(style_name)
+		if not (style is StyleBoxTexture):
+			return false
+		var texture_style := style as StyleBoxTexture
+		var texture := texture_style.texture
+		if texture == null \
+				or texture.resource_path != String(expected_paths[style_name]) \
+				or not is_equal_approx(texture_style.texture_margin_left, 6.0) \
+				or not is_equal_approx(texture_style.texture_margin_top, 6.0) \
+				or not is_equal_approx(texture_style.texture_margin_right, 6.0) \
+				or not is_equal_approx(texture_style.texture_margin_bottom, 6.0) \
+				or not is_equal_approx(texture_style.content_margin_left, 1.0) \
+				or not is_equal_approx(texture_style.content_margin_top, 2.0) \
+				or not is_equal_approx(texture_style.content_margin_right, 1.0) \
+				or not is_equal_approx(texture_style.content_margin_bottom, 2.0):
+			return false
+		if style_name == "tab_disabled" and not texture_style.modulate_color.is_equal_approx(Color(0.72, 0.72, 0.72, 0.76)):
+			return false
+	var focus := tabs.get_theme_stylebox("tab_focus")
+	if not (focus is StyleBoxFlat):
+		return false
+	var focus_flat := focus as StyleBoxFlat
+	return titles == expected_titles \
+		and tabs.current_tab == current_tab_before \
+		and focus_flat.bg_color.a <= 0.001 \
+		and focus_flat.border_color.is_equal_approx(Color(0.97, 0.88, 0.61, 1.0)) \
+		and focus_flat.border_width_left == 2 \
+		and focus_flat.border_width_top == 2 \
+		and focus_flat.border_width_right == 2 \
+		and focus_flat.border_width_bottom == 2 \
+		and focus_flat.corner_radius_top_left == 6 \
+		and focus_flat.corner_radius_top_right == 6 \
+		and focus_flat.corner_radius_bottom_left == 6 \
+		and focus_flat.corner_radius_bottom_right == 6
+
+func _shared_tab_plaque_high_contrast_exact(tabs: TabContainer) -> bool:
+	var current_tab_before := tabs.current_tab
+	for style_name in ["tab_selected", "tab_hovered", "tab_unselected", "tab_disabled"]:
+		var style := tabs.get_theme_stylebox(style_name)
+		if not (style is StyleBoxFlat):
+			return false
+		var flat := style as StyleBoxFlat
+		if flat.bg_color.get_luminance() > 0.08 \
+				or flat.border_color.get_luminance() < 0.70 \
+				or flat.border_width_left != 2 \
+				or flat.border_width_top != 2 \
+				or flat.border_width_right != 2 \
+				or flat.border_width_bottom != 2 \
+				or flat.corner_radius_top_left != 6 \
+				or not is_equal_approx(flat.content_margin_left, 1.0) \
+				or not is_equal_approx(flat.content_margin_top, 2.0) \
+				or not is_equal_approx(flat.content_margin_right, 1.0) \
+				or not is_equal_approx(flat.content_margin_bottom, 2.0):
+			return false
+	var focus := tabs.get_theme_stylebox("tab_focus")
+	if not (focus is StyleBoxFlat):
+		return false
+	var focus_flat := focus as StyleBoxFlat
+	return tabs.current_tab == current_tab_before \
+		and focus_flat.bg_color.a <= 0.001 \
+		and focus_flat.border_color.is_equal_approx(Color(1.0, 0.91, 0.32, 1.0)) \
+		and focus_flat.border_width_left == 2 \
+		and focus_flat.border_width_top == 2 \
+		and focus_flat.border_width_right == 2 \
+		and focus_flat.border_width_bottom == 2 \
+		and focus_flat.corner_radius_top_left == 6
+
 
 func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 	if not shell.has_method("validation_scenic_epilogue_summary"):
@@ -1686,6 +1787,11 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		get_tree().quit(1)
 		return false
 	var authority_before: Dictionary = session.to_dict()
+	var recap_tabs := shell.get_node_or_null("%RecapTabs") as TabContainer
+	if recap_tabs == null or not _shared_tab_plaque_standard_exact(recap_tabs, ["Progress", "Arc", "Carry", "After", "Journal"]):
+		push_error("Outcome smoke: recap tabs did not retain exact compact shared plaques, titles, order, current page, and fit.")
+		get_tree().quit(1)
+		return false
 	var live_banner = shell.get_node_or_null("%OutcomeBanner")
 	if live_banner == null or not live_banner.has_method("validation_summary"):
 		push_error("Outcome smoke: live result banner does not expose authored-emblem validation.")

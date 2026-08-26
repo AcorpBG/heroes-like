@@ -182,6 +182,15 @@ const ITEM_LIST_SELECTED_FILL := Color(0.24, 0.18, 0.10, 0.96)
 const ITEM_LIST_SELECTED_BORDER := Color(0.86, 0.70, 0.39, 0.94)
 const ITEM_LIST_HOVER_FILL := Color(0.10, 0.16, 0.18, 0.88)
 const ITEM_LIST_HOVER_BORDER := Color(0.43, 0.66, 0.70, 0.78)
+const TAB_PLAQUE_MODEL := "shared_imported_rectangular_cartographic_plaque"
+const TAB_PLAQUE_TEXTURE_MARGIN := 6
+const TAB_PLAQUE_CORNER_RADIUS := 6
+const TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL := 1.0
+const TAB_PLAQUE_CONTENT_MARGIN_VERTICAL := 2.0
+const TAB_PLAQUE_SELECTED_PATH := "res://art/ui/runtime/shared/button_primary_pressed.png"
+const TAB_PLAQUE_HOVER_PATH := "res://art/ui/runtime/shared/button_secondary_hover.png"
+const TAB_PLAQUE_UNSELECTED_PATH := "res://art/ui/runtime/shared/button_secondary_normal.png"
+const TAB_PLAQUE_DISABLED_PATH := "res://art/ui/runtime/shared/button_secondary_disabled.png"
 
 static func set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> void:
 	label.tooltip_text = full_text
@@ -499,12 +508,37 @@ static func _item_list_focus_style() -> StyleBoxFlat:
 
 static func apply_tab_container(tabs: TabContainer, tone: String = "ink") -> void:
 	tabs.add_theme_stylebox_override("panel", panel_style(tone, 18))
-	tabs.add_theme_stylebox_override("tab_selected", badge_style("gold"))
-	tabs.add_theme_stylebox_override("tab_hovered", badge_style("teal"))
-	tabs.add_theme_stylebox_override("tab_unselected", badge_style("ink"))
+	tabs.add_theme_stylebox_override("tab_selected", _tab_plaque_style(TAB_PLAQUE_SELECTED_PATH, "gold"))
+	tabs.add_theme_stylebox_override("tab_hovered", _tab_plaque_style(TAB_PLAQUE_HOVER_PATH, "teal"))
+	tabs.add_theme_stylebox_override("tab_unselected", _tab_plaque_style(TAB_PLAQUE_UNSELECTED_PATH, "ink"))
+	tabs.add_theme_stylebox_override("tab_disabled", _tab_plaque_style(TAB_PLAQUE_DISABLED_PATH, "ink", true))
+	tabs.add_theme_stylebox_override("tab_focus", _tab_plaque_focus_style())
 	tabs.add_theme_color_override("font_selected_color", text_color("title"))
 	tabs.add_theme_color_override("font_unselected_color", text_color("muted"))
 	tabs.add_theme_color_override("font_hovered_color", text_color("body"))
+	tabs.add_theme_color_override("font_disabled_color", text_color("muted").darkened(0.28))
+
+static func _tab_plaque_style(path: String, fallback_tone: String, disabled: bool = false) -> StyleBox:
+	var style: StyleBox
+	if high_contrast_enabled() or not ResourceLoader.exists(path):
+		style = panel_style(fallback_tone, TAB_PLAQUE_CORNER_RADIUS)
+	else:
+		style = texture_panel_style(path, fallback_tone, TAB_PLAQUE_TEXTURE_MARGIN, int(TAB_PLAQUE_CONTENT_MARGIN_VERTICAL))
+	style.content_margin_left = TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL
+	style.content_margin_right = TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL
+	style.content_margin_top = TAB_PLAQUE_CONTENT_MARGIN_VERTICAL
+	style.content_margin_bottom = TAB_PLAQUE_CONTENT_MARGIN_VERTICAL
+	if disabled and style is StyleBoxTexture:
+		(style as StyleBoxTexture).modulate_color = Color(0.72, 0.72, 0.72, 0.76)
+	return style
+
+static func _tab_plaque_focus_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color.TRANSPARENT
+	style.border_color = text_color("gold")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(TAB_PLAQUE_CORNER_RADIUS)
+	return style
 
 static func apply_range(range_control: Range, tone: String = "gold") -> void:
 	range_control.add_theme_color_override("font_color", text_color("body"))

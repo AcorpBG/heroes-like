@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
 
+## Shared Cartographic Tab Plaques
+
+id: `presentation-shared-cartographic-tab-plaques-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the shared rounded flat TabContainer selected/hover/unselected/disabled/focus capsules with compact rectangular cartographic plaques built from the existing imported primary/secondary button-state assets and a fail-closed high-contrast fallback;
+- apply the exact shared plaque language to the existing Town management, Battle tactical, and Outcome recap tabs without adding, removing, renaming, reordering, resizing, or reparenting a tab or page;
+- preserve current tab, page visibility, focus order/navigation, tab-change actions and cues, panel containment, settings, save, route, battle, town, outcome, and session authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Town and Outcome captures plus the visible 1920x1080 Battle sidebar show compact engraved tab plaques integrated with their surrounding gold-framed surfaces instead of generic rounded blue-gray capsules, while the intentionally hidden compact Battle sidebar remains unchanged;
+- focused runtime proves exact selected/hover/unselected/disabled/focus asset paths in standard contrast, exact texture-free high-contrast fallbacks, unchanged tab titles/order/count/current page/focus/navigation/page geometry/actions/cues, and exact session/settings/save/route authority;
+- Town/Battle/Outcome visual, keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tab title/order/count/current index, page identity/content/visibility, panel or sidebar dimensions, focus order/navigation, input action, cue identity, settings, save/session/schema, route, town, battle, outcome, content, rules, AI, balance, or Native RMG change;
+- no panel, button, list, slider, option, portrait, board/stage/backdrop, font, UI-scale, animation/audio/VFX, or broad shell redesign;
+- no packaged Town/Battle/Outcome interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- Town management, Battle tactical, Outcome recap, and the hidden Main Menu tab owner now share compact rectangular cartographic plaque states backed by the existing primary/secondary button assets, with texture-free high-contrast fallbacks;
+- inspected 1280x720 and 1920x1080 Town and Outcome captures plus the visible 1920x1080 Battle sidebar show all labels fitting without overflow, while compact Battle retains its intentionally hidden sidebar;
+- focused style/title/order/current-page/fit and high-contrast authority, Town/Battle visual compatibility, active keyboard focus, screen-reader semantics, core systems, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged tab interaction and whole-release readiness remain unclaimed.
+
 ## Main Menu Item-List Selection Inlay
 
 id: `presentation-main-menu-item-list-selection-inlay-10184`
