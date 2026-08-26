@@ -1,6 +1,8 @@
 class_name ManualSaveOverwriteDialog
 extends ConfirmationDialog
 
+const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 var _pending_slot := 0
 var _pending_action := {}
 var _return_focus: Control
@@ -11,6 +13,7 @@ var _forwarding_root_physical_input := false
 
 
 func _ready() -> void:
+	FrontierVisualKit.apply_confirmation_dialog(self, "danger")
 	get_cancel_button().text = "Keep Save"
 	var cancel_shortcut := Shortcut.new()
 	var cancel_action := InputEventAction.new()

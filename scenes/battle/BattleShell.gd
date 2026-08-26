@@ -4175,6 +4175,9 @@ func _movement_click_response(
 	}
 
 func _apply_visual_theme() -> void:
+	FrontierVisualKit.apply_confirmation_dialog(_quick_resolve_confirmation_dialog, "primary")
+	FrontierVisualKit.apply_confirmation_dialog(_withdrawal_confirmation_dialog, "danger")
+	FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")
 	FrontierVisualKit.apply_panel(_banner_panel, "banner")
 	FrontierVisualKit.apply_panel(_briefing_panel, "gold")
 	FrontierVisualKit.apply_panel(_risk_panel, "teal")

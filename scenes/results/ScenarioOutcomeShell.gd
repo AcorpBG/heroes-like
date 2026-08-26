@@ -1964,6 +1964,8 @@ func _outcome_action_tooltip_snapshot() -> Array:
 	return tooltips
 
 func _apply_visual_theme() -> void:
+	FrontierVisualKit.apply_confirmation_dialog(_new_session_confirmation_dialog, "danger")
+	FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")
 	var panel_tones := {
 		"Banner": "banner",
 		"BannerArtPanel": "earth",

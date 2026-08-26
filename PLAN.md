@@ -24,7 +24,60 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Next: select another bounded, tracker-approved graphical-polish slice from fresh inspected pixels.
+- Selected implementation slice: `presentation-overworld-footprint-proportional-object-scale-10184`.
+
+## Footprint-Proportional Overworld Object Scale
+
+id: `presentation-overworld-footprint-proportional-object-scale-10184`
+
+Status: in progress.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Overworld captures show the current semantic scale ladder compressing handheld pickups, heroes, one-tile structures, multi-tile services, and 3x2 towns into a narrow 0.46-0.82 tile visible-extent band;
+- multi-tile structures are capped below one tile and town art occupies only 0.82 tile despite a 3x2 logical footprint, so the map reads as mixed-size board tokens rather than a coherent physical world.
+
+Implementation boundary:
+- widen the existing semantic scale hierarchy so loose items remain compact, heroes and encounters retain readable actor presence, and durable/landmark/town art visibly reflects its authored footprint;
+- keep all sprite art aspect-correct, bottom-anchored, clipped safely at visible map edges, and subordinate to selection/hover/route/fog cues;
+- preserve every logical footprint, tile, passability, visitability, click/selection target, route/pathfinding rule, content record, save/session authority, and Native RMG behavior.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 captures show a convincing item/actor/structure/town hierarchy without overlap obscuring interaction cues;
+- focused scale payload and live Overworld runtime prove exact family ranks, footprint growth, aspect/bounds/edge containment, unchanged selection/collision/route/session authority, and representative small/generated map compatibility;
+- repository/editor and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no sprite replacement, new art asset, map/tile/footprint/passability/visitability/collision/pathfinding/content/save/schema/gameplay/Native RMG change;
+- no camera, zoom, shell layout, control, text, packaged interaction, controller/AT-SPI/UIA/native-hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Cartographic Confirmation Dialog Surfaces
+
+id: `presentation-cartographic-confirmation-dialog-surfaces-10184`
+
+Status: completed.
+
+Result:
+- all existing Main Menu, Overworld, Battle, Map Editor, Outcome, and shared manual-save confirmation dialogs now use one shared cartographic frame with exact secondary/primary/danger button-state art and a flat high-contrast fallback;
+- inspected 1280x720 and 1920x1080 Main Menu, End Turn, and Battle retreat captures are contained and scenery-first; focused authority/style runtime, settings reset, withdrawal, Outcome new-session, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass;
+- the frame inset was reduced from the initial 18-pixel candidate to 10 pixels after the Outcome compatibility owner correctly caught an 8-pixel 1280-wide containment escape; dialog titles, messages, labels, shortcuts, focus, native ownership, sizing requests, actions, saves/settings/session/routes, and Native RMG remain unchanged.
+
+Current finding:
+- fresh Main Menu restore-defaults and save-deletion captures show native confirmation dialogs falling back to a flat medium-gray Godot surface over otherwise authored cartographic screens;
+- the mismatch repeats across campaign restart, display confirmation, End Turn, battle resolution/withdrawal, dirty-editor, new-session, and manual-save overwrite flows, making destructive and consequential actions look like development UI rather than part of the shipped visual language.
+
+Implementation boundary:
+- add one shared `FrontierVisualKit` confirmation-dialog skin using the existing cartographic frame, shared button-state art, text tones, and high-contrast fallback;
+- apply it to the exact existing Main Menu, Overworld, Battle, Map Editor, Outcome, and shared manual-save confirmation dialogs, with primary versus danger confirmation roles matching each existing action;
+- preserve every dialog title/text, button label, shortcut, focus/cancel/confirm ownership, exclusive native-window behavior, popup sizing, action result, session/save/settings/package authority, and route behavior.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 captures show consequential confirmations as coherent cartographic overlays rather than flat gray native panels;
+- focused runtime proves exact authored frame/button assets, primary/danger role mapping, readable label/title tones, high-contrast fallback, viewport containment, and unchanged labels/focus/actions;
+- menu/active-play/editor/outcome/manual-save compatibility, accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no dialog, button, title, message, shortcut, action, focus order, native-window ownership, popup size, layout, settings/save/package/session/schema/route/gameplay/content/Native RMG behavior, or new art asset;
+- no packaged dialog interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Map Editor Cartographic Workbench Skin
 

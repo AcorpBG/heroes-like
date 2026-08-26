@@ -5230,6 +5230,10 @@ func _main_menu_pocket_surface_style(asset_path: String, high_contrast: bool) ->
 
 
 func _apply_visual_theme() -> void:
+	FrontierVisualKit.apply_confirmation_dialog(_campaign_restart_dialog, "danger")
+	FrontierVisualKit.apply_confirmation_dialog(_save_delete_dialog, "danger")
+	FrontierVisualKit.apply_confirmation_dialog(_settings_restore_defaults_dialog, "primary")
+	FrontierVisualKit.apply_confirmation_dialog(_display_change_confirmation_dialog, "primary")
 	var panel_tones := {
 		"LogoPocketPanel": "smoke",
 		"StageDockPanel": "smoke",
