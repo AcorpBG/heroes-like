@@ -37,6 +37,16 @@ const MAIN_MENU_STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
 const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"
 const MAIN_MENU_POCKET_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)
 const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)
+const MAIN_MENU_WORDMARK_FACE_COLOR := Color(0.98, 0.84, 0.46, 1.0)
+const MAIN_MENU_WORDMARK_HIGH_CONTRAST_FACE_COLOR := Color(1.0, 0.91, 0.32, 1.0)
+const MAIN_MENU_WORDMARK_OUTLINE_COLOR := Color(0.05, 0.035, 0.02, 0.96)
+const MAIN_MENU_WORDMARK_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.72)
+const MAIN_MENU_EYEBROW_FACE_COLOR := Color(0.97, 0.88, 0.61, 1.0)
+const MAIN_MENU_EYEBROW_HIGH_CONTRAST_FACE_COLOR := Color(1.0, 0.91, 0.32, 1.0)
+const MAIN_MENU_EYEBROW_OUTLINE_COLOR := Color(0.04, 0.03, 0.02, 0.92)
+const MAIN_MENU_EYEBROW_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.66)
+const MAIN_MENU_SUBTITLE_FACE_COLOR := Color(0.86, 0.90, 0.93, 1.0)
+const MAIN_MENU_SUBTITLE_HIGH_CONTRAST_FACE_COLOR := Color(0.96, 0.98, 1.0, 1.0)
 const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)
 const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.895, 0.340, 0.080)
 const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]
@@ -151,6 +161,9 @@ func _run_main_menu_smoke() -> bool:
 		or title_minimum_size.y > title_rect.size.y + 0.5
 	):
 		push_error("Main menu smoke: the AURELION REACH title overflows the compact logo pocket.")
+		get_tree().quit(1)
+		return false
+	if not _main_menu_wordmark_theme_exact(shell, original_high_contrast):
 		get_tree().quit(1)
 		return false
 
@@ -958,6 +971,11 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: high-contrast tabs did not use exact texture-free plaque fallbacks.")
 		get_tree().quit(1)
 		return false
+	if not _main_menu_wordmark_theme_exact(shell, true):
+		if not original_high_contrast:
+			shell.call("validation_set_high_contrast", false)
+		get_tree().quit(1)
+		return false
 	var contrast_stage_surface: Dictionary = shell.call("validation_stage_dock_surface_summary")
 	if String(contrast_stage_surface.get("style_class", "")) != "StyleBoxFlat" \
 			or String(contrast_stage_surface.get("rendering_mode", "")) != "smoke_fallback" \
@@ -1024,6 +1042,9 @@ func _run_main_menu_smoke() -> bool:
 			or (not original_high_contrast and String(restored_pocket_surface.get("logo_texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH) \
 			or (not original_high_contrast and String(restored_pocket_surface.get("footer_texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH):
 		push_error("Main menu smoke: first-view pocket surfaces did not restore their original contrast-dependent rendering mode: %s." % [restored_pocket_surface])
+		get_tree().quit(1)
+		return false
+	if not _main_menu_wordmark_theme_exact(shell, original_high_contrast):
 		get_tree().quit(1)
 		return false
 
@@ -1418,6 +1439,9 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 		var quit_rect := quit_button.get_global_rect()
 		var logo_rect := logo_panel.get_global_rect()
 		var title_rect := public_title.get_global_rect()
+		var title_minimum_size := public_title.get_combined_minimum_size()
+		var eyebrow := shell.get_node_or_null("%Eyebrow") as Label
+		var eyebrow_rect := eyebrow.get_global_rect() if eyebrow != null else Rect2()
 		var crest_rect := frontier_crest.get_global_rect()
 		if not physical_size_exact \
 				or get_window().size != requested_size \
@@ -1430,6 +1454,15 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 		var pocket_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
 		if not _main_menu_pocket_summary_exact(pocket_summary, viewport_size):
 			push_error("Main menu smoke: cartographic first-view pocket contract failed at %s: %s." % [requested_size, pocket_summary])
+			return false
+		if not _main_menu_wordmark_theme_exact(shell, SettingsService.high_contrast_ui_enabled()):
+			return false
+		if eyebrow == null \
+				or not _rect_is_contained(logo_rect, eyebrow_rect) \
+				or not _rect_is_contained(logo_rect, title_rect) \
+				or title_minimum_size.x > title_rect.size.x + 0.5 \
+				or title_minimum_size.y > title_rect.size.y + 0.5:
+			push_error("Main menu smoke: gilded wordmark escaped or clipped inside the exact logo pocket at %s: %s / %s / %s." % [requested_size, logo_rect, eyebrow_rect, title_rect])
 			return false
 		if not _assert_footer_pocket_containment(shell, viewport_size, "%s first view" % requested_size):
 			return false
@@ -1474,6 +1507,40 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 	await get_tree().process_frame
 	await get_tree().process_frame
 	return true
+
+
+func _main_menu_wordmark_theme_exact(shell: Control, expected_high_contrast: bool) -> bool:
+	var title := shell.get_node_or_null("%Title") as Label
+	var eyebrow := shell.get_node_or_null("%Eyebrow") as Label
+	var subtitle := shell.get_node_or_null("%Subtitle") as Label
+	if title == null or eyebrow == null or subtitle == null:
+		push_error("Main menu smoke: gilded wordmark labels are missing.")
+		return false
+	var expected_title_face := MAIN_MENU_WORDMARK_HIGH_CONTRAST_FACE_COLOR if expected_high_contrast else MAIN_MENU_WORDMARK_FACE_COLOR
+	var expected_eyebrow_face := MAIN_MENU_EYEBROW_HIGH_CONTRAST_FACE_COLOR if expected_high_contrast else MAIN_MENU_EYEBROW_FACE_COLOR
+	var expected_subtitle_face := MAIN_MENU_SUBTITLE_HIGH_CONTRAST_FACE_COLOR if expected_high_contrast else MAIN_MENU_SUBTITLE_FACE_COLOR
+	var exact := title.text == "AURELION REACH" \
+		and eyebrow.text == "KINGDOM FRONT" \
+		and subtitle.text == "Choose the next march from the border citadel." \
+		and title.get_theme_font_size("font_size") == 38 \
+		and eyebrow.get_theme_font_size("font_size") == 14 \
+		and subtitle.get_theme_font_size("font_size") == 14 \
+		and title.get_theme_color("font_color").is_equal_approx(expected_title_face) \
+		and title.get_theme_color("font_outline_color").is_equal_approx(MAIN_MENU_WORDMARK_OUTLINE_COLOR) \
+		and title.get_theme_color("font_shadow_color").is_equal_approx(MAIN_MENU_WORDMARK_SHADOW_COLOR) \
+		and title.get_theme_constant("outline_size") == 2 \
+		and title.get_theme_constant("shadow_offset_x") == 2 \
+		and title.get_theme_constant("shadow_offset_y") == 2 \
+		and eyebrow.get_theme_color("font_color").is_equal_approx(expected_eyebrow_face) \
+		and eyebrow.get_theme_color("font_outline_color").is_equal_approx(MAIN_MENU_EYEBROW_OUTLINE_COLOR) \
+		and eyebrow.get_theme_color("font_shadow_color").is_equal_approx(MAIN_MENU_EYEBROW_SHADOW_COLOR) \
+		and eyebrow.get_theme_constant("outline_size") == 1 \
+		and eyebrow.get_theme_constant("shadow_offset_x") == 1 \
+		and eyebrow.get_theme_constant("shadow_offset_y") == 1 \
+		and subtitle.get_theme_color("font_color").is_equal_approx(expected_subtitle_face)
+	if not exact:
+		push_error("Main menu smoke: gilded wordmark theme diverged at high_contrast=%s." % expected_high_contrast)
+	return exact
 
 func _main_menu_pocket_summary_exact(summary: Dictionary, viewport_size: Vector2) -> bool:
 	var viewport_rect := Rect2(Vector2.ZERO, viewport_size)

@@ -19301,6 +19301,116 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
     menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
+        "const MAIN_MENU_WORDMARK_FACE_COLOR := Color(0.98, 0.84, 0.46, 1.0)",
+        "const MAIN_MENU_WORDMARK_OUTLINE_COLOR := Color(0.05, 0.035, 0.02, 0.96)",
+        "const MAIN_MENU_WORDMARK_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.72)",
+        "const MAIN_MENU_WORDMARK_OUTLINE_SIZE := 2",
+        "const MAIN_MENU_WORDMARK_SHADOW_OFFSET := Vector2i(2, 2)",
+        "const MAIN_MENU_EYEBROW_OUTLINE_COLOR := Color(0.04, 0.03, 0.02, 0.92)",
+        "const MAIN_MENU_EYEBROW_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.66)",
+        "const MAIN_MENU_EYEBROW_OUTLINE_SIZE := 1",
+        "const MAIN_MENU_EYEBROW_SHADOW_OFFSET := Vector2i(1, 1)",
+        "func _apply_main_menu_wordmark_theme() -> void:",
+        'FrontierVisualKit.text_color("gold") if FrontierVisualKit.high_contrast_enabled() else MAIN_MENU_WORDMARK_FACE_COLOR',
+        '_title_label.add_theme_color_override("font_color", title_face)',
+        '_title_label.add_theme_color_override("font_outline_color", MAIN_MENU_WORDMARK_OUTLINE_COLOR)',
+        '_title_label.add_theme_color_override("font_shadow_color", MAIN_MENU_WORDMARK_SHADOW_COLOR)',
+        '_title_label.add_theme_constant_override("outline_size", MAIN_MENU_WORDMARK_OUTLINE_SIZE)',
+        '_title_label.add_theme_constant_override("shadow_offset_x", MAIN_MENU_WORDMARK_SHADOW_OFFSET.x)',
+        '_title_label.add_theme_constant_override("shadow_offset_y", MAIN_MENU_WORDMARK_SHADOW_OFFSET.y)',
+        '_eyebrow_label.add_theme_color_override("font_outline_color", MAIN_MENU_EYEBROW_OUTLINE_COLOR)',
+        '_eyebrow_label.add_theme_color_override("font_shadow_color", MAIN_MENU_EYEBROW_SHADOW_COLOR)',
+        '_eyebrow_label.add_theme_constant_override("outline_size", MAIN_MENU_EYEBROW_OUTLINE_SIZE)',
+        '_eyebrow_label.add_theme_constant_override("shadow_offset_x", MAIN_MENU_EYEBROW_SHADOW_OFFSET.x)',
+        '_eyebrow_label.add_theme_constant_override("shadow_offset_y", MAIN_MENU_EYEBROW_SHADOW_OFFSET.y)',
+        'FrontierVisualKit.apply_label(_eyebrow_label, "gold", 14)',
+        'FrontierVisualKit.apply_label(_title_label, "title", 38)',
+        "_apply_main_menu_wordmark_theme()",
+        'FrontierVisualKit.apply_label(_subtitle_label, "body", 14)',
+    ):
+        ensure(required_token in menu_text, errors, f"MainMenu.gd is missing gilded wordmark token: {required_token}")
+    ensure(menu_text.count("func _apply_main_menu_wordmark_theme()") == 1, errors, "MainMenu.gd must own exactly one gilded wordmark theme helper")
+    ensure(menu_text.count("_apply_main_menu_wordmark_theme()") == 2, errors, "MainMenu.gd must declare and invoke the gilded wordmark helper exactly once")
+    wordmark_match = re.search(r"func _apply_main_menu_wordmark_theme\(\) -> void:\n(?P<body>.*?)(?=\nfunc |\Z)", menu_text, flags=re.DOTALL)
+    ensure(wordmark_match is not None, errors, "MainMenu.gd gilded wordmark helper could not be isolated")
+    if wordmark_match is not None:
+        wordmark_body = wordmark_match.group("body")
+        for forbidden_token in (
+            "custom_minimum_size",
+            "anchor_",
+            ".position",
+            ".size =",
+            ".visible =",
+            "grab_focus",
+            "Input.",
+            "AppRouter",
+            "SessionState",
+            "SaveService",
+            "create_timer",
+            "call_deferred",
+        ):
+            ensure(forbidden_token not in wordmark_body, errors, f"Main Menu wordmark helper must remain theme-only: {forbidden_token}")
+        ensure(re.search(r"\.text\s*=(?!=)", wordmark_body) is None, errors, "Main Menu wordmark helper must not mutate public copy")
+        ensure(re.search(r"\.(?:offset_left|offset_top|offset_right|offset_bottom)\s*=", wordmark_body) is None, errors, "Main Menu wordmark helper must not mutate layout offsets")
+    apply_theme_match = re.search(r"func _apply_visual_theme\(\) -> void:\n(?P<body>.*?)(?=\nfunc |\Z)", menu_text, flags=re.DOTALL)
+    ensure(apply_theme_match is not None, errors, "MainMenu.gd visual theme could not be isolated for wordmark ordering")
+    if apply_theme_match is not None:
+        apply_theme_body = apply_theme_match.group("body")
+        ensure(
+            apply_theme_body.index('FrontierVisualKit.apply_label(_eyebrow_label, "gold", 14)')
+            < apply_theme_body.index('FrontierVisualKit.apply_label(_title_label, "title", 38)')
+            < apply_theme_body.index("_apply_main_menu_wordmark_theme()")
+            < apply_theme_body.index('FrontierVisualKit.apply_label(_subtitle_label, "body", 14)'),
+            errors,
+            "Main Menu must apply the fixed wordmark treatment after base title sizing and before unchanged subtitle styling",
+        )
+    for required_token in (
+        "func _main_menu_wordmark_theme_exact(shell: Control, expected_high_contrast: bool) -> bool:",
+        'shell.get_node_or_null("%Title") as Label',
+        'shell.get_node_or_null("%Eyebrow") as Label',
+        'shell.get_node_or_null("%Subtitle") as Label',
+        'title.text == "AURELION REACH"',
+        'eyebrow.text == "KINGDOM FRONT"',
+        'subtitle.text == "Choose the next march from the border citadel."',
+        'title.get_theme_font_size("font_size") == 38',
+        'eyebrow.get_theme_font_size("font_size") == 14',
+        'subtitle.get_theme_font_size("font_size") == 14',
+        'title.get_theme_color("font_color").is_equal_approx(expected_title_face)',
+        'title.get_theme_constant("outline_size") == 2',
+        'title.get_theme_constant("shadow_offset_x") == 2',
+        'title.get_theme_constant("shadow_offset_y") == 2',
+        'eyebrow.get_theme_constant("outline_size") == 1',
+        'eyebrow.get_theme_constant("shadow_offset_x") == 1',
+        'eyebrow.get_theme_constant("shadow_offset_y") == 1',
+        'subtitle.get_theme_color("font_color").is_equal_approx(expected_subtitle_face)',
+        "not _rect_is_contained(logo_rect, eyebrow_rect)",
+        "not _rect_is_contained(logo_rect, title_rect)",
+        "title_minimum_size.x > title_rect.size.x + 0.5",
+        "title_minimum_size.y > title_rect.size.y + 0.5",
+        "_main_menu_wordmark_theme_exact(shell, original_high_contrast)",
+        "_main_menu_wordmark_theme_exact(shell, true)",
+        "_main_menu_wordmark_theme_exact(shell, SettingsService.high_contrast_ui_enabled())",
+    ):
+        ensure(required_token in smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing gilded wordmark proof: {required_token}")
+    ensure(smoke_text.count("_main_menu_wordmark_theme_exact(") == 5, errors, "Main Menu smoke must declare the wordmark oracle and invoke it at initial, both-width, high-contrast, and restored boundaries")
+    wordmark_oracle_match = re.search(r"func _main_menu_wordmark_theme_exact\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    ensure(wordmark_oracle_match is not None, errors, "Main Menu gilded wordmark oracle could not be isolated")
+    if wordmark_oracle_match is not None:
+        wordmark_oracle_body = wordmark_oracle_match.group("body")
+        for forbidden_token in (
+            "add_theme_",
+            "remove_theme_",
+            "custom_minimum_size =",
+            "anchor_",
+            "SettingsService.",
+            "validation_set_",
+            "create_timer",
+            "call_deferred",
+        ):
+            ensure(forbidden_token not in wordmark_oracle_body, errors, f"Main Menu wordmark oracle must remain a passive observer: {forbidden_token}")
+        ensure(re.search(r"\.text\s*=(?!=)", wordmark_oracle_body) is None, errors, "Main Menu wordmark oracle must not mutate public copy")
+        ensure(re.search(r"\.(?:offset_left|offset_top|offset_right|offset_bottom)\s*=", wordmark_oracle_body) is None, errors, "Main Menu wordmark oracle must not mutate layout offsets")
+    for required_token in (
         'const STAGE_DOCK_CARTOGRAPHY_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
         "const STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)",
         "const STAGE_DOCK_TEXTURE_MARGIN := 56.0",

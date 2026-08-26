@@ -24,7 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. `presentation-overworld-coherent-object-scale-ladder-10184` is completed; select the next graphical-polish slice from direct current capture or playtest evidence.
+- Selected implementation slice: none. `presentation-main-menu-gilded-title-wordmark-10184` is completed; select the next graphical-polish slice from direct current capture or playtest evidence.
 
 ## Overworld Coherent Object-Scale Ladder
 
@@ -55,7 +55,12 @@ Non-goals:
 
 id: `presentation-main-menu-gilded-title-wordmark-10184`
 
-Status: pending.
+Status: completed.
+
+Result:
+- the existing `AURELION REACH` title now uses a warm-gold face, two-pixel dark edge, and restrained two-pixel shadow, while `KINGDOM FRONT` keeps its existing gold face with a matching one-pixel edge and shadow; high-contrast mode promotes both to the established bright accessibility gold;
+- inspected 1280x720 and 1920x1080 first-view captures show the wordmark integrated with the crest, aged-gold frame, and sunset light without changing the scenic panorama, logo pocket, command plaques, footer, or negative space;
+- focused Main Menu/Outcome visual, keyboard/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green. Packaged Main Menu interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
 
 Implementation boundary:
 - give the existing `AURELION REACH` title one fixed warm-gold face, dark outline, and restrained shadow, with a lighter matching edge on the existing `KINGDOM FRONT` eyebrow;

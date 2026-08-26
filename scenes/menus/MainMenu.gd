@@ -16,6 +16,15 @@ const STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
 const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"
 const MAIN_MENU_POCKET_TEXTURE_MARGIN := 56.0
 const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)
+const MAIN_MENU_WORDMARK_FACE_COLOR := Color(0.98, 0.84, 0.46, 1.0)
+const MAIN_MENU_WORDMARK_OUTLINE_COLOR := Color(0.05, 0.035, 0.02, 0.96)
+const MAIN_MENU_WORDMARK_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.72)
+const MAIN_MENU_WORDMARK_OUTLINE_SIZE := 2
+const MAIN_MENU_WORDMARK_SHADOW_OFFSET := Vector2i(2, 2)
+const MAIN_MENU_EYEBROW_OUTLINE_COLOR := Color(0.04, 0.03, 0.02, 0.92)
+const MAIN_MENU_EYEBROW_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.66)
+const MAIN_MENU_EYEBROW_OUTLINE_SIZE := 1
+const MAIN_MENU_EYEBROW_SHADOW_OFFSET := Vector2i(1, 1)
 const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
@@ -5286,6 +5295,7 @@ func _apply_visual_theme() -> void:
 
 	FrontierVisualKit.apply_label(_eyebrow_label, "gold", 14)
 	FrontierVisualKit.apply_label(_title_label, "title", 38)
+	_apply_main_menu_wordmark_theme()
 	FrontierVisualKit.apply_label(_subtitle_label, "body", 14)
 	FrontierVisualKit.apply_label(_summary_label, "body", 15)
 	FrontierVisualKit.apply_label(_stage_dock_title_label, "title", 18)
@@ -5296,3 +5306,18 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_master_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_music_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_effects_volume_value, "gold", 13)
+
+
+func _apply_main_menu_wordmark_theme() -> void:
+	var title_face := FrontierVisualKit.text_color("gold") if FrontierVisualKit.high_contrast_enabled() else MAIN_MENU_WORDMARK_FACE_COLOR
+	_title_label.add_theme_color_override("font_color", title_face)
+	_title_label.add_theme_color_override("font_outline_color", MAIN_MENU_WORDMARK_OUTLINE_COLOR)
+	_title_label.add_theme_color_override("font_shadow_color", MAIN_MENU_WORDMARK_SHADOW_COLOR)
+	_title_label.add_theme_constant_override("outline_size", MAIN_MENU_WORDMARK_OUTLINE_SIZE)
+	_title_label.add_theme_constant_override("shadow_offset_x", MAIN_MENU_WORDMARK_SHADOW_OFFSET.x)
+	_title_label.add_theme_constant_override("shadow_offset_y", MAIN_MENU_WORDMARK_SHADOW_OFFSET.y)
+	_eyebrow_label.add_theme_color_override("font_outline_color", MAIN_MENU_EYEBROW_OUTLINE_COLOR)
+	_eyebrow_label.add_theme_color_override("font_shadow_color", MAIN_MENU_EYEBROW_SHADOW_COLOR)
+	_eyebrow_label.add_theme_constant_override("outline_size", MAIN_MENU_EYEBROW_OUTLINE_SIZE)
+	_eyebrow_label.add_theme_constant_override("shadow_offset_x", MAIN_MENU_EYEBROW_SHADOW_OFFSET.x)
+	_eyebrow_label.add_theme_constant_override("shadow_offset_y", MAIN_MENU_EYEBROW_SHADOW_OFFSET.y)

@@ -1911,20 +1911,58 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-coherent-object-scale-ladder-10184",
-    "title": "Overworld coherent object-scale ladder",
+    "id": "presentation-main-menu-gilded-title-wordmark-10184",
+    "title": "Main Menu gilded title wordmark",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T12:01:38Z",
-    "updatedAt": "2026-08-26T12:26:27Z",
+    "startedAt": "2026-08-26T12:28:09Z",
+    "updatedAt": "2026-08-26T12:44:31Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the direct user-reported Overworld scale correction. The coherent painted ladder enlarges undersized props, restrains towns and multi-tile sites, keeps heroes as the intermediate anchor, and preserves exact logical map, interaction, movement, session, and save authority."
+    "notes": "Completed the first-view wordmark integration. The title now uses a warm-gold face with a dark edge and restrained shadow, the eyebrow uses a matching lighter treatment, high contrast remains explicit, and exact first-view geometry and menu authority are preserved."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-main-menu-gilded-title-wordmark-20260826",
+      "title": "Main Menu gilded title wordmark",
+      "sliceId": "presentation-main-menu-gilded-title-wordmark-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T12:44:31Z",
+      "updatedAt": "2026-08-26T12:44:31Z",
+      "latestFinding": "The existing AURELION REACH title is now visually integrated with the crest and aged-gold cartographic frame through a restrained gold face, dark edge, and shadow, with a matching KINGDOM FRONT edge and an explicit bright-gold high-contrast variant; copy, sizes, pocket geometry, commands, focus, routes, settings, session, and save authority are unchanged.",
+      "artifacts": [
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        ".artifacts/graphical_polish_audit/captures/main_menu_title_current_1280x720.png",
+        ".artifacts/graphical_polish_audit/captures/main_menu_title_current_1920x1080.png",
+        "/tmp/heroes-main-wordmark-capture-xvfb.1jdMBE",
+        "/tmp/heroes-main-wordmark-focused.wYDqbd",
+        "/tmp/heroes-main-wordmark-compat.DGWoVI",
+        "/tmp/heroes-main-wordmark-editor-final.Emk5cJ",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "title_face": "Color(0.98,0.84,0.46,1.0)",
+        "title_outline_px": 2,
+        "title_shadow_offset_px": [2, 2],
+        "eyebrow_outline_px": 1,
+        "eyebrow_shadow_offset_px": [1, 1],
+        "high_contrast_face": "Color(1.0,0.91,0.32,1.0)",
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "copy_font_geometry_focus_route_settings_session_save_exact": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "packaged_main_menu_interaction_claimed": false
+      },
+      "nonClaims": [
+        "No packaged Main Menu interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-overworld-coherent-object-scale-ladder-20260826",
       "title": "Overworld coherent object-scale ladder",
@@ -15007,14 +15045,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld coherent object-scale ladder is completed with inspected 1280x720 and 1920x1080 captures, exact focused and compatibility runtime authority, static/editor validation, and bounded Linux/Windows export-startup evidence. The Main Menu title slice remains pending and unimplemented.",
+  "currentNotes": "The Main Menu gilded title wordmark is completed with inspected 1280x720 and 1920x1080 captures, focused standard/high-contrast geometry and authority, keyboard/focus/accessibility/core compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-coherent-object-scale-ladder-10184",
-  "currentSliceId": "presentation-overworld-coherent-object-scale-ladder-10184",
-  "currentSliceNotes": "Completed the painted settlement-to-prop scale correction while preserving exact identities, assets, footprints, hit areas, passability, routes, interactions, session, and save authority.",
+  "currentSlice": "presentation-main-menu-gilded-title-wordmark-10184",
+  "currentSliceId": "presentation-main-menu-gilded-title-wordmark-10184",
+  "currentSliceNotes": "Completed the restrained gold face, dark outline, and shadow treatment for the existing public title and eyebrow while preserving exact text, fonts, pocket geometry, focus, routes, session, save, and settings authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation overworld coherent object scale ladder 10184",
-  "currentSliceUpdatedAt": "2026-08-26T12:26:27Z",
+  "currentSliceTitle": "presentation main menu gilded title wordmark 10184",
+  "currentSliceUpdatedAt": "2026-08-26T12:44:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20530,7 +20568,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The Overworld coherent object-scale ladder slice is completed and blockers are empty. The Main Menu title slice remains pending and unimplemented.",
+  "notes": "The Main Menu gilded title wordmark slice is completed and blockers are empty.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-coherent-object-scale-ladder-10184",
@@ -20563,11 +20601,11 @@
     {
       "id": "presentation-main-menu-gilded-title-wordmark-10184",
       "title": "Main Menu gilded title wordmark",
-      "status": "pending",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "startedAt": "2026-08-26T11:57:27Z",
-      "updatedAt": "2026-08-26T12:01:38Z",
+      "startedAt": "2026-08-26T12:28:09Z",
+      "updatedAt": "2026-08-26T12:44:31Z",
       "implementationTargets": [
         "PLAN.md",
         "ops/progress.json",
@@ -20581,9 +20619,9 @@
         "No copy, crest/backdrop/plaque/panel asset, pocket/footer/stage/command geometry, font family/size, UI scale, input/focus/accessibility semantic, route, session/save/schema, gameplay, content, AI, balance, or Native RMG change.",
         "No new image, shader, animation/audio/VFX, packaged Main Menu interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
       ],
-      "notes": "Deferred before production implementation when direct current playtest evidence prioritized the Overworld object-scale mismatch. Comparison captures remain available for a later slice.",
+      "notes": "Completed after direct current/gold/ivory comparison captures selected the gold direction. Production captures, exact standard/high-contrast theme and geometry proof, menu authority, compatibility, static/editor, and bounded platform startup gates are green.",
       "blockedReason": null,
-      "remainingWork": "Implement the exact title treatment, add focused validation, capture both widths, and run compatibility/static/platform gates."
+      "remainingWork": ""
     },
     {
       "id": "presentation-battle-sidebar-heraldic-watermark-10184",
