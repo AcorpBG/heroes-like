@@ -1,6 +1,7 @@
 extends Node
 
 const REPORT_ID := "ACTIVE_PLAY_SETTINGS_RUNTIME_REPORT"
+const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const FOCUS_CYCLE_NAMES := [
 	"Close",
 	"MasterVolumeSlider",
@@ -92,6 +93,8 @@ func _check_overworld_settings() -> bool:
 	var accessibility: Dictionary = UiAccessibility.validation_snapshot(dialog)
 	if not _require(bool(accessibility.get("ok", false)) and int(accessibility.get("named_control_count", 0)) >= 12, "Active-play settings controls are missing native accessibility semantics."):
 		return false
+	if not await _check_ornate_frame_visual_roundtrip(dialog, "overworld"):
+		return false
 	if not _require(dialog.validation_set_volume("MasterVolumeSlider", 55), "Overworld settings could not change Master volume."):
 		return false
 	if not _require(dialog.validation_select_option("BattlePlaybackSpeedPicker", "fast"), "Overworld settings could not select Fast battle playback."):
@@ -156,6 +159,8 @@ func _check_town_settings() -> bool:
 	var dialog = shell.validation_active_play_settings_dialog()
 	if not _require(bool(opened.get("visible", false)) and SettingsService.master_volume_percent() == 55, "Town settings did not reopen with persisted active-play values."):
 		return false
+	if not await _check_ornate_frame_visual_roundtrip(dialog, "town"):
+		return false
 	if not _require(_dialog_fits_1280_at_130(dialog), "Town settings modal does not fit 1280x720 at 130 percent UI scale."):
 		return false
 	if not await _check_modal_focus_containment(shell, dialog, session, "Town"):
@@ -199,6 +204,8 @@ func _check_battle_settings() -> bool:
 	await _settle()
 	var dialog = shell.validation_active_play_settings_dialog()
 	if not _require(bool(opened.get("visible", false)) and SettingsService.reduced_motion_enabled(), "Battle settings did not reopen with persisted readability values."):
+		return false
+	if not await _check_ornate_frame_visual_roundtrip(dialog, "battle"):
 		return false
 	if not _require(_dialog_fits_1280_at_130(dialog), "Battle settings modal does not fit 1280x720 at 130 percent UI scale."):
 		return false
@@ -434,6 +441,144 @@ func _check_persisted_reload() -> bool:
 func _dialog_fits_viewport(dialog: Control) -> bool:
 	var panel: Control = dialog.get_node("%DialogPanel")
 	return dialog.get_viewport_rect().grow(1.0).encloses(panel.get_global_rect())
+
+func _check_ornate_frame_visual_roundtrip(dialog: Control, surface_name: String) -> bool:
+	var settings_before: Dictionary = _settings_visual_authority()
+	var original_resolution_id := SettingsService.presentation_resolution_id()
+	var original_ui_scale := SettingsService.ui_scale_percent()
+	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
+	var original_window_size := get_window().size
+	var standard_contrast_result: bool = dialog.validation_set_toggle("HighContrastToggle", false)
+	var standard_scale_result: Dictionary = SettingsService.set_ui_scale_percent(100)
+	if not _require(standard_contrast_result and bool(standard_scale_result.get("ok", false)), "%s Settings could not establish the standard ornate-frame fixture." % surface_name):
+		return false
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		var resolution_id := "%dx%d" % [viewport_size.x, viewport_size.y]
+		var resolution_result: Dictionary = SettingsService.set_presentation_resolution(resolution_id)
+		get_window().size = viewport_size
+		await _settle()
+		var contract: Dictionary = _ornate_frame_contract(dialog)
+		if not _require(
+			bool(resolution_result.get("ok", false))
+			and get_window().size == viewport_size
+			and bool(contract.get("ok", false)),
+			"%s Settings ornate frame is not exact and contained at %s: %s" % [surface_name, viewport_size, contract]
+		):
+			return false
+		if not await _capture_if_requested("%s_settings_%dx%d" % [surface_name, viewport_size.x, viewport_size.y]):
+			return false
+	var restore_contrast_result: bool = dialog.validation_set_toggle("HighContrastToggle", original_high_contrast)
+	var restore_scale_result: Dictionary = SettingsService.set_ui_scale_percent(original_ui_scale)
+	var restore_resolution_result: Dictionary = SettingsService.set_presentation_resolution(original_resolution_id)
+	get_window().size = original_window_size
+	await _settle()
+	var settings_after: Dictionary = _settings_visual_authority()
+	var settings_authority_checks := {
+		"settings": settings_after.get("settings", {}) == settings_before.get("settings", {}),
+		"committed_settings": settings_after.get("committed_settings", {}) == settings_before.get("committed_settings", {}),
+		"input_map": settings_after.get("input_map", {}) == settings_before.get("input_map", {}),
+		"live_exists": settings_after.get("live_exists", false) == settings_before.get("live_exists", false),
+		"candidate_exists": settings_after.get("candidate_exists", false) == settings_before.get("candidate_exists", false),
+		"backup_exists": settings_after.get("backup_exists", false) == settings_before.get("backup_exists", false),
+		"live_bytes": settings_after.get("live_bytes", PackedByteArray()) == settings_before.get("live_bytes", PackedByteArray()),
+	}
+	return (
+		_require(restore_contrast_result and bool(restore_scale_result.get("ok", false)) and bool(restore_resolution_result.get("ok", false)), "%s Settings could not restore its pre-capture presentation settings." % surface_name)
+		and _require(get_window().size == original_window_size, "%s Settings ornate-frame capture did not restore the live window size." % surface_name)
+		and _require(settings_after == settings_before, "%s Settings ornate-frame capture changed settings, committed config, input, or file authority: %s" % [surface_name, settings_authority_checks])
+	)
+
+func _settings_visual_authority() -> Dictionary:
+	var snapshot: Dictionary = SettingsService.validation_settings_transaction_snapshot()
+	var settings_file := String(snapshot.get("settings_file", ""))
+	return {
+		"settings": (snapshot.get("settings", {}) as Dictionary).duplicate(true),
+		"committed_settings": (snapshot.get("committed_settings", {}) as Dictionary).duplicate(true),
+		"input_map": _canonical_input_map(snapshot.get("input_map", {})),
+		"live_exists": bool(snapshot.get("live_exists", false)),
+		"candidate_exists": bool(snapshot.get("candidate_exists", false)),
+		"backup_exists": bool(snapshot.get("backup_exists", false)),
+		"live_bytes": FileAccess.get_file_as_bytes(settings_file) if settings_file != "" and FileAccess.file_exists(settings_file) else PackedByteArray(),
+	}
+
+func _canonical_input_map(value: Variant) -> Dictionary:
+	var input_map: Dictionary = value if value is Dictionary else {}
+	var result := {}
+	for action_value in input_map:
+		var action_id := String(action_value)
+		var row_value: Variant = input_map.get(action_value, {})
+		var row: Dictionary = row_value if row_value is Dictionary else {}
+		var events := []
+		var events_value: Variant = row.get("events", [])
+		if events_value is Array:
+			for event_value in events_value:
+				if event_value is InputEvent:
+					events.append(_serialize_input_event(event_value))
+		result[action_id] = {
+			"exists": bool(row.get("exists", false)),
+			"deadzone": float(row.get("deadzone", 0.5)),
+			"events": events,
+		}
+	return result
+
+func _serialize_input_event(input_event: InputEvent) -> Dictionary:
+	var properties := {}
+	for property_value in input_event.get_property_list():
+		var property: Dictionary = property_value
+		if (int(property.get("usage", 0)) & PROPERTY_USAGE_STORAGE) == 0:
+			continue
+		var property_name := String(property.get("name", ""))
+		if property_name == "" or property_name == "script":
+			continue
+		properties[property_name] = var_to_str(input_event.get(property_name))
+	return {
+		"class": input_event.get_class(),
+		"text": input_event.as_text(),
+		"properties": properties,
+	}
+
+func _ornate_frame_contract(dialog: Control) -> Dictionary:
+	var panel := dialog.get_node_or_null("%DialogPanel") as PanelContainer
+	var panel_style: StyleBox = panel.get_theme_stylebox("panel") if panel != null else null
+	var texture_style := panel_style as StyleBoxTexture
+	var expected_section_names := [&"SoundTitle", &"GameplayTitle", &"ReadabilityTitle"]
+	var section_contracts: Array[Dictionary] = []
+	var sections_exact := true
+	for section_name in expected_section_names:
+		var label := dialog.find_child(String(section_name), true, false) as Label
+		var section_exact := (
+			label != null
+			and label.get_theme_color("font_color") == FrontierVisualKit.text_color("gold")
+			and label.get_theme_font_size("font_size") == 15
+		)
+		sections_exact = sections_exact and section_exact
+		section_contracts.append({
+			"name": String(section_name),
+			"exact": section_exact,
+			"font_size": label.get_theme_font_size("font_size") if label != null else -1,
+			"font_color": label.get_theme_color("font_color") if label != null else Color(),
+		})
+	var texture_path := texture_style.texture.resource_path if texture_style != null and texture_style.texture != null else ""
+	var viewport_rect := dialog.get_viewport_rect()
+	var panel_rect := panel.get_global_rect() if panel != null else Rect2()
+	var frame_exact := (
+		texture_style != null
+		and texture_path == "res://art/ui/runtime/overworld/parchment_panel.png"
+		and is_equal_approx(texture_style.texture_margin_left, 24.0)
+		and is_equal_approx(texture_style.texture_margin_top, 24.0)
+		and is_equal_approx(texture_style.content_margin_left, 0.0)
+		and texture_style.modulate_color == Color(0.82, 0.78, 0.70, 1.0)
+	)
+	return {
+		"ok": panel != null and frame_exact and sections_exact and viewport_rect.grow(1.0).encloses(panel_rect),
+		"frame_exact": frame_exact,
+		"texture_path": texture_path,
+		"style_class": panel_style.get_class() if panel_style != null else "",
+		"sections_exact": sections_exact,
+		"sections": section_contracts,
+		"viewport_rect": viewport_rect,
+		"panel_rect": panel_rect,
+	}
 
 func _dialog_fits_1280_at_130(dialog: Control) -> bool:
 	return bool(_dialog_1280_at_130_snapshot(dialog).get("ok", false))

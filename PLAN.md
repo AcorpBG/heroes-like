@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
+- Selected implementation slice: none. Continue the next tracker-approved source-backed graphical-polish slice from fresh rendered evidence.
+
+## Active-Play Settings Ornate Frame Integration
+
+id: `presentation-active-play-settings-ornate-frame-integration-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the shared active-play Settings dialog's generic flat ink panel with the existing production Overworld parchment frame and strengthen the existing Sound, Gameplay, and Readability headings within the same compact modal;
+- retain the exact dialog rect, margin, scroll surface, controls, labels, values, item arrays, focus order, input ownership, native popup/slider behavior, settings persistence, and Overworld/Town/Battle host integration;
+- preserve the dimmed scenic host as the dominant surrounding surface while giving the modal the same cartographic frame language already used by shipped Overworld and Town panels.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Overworld, Town, and Battle Settings captures show one contained ornate frame with readable section hierarchy and no clipping or screen-filling composition;
+- focused runtime proves the exact existing frame asset, section label tones, responsive containment, complete control/popup/focus/settings authority, and unchanged host session/save/input state;
+- active-play settings, keyboard/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no setting id, default, value, option item, persistence, schema, focus cycle, control order, popup/slider behavior, modal ownership, shell command, session/save, gameplay, map, Town, Battle, AI, balance, content, or Native RMG change;
+- no dialog size, margin, scroll budget, new control, new explanatory text, backdrop replacement, host shell layout, global theme, font family, UI-scale policy, animation/audio/VFX, or broad Settings redesign;
+- no packaged Settings interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the shared Overworld, Town, and Battle Settings modal now uses the existing Overworld parchment cartographic frame, with exact gold Sound, Gameplay, and Readability headings and the prior compact layout/control tree unchanged;
+- six fresh inspected 1280x720 and 1920x1080 captures show the ornate modal contained over each scenic host, while focused runtime preserves exact controls, native popup/slider behavior, 12-control focus ownership, settings/config/input authority, session/save state, and accessibility semantics;
+- active-play Settings, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; packaged Settings interaction, hardware certification, whole-game validation, and release readiness remain unclaimed.
 
 ## Overworld Contained Hover Card
 

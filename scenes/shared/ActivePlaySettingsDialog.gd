@@ -4,6 +4,10 @@ signal closed
 signal setting_changed(setting_id: String)
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const UI_ART_ACTIVE_PLAY_SETTINGS_FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
+const ACTIVE_PLAY_SETTINGS_FRAME_MODEL := "shared_overworld_parchment_cartographic_frame"
+const ACTIVE_PLAY_SETTINGS_FRAME_TEXTURE_MARGIN := 54
+const ACTIVE_PLAY_SETTINGS_SECTION_LABELS := [&"SoundTitle", &"GameplayTitle", &"ReadabilityTitle"]
 
 @onready var _panel: PanelContainer = %DialogPanel
 @onready var _title: Label = %Title
@@ -235,12 +239,21 @@ func _on_reduce_repetitive_sounds_toggled(enabled: bool) -> void:
 func _apply_visual_theme() -> void:
 	if _panel == null:
 		return
-	FrontierVisualKit.apply_panel(_panel, "ink", 8)
+	FrontierVisualKit.apply_art_panel(
+		_panel,
+		UI_ART_ACTIVE_PLAY_SETTINGS_FRAME,
+		"ink",
+		ACTIVE_PLAY_SETTINGS_FRAME_TEXTURE_MARGIN,
+		0,
+		Color(0.82, 0.78, 0.70, 1.0)
+	)
 	FrontierVisualKit.apply_label(_title, "title", 20)
 	FrontierVisualKit.apply_label(_status, "muted", 12)
-	for label in find_children("*Label", "Label", true, false):
+	for label in find_children("*", "Label", true, false):
 		if label is Label and label != _title and label != _status:
-			FrontierVisualKit.apply_label(label, "body", 13)
+			var tone := "gold" if label.name in ACTIVE_PLAY_SETTINGS_SECTION_LABELS else "body"
+			var font_size := 15 if label.name in ACTIVE_PLAY_SETTINGS_SECTION_LABELS else 13
+			FrontierVisualKit.apply_label(label, tone, font_size)
 	FrontierVisualKit.apply_button(_close_button, "secondary", 92.0, 36.0, 13)
 	for picker in [_battle_speed_picker, _ui_scale_picker, _battle_shake_picker, _color_cue_picker]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", 220.0, 36.0, 13)
