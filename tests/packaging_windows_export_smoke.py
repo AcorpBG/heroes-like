@@ -43,6 +43,7 @@ FORBIDDEN_TERRAIN_PCK_PREFIXES = (
 )
 REQUIRED_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/terrain_tiles/base/",
+    "art/overworld/runtime/terrain_tiles/detail/",
     "art/overworld/runtime/terrain_tiles/roads/",
 )
 REQUIRED_ARTIFACT_FIELD_NAMES = (

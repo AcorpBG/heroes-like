@@ -247,6 +247,11 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var macro_lighting_corner_mismatch_count := 0
 	var terrain_grain_tile_count := 0
 	var terrain_grain_exact_count := 0
+	var terrain_detail_drawn_count := 0
+	var terrain_detail_exact_count := 0
+	var terrain_detail_road_excluded_count := 0
+	var terrain_detail_water_excluded_count := 0
+	var terrain_detail_invalid_count := 0
 	var shoreline_tile_count := 0
 	var shoreline_source_count := 0
 	var shoreline_exact_count := 0
@@ -262,6 +267,9 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var terrain_grain_source_model_ids: Dictionary = {}
 	var terrain_grain_texture_paths: Dictionary = {}
 	var terrain_grain_modulate_alphas: Dictionary = {}
+	var terrain_detail_model_ids: Dictionary = {}
+	var terrain_detail_texture_paths: Dictionary = {}
+	var terrain_detail_cell_ids: Dictionary = {}
 	var session = SessionState.active_session
 	var map_size := OverworldRules.derive_map_size(session)
 	for y in range(map_size.y):
@@ -273,6 +281,7 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 			var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
 			var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 			var grain: Dictionary = terrain.get("terrain_grain_overlay", {}) if terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
+			var detail: Dictionary = terrain.get("terrain_detail_decal", {}) if terrain.get("terrain_detail_decal", {}) is Dictionary else {}
 			var shoreline: Dictionary = terrain.get("water_shoreline_contour", {}) if terrain.get("water_shoreline_contour", {}) is Dictionary else {}
 			var lighting_keys: Array = lighting.get("corner_keys", []) if lighting.get("corner_keys", []) is Array else []
 			var lighting_samples: Array = lighting.get("corner_samples", []) if lighting.get("corner_samples", []) is Array else []
@@ -313,6 +322,54 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 					and bool(grain.get("hidden_by_unexplored_shroud", false))
 				):
 					terrain_grain_exact_count += 1
+			terrain_detail_model_ids[String(detail.get("model", ""))] = true
+			if bool(detail.get("road_excluded", false)):
+				terrain_detail_road_excluded_count += 1
+			if bool(detail.get("water_excluded", false)):
+				terrain_detail_water_excluded_count += 1
+			var detail_exact: bool = (
+				String(detail.get("model", "")) == "sparse_biome_aware_painterly_surface_clusters"
+				and bool(detail.get("atlas_texture_loaded", false))
+				and detail.get("atlas_size", {}) == {"x": 1024, "y": 1024}
+				and detail.get("atlas_grid", {}) == {"x": 4, "y": 4}
+				and detail.get("atlas_cell_size", {}) == {"x": 256, "y": 256}
+				and int(detail.get("density_modulus", 0)) == 3
+				and not bool(detail.get("interactive", true))
+				and not bool(detail.get("collision", true))
+				and is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.78)
+				and String(detail.get("draw_order", "")) == "after_macro_lighting_before_roads_objects_and_fog"
+				and bool(detail.get("hidden_by_unexplored_shroud", false))
+				and String(detail.get("variation_basis", "")) == "tile_coordinate_and_terrain_id_only"
+			)
+			if bool(detail.get("drawn", false)):
+				terrain_detail_drawn_count += 1
+				terrain_detail_texture_paths[String(detail.get("atlas_texture_path", ""))] = true
+				terrain_detail_cell_ids[int(detail.get("cell_id", -1))] = true
+				var source_rect: Dictionary = detail.get("source_rect", {}) if detail.get("source_rect", {}) is Dictionary else {}
+				var destination_rect: Dictionary = detail.get("destination_rect", {}) if detail.get("destination_rect", {}) is Dictionary else {}
+				var offset: Dictionary = detail.get("offset_factor", {}) if detail.get("offset_factor", {}) is Dictionary else {}
+				var cell_id := int(detail.get("cell_id", -1))
+				detail_exact = (
+					detail_exact
+					and cell_id >= 0 and cell_id < 16
+					and int(source_rect.get("x", -1)) == (cell_id % 4) * 256
+					and int(source_rect.get("y", -1)) == floori(float(cell_id) / 4.0) * 256
+					and int(source_rect.get("width", 0)) == 256 and int(source_rect.get("height", 0)) == 256
+					and bool(detail.get("destination_contained", false))
+					and float(detail.get("extent_factor", 0.0)) >= 0.22 and float(detail.get("extent_factor", 0.0)) <= 0.30
+					and float(offset.get("x", -1.0)) >= -0.13 and float(offset.get("x", 1.0)) <= 0.13
+					and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.12
+					and float(destination_rect.get("width", 0.0)) > 0.0
+					and is_equal_approx(float(destination_rect.get("width", 0.0)), float(destination_rect.get("height", -1.0)))
+					and not bool(detail.get("road_excluded", true))
+					and not bool(detail.get("water_excluded", true))
+				)
+			else:
+				detail_exact = detail_exact and int(detail.get("cell_id", -2)) == -1
+			if detail_exact:
+				terrain_detail_exact_count += 1
+			else:
+				terrain_detail_invalid_count += 1
 			if bool(shoreline.get("active", false)):
 				shoreline_tile_count += 1
 				shoreline_source_count += int(shoreline.get("source_count", 0))
@@ -359,6 +416,11 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"macro_lighting_corner_mismatch_count": macro_lighting_corner_mismatch_count,
 		"terrain_grain_tile_count": terrain_grain_tile_count,
 		"terrain_grain_exact_count": terrain_grain_exact_count,
+		"terrain_detail_drawn_count": terrain_detail_drawn_count,
+		"terrain_detail_exact_count": terrain_detail_exact_count,
+		"terrain_detail_road_excluded_count": terrain_detail_road_excluded_count,
+		"terrain_detail_water_excluded_count": terrain_detail_water_excluded_count,
+		"terrain_detail_invalid_count": terrain_detail_invalid_count,
 		"shoreline_tile_count": shoreline_tile_count,
 		"shoreline_source_count": shoreline_source_count,
 		"shoreline_exact_count": shoreline_exact_count,
@@ -373,6 +435,9 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"terrain_grain_source_model_ids": terrain_grain_source_model_ids.keys(),
 		"terrain_grain_texture_paths": terrain_grain_texture_paths.keys(),
 		"terrain_grain_modulate_alphas": terrain_grain_modulate_alphas.keys(),
+		"terrain_detail_model_ids": terrain_detail_model_ids.keys(),
+		"terrain_detail_texture_paths": terrain_detail_texture_paths.keys(),
+		"terrain_detail_cell_ids": terrain_detail_cell_ids.keys(),
 	}
 
 func _assert_natural_fog_terrain_transition_progression(before: Dictionary, after: Dictionary) -> bool:
@@ -385,6 +450,7 @@ func _assert_natural_fog_terrain_transition_progression(before: Dictionary, afte
 		"irregular_inner_edge_count",
 		"deterministic_seed_count",
 		"terrain_grain_tile_count",
+		"terrain_detail_drawn_count",
 	]
 	for key in count_keys:
 		if int(after.get(key, -1)) < int(before.get(key, 0)):
@@ -400,6 +466,9 @@ func _assert_natural_fog_terrain_transition_progression(before: Dictionary, afte
 			or int(summary.get("macro_lighting_corner_mismatch_count", -1)) != 0
 			or int(summary.get("terrain_grain_tile_count", -1)) != explored_count
 			or int(summary.get("terrain_grain_exact_count", -1)) != explored_count
+			or int(summary.get("terrain_detail_exact_count", -1)) != explored_count
+			or int(summary.get("terrain_detail_invalid_count", -1)) != 0
+			or int(summary.get("terrain_detail_drawn_count", 0)) <= 0
 			or int(summary.get("irregular_inner_edge_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))
 			or int(summary.get("deterministic_seed_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))
 		):
@@ -417,6 +486,8 @@ func _assert_natural_fog_terrain_transition_progression(before: Dictionary, afte
 		"terrain_grain_source_model_ids",
 		"terrain_grain_texture_paths",
 		"terrain_grain_modulate_alphas",
+		"terrain_detail_model_ids",
+		"terrain_detail_texture_paths",
 	]:
 		if after.get(key, []) != before.get(key, []):
 			_fail("Generated natural-fog terrain presentation model changed for %s: before=%s after=%s" % [key, before.get(key, []), after.get(key, [])])
@@ -645,6 +716,9 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or summary.get("macro_lighting_highlight_alphas", []) != [0.04]
 		or int(summary.get("terrain_grain_tile_count", 0)) != explored_tile_count
 		or int(summary.get("terrain_grain_exact_count", 0)) != explored_tile_count
+		or int(summary.get("terrain_detail_exact_count", 0)) != explored_tile_count
+		or int(summary.get("terrain_detail_invalid_count", -1)) != 0
+		or int(summary.get("terrain_detail_drawn_count", 0)) <= 0
 		or int(summary.get("shoreline_exact_count", -1)) != int(summary.get("shoreline_tile_count", -2))
 		or int(summary.get("shoreline_source_count", 0)) < int(summary.get("shoreline_tile_count", 0))
 		or summary.get("terrain_grain_model_ids", []) != ["single_normalized_map_space_seamless_painterly_microtexture"]
@@ -652,6 +726,8 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or summary.get("terrain_grain_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"]
 		or terrain_grain_modulate_alphas.size() != 1
 		or not is_equal_approx(float(terrain_grain_modulate_alphas[0]), 0.72)
+		or summary.get("terrain_detail_model_ids", []) != ["sparse_biome_aware_painterly_surface_clusters"]
+		or summary.get("terrain_detail_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"]
 	):
 		_fail("%s generated terrain transitions or continuous macro-lighting contract did not remain exact: %s" % [label, JSON.stringify(summary)])
 		return false
@@ -665,7 +741,8 @@ func _assert_macro_lighting_render_profile(snapshot: Dictionary, label: String) 
 	var terrain_draws := int(last_static.get("terrain_tile_draws", 0))
 	var macro_polygon_draws := int(last_static.get("terrain_macro_lighting_polygon_draws", 0))
 	var grain_draws := int(last_static.get("terrain_grain_overlay_draws", 0))
-	if terrain_draws <= 0 or grain_draws != 1 or macro_polygon_draws <= 0 or macro_polygon_draws > 12 or macro_polygon_draws * 8 >= terrain_draws:
+	var detail_draws := int(last_static.get("terrain_detail_decal_draws", 0))
+	if terrain_draws <= 0 or grain_draws != 1 or detail_draws <= 0 or detail_draws >= terrain_draws or macro_polygon_draws <= 0 or macro_polygon_draws > 12 or macro_polygon_draws * 8 >= terrain_draws:
 		_fail("%s macro-lighting render pass was not materially batched below tile count: %s" % [label, JSON.stringify(last_static)])
 		return false
 	return true

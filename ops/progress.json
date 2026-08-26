@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    "Select the next tracker-approved graphical-polish implementation slice from current inspected game evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,17 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-irregular-cartographic-fog-contour-10184",
-    "title": "Overworld irregular cartographic fog contour",
+    "id": "presentation-overworld-biome-surface-detail-decals-10184",
+    "title": "Overworld biome surface detail decals",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T02:07:46Z",
-    "updatedAt": "2026-08-26T02:23:38Z",
+    "startedAt": "2026-08-26T02:28:25Z",
+    "updatedAt": "2026-08-26T02:54:19Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct two-width capture inspection and focused/generated runtime: the straight explored-side stroke is now a bounded deterministic irregular contour while the completed gradient, hidden shroud, fog state, and session authority remain exact."
+    "notes": "Completed with inspected two-width captures and focused, generated, compatibility, static/editor, Linux, and Windows package-startup evidence; packaged Overworld interaction remains unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -14567,14 +14567,14 @@
       }
     }
   ],
-  "currentNotes": "The irregular cartographic fog contour is completed with inspected captures and focused, generated, compatibility, static/editor, and bounded platform evidence.",
+  "currentNotes": "The biome surface-detail decal pass is completed with inspected captures and focused, generated, compatibility, static/editor, and bounded platform evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-irregular-cartographic-fog-contour-10184",
-  "currentSliceId": "ux-overworld-irregular-cartographic-fog-contour-10184",
-  "currentSliceNotes": "Change only the explored-side fog contour stroke; preserve the completed gradient/shroud, exact fog ownership, hidden identity, and session/save authority.",
+  "currentSlice": "presentation-overworld-biome-surface-detail-decals-10184",
+  "currentSliceId": "presentation-overworld-biome-surface-detail-decals-10184",
+  "currentSliceNotes": "Add sparse deterministic terrain-family decals below roads, objects, and fog; preserve exact terrain/map/session authority and all gameplay.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld irregular cartographic fog contour",
-  "currentSliceUpdatedAt": "2026-08-26T02:23:38Z",
+  "currentSliceTitle": "Overworld biome surface detail decals",
+  "currentSliceUpdatedAt": "2026-08-26T02:54:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20089,9 +20089,39 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog/shroud, route, object-scale, and logical authority.",
-  "notes": "The irregular cartographic fog-contour slice is completed; blockers are empty and the next slice remains unselected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved graphical-polish implementation slice from inspected game evidence; preserve completed terrain, fog, route, object-scale, and gameplay authority.",
+  "notes": "The biome surface-detail decal slice is completed; blockers are empty and the next graphical-polish slice remains unselected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-biome-surface-detail-decals-10184",
+      "title": "Overworld biome surface detail decals",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T02:28:25Z",
+      "updatedAt": "2026-08-26T02:54:19Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Add restrained original biome-aware surface detail to open Overworld land so the terrain supports the polished sprites instead of reading as a flat painted board.",
+      "completionCriteria": "Fresh inspected two-width captures show sparse natural ground detail without stamp repetition or clutter; focused and generated runtime prove exact atlas/cell identity, deterministic bounded land-only placement, draw order, fog concealment, and unchanged terrain/map/session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No terrain/topology/passability/movement, road, object/hero/town identity or scale, content/generated placement, fog, route, interaction, save/session/schema, AI, battle, balance, or Native RMG change.",
+        "No large blockers, interactive decoration, animation/audio/VFX, shader, weather, camera/UI layout, or broad map redesign.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with one original 4x4 RGBA atlas and deterministic sparse biome-aware land decals. Fresh inspected 1280x720 and 1920x1080 captures preserve roads, objects, routes, and fog hierarchy. Focused Ninefold plus generated natural/reveal-all runtime, broad compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction and whole-release readiness remain unclaimed.",
+      "blockedReason": null,
+      "remainingWork": "Select the next tracker-approved graphical-polish implementation slice from current inspected game evidence."
+    },
     {
       "id": "ux-overworld-irregular-cartographic-fog-contour-10184",
       "title": "Overworld irregular cartographic fog contour",
