@@ -506,6 +506,9 @@ func _check_settings_focus_visibility() -> bool:
 		var summary_error := _settings_summary_contract_error(summary_label, scroll, 1280, scale)
 		if summary_error != "":
 			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, summary_error)
+		var mixer_error := _settings_audio_mixer_contract_error(settings_shell, scroll, 1280, scale)
+		if mixer_error != "":
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, mixer_error)
 		var controls: Array[Control] = []
 		for control_name in SETTINGS_SCROLL_FOCUS_NAMES:
 			var control := settings_shell.get_node_or_null("%%%s" % control_name) as Control
@@ -544,6 +547,9 @@ func _check_settings_focus_visibility() -> bool:
 		var summary_error := _settings_summary_contract_error(summary_label, scroll, 1920, scale)
 		if summary_error != "":
 			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, summary_error)
+		var mixer_error := _settings_audio_mixer_contract_error(settings_shell, scroll, 1920, scale)
+		if mixer_error != "":
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, mixer_error)
 	SettingsService.settings = original_settings.duplicate(true)
 	SettingsService.apply_settings()
 	await _settle()
@@ -588,6 +594,61 @@ func _settings_summary_contract_error(summary_label: Label, scroll: ScrollContai
 			or summary_label.size.x > scroll.size.x + 1.0 \
 			or not summary_parent.get_global_rect().grow(1.0).encloses(summary_label.get_global_rect()):
 		return "Settings summary left its live Settings content width at width %d/%d percent: summary=%s content=%s scroll=%s." % [width, scale, summary_label.get_global_rect(), summary_parent.get_global_rect() if summary_parent != null else Rect2(), scroll.get_global_rect()]
+	return ""
+
+func _settings_audio_mixer_contract_error(shell: Node, scroll: ScrollContainer, width: int, scale: int) -> String:
+	var mixer := shell.get_node_or_null("%AudioMixerRow") as HBoxContainer
+	if mixer == null or mixer.get_theme_constant("separation") != 8:
+		return "Settings audio mixer row is missing or lost its exact separation at width %d/%d percent." % [width, scale]
+	var panel_names := [&"MasterVolumePanel", &"MusicVolumePanel", &"EffectsVolumePanel"]
+	var title_names := [&"MasterVolumeTitle", &"MusicVolumeTitle", &"EffectsVolumeTitle"]
+	var slider_names := [&"MasterVolumeSlider", &"MusicVolumeSlider", &"EffectsVolumeSlider"]
+	var value_names := [&"MasterVolumeValue", &"MusicVolumeValue", &"EffectsVolumeValue"]
+	var expected_titles := ["Master", "Music", "Effects"]
+	var panel_rects: Array[Rect2] = []
+	var panel_border_colors: Array[Color] = []
+	var mixer_rect := mixer.get_global_rect()
+	for index in range(panel_names.size()):
+		var panel := shell.get_node_or_null("%%%s" % panel_names[index]) as PanelContainer
+		var slider := shell.get_node_or_null("%%%s" % slider_names[index]) as HSlider
+		var value_label := shell.get_node_or_null("%%%s" % value_names[index]) as Label
+		var title_label := shell.find_child(String(title_names[index]), true, false) as Label
+		if panel == null or slider == null or value_label == null or title_label == null:
+			return "Settings audio mixer is missing its %s panel controls at width %d/%d percent." % [expected_titles[index], width, scale]
+		if panel.get_parent() != mixer or mixer.get_child(index) != panel or not panel.visible or panel.size_flags_horizontal != Control.SIZE_EXPAND_FILL:
+			return "Settings audio mixer %s panel lost its exact ordered responsive ownership at width %d/%d percent." % [expected_titles[index], width, scale]
+		var panel_rect := panel.get_global_rect()
+		if not mixer_rect.grow(1.0).encloses(panel_rect) \
+				or title_label.text != expected_titles[index] \
+				or title_label.get_combined_minimum_size().x > title_label.size.x + 0.5 \
+				or value_label.text != "%d%%" % int(round(slider.value)) \
+				or value_label.get_combined_minimum_size().x > value_label.size.x + 0.5 \
+				or not is_zero_approx(slider.min_value) \
+				or not is_equal_approx(slider.max_value, 100.0) \
+				or not is_equal_approx(slider.step, 1.0) \
+				or slider.size.x < 56.0:
+			return "Settings audio mixer %s panel is clipped or changed its slider/value contract at width %d/%d percent: panel=%s mixer=%s." % [expected_titles[index], width, scale, panel_rect, mixer_rect]
+		var panel_style := panel.get_theme_stylebox("panel")
+		if not (panel_style is StyleBoxFlat):
+			return "Settings audio mixer %s panel lost its runtime panel style at width %d/%d percent." % [expected_titles[index], width, scale]
+		panel_rects.append(panel_rect)
+		panel_border_colors.append((panel_style as StyleBoxFlat).border_color)
+	if panel_rects[0].intersects(panel_rects[1]) \
+			or panel_rects[1].intersects(panel_rects[2]) \
+			or panel_rects[0].end.x > panel_rects[1].position.x \
+			or panel_rects[1].end.x > panel_rects[2].position.x:
+		return "Settings audio mixer panels overlap or lost source order at width %d/%d percent: %s." % [width, scale, panel_rects]
+	var width_spread := maxf(panel_rects[0].size.x, maxf(panel_rects[1].size.x, panel_rects[2].size.x)) \
+		- minf(panel_rects[0].size.x, minf(panel_rects[1].size.x, panel_rects[2].size.x))
+	if width_spread > 1.5:
+		return "Settings audio mixer panels are not equally distributed at width %d/%d percent: %s." % [width, scale, panel_rects]
+	if not SettingsService.high_contrast_ui_enabled() \
+			and (panel_border_colors[0].is_equal_approx(panel_border_colors[1]) \
+			or panel_border_colors[1].is_equal_approx(panel_border_colors[2]) \
+			or panel_border_colors[0].is_equal_approx(panel_border_colors[2])):
+		return "Settings audio mixer lost its distinct teal, blue, and earth panel registration at width %d/%d percent." % [width, scale]
+	if scale == 100 and not scroll.get_global_rect().grow(1.0).encloses(mixer_rect):
+		return "Settings audio mixer is not together in the initial Settings view at width %d/%d percent: mixer=%s scroll=%s." % [width, scale, mixer_rect, scroll.get_global_rect()]
 	return ""
 
 func _expected_settings_summary_visible_text(full_text: String, max_lines: int, max_chars: int) -> String:

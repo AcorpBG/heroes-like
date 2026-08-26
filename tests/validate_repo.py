@@ -20996,10 +20996,43 @@ def validate_main_menu_skirmish_map_forge_disclosure(errors: list[str]) -> None:
 
 
 def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
-    for path in (MAIN_MENU_SCRIPT_PATH, MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH):
+    for path in (MAIN_MENU_SCENE_PATH, MAIN_MENU_SCRIPT_PATH, MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH):
         ensure(path.exists(), errors, f"Missing Main Menu Settings focus-visibility dependency: {path.relative_to(ROOT)}")
-    if not MAIN_MENU_SCRIPT_PATH.exists() or not MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.exists():
+    if not MAIN_MENU_SCENE_PATH.exists() or not MAIN_MENU_SCRIPT_PATH.exists() or not MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.exists():
         return
+
+    scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    mixer_parent = "StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow"
+    for token in (
+        '[node name="AudioMixerRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]',
+        "unique_name_in_owner = true",
+        "theme_override_constants/separation = 8",
+        f'[node name="MasterVolumePanel" type="PanelContainer" parent="{mixer_parent}"]',
+        f'[node name="MusicVolumePanel" type="PanelContainer" parent="{mixer_parent}"]',
+        f'[node name="EffectsVolumePanel" type="PanelContainer" parent="{mixer_parent}"]',
+        f'from="{mixer_parent}/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider"',
+        f'from="{mixer_parent}/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider"',
+        f'from="{mixer_parent}/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow/EffectsVolumeSlider"',
+    ):
+        ensure(token in scene_text, errors, f"Main Menu Settings audio mixer scene is missing token: {token}")
+    ensure(scene_text.count('[node name="AudioMixerRow"') == 1, errors, "Main Menu Settings must own exactly one audio mixer row")
+    for panel_name in ("MasterVolumePanel", "MusicVolumePanel", "EffectsVolumePanel"):
+        panel_match = re.search(
+            rf'\[node name="{panel_name}" type="PanelContainer" parent="{re.escape(mixer_parent)}"\](.*?)(?=\n\[node )',
+            scene_text,
+            flags=re.DOTALL,
+        )
+        ensure(panel_match is not None, errors, f"Main Menu Settings audio mixer is missing exact {panel_name} ownership")
+        if panel_match is not None:
+            ensure("unique_name_in_owner = true" in panel_match.group(1), errors, f"Main Menu Settings {panel_name} must remain public to focused geometry proof")
+            ensure("size_flags_horizontal = 3" in panel_match.group(1), errors, f"Main Menu Settings {panel_name} must expand equally inside the mixer")
+    for forbidden in (
+        'SettingsBox/MasterVolumePanel"]',
+        'SettingsBox/MusicVolumePanel"]',
+        'SettingsBox/EffectsVolumePanel"]',
+        'type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]\nunique_name_in_owner = true\nlayout_mode = 2\nsize_flags_horizontal = 3\ntheme_override_constants/separation = 8',
+    ):
+        ensure(forbidden not in scene_text, errors, f"Main Menu Settings must not restore stacked or vertical audio layout: {forbidden}")
 
     script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     expected_controls = (
@@ -21135,6 +21168,17 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         '"ReduceFlashesToggle"',
         '"RestoreSettingsDefaults"',
         "func _check_settings_focus_visibility() -> bool:",
+        "func _settings_audio_mixer_contract_error(shell: Node, scroll: ScrollContainer, width: int, scale: int) -> String:",
+        'var mixer := shell.get_node_or_null("%AudioMixerRow") as HBoxContainer',
+        'var panel_names := [&"MasterVolumePanel", &"MusicVolumePanel", &"EffectsVolumePanel"]',
+        'var expected_titles := ["Master", "Music", "Effects"]',
+        "panel.get_parent() != mixer or mixer.get_child(index) != panel",
+        "panel.size_flags_horizontal != Control.SIZE_EXPAND_FILL",
+        "mixer_rect.grow(1.0).encloses(panel_rect)",
+        "panel_rects[0].intersects(panel_rects[1])",
+        "width_spread > 1.5",
+        "slider.size.x < 56.0",
+        "scale == 100 and not scroll.get_global_rect().grow(1.0).encloses(mixer_rect)",
         "get_window().size = Vector2i(1280, 720)",
         "for scale in [100, 130]:",
         "func _apply_settings_focus_ui_scale(shell: Node, original_settings: Dictionary, scale: int) -> bool:",
@@ -21177,6 +21221,26 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         focus_case_body = focus_case_match.group(1)
         ensure("validation_select_ui_scale" not in focus_case_body, errors, "Settings focus layout fixture must not persist UI-scale commits")
         ensure("set_ui_scale_percent" not in focus_case_body, errors, "Settings focus layout fixture must not call the persistent scale setter")
+    mixer_case_match = re.search(
+        r"func _settings_audio_mixer_contract_error\(shell: Node, scroll: ScrollContainer, width: int, scale: int\) -> String:(.*?)(?=\n\nfunc )",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(mixer_case_match is not None, errors, "Main Menu smoke is missing isolated Settings audio mixer geometry proof")
+    if mixer_case_match is not None:
+        mixer_case_body = mixer_case_match.group(1)
+        for forbidden in (
+            "SettingsService.settings =",
+            "SettingsService.apply_settings",
+            "SaveService.",
+            "SessionState.",
+            "AppRouter.",
+            "reparent(",
+            "set_deferred(",
+            "size =",
+            "position =",
+        ):
+            ensure(forbidden not in mixer_case_body, errors, f"Settings audio mixer proof must remain detached and observation-only: {forbidden}")
 
 
 def validate_main_menu_settings_summary_word_ellipsis(errors: list[str]) -> None:

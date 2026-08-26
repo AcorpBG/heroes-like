@@ -26,6 +26,36 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from fresh current pixels.
 
+## Main Menu Settings Audio Mixer Strip
+
+id: `ux-main-menu-settings-audio-mixer-strip-10184`
+
+Status: completed.
+
+Result:
+- Master, Music, and Effects now form one responsive teal/blue/earth mixer strip using the exact existing panels, sliders, values, signals, and focus order instead of consuming three stacked full-width rows;
+- fresh inspected 1280x720 and 1920x1080 captures show all three channels together in the initial Settings view, equally distributed and text-safe, while moving the unchanged readability controls materially higher in the board;
+- focused keyboard/scroll and menu visual owners, restore defaults, active-play Settings, screen-reader semantics, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Settings interaction, audio/controller/accessibility hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Settings captures show Master, Music, and Effects as three stacked full-width bands, so the initial compact view exposes only Master and makes the sound controls read like a long form rather than one coherent mixer;
+- the three existing colored panels already carry a clear semantic grouping and can share one responsive horizontal row without changing any control or behavior.
+
+Implementation boundary:
+- arrange the existing Master, Music, and Effects panels as one responsive three-part mixer strip inside the existing Settings scroll surface, retaining their teal/blue/earth panel tones and exact labels, sliders, values, signals, and focus order;
+- keep every display, gameplay, accessibility, support, restore-default, scroll, settings persistence, audio-bus, input, and session authority unchanged;
+- prove the three panels are equally distributed, ordered, contained, non-overlapping, and text-safe at 1280x720 and 1920x1080.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 Settings captures show Master, Music, and Effects together as one readable mixer strip in the initial view;
+- focused runtime proves exact panel tones, labels/values/ranges, ordered geometry, keyboard focus order, slider mutations, persistence, audio-bus authority, and scroll restoration;
+- Main Menu settings, keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no setting, option, label, value, range, default, audio-bus, persistence, save/session, display transaction, accessibility policy, input mapping, focus order, or scrolling behavior change;
+- no Stage Dock anchor/size, Settings panel width, shared panel/button art, font/UI scale, sound asset/mix/mastering, Main Menu scenery, gameplay, AI, balance, content, save schema, or Native RMG change;
+- no packaged Settings interaction parity, audio-hardware certification, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Town Management Tab Breathing Room
 
 id: `ux-town-management-tab-breathing-room-10184`

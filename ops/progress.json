@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-town-management-tab-breathing-room-10184",
-    "title": "Town management tab breathing room",
+    "id": "ux-main-menu-settings-audio-mixer-strip-10184",
+    "title": "Main Menu Settings audio mixer strip",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T17:55:16Z",
-    "updatedAt": "2026-08-26T18:13:49Z",
-    "completedAt": "2026-08-26T18:13:49Z",
+    "startedAt": "2026-08-26T18:26:06Z",
+    "updatedAt": "2026-08-26T18:41:10Z",
+    "completedAt": "2026-08-26T18:41:10Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the Town management-tab polish. The five native plaques now use exact Town-local 4px horizontal text insets and a centered group within the unchanged 304px/400px rails, preserving shared art, titles/order/pages, actions, focus, accessibility, session, and save authority. Fresh inspected 1280/1920 captures and focused runtime are green; active-play focus, accessibility, Town transition, settings/high contrast, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The unrelated cache owner was excluded because normal-mode building presentation intentionally focuses TownActionInputBlocker while that older oracle expects Leave after one frame. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG are unclaimed."
+    "notes": "Completed the responsive Main Menu Settings audio mixer strip. Fresh 1280/1920 captures show Master, Music, and Effects together with exact teal/blue/earth tones, equal contained geometry, and preserved control values, signals, focus, scroll, settings, audio-bus, and session authority. Focused keyboard/scroll and menu visual owners, restore defaults, active-play Settings, screen-reader semantics, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Settings interaction, audio/controller/accessibility hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -2039,8 +2039,14 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "cursor_size_px": [32, 32],
-        "hotspot_px": [3, 2],
+        "cursor_size_px": [
+          32,
+          32
+        ],
+        "hotspot_px": [
+          3,
+          2
+        ],
         "hardware_cursor_api": true,
         "software_cursor_node_or_frame_loop": false,
         "high_contrast_system_fallback": true,
@@ -2079,7 +2085,10 @@
       ],
       "metrics": {
         "watermark_alpha": 0.18,
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "shared_existing_heraldic_texture": true,
         "compact_and_high_contrast_hidden": true,
         "footer_commands_focus_battle_session_save_exact": true,
@@ -2114,7 +2123,10 @@
       ],
       "metrics": {
         "watermark_alpha": 0.22,
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "shared_live_faction_crest": true,
         "high_contrast_hidden": true,
         "management_focus_session_save_exact": true,
@@ -2158,7 +2170,10 @@
         "landmark_extent_tiles": 0.68,
         "largest_multi_tile_extent_tiles": 0.92,
         "town_extent_tiles": 1.16,
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "generated_body_tile_count": 464,
         "logical_footprint_route_interaction_session_save_exact": true,
         "linux_export_startup_ok": true,
@@ -2190,11 +2205,20 @@
       "metrics": {
         "title_face": "Color(0.98,0.84,0.46,1.0)",
         "title_outline_px": 2,
-        "title_shadow_offset_px": [2, 2],
+        "title_shadow_offset_px": [
+          2,
+          2
+        ],
         "eyebrow_outline_px": 1,
-        "eyebrow_shadow_offset_px": [1, 1],
+        "eyebrow_shadow_offset_px": [
+          1,
+          1
+        ],
         "high_contrast_face": "Color(1.0,0.91,0.32,1.0)",
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "copy_font_geometry_focus_route_settings_session_save_exact": true,
         "linux_export_startup_ok": true,
         "windows_export_wine_startup_ok": true,
@@ -2233,13 +2257,22 @@
       "metrics": {
         "artifact_extent_tiles": 0.36,
         "pickup_extent_tiles": 0.42,
-        "ordinary_prop_extent_tiles": [0.44, 0.55],
+        "ordinary_prop_extent_tiles": [
+          0.44,
+          0.55
+        ],
         "hero_extent_tiles": 0.56,
-        "multi_tile_extent_tiles": [0.64, 0.88],
+        "multi_tile_extent_tiles": [
+          0.64,
+          0.88
+        ],
         "town_extent_tiles_before": 1.2,
         "town_extent_tiles_after": 1.04,
         "logical_footprints_routes_movement_session_save_exact": true,
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "linux_export_startup_ok": true,
         "windows_export_wine_startup_ok": true,
         "packaged_overworld_interaction_claimed": false
@@ -2271,10 +2304,18 @@
         ".artifacts/packaging_windows_export_smoke/report.json"
       ],
       "metrics": {
-        "asset_size_px": [512, 512],
+        "asset_size_px": [
+          512,
+          512
+        ],
         "asset_rgba": true,
         "scene_modulate_alpha": 0.2,
-        "logical_widths_inspected": [1280, 1600, 1920, 2560],
+        "logical_widths_inspected": [
+          1280,
+          1600,
+          1920,
+          2560
+        ],
         "watermark_minimum_size_zero": true,
         "watermark_mouse_ignored": true,
         "watermark_focus_none": true,
@@ -15286,13 +15327,13 @@
       }
     }
   ],
-  "currentNotes": "Town management-tab breathing room is completed; select the next bounded graphical-polish slice from fresh current pixels.",
+  "currentNotes": "Main Menu Settings audio mixer polish is completed; select the next bounded graphical-polish slice from fresh current pixels.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-management-tab-breathing-room-10184",
-  "currentSliceId": "ux-town-management-tab-breathing-room-10184",
-  "currentSliceNotes": "Town's five native management tabs now own exact local breathing room and balanced centering at compact and wide desktop sizes.",
+  "currentSlice": "ux-main-menu-settings-audio-mixer-strip-10184",
+  "currentSliceId": "ux-main-menu-settings-audio-mixer-strip-10184",
+  "currentSliceNotes": "Completed the responsive Main Menu Settings audio mixer strip. Fresh 1280/1920 captures show Master/Music/Effects together with exact teal/blue/earth tones, equal contained geometry, preserved control values/signals/focus/scroll/settings authority, green focused compatibility/static/editor, and bounded Linux/Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town management tab breathing room",
+  "currentSliceTitle": "Main Menu Settings audio mixer strip",
   "currentSliceUpdatedAt": "2026-08-26T18:13:49Z",
   "deferredRiskRegister": [
     {
@@ -103957,6 +103998,31 @@
       "blockedReason": null,
       "notes": "Completed the Town management-tab polish. The native five-page rail keeps its shared imported plaque art while exact Town-local 4px text insets and centered alignment produce distinct readable labels at 1280/1920. Focused visual/action authority, rendered viewport reports, active-play focus, accessibility, Town transition, settings/high contrast, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The unrelated cache owner was excluded because normal-mode building presentation intentionally focuses TownActionInputBlocker while its older oracle expects Leave focus after one frame. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-26T18:13:49Z"
+    },
+    {
+      "id": "ux-main-menu-settings-audio-mixer-strip-10184",
+      "title": "Main Menu Settings audio mixer strip",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T18:41:10Z",
+      "startedAt": "2026-08-26T18:26:06Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make the existing Master, Music, and Effects controls read as one coherent responsive mixer instead of three stacked full-width form rows.",
+      "completionCriteria": "Inspected 1280/1920 Settings captures show all three channels together in the initial view; focused runtime proves exact panel tones, geometry, controls, focus, scroll, settings/audio authority; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No setting, option, label, value, range, default, audio-bus, persistence, display transaction, accessibility policy, input/focus order, save/session, or scroll behavior change.",
+        "No Stage Dock dimensions, shared art, font/UI scale, sound asset/mix, scenery, gameplay, content, Native RMG, packaged interaction, certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed the responsive Main Menu Settings audio mixer strip. Fresh 1280/1920 captures show Master, Music, and Effects together with exact teal/blue/earth tones, equal contained geometry, and preserved control values, signals, focus, scroll, settings, audio-bus, and session authority. Focused keyboard/scroll and menu visual owners, restore defaults, active-play Settings, screen-reader semantics, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Settings interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-26T18:41:10Z"
     }
   ],
   "project": "heroes-like",
@@ -104501,7 +104567,7 @@
   ],
   "summary": "Selected a bounded Battle terrain blend correction so the authored texture reads as one field rather than 77 nearly opaque disconnected hex samples.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T17:34:03Z",
+  "updatedAt": "2026-08-26T18:41:10Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

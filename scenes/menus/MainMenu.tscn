@@ -1190,96 +1190,108 @@ custom_minimum_size = Vector2(140, 34)
 layout_mode = 2
 text = "Customize Keys"
 
-[node name="MasterVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="AudioMixerRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]
+unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
-[node name="MasterVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel"]
+[node name="MasterVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MasterVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MasterVolumePanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="MasterVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad"]
+[node name="MasterVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MasterVolumePanel/MasterVolumePad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MasterVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+[node name="MasterVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
 layout_mode = 2
 text = "Master"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+[node name="MasterVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 100.0
 step = 1.0
 
-[node name="MasterVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+[node name="MasterVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
 horizontal_alignment = 2
 text = "80%"
 
-[node name="MusicVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="MusicVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow"]
+unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="MusicVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel"]
+[node name="MusicVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MusicVolumePanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="MusicVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad"]
+[node name="MusicVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MusicVolumePanel/MusicVolumePad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MusicVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+[node name="MusicVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
 layout_mode = 2
 text = "Music"
 
-[node name="MusicVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+[node name="MusicVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 100.0
 step = 1.0
 
-[node name="MusicVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+[node name="MusicVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
 horizontal_alignment = 2
 text = "65%"
 
-[node name="EffectsVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="EffectsVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow"]
+unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="EffectsVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel"]
+[node name="EffectsVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/EffectsVolumePanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="EffectsVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad"]
+[node name="EffectsVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/EffectsVolumePanel/EffectsVolumePad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="EffectsVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow"]
+[node name="EffectsVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow"]
 layout_mode = 2
 text = "Effects"
 
-[node name="EffectsVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow"]
+[node name="EffectsVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 100.0
 step = 1.0
 
-[node name="EffectsVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow"]
+[node name="EffectsVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
@@ -1687,9 +1699,9 @@ size_flags_horizontal = 3
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/GameplayRow/BattlePlaybackSpeedPicker" to="." method="_on_battle_playback_speed_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/GameplayRow/KeyboardNavigationLayoutPicker" to="." method="_on_keyboard_navigation_layout_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/GameplayRow/CustomizeMovementKeys" to="." method="_on_customize_movement_keys_pressed"]
-[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
-[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
-[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow/EffectsVolumeSlider" to="." method="_on_effects_volume_changed"]
+[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
+[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow/EffectsVolumeSlider" to="." method="_on_effects_volume_changed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow/UIScalePicker" to="." method="_on_ui_scale_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow/BattleCameraShakePicker" to="." method="_on_battle_camera_shake_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/ColorCuePicker" to="." method="_on_color_cue_selected"]
