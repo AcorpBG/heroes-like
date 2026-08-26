@@ -1348,6 +1348,7 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 	var authority_before: Dictionary = session.to_dict()
 	var tabs: TabContainer = shell.get_node("%ManagementTabs")
 	var shell_control := shell as Control
+	var sidebar_box := tabs.get_parent() as VBoxContainer
 	var watermark: TextureRect = shell.get_node("%BuildFactionWatermark")
 	var crest_icon: TextureRect = shell.get_node("%CrestIcon")
 	var build_box: VBoxContainer = shell.get_node("%BuildFactionWatermark").get_parent()
@@ -1374,10 +1375,11 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 			push_error("Town smoke: management tab plaque %s lost its exact 4px horizontal breathing room." % style_name)
 			return false
 	if not is_equal_approx(tabs.custom_minimum_size.y, 460.0) \
-			or tabs.size_flags_vertical != Control.SIZE_FILL:
-		push_error("Town smoke: ManagementTabs lost its exact 460px fill-only card policy: minimum=%s flags=%s." % [tabs.custom_minimum_size, tabs.size_flags_vertical])
+			or tabs.size_flags_vertical != Control.SIZE_EXPAND_FILL:
+		push_error("Town smoke: ManagementTabs lost its exact 460px minimum-plus-expand rail policy: minimum=%s flags=%s." % [tabs.custom_minimum_size, tabs.size_flags_vertical])
 		return false
 	if shell_control == null \
+			or sidebar_box == null \
 			or watermark.texture == null \
 			or watermark.texture != crest_icon.texture \
 			or watermark.texture.resource_path != TownRules.faction_crest_icon_path("faction_embercourt") \
@@ -1387,7 +1389,7 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 			or watermark.focus_mode != Control.FOCUS_NONE \
 			or watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE \
 			or watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED \
-			or not is_equal_approx(watermark.self_modulate.a, 0.22) \
+			or not is_equal_approx(watermark.self_modulate.a, 0.14) \
 			or watermark.tooltip_text != "" \
 			or not watermark.visible:
 		push_error("Town smoke: Build faction watermark lost its exact passive live-crest contract.")
@@ -1429,7 +1431,13 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 		var watermark_rect := watermark.get_global_rect()
 		var build_box_rect := build_box.get_global_rect()
 		var confirm_rect := confirm_build.get_global_rect()
+		var tabs_rect := tabs.get_global_rect()
+		var sidebar_box_rect := sidebar_box.get_global_rect()
 		if window.size != viewport_size \
+				or tabs_rect.size.y + 0.01 < 460.0 \
+				or not sidebar_box_rect.encloses(tabs_rect) \
+				or absf(sidebar_box_rect.end.y - tabs_rect.end.y) > 1.0 \
+				or (viewport_size.y >= 1080 and tabs_rect.size.y < 600.0) \
 				or not watermark.is_visible_in_tree() \
 				or watermark_rect.size.x <= 0.0 \
 				or watermark_rect.size.y <= 0.0 \
@@ -1468,7 +1476,7 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 		var expected_title := String(row.get("title", ""))
 		var actual_title := tabs.get_tab_title(index)
 		if actual_title != expected_title and not actual_title.begins_with("%s " % expected_title) \
-				or not is_equal_approx(tabs.size.y, 460.0) \
+				or tabs.size.y + 0.01 < 460.0 \
 				or not tabs.get_global_rect().encloses(page.get_global_rect()):
 			push_error("Town smoke: management card title/height/page containment mismatch at tab %s: title=%s tabs=%s page=%s." % [index, actual_title, tabs.get_global_rect(), page.get_global_rect()])
 			return false

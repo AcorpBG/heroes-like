@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved bounded graphical-polish slice."
+    "Select the next bounded source-backed graphical-polish slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld object-scale coherence correction is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "currentNotes": "The Town management rail now uses its full available height at 1280x720 and 1920x1080, with the existing live crest providing restrained decorative fill and all focused, compatibility, static/editor, and bounded platform gates green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-object-scale-coherence-10184",
-  "currentSliceId": "presentation-overworld-object-scale-coherence-10184",
-  "currentSliceNotes": "Completed: the painted hierarchy now spans a compressed 0.46-to-0.82 tile ladder, making portable objects readable while preserving exact alpha-bound/aspect handling, logical footprints, interaction, gameplay, content, session, and save authority; focused, compatibility, static/editor, and bounded platform gates pass.",
+  "currentSlice": "presentation-town-management-rail-heraldic-fill-10184",
+  "currentSliceId": "presentation-town-management-rail-heraldic-fill-10184",
+  "currentSliceNotes": "Completed from inspected 1280x720 and 1920x1080 pixels. The existing five-page panel expands through the rail from its 460px minimum, the live crest remains passive and high-contrast-safe at 0.14 opacity, and Town visual/focus/accessibility/core plus bounded Linux/Windows startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld object scale coherence",
-  "currentSliceUpdatedAt": "2026-08-26T20:26:16Z",
+  "currentSliceTitle": "Town management rail heraldic fill",
+  "currentSliceUpdatedAt": "2026-08-26T20:41:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20850,8 +20850,34 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
-  "notes": "The Main Menu Skirmish intelligence disclosure is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded slice is not yet selected.",
+  "notes": "The Town management-rail heraldic fill is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-town-management-rail-heraldic-fill-10184",
+      "title": "Town management rail heraldic fill",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T20:30:04Z",
+      "updatedAt": "2026-08-26T20:41:40Z",
+      "completedAt": "2026-08-26T20:41:40Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownShell.tscn",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the tall-screen Town sidebar void with the existing native management panel and restrained live faction heraldry, without adding controls, panels, or text.",
+      "completionCriteria": "Inspected 1280/1920 Town captures and focused runtime prove minimum-plus-expand rail geometry, exact five-page containment/scrolling, passive live watermark/high-contrast behavior, and unchanged session/save authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new panel, tab, control, text, art asset, town-stage/city art, resource/header/footer geometry, command behavior, input/focus/accessibility semantic, gameplay, content, save/schema, route, or Native RMG change.",
+        "No packaged Town interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed from inspected 1280x720 and 1920x1080 Town pixels. The exact 460px minimum-plus-expand rail geometry, five native pages/Log scrolling, passive live watermark/high-contrast lifecycle, session/save authority, focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Town interaction and release-readiness claims remain excluded."
+    },
     {
       "id": "presentation-overworld-object-scale-coherence-10184",
       "title": "Overworld object scale coherence",
