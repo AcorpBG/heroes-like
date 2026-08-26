@@ -3566,6 +3566,7 @@ func _assert_water_causeway_render_model(shell: Node, session) -> bool:
 		get_tree().quit(1)
 		return false
 	var water_terrain: Dictionary = water_presentation.get("terrain_presentation", {})
+	var water_ripples: Dictionary = water_terrain.get("water_surface_ripples", {}) if water_terrain.get("water_surface_ripples", {}) is Dictionary else {}
 	if String(water_terrain.get("terrain", "")) != "water" or String(water_terrain.get("road_render_model", "")) != "weathered_cross_planked_causeway":
 		push_error("Overworld smoke: water road did not select the weathered cross-planked causeway model. presentation=%s" % water_presentation)
 		get_tree().quit(1)
@@ -3580,6 +3581,18 @@ func _assert_water_causeway_render_model(shell: Node, session) -> bool:
 		return false
 	if String(water_terrain.get("road_connection_key", "")) != connection_key_before or int(water_terrain.get("road_connection_count", -1)) != connection_count_before:
 		push_error("Overworld smoke: water-causeway fixture changed road topology unexpectedly. presentation=%s" % water_presentation)
+		get_tree().quit(1)
+		return false
+	if (
+		String(water_ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs"
+		or String(water_ripples.get("terrain_group", "")) != "water"
+		or not bool(water_ripples.get("road_excluded", false))
+		or bool(water_ripples.get("drawn", true))
+		or int(water_ripples.get("ripple_count", -1)) != 0
+		or not (water_ripples.get("profiles", []) is Array)
+		or not (water_ripples.get("profiles", []) as Array).is_empty()
+	):
+		push_error("Overworld smoke: water causeway did not suppress the shared current-ripple surface below its planks. presentation=%s" % water_presentation)
 		get_tree().quit(1)
 		return false
 	return true

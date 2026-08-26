@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish implementation slice from current inspected game evidence."
+    "Register the directly observed Overworld object-scale hierarchy correction before changing live presentation."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,20 +1911,64 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-biome-surface-detail-decals-10184",
-    "title": "Overworld biome surface detail decals",
+    "id": "presentation-overworld-broken-water-current-ripples-10184",
+    "title": "Overworld broken water current ripples",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T02:28:25Z",
-    "updatedAt": "2026-08-26T02:54:19Z",
+    "startedAt": "2026-08-26T02:58:57Z",
+    "updatedAt": "2026-08-26T03:32:33Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with inspected two-width captures and focused, generated, compatibility, static/editor, Linux, and Windows package-startup evidence; packaged Overworld interaction remains unclaimed."
+    "notes": "Completed with inspected two-width captures plus authored, generated reveal-all, broad compatibility, static/editor, Linux, and Windows startup evidence; packaged Overworld interaction remains unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-broken-water-current-ripples-20260826",
+      "title": "Overworld broken water current ripples",
+      "sliceId": "presentation-overworld-broken-water-current-ripples-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T03:32:33Z",
+      "updatedAt": "2026-08-26T03:32:33Z",
+      "latestFinding": "Fresh inspected 1280x720 and 1920x1080 River Pass captures show sparse broken current marks on authored water; focused authored and generated reveal-all, causeway exclusion, broad compatibility, static/editor, and bounded Linux/Windows startup gates pass with map/session authority exact.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-water-route-capture-x11.GJEr5F",
+        "/tmp/heroes-water-ninefold.lPPiXA",
+        "/tmp/heroes-water-generated-reveal.jLnyoC",
+        "/tmp/heroes-water-visual-compat.dGGi7C",
+        "/tmp/heroes-water-compat-chain.t8yrJz",
+        "/tmp/heroes-water-linux-package.e5QvCs",
+        "/tmp/heroes-water-windows-package.Fh06VJ",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "ripple_density_modulus": 3,
+        "active_residues": [0, 1],
+        "ripples_per_active_tile": 2,
+        "points_per_ripple": 5,
+        "generated_explored_tiles": 1296,
+        "generated_water_tiles": 1,
+        "generated_water_ripple_draws": 1,
+        "generated_invalid_payloads": 0,
+        "causeway_excluded": true,
+        "session_authority_exact": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "remainingValidation": [
+        "Packaged Overworld interaction was not driven.",
+        "Controller, AT-SPI, UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed."
+      ]
+    },
     {
       "id": "ux-overworld-irregular-cartographic-fog-contour-20260826",
       "title": "Overworld irregular cartographic fog contour",
@@ -1936,6 +1980,7 @@
       "artifacts": [
         "scenes/overworld/OverworldMapView.gd",
         "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py",
         "/tmp/heroes-fog-contour-ninefold.KjbIN5",
@@ -14567,14 +14612,14 @@
       }
     }
   ],
-  "currentNotes": "The biome surface-detail decal pass is completed with inspected captures and focused, generated, compatibility, static/editor, and bounded platform evidence.",
+  "currentNotes": "The broken-water-current ripple pass is completed; the next directly observed graphical-polish gap is the Overworld object-scale hierarchy.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-biome-surface-detail-decals-10184",
-  "currentSliceId": "presentation-overworld-biome-surface-detail-decals-10184",
-  "currentSliceNotes": "Add sparse deterministic terrain-family decals below roads, objects, and fog; preserve exact terrain/map/session authority and all gameplay.",
+  "currentSlice": "presentation-overworld-broken-water-current-ripples-10184",
+  "currentSliceId": "presentation-overworld-broken-water-current-ripples-10184",
+  "currentSliceNotes": "Deterministic sparse water-only ripple geometry now renders after macro lighting and below causeways, objects, routes, and fog with exact topology and gameplay authority preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld biome surface detail decals",
-  "currentSliceUpdatedAt": "2026-08-26T02:54:19Z",
+  "currentSliceTitle": "Overworld broken water current ripples",
+  "currentSliceUpdatedAt": "2026-08-26T03:32:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20089,9 +20134,36 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved graphical-polish implementation slice from inspected game evidence; preserve completed terrain, fog, route, object-scale, and gameplay authority.",
-  "notes": "The biome surface-detail decal slice is completed; blockers are empty and the next graphical-polish slice remains unselected.",
+  "nextActionGuardrailNote": "Register the directly observed Overworld object-scale hierarchy correction before implementation; preserve logical footprints, hit areas, pathing, interactions, content identity, and session/save authority.",
+  "notes": "The broken-water-current ripple slice is completed; blockers are empty and the next object-scale polish slice is not yet registered.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-broken-water-current-ripples-10184",
+      "title": "Overworld broken water current ripples",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T02:58:57Z",
+      "updatedAt": "2026-08-26T03:32:33Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give loaded and fallback Overworld water a shared restrained painterly current surface instead of leaving authored water dependent on flat atlas texture and fallback-only straight wave stamps.",
+      "completionCriteria": "Fresh inspected two-width captures show restrained broken current ripples without repeated tile bands or competition; focused/generated runtime prove water-only deterministic contained geometry, causeway exclusion, draw order, fog concealment, and unchanged map/session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No water topology/coast/passability/movement, causeway/shoreline, content, fog, route, object presentation, interaction, save/session/schema, AI, battle, balance, or Native RMG change.",
+        "No animation clock, shader, reflection simulation, weather, particles, audio/VFX, camera/UI layout, or broad water redesign.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with inspected River Pass 1280x720 and 1920x1080 captures, exact authored/generated water and causeway evidence, broad compatibility, static/editor, and bounded Linux/Windows startup gates.",
+      "blockedReason": null,
+      "remainingWork": "No work remains inside this bounded slice. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed."
+    },
     {
       "id": "presentation-overworld-biome-surface-detail-decals-10184",
       "title": "Overworld biome surface detail decals",

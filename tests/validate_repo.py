@@ -40658,6 +40658,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(water_terrain.get("road_surface_material", "")) != "weathered_cross_planked_timber"',
         'String(water_terrain.get("road_connection_key", "")) != connection_key_before',
         'int(water_terrain.get("road_connection_count", -1)) != connection_count_before',
+        'String(water_ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs"',
+        'String(water_ripples.get("terrain_group", "")) != "water"',
+        'not bool(water_ripples.get("road_excluded", false))',
+        'bool(water_ripples.get("drawn", true))',
+        'int(water_ripples.get("ripple_count", -1)) != 0',
     ):
         ensure(token in visual_road_block, errors, f"Overworld visual owner must prove the water causeway with exact restored authority and topology: {token}")
     ensure(
@@ -40868,6 +40873,69 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for block_name, block in (("terrain-detail choices", detail_cells_block), ("terrain-detail payload", detail_payload_block), ("terrain-detail draw", detail_draw_block)):
         for forbidden in ("rand", "Time.", "set_map_state", "queue_redraw", "await ", "create_timer", "collision_layer", "mouse_filter"):
             ensure(forbidden not in block, errors, f"{block_name} must remain deterministic, presentation-only, and noninteractive: {forbidden}")
+
+    for token in (
+        'const WATER_SURFACE_RIPPLE_MODEL := "deterministic_broken_painterly_current_pairs"',
+        "const WATER_SURFACE_RIPPLE_DENSITY_MODULUS := 3",
+        "const WATER_SURFACE_RIPPLE_ACTIVE_RESIDUES := [0, 1]",
+        "const WATER_SURFACE_RIPPLE_COUNT := 2",
+        "const WATER_SURFACE_RIPPLE_POINT_COUNT := 5",
+        "const WATER_SURFACE_RIPPLE_MIN_LENGTH_FACTOR := 0.26",
+        "const WATER_SURFACE_RIPPLE_MAX_LENGTH_FACTOR := 0.48",
+        "const WATER_SURFACE_RIPPLE_MIN_CURVE_FACTOR := 0.018",
+        "const WATER_SURFACE_RIPPLE_MAX_CURVE_FACTOR := 0.042",
+        "const WATER_SURFACE_RIPPLE_SHADOW_COLOR := Color(0.025, 0.11, 0.15, 0.24)",
+        "const WATER_SURFACE_RIPPLE_HIGHLIGHT_COLOR := Color(0.65, 0.86, 0.88, 0.30)",
+    ):
+        ensure(map_view_text.count(token) == 1, errors, f"Water surface detail must own one exact restrained ripple constant: {token}")
+    water_ripple_profiles_block = gd_function_block(map_view_text, "_water_surface_ripple_profiles")
+    water_ripple_payload_block = gd_function_block(map_view_text, "_water_surface_ripple_payload")
+    water_ripple_draw_block = gd_function_block(map_view_text, "_draw_water_surface_ripples")
+    for token in (
+        "for ripple_index in range(WATER_SURFACE_RIPPLE_COUNT)",
+        "for point_index in range(WATER_SURFACE_RIPPLE_POINT_COUNT)",
+        "_stable_unit_fraction(\"water_ripple_x:%d:%d:%d\"",
+        "sin(progress * PI) * curve_factor * curve_direction",
+        "profiles.append(points)",
+    ):
+        ensure(token in water_ripple_profiles_block, errors, f"Water ripple profiles must remain short deterministic curved tile-local lines: {token}")
+    for token in (
+        "var terrain := _terrain_at(tile)",
+        "var terrain_group := _terrain_group(terrain)",
+        "var road_excluded := not _road_tile_payload(tile).is_empty()",
+        'var drawn := terrain_group == "water" and not road_excluded and density_residue in WATER_SURFACE_RIPPLE_ACTIVE_RESIDUES',
+        '"interactive": false',
+        '"collision": false',
+        '"animated": false',
+        '"variation_basis": "tile_coordinate_and_ripple_index_only"',
+        '"draw_order": "after_macro_lighting_before_causeways_objects_routes_selection_and_fog"',
+        '"hidden_by_unexplored_shroud": true',
+    ):
+        ensure(token in water_ripple_payload_block, errors, f"Water ripple eligibility must remain water-only, causeway-safe, and detached: {token}")
+    for token in (
+        "var payload := _water_surface_ripple_payload(tile, rect)",
+        'if not bool(payload.get("drawn", false)):',
+        "_canvas_draw_polyline(shadow_profile, WATER_SURFACE_RIPPLE_SHADOW_COLOR",
+        "_canvas_draw_polyline(profile, WATER_SURFACE_RIPPLE_HIGHLIGHT_COLOR",
+    ):
+        ensure(token in water_ripple_draw_block, errors, f"Water ripple drawing must use only the bounded shadow/highlight profiles: {token}")
+    ensure(
+        static_draw_block.find("_draw_terrain_macro_lighting_field(board_rect, visible_bounds)")
+        < static_draw_block.find("_draw_water_surface_ripples(tile, rect)")
+        < static_draw_block.find("_draw_road_overlay(tile, rect)"),
+        errors,
+        "Water ripples must render after macro lighting and below causeways and all dynamic map objects.",
+    )
+    for token in (
+        "var water_surface_ripple_draws := 0",
+        "water_surface_ripple_draws += 1",
+        '_profile_add("water_surface_ripple_draws", water_surface_ripple_draws)',
+        '"water_surface_ripple_draws": water_surface_ripple_draws',
+    ):
+        ensure(token in static_draw_block, errors, f"Live static rendering must expose exact water ripple draw counts: {token}")
+    for block_name, block in (("water-ripple profiles", water_ripple_profiles_block), ("water-ripple payload", water_ripple_payload_block), ("water-ripple draw", water_ripple_draw_block)):
+        for forbidden in ("rand", "Time.", "set_map_state", "queue_redraw", "await ", "create_timer", "collision_layer", "mouse_filter"):
+            ensure(forbidden not in block, errors, f"{block_name} must remain deterministic, presentation-only, and noninteractive: {forbidden}")
     for token in (
         'var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)',
         '_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)',
@@ -40965,6 +41033,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"model": TERRAIN_DETAIL_DECAL_MODEL',
         '"terrain_identity_sampled": false',
         '"terrain_detail_decal": _terrain_detail_decal_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE))',
+        '"water_surface_ripples": {',
+        '"model": WATER_SURFACE_RIPPLE_MODEL',
+        '"water_surface_ripples": _water_surface_ripple_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE))',
     ):
         ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose explored and unexplored macro-lighting ownership: {token}")
 
@@ -41032,6 +41103,35 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'int(shoreline_detail.get("cell_id", -2)) != -1',
     ):
         ensure(token in gd_function_block(ninefold_transition_text, "_assert_neighbor_terrain_transitions"), errors, f"Ninefold shoreline fixture must forbid land detail decals on water: {token}")
+    ninefold_water_ripple_block = gd_function_block(ninefold_transition_text, "_water_surface_ripple_payload_exact")
+    for token in (
+        'String(ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs"',
+        'String(ripples.get("terrain_group", "")) != "water"',
+        'ripples.get("active_residues", []) != [0, 1]',
+        'int(ripples.get("point_count_per_ripple", 0)) != 5',
+        'int(ripples.get("ripple_count", 0)) != 2',
+        'profiles.size() != 2',
+        'profile.size() != 5',
+        'length_factor < 0.26 or length_factor > 0.48',
+    ):
+        ensure(token in ninefold_water_ripple_block, errors, f"Ninefold must independently bound exact water current geometry: {token}")
+    for forbidden in ('call("_water_surface_ripple_payload"', 'call("_water_surface_ripple_profiles"', "set(", "erase(", "sort(", "rand", "create_timer"):
+        ensure(forbidden not in ninefold_water_ripple_block, errors, f"Ninefold water-ripple oracle must remain independent and observation-only: {forbidden}")
+    ninefold_neighbor_block = gd_function_block(ninefold_transition_text, "_assert_neighbor_terrain_transitions")
+    for token in (
+        "var active_water_tile := Vector2i(50, 0)",
+        "_reveal_validation_tiles(session, [active_water_tile])",
+        "_water_surface_ripple_payload_exact(sparse_water_ripple, false, false)",
+        "_water_surface_ripple_payload_exact(active_water_ripple, true, false)",
+        'repeated_water_terrain.get("water_surface_ripples", {}) != active_water_ripple',
+    ):
+        ensure(token in ninefold_neighbor_block, errors, f"Ninefold authored water must prove sparse and active deterministic ripple controls: {token}")
+    for token in (
+        'String(hidden_water_ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs"',
+        'bool(hidden_water_ripples.get("drawn", true))',
+        'bool(hidden_water_ripples.get("terrain_identity_sampled", true))',
+    ):
+        ensure(token in ninefold_macro_block, errors, f"Ninefold unexplored shroud must remain authoritative over water ripples: {token}")
     for token in (
         'String((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("model", "")) != "continuous_shared_corner_bilinear_field"',
         'not bool((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("drawn", false))',
@@ -41073,6 +41173,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 		'"terrain_detail_invalid_count": terrain_detail_invalid_count',
 		'"terrain_detail_texture_paths": terrain_detail_texture_paths.keys()',
 		'"terrain_detail_cell_ids": terrain_detail_cell_ids.keys()',
+		'var water_ripples: Dictionary = terrain.get("water_surface_ripples", {})',
+		'water_ripple_model_ids[String(water_ripples.get("model", ""))] = true',
+		'"water_ripple_water_tile_count": water_ripple_water_tile_count',
+		'"water_ripple_drawn_count": water_ripple_drawn_count',
+		'"water_ripple_exact_count": water_ripple_exact_count',
+		'"water_ripple_invalid_count": water_ripple_invalid_count',
 		'var shoreline: Dictionary = terrain.get("water_shoreline_contour", {})',
 		'"shoreline_tile_count": shoreline_tile_count',
 		'"shoreline_source_count": shoreline_source_count',
@@ -41114,6 +41220,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 		'int(summary.get("terrain_detail_drawn_count", 0)) <= 0',
 		'["sparse_biome_aware_painterly_surface_clusters"]',
 		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"]',
+		'int(summary.get("water_ripple_exact_count", 0)) != explored_tile_count',
+		'int(summary.get("water_ripple_invalid_count", -1)) != 0',
+		'int(summary.get("water_ripple_water_tile_count", 0)) <= 0',
+		'int(summary.get("water_ripple_drawn_count", 0)) <= 0',
+		'["deterministic_broken_painterly_current_pairs"]',
 		'int(summary.get("shoreline_exact_count", -1)) != int(summary.get("shoreline_tile_count", -2))',
 		'int(summary.get("shoreline_source_count", 0)) < int(summary.get("shoreline_tile_count", 0))',
     ):
@@ -41159,6 +41270,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'int(summary.get("terrain_detail_exact_count", -1)) != explored_count',
         'int(summary.get("terrain_detail_invalid_count", -1)) != 0',
         'int(summary.get("terrain_detail_drawn_count", 0)) <= 0',
+        'int(summary.get("water_ripple_exact_count", -1)) != explored_count',
+        'int(summary.get("water_ripple_invalid_count", -1)) != 0',
         'int(summary.get("irregular_inner_edge_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
         'int(summary.get("deterministic_seed_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
         '"draw_policy_ids"',
@@ -41167,6 +41280,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"terrain_grain_texture_paths"',
         '"terrain_detail_model_ids"',
         '"terrain_detail_texture_paths"',
+        '"water_ripple_model_ids"',
         'after.get(key, []) != before.get(key, [])',
         "return true",
     ):

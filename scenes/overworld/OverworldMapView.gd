@@ -280,6 +280,19 @@ const WATER_SHORELINE_WET_EDGE_WIDTH_FACTOR := 0.014
 const WATER_SHORELINE_FOAM_SHADOW_WIDTH_FACTOR := 0.024
 const WATER_SHORELINE_FOAM_WIDTH_FACTOR := 0.012
 const WATER_SHORELINE_FOAM_SEGMENTS_PER_EDGE := 2
+const WATER_SURFACE_RIPPLE_MODEL := "deterministic_broken_painterly_current_pairs"
+const WATER_SURFACE_RIPPLE_DENSITY_MODULUS := 3
+const WATER_SURFACE_RIPPLE_ACTIVE_RESIDUES := [0, 1]
+const WATER_SURFACE_RIPPLE_COUNT := 2
+const WATER_SURFACE_RIPPLE_POINT_COUNT := 5
+const WATER_SURFACE_RIPPLE_MIN_LENGTH_FACTOR := 0.26
+const WATER_SURFACE_RIPPLE_MAX_LENGTH_FACTOR := 0.48
+const WATER_SURFACE_RIPPLE_MIN_CURVE_FACTOR := 0.018
+const WATER_SURFACE_RIPPLE_MAX_CURVE_FACTOR := 0.042
+const WATER_SURFACE_RIPPLE_SHADOW_COLOR := Color(0.025, 0.11, 0.15, 0.24)
+const WATER_SURFACE_RIPPLE_HIGHLIGHT_COLOR := Color(0.65, 0.86, 0.88, 0.30)
+const WATER_SURFACE_RIPPLE_SHADOW_WIDTH_FACTOR := 0.024
+const WATER_SURFACE_RIPPLE_HIGHLIGHT_WIDTH_FACTOR := 0.012
 const TERRAIN_MACRO_LIGHTING_MODEL := "continuous_shared_corner_bilinear_field"
 const TERRAIN_MACRO_LIGHTING_CELL_TILES := 12
 const TERRAIN_MACRO_LIGHTING_CELL_SUBDIVISIONS := 1
@@ -1483,12 +1496,15 @@ func _draw_session_static_layer() -> void:
 	var terrain_grain_drawn := _draw_terrain_grain_overlay(board_rect)
 	var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)
 	var terrain_detail_decal_draws := 0
+	var water_surface_ripple_draws := 0
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			if _draw_terrain_detail_decal(tile, rect):
 				terrain_detail_decal_draws += 1
+			if _draw_water_surface_ripples(tile, rect):
+				water_surface_ripple_draws += 1
 			if not _road_tile_payload(tile).is_empty():
 				road_draws += 1
 			_draw_road_overlay(tile, rect)
@@ -1498,12 +1514,14 @@ func _draw_session_static_layer() -> void:
 	_profile_add("road_tile_draws", road_draws)
 	_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)
 	_profile_add("terrain_detail_decal_draws", terrain_detail_decal_draws)
+	_profile_add("water_surface_ripple_draws", water_surface_ripple_draws)
 	_profile_end("draw_session_static", profile_start, {
 		"terrain_tile_draws": terrain_draws,
 		"terrain_grain_overlay_draws": 1 if terrain_grain_drawn else 0,
 		"road_tile_draws": road_draws,
 		"terrain_macro_lighting_polygon_draws": macro_lighting_polygon_draws,
 		"terrain_detail_decal_draws": terrain_detail_decal_draws,
+		"water_surface_ripple_draws": water_surface_ripple_draws,
 		"visible_bounds": _rect2i_payload(visible_bounds),
 	})
 
@@ -2043,6 +2061,84 @@ func _draw_terrain_detail_decal(tile: Vector2i, rect: Rect2) -> bool:
 		Vector2(float(source_payload.get("width", 0.0)), float(source_payload.get("height", 0.0)))
 	)
 	_canvas_draw_texture_rect_region(texture, destination_rect, source_rect, TERRAIN_DETAIL_DECAL_MODULATE)
+	return true
+
+func _water_surface_ripple_profiles(tile: Vector2i, rect: Rect2) -> Array:
+	var profiles: Array = []
+	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return profiles
+	for ripple_index in range(WATER_SURFACE_RIPPLE_COUNT):
+		var x_center := lerpf(0.30, 0.70, _stable_unit_fraction("water_ripple_x:%d:%d:%d" % [tile.x, tile.y, ripple_index]))
+		var y_base := 0.32 if ripple_index == 0 else 0.66
+		var y_center := y_base + lerpf(-0.055, 0.055, _stable_unit_fraction("water_ripple_y:%d:%d:%d" % [tile.x, tile.y, ripple_index]))
+		var length_factor := lerpf(WATER_SURFACE_RIPPLE_MIN_LENGTH_FACTOR, WATER_SURFACE_RIPPLE_MAX_LENGTH_FACTOR, _stable_unit_fraction("water_ripple_length:%d:%d:%d" % [tile.x, tile.y, ripple_index]))
+		var curve_factor := lerpf(WATER_SURFACE_RIPPLE_MIN_CURVE_FACTOR, WATER_SURFACE_RIPPLE_MAX_CURVE_FACTOR, _stable_unit_fraction("water_ripple_curve:%d:%d:%d" % [tile.x, tile.y, ripple_index]))
+		var curve_direction := -1.0 if posmod(tile.x + tile.y + ripple_index, 2) == 0 else 1.0
+		var start_factor := clampf(x_center - (length_factor * 0.5), 0.08, 0.92 - length_factor)
+		var points := PackedVector2Array()
+		for point_index in range(WATER_SURFACE_RIPPLE_POINT_COUNT):
+			var progress := float(point_index) / float(WATER_SURFACE_RIPPLE_POINT_COUNT - 1)
+			var x_factor := start_factor + (length_factor * progress)
+			var y_factor := y_center + (sin(progress * PI) * curve_factor * curve_direction)
+			points.append(rect.position + rect.size * Vector2(x_factor, y_factor))
+		profiles.append(points)
+	return profiles
+
+func _water_surface_ripple_payload(tile: Vector2i, rect: Rect2) -> Dictionary:
+	var terrain := _terrain_at(tile)
+	var terrain_group := _terrain_group(terrain)
+	var road_excluded := not _road_tile_payload(tile).is_empty()
+	var density_residue := posmod(absi((tile.x * 137) + (tile.y * 223)), WATER_SURFACE_RIPPLE_DENSITY_MODULUS)
+	var drawn := terrain_group == "water" and not road_excluded and density_residue in WATER_SURFACE_RIPPLE_ACTIVE_RESIDUES
+	var profiles := _water_surface_ripple_profiles(tile, rect) if drawn else []
+	var normalized_profiles: Array = []
+	var geometry_contained := drawn and profiles.size() == WATER_SURFACE_RIPPLE_COUNT
+	for profile_value in profiles:
+		var profile: PackedVector2Array = profile_value
+		var normalized_profile: Array = []
+		for point in profile:
+			normalized_profile.append(_vector2_payload(point))
+			geometry_contained = geometry_contained and rect.has_point(point)
+		normalized_profiles.append(normalized_profile)
+	return {
+		"model": WATER_SURFACE_RIPPLE_MODEL,
+		"drawn": drawn,
+		"terrain_group": terrain_group,
+		"road_excluded": road_excluded,
+		"density_modulus": WATER_SURFACE_RIPPLE_DENSITY_MODULUS,
+		"active_residues": WATER_SURFACE_RIPPLE_ACTIVE_RESIDUES.duplicate(),
+		"density_residue": density_residue,
+		"ripple_count": profiles.size(),
+		"point_count_per_ripple": WATER_SURFACE_RIPPLE_POINT_COUNT,
+		"profiles": normalized_profiles,
+		"geometry_contained": geometry_contained,
+		"min_length_factor": WATER_SURFACE_RIPPLE_MIN_LENGTH_FACTOR,
+		"max_length_factor": WATER_SURFACE_RIPPLE_MAX_LENGTH_FACTOR,
+		"min_curve_factor": WATER_SURFACE_RIPPLE_MIN_CURVE_FACTOR,
+		"max_curve_factor": WATER_SURFACE_RIPPLE_MAX_CURVE_FACTOR,
+		"shadow_alpha": WATER_SURFACE_RIPPLE_SHADOW_COLOR.a,
+		"highlight_alpha": WATER_SURFACE_RIPPLE_HIGHLIGHT_COLOR.a,
+		"interactive": false,
+		"collision": false,
+		"animated": false,
+		"variation_basis": "tile_coordinate_and_ripple_index_only",
+		"draw_order": "after_macro_lighting_before_causeways_objects_routes_selection_and_fog",
+		"hidden_by_unexplored_shroud": true,
+	}
+
+func _draw_water_surface_ripples(tile: Vector2i, rect: Rect2) -> bool:
+	var payload := _water_surface_ripple_payload(tile, rect)
+	if not bool(payload.get("drawn", false)):
+		return false
+	var profiles := _water_surface_ripple_profiles(tile, rect)
+	var extent := minf(rect.size.x, rect.size.y)
+	for profile_value in profiles:
+		var profile: PackedVector2Array = profile_value
+		var shadow_profile := PackedVector2Array()
+		for point in profile:
+			shadow_profile.append(point + Vector2(0.0, extent * 0.018))
+		_canvas_draw_polyline(shadow_profile, WATER_SURFACE_RIPPLE_SHADOW_COLOR, maxf(1.2, extent * WATER_SURFACE_RIPPLE_SHADOW_WIDTH_FACTOR), true)
+		_canvas_draw_polyline(profile, WATER_SURFACE_RIPPLE_HIGHLIGHT_COLOR, maxf(1.0, extent * WATER_SURFACE_RIPPLE_HIGHLIGHT_WIDTH_FACTOR), true)
 	return true
 
 func _draw_terrain_macro_lighting_field(board_rect: Rect2, visible_bounds: Rect2i) -> int:
@@ -6350,6 +6446,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 				"hidden_by_unexplored_shroud": true,
 				"terrain_identity_sampled": false,
 			},
+			"water_surface_ripples": {
+				"model": WATER_SURFACE_RIPPLE_MODEL,
+				"drawn": false,
+				"hidden_by_unexplored_shroud": true,
+				"terrain_identity_sampled": false,
+			},
 			"rendering_mode": "hidden_fog",
 		}
 	var terrain := _terrain_at(tile)
@@ -6426,6 +6528,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"water_shoreline_contour": water_shoreline_contour,
 		"terrain_grain_overlay": _terrain_grain_overlay_payload(true),
 		"terrain_detail_decal": _terrain_detail_decal_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE)),
+		"water_surface_ripples": _water_surface_ripple_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE)),
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,
 		"uses_original_tile_bank": tile_art_loaded and not homm3_rendering_active,

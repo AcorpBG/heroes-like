@@ -252,6 +252,11 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var terrain_detail_road_excluded_count := 0
 	var terrain_detail_water_excluded_count := 0
 	var terrain_detail_invalid_count := 0
+	var water_ripple_water_tile_count := 0
+	var water_ripple_drawn_count := 0
+	var water_ripple_road_excluded_count := 0
+	var water_ripple_exact_count := 0
+	var water_ripple_invalid_count := 0
 	var shoreline_tile_count := 0
 	var shoreline_source_count := 0
 	var shoreline_exact_count := 0
@@ -270,6 +275,7 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var terrain_detail_model_ids: Dictionary = {}
 	var terrain_detail_texture_paths: Dictionary = {}
 	var terrain_detail_cell_ids: Dictionary = {}
+	var water_ripple_model_ids: Dictionary = {}
 	var session = SessionState.active_session
 	var map_size := OverworldRules.derive_map_size(session)
 	for y in range(map_size.y):
@@ -282,6 +288,7 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 			var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 			var grain: Dictionary = terrain.get("terrain_grain_overlay", {}) if terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
 			var detail: Dictionary = terrain.get("terrain_detail_decal", {}) if terrain.get("terrain_detail_decal", {}) is Dictionary else {}
+			var water_ripples: Dictionary = terrain.get("water_surface_ripples", {}) if terrain.get("water_surface_ripples", {}) is Dictionary else {}
 			var shoreline: Dictionary = terrain.get("water_shoreline_contour", {}) if terrain.get("water_shoreline_contour", {}) is Dictionary else {}
 			var lighting_keys: Array = lighting.get("corner_keys", []) if lighting.get("corner_keys", []) is Array else []
 			var lighting_samples: Array = lighting.get("corner_samples", []) if lighting.get("corner_samples", []) is Array else []
@@ -370,6 +377,42 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 				terrain_detail_exact_count += 1
 			else:
 				terrain_detail_invalid_count += 1
+			water_ripple_model_ids[String(water_ripples.get("model", ""))] = true
+			var water_ripple_profiles: Array = water_ripples.get("profiles", []) if water_ripples.get("profiles", []) is Array else []
+			var water_ripple_exact: bool = (
+				String(water_ripples.get("model", "")) == "deterministic_broken_painterly_current_pairs"
+				and int(water_ripples.get("density_modulus", 0)) == 3
+				and water_ripples.get("active_residues", []) == [0, 1]
+				and int(water_ripples.get("point_count_per_ripple", 0)) == 5
+				and not bool(water_ripples.get("interactive", true))
+				and not bool(water_ripples.get("collision", true))
+				and not bool(water_ripples.get("animated", true))
+				and String(water_ripples.get("variation_basis", "")) == "tile_coordinate_and_ripple_index_only"
+				and String(water_ripples.get("draw_order", "")) == "after_macro_lighting_before_causeways_objects_routes_selection_and_fog"
+				and bool(water_ripples.get("hidden_by_unexplored_shroud", false))
+			)
+			var is_water := String(water_ripples.get("terrain_group", "")) == "water"
+			if is_water:
+				water_ripple_water_tile_count += 1
+			if bool(water_ripples.get("road_excluded", false)):
+				water_ripple_road_excluded_count += 1
+			if bool(water_ripples.get("drawn", false)):
+				water_ripple_drawn_count += 1
+				water_ripple_exact = water_ripple_exact and is_water and not bool(water_ripples.get("road_excluded", true)) and int(water_ripples.get("ripple_count", 0)) == 2 and water_ripple_profiles.size() == 2 and bool(water_ripples.get("geometry_contained", false))
+				for profile_value in water_ripple_profiles:
+					var water_ripple_profile: Array = profile_value if profile_value is Array else []
+					water_ripple_exact = water_ripple_exact and water_ripple_profile.size() == 5
+					for point_value in water_ripple_profile:
+						var water_ripple_point: Dictionary = point_value if point_value is Dictionary else {}
+						water_ripple_exact = water_ripple_exact and float(water_ripple_point.get("x", -1.0)) >= 0.0 and float(water_ripple_point.get("x", 2.0)) <= 1.0 and float(water_ripple_point.get("y", -1.0)) >= 0.0 and float(water_ripple_point.get("y", 2.0)) <= 1.0
+			else:
+				water_ripple_exact = water_ripple_exact and int(water_ripples.get("ripple_count", -1)) == 0 and water_ripple_profiles.is_empty() and not bool(water_ripples.get("geometry_contained", true))
+			if not is_water:
+				water_ripple_exact = water_ripple_exact and not bool(water_ripples.get("drawn", true))
+			if water_ripple_exact:
+				water_ripple_exact_count += 1
+			else:
+				water_ripple_invalid_count += 1
 			if bool(shoreline.get("active", false)):
 				shoreline_tile_count += 1
 				shoreline_source_count += int(shoreline.get("source_count", 0))
@@ -421,6 +464,12 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 		"terrain_detail_road_excluded_count": terrain_detail_road_excluded_count,
 		"terrain_detail_water_excluded_count": terrain_detail_water_excluded_count,
 		"terrain_detail_invalid_count": terrain_detail_invalid_count,
+		"water_ripple_water_tile_count": water_ripple_water_tile_count,
+		"water_ripple_drawn_count": water_ripple_drawn_count,
+		"water_ripple_road_excluded_count": water_ripple_road_excluded_count,
+		"water_ripple_exact_count": water_ripple_exact_count,
+		"water_ripple_invalid_count": water_ripple_invalid_count,
+		"water_ripple_model_ids": water_ripple_model_ids.keys(),
 		"shoreline_tile_count": shoreline_tile_count,
 		"shoreline_source_count": shoreline_source_count,
 		"shoreline_exact_count": shoreline_exact_count,
@@ -469,6 +518,8 @@ func _assert_natural_fog_terrain_transition_progression(before: Dictionary, afte
 			or int(summary.get("terrain_detail_exact_count", -1)) != explored_count
 			or int(summary.get("terrain_detail_invalid_count", -1)) != 0
 			or int(summary.get("terrain_detail_drawn_count", 0)) <= 0
+			or int(summary.get("water_ripple_exact_count", -1)) != explored_count
+			or int(summary.get("water_ripple_invalid_count", -1)) != 0
 			or int(summary.get("irregular_inner_edge_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))
 			or int(summary.get("deterministic_seed_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))
 		):
@@ -488,6 +539,7 @@ func _assert_natural_fog_terrain_transition_progression(before: Dictionary, afte
 		"terrain_grain_modulate_alphas",
 		"terrain_detail_model_ids",
 		"terrain_detail_texture_paths",
+		"water_ripple_model_ids",
 	]:
 		if after.get(key, []) != before.get(key, []):
 			_fail("Generated natural-fog terrain presentation model changed for %s: before=%s after=%s" % [key, before.get(key, []), after.get(key, [])])
@@ -719,6 +771,10 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or int(summary.get("terrain_detail_exact_count", 0)) != explored_tile_count
 		or int(summary.get("terrain_detail_invalid_count", -1)) != 0
 		or int(summary.get("terrain_detail_drawn_count", 0)) <= 0
+		or int(summary.get("water_ripple_exact_count", 0)) != explored_tile_count
+		or int(summary.get("water_ripple_invalid_count", -1)) != 0
+		or int(summary.get("water_ripple_water_tile_count", 0)) <= 0
+		or int(summary.get("water_ripple_drawn_count", 0)) <= 0
 		or int(summary.get("shoreline_exact_count", -1)) != int(summary.get("shoreline_tile_count", -2))
 		or int(summary.get("shoreline_source_count", 0)) < int(summary.get("shoreline_tile_count", 0))
 		or summary.get("terrain_grain_model_ids", []) != ["single_normalized_map_space_seamless_painterly_microtexture"]
@@ -728,6 +784,7 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or not is_equal_approx(float(terrain_grain_modulate_alphas[0]), 0.72)
 		or summary.get("terrain_detail_model_ids", []) != ["sparse_biome_aware_painterly_surface_clusters"]
 		or summary.get("terrain_detail_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"]
+		or summary.get("water_ripple_model_ids", []) != ["deterministic_broken_painterly_current_pairs"]
 	):
 		_fail("%s generated terrain transitions or continuous macro-lighting contract did not remain exact: %s" % [label, JSON.stringify(summary)])
 		return false

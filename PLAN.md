@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved graphical-polish implementation slice from current inspected game evidence.
+- Selected implementation slice: none. Next: register the directly observed Overworld object-scale hierarchy correction.
+
+## Overworld Broken Water Current Ripples
+
+id: `presentation-overworld-broken-water-current-ripples-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add a shared deterministic water-surface detail pass for authored and fallback water tiles so loaded water art no longer depends on the fallback-only straight-line pattern;
+- draw sparse short curved shadow/highlight ripple pairs derived only from tile coordinates, contained within the owning water tile, varied in length/position, and skipped beneath water-road causeways;
+- place ripples after terrain/macro lighting and before roads, objects, routes, selection, and fog while preserving shoreline contours, water identity, and exact map/session authority.
+
+Completion criteria:
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show water with restrained painterly current motion instead of repeated horizontal tile stamps, without competing with shorelines, causeways, objects, or route guidance;
+- focused authored and generated reveal-all runtime prove water-only eligibility, deterministic bounded broken geometry, causeway exclusion, draw order, hidden-by-shroud behavior, and unchanged terrain/map/session/save authority;
+- broad Overworld visual/route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no water/terrain ids, topology, coast shape, passability, movement cost, road/causeway, shoreline geometry, map content, fog/reveal, route/pathfinding, object/hero/town presentation, interaction, save/session/schema, AI, battle, balance, or Native RMG change;
+- no animation clock, shader, reflection simulation, weather, particles, audio/VFX, camera/UI layout, or broad water redesign;
+- no packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- authored and fallback water now share deterministic sparse two-curve shadow/highlight current marks, with tile-coordinate variation, exact water-only ownership, and causeway exclusion;
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show subtle broken current detail without straight repeated bands or competition with shorelines, routes, and objects;
+- Ninefold authored-water, generated reveal-all, broad visual/route/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass while map topology, gameplay, session/save authority, and Native RMG remain unchanged.
 
 ## Overworld Biome Surface Detail Decals
 
