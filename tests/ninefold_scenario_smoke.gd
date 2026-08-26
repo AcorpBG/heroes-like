@@ -327,6 +327,23 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	):
 		_fail("Ninefold smoke: water shoreline received a land surface-detail decal: %s." % JSON.stringify(shoreline_detail))
 		return false
+	var sparse_water_ripple: Dictionary = shoreline.get("water_surface_ripples", {}) if shoreline.get("water_surface_ripples", {}) is Dictionary else {}
+	if not _water_surface_ripple_payload_exact(sparse_water_ripple, false, false):
+		_fail("Ninefold smoke: sparse water control did not retain exact non-drawn current ownership: %s." % JSON.stringify(sparse_water_ripple))
+		return false
+	var active_water_tile := Vector2i(50, 0)
+	_reveal_validation_tiles(session, [active_water_tile])
+	var active_water_presentation: Dictionary = shell.call("validation_tile_presentation", active_water_tile.x, active_water_tile.y)
+	var active_water_terrain: Dictionary = active_water_presentation.get("terrain_presentation", {}) if active_water_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	var active_water_ripple: Dictionary = active_water_terrain.get("water_surface_ripples", {}) if active_water_terrain.get("water_surface_ripples", {}) is Dictionary else {}
+	if String(active_water_terrain.get("terrain", "")) != "water" or not _water_surface_ripple_payload_exact(active_water_ripple, true, false):
+		_fail("Ninefold smoke: authored loaded water did not expose exact broken current ripples: %s." % JSON.stringify(active_water_presentation))
+		return false
+	var repeated_water_presentation: Dictionary = shell.call("validation_tile_presentation", active_water_tile.x, active_water_tile.y)
+	var repeated_water_terrain: Dictionary = repeated_water_presentation.get("terrain_presentation", {}) if repeated_water_presentation.get("terrain_presentation", {}) is Dictionary else {}
+	if repeated_water_terrain.get("water_surface_ripples", {}) != active_water_ripple:
+		_fail("Ninefold smoke: authored water current ripples changed across repeated observation.")
+		return false
 	if not _assert_direct_dirt_sand_transition(shell, session):
 		return false
 	return true
@@ -449,6 +466,7 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var hidden_lighting: Dictionary = hidden_terrain.get("terrain_macro_lighting", {}) if hidden_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 	var hidden_grain: Dictionary = hidden_terrain.get("terrain_grain_overlay", {}) if hidden_terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
 	var hidden_detail: Dictionary = hidden_terrain.get("terrain_detail_decal", {}) if hidden_terrain.get("terrain_detail_decal", {}) is Dictionary else {}
+	var hidden_water_ripples: Dictionary = hidden_terrain.get("water_surface_ripples", {}) if hidden_terrain.get("water_surface_ripples", {}) is Dictionary else {}
 	if String(hidden_lighting.get("model", "")) != "continuous_shared_corner_bilinear_field" or bool(hidden_lighting.get("drawn", true)) or not bool(hidden_lighting.get("hidden_by_unexplored_shroud", false)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain macro-lighting: %s." % JSON.stringify(hidden_lighting))
 		return false
@@ -457,6 +475,9 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 		return false
 	if String(hidden_detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain surface detail: %s." % JSON.stringify(hidden_detail))
+		return false
+	if String(hidden_water_ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs" or bool(hidden_water_ripples.get("drawn", true)) or not bool(hidden_water_ripples.get("hidden_by_unexplored_shroud", false)) or bool(hidden_water_ripples.get("terrain_identity_sampled", true)):
+		_fail("Ninefold smoke: unexplored fog did not remain authoritative over water current ripples: %s." % JSON.stringify(hidden_water_ripples))
 		return false
 	if not _assert_soft_fog_frontier(shell, session, north_west_tile):
 		return false
@@ -517,6 +538,49 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		and float(destination_rect.get("width", 0.0)) > 0.0
 		and is_equal_approx(float(destination_rect.get("width", 0.0)), float(destination_rect.get("height", -1.0)))
 	)
+
+func _water_surface_ripple_payload_exact(ripples: Dictionary, expected_drawn: bool, expected_road_excluded: bool) -> bool:
+	if (
+		String(ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs"
+		or String(ripples.get("terrain_group", "")) != "water"
+		or bool(ripples.get("drawn", not expected_drawn)) != expected_drawn
+		or bool(ripples.get("road_excluded", not expected_road_excluded)) != expected_road_excluded
+		or int(ripples.get("density_modulus", 0)) != 3
+		or ripples.get("active_residues", []) != [0, 1]
+		or int(ripples.get("point_count_per_ripple", 0)) != 5
+		or not is_equal_approx(float(ripples.get("min_length_factor", 0.0)), 0.26)
+		or not is_equal_approx(float(ripples.get("max_length_factor", 0.0)), 0.48)
+		or not is_equal_approx(float(ripples.get("min_curve_factor", 0.0)), 0.018)
+		or not is_equal_approx(float(ripples.get("max_curve_factor", 0.0)), 0.042)
+		or not is_equal_approx(float(ripples.get("shadow_alpha", 0.0)), 0.24)
+		or not is_equal_approx(float(ripples.get("highlight_alpha", 0.0)), 0.30)
+		or bool(ripples.get("interactive", true))
+		or bool(ripples.get("collision", true))
+		or bool(ripples.get("animated", true))
+		or String(ripples.get("variation_basis", "")) != "tile_coordinate_and_ripple_index_only"
+		or String(ripples.get("draw_order", "")) != "after_macro_lighting_before_causeways_objects_routes_selection_and_fog"
+		or not bool(ripples.get("hidden_by_unexplored_shroud", false))
+	):
+		return false
+	if not expected_drawn:
+		return int(ripples.get("ripple_count", -1)) == 0 and (ripples.get("profiles", []) as Array).is_empty() and not bool(ripples.get("geometry_contained", true))
+	var profiles: Array = ripples.get("profiles", []) if ripples.get("profiles", []) is Array else []
+	if int(ripples.get("density_residue", -1)) not in [0, 1] or int(ripples.get("ripple_count", 0)) != 2 or profiles.size() != 2 or not bool(ripples.get("geometry_contained", false)):
+		return false
+	for profile_value in profiles:
+		var profile: Array = profile_value if profile_value is Array else []
+		if profile.size() != 5:
+			return false
+		for point_value in profile:
+			var point: Dictionary = point_value if point_value is Dictionary else {}
+			if float(point.get("x", -1.0)) < 0.0 or float(point.get("x", 2.0)) > 1.0 or float(point.get("y", -1.0)) < 0.0 or float(point.get("y", 2.0)) > 1.0:
+				return false
+		var start: Dictionary = profile[0]
+		var finish: Dictionary = profile[4]
+		var length_factor := float(finish.get("x", 0.0)) - float(start.get("x", 0.0))
+		if length_factor < 0.26 or length_factor > 0.48 or not is_equal_approx(float(start.get("y", -1.0)), float(finish.get("y", -2.0))):
+			return false
+	return true
 
 func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) -> bool:
 	var session_authority_before: Dictionary = session.to_dict()
