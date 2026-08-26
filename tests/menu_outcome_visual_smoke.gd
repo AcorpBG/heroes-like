@@ -34,6 +34,11 @@ const MAIN_MENU_STAGE_DOCK_ASSET_PATH := "res://art/ui/runtime/main_menu/stage_d
 const MAIN_MENU_STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)
 const MAIN_MENU_STAGE_DOCK_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)
 const MAIN_MENU_STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
+const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"
+const MAIN_MENU_POCKET_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)
+const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)
+const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)
+const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.895, 0.340, 0.080)
 const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]
 const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
@@ -964,6 +969,19 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: high-contrast mode did not replace the cartographic Stage Dock with the exact smoke fallback: %s." % [contrast_stage_surface])
 		get_tree().quit(1)
 		return false
+	var contrast_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
+	if String(contrast_pocket_surface.get("rendering_mode", "")) != "smoke_fallback" \
+			or String(contrast_pocket_surface.get("logo_style_class", "")) != "StyleBoxFlat" \
+			or String(contrast_pocket_surface.get("footer_style_class", "")) != "StyleBoxFlat" \
+			or String(contrast_pocket_surface.get("logo_texture_path", "")) != "" \
+			or String(contrast_pocket_surface.get("footer_texture_path", "")) != "" \
+			or not bool(contrast_pocket_surface.get("high_contrast", false)) \
+			or not bool(contrast_pocket_surface.get("fallbacks_texture_free", false)):
+		if not original_high_contrast:
+			shell.call("validation_set_high_contrast", false)
+		push_error("Main menu smoke: high-contrast mode did not replace both cartographic first-view pockets with exact smoke fallbacks: %s." % [contrast_pocket_surface])
+		get_tree().quit(1)
+		return false
 	if not bool(shell.call("validation_select_color_cue_mode", "assisted")):
 		if not original_high_contrast:
 			shell.call("validation_set_high_contrast", false)
@@ -990,12 +1008,22 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	var restored_stage_surface: Dictionary = shell.call("validation_stage_dock_surface_summary")
+	var restored_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
 	var expected_restored_mode := "smoke_fallback" if original_high_contrast else "authored_cartography_surface"
 	var expected_restored_class := "StyleBoxFlat" if original_high_contrast else "StyleBoxTexture"
 	if String(restored_stage_surface.get("rendering_mode", "")) != expected_restored_mode \
 			or String(restored_stage_surface.get("style_class", "")) != expected_restored_class \
 			or (not original_high_contrast and String(restored_stage_surface.get("texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH):
 		push_error("Main menu smoke: Stage Dock surface did not restore its original contrast-dependent rendering mode: %s." % [restored_stage_surface])
+		get_tree().quit(1)
+		return false
+	var expected_restored_pocket_mode := "smoke_fallback" if original_high_contrast else "authored_cartography_pockets"
+	if String(restored_pocket_surface.get("rendering_mode", "")) != expected_restored_pocket_mode \
+			or String(restored_pocket_surface.get("logo_style_class", "")) != expected_restored_class \
+			or String(restored_pocket_surface.get("footer_style_class", "")) != expected_restored_class \
+			or (not original_high_contrast and String(restored_pocket_surface.get("logo_texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH) \
+			or (not original_high_contrast and String(restored_pocket_surface.get("footer_texture_path", "")) != MAIN_MENU_STAGE_DOCK_ASSET_PATH):
+		push_error("Main menu smoke: first-view pocket surfaces did not restore their original contrast-dependent rendering mode: %s." % [restored_pocket_surface])
 		get_tree().quit(1)
 		return false
 
@@ -1399,6 +1427,10 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 			push_error("Main menu smoke: native/root/canvas size authority diverged at %s: physical=%s window=%s root=%s content_scale=%s viewport=%s." % [requested_size, physical_size, get_window().size, root_size, content_scale_size, viewport_size])
 			return false
 		var first_view_rect := Rect2(Vector2.ZERO, viewport_size)
+		var pocket_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
+		if not _main_menu_pocket_summary_exact(pocket_summary, viewport_size):
+			push_error("Main menu smoke: cartographic first-view pocket contract failed at %s: %s." % [requested_size, pocket_summary])
+			return false
 		if not _assert_footer_pocket_containment(shell, viewport_size, "%s first view" % requested_size):
 			return false
 		for command_name in ["OpenCampaign", "OpenSkirmish", "OpenSaves", "OpenSettings", "OpenEditor", "Quit"]:
@@ -1442,6 +1474,49 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 	await get_tree().process_frame
 	await get_tree().process_frame
 	return true
+
+func _main_menu_pocket_summary_exact(summary: Dictionary, viewport_size: Vector2) -> bool:
+	var viewport_rect := Rect2(Vector2.ZERO, viewport_size)
+	var logo_rect: Rect2 = summary.get("logo_rect", Rect2())
+	var footer_rect: Rect2 = summary.get("footer_rect", Rect2())
+	var checks := {
+		"model": String(summary.get("model", "")) == MAIN_MENU_POCKET_FRAME_MODEL,
+		"asset_path": String(summary.get("asset_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
+		"asset_exists": bool(summary.get("asset_exists", false)),
+		"logo_style": String(summary.get("logo_style_class", "")) == "StyleBoxTexture",
+		"footer_style": String(summary.get("footer_style_class", "")) == "StyleBoxTexture",
+		"logo_texture": String(summary.get("logo_texture_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
+		"footer_texture": String(summary.get("footer_texture_path", "")) == MAIN_MENU_STAGE_DOCK_ASSET_PATH,
+		"logo_margins": summary.get("logo_texture_margins", Vector4.ZERO) == MAIN_MENU_POCKET_TEXTURE_MARGINS,
+		"footer_margins": summary.get("footer_texture_margins", Vector4.ZERO) == MAIN_MENU_POCKET_TEXTURE_MARGINS,
+		"logo_modulate": summary.get("logo_modulate", Color.WHITE) == MAIN_MENU_POCKET_TEXTURE_MODULATE,
+		"footer_modulate": summary.get("footer_modulate", Color.WHITE) == MAIN_MENU_POCKET_TEXTURE_MODULATE,
+		"logo_anchors": (summary.get("logo_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_LOGO_POCKET_ANCHORS.position) <= 0.0001 \
+			and (summary.get("logo_anchors", Rect2()) as Rect2).size.distance_to(MAIN_MENU_LOGO_POCKET_ANCHORS.size) <= 0.0001,
+		"footer_anchors": (summary.get("footer_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_FOOTER_POCKET_ANCHORS.position) <= 0.0001 \
+			and (summary.get("footer_anchors", Rect2()) as Rect2).size.distance_to(MAIN_MENU_FOOTER_POCKET_ANCHORS.size) <= 0.0001,
+		"logo_visible": bool(summary.get("logo_visible", false)),
+		"footer_visible": bool(summary.get("footer_visible", false)),
+		"title": String(summary.get("title_text", "")) == "AURELION REACH",
+		"footer_copy_exact": String(summary.get("active_expedition_text", "")) == String(summary.get("active_expedition_tooltip", "")),
+		"load_copy": String(summary.get("active_expedition_text", "")).contains("Load: choose a saved expedition."),
+		"quit_copy": String(summary.get("active_expedition_text", "")).contains("Quit check: save first automatically, then closes client."),
+		"standard_contrast": not bool(summary.get("high_contrast", true)),
+		"rendering_mode": String(summary.get("rendering_mode", "")) == "authored_cartography_pockets",
+		"high_contrast_fallback": String(summary.get("high_contrast_fallback_class", "")) == "StyleBoxFlat",
+		"missing_asset_fallback": String(summary.get("missing_asset_fallback_class", "")) == "StyleBoxFlat",
+		"fallbacks_texture_free": bool(summary.get("fallbacks_texture_free", false)),
+		"logo_contained": _rect_is_contained(viewport_rect, logo_rect, 1.0),
+		"footer_contained": _rect_is_contained(viewport_rect, footer_rect, 1.0),
+		"pockets_disjoint": not logo_rect.intersects(footer_rect),
+	}
+	var failures := []
+	for check_name in checks:
+		if not bool(checks[check_name]):
+			failures.append(check_name)
+	if not failures.is_empty():
+		push_error("Main menu smoke: failed named cartographic pocket checks: %s." % [failures])
+	return failures.is_empty()
 
 func _assert_battle_shake_picker_theme_parity(
 		shell: Control,

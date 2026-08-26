@@ -19363,6 +19363,74 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         )
 
     for required_token in (
+        'const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"',
+        "const MAIN_MENU_POCKET_TEXTURE_MARGIN := 56.0",
+        "const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)",
+        "@onready var _logo_pocket_panel: PanelContainer = $LogoPocketPanel",
+        "@onready var _footer_pocket_panel: PanelContainer = $FooterPocketPanel",
+        "func _main_menu_pocket_surface_style(asset_path: String, high_contrast: bool) -> StyleBox:",
+        "style.modulate_color = MAIN_MENU_POCKET_TEXTURE_MODULATE",
+        "func validation_main_menu_pocket_surface_summary() -> Dictionary:",
+        '"model": MAIN_MENU_POCKET_FRAME_MODEL',
+        '"logo_texture_path": logo_texture_path',
+        '"footer_texture_path": footer_texture_path',
+        '"logo_anchors": Rect2(',
+        '"footer_anchors": Rect2(',
+        '"rendering_mode": "authored_cartography_pockets" if logo_style is StyleBoxTexture and footer_style is StyleBoxTexture else "smoke_fallback"',
+        'var pocket_style := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())',
+        '_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)',
+        '_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())',
+    ):
+        ensure(required_token in menu_text, errors, f"MainMenu.gd is missing cartographic pocket-frame token: {required_token}")
+    ensure(menu_text.count("func _main_menu_pocket_surface_style(") == 1, errors, "MainMenu.gd must own exactly one first-view pocket surface factory")
+    ensure(menu_text.count("func validation_main_menu_pocket_surface_summary()") == 1, errors, "MainMenu.gd must own exactly one first-view pocket surface summary")
+    ensure(menu_text.count('_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)') == 1, errors, "MainMenu.gd must apply the cartographic logo-pocket surface exactly once")
+    ensure(menu_text.count('_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())') == 1, errors, "MainMenu.gd must apply one detached cartographic footer-pocket surface")
+    pocket_factory_match = re.search(r"func _main_menu_pocket_surface_style\([^\n]*\) -> StyleBox:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
+    pocket_summary_match = re.search(r"func validation_main_menu_pocket_surface_summary\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", menu_text, flags=re.DOTALL)
+    ensure(pocket_factory_match is not None and pocket_summary_match is not None, errors, "Main Menu pocket surface factory/summary could not be isolated")
+    if pocket_factory_match is not None:
+        pocket_factory_body = pocket_factory_match.group("body")
+        ensure(
+            pocket_factory_body.index("if high_contrast")
+            < pocket_factory_body.index("var texture := load(asset_path)")
+            < pocket_factory_body.index("var style := StyleBoxTexture.new()"),
+            errors,
+            "Main Menu pocket surface must fail closed before loading or styling the authored texture",
+        )
+        for forbidden_token in (
+            "anchor_left",
+            "anchor_top",
+            "anchor_right",
+            "anchor_bottom",
+            ".visible =",
+            ".text =",
+            "grab_focus",
+            "Input.",
+            "AppRouter",
+            "SessionState",
+            "SaveService",
+            "create_timer",
+            "call_deferred",
+        ):
+            ensure(forbidden_token not in pocket_factory_body, errors, f"Main Menu pocket surface factory must remain visual-only: {forbidden_token}")
+    if pocket_summary_match is not None:
+        pocket_summary_body = pocket_summary_match.group("body")
+        for forbidden_token in (".anchor_left =", ".anchor_top =", ".anchor_right =", ".anchor_bottom =", ".visible =", ".text =", "grab_focus", "Input.", "AppRouter", "SessionState", "SaveService", "create_timer"):
+            ensure(forbidden_token not in pocket_summary_body, errors, f"Main Menu pocket surface summary must remain read-only: {forbidden_token}")
+    if apply_match is not None:
+        apply_body = apply_match.group("body")
+        ensure(
+            apply_body.index("_stage_dock_panel.add_theme_stylebox_override(")
+            < apply_body.index("var pocket_style := _main_menu_pocket_surface_style(")
+            < apply_body.index('_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)')
+            < apply_body.index('_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())')
+            < apply_body.index('FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")'),
+            errors,
+            "Main Menu must apply both quiet pocket frames after the Stage Dock and before tab/control styling",
+        )
+
+    for required_token in (
         'const MAIN_MENU_STAGE_DOCK_ASSET_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
         "const MAIN_MENU_STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)",
         "const MAIN_MENU_STAGE_DOCK_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)",
@@ -19413,6 +19481,24 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         "MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y)",
         "MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO",
         "maxf(MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.y, first_view_height_ratio)",
+        'const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"',
+        "const MAIN_MENU_POCKET_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)",
+        "const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)",
+        "const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)",
+        "const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.895, 0.340, 0.080)",
+        'var pocket_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
+        "if not _main_menu_pocket_summary_exact(pocket_summary, viewport_size):",
+        "func _main_menu_pocket_summary_exact(summary: Dictionary, viewport_size: Vector2) -> bool:",
+        'String(summary.get("model", "")) == MAIN_MENU_POCKET_FRAME_MODEL',
+        '(summary.get("logo_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_LOGO_POCKET_ANCHORS.position) <= 0.0001',
+        '(summary.get("footer_anchors", Rect2()) as Rect2).position.distance_to(MAIN_MENU_FOOTER_POCKET_ANCHORS.position) <= 0.0001',
+        'String(summary.get("title_text", "")) == "AURELION REACH"',
+        'String(summary.get("active_expedition_text", "")).contains("Load: choose a saved expedition.")',
+        'String(summary.get("active_expedition_text", "")).contains("Quit check: save first automatically, then closes client.")',
+        'var contrast_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
+        'String(contrast_pocket_surface.get("rendering_mode", "")) != "smoke_fallback"',
+        'var restored_pocket_surface: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")',
+        'String(restored_pocket_surface.get("rendering_mode", "")) != expected_restored_pocket_mode',
     ):
         ensure(required_token in smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Stage Dock cartography proof token: {required_token}")
     stage_helper_match = re.search(r"func _assert_main_menu_stage_dock_surface\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
@@ -19439,6 +19525,12 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         summary_body = summary_helper_match.group("body")
         for forbidden_token in ("shell", "MainMenu", "SettingsService", "load(", "ResourceLoader", "sort(", "erase(", "duplicate("):
             ensure(forbidden_token not in summary_body, errors, f"Main Menu Stage Dock summary oracle must remain source-independent and passive: {forbidden_token}")
+    pocket_oracle_match = re.search(r"func _main_menu_pocket_summary_exact\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    ensure(pocket_oracle_match is not None, errors, "Main Menu cartographic pocket oracle could not be isolated")
+    if pocket_oracle_match is not None:
+        pocket_oracle_body = pocket_oracle_match.group("body")
+        for forbidden_token in ("shell", "MainMenu", "SettingsService", "load(", "ResourceLoader", "sort(", "erase(", "duplicate(", "add_theme_stylebox_override", ".anchor_left =", ".visible =", ".text ="):
+            ensure(forbidden_token not in pocket_oracle_body, errors, f"Main Menu cartographic pocket oracle must remain source-independent and passive: {forbidden_token}")
 
 
 def validate_main_menu_item_list_selection_inlay(errors: list[str]) -> None:
