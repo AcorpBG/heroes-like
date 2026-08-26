@@ -1077,8 +1077,26 @@ func _assert_battle_system_frame_roundtrip(shell: Node, session) -> bool:
 	var system_panel := shell.get_node_or_null("%SystemPanel") as PanelContainer
 	var speed_bar := shell.get_node_or_null("%SpeedBar") as Control
 	var system_actions := shell.get_node_or_null("%SystemActions") as Container
-	if system_panel == null or speed_bar == null or system_actions == null:
+	var footer_row := shell.get_node_or_null("%FooterRow") as GridContainer
+	var footer_watermark := shell.get_node_or_null("%FooterWatermark") as TextureRect
+	var sidebar_watermark := shell.get_node_or_null("%SidebarWatermark") as TextureRect
+	var system_box: VBoxContainer = system_actions.get_parent() as VBoxContainer if system_actions != null else null
+	if system_panel == null or speed_bar == null or system_actions == null or footer_row == null or footer_watermark == null or sidebar_watermark == null or system_box == null:
 		push_error("Battle smoke: responsive System command frame nodes are incomplete.")
+		return false
+	if footer_watermark.texture == null \
+			or footer_watermark.texture != sidebar_watermark.texture \
+			or footer_watermark.texture.resource_path != "res://art/ui/runtime/battle/sidebar_heraldic_watermark.png" \
+			or footer_watermark.custom_minimum_size != Vector2.ZERO \
+			or footer_watermark.size_flags_horizontal != Control.SIZE_EXPAND_FILL \
+			or footer_watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL \
+			or footer_watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE \
+			or footer_watermark.focus_mode != Control.FOCUS_NONE \
+			or footer_watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE \
+			or footer_watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED \
+			or not is_equal_approx(footer_watermark.self_modulate.a, 0.18) \
+			or footer_watermark.tooltip_text != "":
+		push_error("Battle smoke: footer watermark lost its exact passive reuse contract.")
 		return false
 	var expected_action_names := ["SaveSlot", "Save", "Settings", "Menu"]
 	window.size = Vector2i(1280, 720)
@@ -1087,7 +1105,20 @@ func _assert_battle_system_frame_roundtrip(shell: Node, session) -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var compact_style := system_panel.get_theme_stylebox("panel")
-	if not compact_style is StyleBoxEmpty or speed_bar.visible or not system_actions.is_visible_in_tree() or _visible_child_names(system_actions) != expected_action_names:
+	var compact_watermark_rect := footer_watermark.get_global_rect()
+	var compact_system_box_rect := system_box.get_global_rect()
+	var compact_system_actions_rect := system_actions.get_global_rect()
+	if not compact_style is StyleBoxEmpty \
+			or speed_bar.visible \
+			or not system_actions.is_visible_in_tree() \
+			or _visible_child_names(system_actions) != expected_action_names \
+			or footer_row.columns != 2 \
+			or not footer_watermark.is_visible_in_tree() \
+			or compact_watermark_rect.size.x <= 0.0 \
+			or compact_watermark_rect.size.y <= 0.0 \
+			or not compact_system_box_rect.encloses(compact_watermark_rect) \
+			or compact_watermark_rect.intersects(compact_system_actions_rect) \
+			or compact_watermark_rect.position.y + 0.01 < compact_system_actions_rect.end.y:
 		push_error("Battle smoke: compact System command row lost its borderless visible command contract.")
 		window.size = original_window_size
 		return false
@@ -1100,16 +1131,57 @@ func _assert_battle_system_frame_roundtrip(shell: Node, session) -> bool:
 	var wide_texture_path := ""
 	if wide_style is StyleBoxTexture and (wide_style as StyleBoxTexture).texture != null:
 		wide_texture_path = (wide_style as StyleBoxTexture).texture.resource_path
-	if wide_texture_path != "res://art/ui/runtime/battle/combat_log_panel.png" or not speed_bar.visible or not system_actions.is_visible_in_tree() or _visible_child_names(system_actions) != expected_action_names:
+	var wide_watermark_rect := footer_watermark.get_global_rect()
+	var wide_system_box_rect := system_box.get_global_rect()
+	var wide_system_actions_rect := system_actions.get_global_rect()
+	if wide_texture_path != "res://art/ui/runtime/battle/combat_log_panel.png" \
+			or not speed_bar.visible \
+			or not system_actions.is_visible_in_tree() \
+			or _visible_child_names(system_actions) != expected_action_names \
+			or footer_row.columns != 2 \
+			or not footer_watermark.is_visible_in_tree() \
+			or wide_watermark_rect.size.x <= 0.0 \
+			or wide_watermark_rect.size.y <= 0.0 \
+			or not wide_system_box_rect.encloses(wide_watermark_rect) \
+			or wide_watermark_rect.intersects(wide_system_actions_rect) \
+			or wide_watermark_rect.position.y + 0.01 < wide_system_actions_rect.end.y:
 		push_error("Battle smoke: wide System command panel did not restore its authored frame and command order.")
 		window.size = original_window_size
+		return false
+	var original_high_contrast := FrontierVisualKitScript.high_contrast_enabled()
+	FrontierVisualKitScript.set_high_contrast_enabled(true)
+	shell.call("_apply_responsive_layout")
+	await get_tree().process_frame
+	if footer_watermark.visible:
+		push_error("Battle smoke: decorative footer watermark remained visible in high-contrast mode.")
+		FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)
+		window.size = original_window_size
+		shell_control.size = original_shell_size
+		return false
+	FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)
+	shell.call("_apply_responsive_layout")
+	await get_tree().process_frame
+	if not footer_watermark.visible:
+		push_error("Battle smoke: footer watermark did not restore after high-contrast validation.")
+		window.size = original_window_size
+		shell_control.size = original_shell_size
+		return false
+	window.size = Vector2i(1024, 720)
+	shell_control.size = Vector2(1024.0, 720.0)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if footer_row.columns != 1 or footer_watermark.visible or not system_actions.is_visible_in_tree() or _visible_child_names(system_actions) != expected_action_names:
+		push_error("Battle smoke: vertical footer layout did not hide only its decorative watermark.")
+		window.size = original_window_size
+		shell_control.size = original_shell_size
 		return false
 	window.size = Vector2i(1280, 720)
 	shell_control.size = Vector2(1280.0, 720.0)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
-	if not system_panel.get_theme_stylebox("panel") is StyleBoxEmpty or speed_bar.visible or _visible_child_names(system_actions) != expected_action_names:
+	if not system_panel.get_theme_stylebox("panel") is StyleBoxEmpty or speed_bar.visible or footer_row.columns != 2 or not footer_watermark.visible or _visible_child_names(system_actions) != expected_action_names:
 		push_error("Battle smoke: System command panel did not restore the compact borderless contract after a wide roundtrip.")
 		window.size = original_window_size
 		return false

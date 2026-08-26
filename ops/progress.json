@@ -1911,20 +1911,54 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-town-build-faction-crest-watermark-10184",
-    "title": "Town Build faction-crest watermark",
+    "id": "presentation-battle-footer-heraldic-watermark-10184",
+    "title": "Battle footer heraldic watermark",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T13:21:38Z",
-    "updatedAt": "2026-08-26T13:55:14Z",
+    "startedAt": "2026-08-26T13:58:53Z",
+    "updatedAt": "2026-08-26T14:17:36Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the passive live-faction crest reuse in the default Build page with inspected 1280x720 and 1920x1080 captures and exact layout/focus/session authority preserved."
+    "notes": "Completed the passive existing-heraldry reuse in the horizontal Battle System field with inspected 1280x720 and 1920x1080 captures and exact command/focus/battle/session authority preserved."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-battle-footer-heraldic-watermark-20260826",
+      "title": "Battle footer heraldic watermark",
+      "sliceId": "presentation-battle-footer-heraldic-watermark-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T14:17:36Z",
+      "updatedAt": "2026-08-26T14:17:36Z",
+      "latestFinding": "The horizontal Battle footer now reuses the existing heraldic watermark as a subdued passive ornament below System controls while preserving exact footer commands, board allocation, focus, battle, session, save, and route authority.",
+      "artifacts": [
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py",
+        ".artifacts/graphical_polish_audit/captures/active_battle_1280x720.png",
+        ".artifacts/graphical_polish_audit/captures/active_battle_1920x1080.png",
+        "/tmp/heroes-battle-footer-focused.pJZPis",
+        "/tmp/heroes-battle-footer-capture.MHScxl",
+        "/tmp/heroes-battle-footer-compat.f62YbV",
+        "/tmp/heroes-battle-footer-static-final.f8f9Uj",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "watermark_alpha": 0.18,
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "shared_existing_heraldic_texture": true,
+        "compact_and_high_contrast_hidden": true,
+        "footer_commands_focus_battle_session_save_exact": true,
+        "focused_visual_authority_runtime_ok": true,
+        "controller_animation_keyboard_accessibility_core_ok": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      }
+    },
     {
       "id": "presentation-town-build-faction-crest-watermark-20260826",
       "title": "Town Build faction-crest watermark",
@@ -15121,14 +15155,14 @@
       }
     }
   ],
-  "currentNotes": "The Town Build faction-crest watermark is completed with inspected two-size captures, focused live crest/layout/authority proof, compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Battle footer heraldic watermark is completed with inspected two-size captures, focused live layout/authority proof, compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-build-faction-crest-watermark-10184",
-  "currentSliceId": "presentation-town-build-faction-crest-watermark-10184",
-  "currentSliceNotes": "Completed the subdued passive Build-page crest reuse while preserving exact Town layout, controls, focus, gameplay, session, and save authority.",
+  "currentSlice": "presentation-battle-footer-heraldic-watermark-10184",
+  "currentSliceId": "presentation-battle-footer-heraldic-watermark-10184",
+  "currentSliceNotes": "Completed the subdued passive Battle heraldic reuse while preserving exact commands, responsive layout, focus, battle, session, save, and route authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation town build faction crest watermark 10184",
-  "currentSliceUpdatedAt": "2026-08-26T13:55:14Z",
+  "currentSliceTitle": "presentation battle footer heraldic watermark 10184",
+  "currentSliceUpdatedAt": "2026-08-26T14:17:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20644,8 +20678,34 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The Town Build faction-crest watermark slice is completed and blockers are empty.",
+  "notes": "The Battle footer heraldic watermark slice is completed and blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-footer-heraldic-watermark-10184",
+      "title": "Battle footer heraldic watermark",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T13:58:53Z",
+      "updatedAt": "2026-08-26T14:17:36Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Fill the direct capture-backed empty horizontal-footer System field with a quiet reuse of existing battle heraldry, without adding another panel or changing commands.",
+      "completionCriteria": "Inspected 1280x720 and 1920x1080 Battle captures show a subdued contained heraldic anchor below System controls; focused runtime proves exact texture reuse/passive geometry/responsive and high-contrast hiding with unchanged battle/session authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new asset, panel, text, command, focus target, footer column/breakpoint, Action/System geometry, board/sidebar/banner art, battle rule, AI, balance, content, session/save/schema, or Native RMG change.",
+        "No animation/audio/VFX/shader, packaged Battle interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from fresh current 1280x720 and 1920x1080 Battle captures. Focused visual/authority runtime, controller/animation/keyboard/accessibility/core compatibility, static/editor, and bounded platform startup gates pass.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
     {
       "id": "presentation-town-build-faction-crest-watermark-10184",
       "title": "Town Build faction-crest watermark",
@@ -104017,7 +104077,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "town_build_faction_crest_watermark_completed",
+  "result": "battle_footer_heraldic_watermark_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
