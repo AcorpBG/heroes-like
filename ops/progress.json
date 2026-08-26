@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved bounded release-readiness slice."
+    "Select the next tracker-approved bounded graphical-polish slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu Skirmish intelligence disclosure is completed; blockers are empty and the next bounded slice is not yet selected.",
+  "currentNotes": "The Battle stack-token scale correction is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-skirmish-intel-disclosure-10184",
-  "currentSliceId": "ux-main-menu-skirmish-intel-disclosure-10184",
-  "currentSliceNotes": "Completed: launch-critical Skirmish setup remains visible while exact Commander and Operational Board detail is disclosed on demand; focused, compatibility, static/editor, and bounded platform gates pass.",
+  "currentSlice": "presentation-battle-stack-token-scale-10184",
+  "currentSliceId": "presentation-battle-stack-token-scale-10184",
+  "currentSliceNotes": "Completed: painted stack medallions use the larger bounded 0.68-times-hex presentation while exact pre-change hit geometry and battle authority remain unchanged; focused, compatibility, static/editor, and bounded platform gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Skirmish intelligence disclosure",
-  "currentSliceUpdatedAt": "2026-08-26T19:37:46Z",
+  "currentSliceTitle": "Battle stack token scale",
+  "currentSliceUpdatedAt": "2026-08-26T19:57:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,6 +20852,33 @@
   "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
   "notes": "The Main Menu Skirmish intelligence disclosure is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-stack-token-scale-10184",
+      "title": "Battle stack token scale",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T19:44:39Z",
+      "updatedAt": "2026-08-26T19:57:48Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make curated Battle character silhouettes read as battlefield pieces rather than undersized interface pips by increasing only the painted token radius against the existing tactical hex.",
+      "completionCriteria": "Inspected 1280/1920 captures and focused runtime prove the exact larger painted-token scale, cell containment/separation, unchanged hit radius, retained cue/caption/count/health hierarchy, and unchanged battle/session authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No token center/cell, hit geometry, hex/grid/terrain/layout, caption text, count/health meaning, unit art/frame, animation/VFX/audio, action/target/movement/combat rule, AI, balance, content, save/schema, UI scale, or Native RMG change.",
+        "No packaged Battle interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "",
+      "notes": "Completed the presentation-only Battle stack-token scale correction. Painted medallions use exact factor/min/max 0.68/15/32 while the pre-change hit formula 0.58/13/28 plus 10 remains exact. Fresh inspected 1280/1920 before-after captures show stronger separated silhouettes with intact state rings, captions, count and health cues. Board navigation, Battle visual, animation/VFX, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
+      "completedAt": "2026-08-26T19:57:48Z"
+    },
     {
       "id": "ux-battle-movement-range-alternating-edge-cues-10184",
       "title": "Battle movement-range alternating edge cues",

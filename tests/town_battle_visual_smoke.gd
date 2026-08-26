@@ -826,8 +826,21 @@ func _run_battle_smoke() -> bool:
 	var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")
 	var token_visual: Dictionary = unit_art_summary.get("token_visual_contract", {})
 	var inner_fill: Color = token_visual.get("inner_fill", Color.WHITE)
+	var token_hex_radius := float(token_visual.get("hex_radius", 0.0))
+	var expected_hit_radius := clampf(token_hex_radius * 0.58, 13.0, 28.0) + 10.0
 	if (
 		String(token_visual.get("presentation_model", "")) != "character_first_dark_medallion_side_rim"
+		or not is_equal_approx(float(token_visual.get("token_radius_factor", 0.0)), 0.68)
+		or not is_equal_approx(float(token_visual.get("token_radius_min", 0.0)), 15.0)
+		or not is_equal_approx(float(token_visual.get("token_radius_max", 0.0)), 32.0)
+		or not is_equal_approx(float(token_visual.get("hit_radius_factor", 0.0)), 0.58)
+		or not is_equal_approx(float(token_visual.get("hit_radius_min", 0.0)), 13.0)
+		or not is_equal_approx(float(token_visual.get("hit_radius_max", 0.0)), 28.0)
+		or not is_equal_approx(float(token_visual.get("hit_radius_padding", 0.0)), 10.0)
+		or not is_equal_approx(float(token_visual.get("hit_radius", 0.0)), expected_hit_radius)
+		or not bool(token_visual.get("painted_token_larger_than_legacy_scale", false))
+		or not bool(token_visual.get("token_diameter_within_neighbor_spacing", false))
+		or not bool(token_visual.get("token_shadow_within_hex_radius", false))
 		or not is_equal_approx(float(token_visual.get("animation_art_extent_factor", 0.0)), 1.96)
 		or not is_equal_approx(float(token_visual.get("icon_art_extent_factor", 0.0)), 1.86)
 		or not is_equal_approx(float(token_visual.get("animation_art_diameter_fraction", 0.0)), 0.98)
@@ -838,7 +851,7 @@ func _run_battle_smoke() -> bool:
 		or not bool(token_visual.get("art_contained_within_token", false))
 		or float(token_visual.get("hit_radius", 0.0)) <= float(token_visual.get("token_radius", 0.0))
 	):
-		push_error("Battle smoke: stack art did not retain the character-first medallion hierarchy inside unchanged hit geometry: %s." % token_visual)
+		push_error("Battle smoke: stack art did not retain the larger character-first medallion hierarchy inside unchanged hit geometry and neighboring-cell separation: %s." % token_visual)
 		get_tree().quit(1)
 		return false
 	if not await _capture_color_cue_frame("battle_color_cues"):

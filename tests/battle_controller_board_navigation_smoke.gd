@@ -40,6 +40,8 @@ func _run() -> void:
 	var board: Control = shell.get_node("%BattleBoard")
 	var battle_live: Label = shell.get_node("%BattleBoardCursorLive")
 	var battle_semantic_timer: Timer = board.get("_battle_board_cursor_semantic_timer")
+	if not _validate_stack_token_scale(board, session):
+		return
 	if not _validate_stack_caption_word_boundaries(board, session):
 		return
 	board.stack_focus_requested.connect(_on_stack_focus_requested)
@@ -893,6 +895,37 @@ func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictionary:
 		if stack_value is Dictionary and String(stack_value.get("battle_id", "")) == battle_id:
 			return stack_value
 	return {}
+
+func _validate_stack_token_scale(board: Control, session) -> bool:
+	if not board.has_method("validation_unit_art_summary"):
+		return _fail_bool("BattleBoard does not expose its stack-token visual contract.")
+	var battle_authority_before: Dictionary = session.battle.duplicate(true)
+	var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")
+	var token_visual: Dictionary = unit_art_summary.get("token_visual_contract", {})
+	var hex_radius := float(token_visual.get("hex_radius", 0.0))
+	var token_radius := float(token_visual.get("token_radius", 0.0))
+	var hit_radius := float(token_visual.get("hit_radius", 0.0))
+	var expected_token_radius := clampf(hex_radius * 0.68, 15.0, 32.0)
+	var expected_hit_radius := clampf(hex_radius * 0.58, 13.0, 28.0) + 10.0
+	if (
+		hex_radius <= 0.0
+		or not is_equal_approx(float(token_visual.get("token_radius_factor", 0.0)), 0.68)
+		or not is_equal_approx(float(token_visual.get("token_radius_min", 0.0)), 15.0)
+		or not is_equal_approx(float(token_visual.get("token_radius_max", 0.0)), 32.0)
+		or not is_equal_approx(token_radius, expected_token_radius)
+		or not is_equal_approx(hit_radius, expected_hit_radius)
+		or token_radius <= clampf(hex_radius * 0.58, 13.0, 28.0)
+		or hit_radius <= token_radius
+		or token_radius * 2.0 >= sqrt(3.0) * hex_radius
+		or token_radius + 4.0 >= hex_radius
+		or not bool(token_visual.get("painted_token_larger_than_legacy_scale", false))
+		or not bool(token_visual.get("token_diameter_within_neighbor_spacing", false))
+		or not bool(token_visual.get("token_shadow_within_hex_radius", false))
+	):
+		return _fail_bool("BattleBoard stack tokens lost the exact enlarged painted scale, unchanged hit radius, or cell separation: %s." % token_visual)
+	if session.battle != battle_authority_before:
+		return _fail_bool("Reading the BattleBoard stack-token visual contract changed battle authority.")
+	return true
 
 func _validate_stack_caption_word_boundaries(board: Control, session) -> bool:
 	if not board.has_method("validation_stack_caption_summary"):
