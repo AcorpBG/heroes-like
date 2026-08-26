@@ -42,6 +42,12 @@ const MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
 const MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0
 const MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720
 const MAIN_MENU_GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
+const MAIN_MENU_ITEM_LISTS_BY_BOARD := {
+	"Campaign": ["CampaignList", "ChapterList"],
+	"Skirmish": ["SkirmishList"],
+	"Saves": ["SaveList"],
+	"Guide": ["HelpList"],
+}
 
 var _original_campaign_profile := {}
 
@@ -1036,6 +1042,7 @@ func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
 	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
 	var session_before: Dictionary = session.to_dict()
 	var compact_contracts: Dictionary = {}
+	var compact_item_list_payloads: Dictionary = {}
 	var failure := ""
 	if original_high_contrast and not bool(shell.call("validation_set_high_contrast", false)):
 		failure = "could not establish the authored standard-contrast surface"
@@ -1088,11 +1095,29 @@ func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
 			if not _main_menu_stage_dock_summary_exact(summary, int(board.get("tab", -1)), anchors, anchored_rect, shell.size):
 				failure = "%s surface contract failed at %s: %s" % [board.get("label", ""), requested_size, summary]
 				break
+			for item_list_name_value in MAIN_MENU_ITEM_LISTS_BY_BOARD.get(String(board.get("label", "")), []):
+				var item_list_name := String(item_list_name_value)
+				var item_list := shell.get_node_or_null("%%%s" % item_list_name) as ItemList
+				var dock_rect: Rect2 = summary.get("dock_rect", Rect2())
+				if not _main_menu_item_list_inlay_exact(item_list, dock_rect):
+					failure = "%s list %s lost its enamel-and-gold inlay or containment at %s" % [board.get("label", ""), item_list_name, requested_size]
+					break
+			if failure != "":
+				break
 			var contract_key := String(board.get("label", ""))
+			var board_item_list_payloads: Dictionary = {}
+			var all_item_list_payloads := _main_menu_item_list_payloads(shell)
+			for item_list_name_value in MAIN_MENU_ITEM_LISTS_BY_BOARD.get(contract_key, []):
+				var payload_item_list_name := String(item_list_name_value)
+				board_item_list_payloads[payload_item_list_name] = all_item_list_payloads.get(payload_item_list_name, {}).duplicate(true)
 			if width_index == 0:
 				compact_contracts[contract_key] = summary.duplicate(true)
+				compact_item_list_payloads[contract_key] = board_item_list_payloads
 			elif width_index == MAIN_MENU_STAGE_DOCK_WINDOW_SIZES.size() - 1 and summary != compact_contracts.get(contract_key, {}):
 				failure = "%s surface did not restore exactly after compact-wide-compact: before=%s after=%s" % [contract_key, compact_contracts.get(contract_key, {}), summary]
+				break
+			elif width_index == MAIN_MENU_STAGE_DOCK_WINDOW_SIZES.size() - 1 and board_item_list_payloads != compact_item_list_payloads.get(contract_key, {}):
+				failure = "%s item text, metadata, tooltip, or selection did not restore exactly after compact-wide-compact" % contract_key
 				break
 	SettingsService.call("_set_runtime_window_size", original_window_size)
 	await get_tree().process_frame
@@ -1107,6 +1132,99 @@ func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _main_menu_item_list_inlay_exact(item_list: ItemList, dock_rect: Rect2) -> bool:
+	if item_list == null or not item_list.is_visible_in_tree() or item_list.get_item_count() <= 0:
+		return false
+	if not _main_menu_item_list_visible_containment_exact(item_list, dock_rect) or item_list.get_selected_items().size() != 1:
+		return false
+	var selected := item_list.get_theme_stylebox("selected")
+	var selected_focus := item_list.get_theme_stylebox("selected_focus")
+	var hovered := item_list.get_theme_stylebox("hovered")
+	var hovered_selected := item_list.get_theme_stylebox("hovered_selected")
+	var hovered_selected_focus := item_list.get_theme_stylebox("hovered_selected_focus")
+	var cursor := item_list.get_theme_stylebox("cursor")
+	var cursor_unfocused := item_list.get_theme_stylebox("cursor_unfocused")
+	var focus := item_list.get_theme_stylebox("focus")
+	if not (
+		selected is StyleBoxFlat
+		and selected_focus is StyleBoxFlat
+		and hovered is StyleBoxFlat
+		and hovered_selected is StyleBoxFlat
+		and hovered_selected_focus is StyleBoxFlat
+		and cursor is StyleBoxFlat
+		and cursor_unfocused is StyleBoxFlat
+		and focus is StyleBoxFlat
+	):
+		return false
+	var selected_flat := selected as StyleBoxFlat
+	var selected_focus_flat := selected_focus as StyleBoxFlat
+	var hovered_flat := hovered as StyleBoxFlat
+	var cursor_flat := cursor as StyleBoxFlat
+	var cursor_unfocused_flat := cursor_unfocused as StyleBoxFlat
+	var focus_flat := focus as StyleBoxFlat
+	return (
+		selected_flat.bg_color.is_equal_approx(Color(0.24, 0.18, 0.10, 0.96))
+		and selected_flat.border_color.is_equal_approx(Color(0.86, 0.70, 0.39, 0.94))
+		and selected_flat.border_width_left == 4
+		and selected_flat.border_width_top == 1
+		and selected_flat.border_width_right == 1
+		and selected_flat.border_width_bottom == 1
+		and selected_flat.corner_radius_top_left == 4
+		and selected_flat.corner_radius_top_right == 4
+		and selected_flat.corner_radius_bottom_left == 4
+		and selected_flat.corner_radius_bottom_right == 4
+		and is_equal_approx(selected_flat.content_margin_left, 8.0)
+		and is_equal_approx(selected_flat.content_margin_top, 2.0)
+		and is_equal_approx(selected_flat.content_margin_right, 6.0)
+		and is_equal_approx(selected_flat.content_margin_bottom, 2.0)
+		and selected_focus_flat.border_color.is_equal_approx(Color(0.97, 0.88, 0.61, 1.0))
+		and selected_focus_flat.border_width_left == 4
+		and selected_focus_flat.shadow_size == 3
+		and hovered_flat.bg_color.is_equal_approx(Color(0.10, 0.16, 0.18, 0.88))
+		and hovered_flat.border_color.is_equal_approx(Color(0.43, 0.66, 0.70, 0.78))
+		and hovered_flat.border_width_left == 2
+		and cursor_flat.border_width_left == 2
+		and cursor_unfocused_flat.border_width_left == 1
+		and focus_flat.bg_color.a <= 0.001
+		and focus_flat.border_color.is_equal_approx(Color(0.97, 0.88, 0.61, 1.0))
+		and focus_flat.border_width_left == 1
+		and focus_flat.corner_radius_top_left == 8
+		and item_list.get_theme_constant("line_separation") == 3
+		and item_list.get_theme_color("font_color").is_equal_approx(Color(0.86, 0.90, 0.93, 1.0))
+		and item_list.get_theme_color("font_selected_color").is_equal_approx(Color(0.98, 0.96, 0.90, 1.0))
+	)
+
+func _main_menu_item_list_visible_containment_exact(item_list: ItemList, dock_rect: Rect2) -> bool:
+	var list_rect := item_list.get_global_rect()
+	var ancestor := item_list.get_parent()
+	while ancestor != null:
+		if ancestor is ScrollContainer:
+			var scroll_rect := (ancestor as ScrollContainer).get_global_rect()
+			return _rect_is_contained(dock_rect, scroll_rect) and scroll_rect.intersects(list_rect)
+		ancestor = ancestor.get_parent()
+	return _rect_is_contained(dock_rect, list_rect)
+
+func _main_menu_item_list_payloads(shell: Control) -> Dictionary:
+	var result := {}
+	for list_name in ["CampaignList", "ChapterList", "SkirmishList", "SaveList", "HelpList"]:
+		var item_list := shell.get_node_or_null("%%%s" % list_name) as ItemList
+		if item_list == null:
+			result[list_name] = {"missing": true}
+			continue
+		var items: Array = []
+		for item_index in range(item_list.get_item_count()):
+			var metadata = item_list.get_item_metadata(item_index)
+			items.append({
+				"text": item_list.get_item_text(item_index),
+				"tooltip": item_list.get_item_tooltip(item_index),
+				"metadata": metadata.duplicate(true) if metadata is Dictionary or metadata is Array else metadata,
+			})
+		result[list_name] = {
+			"items": items,
+			"selected": Array(item_list.get_selected_items()),
+		}
+	return result
 
 func _main_menu_campaign_dock_anchors(viewport_size: Vector2i) -> Rect2:
 	var first_view_height_ratio := minf(

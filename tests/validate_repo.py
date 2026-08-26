@@ -19382,6 +19382,131 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
             ensure(forbidden_token not in summary_body, errors, f"Main Menu Stage Dock summary oracle must remain source-independent and passive: {forbidden_token}")
 
 
+def validate_main_menu_item_list_selection_inlay(errors: list[str]) -> None:
+    visual_kit_path = ROOT / "scripts" / "ui" / "FrontierVisualKit.gd"
+    required_paths = (visual_kit_path, MAIN_MENU_SCRIPT_PATH, MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Main Menu item-list inlay owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    visual_text = visual_kit_path.read_text(encoding="utf-8")
+    menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const ITEM_LIST_ROW_MODEL := "compact_enamel_gold_registration_inlay"',
+        "const ITEM_LIST_ROW_CORNER_RADIUS := 4",
+        "const ITEM_LIST_ROW_ACCENT_WIDTH := 4",
+        "const ITEM_LIST_ROW_LINE_SEPARATION := 3",
+        "const ITEM_LIST_SELECTED_FILL := Color(0.24, 0.18, 0.10, 0.96)",
+        "const ITEM_LIST_SELECTED_BORDER := Color(0.86, 0.70, 0.39, 0.94)",
+        "const ITEM_LIST_HOVER_FILL := Color(0.10, 0.16, 0.18, 0.88)",
+        "const ITEM_LIST_HOVER_BORDER := Color(0.43, 0.66, 0.70, 0.78)",
+    ):
+        ensure(visual_text.count(required_token) == 1, errors, f"Main Menu ItemList inlay must own one exact presentation constant: {required_token}")
+    apply_match = re.search(r"static func apply_item_list\([^\n]*\) -> void:\n(?P<body>.*?)(?=\nstatic func )", visual_text, flags=re.DOTALL)
+    row_match = re.search(r"static func _item_list_row_style\([^\n]*\) -> StyleBoxFlat:\n(?P<body>.*?)(?=\nstatic func )", visual_text, flags=re.DOTALL)
+    cursor_match = re.search(r"static func _item_list_cursor_style\([^\n]*\) -> StyleBoxFlat:\n(?P<body>.*?)(?=\nstatic func )", visual_text, flags=re.DOTALL)
+    focus_match = re.search(r"static func _item_list_focus_style\([^\n]*\) -> StyleBoxFlat:\n(?P<body>.*?)(?=\nstatic func )", visual_text, flags=re.DOTALL)
+    ensure(all(match is not None for match in (apply_match, row_match, cursor_match, focus_match)), errors, "Could not isolate Main Menu ItemList inlay source helpers")
+    if apply_match is not None:
+        apply_body = apply_match.group("body")
+        apply_order = tuple(apply_body.find(token) for token in (
+            'item_list.add_theme_stylebox_override("panel", panel_style(tone, 14))',
+            'item_list.add_theme_color_override("font_color", text_color("body"))',
+            'item_list.add_theme_color_override("font_selected_color", text_color("title"))',
+            'item_list.add_theme_color_override("font_hovered_color", text_color("title"))',
+            'item_list.add_theme_constant_override("line_separation", ITEM_LIST_ROW_LINE_SEPARATION)',
+            "var selected := _item_list_row_style(selected_fill, selected_border, ITEM_LIST_ROW_ACCENT_WIDTH)",
+            "var selected_focus := _item_list_row_style(selected_fill.lightened(0.045), text_color(\"gold\"), ITEM_LIST_ROW_ACCENT_WIDTH)",
+            "var hovered := _item_list_row_style(hover_fill, hover_border, 2)",
+            'item_list.add_theme_stylebox_override("selected", selected)',
+            'item_list.add_theme_stylebox_override("selected_focus", selected_focus)',
+            'item_list.add_theme_stylebox_override("hovered", hovered)',
+            'item_list.add_theme_stylebox_override("hovered_selected", hovered_selected)',
+            'item_list.add_theme_stylebox_override("hovered_selected_focus", hovered_selected_focus)',
+            'item_list.add_theme_stylebox_override("cursor", _item_list_cursor_style(text_color("gold"), 2))',
+            'item_list.add_theme_stylebox_override("cursor_unfocused", _item_list_cursor_style(selected_border, 1))',
+            'item_list.add_theme_stylebox_override("focus", _item_list_focus_style())',
+        ))
+        ensure(all(index >= 0 for index in apply_order) and list(apply_order) == sorted(apply_order), errors, "Main Menu ItemList inlay must apply panel/text/spacing, selected/hover, cursor, then focus styles in exact order")
+        for forbidden_token in ("set_item_", "select(", "deselect", "ensure_current_is_visible", "scroll", "custom_minimum_size", "focus_mode", "grab_focus", "sort(", "erase(", "await ", "call_deferred"):
+            ensure(forbidden_token not in apply_body, errors, f"Main Menu ItemList inlay application must remain presentation-only and avoid {forbidden_token}")
+    if row_match is not None:
+        row_body = row_match.group("body")
+        for required_token in (
+            "style.bg_color = fill",
+            "style.border_color = border",
+            "style.border_width_left = accent_width",
+            "style.border_width_top = 1",
+            "style.border_width_right = 1",
+            "style.border_width_bottom = 1",
+            "style.set_corner_radius_all(ITEM_LIST_ROW_CORNER_RADIUS)",
+            "style.content_margin_left = 8.0",
+            "style.content_margin_top = 2.0",
+            "style.content_margin_right = 6.0",
+            "style.content_margin_bottom = 2.0",
+        ):
+            ensure(required_token in row_body, errors, f"Main Menu ItemList row inlay is missing exact restrained geometry: {required_token}")
+    for helper_match, label in ((row_match, "row"), (cursor_match, "cursor"), (focus_match, "focus")):
+        if helper_match is not None:
+            helper_body = helper_match.group("body")
+            for forbidden_token in ("ItemList", "Control", "set_item_", "select(", "Input.", "SettingsService", "SaveService", "SessionState", "await ", "call_deferred"):
+                ensure(forbidden_token not in helper_body, errors, f"Main Menu ItemList {label} style helper must remain detached and avoid {forbidden_token}")
+    ensure('for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:\n\t\tFrontierVisualKit.apply_item_list(list, "smoke")' in menu_text, errors, "Main Menu must apply the shared ItemList inlay to exactly its five existing list owners")
+
+    for required_token in (
+        'const MAIN_MENU_ITEM_LISTS_BY_BOARD := {',
+        '"Campaign": ["CampaignList", "ChapterList"]',
+        '"Skirmish": ["SkirmishList"]',
+        '"Saves": ["SaveList"]',
+        '"Guide": ["HelpList"]',
+        "var compact_item_list_payloads: Dictionary = {}",
+        "for item_list_name_value in MAIN_MENU_ITEM_LISTS_BY_BOARD.get(String(board.get(\"label\", \"\")), []):",
+        'var item_list := shell.get_node_or_null("%%%s" % item_list_name) as ItemList',
+        "if not _main_menu_item_list_inlay_exact(item_list, dock_rect):",
+        "var all_item_list_payloads := _main_menu_item_list_payloads(shell)",
+        "board_item_list_payloads[payload_item_list_name] = all_item_list_payloads.get(payload_item_list_name, {}).duplicate(true)",
+        "compact_item_list_payloads[contract_key] = board_item_list_payloads",
+        "board_item_list_payloads != compact_item_list_payloads.get(contract_key, {})",
+        "func _main_menu_item_list_inlay_exact(item_list: ItemList, dock_rect: Rect2) -> bool:",
+        "not _main_menu_item_list_visible_containment_exact(item_list, dock_rect)",
+        'item_list.get_theme_stylebox("selected")',
+        'item_list.get_theme_stylebox("selected_focus")',
+        'item_list.get_theme_stylebox("hovered")',
+        'item_list.get_theme_stylebox("hovered_selected")',
+        'item_list.get_theme_stylebox("hovered_selected_focus")',
+        'item_list.get_theme_stylebox("cursor")',
+        'item_list.get_theme_stylebox("cursor_unfocused")',
+        'item_list.get_theme_stylebox("focus")',
+        "selected_flat.bg_color.is_equal_approx(Color(0.24, 0.18, 0.10, 0.96))",
+        "selected_flat.border_width_left == 4",
+        "hovered_flat.border_width_left == 2",
+        'item_list.get_theme_constant("line_separation") == 3',
+        "func _main_menu_item_list_visible_containment_exact(item_list: ItemList, dock_rect: Rect2) -> bool:",
+        "var list_rect := item_list.get_global_rect()",
+        "if ancestor is ScrollContainer:",
+        "var scroll_rect := (ancestor as ScrollContainer).get_global_rect()",
+        "return _rect_is_contained(dock_rect, scroll_rect) and scroll_rect.intersects(list_rect)",
+        "return _rect_is_contained(dock_rect, list_rect)",
+        "func _main_menu_item_list_payloads(shell: Control) -> Dictionary:",
+        'for list_name in ["CampaignList", "ChapterList", "SkirmishList", "SaveList", "HelpList"]:',
+        '"text": item_list.get_item_text(item_index)',
+        '"tooltip": item_list.get_item_tooltip(item_index)',
+        '"metadata": metadata.duplicate(true) if metadata is Dictionary or metadata is Array else metadata',
+        '"selected": Array(item_list.get_selected_items())',
+    ):
+        ensure(required_token in smoke_text, errors, f"Main Menu ItemList focused proof is missing exact token: {required_token}")
+    proof_match = re.search(r"func _main_menu_item_list_inlay_exact\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    containment_match = re.search(r"func _main_menu_item_list_visible_containment_exact\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    payload_match = re.search(r"func _main_menu_item_list_payloads\([^\n]*\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", smoke_text, flags=re.DOTALL)
+    ensure(proof_match is not None and containment_match is not None and payload_match is not None, errors, "Could not isolate Main Menu ItemList inlay focused observers")
+    for helper_match, label in ((proof_match, "style"), (containment_match, "visible containment"), (payload_match, "payload")):
+        if helper_match is not None:
+            helper_body = helper_match.group("body")
+            for forbidden_token in ("FrontierVisualKit", "apply_item_list", "add_theme_", "remove_theme_", "set_item_", "select(", "deselect", "scroll_vertical =", "grab_focus", "SettingsService", "SaveService", "SessionState", "sort(", "erase(", "await "):
+                ensure(forbidden_token not in helper_body, errors, f"Main Menu ItemList focused {label} observer must remain source-independent and passive: {forbidden_token}")
+
+
 def validate_main_menu_field_manual_reference_card(errors: list[str]) -> None:
     def gd_function_block(text: str, name: str) -> str:
         start = text.find(f"func {name}(")
@@ -67288,6 +67413,7 @@ def main() -> int:
     validate_main_menu_credits_third_party_notices(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_stage_dock_cartography_surface(errors)
+    validate_main_menu_item_list_selection_inlay(errors)
     validate_main_menu_field_manual_reference_card(errors)
     validate_main_menu_empty_save_scenic_card(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)

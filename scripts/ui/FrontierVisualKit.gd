@@ -174,6 +174,14 @@ static var _high_contrast_enabled := false
 static var _color_cue_mode := COLOR_CUE_MODE_STANDARD
 
 const BUTTON_ART_ROOT := "res://art/ui/runtime/shared"
+const ITEM_LIST_ROW_MODEL := "compact_enamel_gold_registration_inlay"
+const ITEM_LIST_ROW_CORNER_RADIUS := 4
+const ITEM_LIST_ROW_ACCENT_WIDTH := 4
+const ITEM_LIST_ROW_LINE_SEPARATION := 3
+const ITEM_LIST_SELECTED_FILL := Color(0.24, 0.18, 0.10, 0.96)
+const ITEM_LIST_SELECTED_BORDER := Color(0.86, 0.70, 0.39, 0.94)
+const ITEM_LIST_HOVER_FILL := Color(0.10, 0.16, 0.18, 0.88)
+const ITEM_LIST_HOVER_BORDER := Color(0.43, 0.66, 0.70, 0.78)
 
 static func set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> void:
 	label.tooltip_text = full_text
@@ -434,9 +442,60 @@ static func apply_item_list(item_list: ItemList, tone: String = "ink") -> void:
 	item_list.add_theme_stylebox_override("panel", panel_style(tone, 14))
 	item_list.add_theme_color_override("font_color", text_color("body"))
 	item_list.add_theme_color_override("font_selected_color", text_color("title"))
+	item_list.add_theme_color_override("font_hovered_color", text_color("title"))
+	item_list.add_theme_color_override("font_hovered_selected_color", text_color("title"))
 	item_list.add_theme_color_override("guide_color", Color(0.28, 0.34, 0.39, 0.70))
-	item_list.add_theme_color_override("selection_fill", text_color("gold").darkened(0.58))
-	item_list.add_theme_color_override("selection_color", text_color("gold"))
+	item_list.add_theme_constant_override("line_separation", ITEM_LIST_ROW_LINE_SEPARATION)
+	var selected_fill := Color(0.04, 0.035, 0.01, 1.0) if high_contrast_enabled() else ITEM_LIST_SELECTED_FILL
+	var selected_border := text_color("gold") if high_contrast_enabled() else ITEM_LIST_SELECTED_BORDER
+	var hover_fill := Color(0.02, 0.08, 0.10, 1.0) if high_contrast_enabled() else ITEM_LIST_HOVER_FILL
+	var hover_border := text_color("teal") if high_contrast_enabled() else ITEM_LIST_HOVER_BORDER
+	var selected := _item_list_row_style(selected_fill, selected_border, ITEM_LIST_ROW_ACCENT_WIDTH)
+	var selected_focus := _item_list_row_style(selected_fill.lightened(0.045), text_color("gold"), ITEM_LIST_ROW_ACCENT_WIDTH)
+	selected_focus.shadow_color = Color(0.0, 0.0, 0.0, 0.34)
+	selected_focus.shadow_size = 3
+	var hovered := _item_list_row_style(hover_fill, hover_border, 2)
+	var hovered_selected := _item_list_row_style(selected_fill.lightened(0.035), selected_border.lightened(0.08), ITEM_LIST_ROW_ACCENT_WIDTH)
+	var hovered_selected_focus := _item_list_row_style(selected_fill.lightened(0.07), text_color("gold"), ITEM_LIST_ROW_ACCENT_WIDTH)
+	item_list.add_theme_stylebox_override("selected", selected)
+	item_list.add_theme_stylebox_override("selected_focus", selected_focus)
+	item_list.add_theme_stylebox_override("hovered", hovered)
+	item_list.add_theme_stylebox_override("hovered_selected", hovered_selected)
+	item_list.add_theme_stylebox_override("hovered_selected_focus", hovered_selected_focus)
+	item_list.add_theme_stylebox_override("cursor", _item_list_cursor_style(text_color("gold"), 2))
+	item_list.add_theme_stylebox_override("cursor_unfocused", _item_list_cursor_style(selected_border, 1))
+	item_list.add_theme_stylebox_override("focus", _item_list_focus_style())
+
+static func _item_list_row_style(fill: Color, border: Color, accent_width: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = border
+	style.border_width_left = accent_width
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.set_corner_radius_all(ITEM_LIST_ROW_CORNER_RADIUS)
+	style.content_margin_left = 8.0
+	style.content_margin_top = 2.0
+	style.content_margin_right = 6.0
+	style.content_margin_bottom = 2.0
+	return style
+
+static func _item_list_cursor_style(border: Color, width: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color.TRANSPARENT
+	style.border_color = border
+	style.set_border_width_all(width)
+	style.set_corner_radius_all(ITEM_LIST_ROW_CORNER_RADIUS)
+	return style
+
+static func _item_list_focus_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color.TRANSPARENT
+	style.border_color = text_color("gold")
+	style.set_border_width_all(2 if high_contrast_enabled() else 1)
+	style.set_corner_radius_all(8)
+	return style
 
 static func apply_tab_container(tabs: TabContainer, tone: String = "ink") -> void:
 	tabs.add_theme_stylebox_override("panel", panel_style(tone, 18))

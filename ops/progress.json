@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from fresh inspected runtime evidence."
+    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,20 +1911,56 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-battle-stack-caption-nameplate-10184",
-    "title": "Battle stack caption nameplate",
+    "id": "presentation-main-menu-item-list-selection-inlay-10184",
+    "title": "Main Menu item-list selection inlay",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T04:17:26Z",
-    "updatedAt": "2026-08-26T04:45:48Z",
+    "startedAt": "2026-08-26T04:50:31Z",
+    "updatedAt": "2026-08-26T05:20:34Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from fresh inspected Battle captures: every visible stack name now uses a compact translucent side-accented nameplate above the unchanged character medallion, with exact caption identity, hit geometry, input, combat, and session authority preserved."
+    "notes": "Completed from fresh inspected 1280x720 and 1920x1080 captures: Campaign, Skirmish, Save, and Field Manual selections now use one compact enamel-and-gold row language while exact list/menu authority and compatibility gates remain green."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-main-menu-item-list-selection-inlay-20260826",
+      "title": "Main Menu item-list selection inlay",
+      "sliceId": "presentation-main-menu-item-list-selection-inlay-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T05:20:34Z",
+      "updatedAt": "2026-08-26T05:20:34Z",
+      "latestFinding": "Fresh inspected 1280x720 and 1920x1080 Campaign, Skirmish, and Field Manual captures replace default gray selection bars with compact dark enamel rows, restrained gold registration edges, and clear focus states; all five ItemLists preserve exact context-matched items, metadata, tooltips, selections, clipped scrolling, actions, accessibility, settings, save/session authority, compatibility, static/editor, and bounded Linux/Windows startup gates.",
+      "artifacts": [
+        "scripts/ui/FrontierVisualKit.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-menu-list-inlay-capture-final.dYDMpA",
+        "/tmp/heroes-menu-inlay-focused-authoritative.HAgA53",
+        "/tmp/heroes-menu-inlay-compat.85sV9W",
+        "/tmp/heroes-menu-inlay-validate-final.log",
+        "/tmp/heroes-menu-inlay-linux-package.0qRRke",
+        "/tmp/heroes-menu-inlay-windows-package.LW1XM4",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "styled_item_list_owners": 5,
+        "selected_hover_focus_style_states": 8,
+        "selected_accent_width_px": 4,
+        "line_separation_px": 3,
+        "context_matched_list_payloads_exact": true,
+        "menu_and_session_authority_unchanged": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "nonClaims": [
+        "No packaged Main Menu interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-battle-stack-caption-nameplate-20260826",
       "title": "Battle stack caption nameplate",
@@ -14693,14 +14729,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle stack-caption nameplate is completed; select the next graphical-polish slice from fresh inspected evidence.",
+  "currentNotes": "The Main Menu item-list selection inlay is completed; no implementation slice is currently selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-stack-caption-nameplate-10184",
-  "currentSliceId": "presentation-battle-stack-caption-nameplate-10184",
-  "currentSliceNotes": "Compact translucent side-accented nameplates now integrate exact stack captions above unchanged character medallions and hit geometry.",
+  "currentSlice": "presentation-main-menu-item-list-selection-inlay-10184",
+  "currentSliceId": "presentation-main-menu-item-list-selection-inlay-10184",
+  "currentSliceNotes": "Replace only default Main Menu ItemList selected/hover/focus rows with compact enamel-and-gold inlays while preserving exact list and menu authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle stack caption nameplate",
-  "currentSliceUpdatedAt": "2026-08-26T04:45:48Z",
+  "currentSliceTitle": "Main Menu item-list selection inlay",
+  "currentSliceUpdatedAt": "2026-08-26T05:20:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20215,9 +20251,35 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next graphical-polish slice from fresh inspected evidence; preserve completed Battle caption identity, token/hit geometry, input, combat, and session authority.",
-  "notes": "The Battle stack-caption nameplate slice is completed; blockers are empty and no next slice is selected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; preserve completed Main Menu list and menu authority.",
+  "notes": "The Main Menu item-list selection inlay slice is completed; blockers are empty and no next slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-main-menu-item-list-selection-inlay-10184",
+      "title": "Main Menu item-list selection inlay",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T04:50:31Z",
+      "updatedAt": "2026-08-26T05:20:34Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scripts/ui/FrontierVisualKit.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace default gray Main Menu list selections with compact enamel-and-gold inlays that match the ornate cartographic board while preserving the complete existing menu workflow.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 Campaign, Skirmish, and Field Manual captures show integrated selected rows; focused runtime proves exact five-list styles, containment and unchanged items/metadata/selection/focus/scroll/actions/settings/save/session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No item identity/text/order/metadata, selected index, row-height budget, scroll/focus/navigation, launch/load/help action, settings, save/session/schema, content, rules, or Native RMG change.",
+        "No backdrop/logo/command-spine/Stage-Dock art or layout, disclosure, portrait, other control style, typography, UI scale, animation/audio/VFX, or broad Main Menu redesign.",
+        "No packaged Main Menu interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from fresh inspected 1280x720 and 1920x1080 captures: all five existing list owners now share compact enamel-and-gold selected, hover, cursor, and focus states without changing list or menu authority.",
+      "blockedReason": null,
+      "remainingWork": "Completed: inspected two-width captures, focused and compatibility runtime, static/editor, and bounded Linux/Windows export-startup gates are green."
+    },
     {
       "id": "presentation-battle-stack-caption-nameplate-10184",
       "title": "Battle stack caption nameplate",
