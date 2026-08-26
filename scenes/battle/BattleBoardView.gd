@@ -44,6 +44,16 @@ const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
 const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
 const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96
 const STACK_ICON_ART_EXTENT_FACTOR := 1.86
+const STACK_CAPTION_PLATE_MODEL := "compact_translucent_side_accent_nameplate"
+const STACK_CAPTION_FONT_SIZE := 10
+const STACK_CAPTION_HORIZONTAL_PADDING := 5.0
+const STACK_CAPTION_PLATE_HEIGHT := 16.0
+const STACK_CAPTION_TOKEN_GAP := 2.0
+const STACK_CAPTION_ACCENT_WIDTH := 2.0
+const STACK_CAPTION_PLATE_FILL := Color(0.018, 0.024, 0.029, 0.78)
+const STACK_CAPTION_PLATE_FRAME := Color(0.80, 0.74, 0.57, 0.30)
+const STACK_CAPTION_PLATE_SHADOW := Color(0.01, 0.014, 0.018, 0.42)
+const STACK_CAPTION_ACCENT_ALPHA := 0.82
 const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.48)
 const MOVE_RANGE_VISUAL_MODEL := "thin_inset_outline_near_transparent_fill"
 const MOVE_RANGE_RADIUS_FACTOR := 0.72
@@ -992,15 +1002,44 @@ func _stack_token_visual_contract(hex_layout: Dictionary) -> Dictionary:
 
 func validation_stack_caption_summary() -> Array:
 	var rows: Array = []
+	var field_rect := _current_field_rect()
+	var hex_layout := _hex_layout(field_rect)
+	var stack_cells := _stack_cells()
 	for stack in _all_visible_stacks():
 		if not (stack is Dictionary):
 			continue
 		var battle_id := String(stack.get("battle_id", ""))
+		if not stack_cells.has(battle_id):
+			continue
+		var cell: Vector2i = stack_cells.get(battle_id)
+		var center := _stack_presentation_center(stack, cell, hex_layout, stack_cells)
+		var radius := float(hex_layout.get("radius", 1.0))
+		var layout := _stack_caption_layout(center, radius, stack)
+		var plate_rect: Rect2 = layout.get("plate_rect", Rect2())
+		var text_rect: Rect2 = layout.get("text_rect", Rect2())
+		var accent_rect: Rect2 = layout.get("accent_rect", Rect2())
+		var token_radius := _stack_token_radius(radius)
 		rows.append({
 			"battle_id": battle_id,
 			"full_name": _stack_full_name(stack),
 			"visible_caption": _stack_caption_label(stack),
 			"tooltip": _stack_board_tooltip(battle_id),
+			"plate_model": STACK_CAPTION_PLATE_MODEL,
+			"plate_rect": plate_rect,
+			"text_rect": text_rect,
+			"accent_rect": accent_rect,
+			"field_rect": field_rect,
+			"token_center": center,
+			"token_radius": token_radius,
+			"plate_fill_alpha": STACK_CAPTION_PLATE_FILL.a,
+			"plate_frame_alpha": STACK_CAPTION_PLATE_FRAME.a,
+			"plate_shadow_alpha": STACK_CAPTION_PLATE_SHADOW.a,
+			"accent_side": String(stack.get("side", "")),
+			"accent_color": layout.get("accent_color", Color.TRANSPARENT),
+			"text_contained": plate_rect.encloses(text_rect),
+			"accent_contained": plate_rect.encloses(accent_rect),
+			"plate_above_token": plate_rect.end.y <= center.y - token_radius + 0.01,
+			"field_contained": field_rect.encloses(plate_rect),
 		})
 	return rows
 
@@ -3696,9 +3735,39 @@ func _draw_count_badge(center: Vector2, token_radius: float, stack: Dictionary) 
 	_draw_centered_text(str(count), badge_center + Vector2(0.0, 3.5), TEXT_COLOR, 10)
 
 func _draw_stack_caption(center: Vector2, radius: float, stack: Dictionary) -> void:
+	var layout := _stack_caption_layout(center, radius, stack)
+	var plate_rect: Rect2 = layout.get("plate_rect", Rect2())
+	var accent_rect: Rect2 = layout.get("accent_rect", Rect2())
+	var text_position: Vector2 = layout.get("text_position", Vector2.ZERO)
+	var accent_color: Color = layout.get("accent_color", Color.TRANSPARENT)
+	draw_rect(Rect2(plate_rect.position + Vector2(1.0, 2.0), plate_rect.size), STACK_CAPTION_PLATE_SHADOW, true)
+	draw_rect(plate_rect, STACK_CAPTION_PLATE_FILL, true)
+	draw_rect(plate_rect, STACK_CAPTION_PLATE_FRAME, false, 1.0)
+	draw_rect(accent_rect, accent_color, true)
+	_draw_text(String(layout.get("label", "")), text_position, TEXT_COLOR, STACK_CAPTION_FONT_SIZE)
+
+func _stack_caption_layout(center: Vector2, radius: float, stack: Dictionary) -> Dictionary:
 	var label := _stack_caption_label(stack)
-	var caption_pos := center + Vector2(-radius * 0.72, -radius * 0.62)
-	_draw_text(label, caption_pos, TEXT_COLOR, 10)
+	var font := get_theme_default_font()
+	var text_size := font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE) if font != null else Vector2(float(label.length()) * 5.5, 10.0)
+	var plate_size := Vector2(ceil(text_size.x) + STACK_CAPTION_HORIZONTAL_PADDING * 2.0 + STACK_CAPTION_ACCENT_WIDTH, STACK_CAPTION_PLATE_HEIGHT)
+	var token_radius := _stack_token_radius(radius)
+	var plate_position := Vector2(round(center.x - plate_size.x * 0.5), round(center.y - token_radius - STACK_CAPTION_TOKEN_GAP - plate_size.y))
+	var plate_rect := Rect2(plate_position, plate_size)
+	var text_position := plate_position + Vector2(STACK_CAPTION_HORIZONTAL_PADDING + STACK_CAPTION_ACCENT_WIDTH, 12.0)
+	var text_rect := Rect2(Vector2(text_position.x, plate_position.y + 2.0), text_size)
+	var accent_rect := Rect2(plate_position, Vector2(STACK_CAPTION_ACCENT_WIDTH, plate_size.y))
+	var side_color := _side_color(String(stack.get("side", "")))
+	var accent_color := Color(side_color.r, side_color.g, side_color.b, STACK_CAPTION_ACCENT_ALPHA)
+	return {
+		"model": STACK_CAPTION_PLATE_MODEL,
+		"label": label,
+		"plate_rect": plate_rect,
+		"text_position": text_position,
+		"text_rect": text_rect,
+		"accent_rect": accent_rect,
+		"accent_color": accent_color,
+	}
 
 func _draw_focus_link(start: Vector2, end: Vector2, active_side: String) -> void:
 	var color := ACTIVE_COLOR if active_side == "player" else TARGET_COLOR

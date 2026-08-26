@@ -26,6 +26,27 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next graphical-polish slice from fresh inspected evidence.
 
+## Battle Stack Caption Nameplate
+
+id: `presentation-battle-stack-caption-nameplate-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the bare painted Battle stack caption with one compact translucent nameplate positioned above the existing character medallion;
+- retain the exact word-boundary caption text and full-name tooltip while adding a restrained neutral frame and a narrow live side-color accent derived from the current stack side;
+- keep the plate bounded within the battlefield, clear of the token portrait, and presentation-only, without changing the stack center, token radius, health/count cues, hit shape, board cell, initiative, input, or battle authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Battle captures show every visible stack name as a readable integrated label instead of loose text over terrain or character art;
+- focused runtime proves exact caption/full-name/tooltip preservation, side-accent ownership, plate/text containment, token clearance, battlefield containment, and unchanged stack/token/hit/combat/session authority;
+- Battle visual/navigation/animation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no stack/unit/hero identity, name, caption truncation policy, tooltip, count, health, initiative, side, position, movement, attack, targeting, AI, battle rule, session/save/schema, content, balance, or Native RMG change;
+- no token medallion/art/rim, hex terrain/grid, movement/target overlay, VFX/audio/animation, Battle shell/banner/sidebar/footer layout, input/focus, font, UI scale, or broad Battle redesign;
+- no packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Map-Object World-Scale Hierarchy
 
 id: `presentation-overworld-map-object-world-scale-hierarchy-10184`

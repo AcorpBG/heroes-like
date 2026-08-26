@@ -801,6 +801,7 @@ func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictionary:
 func _validate_stack_caption_word_boundaries(board: Control, session) -> bool:
 	if not board.has_method("validation_stack_caption_summary"):
 		return _fail_bool("BattleBoard does not expose its painted stack-caption summary.")
+	var battle_authority_before: Dictionary = session.battle.duplicate(true)
 	var rows: Array = board.call("validation_stack_caption_summary")
 	var visible_stack_count := 0
 	for stack in session.battle.get("stacks", []):
@@ -820,6 +821,40 @@ func _validate_stack_caption_word_boundaries(board: Control, session) -> bool:
 		var expected_caption := _stack_caption_word_text_control(full_name)
 		if String(row.get("full_name", "")) != full_name or visible_caption != expected_caption or visible_caption.contains("...") or not String(row.get("tooltip", "")).contains(full_name):
 			return _fail_bool("BattleBoard stack caption lost exact word-boundary/full-identity authority: row=%s expected=%s." % [row, expected_caption])
+		if not (row.get("plate_rect") is Rect2) or not (row.get("text_rect") is Rect2) or not (row.get("accent_rect") is Rect2) or not (row.get("field_rect") is Rect2) or not (row.get("token_center") is Vector2):
+			return _fail_bool("BattleBoard stack nameplate geometry is malformed: %s." % row)
+		var plate_rect: Rect2 = row.get("plate_rect")
+		var text_rect: Rect2 = row.get("text_rect")
+		var accent_rect: Rect2 = row.get("accent_rect")
+		var field_rect: Rect2 = row.get("field_rect")
+		var token_center: Vector2 = row.get("token_center")
+		var token_radius := float(row.get("token_radius", 0.0))
+		var side := String(stack.get("side", ""))
+		var actual_accent: Color = row.get("accent_color", Color.TRANSPARENT)
+		var expected_accent := Color(0.68, 0.72, 0.78, 0.82)
+		if side == "player":
+			expected_accent = Color(0.42, 0.66, 0.90, 0.82)
+		elif side == "enemy":
+			expected_accent = Color(0.84, 0.38, 0.33, 0.82)
+		if (
+			String(row.get("plate_model", "")) != "compact_translucent_side_accent_nameplate"
+			or not is_equal_approx(plate_rect.size.y, 16.0)
+			or not is_equal_approx(accent_rect.size.x, 2.0)
+			or not plate_rect.encloses(text_rect)
+			or not plate_rect.encloses(accent_rect)
+			or not field_rect.encloses(plate_rect)
+			or plate_rect.end.y > token_center.y - token_radius + 0.01
+			or not bool(row.get("text_contained", false))
+			or not bool(row.get("accent_contained", false))
+			or not bool(row.get("plate_above_token", false))
+			or not bool(row.get("field_contained", false))
+			or not is_equal_approx(float(row.get("plate_fill_alpha", 0.0)), 0.78)
+			or not is_equal_approx(float(row.get("plate_frame_alpha", 0.0)), 0.30)
+			or not is_equal_approx(float(row.get("plate_shadow_alpha", 0.0)), 0.42)
+			or String(row.get("accent_side", "")) != side
+			or not actual_accent.is_equal_approx(expected_accent)
+		):
+			return _fail_bool("BattleBoard stack nameplate lost exact containment, token clearance, or side accent authority: %s." % row)
 		if visible_caption.ends_with("…"):
 			saw_overflow = true
 			var prefix := visible_caption.trim_suffix("…")
@@ -827,6 +862,8 @@ func _validate_stack_caption_word_boundaries(board: Control, session) -> bool:
 				return _fail_bool("BattleBoard stack caption ended inside a live stack-name token: row=%s." % row)
 	if not saw_overflow:
 		return _fail_bool("BattleBoard stack-caption fixture did not exercise genuine multi-word overflow: %s." % rows)
+	if session.battle != battle_authority_before:
+		return _fail_bool("BattleBoard stack-nameplate observation changed battle authority.")
 	return true
 
 func _stack_caption_word_text_control(full_name: String) -> String:

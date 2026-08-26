@@ -1911,20 +1911,56 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-map-object-world-scale-hierarchy-10184",
-    "title": "Overworld map-object world-scale hierarchy",
+    "id": "presentation-battle-stack-caption-nameplate-10184",
+    "title": "Battle stack caption nameplate",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T03:34:13Z",
-    "updatedAt": "2026-08-26T03:54:08Z",
+    "startedAt": "2026-08-26T04:17:26Z",
+    "updatedAt": "2026-08-26T04:45:48Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct user feedback and inspected River Pass captures: non-town, non-hero painted extents now form a subordinate world-scale ladder while every logical footprint, interaction, and map/session authority remains exact."
+    "notes": "Completed from fresh inspected Battle captures: every visible stack name now uses a compact translucent side-accented nameplate above the unchanged character medallion, with exact caption identity, hit geometry, input, combat, and session authority preserved."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-battle-stack-caption-nameplate-20260826",
+      "title": "Battle stack caption nameplate",
+      "sliceId": "presentation-battle-stack-caption-nameplate-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T04:45:48Z",
+      "updatedAt": "2026-08-26T04:45:48Z",
+      "latestFinding": "Fresh inspected 1280x720 and 1920x1080 Battle captures show readable integrated stack-name plates instead of loose terrain-overlaid text; exact captions/tooltips, side accents, battlefield containment, token clearance, token/hit geometry, combat/session authority, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "artifacts": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-caption-nameplate-focused.BVtk82",
+        "/tmp/heroes-caption-nameplate-captures-x11.llrujW",
+        "/tmp/heroes-caption-nameplate-compat.O61inU",
+        "/tmp/heroes-caption-nameplate-static.VbkVEu",
+        "/tmp/heroes-caption-nameplate-platform.0yPqrG",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "caption_plate_height_px": 16,
+        "caption_side_accent_width_px": 2,
+        "caption_fill_alpha": 0.78,
+        "caption_accent_alpha": 0.82,
+        "focused_width_count": 2,
+        "token_and_hit_geometry_unchanged": true,
+        "battle_and_session_authority_unchanged": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "nonClaims": [
+        "No packaged Battle interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-overworld-map-object-world-scale-hierarchy-20260826",
       "title": "Overworld map-object world-scale hierarchy",
@@ -14657,14 +14693,14 @@
       }
     }
   ],
-  "currentNotes": "The map-object world-scale hierarchy is completed; select the next graphical-polish slice from fresh inspected evidence.",
+  "currentNotes": "The Battle stack-caption nameplate is completed; select the next graphical-polish slice from fresh inspected evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-map-object-world-scale-hierarchy-10184",
-  "currentSliceId": "presentation-overworld-map-object-world-scale-hierarchy-10184",
-  "currentSliceNotes": "Tighten only painted non-town, non-hero object extents into one world-scale ladder while preserving alpha crop, anchoring, footprints, interactions, and authority.",
+  "currentSlice": "presentation-battle-stack-caption-nameplate-10184",
+  "currentSliceId": "presentation-battle-stack-caption-nameplate-10184",
+  "currentSliceNotes": "Compact translucent side-accented nameplates now integrate exact stack captions above unchanged character medallions and hit geometry.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld map-object world-scale hierarchy",
-  "currentSliceUpdatedAt": "2026-08-26T03:54:08Z",
+  "currentSliceTitle": "Battle stack caption nameplate",
+  "currentSliceUpdatedAt": "2026-08-26T04:45:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20179,9 +20215,35 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next graphical-polish slice from fresh inspected evidence; preserve completed map-object scale, footprints, interactions, content identity, and session/save authority.",
-  "notes": "The map-object world-scale hierarchy slice is completed; blockers are empty and no next slice is selected.",
+  "nextActionGuardrailNote": "Select the next graphical-polish slice from fresh inspected evidence; preserve completed Battle caption identity, token/hit geometry, input, combat, and session authority.",
+  "notes": "The Battle stack-caption nameplate slice is completed; blockers are empty and no next slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-stack-caption-nameplate-10184",
+      "title": "Battle stack caption nameplate",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T04:17:26Z",
+      "updatedAt": "2026-08-26T04:45:48Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Integrate live stack names into the painted battlefield with a compact translucent side-accented nameplate above each unchanged character medallion.",
+      "completionCriteria": "Fresh inspected 1280x720 and 1920x1080 Battle captures show readable integrated stack names; focused runtime proves exact text/tooltips, side accents, plate/text containment, token clearance, battlefield containment, and unchanged token/hit/combat/session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No stack/unit identity, caption policy, tooltip, count/health/initiative/side, position/movement/attack/targeting, AI, battle rules, session/save/schema, content, balance, or Native RMG change.",
+        "No token medallion/art/rim, hex terrain/grid, overlays, VFX/audio/animation, shell layout, input/focus, font/UI-scale, or broad Battle redesign.",
+        "No packaged Battle interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from fresh inspected 1280x720 and 1920x1080 Battle captures: stack captions now read as integrated nameplates above unchanged medallions.",
+      "blockedReason": null,
+      "remainingWork": "Completed: inspected two-width captures, focused and compatibility runtime, static/editor, and bounded Linux/Windows export-startup gates are green."
+    },
     {
       "id": "presentation-overworld-map-object-world-scale-hierarchy-10184",
       "title": "Overworld map-object world-scale hierarchy",
