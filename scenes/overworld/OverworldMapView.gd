@@ -73,6 +73,16 @@ const HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR := 0.18
 const HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR := 0.035
 const HERO_COMMAND_FOCUS_ALPHA := 0.82
 const HERO_COMMAND_FOCUS_SHADOW_ALPHA := 0.40
+const HOSTILE_ACTOR_MARKER_MODEL := "open_hostile_flank_chevrons_and_threat_notch"
+const HOSTILE_ACTOR_MARKER_OUTSET_FACTOR := 0.035
+const HOSTILE_ACTOR_MARKER_FLANK_LENGTH_FACTOR := 0.11
+const HOSTILE_ACTOR_MARKER_FLANK_DEPTH_FACTOR := 0.10
+const HOSTILE_ACTOR_MARKER_NOTCH_WIDTH_FACTOR := 0.14
+const HOSTILE_ACTOR_MARKER_NOTCH_DEPTH_FACTOR := 0.07
+const HOSTILE_ACTOR_MARKER_LINE_WIDTH_FACTOR := 0.020
+const HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA := 0.86
+const HOSTILE_ACTOR_MARKER_MEMORY_ALPHA := 0.62
+const HOSTILE_ACTOR_MARKER_SHADOW_ALPHA := 0.42
 const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
 const HERO_FILL_COLOR := Color(0.88, 0.32, 0.21, 1.0)
@@ -2898,16 +2908,10 @@ func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, rememb
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
-	var extent := minf(rect.size.x, rect.size.y)
-	var icon_extent := maxf(14.0, extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES)
-	var center: Vector2 = anchor.get("center", rect.get_center())
-	var icon_center := center + Vector2(0.0, -extent * 0.14)
-	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
-	var ring_radius := icon_extent * 0.54
-	_canvas_draw_circle(icon_center + Vector2(1.5, 2.0), ring_radius, MARKER_SHADOW_COLOR)
-	_canvas_draw_circle(icon_center, ring_radius, Color(0.08, 0.07, 0.05, 0.88 if not remembered else 0.58))
-	_canvas_draw_circle(icon_center, ring_radius, MEMORY_OBJECT_OUTLINE if remembered else ENCOUNTER_COLOR, false, maxf(2.0, extent * 0.028))
+	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)
+	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
 	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
 
@@ -2919,18 +2923,105 @@ func _draw_encounter_unit_icon(encounter: Dictionary, rect: Rect2, remembered: b
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
-	var extent := minf(rect.size.x, rect.size.y)
-	var icon_extent := maxf(14.0, extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES)
-	var center: Vector2 = anchor.get("center", rect.get_center())
-	var icon_center := center + Vector2(0.0, -extent * 0.14)
-	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
-	var ring_radius := icon_extent * 0.54
-	_canvas_draw_circle(icon_center + Vector2(1.5, 2.0), ring_radius, MARKER_SHADOW_COLOR)
-	_canvas_draw_circle(icon_center, ring_radius, Color(0.08, 0.07, 0.05, 0.88 if not remembered else 0.58))
-	_canvas_draw_circle(icon_center, ring_radius, MEMORY_OBJECT_OUTLINE if remembered else ENCOUNTER_COLOR, false, maxf(2.0, extent * 0.028))
+	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)
+	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
 	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
+
+func _hostile_actor_layout(rect: Rect2, ground_center: Vector2, remembered: bool) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var icon_extent := maxf(14.0, extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES)
+	var icon_center := ground_center + Vector2(0.0, -extent * 0.14)
+	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
+	return {
+		"tile_rect": rect,
+		"icon_rect": icon_rect,
+		"marker_profile": _hostile_actor_marker_profile(rect, icon_rect, extent, remembered),
+	}
+
+func _hostile_actor_marker_profile(tile_rect: Rect2, icon_rect: Rect2, tile_extent: float, remembered: bool) -> Dictionary:
+	var outset := maxf(2.0, tile_extent * HOSTILE_ACTOR_MARKER_OUTSET_FACTOR)
+	var marker_rect := icon_rect.grow(outset)
+	var line_width := maxf(1.25, tile_extent * HOSTILE_ACTOR_MARKER_LINE_WIDTH_FACTOR)
+	return {
+		"model": HOSTILE_ACTOR_MARKER_MODEL,
+		"tile_rect": tile_rect,
+		"icon_rect": icon_rect,
+		"marker_rect": marker_rect,
+		"center_y": marker_rect.get_center().y,
+		"flank_length_px": maxf(4.0, tile_extent * HOSTILE_ACTOR_MARKER_FLANK_LENGTH_FACTOR),
+		"flank_depth_px": maxf(3.5, tile_extent * HOSTILE_ACTOR_MARKER_FLANK_DEPTH_FACTOR),
+		"threat_notch_width_px": maxf(5.0, tile_extent * HOSTILE_ACTOR_MARKER_NOTCH_WIDTH_FACTOR),
+		"threat_notch_depth_px": maxf(3.0, tile_extent * HOSTILE_ACTOR_MARKER_NOTCH_DEPTH_FACTOR),
+		"line_width_px": line_width,
+		"shadow_width_px": line_width + 1.5,
+		"marker_alpha": HOSTILE_ACTOR_MARKER_MEMORY_ALPHA if remembered else HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA,
+		"shadow_alpha": HOSTILE_ACTOR_MARKER_SHADOW_ALPHA,
+		"flank_chevron_count": 2,
+		"threat_notch_count": 1,
+		"continuous_ring": false,
+		"interior_fill_alpha": 0.0,
+		"remembered": remembered,
+		"contained_in_tile": tile_rect.encloses(marker_rect),
+	}
+
+func _draw_hostile_actor_marker(profile: Dictionary) -> void:
+	var marker_rect: Rect2 = profile.get("marker_rect", Rect2())
+	if marker_rect.size.x <= 0.0 or marker_rect.size.y <= 0.0:
+		return
+	var center_y := float(profile.get("center_y", marker_rect.get_center().y))
+	var flank_length := float(profile.get("flank_length_px", 4.0))
+	var flank_depth := float(profile.get("flank_depth_px", 3.5))
+	var notch_width := float(profile.get("threat_notch_width_px", 5.0))
+	var notch_depth := float(profile.get("threat_notch_depth_px", 3.0))
+	var line_width := float(profile.get("line_width_px", 1.25))
+	var shadow_width := float(profile.get("shadow_width_px", line_width + 1.5))
+	var left_flank := PackedVector2Array([
+		Vector2(marker_rect.position.x + flank_length, center_y - flank_depth),
+		Vector2(marker_rect.position.x, center_y),
+		Vector2(marker_rect.position.x + flank_length, center_y + flank_depth),
+	])
+	var right_flank := PackedVector2Array([
+		Vector2(marker_rect.end.x - flank_length, center_y - flank_depth),
+		Vector2(marker_rect.end.x, center_y),
+		Vector2(marker_rect.end.x - flank_length, center_y + flank_depth),
+	])
+	var top_center := Vector2(marker_rect.get_center().x, marker_rect.position.y)
+	var threat_notch := PackedVector2Array([
+		top_center + Vector2(-notch_width * 0.5, 0.0),
+		top_center + Vector2(0.0, notch_depth),
+		top_center + Vector2(notch_width * 0.5, 0.0),
+	])
+	var shadow_color := Color(0.025, 0.018, 0.014, float(profile.get("shadow_alpha", HOSTILE_ACTOR_MARKER_SHADOW_ALPHA)))
+	var base_color := MEMORY_OBJECT_OUTLINE if bool(profile.get("remembered", false)) else ENCOUNTER_COLOR
+	var marker_color := Color(base_color.r, base_color.g, base_color.b, float(profile.get("marker_alpha", HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA)))
+	for points in [left_flank, right_flank, threat_notch]:
+		_canvas_draw_polyline(points, shadow_color, shadow_width, true)
+		_canvas_draw_polyline(points, marker_color, line_width, true)
+
+func _hostile_actor_marker_validation_payload(profile: Dictionary) -> Dictionary:
+	var tile_rect: Rect2 = profile.get("tile_rect", Rect2())
+	var icon_rect: Rect2 = profile.get("icon_rect", Rect2())
+	var marker_rect: Rect2 = profile.get("marker_rect", Rect2())
+	return {
+		"model": String(profile.get("model", "")),
+		"tile_rect": _rect_payload(tile_rect),
+		"icon_rect": _rect_payload(icon_rect),
+		"marker_rect": _rect_payload(marker_rect),
+		"flank_chevron_count": int(profile.get("flank_chevron_count", 0)),
+		"threat_notch_count": int(profile.get("threat_notch_count", 0)),
+		"line_width_px": float(profile.get("line_width_px", 0.0)),
+		"shadow_width_px": float(profile.get("shadow_width_px", 0.0)),
+		"marker_alpha": float(profile.get("marker_alpha", 0.0)),
+		"visible_alpha": HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA,
+		"remembered_alpha": HOSTILE_ACTOR_MARKER_MEMORY_ALPHA,
+		"continuous_ring": bool(profile.get("continuous_ring", true)),
+		"interior_fill_alpha": float(profile.get("interior_fill_alpha", 1.0)),
+		"contained_in_tile": bool(profile.get("contained_in_tile", false)),
+		"antialiased": true,
+	}
 
 func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if bool(object.get("generated_decorative_body_cell", false)):
@@ -5578,6 +5669,11 @@ func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 	var unit_icon_loaded := unit_icon_path != "" and _unit_art_texture(unit_icon_path) is Texture2D
 	var encounter_asset_id := _encounter_asset_id(encounter)
 	var encounter_asset_loaded := encounter_asset_id != "" and _object_texture_for_asset(encounter_asset_id) is Texture2D
+	var tile := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
+	var tile_rect := _tile_rect(_board_rect(), tile)
+	var ground_center := tile_rect.position + tile_rect.size * Vector2(0.50, _procedural_ground_center_y_factor("encounter"))
+	var hostile_layout := _hostile_actor_layout(tile_rect, ground_center, false)
+	var hostile_marker_profile: Dictionary = hostile_layout.get("marker_profile", {})
 	return {
 		"placement_id": String(encounter.get("placement_id", "")),
 		"hero_id": hero_id,
@@ -5592,7 +5688,8 @@ func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 		"uses_commander_sprite": sprite_asset_id != "",
 		"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded,
 		"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded,
-		"hostile_treatment": "encounter_ring",
+		"hostile_treatment": HOSTILE_ACTOR_MARKER_MODEL,
+		"hostile_marker_profile": _hostile_actor_marker_validation_payload(hostile_marker_profile),
 		"visible_extent_tiles": OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES,
 		"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL,
 		"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL,

@@ -43548,6 +43548,11 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     draw_block = function_block(map_text, "_draw_encounter_sprite")
     commander_draw_block = function_block(map_text, "_draw_encounter_commander_sprite")
+    unit_draw_block = function_block(map_text, "_draw_encounter_unit_icon")
+    hostile_layout_block = function_block(map_text, "_hostile_actor_layout")
+    hostile_profile_block = function_block(map_text, "_hostile_actor_marker_profile")
+    hostile_draw_block = function_block(map_text, "_draw_hostile_actor_marker")
+    hostile_validation_block = function_block(map_text, "_hostile_actor_marker_validation_payload")
     resolver_block = function_block(map_text, "_enemy_commander_hero_template")
     profile_block = function_block(map_text, "validation_enemy_commander_presentation_profiles")
     payload_block = function_block(map_text, "_enemy_commander_presentation_payload")
@@ -43565,9 +43570,9 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         "_object_texture_for_asset(_hero_sprite_asset_id(hero))",
         'if not (texture is Texture2D):',
         '_draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)',
-        "extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES",
-        "MEMORY_OBJECT_OUTLINE if remembered else ENCOUNTER_COLOR",
+        '_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)',
         "OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE",
+        '_draw_hostile_actor_marker(layout.get("marker_profile", {}))',
         '_draw_procedural_contact_marks(anchor, "encounter", remembered)',
         "return true",
     ):
@@ -43606,7 +43611,8 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         '"uses_commander_sprite": sprite_asset_id != ""',
         '"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded',
         '"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded',
-        '"hostile_treatment": "encounter_ring"',
+        '"hostile_treatment": HOSTILE_ACTOR_MARKER_MODEL',
+        '"hostile_marker_profile": _hostile_actor_marker_validation_payload(hostile_marker_profile)',
         '"visible_extent_tiles": OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES',
         '"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL',
         '"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL',
@@ -43615,9 +43621,63 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "erase("):
         ensure(forbidden not in payload_block, errors, f"Enemy commander validation payload must remain read-only: {forbidden}")
 
-    ensure(commander_draw_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Enemy commander art must use the exact semantic encounter extent once")
-    unit_draw_block = function_block(map_text, "_draw_encounter_unit_icon")
-    ensure(unit_draw_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Encounter unit fallback art must use the exact semantic encounter extent once")
+    for token in (
+        'const HOSTILE_ACTOR_MARKER_MODEL := "open_hostile_flank_chevrons_and_threat_notch"',
+        "const HOSTILE_ACTOR_MARKER_OUTSET_FACTOR := 0.035",
+        "const HOSTILE_ACTOR_MARKER_FLANK_LENGTH_FACTOR := 0.11",
+        "const HOSTILE_ACTOR_MARKER_FLANK_DEPTH_FACTOR := 0.10",
+        "const HOSTILE_ACTOR_MARKER_NOTCH_WIDTH_FACTOR := 0.14",
+        "const HOSTILE_ACTOR_MARKER_NOTCH_DEPTH_FACTOR := 0.07",
+        "const HOSTILE_ACTOR_MARKER_LINE_WIDTH_FACTOR := 0.020",
+        "const HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA := 0.86",
+        "const HOSTILE_ACTOR_MARKER_MEMORY_ALPHA := 0.62",
+        "const HOSTILE_ACTOR_MARKER_SHADOW_ALPHA := 0.42",
+    ):
+        ensure(map_text.count(token) == 1, errors, f"Open hostile actor marker must own one exact visual constant: {token}")
+    for token in (
+        "extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES",
+        '"marker_profile": _hostile_actor_marker_profile(rect, icon_rect, extent, remembered)',
+    ):
+        ensure(token in hostile_layout_block, errors, f"Hostile actor layout is missing exact unchanged sprite/marker geometry: {token}")
+    for token in (
+        '"model": HOSTILE_ACTOR_MARKER_MODEL',
+        '"flank_chevron_count": 2',
+        '"threat_notch_count": 1',
+        '"continuous_ring": false',
+        '"interior_fill_alpha": 0.0',
+        '"contained_in_tile": tile_rect.encloses(marker_rect)',
+        '"marker_alpha": HOSTILE_ACTOR_MARKER_MEMORY_ALPHA if remembered else HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA',
+    ):
+        ensure(token in hostile_profile_block, errors, f"Hostile actor marker profile is missing fill-free contained geometry: {token}")
+    for forbidden in ("session", "_session", "Input.", "await ", "create_timer", "queue_redraw", "_canvas_draw_"):
+        ensure(forbidden not in hostile_profile_block + hostile_layout_block, errors, f"Hostile actor marker geometry must remain pure and presentation-only: {forbidden}")
+    for token in (
+        "var left_flank := PackedVector2Array([",
+        "var right_flank := PackedVector2Array([",
+        "var threat_notch := PackedVector2Array([",
+        "for points in [left_flank, right_flank, threat_notch]:",
+        "_canvas_draw_polyline(points, shadow_color, shadow_width, true)",
+        "_canvas_draw_polyline(points, marker_color, line_width, true)",
+    ):
+        ensure(token in hostile_draw_block, errors, f"Hostile actor marker draw must retain exact open chevron/notch ownership: {token}")
+    for forbidden in ("_canvas_draw_circle", "_canvas_draw_rect", "_canvas_draw_colored_polygon", "session", "_session", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in hostile_draw_block + commander_draw_block + unit_draw_block, errors, f"Hostile actor presentation must not restore a filled/continuous ring or mutate gameplay/timing: {forbidden}")
+    for token in (
+        '"model": String(profile.get("model", ""))',
+        '"flank_chevron_count": int(profile.get("flank_chevron_count", 0))',
+        '"threat_notch_count": int(profile.get("threat_notch_count", 0))',
+        '"continuous_ring": bool(profile.get("continuous_ring", true))',
+        '"interior_fill_alpha": float(profile.get("interior_fill_alpha", 1.0))',
+        '"contained_in_tile": bool(profile.get("contained_in_tile", false))',
+        '"visible_alpha": HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA',
+        '"remembered_alpha": HOSTILE_ACTOR_MARKER_MEMORY_ALPHA',
+    ):
+        ensure(token in hostile_validation_block, errors, f"Hostile marker public validation is missing detached exact evidence: {token}")
+    for forbidden in ("_draw_hostile_actor_marker", "session", "_session", "Input.", "await ", "create_timer", "queue_redraw"):
+        ensure(forbidden not in hostile_validation_block, errors, f"Hostile marker validation must remain detached/read-only: {forbidden}")
+    ensure(hostile_layout_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Hostile actor layout must derive the exact semantic 0.50-tile extent once")
+    ensure(commander_draw_block.count('_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)') == 1, errors, "Enemy commander draw must use one shared hostile actor layout")
+    ensure(unit_draw_block.count('_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)') == 1, errors, "Encounter unit fallback draw must use one shared hostile actor layout")
     ensure("extent * 0.68" not in commander_draw_block + unit_draw_block, errors, "Encounter actor drawing must not retain the oversized hard-coded 0.68-tile bypass")
 
     ensure('_enemy_commander_presentation_signature(overworld.get("encounters", []))' in index_block, errors, "Static object index must invalidate when nested enemy commander presentation identity changes")
@@ -43645,7 +43705,12 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(profile.get("commander_faction_id", "")) != faction_id',
         'String(profile.get("authored_faction_id", "")) != faction_id',
         'String(profile.get("sprite_asset_id", "")) != expected_asset_id',
-        'String(profile.get("hostile_treatment", "")) == "encounter_ring"',
+        'String(profile.get("hostile_treatment", "")) == "open_hostile_flank_chevrons_and_threat_notch"',
+        '_hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}))',
+        'not bool(profile.get("continuous_ring", true))',
+        'is_zero_approx(float(profile.get("interior_fill_alpha", -1.0)))',
+        'tile_rect.encloses(marker_rect)',
+        'marker_rect.encloses(icon_rect)',
         'float(profile.get("visible_extent_tiles", 0.0)), 0.50',
         'session.from_dict(authority_before)',
         'if not _apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id):',
@@ -43710,6 +43775,12 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw"',
         'not bool(interceptor_profile.get("uses_commander_sprite", false))',
         'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.50',
+        'String(interceptor_profile.get("hostile_treatment", "")) != "open_hostile_flank_chevrons_and_threat_notch"',
+        'int(hostile_marker.get("flank_chevron_count", 0)) != 2',
+        'int(hostile_marker.get("threat_notch_count", 0)) != 1',
+        'bool(hostile_marker.get("continuous_ring", true))',
+        'not is_zero_approx(float(hostile_marker.get("interior_fill_alpha", -1.0)))',
+        'not bool(hostile_marker.get("contained_in_tile", false))',
     ):
         ensure(token in visual_text, errors, f"Broad Overworld visual gate must require the exact live Mireclaw raid commander sprite: {token}")
 

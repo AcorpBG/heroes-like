@@ -106,6 +106,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		"profile_count": profiles.size(),
 		"asset_ids": exact.get("asset_ids", []),
 		"hostile_treatment_exact": exact.get("hostile_treatment_exact", false),
+		"hostile_marker_geometry_exact": exact.get("hostile_marker_geometry_exact", false),
 		"fallback_rows": fallback_rows,
 		"restored_exact": restored_exact,
 		"containment_exact": containment_exact,
@@ -117,6 +118,7 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 	var seen_factions: Dictionary = {}
 	var seen_assets: Dictionary = {}
 	var hostile_treatment_exact := true
+	var hostile_marker_geometry_exact := true
 	for profile_value in profiles:
 		if not (profile_value is Dictionary):
 			return {"ok": false, "reason": "profile_type"}
@@ -139,17 +141,53 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 		if String(profile.get("primary_unit_id", "")) == "" or String(profile.get("unit_icon_path", "")) == "":
 			return {"ok": false, "reason": "unit_fallback_authority", "profile": profile}
 		hostile_treatment_exact = hostile_treatment_exact \
-			and String(profile.get("hostile_treatment", "")) == "encounter_ring" \
+			and String(profile.get("hostile_treatment", "")) == "open_hostile_flank_chevrons_and_threat_notch" \
 			and is_equal_approx(float(profile.get("visible_extent_tiles", 0.0)), 0.50) \
 			and String(profile.get("grounding_model", "")) == "family_specific_contact_scuffs_no_marker_plate" \
 			and String(profile.get("contact_model", "")) == "localized_object_contact_shadow"
+		hostile_marker_geometry_exact = hostile_marker_geometry_exact and _hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}))
 		seen_factions[faction_id] = true
 		seen_assets[expected_asset_id] = true
 	return {
-		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and hostile_treatment_exact,
+		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and hostile_treatment_exact and hostile_marker_geometry_exact,
 		"asset_ids": seen_assets.keys(),
 		"hostile_treatment_exact": hostile_treatment_exact,
+		"hostile_marker_geometry_exact": hostile_marker_geometry_exact,
 	}
+
+func _hostile_marker_profile_exact(profile_value: Variant) -> bool:
+	if not (profile_value is Dictionary):
+		return false
+	var profile: Dictionary = profile_value
+	var tile_rect := _rect_from_payload(profile.get("tile_rect", {}))
+	var icon_rect := _rect_from_payload(profile.get("icon_rect", {}))
+	var marker_rect := _rect_from_payload(profile.get("marker_rect", {}))
+	return String(profile.get("model", "")) == "open_hostile_flank_chevrons_and_threat_notch" \
+		and int(profile.get("flank_chevron_count", 0)) == 2 \
+		and int(profile.get("threat_notch_count", 0)) == 1 \
+		and not bool(profile.get("continuous_ring", true)) \
+		and is_zero_approx(float(profile.get("interior_fill_alpha", -1.0))) \
+		and bool(profile.get("contained_in_tile", false)) \
+		and bool(profile.get("antialiased", false)) \
+		and is_equal_approx(float(profile.get("visible_alpha", 0.0)), 0.86) \
+		and is_equal_approx(float(profile.get("remembered_alpha", 0.0)), 0.62) \
+		and float(profile.get("line_width_px", 0.0)) > 0.0 \
+		and float(profile.get("shadow_width_px", 0.0)) > float(profile.get("line_width_px", 0.0)) \
+		and tile_rect.encloses(marker_rect) \
+		and marker_rect.encloses(icon_rect) \
+		and is_equal_approx(marker_rect.get_center().x, icon_rect.get_center().x) \
+		and is_equal_approx(marker_rect.get_center().y, icon_rect.get_center().y)
+
+func _rect_from_payload(value: Variant) -> Rect2:
+	if not (value is Dictionary):
+		return Rect2()
+	var payload: Dictionary = value
+	return Rect2(
+		float(payload.get("x", 0.0)),
+		float(payload.get("y", 0.0)),
+		float(payload.get("width", 0.0)),
+		float(payload.get("height", 0.0))
+	)
 
 func _configure_commander_fixture(session) -> void:
 	var encounters: Array = []
