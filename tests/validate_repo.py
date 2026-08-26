@@ -55211,6 +55211,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)",
         "const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92",
         "const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15",
+        "const STACK_TOKEN_RADIUS_FACTOR := 0.68",
+        "const STACK_TOKEN_RADIUS_MIN := 15.0",
+        "const STACK_TOKEN_RADIUS_MAX := 32.0",
+        "const STACK_HIT_RADIUS_FACTOR := 0.58",
+        "const STACK_HIT_RADIUS_MIN := 13.0",
+        "const STACK_HIT_RADIUS_MAX := 28.0",
+        "const STACK_HIT_RADIUS_PADDING := 10.0",
         "const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96",
         "const STACK_ICON_ART_EXTENT_FACTOR := 1.86",
     ):
@@ -55247,6 +55254,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         '"presentation_model": "character_first_dark_medallion_side_rim"',
         '"token_radius": token_radius',
         '"hit_radius": _stack_hit_shape_radius(hex_radius)',
+        '"hex_radius": hex_radius',
+        '"token_radius_factor": STACK_TOKEN_RADIUS_FACTOR',
+        '"token_radius_min": STACK_TOKEN_RADIUS_MIN',
+        '"token_radius_max": STACK_TOKEN_RADIUS_MAX',
+        '"hit_radius_factor": STACK_HIT_RADIUS_FACTOR',
+        '"hit_radius_min": STACK_HIT_RADIUS_MIN',
+        '"hit_radius_max": STACK_HIT_RADIUS_MAX',
+        '"hit_radius_padding": STACK_HIT_RADIUS_PADDING',
+        '"painted_token_larger_than_legacy_scale": token_radius > clampf(hex_radius * STACK_HIT_RADIUS_FACTOR, STACK_HIT_RADIUS_MIN, STACK_HIT_RADIUS_MAX)',
+        '"token_diameter_within_neighbor_spacing": token_radius * 2.0 < SQRT_3 * hex_radius',
+        '"token_shadow_within_hex_radius": token_radius + 4.0 < hex_radius',
         '"inner_fill": STACK_TOKEN_INNER_FILL',
         '"side_rim_alpha": STACK_TOKEN_SIDE_RIM_ALPHA',
         '"animation_art_diameter_fraction": STACK_ANIMATION_ART_EXTENT_FACTOR * 0.5',
@@ -55256,12 +55274,36 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(required_token in token_contract_block, errors, f"Battle token visual contract is missing exact medallion evidence: {required_token}")
     for forbidden_token in ("session", "_battle", "set(", "queue_redraw", "await ", "create_timer"):
         ensure(forbidden_token not in token_contract_block, errors, f"Battle token visual contract must remain a detached geometry observer: {forbidden_token}")
+    token_radius_block = gd_function_block(battle_board_text, "_stack_token_radius")
+    hit_radius_block = gd_function_block(battle_board_text, "_stack_hit_shape_radius")
+    ensure(
+        "return clampf(hex_radius * STACK_TOKEN_RADIUS_FACTOR, STACK_TOKEN_RADIUS_MIN, STACK_TOKEN_RADIUS_MAX)" in token_radius_block,
+        errors,
+        "Battle stack painted radius must use the exact bounded presentation-only scale contract",
+    )
+    ensure(
+        "return clampf(hex_radius * STACK_HIT_RADIUS_FACTOR, STACK_HIT_RADIUS_MIN, STACK_HIT_RADIUS_MAX) + STACK_HIT_RADIUS_PADDING" in hit_radius_block,
+        errors,
+        "Battle stack hit radius must retain the exact pre-polish geometry independently from painted scale",
+    )
+    for forbidden_token in ("0.58, 13.0, 28.0", "_stack_token_radius(hex_radius)"):
+        ensure(forbidden_token not in token_radius_block + hit_radius_block, errors, f"Battle stack radius helpers must not restore the old coupled geometry contract: {forbidden_token}")
     town_battle_text = (ROOT / "tests" / "town_battle_visual_smoke.gd").read_text(encoding="utf-8")
     battle_smoke_block = gd_function_block(town_battle_text, "_run_battle_smoke")
     for required_token in (
         'var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")',
         'var token_visual: Dictionary = unit_art_summary.get("token_visual_contract", {})',
         'String(token_visual.get("presentation_model", "")) != "character_first_dark_medallion_side_rim"',
+        'float(token_visual.get("token_radius_factor", 0.0)), 0.68',
+        'float(token_visual.get("token_radius_min", 0.0)), 15.0',
+        'float(token_visual.get("token_radius_max", 0.0)), 32.0',
+        'float(token_visual.get("hit_radius_factor", 0.0)), 0.58',
+        'float(token_visual.get("hit_radius_min", 0.0)), 13.0',
+        'float(token_visual.get("hit_radius_max", 0.0)), 28.0',
+        'float(token_visual.get("hit_radius_padding", 0.0)), 10.0',
+        'not bool(token_visual.get("painted_token_larger_than_legacy_scale", false))',
+        'not bool(token_visual.get("token_diameter_within_neighbor_spacing", false))',
+        'not bool(token_visual.get("token_shadow_within_hex_radius", false))',
         'float(token_visual.get("animation_art_extent_factor", 0.0)), 1.96',
         'float(token_visual.get("icon_art_extent_factor", 0.0)), 1.86',
         'float(token_visual.get("side_rim_alpha", 0.0)), 0.92',
@@ -55273,6 +55315,21 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(required_token in battle_smoke_block, errors, f"Battle visual smoke is missing exact character-medallion runtime proof: {required_token}")
     for forbidden_token in ("board.set(", "_draw_stack_tokens", "queue_redraw", "create_timer"):
         ensure(forbidden_token not in battle_smoke_block, errors, f"Battle medallion runtime proof must not mutate renderer/combat authority: {forbidden_token}")
+    battle_controller_text = (ROOT / "tests" / "battle_controller_board_navigation_smoke.gd").read_text(encoding="utf-8")
+    token_scale_control_block = gd_function_block(battle_controller_text, "_validate_stack_token_scale")
+    for required_token in (
+        'var battle_authority_before: Dictionary = session.battle.duplicate(true)',
+        'var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")',
+        'var expected_token_radius := clampf(hex_radius * 0.68, 15.0, 32.0)',
+        'var expected_hit_radius := clampf(hex_radius * 0.58, 13.0, 28.0) + 10.0',
+        'token_radius * 2.0 >= sqrt(3.0) * hex_radius',
+        'token_radius + 4.0 >= hex_radius',
+        'if session.battle != battle_authority_before:',
+    ):
+        ensure(required_token in token_scale_control_block, errors, f"Battle Board focused owner is missing independent stack-token scale/authority proof: {required_token}")
+    for forbidden_token in ("board.set(", "_stack_token_radius", "_stack_hit_shape_radius", "queue_redraw", "create_timer", "await "):
+        ensure(forbidden_token not in token_scale_control_block, errors, f"Battle Board stack-token scale proof must stay independent and read-only: {forbidden_token}")
+    ensure(battle_controller_text.count("_validate_stack_token_scale(board, session)") == 1, errors, "Battle Board focused owner must invoke the stack-token scale proof exactly once")
     for required_mapping in (
         '"spell_prism_bastion":\n\t\t\treturn "vfx_spell_prism_bastion"',
         '"spell_resonant_chorus":\n\t\t\treturn "vfx_spell_resonant_chorus"',

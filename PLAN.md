@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved bounded release-readiness slice.
+- Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
+
+## Battle Stack Token Scale
+
+id: `presentation-battle-stack-token-scale-10184`
+
+Status: completed.
+
+Result:
+- live Battle stack medallions now use a bounded 0.68-times-hex painted radius with 15px/32px limits instead of the former 0.58-times-hex presentation, making curated unit silhouettes materially more legible at 1280x720 and 1920x1080;
+- the exact pre-change 0.58-times-hex, 13px/28px plus 10px interaction radius remains independently preserved, so mouse/controller hit behavior, cells, commands, and combat authority are unchanged;
+- fresh before/after captures show stronger separated battlefield pieces with intact active/target rings, captions, count badges, health bars, terrain, and command hierarchy; Board navigation, Battle visual, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Current finding:
+- fresh inspected 1280x720 and 1920x1080 Battle captures show the curated character art filling nearly the entire existing medallion, but the medallion itself remains materially undersized against the live tactical hexes, making armies read like small interface pips instead of battlefield pieces;
+- the token radius is presentation-only and separately derived from the unchanged authoritative hex center/cell geometry, while hit geometry can retain its exact existing radius.
+
+Implementation boundary:
+- increase only the painted Battle stack-token radius through one explicit bounded hex-relative presentation scale, retaining the existing character-first inner fill, side rim, art extent, active/target/blocked rings, count badge, health bar, nameplate, and draw order;
+- keep the exact stack centers/cells, hex/grid/terrain geometry, neighboring-token separation, caption/field containment, and existing hit radius, so mouse/controller targeting and battle authority remain unchanged;
+- preserve every unit asset/frame, stack identity/count/health, movement/target/action rule, focus/accessibility cue, animation/VFX/audio behavior, battle/session/save state, content, and Native RMG authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 captures show materially stronger character silhouettes that remain separated, contained within their own tactical cells, and subordinate to active/target/controller cues;
+- focused runtime proves the exact new token factor/minimum/maximum, unchanged hit radius, token-to-hex and neighboring-separation bounds, caption/health/count containment, and whole battle/session authority;
+- Battle visual/navigation/animation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no token center/cell, hit geometry, hex/grid/terrain/layout, caption text, count/health meaning, unit art/source/frame, animation/VFX/audio timing, action/target/movement/combat rule, AI, balance, content, save/schema, UI scale, or Native RMG change;
+- no packaged Battle interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Main Menu Skirmish Intelligence Disclosure
 

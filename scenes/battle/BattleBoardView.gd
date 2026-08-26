@@ -42,6 +42,13 @@ const TURN_STRIP_QUEUED_FRAME := Color(0.45, 0.49, 0.48, 0.78)
 const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)
 const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
 const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
+const STACK_TOKEN_RADIUS_FACTOR := 0.68
+const STACK_TOKEN_RADIUS_MIN := 15.0
+const STACK_TOKEN_RADIUS_MAX := 32.0
+const STACK_HIT_RADIUS_FACTOR := 0.58
+const STACK_HIT_RADIUS_MIN := 13.0
+const STACK_HIT_RADIUS_MAX := 28.0
+const STACK_HIT_RADIUS_PADDING := 10.0
 const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96
 const STACK_ICON_ART_EXTENT_FACTOR := 1.86
 const STACK_CAPTION_PLATE_MODEL := "compact_translucent_side_accent_nameplate"
@@ -1001,6 +1008,17 @@ func _stack_token_visual_contract(hex_layout: Dictionary) -> Dictionary:
 		"presentation_model": "character_first_dark_medallion_side_rim",
 		"token_radius": token_radius,
 		"hit_radius": _stack_hit_shape_radius(hex_radius),
+		"hex_radius": hex_radius,
+		"token_radius_factor": STACK_TOKEN_RADIUS_FACTOR,
+		"token_radius_min": STACK_TOKEN_RADIUS_MIN,
+		"token_radius_max": STACK_TOKEN_RADIUS_MAX,
+		"hit_radius_factor": STACK_HIT_RADIUS_FACTOR,
+		"hit_radius_min": STACK_HIT_RADIUS_MIN,
+		"hit_radius_max": STACK_HIT_RADIUS_MAX,
+		"hit_radius_padding": STACK_HIT_RADIUS_PADDING,
+		"painted_token_larger_than_legacy_scale": token_radius > clampf(hex_radius * STACK_HIT_RADIUS_FACTOR, STACK_HIT_RADIUS_MIN, STACK_HIT_RADIUS_MAX),
+		"token_diameter_within_neighbor_spacing": token_radius * 2.0 < SQRT_3 * hex_radius,
+		"token_shadow_within_hex_radius": token_radius + 4.0 < hex_radius,
 		"inner_fill": STACK_TOKEN_INNER_FILL,
 		"side_rim_alpha": STACK_TOKEN_SIDE_RIM_ALPHA,
 		"side_rim_width": maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR),
@@ -4488,10 +4506,10 @@ func _stack_id_at_position(position: Vector2) -> String:
 	return ""
 
 func _stack_token_radius(hex_radius: float) -> float:
-	return clampf(hex_radius * 0.58, 13.0, 28.0)
+	return clampf(hex_radius * STACK_TOKEN_RADIUS_FACTOR, STACK_TOKEN_RADIUS_MIN, STACK_TOKEN_RADIUS_MAX)
 
 func _stack_hit_shape_radius(hex_radius: float) -> float:
-	return _stack_token_radius(hex_radius) + 10.0
+	return clampf(hex_radius * STACK_HIT_RADIUS_FACTOR, STACK_HIT_RADIUS_MIN, STACK_HIT_RADIUS_MAX) + STACK_HIT_RADIUS_PADDING
 
 func _neighboring_stack_hit_shape_overlap_possible(hex_radius: float) -> bool:
 	return _stack_hit_shape_radius(hex_radius) >= cos(deg_to_rad(30.0)) * hex_radius
