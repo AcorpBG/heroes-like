@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from direct current capture or playtest evidence."
+    "Select the next tracker-approved graphical-polish or release-readiness slice from direct current evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15235,14 +15235,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu stage-dock reveal transition is completed with focused opacity/lifecycle/authority proof, broad menu compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Overworld painted scale ladder is compressed to a coherent 0.32-to-1.00 tile range with inspected 1280/1920 captures, focused/authored/generated runtime, movement, accessibility, core, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-main-menu-stage-dock-reveal-transition-10184",
-  "currentSliceId": "presentation-main-menu-stage-dock-reveal-transition-10184",
-  "currentSliceNotes": "Completed the paused-tree-safe stage-dock reveal and immediate Reduced Motion fallback while preserving exact controls, focus, geometry, settings, save, campaign, session, route, and Native RMG authority.",
+  "currentSlice": "ux-overworld-object-scale-overcorrection-10184",
+  "currentSliceId": "ux-overworld-object-scale-overcorrection-10184",
+  "currentSliceNotes": "Completed the direct playtest correction: small props now start at 0.32 tile, field heroes use 0.60, normalized multi-tile sites cap below towns, and towns use 1.00 tile while logical/game/save/generated/Native-RMG authority stays exact. Fresh 1280/1920 captures and the focused, compatibility, static/editor, Linux, and Windows gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation main menu stage dock reveal transition 10184",
-  "currentSliceUpdatedAt": "2026-08-26T14:58:52Z",
+  "currentSliceTitle": "Overworld object scale overcorrection",
+  "currentSliceUpdatedAt": "2026-08-26T15:46:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20547,7 +20547,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next tracker-approved source-backed release-readiness slice; preserve completed Overworld visual and logical authority.",
+  "guardrailNote": "Select the next bounded slice from direct current evidence; preserve exact gameplay, session/save, generated placement, and Native RMG authority unless explicitly selected.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -20758,7 +20758,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The Main Menu stage-dock reveal transition is completed and blockers are empty.",
+  "notes": "The Overworld object-scale correction is completed and blockers are empty.",
   "plannedSlices": [
     {
       "id": "presentation-main-menu-stage-dock-reveal-transition-10184",
@@ -20988,6 +20988,7 @@
         "tests/overworld_visual_smoke.gd",
         "tests/overworld_small_map_visual_scale_runtime_report.gd",
         "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
         "tests/validate_repo.py"
       ],
       "purpose": "Make authored towns and footprint-bearing sites occupy a credible share of their logical world footprint while restoring a legible one-tile object-to-hero hierarchy.",
@@ -103769,6 +103770,35 @@
       "startedAt": "2026-08-26T08:41:55Z",
       "notes": "Completed the Main Menu cartographic pocket-frame integration. Existing Stage Dock art now frames the logo and Frontier Log with exact quiet modulation while preserving anchors, margins, copy, visibility, command hotspots, focus, settings, session, and save authority. Fresh inspected 1280x720 and 1920x1080 captures are contained and scenery-first. Main Menu/Outcome, keyboard navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Main Menu interaction, controller/accessibility hardware, signing/publication, whole-game, release-readiness, or Native RMG claim.",
       "completedAt": "2026-08-26T09:27:28Z"
+    },
+    {
+      "id": "ux-overworld-object-scale-overcorrection-10184",
+      "title": "Overworld object scale overcorrection",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T15:46:16Z",
+      "startedAt": "2026-08-26T15:08:01Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the direct playtest finding that the current painted Overworld scale ladder is over-separated, causing adjacent large objects to crowd while small pickups read as miniature tokens.",
+      "completionCriteria": "Inspected 1280/1920 authored captures show a coherent prop, encounter/hero, site, and town hierarchy without adjacent large-object overlap or miniature pickups; focused and generated runtime preserve alpha-bound/aspect, clipping, logical/game/save authority; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No asset, id, family/profile, footprint, body/visit mask, hit area, placement/count/density, passability, pathfinding, route, movement, interaction, gameplay, save schema, generated-map, or Native RMG change.",
+        "No camera/map-fit, terrain/road/fog, shell/UI layout, selection/hover semantic, input/focus/accessibility semantic, animation/audio/VFX, shader, font, or UI-scale change.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed the direct painted-scale correction. The live ladder now spans 0.32-to-1.00 tile with heroes at 0.60, normalized multi-tile sites below towns, and unchanged assets, alpha-bound/aspect, logical footprints, placement, pathing, gameplay, session/save, generated-map, and Native RMG authority. Fresh inspected 1280x720 and 1920x1080 captures are coherent; focused/authored/generated render, route movement, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-26T15:46:16Z"
     }
   ],
   "project": "heroes-like",
@@ -103779,7 +103809,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; broader product gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from direct current evidence; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -104210,7 +104240,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "battle_footer_heraldic_watermark_completed",
+  "result": "overworld_object_scale_overcorrection_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -104311,9 +104341,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Main Menu logo and Frontier Log now use restrained cartographic frames that preserve the scenery-first layout; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "summary": "The Overworld painted object hierarchy now uses a coherent bounded 0.32-to-1.00 tile scale while preserving exact logical/game/save/generated-map authority; inspected captures, focused and compatibility runtime, static/editor, and bounded Linux/Windows startup gates pass.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T09:27:28Z",
+  "updatedAt": "2026-08-26T15:46:16Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
