@@ -32983,7 +32983,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     ensure(map_text.count("const MAX_SMALL_MAP_FIT_TILE_EXTENT := 104.0") == 1, errors, "Small-map fit must own one exact 104px visual extent cap")
     ensure(map_text.count('const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"') == 1, errors, "Small-map surround must own one exact quiet cartographic matte model")
     ensure(map_text.count("const SMALL_MAP_CARTOGRAPHIC_MATTE_MIN_GUTTER := 48.0") == 1, errors, "Small-map cartographic matte must require one exact 48px material gutter")
-    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.56") == 1, errors, "Town art must own one exact proportional 56% visual-footprint scale")
+    ensure(map_text.count("const TOWN_SPRITE_EXTENT_FACTOR := 0.52") == 1, errors, "Town art must own one exact proportional 52% visual-footprint scale")
     extent_block = gd_function_block(map_text, "_tile_extent_for_viewport")
     uncapped_block = gd_function_block(map_text, "_uncapped_whole_map_fit_tile_extent")
     metrics_block = gd_function_block(map_text, "validation_view_metrics")
@@ -33087,7 +33087,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
     for preserved_token in (
         "const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
         "const TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.56",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.52",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
         "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
         'const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"',
@@ -33101,7 +33101,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "const MAX_SMALL_MAP_TILE_EXTENT := 104.0",
         'const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"',
         "const SMALL_MAP_MATTE_MIN_GUTTER := 48.0",
-        "const TOWN_VISUAL_EXTENT_TILES := 1.12",
+        "const TOWN_VISUAL_EXTENT_TILES := 1.04",
         'var metrics: Dictionary = map_view.call("validation_view_metrics")',
         "var expected_capped := uncapped_extent > MAX_SMALL_MAP_TILE_EXTENT",
         "viewport_rect.get_center().distance_to(board_rect.get_center()) <= 1.5",
@@ -33130,7 +33130,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'int(profile.get("footprint_width_tiles", 0)) != 3',
         'int(profile.get("footprint_height_tiles", 0)) != 2',
         'int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5',
-        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.56',
+        'float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.52',
         'float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES',
         'String(profile.get("entry_role", "")) != "bottom_middle_visit_approach"',
         'int(readability.get("footprint_width_tiles", 0)) == 1',
@@ -33165,8 +33165,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     report_text = report_path.read_text(encoding="utf-8")
     for token in (
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.72",
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.68",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.76",
         "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
         "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
         'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"',
@@ -33400,7 +33400,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'int(summary.get("repeated_def_multi_asset_count", 0)) <= 0',
         'String(summary.get("composition_signature", "")).length() != 64',
         'float(summary.get("body_sprite_extent_tiles", 0.0)), 0.56',
-        'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.84',
+        'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.76',
         'float(metrics.get("sprite_extent_tiles", 99.0)) > 1.0001',
         'not is_equal_approx(float(metrics.get("uncapped_sprite_extent_px", 0.0)), float(metrics.get("sprite_extent_px", -1.0)))',
         '"map_objects": session.overworld.get("map_objects", []).duplicate(true)',
@@ -33453,19 +33453,19 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     extent_block = gd_function_block(map_text, "_sprite_extent_fraction")
     semantic_class_block = gd_function_block(map_text, "_semantic_visual_scale_class")
     for token in (
-        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30",
-        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.38",
-        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.50",
-        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.66",
-        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.60",
-        "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.70",
-        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.58",
-        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.42",
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.36",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.42",
+        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.52",
+        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.62",
+        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.58",
+        "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.64",
+        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.54",
+        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.44",
         "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.48",
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.72",
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.68",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.76",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.56",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.52",
     ):
         ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
     for rejected_token in (
@@ -33486,7 +33486,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.62",
         "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.64",
         "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.50",
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.76",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.84",
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.82",
         "const TOWN_SPRITE_EXTENT_FACTOR := 0.48",
     ):
@@ -33602,24 +33602,24 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(payload.get("cache_repeat_exact", false))',
         'not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
         'String(artifact.get("semantic_scale_class", "")) != "handheld_artifact"',
-        'float(artifact.get("visible_extent_tiles", 0.0)), 0.30',
+        'float(artifact.get("visible_extent_tiles", 0.0)), 0.36',
         'String(pickup.get("semantic_scale_class", "")) != "loose_pickup"',
-        'float(pickup.get("visible_extent_tiles", 0.0)), 0.38',
+        'float(pickup.get("visible_extent_tiles", 0.0)), 0.42',
         'float(hero.get("sprite_extent_fraction", 0.0)), 0.56',
-        'float(service.get("visible_extent_tiles", 0.0)), 0.66',
-        'float(objective.get("visible_extent_tiles", 0.0)), 0.70',
-        'float(wide_service.get("min_tiles", 0.0)), 0.72',
-        'float(wide_service.get("cap_tiles", 0.0)), 0.84',
-        'float(wide_service.get("visible_extent_tiles", 0.0)), 0.72',
-        'float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.72',
-        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.84',
-        'float(large_service.get("visible_extent_tiles", 0.0)), 0.84',
-        'float(town.get("visible_extent_tiles", 0.0)), 1.12',
+        'float(service.get("visible_extent_tiles", 0.0)), 0.62',
+        'float(objective.get("visible_extent_tiles", 0.0)), 0.64',
+        'float(wide_service.get("min_tiles", 0.0)), 0.68',
+        'float(wide_service.get("cap_tiles", 0.0)), 0.76',
+        'float(wide_service.get("visible_extent_tiles", 0.0)), 0.68',
+        'float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.68',
+        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.76',
+        'float(large_service.get("visible_extent_tiles", 0.0)), 0.76',
+        'float(town.get("visible_extent_tiles", 0.0)), 1.04',
         '"id": "object_wood_wagon"',
         '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
         '"id": "object_contract_scribe_booth"',
         '"map_roles": ["route_pacing", "world_lore", "repeatable_service"]',
-        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.72',
+        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.68',
         'float(service.get("visible_extent_tiles", 0.0))',
         '< float(town.get("visible_extent_tiles", 0.0))',
         "SessionState.ensure_active_session().to_dict() != authority_before",
@@ -43209,6 +43209,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure(marker_block.find("var hero_rect :=") < marker_block.find("if _draw_hero_sprite(hero, hero_rect, tile):") < marker_block.find("var anchor := _draw_hero_grounding_anchor(hero_rect, tile)"), errors, "Hero draw path must apply the same resolved visitor rect to imported and procedural heroes before grounding")
     for token in (
         "_object_texture_for_asset(_hero_sprite_asset_id(hero))", "_draw_hero_grounding_anchor(rect, tile)",
+        "var sprite_factor := HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR if not _town_presentation_at(tile).is_empty() else HERO_FIELD_SPRITE_EXTENT_FACTOR",
+        "var sprite_extent := maxf(16.0, extent * sprite_factor)",
         "_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)",
         "_draw_hero_foreground_contact(anchor)", "return true",
     ):
@@ -43217,8 +43219,9 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"',
         'const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"',
         "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
-        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.64",
-        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.66",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.76",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := 0.59",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.61",
     ):
         ensure(token in map_text, errors, f"Town-footprint hero composition constant drifted: {token}")
     for token in (
@@ -43232,7 +43235,9 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         ensure(forbidden not in draw_rect_block, errors, f"Town-footprint hero draw-rect resolver must remain pure layout: {forbidden}")
     for token in (
         "var hero_rect := _hero_draw_rect(rect, tile, allow_town_footprint_layout)",
-        "var sprite_extent := maxf(16.0, hero_extent * HERO_FIELD_SPRITE_EXTENT_FACTOR)",
+        "var uses_town_footprint_layout := allow_town_footprint_layout and not _town_presentation_at(tile).is_empty()",
+        "var sprite_factor := HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR if uses_town_footprint_layout else HERO_FIELD_SPRITE_EXTENT_FACTOR",
+        "var sprite_extent := maxf(16.0, hero_extent * sprite_factor)",
         '"mode": HERO_TOWN_FOOTPRINT_LAYOUT_MODE if uses_town_footprint_layout else HERO_FIELD_LAYOUT_MODE',
         '"town_footprint_colocated": uses_town_footprint_layout', '"hero_rect": _rect_payload(hero_rect)',
         '"sprite_rect": _rect_payload(sprite_rect)', '"sprite_contained_in_tile": rect.encloses(sprite_rect)',
@@ -43385,7 +43390,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'var restored_focus_exact: bool = map_view.call("validation_tile_focus_layout", active_tile) == focus_exact.get("town_layout", {})',
         'town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact',
         'String(layout.get("mode", "")) == "compact_town_footprint_visitor"',
-        'is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.64)',
+        'is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.76)',
+        'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.4484)',
         'tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect)',
         'String(town_presentation.get("presentation_model", "")) == "town_3x2_footprint_bottom_middle_entry"',
         'bool(tile_presentation.get("has_town_non_entry", false))',
@@ -43411,7 +43417,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         "if hero_on_town_footprint:",
         'String(hero_layout.get("mode", "")) != "compact_town_footprint_visitor"',
         'not bool(hero_layout.get("town_footprint_colocated", false))',
-        'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 0.64)',
+        'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 0.76)',
+        'not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.4484)',
         'not bool(hero_layout.get("sprite_contained_in_tile", false))',
         'String(hero_layout.get("mode", "")) != "full_tile_world_hero"',
         'bool(hero_layout.get("town_footprint_colocated", true))',
@@ -43871,7 +43878,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(interceptor_profile.get("hero_id", "")) != "hero_vaska"',
         'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw"',
         'not bool(interceptor_profile.get("uses_commander_sprite", false))',
-        'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.50',
+        'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.52',
         'String(interceptor_profile.get("hostile_treatment", "")) != "open_hostile_flank_chevrons_and_threat_notch"',
         'int(hostile_marker.get("flank_chevron_count", 0)) != 2',
         'int(hostile_marker.get("threat_notch_count", 0)) != 1',

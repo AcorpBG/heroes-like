@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish or release-readiness slice."
+    "Select the next tracker-approved release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,57 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-organic-water-shoreline-contours-10184",
-    "title": "Overworld organic water shoreline contours",
+    "id": "ux-overworld-coherent-screen-object-proportions-10184",
+    "title": "Overworld coherent screen object proportions",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T00:40:46Z",
-    "updatedAt": "2026-08-26T00:59:54Z",
-    "completedAt": "2026-08-26T00:59:54Z",
+    "startedAt": "2026-08-26T01:10:19Z",
+    "updatedAt": "2026-08-26T01:38:41Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed: the original-bank water edge now adds contained shallow tint, muted irregular wet contour, and two bent broken-foam accents. Inspected 1280x720 and 1920x1080 captures, focused/generated compatibility, static/editor, and bounded Linux/Windows startup gates are green; packaged Overworld interaction and whole-release readiness remain unclaimed."
+    "notes": "Completed from direct user playtest feedback: the live screen-space object hierarchy is tighter and the town-entry hero double-shrink is removed without changing logical map or gameplay authority."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-overworld-coherent-screen-object-proportions-20260826",
+      "title": "Overworld coherent screen object proportions",
+      "sliceId": "ux-overworld-coherent-screen-object-proportions-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T01:38:41Z",
+      "updatedAt": "2026-08-26T01:38:41Z",
+      "latestFinding": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a tighter readable object hierarchy: the town is slightly restrained, its co-located visitor hero is legible instead of double-shrunk, compact pickups remain distinct, and sites/landmarks no longer dominate adjacent roads or terrain. Focused authored/generated Overworld, movement/input/focus/accessibility/core, static/editor, Linux, and Windows startup gates are green.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-object-proportion-x11-capture.oFA7RC",
+        "/tmp/heroes-object-proportion-runtime.3KfMYu",
+        "/tmp/heroes-object-proportion-compat-resume.q5Lxkw",
+        "/tmp/heroes-object-proportion-static.bwkkmJ",
+        "/tmp/heroes-object-proportion-packaging.th99PD",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "town_visible_extent_tiles": 1.04,
+        "town_visitor_visible_extent_tiles": 0.4484,
+        "field_hero_visible_extent_tiles": 0.56,
+        "multi_tile_visible_extent_min_tiles": 0.68,
+        "multi_tile_visible_extent_max_tiles": 0.76,
+        "logical_footprints_unchanged": true,
+        "session_authority_exact": true,
+        "linux_export_headless_startup": true,
+        "windows_export_wine_startup": true,
+        "packaged_overworld_interaction_claimed": false
+      }
+    },
     {
       "id": "presentation-overworld-organic-water-shoreline-contours-20260826",
       "title": "Overworld organic water shoreline contours",
@@ -14456,14 +14492,14 @@
       }
     }
   ],
-  "currentNotes": "The organic shoreline contour polish is completed; select the next source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The coherent Overworld object-proportion correction is completed with inspected two-width captures and focused, compatibility, static/editor, and bounded platform evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-organic-water-shoreline-contours-10184",
-  "currentSliceId": "presentation-overworld-organic-water-shoreline-contours-10184",
-  "currentSliceNotes": "Add deterministic shallow tint, wet-edge contour, and broken foam to existing water-to-land transition geometry; preserve topology, passability, transition selection, map/session/save, and gameplay authority.",
+  "currentSlice": "ux-overworld-coherent-screen-object-proportions-10184",
+  "currentSliceId": "ux-overworld-coherent-screen-object-proportions-10184",
+  "currentSliceNotes": "Tighten only mapped Overworld visual extents and correct the town-entry hero double-shrink; preserve logical footprints, interaction, content, and session/save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld organic water shoreline contours",
-  "currentSliceUpdatedAt": "2026-08-26T00:59:54Z",
+  "currentSliceTitle": "Overworld coherent screen object proportions",
+  "currentSliceUpdatedAt": "2026-08-26T01:38:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19768,7 +19804,7 @@
       }
     }
   },
-  "guardrailNote": "Change only the Battle initiative strip's presentation and shared painted/hit geometry. Preserve exact turn order/index, stacks/counts, labels/tooltips, board tokens/hexes, focus/input, combat, session/save/settings authority, and gameplay.",
+  "guardrailNote": "Select the next tracker-approved source-backed release-readiness slice; preserve completed Overworld visual and logical authority.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -19916,7 +19952,7 @@
     ".artifacts/rmg_native_4a901a_identity/final_payload_compare.json"
   ],
   "latestEvidenceId": "native-rmg-4a7605-source-owned-monolith-dispatch-20260714",
-  "latestFinding": "The active Overworld scale slice is in progress from a reproduced shipped presentation defect. Small authored maps currently derive an unbounded full-fit tile extent, so 1920x1080 enlarges the same town, hero, encounter, and site art beyond the 1280x720 presentation. Logical footprint and interaction authority are already separate and must remain unchanged.",
+  "latestFinding": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a tighter readable object hierarchy: the town is slightly restrained, its co-located visitor hero is legible instead of double-shrunk, compact pickups remain distinct, and sites/landmarks no longer dominate adjacent roads or terrain. Logical footprint, movement, interaction, and session/save authority remain exact.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -19978,8 +20014,8 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next source-backed graphical-polish or release-readiness slice; preserve the completed shoreline, terrain, fog, movement, session/save, and Native RMG authority.",
-  "notes": "The organic shoreline contour polish is completed; blockers are empty and the next slice is not yet selected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; preserve completed Overworld visual and logical authority.",
+  "notes": "The coherent Overworld object-proportion correction is completed; blockers are empty and the next slice remains unselected.",
   "plannedSlices": [
     {
       "id": "ux-overworld-active-hero-command-marker-10184",
@@ -102251,6 +102287,36 @@
       },
       "blockedReason": null,
       "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
+    {
+      "id": "ux-overworld-coherent-screen-object-proportions-10184",
+      "title": "Overworld coherent screen object proportions",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T01:38:41Z",
+      "startedAt": "2026-08-26T01:10:19Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the live Overworld's extreme town/visitor-hero/prop size separation so mapped objects read as one coherent screen-space composition without changing map authority.",
+      "completionCriteria": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show restrained readable proportions; focused runtime proves exact ranks, town-visitor hero readability, containment, alpha-crop/cache authority, and unchanged logical/session authority; broad compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No object/hero/town identity, asset, family/profile, logical footprint, body/visit mask, collision, pathfinding, interaction, content, generated placement, session/save/schema, gameplay, AI, battle, balance, or Native RMG change.",
+        "No terrain, road, fog, route, shell/UI layout, camera/tile extent, selection marker, animation, audio, VFX, shader, font, or broad Overworld redesign.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct user playtest feedback and two-width capture inspection; the semantic ladder is tighter and town-entry visitors use an explicit contained sprite factor instead of a second inherited reduction.",
+      "blockedReason": null,
+      "completedAt": "2026-08-26T01:38:41Z",
+      "remainingWork": "Select the next tracker-approved release-readiness slice."
     }
   ],
   "project": "heroes-like",
@@ -102261,7 +102327,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next source-backed graphical-polish or release-readiness slice; broader product gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -102692,7 +102758,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_hostile_commander_open_threat_marker_completed",
+  "result": "overworld_coherent_screen_object_proportions_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102793,9 +102859,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Hostile commander and unit-fallback sprites now use a compact fill-free open threat marker instead of the dominant circular plate; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "summary": "Overworld towns, town visitors, heroes, pickups, sites, landmarks, blockers, and decorations now share a tighter readable visual hierarchy; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T00:37:08Z",
+  "updatedAt": "2026-08-26T01:38:41Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

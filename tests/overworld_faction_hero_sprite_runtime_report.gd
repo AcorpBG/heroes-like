@@ -187,8 +187,8 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 			geometry_exact = geometry_exact \
 				and bool(profile.get("is_active", false)) \
 				and String(layout.get("mode", "")) == "compact_town_footprint_visitor" \
-				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.64) \
-				and float(layout.get("sprite_extent_fraction", 1.0)) < 0.64 \
+				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.76) \
+				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.4484) \
 				and bool(layout.get("sprite_contained_in_tile", false)) \
 				and tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect) \
 				and float(layout.get("ground_anchor_y_fraction", 0.0)) > 0.75 \
