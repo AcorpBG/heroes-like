@@ -14921,14 +14921,14 @@
       }
     }
   ],
-  "currentNotes": "The Town compact management-tab breathing-room slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
+  "currentNotes": "The Outcome recap tab-plaque breathing-room slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-compact-management-tab-breathing-room-10184",
-  "currentSliceId": "ux-town-compact-management-tab-breathing-room-10184",
-  "currentSliceNotes": "Completed the compact Town management-rail correction. The compact rail is 304px while the wide rail remains 400px; fresh 1280x720 and 1920x1080 captures retain the scenic Town stage as the dominant surface and give all five existing tab titles readable room. Focused responsive, Town/Battle visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Tab semantics, pages, actions, focus, economy, session/save, route authority, and Native RMG remain unchanged.",
+  "currentSlice": "presentation-outcome-recap-tab-plaque-breathing-room-10184",
+  "currentSliceId": "presentation-outcome-recap-tab-plaque-breathing-room-10184",
+  "currentSliceNotes": "Completed the Outcome-local recap plaque correction. All four state styles retain the shared assets/vertical margins/focus styling but use 4px horizontal content margins; the five tabs grow from 241px to 271px inside the unchanged 296px live TabBar. Fresh victory/defeat captures are clean, and focused visual, focus/cancel/recovery, keyboard, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Outcome semantics, rail geometry, panorama, saves, routes, progression, session authority, and Native RMG remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "ux town compact management tab breathing room 10184",
-  "currentSliceUpdatedAt": "2026-08-26T10:21:05Z",
+  "currentSliceTitle": "presentation outcome recap tab plaque breathing room 10184",
+  "currentSliceUpdatedAt": "2026-08-26T10:40:37Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20444,8 +20444,35 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
-  "notes": "The compact Town management-tab breathing-room slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "notes": "The Outcome recap tab-plaque breathing-room slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-outcome-recap-tab-plaque-breathing-room-10184",
+      "title": "Outcome recap tab plaque breathing room",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T10:28:06Z",
+      "updatedAt": "2026-08-26T10:40:37Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the five existing Outcome recap plaques enough local horizontal title breathing room to read as distinct controls without changing the rail or reducing the scenic panorama.",
+      "completionCriteria": "Fresh victory/defeat captures at 1280x720 and 1920x1080 show five contained readable plaques; focused runtime proves exact local four-state 4px margins, unchanged shared assets/focus/titles/order/current page and exact Outcome/session/save/progression authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No shared tab style, global theme spacing, sidebar width/breakpoint, panel geometry, panorama/emblem, font/UI-scale, animation/audio/VFX, shader, or broad Outcome redesign.",
+        "No recap titles/order/count/page/copy, actions, focus/controller input, campaign/scenario result, rewards, save/recovery, route, session/progression/schema, AI, battle, balance, content, or Native RMG change.",
+        "No packaged Outcome interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct visual and geometry evidence. Production now duplicates only the four Outcome recap state styles and gives them 4px horizontal content margins, producing a 271px strip inside the unchanged 296px TabBar with 25px spare. Fresh victory/defeat 1280x720 and 1920x1080 captures are visually clear. Focused `/tmp/heroes-outcome-tab-focused.HWVm9M` and compatibility `/tmp/heroes-outcome-tab-compat.o2f1i8` are green; the compatibility errors are exact suite-owned autosave failure fixtures. Repository/editor validation passes. Official Linux and Windows exports pass; Linux boots headlessly, and fresh Wine reaches Godot, Boot, MainMenu, and the native DLL. Packaged Outcome interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-26T10:40:37Z",
+      "remainingWork": "None for this bounded slice."
+    },
     {
       "id": "ux-town-compact-management-tab-breathing-room-10184",
       "title": "Town compact management tab breathing room",

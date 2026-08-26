@@ -1761,7 +1761,7 @@ func _assert_no_score_leak(label: String, texts: Array) -> bool:
 			return false
 	return true
 
-func _shared_tab_plaque_standard_exact(tabs: TabContainer, expected_titles: Array) -> bool:
+func _shared_tab_plaque_standard_exact(tabs: TabContainer, expected_titles: Array, expected_horizontal_content_margin: float) -> bool:
 	var current_tab_before := tabs.current_tab
 	var tab_bar := tabs.get_tab_bar()
 	if tab_bar == null or tabs.get_tab_count() != expected_titles.size():
@@ -1799,9 +1799,9 @@ func _shared_tab_plaque_standard_exact(tabs: TabContainer, expected_titles: Arra
 				or not is_equal_approx(texture_style.texture_margin_top, 6.0) \
 				or not is_equal_approx(texture_style.texture_margin_right, 6.0) \
 				or not is_equal_approx(texture_style.texture_margin_bottom, 6.0) \
-				or not is_equal_approx(texture_style.content_margin_left, 1.0) \
+				or not is_equal_approx(texture_style.content_margin_left, expected_horizontal_content_margin) \
 				or not is_equal_approx(texture_style.content_margin_top, 2.0) \
-				or not is_equal_approx(texture_style.content_margin_right, 1.0) \
+				or not is_equal_approx(texture_style.content_margin_right, expected_horizontal_content_margin) \
 				or not is_equal_approx(texture_style.content_margin_bottom, 2.0):
 			return false
 		if style_name == "tab_disabled" and not texture_style.modulate_color.is_equal_approx(Color(0.72, 0.72, 0.72, 0.76)):
@@ -1863,7 +1863,7 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		return false
 	var authority_before: Dictionary = session.to_dict()
 	var recap_tabs := shell.get_node_or_null("%RecapTabs") as TabContainer
-	if recap_tabs == null or not _shared_tab_plaque_standard_exact(recap_tabs, ["Progress", "Arc", "Carry", "After", "Journal"]):
+	if recap_tabs == null or not _shared_tab_plaque_standard_exact(recap_tabs, ["Progress", "Arc", "Carry", "After", "Journal"], 4.0):
 		push_error("Outcome smoke: recap tabs did not retain exact compact shared plaques, titles, order, current page, and fit.")
 		get_tree().quit(1)
 		return false

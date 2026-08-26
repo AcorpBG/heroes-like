@@ -19765,6 +19765,50 @@ def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
         owner_text = path.read_text(encoding="utf-8")
         ensure(owner_text.count(token) == 1, errors, f"{label} must apply the shared TabContainer presentation exactly once")
 
+    outcome_text = outcome_path.read_text(encoding="utf-8")
+    ensure(outcome_text.count("const OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0") == 1, errors, "Outcome must own one exact local 4px recap-tab content margin")
+    ensure(outcome_text.count('const OUTCOME_RECAP_TAB_STATE_STYLES := [\n\t&"tab_selected",\n\t&"tab_hovered",\n\t&"tab_unselected",\n\t&"tab_disabled",\n]') == 1, errors, "Outcome must enumerate the exact four local recap-tab state styles once")
+    outcome_theme_body = gd_block(outcome_text, "func _apply_visual_theme(")
+    outcome_breathing_body = gd_block(outcome_text, "func _apply_outcome_recap_tab_breathing_room(")
+    ensure(outcome_theme_body != "" and outcome_breathing_body != "", errors, "Could not isolate Outcome recap-tab breathing-room source")
+    outcome_theme_order = [
+        outcome_theme_body.find("FrontierVisualKit.apply_tab_container(_recap_tabs)"),
+        outcome_theme_body.find("_apply_outcome_recap_tab_breathing_room()"),
+        outcome_theme_body.find('_recap_tabs.set_tab_title(0, "Progress")'),
+        outcome_theme_body.find('_recap_tabs.set_tab_title(4, "Journal")'),
+    ]
+    ensure(all(index >= 0 for index in outcome_theme_order) and outcome_theme_order == sorted(outcome_theme_order), errors, "Outcome must apply the shared plaque theme, local breathing room, then retain exact tab titles")
+    for required_token in (
+        "for style_name in OUTCOME_RECAP_TAB_STATE_STYLES:",
+        "var shared_style := _recap_tabs.get_theme_stylebox(style_name)",
+        "var outcome_style := shared_style.duplicate() as StyleBox",
+        "outcome_style.content_margin_left = OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL",
+        "outcome_style.content_margin_right = OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL",
+        "_recap_tabs.add_theme_stylebox_override(style_name, outcome_style)",
+    ):
+        ensure(required_token in outcome_breathing_body, errors, f"Outcome recap-tab breathing-room helper is missing exact local style token: {required_token}")
+    for forbidden in (
+        "FrontierVisualKit",
+        "TAB_PLAQUE_CONTENT_MARGIN_HORIZONTAL",
+        "content_margin_top",
+        "content_margin_bottom",
+        "texture_margin",
+        "current_tab",
+        "set_tab_",
+        "custom_minimum_size",
+        "size_flags",
+        "grab_focus",
+        "Input.",
+        "SettingsService",
+        "SaveService",
+        "SessionState",
+        "CampaignProgression",
+        "AppRouter",
+        "await ",
+        "call_deferred",
+    ):
+        ensure(forbidden not in outcome_breathing_body, errors, f"Outcome recap-tab breathing room must remain local and presentation-only: {forbidden}")
+
     for required_token in (
         'var expected_titles := ["Order", "Focus", "Spell", "Timing"]',
         'var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]',
@@ -19797,7 +19841,7 @@ def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
     for required_token in (
         'shell.get_node_or_null("%RecapTabs") as TabContainer',
         '["Progress", "Arc", "Carry", "After", "Journal"]',
-        "func _shared_tab_plaque_standard_exact(tabs: TabContainer, expected_titles: Array) -> bool:",
+        "func _shared_tab_plaque_standard_exact(tabs: TabContainer, expected_titles: Array, expected_horizontal_content_margin: float) -> bool:",
         "var current_tab_before := tabs.current_tab",
         "var tab_rect: Rect2 = tab_bar.get_tab_rect(index)",
         "or tab_rect.end.x > tab_bar.size.x + 0.5",
@@ -19805,6 +19849,9 @@ def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
         '"tab_hovered": "res://art/ui/runtime/shared/button_secondary_hover.png"',
         '"tab_unselected": "res://art/ui/runtime/shared/button_secondary_normal.png"',
         '"tab_disabled": "res://art/ui/runtime/shared/button_secondary_disabled.png"',
+        "not is_equal_approx(texture_style.content_margin_left, expected_horizontal_content_margin)",
+        "not is_equal_approx(texture_style.content_margin_right, expected_horizontal_content_margin)",
+        'not _shared_tab_plaque_standard_exact(recap_tabs, ["Progress", "Arc", "Carry", "After", "Journal"], 4.0)',
         "func _shared_tab_plaque_high_contrast_exact(tabs: TabContainer) -> bool:",
         'for style_name in ["tab_selected", "tab_hovered", "tab_unselected", "tab_disabled"]:',
         "if not (style is StyleBoxFlat):",
