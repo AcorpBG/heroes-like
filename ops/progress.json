@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-battlefield-continuous-terrain-cohesion-10184",
-    "title": "Battle continuous terrain cohesion",
+    "id": "ux-town-management-tab-breathing-room-10184",
+    "title": "Town management tab breathing room",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T17:34:03Z",
-    "updatedAt": "2026-08-26T17:51:09Z",
-    "completedAt": "2026-08-26T17:51:09Z",
+    "startedAt": "2026-08-26T17:55:16Z",
+    "updatedAt": "2026-08-26T18:13:49Z",
+    "completedAt": "2026-08-26T18:13:49Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the Battle terrain-cohesion correction. The existing full-field texture is now primary and the exact 77 per-cell samples are subordinate, producing one continuous forest battlefield while preserving terrain identity, UV containment, the 11x7 grid, fallback, tactics, combat, input, session, and save authority. Fresh 1280/1920 captures and focused runtime are green; Board navigation, animation/VFX, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG are unclaimed."
+    "notes": "Completed the Town management-tab polish. The five native plaques now use exact Town-local 4px horizontal text insets and a centered group within the unchanged 304px/400px rails, preserving shared art, titles/order/pages, actions, focus, accessibility, session, and save authority. Fresh inspected 1280/1920 captures and focused runtime are green; active-play focus, accessibility, Town transition, settings/high contrast, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The unrelated cache owner was excluded because normal-mode building presentation intentionally focuses TownActionInputBlocker while that older oracle expects Leave after one frame. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG are unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -2099,6 +2099,7 @@
       "latestFinding": "The default Town Build page now reuses the active faction's live crest as a subdued passive seal below construction controls while preserving exact management geometry, focus, gameplay, session, and save authority.",
       "artifacts": [
         "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
         "scenes/town/TownShell.tscn",
         "tests/town_battle_visual_smoke.gd",
         "tests/validate_repo.py",
@@ -15285,14 +15286,14 @@
       }
     }
   ],
-  "currentNotes": "Battle terrain cohesion is completed; select the next bounded graphical-polish slice from fresh current pixels.",
+  "currentNotes": "Town management-tab breathing room is completed; select the next bounded graphical-polish slice from fresh current pixels.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battlefield-continuous-terrain-cohesion-10184",
-  "currentSliceId": "ux-battlefield-continuous-terrain-cohesion-10184",
-  "currentSliceNotes": "The existing continuous Battle terrain layer is now primary, with exact subordinate 77-cell variation and unchanged tactical authority.",
+  "currentSlice": "ux-town-management-tab-breathing-room-10184",
+  "currentSliceId": "ux-town-management-tab-breathing-room-10184",
+  "currentSliceNotes": "Town's five native management tabs now own exact local breathing room and balanced centering at compact and wide desktop sizes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle continuous terrain cohesion",
-  "currentSliceUpdatedAt": "2026-08-26T17:51:09Z",
+  "currentSliceTitle": "Town management tab breathing room",
+  "currentSliceUpdatedAt": "2026-08-26T18:13:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -103930,6 +103931,32 @@
       "blockedReason": null,
       "notes": "Completed the Battle terrain-cohesion correction. The existing full-field texture is now primary and exact per-cell samples are subordinate, removing the 77-cell quilt while preserving texture identity, grid, fallback, cues, combat, input, session, and save authority. Fresh inspected 1280/1920 captures, focused terrain and rendered-viewport owners, Board navigation, animation/VFX, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-26T17:51:09Z"
+    },
+    {
+      "id": "ux-town-management-tab-breathing-room-10184",
+      "title": "Town management tab breathing room",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T18:13:49Z",
+      "startedAt": "2026-08-26T17:55:16Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownShell.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make the five Town management tabs read as distinct native cartographic plaques at compact and wide desktop sizes instead of one crowded label string.",
+      "completionCriteria": "Inspected 1280/1920 Town captures show five readable separated labels; focused runtime proves exact local style margins, text-safe tab rects, compact/wide containment, focus/page/action/session/save parity; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No tab title/order/count/page, Town action/content/art, rail width, stage, header/footer, font family/size, shared Battle/Outcome/Main Menu style, input/focus/accessibility behavior, gameplay, AI, balance, save/schema, or Native RMG change.",
+        "No new panel, command, overlay, packaged Town interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed the Town management-tab polish. The native five-page rail keeps its shared imported plaque art while exact Town-local 4px text insets and centered alignment produce distinct readable labels at 1280/1920. Focused visual/action authority, rendered viewport reports, active-play focus, accessibility, Town transition, settings/high contrast, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The unrelated cache owner was excluded because normal-mode building presentation intentionally focuses TownActionInputBlocker while its older oracle expects Leave focus after one frame. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-26T18:13:49Z"
     }
   ],
   "project": "heroes-like",

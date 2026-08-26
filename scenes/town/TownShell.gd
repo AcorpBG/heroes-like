@@ -13,6 +13,13 @@ const UI_ART_TOWN_RESOURCE_LEDGER := "res://art/ui/runtime/town/resource_ledger.
 const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 const TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH := 304.0
 const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 400.0
+const TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0
+const TOWN_MANAGEMENT_TAB_STATE_STYLES := [
+	&"tab_selected",
+	&"tab_hovered",
+	&"tab_unselected",
+	&"tab_disabled",
+]
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 
 @onready var _banner_panel: PanelContainer = %Banner
@@ -5416,6 +5423,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_logistics_panel, UI_ART_TOWN_BUILD_PANEL, "teal", 58, 12, Color(0.50, 0.56, 0.54, 1.0))
 	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 12, Color(0.70, 0.66, 0.60, 1.0))
 	FrontierVisualKit.apply_tab_container(_management_tabs)
+	_apply_town_management_tab_breathing_room()
 	_management_tabs.set_tab_title(0, "Build")
 	_management_tabs.set_tab_title(1, "Muster")
 	_management_tabs.set_tab_title(2, "Spells")
@@ -5465,6 +5473,16 @@ func _apply_visual_theme() -> void:
 		_response_label,
 		_artifact_label,
 	], "body", 12)
+
+func _apply_town_management_tab_breathing_room() -> void:
+	for style_name in TOWN_MANAGEMENT_TAB_STATE_STYLES:
+		var shared_style := _management_tabs.get_theme_stylebox(style_name)
+		var town_style := shared_style.duplicate() as StyleBox
+		if town_style == null:
+			continue
+		town_style.content_margin_left = TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL
+		town_style.content_margin_right = TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL
+		_management_tabs.add_theme_stylebox_override(style_name, town_style)
 
 func _faction_accent() -> Color:
 	var town := TownRules.get_active_town(_session)

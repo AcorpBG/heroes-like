@@ -422,6 +422,7 @@ custom_minimum_size = Vector2(0, 460)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+tab_alignment = 1
 
 [node name="BuildPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs"]
 unique_name_in_owner = true

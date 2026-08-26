@@ -363,7 +363,7 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 	var authority_before: Dictionary = session.to_dict()
 	var original_tab := tabs.current_tab
 	var expected_titles := ["Order", "Focus", "Spell", "Timing"]
-	var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles)
+	var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles, 1.0)
 	var titles: Array[String] = []
 	var heights: Array[float] = []
 	var pages_contained := true
@@ -436,7 +436,13 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 	var authority_before: Dictionary = session.to_dict()
 	var original_tab := tabs.current_tab
 	var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]
-	var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles)
+	var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles, 4.0)
+	var tab_bar := tabs.get_tab_bar()
+	var first_tab_rect := tab_bar.get_tab_rect(0) if tab_bar != null else Rect2()
+	var last_tab_rect := tab_bar.get_tab_rect(tabs.get_tab_count() - 1) if tab_bar != null else Rect2()
+	var tab_group_centered := tab_bar != null \
+		and tabs.tab_alignment == HORIZONTAL_ALIGNMENT_CENTER \
+		and absf(first_tab_rect.position.x - (tab_bar.size.x - last_tab_rect.end.x)) <= 1.0
 	var titles: Array[String] = []
 	var heights: Array[float] = []
 	var pages_contained := true
@@ -488,11 +494,12 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 	await get_tree().process_frame
 	var authority_exact := session.to_dict() == authority_before
 	return {
-		"ok": authored_height_exact and geometry_exact and titles == expected_titles and bool(tab_plaque_contract.get("ok", false)) and authority_exact,
+		"ok": authored_height_exact and geometry_exact and titles == expected_titles and bool(tab_plaque_contract.get("ok", false)) and tab_group_centered and authority_exact,
 		"compact": compact,
 		"authored_height_exact": authored_height_exact,
 		"titles": titles,
 		"tab_plaques": tab_plaque_contract,
+		"tab_group_centered": tab_group_centered,
 		"heights": heights,
 		"sidebar_rect": sidebar_rect,
 		"command_rect": command_rect,
@@ -508,18 +515,22 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 		"authority_exact": authority_exact,
 	}
 
-func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> Dictionary:
+func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array, expected_horizontal_content_margin: float) -> Dictionary:
 	var current_tab_before := tabs.current_tab
 	var tab_bar := tabs.get_tab_bar()
 	if tab_bar == null or tabs.get_tab_count() != expected_titles.size():
 		return {"ok": false, "missing_tab_bar": tab_bar == null, "tab_count": tabs.get_tab_count()}
+	var font := tab_bar.get_theme_font("font")
+	var font_size := tab_bar.get_theme_font_size("font_size")
 	var titles: Array[String] = []
 	var rects: Array[Rect2] = []
 	var live_fit_required := tabs.is_visible_in_tree()
 	var contained := true
 	var ordered_without_overlap := true
+	var text_safe_insets := font != null and font_size > 0
 	for index in range(tabs.get_tab_count()):
-		titles.append(tabs.get_tab_title(index))
+		var title := tabs.get_tab_title(index)
+		titles.append(title)
 		var tab_rect: Rect2 = tab_bar.get_tab_rect(index)
 		rects.append(tab_rect)
 		contained = contained \
@@ -529,6 +540,9 @@ func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> 
 			and tab_rect.position.y >= -0.5 \
 			and tab_rect.end.x <= tab_bar.size.x + 0.5 \
 			and tab_rect.end.y <= tab_bar.size.y + 0.5
+		if font != null and font_size > 0:
+			var text_width := font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
+			text_safe_insets = text_safe_insets and tab_rect.size.x + 0.5 >= text_width + expected_horizontal_content_margin * 2.0
 		if index > 0:
 			ordered_without_overlap = ordered_without_overlap and rects[index - 1].end.x <= tab_rect.position.x + 0.5
 	var expected_paths := {
@@ -556,9 +570,9 @@ func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> 
 			and is_equal_approx(texture_style.texture_margin_top, 6.0) \
 			and is_equal_approx(texture_style.texture_margin_right, 6.0) \
 			and is_equal_approx(texture_style.texture_margin_bottom, 6.0) \
-			and is_equal_approx(texture_style.content_margin_left, 1.0) \
+			and is_equal_approx(texture_style.content_margin_left, expected_horizontal_content_margin) \
 			and is_equal_approx(texture_style.content_margin_top, 2.0) \
-			and is_equal_approx(texture_style.content_margin_right, 1.0) \
+			and is_equal_approx(texture_style.content_margin_right, expected_horizontal_content_margin) \
 			and is_equal_approx(texture_style.content_margin_bottom, 2.0)
 		if style_name == "tab_disabled":
 			styles_exact = styles_exact and texture_style.modulate_color.is_equal_approx(Color(0.72, 0.72, 0.72, 0.76))
@@ -580,6 +594,7 @@ func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> 
 		"ok": titles == expected_titles \
 			and styles_exact \
 			and focus_exact \
+			and text_safe_insets \
 			and (not live_fit_required or (contained and ordered_without_overlap)) \
 			and tabs.current_tab == current_tab_before,
 		"titles": titles,
@@ -589,6 +604,8 @@ func _shared_tab_plaque_contract(tabs: TabContainer, expected_titles: Array) -> 
 		"live_fit_required": live_fit_required,
 		"contained": contained,
 		"ordered_without_overlap": ordered_without_overlap,
+		"text_safe_insets": text_safe_insets,
+		"horizontal_content_margin": expected_horizontal_content_margin,
 		"tab_bar_size": tab_bar.size,
 		"current_tab_unchanged": tabs.current_tab == current_tab_before,
 	}

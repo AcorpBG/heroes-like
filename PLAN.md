@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from fresh current pixels.
 
+## Town Management Tab Breathing Room
+
+id: `ux-town-management-tab-breathing-room-10184`
+
+Status: completed.
+
+Result:
+- retained the native five-page Town command rail while giving its shared plaque states exact Town-local 4px horizontal text insets and centering the group within both compact and wide rails;
+- fresh inspected 1280x720 and 1920x1080 captures show distinct readable Build, Muster, Spells, Trade, and Log plaques instead of one crowded label string, with exact text-safe, contained, balanced geometry;
+- focused Town visual/action authority, rendered 1280/1920 reports, active-play focus, accessibility, Town transition, settings/high-contrast, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The unrelated Town entity-cache owner was excluded after its normal-mode build presentation intentionally focused `TownActionInputBlocker` while its older oracle expected Leave focus after one frame; this slice does not touch that presentation path. Packaged Town interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Town captures show the five native management tabs compressed into a visually continuous `BuildMusterSpellsTradeLog` string above the scenic command card;
+- the tabs are geometrically ordered, but their shared 1px horizontal text insets do not give the five labels enough visual separation inside the 304px compact and 400px wide management rails.
+
+Implementation boundary:
+- retain the shared imported cartographic plaque states and native TabContainer, but give Town's five management tab plaques a local bounded horizontal content inset after the shared style is applied;
+- preserve exact titles/order/count, tab/page identity, current/disabled state, input/focus/navigation/accessibility, 304px/400px rails, all Town content, actions, session, and save authority;
+- prove every live tab's text-safe inset, ordered non-overlapping rect, rail containment, and exact restoration at 1280x720 and 1920x1080.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 Town captures show five distinct readable command plaques without crowding or clipping;
+- focused runtime proves exact local style margins, all five live rects/text insets, page/action/focus/authority parity, and compact/wide containment;
+- Town visual/action/navigation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tab title/order/count/page, Town action/content/art, sidebar/rail width, stage, header/footer, font family/size, shared Battle/Outcome/Main Menu tab style, input/focus/accessibility behavior, gameplay, AI, balance, save/schema, or Native RMG change;
+- no new panel, command, overlay, packed-screen interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Battle Continuous Terrain Cohesion
 
 id: `ux-battlefield-continuous-terrain-cohesion-10184`

@@ -1346,6 +1346,20 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 		{"title": "Trade", "page": shell.get_node("%MarketPanel")},
 		{"title": "Log", "page": shell.get_node("%LogisticsPanel")},
 	]
+	var tab_bar := tabs.get_tab_bar()
+	if tab_bar == null:
+		push_error("Town smoke: ManagementTabs did not expose its native TabBar.")
+		return false
+	if tabs.tab_alignment != HORIZONTAL_ALIGNMENT_CENTER:
+		push_error("Town smoke: ManagementTabs lost its centered five-plaque command group.")
+		return false
+	for style_name in ["tab_selected", "tab_hovered", "tab_unselected", "tab_disabled"]:
+		var style := tabs.get_theme_stylebox(style_name)
+		if style == null \
+				or not is_equal_approx(style.content_margin_left, 4.0) \
+				or not is_equal_approx(style.content_margin_right, 4.0):
+			push_error("Town smoke: management tab plaque %s lost its exact 4px horizontal breathing room." % style_name)
+			return false
 	if not is_equal_approx(tabs.custom_minimum_size.y, 460.0) \
 			or tabs.size_flags_vertical != Control.SIZE_FILL:
 		push_error("Town smoke: ManagementTabs lost its exact 460px fill-only card policy: minimum=%s flags=%s." % [tabs.custom_minimum_size, tabs.size_flags_vertical])
@@ -1376,6 +1390,29 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		await get_tree().process_frame
+		var tab_font := tab_bar.get_theme_font("font")
+		var tab_font_size := tab_bar.get_theme_font_size("font_size")
+		var prior_tab_end := 0.0
+		var first_tab_start := INF
+		for tab_index in range(rows.size()):
+			var tab_title := tabs.get_tab_title(tab_index)
+			var tab_rect := tab_bar.get_tab_rect(tab_index)
+			var text_width := tab_font.get_string_size(tab_title, HORIZONTAL_ALIGNMENT_LEFT, -1.0, tab_font_size).x if tab_font != null and tab_font_size > 0 else INF
+			if tab_rect.position.x + 0.01 < prior_tab_end \
+					or tab_rect.end.x > tab_bar.size.x + 0.01 \
+					or tab_rect.size.x + 0.5 < text_width + 8.0:
+				push_error("Town smoke: management tab %s lacks ordered text-safe breathing room at %s: rect=%s text_width=%s bar=%s." % [tab_title, viewport_size, tab_rect, text_width, tab_bar.size])
+				window.size = original_window_size
+				shell_control.size = original_shell_size
+				return false
+			if tab_index == 0:
+				first_tab_start = tab_rect.position.x
+			prior_tab_end = tab_rect.end.x
+		if absf(first_tab_start - (tab_bar.size.x - prior_tab_end)) > 1.0:
+			push_error("Town smoke: management tab group is not centered at %s: first=%s last=%s bar=%s." % [viewport_size, first_tab_start, prior_tab_end, tab_bar.size])
+			window.size = original_window_size
+			shell_control.size = original_shell_size
+			return false
 		var watermark_rect := watermark.get_global_rect()
 		var build_box_rect := build_box.get_global_rect()
 		var confirm_rect := confirm_build.get_global_rect()
