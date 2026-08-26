@@ -1911,21 +1911,46 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-main-menu-painted-torch-ambient-glow-10184",
-    "title": "Main Menu painted-torch ambient glow",
+    "id": "ux-battle-movement-range-alternating-edge-cues-10184",
+    "title": "Battle movement-range alternating edge cues",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T15:52:04Z",
-    "updatedAt": "2026-08-26T16:09:41Z",
+    "startedAt": "2026-08-26T16:16:39Z",
+    "updatedAt": "2026-08-26T16:58:26Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the passive painted-torch glow from direct first-view evidence. Inspected 1280x720 and 1920x1080 desktop captures show restrained localized halos; focused standard/Reduced Motion/High Contrast lifecycle and exact authority, Main Menu keyboard/stage/outcome, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged animation parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
-    "completedAt": "2026-08-26T16:09:41Z"
+    "notes": "Completed the movement-range visual correction from fresh current capture evidence. Every exact legal destination now uses three short alternating edge ticks, a center pip, and a lighter inset fill instead of a complete secondary cyan hex. Inspected 1280x720 and 1920x1080 captures, focused Battle/Town visual, rendered Battle skin, Board navigation, animation/VFX, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Two headless skin-report attempts were excluded as fixture no-results because that owner awaits frame_post_draw; its exact selected rows passed under Xvfb. Packaged Battle interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+    "completedAt": "2026-08-26T16:58:26Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-battle-movement-range-alternating-edge-cues-20260826",
+      "title": "Battle movement-range alternating edge cues",
+      "sliceId": "ux-battle-movement-range-alternating-edge-cues-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T16:58:26Z",
+      "updatedAt": "2026-08-26T16:58:26Z",
+      "latestFinding": "Every exact legal movement destination now uses three short alternating edge ticks, a quiet center pip, and a lighter inset fill instead of a complete secondary cyan hex, restoring terrain and unit-art priority without changing movement authority.",
+      "artifacts": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/graphical_polish_audit/captures/active_battle_1280x720.png",
+        ".artifacts/graphical_polish_audit/captures/active_battle_1920x1080.png",
+        "/tmp/heroes-move-cue-focused.iqPLmX",
+        "/tmp/heroes-move-cue-visual.MrO1RX",
+        "/tmp/heroes-move-cue-ui-xvfb.8Ri1WN",
+        "/tmp/heroes-move-cue-headless-compat.nadSNr",
+        "/tmp/heroes-move-cue-final-static.c0Ab5f",
+        "/tmp/heroes-move-cue-linux-package.DYye3L",
+        "/tmp/heroes-move-cue-windows-package.9oJ7sO"
+      ],
+      "result": "completed"
+    },
     {
       "id": "presentation-main-menu-painted-torch-ambient-glow-20260826",
       "title": "Main Menu painted-torch ambient glow",
@@ -15260,14 +15285,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu painted-torch ambient glow is completed with inspected desktop captures, focused accessibility-aware runtime, compatibility/static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Battle movement-range alternating edge cue is completed with inspected pixels, exact movement authority, compatibility/static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-main-menu-painted-torch-ambient-glow-10184",
-  "currentSliceId": "presentation-main-menu-painted-torch-ambient-glow-10184",
-  "currentSliceNotes": "Completed from direct current first-view evidence with exact Main Menu scenery, commands, focus, layout, input, settings, save, campaign, session, route, and Native RMG authority preserved.",
+  "currentSlice": "ux-battle-movement-range-alternating-edge-cues-10184",
+  "currentSliceId": "ux-battle-movement-range-alternating-edge-cues-10184",
+  "currentSliceNotes": "Completed from fresh current Battle captures with exact legal destinations, board/input/combat/session/save authority, and all stronger active/target/controller cues preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu painted-torch ambient glow",
-  "currentSliceUpdatedAt": "2026-08-26T16:09:41Z",
+  "currentSliceTitle": "Battle movement-range alternating edge cues",
+  "currentSliceUpdatedAt": "2026-08-26T16:58:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20783,8 +20808,35 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
-  "notes": "The Main Menu painted-torch ambient glow is completed and blockers are empty; select the next tracker-approved graphical-polish slice.",
+  "notes": "The Battle movement-range alternating edge cue is completed and blockers are empty; select the next tracker-approved graphical-polish slice.",
   "plannedSlices": [
+    {
+      "id": "ux-battle-movement-range-alternating-edge-cues-10184",
+      "title": "Battle movement-range alternating edge cues",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T16:16:39Z",
+      "updatedAt": "2026-08-26T16:58:26Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Reduce the dense secondary honeycomb over the Battle terrain while retaining a truthful visible cue on every exact legal movement destination.",
+      "completionCriteria": "Inspected 1280/1920 captures and focused runtime prove exact alternating edge/pip/fill cues for every legal cell with no full secondary outline and unchanged active/target/controller/game authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No legal-cell, pathfinding, movement, action, target, hit geometry, token, terrain texture, base grid, objective, VFX/audio, animation, battle rule, AI, balance, content, save/schema, layout, font/UI-scale, or Native RMG change.",
+        "No packaged Battle interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from fresh current Battle captures. Every exact legal destination now uses three short alternating edge ticks, a center pip, and a lighter inset fill instead of a complete secondary cyan hex. Inspected 1280x720 and 1920x1080 captures, focused Battle/Town visual, rendered Battle skin, Board navigation, animation/VFX, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Two headless skin-report attempts were fixture no-results because that owner awaits frame_post_draw; the exact selected rows passed naturally under Xvfb. Packaged Battle interaction parity and broader release claims remain unclaimed.",
+      "blockedReason": null,
+      "remainingWork": "",
+      "completedAt": "2026-08-26T16:58:26Z"
+    },
     {
       "id": "presentation-main-menu-painted-torch-ambient-glow-10184",
       "title": "Main Menu painted-torch ambient glow",
@@ -104293,7 +104345,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "main_menu_painted_torch_ambient_glow_completed",
+  "result": "battle_movement_range_alternating_edge_cues_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -104394,9 +104446,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Main Menu now gives its two painted command-rail flames restrained additive ambient life with exact Reduced Motion, High Contrast, input, settings, save, campaign, session, route, and gameplay authority preserved.",
+  "summary": "Battle movement destinations now use restrained alternating edge ticks, center pips, and lighter inset fills instead of complete secondary cyan hex outlines, restoring terrain and unit-art priority with exact movement authority preserved.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T16:09:41Z",
+  "updatedAt": "2026-08-26T16:58:26Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

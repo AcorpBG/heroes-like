@@ -876,13 +876,19 @@ func _run_battle_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	if (
-		String(hex_summary.get("movement_range_visual_model", "")) != "thin_inset_outline_near_transparent_fill"
+		String(hex_summary.get("movement_range_visual_model", "")) != "alternating_edge_ticks_center_pip_near_transparent_fill"
 		or int(hex_summary.get("movement_range_cell_count", -1)) != int(hex_summary.get("legal_destination_count", -2))
 		or int(hex_summary.get("movement_range_cell_count", 0)) <= 0
-		or not is_equal_approx(float(hex_summary.get("movement_range_radius_factor", 0.0)), 0.72)
-		or not is_equal_approx(float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.045)
-		or not is_equal_approx(float(hex_summary.get("movement_range_outline_alpha", 0.0)), 0.48)
-		or not is_equal_approx(float(hex_summary.get("movement_range_outline_width", 0.0)), 1.15)
+		or not is_equal_approx(float(hex_summary.get("movement_range_fill_radius_factor", 0.0)), 0.66)
+		or not is_equal_approx(float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.020)
+		or not is_equal_approx(float(hex_summary.get("movement_range_tick_radius_factor", 0.0)), 0.74)
+		or not is_equal_approx(float(hex_summary.get("movement_range_tick_segment_factor", 0.0)), 0.36)
+		or not is_equal_approx(float(hex_summary.get("movement_range_tick_alpha", 0.0)), 0.58)
+		or not is_equal_approx(float(hex_summary.get("movement_range_tick_width", 0.0)), 1.4)
+		or int(hex_summary.get("movement_range_tick_edge_count", 0)) != 3
+		or not is_equal_approx(float(hex_summary.get("movement_range_pip_radius_factor", 0.0)), 0.045)
+		or not is_equal_approx(float(hex_summary.get("movement_range_pip_alpha", 0.0)), 0.52)
+		or bool(hex_summary.get("movement_range_complete_outline", true))
 		or not bool(hex_summary.get("movement_range_all_legal_cells_drawn", false))
 		or bool(hex_summary.get("movement_range_hover_only", true))
 		or not bool(hex_summary.get("movement_range_below_active_targets_and_stacks", false))
