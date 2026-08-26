@@ -24,7 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice.
+- Selected implementation slice: none. Select the next tracker-approved graphical-polish implementation slice.
 
 ## Battle Movement-Range Alternating Edge Cues
 
@@ -83,13 +83,13 @@ id: `ux-overworld-object-scale-overcorrection-10184`
 Status: completed.
 
 Result:
-- compressed the live painted scale ladder from the over-separated 0.26-to-1.16 range to a bounded 0.32-to-1.00 range: small pickups are legible, heroes retain a distinct middle rank, multi-tile sites remain below towns, and adjacent large objects no longer dominate one another;
-- preserved alpha-bound cropping, source aspect, grounding, clipping behavior, exact assets/ids, logical footprints, placement, pathing, movement, interactions, session/save authority, and generated-map behavior;
-- fresh inspected River Pass captures at 1280x720 and 1920x1080, focused/authored/generated runtime, route movement, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG are unchanged and unclaimed.
+- compressed the live tile-relative painted hierarchy to artifact 0.34, loose pickup 0.38, ordinary object 0.40, blocker 0.42, encounter 0.44, waypoint 0.48, hero 0.50, durable site 0.52, landmark 0.56, multi-tile site 0.58-to-0.72, and town 0.84 tile extents;
+- fresh inspected authored 1280x720 and 1920x1080 captures make adjacent towns distinct, keep heroes and encounters subordinate to sites, and retain legible portable props; generated-map captures preserve restrained decorative bodies, capped multi-tile structures, exact movement, and save/reload authority;
+- focused small-map, six-faction commander, full Overworld visual, route/controller/focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
 
 Implementation boundary:
-- correct the direct playtest finding that the current painted ladder is over-separated: adjacent large objects crowd one another while small pickups read as miniature tokens;
-- keep the existing semantic family ownership, alpha-bound cropping, sprite aspect, grounding, draw order, and logical footprints, but compress the painted hierarchy around the live tile scale so ordinary props remain legible, heroes remain distinct, multi-tile sites stay below towns, and adjacent large objects do not visually collide;
+- correct the direct playtest finding that the current painted ladder remains physically out of scale: adjacent towns crowd into one visual mass, actors approach structure mass, and portable props become toy-sized;
+- keep the existing semantic family ownership, alpha-bound cropping, sprite aspect, grounding, draw order, and logical footprints, but compress the painted hierarchy around the live tile scale so portable props remain legible, actors are subordinate to sites, multi-tile sites stay below towns, and adjacent large objects remain visually distinct;
 - keep every object id, asset, body/visit tile, hit area, passability rule, route, movement, interaction, generated placement, session, save, and Native RMG behavior exact.
 
 Completion criteria:

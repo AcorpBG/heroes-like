@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-battle-movement-range-alternating-edge-cues-10184",
-    "title": "Battle movement-range alternating edge cues",
+    "id": "ux-overworld-object-scale-overcorrection-10184",
+    "title": "Overworld object scale overcorrection",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T16:16:39Z",
-    "updatedAt": "2026-08-26T16:58:26Z",
+    "startedAt": "2026-08-26T15:08:01Z",
+    "updatedAt": "2026-08-26T17:29:30Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the movement-range visual correction from fresh current capture evidence. Every exact legal destination now uses three short alternating edge ticks, a center pip, and a lighter inset fill instead of a complete secondary cyan hex. Inspected 1280x720 and 1920x1080 captures, focused Battle/Town visual, rendered Battle skin, Board navigation, animation/VFX, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Two headless skin-report attempts were excluded as fixture no-results because that owner awaits frame_post_draw; its exact selected rows passed under Xvfb. Packaged Battle interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
-    "completedAt": "2026-08-26T16:58:26Z"
+    "notes": "Completed the reopened scale correction from fresh authored and generated pixels. The live hierarchy now spans artifact 0.34, pickup 0.38, ordinary 0.40, blocker 0.42, encounter 0.44, waypoint 0.48, hero 0.50, durable 0.52, landmark 0.56, multi-tile 0.58-to-0.72, and town 0.84 tile extents. Focused visual/scale/generated, route/controller/focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+    "completedAt": "2026-08-26T17:29:30Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15285,14 +15285,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle movement-range alternating edge cue is completed with inspected pixels, exact movement authority, compatibility/static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The reopened Overworld object-scale correction is completed from fresh authored and generated pixels, exact logical authority, compatibility/static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-movement-range-alternating-edge-cues-10184",
-  "currentSliceId": "ux-battle-movement-range-alternating-edge-cues-10184",
-  "currentSliceNotes": "Completed from fresh current Battle captures with exact legal destinations, board/input/combat/session/save authority, and all stronger active/target/controller cues preserved.",
+  "currentSlice": "ux-overworld-object-scale-overcorrection-10184",
+  "currentSliceId": "ux-overworld-object-scale-overcorrection-10184",
+  "currentSliceNotes": "Completed from fresh 1280/1920 authored and generated captures with a coherent 0.34-to-0.84 tile-relative hierarchy and exact movement/session/save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle movement-range alternating edge cues",
-  "currentSliceUpdatedAt": "2026-08-26T16:58:26Z",
+  "currentSliceTitle": "Overworld object scale overcorrection",
+  "currentSliceUpdatedAt": "2026-08-26T17:29:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20808,7 +20808,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
-  "notes": "The Battle movement-range alternating edge cue is completed and blockers are empty; select the next tracker-approved graphical-polish slice.",
+  "notes": "The Overworld object-scale owner is reopened and active from direct playtest feedback; blockers are empty.",
   "plannedSlices": [
     {
       "id": "ux-battle-movement-range-alternating-edge-cues-10184",
@@ -103882,7 +103882,7 @@
       "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "updatedAt": "2026-08-26T15:46:16Z",
+      "updatedAt": "2026-08-26T17:29:30Z",
       "startedAt": "2026-08-26T15:08:01Z",
       "implementationTargets": [
         "PLAN.md",
@@ -103902,8 +103902,8 @@
         "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
       ],
       "blockedReason": null,
-      "notes": "Completed the direct painted-scale correction. The live ladder now spans 0.32-to-1.00 tile with heroes at 0.60, normalized multi-tile sites below towns, and unchanged assets, alpha-bound/aspect, logical footprints, placement, pathing, gameplay, session/save, generated-map, and Native RMG authority. Fresh inspected 1280x720 and 1920x1080 captures are coherent; focused/authored/generated render, route movement, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
-      "completedAt": "2026-08-26T15:46:16Z"
+      "notes": "Completed after direct playtest rejected the prior scale ladder. Fresh authored 1280/1920 captures prove distinct adjacent towns, subordinate actors, and legible portable props; generated captures prove restrained bodies and capped multi-tile structures with exact movement/save authority. Focused scale/visual/generated, route/controller/focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-26T17:29:30Z"
     }
   ],
   "project": "heroes-like",
@@ -104345,7 +104345,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "battle_movement_range_alternating_edge_cues_completed",
+  "result": "overworld_object_scale_overcorrection_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -104446,9 +104446,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Battle movement destinations now use restrained alternating edge ticks, center pips, and lighter inset fills instead of complete secondary cyan hex outlines, restoring terrain and unit-art priority with exact movement authority preserved.",
+  "summary": "Overworld objects now use a coherent 0.34-to-0.84 tile-relative painted hierarchy: portable props remain legible, actors stay subordinate to sites, and adjacent towns remain distinct while logical gameplay authority is unchanged.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T16:58:26Z",
+  "updatedAt": "2026-08-26T17:29:30Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
