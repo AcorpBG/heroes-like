@@ -129,9 +129,13 @@ func _validate_native_skirmish_launch_setup(shell: Node, entries: Array) -> bool
 	var arc_navigation := shell.find_child("CampaignArcNavigation", true, false) as HBoxContainer
 	var chapter_navigation := shell.find_child("CampaignChapterNavigation", true, false) as HBoxContainer
 	var list := shell.find_child("SkirmishList", true, false) as ItemList
+	var intel_toggle := shell.find_child("SkirmishIntelToggle", true, false) as Button
+	var intel_row := shell.find_child("SkirmishIntelRow", true, false) as HBoxContainer
+	var commander_preview := shell.find_child("SkirmishCommanderPreview", true, false) as Label
+	var operational_board := shell.find_child("SkirmishOperationalBoard", true, false) as Label
 	var stage := shell.get_node("StageDockPanel") as PanelContainer
 	var campaign_launch_row := shell.find_child("CampaignLaunchRow", true, false) as HBoxContainer
-	if launch_row == null or previous_button == null or next_button == null or difficulty_picker == null or difficulty_label == null or start_button == null or arc_navigation == null or chapter_navigation == null or list == null or campaign_launch_row == null:
+	if launch_row == null or previous_button == null or next_button == null or difficulty_picker == null or difficulty_label == null or start_button == null or arc_navigation == null or chapter_navigation == null or list == null or intel_toggle == null or intel_row == null or commander_preview == null or operational_board == null or campaign_launch_row == null:
 		_fail("Skirmish browser is missing its native launch row, front, difficulty, or launch controls.")
 		return false
 	if previous_button.get_parent() != arc_navigation or next_button.get_parent() != arc_navigation or start_button.get_parent() != chapter_navigation or difficulty_label.get_parent() != launch_row or difficulty_picker.get_parent() != launch_row:
@@ -161,9 +165,19 @@ func _validate_native_skirmish_launch_setup(shell: Node, entries: Array) -> bool
 		return false
 	var original_window_size := get_window().size
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
-		get_window().size = viewport_size
+		SettingsService.call("_set_runtime_window_size", viewport_size)
 		await _settle_frames(3)
+		if get_window().size != viewport_size or get_tree().root.size != viewport_size:
+			SettingsService.call("_set_runtime_window_size", original_window_size)
+			await _settle_frames(3)
+			_fail("Skirmish disclosure fixture did not reach requested window/root size %s." % viewport_size)
+			return false
+		var collapsed_snapshot: Dictionary = shell.call("validation_snapshot")
+		var collapsed_layout: Dictionary = collapsed_snapshot.get("skirmish_layout", {}) if collapsed_snapshot.get("skirmish_layout", {}) is Dictionary else {}
 		var stage_rect := stage.get_global_rect()
+		var stage_combined_minimum := stage.get_combined_minimum_size()
+		var expected_collapsed_width := maxf(float(viewport_size.x) * 0.733, stage_combined_minimum.x)
+		var expected_collapsed_height := maxf(minf(560.0, float(viewport_size.y) * 0.720), stage_combined_minimum.y)
 		var previous_rect := previous_button.get_global_rect()
 		var next_rect := next_button.get_global_rect()
 		var arc_navigation_rect := arc_navigation.get_global_rect()
@@ -172,6 +186,7 @@ func _validate_native_skirmish_launch_setup(shell: Node, entries: Array) -> bool
 		var difficulty_rect := difficulty_picker.get_global_rect()
 		var start_rect := start_button.get_global_rect()
 		var list_rect := list.get_global_rect()
+		var intel_toggle_rect := intel_toggle.get_global_rect()
 		if (
 			not launch_row.is_visible_in_tree()
 			or not previous_button.is_visible_in_tree()
@@ -193,12 +208,86 @@ func _validate_native_skirmish_launch_setup(shell: Node, entries: Array) -> bool
 			or difficulty_rect.size.x < difficulty_picker.get_combined_minimum_size().x
 			or start_rect.size.x < start_button.get_combined_minimum_size().x
 			or list_rect.position.y < launch_row_rect.end.y
+			or not stage_rect.encloses(intel_toggle_rect)
+			or absf(stage_rect.size.x - expected_collapsed_width) > 2.0
+			or absf(stage_rect.size.y - expected_collapsed_height) > 2.0
+			or bool(collapsed_snapshot.get("skirmish_intel_expanded", true))
+			or bool(collapsed_snapshot.get("skirmish_intel_row_visible", true))
+			or String(collapsed_snapshot.get("skirmish_intel_toggle_text", "")) != "Show Intel"
+			or String(collapsed_layout.get("intel_toggle_text", "")) != "Show Intel"
 		):
-			get_window().size = original_window_size
+			SettingsService.call("_set_runtime_window_size", original_window_size)
 			await _settle_frames(3)
-			_fail("Skirmish native launch row escaped or overlapped its board at %s." % viewport_size)
+			_fail("Skirmish native launch row escaped or overlapped its board at %s: %s" % [viewport_size, JSON.stringify({
+				"stage": stage_rect,
+				"expected_width": expected_collapsed_width,
+				"expected_height": expected_collapsed_height,
+				"launch": launch_row_rect,
+				"arc": arc_navigation_rect,
+				"chapter": chapter_navigation_rect,
+				"difficulty": difficulty_rect,
+				"start": start_rect,
+				"list": list_rect,
+				"intel_toggle": intel_toggle_rect,
+				"collapsed_layout": collapsed_layout,
+			})])
 			return false
-	get_window().size = original_window_size
+		var disclosure_authority_before := {
+			"selected_id": String(collapsed_snapshot.get("selected_skirmish_id", "")),
+			"difficulty": String(collapsed_snapshot.get("selected_difficulty", "")),
+			"commander": commander_preview.text,
+			"commander_full": commander_preview.tooltip_text,
+			"operational": operational_board.text,
+			"operational_full": operational_board.tooltip_text,
+			"items": _skirmish_item_labels(list),
+			"tooltips": _skirmish_item_tooltips(list),
+		}
+		intel_toggle.grab_focus()
+		intel_toggle.pressed.emit()
+		await _settle_frames(3)
+		var expanded_snapshot: Dictionary = shell.call("validation_snapshot")
+		var expanded_rect := stage.get_global_rect()
+		var expanded_authority := {
+			"selected_id": String(expanded_snapshot.get("selected_skirmish_id", "")),
+			"difficulty": String(expanded_snapshot.get("selected_difficulty", "")),
+			"commander": commander_preview.text,
+			"commander_full": commander_preview.tooltip_text,
+			"operational": operational_board.text,
+			"operational_full": operational_board.tooltip_text,
+			"items": _skirmish_item_labels(list),
+			"tooltips": _skirmish_item_tooltips(list),
+		}
+		if (
+			not bool(expanded_snapshot.get("skirmish_intel_expanded", false))
+			or not bool(expanded_snapshot.get("skirmish_intel_row_visible", false))
+			or String(expanded_snapshot.get("skirmish_intel_toggle_text", "")) != "Hide Intel"
+			or not intel_row.is_visible_in_tree()
+			or get_viewport().gui_get_focus_owner() != intel_toggle
+			or expanded_rect.size.y + 1.0 < stage_rect.size.y
+			or (viewport_size.x >= 1920 and expanded_rect.size.y < stage_rect.size.y + 200.0)
+			or expanded_authority != disclosure_authority_before
+		):
+			SettingsService.call("_set_runtime_window_size", original_window_size)
+			await _settle_frames(3)
+			_fail("Skirmish intelligence disclosure changed content, focus, or responsive geometry at %s." % viewport_size)
+			return false
+		intel_toggle.pressed.emit()
+		await _settle_frames(3)
+		var restored_snapshot: Dictionary = shell.call("validation_snapshot")
+		var restored_rect := stage.get_global_rect()
+		if (
+			bool(restored_snapshot.get("skirmish_intel_expanded", true))
+			or bool(restored_snapshot.get("skirmish_intel_row_visible", true))
+			or String(restored_snapshot.get("skirmish_intel_toggle_text", "")) != "Show Intel"
+			or not restored_rect.position.is_equal_approx(stage_rect.position)
+			or not restored_rect.size.is_equal_approx(stage_rect.size)
+			or get_viewport().gui_get_focus_owner() != intel_toggle
+		):
+			SettingsService.call("_set_runtime_window_size", original_window_size)
+			await _settle_frames(3)
+			_fail("Skirmish intelligence disclosure did not restore its exact compact state at %s." % viewport_size)
+			return false
+	SettingsService.call("_set_runtime_window_size", original_window_size)
 	await _settle_frames(3)
 
 	var session_before = SessionState.active_session
