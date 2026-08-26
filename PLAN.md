@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
 
+## Main Menu Adaptive Title Pocket
+
+id: `presentation-main-menu-adaptive-title-pocket-10184`
+
+Status: completed.
+
+Result:
+- the first-view title pocket now uses a compact 0.180 bottom anchor while Summary is hidden, revealing materially more castle and sky at 1280x720 and 1920x1080;
+- a real menu notice restores the exact prior 0.228 bottom anchor, contains the unchanged three-line Summary, then returns exactly to compact geometry when cleared;
+- focused adaptive/authority, Main Menu navigation/notices, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Main Menu interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 first-view captures show the upper-left title pocket reserves its full three-line notice height even when the notice is hidden, leaving a large empty lower half over the castle and sky;
+- the existing title, crest, subtitle, frame, and optional Summary row already provide the correct content hierarchy, so only the pocket's inactive height needs to adapt.
+
+Implementation boundary:
+- author a compact default title-pocket bottom anchor while preserving the exact existing left/top/right anchors, padding, crest, wordmark, subtitle, and frame;
+- restore the existing full pocket height only when a real menu notice makes Summary visible, then return to compact when no notice remains;
+- preserve every menu hotspot, secondary board, text, focus/input/accessibility behavior, settings/save/quit/route authority, content, and Native RMG behavior.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 first-view captures show materially more castle/sky and no excessive blank title-panel area;
+- focused runtime proves compact hidden-summary and expanded visible-summary geometry, exact content containment, roundtrip, and unchanged menu/settings/save/route authority;
+- Main Menu visual/navigation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no title, crest, subtitle, summary, frame, button/hotspot, secondary-menu, background art, focus/input/accessibility semantic, settings/save/quit/route, gameplay, content, schema, or Native RMG change;
+- no packaged Main Menu interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Town Management Rail Heraldic Fill
 
 id: `presentation-town-management-rail-heraldic-fill-10184`

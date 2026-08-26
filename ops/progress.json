@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "The Town management rail now uses its full available height at 1280x720 and 1920x1080, with the existing live crest providing restrained decorative fill and all focused, compatibility, static/editor, and bounded platform gates green.",
+  "currentNotes": "The Main Menu title pocket now stays compact while Summary is hidden and restores its full existing height only for a real notice; inspected pixels and focused, compatibility, static/editor, and bounded platform gates are green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-management-rail-heraldic-fill-10184",
-  "currentSliceId": "presentation-town-management-rail-heraldic-fill-10184",
-  "currentSliceNotes": "Completed from inspected 1280x720 and 1920x1080 pixels. The existing five-page panel expands through the rail from its 460px minimum, the live crest remains passive and high-contrast-safe at 0.14 opacity, and Town visual/focus/accessibility/core plus bounded Linux/Windows startup gates pass.",
+  "currentSlice": "presentation-main-menu-adaptive-title-pocket-10184",
+  "currentSliceId": "presentation-main-menu-adaptive-title-pocket-10184",
+  "currentSliceNotes": "Completed from inspected 1280x720 and 1920x1080 pixels. The title pocket uses the compact 0.180 bottom anchor while Summary is hidden, expands to the prior 0.228 anchor for a real notice, and roundtrips with exact content and authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town management rail heraldic fill",
-  "currentSliceUpdatedAt": "2026-08-26T20:41:40Z",
+  "currentSliceTitle": "Main Menu adaptive title pocket",
+  "currentSliceUpdatedAt": "2026-08-26T21:07:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20850,8 +20850,34 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
-  "notes": "The Town management-rail heraldic fill is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "notes": "The adaptive Main Menu title pocket is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-main-menu-adaptive-title-pocket-10184",
+      "title": "Main Menu adaptive title pocket",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T20:46:42Z",
+      "updatedAt": "2026-08-26T21:07:33Z",
+      "completedAt": "2026-08-26T21:07:33Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Release normally hidden notice capacity from the first-view title pocket so its frame supports the wordmark instead of covering castle and sky with empty panel space.",
+      "completionCriteria": "Inspected 1280/1920 first-view captures and focused runtime prove compact hidden-summary and expanded visible-summary geometry, exact content containment/roundtrip, and unchanged menu authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No title, crest, subtitle, summary, frame, button/hotspot, secondary-menu, background art, focus/input/accessibility semantic, settings/save/quit/route, gameplay, content, schema, or Native RMG change.",
+        "No packaged Main Menu interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed from inspected 1280x720 and 1920x1080 first-view pixels. Compact hidden-summary and expanded visible-summary geometry, exact content containment/roundtrip, menu authority, navigation/notices, focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Main Menu interaction and release-readiness claims remain excluded."
+    },
     {
       "id": "presentation-town-management-rail-heraldic-fill-10184",
       "title": "Town management rail heraldic fill",

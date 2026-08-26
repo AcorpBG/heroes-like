@@ -25,6 +25,8 @@ const MAIN_MENU_EYEBROW_OUTLINE_COLOR := Color(0.04, 0.03, 0.02, 0.92)
 const MAIN_MENU_EYEBROW_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.66)
 const MAIN_MENU_EYEBROW_OUTLINE_SIZE := 1
 const MAIN_MENU_EYEBROW_SHADOW_OFFSET := Vector2i(1, 1)
+const MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM := 0.180
+const MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM := 0.228
 const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
@@ -359,12 +361,16 @@ func _refresh_summary() -> void:
 	var lead := _menu_notice
 	_summary_label.visible = lead != ""
 	_set_compact_label(_summary_label, lead, 3, 84)
+	_sync_logo_pocket_notice_height(_summary_label.visible)
 	_set_compact_label(
 		_active_expedition_label,
 		_build_footer_expedition_summary(),
 		5,
 		84
 	)
+
+func _sync_logo_pocket_notice_height(has_notice: bool) -> void:
+	_logo_pocket_panel.anchor_bottom = MAIN_MENU_LOGO_POCKET_NOTICE_BOTTOM if has_notice else MAIN_MENU_LOGO_POCKET_COMPACT_BOTTOM
 
 func _on_campaign_selected(index: int) -> Dictionary:
 	if index < 0 or index >= _campaign_entries.size():
@@ -4050,6 +4056,9 @@ func validation_main_menu_pocket_surface_summary() -> Dictionary:
 		"logo_visible": _logo_pocket_panel.is_visible_in_tree(),
 		"footer_visible": _footer_pocket_panel.is_visible_in_tree(),
 		"title_text": _title_label.text,
+		"summary_visible": _summary_label.is_visible_in_tree(),
+		"summary_text": _summary_label.text,
+		"summary_rect": _summary_label.get_global_rect(),
 		"active_expedition_text": _active_expedition_label.text,
 		"active_expedition_tooltip": _active_expedition_label.tooltip_text,
 		"high_contrast": FrontierVisualKit.high_contrast_enabled(),

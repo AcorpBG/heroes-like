@@ -47,7 +47,8 @@ const MAIN_MENU_EYEBROW_OUTLINE_COLOR := Color(0.04, 0.03, 0.02, 0.92)
 const MAIN_MENU_EYEBROW_SHADOW_COLOR := Color(0.0, 0.0, 0.0, 0.66)
 const MAIN_MENU_SUBTITLE_FACE_COLOR := Color(0.86, 0.90, 0.93, 1.0)
 const MAIN_MENU_SUBTITLE_HIGH_CONTRAST_FACE_COLOR := Color(0.96, 0.98, 1.0, 1.0)
-const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)
+const MAIN_MENU_LOGO_POCKET_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.152)
+const MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS := Rect2(0.032, 0.028, 0.330, 0.200)
 const MAIN_MENU_FOOTER_POCKET_ANCHORS := Rect2(0.032, 0.895, 0.340, 0.080)
 const MAIN_MENU_STAGE_DOCK_WINDOW_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1280, 720)]
 const MAIN_MENU_STAGE_DOCK_COMPACT_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
@@ -1455,6 +1456,8 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 		if not _main_menu_pocket_summary_exact(pocket_summary, viewport_size):
 			push_error("Main menu smoke: cartographic first-view pocket contract failed at %s: %s." % [requested_size, pocket_summary])
 			return false
+		if not await _assert_main_menu_adaptive_logo_pocket(shell, viewport_size):
+			return false
 		if not _main_menu_wordmark_theme_exact(shell, SettingsService.high_contrast_ui_enabled()):
 			return false
 		if eyebrow == null \
@@ -1584,6 +1587,61 @@ func _main_menu_pocket_summary_exact(summary: Dictionary, viewport_size: Vector2
 	if not failures.is_empty():
 		push_error("Main menu smoke: failed named cartographic pocket checks: %s." % [failures])
 	return failures.is_empty()
+
+func _assert_main_menu_adaptive_logo_pocket(shell: Control, viewport_size: Vector2) -> bool:
+	var session = SessionState.ensure_active_session()
+	var authority_before: Dictionary = session.to_dict()
+	var settings_before: Dictionary = SettingsService.settings.duplicate(true)
+	var original_notice := String(shell.get("_menu_notice"))
+	var logo_panel := shell.get_node("LogoPocketPanel") as PanelContainer
+	var logo_header := shell.get_node("LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader") as HBoxContainer
+	var summary_label := shell.get_node("%Summary") as Label
+	var compact_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
+	var compact_rect := logo_panel.get_global_rect()
+	if original_notice != "" \
+			or summary_label.visible \
+			or not _main_menu_pocket_anchor_exact(compact_summary, MAIN_MENU_LOGO_POCKET_ANCHORS) \
+			or not compact_rect.encloses(logo_header.get_global_rect()):
+		push_error("Main menu smoke: default title pocket did not begin compact with its notice row hidden: %s." % compact_summary)
+		return false
+	var notice := "Frontier route restored. Review the latest expedition before marching."
+	shell.set("_menu_notice", notice)
+	shell.call("_refresh_summary")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var notice_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
+	var notice_rect := logo_panel.get_global_rect()
+	if not summary_label.is_visible_in_tree() \
+			or summary_label.text != notice \
+			or not _main_menu_pocket_anchor_exact(notice_summary, MAIN_MENU_LOGO_POCKET_NOTICE_ANCHORS) \
+			or notice_rect.size.y <= compact_rect.size.y + 1.0 \
+			or not notice_rect.encloses(logo_header.get_global_rect()) \
+			or not notice_rect.encloses(summary_label.get_global_rect()) \
+			or summary_label.get_global_rect().position.y + 0.01 < logo_header.get_global_rect().end.y:
+		push_error("Main menu smoke: visible notice did not expand the title pocket around its exact existing content at %s: %s." % [viewport_size, notice_summary])
+		shell.set("_menu_notice", original_notice)
+		shell.call("_refresh_summary")
+		return false
+	shell.set("_menu_notice", original_notice)
+	shell.call("_refresh_summary")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var restored_summary: Dictionary = shell.call("validation_main_menu_pocket_surface_summary")
+	var restored_rect := logo_panel.get_global_rect()
+	var restored_exact := not summary_label.visible \
+		and summary_label.text == original_notice \
+		and _main_menu_pocket_anchor_exact(restored_summary, MAIN_MENU_LOGO_POCKET_ANCHORS) \
+		and restored_rect.is_equal_approx(compact_rect) \
+		and session.to_dict() == authority_before \
+		and SettingsService.settings == settings_before
+	if not restored_exact:
+		push_error("Main menu smoke: title pocket did not restore its compact geometry and authority at %s: %s." % [viewport_size, restored_summary])
+	return restored_exact
+
+func _main_menu_pocket_anchor_exact(summary: Dictionary, expected: Rect2) -> bool:
+	var actual := summary.get("logo_anchors", Rect2()) as Rect2
+	return actual.position.distance_to(expected.position) <= 0.0001 \
+		and actual.size.distance_to(expected.size) <= 0.0001
 
 func _assert_battle_shake_picker_theme_parity(
 		shell: Control,
