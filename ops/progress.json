@@ -1936,6 +1936,8 @@
       "latestFinding": "Every exact legal movement destination now uses three short alternating edge ticks, a quiet center pip, and a lighter inset fill instead of a complete secondary cyan hex, restoring terrain and unit-art priority without changing movement authority.",
       "artifacts": [
         "scenes/battle/BattleBoardView.gd",
+        "tests/battle_movement_range_perimeter_runtime_report.gd",
+        "tests/battle_movement_range_perimeter_runtime_report.tscn",
         "tests/town_battle_visual_smoke.gd",
         "tests/ui_runtime_skin_visual_report.gd",
         "tests/validate_repo.py",
@@ -15327,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The footprint-proportional Overworld object-scale correction is completed and validated; select the next tracker-approved graphical-polish slice from fresh playtest evidence.",
+  "currentNotes": "The Battle movement-range perimeter-contour polish is completed and validated; the next graphical-polish slice is not yet selected and blockers are empty.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-footprint-proportional-object-scale-10184",
-  "currentSliceId": "presentation-overworld-footprint-proportional-object-scale-10184",
-  "currentSliceNotes": "Completed: painted Overworld item, actor, structure, multi-tile site, and town extents now reflect physical role and authored footprint while preserving exact map authority.",
+  "currentSlice": "presentation-battle-movement-range-perimeter-contour-10184",
+  "currentSliceId": "presentation-battle-movement-range-perimeter-contour-10184",
+  "currentSliceNotes": "Completed: 32 legal destinations retain 32 subtle pips; 96 repeated ticks became 50 exposed-edge contour segments and 71 internal shared edges are omitted, with movement/combat/session authority unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Footprint-proportional Overworld object scale",
-  "currentSliceUpdatedAt": "2026-08-26T22:48:18Z",
+  "currentSliceTitle": "Battle movement-range perimeter contour",
+  "currentSliceUpdatedAt": "2026-08-26T23:22:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20849,9 +20851,49 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next bounded graphical-polish slice from direct current playtest evidence; preserve gameplay, session authority, content, and Native RMG behavior unless explicitly owned.",
-  "notes": "The footprint-proportional Overworld object-scale correction is completed with focused/live, compatibility, repository/editor, and bounded Linux/Windows export-startup evidence; no next slice is selected.",
+  "nextActionGuardrailNote": "Select one bounded source-backed graphical defect from fresh rendered evidence; preserve gameplay, input, save/session authority, and Native RMG behavior unless the selected slice explicitly owns them.",
+  "notes": "The Battle movement-range perimeter contour is completed: 32 legal cells retain 32 pips, 96 repeated ticks became 50 exposed-edge segments, and 71 internal shared edges are omitted; the next graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-movement-range-perimeter-contour-10184",
+      "title": "Battle movement-range perimeter contour",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T22:53:15Z",
+      "updatedAt": "2026-08-26T23:22:11Z",
+      "completedAt": "2026-08-26T23:22:11Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_movement_range_perimeter_runtime_report.gd",
+        "tests/battle_movement_range_perimeter_runtime_report.tscn",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the repeated per-cell Battle movement-range edge hatch with a restrained broken exposed-edge perimeter while retaining one clear destination pip for every exact legal cell.",
+      "completionCriteria": "Inspected 1280/1920 captures and focused/live runtime prove one pip per legal destination, exposed-edge-only contour geometry, no internal shared edges, and unchanged movement/input/combat/session authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No legal destination, movement/path/cost, active/target/attack/cursor/objective cue, grid/token/caption/VFX, hit geometry, input/focus/accessibility semantic, combat, AI, balance, content, save/session/schema, or Native RMG change.",
+        "No packaged Battle interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None. Focused runtime proves exact exposed/internal edge algebra and one pip per legal destination; inspected 1280/1920 captures, live compatibility, repository/editor, and bounded Linux/Windows export-startup gates are green. Packaged Battle interaction and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "focusedRuntimeArtifact": "/tmp/heroes-battle-perimeter-focused-rerun.TUgLef",
+        "captureArtifact": "/tmp/heroes-battle-perimeter-capture.3sqjCW",
+        "townBattleArtifact": "/tmp/heroes-battle-perimeter-town-battle.nLH2fM",
+        "boardNavigationArtifact": "/tmp/heroes-battle-perimeter-board_navigation.NOfQAL",
+        "battleAnimationArtifact": "/tmp/heroes-battle-perimeter-battle_animation.ivknGb",
+        "activeFocusArtifact": "/tmp/heroes-battle-perimeter-active_focus.8T7In5",
+        "accessibilityArtifact": "/tmp/heroes-battle-perimeter-accessibility.yw521I",
+        "coreArtifact": "/tmp/heroes-battle-perimeter-core.72o0bA",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-overworld-footprint-proportional-object-scale-10184",
       "title": "Footprint-proportional Overworld object scale",

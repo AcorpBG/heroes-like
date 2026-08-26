@@ -33903,7 +33903,7 @@ def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) 
             ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
 
 
-def validate_battle_movement_range_alternating_edge_cues(errors: list[str]) -> None:
+def validate_battle_movement_range_perimeter_contour(errors: list[str]) -> None:
     def gd_function_block(text: str, name: str) -> str:
         start = text.find(f"func {name}(")
         if start < 0:
@@ -33912,40 +33912,50 @@ def validate_battle_movement_range_alternating_edge_cues(errors: list[str]) -> N
         return text[start:] if end < 0 else text[start:end]
 
     board_path = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
+    focused_path = ROOT / "tests" / "battle_movement_range_perimeter_runtime_report.gd"
+    focused_scene_path = ROOT / "tests" / "battle_movement_range_perimeter_runtime_report.tscn"
     smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
     visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
-    for path in (board_path, smoke_path, visual_path):
+    for path in (board_path, focused_path, focused_scene_path, smoke_path, visual_path):
         ensure(path.exists(), errors, f"Missing Battle movement-range restraint owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (board_path, smoke_path, visual_path)):
+    if not all(path.exists() for path in (board_path, focused_path, focused_scene_path, smoke_path, visual_path)):
         return
 
     board_text = board_path.read_text(encoding="utf-8")
+    focused_text = focused_path.read_text(encoding="utf-8")
+    focused_scene_text = focused_scene_path.read_text(encoding="utf-8")
     smoke_text = smoke_path.read_text(encoding="utf-8")
     visual_text = visual_path.read_text(encoding="utf-8")
+    ensure(focused_scene_text.count('path="res://tests/battle_movement_range_perimeter_runtime_report.gd"') == 1, errors, "Focused Battle movement perimeter scene must own the exact runtime report script")
     for token in (
         "const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.58)",
-        'const MOVE_RANGE_VISUAL_MODEL := "alternating_edge_ticks_center_pip_near_transparent_fill"',
-        "const MOVE_RANGE_FILL_RADIUS_FACTOR := 0.66",
-        "const MOVE_RANGE_FILL_ALPHA := 0.020",
-        "const MOVE_RANGE_TICK_RADIUS_FACTOR := 0.74",
-        "const MOVE_RANGE_TICK_SEGMENT_FACTOR := 0.36",
-        "const MOVE_RANGE_TICK_WIDTH := 1.4",
-        "const MOVE_RANGE_TICK_EDGE_COUNT := 3",
-        "const MOVE_RANGE_PIP_RADIUS_FACTOR := 0.045",
-        "const MOVE_RANGE_PIP_ALPHA := 0.52",
+        'const MOVE_RANGE_VISUAL_MODEL := "broken_exposed_edge_perimeter_center_pips_near_transparent_fill"',
+        "const MOVE_RANGE_FILL_RADIUS_FACTOR := 0.58",
+        "const MOVE_RANGE_FILL_ALPHA := 0.012",
+        "const MOVE_RANGE_CONTOUR_RADIUS_FACTOR := 0.90",
+        "const MOVE_RANGE_CONTOUR_SEGMENT_FACTOR := 0.72",
+        "const MOVE_RANGE_CONTOUR_ALPHA := 0.48",
+        "const MOVE_RANGE_CONTOUR_WIDTH := 1.6",
+        "const MOVE_RANGE_PIP_RADIUS_FACTOR := 0.040",
+        "const MOVE_RANGE_PIP_ALPHA := 0.46",
     ):
         ensure(board_text.count(token) == 1, errors, f"Battle movement-range restraint must own one exact visual constant: {token}")
     affordance = gd_function_block(board_text, "_draw_tactical_affordances")
     cue_draw = gd_function_block(board_text, "_draw_movement_destination_cue")
+    contour_summary = gd_function_block(board_text, "_movement_range_contour_summary")
+    neighbor_for_edge = gd_function_block(board_text, "_movement_range_neighbor_for_edge")
     summary = gd_function_block(board_text, "validation_hex_layout_summary")
-    ensure(affordance and cue_draw and summary, errors, "Could not isolate Battle movement-range cue/draw/summary ownership")
+    ensure(affordance and cue_draw and contour_summary and neighbor_for_edge and summary, errors, "Could not isolate Battle movement-range cue/perimeter/summary ownership")
     if affordance:
         draw_order = tuple(affordance.find(token) for token in (
             "if player_input_active:",
-            "for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):",
+            "var legal_destinations: Array = BattleRulesScript.legal_destinations_for_active_stack(_battle)",
+            "var movement_range_region := _movement_range_contour_summary(legal_destinations)",
+            'var legal_cell_keys: Dictionary = movement_range_region.get("cell_keys", {})',
+            "for destination in legal_destinations:",
             "if not (destination is Dictionary):",
             "if not _cell_in_bounds(cell):",
-            "_draw_movement_destination_cue(_hex_center(cell, hex_layout), radius)",
+            "_draw_movement_destination_cue(cell, _hex_center(cell, hex_layout), radius, legal_cell_keys)",
             "_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)",
             "var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)",
             "var legal_ranged_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, true)",
@@ -33957,20 +33967,64 @@ def validate_battle_movement_range_alternating_edge_cues(errors: list[str]) -> N
             ensure(forbidden not in affordance, errors, f"Movement range draw must avoid obsolete/heurstic/mutating presentation path: {forbidden}")
     if cue_draw:
         cue_order = tuple(cue_draw.find(token) for token in (
+            "cell: Vector2i",
+            "legal_cell_keys: Dictionary",
             "radius * MOVE_RANGE_FILL_RADIUS_FACTOR",
             "Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_FILL_ALPHA)",
-            "var tick_points := _hex_points(center, radius * MOVE_RANGE_TICK_RADIUS_FACTOR)",
-            "var inset := (1.0 - MOVE_RANGE_TICK_SEGMENT_FACTOR) * 0.5",
-            "for edge_index in [0, 2, 4]:",
+            "var contour_points := _hex_points(center, radius * MOVE_RANGE_CONTOUR_RADIUS_FACTOR)",
+            "var inset := (1.0 - MOVE_RANGE_CONTOUR_SEGMENT_FACTOR) * 0.5",
+            "for edge_index in range(6):",
+            "var neighbor := _movement_range_neighbor_for_edge(cell, edge_index)",
+            "if legal_cell_keys.has(_movement_range_cell_key(neighbor)):",
+            "continue",
             "draw_line(",
-            "MOVE_RANGE_TICK_WIDTH",
+            "Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_CONTOUR_ALPHA)",
+            "MOVE_RANGE_CONTOUR_WIDTH",
             "draw_circle(",
             "radius * MOVE_RANGE_PIP_RADIUS_FACTOR",
             "MOVE_RANGE_PIP_ALPHA",
         ))
-        ensure(all(index >= 0 for index in cue_order) and list(cue_order) == sorted(cue_order), errors, "Movement destination cue must draw restrained fill, three alternating edge ticks, then the center pip")
-        for forbidden in ("_draw_hex_outline", "_closed_points", "range(6)", "BattleRulesScript", "Input.", "sort(", "erase(", "await ", "create_timer"):
-            ensure(forbidden not in cue_draw, errors, f"Movement destination cue must not rebuild authority or restore a complete outline: {forbidden}")
+        ensure(all(index >= 0 for index in cue_order) and list(cue_order) == sorted(cue_order), errors, "Movement destination cue must draw restrained fill, skip shared internal edges, draw exposed contour segments, then retain the center pip")
+        for forbidden in ("_draw_hex_outline", "_closed_points", "BattleRulesScript", "Input.", "sort(", "erase(", "await ", "create_timer"):
+            ensure(forbidden not in cue_draw, errors, f"Movement destination cue must not rebuild authority or restore per-cell outlines: {forbidden}")
+    if contour_summary:
+        contour_order = tuple(contour_summary.find(token) for token in (
+            "var cells: Array[Vector2i] = []",
+            "var cell_keys := {}",
+            "for destination in legal_destinations:",
+            "if not _cell_in_bounds(cell):",
+            "if cell_keys.has(key):",
+            "cell_keys[key] = true",
+            "cells.append(cell)",
+            "for cell in cells:",
+            "for edge_index in range(6):",
+            "var neighbor := _movement_range_neighbor_for_edge(cell, edge_index)",
+            "if cell_keys.has(_movement_range_cell_key(neighbor)):",
+            "internal_directed_edge_count += 1",
+            "boundary_segment_count += 1",
+            "var internal_shared_edge_count := int(internal_directed_edge_count / 2)",
+            '"edge_balance_exact": boundary_segment_count + internal_shared_edge_count * 2 == cells.size() * 6',
+        ))
+        ensure(all(index >= 0 for index in contour_order) and list(contour_order) == sorted(contour_order), errors, "Movement-range region must derive unique exact legal cells, count exposed/internal edges, and prove the hex-edge balance")
+        for forbidden in ("sort(", "erase(", "BattleRulesScript", "Input.", "await ", "create_timer", "_battle"):
+            ensure(forbidden not in contour_summary, errors, f"Movement-range contour summary must remain a detached projection of the supplied legal destinations: {forbidden}")
+    if neighbor_for_edge:
+        for token in (
+            "var even_row_offsets := [",
+            "Vector2i(0, -1)",
+            "Vector2i(-1, -1)",
+            "Vector2i(-1, 0)",
+            "Vector2i(-1, 1)",
+            "Vector2i(0, 1)",
+            "Vector2i(1, 0)",
+            "var odd_row_offsets := [",
+            "Vector2i(1, -1)",
+            "var offsets := even_row_offsets if cell.y % 2 == 0 else odd_row_offsets",
+            "return cell + offsets[clampi(edge_index, 0, 5)]",
+        ):
+            ensure(token in neighbor_for_edge, errors, f"Movement-range exposed-edge mapping must retain exact odd/even row geometry: {token}")
+        for forbidden in ("BattleRulesScript", "sort(", "erase(", "_battle", "await ", "create_timer"):
+            ensure(forbidden not in neighbor_for_edge, errors, f"Movement-range edge mapping must remain local geometry only: {forbidden}")
     if summary:
         for token in (
             '"legal_destinations": legal_destinations',
@@ -33979,14 +34033,18 @@ def validate_battle_movement_range_alternating_edge_cues(errors: list[str]) -> N
             '"movement_range_cell_count": legal_destinations.size()',
             '"movement_range_fill_radius_factor": MOVE_RANGE_FILL_RADIUS_FACTOR',
             '"movement_range_fill_alpha": MOVE_RANGE_FILL_ALPHA',
-            '"movement_range_tick_radius_factor": MOVE_RANGE_TICK_RADIUS_FACTOR',
-            '"movement_range_tick_segment_factor": MOVE_RANGE_TICK_SEGMENT_FACTOR',
-            '"movement_range_tick_alpha": MOVE_COLOR.a',
-            '"movement_range_tick_width": MOVE_RANGE_TICK_WIDTH',
-            '"movement_range_tick_edge_count": MOVE_RANGE_TICK_EDGE_COUNT',
+            '"movement_range_contour_radius_factor": MOVE_RANGE_CONTOUR_RADIUS_FACTOR',
+            '"movement_range_contour_segment_factor": MOVE_RANGE_CONTOUR_SEGMENT_FACTOR',
+            '"movement_range_contour_alpha": MOVE_RANGE_CONTOUR_ALPHA',
+            '"movement_range_contour_width": MOVE_RANGE_CONTOUR_WIDTH',
+            '"movement_range_boundary_segment_count": int(movement_range_region.get("boundary_segment_count", 0))',
+            '"movement_range_internal_shared_edge_count": int(movement_range_region.get("internal_shared_edge_count", 0))',
+            '"movement_range_region_edge_balance_exact": bool(movement_range_region.get("edge_balance_exact", false))',
+            '"movement_range_internal_edges_drawn": false',
+            '"movement_range_destination_pip_count": legal_destinations.size()',
             '"movement_range_pip_radius_factor": MOVE_RANGE_PIP_RADIUS_FACTOR',
             '"movement_range_pip_alpha": MOVE_RANGE_PIP_ALPHA',
-            '"movement_range_complete_outline": false',
+            '"movement_range_complete_cell_outlines": false',
             '"movement_range_all_legal_cells_drawn": true',
             '"movement_range_hover_only": false',
             '"movement_range_below_active_targets_and_stacks": true',
@@ -33994,25 +34052,98 @@ def validate_battle_movement_range_alternating_edge_cues(errors: list[str]) -> N
         ):
             ensure(token in summary, errors, f"Battle board summary is missing exact movement-range authority/profile token: {token}")
     for token in (
-        'String(hex_summary.get("movement_range_visual_model", "")) != "alternating_edge_ticks_center_pip_near_transparent_fill"',
+        'String(hex_summary.get("movement_range_visual_model", "")) != "broken_exposed_edge_perimeter_center_pips_near_transparent_fill"',
+        'var independent_movement_region := _independent_movement_range_region_summary(hex_summary.get("legal_destinations", []))',
         'int(hex_summary.get("movement_range_cell_count", -1)) != int(hex_summary.get("legal_destination_count", -2))',
         'int(hex_summary.get("movement_range_cell_count", 0)) <= 0',
-        'float(hex_summary.get("movement_range_fill_radius_factor", 0.0)), 0.66',
-        'float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.020',
-        'float(hex_summary.get("movement_range_tick_radius_factor", 0.0)), 0.74',
-        'float(hex_summary.get("movement_range_tick_segment_factor", 0.0)), 0.36',
-        'float(hex_summary.get("movement_range_tick_alpha", 0.0)), 0.58',
-        'float(hex_summary.get("movement_range_tick_width", 0.0)), 1.4',
-        'int(hex_summary.get("movement_range_tick_edge_count", 0)) != 3',
-        'float(hex_summary.get("movement_range_pip_radius_factor", 0.0)), 0.045',
-        'float(hex_summary.get("movement_range_pip_alpha", 0.0)), 0.52',
-        'bool(hex_summary.get("movement_range_complete_outline", true))',
+        'float(hex_summary.get("movement_range_fill_radius_factor", 0.0)), 0.58',
+        'float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.012',
+        'float(hex_summary.get("movement_range_contour_radius_factor", 0.0)), 0.90',
+        'float(hex_summary.get("movement_range_contour_segment_factor", 0.0)), 0.72',
+        'float(hex_summary.get("movement_range_contour_alpha", 0.0)), 0.48',
+        'float(hex_summary.get("movement_range_contour_width", 0.0)), 1.6',
+        'int(hex_summary.get("movement_range_boundary_segment_count", -1)) != int(independent_movement_region.get("boundary_segment_count", -2))',
+        'int(hex_summary.get("movement_range_internal_shared_edge_count", -1)) != int(independent_movement_region.get("internal_shared_edge_count", -2))',
+        'int(hex_summary.get("movement_range_boundary_segment_count", 0)) >= int(hex_summary.get("movement_range_cell_count", 0)) * 3',
+        'not bool(hex_summary.get("movement_range_region_edge_balance_exact", false))',
+        'not bool(independent_movement_region.get("edge_balance_exact", false))',
+        'bool(independent_movement_region.get("duplicate_cell", true))',
+        'bool(hex_summary.get("movement_range_internal_edges_drawn", true))',
+        'int(hex_summary.get("movement_range_destination_pip_count", -1)) != int(hex_summary.get("legal_destination_count", -2))',
+        'float(hex_summary.get("movement_range_pip_radius_factor", 0.0)), 0.040',
+        'float(hex_summary.get("movement_range_pip_alpha", 0.0)), 0.46',
+        'bool(hex_summary.get("movement_range_complete_cell_outlines", true))',
         'not bool(hex_summary.get("movement_range_all_legal_cells_drawn", false))',
         'bool(hex_summary.get("movement_range_hover_only", true))',
         'not bool(hex_summary.get("movement_range_below_active_targets_and_stacks", false))',
         'String(hex_summary.get("movement_range_action_authority", "")) != "legal_destinations_for_active_stack"',
     ):
         ensure(token in smoke_text, errors, f"Town/Battle focused smoke is missing exact movement-range restraint proof: {token}")
+    independent_region = gd_function_block(smoke_text, "_independent_movement_range_region_summary")
+    ensure(independent_region, errors, "Could not isolate independent Battle movement-range region oracle")
+    if independent_region:
+        for token in (
+            "var destinations: Array = destinations_value if destinations_value is Array else []",
+            "var duplicate_cell := false",
+            'var key := "%d,%d" % [cell.x, cell.y]',
+            "duplicate_cell = true",
+            "var offsets := [",
+            "] if cell.y % 2 == 0 else [",
+            "for offset_value in offsets:",
+            'if cell_keys.has("%d,%d" % [neighbor.x, neighbor.y]):',
+            '"edge_balance_exact": boundary_segment_count + internal_shared_edge_count * 2 == cells.size() * 6',
+        ):
+            ensure(token in independent_region, errors, f"Independent Battle movement-range oracle is missing exact region token: {token}")
+        for forbidden in ("BattleBoardView", "_movement_range_contour_summary", "_movement_range_neighbor_for_edge", "BattleRulesScript", "sort(", "erase(", "await ", "create_timer"):
+            ensure(forbidden not in independent_region, errors, f"Independent Battle movement-range oracle must not depend on production projection helpers: {forbidden}")
+    focused_run = gd_function_block(focused_text, "_run_viewport")
+    focused_independent = gd_function_block(focused_text, "_independent_region_summary")
+    ensure(focused_run and focused_independent, errors, "Could not isolate focused Battle movement-range runtime and independent perimeter oracle")
+    if focused_run:
+        focused_order = tuple(focused_run.find(token) for token in (
+            'ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)',
+            "BattleRules.create_battle_payload(session, encounter)",
+            "session = SessionState.set_active_session(session)",
+            'load("res://scenes/battle/BattleShell.tscn").instantiate()',
+            "var authority_before: Dictionary = session.to_dict()",
+            'shell.get_node_or_null("%BattleBoard")',
+            'board.call("validation_hex_layout_summary")',
+            'var independent := _independent_region_summary(summary.get("legal_destinations", []))',
+            "boundary_count == int(independent.get(\"boundary_segment_count\", -2))",
+            "internal_count == int(independent.get(\"internal_shared_edge_count\", -2))",
+            "boundary_count < legal_count * 3",
+            "boundary_count + internal_count * 2 == legal_count * 6",
+            'not bool(summary.get("movement_range_internal_edges_drawn", true))',
+            'int(summary.get("movement_range_destination_pip_count", -2)) == legal_count',
+            "session.to_dict() == authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle perimeter runtime must build a real battle, compare public geometry with an independent oracle, prove authority, then clean up")
+        ensure(focused_run.rfind("shell.queue_free()") > focused_run.find('"session_authority_exact": session.to_dict() == authority_before'), errors, "Focused Battle perimeter runtime must clean up only after recording whole-session authority")
+        for token in (
+            "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+            'String(summary.get("movement_range_visual_model", "")) == "broken_exposed_edge_perimeter_center_pips_near_transparent_fill"',
+            'bool(summary.get("movement_range_region_edge_balance_exact", false))',
+            'not bool(independent.get("duplicate_cell", true))',
+            'not bool(summary.get("movement_range_complete_cell_outlines", true))',
+            'String(summary.get("movement_range_action_authority", "")) == "legal_destinations_for_active_stack"',
+            '"old_repeated_tick_count": legal_count * 3',
+            'print("BATTLE_MOVEMENT_RANGE_PERIMETER_RUNTIME_REPORT %s"',
+        ):
+            ensure(token in focused_text, errors, f"Focused Battle movement perimeter report is missing exact runtime evidence: {token}")
+        for forbidden in ("_draw_tactical_affordances", "_draw_movement_destination_cue", "_movement_range_contour_summary", "_movement_range_neighbor_for_edge", "set_battle_state", "BattleRules.perform", "Input.", "create_timer", "sort(", "erase("):
+            ensure(forbidden not in focused_run, errors, f"Focused Battle movement perimeter runtime must remain public and observation-only: {forbidden}")
+    if focused_independent:
+        for token in (
+            "var cells: Array[Vector2i] = []",
+            "var duplicate_cell := false",
+            "var offsets := [",
+            "] if cell.y % 2 == 0 else [",
+            'if cell_keys.has("%d,%d" % [neighbor.x, neighbor.y]):',
+            '"edge_balance_exact": boundary_segment_count + internal_shared_edge_count * 2 == cells.size() * 6',
+        ):
+            ensure(token in focused_independent, errors, f"Focused independent perimeter oracle is missing exact hex-region token: {token}")
+        for forbidden in ("BattleBoardView", "_movement_range_contour_summary", "_movement_range_neighbor_for_edge", "BattleRulesScript", "sort(", "erase(", "await ", "create_timer"):
+            ensure(forbidden not in focused_independent, errors, f"Focused independent perimeter oracle must not depend on production helpers: {forbidden}")
     visual_helper = gd_function_block(visual_text, "_battle_movement_range_contract")
     visual_run = gd_function_block(visual_text, "_run_shell")
     ensure(visual_helper and visual_run, errors, "Could not isolate captured Battle movement-range contract")
@@ -34022,17 +34153,23 @@ def validate_battle_movement_range_alternating_edge_cues(errors: list[str]) -> N
             'board.call("validation_hex_layout_summary")',
             "legal_destination_count > 0",
             'int(summary.get("movement_range_cell_count", -2)) == legal_destination_count',
-            'String(summary.get("movement_range_visual_model", "")) == "alternating_edge_ticks_center_pip_near_transparent_fill"',
-            'float(summary.get("movement_range_fill_radius_factor", 0.0)), 0.66',
-            'float(summary.get("movement_range_fill_alpha", 0.0)), 0.020',
-            'float(summary.get("movement_range_tick_radius_factor", 0.0)), 0.74',
-            'float(summary.get("movement_range_tick_segment_factor", 0.0)), 0.36',
-            'float(summary.get("movement_range_tick_alpha", 0.0)), 0.58',
-            'float(summary.get("movement_range_tick_width", 0.0)), 1.4',
-            'int(summary.get("movement_range_tick_edge_count", 0)) == 3',
-            'float(summary.get("movement_range_pip_radius_factor", 0.0)), 0.045',
-            'float(summary.get("movement_range_pip_alpha", 0.0)), 0.52',
-            'not bool(summary.get("movement_range_complete_outline", true))',
+            'String(summary.get("movement_range_visual_model", "")) == "broken_exposed_edge_perimeter_center_pips_near_transparent_fill"',
+            'float(summary.get("movement_range_fill_radius_factor", 0.0)), 0.58',
+            'float(summary.get("movement_range_fill_alpha", 0.0)), 0.012',
+            'float(summary.get("movement_range_contour_radius_factor", 0.0)), 0.90',
+            'float(summary.get("movement_range_contour_segment_factor", 0.0)), 0.72',
+            'float(summary.get("movement_range_contour_alpha", 0.0)), 0.48',
+            'float(summary.get("movement_range_contour_width", 0.0)), 1.6',
+            "boundary_segment_count > 0",
+            "internal_shared_edge_count > 0",
+            "boundary_segment_count < legal_destination_count * 3",
+            "boundary_segment_count + internal_shared_edge_count * 2 == legal_destination_count * 6",
+            'bool(summary.get("movement_range_region_edge_balance_exact", false))',
+            'not bool(summary.get("movement_range_internal_edges_drawn", true))',
+            'int(summary.get("movement_range_destination_pip_count", -2)) == legal_destination_count',
+            'float(summary.get("movement_range_pip_radius_factor", 0.0)), 0.040',
+            'float(summary.get("movement_range_pip_alpha", 0.0)), 0.46',
+            'not bool(summary.get("movement_range_complete_cell_outlines", true))',
             'bool(summary.get("movement_range_all_legal_cells_drawn", false))',
             'not bool(summary.get("movement_range_hover_only", true))',
         ):
@@ -69608,7 +69745,7 @@ def main() -> int:
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
-    validate_battle_movement_range_alternating_edge_cues(errors)
+    validate_battle_movement_range_perimeter_contour(errors)
     validate_battle_sidebar_tactical_card_height_cap(errors)
     validate_battle_sidebar_heraldic_watermark(errors)
     validate_battle_footer_heraldic_watermark(errors)
