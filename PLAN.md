@@ -26,6 +26,31 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
 
+## Overworld Object Scale Coherence
+
+id: `presentation-overworld-object-scale-coherence-10184`
+
+Status: completed.
+
+Result:
+- direct playtest feedback was corrected by compressing the painted ladder to artifact 0.46, decoration 0.48, pickup 0.50, ordinary object 0.52, blocker 0.54, encounter 0.56, waypoint 0.58, hero 0.60, durable site 0.64, landmark 0.68, multi-tile site 0.70-to-0.80, and town 0.82 tile extents;
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show portable objects as readable map symbols, actors at a shared middle rank, structures below towns, and no adjacent-object crowding;
+- focused authored/generated scale, movement/save, route/controller, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Implementation boundary:
+- compress the symbolic painted hierarchy around the live tile scale so artifacts and loose pickups remain clearly readable, actors and encounters remain subordinate to sites, and towns remain the largest map landmark without visually dwarfing every other object;
+- retain the existing semantic family ownership, alpha-bound crop/aspect correction, footprint-aware caps, centers, grounding, and draw order;
+- preserve exact object assets/ids, logical footprints, body/entry/visit masks, hit areas, selection/hover, passability, routes, movement, interaction, content, session/save authority, generated placement, and Native RMG behavior.
+
+Completion criteria:
+- fresh inspected authored 1280x720 and 1920x1080 captures show a coherent symbolic prop < actor/encounter < structure < town hierarchy without tiny resource specks or adjacent-object crowding;
+- focused runtime proves exact painted extents, aspect/alpha-bound preservation, footprint caps, full-versus-clipped placement parity, and unchanged logical/session/save authority;
+- authored/generated Overworld visual and movement/save, route/input/focus, accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object asset, id, family/profile, footprint, body/visit mask, hit area, placement/count/density, passability, pathfinding, route, movement, interaction, terrain/road/fog, camera/map-fit, shell layout, input/focus/accessibility semantic, gameplay, content, save/schema, generated-map, or Native RMG change;
+- no packaged Overworld interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Battle Stack Token Scale
 
 id: `presentation-battle-stack-token-scale-10184`
