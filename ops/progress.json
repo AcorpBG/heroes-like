@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Correct the compressed Overworld item, actor, structure, and town scale ladder using authored logical footprints without changing map behavior."
+    "Select the next tracker-approved graphical-polish slice from fresh playtest evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "The footprint-proportional Overworld object-scale correction is in progress from fresh 1280/1920 evidence; blockers are empty.",
+  "currentNotes": "The footprint-proportional Overworld object-scale correction is completed and validated; select the next tracker-approved graphical-polish slice from fresh playtest evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "presentation-overworld-footprint-proportional-object-scale-10184",
   "currentSliceId": "presentation-overworld-footprint-proportional-object-scale-10184",
-  "currentSliceNotes": "In progress: widen the compressed painted Overworld scale ladder so item, actor, durable structure, multi-tile structure, and town art visibly reflects physical role and logical footprint while preserving map authority.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Completed: painted Overworld item, actor, structure, multi-tile site, and town extents now reflect physical role and authored footprint while preserving exact map authority.",
+  "currentSliceStatus": "completed",
   "currentSliceTitle": "Footprint-proportional Overworld object scale",
-  "currentSliceUpdatedAt": "2026-08-26T22:16:47Z",
+  "currentSliceUpdatedAt": "2026-08-26T22:48:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20849,21 +20849,23 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Correct only painted Overworld sprite scale and footprint growth; preserve logical footprints, map interaction/pathfinding, session authority, content, and Native RMG behavior.",
-  "notes": "The footprint-proportional Overworld object-scale correction is the sole selected graphical-polish slice; implementation and validation are in progress with blockers empty.",
+  "nextActionGuardrailNote": "Select the next bounded graphical-polish slice from direct current playtest evidence; preserve gameplay, session authority, content, and Native RMG behavior unless explicitly owned.",
+  "notes": "The footprint-proportional Overworld object-scale correction is completed with focused/live, compatibility, repository/editor, and bounded Linux/Windows export-startup evidence; no next slice is selected.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-footprint-proportional-object-scale-10184",
       "title": "Footprint-proportional Overworld object scale",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "startedAt": "2026-08-26T22:16:47Z",
-      "updatedAt": "2026-08-26T22:16:47Z",
+      "updatedAt": "2026-08-26T22:48:18Z",
+      "completedAt": "2026-08-26T22:48:18Z",
       "implementationTargets": [
         "PLAN.md",
         "ops/progress.json",
         "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
         "tests/overworld_visual_smoke.gd",
         "tests/overworld_small_map_visual_scale_runtime_report.gd",
         "tests/random_map_live_overworld_render_move_report.gd",
@@ -20876,7 +20878,18 @@
         "No camera, zoom, shell layout, control, text, packaged interaction, controller/AT-SPI/UIA/native-hardware, signing/publication, whole-game validation, or release-readiness claim."
       ],
       "blockedReason": null,
-      "remainingWork": "Implement footprint-proportional painted sprite extents, inspect fresh representative pixels, and complete focused/live, small/generated map, static/editor, and bounded platform validation."
+      "remainingWork": "None. Footprint-proportional extents, bottom grounding, visible-edge containment, representative live/generated compatibility, repository/editor, and bounded Linux/Windows export-startup gates are green; packaged Overworld interaction and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "focusedScaleArtifact": "/tmp/heroes-scale-contract.kw5eyI",
+        "smallMapArtifact": "/tmp/heroes-scale-small-map.e5qBd7",
+        "generatedMapArtifact": "/tmp/heroes-scale-random-map.vIZYi6",
+        "commanderArtifact": "/tmp/heroes-scale-commander.IGshJv",
+        "activeFocusArtifact": "/tmp/heroes-scale-active_focus.IJG6pB",
+        "accessibilityArtifact": "/tmp/heroes-scale-accessibility.gdpZb0",
+        "coreArtifact": "/tmp/heroes-scale-core.wHCAsp",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
     },
     {
       "id": "presentation-cartographic-confirmation-dialog-surfaces-10184",
