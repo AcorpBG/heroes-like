@@ -44573,6 +44573,149 @@ def validate_overworld_cartographic_hover_reticle(errors: list[str]) -> None:
             ensure(token in exact_profile, errors, f"Focused hover profile proof is missing exact geometry/color: {token}")
 
 
+def validate_overworld_contained_hover_card(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    map_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    for path in (map_path, visual_path):
+        ensure(path.is_file(), errors, f"Missing Overworld contained hover-card owner: {path.relative_to(ROOT)}")
+    if not map_path.is_file() or not visual_path.is_file():
+        return
+
+    map_text = map_path.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    for token in (
+        'const HOVER_TOOLTIP_VISUAL_MODEL := "contained_cartographic_hover_card"',
+        'const HOVER_TOOLTIP_CONTENT_WIDTH_FACTOR := 0.34',
+        'const HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX := 280.0',
+        'const HOVER_TOOLTIP_CONTENT_WIDTH_MAX_PX := 420.0',
+        'const HOVER_TOOLTIP_MAX_LINES := 4',
+        'const HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX := 12',
+        'const HOVER_TOOLTIP_MARGIN_VERTICAL_PX := 9',
+        'const HOVER_TOOLTIP_PANEL_COLOR := Color(0.035, 0.050, 0.045, 0.96)',
+        'const HOVER_TOOLTIP_BORDER_COLOR := Color(0.64, 0.57, 0.38, 0.86)',
+        'const HOVER_TOOLTIP_TEXT_COLOR := Color(0.93, 0.91, 0.82, 1.0)',
+        'const HOVER_TOOLTIP_SHADOW_COLOR := Color(0.01, 0.015, 0.012, 0.72)',
+        'const HOVER_TOOLTIP_BORDER_WIDTH_PX := 1',
+        'const HOVER_TOOLTIP_CORNER_RADIUS_PX := 3',
+        'const HOVER_TOOLTIP_SHADOW_SIZE_PX := 6',
+        'const HOVER_TOOLTIP_SHADOW_OFFSET := Vector2(0.0, 3.0)',
+    ):
+        ensure(map_text.count(token) == 1, errors, f"Contained hover card must own one exact presentation constant: {token}")
+
+    profile = function_block(map_text, "_hover_tooltip_visual_profile")
+    builder = function_block(map_text, "_build_hover_tooltip_card")
+    delegate = function_block(map_text, "_make_custom_tooltip")
+    validation = function_block(map_text, "validation_hover_tooltip_card")
+    ensure(all((profile, builder, delegate, validation)), errors, "Could not isolate Overworld contained hover-card production ownership")
+    if profile:
+        for token in (
+            'size.x * HOVER_TOOLTIP_CONTENT_WIDTH_FACTOR',
+            'HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX',
+            'HOVER_TOOLTIP_CONTENT_WIDTH_MAX_PX',
+            '"model": HOVER_TOOLTIP_VISUAL_MODEL',
+            '"full_text": for_text',
+            '"content_width_px": content_width',
+            '"card_width_px": content_width + float(HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX * 2 + HOVER_TOOLTIP_BORDER_WIDTH_PX * 2)',
+            '"max_lines": HOVER_TOOLTIP_MAX_LINES',
+            '"autowrap_mode": TextServer.AUTOWRAP_WORD_SMART',
+            '"overrun_behavior": TextServer.OVERRUN_TRIM_ELLIPSIS',
+        ):
+            ensure(token in profile, errors, f"Contained hover-card profile is missing exact responsive semantics: {token}")
+        for forbidden in ("split(", "replace(", "substr(", "left(", "_session", "session.", "_hover_tile", "Input.", "await ", "create_timer", "create_tween", ".erase("):
+            ensure(forbidden not in profile, errors, f"Hover-card profile must retain full text and stay pure: {forbidden}")
+    if builder:
+        required = (
+            'var profile := _hover_tooltip_visual_profile(for_text)',
+            'var card := PanelContainer.new()',
+            'card.name = "CartographicHoverCard"',
+            'card.mouse_filter = Control.MOUSE_FILTER_IGNORE',
+            'card.custom_minimum_size = Vector2(float(profile.get("card_width_px", HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX)), 0.0)',
+            'var panel_style := StyleBoxFlat.new()',
+            'panel_style.bg_color = profile.get("panel_color", HOVER_TOOLTIP_PANEL_COLOR)',
+            'panel_style.set_border_width_all(int(profile.get("border_width_px", HOVER_TOOLTIP_BORDER_WIDTH_PX)))',
+            'panel_style.set_corner_radius_all(int(profile.get("corner_radius_px", HOVER_TOOLTIP_CORNER_RADIUS_PX)))',
+            'card.add_theme_stylebox_override("panel", panel_style)',
+            'var margin := MarginContainer.new()',
+            'margin.name = "CardMargin"',
+            'var label := Label.new()',
+            'label.name = "CardText"',
+            'label.custom_minimum_size = Vector2(float(profile.get("content_width_px", HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX)), 0.0)',
+            'label.autowrap_mode = int(profile.get("autowrap_mode", TextServer.AUTOWRAP_WORD_SMART))',
+            'label.text_overrun_behavior = int(profile.get("overrun_behavior", TextServer.OVERRUN_TRIM_ELLIPSIS))',
+            'label.max_lines_visible = int(profile.get("max_lines", HOVER_TOOLTIP_MAX_LINES))',
+            'label.text = for_text',
+            'margin.add_child(label)',
+            'return card',
+        )
+        positions = [builder.find(token) for token in required]
+        ensure(all(index >= 0 for index in positions), errors, "Contained hover-card builder is missing an exact card/style/margin/label contract")
+        ensure(positions == sorted(positions), errors, "Contained hover-card builder must construct panel, style, margin, then full-text label in exact order")
+        for forbidden in ("tooltip_text =", "split(", "replace(", "substr(", "_session", "session.", "_hover_tile", "Input.", "await ", "create_timer", "create_tween", "queue_redraw"):
+            ensure(forbidden not in builder, errors, f"Hover-card construction must be presentation-only and retain full text: {forbidden}")
+    if delegate:
+        ensure(delegate.strip() == 'func _make_custom_tooltip(for_text: String) -> Object:\n\treturn _build_hover_tooltip_card(for_text)', errors, "Map custom-tooltip ownership must be one exact builder delegate")
+    if validation:
+        for token in (
+            'var profile := _hover_tooltip_visual_profile(for_text).duplicate(true)',
+            'var card := _build_hover_tooltip_card(for_text)',
+            'var margin := card.get_node_or_null("CardMargin") as MarginContainer',
+            'var label := card.get_node_or_null("CardMargin/CardText") as Label',
+            '"label_text": label.text if label != null else ""',
+            '"label_autowrap_mode": label.autowrap_mode if label != null else -1',
+            '"label_overrun_behavior": label.text_overrun_behavior if label != null else -1',
+            '"label_max_lines": label.max_lines_visible if label != null else -1',
+            'card.free()',
+            'return result',
+        ):
+            ensure(token in validation, errors, f"Public hover-card observation is missing exact detached control evidence: {token}")
+        ensure(validation.find("_build_hover_tooltip_card") < validation.find('"label_text"') < validation.find("card.free()") < validation.find("return result"), errors, "Public hover-card validation must observe then free its detached card")
+        for forbidden in ("add_child(card", "tooltip_text =", "_make_custom_tooltip(", "_gui_input(", "Input.", "await ", "create_timer", "queue_redraw", "_session"):
+            ensure(forbidden not in validation, errors, f"Public hover-card observation must not attach or mutate live state: {forbidden}")
+
+    capture = function_block(visual_text, "_capture_object_scale_viewports")
+    exact = function_block(visual_text, "_hover_tooltip_card_contract_exact")
+    ensure(bool(capture and exact), errors, "Could not isolate focused hover-card capture/contract ownership")
+    if capture:
+        for token in (
+            'map_node.has_method("validation_hover_tooltip_card")',
+            'var full_tooltip_text := String(shell_snapshot_after.get("map_tooltip", ""))',
+            'map_node.tooltip_text != full_tooltip_text',
+            'map_node.call("validation_hover_tooltip_card", full_tooltip_text)',
+            'not _hover_tooltip_card_contract_exact(tooltip_card, full_tooltip_text, map_node.size.x)',
+            '"tooltip_text_exact": true',
+            '"tooltip_card_width_px": float(tooltip_card.get("profile", {}).get("card_width_px", 0.0))',
+            'await RenderingServer.frame_post_draw',
+        ):
+            ensure(token in capture, errors, f"Focused real-pointer capture is missing exact hover-card evidence: {token}")
+        ensure(capture.find("push_input(pointer_motion, true)") < capture.find("var full_tooltip_text") < capture.find('map_node.call("validation_hover_tooltip_card"') < capture.find("frame_post_draw"), errors, "Real pointer must own the full tooltip before card validation and capture")
+        for forbidden in ('shell.call("validation_hover_tile"', "._make_custom_tooltip(", "._build_hover_tooltip_card(", "map_node.tooltip_text =", "create_timer", "create_tween"):
+            ensure(forbidden not in capture, errors, f"Focused hover-card capture must not bypass production tooltip/input ownership: {forbidden}")
+    if exact:
+        for token in (
+            'clampf(map_width * 0.34, 280.0, 420.0)',
+            'var card_width := content_width + 26.0',
+            'String(profile.get("full_text", "")) == full_text',
+            'String(card.get("label_text", "")) == full_text',
+            'card_width < map_width',
+            'int(card.get("label_max_lines", 0)) == 4',
+            'TextServer.AUTOWRAP_WORD_SMART',
+            'TextServer.OVERRUN_TRIM_ELLIPSIS',
+            'Control.MOUSE_FILTER_IGNORE',
+            'margins == {"left": 12, "right": 12, "top": 9, "bottom": 9}',
+            'float(panel_color.get("a", 0.0)), 0.96',
+            'float(border_color.get("a", 0.0)), 0.86',
+            'int(panel_style.get("shadow_size", 0)) == 6',
+        ):
+            ensure(token in exact, errors, f"Focused hover-card contract is missing exact width/wrap/style/full-text proof: {token}")
+
+
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -67895,6 +68038,7 @@ def main() -> int:
     validate_overworld_faction_hero_sprite_runtime(errors)
     validate_overworld_town_selection_cartographic_perimeter(errors)
     validate_overworld_cartographic_hover_reticle(errors)
+    validate_overworld_contained_hover_card(errors)
     validate_overworld_enemy_commander_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)

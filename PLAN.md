@@ -26,6 +26,27 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
 
+## Overworld Contained Hover Card
+
+id: `presentation-overworld-contained-hover-card-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only `%Map`'s unbounded default native tooltip presentation with a compact wrapped cartographic hover card whose width follows the live map viewport within restrained minimum/maximum bounds;
+- retain the exact existing full hover tooltip string as the semantic source and expose it through the contained card without changing tile descriptions, route/order cues, target identity, or hover timing;
+- preserve exact pointer-to-tile mapping, hover signal/payload, click/drag/pan/selection/focus/input, route/path/interaction, map/session/save, and accessibility tooltip authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 pointer-hover captures show a contained readable hover card instead of a full-screen black tooltip strip, without covering the dominant map surface;
+- focused runtime proves exact responsive width bounds, wrapping/line cap/ellipsis, full tooltip text retention, map containment, real pointer ownership, and unchanged hover/input/session/save authority;
+- route-tooltip/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tooltip content, object/town/hero identity, route/order wording, hover target/timing, click/drag/pan/selection/path/interaction, map/session/save/schema, AI, battle, balance, content, or Native RMG change;
+- no map-object scale, hover-reticle, selection/town/hero/hostile/object-focus/route visual, terrain/fog/road/water art, shell/footer/rail, global theme, font/UI-scale, animation/audio/VFX, or shader redesign;
+- no packaged pointer-interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Cartographic Hover Reticle
 
 id: `presentation-overworld-cartographic-hover-reticle-10184`

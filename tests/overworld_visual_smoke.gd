@@ -3860,7 +3860,9 @@ func _capture_object_scale_viewports(shell: Node, map_node: Control, session) ->
 		push_error("Overworld smoke: could not create object-scale capture directory %s." % absolute_dir)
 		get_tree().quit(1)
 		return false
-	if not shell.has_method("validation_snapshot") or not map_node.has_method("validation_hover_presentation"):
+	if not shell.has_method("validation_snapshot") \
+		or not map_node.has_method("validation_hover_presentation") \
+		or not map_node.has_method("validation_hover_tooltip_card"):
 		push_error("Overworld smoke: hover capture is missing the shell or map validation surface.")
 		get_tree().quit(1)
 		return false
@@ -3897,13 +3899,19 @@ func _capture_object_scale_viewports(shell: Node, map_node: Control, session) ->
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var hover_presentation: Dictionary = map_node.call("validation_hover_presentation")
-		var cache_after := _render_cache_metrics(shell.call("validation_snapshot"))
+		var shell_snapshot_after: Dictionary = shell.call("validation_snapshot")
+		var cache_after := _render_cache_metrics(shell_snapshot_after)
 		var hovered_layout: Dictionary = hover_presentation.get("focus_layout", {})
-		var save_surface_after: Dictionary = shell.call("validation_snapshot").get("save_surface", {}).duplicate(true)
+		var save_surface_after: Dictionary = shell_snapshot_after.get("save_surface", {}).duplicate(true)
+		var full_tooltip_text := String(shell_snapshot_after.get("map_tooltip", ""))
+		var tooltip_card: Dictionary = map_node.call("validation_hover_tooltip_card", full_tooltip_text)
 		if not bool(hover_presentation.get("active", false)) \
 			or hover_presentation.get("hover_tile", {}) != {"x": hover_tile.x, "y": hover_tile.y} \
 			or hovered_layout != target_layout \
 			or not _hover_reticle_profile_exact(hovered_layout.get("hover_visual_profile", {}), target_rect) \
+			or full_tooltip_text == "" \
+			or map_node.tooltip_text != full_tooltip_text \
+			or not _hover_tooltip_card_contract_exact(tooltip_card, full_tooltip_text, map_node.size.x) \
 			or cache_before.is_empty() \
 			or int(cache_after.get("session_static_generation", -1)) != int(cache_before.get("session_static_generation", -1)) \
 			or int(cache_after.get("state_generation", -1)) != int(cache_before.get("state_generation", -1)) \
@@ -3935,6 +3943,9 @@ func _capture_object_scale_viewports(shell: Node, map_node: Control, session) ->
 			"hover_tile": {"x": hover_tile.x, "y": hover_tile.y},
 			"pointer_input_exact": true,
 			"dynamic_layer_only": true,
+			"tooltip_text_exact": true,
+			"tooltip_card_width_px": float(tooltip_card.get("profile", {}).get("card_width_px", 0.0)),
+			"tooltip_max_lines": int(tooltip_card.get("label_max_lines", 0)),
 		})
 	get_window().size = original_window_size
 	await get_tree().process_frame
@@ -3957,6 +3968,47 @@ func _visible_empty_hover_tiles(session, map_node: Node, required_count: int) ->
 			if result.size() == required_count:
 				return result
 	return result
+
+func _hover_tooltip_card_contract_exact(card: Dictionary, full_text: String, map_width: float) -> bool:
+	var profile: Dictionary = card.get("profile", {}) if card.get("profile", {}) is Dictionary else {}
+	var content_width := clampf(map_width * 0.34, 280.0, 420.0)
+	var card_width := content_width + 26.0
+	var panel_style: Dictionary = card.get("panel_style", {}) if card.get("panel_style", {}) is Dictionary else {}
+	var panel_color: Dictionary = panel_style.get("panel_color", {}) if panel_style.get("panel_color", {}) is Dictionary else {}
+	var border_color: Dictionary = panel_style.get("border_color", {}) if panel_style.get("border_color", {}) is Dictionary else {}
+	var shadow_color: Dictionary = panel_style.get("shadow_color", {}) if panel_style.get("shadow_color", {}) is Dictionary else {}
+	var margins: Dictionary = card.get("margins", {}) if card.get("margins", {}) is Dictionary else {}
+	return String(profile.get("model", "")) == "contained_cartographic_hover_card" \
+		and String(profile.get("full_text", "")) == full_text \
+		and String(card.get("label_text", "")) == full_text \
+		and is_equal_approx(float(profile.get("content_width_px", 0.0)), content_width) \
+		and is_equal_approx(float(profile.get("card_width_px", 0.0)), card_width) \
+		and is_equal_approx(float(card.get("card_minimum_size", {}).get("x", 0.0)), card_width) \
+		and is_equal_approx(float(card.get("label_minimum_size", {}).get("x", 0.0)), content_width) \
+		and card_width < map_width \
+		and int(profile.get("max_lines", 0)) == 4 \
+		and int(card.get("label_max_lines", 0)) == 4 \
+		and int(card.get("label_autowrap_mode", -1)) == TextServer.AUTOWRAP_WORD_SMART \
+		and int(card.get("label_overrun_behavior", -1)) == TextServer.OVERRUN_TRIM_ELLIPSIS \
+		and String(card.get("card_name", "")) == "CartographicHoverCard" \
+		and String(card.get("margin_name", "")) == "CardMargin" \
+		and String(card.get("label_name", "")) == "CardText" \
+		and int(card.get("card_mouse_filter", -1)) == Control.MOUSE_FILTER_IGNORE \
+		and int(card.get("margin_mouse_filter", -1)) == Control.MOUSE_FILTER_IGNORE \
+		and int(card.get("label_mouse_filter", -1)) == Control.MOUSE_FILTER_IGNORE \
+		and margins == {"left": 12, "right": 12, "top": 9, "bottom": 9} \
+		and is_equal_approx(float(panel_color.get("r", 0.0)), 0.035) \
+		and is_equal_approx(float(panel_color.get("g", 0.0)), 0.050) \
+		and is_equal_approx(float(panel_color.get("b", 0.0)), 0.045) \
+		and is_equal_approx(float(panel_color.get("a", 0.0)), 0.96) \
+		and is_equal_approx(float(border_color.get("r", 0.0)), 0.64) \
+		and is_equal_approx(float(border_color.get("g", 0.0)), 0.57) \
+		and is_equal_approx(float(border_color.get("b", 0.0)), 0.38) \
+		and is_equal_approx(float(border_color.get("a", 0.0)), 0.86) \
+		and int(panel_style.get("border_width", 0)) == 1 \
+		and int(panel_style.get("corner_radius", 0)) == 3 \
+		and int(panel_style.get("shadow_size", 0)) == 6 \
+		and is_equal_approx(float(shadow_color.get("a", 0.0)), 0.72)
 
 func _capture_route_visual_viewports(shell: Node, map_node: Node, session) -> bool:
 	var output_dir := OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_DIR").strip_edges()

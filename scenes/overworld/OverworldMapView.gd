@@ -99,6 +99,21 @@ const HOVER_RETICLE_CORNER_WIDTH_MIN_PX := 1.25
 const HOVER_RETICLE_CORNER_WIDTH_MAX_PX := 2.0
 const HOVER_RETICLE_SHADOW_ALPHA := 0.24
 const HOVER_RETICLE_SHADOW_WIDTH_ADD_PX := 1.25
+const HOVER_TOOLTIP_VISUAL_MODEL := "contained_cartographic_hover_card"
+const HOVER_TOOLTIP_CONTENT_WIDTH_FACTOR := 0.34
+const HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX := 280.0
+const HOVER_TOOLTIP_CONTENT_WIDTH_MAX_PX := 420.0
+const HOVER_TOOLTIP_MAX_LINES := 4
+const HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX := 12
+const HOVER_TOOLTIP_MARGIN_VERTICAL_PX := 9
+const HOVER_TOOLTIP_PANEL_COLOR := Color(0.035, 0.050, 0.045, 0.96)
+const HOVER_TOOLTIP_BORDER_COLOR := Color(0.64, 0.57, 0.38, 0.86)
+const HOVER_TOOLTIP_TEXT_COLOR := Color(0.93, 0.91, 0.82, 1.0)
+const HOVER_TOOLTIP_SHADOW_COLOR := Color(0.01, 0.015, 0.012, 0.72)
+const HOVER_TOOLTIP_BORDER_WIDTH_PX := 1
+const HOVER_TOOLTIP_CORNER_RADIUS_PX := 3
+const HOVER_TOOLTIP_SHADOW_SIZE_PX := 6
+const HOVER_TOOLTIP_SHADOW_OFFSET := Vector2(0.0, 3.0)
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
 const HERO_FILL_COLOR := Color(0.88, 0.32, 0.21, 1.0)
 const RESERVE_HERO_COLOR := Color(0.87, 0.90, 0.94, 1.0)
@@ -1470,6 +1485,76 @@ func _gui_input(event: InputEvent) -> void:
 				MOUSE_BUTTON_WHEEL_RIGHT:
 					pan_tiles(Vector2i(WHEEL_PAN_TILES, 0))
 					accept_event()
+
+func _hover_tooltip_visual_profile(for_text: String) -> Dictionary:
+	var content_width := clampf(
+		size.x * HOVER_TOOLTIP_CONTENT_WIDTH_FACTOR,
+		HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX,
+		HOVER_TOOLTIP_CONTENT_WIDTH_MAX_PX
+	)
+	return {
+		"model": HOVER_TOOLTIP_VISUAL_MODEL,
+		"full_text": for_text,
+		"content_width_px": content_width,
+		"card_width_px": content_width + float(HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX * 2 + HOVER_TOOLTIP_BORDER_WIDTH_PX * 2),
+		"max_lines": HOVER_TOOLTIP_MAX_LINES,
+		"autowrap_mode": TextServer.AUTOWRAP_WORD_SMART,
+		"overrun_behavior": TextServer.OVERRUN_TRIM_ELLIPSIS,
+		"margin_horizontal_px": HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX,
+		"margin_vertical_px": HOVER_TOOLTIP_MARGIN_VERTICAL_PX,
+		"panel_color": HOVER_TOOLTIP_PANEL_COLOR,
+		"border_color": HOVER_TOOLTIP_BORDER_COLOR,
+		"text_color": HOVER_TOOLTIP_TEXT_COLOR,
+		"shadow_color": HOVER_TOOLTIP_SHADOW_COLOR,
+		"border_width_px": HOVER_TOOLTIP_BORDER_WIDTH_PX,
+		"corner_radius_px": HOVER_TOOLTIP_CORNER_RADIUS_PX,
+		"shadow_size_px": HOVER_TOOLTIP_SHADOW_SIZE_PX,
+		"shadow_offset": HOVER_TOOLTIP_SHADOW_OFFSET,
+	}
+
+func _build_hover_tooltip_card(for_text: String) -> PanelContainer:
+	var profile := _hover_tooltip_visual_profile(for_text)
+	var card := PanelContainer.new()
+	card.name = "CartographicHoverCard"
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.custom_minimum_size = Vector2(float(profile.get("card_width_px", HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX)), 0.0)
+
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = profile.get("panel_color", HOVER_TOOLTIP_PANEL_COLOR)
+	panel_style.border_color = profile.get("border_color", HOVER_TOOLTIP_BORDER_COLOR)
+	panel_style.set_border_width_all(int(profile.get("border_width_px", HOVER_TOOLTIP_BORDER_WIDTH_PX)))
+	panel_style.set_corner_radius_all(int(profile.get("corner_radius_px", HOVER_TOOLTIP_CORNER_RADIUS_PX)))
+	panel_style.shadow_color = profile.get("shadow_color", HOVER_TOOLTIP_SHADOW_COLOR)
+	panel_style.shadow_size = int(profile.get("shadow_size_px", HOVER_TOOLTIP_SHADOW_SIZE_PX))
+	panel_style.shadow_offset = profile.get("shadow_offset", HOVER_TOOLTIP_SHADOW_OFFSET)
+	card.add_theme_stylebox_override("panel", panel_style)
+
+	var margin := MarginContainer.new()
+	margin.name = "CardMargin"
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_theme_constant_override("margin_left", int(profile.get("margin_horizontal_px", HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX)))
+	margin.add_theme_constant_override("margin_right", int(profile.get("margin_horizontal_px", HOVER_TOOLTIP_MARGIN_HORIZONTAL_PX)))
+	margin.add_theme_constant_override("margin_top", int(profile.get("margin_vertical_px", HOVER_TOOLTIP_MARGIN_VERTICAL_PX)))
+	margin.add_theme_constant_override("margin_bottom", int(profile.get("margin_vertical_px", HOVER_TOOLTIP_MARGIN_VERTICAL_PX)))
+	card.add_child(margin)
+
+	var label := Label.new()
+	label.name = "CardText"
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.custom_minimum_size = Vector2(float(profile.get("content_width_px", HOVER_TOOLTIP_CONTENT_WIDTH_MIN_PX)), 0.0)
+	label.autowrap_mode = int(profile.get("autowrap_mode", TextServer.AUTOWRAP_WORD_SMART))
+	label.text_overrun_behavior = int(profile.get("overrun_behavior", TextServer.OVERRUN_TRIM_ELLIPSIS))
+	label.max_lines_visible = int(profile.get("max_lines", HOVER_TOOLTIP_MAX_LINES))
+	label.text = for_text
+	label.add_theme_color_override("font_color", profile.get("text_color", HOVER_TOOLTIP_TEXT_COLOR))
+	label.add_theme_color_override("font_shadow_color", profile.get("shadow_color", HOVER_TOOLTIP_SHADOW_COLOR))
+	label.add_theme_constant_override("shadow_offset_x", 1)
+	label.add_theme_constant_override("shadow_offset_y", 1)
+	margin.add_child(label)
+	return card
+
+func _make_custom_tooltip(for_text: String) -> Object:
+	return _build_hover_tooltip_card(for_text)
 
 func _draw() -> void:
 	return
@@ -6284,6 +6369,50 @@ func validation_hover_presentation() -> Dictionary:
 		"hover_tile": _vector2i_payload(_hover_tile),
 		"focus_layout": validation_tile_focus_layout(_hover_tile),
 	}
+
+func validation_hover_tooltip_card(for_text: String) -> Dictionary:
+	var profile := _hover_tooltip_visual_profile(for_text).duplicate(true)
+	profile["panel_color"] = _color_payload(profile.get("panel_color", HOVER_TOOLTIP_PANEL_COLOR))
+	profile["border_color"] = _color_payload(profile.get("border_color", HOVER_TOOLTIP_BORDER_COLOR))
+	profile["text_color"] = _color_payload(profile.get("text_color", HOVER_TOOLTIP_TEXT_COLOR))
+	profile["shadow_color"] = _color_payload(profile.get("shadow_color", HOVER_TOOLTIP_SHADOW_COLOR))
+	profile["shadow_offset"] = _vector2_payload(profile.get("shadow_offset", HOVER_TOOLTIP_SHADOW_OFFSET))
+	var card := _build_hover_tooltip_card(for_text)
+	var margin := card.get_node_or_null("CardMargin") as MarginContainer
+	var label := card.get_node_or_null("CardMargin/CardText") as Label
+	var panel_style := card.get_theme_stylebox("panel") as StyleBoxFlat
+	var result := {
+		"profile": profile,
+		"card_name": String(card.name),
+		"card_mouse_filter": card.mouse_filter,
+		"card_minimum_size": _vector2_payload(card.custom_minimum_size),
+		"margin_name": String(margin.name) if margin != null else "",
+		"margin_mouse_filter": margin.mouse_filter if margin != null else -1,
+		"margins": {
+			"left": margin.get_theme_constant("margin_left") if margin != null else -1,
+			"right": margin.get_theme_constant("margin_right") if margin != null else -1,
+			"top": margin.get_theme_constant("margin_top") if margin != null else -1,
+			"bottom": margin.get_theme_constant("margin_bottom") if margin != null else -1,
+		},
+		"label_name": String(label.name) if label != null else "",
+		"label_mouse_filter": label.mouse_filter if label != null else -1,
+		"label_minimum_size": _vector2_payload(label.custom_minimum_size) if label != null else {},
+		"label_autowrap_mode": label.autowrap_mode if label != null else -1,
+		"label_overrun_behavior": label.text_overrun_behavior if label != null else -1,
+		"label_max_lines": label.max_lines_visible if label != null else -1,
+		"label_text": label.text if label != null else "",
+		"panel_style": {
+			"panel_color": _color_payload(panel_style.bg_color) if panel_style != null else {},
+			"border_color": _color_payload(panel_style.border_color) if panel_style != null else {},
+			"border_width": panel_style.border_width_left if panel_style != null else -1,
+			"corner_radius": panel_style.corner_radius_top_left if panel_style != null else -1,
+			"shadow_color": _color_payload(panel_style.shadow_color) if panel_style != null else {},
+			"shadow_size": panel_style.shadow_size if panel_style != null else -1,
+			"shadow_offset": _vector2_payload(panel_style.shadow_offset) if panel_style != null else {},
+		},
+	}
+	card.free()
+	return result
 
 func validation_enemy_commander_presentation_profiles() -> Array:
 	var profiles := []

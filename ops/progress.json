@@ -1911,20 +1911,60 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-cartographic-hover-reticle-10184",
-    "title": "Overworld cartographic hover reticle",
+    "id": "presentation-overworld-contained-hover-card-10184",
+    "title": "Overworld contained hover card",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T06:28:10Z",
-    "updatedAt": "2026-08-26T06:44:04Z",
+    "startedAt": "2026-08-26T06:47:06Z",
+    "updatedAt": "2026-08-26T07:03:09Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with an open fill-free cartographic hover reticle, inspected 1280/1920 pointer captures, exact town/tile geometry and viewport-routed hover ownership, dynamic-layer-only invalidation, unchanged session/save authority, compatibility/static/editor, and bounded Linux/Windows export-startup gates."
+    "notes": "Completed with a compact responsive wrapped cartographic hover card, inspected 1280/1920 real-pointer captures, exact full tooltip retention and control contract, route-tooltip/focus/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup gates."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-contained-hover-card-20260826",
+      "title": "Overworld contained hover card",
+      "sliceId": "presentation-overworld-contained-hover-card-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T07:03:09Z",
+      "updatedAt": "2026-08-26T07:03:09Z",
+      "latestFinding": "The Overworld map now presents the exact existing hover tooltip through a restrained map-colored card with responsive 280-420px content width, smart wrapping, a four-line cap, and ellipsis instead of an unbounded black strip across the map and side rail.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-hover-card.9KVeVv",
+        "/tmp/heroes-hover-card-route-tooltip.wWJdlD",
+        "/tmp/heroes-hover-card-focus.5NT9NE",
+        "/tmp/heroes-hover-card-accessibility.PCR8SY",
+        "/tmp/heroes-hover-card-core.UQNBaD",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "visual_model": "contained_cartographic_hover_card",
+        "content_width_min_px": 280.0,
+        "content_width_max_px": 420.0,
+        "max_lines": 4,
+        "smart_wrap": true,
+        "ellipsis": true,
+        "full_tooltip_text_exact": true,
+        "real_pointer_input_exact": true,
+        "session_authority_exact": true,
+        "save_surface_exact": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "packaged_pointer_interaction_claimed": false
+      },
+      "nonClaims": [
+        "No packaged pointer-interaction parity, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-overworld-cartographic-hover-reticle-20260826",
       "title": "Overworld cartographic hover reticle",
@@ -14841,14 +14881,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld cartographic hover-reticle slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Overworld contained hover-card slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-cartographic-hover-reticle-10184",
-  "currentSliceId": "presentation-overworld-cartographic-hover-reticle-10184",
-  "currentSliceNotes": "Completed with inspected 1280/1920 real-pointer captures, exact open-corner geometry, dynamic-only invalidation, unchanged game authority, compatibility/static/editor, and bounded export-startup evidence.",
+  "currentSlice": "presentation-overworld-contained-hover-card-10184",
+  "currentSliceId": "presentation-overworld-contained-hover-card-10184",
+  "currentSliceNotes": "Completed with inspected 1280/1920 real-pointer captures, exact responsive card/full-text semantics, unchanged game authority, compatibility/static/editor, and bounded export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld cartographic hover reticle",
-  "currentSliceUpdatedAt": "2026-08-26T06:44:04Z",
+  "currentSliceTitle": "Overworld contained hover card",
+  "currentSliceUpdatedAt": "2026-08-26T07:03:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20364,8 +20404,34 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
-  "notes": "The Overworld cartographic hover-reticle slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "notes": "The Overworld contained hover-card slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-contained-hover-card-10184",
+      "title": "Overworld contained hover card",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T06:47:06Z",
+      "updatedAt": "2026-08-26T07:03:09Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the default unbounded `%Map` tooltip strip with a compact responsive wrapped hover card while retaining the exact full tooltip semantics and live pointer behavior.",
+      "completionCriteria": "Inspected 1280x720 and 1920x1080 real-pointer captures show a contained map-native card; focused runtime proves width/wrap/line/ellipsis/full-text/containment and unchanged pointer/session/save authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No tooltip content, hover timing/target, object/town/hero identity, route/order wording, click/drag/pan/selection/path/interaction, map/session/save/schema, rules, AI, battle, balance, content, or Native RMG change.",
+        "No hover-reticle, selection/town/hero/hostile/object-focus/route visual, map-object scale, terrain/fog/road/water art, shell/footer/rail, global theme, font/UI-scale, animation/audio/VFX, shader, or broad Overworld redesign.",
+        "No packaged pointer-interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with a responsive map-native card, exact full-text semantics, real-pointer screenshots at both widths, route-tooltip/focus/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+      "blockedReason": null,
+      "remainingWork": "None for this bounded slice."
+    },
     {
       "id": "presentation-overworld-cartographic-hover-reticle-10184",
       "title": "Overworld cartographic hover reticle",
