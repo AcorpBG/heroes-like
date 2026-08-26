@@ -68505,6 +68505,118 @@ def validate_nightglass_redoubt_chapter_three_sequential_viability(errors: list[
         ensure('res://tests/nightglass_redoubt_chapter_three_sequential_viability_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Nightglass chapter-three scene must load its exact report script")
 
 
+def validate_shared_heraldic_hardware_cursor(errors: list[str]) -> None:
+    cursor_asset_path = ROOT / "art" / "ui" / "runtime" / "cursors" / "aurelion_pointer.svg"
+    visual_kit_path = ROOT / "scripts" / "ui" / "FrontierVisualKit.gd"
+    report_script_path = ROOT / "tests" / "custom_mouse_cursor_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "custom_mouse_cursor_runtime_report.tscn"
+
+    ensure(cursor_asset_path.exists(), errors, "Missing authored Aurelion hardware pointer SVG")
+    if cursor_asset_path.exists():
+        cursor_asset_text = cursor_asset_path.read_text(encoding="utf-8")
+        for required_token in (
+            '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">',
+            'fill="#d5ab55"',
+            'stroke="#f5df9a"',
+            'fill="#13222a"',
+            'fill-opacity="0.72"',
+        ):
+            ensure(required_token in cursor_asset_text, errors, f"Aurelion pointer SVG is missing authored token: {required_token}")
+        ensure(cursor_asset_text.count("<path ") == 4, errors, "Aurelion pointer SVG must retain exactly four restrained vector layers")
+        for forbidden_token in ("<image", "<script", "animation", "filter=", "data:"):
+            ensure(forbidden_token not in cursor_asset_text, errors, f"Aurelion pointer SVG must stay static and self-contained: {forbidden_token}")
+
+    ensure(visual_kit_path.exists(), errors, "Missing FrontierVisualKit hardware cursor owner")
+    if visual_kit_path.exists():
+        visual_kit_text = visual_kit_path.read_text(encoding="utf-8")
+        for required_token in (
+            'const POINTER_CURSOR_PATH := "res://art/ui/runtime/cursors/aurelion_pointer.svg"',
+            "const POINTER_CURSOR_SIZE := Vector2(32.0, 32.0)",
+            "const POINTER_CURSOR_HOTSPOT := Vector2(3.0, 2.0)",
+            "static var _pointer_cursor_texture: Texture2D = null",
+            "static func _sync_pointer_cursor() -> void:",
+            "Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)",
+            "ResourceLoader.exists(POINTER_CURSOR_PATH, \"Texture2D\")",
+            "_pointer_cursor_texture.get_size() != POINTER_CURSOR_SIZE",
+            "Input.set_custom_mouse_cursor(_pointer_cursor_texture, Input.CURSOR_ARROW, POINTER_CURSOR_HOTSPOT)",
+            '"system_high_contrast"',
+            '"system_unavailable"',
+            '"custom_standard"',
+            "static func validation_pointer_cursor_snapshot() -> Dictionary:",
+        ):
+            ensure(required_token in visual_kit_text, errors, f"FrontierVisualKit hardware cursor contract is missing token: {required_token}")
+        setter_match = re.search(
+            r"static func set_high_contrast_enabled\(enabled: bool\) -> void:\n(?P<body>(?:\t.*\n)+?)\nstatic func high_contrast_enabled",
+            visual_kit_text,
+        )
+        ensure(setter_match is not None, errors, "FrontierVisualKit high-contrast setter could not be isolated")
+        if setter_match is not None:
+            setter_body = setter_match.group("body")
+            ensure(setter_body.count("_sync_pointer_cursor()") == 1, errors, "High-contrast changes must synchronize the hardware cursor exactly once")
+        sync_match = re.search(
+            r"static func _sync_pointer_cursor\(\) -> void:\n(?P<body>(?:\t.*\n)+?)\nstatic func validation_pointer_cursor_snapshot",
+            visual_kit_text,
+        )
+        ensure(sync_match is not None, errors, "FrontierVisualKit hardware cursor synchronizer could not be isolated")
+        if sync_match is not None:
+            sync_body = sync_match.group("body")
+            ensure(
+                sync_body.find("if high_contrast_enabled():")
+                < sync_body.find("ResourceLoader.exists(POINTER_CURSOR_PATH, \"Texture2D\")")
+                < sync_body.find("Input.set_custom_mouse_cursor(_pointer_cursor_texture, Input.CURSOR_ARROW, POINTER_CURSOR_HOTSPOT)"),
+                errors,
+                "Hardware cursor synchronization must fail to the system cursor before loading/installing custom art",
+            )
+            for forbidden_token in ("await ", "create_timer", "call_deferred", "Input.warp_mouse", "Input.set_mouse_mode", "Sprite2D", "TextureRect", "_process("):
+                ensure(forbidden_token not in sync_body, errors, f"Hardware cursor synchronization must remain immediate and hardware-owned: {forbidden_token}")
+
+    if SETTINGS_SERVICE_PATH.exists():
+        settings_service_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8")
+        accessibility_match = re.search(
+            r"func _apply_accessibility_settings\(\) -> void:\n(?P<body>(?:\t.*\n)+?)\nfunc _apply_keyboard_navigation_layout",
+            settings_service_text,
+        )
+        ensure(accessibility_match is not None, errors, "SettingsService accessibility lifecycle could not be isolated for pointer synchronization")
+        if accessibility_match is not None:
+            accessibility_body = accessibility_match.group("body")
+            ensure(
+                accessibility_body.count("FrontierVisualKitScript.set_high_contrast_enabled(high_contrast_ui_enabled())") == 1,
+                errors,
+                "SettingsService must drive the shared pointer through its existing high-contrast lifecycle exactly once",
+            )
+
+    ensure(report_script_path.exists(), errors, "Missing focused custom mouse cursor runtime report")
+    if report_script_path.exists():
+        report_text = report_script_path.read_text(encoding="utf-8")
+        for required_token in (
+            'const REPORT_ID := "CUSTOM_MOUSE_CURSOR_RUNTIME_REPORT"',
+            "ResourceLoader.load(FrontierVisualKit.POINTER_CURSOR_PATH, \"Texture2D\") as Texture2D",
+            "_apply_memory_high_contrast(false)",
+            "_apply_memory_high_contrast(true)",
+            'String(high_contrast.get("mode", "")) == "system_high_contrast"',
+            "_standard_cursor_exact(restored_standard, expected_texture)",
+            'int(restored_standard.get("texture_instance_id", 0)) == int(standard_before.get("texture_instance_id", -1))',
+            "SettingsService.settings = _original_settings.duplicate(true)",
+            "final_transaction == _original_transaction",
+            '"settings_input_file_authority_exact": true',
+            "func _canonical_input_map(value: Variant) -> Dictionary:",
+        ):
+            ensure(required_token in report_text, errors, f"Custom mouse cursor runtime report is missing token: {required_token}")
+        ensure(report_text.count("_apply_memory_high_contrast(false)") == 2, errors, "Custom pointer report must establish and restore standard contrast exactly once each")
+        ensure(report_text.count("_apply_memory_high_contrast(true)") == 1, errors, "Custom pointer report must exercise high-contrast system fallback exactly once")
+        for forbidden_token in ("set_custom_mouse_cursor", "Sprite2D", "TextureRect", "create_timer", "Input.warp_mouse", "Input.set_mouse_mode"):
+            ensure(forbidden_token not in report_text, errors, f"Focused cursor report must observe production behavior without bypassing it: {forbidden_token}")
+
+    ensure(report_scene_path.exists(), errors, "Missing focused custom mouse cursor runtime report scene")
+    if report_scene_path.exists():
+        report_scene_text = report_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/custom_mouse_cursor_runtime_report.gd"' in report_scene_text,
+            errors,
+            "Custom mouse cursor runtime report scene must load its focused script",
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -68537,6 +68649,7 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
+    validate_shared_heraldic_hardware_cursor(errors)
     validate_progress_tracker_state(errors)
     validate_strategic_ai_medium_long_run_adoption(errors)
     validate_overworld_town_assault_victory_return_feedback(errors)

@@ -24,7 +24,32 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `presentation-battle-footer-heraldic-watermark-10184` (completed).
+- Selected implementation slice: `presentation-shared-heraldic-hardware-cursor-10184` (completed).
+
+## Shared Heraldic Hardware Cursor
+
+id: `presentation-shared-heraldic-hardware-cursor-10184`
+
+Status: completed.
+
+Result:
+- standard-contrast play now uses a compact original 32x32 gold-and-ink Aurelion Reach pointer through Godot's hardware-cursor API, with an exact `(3, 2)` tip hotspot and no software cursor node or frame loop;
+- the existing accessibility settings lifecycle restores the platform arrow in high-contrast mode and reinstalls the same cached authored pointer when standard contrast returns, failing closed to the platform arrow if the texture is unavailable or malformed;
+- focused lifecycle/authority, inspected desktop composition, shared settings, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged cursor interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Implementation boundary:
+- replace the unthemed default arrow during standard-contrast play with one original, compact Aurelion Reach pointer rendered through Godot's hardware-cursor API;
+- install the pointer through the existing startup/accessibility settings lifecycle, restore the platform cursor in high-contrast mode, and fail closed to the platform cursor if the authored texture is unavailable;
+- keep the cursor asset at 32x32 with one exact top-left hotspot and preserve every existing control cursor shape, input action, focus path, click target, gameplay state, session, save, and route authority.
+
+Completion criteria:
+- focused runtime proves the exact asset, dimensions, hotspot, hardware-cursor request, high-contrast system fallback, standard-mode restoration, and unchanged settings/input/file authority;
+- keyboard/controller focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass;
+- inspected desktop play shows the restrained gold-and-ink pointer remains legible over dark UI and bright scenic/map surfaces without covering control labels.
+
+Non-goals:
+- no software cursor sprite, cursor animation, per-frame processing, alternate hover/drag cursor shapes, control geometry, screen layout, input binding, focus/navigation, gameplay, session/save/schema, AI, balance, content, or Native RMG change;
+- no packaged cursor-interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Battle Footer Heraldic Watermark
 
