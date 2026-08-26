@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://main_menu"]
+[gd_scene load_steps=8 format=3 uid="uid://main_menu"]
 
 [ext_resource type="Script" path="res://scenes/menus/MainMenu.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/menus/MainMenuHeroView.gd" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/menus/HeroKeybindingsDialog.tscn" id="4_keybindings"]
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="5_hero_portrait"]
 [ext_resource type="Texture2D" path="res://art/ui/branding/aurelion_reach_frontier_crest.png" id="6_crest"]
+[ext_resource type="Script" path="res://scenes/menus/MainMenuTorchGlow.gd" id="7_torch_glow"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_torch_glow"]
+blend_mode = 1
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -28,6 +32,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("2")
+
+[node name="TorchGlow" type="Control" parent="."]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_torch_glow")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("7_torch_glow")
 
 [node name="LogoPocketPanel" type="PanelContainer" parent="."]
 layout_mode = 1

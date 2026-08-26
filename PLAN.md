@@ -24,7 +24,32 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `ux-overworld-object-scale-overcorrection-10184` (completed).
+- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice.
+
+## Main Menu Painted-Torch Ambient Glow
+
+id: `presentation-main-menu-painted-torch-ambient-glow-10184`
+
+Status: completed.
+
+Result:
+- added one passive additive draw layer behind the Main Menu UI, aligning restrained amber halos to the two painted command-rail flames without adding panels, text, controls, or input surfaces;
+- standard presentation uses a slow bounded pulse, Reduced Motion keeps the same localized light static, and High Contrast hides it; settings-signal lifecycle and exact settings/input/save/campaign/session/route authority remain intact;
+- inspected 1280x720 and 1920x1080 desktop captures, focused runtime, Main Menu keyboard/stage/outcome compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged animation parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Implementation boundary:
+- add one passive full-screen draw layer immediately above the existing scenic backdrop, aligned only to the two painted command-rail flames;
+- render restrained additive amber halos with a slow bounded pulse in standard presentation, keep Reduced Motion static, hide the decoration in High Contrast, and react through the existing settings signal;
+- preserve the exact backdrop, command hotspots, panels, focus/navigation, layout, input, settings, save, campaign, session, and route authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 desktop captures show soft localized torchlight without washing the command plaques or scenery;
+- focused runtime proves exact anchors/radii/pulse bounds, passive input/focus geometry, standard/reduced/high-contrast transitions, signal deduplication, and whole authority;
+- Main Menu navigation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new flame sprite, panel, text, command, hotspot, focus target, layout, gameplay, router, save/schema, campaign, content, audio, or Native RMG change;
+- no packaged animation parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Object Scale Overcorrection
 

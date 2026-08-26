@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish or release-readiness slice from direct current evidence."
+    "Select the next tracker-approved graphical-polish implementation slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,20 +1911,45 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-main-menu-stage-dock-reveal-transition-10184",
-    "title": "Main Menu stage-dock reveal transition",
+    "id": "presentation-main-menu-painted-torch-ambient-glow-10184",
+    "title": "Main Menu painted-torch ambient glow",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T14:44:52Z",
-    "updatedAt": "2026-08-26T14:58:52Z",
+    "startedAt": "2026-08-26T15:52:04Z",
+    "updatedAt": "2026-08-26T16:09:41Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the 160 ms paused-tree-safe stage-dock opacity reveal with immediate Reduced Motion fallback and exact focus/authority preservation."
+    "notes": "Completed the passive painted-torch glow from direct first-view evidence. Inspected 1280x720 and 1920x1080 desktop captures show restrained localized halos; focused standard/Reduced Motion/High Contrast lifecycle and exact authority, Main Menu keyboard/stage/outcome, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged animation parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+    "completedAt": "2026-08-26T16:09:41Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-main-menu-painted-torch-ambient-glow-20260826",
+      "title": "Main Menu painted-torch ambient glow",
+      "sliceId": "presentation-main-menu-painted-torch-ambient-glow-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T16:09:41Z",
+      "updatedAt": "2026-08-26T16:09:41Z",
+      "latestFinding": "The two existing painted command-rail flames now own restrained localized amber halos: standard presentation pulses slowly, Reduced Motion is static, High Contrast hides the decoration, and exact Main Menu authority is preserved.",
+      "artifacts": [
+        "scenes/menus/MainMenu.tscn",
+        "scenes/menus/MainMenuTorchGlow.gd",
+        "tests/main_menu_torch_glow_runtime_report.gd",
+        "tests/main_menu_torch_glow_runtime_report.tscn",
+        "tests/validate_repo.py",
+        ".artifacts/next_slice_visual_audit/main_menu_1280x720.png",
+        ".artifacts/next_slice_visual_audit/main_menu_1920x1080.png",
+        "/tmp/heroes-torch-focused-rerun.ModMFZ",
+        "/tmp/heroes-torch-compat.fT2EJN",
+        "/tmp/heroes-torch-static.oIa7nx",
+        "/tmp/heroes-torch-linux-package.fCX4lw",
+        "/tmp/heroes-torch-windows-package.7yNg4V"
+      ],
+      "result": "completed"
+    },
     {
       "id": "presentation-main-menu-stage-dock-reveal-transition-20260826",
       "title": "Main Menu stage-dock reveal transition",
@@ -15235,14 +15260,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld painted scale ladder is compressed to a coherent 0.32-to-1.00 tile range with inspected 1280/1920 captures, focused/authored/generated runtime, movement, accessibility, core, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Main Menu painted-torch ambient glow is completed with inspected desktop captures, focused accessibility-aware runtime, compatibility/static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-object-scale-overcorrection-10184",
-  "currentSliceId": "ux-overworld-object-scale-overcorrection-10184",
-  "currentSliceNotes": "Completed the direct playtest correction: small props now start at 0.32 tile, field heroes use 0.60, normalized multi-tile sites cap below towns, and towns use 1.00 tile while logical/game/save/generated/Native-RMG authority stays exact. Fresh 1280/1920 captures and the focused, compatibility, static/editor, Linux, and Windows gates are green.",
+  "currentSlice": "presentation-main-menu-painted-torch-ambient-glow-10184",
+  "currentSliceId": "presentation-main-menu-painted-torch-ambient-glow-10184",
+  "currentSliceNotes": "Completed from direct current first-view evidence with exact Main Menu scenery, commands, focus, layout, input, settings, save, campaign, session, route, and Native RMG authority preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld object scale overcorrection",
-  "currentSliceUpdatedAt": "2026-08-26T15:46:16Z",
+  "currentSliceTitle": "Main Menu painted-torch ambient glow",
+  "currentSliceUpdatedAt": "2026-08-26T16:09:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20547,7 +20572,7 @@
       }
     }
   },
-  "guardrailNote": "Select the next bounded slice from direct current evidence; preserve exact gameplay, session/save, generated placement, and Native RMG authority unless explicitly selected.",
+  "guardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -20757,9 +20782,37 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The Overworld object-scale correction is completed and blockers are empty.",
+  "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
+  "notes": "The Main Menu painted-torch ambient glow is completed and blockers are empty; select the next tracker-approved graphical-polish slice.",
   "plannedSlices": [
+    {
+      "id": "presentation-main-menu-painted-torch-ambient-glow-10184",
+      "title": "Main Menu painted-torch ambient glow",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T15:52:04Z",
+      "updatedAt": "2026-08-26T16:09:41Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.tscn",
+        "scenes/menus/MainMenuTorchGlow.gd",
+        "tests/main_menu_torch_glow_runtime_report.gd",
+        "tests/main_menu_torch_glow_runtime_report.tscn",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the existing painted command-rail flames restrained ambient life without adding foreground UI or altering the scenery-first composition.",
+      "completionCriteria": "Inspected 1280/1920 captures and focused runtime prove localized passive glow, motion/high-contrast fallbacks, settings signal lifecycle, and authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new flame sprite, panel, text, command, hotspot, focus target, layout, gameplay, router, save/schema, campaign, content, audio, or Native RMG change.",
+        "No packaged animation parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current first-view evidence. Inspected 1280x720 and 1920x1080 desktop captures show restrained localized halos; focused standard/Reduced Motion/High Contrast lifecycle and exact authority, Main Menu keyboard/stage/outcome, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged animation parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "blockedReason": null,
+      "remainingWork": "",
+      "completedAt": "2026-08-26T16:09:41Z"
+    },
     {
       "id": "presentation-main-menu-stage-dock-reveal-transition-10184",
       "title": "Main Menu stage-dock reveal transition",
@@ -103809,7 +103862,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from direct current evidence; broader product gaps remain.",
+  "remainingWork": "Select the next bounded tracker-approved graphical-polish slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -104240,7 +104293,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_object_scale_overcorrection_completed",
+  "result": "main_menu_painted_torch_ambient_glow_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -104341,9 +104394,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld painted object hierarchy now uses a coherent bounded 0.32-to-1.00 tile scale while preserving exact logical/game/save/generated-map authority; inspected captures, focused and compatibility runtime, static/editor, and bounded Linux/Windows startup gates pass.",
+  "summary": "The Main Menu now gives its two painted command-rail flames restrained additive ambient life with exact Reduced Motion, High Contrast, input, settings, save, campaign, session, route, and gameplay authority preserved.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T15:46:16Z",
+  "updatedAt": "2026-08-26T16:09:41Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
