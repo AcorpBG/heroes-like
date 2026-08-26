@@ -142,7 +142,7 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 			return {"ok": false, "reason": "unit_fallback_authority", "profile": profile}
 		hostile_treatment_exact = hostile_treatment_exact \
 			and String(profile.get("hostile_treatment", "")) == "open_hostile_flank_chevrons_and_threat_notch" \
-			and is_equal_approx(float(profile.get("visible_extent_tiles", 0.0)), 0.50) \
+			and is_equal_approx(float(profile.get("visible_extent_tiles", 0.0)), 0.42) \
 			and String(profile.get("grounding_model", "")) == "family_specific_contact_scuffs_no_marker_plate" \
 			and String(profile.get("contact_model", "")) == "localized_object_contact_shadow"
 		hostile_marker_geometry_exact = hostile_marker_geometry_exact and _hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}))

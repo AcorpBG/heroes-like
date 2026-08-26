@@ -33213,12 +33213,12 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     report_text = report_path.read_text(encoding="utf-8")
     for token in (
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.68",
-        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.76",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.50",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54",
         "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
         "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
         'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"',
-        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.56",
+        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.44",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88",
         "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08",
         "const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 16",
@@ -33447,8 +33447,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'int(summary.get("distinct_body_asset_count", 0)) < 8',
         'int(summary.get("repeated_def_multi_asset_count", 0)) <= 0',
         'String(summary.get("composition_signature", "")).length() != 64',
-        'float(summary.get("body_sprite_extent_tiles", 0.0)), 0.56',
-        'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.76',
+        'float(summary.get("body_sprite_extent_tiles", 0.0)), 0.44',
+        'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.54',
         'float(metrics.get("sprite_extent_tiles", 99.0)) > 1.0001',
         'not is_equal_approx(float(metrics.get("uncapped_sprite_extent_px", 0.0)), float(metrics.get("sprite_extent_px", -1.0)))',
         '"map_objects": session.overworld.get("map_objects", []).duplicate(true)',
@@ -33501,22 +33501,32 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     extent_block = gd_function_block(map_text, "_sprite_extent_fraction")
     semantic_class_block = gd_function_block(map_text, "_semantic_visual_scale_class")
     for token in (
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.24",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.30",
+        "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.42",
+        "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.50",
+        "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.46",
+        "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.54",
+        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.44",
+        "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.34",
+        "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.38",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.50",
+        "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.54",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
+        "const TOWN_SPRITE_EXTENT_FACTOR := 0.52",
+    ):
+        ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
+    for rejected_token in (
         "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.36",
         "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.42",
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.52",
         "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.62",
         "const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.58",
         "const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.64",
-        "const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.54",
         "const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.44",
         "const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.48",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_MIN_TILES := 0.68",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_CAP_TILES := 0.76",
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.56",
-        "const TOWN_SPRITE_EXTENT_FACTOR := 0.52",
-    ):
-        ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
-    for rejected_token in (
         "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36",
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46",
         "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.52",
@@ -33635,6 +33645,11 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     for token in (
         'map_node.call("validation_object_sprite_scale_payload", "artifact_field_trailsinger_boots", "artifact", Vector2i.ONE, {"primary_class": "handheld_artifact", "footprint_tier": "micro"})',
         'map_node.call("validation_object_sprite_scale_payload", "lumber_wagon", "pickup", Vector2i.ONE, {"primary_class": "pickup", "footprint_tier": "micro"})',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "decoration", Vector2i.ONE, {"primary_class": "decoration", "footprint_tier": "micro"})',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "map_object", Vector2i.ONE, {"primary_class": "map_object", "footprint_tier": "micro"})',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "encounter", Vector2i.ONE, {"primary_class": "neutral_encounter", "footprint_tier": "micro"})',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "blocker", Vector2i.ONE, {"primary_class": "decoration", "footprint_tier": "small"})',
+        'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "transit_object", Vector2i.ONE, {"primary_class": "transit_route_object", "footprint_tier": "small"})',
         'map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i.ONE, {"primary_class": "interactable_site", "footprint_tier": "small"})',
         'map_node.call("validation_object_sprite_scale_payload", "mapobj_withered_rootgate_marker", "scenario_objective", Vector2i.ONE, {"primary_class": "scenario_objective", "footprint_tier": "micro"})',
         'map_node.call("validation_object_sprite_scale_payload", "mapobj_contract_scribe_booth", "repeatable_service", Vector2i(2, 1), {"primary_class": "interactable_site", "footprint_tier": "small"})',
@@ -33650,24 +33665,30 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(payload.get("cache_repeat_exact", false))',
         'not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
         'String(artifact.get("semantic_scale_class", "")) != "handheld_artifact"',
-        'float(artifact.get("visible_extent_tiles", 0.0)), 0.36',
+        'float(artifact.get("visible_extent_tiles", 0.0)), 0.24',
         'String(pickup.get("semantic_scale_class", "")) != "loose_pickup"',
-        'float(pickup.get("visible_extent_tiles", 0.0)), 0.42',
+        'float(pickup.get("visible_extent_tiles", 0.0)), 0.30',
+        'float(decoration.get("visible_extent_tiles", 0.0)), 0.34',
+        'float(generic_object.get("visible_extent_tiles", 0.0)), 0.38',
+        'float(encounter.get("visible_extent_tiles", 0.0)), 0.42',
+        'float(blocker.get("visible_extent_tiles", 0.0)), 0.44',
+        'float(waypoint.get("visible_extent_tiles", 0.0)), 0.46',
         'float(hero.get("sprite_extent_fraction", 0.0)), 0.56',
-        'float(service.get("visible_extent_tiles", 0.0)), 0.62',
-        'float(objective.get("visible_extent_tiles", 0.0)), 0.64',
-        'float(wide_service.get("min_tiles", 0.0)), 0.68',
-        'float(wide_service.get("cap_tiles", 0.0)), 0.76',
-        'float(wide_service.get("visible_extent_tiles", 0.0)), 0.68',
-        'float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.68',
-        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.76',
-        'float(large_service.get("visible_extent_tiles", 0.0)), 0.76',
+        'float(service.get("visible_extent_tiles", 0.0)), 0.50',
+        'float(objective.get("visible_extent_tiles", 0.0)), 0.54',
+        'float(wide_service.get("min_tiles", 0.0)), 0.50',
+        'float(wide_service.get("cap_tiles", 0.0)), 0.54',
+        'float(wide_service.get("visible_extent_tiles", 0.0)), 0.54',
+        'float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.50',
+        'float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.54',
+        'float(large_service.get("visible_extent_tiles", 0.0)), 0.54',
         'float(town.get("visible_extent_tiles", 0.0)), 1.04',
         '"id": "object_wood_wagon"',
         '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
         '"id": "object_contract_scribe_booth"',
         '"map_roles": ["route_pacing", "world_lore", "repeatable_service"]',
-        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.68',
+        'float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.30',
+        'float(authored_service.get("visible_extent_tiles", 0.0)), 0.54',
         'float(service.get("visible_extent_tiles", 0.0))',
         '< float(town.get("visible_extent_tiles", 0.0))',
         "SessionState.ensure_active_session().to_dict() != authority_before",
@@ -44156,7 +44177,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         ensure(token in hostile_validation_block, errors, f"Hostile marker public validation is missing detached exact evidence: {token}")
     for forbidden in ("_draw_hostile_actor_marker", "session", "_session", "Input.", "await ", "create_timer", "queue_redraw"):
         ensure(forbidden not in hostile_validation_block, errors, f"Hostile marker validation must remain detached/read-only: {forbidden}")
-    ensure(hostile_layout_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Hostile actor layout must derive the exact semantic 0.50-tile extent once")
+    ensure(hostile_layout_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Hostile actor layout must derive the exact semantic 0.42-tile extent once")
     ensure(commander_draw_block.count('_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)') == 1, errors, "Enemy commander draw must use one shared hostile actor layout")
     ensure(unit_draw_block.count('_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)') == 1, errors, "Encounter unit fallback draw must use one shared hostile actor layout")
     ensure("extent * 0.68" not in commander_draw_block + unit_draw_block, errors, "Encounter actor drawing must not retain the oversized hard-coded 0.68-tile bypass")
@@ -44192,7 +44213,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'is_zero_approx(float(profile.get("interior_fill_alpha", -1.0)))',
         'tile_rect.encloses(marker_rect)',
         'marker_rect.encloses(icon_rect)',
-        'float(profile.get("visible_extent_tiles", 0.0)), 0.50',
+        'float(profile.get("visible_extent_tiles", 0.0)), 0.42',
         'session.from_dict(authority_before)',
         'if not _apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id):',
         'session.overworld["encounters"] = encounters',
@@ -44255,7 +44276,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(interceptor_profile.get("hero_id", "")) != "hero_vaska"',
         'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw"',
         'not bool(interceptor_profile.get("uses_commander_sprite", false))',
-        'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.52',
+        'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.42',
         'String(interceptor_profile.get("hostile_treatment", "")) != "open_hostile_flank_chevrons_and_threat_notch"',
         'int(hostile_marker.get("flank_chevron_count", 0)) != 2',
         'int(hostile_marker.get("threat_notch_count", 0)) != 1',
