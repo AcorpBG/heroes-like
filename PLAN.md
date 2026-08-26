@@ -24,7 +24,38 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from fresh current pixels.
+- Selected implementation slice: none. Select the next tracker-approved bounded release-readiness slice.
+
+## Main Menu Skirmish Intelligence Disclosure
+
+id: `ux-main-menu-skirmish-intel-disclosure-10184`
+
+Status: completed.
+
+Result:
+- Skirmish now opens as a compact launch-ready board: the existing Commander and Operational Board cards remain exact but are collapsed behind one native `Show Intel` / `Hide Intel` control, restoring a materially larger scenic first view at 1280x720 and 1920x1080;
+- the disclosure preserves front selection, difficulty, Map Forge, launch, focus, accessibility, session, save, and settings authority, while its compact 30px command height keeps the authored-front dossier visible at 1280;
+- a compatibility correction trims only the completed Settings board's inner vertical inset from 8px to 4px so the unchanged three-channel mixer remains fully visible in its initial 1280 view;
+- focused Skirmish launch, generated-map setup, Main Menu keyboard, menu/outcome visuals, accessibility semantics, core systems, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Skirmish captures show the Commander and Operational Board cards permanently expanded below the essential front list and opening brief, producing a dashboard-like stage that covers roughly half the wide scenic menu and leaves the lower cards partially clipped;
+- those two existing detail cards are reference intelligence rather than launch-critical controls, and the established Campaign disclosure pattern provides a bounded native presentation model without changing their content or authority.
+
+Implementation boundary:
+- keep the existing front list, opening brief, difficulty, Map Forge disclosure, native navigation, and launch action in the compact first view;
+- place the exact existing Commander and Operational Board cards behind one Skirmish-only Show Intel / Hide Intel native disclosure and cap the collapsed wide-screen stage to a content-safe scenic footprint;
+- preserve every existing detail string, tooltip, portrait, selection, focus, keyboard/controller/mouse action, generated-map state, session, save, route, settings, and accessibility authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 captures show a compact launch-ready Skirmish board with materially more scenery visible and no partially clipped intelligence cards;
+- focused runtime proves collapsed-expanded-collapsed geometry, exact card/content/portrait restoration, scroll and focus stability, unchanged front/difficulty/launch/Map Forge behavior, and whole session/save/settings authority;
+- Main Menu visual/keyboard/accessibility, Skirmish launch, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no Skirmish entry/order/selection, summary, setup, commander, operational, difficulty, generated-map, action, routing, session, save/schema, settings, input mapping, focus order, accessibility wording, gameplay, AI, balance, content, or Native RMG change;
+- no first-view command plaque, title/logo/footer, shared Stage Dock art, font/UI scale, Campaign/Load/Guide layout, Settings control/behavior, new modal, or removal of authored detail; the only Settings geometry change is the bounded 4px inner vertical inset correction described above;
+- no packaged Skirmish interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Main Menu Settings Audio Mixer Strip
 

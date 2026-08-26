@@ -515,6 +515,11 @@ size_flags_horizontal = 3
 horizontal_alignment = 2
 text = "Single-front starts with difficulty and first-contact intel."
 
+[node name="SkirmishIntelToggle" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Show Intel"
+
 [node name="DifficultyPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
 layout_mode = 2
 
@@ -717,6 +722,7 @@ text = "Setup summary"
 
 [node name="SkirmishIntelRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 10
 
@@ -1086,9 +1092,9 @@ size_flags_vertical = 3
 [node name="SettingsPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
+theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_bottom = 4
 
 [node name="SettingsBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad"]
 layout_mode = 2
@@ -1671,6 +1677,7 @@ size_flags_horizontal = 3
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/StageHelp" to="." method="_on_stage_help_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CloseStageDock" to="." method="_on_close_stage_dock_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishHeader/SkirmishIntelToggle" to="." method="_on_skirmish_intel_toggle_pressed"]
 [connection signal="item_selected" from="SkirmishCommandRail/SkirmishLaunchRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
 [connection signal="text_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedSeed" to="." method="_on_generated_seed_changed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedSizePicker" to="." method="_on_generated_size_selected"]

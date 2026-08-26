@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from fresh current pixels."
+    "Select the next tracker-approved bounded release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-main-menu-settings-audio-mixer-strip-10184",
-    "title": "Main Menu Settings audio mixer strip",
+    "id": "ux-main-menu-skirmish-intel-disclosure-10184",
+    "title": "Main Menu Skirmish intelligence disclosure",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T18:26:06Z",
-    "updatedAt": "2026-08-26T18:41:10Z",
-    "completedAt": "2026-08-26T18:41:10Z",
+    "startedAt": "2026-08-26T18:52:34Z",
+    "updatedAt": "2026-08-26T19:37:46Z",
+    "completedAt": "2026-08-26T19:37:46Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the responsive Main Menu Settings audio mixer strip. Fresh 1280/1920 captures show Master, Music, and Effects together with exact teal/blue/earth tones, equal contained geometry, and preserved control values, signals, focus, scroll, settings, audio-bus, and session authority. Focused keyboard/scroll and menu visual owners, restore defaults, active-play Settings, screen-reader semantics, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Settings interaction, audio/controller/accessibility hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed."
+    "notes": "Completed the compact Main Menu Skirmish intelligence disclosure. Fresh inspected 1280/1920 pixels show a launch-ready first view with materially more scenery and exact Commander/Operational cards behind Show Intel/Hide Intel. Focused launch, Map Forge, keyboard, broad visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. A bounded Settings inset correction keeps the unchanged audio mixer fully visible at 1280. Packaged Skirmish interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "Main Menu Settings audio mixer polish is completed; select the next bounded graphical-polish slice from fresh current pixels.",
+  "currentNotes": "The Main Menu Skirmish intelligence disclosure is completed; blockers are empty and the next bounded slice is not yet selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-settings-audio-mixer-strip-10184",
-  "currentSliceId": "ux-main-menu-settings-audio-mixer-strip-10184",
-  "currentSliceNotes": "Completed the responsive Main Menu Settings audio mixer strip. Fresh 1280/1920 captures show Master/Music/Effects together with exact teal/blue/earth tones, equal contained geometry, preserved control values/signals/focus/scroll/settings authority, green focused compatibility/static/editor, and bounded Linux/Windows export-startup gates.",
+  "currentSlice": "ux-main-menu-skirmish-intel-disclosure-10184",
+  "currentSliceId": "ux-main-menu-skirmish-intel-disclosure-10184",
+  "currentSliceNotes": "Completed: launch-critical Skirmish setup remains visible while exact Commander and Operational Board detail is disclosed on demand; focused, compatibility, static/editor, and bounded platform gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Settings audio mixer strip",
-  "currentSliceUpdatedAt": "2026-08-26T18:13:49Z",
+  "currentSliceTitle": "Main Menu Skirmish intelligence disclosure",
+  "currentSliceUpdatedAt": "2026-08-26T19:37:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20850,7 +20850,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
-  "notes": "The Overworld object-scale owner is reopened and active from direct playtest feedback; blockers are empty.",
+  "notes": "The Main Menu Skirmish intelligence disclosure is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded slice is not yet selected.",
   "plannedSlices": [
     {
       "id": "ux-battle-movement-range-alternating-edge-cues-10184",
@@ -104023,6 +104023,33 @@
       "blockedReason": null,
       "notes": "Completed the responsive Main Menu Settings audio mixer strip. Fresh 1280/1920 captures show Master, Music, and Effects together with exact teal/blue/earth tones, equal contained geometry, and preserved control values, signals, focus, scroll, settings, audio-bus, and session authority. Focused keyboard/scroll and menu visual owners, restore defaults, active-play Settings, screen-reader semantics, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Settings interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-26T18:41:10Z"
+    },
+    {
+      "id": "ux-main-menu-skirmish-intel-disclosure-10184",
+      "title": "Main Menu Skirmish intelligence disclosure",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T19:37:46Z",
+      "startedAt": "2026-08-26T18:52:34Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Keep launch-critical Skirmish setup visible while moving the permanently expanded Commander and Operational Board cards behind one compact native disclosure.",
+      "completionCriteria": "Inspected 1280/1920 captures show a smaller launch-ready board with no clipped intelligence cards; focused runtime proves exact disclosure geometry/content/focus/scroll and unchanged front/difficulty/launch/Map Forge/session/save/settings authority; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No Skirmish entry/order/selection, copy, portrait, difficulty, generated-map, action, routing, session, save/schema, settings, input/focus order, accessibility wording, gameplay, AI, balance, content, or Native RMG change.",
+        "No first-view command plaque, title/logo/footer, shared Stage Dock art, font/UI scale, other secondary-board layout, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed the compact Skirmish intelligence disclosure. Fresh inspected 1280/1920 captures show a smaller launch-ready board with materially more scenery; the existing Commander and Operational Board cards restore exactly through the public Show Intel/Hide Intel control. Focused launch/session/save authority, Map Forge, Main Menu keyboard, menu/outcome visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. A bounded 4px Settings inner inset correction keeps the unchanged mixer fully visible at 1280. Packaged Skirmish interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-26T19:37:46Z"
     }
   ],
   "project": "heroes-like",
@@ -104033,7 +104060,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next bounded tracker-approved graphical-polish slice; broader product gaps remain.",
+  "remainingWork": "Select the next tracker-approved bounded release-readiness slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

@@ -29,7 +29,7 @@ const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
 const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
-const SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0
+const SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 560.0
 const SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
@@ -120,6 +120,7 @@ const TAB_HELP_TOPIC := {
 @onready var _skirmish_scroll: ScrollContainer = %SkirmishScroll
 @onready var _skirmish_mode_split: HBoxContainer = %ModeSplit
 @onready var _skirmish_intel_row: HBoxContainer = %SkirmishIntelRow
+@onready var _skirmish_intel_toggle: Button = %SkirmishIntelToggle
 @onready var _previous_skirmish_front_button: Button = %PreviousCampaignArc
 @onready var _next_skirmish_front_button: Button = %NextCampaignArc
 @onready var _skirmish_details_label: Label = %SkirmishDetails
@@ -222,6 +223,7 @@ var _campaign_last_mutation_result: Dictionary = {}
 var _validation_campaign_blocked_command_count := 0
 var _stage_dock_reveal_tween: Tween = null
 var _campaign_intel_expanded := false
+var _skirmish_intel_expanded := false
 var _skirmish_entries: Array = []
 var _skirmish_browser_loaded := false
 var _selected_skirmish_id := ""
@@ -531,6 +533,20 @@ func _set_campaign_intel_expanded(expanded: bool) -> void:
 		"Hide the selected arc, chapter, commander, operational, and journal detail; selection and launch actions stay unchanged."
 		if expanded
 		else "Show selected arc, chapter, commander, operational, and journal detail inside this campaign rail."
+	)
+
+func _on_skirmish_intel_toggle_pressed() -> void:
+	_set_skirmish_intel_expanded(not _skirmish_intel_expanded)
+
+func _set_skirmish_intel_expanded(expanded: bool) -> void:
+	_skirmish_intel_expanded = expanded
+	_skirmish_intel_row.visible = expanded
+	_apply_stage_dock_layout()
+	_skirmish_intel_toggle.text = "Hide Intel" if expanded else "Show Intel"
+	_skirmish_intel_toggle.tooltip_text = (
+		"Hide the selected commander and operational detail; front selection and launch setup stay unchanged."
+		if expanded
+		else "Show the selected commander and operational detail inside this Skirmish board."
 	)
 
 func _on_campaign_primary_pressed() -> void:
@@ -3232,6 +3248,8 @@ func _show_stage_dock() -> void:
 	_footer_pocket_panel.visible = false
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
 		_set_campaign_intel_expanded(false)
+	elif _menu_tabs.current_tab == TAB_SKIRMISH:
+		_set_skirmish_intel_expanded(false)
 	if _menu_tabs.current_tab == TAB_SAVES:
 		_ensure_save_browser_loaded()
 	_refresh_stage_dock_header()
@@ -3271,7 +3289,7 @@ func _apply_stage_dock_layout() -> void:
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
 		anchors = _campaign_stage_dock_anchors(_campaign_intel_expanded)
 	elif _menu_tabs.current_tab == TAB_SKIRMISH:
-		anchors = _skirmish_stage_dock_anchors()
+		anchors = _skirmish_stage_dock_anchors(_skirmish_intel_expanded)
 	elif _menu_tabs.current_tab == TAB_SAVES and _save_browser_is_empty():
 		anchors = _save_empty_stage_dock_anchors()
 	elif _menu_tabs.current_tab == TAB_GUIDE:
@@ -3291,13 +3309,14 @@ func _campaign_stage_dock_anchors(expanded: bool) -> Rect2:
 	var height_ratio := maxf(base_anchors.size.y, first_view_height_ratio)
 	return Rect2(base_anchors.position, Vector2(base_anchors.size.x, height_ratio))
 
-func _skirmish_stage_dock_anchors() -> Rect2:
-	var viewport_height := maxf(get_viewport().get_visible_rect().size.y, 1.0)
+func _skirmish_stage_dock_anchors(expanded: bool) -> Rect2:
+	var viewport_size := get_viewport().get_visible_rect().size
+	var viewport_height := maxf(viewport_size.y, 1.0)
 	var first_view_height_ratio := minf(
 		SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height,
 		SKIRMISH_DOCK_MAX_HEIGHT_RATIO
 	)
-	var height_ratio := maxf(STANDARD_DOCK_ANCHORS.size.y, first_view_height_ratio)
+	var height_ratio := SKIRMISH_DOCK_MAX_HEIGHT_RATIO if expanded else first_view_height_ratio
 	return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(STANDARD_DOCK_ANCHORS.size.x, height_ratio))
 
 func _guide_stage_dock_anchors() -> Rect2:
@@ -3744,9 +3763,15 @@ func validation_snapshot() -> Dictionary:
 		"start_generated_skirmish_enabled": not _start_generated_skirmish_button.disabled,
 		"skirmish_commander_preview": _skirmish_commander_preview_label.text,
 		"skirmish_commander_preview_full": _skirmish_commander_preview_label.tooltip_text,
+		"skirmish_operational_board": _skirmish_operational_board_label.text,
+		"skirmish_operational_board_full": _skirmish_operational_board_label.tooltip_text,
 		"skirmish_commander_portrait_visible": _skirmish_commander_portrait.visible,
 		"skirmish_commander_portrait_path": _skirmish_commander_portrait.texture.resource_path if _skirmish_commander_portrait.texture is Texture2D else "",
 		"skirmish_commander_portrait_tooltip": _skirmish_commander_portrait.tooltip_text,
+		"skirmish_intel_expanded": _skirmish_intel_expanded,
+		"skirmish_intel_toggle_text": _skirmish_intel_toggle.text,
+		"skirmish_intel_toggle_tooltip": _skirmish_intel_toggle.tooltip_text,
+		"skirmish_intel_row_visible": _skirmish_intel_row.is_visible_in_tree(),
 		"skirmish_browser_item_tooltips": _skirmish_browser_item_tooltips(),
 		"difficulty_summary": _difficulty_summary_label.text,
 		"difficulty_summary_full": _difficulty_summary_label.tooltip_text,
@@ -4138,12 +4163,21 @@ func _skirmish_layout_snapshot() -> Dictionary:
 		_difficulty_picker,
 		_start_skirmish_button,
 		_skirmish_list,
+		_skirmish_intel_toggle,
 	]:
 		if control is Control and control.visible:
 			control_rects[String(control.name)] = _control_rect_snapshot(control)
 	return {
 		"viewport_size": {"x": viewport_size.x, "y": viewport_size.y},
 		"stage_rect": _rect_snapshot(stage_rect),
+		"width_ratio": stage_rect.size.x / viewport_size.x if viewport_size.x > 0.0 else 0.0,
+		"height_ratio": stage_rect.size.y / viewport_size.y if viewport_size.y > 0.0 else 0.0,
+		"uncovered_right_ratio": 1.0 - (stage_rect.end.x / viewport_size.x) if viewport_size.x > 0.0 else 0.0,
+		"intel_expanded": _skirmish_intel_expanded,
+		"intel_toggle_text": _skirmish_intel_toggle.text,
+		"intel_toggle_tooltip": _skirmish_intel_toggle.tooltip_text,
+		"intel_row_visible": _skirmish_intel_row.is_visible_in_tree(),
+		"intel_row_rect": _control_rect_snapshot(_skirmish_intel_row),
 		"launch_row_visible": _skirmish_launch_row.is_visible_in_tree(),
 		"control_rects": control_rects,
 	}
@@ -5254,6 +5288,7 @@ func _apply_visual_theme() -> void:
 	_credits_notices_body.add_theme_color_override("font_color", FrontierVisualKit.text_color("body"))
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_campaign_intel_toggle, "secondary", 116.0, 40.0, 13)
+	FrontierVisualKit.apply_button(_skirmish_intel_toggle, "secondary", 116.0, 30.0, 13)
 	FrontierVisualKit.apply_button(_previous_campaign_arc_button, "secondary", 104.0, 30.0, 11)
 	FrontierVisualKit.apply_button(_next_campaign_arc_button, "secondary", 104.0, 30.0, 11)
 	FrontierVisualKit.apply_button(_previous_campaign_chapter_button, "secondary", 116.0, 30.0, 11)

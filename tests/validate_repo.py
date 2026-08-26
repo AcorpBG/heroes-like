@@ -14772,6 +14772,8 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ("SkirmishList", "ItemList"),
         ("DifficultyPicker", "OptionButton"),
         ("SetupSummary", "Label"),
+        ("SkirmishIntelToggle", "Button"),
+        ("SkirmishIntelRow", "HBoxContainer"),
         ("SkirmishCommanderPreviewTitle", "Label"),
         ("SkirmishCommanderPreview", "Label"),
         ("SkirmishOperationalBoardTitle", "Label"),
@@ -14802,6 +14804,12 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         "@onready var _campaign_command_rail: Control = %CampaignCommandRail",
         "@onready var _skirmish_command_rail: Control = %SkirmishCommandRail",
         "@onready var _skirmish_launch_row: HBoxContainer = %SkirmishLaunchRow",
+        "@onready var _skirmish_intel_toggle: Button = %SkirmishIntelToggle",
+        "var _skirmish_intel_expanded := false",
+        "func _on_skirmish_intel_toggle_pressed() -> void:",
+        "func _set_skirmish_intel_expanded(expanded: bool) -> void:",
+        "func _skirmish_stage_dock_anchors(expanded: bool) -> Rect2:",
+        'FrontierVisualKit.apply_button(_skirmish_intel_toggle, "secondary", 116.0, 30.0, 13)',
         "func _on_previous_skirmish_front_pressed() -> void:",
         "func _on_next_skirmish_front_pressed() -> void:",
         "func _select_relative_skirmish_front(delta: int) -> void:",
@@ -14821,6 +14829,8 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         '[node name="SkirmishDifficultyLabel" type="Label" parent="SkirmishCommandRail/SkirmishLaunchRow"]',
         '[node name="DifficultyPicker" type="OptionButton" parent="SkirmishCommandRail/SkirmishLaunchRow"]',
         '[connection signal="item_selected" from="SkirmishCommandRail/SkirmishLaunchRow/DifficultyPicker" to="." method="_on_difficulty_selected"]',
+        '[node name="SkirmishIntelToggle" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishHeader"]',
+        '[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishHeader/SkirmishIntelToggle" to="." method="_on_skirmish_intel_toggle_pressed"]',
     ):
         ensure(required_scene_token in main_menu_scene_text, errors, f"MainMenu.tscn is missing native Skirmish navigation token: {required_scene_token}")
     ensure(main_menu_scene_text.count('name="SkirmishLaunchRow"') == 1, errors, "MainMenu.tscn must own exactly one SkirmishLaunchRow")
@@ -14831,6 +14841,9 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         "SkirmishLaunchRow must remain authored visible inside its root command rail",
     )
     ensure(main_menu_scene_text.count('name="DifficultyPicker"') == 1, errors, "MainMenu.tscn must own exactly one authored Skirmish DifficultyPicker")
+    ensure(main_menu_scene_text.count('name="SkirmishIntelToggle"') == 1, errors, "MainMenu.tscn must own exactly one Skirmish intelligence disclosure")
+    skirmish_intel_row_scene_block = scene_node_block(main_menu_scene_text, "SkirmishIntelRow", "HBoxContainer")
+    ensure("visible = false" in skirmish_intel_row_scene_block, errors, "MainMenu Skirmish intelligence cards must be authored collapsed")
     for forbidden_name in ("LaunchRows", "NoLaunchRow", "PreviousSkirmishFront", "NextSkirmishFront", "StartSkirmish"):
         ensure(f'name="{forbidden_name}"' not in main_menu_scene_text, errors, f"MainMenu must not duplicate shared command-rail ownership with {forbidden_name}")
 
@@ -14886,10 +14899,50 @@ def validate_skirmish_setup(errors: list[str]) -> None:
     ensure(skirmish_layout_match is not None, errors, "MainMenu.gd is missing the isolated Skirmish launch-row layout snapshot")
     if skirmish_layout_match is not None:
         skirmish_layout_body = skirmish_layout_match.group("body")
-        for required_token in ("_skirmish_launch_row", "_previous_skirmish_front_button", "_next_skirmish_front_button", "_difficulty_picker", "_start_skirmish_button", "_skirmish_list"):
+        for required_token in ("_skirmish_launch_row", "_previous_skirmish_front_button", "_next_skirmish_front_button", "_difficulty_picker", "_start_skirmish_button", "_skirmish_list", "_skirmish_intel_toggle", '"intel_expanded"', '"intel_row_visible"', '"intel_row_rect"', '"uncovered_right_ratio"'):
             ensure(required_token in skirmish_layout_body, errors, f"Skirmish layout containment must include exact live control {required_token}")
         for forbidden_token in ("reparent", "remove_child", "add_child", "hide()", "show()"):
             ensure(forbidden_token not in skirmish_layout_body, errors, f"Skirmish layout snapshot must remain observation-only via {forbidden_token}")
+
+    skirmish_disclosure_match = re.search(
+        r"func _set_skirmish_intel_expanded\(expanded: bool\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(skirmish_disclosure_match is not None, errors, "MainMenu.gd is missing the isolated Skirmish intelligence disclosure")
+    if skirmish_disclosure_match is not None:
+        skirmish_disclosure_body = skirmish_disclosure_match.group("body")
+        ordered_tokens = (
+            "_skirmish_intel_expanded = expanded",
+            "_skirmish_intel_row.visible = expanded",
+            "_apply_stage_dock_layout()",
+            '_skirmish_intel_toggle.text = "Hide Intel" if expanded else "Show Intel"',
+            "_skirmish_intel_toggle.tooltip_text = (",
+        )
+        positions = [skirmish_disclosure_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Skirmish disclosure must change only presentation visibility/layout/copy in exact order")
+        for forbidden_token in ("_refresh_skirmish_setup", "_selected_skirmish_id =", "SessionState", "SaveService", "SettingsService", "reparent", "remove_child", "add_child", "queue_free", "await ", "create_timer"):
+            ensure(forbidden_token not in skirmish_disclosure_body, errors, f"Skirmish disclosure must not mutate content, authority, ownership, or timing via {forbidden_token}")
+
+    skirmish_anchor_match = re.search(
+        r"func _skirmish_stage_dock_anchors\(expanded: bool\) -> Rect2:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(skirmish_anchor_match is not None, errors, "MainMenu.gd is missing the isolated Skirmish scenic-footprint allocator")
+    if skirmish_anchor_match is not None:
+        skirmish_anchor_body = skirmish_anchor_match.group("body")
+        ordered_tokens = (
+            "var viewport_size := get_viewport().get_visible_rect().size",
+            "SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / viewport_height",
+            "SKIRMISH_DOCK_MAX_HEIGHT_RATIO",
+            "var height_ratio := SKIRMISH_DOCK_MAX_HEIGHT_RATIO if expanded else first_view_height_ratio",
+            "return Rect2(STANDARD_DOCK_ANCHORS.position, Vector2(STANDARD_DOCK_ANCHORS.size.x, height_ratio))",
+        )
+        positions = [skirmish_anchor_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Skirmish scenic-footprint allocator must derive bounded width and collapsed/expanded height synchronously")
+        for forbidden_token in (".visible =", ".hide", ".show", "scroll_vertical =", "await ", "create_timer", "call_deferred", "SessionState", "SaveService"):
+            ensure(forbidden_token not in skirmish_anchor_body, errors, f"Skirmish anchor allocation must remain presentation-only via {forbidden_token}")
 
     skirmish_difficulty_match = re.search(
         r"func _on_difficulty_selected\(index: int\) -> void:\n(?P<body>.*?)(?=\nfunc )",
@@ -14969,8 +15022,20 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             'shell.find_child("CampaignChapterNavigation", true, false)',
             'shell.find_child("DifficultyPicker", true, false)',
             'shell.find_child("NextCampaignChapter", true, false)',
+            'shell.find_child("SkirmishIntelToggle", true, false)',
+            'shell.find_child("SkirmishIntelRow", true, false)',
             "difficulty_picker.item_selected.emit(next_difficulty_index)",
             "for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
+            'SettingsService.call("_set_runtime_window_size", viewport_size)',
+            "get_window().size != viewport_size or get_tree().root.size != viewport_size",
+            "var stage_combined_minimum := stage.get_combined_minimum_size()",
+            "expected_collapsed_width := maxf(float(viewport_size.x) * 0.733, stage_combined_minimum.x)",
+            "expected_collapsed_height := maxf(minf(560.0, float(viewport_size.y) * 0.720), stage_combined_minimum.y)",
+            "intel_toggle.pressed.emit()",
+            'String(expanded_snapshot.get("skirmish_intel_toggle_text", "")) != "Hide Intel"',
+            "expanded_authority != disclosure_authority_before",
+            "not restored_rect.position.is_equal_approx(stage_rect.position)",
+            "not restored_rect.size.is_equal_approx(stage_rect.size)",
             "previous_button.pressed.emit()",
             "next_button.pressed.emit()",
             'list.get_selected_items() != PackedInt32Array([1])',
@@ -14997,6 +15062,7 @@ def validate_skirmish_setup(errors: list[str]) -> None:
                 "_skirmish_entries",
                 "remove_item",
                 "sort",
+                "get_window().size = viewport_size",
             ):
                 ensure(forbidden_token not in native_case_body, errors, f"player-facing Skirmish owner must use public button/list authority instead of {forbidden_token}")
         stage_match = re.search(r"func _stage\(stage: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
@@ -19550,7 +19616,7 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         "const MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
         "const MAIN_MENU_CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0",
         "const MAIN_MENU_CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640",
-        "const MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0",
+        "const MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 560.0",
         "const MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720",
         "if not await _assert_main_menu_stage_dock_surface(shell, session):",
         "func _assert_main_menu_stage_dock_surface(shell: Control, session) -> bool:",
@@ -19590,7 +19656,7 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         "func _main_menu_skirmish_dock_anchors(viewport_size: Vector2i) -> Rect2:",
         "MAIN_MENU_SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT / float(viewport_size.y)",
         "MAIN_MENU_SKIRMISH_DOCK_MAX_HEIGHT_RATIO",
-        "maxf(MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.y, first_view_height_ratio)",
+        "MAIN_MENU_STAGE_DOCK_STANDARD_ANCHORS.size.x",
         'const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"',
         "const MAIN_MENU_POCKET_TEXTURE_MARGINS := Vector4(56.0, 56.0, 56.0, 56.0)",
         "const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)",
@@ -20933,7 +20999,7 @@ def validate_main_menu_skirmish_map_forge_disclosure(errors: list[str]) -> None:
     ensure("visible = false" in scene_text[provenance_index:provenance_index + 300], errors, "Generated provenance must be authored collapsed")
 
     for token in (
-        "const SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 520.0",
+        "const SKIRMISH_DOCK_FIRST_VIEW_MIN_HEIGHT := 560.0",
         "const SKIRMISH_DOCK_MAX_HEIGHT_RATIO := 0.720",
         "var _generated_map_forge_expanded := false",
         "func _on_generated_map_toggle_pressed() -> void:",
@@ -20948,7 +21014,7 @@ def validate_main_menu_skirmish_map_forge_disclosure(errors: list[str]) -> None:
         "_generated_map_controls.is_ancestor_of(focus_owner)",
         "_generated_map_toggle_button.grab_focus()",
         "_generated_map_forge_expanded = true",
-        "func _skirmish_stage_dock_anchors() -> Rect2:",
+        "func _skirmish_stage_dock_anchors(expanded: bool) -> Rect2:",
         '"forge": _generated_map_forge_snapshot()',
         "func validation_set_generated_map_forge_expanded(expanded: bool) -> Dictionary:",
     ):
@@ -21002,6 +21068,20 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         return
 
     scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    settings_pad_match = re.search(
+        r'\[node name="SettingsPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel"\](.*?)(?=\n\[node )',
+        scene_text,
+        flags=re.DOTALL,
+    )
+    ensure(settings_pad_match is not None, errors, "Main Menu Settings is missing its bounded inner padding")
+    if settings_pad_match is not None:
+        for token in (
+            "theme_override_constants/margin_left = 12",
+            "theme_override_constants/margin_top = 4",
+            "theme_override_constants/margin_right = 12",
+            "theme_override_constants/margin_bottom = 4",
+        ):
+            ensure(token in settings_pad_match.group(1), errors, f"Main Menu Settings inner padding is missing exact compact inset: {token}")
     mixer_parent = "StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/AudioMixerRow"
     for token in (
         '[node name="AudioMixerRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]',
