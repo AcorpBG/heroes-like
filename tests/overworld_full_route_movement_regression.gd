@@ -47,6 +47,8 @@ func _assert_partial_full_route_execution() -> bool:
 		return _fail("Route preview did not partition reachable and out-of-movement segments.", selection)
 	if int(map_preview.get("reachable_steps", 0)) != 4 or int(map_preview.get("unreachable_steps", 0)) != 5:
 		return _fail("Map route preview did not expose the same out-of-movement partition.", selection)
+	if not _assert_cartographic_route_visual(shell, session, selection, route_preview):
+		return false
 	var result: Dictionary = shell.call("validation_perform_primary_action")
 	var movement_start: Dictionary = _hero_movement_presentation(shell)
 	var start_cache: Dictionary = _render_cache(shell)
@@ -511,6 +513,114 @@ func _capture_route_locomotion_viewports() -> bool:
 	await get_tree().process_frame
 	_evidence["windowed_route_locomotion"] = captures
 	return true
+
+func _assert_cartographic_route_visual(shell: Node, session, selection: Dictionary, route_preview: Dictionary) -> bool:
+	var map_node := shell.get_node_or_null("%Map")
+	if map_node == null:
+		return _fail("Route visual owner is missing from the live Overworld shell.")
+	var authority_before: Dictionary = session.to_dict()
+	var live_profile: Dictionary = map_node.call("validation_route_visual_profile")
+	var viewport: Dictionary = selection.get("map_viewport", {}) if selection.get("map_viewport", {}) is Dictionary else {}
+	var snapshot_profile: Dictionary = viewport.get("route_visual_profile", {}) if viewport.get("route_visual_profile", {}) is Dictionary else {}
+	var reachable_tiles: Array = route_preview.get("reachable_tiles", []) if route_preview.get("reachable_tiles", []) is Array else []
+	var unreachable_tiles: Array = route_preview.get("unreachable_tiles", []) if route_preview.get("unreachable_tiles", []) is Array else []
+	var blocked_tiles: Array = []
+	if not reachable_tiles.is_empty():
+		blocked_tiles.append(reachable_tiles[reachable_tiles.size() - 1])
+	blocked_tiles.append_array(unreachable_tiles)
+	var reachable: Dictionary = live_profile.get("reachable", {}) if live_profile.get("reachable", {}) is Dictionary else {}
+	var blocked: Dictionary = live_profile.get("blocked", {}) if live_profile.get("blocked", {}) is Dictionary else {}
+	var tile_extent := float(viewport.get("tile_extent", 0.0))
+	if (
+		String(live_profile.get("model", "")) != "layered_cartographic_trail_open_waypoints_destination_chevron"
+		or live_profile != snapshot_profile
+		or live_profile.get("reachable_source_tiles", []) != reachable_tiles
+		or live_profile.get("unreachable_source_tiles", []) != unreachable_tiles
+		or String(live_profile.get("draw_order", "")) != "before_focus_and_dynamic_icons"
+		or not bool(live_profile.get("route_preview_enabled", false))
+		or bool(live_profile.get("continuous_debug_bar", true))
+		or int(live_profile.get("filled_node_count", -1)) != 0
+		or not _cartographic_route_segment_exact(reachable, reachable_tiles, tile_extent, false)
+		or not _cartographic_route_segment_exact(blocked, blocked_tiles, tile_extent, true)
+		or session.to_dict() != authority_before
+	):
+		return _fail("Layered cartographic route visual did not preserve exact route/style/session authority.", {
+			"model": live_profile.get("model", ""),
+			"reachable_tiles": live_profile.get("reachable_source_tiles", []),
+			"unreachable_tiles": live_profile.get("unreachable_source_tiles", []),
+			"reachable_summary": _cartographic_route_segment_summary(reachable),
+			"blocked_summary": _cartographic_route_segment_summary(blocked),
+		})
+	_evidence["layered_cartographic_route_visual"] = {
+		"model": String(live_profile.get("model", "")),
+		"reachable": _cartographic_route_segment_summary(reachable),
+		"blocked": _cartographic_route_segment_summary(blocked),
+		"session_authority_exact": true,
+	}
+	return true
+
+func _cartographic_route_segment_exact(segment: Dictionary, expected_tiles: Array, tile_extent: float, blocked: bool) -> bool:
+	var points: PackedVector2Array = segment.get("points", PackedVector2Array())
+	var stitches: Array = segment.get("stitches", []) if segment.get("stitches", []) is Array else []
+	var waypoints: Array = segment.get("waypoints", []) if segment.get("waypoints", []) is Array else []
+	var destination: PackedVector2Array = segment.get("destination_chevron", PackedVector2Array())
+	if (
+		String(segment.get("model", "")) != "layered_cartographic_trail_open_waypoints_destination_chevron"
+		or bool(segment.get("blocked", not blocked)) != blocked
+		or segment.get("source_tiles", []) != expected_tiles
+		or points.size() != expected_tiles.size()
+		or int(segment.get("point_count", -1)) != points.size()
+		or int(segment.get("stitch_count", -1)) != maxi(points.size() - 1, 0)
+		or stitches.size() != maxi(points.size() - 1, 0)
+		or int(segment.get("waypoint_count", -1)) != maxi(points.size() - 2, 0)
+		or waypoints.size() != maxi(points.size() - 2, 0)
+		or int(segment.get("destination_chevron_count", -1)) != 1
+		or destination.size() != 3
+		or destination[1] != points[points.size() - 1]
+		or segment.get("destination_source_tile", {}) != expected_tiles[expected_tiles.size() - 1]
+		or bool(segment.get("continuous_debug_bar", true))
+		or int(segment.get("filled_node_count", -1)) != 0
+		or not is_zero_approx(float(segment.get("waypoint_fill_alpha", 1.0)))
+		or not is_equal_approx(float(segment.get("shadow_width_px", 0.0)), maxf(2.8, tile_extent * 0.040))
+		or not is_equal_approx(float(segment.get("core_width_px", 0.0)), maxf(1.3, tile_extent * 0.018))
+		or not is_equal_approx(float(segment.get("highlight_width_px", 0.0)), maxf(0.65, tile_extent * 0.006))
+		or not is_equal_approx(float(segment.get("shadow_alpha", 0.0)), 0.50)
+		or not is_equal_approx(float(segment.get("core_alpha", 0.0)), 0.86 if blocked else 0.82)
+		or not is_equal_approx(float(segment.get("highlight_alpha", 0.0)), 0.42)
+		or not is_equal_approx(float(segment.get("stitch_length_px", 0.0)), maxf(3.0, tile_extent * 0.045))
+		or not is_equal_approx(float(segment.get("stitch_width_px", 0.0)), maxf(0.85, tile_extent * 0.010))
+		or not is_equal_approx(float(segment.get("stitch_alpha", 0.0)), 0.64)
+		or not is_equal_approx(float(segment.get("waypoint_radius_px", 0.0)), maxf(2.25, tile_extent * 0.030))
+		or not is_equal_approx(float(segment.get("destination_length_px", 0.0)), maxf(5.0, tile_extent * 0.075))
+		or not is_equal_approx(float(segment.get("destination_depth_px", 0.0)), maxf(3.0, tile_extent * 0.045))
+	):
+		return false
+	for stitch_value in stitches:
+		if not (stitch_value is PackedVector2Array) or (stitch_value as PackedVector2Array).size() != 2:
+			return false
+	for waypoint_value in waypoints:
+		if not (waypoint_value is PackedVector2Array):
+			return false
+		var waypoint: PackedVector2Array = waypoint_value
+		if waypoint.size() != 5 or waypoint[0] != waypoint[waypoint.size() - 1]:
+			return false
+	var expected_direction := points[points.size() - 2].direction_to(points[points.size() - 1])
+	var direction_payload: Dictionary = segment.get("destination_direction", {}) if segment.get("destination_direction", {}) is Dictionary else {}
+	var actual_direction := Vector2(float(direction_payload.get("x", 0.0)), float(direction_payload.get("y", 0.0)))
+	var tip_payload: Dictionary = segment.get("destination_tip", {}) if segment.get("destination_tip", {}) is Dictionary else {}
+	return expected_direction.dot(actual_direction) > 0.9999 and Vector2(float(tip_payload.get("x", 0.0)), float(tip_payload.get("y", 0.0))) == points[points.size() - 1]
+
+func _cartographic_route_segment_summary(segment: Dictionary) -> Dictionary:
+	return {
+		"point_count": int(segment.get("point_count", 0)),
+		"stitch_count": int(segment.get("stitch_count", 0)),
+		"waypoint_count": int(segment.get("waypoint_count", 0)),
+		"destination_chevron_count": int(segment.get("destination_chevron_count", 0)),
+		"shadow_width_px": float(segment.get("shadow_width_px", 0.0)),
+		"core_width_px": float(segment.get("core_width_px", 0.0)),
+		"highlight_width_px": float(segment.get("highlight_width_px", 0.0)),
+		"filled_node_count": int(segment.get("filled_node_count", -1)),
+	}
 
 func _last_debug_command(shell: Node) -> Dictionary:
 	var overlay: Dictionary = shell.call("validation_debug_overlay_snapshot")

@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Overworld Layered Cartographic Route Preview
+
+id: `ux-overworld-layered-cartographic-route-preview-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the existing solid five-pixel route polyline and filled four-pixel node dots with a restrained layered cartographic trail, compact open waypoints, and one direction-aware destination cue;
+- preserve the exact reachable/blocked route tile arrays, route ordering, selected destination, movement budget, pathfinding, action ownership, route-open/closed/blocked VFX, and draw-layer order;
+- derive every visual point from the current tile centers, keep the route visible over land/water/fog boundaries at 1280x720 and 1920x1080, and expose detached geometry/style evidence for focused runtime validation.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show a fine readable cartographic route instead of the current debug-like solid gold bar and large filled endpoint dots;
+- focused runtime proves exact reachable/blocked source tiles, point order, layered widths/alphas, open waypoint containment, destination orientation, and unchanged route/session/save authority;
+- full route movement, cached/incremental route ownership, controller/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no route calculation, pathfinding, movement cost/budget, destination, action, interaction, blocked/open/closed response, VFX/audio cue, input/focus, session/save/schema, map content, AI, battle, balance, or Native RMG change;
+- no terrain, road, fog, object/hero/town asset or scale, active-hero/selection/hover marker, shell/UI layout, camera/tile extent, animation, shader, font, or broad Overworld redesign;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- replaced the solid five-pixel route bar and filled node dots with a soft shadow underlay, fine colored core, restrained highlight, perpendicular cartographic stitches, open interior waypoint diamonds, and one direction-aware destination chevron;
+- inspected live River Pass captures at 1280x720 and 1920x1080 show the route as a readable map annotation that remains visible over road, land, water, and fog boundaries without dominating the hero, objects, or terrain;
+- focused reachable/blocked route geometry and movement, broad visual/cache/incremental/controller/input/focus/accessibility/generated-map/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
+
 ## Overworld Coherent Screen Object Proportions
 
 id: `ux-overworld-coherent-screen-object-proportions-10184`
