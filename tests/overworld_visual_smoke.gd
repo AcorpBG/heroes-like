@@ -66,7 +66,9 @@ func _run() -> void:
 			return
 		if not _assert_active_hero_command_marker_contract(shell, map_node, session):
 			return
-		if not await _capture_object_scale_viewports(shell):
+		if not _assert_hover_reticle_layout_contract(map_node, session):
+			return
+		if not await _capture_object_scale_viewports(shell, map_node, session):
 			return
 		shell.queue_free()
 		await get_tree().process_frame
@@ -2893,12 +2895,18 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	var hero_sprite_rect := _focus_rect_from_payload(hero_layout.get("sprite_rect", {}))
 	var selection_focus_rect := _focus_rect_from_payload(focus_layout.get("selection_rect", {}))
 	var hover_focus_rect := _focus_rect_from_payload(focus_layout.get("hover_rect", {}))
+	var hover_visual_profile: Dictionary = focus_layout.get("hover_visual_profile", {})
 	var town_selection_visual_profile: Dictionary = focus_layout.get("town_selection_visual_profile", {})
 	var tile_selection_visual_profile: Dictionary = focus_layout.get("tile_selection_visual_profile", {})
 	var tile_selection_extent := minf(selection_focus_rect.size.x, selection_focus_rect.size.y)
 	var expected_tile_selection_inset := maxf(4.0, tile_selection_extent * 0.085)
 	if not _hero_command_marker_profile_exact(hero_command_marker_profile, hero_focus_rect, hero_sprite_rect):
 		push_error("Overworld smoke: active hero command marker escaped its open contained geometry. focus=%s presentation=%s" % [focus_layout, hero_presentation])
+		get_tree().quit(1)
+		return false
+	if String(focus_layout.get("hover_visual_model", "")) != "open_cartographic_hover_corners" \
+		or not _hover_reticle_profile_exact(hover_visual_profile, hover_focus_rect):
+		push_error("Overworld smoke: map hover did not retain the exact subordinate open-corner reticle. focus=%s" % focus_layout)
 		get_tree().quit(1)
 		return false
 	if hero_on_town_footprint:
@@ -3003,6 +3011,55 @@ func _assert_active_hero_command_marker_contract(shell: Node, map_node: Node, se
 		return false
 	return true
 
+func _assert_hover_reticle_layout_contract(map_node: Node, session) -> bool:
+	if not map_node.has_method("validation_tile_focus_layout"):
+		push_error("Overworld smoke: map is missing the hover-reticle layout validation surface.")
+		get_tree().quit(1)
+		return false
+	var town_tile := Vector2i(-1, -1)
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary:
+			town_tile = Vector2i(int(town_value.get("x", -1)), int(town_value.get("y", -1)))
+			break
+	var field_tile := Vector2i(-1, -1)
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var candidate := Vector2i(x, y)
+			if not OverworldRules.is_tile_visible(session, x, y) or _tile_has_overworld_object(session, candidate):
+				continue
+			var candidate_layout: Dictionary = map_node.call("validation_tile_focus_layout", candidate)
+			if bool(candidate_layout.get("hover_uses_town_footprint_rect", true)):
+				continue
+			field_tile = candidate
+			break
+		if field_tile.x >= 0:
+			break
+	if town_tile.x < 0 or field_tile.x < 0:
+		push_error("Overworld smoke: hover-reticle fixture requires one town and one visible ordinary field tile.")
+		get_tree().quit(1)
+		return false
+	for case_value in [
+		{"tile": town_tile, "town": true},
+		{"tile": field_tile, "town": false},
+	]:
+		var case: Dictionary = case_value
+		var tile: Vector2i = case.get("tile", Vector2i(-1, -1))
+		var uses_town := bool(case.get("town", false))
+		var layout: Dictionary = map_node.call("validation_tile_focus_layout", tile)
+		var tile_rect := _focus_rect_from_payload(layout.get("tile_rect", {}))
+		var hover_rect := _focus_rect_from_payload(layout.get("hover_rect", {}))
+		var profile: Dictionary = layout.get("hover_visual_profile", {})
+		if String(layout.get("hover_visual_model", "")) != "open_cartographic_hover_corners" \
+			or bool(layout.get("hover_uses_town_footprint_rect", not uses_town)) != uses_town \
+			or not _hover_reticle_profile_exact(profile, hover_rect) \
+			or (uses_town and (not hover_rect.encloses(tile_rect) or hover_rect.size == tile_rect.size)) \
+			or (not uses_town and hover_rect != tile_rect):
+			push_error("Overworld smoke: hover reticle escaped exact town/field containment. case=%s layout=%s" % [case, layout])
+			get_tree().quit(1)
+			return false
+	return true
+
 func _focus_rect_from_payload(value: Variant) -> Rect2:
 	var payload: Dictionary = value if value is Dictionary else {}
 	return Rect2(
@@ -3011,6 +3068,28 @@ func _focus_rect_from_payload(value: Variant) -> Rect2:
 		float(payload.get("width", 0.0)),
 		float(payload.get("height", 0.0))
 	)
+
+func _hover_reticle_profile_exact(profile: Dictionary, hover_rect: Rect2) -> bool:
+	var extent := minf(hover_rect.size.x, hover_rect.size.y)
+	var expected_inset := clampf(extent * 0.10, 6.0, 18.0)
+	var expected_length := clampf(extent * 0.12, 6.0, 18.0)
+	var expected_width := clampf(extent * 0.014, 1.25, 2.0)
+	var color: Dictionary = profile.get("corner_color", {}) if profile.get("corner_color", {}) is Dictionary else {}
+	var perimeter_rect := _focus_rect_from_payload(profile.get("perimeter_rect", {}))
+	return String(profile.get("model", "")) == "open_cartographic_hover_corners" \
+		and perimeter_rect == hover_rect.grow(-expected_inset) \
+		and hover_rect.encloses(perimeter_rect) \
+		and is_equal_approx(float(profile.get("perimeter_inset_px", 0.0)), expected_inset) \
+		and is_equal_approx(float(profile.get("corner_length_px", 0.0)), expected_length) \
+		and is_equal_approx(float(profile.get("corner_width_px", 0.0)), expected_width) \
+		and is_equal_approx(float(color.get("r", 0.0)), 0.92) \
+		and is_equal_approx(float(color.get("g", 0.0)), 0.95) \
+		and is_equal_approx(float(color.get("b", 0.0)), 0.98) \
+		and is_equal_approx(float(color.get("a", 0.0)), 0.55) \
+		and is_equal_approx(float(profile.get("shadow_alpha", 0.0)), 0.24) \
+		and is_equal_approx(float(profile.get("shadow_width_px", 0.0)), expected_width + 1.25) \
+		and not bool(profile.get("continuous_outline", true)) \
+		and is_zero_approx(float(profile.get("interior_fill_alpha", -1.0)))
 
 func _hero_command_marker_profile_exact(profile: Dictionary, focus_rect: Rect2, sprite_rect: Rect2) -> bool:
 	var extent := minf(focus_rect.size.x, focus_rect.size.y)
@@ -3770,7 +3849,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		return false
 	return true
 
-func _capture_object_scale_viewports(shell: Node) -> bool:
+func _capture_object_scale_viewports(shell: Node, map_node: Control, session) -> bool:
 	var output_dir := OS.get_environment("OVERWORLD_OBJECT_SCALE_CAPTURE_DIR").strip_edges()
 	if output_dir == "":
 		push_error("Overworld smoke: object-scale capture requires OVERWORLD_OBJECT_SCALE_CAPTURE_DIR.")
@@ -3781,15 +3860,59 @@ func _capture_object_scale_viewports(shell: Node) -> bool:
 		push_error("Overworld smoke: could not create object-scale capture directory %s." % absolute_dir)
 		get_tree().quit(1)
 		return false
+	if not shell.has_method("validation_snapshot") or not map_node.has_method("validation_hover_presentation"):
+		push_error("Overworld smoke: hover capture is missing the shell or map validation surface.")
+		get_tree().quit(1)
+		return false
+	var hover_tiles := _visible_empty_hover_tiles(session, map_node, 2)
+	if hover_tiles.size() != 2:
+		push_error("Overworld smoke: hover capture requires two visible ordinary target tiles. tiles=%s" % hover_tiles)
+		get_tree().quit(1)
+		return false
+	var authority_before: Dictionary = session.to_dict()
+	var save_surface_before: Dictionary = shell.call("validation_snapshot").get("save_surface", {}).duplicate(true)
 	var original_window_size := get_window().size
 	var captures := []
-	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+	var viewport_sizes := [Vector2i(1280, 720), Vector2i(1920, 1080)]
+	for viewport_index in range(viewport_sizes.size()):
+		var viewport_size: Vector2i = viewport_sizes[viewport_index]
 		get_window().size = viewport_size
 		await get_tree().process_frame
 		await get_tree().process_frame
 		if get_window().size != viewport_size:
 			get_window().size = original_window_size
 			push_error("Overworld smoke: object-scale capture did not reach %s." % viewport_size)
+			get_tree().quit(1)
+			return false
+		var hover_tile: Vector2i = hover_tiles[viewport_index]
+		var target_layout: Dictionary = map_node.call("validation_tile_focus_layout", hover_tile)
+		var target_rect := _focus_rect_from_payload(target_layout.get("hover_rect", {}))
+		var pointer_position := map_node.get_global_transform_with_canvas() * target_rect.get_center()
+		var cache_before := _render_cache_metrics(shell.call("validation_snapshot"))
+		var pointer_motion := InputEventMouseMotion.new()
+		pointer_motion.position = pointer_position
+		pointer_motion.global_position = pointer_position
+		pointer_motion.relative = Vector2.ZERO
+		get_viewport().push_input(pointer_motion, true)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var hover_presentation: Dictionary = map_node.call("validation_hover_presentation")
+		var cache_after := _render_cache_metrics(shell.call("validation_snapshot"))
+		var hovered_layout: Dictionary = hover_presentation.get("focus_layout", {})
+		var save_surface_after: Dictionary = shell.call("validation_snapshot").get("save_surface", {}).duplicate(true)
+		if not bool(hover_presentation.get("active", false)) \
+			or hover_presentation.get("hover_tile", {}) != {"x": hover_tile.x, "y": hover_tile.y} \
+			or hovered_layout != target_layout \
+			or not _hover_reticle_profile_exact(hovered_layout.get("hover_visual_profile", {}), target_rect) \
+			or cache_before.is_empty() \
+			or int(cache_after.get("session_static_generation", -1)) != int(cache_before.get("session_static_generation", -1)) \
+			or int(cache_after.get("state_generation", -1)) != int(cache_before.get("state_generation", -1)) \
+			or int(cache_after.get("dynamic_generation", -1)) <= int(cache_before.get("dynamic_generation", -1)) \
+			or String(cache_after.get("dynamic_reason", "")) != "hover_changed" \
+			or session.to_dict() != authority_before \
+			or save_surface_after != save_surface_before:
+			get_window().size = original_window_size
+			push_error("Overworld smoke: real pointer hover changed map/save authority or escaped dynamic-only ownership. tile=%s hover=%s before=%s after=%s" % [hover_tile, hover_presentation, cache_before, cache_after])
 			get_tree().quit(1)
 			return false
 		await RenderingServer.frame_post_draw
@@ -3805,11 +3928,35 @@ func _capture_object_scale_viewports(shell: Node) -> bool:
 			push_error("Overworld smoke: object-scale capture could not save %s." % path)
 			get_tree().quit(1)
 			return false
-		captures.append({"width": viewport_size.x, "height": viewport_size.y, "path": path})
+		captures.append({
+			"width": viewport_size.x,
+			"height": viewport_size.y,
+			"path": path,
+			"hover_tile": {"x": hover_tile.x, "y": hover_tile.y},
+			"pointer_input_exact": true,
+			"dynamic_layer_only": true,
+		})
 	get_window().size = original_window_size
 	await get_tree().process_frame
-	print("OVERWORLD_OBJECT_SCALE_CAPTURE %s" % JSON.stringify({"ok": true, "captures": captures, "session_exact": shell != null}))
+	print("OVERWORLD_OBJECT_SCALE_CAPTURE %s" % JSON.stringify({"ok": true, "captures": captures, "session_exact": session.to_dict() == authority_before, "save_surface_exact": shell.call("validation_snapshot").get("save_surface", {}) == save_surface_before}))
 	return true
+
+func _visible_empty_hover_tiles(session, map_node: Node, required_count: int) -> Array:
+	var result: Array = []
+	var hero_tile := OverworldRules.hero_position(session)
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var tile := Vector2i(x, y)
+			if tile == hero_tile or not OverworldRules.is_tile_visible(session, x, y) or _tile_has_overworld_object(session, tile):
+				continue
+			var layout: Dictionary = map_node.call("validation_tile_focus_layout", tile)
+			if bool(layout.get("hover_uses_town_footprint_rect", true)):
+				continue
+			result.append(tile)
+			if result.size() == required_count:
+				return result
+	return result
 
 func _capture_route_visual_viewports(shell: Node, map_node: Node, session) -> bool:
 	var output_dir := OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_DIR").strip_edges()

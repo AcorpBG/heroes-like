@@ -44088,7 +44088,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'var selection_rect: Rect2 = layout.get("selection_rect", rect)',
         'elif bool(layout.get("selection_uses_cartographic_tile_reticle", false)):',
         '_draw_tile_selection_reticle(selection_rect)',
-        'var hover_rect: Rect2 = layout.get("hover_rect", rect)',
+        '_draw_cartographic_hover_reticle(layout.get("hover_visual_profile", {}))',
     ):
         ensure(token in focus_draw_block, errors, f"Town-footprint focus draw path is missing shared resolved geometry: {token}")
     ensure(focus_draw_block.find("var layout :=") < focus_draw_block.find("if tile == _hero_tile:") < focus_draw_block.find("if tile == _selected_tile:") < focus_draw_block.find("if tile == _hover_tile:"), errors, "Focus drawing must resolve one layout before preserving hero, selected, then hover ownership")
@@ -44419,6 +44419,158 @@ def validate_overworld_town_selection_cartographic_perimeter(errors: list[str]) 
             ensure(forbidden not in text, errors, f"{owner} must observe only public production geometry and avoid {forbidden}")
     ensure('String(ordinary_layout.get("selection_visual_model", "")) == "open_cartographic_tile_corner_and_midpoint_ticks"' in focused_text, errors, "Focused owner must require the exact ordinary open selected-tile reticle")
     ensure('String(focus_layout.get("selection_visual_model", "")) != "open_cartographic_tile_corner_and_midpoint_ticks"' in visual_text, errors, "Broad Overworld visual owner must require the exact ordinary open selected-tile reticle")
+
+
+def validate_overworld_cartographic_hover_reticle(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    map_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    for path in (map_path, visual_path):
+        ensure(path.is_file(), errors, f"Missing Overworld cartographic hover-reticle owner: {path.relative_to(ROOT)}")
+    if not map_path.is_file() or not visual_path.is_file():
+        return
+
+    map_text = map_path.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    for token in (
+        'const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)',
+        'const HOVER_RETICLE_VISUAL_MODEL := "open_cartographic_hover_corners"',
+        'const HOVER_RETICLE_PERIMETER_INSET_FACTOR := 0.10',
+        'const HOVER_RETICLE_PERIMETER_INSET_MIN_PX := 6.0',
+        'const HOVER_RETICLE_PERIMETER_INSET_MAX_PX := 18.0',
+        'const HOVER_RETICLE_CORNER_LENGTH_FACTOR := 0.12',
+        'const HOVER_RETICLE_CORNER_LENGTH_MIN_PX := 6.0',
+        'const HOVER_RETICLE_CORNER_LENGTH_MAX_PX := 18.0',
+        'const HOVER_RETICLE_CORNER_WIDTH_FACTOR := 0.014',
+        'const HOVER_RETICLE_CORNER_WIDTH_MIN_PX := 1.25',
+        'const HOVER_RETICLE_CORNER_WIDTH_MAX_PX := 2.0',
+        'const HOVER_RETICLE_SHADOW_ALPHA := 0.24',
+        'const HOVER_RETICLE_SHADOW_WIDTH_ADD_PX := 1.25',
+    ):
+        ensure(map_text.count(token) == 1, errors, f"Cartographic hover reticle must own one exact visual constant: {token}")
+
+    draw_focus = function_block(map_text, "_draw_tile_focus")
+    profile = function_block(map_text, "_hover_reticle_visual_profile")
+    draw_reticle = function_block(map_text, "_draw_cartographic_hover_reticle")
+    layout = function_block(map_text, "_tile_focus_layout")
+    validation = function_block(map_text, "validation_tile_focus_layout")
+    hover_validation = function_block(map_text, "validation_hover_presentation")
+    ensure(all((draw_focus, profile, draw_reticle, layout, validation, hover_validation)), errors, "Could not isolate Overworld cartographic hover-reticle ownership")
+    if draw_focus:
+        ensure('if tile == _hover_tile:\n\t\t_draw_cartographic_hover_reticle(layout.get("hover_visual_profile", {}))' in draw_focus, errors, "Live hover drawing must consume the resolved cartographic profile")
+        ensure(draw_focus.find("if tile == _selected_tile:") < draw_focus.find("if tile == _hover_tile:"), errors, "Selected focus must retain draw priority before the subordinate hover reticle")
+        for forbidden in ('_canvas_draw_rect(hover_rect.grow(-7.0), HOVER_COLOR, false, 2.0)', '_canvas_draw_rect(', '_canvas_draw_colored_polygon(', '_canvas_draw_polygon('):
+            ensure(forbidden not in draw_focus, errors, f"Live hover drawing must not restore a generic continuous/fill treatment: {forbidden}")
+    if profile:
+        for token in (
+            'var extent := minf(rect.size.x, rect.size.y)',
+            'extent * HOVER_RETICLE_PERIMETER_INSET_FACTOR',
+            'HOVER_RETICLE_PERIMETER_INSET_MIN_PX',
+            'HOVER_RETICLE_PERIMETER_INSET_MAX_PX',
+            'extent * HOVER_RETICLE_CORNER_LENGTH_FACTOR',
+            'extent * HOVER_RETICLE_CORNER_WIDTH_FACTOR',
+            '"model": HOVER_RETICLE_VISUAL_MODEL',
+            '"perimeter_rect": rect.grow(-perimeter_inset)',
+            '"corner_color": HOVER_COLOR',
+            '"shadow_alpha": HOVER_RETICLE_SHADOW_ALPHA',
+            '"shadow_width_px": corner_width + HOVER_RETICLE_SHADOW_WIDTH_ADD_PX',
+            '"continuous_outline": false',
+            '"interior_fill_alpha": 0.0',
+        ):
+            ensure(token in profile, errors, f"Hover profile is missing exact detached geometry: {token}")
+        for forbidden in ("_session", "session.", "_hover_tile", "Input.", "await ", "create_timer", "create_tween", "queue_redraw", ".erase("):
+            ensure(forbidden not in profile, errors, f"Hover profile must remain pure presentation geometry: {forbidden}")
+    if draw_reticle:
+        for token in (
+            'var perimeter_rect: Rect2 = profile.get("perimeter_rect", Rect2())',
+            'var shadow_color := Color(0.02, 0.025, 0.03, float(profile.get("shadow_alpha", HOVER_RETICLE_SHADOW_ALPHA)))',
+            '_draw_cartographic_selection_corners(perimeter_rect, shadow_color, shadow_width, corner_length)',
+            '_draw_cartographic_selection_corners(perimeter_rect, corner_color, corner_width, corner_length)',
+        ):
+            ensure(token in draw_reticle, errors, f"Hover reticle drawing is missing exact two-pass open corners: {token}")
+        ensure(draw_reticle.find("shadow_color") < draw_reticle.find("corner_color") < draw_reticle.find("shadow_color, shadow_width") < draw_reticle.find("corner_color, corner_width"), errors, "Hover reticle must draw shadow then subdued foreground corners")
+        for forbidden in ("_canvas_draw_rect(", "_canvas_draw_circle(", "_canvas_draw_colored_polygon(", "_draw_cartographic_selection_midpoints(", "await ", "create_timer", "create_tween", "session.", "_session"):
+            ensure(forbidden not in draw_reticle, errors, f"Hover reticle must remain open, fill-free, and presentation-only: {forbidden}")
+    if layout:
+        for token in (
+            '"hover_rect": town_rect',
+            '"hover_uses_town_footprint_rect": uses_town_footprint',
+            '"hover_visual_model": HOVER_RETICLE_VISUAL_MODEL',
+            '"hover_visual_profile": _hover_reticle_visual_profile(town_rect)',
+        ):
+            ensure(token in layout, errors, f"Hover layout must preserve exact tile/town footprint ownership: {token}")
+    if validation:
+        for token in (
+            'var hover_visual_profile: Dictionary = layout.get("hover_visual_profile", {}).duplicate(true)',
+            'hover_visual_profile["perimeter_rect"] = _rect_payload(hover_visual_profile.get("perimeter_rect", hover_rect))',
+            'hover_visual_profile["corner_color"] = _color_payload(hover_color)',
+            '"hover_visual_model": String(layout.get("hover_visual_model", ""))',
+            '"hover_visual_profile": hover_visual_profile',
+        ):
+            ensure(token in validation, errors, f"Public focus validation must detach exact hover geometry: {token}")
+    if hover_validation:
+        for token in (
+            'func validation_hover_presentation() -> Dictionary:',
+            '"active": false',
+            '"hover_tile": _vector2i_payload(_hover_tile)',
+            '"active": true',
+            '"focus_layout": validation_tile_focus_layout(_hover_tile)',
+        ):
+            ensure(token in hover_validation, errors, f"Public hover observation is missing fail-closed live ownership: {token}")
+        for forbidden in ("_gui_input(", "Input.", "push_input", "position =", "_hover_tile =", "await ", "create_timer", "queue_redraw"):
+            ensure(forbidden not in hover_validation, errors, f"Public hover observation must remain read-only: {forbidden}")
+
+    capture = function_block(visual_text, "_capture_object_scale_viewports")
+    layout_case = function_block(visual_text, "_assert_hover_reticle_layout_contract")
+    exact_profile = function_block(visual_text, "_hover_reticle_profile_exact")
+    ensure(all((capture, layout_case, exact_profile)), errors, "Could not isolate focused hover-reticle runtime ownership")
+    if capture:
+        for token in (
+            'var hover_tiles := _visible_empty_hover_tiles(session, map_node, 2)',
+            'var authority_before: Dictionary = session.to_dict()',
+            'var save_surface_before: Dictionary = shell.call("validation_snapshot").get("save_surface", {}).duplicate(true)',
+            'var pointer_motion := InputEventMouseMotion.new()',
+            'pointer_motion.position = pointer_position',
+            'get_viewport().push_input(pointer_motion, true)',
+            'map_node.call("validation_hover_presentation")',
+            'String(cache_after.get("dynamic_reason", "")) != "hover_changed"',
+            'session.to_dict() != authority_before',
+            'save_surface_after != save_surface_before',
+            'await RenderingServer.frame_post_draw',
+        ):
+            ensure(token in capture, errors, f"Focused pointer capture is missing real input/authority evidence: {token}")
+        ensure(capture.find("push_input(pointer_motion, true)") < capture.find('map_node.call("validation_hover_presentation")') < capture.find("await RenderingServer.frame_post_draw"), errors, "Focused pointer input must settle and validate before each capture")
+        for forbidden in ("._gui_input(", "_hover_tile =", 'shell.call("validation_hover_tile"', "create_timer", "create_tween", "set_map_state("):
+            ensure(forbidden not in capture, errors, f"Focused pointer capture must not bypass the viewport input path or mutate authority: {forbidden}")
+    if layout_case:
+        for token in (
+            '{"tile": town_tile, "town": true}',
+            '{"tile": field_tile, "town": false}',
+            'map_node.call("validation_tile_focus_layout", tile)',
+            'not _hover_reticle_profile_exact(profile, hover_rect)',
+            'uses_town and (not hover_rect.encloses(tile_rect) or hover_rect.size == tile_rect.size)',
+            'not uses_town and hover_rect != tile_rect',
+        ):
+            ensure(token in layout_case, errors, f"Focused hover owner must prove town and ordinary tile containment: {token}")
+    if exact_profile:
+        for token in (
+            'clampf(extent * 0.10, 6.0, 18.0)',
+            'clampf(extent * 0.12, 6.0, 18.0)',
+            'clampf(extent * 0.014, 1.25, 2.0)',
+            '"open_cartographic_hover_corners"',
+            'hover_rect.grow(-expected_inset)',
+            'float(color.get("a", 0.0)), 0.55',
+            'float(profile.get("shadow_alpha", 0.0)), 0.24',
+            'not bool(profile.get("continuous_outline", true))',
+            'is_zero_approx(float(profile.get("interior_fill_alpha", -1.0)))',
+        ):
+            ensure(token in exact_profile, errors, f"Focused hover profile proof is missing exact geometry/color: {token}")
 
 
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
@@ -67742,6 +67894,7 @@ def main() -> int:
     validate_overworld_faction_town_sprite_runtime(errors)
     validate_overworld_faction_hero_sprite_runtime(errors)
     validate_overworld_town_selection_cartographic_perimeter(errors)
+    validate_overworld_cartographic_hover_reticle(errors)
     validate_overworld_enemy_commander_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)

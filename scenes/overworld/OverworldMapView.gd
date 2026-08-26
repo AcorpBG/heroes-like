@@ -87,6 +87,18 @@ const HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA := 0.86
 const HOSTILE_ACTOR_MARKER_MEMORY_ALPHA := 0.62
 const HOSTILE_ACTOR_MARKER_SHADOW_ALPHA := 0.42
 const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
+const HOVER_RETICLE_VISUAL_MODEL := "open_cartographic_hover_corners"
+const HOVER_RETICLE_PERIMETER_INSET_FACTOR := 0.10
+const HOVER_RETICLE_PERIMETER_INSET_MIN_PX := 6.0
+const HOVER_RETICLE_PERIMETER_INSET_MAX_PX := 18.0
+const HOVER_RETICLE_CORNER_LENGTH_FACTOR := 0.12
+const HOVER_RETICLE_CORNER_LENGTH_MIN_PX := 6.0
+const HOVER_RETICLE_CORNER_LENGTH_MAX_PX := 18.0
+const HOVER_RETICLE_CORNER_WIDTH_FACTOR := 0.014
+const HOVER_RETICLE_CORNER_WIDTH_MIN_PX := 1.25
+const HOVER_RETICLE_CORNER_WIDTH_MAX_PX := 2.0
+const HOVER_RETICLE_SHADOW_ALPHA := 0.24
+const HOVER_RETICLE_SHADOW_WIDTH_ADD_PX := 1.25
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
 const HERO_FILL_COLOR := Color(0.88, 0.32, 0.21, 1.0)
 const RESERVE_HERO_COLOR := Color(0.87, 0.90, 0.94, 1.0)
@@ -2881,8 +2893,49 @@ func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
 			_draw_tile_selection_reticle(selection_rect)
 
 	if tile == _hover_tile:
-		var hover_rect: Rect2 = layout.get("hover_rect", rect)
-		_canvas_draw_rect(hover_rect.grow(-7.0), HOVER_COLOR, false, 2.0)
+		_draw_cartographic_hover_reticle(layout.get("hover_visual_profile", {}))
+
+func _hover_reticle_visual_profile(rect: Rect2) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var perimeter_inset := clampf(
+		extent * HOVER_RETICLE_PERIMETER_INSET_FACTOR,
+		HOVER_RETICLE_PERIMETER_INSET_MIN_PX,
+		HOVER_RETICLE_PERIMETER_INSET_MAX_PX
+	)
+	var corner_length := clampf(
+		extent * HOVER_RETICLE_CORNER_LENGTH_FACTOR,
+		HOVER_RETICLE_CORNER_LENGTH_MIN_PX,
+		HOVER_RETICLE_CORNER_LENGTH_MAX_PX
+	)
+	var corner_width := clampf(
+		extent * HOVER_RETICLE_CORNER_WIDTH_FACTOR,
+		HOVER_RETICLE_CORNER_WIDTH_MIN_PX,
+		HOVER_RETICLE_CORNER_WIDTH_MAX_PX
+	)
+	return {
+		"model": HOVER_RETICLE_VISUAL_MODEL,
+		"perimeter_rect": rect.grow(-perimeter_inset),
+		"perimeter_inset_px": perimeter_inset,
+		"corner_length_px": corner_length,
+		"corner_width_px": corner_width,
+		"corner_color": HOVER_COLOR,
+		"shadow_alpha": HOVER_RETICLE_SHADOW_ALPHA,
+		"shadow_width_px": corner_width + HOVER_RETICLE_SHADOW_WIDTH_ADD_PX,
+		"continuous_outline": false,
+		"interior_fill_alpha": 0.0,
+	}
+
+func _draw_cartographic_hover_reticle(profile: Dictionary) -> void:
+	var perimeter_rect: Rect2 = profile.get("perimeter_rect", Rect2())
+	if perimeter_rect.size.x <= 0.0 or perimeter_rect.size.y <= 0.0:
+		return
+	var corner_length := float(profile.get("corner_length_px", HOVER_RETICLE_CORNER_LENGTH_MIN_PX))
+	var corner_width := float(profile.get("corner_width_px", HOVER_RETICLE_CORNER_WIDTH_MIN_PX))
+	var shadow_width := float(profile.get("shadow_width_px", corner_width + HOVER_RETICLE_SHADOW_WIDTH_ADD_PX))
+	var shadow_color := Color(0.02, 0.025, 0.03, float(profile.get("shadow_alpha", HOVER_RETICLE_SHADOW_ALPHA)))
+	var corner_color: Color = profile.get("corner_color", HOVER_COLOR)
+	_draw_cartographic_selection_corners(perimeter_rect, shadow_color, shadow_width, corner_length)
+	_draw_cartographic_selection_corners(perimeter_rect, corner_color, corner_width, corner_length)
 
 func _hero_command_focus_profile(rect: Rect2) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -2965,6 +3018,8 @@ func _tile_focus_layout(tile: Vector2i, tile_rect: Rect2) -> Dictionary:
 		"selection_visual_model": TOWN_SELECTION_VISUAL_MODEL if uses_town_footprint else TILE_SELECTION_VISUAL_MODEL,
 		"hover_rect": town_rect,
 		"hover_uses_town_footprint_rect": uses_town_footprint,
+		"hover_visual_model": HOVER_RETICLE_VISUAL_MODEL,
+		"hover_visual_profile": _hover_reticle_visual_profile(town_rect),
 		"town_entry_tile": _vector2i_payload(_town_entry_tile(town)) if uses_town_footprint else {},
 	}
 
@@ -6181,6 +6236,11 @@ func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:
 	var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", tile_rect)
 	var selection_rect: Rect2 = layout.get("selection_rect", tile_rect)
 	var hover_rect: Rect2 = layout.get("hover_rect", tile_rect)
+	var hover_visual_profile: Dictionary = layout.get("hover_visual_profile", {}).duplicate(true)
+	if not hover_visual_profile.is_empty():
+		hover_visual_profile["perimeter_rect"] = _rect_payload(hover_visual_profile.get("perimeter_rect", hover_rect))
+		var hover_color: Color = hover_visual_profile.get("corner_color", HOVER_COLOR)
+		hover_visual_profile["corner_color"] = _color_payload(hover_color)
 	var hero_command_marker_profile: Dictionary = layout.get("hero_command_marker_profile", {}).duplicate(true)
 	if not hero_command_marker_profile.is_empty():
 		hero_command_marker_profile["focus_rect"] = _rect_payload(hero_command_marker_profile.get("focus_rect", hero_focus_rect))
@@ -6207,7 +6267,22 @@ func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:
 		"tile_selection_visual_profile": tile_selection_visual_profile.duplicate(true),
 		"hover_rect": _rect_payload(hover_rect),
 		"hover_uses_town_footprint_rect": bool(layout.get("hover_uses_town_footprint_rect", false)),
+		"hover_visual_model": String(layout.get("hover_visual_model", "")),
+		"hover_visual_profile": hover_visual_profile,
 		"town_entry_tile": layout.get("town_entry_tile", {}).duplicate(true),
+	}
+
+func validation_hover_presentation() -> Dictionary:
+	if _hover_tile.x < 0 or _hover_tile.y < 0 or _hover_tile.x >= _map_size.x or _hover_tile.y >= _map_size.y:
+		return {
+			"active": false,
+			"hover_tile": _vector2i_payload(_hover_tile),
+			"focus_layout": {},
+		}
+	return {
+		"active": true,
+		"hover_tile": _vector2i_payload(_hover_tile),
+		"focus_layout": validation_tile_focus_layout(_hover_tile),
 	}
 
 func validation_enemy_commander_presentation_profiles() -> Array:
