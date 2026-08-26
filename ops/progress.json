@@ -1911,20 +1911,59 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-shared-heraldic-hardware-cursor-10184",
-    "title": "Shared heraldic hardware cursor",
+    "id": "presentation-main-menu-stage-dock-reveal-transition-10184",
+    "title": "Main Menu stage-dock reveal transition",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T14:26:29Z",
-    "updatedAt": "2026-08-26T14:41:44Z",
+    "startedAt": "2026-08-26T14:44:52Z",
+    "updatedAt": "2026-08-26T14:58:52Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the original 32x32 hardware pointer with exact hotspot, high-contrast system fallback, inspected desktop composition, and exact settings/input/file authority."
+    "notes": "Completed the 160 ms paused-tree-safe stage-dock opacity reveal with immediate Reduced Motion fallback and exact focus/authority preservation."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-main-menu-stage-dock-reveal-transition-20260826",
+      "title": "Main Menu stage-dock reveal transition",
+      "sliceId": "presentation-main-menu-stage-dock-reveal-transition-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T14:58:52Z",
+      "updatedAt": "2026-08-26T14:58:52Z",
+      "latestFinding": "All five existing Main Menu secondary boards now reveal through a restrained paused-tree-safe opacity ease while Reduced Motion remains immediate and exact controls, focus, geometry, settings, save, campaign, session, and route authority are preserved.",
+      "artifacts": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_stage_dock_reveal_runtime_report.gd",
+        "tests/main_menu_stage_dock_reveal_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "/tmp/heroes-stage-reveal-focused-3.k0RpOx",
+        "/tmp/heroes-stage-reveal-menu-compat.vs3Qfi",
+        "/tmp/heroes-stage-reveal-compat.3KVJot",
+        "/tmp/heroes-stage-reveal-static.Alxrpg",
+        "/tmp/heroes-stage-reveal-platform.Q31wb2",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "duration_seconds": 0.16,
+        "start_alpha": 0.12,
+        "observed_mid_alpha": 0.93545138835907,
+        "completed_alpha": 1.0,
+        "easing": "quad_out",
+        "paused_tree_process": true,
+        "reduced_motion_immediate": true,
+        "close_reset_exact": true,
+        "settings_save_campaign_session_route_authority_exact": true,
+        "main_menu_navigation_accessibility_core_ok": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "nonClaims": [
+        "No packaged transition interaction parity, hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-shared-heraldic-hardware-cursor-20260826",
       "title": "Shared heraldic hardware cursor",
@@ -15196,14 +15235,14 @@
       }
     }
   ],
-  "currentNotes": "The shared heraldic hardware cursor is completed with focused lifecycle/authority proof, inspected desktop composition, compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Main Menu stage-dock reveal transition is completed with focused opacity/lifecycle/authority proof, broad menu compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-shared-heraldic-hardware-cursor-10184",
-  "currentSliceId": "presentation-shared-heraldic-hardware-cursor-10184",
-  "currentSliceNotes": "Completed the original hardware pointer and high-contrast system fallback while preserving exact input, focus, settings, gameplay, session, save, route, and Native RMG authority.",
+  "currentSlice": "presentation-main-menu-stage-dock-reveal-transition-10184",
+  "currentSliceId": "presentation-main-menu-stage-dock-reveal-transition-10184",
+  "currentSliceNotes": "Completed the paused-tree-safe stage-dock reveal and immediate Reduced Motion fallback while preserving exact controls, focus, geometry, settings, save, campaign, session, route, and Native RMG authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation shared heraldic hardware cursor 10184",
-  "currentSliceUpdatedAt": "2026-08-26T14:41:44Z",
+  "currentSliceTitle": "presentation main menu stage dock reveal transition 10184",
+  "currentSliceUpdatedAt": "2026-08-26T14:58:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20719,8 +20758,34 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The shared heraldic hardware cursor slice is completed and blockers are empty.",
+  "notes": "The Main Menu stage-dock reveal transition is completed and blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-main-menu-stage-dock-reveal-transition-10184",
+      "title": "Main Menu stage-dock reveal transition",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T14:44:52Z",
+      "updatedAt": "2026-08-26T14:58:52Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_stage_dock_reveal_runtime_report.gd",
+        "tests/main_menu_stage_dock_reveal_runtime_report.tscn",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the abrupt Main Menu secondary-board appearance with one restrained reduced-motion-aware reveal while leaving the scenery and exact board interactions dominant.",
+      "completionCriteria": "Focused runtime proves standard start/mid/end opacity, exact easing/duration, immediate Reduced Motion fallback, reset/reopen behavior, and authority; inspected desktop motion, compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new panel, art, text, command, tab, focus target, geometry, input blocker, close delay, router transition, gameplay, session/save/schema, campaign, generated-map, or Native RMG change.",
+        "No packaged interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current source/motion audit. Focused opacity/lifecycle/authority runtime, full Main Menu navigation, accessibility/core compatibility, static/editor, and bounded platform startup gates pass.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
     {
       "id": "presentation-shared-heraldic-hardware-cursor-10184",
       "title": "Shared heraldic hardware cursor",

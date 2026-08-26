@@ -35,6 +35,8 @@ const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const GUIDE_DOCK_MAX_SIZE := Vector2(1024.0, 460.0)
 const GUIDE_DOCK_COMPACT_VIEWPORT := Vector2(1280.0, 720.0)
 const SAVE_EMPTY_DOCK_MAX_SIZE := Vector2(920.0, 360.0)
+const STAGE_DOCK_REVEAL_DURATION_SECONDS := 0.16
+const STAGE_DOCK_REVEAL_START_ALPHA := 0.12
 const SETTINGS_SUMMARY_MAX_LINES := 4
 const SETTINGS_SUMMARY_MAX_CHARS := 84
 const TAB_STAGE_COPY := {
@@ -218,6 +220,7 @@ var _campaign_storage_blocked := false
 var _campaign_storage_warning := ""
 var _campaign_last_mutation_result: Dictionary = {}
 var _validation_campaign_blocked_command_count := 0
+var _stage_dock_reveal_tween: Tween = null
 var _campaign_intel_expanded := false
 var _skirmish_entries: Array = []
 var _skirmish_browser_loaded := false
@@ -3225,6 +3228,7 @@ func _show_stage_dock() -> void:
 	elif _menu_tabs.current_tab == TAB_SKIRMISH:
 		_ensure_skirmish_browser_loaded()
 	_stage_dock_panel.visible = true
+	_play_stage_dock_reveal()
 	_footer_pocket_panel.visible = false
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
 		_set_campaign_intel_expanded(false)
@@ -3313,6 +3317,7 @@ func _save_empty_stage_dock_anchors() -> Rect2:
 func _hide_stage_dock() -> void:
 	if SettingsService.display_change_pending() or _display_change_ui_active:
 		_revert_pending_display_change("menu_exit", false)
+	_reset_stage_dock_reveal()
 	_stage_dock_panel.visible = false
 	_campaign_command_rail.visible = false
 	_skirmish_command_rail.visible = false
@@ -3321,6 +3326,36 @@ func _hide_stage_dock() -> void:
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 	call_deferred("_restore_first_view_focus")
+
+func _play_stage_dock_reveal() -> void:
+	_reset_stage_dock_reveal()
+	if SettingsService.reduced_motion_enabled():
+		return
+	_stage_dock_panel.modulate.a = STAGE_DOCK_REVEAL_START_ALPHA
+	_stage_dock_reveal_tween = create_tween()
+	_stage_dock_reveal_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_stage_dock_reveal_tween.set_trans(Tween.TRANS_QUAD)
+	_stage_dock_reveal_tween.set_ease(Tween.EASE_OUT)
+	_stage_dock_reveal_tween.tween_property(_stage_dock_panel, "modulate:a", 1.0, STAGE_DOCK_REVEAL_DURATION_SECONDS)
+
+func _reset_stage_dock_reveal() -> void:
+	if _stage_dock_reveal_tween != null and _stage_dock_reveal_tween.is_valid():
+		_stage_dock_reveal_tween.kill()
+	_stage_dock_reveal_tween = null
+	_stage_dock_panel.modulate.a = 1.0
+
+func validation_stage_dock_reveal_snapshot() -> Dictionary:
+	return {
+		"visible": _stage_dock_panel.visible,
+		"alpha": _stage_dock_panel.modulate.a,
+		"running": _stage_dock_reveal_tween != null and _stage_dock_reveal_tween.is_valid() and _stage_dock_reveal_tween.is_running(),
+		"duration_seconds": STAGE_DOCK_REVEAL_DURATION_SECONDS,
+		"start_alpha": STAGE_DOCK_REVEAL_START_ALPHA,
+		"transition": "quad_out",
+		"reduced_motion": SettingsService.reduced_motion_enabled(),
+		"current_tab": _menu_tabs.current_tab,
+		"focus_owner": String(get_viewport().gui_get_focus_owner().name) if get_viewport().gui_get_focus_owner() != null else "",
+	}
 
 func _first_view_buttons() -> Array[BaseButton]:
 	return [
