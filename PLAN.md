@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved graphical-polish implementation slice.
+- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from fresh current pixels.
+
+## Battle Continuous Terrain Cohesion
+
+id: `ux-battlefield-continuous-terrain-cohesion-10184`
+
+Status: completed.
+
+Result:
+- made the existing full-field Battle terrain texture the primary scenic surface and reduced the exact 77 per-hex texture samples to restrained tactical variation, removing the disconnected quilt effect without changing the terrain asset, grid, or combat authority;
+- fresh inspected 1280x720 and 1920x1080 captures show a cohesive forest battlefield with legible hex boundaries, stacks, selection, movement, targets, and objectives;
+- focused terrain/fallback and rendered viewport owners, Board navigation, animation/VFX, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Battle captures show the same authored terrain texture sampled almost opaquely and independently inside all 77 tactical hexes, producing abrupt seams and a high-frequency patchwork that competes with stack art, objectives, and action cues;
+- the renderer already owns one full-field texture layer beneath those cells, but its dark 0.72-alpha treatment is visually buried by the 0.98-alpha per-hex samples.
+
+Implementation boundary:
+- make the existing continuous full-field terrain texture the primary scenic surface, with restrained per-hex texture variation preserving the exact authoritative cell grid without reading as 77 disconnected image patches;
+- keep the exact terrain id/path/asset, 11x7 cell count/order, normalized source samples, fallback renderer, grid/cell geometry, deployment/center hints, stacks, objectives, selection/target/range/controller/VFX layering, and whole battle/session/save authority;
+- prove the blend hierarchy and resulting pixels at 1280x720 and 1920x1080 across textured and missing-texture fallback cases.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 captures show one cohesive battlefield surface with materially quieter per-cell discontinuities and clearer stack silhouettes, while hex boundaries and tactical cues remain legible;
+- focused runtime proves one continuous texture layer, exact 77 subordinate cell samples, bounded blend/readability values, exact texture identity/UV containment, fallback parity, and unchanged battle/session/save authority;
+- Battle visual/navigation/animation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain asset/id/path/source image, battle terrain rule, cell count/order/geometry, movement/pathing, deployment, target/action legality, objective, stack/token/portrait, VFX/audio/animation, layout, input/focus/accessibility, AI, combat, balance, content, save/schema, or Native RMG change;
+- no shader, weather, parallax, animated terrain, additional battlefield prop, camera redesign, packaged Battle interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Battle Movement-Range Alternating Edge Cues
 

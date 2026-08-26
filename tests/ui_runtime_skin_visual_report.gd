@@ -155,6 +155,10 @@ func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> 
 		shell_report["battle_movement_range"] = movement_range_contract
 		if not bool(movement_range_contract.get("ok", false)):
 			_error("Battle movement-range visual restraint failed at %s: %s" % [_viewport_key(viewport_size), movement_range_contract])
+		var terrain_cohesion_contract := _battle_terrain_cohesion_contract(shell)
+		shell_report["battle_terrain_cohesion"] = terrain_cohesion_contract
+		if not bool(terrain_cohesion_contract.get("ok", false)):
+			_error("Battle terrain cohesion failed at %s: %s" % [_viewport_key(viewport_size), terrain_cohesion_contract])
 		var sidebar_contract := await _battle_sidebar_tactical_card_contract(shell, viewport_size)
 		shell_report["battle_sidebar_tactical_card"] = sidebar_contract
 		if not bool(sidebar_contract.get("ok", false)):
@@ -295,6 +299,52 @@ func _battle_movement_range_contract(shell: Node) -> Dictionary:
 		"all_legal_cells_drawn": summary.get("movement_range_all_legal_cells_drawn", false),
 		"hover_only": summary.get("movement_range_hover_only", true),
 		"below_active_targets_and_stacks": summary.get("movement_range_below_active_targets_and_stacks", false),
+	}
+
+func _battle_terrain_cohesion_contract(shell: Node) -> Dictionary:
+	var board = shell.get_node_or_null("%BattleBoard")
+	if board == null \
+		or not board.has_method("validation_hex_layout_summary") \
+		or not board.has_method("validation_terrain_rendering_summary"):
+		return {"ok": false, "missing_board_terrain_summary": true}
+	var session = SessionState.active_session
+	var authority_before: Dictionary = session.to_dict()
+	var hex_summary: Dictionary = board.call("validation_hex_layout_summary")
+	var terrain_summary: Dictionary = board.call("validation_terrain_rendering_summary")
+	var context_alpha := float(terrain_summary.get("terrain_context_texture_modulate_alpha", 0.0))
+	var variation_alpha := float(terrain_summary.get("texture_modulate_alpha", 0.0))
+	var ok := bool(terrain_summary.get("texture_loaded", false)) \
+		and String(terrain_summary.get("rendering_mode", "")) == "continuous_field_with_hex_variation" \
+		and String(terrain_summary.get("texture_sample_mode", "")) == "continuous_field_plus_subordinate_per_hex_variation" \
+		and String(terrain_summary.get("terrain_context_model", "")) == "continuous_primary_field_with_subordinate_hex_variation" \
+		and bool(terrain_summary.get("single_board_backdrop", false)) \
+		and bool(terrain_summary.get("hex_snapped", false)) \
+		and bool(terrain_summary.get("terrain_context_covers_full_field", false)) \
+		and bool(terrain_summary.get("terrain_context_preserves_hex_authority", false)) \
+		and bool(terrain_summary.get("terrain_context_primary", false)) \
+		and bool(terrain_summary.get("terrain_hex_variation_subordinate", false)) \
+		and is_equal_approx(context_alpha, 0.92) \
+		and is_equal_approx(variation_alpha, 0.24) \
+		and context_alpha > variation_alpha \
+		and int(terrain_summary.get("hex_tile_count", 0)) == 77 \
+		and int(terrain_summary.get("texture_source_sample_count", 0)) == 77 \
+		and int(hex_summary.get("hex_count", 0)) == 77 \
+		and bool(terrain_summary.get("texture_uv_within_0_1", false)) \
+		and bool(terrain_summary.get("texture_source_within_texture", false)) \
+		and bool(terrain_summary.get("texture_visible", false)) \
+		and session.to_dict() == authority_before
+	return {
+		"ok": ok,
+		"rendering_mode": terrain_summary.get("rendering_mode", ""),
+		"texture_sample_mode": terrain_summary.get("texture_sample_mode", ""),
+		"terrain_context_model": terrain_summary.get("terrain_context_model", ""),
+		"context_alpha": context_alpha,
+		"variation_alpha": variation_alpha,
+		"hex_tile_count": terrain_summary.get("hex_tile_count", 0),
+		"texture_source_sample_count": terrain_summary.get("texture_source_sample_count", 0),
+		"texture_id": terrain_summary.get("texture_id", ""),
+		"texture_path": terrain_summary.get("texture_path", ""),
+		"authority_exact": session.to_dict() == authority_before,
 	}
 
 func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i) -> Dictionary:

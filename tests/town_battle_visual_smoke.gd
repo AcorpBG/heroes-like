@@ -901,8 +901,8 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: terrain texture was not loaded for the active battlefield: %s." % hex_summary)
 		get_tree().quit(1)
 		return false
-	if not bool(hex_summary.get("terrain_hex_snapped", false)) or bool(hex_summary.get("terrain_single_board_backdrop", true)):
-		push_error("Battle smoke: terrain texture rendering is not snapped to the hex grid: %s." % hex_summary)
+	if not bool(hex_summary.get("terrain_hex_snapped", false)) or not bool(hex_summary.get("terrain_single_board_backdrop", false)):
+		push_error("Battle smoke: terrain texture rendering did not retain both the continuous field and authoritative snapped hex variation: %s." % hex_summary)
 		get_tree().quit(1)
 		return false
 	var terrain_summary: Dictionary = board.call("validation_terrain_rendering_summary")
@@ -910,16 +910,28 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: terrain rendering validation did not report a usable runtime texture: %s." % terrain_summary)
 		get_tree().quit(1)
 		return false
-	if String(terrain_summary.get("rendering_mode", "")) != "hex_snapped_texture" or not bool(terrain_summary.get("hex_snapped", false)) or bool(terrain_summary.get("single_board_backdrop", true)):
-		push_error("Battle smoke: terrain texture is not using the hex-snapped rendering path: %s." % terrain_summary)
+	if String(terrain_summary.get("rendering_mode", "")) != "continuous_field_with_hex_variation" \
+		or String(terrain_summary.get("texture_sample_mode", "")) != "continuous_field_plus_subordinate_per_hex_variation" \
+		or not bool(terrain_summary.get("hex_snapped", false)) \
+		or not bool(terrain_summary.get("single_board_backdrop", false)):
+		push_error("Battle smoke: terrain texture is not using one continuous field plus subordinate hex variation: %s." % terrain_summary)
 		get_tree().quit(1)
 		return false
-	if not bool(terrain_summary.get("terrain_context_underlay_enabled", false)) or String(terrain_summary.get("terrain_context_model", "")) != "subdued_full_field_underlay_beneath_authoritative_hex_grid" or not bool(terrain_summary.get("terrain_context_covers_full_field", false)) or not bool(terrain_summary.get("terrain_context_preserves_hex_authority", false)):
-		push_error("Battle smoke: terrain context does not cover the full field beneath the authoritative hex grid: %s." % terrain_summary)
+	if not bool(terrain_summary.get("terrain_context_underlay_enabled", false)) \
+		or String(terrain_summary.get("terrain_context_model", "")) != "continuous_primary_field_with_subordinate_hex_variation" \
+		or not bool(terrain_summary.get("terrain_context_covers_full_field", false)) \
+		or not bool(terrain_summary.get("terrain_context_preserves_hex_authority", false)) \
+		or not bool(terrain_summary.get("terrain_context_primary", false)) \
+		or not bool(terrain_summary.get("terrain_hex_variation_subordinate", false)):
+		push_error("Battle smoke: terrain context does not own the continuous field above the subordinate authoritative hex variation: %s." % terrain_summary)
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(terrain_summary.get("terrain_context_texture_modulate_alpha", 0.0)), 0.72) or not is_equal_approx(float(terrain_summary.get("terrain_context_readability_wash_alpha", 0.0)), 0.24):
-		push_error("Battle smoke: terrain context no longer uses the subdued presentation treatment: %s." % terrain_summary)
+	if not is_equal_approx(float(terrain_summary.get("terrain_context_texture_modulate_alpha", 0.0)), 0.92) \
+		or not is_equal_approx(float(terrain_summary.get("terrain_context_readability_wash_alpha", 0.0)), 0.10) \
+		or not is_equal_approx(float(terrain_summary.get("texture_modulate_alpha", 0.0)), 0.24) \
+		or not is_equal_approx(float(terrain_summary.get("texture_readability_wash_alpha", 0.0)), 0.045) \
+		or float(terrain_summary.get("terrain_context_texture_modulate_alpha", 0.0)) <= float(terrain_summary.get("texture_modulate_alpha", 1.0)):
+		push_error("Battle smoke: terrain blend no longer gives the continuous field exact visual priority over per-hex variation: %s." % terrain_summary)
 		get_tree().quit(1)
 		return false
 	var terrain_context_rect: Dictionary = terrain_summary.get("terrain_context_rect", {}) if terrain_summary.get("terrain_context_rect", {}) is Dictionary else {}
@@ -964,7 +976,7 @@ func _run_battle_smoke() -> bool:
 	board.call("set_battle_state", session)
 	await get_tree().process_frame
 	var plains_summary: Dictionary = board.call("validation_terrain_rendering_summary")
-	if String(plains_summary.get("texture_id", "")) != "grass" or not bool(plains_summary.get("texture_loaded", false)) or not bool(plains_summary.get("mapped", false)) or String(plains_summary.get("rendering_mode", "")) != "hex_snapped_texture":
+	if String(plains_summary.get("texture_id", "")) != "grass" or not bool(plains_summary.get("texture_loaded", false)) or not bool(plains_summary.get("mapped", false)) or String(plains_summary.get("rendering_mode", "")) != "continuous_field_with_hex_variation":
 		push_error("Battle smoke: plains terrain did not map cleanly to the grass battlefield texture: %s." % plains_summary)
 		get_tree().quit(1)
 		return false
