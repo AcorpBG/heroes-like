@@ -1862,6 +1862,16 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: strategic raid did not retain its exact Mireclaw commander presentation. profile=%s" % interceptor_profile)
 		get_tree().quit(1)
 		return false
+	var hostile_marker: Dictionary = interceptor_profile.get("hostile_marker_profile", {})
+	if String(interceptor_profile.get("hostile_treatment", "")) != "open_hostile_flank_chevrons_and_threat_notch" \
+			or int(hostile_marker.get("flank_chevron_count", 0)) != 2 \
+			or int(hostile_marker.get("threat_notch_count", 0)) != 1 \
+			or bool(hostile_marker.get("continuous_ring", true)) \
+			or not is_zero_approx(float(hostile_marker.get("interior_fill_alpha", -1.0))) \
+			or not bool(hostile_marker.get("contained_in_tile", false)):
+		push_error("Overworld smoke: strategic raid commander did not use the contained fill-free open hostile marker. profile=%s" % interceptor_profile)
+		get_tree().quit(1)
+		return false
 	var convoy_watch: Dictionary = shell.call("validation_select_tile", 0, 4)
 	var convoy_decision: Dictionary = convoy_watch.get("selected_route_decision", {})
 	var route_watch: Dictionary = convoy_decision.get("interception", {})

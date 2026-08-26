@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next source-backed graphical-polish or release-readiness slice.
 
+## Overworld Hostile Commander Open Threat Marker
+
+id: `ux-overworld-hostile-commander-open-threat-marker-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the filled black/red circular plate around hostile commander and unit-fallback sprites with symmetric open flank chevrons plus one compact threat notch;
+- retain the exact 0.50-tile actor extent, sprite/fallback resolution order, encounter grounding/contact marks, remembered treatment, draw order, selection/route overlays, and faction/hero/unit identity;
+- derive all marker geometry from the existing encounter tile/icon rectangle, keep it fill-free and contained, and expose detached public presentation evidence for focused 1280x720 and 1920x1080 validation.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show the live Mireclaw raid commander with a lighter open hostile marker instead of the oversized generic circular plate;
+- the focused six-faction commander owner proves exact actor assets/fallbacks, 0.50-tile extent, marker geometry/containment, no continuous ring or interior fill, remembered style, stable restoration, and unchanged session/save authority;
+- broad Overworld visual, generated-map/route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no encounter, commander, hero, faction, unit, army, AI, battle, target, route, movement, session, save/schema, scenario, content, generated placement, balance, or Native RMG change;
+- no actor sprite asset, object/town/hero scale, selected-tile/town/hero focus, terrain, fog, road, shell/UI layout, input, accessibility semantics, animation/audio/VFX, theme, font, or UI-scale change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- replaced the filled black/red hostile commander and unit-fallback circle with two open flank chevrons and one compact top threat notch, keeping the existing 0.50-tile actor sprite and localized ground contact visually primary;
+- inspected River Pass at 1280x720 and 1920x1080: the live Mireclaw commander remains immediately hostile/readable without the oversized generic circular plate, and the marker stays fully contained and fill-free;
+- the focused six-faction/four-fallback owner, broad Overworld visual, generated-map movement/save, full-route movement, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
+
 ## Overworld Ember Signal Post Distinct Field Sprite
 
 id: `presentation-overworld-ember-signal-post-distinct-field-sprite-10184`

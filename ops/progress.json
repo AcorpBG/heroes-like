@@ -1911,21 +1911,44 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
-    "title": "Overworld Ember Signal Post distinct field sprite",
+    "id": "ux-overworld-hostile-commander-open-threat-marker-10184",
+    "title": "Overworld hostile commander open threat marker",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T00:04:47Z",
-    "updatedAt": "2026-08-26T00:19:05Z",
-    "completedAt": "2026-08-26T00:19:05Z",
+    "startedAt": "2026-08-26T00:22:55Z",
+    "updatedAt": "2026-08-26T00:37:08Z",
+    "completedAt": "2026-08-26T00:37:08Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "The shipped Ember Signal Post now uses one original transparent, compact one-tile Embercourt signal-outpost sprite instead of the generic procedural house marker. Focused visual, generated-map movement/save, route, focus, accessibility, core, static/editor, and bounded Linux/Windows export-startup gates are green; packaged Overworld interaction and whole-release readiness remain unclaimed."
+    "notes": "The filled hostile commander/unit encounter plate is replaced by two open flank chevrons and one compact threat notch. Focused six-faction/fallback, inspected 1280x720 and 1920x1080 visual, compatibility, static/editor, and bounded Linux/Windows startup gates are green; packaged Overworld interaction and whole-release readiness remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-overworld-hostile-commander-open-threat-marker-20260826",
+      "title": "Overworld hostile commander open threat marker",
+      "sliceId": "ux-overworld-hostile-commander-open-threat-marker-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T00:37:08Z",
+      "updatedAt": "2026-08-26T00:37:08Z",
+      "latestFinding": "Fresh River Pass 1280x720 and 1920x1080 captures show the live hostile actor as primary inside two open flank chevrons and one compact threat notch, with no filled plate or continuous ring. Focused six-faction/four-fallback geometry and authority, broad Overworld, generated-map, route, focus, accessibility, core, static/editor, Linux, and Windows startup gates are green.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-hostile-marker-focused.AZqnwF",
+        "/tmp/heroes-hostile-marker-capture.cG92pY",
+        "/tmp/heroes-hostile-marker-compat.wQEkok",
+        "/tmp/heroes-hostile-marker-editor.oiOkBd",
+        "/tmp/heroes-hostile-marker-static.vLQlum",
+        "/tmp/heroes-hostile-marker-platform.vI9uhh",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ]
+    },
     {
       "id": "presentation-overworld-ember-signal-post-distinct-field-sprite-20260826",
       "title": "Overworld Ember Signal Post distinct field sprite",
@@ -14400,14 +14423,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld Ember Signal Post now has a distinct original compact field sprite; select the next source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The hostile commander now uses a compact open threat marker that keeps the actor primary; select the next source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
-  "currentSliceId": "presentation-overworld-ember-signal-post-distinct-field-sprite-10184",
-  "currentSliceNotes": "Map only site_ember_signal_post to one original loaded transparent outpost sprite while preserving exact placement, scale path, interaction, session, save, and gameplay authority.",
+  "currentSlice": "ux-overworld-hostile-commander-open-threat-marker-10184",
+  "currentSliceId": "ux-overworld-hostile-commander-open-threat-marker-10184",
+  "currentSliceNotes": "Replace only the hostile encounter ring/plate with contained open flank chevrons and a threat notch; preserve actor/fallback identity, 0.50-tile extent, grounding, session, save, and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Ember Signal Post distinct field sprite",
-  "currentSliceUpdatedAt": "2026-08-26T00:19:05Z",
+  "currentSliceTitle": "Overworld hostile commander open threat marker",
+  "currentSliceUpdatedAt": "2026-08-26T00:37:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -102102,6 +102125,54 @@
         "packagedOverworldInteractionClaimed": false
       },
       "blockedReason": null
+    },
+    {
+      "id": "ux-overworld-hostile-commander-open-threat-marker-10184",
+      "title": "Overworld hostile commander open threat marker",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T00:37:08Z",
+      "startedAt": "2026-08-26T00:22:55Z",
+      "completedAt": "2026-08-26T00:37:08Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the visually dominant filled circular hostile encounter plate with a compact open tactical marker that keeps the actor sprite primary.",
+      "completionCriteria": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show the live Mireclaw commander with a contained fill-free open hostile marker; focused six-faction runtime proves exact actor/fallback assets, 0.50-tile extent, symmetric marker geometry, no continuous ring/interior plate, remembered treatment, stable restoration and unchanged session/save authority; broad compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No encounter, commander, hero, faction, unit, army, AI, battle, target, route, movement, session, save/schema, scenario, content, generated placement, balance, or Native RMG change.",
+        "No actor sprite asset, object/town/hero scale, selected-tile/town/hero focus, terrain, fog, road, shell/UI layout, input, accessibility semantics, animation/audio/VFX, theme, font, or UI-scale change.",
+        "No packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current capture/source inspection. Both commander and unit-icon fallbacks now share a pure contained 0.50-tile layout with two open flank chevrons and one threat notch; the filled dark plate and continuous red ring are removed. Six-faction/four-fallback focused runtime, inspected 1280x720 and 1920x1080 captures, broad compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Overworld interaction and whole-release readiness remain unclaimed.",
+      "validation": {
+        "focusedArtifact": "/tmp/heroes-hostile-marker-focused.AZqnwF",
+        "captureArtifact": "/tmp/heroes-hostile-marker-capture.cG92pY",
+        "compatibilityArtifact": "/tmp/heroes-hostile-marker-compat.wQEkok",
+        "editorArtifact": "/tmp/heroes-hostile-marker-editor.oiOkBd",
+        "staticArtifact": "/tmp/heroes-hostile-marker-static.vLQlum",
+        "platformArtifact": "/tmp/heroes-hostile-marker-platform.vI9uhh",
+        "captureWidths": [1280, 1920],
+        "factionCount": 6,
+        "fallbackCaseCount": 4,
+        "visibleExtentTiles": 0.50,
+        "flankChevronCount": 2,
+        "threatNotchCount": 1,
+        "continuousRing": false,
+        "interiorFillAlpha": 0.0,
+        "markerContained": true,
+        "sessionAuthorityExact": true,
+        "linuxExportHeadlessStartup": true,
+        "windowsExportWineStartup": true,
+        "packagedOverworldInteractionClaimed": false
+      },
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -102543,7 +102614,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_ember_signal_post_distinct_field_sprite_completed",
+  "result": "overworld_hostile_commander_open_threat_marker_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -102644,9 +102715,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld Ember Signal Post now uses one original transparent, compact one-tile Embercourt outpost sprite instead of the generic procedural house marker; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "summary": "Hostile commander and unit-fallback sprites now use a compact fill-free open threat marker instead of the dominant circular plate; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T00:19:05Z",
+  "updatedAt": "2026-08-26T00:37:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
