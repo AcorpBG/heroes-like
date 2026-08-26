@@ -1911,20 +1911,58 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-footprint-aware-site-scale-10184",
-    "title": "Footprint-aware Overworld site scale",
+    "id": "presentation-overworld-cartographic-hover-reticle-10184",
+    "title": "Overworld cartographic hover reticle",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T06:03:13Z",
-    "updatedAt": "2026-08-26T06:23:46Z",
+    "startedAt": "2026-08-26T06:28:10Z",
+    "updatedAt": "2026-08-26T06:44:04Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with graduated exact footprint-span bounds, inspected authored/generated captures, exact scale and gameplay authority, route/focus/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup gates."
+    "notes": "Completed with an open fill-free cartographic hover reticle, inspected 1280/1920 pointer captures, exact town/tile geometry and viewport-routed hover ownership, dynamic-layer-only invalidation, unchanged session/save authority, compatibility/static/editor, and bounded Linux/Windows export-startup gates."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-cartographic-hover-reticle-20260826",
+      "title": "Overworld cartographic hover reticle",
+      "sliceId": "presentation-overworld-cartographic-hover-reticle-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T06:44:04Z",
+      "updatedAt": "2026-08-26T06:44:04Z",
+      "latestFinding": "The last generic continuous Overworld hover rectangle is replaced by a restrained two-pass open-corner reticle derived from exact live tile or town-footprint geometry; real viewport pointer input owns hover and invalidates only the dynamic layer without changing session or save authority.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-hover-reticle.tBOb4g",
+        "/tmp/heroes-hover-route.DgRfRe",
+        "/tmp/heroes-hover-focus.kY6snd",
+        "/tmp/heroes-hover-accessibility.DCWfCk",
+        "/tmp/heroes-hover-core.AevrNi",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "visual_model": "open_cartographic_hover_corners",
+        "continuous_outline": false,
+        "interior_fill_alpha": 0.0,
+        "pointer_input_exact": true,
+        "town_and_tile_geometry_exact": true,
+        "dynamic_layer_only": true,
+        "session_authority_exact": true,
+        "save_surface_exact": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "packaged_pointer_interaction_claimed": false
+      },
+      "nonClaims": [
+        "No packaged pointer interaction parity, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-overworld-footprint-aware-site-scale-20260826",
       "title": "Footprint-aware Overworld site scale",
@@ -14803,14 +14841,14 @@
       }
     }
   ],
-  "currentNotes": "The footprint-aware Overworld site-scale correction is completed; no implementation slice is currently selected.",
+  "currentNotes": "The Overworld cartographic hover-reticle slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-footprint-aware-site-scale-10184",
-  "currentSliceId": "presentation-overworld-footprint-aware-site-scale-10184",
-  "currentSliceNotes": "Graduate only multi-tile interactive art from exact logical footprint span while preserving all single-tile/town/hero and gameplay authority.",
+  "currentSlice": "presentation-overworld-cartographic-hover-reticle-10184",
+  "currentSliceId": "presentation-overworld-cartographic-hover-reticle-10184",
+  "currentSliceNotes": "Completed with inspected 1280/1920 real-pointer captures, exact open-corner geometry, dynamic-only invalidation, unchanged game authority, compatibility/static/editor, and bounded export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Footprint-aware Overworld site scale",
-  "currentSliceUpdatedAt": "2026-08-26T06:23:46Z",
+  "currentSliceTitle": "Overworld cartographic hover reticle",
+  "currentSliceUpdatedAt": "2026-08-26T06:44:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20325,9 +20363,35 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; preserve the completed footprint-aware scale and exact map/game authority.",
-  "notes": "The footprint-aware Overworld site-scale slice is completed; blockers are empty and no next slice is selected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
+  "notes": "The Overworld cartographic hover-reticle slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-cartographic-hover-reticle-10184",
+      "title": "Overworld cartographic hover reticle",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T06:28:10Z",
+      "updatedAt": "2026-08-26T06:44:04Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the last generic continuous map-hover rectangle with a quiet open cartographic corner reticle while retaining exact live hover and input behavior.",
+      "completionCriteria": "Inspected 1280x720 and 1920x1080 pointer-hover captures show a subordinate open reticle; focused runtime proves exact tile/town geometry, real pointer ownership, dynamic-only invalidation, and unchanged input/map/session/save authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No hover target, selection, click/drag/pan, route/path/visit/interaction, map/session/save/schema, rules, AI, battle, balance, content, or Native RMG change.",
+        "No selection/town/hero/hostile/object-focus/route visual, map-object scale, terrain/fog/road/water art, shell/UI, font/UI-scale, animation/audio/VFX, shader, or broad Overworld redesign.",
+        "No packaged pointer interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed with a restrained open-corner hover profile and two-pass draw path, public read-only hover observation, inspected real-pointer captures at both widths, exact compatibility/static/editor gates, and bounded Linux/Windows export-startup evidence.",
+      "blockedReason": null,
+      "remainingWork": "None for this bounded slice."
+    },
     {
       "id": "presentation-overworld-footprint-aware-site-scale-10184",
       "title": "Footprint-aware Overworld site scale",

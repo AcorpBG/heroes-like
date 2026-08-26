@@ -26,6 +26,27 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
 
+## Overworld Cartographic Hover Reticle
+
+id: `presentation-overworld-cartographic-hover-reticle-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the generic full rectangular `%Map` hover outline with a restrained open-corner cartographic hover reticle using the existing hover color family and exact live tile/town footprint geometry;
+- keep hover visually subordinate to selected-tile, hero-command, town-perimeter, hostile, route, and object-focus cues, with no fill and no continuous outline;
+- preserve exact mouse position-to-tile mapping, hover signal/payload, town-footprint routing, click/drag/pan/selection/focus/input, pathing, interaction, session, and save authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 pointer-hover captures show a quiet map-native corner reticle rather than a generic UI/debug rectangle, with clear separation from selection and hero markers;
+- focused runtime proves exact open-corner geometry/color/alpha/width, tile and town-footprint containment, real pointer hover ownership, dynamic-layer-only invalidation, and unchanged input/map/session/save authority;
+- route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no tile/object/town/hero identity, hover target, selection, click, drag, pan, route, pathing, visit/interaction, map/session/save/schema, AI, battle, balance, content, or Native RMG change;
+- no selection/town/hero/hostile/object-focus/route visual, map-object scale, terrain/fog/road/water art, shell/UI, font/UI-scale, animation/audio/VFX, or shader redesign;
+- no packaged pointer interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Footprint-Aware Overworld Site Scale
 
 id: `presentation-overworld-footprint-aware-site-scale-10184`
