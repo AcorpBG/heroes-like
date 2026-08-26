@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Continue the next tracker-approved source-backed graphical-polish slice from fresh rendered evidence.
+- Selected implementation slice: none; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
+
+## Main Menu Cartographic Pocket Frame Integration
+
+id: `presentation-main-menu-cartographic-pocket-frame-integration-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the generic smoke surfaces behind the existing compact Main Menu logo pocket and Frontier Log pocket with restrained instances of the existing production Stage Dock cartography frame;
+- keep the title crest, eyebrow, AURELION REACH title, subtitle, optional notice summary, Frontier Log text, exact pocket anchors, margins, visibility, and scenic first-view command hotspots unchanged;
+- retain flat high-contrast and missing-asset fallbacks while using a quieter translucent modulation than the secondary Stage Dock so both pockets remain subordinate to the painted citadel landscape.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 first-view captures show the title and Frontier Log integrated with the cartographic UI language instead of floating generic rounded boxes, without reducing scenic negative space;
+- focused runtime proves exact shared asset ownership, pocket-specific modulation, containment, high-contrast/missing-asset fallback, and unchanged title/crest/summary/command/focus/session/save/settings authority;
+- Main Menu/Outcome, keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no Main Menu backdrop, command-door/plaque art, command labels/actions, Stage Dock art/layout/content, logo/crest/title/subtitle/copy, Frontier Log content, pocket anchors/margins/visibility, tab/list/button style, focus/input/accessibility, campaign/skirmish/load/settings/editor routing, session/save/schema, gameplay, content, AI, balance, or Native RMG change;
+- no new panel, text, icon, texture, font, UI-scale rule, animation/audio/VFX, shader, or broad Main Menu redesign;
+- no packaged Main Menu interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the existing Stage Dock cartography artwork now frames the compact logo and Frontier Log pockets with a quieter translucent treatment, replacing their generic smoke boxes without changing either pocket's anchors, margins, copy, visibility, or first-view command layout;
+- fresh inspected 1280x720 and 1920x1080 captures show both pockets contained, legible, visually subordinate to the scenic citadel, and consistent with the ornate right command door;
+- Main Menu/Outcome, keyboard navigation, accessibility semantics, core systems, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; packaged Main Menu interaction, hardware certification, whole-game validation, and release readiness remain unclaimed.
 
 ## Active-Play Settings Ornate Frame Integration
 

@@ -14920,14 +14920,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld footprint-faithful scale slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice.",
+  "currentNotes": "The Main Menu cartographic pocket-frame slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-footprint-faithful-world-scale-10184",
-  "currentSliceId": "presentation-active-play-settings-ornate-frame-integration-10184",
-  "currentSliceNotes": "Completed the shared active-play Settings visual integration. Existing Overworld parchment frame now replaces the generic flat modal, and exact Sound/Gameplay/Readability headings use the gold hierarchy without changing layout, controls, focus, settings, session, or save behavior. Six fresh inspected 1280x720 and 1920x1080 captures cover Overworld/Town/Battle. Focused Settings, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. The optional all-shell UI skin screenshot matrix was an excluded headless frame-post-draw timeout and is not required by this modal-specific slice. No packaged Settings interaction, hardware certification, whole-game validation, release-readiness, or Native RMG claim.",
+  "currentSlice": "presentation-main-menu-cartographic-pocket-frame-integration-10184",
+  "currentSliceId": "presentation-main-menu-cartographic-pocket-frame-integration-10184",
+  "currentSliceNotes": "Completed the Main Menu cartographic pocket-frame integration. Existing Stage Dock art now frames the logo and Frontier Log with exact quiet modulation while preserving anchors, margins, copy, visibility, command hotspots, focus, settings, session, and save authority. Fresh inspected 1280x720 and 1920x1080 captures are contained and scenery-first. Main Menu/Outcome, keyboard navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Main Menu interaction, controller/accessibility hardware, signing/publication, whole-game, release-readiness, or Native RMG claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation active play settings ornate frame integration 10184",
-  "currentSliceUpdatedAt": "2026-08-26T07:50:58Z",
+  "currentSliceTitle": "presentation main menu cartographic pocket frame integration 10184",
+  "currentSliceUpdatedAt": "2026-08-26T09:27:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -103122,6 +103122,16 @@
       "startedAt": "2026-08-26T07:59:23Z",
       "notes": "Completed the shared active-play Settings visual integration. Existing Overworld parchment frame now replaces the generic flat modal, and exact Sound/Gameplay/Readability headings use the gold hierarchy without changing layout, controls, focus, settings, session, or save behavior. Six fresh inspected 1280x720 and 1920x1080 captures cover Overworld/Town/Battle. Focused Settings, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. The optional all-shell UI skin screenshot matrix was an excluded headless frame-post-draw timeout and is not required by this modal-specific slice. No packaged Settings interaction, hardware certification, whole-game validation, release-readiness, or Native RMG claim.",
       "completedAt": "2026-08-26T08:37:02Z"
+    },
+    {
+      "id": "presentation-main-menu-cartographic-pocket-frame-integration-10184",
+      "title": "presentation main menu cartographic pocket frame integration 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-26T09:27:28Z",
+      "startedAt": "2026-08-26T08:41:55Z",
+      "notes": "Completed the Main Menu cartographic pocket-frame integration. Existing Stage Dock art now frames the logo and Frontier Log with exact quiet modulation while preserving anchors, margins, copy, visibility, command hotspots, focus, settings, session, and save authority. Fresh inspected 1280x720 and 1920x1080 captures are contained and scenery-first. Main Menu/Outcome, keyboard navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Main Menu interaction, controller/accessibility hardware, signing/publication, whole-game, release-readiness, or Native RMG claim.",
+      "completedAt": "2026-08-26T09:27:28Z"
     }
   ],
   "project": "heroes-like",
@@ -103132,7 +103142,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness slice; broader product gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -103664,9 +103674,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld now keeps multi-tile sites visibly subordinate to towns and centers edge-clipped art within its live visible footprint; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "summary": "The Main Menu logo and Frontier Log now use restrained cartographic frames that preserve the scenery-first layout; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T08:37:02Z",
+  "updatedAt": "2026-08-26T09:27:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

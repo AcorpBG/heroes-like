@@ -13,6 +13,9 @@ const STAGE_DOCK_CARTOGRAPHY_PATH := "res://art/ui/runtime/main_menu/stage_dock_
 const STAGE_DOCK_TEXTURE_SIZE := Vector2(1024.0, 1024.0)
 const STAGE_DOCK_TEXTURE_MARGIN := 56.0
 const STAGE_DOCK_TEXTURE_MODULATE := Color(0.86, 0.88, 0.88, 0.98)
+const MAIN_MENU_POCKET_FRAME_MODEL := "shared_stage_cartography_quiet_pocket_frame"
+const MAIN_MENU_POCKET_TEXTURE_MARGIN := 56.0
+const MAIN_MENU_POCKET_TEXTURE_MODULATE := Color(0.72, 0.76, 0.78, 0.88)
 const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
@@ -55,6 +58,7 @@ const TAB_HELP_TOPIC := {
 }
 
 @onready var _menu_tabs: TabContainer = %MenuTabs
+@onready var _logo_pocket_panel: PanelContainer = $LogoPocketPanel
 @onready var _stage_dock_panel: PanelContainer = $StageDockPanel
 @onready var _footer_pocket_panel: PanelContainer = $FooterPocketPanel
 @onready var _stage_dock_title_label: Label = %ActionLead
@@ -3913,6 +3917,79 @@ func validation_stage_dock_surface_summary() -> Dictionary:
 		"fallbacks_texture_free": not (high_contrast_fallback is StyleBoxTexture) and not (missing_asset_fallback is StyleBoxTexture),
 	}
 
+func validation_main_menu_pocket_surface_summary() -> Dictionary:
+	var logo_style := _logo_pocket_panel.get_theme_stylebox("panel")
+	var footer_style := _footer_pocket_panel.get_theme_stylebox("panel")
+	var logo_texture_path := ""
+	var footer_texture_path := ""
+	var logo_texture_margins := Vector4.ZERO
+	var footer_texture_margins := Vector4.ZERO
+	var logo_modulate := Color.WHITE
+	var footer_modulate := Color.WHITE
+	if logo_style is StyleBoxTexture:
+		var logo_texture_style := logo_style as StyleBoxTexture
+		if logo_texture_style.texture != null:
+			logo_texture_path = logo_texture_style.texture.resource_path
+		logo_texture_margins = Vector4(
+			logo_texture_style.texture_margin_left,
+			logo_texture_style.texture_margin_top,
+			logo_texture_style.texture_margin_right,
+			logo_texture_style.texture_margin_bottom
+		)
+		logo_modulate = logo_texture_style.modulate_color
+	if footer_style is StyleBoxTexture:
+		var footer_texture_style := footer_style as StyleBoxTexture
+		if footer_texture_style.texture != null:
+			footer_texture_path = footer_texture_style.texture.resource_path
+		footer_texture_margins = Vector4(
+			footer_texture_style.texture_margin_left,
+			footer_texture_style.texture_margin_top,
+			footer_texture_style.texture_margin_right,
+			footer_texture_style.texture_margin_bottom
+		)
+		footer_modulate = footer_texture_style.modulate_color
+	var high_contrast_fallback := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, true)
+	var missing_asset_fallback := _main_menu_pocket_surface_style("res://art/ui/runtime/main_menu/missing_pocket_cartography.png", false)
+	return {
+		"model": MAIN_MENU_POCKET_FRAME_MODEL,
+		"asset_path": STAGE_DOCK_CARTOGRAPHY_PATH,
+		"asset_exists": ResourceLoader.exists(STAGE_DOCK_CARTOGRAPHY_PATH),
+		"logo_style_class": logo_style.get_class() if logo_style != null else "",
+		"footer_style_class": footer_style.get_class() if footer_style != null else "",
+		"logo_texture_path": logo_texture_path,
+		"footer_texture_path": footer_texture_path,
+		"logo_texture_margins": logo_texture_margins,
+		"footer_texture_margins": footer_texture_margins,
+		"logo_modulate": logo_modulate,
+		"footer_modulate": footer_modulate,
+		"logo_rect": _logo_pocket_panel.get_global_rect(),
+		"footer_rect": _footer_pocket_panel.get_global_rect(),
+		"logo_anchors": Rect2(
+			Vector2(_logo_pocket_panel.anchor_left, _logo_pocket_panel.anchor_top),
+			Vector2(
+				_logo_pocket_panel.anchor_right - _logo_pocket_panel.anchor_left,
+				_logo_pocket_panel.anchor_bottom - _logo_pocket_panel.anchor_top
+			)
+		),
+		"footer_anchors": Rect2(
+			Vector2(_footer_pocket_panel.anchor_left, _footer_pocket_panel.anchor_top),
+			Vector2(
+				_footer_pocket_panel.anchor_right - _footer_pocket_panel.anchor_left,
+				_footer_pocket_panel.anchor_bottom - _footer_pocket_panel.anchor_top
+			)
+		),
+		"logo_visible": _logo_pocket_panel.is_visible_in_tree(),
+		"footer_visible": _footer_pocket_panel.is_visible_in_tree(),
+		"title_text": _title_label.text,
+		"active_expedition_text": _active_expedition_label.text,
+		"active_expedition_tooltip": _active_expedition_label.tooltip_text,
+		"high_contrast": FrontierVisualKit.high_contrast_enabled(),
+		"rendering_mode": "authored_cartography_pockets" if logo_style is StyleBoxTexture and footer_style is StyleBoxTexture else "smoke_fallback",
+		"high_contrast_fallback_class": high_contrast_fallback.get_class(),
+		"missing_asset_fallback_class": missing_asset_fallback.get_class(),
+		"fallbacks_texture_free": not (high_contrast_fallback is StyleBoxTexture) and not (missing_asset_fallback is StyleBoxTexture),
+	}
+
 func _editor_utility_frame_snapshot() -> Dictionary:
 	var normal_style := _open_editor_button.get_theme_stylebox("normal")
 	var normal_texture_path := ""
@@ -5038,6 +5115,33 @@ func _stage_dock_surface_style(asset_path: String, high_contrast: bool) -> Style
 	return style
 
 
+func _main_menu_pocket_surface_style(asset_path: String, high_contrast: bool) -> StyleBox:
+	if high_contrast or asset_path == "" or not ResourceLoader.exists(asset_path):
+		return FrontierVisualKit.panel_style("smoke")
+	var texture := load(asset_path) as Texture2D
+	if texture == null:
+		return FrontierVisualKit.panel_style("smoke")
+	var margin := minf(
+		MAIN_MENU_POCKET_TEXTURE_MARGIN,
+		minf(float(texture.get_width()), float(texture.get_height())) * 0.5 - 1.0
+	)
+	var style := StyleBoxTexture.new()
+	style.texture = texture
+	style.texture_margin_left = margin
+	style.texture_margin_top = margin
+	style.texture_margin_right = margin
+	style.texture_margin_bottom = margin
+	style.content_margin_left = 0.0
+	style.content_margin_top = 0.0
+	style.content_margin_right = 0.0
+	style.content_margin_bottom = 0.0
+	style.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	style.draw_center = true
+	style.modulate_color = MAIN_MENU_POCKET_TEXTURE_MODULATE
+	return style
+
+
 func _apply_visual_theme() -> void:
 	var panel_tones := {
 		"LogoPocketPanel": "smoke",
@@ -5073,6 +5177,9 @@ func _apply_visual_theme() -> void:
 		"panel",
 		_stage_dock_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())
 	)
+	var pocket_style := _main_menu_pocket_surface_style(STAGE_DOCK_CARTOGRAPHY_PATH, FrontierVisualKit.high_contrast_enabled())
+	_logo_pocket_panel.add_theme_stylebox_override("panel", pocket_style)
+	_footer_pocket_panel.add_theme_stylebox_override("panel", pocket_style.duplicate())
 
 	FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
