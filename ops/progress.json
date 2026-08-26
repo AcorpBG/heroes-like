@@ -2357,6 +2357,7 @@
       "latestFinding": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a tighter readable object hierarchy: the town is slightly restrained, its co-located visitor hero is legible instead of double-shrunk, compact pickups remain distinct, and sites/landmarks no longer dominate adjacent roads or terrain. Focused authored/generated Overworld, movement/input/focus/accessibility/core, static/editor, Linux, and Windows startup gates are green.",
       "artifacts": [
         "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
         "tests/overworld_small_map_visual_scale_runtime_report.gd",
         "tests/overworld_faction_hero_sprite_runtime_report.gd",
         "tests/overworld_visual_smoke.gd",
@@ -14920,14 +14921,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu cartographic pocket-frame slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
+  "currentNotes": "The Overworld compressed world-scale ladder is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-main-menu-cartographic-pocket-frame-integration-10184",
-  "currentSliceId": "presentation-main-menu-cartographic-pocket-frame-integration-10184",
-  "currentSliceNotes": "Completed the Main Menu cartographic pocket-frame integration. Existing Stage Dock art now frames the logo and Frontier Log with exact quiet modulation while preserving anchors, margins, copy, visibility, command hotspots, focus, settings, session, and save authority. Fresh inspected 1280x720 and 1920x1080 captures are contained and scenery-first. Main Menu/Outcome, keyboard navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Main Menu interaction, controller/accessibility hardware, signing/publication, whole-game, release-readiness, or Native RMG claim.",
+  "currentSlice": "presentation-overworld-compressed-world-scale-ladder-10184",
+  "currentSliceId": "presentation-overworld-compressed-world-scale-ladder-10184",
+  "currentSliceNotes": "Completed the presentation-only Overworld scale correction. Fresh 1280x720 and 1920x1080 captures show adjacent towns separated and small props legible. Focused/broad scale, generated movement/save, full-route movement, active keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Logical footprints, hit areas, passability, placement, routes, fog, session/save, and Native RMG behavior remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation main menu cartographic pocket frame integration 10184",
-  "currentSliceUpdatedAt": "2026-08-26T09:27:28Z",
+  "currentSliceTitle": "presentation overworld compressed world scale ladder 10184",
+  "currentSliceUpdatedAt": "2026-08-26T10:01:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20443,8 +20444,35 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
-  "notes": "The Overworld contained hover-card slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "notes": "The Overworld compressed world-scale ladder is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-compressed-world-scale-ladder-10184",
+      "title": "Overworld compressed world-scale ladder",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T09:41:04Z",
+      "updatedAt": "2026-08-26T10:01:31Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Narrow the painted-size spread between towns, heroes, and semantic map-object families so the live Overworld reads as one coherent world without changing logical map authority.",
+      "completionCriteria": "Inspected River Pass 1280x720 and 1920x1080 captures show non-colliding towns and legible props; focused runtime proves the exact compressed hierarchy and unchanged footprints/body masks/hit areas/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No ids, assets, content profiles, footprints, body/entry masks, hit areas, passability, placement, terrain, fog, routes, interactions, session/save/schema, AI, battle, balance, or Native RMG change.",
+        "No camera/map-fit, shell/UI, tooltip/reticle/selection, grounding/contact model, animation/audio/VFX, shader, font/UI-scale, or broad Overworld redesign.",
+        "No packaged Overworld interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct user feedback and fresh River Pass evidence. The exact scale band is now artifact0.28, pickup0.34, decoration0.36, default0.40, encounter0.42, blocker0.46, waypoint0.48, durable0.50, landmark0.54, hero0.56, town0.88. Fresh captures are visually coherent; focused/broad map scale, generated movement/save, route, focus, accessibility, core, repository/editor, and bounded Linux/Windows startup gates pass.",
+      "blockedReason": null,
+      "completedAt": "2026-08-26T10:01:31Z",
+      "remainingWork": "None for this bounded slice."
+    },
     {
       "id": "presentation-overworld-contained-hover-card-10184",
       "title": "Overworld contained hover card",
