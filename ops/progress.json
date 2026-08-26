@@ -1911,20 +1911,61 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-battle-footer-heraldic-watermark-10184",
-    "title": "Battle footer heraldic watermark",
+    "id": "presentation-shared-heraldic-hardware-cursor-10184",
+    "title": "Shared heraldic hardware cursor",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T13:58:53Z",
-    "updatedAt": "2026-08-26T14:17:36Z",
+    "startedAt": "2026-08-26T14:26:29Z",
+    "updatedAt": "2026-08-26T14:41:44Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the passive existing-heraldry reuse in the horizontal Battle System field with inspected 1280x720 and 1920x1080 captures and exact command/focus/battle/session authority preserved."
+    "notes": "Completed the original 32x32 hardware pointer with exact hotspot, high-contrast system fallback, inspected desktop composition, and exact settings/input/file authority."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-shared-heraldic-hardware-cursor-20260826",
+      "title": "Shared heraldic hardware cursor",
+      "sliceId": "presentation-shared-heraldic-hardware-cursor-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T14:41:44Z",
+      "updatedAt": "2026-08-26T14:41:44Z",
+      "latestFinding": "Standard-contrast play now installs one original compact Aurelion Reach hardware pointer while the existing accessibility lifecycle restores the platform arrow for high contrast; no software cursor, input, focus, gameplay, session, save, or route behavior changed.",
+      "artifacts": [
+        "art/ui/runtime/cursors/aurelion_pointer.svg",
+        "scripts/ui/FrontierVisualKit.gd",
+        "tests/custom_mouse_cursor_runtime_report.gd",
+        "tests/custom_mouse_cursor_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "/tmp/heroes-cursor-focused.QyrCkC",
+        "/tmp/heroes-cursor-desktop.2AtfNY/main_menu_pointer.png",
+        "/tmp/heroes-cursor-settings-compat.gZaMg7",
+        "/tmp/heroes-cursor-compat.84cZnp",
+        "/tmp/heroes-cursor-final-static.Aw5FAa",
+        "/tmp/heroes-cursor-linux-package.yqKRuF",
+        "/tmp/heroes-cursor-windows-package.QBYrX0",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "cursor_size_px": [32, 32],
+        "hotspot_px": [3, 2],
+        "hardware_cursor_api": true,
+        "software_cursor_node_or_frame_loop": false,
+        "high_contrast_system_fallback": true,
+        "standard_cached_cursor_restoration": true,
+        "settings_input_file_authority_exact": true,
+        "desktop_capture_inspected": true,
+        "settings_keyboard_accessibility_core_ok": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true
+      },
+      "nonClaims": [
+        "No packaged cursor interaction parity, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-battle-footer-heraldic-watermark-20260826",
       "title": "Battle footer heraldic watermark",
@@ -15155,14 +15196,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle footer heraldic watermark is completed with inspected two-size captures, focused live layout/authority proof, compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The shared heraldic hardware cursor is completed with focused lifecycle/authority proof, inspected desktop composition, compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-footer-heraldic-watermark-10184",
-  "currentSliceId": "presentation-battle-footer-heraldic-watermark-10184",
-  "currentSliceNotes": "Completed the subdued passive Battle heraldic reuse while preserving exact commands, responsive layout, focus, battle, session, save, and route authority.",
+  "currentSlice": "presentation-shared-heraldic-hardware-cursor-10184",
+  "currentSliceId": "presentation-shared-heraldic-hardware-cursor-10184",
+  "currentSliceNotes": "Completed the original hardware pointer and high-contrast system fallback while preserving exact input, focus, settings, gameplay, session, save, route, and Native RMG authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation battle footer heraldic watermark 10184",
-  "currentSliceUpdatedAt": "2026-08-26T14:17:36Z",
+  "currentSliceTitle": "presentation shared heraldic hardware cursor 10184",
+  "currentSliceUpdatedAt": "2026-08-26T14:41:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20678,8 +20719,35 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The Battle footer heraldic watermark slice is completed and blockers are empty.",
+  "notes": "The shared heraldic hardware cursor slice is completed and blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-shared-heraldic-hardware-cursor-10184",
+      "title": "Shared heraldic hardware cursor",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T14:26:29Z",
+      "updatedAt": "2026-08-26T14:41:44Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/ui/runtime/cursors/aurelion_pointer.svg",
+        "scripts/ui/FrontierVisualKit.gd",
+        "tests/custom_mouse_cursor_runtime_report.gd",
+        "tests/custom_mouse_cursor_runtime_report.tscn",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the platform-default arrow across the otherwise themed game with a compact original hardware pointer while retaining the system cursor for high contrast.",
+      "completionCriteria": "Focused runtime proves the exact 32x32 asset, hotspot, hardware request, high-contrast fallback, standard restoration, and settings/input/file authority; inspected desktop play, compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No software cursor sprite, animation, per-frame processing, alternate control cursor shapes, layout, input binding, focus/navigation, gameplay, session/save/schema, AI, balance, content, or Native RMG change.",
+        "No packaged cursor-interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct cross-screen playtest evidence. Focused lifecycle/authority runtime, inspected desktop composition, shared settings/keyboard/accessibility/core compatibility, static/editor, and bounded platform startup gates pass.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
     {
       "id": "presentation-battle-footer-heraldic-watermark-10184",
       "title": "Battle footer heraldic watermark",

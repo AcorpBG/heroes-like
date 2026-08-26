@@ -172,6 +172,13 @@ const HIGH_CONTRAST_BUTTON_ROLES := {
 
 static var _high_contrast_enabled := false
 static var _color_cue_mode := COLOR_CUE_MODE_STANDARD
+static var _pointer_cursor_texture: Texture2D = null
+static var _pointer_cursor_mode := "system_uninitialized"
+static var _pointer_cursor_apply_count := 0
+
+const POINTER_CURSOR_PATH := "res://art/ui/runtime/cursors/aurelion_pointer.svg"
+const POINTER_CURSOR_SIZE := Vector2(32.0, 32.0)
+const POINTER_CURSOR_HOTSPOT := Vector2(3.0, 2.0)
 
 const BUTTON_ART_ROOT := "res://art/ui/runtime/shared"
 const ITEM_LIST_ROW_MODEL := "compact_enamel_gold_registration_inlay"
@@ -237,9 +244,40 @@ static func apply_labels(labels: Array, tone: String, font_size: int = -1) -> vo
 
 static func set_high_contrast_enabled(enabled: bool) -> void:
 	_high_contrast_enabled = enabled
+	_sync_pointer_cursor()
 
 static func high_contrast_enabled() -> bool:
 	return _high_contrast_enabled
+
+static func _sync_pointer_cursor() -> void:
+	_pointer_cursor_apply_count += 1
+	if high_contrast_enabled():
+		Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)
+		_pointer_cursor_mode = "system_high_contrast"
+		return
+	if _pointer_cursor_texture == null and ResourceLoader.exists(POINTER_CURSOR_PATH, "Texture2D"):
+		_pointer_cursor_texture = ResourceLoader.load(POINTER_CURSOR_PATH, "Texture2D") as Texture2D
+	if _pointer_cursor_texture == null or _pointer_cursor_texture.get_size() != POINTER_CURSOR_SIZE:
+		Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)
+		_pointer_cursor_mode = "system_unavailable"
+		return
+	Input.set_custom_mouse_cursor(_pointer_cursor_texture, Input.CURSOR_ARROW, POINTER_CURSOR_HOTSPOT)
+	_pointer_cursor_mode = "custom_standard"
+
+static func validation_pointer_cursor_snapshot() -> Dictionary:
+	return {
+		"asset_path": POINTER_CURSOR_PATH,
+		"asset_exists": ResourceLoader.exists(POINTER_CURSOR_PATH, "Texture2D"),
+		"texture_loaded": _pointer_cursor_texture != null,
+		"texture_size": _pointer_cursor_texture.get_size() if _pointer_cursor_texture != null else Vector2.ZERO,
+		"texture_instance_id": _pointer_cursor_texture.get_instance_id() if _pointer_cursor_texture != null else 0,
+		"hotspot": POINTER_CURSOR_HOTSPOT,
+		"shape": int(Input.CURSOR_ARROW),
+		"mode": _pointer_cursor_mode,
+		"custom_active": _pointer_cursor_mode == "custom_standard",
+		"high_contrast": high_contrast_enabled(),
+		"apply_count": _pointer_cursor_apply_count,
+	}
 
 static func set_color_cue_mode(mode: String) -> void:
 	_color_cue_mode = COLOR_CUE_MODE_ASSISTED if mode == COLOR_CUE_MODE_ASSISTED else COLOR_CUE_MODE_STANDARD
