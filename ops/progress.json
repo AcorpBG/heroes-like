@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence."
+    "Select the next tracker-approved graphical-polish slice from direct playtest evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,17 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-contained-hover-card-10184",
-    "title": "Overworld contained hover card",
+    "id": "presentation-overworld-footprint-readable-world-scale-10184",
+    "title": "Overworld footprint-readable world scale",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T06:47:06Z",
-    "updatedAt": "2026-08-26T07:03:09Z",
+    "startedAt": "2026-08-26T10:52:10Z",
+    "updatedAt": "2026-08-26T11:21:14Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with a compact responsive wrapped cartographic hover card, inspected 1280/1920 real-pointer captures, exact full tooltip retention and control contract, route-tooltip/focus/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup gates."
+    "notes": "Completed the presentation-only world-scale correction: towns paint at 1.20 tiles, one-tile objects and heroes retain a restrained 0.30-0.56 hierarchy, and multi-tile sites grow by footprint span to a 1.04-tile cap. Authored/generated movement, save/reload, visual, route, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -1935,6 +1935,8 @@
       "latestFinding": "The Overworld map now presents the exact existing hover tooltip through a restrained map-colored card with responsive 280-420px content width, smart wrapping, a four-line cap, and ellipsis instead of an unbounded black strip across the map and side rail.",
       "artifacts": [
         "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
         "tests/overworld_visual_smoke.gd",
         "tests/validate_repo.py",
         "/tmp/heroes-hover-card.9KVeVv",
@@ -14921,14 +14923,14 @@
       }
     }
   ],
-  "currentNotes": "The Outcome recap tab-plaque breathing-room slice is complete; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
+  "currentNotes": "The Overworld footprint-readable world-scale correction is completed with inspected captures and authored/generated runtime authority preserved.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-outcome-recap-tab-plaque-breathing-room-10184",
-  "currentSliceId": "presentation-outcome-recap-tab-plaque-breathing-room-10184",
-  "currentSliceNotes": "Completed the Outcome-local recap plaque correction. All four state styles retain the shared assets/vertical margins/focus styling but use 4px horizontal content margins; the five tabs grow from 241px to 271px inside the unchanged 296px live TabBar. Fresh victory/defeat captures are clean, and focused visual, focus/cancel/recovery, keyboard, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Outcome semantics, rail geometry, panorama, saves, routes, progression, session authority, and Native RMG remain unchanged.",
+  "currentSlice": "presentation-overworld-footprint-readable-world-scale-10184",
+  "currentSliceId": "presentation-overworld-footprint-readable-world-scale-10184",
+  "currentSliceNotes": "Towns now paint at 1.20 tiles over their unchanged 3x2 logical footprint; one-tile objects and heroes use a restrained 0.30-0.56 ladder, and footprint-bearing sites grow to a contained 1.04-tile cap. Fresh 1280x720/1920x1080 captures and authored/generated runtime preserve movement, interaction, session/save, generated placement, and Native RMG authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation outcome recap tab plaque breathing room 10184",
-  "currentSliceUpdatedAt": "2026-08-26T10:40:37Z",
+  "currentSliceTitle": "presentation overworld footprint readable world scale 10184",
+  "currentSliceUpdatedAt": "2026-08-26T11:21:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20443,9 +20445,38 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.",
-  "notes": "The Outcome recap tab-plaque breathing-room slice is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "nextActionGuardrailNote": "Select the next bounded graphical-polish slice from direct visual or playtest evidence; preserve gameplay and Native RMG authority.",
+  "notes": "The Overworld footprint-readable world-scale correction is completed; blockers are empty and the next graphical-polish slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-footprint-readable-world-scale-10184",
+      "title": "Overworld footprint-readable world scale",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T10:52:10Z",
+      "updatedAt": "2026-08-26T11:21:14Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make authored towns and footprint-bearing sites occupy a credible share of their logical world footprint while restoring a legible one-tile object-to-hero hierarchy.",
+      "completionCriteria": "Fresh 1280x720 and 1920x1080 captures show credible contained world scale; focused authored/generated runtime proves the exact monotonic scale ladder, footprint growth, painted-bound/aspect preservation, and unchanged map/path/input/interaction/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No ids/assets/content, logical footprint/body/entry/hit/passability/placement/path/interaction, session/save/schema, rules, AI, battle, balance, or Native RMG change.",
+        "No camera/map-fit, shell/UI, selection/tooltip/reticle, animation/audio/VFX, shader, font/UI-scale, or broad Overworld redesign.",
+        "No packaged Overworld interaction parity, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct user feedback: inspected captures at both target widths show footprint-readable towns/sites and a subordinate one-tile object/hero ladder. Focused authored/generated movement and save/reload, broad visual/route/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
     {
       "id": "presentation-outcome-recap-tab-plaque-breathing-room-10184",
       "title": "Outcome recap tab plaque breathing room",

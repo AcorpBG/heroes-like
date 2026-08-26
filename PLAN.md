@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none; select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
+- Selected implementation slice: none. `presentation-overworld-footprint-readable-world-scale-10184` is completed; select the next tracker-approved graphical-polish slice from direct playtest evidence.
+
+## Overworld Footprint-Readable World Scale
+
+id: `presentation-overworld-footprint-readable-world-scale-10184`
+
+Status: completed.
+
+Implementation boundary:
+- correct the direct user-reported symbolic-scale mismatch in which a 3x2 town is painted at only 0.88 tile and a 3x2 interactive site is capped at 0.84 tile, making structures read like icons beside heroes and terrain;
+- establish one restrained painted-extent ladder from handheld artifacts and loose pickups through encounters, structures, landmarks, field heroes, footprint-bearing sites, and towns, with multi-tile art increasing by logical footprint span while remaining contained below the town anchor;
+- preserve cached alpha cropping, source aspect, bottom grounding, draw order, fog/memory treatment, generated decorative-body variation, and every logical footprint, body/entry tile, hit area, passability, route, interaction, content, session, and save authority.
+
+Completion criteria:
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show towns and sites occupying a credible share of their authored footprint, heroes clearly subordinate to towns, and pickups/encounters legible without covering roads or adjacent cells;
+- focused authored and generated runtime proves the exact monotonic painted-size ladder, footprint-span growth, containment, painted-bound/aspect preservation, and unchanged map/path/input/interaction/session/save authority;
+- broad Overworld visual, generated movement/save, route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object/town/hero id, asset, content profile, logical footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, pathing, interaction, session/save/schema, AI, battle, balance, or Native RMG change;
+- no camera/map-fit, shell/UI, tooltip/reticle/selection cue, animation/audio/VFX, shader, font, UI-scale, or broad Overworld redesign;
+- no packaged Overworld interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- towns now paint at 1.20 tiles across their unchanged 3x2 logical footprint, while a restrained 0.30-0.56 one-tile ladder keeps artifacts, pickups, encounters, structures, landmarks, and heroes visually ordered;
+- footprint-bearing sites grow by logical span to a contained 1.04-tile cap, preserving cached alpha cropping, aspect, grounding, hit areas, passability, routes, interactions, generated placement, session/save data, and Native RMG authority;
+- inspected 1280x720 and 1920x1080 captures, authored/generated live movement and save/reload, full Overworld visual/route/accessibility/core compatibility, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green.
 
 ## Outcome Recap Tab Plaque Breathing Room
 
