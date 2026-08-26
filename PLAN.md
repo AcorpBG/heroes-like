@@ -26,6 +26,32 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice from fresh evidence.
 
+## Footprint-Aware Overworld Site Scale
+
+id: `presentation-overworld-footprint-aware-site-scale-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace the single fixed multi-tile interactive sprite clamp with a restrained graduated extent derived only from the authored logical footprint span, so 2x1, 1x2, 2x2, and 3x2 sites no longer collapse to near-identical half-tile icons;
+- preserve the completed single-tile semantic scale ladder and keep towns as the largest shared map anchor, while retaining painted-alpha cropping, source aspect, bottom anchoring, grounding, draw order, and family classification;
+- leave every logical footprint, body/entry mask, hit area, path, visit, interaction, content profile, session, and save authority unchanged.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Overworld captures show multi-tile services, waypoints, and landmarks gaining restrained footprint-proportional presence without crowding adjacent tiles or overtaking towns;
+- focused authored and generated runtime proves exact graduated 2x1/1x2/2x2/3x2 extents, unchanged single-tile ranks, town/hero/generated-decoration scale, painted bounds/aspect/grounding, and exact map/path/interaction/session/save authority;
+- broad Overworld visual, route/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object id, asset, logical footprint, body/entry mask, hit area, passability, visitability, placement, density, content, terrain, road, fog, route, pathing, interaction, session/save/schema, AI, battle, balance, or Native RMG change;
+- no town, hero, single-tile object, generated decorative-body, camera/map-fit, shell/UI, font/UI-scale, animation/audio/VFX, or shader redesign;
+- no packaged Overworld interaction parity, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- multi-tile interactive sprites now use a footprint-span ladder: 2-span sites own a 0.66-0.74 tile band and 3-span sites a 0.82-0.94 band, while single-tile ranks remain unchanged and towns retain the 1.04-tile top anchor;
+- inspected authored 1280x720/1920x1080 and generated-map captures show larger sites reading as restrained structures instead of half-tile icons, with exact painted bounds, aspect, grounding, movement, save/restore, map, and session authority preserved;
+- focused scale, generated-map movement, route, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
 ## Shared Cartographic Tab Plaques
 
 id: `presentation-shared-cartographic-tab-plaques-10184`

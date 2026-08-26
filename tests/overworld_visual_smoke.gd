@@ -3663,14 +3663,26 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not bool(tall_waypoint.get("uses_multi_tile_visual_cap", false))
 		or not bool(multi_tile_service.get("uses_multi_tile_visual_cap", false))
 		or not bool(large_service.get("uses_multi_tile_visual_cap", false))
-		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 0.50)
-		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 0.54)
-		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.54)
-		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.50)
-		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.54)
-		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 0.54)
+		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 0.66)
+		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 0.74)
+		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.66)
+		or not is_equal_approx(float(tall_waypoint.get("min_tiles", 0.0)), 0.66)
+		or not is_equal_approx(float(tall_waypoint.get("cap_tiles", 0.0)), 0.74)
+		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.66)
+		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.74)
+		or not is_equal_approx(float(large_service.get("min_tiles", 0.0)), 0.82)
+		or not is_equal_approx(float(large_service.get("cap_tiles", 0.0)), 0.94)
+		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 0.94)
+		or not (
+			float(wide_service.get("visible_extent_tiles", 0.0))
+			< float(multi_tile_service.get("visible_extent_tiles", 0.0))
+			and float(multi_tile_service.get("visible_extent_tiles", 0.0))
+			< float(large_service.get("visible_extent_tiles", 0.0))
+			and float(large_service.get("visible_extent_tiles", 0.0))
+			< float(town.get("visible_extent_tiles", 0.0))
+		)
 	):
-		push_error("Overworld smoke: multi-tile interactive art escaped its bounded footprint-aware scale. wide=%s tall=%s multi=%s large=%s" % [wide_service, tall_waypoint, multi_tile_service, large_service])
+		push_error("Overworld smoke: multi-tile interactive art no longer follows the bounded footprint-span ladder below towns. wide=%s tall=%s multi=%s large=%s town=%s" % [wide_service, tall_waypoint, multi_tile_service, large_service, town])
 		get_tree().quit(1)
 		return false
 	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 0.56) or not bool(hero.get("sprite_contained_in_tile", false)):
@@ -3707,7 +3719,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			"map_roles": ["route_pacing", "world_lore", "repeatable_service"],
 		}
 		or String(authored_service.get("semantic_scale_class", "")) != "durable_structure"
-		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.54)
+		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.66)
 	):
 		push_error("Overworld smoke: authored semantic profiles drifted from logical footprint/passability/role authority. pickup=%s service=%s" % [authored_pickup, authored_service])
 		get_tree().quit(1)
@@ -3729,12 +3741,18 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		< float(service.get("visible_extent_tiles", 0.0))
 		and float(service.get("visible_extent_tiles", 0.0))
 		< float(objective.get("visible_extent_tiles", 0.0))
-		and float(multi_tile_service.get("visible_extent_tiles", 0.0))
+		and float(objective.get("visible_extent_tiles", 0.0))
 		< float(hero.get("sprite_extent_fraction", 0.0))
 		and float(hero.get("sprite_extent_fraction", 0.0))
+		< float(wide_service.get("visible_extent_tiles", 0.0))
+		and float(wide_service.get("visible_extent_tiles", 0.0))
+		< float(multi_tile_service.get("visible_extent_tiles", 0.0))
+		and float(multi_tile_service.get("visible_extent_tiles", 0.0))
+		< float(large_service.get("visible_extent_tiles", 0.0))
+		and float(large_service.get("visible_extent_tiles", 0.0))
 		< float(town.get("visible_extent_tiles", 0.0))
 	):
-		push_error("Overworld smoke: prop-to-actor world-scale ordering is incoherent. artifact=%s pickup=%s decoration=%s generic=%s encounter=%s blocker=%s waypoint=%s service=%s objective=%s multi=%s hero=%s town=%s" % [artifact, pickup, decoration, generic_object, encounter, blocker, waypoint, service, objective, multi_tile_service, hero, town])
+		push_error("Overworld smoke: prop-to-actor-footprint world-scale ordering is incoherent. artifact=%s pickup=%s decoration=%s generic=%s encounter=%s blocker=%s waypoint=%s service=%s objective=%s hero=%s wide=%s multi=%s large=%s town=%s" % [artifact, pickup, decoration, generic_object, encounter, blocker, waypoint, service, objective, hero, wide_service, multi_tile_service, large_service, town])
 		get_tree().quit(1)
 		return false
 	if (
