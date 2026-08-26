@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle stack-token scale correction is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
+  "currentNotes": "The Overworld object-scale coherence correction is completed; blockers are empty and the next bounded graphical-polish slice is not yet selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-stack-token-scale-10184",
-  "currentSliceId": "presentation-battle-stack-token-scale-10184",
-  "currentSliceNotes": "Completed: painted stack medallions use the larger bounded 0.68-times-hex presentation while exact pre-change hit geometry and battle authority remain unchanged; focused, compatibility, static/editor, and bounded platform gates pass.",
+  "currentSlice": "presentation-overworld-object-scale-coherence-10184",
+  "currentSliceId": "presentation-overworld-object-scale-coherence-10184",
+  "currentSliceNotes": "Completed: the painted hierarchy now spans a compressed 0.46-to-0.82 tile ladder, making portable objects readable while preserving exact alpha-bound/aspect handling, logical footprints, interaction, gameplay, content, session, and save authority; focused, compatibility, static/editor, and bounded platform gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle stack token scale",
-  "currentSliceUpdatedAt": "2026-08-26T19:57:48Z",
+  "currentSliceTitle": "Overworld object scale coherence",
+  "currentSliceUpdatedAt": "2026-08-26T20:26:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,6 +20852,34 @@
   "nextActionGuardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
   "notes": "The Main Menu Skirmish intelligence disclosure is completed from inspected current pixels and runtime/platform evidence; blockers are empty and the next bounded slice is not yet selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-object-scale-coherence-10184",
+      "title": "Overworld object scale coherence",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T20:08:01Z",
+      "updatedAt": "2026-08-26T20:26:16Z",
+      "completedAt": "2026-08-26T20:26:16Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct direct playtest feedback that portable Overworld objects still read as tiny specks beside actors, structures, and towns by compressing only the symbolic painted extent ladder.",
+      "completionCriteria": "Inspected authored 1280/1920 captures and focused runtime prove a coherent prop-to-town painted hierarchy, exact aspect/alpha-bound/footprint-cap handling, and unchanged logical/session/save authority; authored/generated compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No object asset, id, family/profile, footprint, body/visit mask, hit area, placement/count/density, passability, pathfinding, route, movement, interaction, terrain/road/fog, camera/map-fit, shell layout, input/focus/accessibility semantic, gameplay, content, save/schema, generated-map, or Native RMG change.",
+        "No packaged Overworld interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed from direct inspected 1280x720 and 1920x1080 River Pass pixels. The exact 0.46-to-0.82 tile symbolic ladder preserves alpha-bound crop/aspect, logical footprints, interaction, session/save, generated placement, and Native RMG authority. Focused authored/generated scale, movement/save, route/controller, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and release-readiness claims remain excluded."
+    },
     {
       "id": "presentation-battle-stack-token-scale-10184",
       "title": "Battle stack token scale",
