@@ -1911,20 +1911,61 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-main-menu-gilded-title-wordmark-10184",
-    "title": "Main Menu gilded title wordmark",
+    "id": "ux-overworld-physical-object-scale-separation-10184",
+    "title": "Overworld physical object-scale separation",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T12:28:09Z",
-    "updatedAt": "2026-08-26T12:44:31Z",
+    "startedAt": "2026-08-26T12:51:44Z",
+    "updatedAt": "2026-08-26T13:15:15Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the first-view wordmark integration. The title now uses a warm-gold face with a dark edge and restrained shadow, the eyebrow uses a matching lighter treatment, high contrast remains explicit, and exact first-view geometry and menu authority are preserved."
+    "notes": "Completed the physical role separation: collectibles are compact, actors remain readable, structures gain presence, and towns are dominant without the rejected overlap. Exact map, route, interaction, session, and save authority remain unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-overworld-physical-object-scale-separation-20260826",
+      "title": "Overworld physical object-scale separation",
+      "sliceId": "ux-overworld-physical-object-scale-separation-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T13:15:15Z",
+      "updatedAt": "2026-08-26T13:15:15Z",
+      "latestFinding": "The painted Overworld ladder now separates compact collectibles, human-scale actors, structures, landmarks, multi-tile sites, and towns while preserving exact logical footprints, routing, interaction, content, session, and save authority.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/overworld_physical_scale_capture/captures/overworld_object_scale_1280x720.png",
+        ".artifacts/overworld_physical_scale_capture/captures/overworld_object_scale_1920x1080.png",
+        "/tmp/heroes-scale-focused.lT4PpL",
+        "/tmp/heroes-scale-focused-chain.JHeMfY",
+        "/tmp/heroes-scale-generated.QrlydW",
+        "/tmp/heroes-scale-compat.ObQQ9o",
+        "/tmp/heroes-scale-editor-audit.BfA3tx",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "artifact_extent_tiles": 0.26,
+        "pickup_extent_tiles": 0.34,
+        "hero_extent_tiles": 0.56,
+        "structure_extent_tiles": 0.62,
+        "landmark_extent_tiles": 0.68,
+        "largest_multi_tile_extent_tiles": 0.92,
+        "town_extent_tiles": 1.16,
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "generated_body_tile_count": 464,
+        "logical_footprint_route_interaction_session_save_exact": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "packaged_overworld_interaction_claimed": false
+      }
+    },
     {
       "id": "presentation-main-menu-gilded-title-wordmark-20260826",
       "title": "Main Menu gilded title wordmark",
@@ -15045,14 +15086,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu gilded title wordmark is completed with inspected 1280x720 and 1920x1080 captures, focused standard/high-contrast geometry and authority, keyboard/focus/accessibility/core compatibility, static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Overworld physical object-scale separation is completed with inspected 1280x720 and 1920x1080 captures, exact world-authority proof, generated-map and compatibility coverage, static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-main-menu-gilded-title-wordmark-10184",
-  "currentSliceId": "presentation-main-menu-gilded-title-wordmark-10184",
-  "currentSliceNotes": "Completed the restrained gold face, dark outline, and shadow treatment for the existing public title and eyebrow while preserving exact text, fonts, pocket geometry, focus, routes, session, save, and settings authority.",
+  "currentSlice": "ux-overworld-physical-object-scale-separation-10184",
+  "currentSliceId": "ux-overworld-physical-object-scale-separation-10184",
+  "currentSliceNotes": "Completed the role-separated painted hierarchy while preserving exact logical footprints, routes, interactions, content, session/save authority, and Native RMG behavior.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation main menu gilded title wordmark 10184",
-  "currentSliceUpdatedAt": "2026-08-26T12:44:31Z",
+  "currentSliceTitle": "ux overworld physical object scale separation 10184",
+  "currentSliceUpdatedAt": "2026-08-26T13:15:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20568,8 +20609,35 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
-  "notes": "The Main Menu gilded title wordmark slice is completed and blockers are empty.",
+  "notes": "The Overworld physical object-scale separation slice is completed and blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-physical-object-scale-separation-10184",
+      "title": "Overworld physical object-scale separation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T12:51:44Z",
+      "updatedAt": "2026-08-26T13:15:15Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the direct user-reported board-token proportions by separating collectible, actor, structure, and settlement painted scales without changing map behavior.",
+      "completionCriteria": "Fresh River Pass 1280x720 and 1920x1080 captures show a clear physical hierarchy; focused runtime proves exact painted extents and unchanged logical footprints/routes/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No identity, asset, content, footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, interaction, session/save/schema, AI, battle, balance, or Native RMG change.",
+        "No camera/map-fit, shell/UI, selection cue, grounding/contact model, VFX, shader, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current playtest feedback. The final role-separated ladder is visually inspected at 1280x720 and 1920x1080 and is covered by focused geometry/authority, generated movement/save, compatibility, static/editor, and bounded platform startup gates.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
     {
       "id": "presentation-overworld-coherent-object-scale-ladder-10184",
       "title": "Overworld coherent object-scale ladder",

@@ -24,7 +24,32 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. `presentation-main-menu-gilded-title-wordmark-10184` is completed; select the next graphical-polish slice from direct current capture or playtest evidence.
+- Selected implementation slice: none. `ux-overworld-physical-object-scale-separation-10184` is completed; select the next graphical-polish slice from direct current capture or playtest evidence.
+
+## Overworld Physical Object-Scale Separation
+
+id: `ux-overworld-physical-object-scale-separation-10184`
+
+Status: completed.
+
+Result:
+- the Overworld now uses a role-separated painted hierarchy: 0.26-tile handheld artifacts, 0.34-tile pickups, 0.38-0.44 ground detail/ordinary objects, 0.48 blockers, 0.52 encounters, the unchanged 0.56 hero, 0.58 waypoints, 0.62 structures, 0.68 landmarks, bounded 0.70/0.82/0.92 multi-tile sites, and 1.16-tile towns;
+- inspected River Pass 1280x720 and 1920x1080 captures show compact collectibles, readable actors, materially larger structures, and a dominant but uncrowded settlement instead of one compressed band of similar-size board tokens;
+- focused scale/small-map/six-faction commander/generated-map authority, broad Overworld/route/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Logical footprints, gameplay, content, save/session authority, and Native RMG behavior are unchanged.
+
+Implementation boundary:
+- replace only the existing painted-extent constants with a physically legible role ladder: collectibles remain compact, actors retain human-scale presence, structures become materially larger than loose props, and towns again read as settlements inside their unchanged 3x2 footprint;
+- retain the exact semantic classifier, cached alpha-bound crop, source aspect, bottom grounding, draw order, fog/memory treatment, multi-tile containment, and generated decorative-body variation;
+- preserve every object/town/hero id, asset, logical footprint, body/entry tile, hit area, passability, placement, route, interaction, content, session, and save authority.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show a clear collectible < actor < structure < town physical hierarchy without unreadable pickups or adjacent-cell crowding;
+- focused runtime proves the exact role-separated painted extents, bounded multi-tile containment, unchanged logical footprints/routes/interactions, and exact session/save authority;
+- broad Overworld visual, generated movement/save, route/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no identity, asset, content profile, logical footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, pathing, interaction, session/save/schema, AI, battle, balance, or Native RMG change;
+- no camera/map-fit, shell/UI, selection cue, grounding/contact model, animation/audio/VFX, shader, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Coherent Object-Scale Ladder
 
