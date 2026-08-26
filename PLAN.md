@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
+- Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+
+## Overworld Irregular Cartographic Fog Contour
+
+id: `ux-overworld-irregular-cartographic-fog-contour-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the explored-side frontier's straight one-pixel cardinal stroke with a deterministic, gently inward-jittered cartographic contour while retaining the completed 0.32-tile inward fog gradient;
+- derive contour variation only from the explored tile coordinate, cardinal edge, and tile rectangle, with fixed endpoints and bounded interior offsets so adjacent corners remain closed and the contour never enters hidden cells;
+- preserve exact explored/hidden direction ownership, opaque unexplored shroud, hidden-identity isolation, draw order, terrain/road/object presentation, and whole session/save authority.
+
+Completion criteria:
+- fresh inspected River Pass 1280x720 and 1920x1080 captures show a less mechanical explored/unexplored staircase without bright seams, gaps, or hidden-content leakage;
+- focused runtime proves exact cardinal ownership, deterministic five-point contour geometry, fixed boundary endpoints, bounded explored-side insets, unchanged gradient/shroud contracts, and unchanged session authority;
+- generated natural-fog movement, broad Overworld visual, route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no fog explored/visible state, scouting radius, reveal timing, hidden terrain/road/object/hero/encounter identity, map content, topology, passability, movement, route/pathfinding, selection, interaction, session/save/schema, generated placement, AI, battle, balance, or Native RMG change;
+- no shroud texture, terrain/road/object/hero/town asset or scale, camera/map fit, shell/UI layout, animation/audio/VFX, shader, or broad Overworld redesign;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the explored-side fog stroke now uses a deterministic five-point contour with fixed tile-corner endpoints and three gently inset interior points instead of a straight one-pixel cardinal segment;
+- inspected River Pass 1280x720 and 1920x1080 captures retain the opaque continuous veil while giving its thin boundary a quieter hand-drawn cartographic variation, with no bright seams, gaps, or hidden-content exposure;
+- focused Ninefold geometry, generated natural-fog movement, broad Overworld visual, route movement, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
 
 ## Overworld Layered Cartographic Route Preview
 

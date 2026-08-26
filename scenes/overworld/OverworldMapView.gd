@@ -25,13 +25,16 @@ const UNEXPLORED_SHROUD_TEXTURE_SIZE := Vector2i(1024, 1024)
 const UNEXPLORED_SHROUD_TEXTURE_MODULATE := Color(0.80, 0.88, 0.82, 0.80)
 const EXPLORED_TERRAIN_GRID_ALPHA := 0.0
 const EXPLORED_TERRAIN_GRID_MODE := "fog_boundary_only"
-const EXPLORED_FOG_FRONTIER_MODEL := "inward_vertex_gradient_cartographic_frontier"
+const EXPLORED_FOG_FRONTIER_MODEL := "inward_gradient_irregular_cartographic_contour"
 const EXPLORED_FOG_FRONTIER_DEPTH_FACTOR := 0.32
 const EXPLORED_FOG_FRONTIER_EDGE_ALPHA := 0.24
 const EXPLORED_FOG_FRONTIER_INNER_ALPHA := 0.0
 const EXPLORED_FOG_FRONTIER_COLOR := Color(0.025, 0.035, 0.045, 1.0)
 const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.16)
 const EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH := 1.0
+const EXPLORED_FOG_CONTOUR_POINT_COUNT := 5
+const EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR := 0.018
+const EXPLORED_FOG_CONTOUR_MAX_INSET_FACTOR := 0.060
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
 const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"
@@ -1641,7 +1644,7 @@ func _draw_explored_terrain_boundary(tile: Vector2i, rect: Rect2) -> void:
 		var gradient_points := _explored_fog_frontier_gradient_points(rect, direction)
 		if gradient_points.size() == 4:
 			_canvas_draw_polygon(gradient_points, _explored_fog_frontier_gradient_colors())
-		_draw_explored_fog_frontier_edge(rect, direction)
+		_draw_explored_fog_frontier_edge(tile, rect, direction)
 
 func _explored_fog_frontier_directions(tile: Vector2i) -> Array:
 	if _session == null:
@@ -1711,20 +1714,43 @@ func _explored_fog_frontier_gradient_colors() -> PackedColorArray:
 	)
 	return PackedColorArray([edge_color, edge_color, inner_color, inner_color])
 
-func _draw_explored_fog_frontier_edge(rect: Rect2, direction: String) -> void:
-	match direction:
-		"N":
-			_canvas_draw_line(rect.position, Vector2(rect.end.x, rect.position.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
-		"S":
-			_canvas_draw_line(Vector2(rect.position.x, rect.end.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
-		"W":
-			_canvas_draw_line(rect.position, Vector2(rect.position.x, rect.end.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
-		"E":
-			_canvas_draw_line(Vector2(rect.end.x, rect.position.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+func _explored_fog_frontier_edge_points(tile: Vector2i, rect: Rect2, direction: String) -> PackedVector2Array:
+	if direction not in ["N", "E", "S", "W"] or rect.size.x <= 0.0 or rect.size.y <= 0.0:
+		return PackedVector2Array()
+	var points := PackedVector2Array()
+	for point_index in range(EXPLORED_FOG_CONTOUR_POINT_COUNT):
+		var progress := float(point_index) / float(EXPLORED_FOG_CONTOUR_POINT_COUNT - 1)
+		var inset_factor := 0.0
+		if point_index > 0 and point_index < EXPLORED_FOG_CONTOUR_POINT_COUNT - 1:
+			var variation := _stable_unit_fraction("fog_contour:%d:%d:%s:%d" % [tile.x, tile.y, direction, point_index])
+			inset_factor = lerpf(EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR, EXPLORED_FOG_CONTOUR_MAX_INSET_FACTOR, variation)
+		match direction:
+			"N":
+				points.append(Vector2(lerpf(rect.position.x, rect.end.x, progress), rect.position.y + (rect.size.y * inset_factor)))
+			"S":
+				points.append(Vector2(lerpf(rect.position.x, rect.end.x, progress), rect.end.y - (rect.size.y * inset_factor)))
+			"W":
+				points.append(Vector2(rect.position.x + (rect.size.x * inset_factor), lerpf(rect.position.y, rect.end.y, progress)))
+			"E":
+				points.append(Vector2(rect.end.x - (rect.size.x * inset_factor), lerpf(rect.position.y, rect.end.y, progress)))
+	return points
+
+func _draw_explored_fog_frontier_edge(tile: Vector2i, rect: Rect2, direction: String) -> void:
+	var points := _explored_fog_frontier_edge_points(tile, rect, direction)
+	if points.size() != EXPLORED_FOG_CONTOUR_POINT_COUNT:
+		return
+	_canvas_draw_polyline(points, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH, true)
 
 func _explored_fog_frontier_payload(tile: Vector2i) -> Dictionary:
 	var directions := _explored_fog_frontier_directions(tile)
 	var softened_corners: Array = []
+	var contour_profiles: Dictionary = {}
+	for direction_value in directions:
+		var direction := String(direction_value)
+		var profile: Array = []
+		for point in _explored_fog_frontier_edge_points(tile, Rect2(Vector2.ZERO, Vector2.ONE), direction):
+			profile.append(_vector2_payload(point))
+		contour_profiles[direction] = profile
 	for corner in [
 		{"id": "NE", "edges": ["N", "E"]},
 		{"id": "SE", "edges": ["S", "E"]},
@@ -1746,6 +1772,13 @@ func _explored_fog_frontier_payload(tile: Vector2i) -> Dictionary:
 		"gradient_inner_alpha": EXPLORED_FOG_FRONTIER_INNER_ALPHA,
 		"edge_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"edge_width": EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH,
+		"contour_profiles": contour_profiles.duplicate(true),
+		"contour_point_count": EXPLORED_FOG_CONTOUR_POINT_COUNT,
+		"contour_min_inset_factor": EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR,
+		"contour_max_inset_factor": EXPLORED_FOG_CONTOUR_MAX_INSET_FACTOR,
+		"contour_endpoints_on_boundary": true,
+		"contour_hidden_side_intrusion": false,
+		"contour_variation_basis": "explored_tile_direction_only",
 		"draw_side": "explored_inward",
 		"neighbor_basis": "cardinal_explored_boolean_only",
 		"hidden_identity_sampled": false,

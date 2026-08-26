@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness slice."
+    "Select the next tracker-approved source-backed graphical-polish or release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,20 +1911,57 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-overworld-layered-cartographic-route-preview-10184",
-    "title": "Overworld layered cartographic route preview",
+    "id": "ux-overworld-irregular-cartographic-fog-contour-10184",
+    "title": "Overworld irregular cartographic fog contour",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T01:42:25Z",
-    "updatedAt": "2026-08-26T02:03:59Z",
+    "startedAt": "2026-08-26T02:07:46Z",
+    "updatedAt": "2026-08-26T02:23:38Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct capture inspection: the solid debug-like route bar and filled dots are replaced by a layered cartographic trail while exact route and session authority remain unchanged."
+    "notes": "Completed from direct two-width capture inspection and focused/generated runtime: the straight explored-side stroke is now a bounded deterministic irregular contour while the completed gradient, hidden shroud, fog state, and session authority remain exact."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "ux-overworld-irregular-cartographic-fog-contour-20260826",
+      "title": "Overworld irregular cartographic fog contour",
+      "sliceId": "ux-overworld-irregular-cartographic-fog-contour-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T02:23:38Z",
+      "updatedAt": "2026-08-26T02:23:38Z",
+      "latestFinding": "Fresh inspected River Pass 1280x720 and 1920x1080 captures retain the continuous opaque shroud while the explored-side boundary stroke follows a subtle deterministic contour. Focused five-point geometry, generated reveal/movement, visual/route/focus/accessibility/core, static/editor, Linux, and Windows startup gates are green.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-fog-contour-ninefold.KjbIN5",
+        "/tmp/heroes-fog-contour-capture.DaAHAr",
+        "/tmp/heroes-fog-contour-generated.5ighQ8",
+        "/tmp/heroes-fog-contour-compat.RcU6zf",
+        "/tmp/heroes-fog-contour-packaging.uyhyFu",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "capture_widths": [1280, 1920],
+        "contour_point_count": 5,
+        "contour_min_inset_factor": 0.018,
+        "contour_max_inset_factor": 0.06,
+        "fixed_boundary_endpoints": true,
+        "hidden_side_intrusion": false,
+        "generated_frontier_before": 12,
+        "generated_frontier_after": 14,
+        "generated_invalid_direction_count": 0,
+        "session_authority_exact": true,
+        "linux_export_headless_startup": true,
+        "windows_export_wine_startup": true,
+        "packaged_overworld_interaction_claimed": false
+      }
+    },
     {
       "id": "ux-overworld-layered-cartographic-route-preview-20260826",
       "title": "Overworld layered cartographic route preview",
@@ -14530,14 +14567,14 @@
       }
     }
   ],
-  "currentNotes": "The layered cartographic Overworld route-preview polish is completed with inspected two-width captures and focused, compatibility, static/editor, and bounded platform evidence.",
+  "currentNotes": "The irregular cartographic fog contour is completed with inspected captures and focused, generated, compatibility, static/editor, and bounded platform evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-layered-cartographic-route-preview-10184",
-  "currentSliceId": "ux-overworld-layered-cartographic-route-preview-10184",
-  "currentSliceNotes": "Change only the route preview's layered visual geometry; preserve exact route tiles, movement, actions, cues, input, and session/save authority.",
+  "currentSlice": "ux-overworld-irregular-cartographic-fog-contour-10184",
+  "currentSliceId": "ux-overworld-irregular-cartographic-fog-contour-10184",
+  "currentSliceNotes": "Change only the explored-side fog contour stroke; preserve the completed gradient/shroud, exact fog ownership, hidden identity, and session/save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld layered cartographic route preview",
-  "currentSliceUpdatedAt": "2026-08-26T02:03:59Z",
+  "currentSliceTitle": "Overworld irregular cartographic fog contour",
+  "currentSliceUpdatedAt": "2026-08-26T02:23:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20052,9 +20089,37 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; preserve completed Overworld route and logical authority.",
-  "notes": "The layered cartographic Overworld route-preview polish is completed; blockers are empty and the next slice remains unselected.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed graphical-polish or release-readiness slice; preserve completed fog/shroud, route, object-scale, and logical authority.",
+  "notes": "The irregular cartographic fog-contour slice is completed; blockers are empty and the next slice remains unselected.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-irregular-cartographic-fog-contour-10184",
+      "title": "Overworld irregular cartographic fog contour",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T02:07:46Z",
+      "updatedAt": "2026-08-26T02:23:38Z",
+      "completedAt": "2026-08-26T02:23:38Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Break the explored fog frontier's remaining square-tile staircase with a restrained deterministic cartographic contour while preserving exact concealment and gameplay authority.",
+      "completionCriteria": "Fresh inspected River Pass 1280x720 and 1920x1080 captures show a less mechanical fog edge; focused and generated runtime prove exact deterministic five-point explored-side geometry, fixed endpoints, bounded inset, unchanged shroud/gradient/fog/session authority; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "nonGoals": [
+        "No fog state, scouting/reveal, hidden identity, terrain, road, object, map content, topology, movement, route, interaction, session/save/schema, generated placement, AI, battle, balance, or Native RMG change.",
+        "No shroud texture, terrain/road/object/hero/town asset or scale, UI/camera layout, animation/audio/VFX, shader, or broad Overworld redesign.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current-capture evidence. The completed inward gradient remains, while its boundary stroke now follows a deterministic five-point explored-side contour with fixed endpoints and bounded inset. Inspected two-width captures, focused Ninefold, generated movement, visual/route/focus/accessibility/core, static/editor, and bounded Linux/Windows startup gates pass.",
+      "blockedReason": null,
+      "remainingWork": "None for this slice; select the next tracker-approved source-backed graphical-polish or release-readiness slice."
+    },
     {
       "id": "ux-overworld-active-hero-command-marker-10184",
       "title": "Overworld active hero command marker",

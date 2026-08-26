@@ -451,7 +451,7 @@ func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) 
 		var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
 		var frontier: Dictionary = terrain.get("fog_frontier", {}) if terrain.get("fog_frontier", {}) is Dictionary else {}
 		if (
-			String(frontier.get("model", "")) != "inward_vertex_gradient_cartographic_frontier"
+			String(frontier.get("model", "")) != "inward_gradient_irregular_cartographic_contour"
 			or frontier.get("direction_order", []) != ["N", "E", "S", "W"]
 			or frontier.get("directions", []) != case_row.get("directions", [])
 			or frontier.get("softened_corners", []) != case_row.get("corners", [])
@@ -462,10 +462,17 @@ func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) 
 			or not is_equal_approx(float(frontier.get("gradient_inner_alpha", -1.0)), 0.0)
 			or not is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.16)
 			or not is_equal_approx(float(frontier.get("edge_width", 0.0)), 1.0)
+			or int(frontier.get("contour_point_count", 0)) != 5
+			or not is_equal_approx(float(frontier.get("contour_min_inset_factor", 0.0)), 0.018)
+			or not is_equal_approx(float(frontier.get("contour_max_inset_factor", 0.0)), 0.060)
+			or not bool(frontier.get("contour_endpoints_on_boundary", false))
+			or bool(frontier.get("contour_hidden_side_intrusion", true))
+			or String(frontier.get("contour_variation_basis", "")) != "explored_tile_direction_only"
 			or String(frontier.get("draw_side", "")) != "explored_inward"
 			or String(frontier.get("neighbor_basis", "")) != "cardinal_explored_boolean_only"
 			or bool(frontier.get("hidden_identity_sampled", true))
 			or bool(frontier.get("interior_explored_seams", true))
+			or not _fog_contour_profiles_exact(frontier, case_row.get("directions", []))
 		):
 			_fail("Ninefold smoke: explored fog frontier contract changed: %s." % JSON.stringify({"case": case_row, "frontier": frontier}))
 			return false
@@ -482,7 +489,7 @@ func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) 
 	if (
 		not bool(hidden_terrain.get("unexplored_hidden", false))
 		or String(hidden_terrain.get("terrain", "leaked")) != ""
-		or String(hidden_frontier.get("model", "")) != "inward_vertex_gradient_cartographic_frontier"
+		or String(hidden_frontier.get("model", "")) != "inward_gradient_irregular_cartographic_contour"
 		or bool(hidden_frontier.get("drawn", true))
 		or String(hidden_frontier.get("draw_side", "")) != "explored_inward"
 		or bool(hidden_frontier.get("hidden_identity_sampled", true))
@@ -492,6 +499,38 @@ func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) 
 	if session.to_dict() != session_authority_before:
 		_fail("Ninefold smoke: fog-frontier observation changed session authority.")
 		return false
+	return true
+
+func _fog_contour_profiles_exact(frontier: Dictionary, expected_directions: Array) -> bool:
+	var profiles: Dictionary = frontier.get("contour_profiles", {}) if frontier.get("contour_profiles", {}) is Dictionary else {}
+	if profiles.keys() != expected_directions:
+		return false
+	for direction_value in expected_directions:
+		var direction := String(direction_value)
+		var profile: Array = profiles.get(direction, []) if profiles.get(direction, []) is Array else []
+		if profile.size() != 5:
+			return false
+		for point_index in range(profile.size()):
+			var point: Dictionary = profile[point_index] if profile[point_index] is Dictionary else {}
+			var x := float(point.get("x", -1.0))
+			var y := float(point.get("y", -1.0))
+			var progress := float(point_index) / 4.0
+			var endpoint := point_index == 0 or point_index == 4
+			match direction:
+				"N":
+					if not is_equal_approx(x, progress) or (endpoint and not is_zero_approx(y)) or (not endpoint and (y < 0.018 or y > 0.060)):
+						return false
+				"S":
+					if not is_equal_approx(x, progress) or (endpoint and not is_equal_approx(y, 1.0)) or (not endpoint and (y < 0.940 or y > 0.982)):
+						return false
+				"W":
+					if not is_equal_approx(y, progress) or (endpoint and not is_zero_approx(x)) or (not endpoint and (x < 0.018 or x > 0.060)):
+						return false
+				"E":
+					if not is_equal_approx(y, progress) or (endpoint and not is_equal_approx(x, 1.0)) or (not endpoint and (x < 0.940 or x > 0.982)):
+						return false
+				_:
+					return false
 	return true
 
 func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_tile: Vector2i) -> bool:
