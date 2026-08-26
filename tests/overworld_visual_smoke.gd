@@ -7,13 +7,14 @@ func _run() -> void:
 	var end_turn_dialog_only := OS.get_environment("OVERWORLD_END_TURN_DIALOG_ONLY") == "1"
 	var objective_brief_only := OS.get_environment("OVERWORLD_OBJECTIVE_BRIEF_ONLY") == "1"
 	var hero_card_only := OS.get_environment("OVERWORLD_HERO_CARD_ONLY") == "1"
+	var object_scale_contract_only := OS.get_environment("OVERWORLD_OBJECT_SCALE_CONTRACT_ONLY") == "1"
 	var object_scale_capture_only := OS.get_environment("OVERWORLD_OBJECT_SCALE_CAPTURE_ONLY") == "1"
 	var route_visual_capture_only := OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_ONLY") == "1"
 	var road_surface_capture_only := OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_ONLY") == "1"
 	var sidebar_ornament_only := OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only or hero_card_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only:
+	elif objective_brief_only or hero_card_only or object_scale_contract_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -31,6 +32,14 @@ func _run() -> void:
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
+		return
+	if object_scale_contract_only:
+		if not _assert_visible_sprite_scale_contract(map_node):
+			return
+		print("OVERWORLD_OBJECT_SCALE_CONTRACT {\"ok\":true}")
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if route_visual_capture_only:
 		if not _assert_overworld_art_contract(shell):
@@ -1870,7 +1879,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 	if String(interceptor_profile.get("hero_id", "")) != "hero_vaska" \
 		or String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw" \
 		or not bool(interceptor_profile.get("uses_commander_sprite", false)) \
-		or not is_equal_approx(float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.56):
+		or not is_equal_approx(float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.64):
 		push_error("Overworld smoke: strategic raid did not retain its exact Mireclaw commander presentation. profile=%s" % interceptor_profile)
 		get_tree().quit(1)
 		return false
@@ -2949,7 +2958,7 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	elif String(hero_layout.get("mode", "")) != "full_tile_world_hero" \
 		or bool(hero_layout.get("town_footprint_colocated", true)) \
 		or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.60) \
+		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.76) \
 		or not bool(hero_layout.get("sprite_contained_in_tile", false)):
 		push_error("Overworld smoke: active field hero did not retain its exact subordinate contained world-figure composition. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
@@ -3713,29 +3722,29 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			push_error("Overworld smoke: mapped sprite did not preserve cached painted bounds/aspect authority. payload=%s" % payload)
 			get_tree().quit(1)
 			return false
-	if String(artifact.get("semantic_scale_class", "")) != "handheld_artifact" or not is_equal_approx(float(artifact.get("visible_extent_tiles", 0.0)), 0.46):
+	if String(artifact.get("semantic_scale_class", "")) != "handheld_artifact" or not is_equal_approx(float(artifact.get("visible_extent_tiles", 0.0)), 0.36):
 		push_error("Overworld smoke: handheld artifact did not retain its legible compact presentation rank. payload=%s" % artifact)
 		get_tree().quit(1)
 		return false
-	if String(pickup.get("semantic_scale_class", "")) != "loose_pickup" or not is_equal_approx(float(pickup.get("visible_extent_tiles", 0.0)), 0.50):
+	if String(pickup.get("semantic_scale_class", "")) != "loose_pickup" or not is_equal_approx(float(pickup.get("visible_extent_tiles", 0.0)), 0.42):
 		push_error("Overworld smoke: pickup visible scale no longer remains subordinate. payload=%s" % pickup)
 		get_tree().quit(1)
 		return false
 	if (
-		String(decoration.get("semantic_scale_class", "")) != "ground_detail" or not is_equal_approx(float(decoration.get("visible_extent_tiles", 0.0)), 0.48)
+		String(decoration.get("semantic_scale_class", "")) != "ground_detail" or not is_equal_approx(float(decoration.get("visible_extent_tiles", 0.0)), 0.39)
 		or String(generic_object.get("semantic_scale_class", "")) != "map_object" or not is_equal_approx(float(generic_object.get("visible_extent_tiles", 0.0)), 0.52)
-		or String(encounter.get("semantic_scale_class", "")) != "encounter" or not is_equal_approx(float(encounter.get("visible_extent_tiles", 0.0)), 0.56)
-		or String(blocker.get("semantic_scale_class", "")) != "terrain_blocker" or not is_equal_approx(float(blocker.get("visible_extent_tiles", 0.0)), 0.54)
-		or String(waypoint.get("semantic_scale_class", "")) != "waypoint" or not is_equal_approx(float(waypoint.get("visible_extent_tiles", 0.0)), 0.58)
+		or String(encounter.get("semantic_scale_class", "")) != "encounter" or not is_equal_approx(float(encounter.get("visible_extent_tiles", 0.0)), 0.64)
+		or String(blocker.get("semantic_scale_class", "")) != "terrain_blocker" or not is_equal_approx(float(blocker.get("visible_extent_tiles", 0.0)), 0.58)
+		or String(waypoint.get("semantic_scale_class", "")) != "waypoint" or not is_equal_approx(float(waypoint.get("visible_extent_tiles", 0.0)), 0.70)
 	):
 		push_error("Overworld smoke: map-object middle ranks no longer form one world-scale ladder. decoration=%s generic=%s encounter=%s blocker=%s waypoint=%s" % [decoration, generic_object, encounter, blocker, waypoint])
 		get_tree().quit(1)
 		return false
-	if String(service.get("semantic_scale_class", "")) != "durable_structure" or not is_equal_approx(float(service.get("visible_extent_tiles", 0.0)), 0.64):
+	if String(service.get("semantic_scale_class", "")) != "durable_structure" or not is_equal_approx(float(service.get("visible_extent_tiles", 0.0)), 0.86):
 		push_error("Overworld smoke: durable service visible scale is not readable at one-tile presentation. payload=%s" % service)
 		get_tree().quit(1)
 		return false
-	if String(objective.get("semantic_scale_class", "")) != "landmark" or not is_equal_approx(float(objective.get("visible_extent_tiles", 0.0)), 0.68):
+	if String(objective.get("semantic_scale_class", "")) != "landmark" or not is_equal_approx(float(objective.get("visible_extent_tiles", 0.0)), 0.94):
 		push_error("Overworld smoke: scenario objective visible scale changed outside its family hierarchy. payload=%s" % objective)
 		get_tree().quit(1)
 		return false
@@ -3744,16 +3753,16 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not bool(tall_waypoint.get("uses_multi_tile_visual_cap", false))
 		or not bool(multi_tile_service.get("uses_multi_tile_visual_cap", false))
 		or not bool(large_service.get("uses_multi_tile_visual_cap", false))
-		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 0.70)
-		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 0.78)
-		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.70)
-		or not is_equal_approx(float(tall_waypoint.get("min_tiles", 0.0)), 0.70)
-		or not is_equal_approx(float(tall_waypoint.get("cap_tiles", 0.0)), 0.78)
-		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.70)
-		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.78)
-		or not is_equal_approx(float(large_service.get("min_tiles", 0.0)), 0.76)
-		or not is_equal_approx(float(large_service.get("cap_tiles", 0.0)), 0.80)
-		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 0.80)
+		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 1.00)
+		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 1.14)
+		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.96)
+		or not is_equal_approx(float(tall_waypoint.get("min_tiles", 0.0)), 1.00)
+		or not is_equal_approx(float(tall_waypoint.get("cap_tiles", 0.0)), 1.14)
+		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.96)
+		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 1.42)
+		or not is_equal_approx(float(large_service.get("min_tiles", 0.0)), 1.40)
+		or not is_equal_approx(float(large_service.get("cap_tiles", 0.0)), 1.56)
+		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 1.56)
 		or not (
 			float(wide_service.get("visible_extent_tiles", 0.0))
 			< float(multi_tile_service.get("visible_extent_tiles", 0.0))
@@ -3771,21 +3780,23 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not is_equal_approx(float(clipped_large_service.get("world_tile_extent_px", 0.0)), 100.0) \
 		or not bool(clipped_large_service.get("footprint_clipped", false)) \
 		or clipped_large_service.get("visible_footprint_rect", {}) != {"x": 200.0, "y": 0.0, "width": 100.0, "height": 200.0} \
-		or clipped_large_service.get("sprite_center", {}) != {"x": 250.0, "y": 140.0} \
+		or clipped_large_service.get("sprite_center", {}) != {"x": 250.0, "y": 127.0} \
 		or not bool(clipped_large_service.get("sprite_contained_in_visible_footprint", false)) \
 		or bool(large_service.get("footprint_clipped", true)) \
-		or not is_equal_approx(float(clipped_large_service.get("visible_extent_tiles", 0.0)), float(large_service.get("visible_extent_tiles", -1.0))) \
+		or not is_equal_approx(float(clipped_large_service.get("visible_extent_tiles", 0.0)), 0.96) \
 		or not is_equal_approx(float(clipped_large_service.get("min_tiles", 0.0)), float(large_service.get("min_tiles", -1.0))) \
 		or not is_equal_approx(float(clipped_large_service.get("cap_tiles", 0.0)), float(large_service.get("cap_tiles", -1.0))) \
-		or clipped_large_service.get("draw_size_tiles", {}) != large_service.get("draw_size_tiles", {}):
-		push_error("Overworld smoke: clipped multi-tile object no longer retains the full-footprint world scale. full=%s clipped=%s" % [large_service, clipped_large_service])
+		or not float(clipped_large_service.get("visible_extent_tiles", 0.0)) < float(large_service.get("visible_extent_tiles", 0.0)):
+		push_error("Overworld smoke: clipped multi-tile object no longer scales down only at the visible board edge. full=%s clipped=%s" % [large_service, clipped_large_service])
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 0.60) or not bool(hero.get("sprite_contained_in_tile", false)):
+	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 0.76) or not bool(hero.get("sprite_contained_in_tile", false)):
 		push_error("Overworld smoke: field hero art is not contained at its proportional tile rank. payload=%s" % hero)
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 0.82):
+	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 1.64) \
+		or not bool(town.get("sprite_contained_in_footprint", false)) \
+		or town.get("sprite_center_tiles", {}) != {"x": 1.5, "y": 1.0}:
 		push_error("Overworld smoke: town art no longer owns the bounded top of the shared world-scale hierarchy. payload=%s" % town)
 		get_tree().quit(1)
 		return false
@@ -3803,7 +3814,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			"map_roles": ["small_reward", "build_resource", "counter_capture_target"],
 		}
 		or String(authored_pickup.get("semantic_scale_class", "")) != "loose_pickup"
-		or not is_equal_approx(float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.50)
+		or not is_equal_approx(float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.42)
 		or authored_service_profile != {
 			"id": "object_contract_scribe_booth",
 			"family": "repeatable_service",
@@ -3815,7 +3826,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			"map_roles": ["route_pacing", "world_lore", "repeatable_service"],
 		}
 		or String(authored_service.get("semantic_scale_class", "")) != "durable_structure"
-		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.70)
+		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.96)
 	):
 		push_error("Overworld smoke: authored semantic profiles drifted from logical footprint/passability/role authority. pickup=%s service=%s" % [authored_pickup, authored_service])
 		get_tree().quit(1)
@@ -3853,7 +3864,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		return false
 	if (
 		float(objective.get("visible_extent_tiles", 0.0)) < float(pickup.get("visible_extent_tiles", 0.0)) * 1.30
-		or float(town.get("visible_extent_tiles", 0.0)) < float(artifact.get("visible_extent_tiles", 0.0)) * 1.70
+		or float(town.get("visible_extent_tiles", 0.0)) < float(artifact.get("visible_extent_tiles", 0.0)) * 4.50
 	):
 		push_error("Overworld smoke: physical role separation collapsed into same-scale board tokens. artifact=%s pickup=%s objective=%s town=%s" % [artifact, pickup, objective, town])
 		get_tree().quit(1)

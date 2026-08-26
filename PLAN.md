@@ -24,13 +24,13 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `presentation-overworld-footprint-proportional-object-scale-10184`.
+- Selected implementation slice: none; select the next tracker-approved graphical-polish slice from fresh playtest evidence.
 
 ## Footprint-Proportional Overworld Object Scale
 
 id: `presentation-overworld-footprint-proportional-object-scale-10184`
 
-Status: in progress.
+Status: completed.
 
 Current finding:
 - fresh 1280x720 and 1920x1080 Overworld captures show the current semantic scale ladder compressing handheld pickups, heroes, one-tile structures, multi-tile services, and 3x2 towns into a narrow 0.46-0.82 tile visible-extent band;
@@ -49,6 +49,11 @@ Completion criteria:
 Non-goals:
 - no sprite replacement, new art asset, map/tile/footprint/passability/visitability/collision/pathfinding/content/save/schema/gameplay/Native RMG change;
 - no camera, zoom, shell layout, control, text, packaged interaction, controller/AT-SPI/UIA/native-hardware, signing/publication, whole-game, or release-readiness claim.
+
+Result:
+- the live Overworld now uses footprint-proportional painted extents: handheld artifacts and loose pickups remain compact at 0.36/0.42 tile, field heroes read at 0.76 tile, one-tile structures and landmarks grow to 0.86/0.94 tile, authored multi-tile sites grow through 0.96/1.42/1.56 tile tiers, and the 3x2 town anchor occupies 1.64 tiles;
+- structures and towns are bottom-grounded inside their visible logical footprint, while partially clipped edge objects shrink only to the visible board intersection and remain contained;
+- inspected 1280x720 and 1920x1080 River Pass captures show a clear item/actor/site/settlement hierarchy; focused scale, small-map, generated-map movement/save, six-faction commander, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass within the stated bounded claims.
 
 ## Cartographic Confirmation Dialog Surfaces
 
