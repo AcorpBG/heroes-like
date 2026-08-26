@@ -824,7 +824,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if not bool(summary.get("body_tile_keys_exact", false)) or not bool(summary.get("all_body_assets_loaded", false)) or not bool(summary.get("all_body_assets_terrain_matched", false)):
 		_fail("%s generated body presentation is incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.56):
+	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.50):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
 	if int(summary.get("composition_key_count", 0)) != int(summary.get("indexed_body_tile_count", -1)):
@@ -848,11 +848,11 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		_fail("%s generated body composition signature is missing: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if (
-		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 1.04)
+		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.88)
 		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_min_tiles", 0.0)), 0.56)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_min_step_tiles", 0.0)), 0.14)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_min_step_tiles", 0.0)), 0.08)
 		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_cap_tiles", 0.0)), 0.64)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_cap_step_tiles", 0.0)), 0.20)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_cap_step_tiles", 0.0)), 0.08)
 	):
 		_fail("%s multi-tile visual cap changed: %s" % [label, summary.get("multi_tile_interactive_cap_tiles", -1.0)])
 		return false
@@ -867,8 +867,8 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		var multi_tile := int(footprint.get("width", 1)) > 1 or int(footprint.get("height", 1)) > 1
 		if multi_tile:
 			var footprint_span := maxi(int(footprint.get("width", 1)), int(footprint.get("height", 1)))
-			var expected_min_tiles := minf(0.56 + float(footprint_span - 1) * 0.14, 1.04)
-			var expected_cap_tiles := minf(0.64 + float(footprint_span - 1) * 0.20, 1.04)
+			var expected_min_tiles := minf(0.56 + float(footprint_span - 1) * 0.08, 0.88)
+			var expected_cap_tiles := minf(0.64 + float(footprint_span - 1) * 0.08, 0.88)
 			if not bool(metrics.get("uses_multi_tile_visual_cap", false)):
 				_fail("%s multi-tile resource did not use the visual cap: %s" % [label, JSON.stringify(entry)])
 				return false

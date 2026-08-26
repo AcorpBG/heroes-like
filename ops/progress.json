@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from direct current capture evidence."
+    "Select the next tracker-approved graphical-polish slice from direct current capture or playtest evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,20 +1911,64 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-battle-sidebar-heraldic-watermark-10184",
-    "title": "Battle sidebar heraldic watermark",
+    "id": "presentation-overworld-coherent-object-scale-ladder-10184",
+    "title": "Overworld coherent object-scale ladder",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T11:26:25Z",
-    "updatedAt": "2026-08-26T11:52:23Z",
+    "startedAt": "2026-08-26T12:01:38Z",
+    "updatedAt": "2026-08-26T12:26:27Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed with one original transparent heraldic watermark inside the existing flexible wide Battle rail. Fresh logical captures, focused four-size runtime, Battle visual/animation/focus/accessibility/core compatibility, static/editor validation, and bounded Linux/Windows export-startup gates are green; layout, input, battle, session/save, and Native RMG authority are unchanged."
+    "notes": "Completed the direct user-reported Overworld scale correction. The coherent painted ladder enlarges undersized props, restrains towns and multi-tile sites, keeps heroes as the intermediate anchor, and preserves exact logical map, interaction, movement, session, and save authority."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-overworld-coherent-object-scale-ladder-20260826",
+      "title": "Overworld coherent object-scale ladder",
+      "sliceId": "presentation-overworld-coherent-object-scale-ladder-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T12:26:27Z",
+      "updatedAt": "2026-08-26T12:26:27Z",
+      "latestFinding": "The live Overworld now uses a compact monotonic painted hierarchy: artifacts and pickups are readable, ordinary props remain below the unchanged hero anchor, footprint-bearing sites remain bounded, and towns no longer overwhelm adjacent cells; logical footprints, routes, movement, interactions, session, and save authority are unchanged.",
+      "artifacts": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/overworld_coherent_scale_capture/captures/overworld_coherent_scale_1280x720.png",
+        ".artifacts/overworld_coherent_scale_capture/captures/overworld_coherent_scale_1920x1080.png",
+        "/tmp/heroes-scale-focused-visual2.4eRBiL",
+        "/tmp/heroes-scale-small-final.pxxrvH",
+        "/tmp/heroes-scale-enemy-final.lW1YmO",
+        "/tmp/heroes-scale-generated-final.uOYV8e",
+        "/tmp/heroes-scale-compat-specific.NYjPxz",
+        "/tmp/heroes-scale-compat-shell.IbORMA",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "artifact_extent_tiles": 0.36,
+        "pickup_extent_tiles": 0.42,
+        "ordinary_prop_extent_tiles": [0.44, 0.55],
+        "hero_extent_tiles": 0.56,
+        "multi_tile_extent_tiles": [0.64, 0.88],
+        "town_extent_tiles_before": 1.2,
+        "town_extent_tiles_after": 1.04,
+        "logical_footprints_routes_movement_session_save_exact": true,
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "packaged_overworld_interaction_claimed": false
+      },
+      "nonClaims": [
+        "No packaged Overworld interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-battle-sidebar-heraldic-watermark-20260826",
       "title": "Battle sidebar heraldic watermark",
@@ -14963,14 +15007,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle sidebar heraldic-watermark polish slice is completed with focused, compatibility, static/editor, and bounded platform evidence; select the next tracker-approved graphical-polish slice from direct current capture evidence.",
+  "currentNotes": "The Overworld coherent object-scale ladder is completed with inspected 1280x720 and 1920x1080 captures, exact focused and compatibility runtime authority, static/editor validation, and bounded Linux/Windows export-startup evidence. The Main Menu title slice remains pending and unimplemented.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-sidebar-heraldic-watermark-10184",
-  "currentSliceId": "presentation-battle-sidebar-heraldic-watermark-10184",
-  "currentSliceNotes": "One transparent text-free heraldic anchor now occupies only the existing flexible wide Battle sidebar negative space, with zero layout pressure and exact compact hiding, input, tabs, board, session, and battle authority.",
+  "currentSlice": "presentation-overworld-coherent-object-scale-ladder-10184",
+  "currentSliceId": "presentation-overworld-coherent-object-scale-ladder-10184",
+  "currentSliceNotes": "Completed the painted settlement-to-prop scale correction while preserving exact identities, assets, footprints, hit areas, passability, routes, interactions, session, and save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation battle sidebar heraldic watermark 10184",
-  "currentSliceUpdatedAt": "2026-08-26T11:52:23Z",
+  "currentSliceTitle": "presentation overworld coherent object scale ladder 10184",
+  "currentSliceUpdatedAt": "2026-08-26T12:26:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20485,9 +20529,62 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct current capture evidence and preserve shipped gameplay, save, and Native RMG authority unless explicitly in scope.",
-  "notes": "The Battle sidebar heraldic-watermark slice is completed with bounded focused/runtime/platform evidence; blockers are empty and no next slice is selected.",
+  "nextActionGuardrailNote": "Select the next graphical-polish slice from direct current capture or playtest evidence; preserve exact gameplay, session/save, and Native RMG authority unless that behavior is explicitly selected.",
+  "notes": "The Overworld coherent object-scale ladder slice is completed and blockers are empty. The Main Menu title slice remains pending and unimplemented.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-coherent-object-scale-ladder-10184",
+      "title": "Overworld coherent object-scale ladder",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T12:01:38Z",
+      "updatedAt": "2026-08-26T12:26:27Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the direct user-reported scale mismatch in which towns dominate neighboring cells while handheld artifacts, pickups, and ordinary props read as undersized symbols.",
+      "completionCriteria": "Fresh River Pass 1280x720 and 1920x1080 captures show a coherent monotonic world scale; focused runtime proves exact painted extents, bounded footprint-aware scaling, and unchanged logical footprints/routes/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No identity, asset, content, footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, interaction, session/save/schema, AI, battle, balance, or Native RMG change.",
+        "No camera/map-fit, shell/UI, selection cue, grounding/contact model, VFX, shader, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current playtest evidence. The final monotonic ladder is visually inspected at 1280x720 and 1920x1080 and is covered by focused geometry/authority, generated movement/save, compatibility, static/editor, and bounded platform startup gates.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
+    {
+      "id": "presentation-main-menu-gilded-title-wordmark-10184",
+      "title": "Main Menu gilded title wordmark",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T11:57:27Z",
+      "updatedAt": "2026-08-26T12:01:38Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/menus/MainMenu.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Integrate the public Aurelion Reach wordmark into the Main Menu's aged-gold crest, plaque, frame, and sunset language instead of leaving it as flat bright UI text.",
+      "completionCriteria": "Fresh 1280x720 and 1920x1080 captures show a restrained gilded embossed wordmark with exact pocket containment; focused runtime proves exact title/eyebrow theme, text, sizes, crest/pocket geometry and unchanged menu/session/save/settings/input authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No copy, crest/backdrop/plaque/panel asset, pocket/footer/stage/command geometry, font family/size, UI scale, input/focus/accessibility semantic, route, session/save/schema, gameplay, content, AI, balance, or Native RMG change.",
+        "No new image, shader, animation/audio/VFX, packaged Main Menu interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Deferred before production implementation when direct current playtest evidence prioritized the Overworld object-scale mismatch. Comparison captures remain available for a later slice.",
+      "blockedReason": null,
+      "remainingWork": "Implement the exact title treatment, add focused validation, capture both widths, and run compatibility/static/platform gates."
+    },
     {
       "id": "presentation-battle-sidebar-heraldic-watermark-10184",
       "title": "Battle sidebar heraldic watermark",
