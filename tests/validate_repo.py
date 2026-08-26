@@ -16124,6 +16124,10 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
 
     active_play_dialog_text = active_play_dialog_path.read_text(encoding="utf-8")
     for required_token in (
+        'const UI_ART_ACTIVE_PLAY_SETTINGS_FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"',
+        'const ACTIVE_PLAY_SETTINGS_FRAME_MODEL := "shared_overworld_parchment_cartographic_frame"',
+        'const ACTIVE_PLAY_SETTINGS_FRAME_TEXTURE_MARGIN := 54',
+        'const ACTIVE_PLAY_SETTINGS_SECTION_LABELS := [&"SoundTitle", &"GameplayTitle", &"ReadabilityTitle"]',
         "func _focus_cycle_controls() -> Array",
         "func _configure_focus_cycle() -> void",
         "FrontierVisualKit.configure_focus_cycle(_focus_cycle_controls())",
@@ -16135,12 +16139,54 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "_close_button",
         "_master_slider",
         "_reduce_repetitive_sounds_toggle",
+        "FrontierVisualKit.apply_art_panel(",
+        "UI_ART_ACTIVE_PLAY_SETTINGS_FRAME",
+        "ACTIVE_PLAY_SETTINGS_FRAME_TEXTURE_MARGIN",
+        'Color(0.82, 0.78, 0.70, 1.0)',
+        'var tone := "gold" if label.name in ACTIVE_PLAY_SETTINGS_SECTION_LABELS else "body"',
+        'var font_size := 15 if label.name in ACTIVE_PLAY_SETTINGS_SECTION_LABELS else 13',
+        'for label in find_children("*", "Label", true, false):',
     ):
         ensure(required_token in active_play_dialog_text, errors, f"ActivePlaySettingsDialog.gd is missing focus-containment token: {required_token}")
+    ensure(
+        'FrontierVisualKit.apply_panel(_panel, "ink", 8)' not in active_play_dialog_text,
+        errors,
+        "ActivePlaySettingsDialog must not restore the generic flat ink panel over the shared ornate frame",
+    )
+    ensure(
+        'find_children("*Label", "Label", true, false)' not in active_play_dialog_text,
+        errors,
+        "ActivePlaySettingsDialog must not exclude section-title nodes from its Label theming pass",
+    )
 
     active_play_report_text = active_play_report_path.read_text(encoding="utf-8")
     battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
     for required_token in (
+        "func _check_ornate_frame_visual_roundtrip",
+        "func _ornate_frame_contract",
+        'dialog.validation_set_toggle("HighContrastToggle", false)',
+        'dialog.validation_set_toggle("HighContrastToggle", original_high_contrast)',
+        'SettingsService.set_ui_scale_percent(100)',
+        'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:',
+        'await _capture_if_requested("%s_settings_%dx%d"',
+        'texture_path == "res://art/ui/runtime/overworld/parchment_panel.png"',
+        "texture_style.texture_margin_left, 24.0",
+        "texture_style.content_margin_left, 0.0",
+        'texture_style.modulate_color == Color(0.82, 0.78, 0.70, 1.0)',
+        'var expected_section_names := [&"SoundTitle", &"GameplayTitle", &"ReadabilityTitle"]',
+        'label.get_theme_color("font_color") == FrontierVisualKit.text_color("gold")',
+        'label.get_theme_font_size("font_size") == 15',
+        "func _settings_visual_authority() -> Dictionary:",
+        'settings_after == settings_before',
+        '"committed_settings": (snapshot.get("committed_settings", {}) as Dictionary).duplicate(true)',
+        '"input_map": _canonical_input_map(snapshot.get("input_map", {}))',
+        "func _canonical_input_map(value: Variant) -> Dictionary:",
+        "func _serialize_input_event(input_event: InputEvent) -> Dictionary:",
+        "PROPERTY_USAGE_STORAGE",
+        '"live_bytes": FileAccess.get_file_as_bytes(settings_file)',
+        'await _check_ornate_frame_visual_roundtrip(dialog, "overworld")',
+        'await _check_ornate_frame_visual_roundtrip(dialog, "town")',
+        'await _check_ornate_frame_visual_roundtrip(dialog, "battle")',
         "func _check_modal_focus_containment",
         "const FOCUS_CYCLE_NAMES",
         "func _check_focus_button_cycle",
@@ -16210,6 +16256,19 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "movement_after == movement_before - 1",
     ):
         ensure(required_token in active_play_report_text, errors, f"active_play_settings_runtime_report.gd is missing focus-containment coverage token: {required_token}")
+    ornate_roundtrip_match = re.search(
+        r"func _check_ornate_frame_visual_roundtrip\(dialog: Control, surface_name: String\) -> bool:(?P<body>.*?)(?=\nfunc )",
+        active_play_report_text,
+        flags=re.DOTALL,
+    )
+    ensure(ornate_roundtrip_match is not None, errors, "Could not isolate active-play Settings ornate-frame visual round trip")
+    if ornate_roundtrip_match is not None:
+        ornate_roundtrip_body = ornate_roundtrip_match.group("body")
+        ensure(ornate_roundtrip_body.count("await _settle()") == 2, errors, "Active-play Settings ornate-frame round trip must settle once per width and once after restoration")
+        ensure(ornate_roundtrip_body.count("_capture_if_requested") == 1, errors, "Active-play Settings ornate-frame round trip must use one width-derived capture call")
+        for forbidden_token in ("queue_free", "remove_child", "add_child", "set_process", "focus_next =", "focus_previous ="):
+            ensure(forbidden_token not in ornate_roundtrip_body, errors, f"Active-play Settings ornate-frame visual proof must not mutate dialog structure or focus policy: {forbidden_token}")
+        ensure("validation_settings_transaction_snapshot() == settings_before" not in ornate_roundtrip_body, errors, "Active-play Settings visual capture must not compare fixture-owned last-result/window-position diagnostics as player settings authority")
 
     battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     battle_settings_close_match = re.search(
