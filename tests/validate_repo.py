@@ -1272,6 +1272,7 @@ OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "watchtower",
     "sawmill",
     "stone_quarry",
+    "ember_signal_post",
 }
 OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
     "site_wood_wagon": "lumber_wagon",
@@ -1283,6 +1284,7 @@ OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
     "site_brightwood_sawmill": "sawmill",
     "site_ridge_quarry": "stone_quarry",
     "site_roadside_sanctum": "shrine",
+    "site_ember_signal_post": "ember_signal_post",
 }
 RELEASE_LOGISTICS_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers"}
 STRATEGIC_RESPONSE_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers", "lockmarsh-surge"}
@@ -39832,6 +39834,55 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         if runtime_path.exists():
             width, height = png_size(runtime_path)
             ensure((width, height) == (512, 512), errors, f"Overworld runtime object asset {asset_id} must use the 512 canvas, found {width}x{height}")
+
+    ember_signal_source_path = ROOT / "art" / "overworld" / "source" / "trimmed" / "map_objects" / "distinct" / "ember_signal_post-trimmed.png"
+    ember_signal_runtime_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "landmarks" / "ember_signal_post.png"
+    ember_signal_asset = object_assets.get("ember_signal_post", {})
+    ember_signal_site_sprite = site_sprites.get("site_ember_signal_post", {})
+    ensure(ember_signal_source_path.is_file() and png_size(ember_signal_source_path) == (1248, 1254), errors, "Ember Signal Post must retain its exact original generated transparent source cutout")
+    ensure(ember_signal_runtime_path.is_file() and png_size(ember_signal_runtime_path) == (512, 512), errors, "Ember Signal Post runtime field sprite must remain an exact 512x512 PNG")
+    if ember_signal_source_path.is_file():
+        source_header = ember_signal_source_path.read_bytes()[:26]
+        ensure(len(source_header) >= 26 and source_header[25] == 6, errors, "Ember Signal Post source cutout must retain an RGBA PNG alpha channel")
+        ensure(hashlib.sha256(ember_signal_source_path.read_bytes()).hexdigest() == "791728c423795a973af6a2ecbdf8f50a62aefc8dc3a33395095a3ba6dc242089", errors, "Ember Signal Post original generated source cutout drifted")
+    if ember_signal_runtime_path.is_file():
+        runtime_header = ember_signal_runtime_path.read_bytes()[:26]
+        ensure(len(runtime_header) >= 26 and runtime_header[25] == 6, errors, "Ember Signal Post runtime field sprite must retain an RGBA PNG alpha channel")
+        ensure(hashlib.sha256(ember_signal_runtime_path.read_bytes()).hexdigest() == "f820d4c3f18d8b39b06efb0850123ae9e7a86ad14ec3fd3f5175326050bed3de", errors, "Ember Signal Post runtime field sprite drifted")
+    ensure(ember_signal_asset == {
+        "path": "res://art/overworld/runtime/objects/landmarks/ember_signal_post.png",
+        "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/ember_signal_post-trimmed.png",
+        "source_model": "built_in_image_gen_original_transparent_cutout",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "assigned_resource_site_id": "site_ember_signal_post",
+        "distinct_sprite_assignment": True,
+    }, errors, "Ember Signal Post manifest entry must retain exact original generated-art provenance and site ownership")
+    ensure(ember_signal_site_sprite == {
+        "asset_id": "ember_signal_post",
+        "fit": "Distinct original Embercourt brazier, mirror, bell, and pennant outpost for the persistent signal-post identity.",
+    }, errors, "Ember Signal Post resource site must retain its exact distinct field-sprite mapping")
+
+    visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    art_contract_block = gd_function_block(visual_text, "_assert_overworld_art_contract")
+    for required_token in (
+        'var signal_authority_before: Dictionary = session.to_dict()',
+        'shell.call("validation_tile_presentation", 2, 3)',
+        '_assert_art_sprite(signal_presentation, "ember_signal_post", false)',
+        'signal_art.get("sprite_asset_ids", []) != ["ember_signal_post"]',
+        'signal_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}]',
+        'var repeated_signal_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)',
+        'repeated_signal_presentation != signal_presentation or session.to_dict() != signal_authority_before',
+    ):
+        ensure(required_token in art_contract_block, errors, f"Overworld visual smoke is missing exact Ember Signal Post field-sprite authority: {required_token}")
+    for forbidden_token in (
+        'unmapped faction outpost did not preserve procedural marker fallback',
+        'fallback_presentation',
+        '_resource_site_asset_ids[',
+        'session.overworld[',
+        'queue_redraw',
+        'create_timer',
+    ):
+        ensure(forbidden_token not in art_contract_block, errors, f"Ember Signal Post visual proof must not restore fallback or mutate renderer/game authority: {forbidden_token}")
 
     decorative_manifest_path = res_path_to_disk(str(manifest.get("decorative_object_sprite_manifest", "")))
     ensure(decorative_manifest_path.exists(), errors, "Overworld art manifest must reference the decorative object sprite manifest")

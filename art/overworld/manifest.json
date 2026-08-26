@@ -288,6 +288,14 @@
       "path": "res://art/overworld/runtime/objects/landmarks/watchtower.png",
       "source_trimmed": "res://art/overworld/source/trimmed/landmarks/watchtower-trimmed.png"
     },
+    "ember_signal_post": {
+      "path": "res://art/overworld/runtime/objects/landmarks/ember_signal_post.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/ember_signal_post-trimmed.png",
+      "source_model": "built_in_image_gen_original_transparent_cutout",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "assigned_resource_site_id": "site_ember_signal_post",
+      "distinct_sprite_assignment": true
+    },
     "sawmill": {
       "path": "res://art/overworld/runtime/objects/landmarks/sawmill.png",
       "source_trimmed": "res://art/overworld/source/trimmed/landmarks/sawmill-trimmed.png"
@@ -3957,6 +3965,10 @@
     "site_starlens_sanctum": {
       "asset_id": "shrine",
       "fit": "Frontier shrine/sanctum match."
+    },
+    "site_ember_signal_post": {
+      "asset_id": "ember_signal_post",
+      "fit": "Distinct original Embercourt brazier, mirror, bell, and pennant outpost for the persistent signal-post identity."
     },
     "site_watchtower_beacon": {
       "asset_id": "watchtower",

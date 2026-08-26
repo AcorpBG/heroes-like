@@ -3436,22 +3436,21 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: Trailsinger Boots did not resolve its exact transparent field silhouette inside one tile. presentation=%s" % artifact_presentation)
 		get_tree().quit(1)
 		return false
-	var fallback_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)
-	var fallback_art: Dictionary = fallback_presentation.get("art_presentation", {})
-	if bool(fallback_art.get("uses_asset_sprite", true)) or not bool(fallback_art.get("fallback_procedural_marker", false)):
-		push_error("Overworld smoke: unmapped faction outpost did not preserve procedural marker fallback. presentation=%s" % fallback_presentation)
+	var signal_authority_before: Dictionary = session.to_dict()
+	var signal_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)
+	if not _assert_art_sprite(signal_presentation, "ember_signal_post", false):
+		return false
+	var signal_art: Dictionary = signal_presentation.get("art_presentation", {})
+	if not bool(signal_presentation.get("has_resource", false)) \
+			or not bool(signal_presentation.get("draws_discoverable_object", false)) \
+			or signal_art.get("sprite_asset_ids", []) != ["ember_signal_post"] \
+			or signal_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}]:
+		push_error("Overworld smoke: Ember Signal Post did not resolve as one exact mapped one-tile field sprite. presentation=%s" % signal_presentation)
 		get_tree().quit(1)
 		return false
-	if String(fallback_art.get("fallback_silhouette_model", "")) != "family_specific_procedural_world_object":
-		push_error("Overworld smoke: procedural fallback object did not report the family-specific world silhouette model. presentation=%s" % fallback_presentation)
-		get_tree().quit(1)
-		return false
-	if String(fallback_art.get("fallback_grounding_model", "")) != "family_specific_contact_scuffs_no_marker_plate" or bool(fallback_art.get("fallback_shared_marker_plate", true)) or bool(fallback_art.get("fallback_upper_mass_backdrop", true)) or bool(fallback_art.get("fallback_foreground_lip", true)):
-		push_error("Overworld smoke: procedural fallback object did not report the no-plate/no-backdrop/no-lip grounding correction. presentation=%s" % fallback_presentation)
-		get_tree().quit(1)
-		return false
-	if String(fallback_art.get("fallback_contact_shadow_model", "")) != "localized_object_contact_shadow":
-		push_error("Overworld smoke: procedural fallback object did not report localized contact shadow grounding. presentation=%s" % fallback_presentation)
+	var repeated_signal_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)
+	if repeated_signal_presentation != signal_presentation or session.to_dict() != signal_authority_before:
+		push_error("Overworld smoke: Ember Signal Post presentation was unstable or mutated session authority. first=%s repeat=%s" % [signal_presentation, repeated_signal_presentation])
 		get_tree().quit(1)
 		return false
 	return true
