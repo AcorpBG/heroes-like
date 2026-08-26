@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from fresh playtest evidence."
+    "Select the next bounded graphical-polish slice from fresh rendered evidence; the independently observed enlarged-hero/open-wing overlap is a candidate."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle movement-range perimeter-contour polish is completed and validated; the next graphical-polish slice is not yet selected and blockers are empty.",
+  "currentNotes": "The compact heraldic Overworld town-pennant polish is completed and validated; the next graphical-polish slice is not yet selected and blockers are empty.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-movement-range-perimeter-contour-10184",
-  "currentSliceId": "presentation-battle-movement-range-perimeter-contour-10184",
-  "currentSliceNotes": "Completed: 32 legal destinations retain 32 subtle pips; 96 repeated ticks became 50 exposed-edge contour segments and 71 internal shared edges are omitted, with movement/combat/session authority unchanged.",
+  "currentSlice": "presentation-overworld-compact-heraldic-town-pennants-10184",
+  "currentSliceId": "presentation-overworld-compact-heraldic-town-pennants-10184",
+  "currentSliceNotes": "Completed: town owner cloth occupies 43.97% of the former flat overlay while exact owner/color-cue, footprint, entry, route, focus, accessibility, and session authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle movement-range perimeter contour",
-  "currentSliceUpdatedAt": "2026-08-26T23:22:11Z",
+  "currentSliceTitle": "Compact heraldic Overworld town pennants",
+  "currentSliceUpdatedAt": "2026-08-26T23:51:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,8 +20852,48 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select one bounded source-backed graphical defect from fresh rendered evidence; preserve gameplay, input, save/session authority, and Native RMG behavior unless the selected slice explicitly owns them.",
-  "notes": "The Battle movement-range perimeter contour is completed: 32 legal cells retain 32 pips, 96 repeated ticks became 50 exposed-edge segments, and 71 internal shared edges are omitted; the next graphical-polish slice is not yet selected.",
+  "notes": "The compact heraldic town-pennant slice is completed with focused/live, compatibility, repository/editor, and bounded Linux/Windows export-startup evidence; no next slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-compact-heraldic-town-pennants-10184",
+      "title": "Compact heraldic Overworld town pennants",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T23:30:26Z",
+      "updatedAt": "2026-08-26T23:51:44Z",
+      "completedAt": "2026-08-26T23:51:44Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_town_pennant_runtime_report.gd",
+        "tests/overworld_town_pennant_runtime_report.tscn",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the broad flat procedural town-owner triangle with a compact single-pass cloth pennant that remains exact to owner color and color-cue shape authority while staying subordinate to the town art.",
+      "completionCriteria": "Inspected 1280/1920 captures and focused runtime prove one compact bounded pennant per town, exact player/enemy/neutral and remembered/color-cue variants, reduced painted footprint, and unchanged town/map/session authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No town sprite/scale/footprint/entry/passability/selection/hover, owner/faction identity, object/hero/terrain/road/fog/route, content, gameplay, session/save/schema, generated placement, AI, balance, or Native RMG change.",
+        "No new bitmap asset, animation/audio/VFX, shell/UI layout, font/UI scale, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for the town-pennant boundary. Focused 1280/1920 variants, inspected pixels, small/generated-map, route, keyboard/focus, accessibility, core, repository/editor, and bounded Linux/Windows startup gates pass. The broad Overworld smoke completed town checks before independently exposing the prior enlarged-hero/open-wing overlap; that remains a separate graphical-polish candidate, not a weakened pennant assertion.",
+      "completionEvidence": {
+        "focusedRuntimeArtifact": "/tmp/heroes-town-pennant-focused.yFLGur",
+        "captureArtifact": "/tmp/heroes-town-pennant-capture-x11.9jhAIu",
+        "smallMapArtifact": "/tmp/heroes-town-pennant-small-scale.iwaa8b",
+        "generatedMapArtifact": "/tmp/heroes-town-pennant-random-map.PBQQHS",
+        "routeArtifact": "/tmp/heroes-town-pennant-route.TbIDVf",
+        "activeFocusArtifact": "/tmp/heroes-town-pennant-active-focus.jzSxmQ",
+        "accessibilityArtifact": "/tmp/heroes-town-pennant-accessibility.ojJbsr",
+        "coreArtifact": "/tmp/heroes-town-pennant-core.Sw5JFC",
+        "broadVisualTownChecksThenUnrelatedHeroWingRed": "/tmp/heroes-town-pennant-overworld-smoke.xymQRh",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-battle-movement-range-perimeter-contour-10184",
       "title": "Battle movement-range perimeter contour",
@@ -104846,9 +104886,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Selected a bounded Battle terrain blend correction so the authored texture reads as one field rather than 77 nearly opaque disconnected hex samples.",
+  "summary": "Completed the compact heraldic Overworld town-pennant polish with exact ownership and town authority preserved; no next graphical-polish slice is selected.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T18:41:10Z",
+  "updatedAt": "2026-08-26T23:51:44Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
