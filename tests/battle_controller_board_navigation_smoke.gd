@@ -14,6 +14,8 @@ func _run() -> void:
 	UiAudio.validation_reset()
 	var original_window_size := get_window().size
 	var original_session = SessionState.active_session
+	if not await _validate_battle_sidebar_watermark_responsiveness():
+		return
 	for width in [1280, 1920]:
 		if not await _validate_battle_board_semantics_width(width):
 			return
@@ -198,6 +200,100 @@ func _run() -> void:
 	UiAudio.validation_reset()
 	print("%s PASS" % REPORT_ID)
 	get_tree().quit(0)
+
+func _validate_battle_sidebar_watermark_responsiveness() -> bool:
+	var original_window_size := get_window().size
+	var original_session = SessionState.active_session
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		return _fail_bool("Battle sidebar watermark fixture has no encounter.")
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	session = SessionState.set_active_session(session)
+	var frame := Control.new()
+	frame.name = "BattleSidebarWatermarkFrame"
+	frame.size = Vector2(1920.0, 1080.0)
+	add_child(frame)
+	var shell: Control = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	frame.add_child(shell)
+	await _settle()
+	var authority_before := _battle_background_authority(session)
+	var sidebar: PanelContainer = shell.get_node("%SidebarShell")
+	var command_panel: PanelContainer = shell.get_node("%CommandPanel")
+	var tabs: TabContainer = shell.get_node("%BattleTabs")
+	var watermark: TextureRect = shell.get_node("%SidebarWatermark")
+	var watermark_texture: Texture2D = watermark.texture
+	var watermark_image: Image = watermark_texture.get_image() if watermark_texture != null else null
+	if watermark_texture == null \
+		or watermark_texture.resource_path != "res://art/ui/runtime/battle/sidebar_heraldic_watermark.png" \
+		or Vector2i(watermark_texture.get_size()) != Vector2i(512, 512) \
+		or watermark_image == null \
+		or watermark_image.get_format() != Image.FORMAT_RGBA8 \
+		or not is_zero_approx(watermark_image.get_pixel(0, 0).a) \
+		or watermark_image.get_pixel(256, 256).a < 0.95 \
+		or watermark.custom_minimum_size != Vector2.ZERO \
+		or watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL \
+		or watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE \
+		or watermark.focus_mode != Control.FOCUS_NONE \
+		or watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE \
+		or watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED \
+		or not is_equal_approx(watermark.self_modulate.a, 0.20):
+		frame.queue_free()
+		SessionState.active_session = original_session
+		get_window().size = original_window_size
+		return _fail_bool("Battle sidebar watermark asset/passive-layout contract mismatch: texture=%s size=%s format=%s corner_alpha=%s center_alpha=%s minimum=%s flags=%s mouse=%s focus=%s expand=%s stretch=%s modulate=%s." % [watermark_texture, watermark_texture.get_size() if watermark_texture != null else Vector2.ZERO, watermark_image.get_format() if watermark_image != null else -1, watermark_image.get_pixel(0, 0).a if watermark_image != null else -1.0, watermark_image.get_pixel(256, 256).a if watermark_image != null else -1.0, watermark.custom_minimum_size, watermark.size_flags_vertical, watermark.mouse_filter, watermark.focus_mode, watermark.expand_mode, watermark.stretch_mode, watermark.self_modulate])
+	var rows: Array = []
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
+		frame.size = Vector2(viewport_size)
+		await _settle()
+		var expected_sidebar_visible: bool = viewport_size.x >= 1360 and viewport_size.y >= 760
+		var expected_watermark_visible: bool = expected_sidebar_visible and viewport_size.y >= 1000
+		var row := {
+			"viewport": viewport_size,
+			"sidebar_visible": sidebar.visible,
+			"watermark_visible": watermark.visible,
+			"watermark_visible_in_tree": watermark.is_visible_in_tree(),
+			"watermark_size": watermark.size,
+		}
+		rows.append(row)
+		if sidebar.visible != expected_sidebar_visible or watermark.visible != expected_watermark_visible:
+			frame.queue_free()
+			SessionState.active_session = original_session
+			get_window().size = original_window_size
+			return _fail_bool("Battle sidebar watermark responsive visibility mismatch: %s rows=%s." % [row, rows])
+		if sidebar.visible:
+			var sidebar_rect := sidebar.get_global_rect()
+			var command_rect := command_panel.get_global_rect()
+			var tabs_rect := tabs.get_global_rect()
+			if not is_equal_approx(tabs.size.y, 248.0) \
+				or not sidebar_rect.encloses(command_rect) \
+				or not sidebar_rect.encloses(tabs_rect) \
+				or command_rect.intersects(tabs_rect):
+				frame.queue_free()
+				SessionState.active_session = original_session
+				get_window().size = original_window_size
+				return _fail_bool("Battle sidebar watermark changed existing card geometry at %s: sidebar=%s command=%s tabs=%s." % [viewport_size, sidebar_rect, command_rect, tabs_rect])
+			if watermark.visible:
+				var watermark_rect := watermark.get_global_rect()
+				if watermark.size.x <= 0.0 or watermark.size.y <= 0.0 \
+					or not sidebar_rect.encloses(watermark_rect) \
+					or watermark_rect.intersects(command_rect) \
+					or watermark_rect.intersects(tabs_rect) \
+					or watermark_rect.position.y + 0.01 < tabs_rect.end.y:
+					frame.queue_free()
+					SessionState.active_session = original_session
+					get_window().size = original_window_size
+					return _fail_bool("Battle sidebar watermark was not confined to reclaimed rail space at %s: watermark=%s sidebar=%s command=%s tabs=%s." % [viewport_size, watermark_rect, sidebar_rect, command_rect, tabs_rect])
+	if _battle_background_authority(session) != authority_before:
+		frame.queue_free()
+		SessionState.active_session = original_session
+		get_window().size = original_window_size
+		return _fail_bool("Battle sidebar watermark responsive inspection changed session/save/settings authority: %s." % [rows])
+	frame.queue_free()
+	await get_tree().process_frame
+	SessionState.active_session = original_session
+	get_window().size = original_window_size
+	return true
 
 func _validate_battle_board_semantics_width(width: int) -> bool:
 	get_window().size = Vector2i(width, 720)

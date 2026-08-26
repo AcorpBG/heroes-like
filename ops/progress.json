@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from direct playtest evidence."
+    "Select the next tracker-approved graphical-polish slice from direct current capture evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,20 +1911,60 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-footprint-readable-world-scale-10184",
-    "title": "Overworld footprint-readable world scale",
+    "id": "presentation-battle-sidebar-heraldic-watermark-10184",
+    "title": "Battle sidebar heraldic watermark",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T10:52:10Z",
-    "updatedAt": "2026-08-26T11:21:14Z",
+    "startedAt": "2026-08-26T11:26:25Z",
+    "updatedAt": "2026-08-26T11:52:23Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the presentation-only world-scale correction: towns paint at 1.20 tiles, one-tile objects and heroes retain a restrained 0.30-0.56 hierarchy, and multi-tile sites grow by footprint span to a 1.04-tile cap. Authored/generated movement, save/reload, visual, route, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass."
+    "notes": "Completed with one original transparent heraldic watermark inside the existing flexible wide Battle rail. Fresh logical captures, focused four-size runtime, Battle visual/animation/focus/accessibility/core compatibility, static/editor validation, and bounded Linux/Windows export-startup gates are green; layout, input, battle, session/save, and Native RMG authority are unchanged."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "presentation-battle-sidebar-heraldic-watermark-20260826",
+      "title": "Battle sidebar heraldic watermark",
+      "sliceId": "presentation-battle-sidebar-heraldic-watermark-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-26T11:52:23Z",
+      "updatedAt": "2026-08-26T11:52:23Z",
+      "latestFinding": "The Battle sidebar's reclaimed wide-layout negative space now carries one subdued original text-free heraldic watermark without changing the Command card, four native Battle tabs, 248px tactical-card height, board/footer allocation, input/focus, battle/session/save authority, or compact composition.",
+      "artifacts": [
+        "art/ui/runtime/battle/sidebar_heraldic_watermark.png",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "/tmp/heroes-battle-watermark-focused-rerun.Iubfg9",
+        "/tmp/heroes-watermark-town-visual.DPGrUB",
+        "/tmp/heroes-watermark-animation.yWNLgr",
+        "/tmp/heroes-watermark-active-focus.A0GkRB",
+        "/tmp/heroes-watermark-accessibility.LvqZpj",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "asset_size_px": [512, 512],
+        "asset_rgba": true,
+        "scene_modulate_alpha": 0.2,
+        "logical_widths_inspected": [1280, 1600, 1920, 2560],
+        "watermark_minimum_size_zero": true,
+        "watermark_mouse_ignored": true,
+        "watermark_focus_none": true,
+        "tactical_card_height_px": 248,
+        "session_save_settings_authority_exact": true,
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "packaged_battle_interaction_claimed": false
+      },
+      "nonClaims": [
+        "No packaged Battle interaction, controller or accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim."
+      ]
+    },
     {
       "id": "presentation-overworld-contained-hover-card-20260826",
       "title": "Overworld contained hover card",
@@ -14923,14 +14963,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld footprint-readable world-scale correction is completed with inspected captures and authored/generated runtime authority preserved.",
+  "currentNotes": "The Battle sidebar heraldic-watermark polish slice is completed with focused, compatibility, static/editor, and bounded platform evidence; select the next tracker-approved graphical-polish slice from direct current capture evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-footprint-readable-world-scale-10184",
-  "currentSliceId": "presentation-overworld-footprint-readable-world-scale-10184",
-  "currentSliceNotes": "Towns now paint at 1.20 tiles over their unchanged 3x2 logical footprint; one-tile objects and heroes use a restrained 0.30-0.56 ladder, and footprint-bearing sites grow to a contained 1.04-tile cap. Fresh 1280x720/1920x1080 captures and authored/generated runtime preserve movement, interaction, session/save, generated placement, and Native RMG authority.",
+  "currentSlice": "presentation-battle-sidebar-heraldic-watermark-10184",
+  "currentSliceId": "presentation-battle-sidebar-heraldic-watermark-10184",
+  "currentSliceNotes": "One transparent text-free heraldic anchor now occupies only the existing flexible wide Battle sidebar negative space, with zero layout pressure and exact compact hiding, input, tabs, board, session, and battle authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation overworld footprint readable world scale 10184",
-  "currentSliceUpdatedAt": "2026-08-26T11:21:14Z",
+  "currentSliceTitle": "presentation battle sidebar heraldic watermark 10184",
+  "currentSliceUpdatedAt": "2026-08-26T11:52:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20445,9 +20485,36 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next bounded graphical-polish slice from direct visual or playtest evidence; preserve gameplay and Native RMG authority.",
-  "notes": "The Overworld footprint-readable world-scale correction is completed; blockers are empty and the next graphical-polish slice is not yet selected.",
+  "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct current capture evidence and preserve shipped gameplay, save, and Native RMG authority unless explicitly in scope.",
+  "notes": "The Battle sidebar heraldic-watermark slice is completed with bounded focused/runtime/platform evidence; blockers are empty and no next slice is selected.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-sidebar-heraldic-watermark-10184",
+      "title": "Battle sidebar heraldic watermark",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T11:26:25Z",
+      "updatedAt": "2026-08-26T11:52:23Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/ui/runtime/battle/sidebar_heraldic_watermark.png",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Turn the wide Battle sidebar's reclaimed flat negative space into an intentional art-backed rest area with one subdued original heraldic anchor.",
+      "completionCriteria": "Fresh wide captures show a quiet contained watermark while compact and short-rail layouts remain uncluttered; focused runtime proves imported transparent art, passive bounded geometry, threshold visibility, zero layout pressure and unchanged sidebar/card/tab/board/session authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No sidebar/card/tab/board/footer/banner allocation, content, input/focus/accessibility, battle rules, AI, balance, save/schema, Native RMG, or other-screen change.",
+        "No extra panel, text, status, action, font/UI-scale, terrain/grid/token/VFX, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed from direct current capture evidence. One original transparent heraldic watermark is confined to the existing flexible wide Battle rail; inspected captures and focused four-size runtime prove passive bounded rendering and unchanged card/tab/board/session authority. Visual/animation/focus/accessibility/core, static/editor, and bounded Linux/Windows export-startup gates are green.",
+      "blockedReason": null,
+      "remainingWork": ""
+    },
     {
       "id": "presentation-overworld-footprint-readable-world-scale-10184",
       "title": "Overworld footprint-readable world scale",

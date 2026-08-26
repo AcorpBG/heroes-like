@@ -24,7 +24,32 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. `presentation-overworld-footprint-readable-world-scale-10184` is completed; select the next tracker-approved graphical-polish slice from direct playtest evidence.
+- Selected implementation slice: none. Select the next tracker-approved graphical-polish slice from direct current capture evidence.
+
+## Battle Sidebar Heraldic Watermark
+
+id: `presentation-battle-sidebar-heraldic-watermark-10184`
+
+Status: completed.
+
+Result:
+- the existing wide Battle sidebar now uses one original transparent heraldic watermark in its reclaimed negative-space region, with fixed subdued modulation, centered aspect-preserving rendering, zero minimum-size pressure, and no input/focus behavior;
+- inspected 1600x900, 1920x1080, and 2560x1440 logical captures confirm a clean short rail and a quiet stable-scale anchor on taller wide layouts; focused runtime additionally proves the compact 1280x720 sidebar-hidden composition, exact imported alpha, four-size geometry, unchanged Command/BattleTabs/board/session authority, and the existing 248px tactical card;
+- Town/Battle visual, Battle animation, active-play focus, accessibility semantics, core systems, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green. Packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Implementation boundary:
+- add one original transparent, text-free battle heraldry asset and render it as a subdued centered watermark only inside the existing flexible negative-space region below the wide Battle tactical card;
+- keep the ornament noninteractive, zero-minimum-size, aspect-preserving, opacity-bounded, and hidden whenever the established compact Battle sidebar is hidden or the remaining rail is too short;
+- preserve the exact Command card, four Battle tabs/pages, 248px tactical-card height, sidebar width, board/footer allocation, focus/navigation, commands, battle/session/save/settings authority, and existing art-backed rail.
+
+Completion criteria:
+- fresh inspected 1920x1080 and 2560x1440 Battle captures show a quiet integrated heraldic anchor in the reclaimed rail space, while 1280x720 retains the exact compact sidebar-hidden composition and 1600x900 remains uncluttered;
+- focused runtime proves the exact imported texture, transparent source, bounded centered draw geometry, passive mouse/focus behavior, wide-height visibility threshold, no minimum-size contribution, and unchanged sidebar/card/tab/board/session authority;
+- Battle visual/layout/navigation/animation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no Command card or BattleTabs content/height, sidebar width, board/footer/banner geometry, new panel/text/status/action, font/UI scale, token/grid/terrain/VFX, input/focus/accessibility semantic, battle rule, AI, balance, content, save/schema, Native RMG, or other-screen change;
+- no packaged Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Footprint-Readable World Scale
 
