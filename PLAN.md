@@ -26,6 +26,31 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved graphical-polish slice.
 
+## Battle Movement-Range Alternating Edge Cues
+
+id: `ux-battle-movement-range-alternating-edge-cues-10184`
+
+Status: completed.
+
+Result:
+- replaced the repeated complete cyan movement-range hex outlines with three short alternating edge ticks, a quiet center pip, and a substantially lighter inset fill on every exact legal destination;
+- fresh inspected 1280x720 and 1920x1080 Battle captures show materially less secondary honeycomb clutter while retaining legible movement cells and making terrain, unit art, the gold active ring, target rings, objectives, and controller cues dominant;
+- focused Battle/Town visual, rendered 1280/1920 Battle skin, Board navigation, animation/VFX, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Two headless-only skin-report attempts were excluded as fixture no-results because that owner awaits `frame_post_draw`; the exact selected rows passed naturally under Xvfb. Packaged Battle interaction parity, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged and unclaimed.
+
+Implementation boundary:
+- replace only the repeated full cyan movement-range hex outline with three short alternating edge ticks, a quiet center pip, and a more restrained inset fill on every exact legal destination;
+- keep the existing active-stack, target, blocked-target, controller, objective, VFX, token, caption, terrain, and base-grid treatments above or otherwise distinct from the new range marks;
+- preserve the exact legal destination array/order/count, board geometry, hit areas, movement/pathing, input/focus/accessibility, combat, session/save, content, and Native RMG authority.
+
+Completion criteria:
+- fresh inspected 1280x720 and 1920x1080 Battle captures show materially less honeycomb clutter while every legal destination remains legible and unit/terrain art is primary;
+- focused runtime proves one cue per exact legal cell, exact tick/pip/fill geometry, no complete secondary outline, unchanged active/target/controller layering, and whole battle/session/save/settings authority;
+- Battle visual/navigation/animation/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no legal-cell, pathfinding, movement, action, target, hit geometry, token, terrain texture, base grid, objective, VFX/audio, animation, battle rule, AI, balance, content, save/schema, layout, font/UI-scale, or Native RMG change;
+- no packaged Battle interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Main Menu Painted-Torch Ambient Glow
 
 id: `presentation-main-menu-painted-torch-ambient-glow-10184`

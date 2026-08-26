@@ -54,11 +54,16 @@ const STACK_CAPTION_PLATE_FILL := Color(0.018, 0.024, 0.029, 0.78)
 const STACK_CAPTION_PLATE_FRAME := Color(0.80, 0.74, 0.57, 0.30)
 const STACK_CAPTION_PLATE_SHADOW := Color(0.01, 0.014, 0.018, 0.42)
 const STACK_CAPTION_ACCENT_ALPHA := 0.82
-const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.48)
-const MOVE_RANGE_VISUAL_MODEL := "thin_inset_outline_near_transparent_fill"
-const MOVE_RANGE_RADIUS_FACTOR := 0.72
-const MOVE_RANGE_FILL_ALPHA := 0.045
-const MOVE_RANGE_OUTLINE_WIDTH := 1.15
+const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.58)
+const MOVE_RANGE_VISUAL_MODEL := "alternating_edge_ticks_center_pip_near_transparent_fill"
+const MOVE_RANGE_FILL_RADIUS_FACTOR := 0.66
+const MOVE_RANGE_FILL_ALPHA := 0.020
+const MOVE_RANGE_TICK_RADIUS_FACTOR := 0.74
+const MOVE_RANGE_TICK_SEGMENT_FACTOR := 0.36
+const MOVE_RANGE_TICK_WIDTH := 1.4
+const MOVE_RANGE_TICK_EDGE_COUNT := 3
+const MOVE_RANGE_PIP_RADIUS_FACTOR := 0.045
+const MOVE_RANGE_PIP_ALPHA := 0.52
 const LEGAL_MELEE_COLOR := Color(1.0, 0.78, 0.36, 0.90)
 const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
 const HEALTH_COLOR := Color(0.95, 0.79, 0.35, 0.96)
@@ -848,10 +853,16 @@ func validation_hex_layout_summary() -> Dictionary:
 		"legal_destination_count": legal_destinations.size(),
 		"movement_range_visual_model": MOVE_RANGE_VISUAL_MODEL,
 		"movement_range_cell_count": legal_destinations.size(),
-		"movement_range_radius_factor": MOVE_RANGE_RADIUS_FACTOR,
+		"movement_range_fill_radius_factor": MOVE_RANGE_FILL_RADIUS_FACTOR,
 		"movement_range_fill_alpha": MOVE_RANGE_FILL_ALPHA,
-		"movement_range_outline_alpha": MOVE_COLOR.a,
-		"movement_range_outline_width": MOVE_RANGE_OUTLINE_WIDTH,
+		"movement_range_tick_radius_factor": MOVE_RANGE_TICK_RADIUS_FACTOR,
+		"movement_range_tick_segment_factor": MOVE_RANGE_TICK_SEGMENT_FACTOR,
+		"movement_range_tick_alpha": MOVE_COLOR.a,
+		"movement_range_tick_width": MOVE_RANGE_TICK_WIDTH,
+		"movement_range_tick_edge_count": MOVE_RANGE_TICK_EDGE_COUNT,
+		"movement_range_pip_radius_factor": MOVE_RANGE_PIP_RADIUS_FACTOR,
+		"movement_range_pip_alpha": MOVE_RANGE_PIP_ALPHA,
+		"movement_range_complete_outline": false,
 		"movement_range_all_legal_cells_drawn": true,
 		"movement_range_hover_only": false,
 		"movement_range_below_active_targets_and_stacks": true,
@@ -2177,13 +2188,7 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 			var cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
 			if not _cell_in_bounds(cell):
 				continue
-			_draw_hex(
-				_hex_center(cell, hex_layout),
-				radius * MOVE_RANGE_RADIUS_FACTOR,
-				Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_FILL_ALPHA),
-				MOVE_COLOR,
-				MOVE_RANGE_OUTLINE_WIDTH
-			)
+			_draw_movement_destination_cue(_hex_center(cell, hex_layout), radius)
 
 	_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)
 
@@ -2219,6 +2224,33 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 					_draw_hex_outline(target_center, radius * 1.12, setup_color, 2.4)
 				_draw_hex_outline(target_center, radius * 1.02, TARGET_COLOR, 3.2)
 				_draw_focus_link(active_center, target_center, String(_active_stack.get("side", "")))
+
+func _draw_movement_destination_cue(center: Vector2, radius: float) -> void:
+	_draw_hex(
+		center,
+		radius * MOVE_RANGE_FILL_RADIUS_FACTOR,
+		Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_FILL_ALPHA),
+		Color(0.0, 0.0, 0.0, 0.0),
+		0.0
+	)
+	var tick_points := _hex_points(center, radius * MOVE_RANGE_TICK_RADIUS_FACTOR)
+	var inset := (1.0 - MOVE_RANGE_TICK_SEGMENT_FACTOR) * 0.5
+	for edge_index in [0, 2, 4]:
+		var edge_start: Vector2 = tick_points[edge_index]
+		var edge_end: Vector2 = tick_points[(edge_index + 1) % tick_points.size()]
+		draw_line(
+			edge_start.lerp(edge_end, inset),
+			edge_start.lerp(edge_end, 1.0 - inset),
+			MOVE_COLOR,
+			MOVE_RANGE_TICK_WIDTH,
+			true
+		)
+	draw_circle(
+		center,
+		clampf(radius * MOVE_RANGE_PIP_RADIUS_FACTOR, 1.4, 2.6),
+		Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_PIP_ALPHA),
+		true
+	)
 
 func _draw_controller_cursor(hex_layout: Dictionary) -> void:
 	if not has_focus() or not _cell_in_bounds(_controller_cursor_cell):

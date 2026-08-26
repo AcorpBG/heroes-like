@@ -33311,7 +33311,7 @@ def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) 
             ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
 
 
-def validate_battle_movement_range_overlay_restraint(errors: list[str]) -> None:
+def validate_battle_movement_range_alternating_edge_cues(errors: list[str]) -> None:
     def gd_function_block(text: str, name: str) -> str:
         start = text.find(f"func {name}(")
         if start < 0:
@@ -33331,25 +33331,29 @@ def validate_battle_movement_range_overlay_restraint(errors: list[str]) -> None:
     smoke_text = smoke_path.read_text(encoding="utf-8")
     visual_text = visual_path.read_text(encoding="utf-8")
     for token in (
-        "const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.48)",
-        'const MOVE_RANGE_VISUAL_MODEL := "thin_inset_outline_near_transparent_fill"',
-        "const MOVE_RANGE_RADIUS_FACTOR := 0.72",
-        "const MOVE_RANGE_FILL_ALPHA := 0.045",
-        "const MOVE_RANGE_OUTLINE_WIDTH := 1.15",
+        "const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.58)",
+        'const MOVE_RANGE_VISUAL_MODEL := "alternating_edge_ticks_center_pip_near_transparent_fill"',
+        "const MOVE_RANGE_FILL_RADIUS_FACTOR := 0.66",
+        "const MOVE_RANGE_FILL_ALPHA := 0.020",
+        "const MOVE_RANGE_TICK_RADIUS_FACTOR := 0.74",
+        "const MOVE_RANGE_TICK_SEGMENT_FACTOR := 0.36",
+        "const MOVE_RANGE_TICK_WIDTH := 1.4",
+        "const MOVE_RANGE_TICK_EDGE_COUNT := 3",
+        "const MOVE_RANGE_PIP_RADIUS_FACTOR := 0.045",
+        "const MOVE_RANGE_PIP_ALPHA := 0.52",
     ):
         ensure(board_text.count(token) == 1, errors, f"Battle movement-range restraint must own one exact visual constant: {token}")
     affordance = gd_function_block(board_text, "_draw_tactical_affordances")
+    cue_draw = gd_function_block(board_text, "_draw_movement_destination_cue")
     summary = gd_function_block(board_text, "validation_hex_layout_summary")
-    ensure(affordance and summary, errors, "Could not isolate Battle movement-range draw/summary ownership")
+    ensure(affordance and cue_draw and summary, errors, "Could not isolate Battle movement-range cue/draw/summary ownership")
     if affordance:
         draw_order = tuple(affordance.find(token) for token in (
             "if player_input_active:",
             "for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):",
             "if not (destination is Dictionary):",
             "if not _cell_in_bounds(cell):",
-            "radius * MOVE_RANGE_RADIUS_FACTOR",
-            "Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_FILL_ALPHA)",
-            "MOVE_RANGE_OUTLINE_WIDTH",
+            "_draw_movement_destination_cue(_hex_center(cell, hex_layout), radius)",
             "_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)",
             "var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)",
             "var legal_ranged_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, true)",
@@ -33357,18 +33361,40 @@ def validate_battle_movement_range_overlay_restraint(errors: list[str]) -> None:
         ))
         ensure(all(index >= 0 for index in draw_order) and list(draw_order) == sorted(draw_order), errors, "Movement range must draw every exact legal in-bounds destination below unchanged active/attack/target cues")
         ensure(affordance.count("BattleRulesScript.legal_destinations_for_active_stack(_battle)") == 1, errors, "Movement range must materialize the authoritative legal destination list exactly once")
-        for forbidden in ("radius * 0.78", "0.16), MOVE_COLOR, 1.8", "sort(", "erase(", "await ", "create_timer", "hover", "controller"):
+        for forbidden in ("MOVE_RANGE_RADIUS_FACTOR", "MOVE_RANGE_OUTLINE_WIDTH", "_draw_hex(_hex_center(cell", "sort(", "erase(", "await ", "create_timer", "hover", "controller"):
             ensure(forbidden not in affordance, errors, f"Movement range draw must avoid obsolete/heurstic/mutating presentation path: {forbidden}")
+    if cue_draw:
+        cue_order = tuple(cue_draw.find(token) for token in (
+            "radius * MOVE_RANGE_FILL_RADIUS_FACTOR",
+            "Color(MOVE_COLOR.r, MOVE_COLOR.g, MOVE_COLOR.b, MOVE_RANGE_FILL_ALPHA)",
+            "var tick_points := _hex_points(center, radius * MOVE_RANGE_TICK_RADIUS_FACTOR)",
+            "var inset := (1.0 - MOVE_RANGE_TICK_SEGMENT_FACTOR) * 0.5",
+            "for edge_index in [0, 2, 4]:",
+            "draw_line(",
+            "MOVE_RANGE_TICK_WIDTH",
+            "draw_circle(",
+            "radius * MOVE_RANGE_PIP_RADIUS_FACTOR",
+            "MOVE_RANGE_PIP_ALPHA",
+        ))
+        ensure(all(index >= 0 for index in cue_order) and list(cue_order) == sorted(cue_order), errors, "Movement destination cue must draw restrained fill, three alternating edge ticks, then the center pip")
+        for forbidden in ("_draw_hex_outline", "_closed_points", "range(6)", "BattleRulesScript", "Input.", "sort(", "erase(", "await ", "create_timer"):
+            ensure(forbidden not in cue_draw, errors, f"Movement destination cue must not rebuild authority or restore a complete outline: {forbidden}")
     if summary:
         for token in (
             '"legal_destinations": legal_destinations',
             '"legal_destination_count": legal_destinations.size()',
             '"movement_range_visual_model": MOVE_RANGE_VISUAL_MODEL',
             '"movement_range_cell_count": legal_destinations.size()',
-            '"movement_range_radius_factor": MOVE_RANGE_RADIUS_FACTOR',
+            '"movement_range_fill_radius_factor": MOVE_RANGE_FILL_RADIUS_FACTOR',
             '"movement_range_fill_alpha": MOVE_RANGE_FILL_ALPHA',
-            '"movement_range_outline_alpha": MOVE_COLOR.a',
-            '"movement_range_outline_width": MOVE_RANGE_OUTLINE_WIDTH',
+            '"movement_range_tick_radius_factor": MOVE_RANGE_TICK_RADIUS_FACTOR',
+            '"movement_range_tick_segment_factor": MOVE_RANGE_TICK_SEGMENT_FACTOR',
+            '"movement_range_tick_alpha": MOVE_COLOR.a',
+            '"movement_range_tick_width": MOVE_RANGE_TICK_WIDTH',
+            '"movement_range_tick_edge_count": MOVE_RANGE_TICK_EDGE_COUNT',
+            '"movement_range_pip_radius_factor": MOVE_RANGE_PIP_RADIUS_FACTOR',
+            '"movement_range_pip_alpha": MOVE_RANGE_PIP_ALPHA',
+            '"movement_range_complete_outline": false',
             '"movement_range_all_legal_cells_drawn": true',
             '"movement_range_hover_only": false',
             '"movement_range_below_active_targets_and_stacks": true',
@@ -33376,13 +33402,19 @@ def validate_battle_movement_range_overlay_restraint(errors: list[str]) -> None:
         ):
             ensure(token in summary, errors, f"Battle board summary is missing exact movement-range authority/profile token: {token}")
     for token in (
-        'String(hex_summary.get("movement_range_visual_model", "")) != "thin_inset_outline_near_transparent_fill"',
+        'String(hex_summary.get("movement_range_visual_model", "")) != "alternating_edge_ticks_center_pip_near_transparent_fill"',
         'int(hex_summary.get("movement_range_cell_count", -1)) != int(hex_summary.get("legal_destination_count", -2))',
         'int(hex_summary.get("movement_range_cell_count", 0)) <= 0',
-        'float(hex_summary.get("movement_range_radius_factor", 0.0)), 0.72',
-        'float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.045',
-        'float(hex_summary.get("movement_range_outline_alpha", 0.0)), 0.48',
-        'float(hex_summary.get("movement_range_outline_width", 0.0)), 1.15',
+        'float(hex_summary.get("movement_range_fill_radius_factor", 0.0)), 0.66',
+        'float(hex_summary.get("movement_range_fill_alpha", 0.0)), 0.020',
+        'float(hex_summary.get("movement_range_tick_radius_factor", 0.0)), 0.74',
+        'float(hex_summary.get("movement_range_tick_segment_factor", 0.0)), 0.36',
+        'float(hex_summary.get("movement_range_tick_alpha", 0.0)), 0.58',
+        'float(hex_summary.get("movement_range_tick_width", 0.0)), 1.4',
+        'int(hex_summary.get("movement_range_tick_edge_count", 0)) != 3',
+        'float(hex_summary.get("movement_range_pip_radius_factor", 0.0)), 0.045',
+        'float(hex_summary.get("movement_range_pip_alpha", 0.0)), 0.52',
+        'bool(hex_summary.get("movement_range_complete_outline", true))',
         'not bool(hex_summary.get("movement_range_all_legal_cells_drawn", false))',
         'bool(hex_summary.get("movement_range_hover_only", true))',
         'not bool(hex_summary.get("movement_range_below_active_targets_and_stacks", false))',
@@ -33398,10 +33430,17 @@ def validate_battle_movement_range_overlay_restraint(errors: list[str]) -> None:
             'board.call("validation_hex_layout_summary")',
             "legal_destination_count > 0",
             'int(summary.get("movement_range_cell_count", -2)) == legal_destination_count',
-            'String(summary.get("movement_range_visual_model", "")) == "thin_inset_outline_near_transparent_fill"',
-            'float(summary.get("movement_range_fill_alpha", 0.0)), 0.045',
-            'float(summary.get("movement_range_outline_alpha", 0.0)), 0.48',
-            'float(summary.get("movement_range_outline_width", 0.0)), 1.15',
+            'String(summary.get("movement_range_visual_model", "")) == "alternating_edge_ticks_center_pip_near_transparent_fill"',
+            'float(summary.get("movement_range_fill_radius_factor", 0.0)), 0.66',
+            'float(summary.get("movement_range_fill_alpha", 0.0)), 0.020',
+            'float(summary.get("movement_range_tick_radius_factor", 0.0)), 0.74',
+            'float(summary.get("movement_range_tick_segment_factor", 0.0)), 0.36',
+            'float(summary.get("movement_range_tick_alpha", 0.0)), 0.58',
+            'float(summary.get("movement_range_tick_width", 0.0)), 1.4',
+            'int(summary.get("movement_range_tick_edge_count", 0)) == 3',
+            'float(summary.get("movement_range_pip_radius_factor", 0.0)), 0.045',
+            'float(summary.get("movement_range_pip_alpha", 0.0)), 0.52',
+            'not bool(summary.get("movement_range_complete_outline", true))',
             'bool(summary.get("movement_range_all_legal_cells_drawn", false))',
             'not bool(summary.get("movement_range_hover_only", true))',
         ):
@@ -68819,7 +68858,7 @@ def main() -> int:
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
-    validate_battle_movement_range_overlay_restraint(errors)
+    validate_battle_movement_range_alternating_edge_cues(errors)
     validate_battle_sidebar_tactical_card_height_cap(errors)
     validate_battle_sidebar_heraldic_watermark(errors)
     validate_battle_footer_heraldic_watermark(errors)
