@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select another bounded, tracker-approved graphical-polish slice from fresh inspected pixels."
+    "Correct the compressed Overworld item, actor, structure, and town scale ladder using authored logical footprints without changing map behavior."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15327,14 +15327,14 @@
       }
     }
   ],
-  "currentNotes": "The Map Editor cartographic workbench skin is completed from inspected 1280x720 and 1920x1080 pixels, focused visual/authority runtime, compatibility, static/editor, and bounded Linux/Windows package startup evidence; blockers are empty.",
+  "currentNotes": "The footprint-proportional Overworld object-scale correction is in progress from fresh 1280/1920 evidence; blockers are empty.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-map-editor-cartographic-workbench-skin-10184",
-  "currentSliceId": "presentation-map-editor-cartographic-workbench-skin-10184",
-  "currentSliceNotes": "Completed: the exact live editor shell, command bar, map frame, tool rail, actions, and pickers use existing exported cartographic frame and shared button-state art while preserving layout, focus, package, session, save, and editor authority.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor cartographic workbench skin",
-  "currentSliceUpdatedAt": "2026-08-26T21:48:05Z",
+  "currentSlice": "presentation-overworld-footprint-proportional-object-scale-10184",
+  "currentSliceId": "presentation-overworld-footprint-proportional-object-scale-10184",
+  "currentSliceNotes": "In progress: widen the compressed painted Overworld scale ladder so item, actor, durable structure, multi-tile structure, and town art visibly reflects physical role and logical footprint while preserving map authority.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Footprint-proportional Overworld object scale",
+  "currentSliceUpdatedAt": "2026-08-26T22:16:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20849,9 +20849,76 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next bounded graphical-polish slice from fresh inspected pixels; do not broaden completed presentation work or claim packaged interaction, hardware certification, Native RMG parity, or release readiness.",
-  "notes": "The Map Editor cartographic workbench skin is completed with blockers empty. Fresh inspected pixels and focused runtime own the editor interaction claim; official Linux and Windows evidence remains bounded to export and startup.",
+  "nextActionGuardrailNote": "Correct only painted Overworld sprite scale and footprint growth; preserve logical footprints, map interaction/pathfinding, session authority, content, and Native RMG behavior.",
+  "notes": "The footprint-proportional Overworld object-scale correction is the sole selected graphical-polish slice; implementation and validation are in progress with blockers empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-footprint-proportional-object-scale-10184",
+      "title": "Footprint-proportional Overworld object scale",
+      "status": "in_progress",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T22:16:47Z",
+      "updatedAt": "2026-08-26T22:16:47Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the compressed board-token scale ladder with an aspect-correct, bottom-anchored physical hierarchy in which loose items remain compact and authored multi-tile structures and towns visibly reflect their logical footprint.",
+      "completionCriteria": "Inspected 1280/1920 captures and focused/live runtime prove exact semantic ranks, footprint growth, painted-bounds aspect, visible-edge containment, and unchanged selection/collision/route/session authority; small/generated map, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No sprite replacement, new art asset, map/tile/footprint/passability/visitability/collision/pathfinding/content/save/schema/gameplay/Native RMG change.",
+        "No camera, zoom, shell layout, control, text, packaged interaction, controller/AT-SPI/UIA/native-hardware, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Implement footprint-proportional painted sprite extents, inspect fresh representative pixels, and complete focused/live, small/generated map, static/editor, and bounded platform validation."
+    },
+    {
+      "id": "presentation-cartographic-confirmation-dialog-surfaces-10184",
+      "title": "Cartographic confirmation dialog surfaces",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T21:58:08Z",
+      "updatedAt": "2026-08-26T22:16:47Z",
+      "completedAt": "2026-08-26T22:16:47Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scripts/ui/FrontierVisualKit.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "scenes/shared/ManualSaveOverwriteDialog.gd",
+        "tests/confirmation_dialog_visual_surface_report.gd",
+        "tests/confirmation_dialog_visual_surface_report.tscn",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the remaining flat gray native confirmation surfaces with the game's existing cartographic frame and shared control-state art across consequential menu and active-play workflows.",
+      "completionCriteria": "Inspected 1280/1920 pixels and focused runtime prove exact cartographic frame/button assets, semantic primary/danger roles, high-contrast fallback, containment, and unchanged labels/focus/actions; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No dialog, button, title, message, shortcut, action, focus order, native-window ownership, popup size, layout, settings/save/package/session/schema/route/gameplay/content/Native RMG behavior, or new art asset.",
+        "No packaged dialog interaction parity, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None. Shared cartographic frame/button roles, 10-pixel contained inset, exact semantic authority, representative compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; packaged interaction and release-readiness remain unclaimed.",
+      "completionEvidence": {
+        "focusedArtifact": "/tmp/heroes-confirmation-fixed.g62LiL",
+        "settingsArtifact": "/tmp/heroes-confirmation-compat.U2u50W",
+        "withdrawalArtifact": "/tmp/heroes-confirmation-withdrawal.yROfvr",
+        "outcomeArtifact": "/tmp/heroes-confirmation-fixed.g62LiL",
+        "editorArtifact": "/tmp/heroes-confirmation-editor.ljLhlp",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-map-editor-cartographic-workbench-skin-10184",
       "title": "Map Editor cartographic workbench skin",

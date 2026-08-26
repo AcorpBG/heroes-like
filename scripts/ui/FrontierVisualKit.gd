@@ -181,6 +181,11 @@ const POINTER_CURSOR_SIZE := Vector2(32.0, 32.0)
 const POINTER_CURSOR_HOTSPOT := Vector2(3.0, 2.0)
 
 const BUTTON_ART_ROOT := "res://art/ui/runtime/shared"
+const CONFIRMATION_DIALOG_SURFACE_MODEL := "shared_cartographic_frame_semantic_confirmation_controls"
+const CONFIRMATION_DIALOG_FRAME_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"
+const CONFIRMATION_DIALOG_TEXTURE_MARGIN := 24
+const CONFIRMATION_DIALOG_CONTENT_MARGIN := 10
+const CONFIRMATION_DIALOG_FRAME_MODULATE := Color(0.92, 0.94, 0.96, 0.98)
 const ITEM_LIST_ROW_MODEL := "compact_enamel_gold_registration_inlay"
 const ITEM_LIST_ROW_CORNER_RADIUS := 4
 const ITEM_LIST_ROW_ACCENT_WIDTH := 4
@@ -377,6 +382,30 @@ static func apply_button(button: BaseButton, role: String = "secondary", width: 
 
 static func apply_option_button(button: OptionButton, role: String = "secondary", width: float = 150.0, height: float = 36.0, font_size: int = 14) -> void:
 	apply_button(button, role, width, height, font_size)
+
+static func apply_confirmation_dialog(dialog: ConfirmationDialog, confirm_role: String = "primary") -> void:
+	if dialog == null:
+		return
+	var resolved_confirm_role := "danger" if confirm_role == "danger" else "primary"
+	var frame_style := texture_panel_style(
+		CONFIRMATION_DIALOG_FRAME_PATH,
+		"ink",
+		CONFIRMATION_DIALOG_TEXTURE_MARGIN,
+		CONFIRMATION_DIALOG_CONTENT_MARGIN,
+		CONFIRMATION_DIALOG_FRAME_MODULATE
+	)
+	dialog.add_theme_stylebox_override("panel", frame_style)
+	dialog.add_theme_stylebox_override("embedded_border", frame_style.duplicate())
+	dialog.add_theme_color_override("title_color", text_color("gold"))
+	var message_label := dialog.get_label()
+	if message_label != null:
+		apply_label(message_label, "body")
+	var cancel_button := dialog.get_cancel_button()
+	if cancel_button != null:
+		_apply_button_theme(cancel_button, "secondary")
+	var confirm_button := dialog.get_ok_button()
+	if confirm_button != null:
+		_apply_button_theme(confirm_button, resolved_confirm_role)
 
 static func configure_focus_cycle(surfaces: Array) -> Array:
 	var controls: Array = []

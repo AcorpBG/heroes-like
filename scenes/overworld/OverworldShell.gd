@@ -12002,6 +12002,8 @@ func _style_rail_action_button(button: Button, role: String = "secondary", heigh
 	button.clip_text = true
 
 func _apply_visual_theme() -> void:
+	FrontierVisualKit.apply_confirmation_dialog(_end_turn_confirmation_dialog, "primary")
+	FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")
 	FrontierVisualKit.apply_panel(_shell_panel, "earth", 24)
 	FrontierVisualKit.apply_panel(_top_strip_panel, "banner", 20)
 	FrontierVisualKit.apply_badge(_status_chip_panel, "ink")

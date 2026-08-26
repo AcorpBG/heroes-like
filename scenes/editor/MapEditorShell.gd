@@ -8085,6 +8085,7 @@ func _set_compact_label(label: Label, text: String, max_lines: int) -> void:
 	label.max_lines_visible = max_lines
 
 func _apply_visual_theme() -> void:
+	FrontierVisualKit.apply_confirmation_dialog(_dirty_transition_dialog, "danger")
 	FrontierVisualKit.apply_art_panel(_editor_shell_panel, EDITOR_SHELL_FRAME_PATH, "frame", 24, 8, Color(0.90, 0.92, 0.94, 0.96))
 	FrontierVisualKit.apply_art_panel(_editor_top_panel, EDITOR_TOP_FRAME_PATH, "banner", 24, 8)
 	FrontierVisualKit.apply_art_panel(_editor_map_panel, EDITOR_MAP_FRAME_PATH, "frame", 24, 8)

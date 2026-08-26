@@ -144,6 +144,8 @@ MANUAL_SAVE_OVERWRITE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_ove
 MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_overwrite_regression.tscn"
 MANUAL_SAVE_OVERWRITE_DIALOG_SCENE_PATH = ROOT / "scenes" / "shared" / "ManualSaveOverwriteDialog.tscn"
 MANUAL_SAVE_OVERWRITE_DIALOG_SCRIPT_PATH = ROOT / "scenes" / "shared" / "ManualSaveOverwriteDialog.gd"
+CONFIRMATION_DIALOG_VISUAL_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "confirmation_dialog_visual_surface_report.gd"
+CONFIRMATION_DIALOG_VISUAL_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "confirmation_dialog_visual_surface_report.tscn"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.gd"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.tscn"
 SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_latest_summary_subsecond_recency_regression.gd"
@@ -19772,6 +19774,150 @@ def validate_main_menu_stage_dock_cartography_surface(errors: list[str]) -> None
         anchor_oracle_body = anchor_oracle_match.group("body")
         for forbidden_token in ("shell", "MainMenu", "SettingsService", "AppRouter", "SessionState", "duplicate(", "sort(", "erase("):
             ensure(forbidden_token not in anchor_oracle_body, errors, f"Main Menu title-pocket anchor oracle must remain detached and source-independent: {forbidden_token}")
+
+
+def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
+    visual_kit_path = ROOT / "scripts" / "ui" / "FrontierVisualKit.gd"
+    shell_paths = {
+        "Main Menu": MAIN_MENU_SCRIPT_PATH,
+        "Overworld": ROOT / "scenes" / "overworld" / "OverworldShell.gd",
+        "Battle": ROOT / "scenes" / "battle" / "BattleShell.gd",
+        "Map Editor": MAP_EDITOR_SCRIPT_PATH,
+        "Outcome": ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd",
+        "Manual Save": MANUAL_SAVE_OVERWRITE_DIALOG_SCRIPT_PATH,
+    }
+    required_paths = (
+        visual_kit_path,
+        CONFIRMATION_DIALOG_VISUAL_SURFACE_REPORT_SCRIPT_PATH,
+        CONFIRMATION_DIALOG_VISUAL_SURFACE_REPORT_SCENE_PATH,
+        *shell_paths.values(),
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing cartographic confirmation-dialog owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    visual_text = visual_kit_path.read_text(encoding="utf-8")
+    report_text = CONFIRMATION_DIALOG_VISUAL_SURFACE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = CONFIRMATION_DIALOG_VISUAL_SURFACE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const CONFIRMATION_DIALOG_SURFACE_MODEL := "shared_cartographic_frame_semantic_confirmation_controls"',
+        'const CONFIRMATION_DIALOG_FRAME_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
+        "const CONFIRMATION_DIALOG_TEXTURE_MARGIN := 24",
+        "const CONFIRMATION_DIALOG_CONTENT_MARGIN := 10",
+        "const CONFIRMATION_DIALOG_FRAME_MODULATE := Color(0.92, 0.94, 0.96, 0.98)",
+    ):
+        ensure(visual_text.count(required_token) == 1, errors, f"Confirmation-dialog visual kit must own one exact shared presentation constant: {required_token}")
+    helper_match = re.search(r"static func apply_confirmation_dialog\([^\n]*\) -> void:\n(?P<body>.*?)(?=\nstatic func )", visual_text, flags=re.DOTALL)
+    ensure(helper_match is not None, errors, "Could not isolate shared confirmation-dialog visual helper")
+    if helper_match is not None:
+        helper_body = helper_match.group("body")
+        ordered_tokens = (
+            "if dialog == null:",
+            'var resolved_confirm_role := "danger" if confirm_role == "danger" else "primary"',
+            "var frame_style := texture_panel_style(",
+            "CONFIRMATION_DIALOG_FRAME_PATH,",
+            '"ink",',
+            "CONFIRMATION_DIALOG_TEXTURE_MARGIN,",
+            "CONFIRMATION_DIALOG_CONTENT_MARGIN,",
+            "CONFIRMATION_DIALOG_FRAME_MODULATE",
+            'dialog.add_theme_stylebox_override("panel", frame_style)',
+            'dialog.add_theme_stylebox_override("embedded_border", frame_style.duplicate())',
+            'dialog.add_theme_color_override("title_color", text_color("gold"))',
+            "var message_label := dialog.get_label()",
+            'apply_label(message_label, "body")',
+            "var cancel_button := dialog.get_cancel_button()",
+            '_apply_button_theme(cancel_button, "secondary")',
+            "var confirm_button := dialog.get_ok_button()",
+            "_apply_button_theme(confirm_button, resolved_confirm_role)",
+        )
+        positions = [helper_body.find(token) for token in ordered_tokens]
+        ensure(all(position >= 0 for position in positions) and positions == sorted(positions), errors, "Confirmation-dialog visual helper must apply its fail-closed role, frame, text, cancel, then confirmation styling in exact order")
+        for forbidden_token in (
+            ".title =",
+            ".dialog_text =",
+            ".text =",
+            ".shortcut =",
+            ".focus_mode =",
+            ".min_size =",
+            ".max_size =",
+            ".size =",
+            ".exclusive =",
+            ".initial_position =",
+            ".popup_",
+            ".show(",
+            ".hide(",
+            "grab_focus",
+            "call_deferred",
+            "await ",
+            "create_timer",
+        ):
+            ensure(forbidden_token not in helper_body, errors, f"Confirmation-dialog visual helper must remain presentation-only and avoid {forbidden_token}")
+
+    expected_calls = {
+        "Main Menu": (
+            'FrontierVisualKit.apply_confirmation_dialog(_campaign_restart_dialog, "danger")',
+            'FrontierVisualKit.apply_confirmation_dialog(_save_delete_dialog, "danger")',
+            'FrontierVisualKit.apply_confirmation_dialog(_settings_restore_defaults_dialog, "primary")',
+            'FrontierVisualKit.apply_confirmation_dialog(_display_change_confirmation_dialog, "primary")',
+        ),
+        "Overworld": (
+            'FrontierVisualKit.apply_confirmation_dialog(_end_turn_confirmation_dialog, "primary")',
+            'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
+        ),
+        "Battle": (
+            'FrontierVisualKit.apply_confirmation_dialog(_quick_resolve_confirmation_dialog, "primary")',
+            'FrontierVisualKit.apply_confirmation_dialog(_withdrawal_confirmation_dialog, "danger")',
+            'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
+        ),
+        "Map Editor": ('FrontierVisualKit.apply_confirmation_dialog(_dirty_transition_dialog, "danger")',),
+        "Outcome": (
+            'FrontierVisualKit.apply_confirmation_dialog(_new_session_confirmation_dialog, "danger")',
+            'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
+        ),
+        "Manual Save": ('FrontierVisualKit.apply_confirmation_dialog(self, "danger")',),
+    }
+    for owner, required_calls in expected_calls.items():
+        owner_text = shell_paths[owner].read_text(encoding="utf-8")
+        for required_call in required_calls:
+            ensure(owner_text.count(required_call) == 1, errors, f"{owner} must apply its exact semantic confirmation-dialog surface once: {required_call}")
+        ensure(owner_text.count("FrontierVisualKit.apply_confirmation_dialog(") == len(required_calls), errors, f"{owner} must style exactly its existing confirmation-dialog owners")
+
+    for required_token in (
+        'const EXPECTED_FRAME_PATH := "res://art/ui/runtime/main_menu/stage_dock_cartography.png"',
+        'const EXPECTED_SECONDARY_PATH := "res://art/ui/runtime/shared/button_secondary_normal.png"',
+        'const EXPECTED_PRIMARY_PATH := "res://art/ui/runtime/shared/button_primary_normal.png"',
+        'const EXPECTED_DANGER_PATH := "res://art/ui/runtime/shared/button_danger_normal.png"',
+        'var primary := await _assert_dialog_case("primary")',
+        'var danger := await _assert_dialog_case("danger")',
+        "var before := _dialog_authority_contract(dialog)",
+        "var after := _dialog_authority_contract(dialog)",
+        "before == after",
+        'dialog.get_theme_stylebox("panel") is StyleBoxFlat',
+        'dialog.get_theme_stylebox("embedded_border") is StyleBoxFlat',
+        "var dialog := MANUAL_SAVE_DIALOG_SCENE.instantiate() as ConfirmationDialog",
+        'dialog.get_cancel_button().text == "Keep Save"',
+        "func _dialog_authority_contract(dialog: ConfirmationDialog) -> Dictionary:",
+        '"cancel_shortcut": cancel_button.shortcut',
+        '"confirm_shortcut": confirm_button.shortcut',
+        "func _frame_style_exact(style: StyleBox) -> bool:",
+        "func _button_state_art_exact(button: BaseButton, role: String) -> bool:",
+        'for state in ["normal", "hover", "pressed", "disabled"]:',
+        'print("CONFIRMATION_DIALOG_VISUAL_SURFACE_REPORT %s" % JSON.stringify(report))',
+    ):
+        ensure(required_token in report_text, errors, f"Confirmation-dialog focused report is missing exact authority/style token: {required_token}")
+    ensure('res://tests/confirmation_dialog_visual_surface_report.gd' in report_scene_text, errors, "Confirmation-dialog focused scene must load its report script")
+    for forbidden_token in (
+        "._apply_button_theme",
+        "dialog.shortcut =",
+        "dialog.focus_mode =",
+        "dialog.min_size = Vector2i(0",
+        "dialog.size =",
+        "dialog.popup_",
+        "sort(",
+        "erase(",
+    ):
+        ensure(forbidden_token not in report_text, errors, f"Confirmation-dialog focused report must observe public styling without bypassing semantic authority through {forbidden_token}")
 
 
 def validate_main_menu_item_list_selection_inlay(errors: list[str]) -> None:
@@ -69377,6 +69523,7 @@ def main() -> int:
     validate_main_menu_credits_third_party_notices(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_stage_dock_cartography_surface(errors)
+    validate_confirmation_dialog_visual_surfaces(errors)
     validate_main_menu_item_list_selection_inlay(errors)
     validate_shared_cartographic_tab_plaques(errors)
     validate_main_menu_field_manual_reference_card(errors)
