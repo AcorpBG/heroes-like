@@ -317,6 +317,16 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	if String(shoreline.get("homm3_selection_kind", "")) != "water_shoreline" or not bool(shoreline.get("homm3_shoreline_specific", false)) or String(shoreline.get("homm3_terrain_atlas", "")) != "watrtl":
 		_fail("Ninefold smoke: water/coast terrain did not use shoreline-specific HoMM3 lookup beside land: %s." % shoreline_presentation)
 		return false
+	var shoreline_detail: Dictionary = shoreline.get("terrain_detail_decal", {}) if shoreline.get("terrain_detail_decal", {}) is Dictionary else {}
+	if (
+		String(shoreline_detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters"
+		or String(shoreline_detail.get("terrain_group", "")) != "water"
+		or bool(shoreline_detail.get("drawn", true))
+		or not bool(shoreline_detail.get("water_excluded", false))
+		or int(shoreline_detail.get("cell_id", -2)) != -1
+	):
+		_fail("Ninefold smoke: water shoreline received a land surface-detail decal: %s." % JSON.stringify(shoreline_detail))
+		return false
 	if not _assert_direct_dirt_sand_transition(shell, session):
 		return false
 	return true
@@ -339,11 +349,14 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var presentations := [north_west_presentation, east_presentation, south_presentation, south_east_presentation]
 	var lighting_rows: Array = []
 	var grain_rows: Array = []
+	var detail_rows: Array = []
+	var drawn_detail_count := 0
 	for presentation_value in presentations:
 		var presentation: Dictionary = presentation_value
 		var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
 		var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 		var grain: Dictionary = terrain.get("terrain_grain_overlay", {}) if terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
+		var detail: Dictionary = terrain.get("terrain_detail_decal", {}) if terrain.get("terrain_detail_decal", {}) is Dictionary else {}
 		var samples: Array = lighting.get("corner_samples", []) if lighting.get("corner_samples", []) is Array else []
 		if (
 			String(lighting.get("model", "")) != "continuous_shared_corner_bilinear_field"
@@ -382,6 +395,16 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 			_fail("Ninefold smoke: explored terrain grain contract is incomplete: %s." % JSON.stringify(grain))
 			return false
 		grain_rows.append(grain)
+		var terrain_group := String(terrain.get("terrain_group", ""))
+		if not _terrain_detail_decal_payload_exact(detail, terrain_group):
+			_fail("Ninefold smoke: explored terrain detail decal contract is incomplete: %s." % JSON.stringify(detail))
+			return false
+		if bool(detail.get("drawn", false)):
+			drawn_detail_count += 1
+		detail_rows.append(detail)
+	if drawn_detail_count <= 0:
+		_fail("Ninefold smoke: live 2x2 grass fixture did not draw any sparse biome surface detail: %s." % JSON.stringify(detail_rows))
+		return false
 	var north_west_lighting: Dictionary = lighting_rows[0]
 	var repeated_terrain: Dictionary = repeated_presentation.get("terrain_presentation", {}) if repeated_presentation.get("terrain_presentation", {}) is Dictionary else {}
 	var repeated_lighting: Dictionary = repeated_terrain.get("terrain_macro_lighting", {}) if repeated_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
@@ -391,6 +414,10 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var repeated_grain: Dictionary = repeated_terrain.get("terrain_grain_overlay", {}) if repeated_terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
 	if repeated_grain != grain_rows[0]:
 		_fail("Ninefold smoke: terrain grain changed across repeated observation.")
+		return false
+	var repeated_detail: Dictionary = repeated_terrain.get("terrain_detail_decal", {}) if repeated_terrain.get("terrain_detail_decal", {}) is Dictionary else {}
+	if repeated_detail != detail_rows[0]:
+		_fail("Ninefold smoke: terrain detail decal changed across repeated observation.")
 		return false
 	var north_west_samples: Array = north_west_lighting.get("corner_samples", [])
 	var east_samples: Array = (lighting_rows[1] as Dictionary).get("corner_samples", [])
@@ -421,11 +448,15 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	var hidden_terrain: Dictionary = hidden_presentation.get("terrain_presentation", {}) if hidden_presentation.get("terrain_presentation", {}) is Dictionary else {}
 	var hidden_lighting: Dictionary = hidden_terrain.get("terrain_macro_lighting", {}) if hidden_terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 	var hidden_grain: Dictionary = hidden_terrain.get("terrain_grain_overlay", {}) if hidden_terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
+	var hidden_detail: Dictionary = hidden_terrain.get("terrain_detail_decal", {}) if hidden_terrain.get("terrain_detail_decal", {}) is Dictionary else {}
 	if String(hidden_lighting.get("model", "")) != "continuous_shared_corner_bilinear_field" or bool(hidden_lighting.get("drawn", true)) or not bool(hidden_lighting.get("hidden_by_unexplored_shroud", false)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain macro-lighting: %s." % JSON.stringify(hidden_lighting))
 		return false
 	if String(hidden_grain.get("model", "")) != "single_normalized_map_space_seamless_painterly_microtexture" or bool(hidden_grain.get("drawn", true)) or not bool(hidden_grain.get("hidden_by_unexplored_shroud", false)) or bool(hidden_grain.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain grain: %s." % JSON.stringify(hidden_grain))
+		return false
+	if String(hidden_detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
+		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain surface detail: %s." % JSON.stringify(hidden_detail))
 		return false
 	if not _assert_soft_fog_frontier(shell, session, north_west_tile):
 		return false
@@ -433,6 +464,59 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 		_fail("Ninefold smoke: terrain macro-lighting observation changed session authority.")
 		return false
 	return true
+
+func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: String) -> bool:
+	var expected_cell_ids: Array = []
+	match expected_group:
+		"grasslands":
+			expected_cell_ids = [0, 1, 6, 8, 10, 11, 12, 15]
+		"forest":
+			expected_cell_ids = [3, 4, 7, 9, 13, 14]
+		"mire":
+			expected_cell_ids = [5, 8, 10, 15]
+		"rough", "rock", "underground":
+			expected_cell_ids = [2, 3, 4, 9, 13, 14]
+		"dirt", "sand":
+			expected_cell_ids = [2, 3, 7, 13]
+		"ash":
+			expected_cell_ids = [3, 7, 10, 13]
+	if (
+		String(detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters"
+		or String(detail.get("terrain_group", "")) != expected_group
+		or not bool(detail.get("atlas_texture_loaded", false))
+		or String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"
+		or detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}
+		or detail.get("atlas_grid", {}) != {"x": 4, "y": 4}
+		or detail.get("atlas_cell_size", {}) != {"x": 256, "y": 256}
+		or int(detail.get("density_modulus", 0)) != 3
+		or bool(detail.get("interactive", true))
+		or bool(detail.get("collision", true))
+		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.78)
+		or String(detail.get("draw_order", "")) != "after_macro_lighting_before_roads_objects_and_fog"
+		or not bool(detail.get("hidden_by_unexplored_shroud", false))
+		or String(detail.get("variation_basis", "")) != "tile_coordinate_and_terrain_id_only"
+	):
+		return false
+	if not bool(detail.get("drawn", false)):
+		return int(detail.get("cell_id", -2)) == -1
+	var cell_id := int(detail.get("cell_id", -1))
+	var source_rect: Dictionary = detail.get("source_rect", {}) if detail.get("source_rect", {}) is Dictionary else {}
+	var destination_rect: Dictionary = detail.get("destination_rect", {}) if detail.get("destination_rect", {}) is Dictionary else {}
+	var offset: Dictionary = detail.get("offset_factor", {}) if detail.get("offset_factor", {}) is Dictionary else {}
+	var extent_factor := float(detail.get("extent_factor", 0.0))
+	return (
+		cell_id in expected_cell_ids
+		and int(source_rect.get("x", -1)) == (cell_id % 4) * 256
+		and int(source_rect.get("y", -1)) == floori(float(cell_id) / 4.0) * 256
+		and int(source_rect.get("width", 0)) == 256
+		and int(source_rect.get("height", 0)) == 256
+		and bool(detail.get("destination_contained", false))
+		and extent_factor >= 0.22 and extent_factor <= 0.30
+		and float(offset.get("x", -1.0)) >= -0.13 and float(offset.get("x", 1.0)) <= 0.13
+		and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.12
+		and float(destination_rect.get("width", 0.0)) > 0.0
+		and is_equal_approx(float(destination_rect.get("width", 0.0)), float(destination_rect.get("height", -1.0)))
+	)
 
 func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) -> bool:
 	var session_authority_before: Dictionary = session.to_dict()

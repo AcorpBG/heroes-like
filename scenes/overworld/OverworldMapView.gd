@@ -292,6 +292,18 @@ const TERRAIN_GRAIN_MODEL := "single_normalized_map_space_seamless_painterly_mic
 const TERRAIN_GRAIN_SOURCE_MODEL := "original_generated_neutral_grain_mirrored_seamless_alpha"
 const TERRAIN_GRAIN_MODULATE := Color(1.0, 1.0, 1.0, 0.72)
 const TERRAIN_GRAIN_EXPECTED_SIZE := Vector2i(1024, 1024)
+const TERRAIN_DETAIL_DECAL_MODEL := "sparse_biome_aware_painterly_surface_clusters"
+const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"
+const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)
+const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)
+const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)
+const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 3
+const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.22
+const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.30
+const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.13
+const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08
+const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.12
+const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.92, 0.94, 0.86, 0.78)
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
 const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
@@ -1470,10 +1482,13 @@ func _draw_session_static_layer() -> void:
 			_draw_tile_terrain_surface(tile, rect)
 	var terrain_grain_drawn := _draw_terrain_grain_overlay(board_rect)
 	var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)
+	var terrain_detail_decal_draws := 0
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
+			if _draw_terrain_detail_decal(tile, rect):
+				terrain_detail_decal_draws += 1
 			if not _road_tile_payload(tile).is_empty():
 				road_draws += 1
 			_draw_road_overlay(tile, rect)
@@ -1482,11 +1497,13 @@ func _draw_session_static_layer() -> void:
 	_profile_add("terrain_grain_overlay_draws", 1 if terrain_grain_drawn else 0)
 	_profile_add("road_tile_draws", road_draws)
 	_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)
+	_profile_add("terrain_detail_decal_draws", terrain_detail_decal_draws)
 	_profile_end("draw_session_static", profile_start, {
 		"terrain_tile_draws": terrain_draws,
 		"terrain_grain_overlay_draws": 1 if terrain_grain_drawn else 0,
 		"road_tile_draws": road_draws,
 		"terrain_macro_lighting_polygon_draws": macro_lighting_polygon_draws,
+		"terrain_detail_decal_draws": terrain_detail_decal_draws,
 		"visible_bounds": _rect2i_payload(visible_bounds),
 	})
 
@@ -1935,6 +1952,98 @@ func _terrain_grain_overlay_payload(explored: bool) -> Dictionary:
 		"draw_order": "after_terrain_transitions_before_macro_lighting_and_roads",
 		"hidden_by_unexplored_shroud": true,
 	}
+
+func _terrain_detail_decal_cells_for_group(terrain_group: String) -> Array:
+	match terrain_group:
+		"grasslands":
+			return [0, 1, 6, 8, 10, 11, 12, 15]
+		"forest":
+			return [3, 4, 7, 9, 13, 14]
+		"mire":
+			return [5, 8, 10, 15]
+		"rough", "rock", "underground":
+			return [2, 3, 4, 9, 13, 14]
+		"dirt", "sand":
+			return [2, 3, 7, 13]
+		"ash":
+			return [3, 7, 10, 13]
+	return []
+
+func _terrain_detail_decal_payload(tile: Vector2i, rect: Rect2) -> Dictionary:
+	var terrain := _terrain_at(tile)
+	var terrain_group := _terrain_group(terrain)
+	var texture = _terrain_art_texture(TERRAIN_DETAIL_DECAL_TEXTURE_PATH)
+	var texture_loaded := texture is Texture2D and Vector2i(texture.get_size()) == TERRAIN_DETAIL_DECAL_ATLAS_SIZE
+	var cell_ids := _terrain_detail_decal_cells_for_group(terrain_group)
+	var seed := absi((tile.x * 101) + (tile.y * 211) + (terrain.hash() * 17))
+	var density_residue := posmod(seed, TERRAIN_DETAIL_DECAL_DENSITY_MODULUS)
+	var road_excluded := not _road_tile_payload(tile).is_empty()
+	var eligible := texture_loaded and not terrain.is_empty() and not cell_ids.is_empty() and not road_excluded and density_residue == 0
+	var cell_id := int(cell_ids[posmod(floori(float(seed) / float(TERRAIN_DETAIL_DECAL_DENSITY_MODULUS)), cell_ids.size())]) if eligible else -1
+	var extent_factor := lerpf(
+		TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR,
+		TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR,
+		_stable_unit_fraction("terrain_detail_extent:%d:%d:%s" % [tile.x, tile.y, terrain])
+	)
+	var offset_factor := Vector2(
+		lerpf(-TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR, TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR, _stable_unit_fraction("terrain_detail_x:%d:%d:%s" % [tile.x, tile.y, terrain])),
+		lerpf(TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR, TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR, _stable_unit_fraction("terrain_detail_y:%d:%d:%s" % [tile.x, tile.y, terrain]))
+	)
+	var extent := minf(rect.size.x, rect.size.y) * extent_factor
+	var destination_center := rect.get_center() + Vector2(rect.size.x * offset_factor.x, rect.size.y * offset_factor.y)
+	var destination_rect := Rect2(destination_center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+	var source_rect := Rect2()
+	if cell_id >= 0:
+		source_rect = Rect2(
+			Vector2(float(cell_id % TERRAIN_DETAIL_DECAL_GRID_SIZE.x), float(floori(float(cell_id) / float(TERRAIN_DETAIL_DECAL_GRID_SIZE.x)))) * Vector2(TERRAIN_DETAIL_DECAL_CELL_SIZE),
+			Vector2(TERRAIN_DETAIL_DECAL_CELL_SIZE)
+		)
+	return {
+		"model": TERRAIN_DETAIL_DECAL_MODEL,
+		"drawn": eligible,
+		"terrain_group": terrain_group,
+		"atlas_texture_loaded": texture_loaded,
+		"atlas_texture_path": TERRAIN_DETAIL_DECAL_TEXTURE_PATH if texture_loaded else "",
+		"atlas_size": _vector2i_payload(TERRAIN_DETAIL_DECAL_ATLAS_SIZE),
+		"atlas_grid": _vector2i_payload(TERRAIN_DETAIL_DECAL_GRID_SIZE),
+		"atlas_cell_size": _vector2i_payload(TERRAIN_DETAIL_DECAL_CELL_SIZE),
+		"cell_id": cell_id,
+		"source_rect": _rect_payload(source_rect),
+		"destination_rect": _rect_payload(destination_rect),
+		"destination_contained": rect.encloses(destination_rect),
+		"extent_factor": extent_factor,
+		"offset_factor": _vector2_payload(offset_factor),
+		"density_modulus": TERRAIN_DETAIL_DECAL_DENSITY_MODULUS,
+		"density_residue": density_residue,
+		"road_excluded": road_excluded,
+		"water_excluded": terrain_group == "water",
+		"interactive": false,
+		"collision": false,
+		"modulate_alpha": TERRAIN_DETAIL_DECAL_MODULATE.a,
+		"draw_order": "after_macro_lighting_before_roads_objects_and_fog",
+		"hidden_by_unexplored_shroud": true,
+		"variation_basis": "tile_coordinate_and_terrain_id_only",
+	}
+
+func _draw_terrain_detail_decal(tile: Vector2i, rect: Rect2) -> bool:
+	var payload := _terrain_detail_decal_payload(tile, rect)
+	if not bool(payload.get("drawn", false)):
+		return false
+	var texture = _terrain_art_texture(TERRAIN_DETAIL_DECAL_TEXTURE_PATH)
+	if not (texture is Texture2D):
+		return false
+	var destination_payload: Dictionary = payload.get("destination_rect", {})
+	var source_payload: Dictionary = payload.get("source_rect", {})
+	var destination_rect := Rect2(
+		Vector2(float(destination_payload.get("x", 0.0)), float(destination_payload.get("y", 0.0))),
+		Vector2(float(destination_payload.get("width", 0.0)), float(destination_payload.get("height", 0.0)))
+	)
+	var source_rect := Rect2(
+		Vector2(float(source_payload.get("x", 0.0)), float(source_payload.get("y", 0.0))),
+		Vector2(float(source_payload.get("width", 0.0)), float(source_payload.get("height", 0.0)))
+	)
+	_canvas_draw_texture_rect_region(texture, destination_rect, source_rect, TERRAIN_DETAIL_DECAL_MODULATE)
+	return true
 
 func _draw_terrain_macro_lighting_field(board_rect: Rect2, visible_bounds: Rect2i) -> int:
 	if board_rect.size.x <= 0.0 or board_rect.size.y <= 0.0 or visible_bounds.size.x <= 0 or visible_bounds.size.y <= 0:
@@ -6235,6 +6344,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 				"hidden_by_unexplored_shroud": true,
 			},
 			"terrain_grain_overlay": _terrain_grain_overlay_payload(false),
+			"terrain_detail_decal": {
+				"model": TERRAIN_DETAIL_DECAL_MODEL,
+				"drawn": false,
+				"hidden_by_unexplored_shroud": true,
+				"terrain_identity_sampled": false,
+			},
 			"rendering_mode": "hidden_fog",
 		}
 	var terrain := _terrain_at(tile)
@@ -6310,6 +6425,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"terrain_macro_lighting": terrain_macro_lighting,
 		"water_shoreline_contour": water_shoreline_contour,
 		"terrain_grain_overlay": _terrain_grain_overlay_payload(true),
+		"terrain_detail_decal": _terrain_detail_decal_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE)),
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,
 		"uses_original_tile_bank": tile_art_loaded and not homm3_rendering_active,

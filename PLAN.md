@@ -24,7 +24,33 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved source-backed graphical-polish or release-readiness slice.
+- Selected implementation slice: none. Select the next tracker-approved graphical-polish implementation slice from current inspected game evidence.
+
+## Overworld Biome Surface Detail Decals
+
+id: `presentation-overworld-biome-surface-detail-decals-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one original transparent 1024x1024 sixteen-cell painterly ground-detail atlas and draw sparse deterministic small moss, grass, reed, flower, twig, and stone clusters over eligible explored-world terrain before roads, objects, routes, selection, and fog;
+- select only from bounded terrain-group-specific atlas cells, vary scale/offset deterministically by tile coordinate and terrain id, and skip water and road tiles while allowing objects and the opaque unexplored shroud to remain visually authoritative above the decals;
+- expose detached placement/source geometry evidence for focused authored and generated-map validation while preserving exact terrain/map/session authority.
+
+Completion criteria:
+- fresh inspected River Pass captures at 1280x720 and 1920x1080 show sparse natural surface interest in open land without a repeated stamp grid, clutter, road/object competition, or terrain-identity loss;
+- focused runtime proves exact original RGBA atlas identity/dimensions/cell layout, terrain-family eligibility, bounded deterministic density/offset/scale/source rectangles, water exclusion, draw order, hidden-by-shroud behavior, and unchanged terrain/map/session/save authority;
+- generated natural-fog movement, route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain id/source frame/transition/topology/passability/movement cost, road, object/hero/town/encounter identity or scale, map content, generated placement, fog/reveal, route/pathfinding, selection, interaction, session/save/schema, AI, battle, balance, or Native RMG change;
+- no large trees, buildings, blockers, interactive decoration, animation/audio/VFX, shader, weather, camera/map fit, shell/UI layout, or broad map redesign;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- shipped one original transparent sixteen-cell painterly atlas and deterministic biome-aware 0.22-0.30-tile surface clusters at one-third candidate density, excluding water and road tiles and remaining noninteractive beneath objects, routes, selection, and fog;
+- inspected fresh River Pass 1280x720 and 1920x1080 captures show restrained moss, grass, flower, twig, and stone accents without a repeated stamp grid or competition with towns, heroes, resources, roads, and route guidance;
+- focused Ninefold and generated natural/reveal-all runtime, broad Overworld visual/route/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and whole-release readiness remain unclaimed.
 
 ## Overworld Irregular Cartographic Fog Contour
 

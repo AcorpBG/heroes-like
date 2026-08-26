@@ -40796,6 +40796,78 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for block_name, block in (("terrain-grain draw", terrain_grain_draw_block), ("terrain-grain payload", terrain_grain_payload_block)):
         for forbidden in ("rand", "Time.", "session.", "_map_data", "_terrain_at", "set_map_state", "queue_redraw", "await ", "create_timer"):
             ensure(forbidden not in block, errors, f"{block_name} must remain deterministic and presentation-only: {forbidden}")
+
+    terrain_detail_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_detail_decal_atlas.png"
+    ensure(terrain_detail_path.is_file(), errors, "Overworld terrain detail decals must ship one project-local runtime atlas.")
+    if terrain_detail_path.is_file():
+        terrain_detail_bytes = terrain_detail_path.read_bytes()
+        ensure(png_size(terrain_detail_path) == (1024, 1024), errors, "Overworld terrain detail decal atlas must remain exactly 1024x1024.")
+        ensure(len(terrain_detail_bytes) > 25 and terrain_detail_bytes[:8] == b"\x89PNG\r\n\x1a\n" and terrain_detail_bytes[25] == 6, errors, "Overworld terrain detail decal atlas must remain an RGBA PNG with transparent cutout clusters.")
+    for token in (
+        'const TERRAIN_DETAIL_DECAL_MODEL := "sparse_biome_aware_painterly_surface_clusters"',
+        'const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"',
+        "const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)",
+        "const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)",
+        "const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)",
+        "const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 3",
+        "const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.22",
+        "const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.30",
+        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.13",
+        "const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08",
+        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.12",
+        "const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.92, 0.94, 0.86, 0.78)",
+    ):
+        ensure(map_view_text.count(token) == 1, errors, f"Terrain detail decals must own one exact bounded presentation constant: {token}")
+    detail_cells_block = gd_function_block(map_view_text, "_terrain_detail_decal_cells_for_group")
+    detail_payload_block = gd_function_block(map_view_text, "_terrain_detail_decal_payload")
+    detail_draw_block = gd_function_block(map_view_text, "_draw_terrain_detail_decal")
+    for token in (
+        '"grasslands":\n\t\t\treturn [0, 1, 6, 8, 10, 11, 12, 15]',
+        '"forest":\n\t\t\treturn [3, 4, 7, 9, 13, 14]',
+        '"mire":\n\t\t\treturn [5, 8, 10, 15]',
+        '"rough", "rock", "underground":\n\t\t\treturn [2, 3, 4, 9, 13, 14]',
+        '"dirt", "sand":\n\t\t\treturn [2, 3, 7, 13]',
+        '"ash":\n\t\t\treturn [3, 7, 10, 13]',
+    ):
+        ensure(token in detail_cells_block, errors, f"Terrain detail decals must retain exact biome-aware atlas choices: {token}")
+    for token in (
+        "var terrain := _terrain_at(tile)",
+        "var terrain_group := _terrain_group(terrain)",
+        "var seed := absi((tile.x * 101) + (tile.y * 211) + (terrain.hash() * 17))",
+        "var density_residue := posmod(seed, TERRAIN_DETAIL_DECAL_DENSITY_MODULUS)",
+        "var road_excluded := not _road_tile_payload(tile).is_empty()",
+        "not cell_ids.is_empty() and not road_excluded and density_residue == 0",
+        '"interactive": false',
+        '"collision": false',
+        '"draw_order": "after_macro_lighting_before_roads_objects_and_fog"',
+        '"hidden_by_unexplored_shroud": true',
+        '"variation_basis": "tile_coordinate_and_terrain_id_only"',
+    ):
+        ensure(token in detail_payload_block, errors, f"Terrain detail payload must retain deterministic sparse presentation ownership: {token}")
+    for token in (
+        "var payload := _terrain_detail_decal_payload(tile, rect)",
+        'if not bool(payload.get("drawn", false)):',
+        "_canvas_draw_texture_rect_region(texture, destination_rect, source_rect, TERRAIN_DETAIL_DECAL_MODULATE)",
+        "return true",
+    ):
+        ensure(token in detail_draw_block, errors, f"Terrain detail decals must draw only the exact selected atlas cell: {token}")
+    ensure(
+        static_draw_block.find("_draw_terrain_macro_lighting_field(board_rect, visible_bounds)")
+        < static_draw_block.find("_draw_terrain_detail_decal(tile, rect)")
+        < static_draw_block.find("_draw_road_overlay(tile, rect)"),
+        errors,
+        "Terrain detail decals must draw after macro lighting and before authoritative roads.",
+    )
+    for token in (
+        "var terrain_detail_decal_draws := 0",
+        "terrain_detail_decal_draws += 1",
+        '_profile_add("terrain_detail_decal_draws", terrain_detail_decal_draws)',
+        '"terrain_detail_decal_draws": terrain_detail_decal_draws',
+    ):
+        ensure(token in static_draw_block, errors, f"Terrain detail decals must expose bounded live draw-count evidence: {token}")
+    for block_name, block in (("terrain-detail choices", detail_cells_block), ("terrain-detail payload", detail_payload_block), ("terrain-detail draw", detail_draw_block)):
+        for forbidden in ("rand", "Time.", "set_map_state", "queue_redraw", "await ", "create_timer", "collision_layer", "mouse_filter"):
+            ensure(forbidden not in block, errors, f"{block_name} must remain deterministic, presentation-only, and noninteractive: {forbidden}")
     for token in (
         'var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)',
         '_profile_add("terrain_macro_lighting_polygon_draws", macro_lighting_polygon_draws)',
@@ -40889,6 +40961,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"terrain_macro_lighting": terrain_macro_lighting',
         '"terrain_grain_overlay": _terrain_grain_overlay_payload(false)',
         '"terrain_grain_overlay": _terrain_grain_overlay_payload(true)',
+        '"terrain_detail_decal": {',
+        '"model": TERRAIN_DETAIL_DECAL_MODEL',
+        '"terrain_identity_sampled": false',
+        '"terrain_detail_decal": _terrain_detail_decal_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE))',
     ):
         ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose explored and unexplored macro-lighting ownership: {token}")
 
@@ -40918,11 +40994,44 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'bool(grain.get("repeated_per_tile", true))',
         'repeated_grain != grain_rows[0]',
         'bool(hidden_grain.get("drawn", true))',
+        'var detail: Dictionary = terrain.get("terrain_detail_decal", {})',
+        'var terrain_group := String(terrain.get("terrain_group", ""))',
+        '_terrain_detail_decal_payload_exact(detail, terrain_group)',
+        "drawn_detail_count <= 0",
+        "repeated_detail != detail_rows[0]",
+        'bool(hidden_detail.get("drawn", true))',
+        'bool(hidden_detail.get("terrain_identity_sampled", true))',
     ):
         ensure(token in ninefold_macro_block, errors, f"Ninefold macro-lighting owner must prove determinism, shared edges, fog ownership, and authority: {token}")
     for forbidden in ("map_node.set", "_draw_terrain_macro_lighting", "_terrain_macro_lighting_sample", "sort(", "erase(", "rand", "create_timer"):
         ensure(forbidden not in ninefold_macro_block, errors, f"Ninefold macro-lighting owner must observe only the public live presentation: {forbidden}")
     ensure('_assert_terrain_macro_lighting(shell, session, receiver_tile)' in gd_function_block(ninefold_transition_text, "_assert_neighbor_terrain_transitions"), errors, "Ninefold terrain boundary flow must run the focused macro-lighting owner before transition checks.")
+    ninefold_detail_exact_block = gd_function_block(ninefold_transition_text, "_terrain_detail_decal_payload_exact")
+    for token in (
+        'String(detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters"',
+        'String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"',
+        'detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}',
+        'detail.get("atlas_grid", {}) != {"x": 4, "y": 4}',
+        'int(detail.get("density_modulus", 0)) != 3',
+        '"grasslands":\n\t\t\texpected_cell_ids = [0, 1, 6, 8, 10, 11, 12, 15]',
+        '"forest":\n\t\t\texpected_cell_ids = [3, 4, 7, 9, 13, 14]',
+        '"dirt", "sand":\n\t\t\texpected_cell_ids = [2, 3, 7, 13]',
+        'cell_id in expected_cell_ids',
+        'extent_factor >= 0.22 and extent_factor <= 0.30',
+        'float(offset.get("x", -1.0)) >= -0.13',
+        'float(offset.get("y", -1.0)) >= -0.08',
+        'bool(detail.get("destination_contained", false))',
+    ):
+        ensure(token in ninefold_detail_exact_block, errors, f"Ninefold must independently bound live grassland surface-detail decals: {token}")
+    for forbidden in ("_draw_terrain_detail_decal", "call(\"_terrain_detail_decal_payload\"", "set(", "erase(", "sort(", "rand", "create_timer"):
+        ensure(forbidden not in ninefold_detail_exact_block, errors, f"Ninefold surface-detail oracle must remain independent and observation-only: {forbidden}")
+    for token in (
+        'String(shoreline_detail.get("terrain_group", "")) != "water"',
+        'bool(shoreline_detail.get("drawn", true))',
+        'not bool(shoreline_detail.get("water_excluded", false))',
+        'int(shoreline_detail.get("cell_id", -2)) != -1',
+    ):
+        ensure(token in gd_function_block(ninefold_transition_text, "_assert_neighbor_terrain_transitions"), errors, f"Ninefold shoreline fixture must forbid land detail decals on water: {token}")
     for token in (
         'String((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("model", "")) != "continuous_shared_corner_bilinear_field"',
         'not bool((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("drawn", false))',
@@ -40957,6 +41066,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"terrain_grain_tile_count": terrain_grain_tile_count',
         '"terrain_grain_exact_count": terrain_grain_exact_count',
         '"terrain_grain_texture_paths": terrain_grain_texture_paths.keys()',
+		'var detail: Dictionary = terrain.get("terrain_detail_decal", {})',
+		'terrain_detail_model_ids[String(detail.get("model", ""))] = true',
+		'"terrain_detail_drawn_count": terrain_detail_drawn_count',
+		'"terrain_detail_exact_count": terrain_detail_exact_count',
+		'"terrain_detail_invalid_count": terrain_detail_invalid_count',
+		'"terrain_detail_texture_paths": terrain_detail_texture_paths.keys()',
+		'"terrain_detail_cell_ids": terrain_detail_cell_ids.keys()',
 		'var shoreline: Dictionary = terrain.get("water_shoreline_contour", {})',
 		'"shoreline_tile_count": shoreline_tile_count',
 		'"shoreline_source_count": shoreline_source_count',
@@ -40993,6 +41109,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'var terrain_grain_modulate_alphas: Array = summary.get("terrain_grain_modulate_alphas", []) if summary.get("terrain_grain_modulate_alphas", []) is Array else []',
         'terrain_grain_modulate_alphas.size() != 1',
         'float(terrain_grain_modulate_alphas[0]), 0.72',
+		'int(summary.get("terrain_detail_exact_count", 0)) != explored_tile_count',
+		'int(summary.get("terrain_detail_invalid_count", -1)) != 0',
+		'int(summary.get("terrain_detail_drawn_count", 0)) <= 0',
+		'["sparse_biome_aware_painterly_surface_clusters"]',
+		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"]',
 		'int(summary.get("shoreline_exact_count", -1)) != int(summary.get("shoreline_tile_count", -2))',
 		'int(summary.get("shoreline_source_count", 0)) < int(summary.get("shoreline_tile_count", 0))',
     ):
@@ -41002,7 +41123,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'int(last_static.get("terrain_tile_draws", 0))',
         'int(last_static.get("terrain_macro_lighting_polygon_draws", 0))',
         'int(last_static.get("terrain_grain_overlay_draws", 0))',
+        'int(last_static.get("terrain_detail_decal_draws", 0))',
         "grain_draws != 1",
+        "detail_draws <= 0",
+        "detail_draws >= terrain_draws",
         "macro_polygon_draws > 12",
         "macro_polygon_draws * 8 >= terrain_draws",
     ):
@@ -41032,12 +41156,17 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'int(summary.get("macro_lighting_corner_mismatch_count", -1)) != 0',
         'int(summary.get("terrain_grain_tile_count", -1)) != explored_count',
         'int(summary.get("terrain_grain_exact_count", -1)) != explored_count',
+        'int(summary.get("terrain_detail_exact_count", -1)) != explored_count',
+        'int(summary.get("terrain_detail_invalid_count", -1)) != 0',
+        'int(summary.get("terrain_detail_drawn_count", 0)) <= 0',
         'int(summary.get("irregular_inner_edge_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
         'int(summary.get("deterministic_seed_count", -1)) != int(summary.get("generic_overlay_tile_count", -2))',
         '"draw_policy_ids"',
         '"macro_lighting_highlight_alphas"',
         '"terrain_grain_model_ids"',
         '"terrain_grain_texture_paths"',
+        '"terrain_detail_model_ids"',
+        '"terrain_detail_texture_paths"',
         'after.get(key, []) != before.get(key, [])',
         "return true",
     ):
@@ -60451,6 +60580,7 @@ def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
             '"art/overworld/runtime/homm3_local_prototype/"',
             '"art/overworld/runtime/terrain_tiles/generated/"',
             '"art/overworld/runtime/terrain_tiles/base/"',
+            '"art/overworld/runtime/terrain_tiles/detail/"',
             '"art/overworld/runtime/terrain_tiles/roads/"',
             "def pck_terrain_payload_summary() -> dict:",
             'header[:4] != b"GDPC"',
@@ -60577,6 +60707,7 @@ def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
             '"art/overworld/runtime/homm3_local_prototype/"',
             '"art/overworld/runtime/terrain_tiles/generated/"',
             '"art/overworld/runtime/terrain_tiles/base/"',
+            '"art/overworld/runtime/terrain_tiles/detail/"',
             '"art/overworld/runtime/terrain_tiles/roads/"',
             "def pck_terrain_payload_summary() -> dict:",
             'header[:4] != b"GDPC"',
