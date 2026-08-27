@@ -12,9 +12,10 @@ func _run() -> void:
 	var route_visual_capture_only := OS.get_environment("OVERWORLD_ROUTE_VISUAL_CAPTURE_ONLY") == "1"
 	var road_surface_capture_only := OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_ONLY") == "1"
 	var sidebar_ornament_only := OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_ONLY") == "1"
+	var terrain_ambient_only := OS.get_environment("OVERWORLD_TERRAIN_AMBIENT_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only or hero_card_only or object_scale_contract_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only:
+	elif objective_brief_only or hero_card_only or object_scale_contract_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only or terrain_ambient_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -32,6 +33,14 @@ func _run() -> void:
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
+		return
+	if terrain_ambient_only:
+		if not await _assert_terrain_ambient_life_contract(map_node, session):
+			return
+		print("OVERWORLD_TERRAIN_AMBIENT_LIFE_REPORT {\"ok\":true}")
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if object_scale_contract_only:
 		if not _assert_visible_sprite_scale_contract(map_node):
@@ -193,6 +202,111 @@ func _run() -> void:
 	if main_loop != null:
 		main_loop.quit(0)
 	return
+
+func _assert_terrain_ambient_life_contract(map_node: Control, session) -> bool:
+	if not map_node.has_method("validation_terrain_ambient_summary"):
+		push_error("Overworld ambient life: map view is missing the focused validation summary.")
+		get_tree().quit(1)
+		return false
+	var original_reduced_motion := SettingsService.reduced_motion_enabled()
+	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
+	SettingsService.set_reduced_motion_enabled(false)
+	SettingsService.set_high_contrast_ui_enabled(false)
+	_map_state_for_ambient_mode(map_node, session)
+	await get_tree().process_frame
+	var authority_before: Dictionary = session.to_dict()
+	var normal_before: Dictionary = map_node.call("validation_terrain_ambient_summary")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var normal_after: Dictionary = map_node.call("validation_terrain_ambient_summary")
+	var layer_indices: Dictionary = normal_after.get("layer_indices", {}) if normal_after.get("layer_indices", {}) is Dictionary else {}
+	var normal_exact: bool = (
+		String(normal_after.get("model", "")) == "deterministic_sparse_explored_tile_ambient_life"
+		and normal_after.get("draw_order", []) == ["terrain_and_roads", "ambient_life", "fog_and_objects", "routes_and_selection", "vfx", "frame_and_ui"]
+		and String(normal_after.get("layer_name", "")) == "TerrainAmbientLayer"
+		and int(layer_indices.get("terrain_and_roads", -1)) < int(layer_indices.get("ambient_life", -1))
+		and int(layer_indices.get("ambient_life", -1)) < int(layer_indices.get("fog_and_objects", -1))
+		and int(layer_indices.get("fog_and_objects", -1)) < int(layer_indices.get("routes_and_selection", -1))
+		and int(layer_indices.get("routes_and_selection", -1)) < int(layer_indices.get("frame_and_ui", -1))
+		and bool(normal_after.get("available", false))
+		and bool(normal_after.get("animating", false))
+		and not bool(normal_after.get("reduced_motion", true))
+		and not bool(normal_after.get("high_contrast", true))
+		and int(normal_after.get("density_modulus", 0)) == 4
+		and int(normal_after.get("entry_count", 0)) > 0
+		and bool(normal_after.get("all_contained", false))
+		and bool(normal_after.get("all_explored", false))
+		and bool(normal_after.get("exploration_gate_before_profile", false))
+		and not bool(normal_after.get("hidden_identity_sampled", true))
+		and String(normal_after.get("session_mutation_source", "")) == "none_presentation_only"
+		and normal_after.get("identities", []) == normal_before.get("identities", [])
+		and normal_after.get("presentations", []) != normal_before.get("presentations", [])
+		and not is_equal_approx(float(normal_after.get("phase", 0.0)), float(normal_before.get("phase", 0.0)))
+	)
+	if not normal_exact:
+		return await _terrain_ambient_failure("Normal ambient-life contract changed: %s" % JSON.stringify(normal_after), map_node, session, original_reduced_motion, original_high_contrast)
+
+	SettingsService.set_reduced_motion_enabled(true)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var reduced_before: Dictionary = map_node.call("validation_terrain_ambient_summary")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var reduced_after: Dictionary = map_node.call("validation_terrain_ambient_summary")
+	if not (
+		bool(reduced_after.get("available", false))
+		and not bool(reduced_after.get("animating", true))
+		and bool(reduced_after.get("reduced_motion", false))
+		and not bool(reduced_after.get("high_contrast", true))
+		and is_zero_approx(float(reduced_after.get("phase", -1.0)))
+		and reduced_after.get("identities", []) == normal_after.get("identities", [])
+		and reduced_after.get("presentations", []) == reduced_before.get("presentations", [])
+	):
+		return await _terrain_ambient_failure("Reduced-motion ambient-life contract changed: %s" % JSON.stringify(reduced_after), map_node, session, original_reduced_motion, original_high_contrast)
+
+	SettingsService.set_reduced_motion_enabled(false)
+	SettingsService.set_high_contrast_ui_enabled(true)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var high_contrast: Dictionary = map_node.call("validation_terrain_ambient_summary")
+	if not (
+		bool(high_contrast.get("high_contrast", false))
+		and not bool(high_contrast.get("available", true))
+		and not bool(high_contrast.get("animating", true))
+		and int(high_contrast.get("entry_count", -1)) == 0
+		and high_contrast.get("identities", ["unexpected"]).is_empty()
+		and high_contrast.get("presentations", ["unexpected"]).is_empty()
+	):
+		return await _terrain_ambient_failure("High-contrast ambient-life contract changed: %s" % JSON.stringify(high_contrast), map_node, session, original_reduced_motion, original_high_contrast)
+
+	SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+	SettingsService.set_high_contrast_ui_enabled(original_high_contrast)
+	if session.to_dict() != authority_before:
+		push_error("Overworld ambient life mutated session authority.")
+		get_tree().quit(1)
+		return false
+	_map_state_for_ambient_mode(map_node, session)
+	await get_tree().process_frame
+	return true
+
+func _map_state_for_ambient_mode(map_node: Control, session) -> void:
+	map_node.call(
+		"set_map_state",
+		session,
+		session.overworld.get("map", []),
+		OverworldRules.derive_map_size(session),
+		OverworldRules.hero_position(session)
+	)
+
+func _terrain_ambient_failure(message: String, map_node: Control, session, original_reduced_motion: bool, original_high_contrast: bool) -> bool:
+	SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+	SettingsService.set_high_contrast_ui_enabled(original_high_contrast)
+	_map_state_for_ambient_mode(map_node, session)
+	push_error(message)
+	get_tree().quit(1)
+	return false
 
 func _assert_hero_identity_progression_contract(shell: Control) -> bool:
 	if not shell.has_method("validation_snapshot"):

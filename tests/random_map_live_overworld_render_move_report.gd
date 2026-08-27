@@ -95,6 +95,9 @@ func _run() -> void:
 	var road_surface_before := _road_surface_summary(overworld)
 	if not _assert_generated_road_surface(road_surface_before, "before_move"):
 		return
+	var terrain_ambient_before := _terrain_ambient_summary(overworld)
+	if not _assert_generated_terrain_ambient(terrain_ambient_before, "before_move"):
+		return
 	var generated_presentation_authority_before := _generated_presentation_authority(SessionState.active_session)
 	if not await _capture_if_requested("before_move"):
 		return
@@ -118,6 +121,9 @@ func _run() -> void:
 		return
 	var road_surface_after := _road_surface_summary(overworld)
 	if not _assert_generated_road_surface(road_surface_after, "after_move"):
+		return
+	var terrain_ambient_after := _terrain_ambient_summary(overworld)
+	if not _assert_generated_terrain_ambient(terrain_ambient_after, "after_move"):
 		return
 	if OS.get_environment("RANDOM_MAP_LIVE_VISUAL_REVEAL_ALL") == "1":
 		if terrain_transition_after != terrain_transition_before:
@@ -192,6 +198,8 @@ func _run() -> void:
 		"fog_frontier_before": fog_frontier_before,
 		"fog_frontier_after": fog_frontier_after,
 		"road_surface": road_surface_after,
+		"terrain_ambient_before": _compact_terrain_ambient_summary(terrain_ambient_before),
+		"terrain_ambient_after": _compact_terrain_ambient_summary(terrain_ambient_after),
 		"save_reload_authority_exact": true,
 	})])
 	get_tree().quit(0)
@@ -228,6 +236,45 @@ func _map_visual_summary(overworld: Node) -> Dictionary:
 	if map_view == null or not map_view.has_method("validation_generated_object_visual_summary"):
 		return {}
 	return map_view.call("validation_generated_object_visual_summary")
+
+func _terrain_ambient_summary(overworld: Node) -> Dictionary:
+	var map_view := overworld.get_node_or_null("%Map")
+	if map_view == null or not map_view.has_method("validation_terrain_ambient_summary"):
+		return {}
+	return map_view.call("validation_terrain_ambient_summary")
+
+func _assert_generated_terrain_ambient(summary: Dictionary, label: String) -> bool:
+	var layer_indices: Dictionary = summary.get("layer_indices", {}) if summary.get("layer_indices", {}) is Dictionary else {}
+	if (
+		String(summary.get("model", "")) != "deterministic_sparse_explored_tile_ambient_life"
+		or summary.get("draw_order", []) != ["terrain_and_roads", "ambient_life", "fog_and_objects", "routes_and_selection", "vfx", "frame_and_ui"]
+		or int(layer_indices.get("terrain_and_roads", -1)) >= int(layer_indices.get("ambient_life", -1))
+		or int(layer_indices.get("ambient_life", -1)) >= int(layer_indices.get("fog_and_objects", -1))
+		or int(layer_indices.get("fog_and_objects", -1)) >= int(layer_indices.get("routes_and_selection", -1))
+		or int(summary.get("entry_count", 0)) <= 0
+		or not bool(summary.get("all_contained", false))
+		or not bool(summary.get("all_explored", false))
+		or not bool(summary.get("exploration_gate_before_profile", false))
+		or bool(summary.get("hidden_identity_sampled", true))
+		or String(summary.get("session_mutation_source", "")) != "none_presentation_only"
+	):
+		_fail("%s generated terrain ambient-life contract changed: %s" % [label, JSON.stringify(_compact_terrain_ambient_summary(summary))])
+		return false
+	return true
+
+func _compact_terrain_ambient_summary(summary: Dictionary) -> Dictionary:
+	return {
+		"model": String(summary.get("model", "")),
+		"draw_order": summary.get("draw_order", []).duplicate(true),
+		"layer_indices": summary.get("layer_indices", {}).duplicate(true),
+		"entry_count": int(summary.get("entry_count", 0)),
+		"profile_ids": summary.get("profile_ids", []).duplicate(true),
+		"all_contained": bool(summary.get("all_contained", false)),
+		"all_explored": bool(summary.get("all_explored", false)),
+		"hidden_identity_sampled": bool(summary.get("hidden_identity_sampled", true)),
+		"animating": bool(summary.get("animating", false)),
+		"generation": int(summary.get("generation", 0)),
+	}
 
 func _terrain_transition_summary(overworld: Node) -> Dictionary:
 	var map_view := overworld.get_node_or_null("%Map")

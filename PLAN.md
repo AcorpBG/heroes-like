@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
+- Selected implementation slice: none; select the next graphical-polish slice from direct rendered evidence.
+
+## Overworld Terrain Ambient Life
+
+id: `presentation-overworld-terrain-ambient-life-10184`
+
+Status: completed.
+
+Result:
+- the Overworld now owns a sparse deterministic terrain-aware ambient layer between terrain/roads and the authoritative fog/object layer, using pollen, fireflies, wisps, dust, frost glints, and embers without covering roads, objects, heroes, routes, selection, VFX, or UI;
+- inspected River Pass 1280x720 and 1920x1080 captures retain clear terrain and object hierarchy while adding restrained living motion. Reduced Motion holds the exact static phase, High Contrast hides the layer, and live setting changes redraw/resynchronize it immediately;
+- focused authored and generated movement/save runtime, full Overworld visual, input ownership, route, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction and broader release claims remain unclaimed.
+
+Current finding:
+- direct current 1280x720 and 1920x1080 captures show the Overworld terrain, object hierarchy, shroud, and shoreline are now cohesive, but the play surface remains completely static between action VFX while Town, Battle, and Outcome own restrained ambient depth;
+- `OverworldMapView` already separates terrain, state/fog/object, dynamic, and frame rendering, so one dedicated layer between terrain and state can add sparse ambient life without redrawing terrain or painting over objects, routes, selection, and hidden-authority surfaces.
+
+Implementation boundary:
+- add one presentation-only ambient layer after terrain/roads and before fog, objects, routes, selection, VFX, and frame/UI surfaces;
+- derive sparse pollen, firefly, wisp, dust, frost, and ember entries from deterministic visible tile/terrain identity, keep every entry contained in its tile, and expose no hidden identity because the authoritative opaque state/fog layer remains above it;
+- animate gently only in normal presentation, hold one exact static phase in Reduced Motion, and hide the layer in High Contrast.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 captures show restrained terrain-appropriate atmosphere without obscuring terrain, roads, shoreline, objects, heroes, towns, routes, selection, fog, or UI;
+- focused runtime proves exact profile mapping, sparse deterministic identities/counts/containment, normal phase movement, Reduced Motion static behavior, High Contrast hiding, layer order, hidden identity silence, and unchanged session/save authority;
+- authored/generated movement, route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain/road/water/fog/object/hero/town bitmap or identity, map topology, placement, passability, route, movement, interaction, camera/layout, content, gameplay, AI, battle, balance, session, save/schema, generation, or Native-RMG change;
+- no Timer, Tween, particle node, shader, nondeterministic random/wall-clock source, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Organic Fog Frontier
 

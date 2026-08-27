@@ -43852,6 +43852,134 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing town-footprint validation token {required_token}")
 
 
+def validate_overworld_terrain_ambient_life(errors: list[str]) -> None:
+    map_view_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    generated_path = ROOT / "tests" / "random_map_live_overworld_render_move_report.gd"
+    for path in (map_view_path, visual_path, generated_path):
+        ensure(path.exists(), errors, f"Missing Overworld terrain ambient-life owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (map_view_path, visual_path, generated_path)):
+        return
+
+    def gd_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    map_text = map_view_path.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    generated_text = generated_path.read_text(encoding="utf-8")
+    for token in (
+        'const TERRAIN_AMBIENT_MODEL := "deterministic_sparse_explored_tile_ambient_life"',
+        'const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain_and_roads", "ambient_life", "fog_and_objects", "routes_and_selection", "vfx", "frame_and_ui"]',
+        "const TERRAIN_AMBIENT_PHASE_SPEED := 0.38",
+        "const TERRAIN_AMBIENT_STATIC_PHASE := 0.0",
+        "const TERRAIN_AMBIENT_DENSITY_MODULUS := 4",
+        '"grasslands": {"id": "meadow_pollen"',
+        '"forest": {"id": "woodland_firefly"',
+        '"mire": {"id": "fen_wisp"',
+        '"rough": {"id": "highland_dust"',
+        '"rock": {"id": "ridge_dust"',
+        '"sand": {"id": "desert_dust"',
+        '"dirt": {"id": "roadside_dust"',
+        '"ash": {"id": "ash_ember"',
+        '"snow": {"id": "frost_glint"',
+        '"underground": {"id": "cavern_spore"',
+        'var _terrain_ambient_layer: Control = null',
+        'var _terrain_ambient_phase := TERRAIN_AMBIENT_STATIC_PHASE',
+        'SettingsService.settings_changed.connect(_on_settings_changed)',
+        '_terrain_ambient_layer = _create_render_layer("TerrainAmbientLayer", Callable(self, "_draw_terrain_ambient_layer"))',
+        'func validation_terrain_ambient_summary() -> Dictionary:',
+    ):
+        ensure(token in map_text, errors, f"Overworld ambient-life source is missing its exact presentation contract: {token}")
+    ensure(
+        map_text.find('_session_static_layer = _create_render_layer("SessionStaticLayer"')
+        < map_text.find('_terrain_ambient_layer = _create_render_layer("TerrainAmbientLayer"')
+        < map_text.find('_state_layer = _create_render_layer("StateLayer"')
+        < map_text.find('_dynamic_layer = _create_render_layer("DynamicLayer"')
+        < map_text.find('_frame_layer = _create_render_layer("FrameLayer"'),
+        errors,
+        "Overworld ambient life must remain below fog/objects/routes/selection/VFX/frame while staying above terrain and roads.",
+    )
+
+    entries = gd_block(map_text, "_overworld_terrain_ambient_entries")
+    ensure(
+        entries.find("OverworldRulesScript.is_tile_explored") < entries.find("_overworld_terrain_ambient_profile(tile)"),
+        errors,
+        "Ambient-life identity must fail closed on unexplored tiles before reading terrain or choosing a profile.",
+    )
+    for token in (
+        "seed % TERRAIN_AMBIENT_DENSITY_MODULUS != 0",
+        "var seed := _overworld_terrain_ambient_seed(tile, profile_id)",
+        '"contained": rect.encloses(bounds)',
+        '"explored": true',
+    ):
+        ensure(token in entries, errors, f"Ambient-life materialization must retain deterministic sparse tile-contained entries: {token}")
+    seed_block = gd_block(map_text, "_overworld_terrain_ambient_seed")
+    for forbidden in ("rand", "Time.", "get_ticks", "hash("):
+        ensure(forbidden not in seed_block, errors, f"Ambient-life identity must not depend on random, wall-clock, or unstable hashing: {forbidden}")
+    ambient_blocks = "\n".join(
+        gd_block(map_text, name)
+        for name in (
+            "_overworld_terrain_ambient_available",
+            "_overworld_terrain_ambient_should_animate",
+            "_overworld_terrain_ambient_seed",
+            "_overworld_terrain_ambient_entries",
+            "_draw_overworld_terrain_ambient_entry",
+            "_draw_terrain_ambient_layer",
+        )
+    )
+    for forbidden in ("Timer", "Tween", "create_timer", "create_tween", "GPUParticles", "CPUParticles", "Shader", "session.overworld[", "session.flags["):
+        ensure(forbidden not in ambient_blocks, errors, f"Ambient life must remain presentation-only and use no timing/particle/shader authority: {forbidden}")
+    ensure("not FrontierVisualKitScript.high_contrast_enabled()" in gd_block(map_text, "_overworld_terrain_ambient_available"), errors, "High Contrast must hide ambient life at the production availability gate.")
+    ensure("not SettingsService.reduced_motion_enabled()" in gd_block(map_text, "_overworld_terrain_ambient_should_animate"), errors, "Reduced Motion must stop ambient animation at the production process gate.")
+    process_block = gd_block(map_text, "_process")
+    ensure("_terrain_ambient_phase = fmod(_terrain_ambient_phase + elapsed_delta * TERRAIN_AMBIENT_PHASE_SPEED, TAU)" in process_block, errors, "Normal ambient life must advance from frame delta at the bounded production rate.")
+    ensure("_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE" in process_block, errors, "Non-animated ambient life must return to the exact static phase.")
+    settings_block = gd_block(map_text, "_on_settings_changed")
+    ensure('_invalidate_terrain_ambient_layer("accessibility_settings_changed")' in settings_block and "_sync_presentation_processing()" in settings_block, errors, "Live accessibility changes must immediately redraw and resynchronize the ambient-life layer.")
+    summary_block = gd_block(map_text, "validation_terrain_ambient_summary")
+    for token in (
+        '"hidden_identity_sampled": false',
+        '"exploration_gate_before_profile": true',
+        '"session_mutation_source": "none_presentation_only"',
+        '"layer_indices": layer_indices',
+        '"identities": identity_rows',
+        '"presentations": presentation_rows',
+    ):
+        ensure(token in summary_block, errors, f"Ambient-life public evidence must retain its fail-closed geometry and authority fields: {token}")
+
+    visual_case = gd_block(visual_text, "_assert_terrain_ambient_life_contract")
+    for token in (
+        'OS.get_environment("OVERWORLD_TERRAIN_AMBIENT_ONLY") == "1"',
+        'String(normal_after.get("model", "")) == "deterministic_sparse_explored_tile_ambient_life"',
+        'normal_after.get("identities", []) == normal_before.get("identities", [])',
+        'normal_after.get("presentations", []) != normal_before.get("presentations", [])',
+        'reduced_after.get("presentations", []) == reduced_before.get("presentations", [])',
+        'is_zero_approx(float(reduced_after.get("phase", -1.0)))',
+        'int(high_contrast.get("entry_count", -1)) == 0',
+        'if session.to_dict() != authority_before:',
+    ):
+        ensure(token in visual_text or token in visual_case, errors, f"Focused ambient-life runtime must retain normal/reduced/high-contrast/session authority proof: {token}")
+    for forbidden in ("create_timer", "create_tween", "rand", "call_deferred"):
+        ensure(forbidden not in visual_case, errors, f"Focused ambient-life runtime must observe frame behavior without synthetic timing or randomness: {forbidden}")
+
+    generated_assert = gd_block(generated_text, "_assert_generated_terrain_ambient")
+    for token in (
+        'var terrain_ambient_before := _terrain_ambient_summary(overworld)',
+        'var terrain_ambient_after := _terrain_ambient_summary(overworld)',
+        'int(summary.get("entry_count", 0)) <= 0',
+        'not bool(summary.get("all_contained", false))',
+        'not bool(summary.get("all_explored", false))',
+        'bool(summary.get("hidden_identity_sampled", true))',
+        '"terrain_ambient_before": _compact_terrain_ambient_summary(terrain_ambient_before)',
+        '"terrain_ambient_after": _compact_terrain_ambient_summary(terrain_ambient_after)',
+    ):
+        ensure(token in generated_text or token in generated_assert, errors, f"Generated live Overworld must retain ambient-life movement/redraw coverage: {token}")
+
+
 def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
     required_paths = (
@@ -43956,7 +44084,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure(sync_block.find("_hero_movement_last_serial = serial") < sync_block.find("_tiles_from_payloads"), errors, "Map view must consume each movement serial once before validating its detached path")
     ensure(sync_block.find("_hero_movement_reduced_motion") < sync_block.find("if _hero_movement_reduced_motion:"), errors, "Map view must derive reduced-motion policy before choosing endpoint snap")
     processing_block = gdscript_function_block(map_view_text, "_sync_presentation_processing")
-    ensure('set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)' in processing_block, errors, "Map view must run per-frame processing only while a presentation is active or queued")
+    ensure('set_process(_overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)' in processing_block, errors, "Map view must run per-frame processing only while ambient life or an action presentation is active or queued")
     ensure("_invalidate_session_static_cache" not in process_block and "_invalidate_state_cache" not in process_block, errors, "Hero locomotion frames must not invalidate static or state caches")
     ensure("_invalidate_dynamic_layer" in process_block, errors, "Hero locomotion frames must invalidate the dynamic layer")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Hero locomotion frame/draw helpers must not mutate or consult session authority")
@@ -70625,6 +70753,7 @@ def main() -> int:
     validate_overworld_rope_lift_live_transit(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
+    validate_overworld_terrain_ambient_life(errors)
     validate_overworld_hero_route_locomotion(errors)
     validate_overworld_field_spell_cast_cue_playback(errors)
     validate_artifact_icon_runtime(errors)

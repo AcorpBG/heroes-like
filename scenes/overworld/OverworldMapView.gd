@@ -380,6 +380,23 @@ const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.13
 const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08
 const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.12
 const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.88)
+const TERRAIN_AMBIENT_MODEL := "deterministic_sparse_explored_tile_ambient_life"
+const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain_and_roads", "ambient_life", "fog_and_objects", "routes_and_selection", "vfx", "frame_and_ui"]
+const TERRAIN_AMBIENT_PHASE_SPEED := 0.38
+const TERRAIN_AMBIENT_STATIC_PHASE := 0.0
+const TERRAIN_AMBIENT_DENSITY_MODULUS := 4
+const TERRAIN_AMBIENT_PROFILES := {
+	"grasslands": {"id": "meadow_pollen", "kind": "pollen", "color": Color(0.96, 0.86, 0.48, 1.0), "alpha": 0.20, "radius_factor": 0.020, "drift": Vector2(0.050, 0.065)},
+	"forest": {"id": "woodland_firefly", "kind": "firefly", "color": Color(0.91, 0.95, 0.48, 1.0), "alpha": 0.28, "radius_factor": 0.019, "drift": Vector2(0.042, 0.055)},
+	"mire": {"id": "fen_wisp", "kind": "wisp", "color": Color(0.48, 0.84, 0.76, 1.0), "alpha": 0.22, "radius_factor": 0.023, "drift": Vector2(0.052, 0.040)},
+	"rough": {"id": "highland_dust", "kind": "dust", "color": Color(0.88, 0.70, 0.43, 1.0), "alpha": 0.15, "radius_factor": 0.018, "drift": Vector2(0.070, 0.025)},
+	"rock": {"id": "ridge_dust", "kind": "dust", "color": Color(0.82, 0.74, 0.58, 1.0), "alpha": 0.14, "radius_factor": 0.018, "drift": Vector2(0.062, 0.022)},
+	"sand": {"id": "desert_dust", "kind": "dust", "color": Color(0.94, 0.78, 0.48, 1.0), "alpha": 0.15, "radius_factor": 0.018, "drift": Vector2(0.078, 0.022)},
+	"dirt": {"id": "roadside_dust", "kind": "dust", "color": Color(0.86, 0.70, 0.46, 1.0), "alpha": 0.14, "radius_factor": 0.018, "drift": Vector2(0.072, 0.023)},
+	"ash": {"id": "ash_ember", "kind": "ember", "color": Color(1.0, 0.48, 0.24, 1.0), "alpha": 0.20, "radius_factor": 0.018, "drift": Vector2(0.038, 0.070)},
+	"snow": {"id": "frost_glint", "kind": "frost", "color": Color(0.76, 0.91, 1.0, 1.0), "alpha": 0.20, "radius_factor": 0.018, "drift": Vector2(0.050, 0.042)},
+	"underground": {"id": "cavern_spore", "kind": "wisp", "color": Color(0.62, 0.70, 0.94, 1.0), "alpha": 0.18, "radius_factor": 0.021, "drift": Vector2(0.040, 0.045)},
+}
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
 const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
@@ -503,6 +520,7 @@ var _town_faction_asset_ids: Dictionary = {}
 var _hero_faction_asset_ids: Dictionary = {}
 var _encounter_default_asset_id := ""
 var _session_static_layer: Control = null
+var _terrain_ambient_layer: Control = null
 var _state_layer: Control = null
 var _dynamic_layer: Control = null
 var _frame_layer: Control = null
@@ -510,10 +528,12 @@ var _draw_canvas_item: CanvasItem = null
 var _session_static_cache_signature := 0
 var _state_cache_signature := 0
 var _session_static_cache_generation := 0
+var _terrain_ambient_generation := 0
 var _state_cache_generation := 0
 var _dynamic_layer_generation := 0
 var _frame_layer_generation := 0
 var _session_static_cache_reason := "uninitialized"
+var _terrain_ambient_reason := "uninitialized"
 var _state_cache_reason := "uninitialized"
 var _dynamic_layer_reason := "uninitialized"
 var _frame_layer_reason := "uninitialized"
@@ -523,6 +543,7 @@ var _road_index_signature := 0
 var _validation_force_index_rebuild := false
 var _path_detail_profile_enabled := false
 var _validation_profile: Dictionary = {}
+var _terrain_ambient_phase := TERRAIN_AMBIENT_STATIC_PHASE
 var _towns_by_tile: Dictionary = {}
 var _town_footprints_by_tile: Dictionary = {}
 var _resources_by_tile: Dictionary = {}
@@ -648,12 +669,20 @@ func _ready() -> void:
 	focus_mode = Control.FOCUS_NONE
 	clip_contents = true
 	custom_minimum_size = Vector2(640, 400)
+	if not SettingsService.settings_changed.is_connected(_on_settings_changed):
+		SettingsService.settings_changed.connect(_on_settings_changed)
 	_ensure_render_layers()
 	_load_terrain_grammar()
 	_load_overworld_art_manifest()
 	_load_overworld_vfx_manifest()
 	_invalidate_frame_layer("ready")
 	set_process(false)
+
+func _on_settings_changed(_settings: Dictionary) -> void:
+	if not _overworld_terrain_ambient_should_animate():
+		_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE
+	_invalidate_terrain_ambient_layer("accessibility_settings_changed")
+	_sync_presentation_processing()
 
 func set_map_state(
 	session,
@@ -749,6 +778,8 @@ func set_map_state(
 		_invalidate_state_cache(state_reason)
 
 	_invalidate_dynamic_layer("map_state_updated")
+	_invalidate_terrain_ambient_layer("map_state_updated")
+	_sync_presentation_processing()
 	_profile_end("set_map_state", profile_start)
 
 func set_route_preview_enabled(enabled: bool) -> void:
@@ -757,6 +788,12 @@ func set_route_preview_enabled(enabled: bool) -> void:
 func _process(delta: float) -> void:
 	var redraw_dynamic := false
 	var elapsed_delta := maxf(0.0, delta)
+	if _overworld_terrain_ambient_should_animate():
+		_terrain_ambient_phase = fmod(_terrain_ambient_phase + elapsed_delta * TERRAIN_AMBIENT_PHASE_SPEED, TAU)
+		_invalidate_terrain_ambient_layer("terrain_ambient_frame")
+	elif not is_zero_approx(_terrain_ambient_phase):
+		_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE
+		_invalidate_terrain_ambient_layer("terrain_ambient_static")
 	if _hero_movement_active:
 		_hero_movement_elapsed_sec = minf(_hero_movement_duration_sec, _hero_movement_elapsed_sec + elapsed_delta)
 		if _hero_movement_elapsed_sec >= _hero_movement_duration_sec:
@@ -787,7 +824,7 @@ func _process(delta: float) -> void:
 		_invalidate_dynamic_layer("overworld_presentation_frame")
 
 func _sync_presentation_processing() -> void:
-	set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)
+	set_process(_overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)
 
 func present_spell_cast_presentation(presentation: Dictionary) -> Dictionary:
 	_sync_spell_cast_presentation(presentation)
@@ -1223,6 +1260,7 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_invalidate_frame_layer("resized")
 		_invalidate_session_static_cache("resized")
+		_invalidate_terrain_ambient_layer("resized")
 		_invalidate_state_cache("resized")
 		_invalidate_dynamic_layer("resized")
 	elif what == NOTIFICATION_MOUSE_EXIT:
@@ -1236,6 +1274,7 @@ func _ensure_render_layers() -> void:
 	if _session_static_layer != null and is_instance_valid(_session_static_layer):
 		return
 	_session_static_layer = _create_render_layer("SessionStaticLayer", Callable(self, "_draw_session_static_layer"))
+	_terrain_ambient_layer = _create_render_layer("TerrainAmbientLayer", Callable(self, "_draw_terrain_ambient_layer"))
 	_state_layer = _create_render_layer("StateLayer", Callable(self, "_draw_state_layer"))
 	_dynamic_layer = _create_render_layer("DynamicLayer", Callable(self, "_draw_dynamic_layer"))
 	_frame_layer = _create_render_layer("FrameLayer", Callable(self, "_draw_frame_layer"))
@@ -1389,6 +1428,12 @@ func _invalidate_session_static_cache(reason: String) -> void:
 	_session_static_cache_reason = reason
 	if _session_static_layer != null:
 		_session_static_layer.queue_redraw()
+
+func _invalidate_terrain_ambient_layer(reason: String) -> void:
+	_terrain_ambient_generation += 1
+	_terrain_ambient_reason = reason
+	if _terrain_ambient_layer != null:
+		_terrain_ambient_layer.queue_redraw()
 
 func _invalidate_state_cache(reason: String) -> void:
 	_state_cache_generation += 1
@@ -1660,6 +1705,116 @@ func _draw_session_static_layer() -> void:
 		"water_surface_ripple_draws": water_surface_ripple_draws,
 		"visible_bounds": _rect2i_payload(visible_bounds),
 	})
+
+func _overworld_terrain_ambient_available() -> bool:
+	return _session != null and not FrontierVisualKitScript.high_contrast_enabled()
+
+func _overworld_terrain_ambient_should_animate() -> bool:
+	return _overworld_terrain_ambient_available() and not SettingsService.reduced_motion_enabled()
+
+func _overworld_terrain_ambient_profile(tile: Vector2i) -> Dictionary:
+	var terrain_group := _terrain_group(_terrain_at(tile))
+	var profile_value: Variant = TERRAIN_AMBIENT_PROFILES.get(terrain_group, {})
+	return profile_value if profile_value is Dictionary else {}
+
+func _overworld_terrain_ambient_seed(tile: Vector2i, profile_id: String) -> int:
+	var profile_seed := 0
+	for index in range(profile_id.length()):
+		profile_seed += profile_id.unicode_at(index) * (index + 1)
+	return absi((tile.x * 73) + (tile.y * 151) + profile_seed)
+
+func _overworld_terrain_ambient_entries(board_rect: Rect2, visible_bounds: Rect2i, phase: float) -> Array:
+	if not _overworld_terrain_ambient_available() or board_rect.size.x <= 0.0 or board_rect.size.y <= 0.0:
+		return []
+	var entries: Array = []
+	for y in range(visible_bounds.position.y, visible_bounds.end.y):
+		for x in range(visible_bounds.position.x, visible_bounds.end.x):
+			var tile := Vector2i(x, y)
+			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+				continue
+			var profile := _overworld_terrain_ambient_profile(tile)
+			if profile.is_empty():
+				continue
+			var profile_id := String(profile.get("id", ""))
+			var seed := _overworld_terrain_ambient_seed(tile, profile_id)
+			if seed % TERRAIN_AMBIENT_DENSITY_MODULUS != 0:
+				continue
+			var rect := _tile_rect(board_rect, tile)
+			var radius := clampf(minf(rect.size.x, rect.size.y) * float(profile.get("radius_factor", 0.02)), 0.85, 2.35)
+			var outer_radius := radius * 3.0
+			var base_normalized := Vector2(
+				0.24 + (float(seed % 37) / 36.0) * 0.52,
+				0.24 + (float((seed / 37) % 37) / 36.0) * 0.52
+			)
+			var local_phase := phase + float(seed % 101) * 0.071
+			var drift: Vector2 = profile.get("drift", Vector2.ZERO)
+			var motion_normalized := Vector2(
+				sin(local_phase) * drift.x,
+				cos((local_phase * 0.79) + float(seed % 13) * 0.19) * drift.y
+			)
+			var center := rect.position + (base_normalized + motion_normalized) * rect.size
+			var pulse := 0.76 + 0.24 * sin((local_phase * 1.17) + 0.6)
+			var bounds := Rect2(center - Vector2(outer_radius, outer_radius), Vector2(outer_radius * 2.0, outer_radius * 2.0))
+			entries.append({
+				"tile": tile,
+				"profile_id": profile_id,
+				"kind": String(profile.get("kind", "")),
+				"base_normalized": base_normalized,
+				"center": center,
+				"radius": radius,
+				"outer_radius": outer_radius,
+				"alpha": float(profile.get("alpha", 0.0)) * pulse,
+				"color": profile.get("color", Color.TRANSPARENT),
+				"bounds": bounds,
+				"contained": rect.encloses(bounds),
+				"explored": true,
+			})
+	return entries
+
+func _draw_overworld_terrain_ambient_entry(entry: Dictionary) -> void:
+	var center: Vector2 = entry.get("center", Vector2.ZERO)
+	var radius := float(entry.get("radius", 0.0))
+	var alpha := float(entry.get("alpha", 0.0))
+	var color: Color = entry.get("color", Color.TRANSPARENT)
+	var halo_color := Color(color.r, color.g, color.b, alpha * 0.16)
+	var soft_color := Color(color.r, color.g, color.b, alpha * 0.42)
+	var core_color := Color(color.r, color.g, color.b, alpha)
+	match String(entry.get("kind", "")):
+		"dust":
+			var tangent := Vector2(1.0, -0.22).normalized()
+			_canvas_draw_line(center - tangent * radius * 2.0, center + tangent * radius * 2.0, soft_color, maxf(0.7, radius * 0.62), true)
+			_canvas_draw_circle(center, radius * 0.42, core_color)
+		"ember":
+			_canvas_draw_line(center + Vector2(0.0, radius * 1.7), center - Vector2(radius * 0.28, radius * 1.2), soft_color, maxf(0.75, radius * 0.58), true)
+			_canvas_draw_circle(center, radius * 0.44, core_color)
+		"frost":
+			_canvas_draw_line(center - Vector2(radius, 0.0), center + Vector2(radius, 0.0), soft_color, maxf(0.7, radius * 0.48), true)
+			_canvas_draw_line(center - Vector2(0.0, radius), center + Vector2(0.0, radius), soft_color, maxf(0.7, radius * 0.48), true)
+			_canvas_draw_circle(center, radius * 0.34, core_color)
+		"wisp":
+			_canvas_draw_circle(center, radius * 3.0, halo_color)
+			_canvas_draw_line(center - Vector2(radius * 1.2, 0.0), center + Vector2(radius * 1.2, -radius * 0.34), soft_color, maxf(0.75, radius * 0.64), true)
+			_canvas_draw_circle(center, radius * 0.40, core_color)
+		_:
+			_canvas_draw_circle(center, radius * 3.0, halo_color)
+			_canvas_draw_circle(center, radius * 1.35, soft_color)
+			_canvas_draw_circle(center, radius * 0.42, core_color)
+
+func _draw_terrain_ambient_layer() -> void:
+	if _session == null or _terrain_ambient_layer == null:
+		return
+	var previous_target = _draw_canvas_item
+	_draw_canvas_item = _terrain_ambient_layer
+	var viewport_rect := _map_viewport_rect()
+	var board_rect := _board_rect()
+	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	var phase := TERRAIN_AMBIENT_STATIC_PHASE if SettingsService.reduced_motion_enabled() else _terrain_ambient_phase
+	var entries := _overworld_terrain_ambient_entries(board_rect, visible_bounds, phase)
+	for entry_value in entries:
+		if entry_value is Dictionary:
+			_draw_overworld_terrain_ambient_entry(entry_value)
+	_draw_canvas_item = previous_target
+	_profile_add("terrain_ambient_draws", entries.size())
 
 func _draw_state_layer() -> void:
 	if _session == null:
@@ -6125,10 +6280,12 @@ func validation_view_metrics() -> Dictionary:
 		},
 		"render_cache": {
 			"session_static_generation": _session_static_cache_generation,
+			"terrain_ambient_generation": _terrain_ambient_generation,
 			"state_generation": _state_cache_generation,
 			"dynamic_generation": _dynamic_layer_generation,
 			"frame_generation": _frame_layer_generation,
 			"session_static_reason": _session_static_cache_reason,
+			"terrain_ambient_reason": _terrain_ambient_reason,
 			"state_reason": _state_cache_reason,
 			"dynamic_reason": _dynamic_layer_reason,
 			"frame_reason": _frame_layer_reason,
@@ -6153,6 +6310,83 @@ func validation_view_metrics() -> Dictionary:
 		"guarded_site_presentation": validation_guarded_site_presentation(),
 		"object_focus_presentation": validation_object_focus_presentation(),
 		"spell_cast_presentation": validation_spell_cast_presentation(),
+	}
+
+func validation_terrain_ambient_summary() -> Dictionary:
+	var viewport_rect := _map_viewport_rect()
+	var board_rect := _board_rect()
+	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	var high_contrast := FrontierVisualKitScript.high_contrast_enabled()
+	var reduced_motion := SettingsService.reduced_motion_enabled()
+	var phase := TERRAIN_AMBIENT_STATIC_PHASE if reduced_motion else _terrain_ambient_phase
+	var entries := _overworld_terrain_ambient_entries(board_rect, visible_bounds, phase)
+	var identity_rows: Array = []
+	var presentation_rows: Array = []
+	var profile_ids: Array = []
+	var all_contained := true
+	var all_explored := true
+	for entry_value in entries:
+		if not (entry_value is Dictionary):
+			all_contained = false
+			all_explored = false
+			continue
+		var entry: Dictionary = entry_value
+		var tile: Vector2i = entry.get("tile", Vector2i(-1, -1))
+		var profile_id := String(entry.get("profile_id", ""))
+		if profile_id not in profile_ids:
+			profile_ids.append(profile_id)
+		all_contained = all_contained and bool(entry.get("contained", false))
+		all_explored = all_explored and bool(entry.get("explored", false)) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
+		identity_rows.append({
+			"x": tile.x,
+			"y": tile.y,
+			"profile_id": profile_id,
+			"kind": String(entry.get("kind", "")),
+			"base_normalized": _vector2_payload(entry.get("base_normalized", Vector2.ZERO)),
+		})
+		presentation_rows.append({
+			"x": tile.x,
+			"y": tile.y,
+			"profile_id": profile_id,
+			"center": _vector2_payload(entry.get("center", Vector2.ZERO)),
+			"radius": float(entry.get("radius", 0.0)),
+			"outer_radius": float(entry.get("outer_radius", 0.0)),
+			"alpha": float(entry.get("alpha", 0.0)),
+			"contained": bool(entry.get("contained", false)),
+		})
+	var layer_indices := {
+		"terrain_and_roads": _session_static_layer.get_index() if is_instance_valid(_session_static_layer) else -1,
+		"ambient_life": _terrain_ambient_layer.get_index() if is_instance_valid(_terrain_ambient_layer) else -1,
+		"fog_and_objects": _state_layer.get_index() if is_instance_valid(_state_layer) else -1,
+		"routes_and_selection": _dynamic_layer.get_index() if is_instance_valid(_dynamic_layer) else -1,
+		"frame_and_ui": _frame_layer.get_index() if is_instance_valid(_frame_layer) else -1,
+	}
+	return {
+		"model": TERRAIN_AMBIENT_MODEL,
+		"draw_order": TERRAIN_AMBIENT_DRAW_ORDER.duplicate(),
+		"layer_name": _terrain_ambient_layer.name if is_instance_valid(_terrain_ambient_layer) else "",
+		"layer_indices": layer_indices,
+		"available": _overworld_terrain_ambient_available(),
+		"animating": _overworld_terrain_ambient_should_animate(),
+		"reduced_motion": reduced_motion,
+		"high_contrast": high_contrast,
+		"phase": phase,
+		"phase_speed": TERRAIN_AMBIENT_PHASE_SPEED,
+		"static_phase": TERRAIN_AMBIENT_STATIC_PHASE,
+		"density_modulus": TERRAIN_AMBIENT_DENSITY_MODULUS,
+		"profile_ids": profile_ids,
+		"profile_mapping": TERRAIN_AMBIENT_PROFILES.duplicate(true),
+		"entry_count": entries.size(),
+		"identities": identity_rows,
+		"presentations": presentation_rows,
+		"all_contained": all_contained,
+		"all_explored": all_explored,
+		"exploration_gate_before_profile": true,
+		"hidden_identity_sampled": false,
+		"visible_bounds": _rect2i_payload(visible_bounds),
+		"session_mutation_source": "none_presentation_only",
+		"generation": _terrain_ambient_generation,
+		"reason": _terrain_ambient_reason,
 	}
 
 func validation_route_visual_profile() -> Dictionary:

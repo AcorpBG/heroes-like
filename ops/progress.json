@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved bounded graphical-polish slice."
+    "Select the next graphical-polish slice from direct rendered evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "The natural shoreline slice is complete; continue graphical polish from fresh direct rendered evidence.",
+  "currentNotes": "The terrain-ambient-life slice is complete. Select the next graphical-polish slice from direct rendered evidence; broader product gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-natural-shoreline-blend-10184",
-  "currentSliceId": "presentation-overworld-natural-shoreline-blend-10184",
-  "currentSliceNotes": "Completed a shared-boundary nine-sample shoreline blend and suppressed generic diagonal water corner hints; inspected captures and focused/generated/compatibility/platform gates pass with terrain and gameplay authority unchanged.",
+  "currentSlice": "presentation-overworld-terrain-ambient-life-10184",
+  "currentSliceId": "presentation-overworld-terrain-ambient-life-10184",
+  "currentSliceNotes": "Add a sparse deterministic terrain-aware ambient layer beneath fog, objects, routes, selection, VFX, and UI, with Reduced Motion static and High Contrast hidden.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Natural Shoreline Blend",
-  "currentSliceUpdatedAt": "2026-08-27T06:32:51Z",
+  "currentSliceTitle": "Overworld Terrain Ambient Life",
+  "currentSliceUpdatedAt": "2026-08-27T07:05:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104874,6 +104874,33 @@
       "blockedReason": null,
       "notes": "Completed from direct 1280x720 and 1920x1080 rendered evidence. Cardinal water transition art and all bank/shallow/wet/foam layers now use a bounded nine-sample shared-boundary lattice with 11-point filled bands, three broken foam segments, shallower depth factors, and restrained alpha. Generic diagonal water corner hints are suppressed, removing the large captured grey triangular wedges while retaining non-water corners. Authored Overworld visual, Ninefold, generated 36x36 reveal-all movement/save, input ownership, full route movement, active-play focus, accessibility, core, validate_repo, pycompile, exact/generic editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain identity/passability, roads, fog, movement, session/save, gameplay, generation, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
       "completedAt": "2026-08-27T06:32:51Z"
+    },
+    {
+      "id": "presentation-overworld-terrain-ambient-life-10184",
+      "title": "Overworld Terrain Ambient Life",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T07:05:31Z",
+      "startedAt": "2026-08-27T06:39:04Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the otherwise static Overworld surface sparse deterministic terrain-aware ambient life beneath every authoritative fog, object, route, selection, and UI surface.",
+      "completionCriteria": "Inspected 1280/1920 normal captures show restrained atmosphere; focused normal/reduced/high-contrast runtime proves exact deterministic profiles, layer order, containment, hidden identity silence, and unchanged authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No terrain/road/water/fog/object/hero/town bitmap or identity, topology, placement, passability, route, movement, interaction, camera/layout, content, gameplay, AI, battle, balance, session, save/schema, generation, or Native RMG change.",
+        "No Timer, Tween, particle node, shader, nondeterministic random/wall-clock source, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed from direct current capture comparison. A sparse deterministic terrain-group ambience layer now draws after terrain/roads and before the authoritative fog/object layer; live settings changes animate normally, freeze at the exact Reduced Motion static phase, and hide in High Contrast. Inspected River Pass 1280x720 and 1920x1080 captures retain terrain, road, shoreline, fog, object, hero, route, selection, and UI clarity. Focused authored and generated movement/save runtime, full Overworld visual, input ownership, full route movement, active-play focus, accessibility, core, validate_repo, pycompile, exact/generic editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Gameplay, session/save, generation, Native RMG, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "completedAt": "2026-08-27T07:05:31Z",
+      "remainingWork": ""
     }
   ],
   "project": "heroes-like",
