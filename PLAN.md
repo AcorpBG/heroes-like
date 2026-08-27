@@ -26,6 +26,37 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Generated Overworld Blocker-Mass Presentation
+
+id: `ux-generated-overworld-blocker-mass-presentation-10184`
+
+Status: completed.
+
+Result:
+- generated blocker placements now compose one to three deterministic painted anchors across their exact body span, using placement-aware biome motifs, bounded variation, cropped sprite payloads, and a grounded contact bed instead of drawing the same small stamp in every occupied cell;
+- a focused save/reload fixture preserves all 24 exact blocker body cells and pathing authority while rebuilding exactly 7 anchors across 4 placements, and the inspected 108x108 generated Large save composes 2698 anchors across 1776 placements / 5459 exact body cells with every placement represented;
+- direct before/after and full-shell captures show materially more coherent cliff, root, snow, thorn, reed, and rock masses while leaving generated topology, passability, body/visit masks, movement, routes, and save authority unchanged. The concepts still expose broader terrain-painting and shell-density opportunities outside this slice.
+
+Implementation boundary:
+- retain every exact generated `package_block_tiles`/`package_body_tiles` cell as the sole collision, movement, save, and generation authority while increasing only the generated body-cell painted composition into a dense bounded sub-tile mass;
+- select existing original blocker assets from the exact terrain-biome pool through a placement-aware bounded spatial motif key, so one placement remains coherent while neighboring placements and larger masses gain deterministic local variety;
+- strengthen only the blocker-cell contact bed/shadow and retain deterministic bounded scale/offset/vertical settling wholly inside the owning body tile, with no animation, frame randomness, or coverage of adjacent passable cells;
+- leave the ordinary object-scale ladder, authored interactive objects, towns, heroes, terrain, roads, fog, camera, selection, UI layout, generation topology/content, body/visit masks, passability, pathfinding, and Native RMG behavior unchanged.
+
+Completion criteria:
+- direct before/after captures of an authored map and an actual generated Large map show blocker footprints reading as coherent forest/cliff/reed/root masses with materially less local stamping while roads, heroes, towns, sites, and routes remain legible;
+- focused runtime proves exact body-cell union, terrain-biome eligibility, placement-local deterministic motif selection, transformed bounds inside each owning tile, stable rebuild composition, and unchanged movement/path/session/save authority;
+- generated map live render/move and Large save/reload, authored Overworld visual/input/accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Completion evidence:
+- the focused production owner exits naturally with exact placement/body/anchor counts `4/24/7`, sparse density `0.291666...`, deterministic redraw, public manual-save restore, unchanged blocker pathing, and an exact rebuilt composition signature;
+- the live generated Large capture reports 1776 placement records, 5459 exact unique body cells, 2698 visual anchors, density `0.494229...`, 110 distinct assets, 2103 motifs, complete placement coverage, terrain eligibility, and exact body authority;
+- generated render-performance and core smoke, repository validation, Python compilation, exact and generic editor parsing, Linux export plus packaged headless startup, and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged generated-map interaction, full visual-direction parity, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Non-goals:
+- no new/generated shipped bitmap, manifest/content identity, RMG placement/count/density/topology, native/GDExtension, H3MapEd private-state/final-payload parity, body/visit mask, passability/pathfinding, movement, route, save/schema, AI, economy, battle, balance, or gameplay change;
+- no general town/hero/site/object scale rewrite, terrain/road/fog replacement, shell/footer/rail redesign, packaged generated-map interaction claim, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Battle Refresh Derived-Surface Reuse
 
 id: `performance-battle-refresh-derived-surface-reuse-10184`

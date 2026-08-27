@@ -18,6 +18,9 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if OS.get_environment("RANDOM_MAP_LIVE_BLOCKER_MASS_FOCUSED_ONLY") == "1":
+		await _run_blocker_mass_focused()
+		return
 	_active_size_class_id = OS.get_environment("RANDOM_MAP_LIVE_SIZE_CLASS").strip_edges()
 	if _active_size_class_id == "":
 		_active_size_class_id = SIZE_CLASS_ID
@@ -203,6 +206,223 @@ func _run() -> void:
 		"save_reload_authority_exact": true,
 	})])
 	get_tree().quit(0)
+
+func _run_blocker_mass_focused() -> void:
+	_active_size_class_id = "focused_blocker_mass"
+	_active_seed = "focused-blocker-mass-10184"
+	var session := _blocker_mass_focused_session()
+	var expected_tiles := _blocker_mass_focused_tiles()
+	var authority_before: Dictionary = session.to_dict()
+	SessionState.set_active_session(session)
+	var view = load("res://scenes/overworld/OverworldMapView.gd").new()
+	view.size = Vector2(1280, 720)
+	add_child(view)
+	await get_tree().process_frame
+	view.set_map_state(session, session.overworld.get("map", []), Vector2i(16, 12), Vector2i(14, 10))
+	await get_tree().process_frame
+	var first_summary: Dictionary = view.validation_generated_object_visual_summary()
+	if not _assert_blocker_mass_focused_summary(first_summary, "initial"):
+		return
+	if session.to_dict() != authority_before:
+		_fail("Focused blocker-mass presentation changed live session authority.")
+		return
+	for tile_value in expected_tiles:
+		var body_tile: Vector2i = tile_value
+		if not OverworldRules.tile_is_blocked(session, body_tile.x, body_tile.y):
+			_fail("Focused blocker-mass body is not blocked at %s." % body_tile)
+			return
+	if OverworldRules.tile_is_blocked(session, 14, 10):
+		_fail("Focused blocker-mass control route became blocked.")
+		return
+	view.set_map_state(session, session.overworld.get("map", []), Vector2i(16, 12), Vector2i(14, 10))
+	await get_tree().process_frame
+	var redraw_summary: Dictionary = view.validation_generated_object_visual_summary()
+	if redraw_summary.get("body_entries", []) != first_summary.get("body_entries", []):
+		_fail("Focused blocker-mass anchors changed across an unchanged redraw.")
+		return
+	var source_save_authority := _generated_save_reload_authority(session)
+	var save_result: Dictionary = SaveService.save_runtime_manual_session(session, 3)
+	if not bool(save_result.get("ok", false)):
+		_fail("Focused blocker-mass fixture did not save: %s" % JSON.stringify(save_result))
+		return
+	var restored_session = SaveService.restore_manual_session(3)
+	if restored_session == null or not _save_authority_values_equal(_generated_save_reload_authority(restored_session), source_save_authority):
+		_fail("Focused blocker-mass fixture changed across save/restore.")
+		return
+	for tile_value in expected_tiles:
+		var body_tile: Vector2i = tile_value
+		if not OverworldRules.tile_is_blocked(restored_session, body_tile.x, body_tile.y):
+			_fail("Focused restored blocker-mass body is not blocked at %s." % body_tile)
+			return
+	var restored_view = load("res://scenes/overworld/OverworldMapView.gd").new()
+	restored_view.size = Vector2(1280, 720)
+	add_child(restored_view)
+	await get_tree().process_frame
+	restored_view.set_map_state(restored_session, restored_session.overworld.get("map", []), Vector2i(16, 12), Vector2i(14, 10))
+	await get_tree().process_frame
+	var restored_summary: Dictionary = restored_view.validation_generated_object_visual_summary()
+	if not _assert_blocker_mass_focused_summary(restored_summary, "restored"):
+		return
+	if restored_summary.get("body_entries", []) != first_summary.get("body_entries", []):
+		_fail("Focused blocker-mass anchors changed after save/restore rebuild.")
+		return
+	print("%s %s" % [REPORT_ID, JSON.stringify({
+		"ok": true,
+		"focused_blocker_mass": true,
+		"expected_body_tile_count": int(first_summary.get("expected_body_tile_count", 0)),
+		"visual_anchor_count": int(first_summary.get("visual_anchor_count", 0)),
+		"visual_anchor_placement_count": int(first_summary.get("visual_anchor_placement_count", 0)),
+		"sparse_anchor_density": float(first_summary.get("sparse_anchor_density", 0.0)),
+		"composition_signature": String(first_summary.get("composition_signature", "")),
+		"pathing_and_save_restore_exact": true,
+	})])
+	view.queue_free()
+	restored_view.queue_free()
+	await get_tree().process_frame
+	get_tree().quit(0)
+
+func _assert_blocker_mass_focused_summary(summary: Dictionary, label: String) -> bool:
+	var expected_anchor_counts := {
+		"focused_mass_single": 1,
+		"focused_mass_small": 1,
+		"focused_mass_medium": 2,
+		"focused_mass_large": 3,
+	}
+	if (
+		String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3"
+		or int(summary.get("generated_record_count", 0)) != 4
+		or int(summary.get("expected_body_tile_count", 0)) != 24
+		or int(summary.get("indexed_body_tile_count", 0)) != 24
+		or not bool(summary.get("body_tile_keys_exact", false))
+		or int(summary.get("visual_anchor_count", 0)) != 7
+		or int(summary.get("visual_anchor_placement_count", 0)) != 4
+		or not bool(summary.get("all_generated_records_anchored", false))
+		or not is_equal_approx(float(summary.get("sparse_anchor_density", 0.0)), 7.0 / 24.0)
+		or not bool(summary.get("all_body_assets_loaded", false))
+		or not bool(summary.get("all_body_assets_terrain_matched", false))
+		or int(summary.get("composition_key_count", 0)) != 7
+		or not bool(summary.get("all_transformed_bounds_within_mass_margin", false))
+		or String(summary.get("composition_signature", "")).length() != 64
+	):
+		_fail("%s focused blocker-mass summary is not exact: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	var observed_anchor_counts: Dictionary = {}
+	var anchor_row_count := 0
+	for entry_value in summary.get("body_entries", []):
+		if not (entry_value is Dictionary):
+			_fail("%s focused blocker-mass summary contains a malformed row." % label)
+			return false
+		var entry: Dictionary = entry_value
+		if not bool(entry.get("visual_anchor", false)):
+			continue
+		anchor_row_count += 1
+		var placement_id := String(entry.get("anchor_placement_id", ""))
+		observed_anchor_counts[placement_id] = int(observed_anchor_counts.get(placement_id, 0)) + 1
+		if not bool(entry.get("asset_loaded", false)) or not bool(entry.get("terrain_matched_asset", false)):
+			_fail("%s focused blocker-mass anchor did not load terrain-matched art: %s" % [label, JSON.stringify(entry)])
+			return false
+	if anchor_row_count != 7 or observed_anchor_counts != expected_anchor_counts:
+		_fail("%s focused blocker-mass anchor ladder changed: %s" % [label, JSON.stringify(observed_anchor_counts)])
+		return false
+	return true
+
+func _blocker_mass_focused_session() -> SessionStateStoreScript.SessionData:
+	var overworld := {
+		"map": _blocker_mass_focused_map(),
+		"map_size": {"width": 16, "height": 12},
+		"terrain_layers": {"id": "focused_blocker_mass_layers", "roads": []},
+		"hero_position": {"x": 14, "y": 10},
+		"movement": {"current": 24, "max": 24},
+		"resources": {"gold": 1000, "wood": 20, "ore": 20},
+		"towns": [],
+		"resource_nodes": [],
+		"artifact_nodes": [],
+		"encounters": [],
+		"resolved_encounters": [],
+		"map_objects": [
+			_blocker_mass_focused_object("focused_mass_single", "AVLf_single.def", [Vector2i(1, 1)]),
+			_blocker_mass_focused_object("focused_mass_small", "AVLf_small.def", [Vector2i(3, 1), Vector2i(4, 1), Vector2i(3, 2), Vector2i(4, 2)]),
+			_blocker_mass_focused_object("focused_mass_medium", "AVLf_medium.def", [Vector2i(7, 1), Vector2i(8, 1), Vector2i(7, 2), Vector2i(8, 2), Vector2i(9, 2), Vector2i(8, 3), Vector2i(9, 3)]),
+			_blocker_mass_focused_object("focused_mass_large", "AVLf_large.def", [Vector2i(1, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(1, 7), Vector2i(2, 7), Vector2i(3, 7), Vector2i(4, 7), Vector2i(5, 7), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8)]),
+		],
+		"player_heroes": [{
+			"id": "focused_blocker_mass_hero",
+			"hero_id": "focused_blocker_mass_hero",
+			"name": "Mass Surveyor",
+			"is_active": true,
+			"position": {"x": 14, "y": 10},
+			"movement": {"current": 24, "max": 24},
+		}],
+		"fog": _blocker_mass_focused_fog(),
+	}
+	var session := SessionStateStoreScript.new_session_data(
+		"focused-blocker-mass",
+		"river-pass",
+		"focused_blocker_mass_hero",
+		1,
+		overworld,
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	session.flags["generated_random_map"] = true
+	session.flags["generated_random_map_materialization"] = {
+		"materialized_map_signature": "focused-blocker-mass-24-cells",
+		"summary": {"map_size": {"width": 16, "height": 12}},
+	}
+	return session
+
+func _blocker_mass_focused_object(placement_id: String, h3m_def_name: String, body_tiles: Array) -> Dictionary:
+	var block_tiles: Array = []
+	for tile_value in body_tiles:
+		var tile: Vector2i = tile_value
+		block_tiles.append({"x": tile.x, "y": tile.y, "level": 0})
+	var anchor: Vector2i = body_tiles[body_tiles.size() - 1]
+	return {
+		"placement_id": placement_id,
+		"h3m_def_name": h3m_def_name,
+		"kind": "decorative_obstacle",
+		"object_family_id": "decorative_obstacle",
+		"runtime_object_role": "decorative_blocker_sprite",
+		"x": anchor.x,
+		"y": anchor.y,
+		"level": 0,
+		"package_block_tiles": block_tiles,
+	}
+
+func _blocker_mass_focused_tiles() -> Array:
+	var tiles: Array = []
+	for object_value in _blocker_mass_focused_session().overworld.get("map_objects", []):
+		for tile_payload in object_value.get("package_block_tiles", []):
+			tiles.append(Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1))))
+	return tiles
+
+func _blocker_mass_focused_map() -> Array:
+	var rows: Array = []
+	for _y in range(12):
+		var row: Array = []
+		for _x in range(16):
+			row.append("grass")
+		rows.append(row)
+	return rows
+
+func _blocker_mass_focused_fog() -> Dictionary:
+	var visible: Array = []
+	var explored: Array = []
+	for _y in range(12):
+		var visible_row: Array = []
+		var explored_row: Array = []
+		for _x in range(16):
+			visible_row.append(true)
+			explored_row.append(true)
+		visible.append(visible_row)
+		explored.append(explored_row)
+	return {
+		"visible_tiles": visible,
+		"explored_tiles": explored,
+		"visible_count": 192,
+		"explored_count": 192,
+		"total_tiles": 192,
+	}
 
 func _assert_menu_hooks(shell: Node) -> bool:
 	for method_name in [
@@ -865,7 +1085,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if summary.is_empty():
 		_fail("%s generated visual summary is unavailable." % label)
 		return false
-	if String(summary.get("presentation_model", "")) != "exact_body_cell_biome_palette_clustered_original_sprite":
+	if String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3":
 		_fail("%s generated body presentation model is not exact: %s" % [label, JSON.stringify(summary)])
 		return false
 	var is_default_fixture := _active_size_class_id == SIZE_CLASS_ID and _active_seed == EXPLICIT_SEED
@@ -878,17 +1098,33 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if int(summary.get("generated_record_count", 0)) <= 0 or int(summary.get("expected_body_tile_count", 0)) <= 0:
 		_fail("%s generated fixture has no decorative body authority: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not bool(summary.get("body_tile_keys_exact", false)) or not bool(summary.get("all_body_assets_loaded", false)) or not bool(summary.get("all_body_assets_terrain_matched", false)):
+	if not bool(summary.get("body_tile_keys_exact", false)) or not bool(summary.get("all_body_assets_loaded", false)) or not bool(summary.get("all_body_assets_terrain_matched", false)) or not bool(summary.get("all_generated_records_anchored", false)):
 		_fail("%s generated body presentation is incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.44):
+	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 0.92):
 		_fail("%s generated body sprite extent changed: %s" % [label, summary.get("body_sprite_extent_tiles", -1.0)])
 		return false
-	if int(summary.get("composition_key_count", 0)) != int(summary.get("indexed_body_tile_count", -1)):
+	if int(summary.get("asset_cluster_tiles", 0)) != 4:
+		_fail("%s generated body motif cluster span changed: %s" % [label, summary.get("asset_cluster_tiles", -1)])
+		return false
+	var visual_anchor_count := int(summary.get("visual_anchor_count", 0))
+	var indexed_body_tile_count := int(summary.get("indexed_body_tile_count", 0))
+	if visual_anchor_count < int(summary.get("generated_record_count", 0)) or visual_anchor_count >= indexed_body_tile_count:
+		_fail("%s generated placement masses are not sparse complete anchors: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	var sparse_anchor_density := float(summary.get("sparse_anchor_density", 0.0))
+	if sparse_anchor_density < 0.25 or sparse_anchor_density > 0.75:
+		_fail("%s generated placement mass density escaped its bounded sparse range: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	if int(summary.get("composition_key_count", 0)) != visual_anchor_count:
 		_fail("%s generated body composition keys are incomplete: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if not bool(summary.get("all_transformed_bounds_within_tile", false)):
-		_fail("%s generated body composition escaped its owning tiles: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+	if int(summary.get("motif_key_count", 0)) <= int(summary.get("distinct_body_asset_count", 0)) \
+		or int(summary.get("motif_key_count", 0)) > visual_anchor_count:
+		_fail("%s generated body motifs did not form bounded placement-local masses: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	if not bool(summary.get("all_transformed_bounds_within_mass_margin", false)) or not is_equal_approx(float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.34):
+		_fail("%s generated body composition escaped its owning placement mass margin: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if int(summary.get("distinct_body_asset_count", 0)) < 8 or int(summary.get("repeated_def_multi_asset_count", 0)) <= 0:
 		_fail("%s generated body palette did not break repeated-definition stamping: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
@@ -903,6 +1139,30 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		return false
 	if String(summary.get("composition_signature", "")).length() != 64:
 		_fail("%s generated body composition signature is missing: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
+		return false
+	var counted_anchors := 0
+	for body_entry_value in summary.get("body_entries", []):
+		if not (body_entry_value is Dictionary):
+			_fail("%s generated body summary contains a malformed row." % label)
+			return false
+		var body_entry: Dictionary = body_entry_value
+		if not bool(body_entry.get("visual_anchor", false)):
+			continue
+		counted_anchors += 1
+		var placement_tile_count := int(body_entry.get("placement_tile_count", 0))
+		var expected_anchor_count := 3 if placement_tile_count >= 9 else (2 if placement_tile_count >= 5 else 1)
+		if (
+			String(body_entry.get("anchor_placement_id", "")).strip_edges() == ""
+			or int(body_entry.get("anchor_index", -1)) < 0
+			or int(body_entry.get("anchor_count", 0)) <= 0
+			or int(body_entry.get("anchor_count", 0)) > expected_anchor_count
+			or int(body_entry.get("anchor_index", -1)) >= int(body_entry.get("anchor_count", 0))
+			or placement_tile_count <= 0
+		):
+			_fail("%s generated visual anchor does not match its placement body: %s" % [label, JSON.stringify(body_entry)])
+			return false
+	if counted_anchors != visual_anchor_count:
+		_fail("%s generated visual anchor rows are incomplete: %d/%d" % [label, counted_anchors, visual_anchor_count])
 		return false
 	if (
 		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.80)
@@ -1011,12 +1271,19 @@ func _compact_generated_visual_summary(summary: Dictionary) -> Dictionary:
 		"body_tile_keys_exact": bool(summary.get("body_tile_keys_exact", false)),
 		"all_body_assets_loaded": bool(summary.get("all_body_assets_loaded", false)),
 		"all_body_assets_terrain_matched": bool(summary.get("all_body_assets_terrain_matched", false)),
+		"visual_anchor_count": int(summary.get("visual_anchor_count", 0)),
+		"visual_anchor_placement_count": int(summary.get("visual_anchor_placement_count", 0)),
+		"all_generated_records_anchored": bool(summary.get("all_generated_records_anchored", false)),
+		"sparse_anchor_density": float(summary.get("sparse_anchor_density", 0.0)),
 		"collision_tile_count": int(summary.get("collision_tile_count", 0)),
 		"body_sprite_extent_tiles": float(summary.get("body_sprite_extent_tiles", 0.0)),
+		"asset_cluster_tiles": int(summary.get("asset_cluster_tiles", 0)),
 		"distinct_body_asset_count": int(summary.get("distinct_body_asset_count", 0)),
+		"motif_key_count": int(summary.get("motif_key_count", 0)),
 		"repeated_def_multi_asset_count": int(summary.get("repeated_def_multi_asset_count", 0)),
 		"composition_key_count": int(summary.get("composition_key_count", 0)),
-		"all_transformed_bounds_within_tile": bool(summary.get("all_transformed_bounds_within_tile", false)),
+		"all_transformed_bounds_within_mass_margin": bool(summary.get("all_transformed_bounds_within_mass_margin", false)),
+		"mass_bounds_margin_tiles": float(summary.get("mass_bounds_margin_tiles", 0.0)),
 		"scale_factor_min": float(summary.get("scale_factor_min", 0.0)),
 		"scale_factor_max": float(summary.get("scale_factor_max", 0.0)),
 		"offset_x_min": float(summary.get("offset_x_min", 0.0)),
