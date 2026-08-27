@@ -31394,12 +31394,13 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "func validation_scenic_backdrop_summary() -> Dictionary:",
         '"rendering_mode": "cover_crop_scenic_backdrop" if texture != null else "procedural_geometry_fallback"',
         '"procedural_fallback": texture == null',
-        '["scenic_or_procedural_stage", "status_plaques", "district_strip", "command_markers", "header"]',
+        '["scenic_or_procedural_stage", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header"]',
     ):
         ensure(required_token in town_stage_text, errors, f"TownStageView.gd is missing scenic-backdrop contract token: {required_token}")
     draw_block = town_stage_text.split("func _draw() -> void:", 1)[1].split("func _draw_procedural_stage", 1)[0]
     draw_order = [
         draw_block.find("_draw_scenic_backdrop(scene_rect)"),
+        draw_block.find("_draw_scenic_ambient_light(scene_rect)"),
         draw_block.find("_draw_status_plaques(scene_rect)"),
         draw_block.find("_draw_district_strip(scene_rect)"),
         draw_block.find("_draw_command_markers(scene_rect)"),
@@ -31408,6 +31409,78 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "TownStageView.gd must draw the scenic or fallback stage before every existing Town overlay")
     scenic_block = town_stage_text.split("func _draw_scenic_backdrop(scene_rect: Rect2) -> bool:", 1)[1].split("\nfunc ", 1)[0]
     ensure("draw_texture_rect(" not in scenic_block, errors, "TownStageView.gd must not stretch scenic backdrops instead of cover-cropping them")
+
+    ambient_constants_block = town_stage_text.split("const SCENIC_AMBIENT_LIGHTS := {", 1)[1].split("const STATUS_ACCENT_WIDTH", 1)[0] if "const SCENIC_AMBIENT_LIGHTS := {" in town_stage_text else ""
+    for required_token in (
+        'const SCENIC_AMBIENT_LIGHT_MODEL := "crop_aware_faction_painted_light_bloom"',
+        "const SCENIC_AMBIENT_LIGHT_RING_COUNT := 9",
+        "const SCENIC_AMBIENT_LIGHT_PULSE_SPEED := 1.35",
+        "const SCENIC_AMBIENT_LIGHT_PULSE_MIN := 0.82",
+        "const SCENIC_AMBIENT_LIGHT_PULSE_MAX := 1.0",
+        "const SCENIC_AMBIENT_LIGHT_STATIC_SCALE := 0.88",
+        "func _draw_scenic_ambient_light(scene_rect: Rect2) -> void:",
+        "func _scenic_ambient_light_entries(scene_rect: Rect2) -> Array:",
+        "func _scenic_ambient_light_available() -> bool:",
+        "func _scenic_ambient_light_should_animate() -> bool:",
+        "func _scenic_ambient_light_pulse_scale() -> float:",
+        "func validation_scenic_ambient_light_summary() -> Dictionary:",
+        'SettingsService.settings_changed.connect(_on_settings_changed)',
+        "_sync_processing_state()",
+    ):
+        ensure(required_token in town_stage_text, errors, f"TownStageView.gd is missing painted-light ambient contract token: {required_token}")
+    for faction_id in scenic_backdrops:
+        expected_anchor_count = 2 if faction_id == "faction_thornwake" else 3
+        ensure(ambient_constants_block.count(f'"{faction_id}": [') == 1, errors, f"Town ambient-light anchors must define exactly one ordered row for {faction_id}")
+        faction_start = ambient_constants_block.find(f'"{faction_id}": [')
+        next_faction = ambient_constants_block.find('\n\t"faction_', faction_start + 1)
+        faction_block = ambient_constants_block[faction_start:] if next_faction < 0 else ambient_constants_block[faction_start:next_faction]
+        ensure(faction_block.count('"position": Vector2(') == expected_anchor_count, errors, f"Town ambient-light anchors must retain exactly {expected_anchor_count} authored source points for {faction_id}")
+        ensure(faction_block.count('"radius":') == expected_anchor_count and faction_block.count('"color": Color(') == expected_anchor_count and faction_block.count('"strength":') == expected_anchor_count, errors, f"Town ambient-light anchors must keep exact radius/color/strength payloads for {faction_id}")
+    ambient_draw_block = town_stage_text.split("func _draw_scenic_ambient_light(scene_rect: Rect2) -> void:", 1)[1].split("\nfunc ", 1)[0] if "func _draw_scenic_ambient_light(scene_rect: Rect2) -> void:" in town_stage_text else ""
+    ambient_entries_block = town_stage_text.split("func _scenic_ambient_light_entries(scene_rect: Rect2) -> Array:", 1)[1].split("\nfunc ", 1)[0] if "func _scenic_ambient_light_entries(scene_rect: Rect2) -> Array:" in town_stage_text else ""
+    ambient_available_block = town_stage_text.split("func _scenic_ambient_light_available() -> bool:", 1)[1].split("\nfunc ", 1)[0] if "func _scenic_ambient_light_available() -> bool:" in town_stage_text else ""
+    ambient_process_block = town_stage_text.split("func _process(delta: float) -> void:", 1)[1].split("\nfunc ", 1)[0] if "func _process(delta: float) -> void:" in town_stage_text else ""
+    ambient_validation_block = town_stage_text.split("func validation_scenic_ambient_light_summary() -> Dictionary:", 1)[1].split("\nfunc ", 1)[0] if "func validation_scenic_ambient_light_summary() -> Dictionary:" in town_stage_text else ""
+    for required_token in (
+        "if not _scenic_ambient_light_available():",
+        "var pulse_scale := _scenic_ambient_light_pulse_scale()",
+        "for entry_value in _scenic_ambient_light_entries(scene_rect):",
+        "for ring_index in range(SCENIC_AMBIENT_LIGHT_RING_COUNT, 0, -1):",
+        "draw_circle(center, radius * ring_ratio, Color(color.r, color.g, color.b, ring_alpha), true, -1.0, true)",
+    ):
+        ensure(required_token in ambient_draw_block, errors, f"Town ambient-light draw must remain bounded multi-ring bloom: {required_token}")
+    for required_token in (
+        "var source_rect := _cover_source_rect(texture_size, scene_rect.size)",
+        "var source_position := Vector2(texture_size.x * normalized_position.x, texture_size.y * normalized_position.y)",
+        "if not source_rect.has_point(source_position):",
+        "var destination_position := scene_rect.position + (source_position - source_rect.position) / source_rect.size * scene_rect.size",
+        '"contained": scene_rect.encloses(bounds)',
+    ):
+        ensure(required_token in ambient_entries_block, errors, f"Town ambient-light anchor projection must use exact cover-crop geometry: {required_token}")
+    for required_token in (
+        "not _town.is_empty()",
+        "_scenic_backdrop_texture() != null",
+        "not Array(SCENIC_AMBIENT_LIGHTS.get(_town_faction_id(), [])).is_empty()",
+        "not FrontierVisualKitScript.high_contrast_enabled()",
+    ):
+        ensure(required_token in ambient_available_block, errors, f"Town ambient-light availability must fail closed on exact live scenic/accessibility authority: {required_token}")
+    for required_token in (
+        "_scenic_ambient_light_should_animate()",
+        "fmod(_scenic_ambient_light_phase + delta * SCENIC_AMBIENT_LIGHT_PULSE_SPEED, TAU)",
+        "if not _town_action_presentation.is_empty():",
+        "dismiss_town_action_presentation()",
+        "set_process(false)",
+    ):
+        ensure(required_token in ambient_process_block, errors, f"Town ambient-light process must coexist with exact action-presentation lifecycle: {required_token}")
+    for required_token in (
+        '"model": SCENIC_AMBIENT_LIGHT_MODEL',
+        '"entries": entries.duplicate(true)',
+        '"all_contained": all_contained',
+        '"draw_order": ["scenic_backdrop", "scenic_dim", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"]',
+    ):
+        ensure(required_token in ambient_validation_block, errors, f"Town ambient-light validation must expose detached geometry and exact draw order: {required_token}")
+    for forbidden_token in ("TownRulesScript", "OverworldRulesScript", "HeroCommandRulesScript", "Input.", "emit(", "await ", "create_timer", "create_tween", "sort(", "erase("):
+        ensure(forbidden_token not in ambient_draw_block + ambient_entries_block + ambient_validation_block, errors, f"Town ambient-light helpers must remain presentation-only and non-mutating: {forbidden_token}")
 
     for required_token in (
         "func validation_header_action_count_summary() -> Dictionary:",
@@ -31488,6 +31561,20 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:",
         "is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)",
         'await _capture_color_cue_frame("town_scenic_backdrop")',
+        'live_board.has_method("validation_scenic_ambient_light_summary")',
+        'func _scenic_ambient_light_contract_exact(summary: Dictionary, expected_faction_id: String, expected_anchor_count: int, expected_enabled: bool, expected_processing: bool) -> bool:',
+        'String(summary.get("model", "")) != "crop_aware_faction_painted_light_bloom"',
+        'var expected_anchor_count := 2 if faction_id == "faction_thornwake" else 3',
+        'live_ambient_summary["entries"][0]["destination_position"] = Vector2.ZERO',
+        'await get_tree().process_frame',
+        '_set_town_ambient_accessibility(true, false)',
+        '_set_town_ambient_accessibility(false, true)',
+        'var preserved_color_cue_mode := FrontierVisualKitScript.color_cue_mode()',
+        'FrontierVisualKitScript.set_color_cue_mode(preserved_color_cue_mode)',
+        'reduced_after != reduced_summary',
+        'bool(contrast_summary.get("enabled", true))',
+        'not _scenic_ambient_light_contract_exact(restored_summary, "faction_veilmourn", 3, true, true)',
+        'int(fallback_ambient_summary.get("anchor_count", -1)) != 0',
     ):
         ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing scenic-backdrop validation token: {required_token}")
     ensure(town_visual_text.count("TOWN_SCENIC_BACKDROP_PATHS.keys()") == 1, errors, "Town scenic smoke must traverse the exact six-path fixture once")

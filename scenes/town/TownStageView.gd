@@ -5,6 +5,7 @@ signal town_action_presentation_blocking_changed(blocking: bool)
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"
 const FRAME_FILL := Color(0.05, 0.07, 0.09, 1.0)
@@ -25,6 +26,43 @@ const SCENIC_GLASS_FILL := Color(0.025, 0.035, 0.042, 0.78)
 const SCENIC_GLASS_CARD_FILL := Color(0.045, 0.058, 0.066, 0.72)
 const SCENIC_GLASS_SHADOW := Color(0.0, 0.0, 0.0, 0.28)
 const SCENIC_GLASS_BORDER := Color(0.86, 0.72, 0.40, 0.70)
+const SCENIC_AMBIENT_LIGHT_MODEL := "crop_aware_faction_painted_light_bloom"
+const SCENIC_AMBIENT_LIGHT_RING_COUNT := 9
+const SCENIC_AMBIENT_LIGHT_PULSE_SPEED := 1.35
+const SCENIC_AMBIENT_LIGHT_PULSE_MIN := 0.82
+const SCENIC_AMBIENT_LIGHT_PULSE_MAX := 1.0
+const SCENIC_AMBIENT_LIGHT_STATIC_SCALE := 0.88
+const SCENIC_AMBIENT_LIGHTS := {
+	"faction_embercourt": [
+		{"position": Vector2(0.61, 0.15), "radius": 0.075, "color": Color(1.0, 0.50, 0.16), "strength": 0.78},
+		{"position": Vector2(0.76, 0.43), "radius": 0.065, "color": Color(1.0, 0.42, 0.10), "strength": 0.72},
+		{"position": Vector2(0.83, 0.75), "radius": 0.085, "color": Color(1.0, 0.34, 0.07), "strength": 0.92},
+	],
+	"faction_mireclaw": [
+		{"position": Vector2(0.10, 0.38), "radius": 0.070, "color": Color(0.76, 1.0, 0.22), "strength": 0.76},
+		{"position": Vector2(0.70, 0.56), "radius": 0.075, "color": Color(0.94, 0.72, 0.15), "strength": 0.72},
+		{"position": Vector2(0.28, 0.80), "radius": 0.085, "color": Color(1.0, 0.39, 0.08), "strength": 0.88},
+	],
+	"faction_sunvault": [
+		{"position": Vector2(0.09, 0.18), "radius": 0.080, "color": Color(0.70, 0.91, 1.0), "strength": 0.82},
+		{"position": Vector2(0.54, 0.28), "radius": 0.080, "color": Color(0.94, 0.89, 0.48), "strength": 0.70},
+		{"position": Vector2(0.80, 0.19), "radius": 0.075, "color": Color(0.55, 0.86, 1.0), "strength": 0.84},
+	],
+	"faction_thornwake": [
+		{"position": Vector2(0.53, 0.21), "radius": 0.130, "color": Color(0.91, 1.0, 0.72), "strength": 0.62},
+		{"position": Vector2(0.70, 0.56), "radius": 0.090, "color": Color(0.56, 1.0, 0.58), "strength": 0.78},
+	],
+	"faction_brasshollow": [
+		{"position": Vector2(0.62, 0.46), "radius": 0.075, "color": Color(1.0, 0.48, 0.12), "strength": 0.74},
+		{"position": Vector2(0.83, 0.78), "radius": 0.095, "color": Color(1.0, 0.30, 0.05), "strength": 0.96},
+		{"position": Vector2(0.18, 0.68), "radius": 0.065, "color": Color(1.0, 0.58, 0.18), "strength": 0.68},
+	],
+	"faction_veilmourn": [
+		{"position": Vector2(0.34, 0.19), "radius": 0.110, "color": Color(0.60, 0.75, 1.0), "strength": 0.68},
+		{"position": Vector2(0.72, 0.58), "radius": 0.065, "color": Color(0.72, 0.83, 1.0), "strength": 0.70},
+		{"position": Vector2(0.82, 0.48), "radius": 0.060, "color": Color(1.0, 0.68, 0.24), "strength": 0.78},
+	],
+}
 const STATUS_ACCENT_WIDTH := 5.0
 const DISTRICT_RIBBON_MODEL := "compact_scenic_district_readiness_ribbon"
 const DISTRICT_RIBBON_FILL := Color(0.025, 0.035, 0.042, 0.56)
@@ -112,22 +150,31 @@ var _town_vfx_manifest_loaded := false
 var _town_vfx_textures: Dictionary = {}
 var _town_vfx_texture_missing: Dictionary = {}
 var _town_action_last_draw: Dictionary = {}
+var _scenic_ambient_light_phase := 0.0
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	focus_mode = Control.FOCUS_NONE
 	custom_minimum_size = Vector2(620, 320)
 	_load_town_vfx_manifest()
-	set_process(false)
+	if not SettingsService.settings_changed.is_connected(_on_settings_changed):
+		SettingsService.settings_changed.connect(_on_settings_changed)
+	_sync_processing_state()
 
-func _process(_delta: float) -> void:
-	if _town_action_presentation.is_empty():
+func _process(delta: float) -> void:
+	var redraw_needed := false
+	if _scenic_ambient_light_should_animate():
+		_scenic_ambient_light_phase = fmod(_scenic_ambient_light_phase + delta * SCENIC_AMBIENT_LIGHT_PULSE_SPEED, TAU)
+		redraw_needed = true
+	if not _town_action_presentation.is_empty():
+		if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):
+			dismiss_town_action_presentation()
+			return
+		redraw_needed = true
+	if redraw_needed:
+		queue_redraw()
+	else:
 		set_process(false)
-		return
-	if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):
-		dismiss_town_action_presentation()
-		return
-	queue_redraw()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -151,11 +198,13 @@ func set_town_state(session) -> void:
 			_threat = OverworldRulesScript.town_public_threat_state(session, _town)
 			_occupation = OverworldRulesScript.town_occupation_state(session, _town)
 			_front = OverworldRulesScript.town_front_state(session, _town)
+	_sync_processing_state()
 	queue_redraw()
 
 func set_precomputed_town_state(session, state: Dictionary) -> void:
 	_clear_town_state(session)
 	if state.is_empty():
+		_sync_processing_state()
 		queue_redraw()
 		return
 	_town = _duplicate_dictionary(state.get("town", {}))
@@ -172,6 +221,7 @@ func set_precomputed_town_state(session, state: Dictionary) -> void:
 	_threat = _duplicate_dictionary(state.get("threat", {}))
 	_occupation = _duplicate_dictionary(state.get("occupation", {}))
 	_front = _duplicate_dictionary(state.get("front", {}))
+	_sync_processing_state()
 	queue_redraw()
 
 func _clear_town_state(session) -> void:
@@ -211,6 +261,7 @@ func _draw() -> void:
 		_draw_procedural_stage(scene_rect)
 	else:
 		draw_rect(scene_rect, Color(0.02, 0.03, 0.04, 0.08), true)
+		_draw_scenic_ambient_light(scene_rect)
 	_draw_status_plaques(scene_rect)
 	_draw_district_strip(scene_rect)
 	_draw_command_markers(scene_rect)
@@ -355,7 +406,7 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 func dismiss_town_action_presentation() -> void:
 	var was_blocking := _town_action_presentation_blocks_input()
 	_town_action_presentation = {}
-	set_process(false)
+	_sync_processing_state()
 	queue_redraw()
 	if was_blocking:
 		town_action_presentation_blocking_changed.emit(false)
@@ -1008,6 +1059,80 @@ func _draw_scenic_backdrop(scene_rect: Rect2) -> bool:
 	draw_texture_rect_region(texture, scene_rect, source_rect)
 	return true
 
+func _draw_scenic_ambient_light(scene_rect: Rect2) -> void:
+	if not _scenic_ambient_light_available():
+		return
+	var pulse_scale := _scenic_ambient_light_pulse_scale()
+	for entry_value in _scenic_ambient_light_entries(scene_rect):
+		var entry: Dictionary = entry_value
+		var center: Vector2 = entry.get("destination_position", Vector2.ZERO)
+		var radius := float(entry.get("radius", 0.0))
+		var color: Color = entry.get("color", Color.TRANSPARENT)
+		var strength := float(entry.get("strength", 0.0))
+		for ring_index in range(SCENIC_AMBIENT_LIGHT_RING_COUNT, 0, -1):
+			var ring_ratio := float(ring_index) / float(SCENIC_AMBIENT_LIGHT_RING_COUNT)
+			var ring_alpha := lerpf(0.018, 0.003, ring_ratio) * strength * pulse_scale
+			draw_circle(center, radius * ring_ratio, Color(color.r, color.g, color.b, ring_alpha), true, -1.0, true)
+
+func _scenic_ambient_light_entries(scene_rect: Rect2) -> Array:
+	var texture := _scenic_backdrop_texture()
+	if texture == null or scene_rect.size.x <= 0.0 or scene_rect.size.y <= 0.0:
+		return []
+	var texture_size := texture.get_size()
+	var source_rect := _cover_source_rect(texture_size, scene_rect.size)
+	if source_rect.size.x <= 0.0 or source_rect.size.y <= 0.0:
+		return []
+	var entries: Array = []
+	for anchor_value in Array(SCENIC_AMBIENT_LIGHTS.get(_town_faction_id(), [])):
+		if not anchor_value is Dictionary:
+			continue
+		var anchor: Dictionary = anchor_value
+		var normalized_position: Vector2 = anchor.get("position", Vector2(-1.0, -1.0))
+		var source_position := Vector2(texture_size.x * normalized_position.x, texture_size.y * normalized_position.y)
+		if not source_rect.has_point(source_position):
+			continue
+		var destination_position := scene_rect.position + (source_position - source_rect.position) / source_rect.size * scene_rect.size
+		var radius := float(anchor.get("radius", 0.0)) * scene_rect.size.y
+		var bounds := Rect2(destination_position - Vector2(radius, radius), Vector2(radius * 2.0, radius * 2.0))
+		entries.append({
+			"source_normalized_position": normalized_position,
+			"source_position": source_position,
+			"destination_position": destination_position,
+			"radius": radius,
+			"color": anchor.get("color", Color.TRANSPARENT),
+			"strength": float(anchor.get("strength", 0.0)),
+			"bounds": bounds,
+			"contained": scene_rect.encloses(bounds),
+		})
+	return entries
+
+func _scenic_ambient_light_available() -> bool:
+	return not _town.is_empty() \
+		and _scenic_backdrop_texture() != null \
+		and not Array(SCENIC_AMBIENT_LIGHTS.get(_town_faction_id(), [])).is_empty() \
+		and not FrontierVisualKitScript.high_contrast_enabled()
+
+func _scenic_ambient_light_should_animate() -> bool:
+	return _scenic_ambient_light_available() and not SettingsService.reduced_motion_enabled()
+
+func _scenic_ambient_light_pulse_scale() -> float:
+	if SettingsService.reduced_motion_enabled():
+		return SCENIC_AMBIENT_LIGHT_STATIC_SCALE
+	return lerpf(
+		SCENIC_AMBIENT_LIGHT_PULSE_MIN,
+		SCENIC_AMBIENT_LIGHT_PULSE_MAX,
+		0.5 + 0.5 * sin(_scenic_ambient_light_phase)
+	)
+
+func _sync_processing_state() -> void:
+	if not _scenic_ambient_light_should_animate():
+		_scenic_ambient_light_phase = 0.0
+	set_process(not _town_action_presentation.is_empty() or _scenic_ambient_light_should_animate())
+	queue_redraw()
+
+func _on_settings_changed(_settings: Dictionary) -> void:
+	_sync_processing_state()
+
 func _scenic_backdrop_texture() -> Texture2D:
 	var value: Variant = FACTION_BACKDROP_TEXTURES.get(_town_faction_id(), null)
 	return value as Texture2D if value is Texture2D else null
@@ -1049,7 +1174,39 @@ func validation_scenic_backdrop_summary() -> Dictionary:
 			and scene_rect.end.y <= size.y,
 		"rendering_mode": "cover_crop_scenic_backdrop" if texture != null else "procedural_geometry_fallback",
 		"procedural_fallback": texture == null,
-		"overlay_order": ["scenic_or_procedural_stage", "status_plaques", "district_strip", "command_markers", "header"],
+		"overlay_order": ["scenic_or_procedural_stage", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header"],
+	}
+
+func validation_scenic_ambient_light_summary() -> Dictionary:
+	var texture := _scenic_backdrop_texture()
+	var scene_rect := Rect2(Vector2(26.0, 26.0), size - Vector2(52.0, 52.0))
+	var texture_size := texture.get_size() if texture != null else Vector2.ZERO
+	var source_rect := _cover_source_rect(texture_size, scene_rect.size) if texture != null else Rect2()
+	var entries := _scenic_ambient_light_entries(scene_rect)
+	var all_contained := not entries.is_empty()
+	for entry_value in entries:
+		var entry: Dictionary = entry_value
+		if not bool(entry.get("contained", false)):
+			all_contained = false
+	return {
+		"model": SCENIC_AMBIENT_LIGHT_MODEL,
+		"faction_id": _town_faction_id(),
+		"enabled": _scenic_ambient_light_available(),
+		"processing": is_processing(),
+		"reduced_motion": SettingsService.reduced_motion_enabled(),
+		"high_contrast": FrontierVisualKitScript.high_contrast_enabled(),
+		"pulse_phase": _scenic_ambient_light_phase,
+		"pulse_scale": _scenic_ambient_light_pulse_scale(),
+		"pulse_min": SCENIC_AMBIENT_LIGHT_PULSE_MIN,
+		"pulse_max": SCENIC_AMBIENT_LIGHT_PULSE_MAX,
+		"static_scale": SCENIC_AMBIENT_LIGHT_STATIC_SCALE,
+		"ring_count": SCENIC_AMBIENT_LIGHT_RING_COUNT,
+		"source_rect": source_rect,
+		"destination_rect": scene_rect,
+		"anchor_count": entries.size(),
+		"entries": entries.duplicate(true),
+		"all_contained": all_contained,
+		"draw_order": ["scenic_backdrop", "scenic_dim", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"],
 	}
 
 func validation_status_plaques_summary() -> Dictionary:
