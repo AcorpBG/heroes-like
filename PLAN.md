@@ -26,6 +26,34 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
 
+## Overworld Surface-Detail Legibility
+
+id: `presentation-overworld-surface-detail-legibility-10184`
+
+Status: completed.
+
+Result:
+- biome-aware surface clusters now paint on one eligible tile in two at 34-46% tile extent instead of one in three at 22-30%, making the existing flowers, moss, reeds, stones, and twigs readable at normal play scale without overwhelming primary landmarks;
+- inspected 1280x720 and 1920x1080 River Pass captures plus authored/generated runtime prove the detail remains beneath roads, objects, selection, and fog, excludes road/water cells, and preserves exact terrain, route, movement, session, and save authority;
+- nine-biome, generated-map, full-route, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 River Pass captures show that broad grassland still reads as a mostly flat green plane even though the shipped detail atlas contains strong flowers, moss, reeds, stones, and twigs;
+- the current renderer paints those clusters on only one eligible tile in three and shrinks them to 22-30% of one tile, making most of the authored detail disappear at normal whole-map scale.
+
+Implementation boundary:
+- increase only the deterministic density and bounded painted extent of the existing biome-aware terrain-detail decals so their authored shapes survive normal play-scale rendering;
+- retain the exact atlas pixels, biome cell choices, tile-and-terrain variation, offsets, alpha, road/water exclusions, draw order beneath roads/objects/fog, and noninteractive/collision-free authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 River Pass captures show readable but subordinate flowers, moss, reeds, stones, and twigs without cluttering roads, objects, towns, heroes, selection, or fog;
+- authored and generated Overworld runtime prove exact deterministic density/extent bounds, atlas/biome identity, road/water exclusions, stable repeated presentation, and unchanged terrain, route, movement, session, and save authority;
+- core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no bitmap/import, biome atlas-cell choice, terrain id/tile/map topology, road, water, object/hero/town art or scale, fog, camera, interaction, pathing, gameplay, save/schema, AI, balance, content, generation, or Native RMG change;
+- no shader, animation, weather, broad terrain rewrite, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Layered Water-Bank Transition
 
 id: `presentation-overworld-layered-water-bank-transition-10184`
