@@ -364,18 +364,19 @@ const TERRAIN_GRAIN_MODEL := "single_normalized_map_space_seamless_painterly_mic
 const TERRAIN_GRAIN_SOURCE_MODEL := "original_generated_neutral_grain_mirrored_seamless_alpha"
 const TERRAIN_GRAIN_MODULATE := Color(1.0, 1.0, 1.0, 0.72)
 const TERRAIN_GRAIN_EXPECTED_SIZE := Vector2i(1024, 1024)
-const TERRAIN_DETAIL_DECAL_MODEL := "sparse_biome_aware_painterly_surface_clusters"
-const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"
+const TERRAIN_DETAIL_DECAL_MODEL := "rich_biome_aware_painterly_surface_clusters_v2"
+const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "original_generated_clean_alpha_4x4_natural_cluster_atlas"
+const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"
 const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)
 const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)
 const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)
 const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 2
-const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.34
-const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.46
+const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.38
+const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.52
 const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.13
 const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08
 const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.12
-const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.92, 0.94, 0.86, 0.78)
+const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.88)
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
 const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
@@ -2150,6 +2151,7 @@ func _terrain_detail_decal_payload(tile: Vector2i, rect: Rect2) -> Dictionary:
 		)
 	return {
 		"model": TERRAIN_DETAIL_DECAL_MODEL,
+		"source_model": TERRAIN_DETAIL_DECAL_SOURCE_MODEL,
 		"drawn": eligible,
 		"terrain_group": terrain_group,
 		"atlas_texture_loaded": texture_loaded,
