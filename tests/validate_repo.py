@@ -45563,10 +45563,13 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure('func validation_hero_draw_layout(tile: Vector2i, moving: bool = false) -> Dictionary:' in map_text and '_hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, not moving)' in map_text, errors, "Focused validation must expose the exact static-versus-moving hero layout decision without mutating it")
     for token in (
         'const HERO_COMMAND_FOCUS_VISUAL_MODEL := "open_lateral_command_wings_and_ground_tick"',
-        "const HERO_COMMAND_FOCUS_INSET_FACTOR := 0.08",
+        "const HERO_COMMAND_FOCUS_INSET_FACTOR := 0.035",
+        "const HERO_COMMAND_FOCUS_INSET_MIN_PX := 1.25",
         "const HERO_COMMAND_FOCUS_CENTER_Y_FACTOR := 0.48",
-        "const HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR := 0.12",
-        "const HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR := 0.11",
+        "const HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR := 0.075",
+        "const HERO_COMMAND_FOCUS_WING_LENGTH_MIN_PX := 2.5",
+        "const HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR := 0.085",
+        "const HERO_COMMAND_FOCUS_WING_DEPTH_MIN_PX := 3.0",
         "const HERO_COMMAND_FOCUS_GROUND_Y_FACTOR := 0.82",
         "const HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR := 0.18",
         "const HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR := 0.035",
@@ -45575,13 +45578,13 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ):
         ensure(token in map_text, errors, f"Active hero command marker constant drifted: {token}")
     for token in (
-        "var inset := maxf(3.0, extent * HERO_COMMAND_FOCUS_INSET_FACTOR)",
+        "var inset := maxf(HERO_COMMAND_FOCUS_INSET_MIN_PX, extent * HERO_COMMAND_FOCUS_INSET_FACTOR)",
         "var marker_rect := rect.grow(-inset)",
         "var line_width := maxf(1.25, extent * FOCUS_RING_WIDTH_FACTOR * 0.58)",
         '"model": HERO_COMMAND_FOCUS_VISUAL_MODEL', '"focus_rect": rect', '"marker_rect": marker_rect',
         '"center_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_CENTER_Y_FACTOR',
-        '"wing_length_px": maxf(4.5, extent * HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR)',
-        '"wing_depth_px": maxf(4.0, extent * HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR)',
+        '"wing_length_px": maxf(HERO_COMMAND_FOCUS_WING_LENGTH_MIN_PX, extent * HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR)',
+        '"wing_depth_px": maxf(HERO_COMMAND_FOCUS_WING_DEPTH_MIN_PX, extent * HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR)',
         '"ground_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_GROUND_Y_FACTOR',
         '"ground_tick_length_px": maxf(6.0, extent * HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR)',
         '"ground_notch_px": maxf(1.5, extent * HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR)',
@@ -45673,6 +45676,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1',
         'var moving_layout: Dictionary = map_view.call("validation_hero_draw_layout", active_tile, true)',
         'String(moving_layout.get("mode", "")) == "full_tile_world_hero"',
+        'is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.76)',
         'var focus_exact: Dictionary = _validate_focus_layouts(map_view, exact)',
         'var town_layout: Dictionary = map_view.call("validation_tile_focus_layout", active_tile)',
         'var ordinary_layout: Dictionary = map_view.call("validation_tile_focus_layout", ordinary_tile)',
@@ -45705,6 +45709,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'String(layout.get("mode", "")) == "compact_town_footprint_visitor"',
         'is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.76)',
         'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.4484)',
+        'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.76)',
         'tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect)',
         'String(town_presentation.get("presentation_model", "")) == "town_3x2_footprint_bottom_middle_entry"',
         'bool(tile_presentation.get("has_town_non_entry", false))',
@@ -45718,6 +45723,15 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ):
         ensure(token in report_text, errors, f"Overworld faction hero focused owner is missing method-matched proof: {token}")
     ensure(report_text.find('session.hero_id = String(heroes[0].get("id", ""))') < report_text.find('session.overworld["player_heroes"] = heroes'), errors, "Faction hero fixture must align the SessionData primary id before installing the exact six-hero roster")
+    for token in (
+        "marker_rect == focus_rect.grow(-maxf(1.25, extent * 0.035))",
+        "is_equal_approx(wing_length, maxf(2.5, extent * 0.075))",
+        "is_equal_approx(wing_depth, maxf(3.0, extent * 0.085))",
+        "marker_rect.position.x + wing_length <= sprite_rect.position.x",
+        "marker_rect.end.x - wing_length >= sprite_rect.end.x",
+        "ground_y > sprite_rect.end.y",
+    ):
+        ensure(token in report_text, errors, f"Focused faction-hero owner is missing exact enlarged-sprite command-wing clearance: {token}")
     ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Faction hero focused owner must run exactly both registered widths")
     ensure(report_text.find('first_hero["id"] = "hero_missing_faction_sprite_fixture"') < report_text.find("session.from_dict(authority_before)") < report_text.find("restored_profiles == profiles and restored_focus_exact and session.to_dict() == authority_before"), errors, "Faction hero fallback fixture must restore through the public SessionData snapshot before exact authority comparison")
     ensure(report_text.find("var active_tile :=") < report_text.find("var focus_exact: Dictionary =") < report_text.find('first_hero["id"] = "hero_missing_faction_sprite_fixture"') < report_text.find("session.from_dict(authority_before)"), errors, "Focused focus-layout proof must precede the fallback mutation and exact public restoration")
@@ -45756,6 +45770,15 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ):
         ensure(token in visual_text, errors, f"Broad Overworld visual gate is missing town-entry visitor composition: {token}")
     ensure('not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.50)' not in visual_text, errors, "Broad Overworld visual gate must not retain the rejected undersized field-hero oracle")
+    for token in (
+        "var expected_inset := maxf(1.25, extent * 0.035)",
+        "is_equal_approx(wing_length, maxf(2.5, extent * 0.075))",
+        "is_equal_approx(wing_depth, maxf(3.0, extent * 0.085))",
+        "marker_rect.position.x + wing_length <= sprite_rect.position.x",
+        "marker_rect.end.x - wing_length >= sprite_rect.end.x",
+        "ground_y > sprite_rect.end.y",
+    ):
+        ensure(token in visual_text, errors, f"Broad Overworld visual owner is missing exact hero command-wing sprite clearance: {token}")
     for forbidden in ("_tile_focus_layout(", "_draw_tile_focus(", "_hero_command_focus_profile(", "_draw_hero_command_focus_marker(", "create_timer", "create_tween"):
         ensure(forbidden not in visual_text, errors, f"Broad focus geometry gate must observe only the public validation surface: {forbidden}")
 

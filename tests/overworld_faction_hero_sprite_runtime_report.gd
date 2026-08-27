@@ -76,7 +76,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var moving_layout_exact: bool = String(moving_layout.get("mode", "")) == "full_tile_world_hero" \
 		and not bool(moving_layout.get("town_footprint_colocated", true)) \
 		and is_equal_approx(float(moving_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.56)
+		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.76)
 	if not moving_layout_exact:
 		shell.queue_free()
 		return {"ok": false, "failure": "moving_layout_control", "layout": moving_layout}
@@ -203,7 +203,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 			geometry_exact = geometry_exact \
 				and String(layout.get("mode", "")) == "full_tile_world_hero" \
 				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.56)
+				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.76)
 	return {
 		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1 and grounding_exact and town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact,
 		"asset_ids": seen_assets.keys(),
@@ -356,11 +356,11 @@ func _hero_command_marker_profile_exact(profile: Dictionary, focus_rect: Rect2, 
 			and ground_y > sprite_rect.end.y
 	return String(profile.get("model", "")) == "open_lateral_command_wings_and_ground_tick" \
 		and _rect_from_payload(profile.get("focus_rect", {})) == focus_rect \
-		and marker_rect == focus_rect.grow(-maxf(3.0, extent * 0.08)) \
+		and marker_rect == focus_rect.grow(-maxf(1.25, extent * 0.035)) \
 		and focus_rect.encloses(marker_rect) \
 		and is_equal_approx(center_y, focus_rect.position.y + focus_rect.size.y * 0.48) \
-		and is_equal_approx(wing_length, maxf(4.5, extent * 0.12)) \
-		and is_equal_approx(wing_depth, maxf(4.0, extent * 0.11)) \
+		and is_equal_approx(wing_length, maxf(2.5, extent * 0.075)) \
+		and is_equal_approx(wing_depth, maxf(3.0, extent * 0.085)) \
 		and center_y - wing_depth >= marker_rect.position.y \
 		and center_y + wing_depth <= marker_rect.end.y \
 		and is_equal_approx(ground_y, focus_rect.position.y + focus_rect.size.y * 0.82) \

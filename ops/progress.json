@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next bounded graphical-polish slice from fresh rendered evidence; the independently observed enlarged-hero/open-wing overlap is a candidate."
+    "Select the next bounded graphical-polish slice from fresh rendered evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The compact heraldic Overworld town-pennant polish is completed and validated; the next graphical-polish slice is not yet selected and blockers are empty.",
+  "currentNotes": "The Overworld hero command-wing sprite-clearance correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-compact-heraldic-town-pennants-10184",
-  "currentSliceId": "presentation-overworld-compact-heraldic-town-pennants-10184",
-  "currentSliceNotes": "Completed: town owner cloth occupies 43.97% of the former flat overlay while exact owner/color-cue, footprint, entry, route, focus, accessibility, and session authority remain unchanged.",
+  "currentSlice": "presentation-overworld-hero-command-sprite-clearance-10184",
+  "currentSliceId": "presentation-overworld-hero-command-sprite-clearance-10184",
+  "currentSliceNotes": "Completed: compact open command wings clear exact 0.76-tile field and town-entry hero sprites while focus, route, movement, session, accessibility, and core authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Compact heraldic Overworld town pennants",
-  "currentSliceUpdatedAt": "2026-08-26T23:51:44Z",
+  "currentSliceTitle": "Overworld hero command-wing sprite clearance",
+  "currentSliceUpdatedAt": "2026-08-27T00:11:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20851,9 +20851,46 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select one bounded source-backed graphical defect from fresh rendered evidence; preserve gameplay, input, save/session authority, and Native RMG behavior unless the selected slice explicitly owns them.",
-  "notes": "The compact heraldic town-pennant slice is completed with focused/live, compatibility, repository/editor, and bounded Linux/Windows export-startup evidence; no next slice is selected.",
+  "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
+  "notes": "The hero command-wing sprite-clearance slice is completed with focused, visual, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-hero-command-sprite-clearance-10184",
+      "title": "Overworld hero command-wing sprite clearance",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-26T23:55:40Z",
+      "updatedAt": "2026-08-27T00:11:42Z",
+      "completedAt": "2026-08-27T00:11:42Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Keep the open lateral command wings in the negative space outside the exact enlarged hero sprite while retaining symmetric fill-free focus and ground-registration cues.",
+      "completionCriteria": "Inspected 1280/1920 captures plus focused six-faction and broad Overworld runtime prove exact sprite clearance, stroke containment, town-entry/ordinary layouts, and unchanged focus/input/movement/session authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No hero sprite/scale/asset/position, selection/hover/route, movement/pathfinding, focus/input semantic, content, gameplay, session/save/schema, AI, balance, or Native RMG change.",
+        "No new bitmap, animation/audio/VFX, shell/UI layout, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for the hero command-wing boundary. Focused and broad Overworld runtime, inspected 1280/1920 pixels, route, keyboard/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "focusedRuntimeArtifact": "/tmp/heroes-hero-wing-focused-rerun.exAyoq",
+        "broadVisualArtifact": "/tmp/heroes-hero-wing-overworld-smoke.QWPVjd",
+        "captureArtifact": "/tmp/heroes-hero-wing-capture.UTWolw",
+        "routeArtifact": "/tmp/heroes-hero-wing-route.7eOLgH",
+        "activeFocusArtifact": "/tmp/heroes-hero-wing-active-focus.1IVQ1Z",
+        "accessibilityArtifact": "/tmp/heroes-hero-wing-accessibility.yBg44p",
+        "coreArtifact": "/tmp/heroes-hero-wing-core.8aPHFl",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-overworld-compact-heraldic-town-pennants-10184",
       "title": "Compact heraldic Overworld town pennants",
@@ -104786,7 +104823,7 @@
     }
   ],
   "result": "battlefield_continuous_terrain_cohesion_in_progress",
-  "status": "in_progress",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -104886,9 +104923,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the compact heraldic Overworld town-pennant polish with exact ownership and town authority preserved; no next graphical-polish slice is selected.",
+  "summary": "Completed the bounded Overworld hero command-wing sprite-clearance correction with exact live-sprite clearance and preserved focus, route, movement, and session authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-26T23:51:44Z",
+  "updatedAt": "2026-08-27T00:11:42Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -67,10 +67,13 @@ const TILE_SELECTION_MIDPOINT_ALPHA := 0.42
 const TILE_SELECTION_MIDPOINT_LENGTH_FACTOR := 0.08
 const TILE_SELECTION_MIDPOINT_WIDTH_FACTOR := 0.016
 const HERO_COMMAND_FOCUS_VISUAL_MODEL := "open_lateral_command_wings_and_ground_tick"
-const HERO_COMMAND_FOCUS_INSET_FACTOR := 0.08
+const HERO_COMMAND_FOCUS_INSET_FACTOR := 0.035
+const HERO_COMMAND_FOCUS_INSET_MIN_PX := 1.25
 const HERO_COMMAND_FOCUS_CENTER_Y_FACTOR := 0.48
-const HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR := 0.12
-const HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR := 0.11
+const HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR := 0.075
+const HERO_COMMAND_FOCUS_WING_LENGTH_MIN_PX := 2.5
+const HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR := 0.085
+const HERO_COMMAND_FOCUS_WING_DEPTH_MIN_PX := 3.0
 const HERO_COMMAND_FOCUS_GROUND_Y_FACTOR := 0.82
 const HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR := 0.18
 const HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR := 0.035
@@ -3041,7 +3044,7 @@ func _draw_cartographic_hover_reticle(profile: Dictionary) -> void:
 
 func _hero_command_focus_profile(rect: Rect2) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
-	var inset := maxf(3.0, extent * HERO_COMMAND_FOCUS_INSET_FACTOR)
+	var inset := maxf(HERO_COMMAND_FOCUS_INSET_MIN_PX, extent * HERO_COMMAND_FOCUS_INSET_FACTOR)
 	var marker_rect := rect.grow(-inset)
 	var line_width := maxf(1.25, extent * FOCUS_RING_WIDTH_FACTOR * 0.58)
 	return {
@@ -3049,8 +3052,8 @@ func _hero_command_focus_profile(rect: Rect2) -> Dictionary:
 		"focus_rect": rect,
 		"marker_rect": marker_rect,
 		"center_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_CENTER_Y_FACTOR,
-		"wing_length_px": maxf(4.5, extent * HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR),
-		"wing_depth_px": maxf(4.0, extent * HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR),
+		"wing_length_px": maxf(HERO_COMMAND_FOCUS_WING_LENGTH_MIN_PX, extent * HERO_COMMAND_FOCUS_WING_LENGTH_FACTOR),
+		"wing_depth_px": maxf(HERO_COMMAND_FOCUS_WING_DEPTH_MIN_PX, extent * HERO_COMMAND_FOCUS_WING_DEPTH_FACTOR),
 		"ground_y": rect.position.y + rect.size.y * HERO_COMMAND_FOCUS_GROUND_Y_FACTOR,
 		"ground_tick_length_px": maxf(6.0, extent * HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR),
 		"ground_notch_px": maxf(1.5, extent * HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR),
@@ -3068,8 +3071,8 @@ func _draw_hero_command_focus_marker(profile: Dictionary) -> void:
 	if marker_rect.size.x <= 0.0 or marker_rect.size.y <= 0.0:
 		return
 	var center_y := float(profile.get("center_y", marker_rect.get_center().y))
-	var wing_length := float(profile.get("wing_length_px", 4.5))
-	var wing_depth := float(profile.get("wing_depth_px", 4.0))
+	var wing_length := float(profile.get("wing_length_px", HERO_COMMAND_FOCUS_WING_LENGTH_MIN_PX))
+	var wing_depth := float(profile.get("wing_depth_px", HERO_COMMAND_FOCUS_WING_DEPTH_MIN_PX))
 	var ground_y := float(profile.get("ground_y", marker_rect.end.y))
 	var tick_length := float(profile.get("ground_tick_length_px", 6.0))
 	var notch := float(profile.get("ground_notch_px", 1.5))

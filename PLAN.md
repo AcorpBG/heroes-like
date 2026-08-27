@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none; select the next graphical-polish slice from fresh playtest evidence.
+- Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
+
+## Overworld Hero Command-Wing Sprite Clearance
+
+id: `presentation-overworld-hero-command-sprite-clearance-10184`
+
+Status: completed.
+
+Result:
+- the lateral command wings now use a 3.5% outer inset and 7.5% wing length, leaving 1.04 pixels of clear negative space beside each exact 0.76-tile hero silhouette at the 104-pixel live tile size while retaining the symmetric open marker and ground-registration tick;
+- inspected 1280x720 and 1920x1080 captures plus focused six-faction and broad Overworld runtime prove both wing tips clear field and town-entry sprites, all strokes remain contained, and focus, route, movement, session, accessibility, and core authority remain unchanged;
+- repository/editor validation, Linux export and packaged headless startup, and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Current finding:
+- the broad Overworld visual runtime shows the existing open lateral command wings intruding into the enlarged 0.76-tile field-hero sprite: at a 104-pixel tile, the wing tips reach x=477.80 while the sprite begins at x=469.48;
+- this is a presentation-geometry incompatibility left by the completed footprint-scale correction, not a hero selection, input, movement, or session-authority failure.
+
+Implementation boundary:
+- tighten the open wing marker's outer inset, wing length, and vertical depth so both lateral strokes remain in the negative space outside the exact live hero sprite at field and town-entry layouts;
+- retain the open/fill-free symmetric wings, ground registration tick, colors, alpha, antialiasing, draw order, selected/hover cues, and public focus geometry.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 captures show a readable selected/commanded hero without wing strokes crossing the sprite silhouette;
+- focused six-faction and broad Overworld runtime prove both wing tips clear the exact live sprite rect, all strokes remain contained, town-entry and ordinary-field layouts remain exact, and focus/input/movement/session authority is unchanged;
+- focus, route, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no hero sprite/scale/asset/position, selection/hover/route, movement/pathfinding, focus/input semantic, content, gameplay, session/save/schema, AI, balance, or Native RMG change;
+- no new bitmap, animation/audio/VFX, shell/UI layout, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Compact Heraldic Overworld Town Pennants
 
