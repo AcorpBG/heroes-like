@@ -6,9 +6,9 @@ const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const MAX_SMALL_MAP_TILE_EXTENT := 104.0
 const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"
 const SMALL_MAP_MATTE_MIN_GUTTER := 48.0
-const SCALE_HIERARCHY_MODEL := "compressed_cartographic_rank_v3"
-const TOWN_VISUAL_EXTENT_TILES := 1.12
-const HERO_FIELD_VISUAL_EXTENT_TILES := 0.60
+const SCALE_HIERARCHY_MODEL := "balanced_cartographic_bands_v4"
+const TOWN_VISUAL_EXTENT_TILES := 0.96
+const HERO_FIELD_VISUAL_EXTENT_TILES := 0.64
 const HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES := 0.4484
 
 func _ready() -> void:
@@ -175,7 +175,7 @@ func _town_footprint_exact(shell: Node) -> bool:
 			or int(profile.get("footprint_height_tiles", 0)) != 2 \
 			or int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5 \
 			or String(profile.get("scale_hierarchy_model", "")) != SCALE_HIERARCHY_MODEL \
-			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.56) \
+			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.48) \
 			or not is_equal_approx(float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
 			or String(profile.get("entry_role", "")) != "bottom_middle_visit_approach" \
 			or not bool(profile.get("entry_is_visit_tile", false)) \

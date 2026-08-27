@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none; select the next tracker-approved graphical-polish slice from direct rendered evidence.
+- Selected implementation slice: none. Select the next graphical-polish slice from direct rendered evidence.
+
+## Overworld Settlement-Cluster Scale Rebalance
+
+id: `ux-overworld-settlement-cluster-scale-rebalance-10184`
+
+Status: completed.
+
+Result:
+- the Overworld now uses tighter cartographic scale bands: loose props and encounters are more legible, field heroes are slightly stronger, multi-tile structures cap at 0.80 tile, and towns cap at 0.96 tile while remaining the largest landmark;
+- resources and structures drawn inside a town footprint retain their authored geometric envelope but receive an independent 0.56-tile painted-extent cap, separating the town, visiting hero, and adjunct instead of merging them into one oversized silhouette;
+- inspected River Pass 1280x720 and 1920x1080 captures show the corrected hierarchy. Focused authored/generated scale, movement, route, input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Logical map geometry and packaged Overworld interaction remain unchanged/unclaimed.
+
+Current finding:
+- direct 1280x720 and 1920x1080 captures show the selected 3x2 town, co-located hero, and town-adjunct multi-tile structures forming one oversized visual mass while loose pickups and encounters read as tiny miniatures;
+- the current painted hierarchy spans 0.24 to 1.12 tiles and the town-adjunct envelope remains 64% of its authored footprint, so mathematically valid individual scales still combine into an incoherent settlement cluster.
+
+Implementation boundary:
+- tighten the painted hierarchy into three readable cartographic bands for loose props, actors/one-tile sites, and footprint-bearing structures, with towns still the largest anchor;
+- reduce only the visual envelope for resources co-located with a town footprint so the town, visiting hero, and adjunct structure remain individually readable instead of merging into one silhouette;
+- retain exact sprite assets, alpha-bounds crop, aspect, grounding, draw order, fog/memory treatment, and every logical footprint, body/entry mask, hit area, passability, route, interaction, session/save, and generated-map authority.
+
+Completion criteria:
+- inspected River Pass 1280x720 and 1920x1080 captures show a coherent town/hero/structure/prop hierarchy with no oversized settlement cluster and no illegible loose objects;
+- focused authored/generated runtime proves exact painted bands, town-adjunct containment, unchanged assets and logical geometry, and exact movement, interaction, session, and save authority;
+- Overworld visual/small-map/hero-town/generated movement/route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no object/town/hero identity or bitmap, content profile, logical footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, pathing, interaction, camera, session/save/schema, AI, battle, balance, generation, or Native RMG change;
+- no shell/UI, tooltip/selection treatment, grounding/contact model, animation/audio/VFX, shader, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Rich Cartographic Shroud
 

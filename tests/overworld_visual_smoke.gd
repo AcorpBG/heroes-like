@@ -1879,7 +1879,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 	if String(interceptor_profile.get("hero_id", "")) != "hero_vaska" \
 		or String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw" \
 		or not bool(interceptor_profile.get("uses_commander_sprite", false)) \
-		or not is_equal_approx(float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.42):
+		or not is_equal_approx(float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.46):
 		push_error("Overworld smoke: strategic raid did not retain its exact Mireclaw commander presentation. profile=%s" % interceptor_profile)
 		get_tree().quit(1)
 		return false
@@ -2958,7 +2958,7 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	elif String(hero_layout.get("mode", "")) != "full_tile_world_hero" \
 		or bool(hero_layout.get("town_footprint_colocated", true)) \
 		or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.60) \
+		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.64) \
 		or not bool(hero_layout.get("sprite_contained_in_tile", false)):
 		push_error("Overworld smoke: active field hero did not retain its exact subordinate contained world-figure composition. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
@@ -3555,6 +3555,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	if String(wood_resource_layout.get("model", "")) != "ordinary_resource_footprint" \
 			or bool(wood_resource_layout.get("town_footprint_colocated", true)) \
 			or not is_equal_approx(float(wood_resource_layout.get("extent_factor", 0.0)), 1.0) \
+			or not is_equal_approx(float(wood_resource_layout.get("visible_extent_cap_tiles", -1.0)), 0.0) \
 			or _focus_rect_from_payload(wood_resource_layout.get("draw_rect", {})) != _focus_rect_from_payload(wood_resource_layout.get("footprint_rect", {})):
 		push_error("Overworld smoke: ordinary standalone resource presentation was compacted by the town-adjunct layout. presentation=%s" % wood_presentation)
 		get_tree().quit(1)
@@ -3577,6 +3578,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	if String(rare_exchange_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource" \
 			or not bool(rare_exchange_layout.get("town_footprint_colocated", false)) \
 			or not is_equal_approx(float(rare_exchange_layout.get("extent_factor", 0.0)), 0.64) \
+			or not is_equal_approx(float(rare_exchange_layout.get("visible_extent_cap_tiles", 0.0)), 0.56) \
 			or String(rare_exchange_layout.get("edge_anchor", "")) != "bottom_right" \
 			or rare_exchange_layout.get("cell_offset", {}) != {"x": 2, "y": 1} \
 			or not bool(rare_exchange_layout.get("contained_in_footprint_tile", false)) \
@@ -3631,6 +3633,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		if String(structure_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource" \
 				or not bool(structure_layout.get("town_footprint_colocated", false)) \
 				or not is_equal_approx(float(structure_layout.get("extent_factor", 0.0)), 0.64) \
+				or not is_equal_approx(float(structure_layout.get("visible_extent_cap_tiles", 0.0)), 0.56) \
 				or String(structure_layout.get("edge_anchor", "")) != "top_right" \
 				or structure_layout.get("cell_offset", {}) != {"x": 1, "y": 0} \
 				or not bool(structure_layout.get("contained_in_footprint_tile", false)) \
@@ -3666,6 +3669,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 			or String(generated_supply_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource" \
 			or not bool(generated_supply_layout.get("town_footprint_colocated", false)) \
 			or not is_equal_approx(float(generated_supply_layout.get("extent_factor", 0.0)), 0.64) \
+			or not is_equal_approx(float(generated_supply_layout.get("visible_extent_cap_tiles", 0.0)), 0.56) \
 			or String(generated_supply_layout.get("edge_anchor", "")) != "top_left" \
 			or generated_supply_layout.get("cell_offset", {}) != {"x": 0, "y": 0} \
 			or not generated_supply_footprint_rect.encloses(generated_supply_draw_rect) \
@@ -3879,29 +3883,29 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			push_error("Overworld smoke: mapped sprite did not preserve cached painted bounds/aspect authority. payload=%s" % payload)
 			get_tree().quit(1)
 			return false
-	if String(artifact.get("semantic_scale_class", "")) != "handheld_artifact" or not is_equal_approx(float(artifact.get("visible_extent_tiles", 0.0)), 0.24):
+	if String(artifact.get("semantic_scale_class", "")) != "handheld_artifact" or not is_equal_approx(float(artifact.get("visible_extent_tiles", 0.0)), 0.30):
 		push_error("Overworld smoke: handheld artifact did not retain its legible compact presentation rank. payload=%s" % artifact)
 		get_tree().quit(1)
 		return false
-	if String(pickup.get("semantic_scale_class", "")) != "loose_pickup" or not is_equal_approx(float(pickup.get("visible_extent_tiles", 0.0)), 0.30):
+	if String(pickup.get("semantic_scale_class", "")) != "loose_pickup" or not is_equal_approx(float(pickup.get("visible_extent_tiles", 0.0)), 0.36):
 		push_error("Overworld smoke: pickup visible scale no longer remains subordinate. payload=%s" % pickup)
 		get_tree().quit(1)
 		return false
 	if (
-		String(decoration.get("semantic_scale_class", "")) != "ground_detail" or not is_equal_approx(float(decoration.get("visible_extent_tiles", 0.0)), 0.28)
-		or String(generic_object.get("semantic_scale_class", "")) != "map_object" or not is_equal_approx(float(generic_object.get("visible_extent_tiles", 0.0)), 0.36)
-		or String(encounter.get("semantic_scale_class", "")) != "encounter" or not is_equal_approx(float(encounter.get("visible_extent_tiles", 0.0)), 0.42)
-		or String(blocker.get("semantic_scale_class", "")) != "terrain_blocker" or not is_equal_approx(float(blocker.get("visible_extent_tiles", 0.0)), 0.44)
-		or String(waypoint.get("semantic_scale_class", "")) != "waypoint" or not is_equal_approx(float(waypoint.get("visible_extent_tiles", 0.0)), 0.46)
+		String(decoration.get("semantic_scale_class", "")) != "ground_detail" or not is_equal_approx(float(decoration.get("visible_extent_tiles", 0.0)), 0.34)
+		or String(generic_object.get("semantic_scale_class", "")) != "map_object" or not is_equal_approx(float(generic_object.get("visible_extent_tiles", 0.0)), 0.41)
+		or String(encounter.get("semantic_scale_class", "")) != "encounter" or not is_equal_approx(float(encounter.get("visible_extent_tiles", 0.0)), 0.46)
+		or String(blocker.get("semantic_scale_class", "")) != "terrain_blocker" or not is_equal_approx(float(blocker.get("visible_extent_tiles", 0.0)), 0.48)
+		or String(waypoint.get("semantic_scale_class", "")) != "waypoint" or not is_equal_approx(float(waypoint.get("visible_extent_tiles", 0.0)), 0.50)
 	):
 		push_error("Overworld smoke: map-object middle ranks no longer form one world-scale ladder. decoration=%s generic=%s encounter=%s blocker=%s waypoint=%s" % [decoration, generic_object, encounter, blocker, waypoint])
 		get_tree().quit(1)
 		return false
-	if String(service.get("semantic_scale_class", "")) != "durable_structure" or not is_equal_approx(float(service.get("visible_extent_tiles", 0.0)), 0.50):
+	if String(service.get("semantic_scale_class", "")) != "durable_structure" or not is_equal_approx(float(service.get("visible_extent_tiles", 0.0)), 0.54):
 		push_error("Overworld smoke: durable service visible scale is not readable at one-tile presentation. payload=%s" % service)
 		get_tree().quit(1)
 		return false
-	if String(objective.get("semantic_scale_class", "")) != "landmark" or not is_equal_approx(float(objective.get("visible_extent_tiles", 0.0)), 0.54):
+	if String(objective.get("semantic_scale_class", "")) != "landmark" or not is_equal_approx(float(objective.get("visible_extent_tiles", 0.0)), 0.58):
 		push_error("Overworld smoke: scenario objective visible scale changed outside its family hierarchy. payload=%s" % objective)
 		get_tree().quit(1)
 		return false
@@ -3910,16 +3914,16 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not bool(tall_waypoint.get("uses_multi_tile_visual_cap", false))
 		or not bool(multi_tile_service.get("uses_multi_tile_visual_cap", false))
 		or not bool(large_service.get("uses_multi_tile_visual_cap", false))
-		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 0.58)
-		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 0.66)
-		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.58)
-		or not is_equal_approx(float(tall_waypoint.get("min_tiles", 0.0)), 0.58)
-		or not is_equal_approx(float(tall_waypoint.get("cap_tiles", 0.0)), 0.66)
-		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.58)
+		or not is_equal_approx(float(wide_service.get("min_tiles", 0.0)), 0.60)
+		or not is_equal_approx(float(wide_service.get("cap_tiles", 0.0)), 0.68)
+		or not is_equal_approx(float(wide_service.get("visible_extent_tiles", 0.0)), 0.60)
+		or not is_equal_approx(float(tall_waypoint.get("min_tiles", 0.0)), 0.60)
+		or not is_equal_approx(float(tall_waypoint.get("cap_tiles", 0.0)), 0.68)
+		or not is_equal_approx(float(tall_waypoint.get("visible_extent_tiles", 0.0)), 0.60)
 		or not is_equal_approx(float(multi_tile_service.get("visible_extent_tiles", 0.0)), 0.78)
-		or not is_equal_approx(float(large_service.get("min_tiles", 0.0)), 0.76)
-		or not is_equal_approx(float(large_service.get("cap_tiles", 0.0)), 0.88)
-		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 0.88)
+		or not is_equal_approx(float(large_service.get("min_tiles", 0.0)), 0.74)
+		or not is_equal_approx(float(large_service.get("cap_tiles", 0.0)), 0.80)
+		or not is_equal_approx(float(large_service.get("visible_extent_tiles", 0.0)), 0.80)
 		or not (
 			float(wide_service.get("visible_extent_tiles", 0.0))
 			< float(multi_tile_service.get("visible_extent_tiles", 0.0))
@@ -3937,23 +3941,23 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not is_equal_approx(float(clipped_large_service.get("world_tile_extent_px", 0.0)), 100.0) \
 		or not bool(clipped_large_service.get("footprint_clipped", false)) \
 		or clipped_large_service.get("visible_footprint_rect", {}) != {"x": 200.0, "y": 0.0, "width": 100.0, "height": 200.0} \
-		or clipped_large_service.get("sprite_center", {}) != {"x": 250.0, "y": 131.0} \
+		or clipped_large_service.get("sprite_center", {}) != {"x": 250.0, "y": 135.0} \
 		or not bool(clipped_large_service.get("sprite_contained_in_visible_footprint", false)) \
 		or bool(large_service.get("footprint_clipped", true)) \
-		or not is_equal_approx(float(clipped_large_service.get("visible_extent_tiles", 0.0)), 0.88) \
+		or not is_equal_approx(float(clipped_large_service.get("visible_extent_tiles", 0.0)), 0.80) \
 		or not is_equal_approx(float(clipped_large_service.get("min_tiles", 0.0)), float(large_service.get("min_tiles", -1.0))) \
 		or not is_equal_approx(float(clipped_large_service.get("cap_tiles", 0.0)), float(large_service.get("cap_tiles", -1.0))) \
 		or not is_equal_approx(float(clipped_large_service.get("visible_extent_tiles", 0.0)), float(large_service.get("visible_extent_tiles", 0.0))):
 		push_error("Overworld smoke: compact multi-tile art escaped its visible board-edge footprint. full=%s clipped=%s" % [large_service, clipped_large_service])
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 0.60) or not bool(hero.get("sprite_contained_in_tile", false)):
+	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 0.64) or not bool(hero.get("sprite_contained_in_tile", false)):
 		push_error("Overworld smoke: field hero art is not contained at its proportional tile rank. payload=%s" % hero)
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 1.12) \
+	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 0.96) \
 		or not bool(town.get("sprite_contained_in_footprint", false)) \
-		or town.get("sprite_center_tiles", {}) != {"x": 1.5, "y": 1.26}:
+		or town.get("sprite_center_tiles", {}) != {"x": 1.5, "y": 1.34}:
 		push_error("Overworld smoke: town art no longer owns the bounded top of the shared world-scale hierarchy. payload=%s" % town)
 		get_tree().quit(1)
 		return false
@@ -3971,7 +3975,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			"map_roles": ["small_reward", "build_resource", "counter_capture_target"],
 		}
 		or String(authored_pickup.get("semantic_scale_class", "")) != "loose_pickup"
-		or not is_equal_approx(float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.30)
+		or not is_equal_approx(float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.36)
 		or authored_service_profile != {
 			"id": "object_contract_scribe_booth",
 			"family": "repeatable_service",
@@ -3983,7 +3987,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			"map_roles": ["route_pacing", "world_lore", "repeatable_service"],
 		}
 		or String(authored_service.get("semantic_scale_class", "")) != "durable_structure"
-		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.58)
+		or not is_equal_approx(float(authored_service.get("visible_extent_tiles", 0.0)), 0.60)
 	):
 		push_error("Overworld smoke: authored semantic profiles drifted from logical footprint/passability/role authority. pickup=%s service=%s" % [authored_pickup, authored_service])
 		get_tree().quit(1)
@@ -4021,7 +4025,7 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		return false
 	if (
 		float(objective.get("visible_extent_tiles", 0.0)) < float(pickup.get("visible_extent_tiles", 0.0)) * 1.30
-		or float(town.get("visible_extent_tiles", 0.0)) < float(artifact.get("visible_extent_tiles", 0.0)) * 4.00
+		or float(town.get("visible_extent_tiles", 0.0)) < float(artifact.get("visible_extent_tiles", 0.0)) * 3.00
 	):
 		push_error("Overworld smoke: physical role separation collapsed into same-scale board tokens. artifact=%s pickup=%s objective=%s town=%s" % [artifact, pickup, objective, town])
 		get_tree().quit(1)
