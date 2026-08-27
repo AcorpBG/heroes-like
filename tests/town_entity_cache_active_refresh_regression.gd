@@ -51,12 +51,20 @@ func _run() -> void:
 	if _has_save_surface_build_record(records):
 		_finish_fail("Ordinary town entry built the expensive save surface.", records)
 		return
+	var entry_cache: Dictionary = entry_snapshot.get("last_cache_result", {}) if entry_snapshot.get("last_cache_result", {}) is Dictionary else {}
+	if String(entry_cache.get("cache_key", "")) != "%s|full" % first_id or bool(entry_cache.get("minimal", true)) or String(entry_cache.get("signature", "")).find("|tab:") >= 0:
+		_finish_fail("Initial Town entry did not populate one tab-independent full entity state.", entry_snapshot)
+		return
+
+	var tab_reuse: Dictionary = await _assert_management_tab_full_state_reuse(shell, session, first_id)
+	if tab_reuse.is_empty():
+		return
 
 	var hit_snapshot: Dictionary = shell.call("validation_force_minimal_refresh")
 	if not _assert_snapshot(hit_snapshot, first_id, true, true, "same-town current-tab refresh"):
 		return
 	var full_build_snapshot: Dictionary = shell.call("validation_force_refresh")
-	if not _assert_snapshot(full_build_snapshot, first_id, false, true, "same-town explicit full refresh"):
+	if not _assert_snapshot(full_build_snapshot, first_id, true, true, "same-town explicit full refresh"):
 		return
 	var full_again_snapshot: Dictionary = shell.call("validation_force_refresh")
 	if not _assert_snapshot(full_again_snapshot, first_id, true, true, "same-town full refresh after explicit full build"):
@@ -179,11 +187,78 @@ func _run() -> void:
 		"second_town": second_id,
 		"action_invalidation_rows": action_invalidation_rows,
 		"economy_context_invalidation": context_invalidation_row,
+		"management_tab_full_state_reuse": tab_reuse,
 		"same_town_minimal_full_entry_count": int(full_again_snapshot.get("entry_count", 0)),
 		"generated_large_reentry": generated_large_metrics,
 	})])
 	ContentService.clear_generated_scenario_drafts()
 	get_tree().quit(0)
+
+func _assert_management_tab_full_state_reuse(shell: Node, session, expected_placement_id: String) -> Dictionary:
+	var management_tabs := shell.get_node_or_null("%ManagementTabs") as TabContainer
+	if management_tabs == null or management_tabs.get_tab_count() != 5:
+		_finish_fail("Town full-state reuse requires the exact five live management tabs.")
+		return {}
+	var authority_before := _authority_snapshot(session, shell)
+	authority_before.erase("focus_owner")
+	var rows := []
+	var maximum_refresh_ms := 0.0
+	for tab in [1, 2, 3, 4, 0]:
+		SaveService.validation_clear_general_profile_log()
+		management_tabs.current_tab = tab
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var refresh_records := _town_refresh_records(SaveService.validation_general_profile_log_last_records(10))
+		if refresh_records.size() != 1:
+			_finish_fail("Management-tab change did not emit exactly one focused Town refresh.", {"tab": tab, "records": refresh_records})
+			return {}
+		var record: Dictionary = refresh_records[0]
+		if not _assert_cache_hit_refresh_is_light(record, "management tab %d full-state reuse" % tab):
+			return {}
+		var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+		var cache_result: Dictionary = metadata.get("town_entity_cache", {}) if metadata.get("town_entity_cache", {}) is Dictionary else {}
+		var signature := String(cache_result.get("signature", ""))
+		if String(cache_result.get("cache_key", "")) != "%s|full" % expected_placement_id or bool(cache_result.get("minimal", true)) or signature.find("|mode:full|") < 0 or signature.find("|tab:") >= 0:
+			_finish_fail("Management-tab refresh did not reuse the tab-independent full entity state.", {"tab": tab, "record": record})
+			return {}
+		OverworldRules.begin_normalized_read_scope(session)
+		TownRules.begin_read_scope(session)
+		var town := TownRules.get_active_town(session)
+		var cached_state: Dictionary = shell.call("_active_town_entity_view_state", town, false)
+		var direct_state: Dictionary = shell.call("_build_active_town_entity_view_state", false)
+		shell.call("_refresh_active_town_dynamic_view_state", direct_state, town, false)
+		TownRules.end_read_scope(session)
+		OverworldRules.end_normalized_read_scope(session)
+		if cached_state != direct_state:
+			_finish_fail("Cached full Town entity state diverged from the fresh direct-plus-dynamic materializer.", {
+				"tab": tab,
+				"first_difference": _first_exact_difference(direct_state, cached_state),
+			})
+			return {}
+		var total_ms := float(record.get("total_ms", 0.0))
+		maximum_refresh_ms = maxf(maximum_refresh_ms, total_ms)
+		rows.append({
+			"tab": tab,
+			"total_ms": total_ms,
+			"cache_build_ms": float(record.get("buckets_ms", {}).get("town_entity_cache_build", -1.0)),
+			"cache_dynamic_ms": float(record.get("buckets_ms", {}).get("town_entity_cache_dynamic", -1.0)),
+			"whole_state_exact": true,
+		})
+	var authority_after := _authority_snapshot(session, shell)
+	authority_after.erase("focus_owner")
+	if authority_after != authority_before:
+		_finish_fail("Management-tab full-state reuse changed session, town, save, or route authority.", {"before": authority_before, "after": authority_after})
+		return {}
+	if maximum_refresh_ms >= 150.0:
+		_finish_fail("Management-tab full-state reuse did not remove the profiled 297-320 ms hitch.", {"maximum_refresh_ms": maximum_refresh_ms, "rows": rows})
+		return {}
+	return {
+		"rows": rows,
+		"maximum_refresh_ms": maximum_refresh_ms,
+		"full_cache_build_count": 1,
+		"tab_cache_hit_count": rows.size(),
+		"whole_state_exact": true,
+	}
 
 func _generated_large_session():
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
@@ -492,7 +567,6 @@ func _assert_action_invalidates_once_then_hits_fast(
 	var before_action := _action_domain_snapshot(session)
 	var save_before := _save_authority_snapshot()
 	var route_before := _route_authority_snapshot(shell, session)
-	var focus_before := _focus_owner_name()
 	SaveService.validation_clear_general_profile_log()
 	var action_result: Dictionary = shell.call("validation_perform_town_action", action_id)
 	await get_tree().process_frame
@@ -525,11 +599,7 @@ func _assert_action_invalidates_once_then_hits_fast(
 			"after": _route_authority_snapshot(shell, session),
 		})
 		return {}
-	if _focus_owner_name() != focus_before:
-		_finish_fail("Real %s action displaced stable Town focus." % lane, {
-			"before": focus_before,
-			"after": _focus_owner_name(),
-		})
+	if not await _await_town_action_focus_release(shell, lane):
 		return {}
 
 	var post_action_authority := _authority_snapshot(session, shell)
@@ -558,6 +628,33 @@ func _assert_action_invalidates_once_then_hits_fast(
 		"hit_total_ms": float(hit_record.get("total_ms", 0.0)),
 		"hit_dynamic_ms": float((hit_snapshot.get("last_cache_result", {}) as Dictionary).get("dynamic_ms", 0.0)),
 	}
+
+func _await_town_action_focus_release(shell: Node, lane: String) -> bool:
+	var stage = shell.get_node_or_null("%TownStage")
+	var blocker := shell.get_node_or_null("%TownActionInputBlocker") as Control
+	if stage == null or blocker == null or not stage.has_method("validation_town_action_presentation_snapshot"):
+		_finish_fail("Real %s action could not observe the authored Town completion presentation." % lane)
+		return false
+	var deadline_msec := Time.get_ticks_msec() + 2000
+	while bool(stage.validation_town_action_presentation_snapshot().get("active", false)) and Time.get_ticks_msec() < deadline_msec:
+		await get_tree().process_frame
+	await get_tree().process_frame
+	var presentation: Dictionary = stage.validation_town_action_presentation_snapshot()
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if (
+		bool(presentation.get("active", true))
+		or blocker.visible
+		or focus_owner == null
+		or focus_owner == blocker
+		or not shell.is_ancestor_of(focus_owner)
+	):
+		_finish_fail("Real %s action did not release its completion presentation back to Town focus." % lane, {
+			"presentation": presentation,
+			"blocker_visible": blocker.visible,
+			"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		})
+		return false
+	return true
 
 func _assert_expected_action_domain_change(lane: String, before: Dictionary, after: Dictionary) -> bool:
 	var changed := false
@@ -860,6 +957,37 @@ func _assert_town_ready_reentry_is_light(record: Dictionary) -> bool:
 		_finish_fail("Same-town re-entry town_ready did not reuse the town entity cache.", record)
 		return false
 	return true
+
+func _first_exact_difference(expected: Variant, actual: Variant, path: String = "$") -> Dictionary:
+	if typeof(expected) != typeof(actual):
+		return {"path": path, "expected_type": type_string(typeof(expected)), "actual_type": type_string(typeof(actual))}
+	if expected is Dictionary:
+		var expected_dictionary: Dictionary = expected
+		var actual_dictionary: Dictionary = actual
+		var expected_keys: Array = expected_dictionary.keys()
+		expected_keys.sort()
+		var actual_keys: Array = actual_dictionary.keys()
+		actual_keys.sort()
+		if expected_keys != actual_keys:
+			return {"path": path, "expected_keys": expected_keys, "actual_keys": actual_keys}
+		for key in expected_keys:
+			var nested: Dictionary = _first_exact_difference(expected_dictionary.get(key), actual_dictionary.get(key), "%s.%s" % [path, key])
+			if not nested.is_empty():
+				return nested
+		return {}
+	if expected is Array:
+		var expected_array: Array = expected
+		var actual_array: Array = actual
+		if expected_array.size() != actual_array.size():
+			return {"path": path, "expected_size": expected_array.size(), "actual_size": actual_array.size()}
+		for index in range(expected_array.size()):
+			var nested: Dictionary = _first_exact_difference(expected_array[index], actual_array[index], "%s[%d]" % [path, index])
+			if not nested.is_empty():
+				return nested
+		return {}
+	if expected != actual:
+		return {"path": path, "expected": expected, "actual": actual}
+	return {}
 
 func _finish_fail(message: String, details: Variant = {}) -> void:
 	OS.set_environment("HEROES_PROFILE_LOG", "")

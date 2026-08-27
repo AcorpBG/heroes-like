@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next graphical-polish slice from direct current rendered evidence."
+    "Select the next tracker-approved release-readiness slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-outcome-scenery-first-edge-composition-10184",
-    "title": "Outcome Scenery-First Edge Composition",
+    "id": "performance-town-management-tab-full-state-reuse-10184",
+    "title": "Town Management-Tab Full-State Reuse",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T07:09:46Z",
-    "updatedAt": "2026-08-27T07:54:37Z",
-    "completedAt": "2026-08-27T07:54:37Z",
+    "startedAt": "2026-08-27T14:57:30Z",
+    "updatedAt": "2026-08-27T15:28:39Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from direct current Outcome pixels. The result identity is now a compact upper-left pocket, force summaries plus actions are a responsive lower-left dock, and recap/save remains the right rail around one dominant scenic center. Inspected 1280/1920 victory and defeat captures are clear; focused compact/wide/compact, focus, cancel, recovery, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Result/save/action/focus/accessibility/session authority remains unchanged. Packaged Outcome interaction and broader release claims remain unclaimed."
+    "notes": "Completed. One signature-validated full Town entity state now serves Build-Muster-Spells-Trade-Log-Build; recovery pressure invalidates it, active actions rebuild once, and dynamic affordability remains live. The same-flow five-tab sequence improved from 1583.7 ms to 150.2 ms, with exact focused authority and bounded compatibility/platform gates green."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15329,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "Outcome scenery-first edge composition is completed; select the next graphical-polish slice only from direct current rendered evidence.",
+  "currentNotes": "Town management-tab full-state reuse is completed. The measured five-tab sequence is 90.5% lower with exact focused state/action/session parity; select the next tracker-approved release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-outcome-scenery-first-edge-composition-10184",
-  "currentSliceId": "presentation-outcome-scenery-first-edge-composition-10184",
-  "currentSliceNotes": "Completed with inspected 1280/1920 victory/defeat captures and focused authority, compatibility, static/editor, Linux, and Windows startup gates; packaged Outcome interaction remains unclaimed.",
+  "currentSlice": "performance-town-management-tab-full-state-reuse-10184",
+  "currentSliceId": "performance-town-management-tab-full-state-reuse-10184",
+  "currentSliceNotes": "Completed full-state reuse reduced the same-flow five-tab sequence from 1583.7 ms to 150.2 ms while preserving active-only invalidation, dynamic affordability, rendered/action/session authority, and bounded platform startup compatibility.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Outcome Scenery-First Edge Composition",
-  "currentSliceUpdatedAt": "2026-08-27T07:54:37Z",
+  "currentSliceTitle": "Town Management-Tab Full-State Reuse",
+  "currentSliceUpdatedAt": "2026-08-27T15:28:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20641,7 +20640,7 @@
       }
     }
   },
-  "guardrailNote": "Select one bounded source-backed graphical-polish slice; preserve exact gameplay, input, accessibility, save, route, content, and Native RMG authority.",
+  "guardrailNote": "Implement only the measured Town full-state cache reuse slice; preserve exact gameplay, input/focus, accessibility, save, route, content, and Native RMG authority.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -20851,9 +20850,34 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The Overworld Cartographic Object Scale slice is complete from direct owner feedback, inspected 1280/1920 captures, and focused authored/generated runtime; blockers are empty.",
+  "nextActionGuardrailNote": "Select the next tracker-approved bounded release-readiness slice from direct current behavior evidence; preserve completed Town cache and gameplay authority.",
+  "notes": "Town Management-Tab Full-State Reuse is complete from current-HEAD profiling, exact focused parity, measured same-flow improvement, compatibility/static gates, and bounded Linux/Windows export-startup evidence; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "performance-town-management-tab-full-state-reuse-10184",
+      "title": "Town Management-Tab Full-State Reuse",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T14:57:30Z",
+      "updatedAt": "2026-08-27T15:28:39Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownShell.gd",
+        "tests/town_entity_cache_active_refresh_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Eliminate repeated 297-320 ms Town management-tab entity-state rebuilds by reusing one exact full active-town view state across minimal current-tab refreshes.",
+      "completionCriteria": "Focused Build-Muster-Spells-Trade-Log-Build runtime uses one full build then exact cache hits with fresh-control parity; real action/economy mutations invalidate once and rebuild without stale state; measured tab latency materially improves and compatibility/static/platform gates pass.",
+      "nonGoals": [
+        "No TownRules, OverworldRules, economy, content, combat, AI, balance, save/schema, route, map, generation, or Native RMG behavior change.",
+        "No UI/art/audio/VFX redesign, persistent/global/day cache, packaged Town interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "",
+      "result": "Completed one full signature-validated Town state across all five management tabs. The same-flow tab sequence improved 1583.7 ms to 150.2 ms (90.5%); focused whole-state/action/session and generated-Large parity, Town/Battle visual, keyboard/focus, completion, profile, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction and broad release readiness remain unclaimed."
+    },
     {
       "id": "presentation-overworld-cartographic-object-scale-10184",
       "title": "Overworld Cartographic Object Scale",
@@ -104939,7 +104963,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved bounded release-readiness slice; broader product gaps remain.",
+  "remainingWork": "Complete the selected Town management-tab full-state reuse optimization; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -105371,7 +105395,7 @@
     }
   ],
   "result": "battlefield_continuous_terrain_cohesion_in_progress",
-  "status": "completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -105473,7 +105497,7 @@
   ],
   "summary": "Completed the Generated Town Supply Cache mapped-art correction with detailed existing cache art and preserved gameplay authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-27T01:07:54Z",
+  "updatedAt": "2026-08-27T14:57:30Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
