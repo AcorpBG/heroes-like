@@ -42541,10 +42541,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "GENERIC_TERRAIN_EDGE_FEATHER_BAND_COUNT",
 	        "GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR",
 	        "GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR",
-	        'const WATER_SHORELINE_CONTOUR_MODEL := "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam"',
-	        'const WATER_TRANSITION_EDGE_ART_MODEL := "authored_texture_clipped_to_deterministic_organic_profile"',
+	        'const WATER_SHORELINE_CONTOUR_MODEL := "shared_lattice_nine_sample_layered_natural_bank"',
+	        'const WATER_TRANSITION_EDGE_ART_MODEL := "authored_texture_feathered_to_shared_lattice_profile"',
 	        "WATER_TRANSITION_EDGE_ART_ALPHA",
 	        "WATER_TRANSITION_EDGE_CLIP_DEPTH_FACTOR",
+	        "WATER_SHORELINE_PROFILE_SAMPLE_COUNT",
 	        "WATER_SHORELINE_BANK_DEPTH_FACTOR",
 	        "WATER_SHORELINE_BANK_COLOR",
 	        "WATER_SHORELINE_SHALLOW_DEPTH_FACTOR",
@@ -42568,6 +42569,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "func _draw_terrain_edge_fallback",
 	        "func _terrain_edge_profile_points",
 	        "func _terrain_edge_band_polygon",
+	        "func _water_shoreline_profile_points",
+	        "func _water_shoreline_band_polygon",
 	        "func _draw_water_shoreline_contour",
 	        "func _draw_water_transition_edge_art",
 	        "func _water_shoreline_contour_profile",
@@ -42708,6 +42711,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     generic_edge_polygon_block = gd_function_block(map_view_text, "_terrain_edge_band_polygon")
     terrain_edge_art_block = gd_function_block(map_view_text, "_draw_terrain_edge_art")
     water_edge_art_block = gd_function_block(map_view_text, "_draw_water_transition_edge_art")
+    water_shoreline_profile_points_block = gd_function_block(map_view_text, "_water_shoreline_profile_points")
+    water_shoreline_band_polygon_block = gd_function_block(map_view_text, "_water_shoreline_band_polygon")
     shoreline_draw_block = gd_function_block(map_view_text, "_draw_water_shoreline_contour")
     shoreline_profile_block = gd_function_block(map_view_text, "_water_shoreline_contour_profile")
     shoreline_foam_block = gd_function_block(map_view_text, "_water_shoreline_foam_segments")
@@ -42730,7 +42735,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "_draw_terrain_edge_fallback(tile, source_terrain, direction, rect)",
 		'_terrain_group(source_terrain) == "water" and _terrain_group(terrain) != "water"',
 		"_draw_water_shoreline_contour(tile, direction, rect)",
-        '_draw_terrain_corner_hint(tile, String(source.get("source_terrain", terrain)), String(source.get("direction", "")), rect)',
+		'var source_terrain := String(source.get("source_terrain", terrain))',
+		'if _terrain_group(source_terrain) == "water":',
+		'_draw_terrain_corner_hint(tile, source_terrain, String(source.get("direction", "")), rect)',
     ):
         ensure(token in transition_draw_block, errors, f"Generic terrain transitions must pass only tile-local presentation inputs into organic edge rendering: {token}")
     for token in (
@@ -42801,17 +42808,34 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for forbidden in ("session", "_session", "map[", "await ", "create_timer", "queue_redraw"):
         ensure(forbidden not in terrain_edge_art_block, errors, f"Authored terrain-edge compositing must remain presentation-local and read-only: {forbidden}")
     for token in (
-        "_terrain_edge_profile_points(tile, direction, rect, WATER_TRANSITION_EDGE_CLIP_DEPTH_FACTOR)",
-        "if inner_profile.size() != 5:",
+        "_water_shoreline_profile_points(tile, direction, rect, WATER_TRANSITION_EDGE_CLIP_DEPTH_FACTOR)",
+        "if inner_profile.size() != WATER_SHORELINE_PROFILE_SAMPLE_COUNT:",
         "var tint := Color(1.0, 1.0, 1.0, WATER_TRANSITION_EDGE_ART_ALPHA)",
-        "for interval in range(4):",
+        "for interval in range(WATER_SHORELINE_PROFILE_SAMPLE_COUNT - 1):",
         "var points := PackedVector2Array([outer_start, outer_end, inner_profile[interval + 1], inner_profile[interval]])",
         "uvs.append((point - rect.position) / rect.size)",
         "_canvas_draw_textured_polygon(points, PackedColorArray([tint, tint, tint, tint]), uvs, texture)",
     ):
-        ensure(token in water_edge_art_block, errors, f"Water edge art must use four contained authored-texture quads clipped to the deterministic five-point profile: {token}")
+        ensure(token in water_edge_art_block, errors, f"Water edge art must use contained authored-texture quads clipped to the shared-lattice shoreline profile: {token}")
     for forbidden in ("draw_texture_rect", "rand", "session", "_session", "map[", "await ", "create_timer", "queue_redraw"):
         ensure(forbidden not in water_edge_art_block, errors, f"Organic water-edge clipping must remain deterministic presentation-only geometry: {forbidden}")
+    for token in (
+        'if direction not in ["N", "E", "S", "W"] or rect.size.x <= 0.0 or rect.size.y <= 0.0:',
+        'var boundary_lattice := tile.y if direction == "N" else tile.y + 1 if direction == "S" else tile.x if direction == "W" else tile.x + 1',
+        'for index in range(WATER_SHORELINE_PROFILE_SAMPLE_COUNT):',
+        'var axis_lattice := (tile.x * (WATER_SHORELINE_PROFILE_SAMPLE_COUNT - 1)) + index if direction in ["N", "S"] else (tile.y * (WATER_SHORELINE_PROFILE_SAMPLE_COUNT - 1)) + index',
+        'var weight := clampf(0.84 + (wave_a * 0.075) + (wave_b * 0.035), 0.72, 0.96)',
+        'var depth := clampf(extent * depth_factor * weight, 2.0, extent * 0.22)',
+    ):
+        ensure(token in water_shoreline_profile_points_block, errors, f"Natural shoreline profiles must use the exact bounded shared boundary lattice: {token}")
+    for forbidden in ("rand", "session", "_session", "map[", "await ", "create_timer", "queue_redraw"):
+        ensure(forbidden not in water_shoreline_profile_points_block, errors, f"Natural shoreline profiles must stay deterministic and presentation-local: {forbidden}")
+    for token in (
+        "if inner_profile.size() != WATER_SHORELINE_PROFILE_SAMPLE_COUNT:",
+        "for index in range(inner_profile.size() - 1, -1, -1):",
+        "polygon.append(inner_profile[index])",
+    ):
+        ensure(token in water_shoreline_band_polygon_block, errors, f"Natural shoreline bands must close the exact dense profile against the source-facing tile edge: {token}")
     for token in (
         'var profile := _water_shoreline_contour_profile(tile, direction, rect)',
 		'var bank_band: PackedVector2Array = profile.get("bank_band", PackedVector2Array())',
@@ -42825,12 +42849,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(token in shoreline_draw_block, errors, f"Water shoreline drawing must retain the shallow, wet-edge, shadow, and broken-foam layers: {token}")
     for token in (
         'if direction not in ["N", "E", "S", "W"] or rect.size.x <= 0.0 or rect.size.y <= 0.0:',
-		"_terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_BANK_DEPTH_FACTOR)",
-        "_terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_SHALLOW_DEPTH_FACTOR)",
-        "_terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR)",
-        "_terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_FOAM_DEPTH_FACTOR)",
-		'"bank_band": _terrain_edge_band_polygon(direction, rect, bank_profile)',
-		'"shallow_band": _terrain_edge_band_polygon(direction, rect, shallow_profile)',
+		"_water_shoreline_profile_points(tile, direction, rect, WATER_SHORELINE_BANK_DEPTH_FACTOR)",
+        "_water_shoreline_profile_points(tile, direction, rect, WATER_SHORELINE_SHALLOW_DEPTH_FACTOR)",
+        "_water_shoreline_profile_points(tile, direction, rect, WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR)",
+        "_water_shoreline_profile_points(tile, direction, rect, WATER_SHORELINE_FOAM_DEPTH_FACTOR)",
+		'"bank_band": _water_shoreline_band_polygon(direction, rect, bank_profile)',
+		'"shallow_band": _water_shoreline_band_polygon(direction, rect, shallow_profile)',
         '"foam_segments": _water_shoreline_foam_segments(tile, direction, foam_profile)',
     ):
         ensure(token in shoreline_profile_block, errors, f"Water shoreline geometry must derive all layers from the existing deterministic transition profile: {token}")
@@ -42850,11 +42874,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 		'"authored_edge_art_model": WATER_TRANSITION_EDGE_ART_MODEL',
 		'"authored_edge_art_alpha": WATER_TRANSITION_EDGE_ART_ALPHA',
 		'"authored_edge_clip_depth_factor": WATER_TRANSITION_EDGE_CLIP_DEPTH_FACTOR',
+		'"profile_sample_count": WATER_SHORELINE_PROFILE_SAMPLE_COUNT',
+		'"shared_lattice_endpoints": true',
 		'"bank_band_alpha": WATER_SHORELINE_BANK_COLOR.a',
 		'"foam_segments_per_edge": WATER_SHORELINE_FOAM_SEGMENTS_PER_EDGE',
         '"continuous_bright_outline": false',
         '"full_tile_fill": false',
-        '"deterministic_seed_basis": "receiver_tile_and_cardinal_direction_only"',
+        '"deterministic_seed_basis": "shared_boundary_lattice_and_cardinal_direction_only"',
+		'"diagonal_water_corner_hints_suppressed": true',
         '"draw_order": "after_authored_transition_overlay_before_macro_lighting_and_roads"',
     ):
         ensure(token in shoreline_payload_block, errors, f"Public shoreline evidence must stay source-owned, contained, deterministic, and fill-free: {token}")
@@ -43060,19 +43087,22 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(water_terrain.get("texture_path", "")) != String(repeated_terrain.get("texture_path", ""))',
         'OverworldRules.terrain_id_is_passable("water")',
 		'shell.call("validation_tile_presentation", 0, 3)',
-		'String(shoreline.get("model", "")) != "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam"',
+		'String(shoreline.get("model", "")) != "shared_lattice_nine_sample_layered_natural_bank"',
 		'shoreline.get("source_directions", []) != ["E"]',
-		'int(shoreline_profiles[0].get("bank_band_point_count", 0)) != 7',
-		'int(shoreline_profiles[0].get("shallow_band_point_count", 0)) != 7',
-		'int(shoreline_profiles[0].get("wet_edge_point_count", 0)) != 5',
-		'int(shoreline_profiles[0].get("foam_segment_count", 0)) != 2',
+		'int(shoreline_profiles[0].get("bank_band_point_count", 0)) != 11',
+		'int(shoreline_profiles[0].get("shallow_band_point_count", 0)) != 11',
+		'int(shoreline_profiles[0].get("wet_edge_point_count", 0)) != 9',
+		'int(shoreline_profiles[0].get("foam_segment_count", 0)) != 3',
 		'not bool(shoreline_profiles[0].get("geometry_contained", false))',
-		'String(shoreline.get("authored_edge_art_model", "")) != "authored_texture_clipped_to_deterministic_organic_profile"',
-		'not is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.64)',
-		'not is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.215)',
-		'not is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.30)',
-		'not is_equal_approx(float(shoreline.get("shallow_band_alpha", 0.0)), 0.19)',
-		'not is_equal_approx(float(shoreline.get("wet_edge_alpha", 0.0)), 0.38)',
+		'String(shoreline.get("authored_edge_art_model", "")) != "authored_texture_feathered_to_shared_lattice_profile"',
+		'not is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.46)',
+		'not is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.125)',
+		'int(shoreline.get("profile_sample_count", 0)) != 9',
+		'not bool(shoreline.get("shared_lattice_endpoints", false))',
+		'not is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.18)',
+		'not is_equal_approx(float(shoreline.get("shallow_band_alpha", 0.0)), 0.14)',
+		'not is_equal_approx(float(shoreline.get("wet_edge_alpha", 0.0)), 0.26)',
+		'not bool(shoreline.get("diagonal_water_corner_hints_suppressed", false))',
 		'bool(shoreline.get("continuous_bright_outline", true))',
 		'bool(shoreline.get("full_tile_fill", true))',
 		'String(shoreline.get("draw_order", "")) != "after_authored_transition_overlay_before_macro_lighting_and_roads"',
@@ -43151,7 +43181,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'String(terrain.get("generic_transition_surface_model", "leaked")) != ""',
         'int(terrain.get("generic_transition_feather_band_count", -1)) != 0',
         'bool(terrain.get("generic_transition_irregular_inner_edge", true))',
-		'String(shoreline.get("model", "")) != "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam"',
+		'String(shoreline.get("model", "")) != "shared_lattice_nine_sample_layered_natural_bank"',
 		'bool(shoreline.get("active", true))',
 		'int(shoreline.get("source_count", -1)) != 0',
     ):
@@ -43661,12 +43691,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 		'"shoreline_tile_count": shoreline_tile_count',
 		'"shoreline_source_count": shoreline_source_count',
 		'"shoreline_exact_count": shoreline_exact_count',
-		'String(shoreline.get("model", "")) == "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam"',
-		'String(shoreline.get("authored_edge_art_model", "")) == "authored_texture_clipped_to_deterministic_organic_profile"',
-		'is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.215)',
-		'int(shoreline_profile.get("bank_band_point_count", 0)) == 7',
-		'is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.64)',
-		'is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.30)',
+		'String(shoreline.get("model", "")) == "shared_lattice_nine_sample_layered_natural_bank"',
+		'String(shoreline.get("authored_edge_art_model", "")) == "authored_texture_feathered_to_shared_lattice_profile"',
+		'is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.125)',
+		'int(shoreline.get("profile_sample_count", 0)) == 9',
+		'bool(shoreline.get("shared_lattice_endpoints", false))',
+		'bool(shoreline.get("diagonal_water_corner_hints_suppressed", false))',
+		'int(shoreline_profile.get("bank_band_point_count", 0)) == 11',
+		'is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.46)',
+		'is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.18)',
 		'not bool(shoreline.get("continuous_bright_outline", true))',
 		'not bool(shoreline.get("full_tile_fill", true))',
     ):

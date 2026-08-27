@@ -743,7 +743,7 @@ func _assert_enabled_homm3_transition_ownership(shell: Node, session, receiver_t
 		or String(terrain.get("generic_transition_surface_model", "leaked")) != ""
 		or int(terrain.get("generic_transition_feather_band_count", -1)) != 0
 		or bool(terrain.get("generic_transition_irregular_inner_edge", true))
-		or String(shoreline.get("model", "")) != "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam"
+		or String(shoreline.get("model", "")) != "shared_lattice_nine_sample_layered_natural_bank"
 		or bool(shoreline.get("active", true))
 		or int(shoreline.get("source_count", -1)) != 0
 		or String((terrain.get("terrain_macro_lighting", {}) as Dictionary).get("model", "")) != "continuous_shared_corner_bilinear_field"

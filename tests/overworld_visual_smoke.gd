@@ -3764,29 +3764,32 @@ func _assert_water_tile_bank(shell: Node, session) -> bool:
 		get_tree().quit(1)
 		return false
 	if String(shoreline_terrain.get("terrain", "")) != "grass" \
-			or String(shoreline.get("model", "")) != "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam" \
+			or String(shoreline.get("model", "")) != "shared_lattice_nine_sample_layered_natural_bank" \
 			or not bool(shoreline.get("active", false)) \
 			or int(shoreline.get("source_count", 0)) != 1 \
 			or shoreline.get("source_directions", []) != ["E"] \
 			or shoreline_profiles.size() != 1 \
 			or String(shoreline_profiles[0].get("source_terrain", "")) != "water" \
 			or String(shoreline_profiles[0].get("direction", "")) != "E" \
-			or int(shoreline_profiles[0].get("bank_band_point_count", 0)) != 7 \
-			or int(shoreline_profiles[0].get("shallow_band_point_count", 0)) != 7 \
-			or int(shoreline_profiles[0].get("wet_edge_point_count", 0)) != 5 \
-			or int(shoreline_profiles[0].get("foam_segment_count", 0)) != 2 \
+			or int(shoreline_profiles[0].get("bank_band_point_count", 0)) != 11 \
+			or int(shoreline_profiles[0].get("shallow_band_point_count", 0)) != 11 \
+			or int(shoreline_profiles[0].get("wet_edge_point_count", 0)) != 9 \
+			or int(shoreline_profiles[0].get("foam_segment_count", 0)) != 3 \
 			or not bool(shoreline_profiles[0].get("geometry_contained", false)) \
-			or String(shoreline.get("authored_edge_art_model", "")) != "authored_texture_clipped_to_deterministic_organic_profile" \
-			or not is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.64) \
-			or not is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.215) \
-			or not is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.30) \
-			or not is_equal_approx(float(shoreline.get("shallow_band_alpha", 0.0)), 0.19) \
-			or not is_equal_approx(float(shoreline.get("wet_edge_alpha", 0.0)), 0.38) \
-			or not is_equal_approx(float(shoreline.get("foam_alpha", 0.0)), 0.36) \
-			or int(shoreline.get("foam_segments_per_edge", 0)) != 2 \
+			or String(shoreline.get("authored_edge_art_model", "")) != "authored_texture_feathered_to_shared_lattice_profile" \
+			or not is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.46) \
+			or not is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.125) \
+			or int(shoreline.get("profile_sample_count", 0)) != 9 \
+			or not bool(shoreline.get("shared_lattice_endpoints", false)) \
+			or not is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.18) \
+			or not is_equal_approx(float(shoreline.get("shallow_band_alpha", 0.0)), 0.14) \
+			or not is_equal_approx(float(shoreline.get("wet_edge_alpha", 0.0)), 0.26) \
+			or not is_equal_approx(float(shoreline.get("foam_alpha", 0.0)), 0.30) \
+			or int(shoreline.get("foam_segments_per_edge", 0)) != 3 \
 			or bool(shoreline.get("continuous_bright_outline", true)) \
 			or bool(shoreline.get("full_tile_fill", true)) \
-			or String(shoreline.get("deterministic_seed_basis", "")) != "receiver_tile_and_cardinal_direction_only" \
+			or String(shoreline.get("deterministic_seed_basis", "")) != "shared_boundary_lattice_and_cardinal_direction_only" \
+			or not bool(shoreline.get("diagonal_water_corner_hints_suppressed", false)) \
 			or String(shoreline.get("draw_order", "")) != "after_authored_transition_overlay_before_macro_lighting_and_roads" \
 			or session.to_dict() != authority_before:
 		push_error("Overworld smoke: River Pass water boundary did not expose the contained layered bank/shallow/wet/broken-foam contour while preserving terrain authority. presentation=%s" % shoreline_presentation)
