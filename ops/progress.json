@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "Town painted-light ambient bloom is complete; select the next graphical-polish slice from fresh inspected pixels.",
+  "currentNotes": "Overworld cartographic object scale is complete from direct owner feedback, inspected live captures, and focused authored/generated runtime; select the next graphical-polish slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-painted-light-ambient-bloom-10184",
-  "currentSliceId": "presentation-town-painted-light-ambient-bloom-10184",
-  "currentSliceNotes": "Completed: six faction-authored Town light surfaces use restrained crop-aware bloom with exact motion-accessibility behavior behind all controls.",
+  "currentSlice": "presentation-overworld-cartographic-object-scale-10184",
+  "currentSliceId": "presentation-overworld-cartographic-object-scale-10184",
+  "currentSliceNotes": "Completed: towns, heroes, sites, encounters, pickups, artifacts, and generated blockers now share one restrained cartographic hierarchy with exact logical map authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Painted-Light Ambient Bloom",
-  "currentSliceUpdatedAt": "2026-08-27T03:03:44Z",
+  "currentSliceTitle": "Overworld Cartographic Object Scale",
+  "currentSliceUpdatedAt": "2026-08-27T03:27:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20851,8 +20851,47 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The Town Painted-Light Ambient Bloom slice is complete from direct inspected pixels and focused runtime; blockers are empty. Select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "notes": "The Overworld Cartographic Object Scale slice is complete from direct owner feedback, inspected 1280/1920 captures, and focused authored/generated runtime; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-cartographic-object-scale-10184",
+      "title": "Overworld Cartographic Object Scale",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T03:10:01Z",
+      "updatedAt": "2026-08-27T03:27:10Z",
+      "completedAt": "2026-08-27T03:27:10Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the directly reported oversized live-map hierarchy by compressing painted towns, actors, sites, and props into one moderate cartographic scale while preserving exact logical map authority.",
+      "completionCriteria": "Fresh inspected 1280/1920 authored captures show terrain and roads primary beneath a clear town > hero > landmark/site > encounter > pickup > artifact ladder; focused and compatibility runtime prove exact painted scale/aspect/containment plus unchanged footprints, body/entry masks, selection, movement, interaction, session/save, generated placement, and gameplay authority; static/editor and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No bitmap/import, identity/content, logical footprint, body/entry mask, hit geometry, passability, pathfinding, route, movement, interaction, selection, fog, camera, save/schema, session, generated placement, or Native RMG change.",
+        "No terrain/road, shell/UI layout, input/focus, accessibility semantic, animation/audio/VFX, gameplay, AI, economy, or balance change.",
+        "No packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for this bounded scale slice. Select the next tracker-approved graphical-polish slice; packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and overall release readiness remain open.",
+      "completionEvidence": {
+        "captureArtifact": "/tmp/heroes-cartographic-scale-capture.SIeMSX",
+        "focusedArtifact": "/tmp/heroes-cartographic-scale-focused.yGDbPn",
+        "generatedArtifact": "/tmp/heroes-cartographic-scale-generated.8HgtNP",
+        "compatibilityArtifact": "/tmp/heroes-cartographic-scale-compat.3TvYXR",
+        "editorArtifact": "/tmp/heroes-cartographic-scale-editor.gdhw36",
+        "platformArtifact": "/tmp/heroes-cartographic-scale-platform.ns1Rdo",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-town-painted-light-ambient-bloom-10184",
       "title": "Town Painted-Light Ambient Bloom",
