@@ -26,6 +26,38 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Large RMG Objective-Anchor Catalog Reuse
+
+id: `performance-large-rmg-objective-anchor-catalog-reuse-10184`
+
+Status: completed.
+
+Result:
+- Large generated-map target discovery now materializes one detached objective-anchor surface per immutable catalog/planner phase and reuses it through known-world catalog rows, target descriptors, multi-origin projections, and owned-town origin ranking while retaining all direct fresh fallbacks;
+- on the same natural-fog 108x108 generated save, the 701-row whole catalog fell from 515,335 ms to 87.9 ms with every ordered row and session authority exact, descriptor materialization fell from 532,783 ms to 86 ms, two-origin projection fell from 39,216 ms to 414 ms, and a real End Turn fell from no completion within 30 minutes to 14,372 ms with the same scenario id, day transition, and public event count;
+- generated Large explicit save/overwrite/recovery/schema validation passes with 22.8 MB save payloads, direct cold/warm restore preserves exact 108x108 authority, strategic-AI compatibility/core/static/editor checks pass, and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Large-map interaction, native RMG parity expansion, hardware certification, and broader release claims remain unclaimed.
+
+Current finding:
+- a current-HEAD 4-player `homm3_large` generated map takes about 102.2 seconds to generate, 2.6 seconds to save, 2.8-5.9 seconds to restore, and 0.31 seconds for one live movement, but a real End Turn does not complete within 30 minutes;
+- phase-local profiling isolates 523,872 ms in Mireclaw's first known-world target-catalog enumeration: towns take 0 ms, 586 resources take 7 ms, 29 artifacts take 142,619 ms, and 77 encounters take 381,217 ms; source projection itself takes 2 ms;
+- the same 701-row target-descriptor enumeration independently takes 532,783 ms. Every artifact and encounter priority in both immutable catalogs recomputes the same objective anchors, and each anchor check calls `ContentService.get_scenario()` which deep-copies the complete generated scenario draft thousands of times.
+- after catalog materialization was fixed, two-origin candidate projection still took 39,216 ms and planner-origin ranking took 9,724 ms for Mireclaw plus 5,195 ms for Sunvault because downstream score breakdowns and each owned-town origin repeated the same objective scenario reads.
+
+Implementation boundary:
+- materialize the exact ordered objective town/encounter anchor surface once inside each known-world target-catalog or target-descriptor build and reuse that detached invocation-local surface for town, artifact, and encounter objective priority inputs;
+- pass the same detached surface through one multi-origin planner invocation so projection breakdowns and owned-town origin ranking reuse exact precomputed anchor membership/proximity values without changing descriptor or candidate payloads;
+- preserve the existing direct helpers as fresh fallbacks for all other callers, and preserve exact town-then-encounter anchor semantics, objective matching, priorities, catalog order, tie behavior, AI actions/events, and save authority;
+- do not cache across factions, refresh invocations, turns, session mutations, or generated scenario registrations.
+
+Completion criteria:
+- independent legacy-vs-preloaded focused controls prove exact anchor tiles, proximity bands, artifact/encounter priorities, whole catalog rows/order, known-world memory, and session/save authority across authored/generated, duplicate/no-anchor, objective-flag, moved/removed target, and next-refresh mutation cases;
+- the same Large natural-fog map materially reduces both 701-row catalog/descriptor materializations and End Turn latency while preserving exact generated scenario identity/payload, event/task/AI trajectory, map counts, manual/autosave bytes and schema, reload/resume authority, and interactive Overworld behavior;
+- relevant strategic-AI, generated-map, save/load, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass with bounded claims.
+
+Non-goals:
+- no RMG generation rule, native/GDExtension, H3MapEd private-state/final-payload parity, map topology/content/density, AI policy/scoring/tie/order, difficulty, economy, combat, save schema/version, or UI/art behavior change;
+- no persistent/global/day/session cache, async/deferred turn mutation, reduced target set, heuristic cutoff, packaged AI-interaction claim, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Town Management-Tab Full-State Reuse
 
 id: `performance-town-management-tab-full-state-reuse-10184`

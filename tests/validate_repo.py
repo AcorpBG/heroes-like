@@ -39536,6 +39536,180 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         "Production known-world catalog lost exact town/resource/artifact/encounter order or exclusions.",
     )
     ensure(catalog_body.rstrip().endswith("return catalog"), errors, "Production known-world catalog must return its invocation-local ordered catalog.")
+    catalog_anchor_order = (
+        "var objective_anchor_surface := _objective_anchor_surface(session)",
+        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
+        'for town_value in session.overworld.get("towns", []):',
+        '_artifact_target_priority(session, node, objective_anchor_tiles)',
+        '_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface)',
+        "return catalog",
+    )
+    catalog_anchor_positions = [catalog_body.rfind(token) if token == "return catalog" else catalog_body.find(token) for token in catalog_anchor_order]
+    ensure(
+        all(position >= 0 for position in catalog_anchor_positions) and catalog_anchor_positions == sorted(catalog_anchor_positions),
+        errors,
+        "Production known-world catalog lost one invocation-local objective-anchor surface before exact artifact/encounter priority reuse.",
+    )
+    ensure(catalog_body.count("_objective_anchor_surface(") == 1, errors, "Known-world catalog must materialize its objective-anchor surface exactly once.")
+    ensure("ContentService.get_scenario(" not in catalog_body, errors, "Known-world catalog must not rematerialize generated scenarios outside its one anchor surface.")
+
+    anchor_surface_match = re.search(
+        r"static func _objective_anchor_surface\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(anchor_surface_match is not None, errors, "Could not isolate production objective-anchor surface.")
+    anchor_surface_text = anchor_surface_match.group(0) if anchor_surface_match else ""
+    anchor_surface_order = (
+        '"town_placement_ids": []',
+        '"flag_ids": []',
+        '"tiles": []',
+        "ContentService.get_scenario(session.scenario_id)",
+        'for bucket in ["victory", "defeat"]:',
+        "placement_id not in town_placement_ids",
+        'String(objective.get("type", "")) == "flag_true"',
+        "flag_id not in flag_ids",
+        'for town_value in session.overworld.get("towns", []):',
+        "tiles.append(Vector2i",
+        'for encounter_value in session.overworld.get("encounters", []):',
+        "_encounter_is_objective_anchor_from_surface",
+        "return surface",
+    )
+    anchor_surface_positions = [anchor_surface_text.rfind(token) if token == "return surface" else anchor_surface_text.find(token) for token in anchor_surface_order]
+    ensure(
+        all(position >= 0 for position in anchor_surface_positions) and anchor_surface_positions == sorted(anchor_surface_positions),
+        errors,
+        "Objective-anchor surface lost exact scenario/objective/town/encounter first-seen ordering.",
+    )
+    for forbidden_token in ("static var", "session.flags", "session.overworld[", "sort", "sort_custom", "call_deferred", "await "):
+        ensure(forbidden_token not in anchor_surface_text, errors, f"Objective-anchor surface must remain detached, ordered, synchronous, and invocation-local: {forbidden_token}")
+    for required_text in (
+        "preloaded_objective_anchor_tiles: Variant = null",
+        "_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles",
+        "else _objective_proximity_bonus(session",
+        "preloaded_objective_anchor_surface: Variant = null",
+        "_encounter_is_objective_anchor_from_surface(encounter, preloaded_objective_anchor_surface)",
+        "else _encounter_is_objective_anchor(session, encounter)",
+    ):
+        ensure(required_text in enemy_adventure_text, errors, f"Objective-anchor priority reuse lost exact preloaded-or-legacy fallback behavior: {required_text}")
+
+    descriptor_match = re.search(
+        r"static func _target_candidate_descriptors\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(descriptor_match is not None, errors, "Could not isolate production target-descriptor catalog.")
+    descriptor_body = descriptor_match.group("body") if descriptor_match else ""
+    descriptor_anchor_order = (
+        "var scenario = ContentService.get_scenario(session.scenario_id)",
+        "var objective_anchor_surface := _objective_anchor_surface(session, scenario)",
+        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
+        'var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", [])',
+        "_town_started_enemy_in_scenario(scenario",
+        "_artifact_target_priority(session, node, objective_anchor_tiles)",
+        "_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface)",
+        "_append_delivery_interception_target_descriptors",
+        "_append_hero_target_descriptors",
+        "return descriptors",
+    )
+    descriptor_anchor_positions = [descriptor_body.find(token) for token in descriptor_anchor_order]
+    ensure(
+        all(position >= 0 for position in descriptor_anchor_positions) and descriptor_anchor_positions == sorted(descriptor_anchor_positions),
+        errors,
+        "Target-descriptor catalog lost exact one-scenario/one-anchor surface reuse and family order.",
+    )
+    ensure(descriptor_body.count("ContentService.get_scenario(") == 1, errors, "Target-descriptor catalog must materialize the generated scenario exactly once.")
+    ensure(descriptor_body.count("_objective_anchor_surface(") == 1, errors, "Target-descriptor catalog must materialize the objective-anchor surface exactly once.")
+    for forbidden_token in ("_town_started_enemy(session", "_town_is_objective_anchor(session", "static var", "session.flags", "call_deferred", "await "):
+        ensure(forbidden_token not in descriptor_body, errors, f"Target-descriptor objective reuse must remain exact, synchronous, and invocation-local: {forbidden_token}")
+    for helper_name in ("_append_town_target_descriptor", "_append_encounter_target_descriptor"):
+        helper_match = re.search(rf"static func {helper_name}\(.*?\n(?P<body>.*?)(?=\nstatic func )", enemy_adventure_text, re.S)
+        ensure(helper_match is not None, errors, f"Could not isolate objective-aware descriptor helper {helper_name}.")
+        helper_text = helper_match.group(0) if helper_match else ""
+        ensure("preloaded_objective_anchor_surface: Variant = null" in helper_text, errors, f"{helper_name} lost optional invocation-local objective surface.")
+        ensure("if preloaded_objective_anchor_surface is Dictionary" in helper_text, errors, f"{helper_name} lost exact preloaded-or-direct fallback.")
+
+    projection_surface_match = re.search(
+        r"static func _target_candidates_from_descriptors\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(projection_surface_match is not None, errors, "Could not isolate target projection objective surface.")
+    projection_surface_text = projection_surface_match.group(0) if projection_surface_match else ""
+    projection_surface_order = (
+        "preloaded_objective_anchor_surface: Variant = null",
+        "var objective_anchor_surface: Dictionary = (",
+        "else _objective_anchor_surface(session)",
+        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
+        "_project_town_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)",
+        "_project_resource_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)",
+        "_project_artifact_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)",
+        "_project_encounter_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)",
+        "return candidates",
+    )
+    projection_surface_positions = [projection_surface_text.find(token) for token in projection_surface_order]
+    ensure(
+        all(position >= 0 for position in projection_surface_positions) and projection_surface_positions == sorted(projection_surface_positions),
+        errors,
+        "Target projection lost one invocation-local objective surface with exact family projection order.",
+    )
+    for forbidden_token in ('descriptor["objective_anchor_surface"]', 'descriptor["objective_anchor_tiles"]', 'descriptor["objective_proximity_bonus"]', "static var", "session.flags"):
+        ensure(forbidden_token not in projection_surface_text, errors, f"Objective reuse must not alter detached descriptor payloads or create persistent cache authority: {forbidden_token}")
+
+    planner_projection_match = re.search(
+        r"static func _ai_hero_task_planner_candidates_from_origins\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(planner_projection_match is not None, errors, "Could not isolate planner multi-origin objective surface reuse.")
+    planner_projection_body = planner_projection_match.group("body") if planner_projection_match else ""
+    planner_projection_order = (
+        "var objective_anchor_surface := _objective_anchor_surface(session)",
+        "for origin_value in origins:",
+        "_target_candidates_from_descriptors(",
+        "path_context,",
+        "objective_anchor_surface",
+    )
+    planner_projection_positions = [planner_projection_body.rfind(token) if token == "objective_anchor_surface" else planner_projection_body.find(token) for token in planner_projection_order]
+    ensure(
+        all(position >= 0 for position in planner_projection_positions) and planner_projection_positions == sorted(planner_projection_positions),
+        errors,
+        "Planner must build one objective surface before fresh per-origin projections.",
+    )
+    ensure(planner_projection_body.count("_objective_anchor_surface(") == 1, errors, "Planner multi-origin projection must enumerate objective anchors exactly once.")
+
+    planner_origins_match = re.search(
+        r"static func _ai_hero_task_planner_origins\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(planner_origins_match is not None, errors, "Could not isolate planner origin ranking.")
+    planner_origins_body = planner_origins_match.group("body") if planner_origins_match else ""
+    for required_token in (
+        "var objective_anchor_surface := _objective_anchor_surface(session)",
+        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
+        'var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", [])',
+        'var objective_anchor := String(town.get("placement_id", "")) in objective_town_ids',
+        "var objective_proximity_bonus := _objective_proximity_bonus_from_tiles(objective_anchor_tiles, x, y)",
+        "_town_strategic_priority_bonus(session, town, faction_id, objective_anchor, objective_proximity_bonus)",
+    ):
+        ensure(required_token in planner_origins_body, errors, f"Planner origin ranking lost exact invocation-local objective reuse: {required_token}")
+    ensure("_town_is_objective_anchor(" not in planner_origins_body and "_objective_proximity_bonus(session" not in planner_origins_body, errors, "Planner origin ranking must not rematerialize generated objective state per town.")
+    ensure("HEROES_LARGE_RMG_PLAN_STAGE_PROFILE" not in enemy_adventure_text and "LARGE_RMG_PLAN_STAGE" not in enemy_adventure_text, errors, "Temporary Large RMG planner stage diagnostics must not ship.")
+
+    for required_text in (
+        "preloaded_base_value: Variant = null",
+        "preloaded_objective_value: Variant = null",
+        "preloaded_baseline_priority: Variant = null",
+        "preloaded_objective_anchor: Variant = null",
+        "preloaded_objective_proximity_bonus: Variant = null",
+        "if preloaded_base_value is int else _artifact_target_priority(session, node)",
+        "if preloaded_objective_value is int else _objective_proximity_bonus(session",
+        "if preloaded_objective_anchor is bool else _encounter_is_objective_anchor(session, encounter)",
+        "if preloaded_baseline_priority is int else _encounter_target_priority(session, encounter)",
+        "if preloaded_objective_proximity_bonus is int else _objective_proximity_bonus(session",
+    ):
+        ensure(required_text in enemy_adventure_text, errors, f"Objective-aware projection breakdown lost exact preloaded-or-legacy fallback: {required_text}")
 
     target_projection_match = re.search(
         r"static func _current_enemy_scouted_target_records\(.*?\n(?P<body>.*?)(?=\nstatic func )",
@@ -39644,6 +39818,63 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
     ensure("raw_detached_sources: Array = initial_current" not in detach_prefix and "raw_detached_catalog: Array = initial_current" not in detach_prefix, errors, "Known-world detach proof must not source its mutation rows from the already-detached snapshot.")
     ensure(not re.search(r"raw_detached_(?:sources|catalog).*duplicate", detach_prefix), errors, "Known-world raw detach captures must not duplicate before nested mutation.")
     ensure("if not raw_detached_sources.is_empty()" not in detach_prefix and "if not raw_detached_catalog.is_empty()" not in detach_prefix, errors, "Known-world detach mutation must be fail-closed, not conditionally skipped for empty raw surfaces.")
+
+    anchor_case_match = re.search(
+        r"func _objective_anchor_catalog_reuse_parity\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        report_text,
+        re.S,
+    )
+    ensure(anchor_case_match is not None, errors, "AI known-world report is missing objective-anchor catalog reuse parity.")
+    anchor_case_body = anchor_case_match.group("body") if anchor_case_match else ""
+    anchor_case_order = (
+        "var authority_before: Dictionary = session.to_dict()",
+        "var legacy_surface := _legacy_objective_anchor_surface_control(session)",
+        "var current_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)",
+        "if current_surface != legacy_surface:",
+        "_legacy_objective_proximity_bonus_control",
+        "EnemyAdventureRules._objective_proximity_bonus_from_tiles",
+        "EnemyAdventureRules._artifact_target_priority(session, artifact_value, anchor_tiles)",
+        "EnemyAdventureRules._artifact_target_priority(session, artifact_value)",
+        "EnemyAdventureRules._encounter_target_priority(session, encounter_value, anchor_tiles, current_surface)",
+        "EnemyAdventureRules._encounter_target_priority(session, encounter_value)",
+        "var raw_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)",
+        'raw_town_ids[0] = "mutated_detached_town"',
+        "raw_tiles[0] = Vector2i(99, 99)",
+        "if session.to_dict() != authority_before",
+        'town["x"] = int(town.get("x", 0)) + 1',
+        "var moved_control := _legacy_objective_anchor_surface_control(session)",
+        "var moved_current: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)",
+        "var duplicate_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session, duplicate_scenario)",
+        'var no_anchor_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session, {"objectives": {"victory": [], "defeat": []}})',
+    )
+    anchor_case_positions = [anchor_case_body.find(token) for token in anchor_case_order]
+    ensure(
+        all(position >= 0 for position in anchor_case_positions) and anchor_case_positions == sorted(anchor_case_positions),
+        errors,
+        "Objective-anchor focused case lost independent parity, priority, raw detach, mutation rebuild, duplicate, or no-anchor order.",
+    )
+    ensure("if not raw_" not in anchor_case_body and ".duplicate(" not in anchor_case_body, errors, "Objective-anchor raw detach proof must be unconditional and must not duplicate production returns before mutation.")
+    for required_helper in (
+        "func _legacy_objective_anchor_surface_control",
+        "func _legacy_town_objective_anchor_control",
+        "func _legacy_encounter_objective_anchor_control",
+        "func _legacy_objective_proximity_bonus_control",
+    ):
+        ensure(required_helper in report_text, errors, f"Known-world report is missing independent objective-anchor legacy control: {required_helper}")
+    legacy_anchor_match = re.search(
+        r"func _legacy_objective_anchor_surface_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_known_world_sight_sources_control)",
+        report_text,
+        re.S,
+    )
+    ensure(legacy_anchor_match is not None, errors, "Could not isolate independent objective-anchor legacy controls.")
+    legacy_anchor_text = legacy_anchor_match.group(0) if legacy_anchor_match else ""
+    for forbidden_token in (
+        "EnemyAdventureRules._objective_anchor_surface",
+        "EnemyAdventureRules._objective_proximity_bonus_from_tiles",
+        "EnemyAdventureRules._town_is_objective_anchor",
+        "EnemyAdventureRules._encounter_is_objective_anchor",
+    ):
+        ensure(forbidden_token not in legacy_anchor_text, errors, f"Independent objective-anchor control must not call optimized production helpers: {forbidden_token}")
 
     legacy_match = re.search(
         r"func _legacy_known_world_projection_control\(.*?\n(?P<body>.*?)(?=\nfunc _fail)",
