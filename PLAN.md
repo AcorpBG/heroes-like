@@ -26,6 +26,34 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
 
+## Overworld Town-Adjunct Resource Clearance
+
+id: `presentation-overworld-town-adjunct-resource-clearance-10184`
+
+Status: completed.
+
+Result:
+- one-tile resources authored inside a town's 3x2 visual footprint now render at 64% of their ordinary tile extent and anchor toward the footprint cell's outer corner, keeping the independent action visible without covering the town core;
+- inspected 1280x720 and 1920x1080 captures plus broad runtime prove Riverwatch's exchange is a compact bottom-right adjunct, standalone resources remain full size, all draw rectangles stay contained, and repeated presentation, route, and session authority remain exact;
+- core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- the post-mapping 1920x1080 River Pass capture exposes the player-side Frontier Rare Exchange at the non-entry edge of Riverwatch's 3x2 visual footprint, where a full-tile market sprite overlays the town silhouette and competes with its gate and selected perimeter;
+- the tile remains a real independently selectable resource-site action, so hiding it or changing scenario placement would weaken gameplay authority; the narrow presentation correction is a compact outward-edge adjunct layout only for one-tile resources colocated with town footprint cells.
+
+Implementation boundary:
+- render one-tile mapped resources on town-footprint cells at a bounded compact extent, anchored toward that footprint cell's outer corner so the resource remains legible and selectable without covering the town core;
+- preserve full-size presentation for resources outside town footprints and preserve exact site, tile, footprint, interaction, route, economy/control, town geometry, session/save, and content authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 captures show the player exchange as a readable edge adjunct rather than a town-covering overlay, while the enemy-side standalone exchange stays full size;
+- broad Overworld runtime proves compact containment/outward anchoring only on town-footprint resource cells, unchanged standalone resource presentation, stable repeated payloads, and exact session/route authority;
+- core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no resource/town asset, asset pixels/import, scenario placement, site content/economy, footprint/collision, town geometry/scale, selection/interaction/route, gameplay, save/schema, AI, balance, or Native RMG change;
+- no broad map relayout, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Frontier Rare Exchange Mapped Art
 
 id: `presentation-overworld-frontier-rare-exchange-mapped-art-10184`

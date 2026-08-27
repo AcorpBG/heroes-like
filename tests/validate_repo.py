@@ -42029,8 +42029,41 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'bool(rare_exchange_art.get("fallback_procedural_marker", true))',
         'repeated_rare_exchange_presentation != rare_exchange_presentation',
         'session.to_dict() != rare_exchange_authority_before',
+        'String(wood_resource_layout.get("model", "")) != "ordinary_resource_footprint"',
+        'String(rare_exchange_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource"',
+        'String(rare_exchange_layout.get("edge_anchor", "")) != "bottom_right"',
+        'rare_exchange_layout.get("cell_offset", {}) != {"x": 2, "y": 1}',
+        'rare_exchange_footprint_rect.encloses(rare_exchange_draw_rect)',
+        'rare_exchange_draw_rect.size.x, rare_exchange_footprint_rect.size.x * 0.64',
+        'rare_exchange_draw_rect.end.x, rare_exchange_footprint_rect.end.x',
     ):
         ensure(required_token in rare_exchange_smoke_text, errors, f"Overworld visual smoke is missing Frontier Rare Exchange mapped-art authority: {required_token}")
+    town_adjunct_map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    town_adjunct_layout_block = gd_function_block(town_adjunct_map_text, "_resource_draw_rect")
+    town_adjunct_payload_block = gd_function_block(town_adjunct_map_text, "_resource_draw_layout_payload")
+    for required_token in (
+        'const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint_resource"',
+        'const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64',
+        'var resource_rect := _resource_draw_rect(resource_node, rect, tile)',
+        '"resource_draw_layout": _resource_draw_layout_payload(_resource_node_at(tile), _tile_rect(_board_rect(), tile), tile) if explored and has_resource else {}',
+    ):
+        ensure(required_token in town_adjunct_map_text, errors, f"Overworld town-adjunct resource layout is missing source token: {required_token}")
+    for required_token in (
+        'if _object_profile_footprint(_resource_object_profile(node)) != Vector2i(1, 1):',
+        'var town_presentation := _town_presentation_at(anchor_tile)',
+        'if town_presentation.is_empty():',
+        'var compact_size := footprint_rect.size * TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR',
+        'float(cell_offset.x) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.x) * 0.5',
+        'float(cell_offset.y) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.y) * 0.5',
+        'return Rect2(compact_position, compact_size)',
+    ):
+        ensure(required_token in town_adjunct_layout_block, errors, f"Overworld town-adjunct resource draw helper is missing exact bounded geometry: {required_token}")
+    for required_token in (
+        '"town_footprint_colocated": colocated',
+        '"extent_factor": TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR if colocated else 1.0',
+        '"contained_in_footprint_tile": footprint_rect.encloses(draw_rect)',
+    ):
+        ensure(required_token in town_adjunct_payload_block, errors, f"Overworld town-adjunct resource payload is missing exact authority: {required_token}")
     for site_id, entry in site_sprites.items():
         ensure(str(site_id) in resource_sites, errors, f"Overworld art mapping references missing resource site {site_id}")
         if isinstance(entry, dict):

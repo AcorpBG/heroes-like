@@ -254,6 +254,8 @@ const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
 const TOWN_SPRITE_EXTENT_FACTOR := 0.82
 const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18
+const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint_resource"
+const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64
 const TOWN_OWNER_PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"
 const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.115
 const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.078
@@ -3154,7 +3156,7 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 			_draw_town_marker(footprint_rect, rect, _town_color(tile), remembered, tile)
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
-		var resource_rect := _resource_footprint_rect(resource_node, rect, tile)
+		var resource_rect := _resource_draw_rect(resource_node, rect, tile)
 		if not _draw_resource_sprite(resource_node, resource_rect, remembered, tile):
 			_draw_resource_marker(resource_node, resource_rect, remembered, tile)
 	var artifact_node := _artifact_node_at(tile)
@@ -5077,6 +5079,45 @@ func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile:
 		Vector2(tile_size.x * float(footprint.x), tile_size.y * float(footprint.y))
 	)
 
+func _resource_draw_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
+	var footprint_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)
+	if _object_profile_footprint(_resource_object_profile(node)) != Vector2i(1, 1):
+		return footprint_rect
+	var town_presentation := _town_presentation_at(anchor_tile)
+	if town_presentation.is_empty():
+		return footprint_rect
+	var compact_size := footprint_rect.size * TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR
+	var cell_offset: Vector2i = town_presentation.get("cell_offset", Vector2i.ZERO)
+	var anchor_right := float(cell_offset.x) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.x) * 0.5
+	var anchor_bottom := float(cell_offset.y) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.y) * 0.5
+	var compact_position := footprint_rect.position + Vector2(
+		footprint_rect.size.x - compact_size.x if anchor_right else 0.0,
+		footprint_rect.size.y - compact_size.y if anchor_bottom else 0.0
+	)
+	return Rect2(compact_position, compact_size)
+
+func _resource_draw_layout_payload(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Dictionary:
+	if node.is_empty():
+		return {}
+	var footprint_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)
+	var draw_rect := _resource_draw_rect(node, anchor_rect, anchor_tile)
+	var town_presentation := _town_presentation_at(anchor_tile)
+	var one_tile := _object_profile_footprint(_resource_object_profile(node)) == Vector2i(1, 1)
+	var colocated := one_tile and not town_presentation.is_empty()
+	var cell_offset: Vector2i = town_presentation.get("cell_offset", Vector2i.ZERO) if colocated else Vector2i.ZERO
+	var anchor_right := colocated and float(cell_offset.x) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.x) * 0.5
+	var anchor_bottom := colocated and float(cell_offset.y) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.y) * 0.5
+	return {
+		"model": TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL if colocated else "ordinary_resource_footprint",
+		"town_footprint_colocated": colocated,
+		"extent_factor": TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR if colocated else 1.0,
+		"edge_anchor": ("bottom" if anchor_bottom else "top") + "_" + ("right" if anchor_right else "left") if colocated else "none",
+		"cell_offset": {"x": cell_offset.x, "y": cell_offset.y},
+		"footprint_rect": _rect_payload(footprint_rect),
+		"draw_rect": _rect_payload(draw_rect),
+		"contained_in_footprint_tile": footprint_rect.encloses(draw_rect),
+	}
+
 func _object_footprint_origin_for_anchor(anchor_tile: Vector2i, footprint: Vector2i, anchor: String) -> Vector2i:
 	match anchor:
 		"top_left":
@@ -6430,6 +6471,7 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"terrain_presentation": _terrain_visual_payload(tile, explored, visible),
 		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
 		"art_presentation": _object_art_payload(tile, explored, visible, object_kinds),
+		"resource_draw_layout": _resource_draw_layout_payload(_resource_node_at(tile), _tile_rect(_board_rect(), tile), tile) if explored and has_resource else {},
 		"artifact_presentation": _artifact_presentation_payload(tile, explored),
 		"hero_presentation": _hero_presentation_payload(tile, explored),
 		"town_presentation": town_presentation,

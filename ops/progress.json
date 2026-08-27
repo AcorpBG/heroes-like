@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The Frontier Rare Exchange mapped-art correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "currentNotes": "The town-adjunct resource-clearance correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-frontier-rare-exchange-mapped-art-10184",
-  "currentSliceId": "presentation-overworld-frontier-rare-exchange-mapped-art-10184",
-  "currentSliceNotes": "Completed: the Frontier Rare Exchange uses the detailed market caravanserai sprite with exact one-tile and gameplay authority.",
+  "currentSlice": "presentation-overworld-town-adjunct-resource-clearance-10184",
+  "currentSliceId": "presentation-overworld-town-adjunct-resource-clearance-10184",
+  "currentSliceNotes": "Completed: town-colocated one-tile resources use compact outward-edge presentation while standalone resources and gameplay authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Frontier Rare Exchange mapped art",
-  "currentSliceUpdatedAt": "2026-08-27T00:25:15Z",
+  "currentSliceTitle": "Overworld town-adjunct resource clearance",
+  "currentSliceUpdatedAt": "2026-08-27T00:37:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,8 +20852,41 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The Frontier Rare Exchange mapped-art slice is completed with pixel, runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
+  "notes": "The town-adjunct resource-clearance slice is completed with pixel, runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-town-adjunct-resource-clearance-10184",
+      "title": "Overworld town-adjunct resource clearance",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T00:28:42Z",
+      "updatedAt": "2026-08-27T00:37:28Z",
+      "completedAt": "2026-08-27T00:37:28Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Keep independently selectable one-tile resources legible as compact outward-edge adjuncts when their authored tile lies inside a town's visual footprint, without covering the town core.",
+      "completionCriteria": "Inspected 1280/1920 captures plus broad Overworld runtime prove compact contained outward anchoring only for town-colocated resource cells, full-size standalone resources, stable payloads, and unchanged route/session authority; core, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No resource/town asset, asset pixels/import, scenario placement, site content/economy, footprint/collision, town geometry/scale, selection/interaction/route, gameplay, save/schema, AI, balance, or Native RMG change.",
+        "No broad map relayout, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for the town-adjunct resource-clearance boundary. Inspected 1280/1920 pixels, broad Overworld runtime, route, core, repository/editor, and bounded Linux/Windows startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "broadVisualArtifact": "/tmp/heroes-town-adjunct-overworld-smoke.AUtvqg",
+        "captureArtifact": "/tmp/heroes-town-adjunct-capture.WFI2GJ",
+        "routeArtifact": "/tmp/heroes-town-adjunct-overworld_full_route_movement_regression.vI8vxV",
+        "coreArtifact": "/tmp/heroes-town-adjunct-core_systems_regression_smoke.MimnEj",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-overworld-frontier-rare-exchange-mapped-art-10184",
       "title": "Overworld Frontier Rare Exchange mapped art",
@@ -104956,9 +104989,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the bounded Frontier Rare Exchange mapped-art correction with exact one-tile presentation and preserved gameplay authority.",
+  "summary": "Completed the bounded town-adjunct resource-clearance correction with compact outward-edge presentation and preserved interaction authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-27T00:25:15Z",
+  "updatedAt": "2026-08-27T00:37:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
