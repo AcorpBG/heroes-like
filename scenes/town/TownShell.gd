@@ -512,7 +512,10 @@ func _refresh(first_render_minimal: bool = false) -> void:
 
 	section_started = ProfileLogScript.begin_usec()
 	var active_town := TownRules.get_active_town(_session)
-	var view_state := _active_town_entity_view_state(active_town, first_render_minimal)
+	# The entity state already contains every management lane. Keep that one full
+	# state cached while first-frame and tab refreshes remain presentation-minimal.
+	# This avoids replacing one minimal cache entry for every selected tab.
+	var view_state := _active_town_entity_view_state(active_town, false)
 	var cache_result: Dictionary = _last_town_entity_cache_result
 	buckets["town_entity_cache"] = ProfileLogScript.elapsed_ms(section_started)
 	buckets["town_entity_cache_hit"] = 1.0 if bool(cache_result.get("hit", false)) else 0.0
@@ -986,13 +989,17 @@ func _refresh_active_town_dynamic_view_state(view_state: Dictionary, town: Dicti
 		view_state["hero_actions"] = _duplicate_action_array(view_state.get("hero_actions", []))
 		view_state["specialty_actions"] = _duplicate_action_array(view_state.get("specialty_actions", []))
 	if not minimal or current_lanes.has("build"):
+		var cached_build_actions := _duplicate_action_array(view_state.get("build_actions", []))
 		var build_actions := _refresh_cached_cost_actions(
-			view_state.get("build_actions", []),
+			cached_build_actions,
 			town,
 			view_state.get("build_action_copy_models", {})
 		)
 		view_state["build_actions"] = build_actions
-		_update_cached_build_readiness(view_state, build_actions, town)
+		# A tab-only refresh must preserve the exact full presentation state. Rebuild
+		# the compact dynamic readiness copy only when affordability actually changed.
+		if build_actions != cached_build_actions:
+			_update_cached_build_readiness(view_state, build_actions, town)
 	if not minimal or current_lanes.has("market"):
 		view_state["market_actions"] = _refresh_cached_cost_actions(view_state.get("market_actions", []), town)
 	if not minimal or current_lanes.has("recruit"):
@@ -1946,12 +1953,13 @@ func _collection_size(value: Variant) -> int:
 
 func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	if _session == null:
-		return "v5|missing-session"
+		return "v6|missing-session"
 	var parts := []
 	var active_tab := _management_tabs.current_tab if _management_tabs != null else -1
-	parts.append("v5")
+	parts.append("v6")
 	parts.append("mode:%s" % ("minimal" if minimal else "full"))
-	parts.append("tab:%d" % active_tab)
+	if minimal:
+		parts.append("tab:%d" % active_tab)
 	parts.append("day:%d" % int(_session.day))
 	parts.append("pid:%s" % _signature_token(town.get("placement_id", "")))
 	parts.append("town:%s" % _signature_token(town.get("town_id", "")))
@@ -2078,6 +2086,7 @@ func _compact_local_state_signature(value: Variant) -> String:
 		"days_remaining",
 		"expires_day",
 		"last_event_day",
+		"pressure",
 		"progress_complete",
 		"progress_total",
 		"relief_per_day",

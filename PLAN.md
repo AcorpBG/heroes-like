@@ -24,7 +24,37 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none; select the next graphical-polish slice from direct rendered evidence.
+- Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
+
+## Town Management-Tab Full-State Reuse
+
+id: `performance-town-management-tab-full-state-reuse-10184`
+
+Status: completed.
+
+Result:
+- Town management tabs now share one signature-validated full entity view state instead of overwriting one minimal cache entry per tab. Dynamic affordability still refreshes, authoritative actions still invalidate the active town, and recovery pressure now participates in cache invalidation;
+- in the same real Town/Battle flow, the five-tab sequence fell from 1,583.7 ms to 150.2 ms (90.5% lower), while total Town-refresh time fell from 3,143.6 ms to 1,872.8 ms and entity-cache build time fell from 2,491.7 ms to 1,317.3 ms;
+- focused whole-state/action/session parity, generated-Large re-entry, Town/Battle visual, keyboard/focus, completion feedback, profile logging, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town interaction and broader release claims remain unclaimed.
+
+Current finding:
+- a current-HEAD profiled Town/Battle flow records ten Town refreshes averaging 314 ms. The repeated dominant bucket is `town_entity_cache_build`, which consumes 297-320 ms on each first visit to management tabs 1-4 and another 296 ms when returning to tab 0;
+- Town already builds an exact full all-tab entity view state, but ordinary tab changes request a minimal state from one `placement|minimal` cache slot. Each tab signature overwrites the prior tab, while the compatible full state is ignored;
+- generated Small Overworld route selection is 20-77 ms in the same profiling pass, so the repeated Town tab rebuild is the strongest bounded interaction-only hitch rather than generation, End Turn, or save policy work.
+
+Implementation boundary:
+- keep one exact full active-town entity view state per placement and let minimal current-tab refreshes reuse it after fresh signature validation, refreshing only the existing dynamic/current-lane fields;
+- make initial Town entry populate that full state once instead of buying a small first-frame reduction followed by four independent tab rebuilds;
+- retain active-town invalidation after every authoritative Town action and all existing resource, hero, stage, focus, save, route, and session authority.
+
+Completion criteria:
+- focused current-HEAD runtime proves Build -> Muster -> Spells -> Trade -> Log -> Build uses one full cache build followed by exact cache hits, with whole rendered view/action payloads equal to fresh direct controls at every tab;
+- real build/recruit/market and economy-context mutations still invalidate only the active town, rebuild exactly once, and subsequent tab changes reuse the new full state without stale affordability, roster, spell, artifact, departure, or stage data;
+- the same Town/Battle profile shows materially lower management-tab refresh latency while Town/Battle visuals, keyboard/controller focus, save/load, core, repository/editor, and bounded Linux/Windows compatibility remain green.
+
+Non-goals:
+- no TownRules, OverworldRules, economy, building, recruitment, market, spell, artifact, hero, combat, AI, content, balance, save/schema, route, map, generation, or Native RMG behavior change;
+- no UI layout/art/audio/VFX redesign, persistent/global/day cache, hidden deferred mutation, packaged Town interaction claim, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Outcome Scenery-First Edge Composition
 

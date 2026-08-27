@@ -67572,7 +67572,22 @@ def validate_town_entity_cache_active_refresh_regression(errors: list[str]) -> N
         "_assert_rendered_action_copy_parity",
         "_assert_departure_parity",
         "_assert_action_invalidates_once_then_hits_fast",
+        "_await_town_action_focus_release",
+        'var deadline_msec := Time.get_ticks_msec() + 2000',
+        'stage.validation_town_action_presentation_snapshot()',
+        "or blocker.visible",
+        "or focus_owner == blocker",
+        "or not shell.is_ancestor_of(focus_owner)",
         "_assert_economy_context_invalidates_once_then_hits_fast",
+        "_assert_management_tab_full_state_reuse",
+        'for tab in [1, 2, 3, 4, 0]',
+        'String(cache_result.get("cache_key", "")) != "%s|full" % expected_placement_id',
+        'var cached_state: Dictionary = shell.call("_active_town_entity_view_state", town, false)',
+        'var direct_state: Dictionary = shell.call("_build_active_town_entity_view_state", false)',
+        'shell.call("_refresh_active_town_dynamic_view_state", direct_state, town, false)',
+        "cached_state != direct_state",
+        "maximum_refresh_ms >= 150.0",
+        '"full_cache_build_count": 1',
         "_first_unresolved_encounter_id",
         'for lane in ["build", "recruit", "market"]',
         "_save_authority_snapshot",
@@ -67596,11 +67611,45 @@ def validate_town_entity_cache_active_refresh_regression(errors: list[str]) -> N
         '"rendered_build_actions"',
         '"rendered_recruit_actions"',
         'buckets["town_entity_cache_dynamic"]',
-        'parts.append("v5")',
+        'parts.append("v6")',
         'parts.append("economy_context:%s" % _town_economy_context_signature())',
         'resolved_encounters',
+        '"pressure",',
+        "var view_state := _active_town_entity_view_state(active_town, false)",
+        'var cached_build_actions := _duplicate_action_array(view_state.get("build_actions", []))',
+        "if build_actions != cached_build_actions:",
+        "_update_cached_build_readiness(view_state, build_actions, town)",
+        "if minimal:",
+        'parts.append("tab:%d" % active_tab)',
     ):
         ensure(token in town_shell_text, errors, f"TownShell cache-hit economy contract is missing token {token}")
+    ensure(
+        "var view_state := _active_town_entity_view_state(active_town, first_render_minimal)" not in town_shell_text,
+        errors,
+        "Town refresh must not overwrite one minimal entity-cache slot per management tab",
+    )
+    focus_release_start = script_text.find("func _await_town_action_focus_release(shell: Node, lane: String) -> bool:")
+    focus_release_end = script_text.find("\nfunc ", focus_release_start + 1)
+    focus_release_body = script_text[focus_release_start:] if focus_release_end < 0 else script_text[focus_release_start:focus_release_end]
+    ensure(
+        focus_release_start >= 0
+        and "await get_tree().process_frame" in focus_release_body
+        and "create_timer" not in focus_release_body
+        and "dismiss_town_action_presentation" not in focus_release_body,
+        errors,
+        "Town entity-cache action fixture must await the real bounded completion presentation without synthetic timers or direct dismissal",
+    )
+    signature_start = town_shell_text.find("func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:")
+    signature_end = town_shell_text.find("\nfunc ", signature_start + 1)
+    signature_body = town_shell_text[signature_start:] if signature_end < 0 else town_shell_text[signature_start:signature_end]
+    ensure(
+        signature_body.find("if minimal:") >= 0
+        and signature_body.find('parts.append("tab:%d" % active_tab)') >= 0
+        and signature_body.find("if minimal:") < signature_body.find('parts.append("tab:%d" % active_tab)')
+        and signature_body.count('parts.append("tab:%d" % active_tab)') == 1,
+        errors,
+        "Town entity-cache signature must include the active tab only for legacy minimal entries, never the reusable full state",
+    )
 
 
 def validate_generated_large_town_explicit_save_surface_regression(errors: list[str]) -> None:
