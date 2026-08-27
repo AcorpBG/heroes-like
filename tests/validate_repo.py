@@ -42049,7 +42049,6 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ):
         ensure(required_token in town_adjunct_map_text, errors, f"Overworld town-adjunct resource layout is missing source token: {required_token}")
     for required_token in (
-        'if _object_profile_footprint(_resource_object_profile(node)) != Vector2i(1, 1):',
         'var town_presentation := _town_presentation_at(anchor_tile)',
         'if town_presentation.is_empty():',
         'var compact_size := footprint_rect.size * TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR',
@@ -42064,6 +42063,38 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"contained_in_footprint_tile": footprint_rect.encloses(draw_rect)',
     ):
         ensure(required_token in town_adjunct_payload_block, errors, f"Overworld town-adjunct resource payload is missing exact authority: {required_token}")
+    ensure(
+        'if _object_profile_footprint(_resource_object_profile(node)) != Vector2i(1, 1):' not in town_adjunct_layout_block,
+        errors,
+        "Overworld town-adjunct resource geometry must not bypass multi-tile structures anchored inside town presentation footprints",
+    )
+    ensure(
+        'var one_tile :=' not in town_adjunct_payload_block and 'one_tile and not town_presentation.is_empty()' not in town_adjunct_payload_block,
+        errors,
+        "Overworld town-adjunct resource payload must not classify only one-tile resources as colocated",
+    )
+    for required_token in (
+        'var town_structure_authority_before: Dictionary = session.to_dict()',
+        'var town_structure_original_fog: Dictionary = session.overworld.get("fog", {}).duplicate(true)',
+        '"asset_id": "mapobj_embergrain_warm_granary"',
+        '"footprint": {"width": 2, "height": 3}',
+        '"requires_controlled_reveal": false',
+        '"asset_id": "mapobj_peatwax_reed_yard"',
+        '"footprint": {"width": 2, "height": 2}',
+        '"requires_controlled_reveal": true',
+        '_reveal_validation_tiles(session, [structure_tile])',
+        'session.overworld["fog"] = town_structure_original_fog.duplicate(true)',
+        'String(structure_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource"',
+        'String(structure_layout.get("edge_anchor", "")) != "top_right"',
+        'structure_layout.get("cell_offset", {}) != {"x": 1, "y": 0}',
+        'structure_draw_rect.size.x, structure_footprint_rect.size.x * 0.64',
+        'structure_draw_rect.size.y, structure_footprint_rect.size.y * 0.64',
+        'structure_draw_rect.end.x, structure_footprint_rect.end.x',
+        'structure_draw_rect.position.y, structure_footprint_rect.position.y',
+        'repeated_structure_presentation != structure_presentation',
+        'session.to_dict() != town_structure_authority_before',
+    ):
+        ensure(required_token in rare_exchange_smoke_text, errors, f"Overworld visual smoke is missing town-adjunct multi-tile structure-scale authority: {required_token}")
     for site_id, entry in site_sprites.items():
         ensure(str(site_id) in resource_sites, errors, f"Overworld art mapping references missing resource site {site_id}")
         if isinstance(entry, dict):

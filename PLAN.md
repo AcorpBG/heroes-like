@@ -26,6 +26,34 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
 
+## Overworld Town-Adjunct Structure Scale
+
+id: `presentation-overworld-town-adjunct-structure-scale-10184`
+
+Status: completed.
+
+Result:
+- the 2x2 Peatwax Reed Yard and 2x3 Embergrain Warm Granary now use the compact 64% outward-edge presentation envelope when their anchor tile lies inside a town's visual footprint, while their exact authored world footprints and interactions remain unchanged;
+- inspected 1280x720 and 1920x1080 captures show both structures as readable subordinate adjuncts rather than town-sized competing silhouettes, and broad runtime proves exact art/footprint identity, stable geometry, restored fog, and unchanged session authority;
+- route, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh 1920x1080 River Pass pixels and runtime presentation payloads show the 2x2 Peatwax Reed Yard and 2x3 Embergrain Warm Granary rendered at their ordinary multi-tile visual extent from cells inside the towns' 3x2 presentation footprints;
+- these valid detailed sprites compete with the adjacent town silhouettes and read as town-sized structures, while the completed compact-adjunct rule applies only to one-tile resources and therefore bypasses them.
+
+Implementation boundary:
+- compact only multi-tile resource structures whose authored anchor tile lies inside a town presentation footprint, preserving their painted aspect, outward grounding, legibility, and exact underlying multi-tile world footprint;
+- preserve ordinary multi-tile scale outside town footprints and preserve exact resource/town identity, asset pixels, placement, interaction, pathing, economy/control, session/save, and content authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 captures show the Peatwax Reed Yard and Embergrain Warm Granary as readable edge adjuncts rather than town-sized competing silhouettes;
+- broad Overworld runtime proves bounded multi-tile town-adjunct scale/placement, unchanged one-tile adjunct and standalone-resource presentation, stable repeated payloads, and exact session/route authority;
+- route, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no resource/town asset, asset pixels/import, scenario placement, world footprint/collision/body/visit mask, town geometry/scale, selection/interaction/route, gameplay, economy, save/schema, AI, balance, or Native RMG change;
+- no global multi-tile object rescale, broad map relayout, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Town-Adjunct Resource Clearance
 
 id: `presentation-overworld-town-adjunct-resource-clearance-10184`
