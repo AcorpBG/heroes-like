@@ -320,12 +320,17 @@ const GENERIC_TERRAIN_EDGE_INNER_ALPHA := 0.15
 const GENERIC_TERRAIN_EDGE_SEAM_ALPHA := 0.30
 const GENERIC_TERRAIN_EDGE_OUTER_DEPTH_FACTOR := 0.34
 const GENERIC_TERRAIN_EDGE_INNER_DEPTH_FACTOR := 0.18
-const WATER_SHORELINE_CONTOUR_MODEL := "deterministic_shallow_wet_edge_and_broken_foam"
+const WATER_SHORELINE_CONTOUR_MODEL := "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam"
+const WATER_TRANSITION_EDGE_ART_MODEL := "authored_texture_clipped_to_deterministic_organic_profile"
+const WATER_TRANSITION_EDGE_ART_ALPHA := 0.64
+const WATER_TRANSITION_EDGE_CLIP_DEPTH_FACTOR := 0.215
+const WATER_SHORELINE_BANK_DEPTH_FACTOR := 0.36
 const WATER_SHORELINE_SHALLOW_DEPTH_FACTOR := 0.285
 const WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR := 0.245
 const WATER_SHORELINE_FOAM_DEPTH_FACTOR := 0.205
-const WATER_SHORELINE_SHALLOW_COLOR := Color(0.30, 0.58, 0.62, 0.10)
-const WATER_SHORELINE_WET_EDGE_COLOR := Color(0.39, 0.34, 0.20, 0.26)
+const WATER_SHORELINE_BANK_COLOR := Color(0.36, 0.27, 0.13, 0.30)
+const WATER_SHORELINE_SHALLOW_COLOR := Color(0.30, 0.58, 0.62, 0.19)
+const WATER_SHORELINE_WET_EDGE_COLOR := Color(0.39, 0.34, 0.20, 0.38)
 const WATER_SHORELINE_FOAM_SHADOW_COLOR := Color(0.035, 0.10, 0.12, 0.30)
 const WATER_SHORELINE_FOAM_COLOR := Color(0.76, 0.89, 0.86, 0.36)
 const WATER_SHORELINE_WET_EDGE_WIDTH_FACTOR := 0.014
@@ -1422,6 +1427,9 @@ func _canvas_draw_colored_polygon(points: PackedVector2Array, color: Color) -> v
 func _canvas_draw_polygon(points: PackedVector2Array, colors: PackedColorArray) -> void:
 	_current_draw_canvas_item().draw_polygon(points, colors)
 
+func _canvas_draw_textured_polygon(points: PackedVector2Array, colors: PackedColorArray, uvs: PackedVector2Array, texture: Texture2D) -> void:
+	_current_draw_canvas_item().draw_polygon(points, colors, uvs, texture)
+
 func _canvas_draw_polyline(points: PackedVector2Array, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
 	_current_draw_canvas_item().draw_polyline(points, color, width, antialiased)
 
@@ -2402,7 +2410,7 @@ func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> 
 			var source: Dictionary = source_value
 			var direction := String(source.get("direction", ""))
 			var source_terrain := String(source.get("source_terrain", terrain))
-			if not _draw_terrain_edge_art(source_terrain, direction, rect):
+			if not _draw_terrain_edge_art(tile, source_terrain, direction, rect):
 				_draw_terrain_edge_fallback(tile, source_terrain, direction, rect)
 			if _terrain_group(source_terrain) == "water" and _terrain_group(terrain) != "water":
 				_draw_water_shoreline_contour(tile, direction, rect)
@@ -2492,9 +2500,12 @@ func _draw_water_shoreline_contour(tile: Vector2i, direction: String, rect: Rect
 	var profile := _water_shoreline_contour_profile(tile, direction, rect)
 	if profile.is_empty():
 		return
+	var bank_band: PackedVector2Array = profile.get("bank_band", PackedVector2Array())
 	var shallow_band: PackedVector2Array = profile.get("shallow_band", PackedVector2Array())
 	var wet_edge: PackedVector2Array = profile.get("wet_edge", PackedVector2Array())
 	var foam_segments: Array = profile.get("foam_segments", [])
+	if bank_band.size() >= 3:
+		_canvas_draw_colored_polygon(bank_band, WATER_SHORELINE_BANK_COLOR)
 	if shallow_band.size() >= 3:
 		_canvas_draw_colored_polygon(shallow_band, WATER_SHORELINE_SHALLOW_COLOR)
 	if wet_edge.size() >= 2:
@@ -2526,15 +2537,17 @@ func _draw_water_shoreline_contour(tile: Vector2i, direction: String, rect: Rect
 func _water_shoreline_contour_profile(tile: Vector2i, direction: String, rect: Rect2) -> Dictionary:
 	if direction not in ["N", "E", "S", "W"] or rect.size.x <= 0.0 or rect.size.y <= 0.0:
 		return {}
+	var bank_profile := _terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_BANK_DEPTH_FACTOR)
 	var shallow_profile := _terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_SHALLOW_DEPTH_FACTOR)
 	var wet_edge := _terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_WET_EDGE_DEPTH_FACTOR)
 	var foam_profile := _terrain_edge_profile_points(tile, direction, rect, WATER_SHORELINE_FOAM_DEPTH_FACTOR)
-	if shallow_profile.size() != 5 or wet_edge.size() != 5 or foam_profile.size() != 5:
+	if bank_profile.size() != 5 or shallow_profile.size() != 5 or wet_edge.size() != 5 or foam_profile.size() != 5:
 		return {}
 	return {
 		"model": WATER_SHORELINE_CONTOUR_MODEL,
 		"direction": direction,
 		"receiver_tile": tile,
+		"bank_band": _terrain_edge_band_polygon(direction, rect, bank_profile),
 		"shallow_band": _terrain_edge_band_polygon(direction, rect, shallow_profile),
 		"wet_edge": wet_edge,
 		"foam_segments": _water_shoreline_foam_segments(tile, direction, foam_profile),
@@ -2592,6 +2605,7 @@ func _water_shoreline_contour_payload(tile: Vector2i, transition_payload: Dictio
 			var profile := _water_shoreline_contour_profile(tile, direction, validation_rect)
 			if profile.is_empty():
 				continue
+			var bank_band: PackedVector2Array = profile.get("bank_band", PackedVector2Array())
 			var shallow_band: PackedVector2Array = profile.get("shallow_band", PackedVector2Array())
 			var wet_edge: PackedVector2Array = profile.get("wet_edge", PackedVector2Array())
 			var foam_segments: Array = profile.get("foam_segments", [])
@@ -2604,10 +2618,11 @@ func _water_shoreline_contour_payload(tile: Vector2i, transition_payload: Dictio
 			profiles.append({
 				"direction": direction,
 				"source_terrain": source_terrain,
+				"bank_band_point_count": bank_band.size(),
 				"shallow_band_point_count": shallow_band.size(),
 				"wet_edge_point_count": wet_edge.size(),
 				"foam_segment_count": foam_segments.size(),
-				"geometry_contained": _shoreline_points_contained(shallow_band, validation_rect) and _shoreline_points_contained(wet_edge, validation_rect) and foam_contained,
+				"geometry_contained": _shoreline_points_contained(bank_band, validation_rect) and _shoreline_points_contained(shallow_band, validation_rect) and _shoreline_points_contained(wet_edge, validation_rect) and foam_contained,
 			})
 	return {
 		"model": WATER_SHORELINE_CONTOUR_MODEL,
@@ -2616,6 +2631,10 @@ func _water_shoreline_contour_payload(tile: Vector2i, transition_payload: Dictio
 		"source_directions": source_directions,
 		"direction_order": ["N", "E", "S", "W"],
 		"profiles": profiles,
+		"authored_edge_art_model": WATER_TRANSITION_EDGE_ART_MODEL,
+		"authored_edge_art_alpha": WATER_TRANSITION_EDGE_ART_ALPHA,
+		"authored_edge_clip_depth_factor": WATER_TRANSITION_EDGE_CLIP_DEPTH_FACTOR,
+		"bank_band_alpha": WATER_SHORELINE_BANK_COLOR.a,
 		"shallow_band_alpha": WATER_SHORELINE_SHALLOW_COLOR.a,
 		"wet_edge_alpha": WATER_SHORELINE_WET_EDGE_COLOR.a,
 		"foam_alpha": WATER_SHORELINE_FOAM_COLOR.a,
@@ -2675,14 +2694,48 @@ func _draw_terrain_corner_hint(tile: Vector2i, source_terrain: String, direction
 	_canvas_draw_colored_polygon(points, color)
 	_canvas_draw_line(accent_start, accent_end, detail_color, maxf(1.0, extent * 0.014))
 
-func _draw_terrain_edge_art(terrain: String, direction: String, rect: Rect2) -> bool:
+func _draw_terrain_edge_art(tile: Vector2i, terrain: String, direction: String, rect: Rect2) -> bool:
 	if not _terrain_art_can_be_primary(terrain):
 		return false
 	var texture_path := _terrain_edge_art_path(terrain, direction)
 	var texture = _terrain_art_texture(texture_path)
 	if not (texture is Texture2D):
 		return false
+	if _terrain_group(terrain) == "water":
+		return _draw_water_transition_edge_art(tile, direction, rect, texture)
 	_canvas_draw_texture_rect(texture, rect, false)
+	return true
+
+func _draw_water_transition_edge_art(tile: Vector2i, direction: String, rect: Rect2, texture: Texture2D) -> bool:
+	var inner_profile := _terrain_edge_profile_points(tile, direction, rect, WATER_TRANSITION_EDGE_CLIP_DEPTH_FACTOR)
+	if inner_profile.size() != 5:
+		return false
+	var tint := Color(1.0, 1.0, 1.0, WATER_TRANSITION_EDGE_ART_ALPHA)
+	for interval in range(4):
+		var start_fraction := float(interval) / 4.0
+		var end_fraction := float(interval + 1) / 4.0
+		var outer_start := Vector2.ZERO
+		var outer_end := Vector2.ZERO
+		match direction:
+			"N":
+				outer_start = Vector2(lerpf(rect.position.x, rect.end.x, start_fraction), rect.position.y)
+				outer_end = Vector2(lerpf(rect.position.x, rect.end.x, end_fraction), rect.position.y)
+			"E":
+				outer_start = Vector2(rect.end.x, lerpf(rect.position.y, rect.end.y, start_fraction))
+				outer_end = Vector2(rect.end.x, lerpf(rect.position.y, rect.end.y, end_fraction))
+			"S":
+				outer_start = Vector2(lerpf(rect.position.x, rect.end.x, start_fraction), rect.end.y)
+				outer_end = Vector2(lerpf(rect.position.x, rect.end.x, end_fraction), rect.end.y)
+			"W":
+				outer_start = Vector2(rect.position.x, lerpf(rect.position.y, rect.end.y, start_fraction))
+				outer_end = Vector2(rect.position.x, lerpf(rect.position.y, rect.end.y, end_fraction))
+			_:
+				return false
+		var points := PackedVector2Array([outer_start, outer_end, inner_profile[interval + 1], inner_profile[interval]])
+		var uvs := PackedVector2Array()
+		for point in points:
+			uvs.append((point - rect.position) / rect.size)
+		_canvas_draw_textured_polygon(points, PackedColorArray([tint, tint, tint, tint]), uvs, texture)
 	return true
 
 func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
