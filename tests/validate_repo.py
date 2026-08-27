@@ -28753,6 +28753,104 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
     ):
         ensure(required_token in texture_visible, errors, f"Battle cohesive terrain visibility guard is missing exact blend bound: {required_token}")
 
+    for required_token in (
+        'const TERRAIN_AMBIENT_MODEL := "deterministic_terrain_specific_passive_motes"',
+        'const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain", "ambient_motes", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_strip", "footer"]',
+        'const TERRAIN_AMBIENT_PHASE_SPEED := 0.52',
+        'const TERRAIN_AMBIENT_STATIC_PHASE := 0.0',
+        '"grass": {"id": "sunlit_pollen", "kind": "pollen", "count": 14',
+        '"forest": {"id": "forest_fireflies", "kind": "firefly", "count": 11',
+        '"swamp": {"id": "swamp_wisps", "kind": "wisp", "count": 10',
+        '"rough": {"id": "roughland_dust", "kind": "dust", "count": 12',
+        '"road": {"id": "roadside_dust", "kind": "dust", "count": 9',
+        '"mire": {"id": "mire_wisps", "kind": "wisp", "count": 12',
+        'var _terrain_ambient_phase := TERRAIN_AMBIENT_STATIC_PHASE',
+        'func _terrain_ambient_profile() -> Dictionary:',
+        'func _terrain_ambient_available() -> bool:',
+        'func _terrain_ambient_should_animate() -> bool:',
+        'func _terrain_ambient_entries(field_rect: Rect2, phase: float) -> Array:',
+        'func _draw_terrain_ambient(field_rect: Rect2) -> void:',
+        'func validation_terrain_ambient_summary() -> Dictionary:',
+    ):
+        ensure(required_token in board_text, errors, f"Battle terrain ambience is missing exact presentation ownership: {required_token}")
+    battle_draw = gdscript_function_block(board_text, "_draw")
+    ambient_draw_order = [battle_draw.find(token) for token in (
+        "_draw_terrain(field_rect, hex_layout)",
+        "_draw_terrain_ambient(field_rect)",
+        "_draw_hex_grid(hex_layout, terrain_texture_loaded)",
+        "_draw_field_objectives(hex_layout)",
+        "_draw_tactical_affordances(hex_layout, stack_cells)",
+        "_draw_controller_cursor(hex_layout)",
+        "_draw_vfx_cues(hex_layout, stack_cells)",
+        "_draw_stack_tokens(hex_layout, stack_cells)",
+        "_draw_turn_strip(field_rect)",
+        "_draw_footer_line(field_rect)",
+    )]
+    ensure(all(index >= 0 for index in ambient_draw_order) and ambient_draw_order == sorted(ambient_draw_order), errors, "Battle ambient motes must draw after terrain and before every tactical/UI surface")
+    ambient_process = gdscript_function_block(board_text, "_process")
+    for required_token in (
+        "if _terrain_ambient_should_animate():",
+        "_terrain_ambient_phase = fmod(_terrain_ambient_phase + delta * TERRAIN_AMBIENT_PHASE_SPEED, TAU)",
+        "_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE",
+    ):
+        ensure(required_token in ambient_process, errors, f"Battle terrain ambient lifecycle is missing exact frame-owned token: {required_token}")
+    ambient_profile = gdscript_function_block(board_text, "_terrain_ambient_profile")
+    ambient_available = gdscript_function_block(board_text, "_terrain_ambient_available")
+    ambient_should_animate = gdscript_function_block(board_text, "_terrain_ambient_should_animate")
+    ambient_entries = gdscript_function_block(board_text, "_terrain_ambient_entries")
+    ambient_draw = gdscript_function_block(board_text, "_draw_terrain_ambient")
+    ambient_summary = gdscript_function_block(board_text, "validation_terrain_ambient_summary")
+    for required_token in (
+        "TERRAIN_AMBIENT_PROFILES.get(_terrain_texture_id(_battle_terrain_id()), {})",
+        "return profile_value if profile_value is Dictionary else {}",
+    ):
+        ensure(required_token in ambient_profile, errors, f"Battle terrain ambience must resolve only through the authored terrain alias/profile table: {required_token}")
+    for required_token in (
+        "not _battle.is_empty()",
+        "not _terrain_ambient_profile().is_empty()",
+        "not FrontierVisualKitScript.high_contrast_enabled()",
+    ):
+        ensure(required_token in ambient_available, errors, f"Battle terrain ambience availability is missing fail-closed context: {required_token}")
+    ensure("not SettingsService.reduced_motion_enabled()" in ambient_should_animate, errors, "Battle terrain ambience must stop animation in Reduced Motion")
+    for required_token in (
+        'var radius := clampf(minf(field_rect.size.x, field_rect.size.y) * float(profile.get("radius_factor", 0.0024)), 1.15, 2.55)',
+        "var safe_rect := field_rect.grow(-safe_inset)",
+        "for index in range(int(profile.get(\"count\", 0))):",
+        "fmod(0.173 + float(index) * 0.347, 1.0)",
+        "fmod(0.291 + float(index) * 0.613, 1.0)",
+        "sin(local_phase) * drift.x",
+        "cos(local_phase * 0.73 + float(index) * 0.41) * drift.y",
+        '"contained": field_rect.encloses(bounds)',
+    ):
+        ensure(required_token in ambient_entries, errors, f"Battle terrain ambient entries are missing deterministic contained geometry: {required_token}")
+    for required_token in (
+        "if not _terrain_ambient_available():",
+        "var phase := TERRAIN_AMBIENT_STATIC_PHASE if SettingsService.reduced_motion_enabled() else _terrain_ambient_phase",
+        "for entry_value in _terrain_ambient_entries(field_rect, phase):",
+        'if String(entry.get("kind", "")) == "dust":',
+        "draw_line(",
+        "draw_circle(",
+    ):
+        ensure(required_token in ambient_draw, errors, f"Battle terrain ambient painter is missing restrained accessibility-aware draw ownership: {required_token}")
+    for required_token in (
+        '"model": TERRAIN_AMBIENT_MODEL',
+        '"draw_order": TERRAIN_AMBIENT_DRAW_ORDER.duplicate()',
+        '"reduced_motion": reduced_motion',
+        '"high_contrast": FrontierVisualKitScript.high_contrast_enabled()',
+        '"session_mutation_source": "none_presentation_only"',
+    ):
+        ensure(required_token in ambient_summary, errors, f"Battle terrain ambient validation is missing detached contract evidence: {required_token}")
+    for helper_name, helper in (
+        ("_terrain_ambient_profile", ambient_profile),
+        ("_terrain_ambient_available", ambient_available),
+        ("_terrain_ambient_should_animate", ambient_should_animate),
+        ("_terrain_ambient_entries", ambient_entries),
+        ("_draw_terrain_ambient", ambient_draw),
+        ("validation_terrain_ambient_summary", ambient_summary),
+    ):
+        for forbidden_token in ("BattleRules", "SessionState", "SaveService", "AppRouter", "Input.", "rand", "Time.", "Timer", "Tween", "Particle", "await ", "create_timer", "create_tween", "session.", "_battle["):
+            ensure(forbidden_token not in helper, errors, f"Battle terrain ambient helper {helper_name} must remain deterministic presentation-only: {forbidden_token}")
+
     shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "var _wide_system_panel_style: StyleBox = null",
@@ -28807,6 +28905,40 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         'String(missing_summary.get("terrain_context_model", "")) != "disabled_for_texture_fallback"',
     ):
         ensure(required_token in smoke_text, errors, f"Battle focused terrain-context proof is missing token: {required_token}")
+
+    ambient_smoke = gdscript_function_block(smoke_text, "_assert_battle_terrain_ambient_contract")
+    ambient_exact = gdscript_function_block(smoke_text, "_battle_terrain_ambient_summary_exact")
+    for required_token in (
+        'board.has_method("validation_terrain_ambient_summary")',
+        "var original_settings: Dictionary = SettingsService.settings.duplicate(true)",
+        "var session_before: Dictionary = session.to_dict()",
+        "for terrain_value in BATTLE_TERRAIN_AMBIENT_EXPECTED.keys():",
+        'board.call("set_battle_state", session)',
+        'board.call("validation_terrain_ambient_summary")',
+        'animated_after.get("identities", []) != animated_before.get("identities", [])',
+        'animated_after.get("entries", []) == animated_before.get("entries", [])',
+        "_set_town_ambient_accessibility(true, false)",
+        "reduced_after != reduced_before",
+        "_set_town_ambient_accessibility(false, true)",
+        'session.battle["terrain"] = "validation_missing_texture"',
+        "SettingsService.settings = original_settings.duplicate(true)",
+        'session.battle["terrain"] = original_terrain',
+        "session.to_dict() != session_before",
+    ):
+        ensure(required_token in ambient_smoke, errors, f"Battle terrain ambient focused proof is missing method-matched lifecycle token: {required_token}")
+    for required_token in (
+        'String(summary.get("model", "")) != "deterministic_terrain_specific_passive_motes"',
+        'Array(summary.get("draw_order", [])) != ["terrain", "ambient_motes", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_strip", "footer"]',
+        'int(summary.get("entry_count", -1)) != int(expected.get("count", -2))',
+        'not bool(summary.get("all_contained", false))',
+        'float(summary.get("phase_speed", 0.0)), 0.52',
+        'String(summary.get("session_mutation_source", "")) != "none_presentation_only"',
+        "not field_rect.encloses(bounds)",
+    ):
+        ensure(required_token in ambient_exact, errors, f"Battle terrain ambient exact helper is missing deterministic/readability bound: {required_token}")
+    ensure(smoke_text.count("await _assert_battle_terrain_ambient_contract(board, session)") == 1, errors, "Town/Battle visual smoke must run the ambient terrain lifecycle exactly once")
+    for forbidden_token in ("_terrain_ambient_entries(", "_draw_terrain_ambient(", "_terrain_ambient_phase =", "Time.", "rand", "create_timer", "create_tween", "session.battle.erase"):
+        ensure(forbidden_token not in ambient_smoke + ambient_exact, errors, f"Battle ambient focused proof must not bypass public validation or mutate presentation internals: {forbidden_token}")
 
     visual_text = visual_report_path.read_text(encoding="utf-8")
     banner_contract = gdscript_function_block(visual_text, "_battle_banner_contract")

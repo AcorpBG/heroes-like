@@ -10,6 +10,15 @@ const TOWN_SCENIC_BACKDROP_PATHS := {
 	"faction_brasshollow": "res://art/towns/runtime/backdrops/town_brasshollow.png",
 	"faction_veilmourn": "res://art/towns/runtime/backdrops/town_veilmourn.png",
 }
+const BATTLE_TERRAIN_AMBIENT_EXPECTED := {
+	"plains": {"profile_key": "grass", "profile_id": "sunlit_pollen", "kind": "pollen", "count": 14},
+	"grass": {"profile_key": "grass", "profile_id": "sunlit_pollen", "kind": "pollen", "count": 14},
+	"forest": {"profile_key": "forest", "profile_id": "forest_fireflies", "kind": "firefly", "count": 11},
+	"swamp": {"profile_key": "swamp", "profile_id": "swamp_wisps", "kind": "wisp", "count": 10},
+	"rough": {"profile_key": "rough", "profile_id": "roughland_dust", "kind": "dust", "count": 12},
+	"road": {"profile_key": "road", "profile_id": "roadside_dust", "kind": "dust", "count": 9},
+	"mire": {"profile_key": "mire", "profile_id": "mire_wisps", "kind": "wisp", "count": 12},
+}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -1003,6 +1012,9 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board does not expose terrain rendering validation.")
 		get_tree().quit(1)
 		return false
+	if not await _assert_battle_terrain_ambient_contract(board, session):
+		get_tree().quit(1)
+		return false
 	var hex_summary: Dictionary = board.call("validation_hex_layout_summary")
 	if String(hex_summary.get("presentation", "")) != "hex":
 		push_error("Battle smoke: battle board did not render through the hex-field presentation.")
@@ -1224,6 +1236,132 @@ func _run_battle_smoke() -> bool:
 	if not await _assert_battle_aftermath_transition(session):
 		get_tree().quit(1)
 		return false
+	return true
+
+func _assert_battle_terrain_ambient_contract(board: Node, session) -> bool:
+	if not board.has_method("validation_terrain_ambient_summary"):
+		push_error("Battle smoke: battle board does not expose terrain ambient validation.")
+		return false
+	var original_settings: Dictionary = SettingsService.settings.duplicate(true)
+	var original_color_cue_mode := FrontierVisualKitScript.color_cue_mode()
+	var original_terrain := String(session.battle.get("terrain", ""))
+	var session_before: Dictionary = session.to_dict()
+	var failure := ""
+	_set_town_ambient_accessibility(false, false)
+	for terrain_value in BATTLE_TERRAIN_AMBIENT_EXPECTED.keys():
+		var terrain := String(terrain_value)
+		var expected: Dictionary = BATTLE_TERRAIN_AMBIENT_EXPECTED.get(terrain, {})
+		session.battle["terrain"] = terrain
+		board.call("set_battle_state", session)
+		await get_tree().process_frame
+		var summary: Dictionary = board.call("validation_terrain_ambient_summary")
+		if not _battle_terrain_ambient_summary_exact(summary, terrain, expected, true, true):
+			failure = "Battle terrain ambient profile failed for %s: %s." % [terrain, summary]
+			break
+	if failure == "":
+		session.battle["terrain"] = "forest"
+		board.call("set_battle_state", session)
+		await get_tree().process_frame
+		var animated_before: Dictionary = board.call("validation_terrain_ambient_summary")
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var animated_after: Dictionary = board.call("validation_terrain_ambient_summary")
+		if float(animated_after.get("phase", 0.0)) <= float(animated_before.get("phase", -1.0)) \
+				or animated_after.get("identities", []) != animated_before.get("identities", []) \
+				or animated_after.get("entries", []) == animated_before.get("entries", []):
+			failure = "Battle terrain ambient normal-motion phase or deterministic identities drifted: %s / %s." % [animated_before, animated_after]
+	if failure == "":
+		_set_town_ambient_accessibility(true, false)
+		await get_tree().process_frame
+		var reduced_before: Dictionary = board.call("validation_terrain_ambient_summary")
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var reduced_after: Dictionary = board.call("validation_terrain_ambient_summary")
+		if reduced_after != reduced_before \
+				or not _battle_terrain_ambient_summary_exact(reduced_before, "forest", BATTLE_TERRAIN_AMBIENT_EXPECTED["forest"], true, false) \
+				or not bool(reduced_before.get("reduced_motion", false)) \
+				or not is_zero_approx(float(reduced_before.get("phase", -1.0))):
+			failure = "Battle terrain ambient Reduced Motion composition was not exact and static: %s / %s." % [reduced_before, reduced_after]
+	if failure == "":
+		_set_town_ambient_accessibility(false, true)
+		await get_tree().process_frame
+		var contrast_summary: Dictionary = board.call("validation_terrain_ambient_summary")
+		if bool(contrast_summary.get("enabled", true)) \
+				or bool(contrast_summary.get("animating", true)) \
+				or not bool(contrast_summary.get("high_contrast", false)) \
+				or int(contrast_summary.get("entry_count", -1)) != 0 \
+				or not Array(contrast_summary.get("entries", [1])).is_empty():
+			failure = "Battle terrain ambient layer did not hide completely in High Contrast: %s." % contrast_summary
+	if failure == "":
+		_set_town_ambient_accessibility(false, false)
+		session.battle["terrain"] = "validation_missing_texture"
+		board.call("set_battle_state", session)
+		await get_tree().process_frame
+		var fallback_summary: Dictionary = board.call("validation_terrain_ambient_summary")
+		if bool(fallback_summary.get("enabled", true)) \
+				or String(fallback_summary.get("profile_id", "")) != "" \
+				or int(fallback_summary.get("entry_count", -1)) != 0 \
+				or not Array(fallback_summary.get("entries", [1])).is_empty():
+			failure = "Battle terrain ambient layer did not fail closed for an unmapped terrain: %s." % fallback_summary
+	SettingsService.settings = original_settings.duplicate(true)
+	SettingsService.apply_settings()
+	FrontierVisualKitScript.set_color_cue_mode(original_color_cue_mode)
+	SettingsService.settings_changed.emit(SettingsService.settings.duplicate(true))
+	session.battle["terrain"] = original_terrain
+	board.call("set_battle_state", session)
+	await get_tree().process_frame
+	if failure == "" and session.to_dict() != session_before:
+		failure = "Battle terrain ambient validation changed battle/session authority."
+	if failure != "":
+		push_error("Battle smoke: %s" % failure)
+		return false
+	return true
+
+func _battle_terrain_ambient_summary_exact(summary: Dictionary, terrain: String, expected: Dictionary, expected_enabled: bool, expected_animating: bool) -> bool:
+	var entries: Array = summary.get("entries", []) if summary.get("entries", []) is Array else []
+	var identities: Array = summary.get("identities", []) if summary.get("identities", []) is Array else []
+	var field_rect: Rect2 = summary.get("field_rect", Rect2()) if summary.get("field_rect", Rect2()) is Rect2 else Rect2()
+	if String(summary.get("model", "")) != "deterministic_terrain_specific_passive_motes" \
+			or Array(summary.get("draw_order", [])) != ["terrain", "ambient_motes", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_strip", "footer"] \
+			or String(summary.get("terrain", "")) != terrain \
+			or String(summary.get("terrain_profile_key", "")) != String(expected.get("profile_key", "")) \
+			or String(summary.get("profile_id", "")) != String(expected.get("profile_id", "")) \
+			or String(summary.get("kind", "")) != String(expected.get("kind", "")) \
+			or int(summary.get("profile_count", -1)) != int(expected.get("count", -2)) \
+			or bool(summary.get("enabled", false)) != expected_enabled \
+			or bool(summary.get("animating", false)) != expected_animating \
+			or bool(summary.get("high_contrast", true)) \
+			or int(summary.get("entry_count", -1)) != int(expected.get("count", -2)) \
+			or entries.size() != int(expected.get("count", -2)) \
+			or identities.size() != entries.size() \
+			or not bool(summary.get("all_contained", false)) \
+			or not is_equal_approx(float(summary.get("phase_speed", 0.0)), 0.52) \
+			or not is_zero_approx(float(summary.get("static_phase", -1.0))) \
+			or String(summary.get("session_mutation_source", "")) != "none_presentation_only" \
+			or field_rect.size.x <= 0.0 \
+			or field_rect.size.y <= 0.0:
+		return false
+	for index in range(entries.size()):
+		if not entries[index] is Dictionary or not identities[index] is Dictionary:
+			return false
+		var entry: Dictionary = entries[index]
+		var identity: Dictionary = identities[index]
+		var base_normalized: Vector2 = entry.get("base_normalized", Vector2(-1.0, -1.0))
+		var bounds: Rect2 = entry.get("bounds", Rect2()) if entry.get("bounds", Rect2()) is Rect2 else Rect2()
+		var color: Color = entry.get("color", Color.TRANSPARENT)
+		if int(entry.get("index", -1)) != index \
+				or identity != {"index": index, "profile_id": String(expected.get("profile_id", "")), "kind": String(expected.get("kind", "")), "base_normalized": base_normalized} \
+				or String(entry.get("profile_id", "")) != String(expected.get("profile_id", "")) \
+				or String(entry.get("kind", "")) != String(expected.get("kind", "")) \
+				or base_normalized.x < 0.08 or base_normalized.x > 0.92 \
+				or base_normalized.y < 0.08 or base_normalized.y > 0.92 \
+				or float(entry.get("radius", 0.0)) < 1.15 \
+				or float(entry.get("outer_radius", 0.0)) <= float(entry.get("radius", 0.0)) \
+				or float(entry.get("alpha", 0.0)) <= 0.0 or float(entry.get("alpha", 0.0)) > 0.22 \
+				or not bool(entry.get("contained", false)) \
+				or not field_rect.encloses(bounds) \
+				or not is_equal_approx(color.a, 1.0):
+			return false
 	return true
 
 func _independent_movement_range_region_summary(destinations_value: Variant) -> Dictionary:
