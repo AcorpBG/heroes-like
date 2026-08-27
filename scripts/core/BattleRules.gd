@@ -1484,9 +1484,16 @@ static func selected_target_closing_context(battle: Dictionary) -> Dictionary:
 	context["target_line"] = fallback_message
 	return context
 
-static func active_movement_board_click_intent(battle: Dictionary) -> Dictionary:
+static func active_movement_board_click_intent(
+	battle: Dictionary,
+	preloaded_legal_destinations: Variant = null
+) -> Dictionary:
 	var active_stack = get_active_stack(battle)
-	var destinations := legal_destinations_for_active_stack(battle)
+	var destinations: Array = (
+		preloaded_legal_destinations
+		if preloaded_legal_destinations is Array
+		else legal_destinations_for_active_stack(battle)
+	)
 	var intent := _movement_intent_skeleton(battle, active_stack, {})
 	intent["destination_count"] = destinations.size()
 	if battle.is_empty():
@@ -1509,7 +1516,12 @@ static func active_movement_board_click_intent(battle: Dictionary) -> Dictionary
 	intent["message"] = _movement_intent_message(battle, active_stack, {}, destinations.size())
 	return intent
 
-static func movement_intent_for_destination(battle: Dictionary, q: int, r: int) -> Dictionary:
+static func movement_intent_for_destination(
+	battle: Dictionary,
+	q: int,
+	r: int,
+	preloaded_legal_destinations: Variant = null
+) -> Dictionary:
 	var active_stack = get_active_stack(battle)
 	var destination := _hex_cell(q, r) if _hex_in_bounds(q, r) else {}
 	var intent := _movement_intent_skeleton(battle, active_stack, destination)
@@ -1526,7 +1538,11 @@ static func movement_intent_for_destination(battle: Dictionary, q: int, r: int) 
 		intent["blocked"] = true
 		intent["message"] = "Move hex click blocked: that hex is outside the battlefield."
 		return intent
-	var legal_destination := _legal_destination_for_stack(battle, active_stack, destination)
+	var legal_destination := (
+		_legal_destination_from_preloaded(preloaded_legal_destinations, q, r)
+		if preloaded_legal_destinations is Array
+		else _legal_destination_for_stack(battle, active_stack, destination)
+	)
 	if legal_destination.is_empty():
 		intent["blocked"] = true
 		intent["message"] = "Move hex click blocked: %s is not a legal move destination for %s." % [
@@ -1544,17 +1560,35 @@ static func movement_intent_for_destination(battle: Dictionary, q: int, r: int) 
 	intent["message"] = _movement_intent_message(battle, active_stack, destination, 1)
 	return intent
 
-static func legal_movement_intents_for_active_stack(battle: Dictionary) -> Array:
+static func legal_movement_intents_for_active_stack(
+	battle: Dictionary,
+	preloaded_legal_destinations: Variant = null
+) -> Array:
 	var intents := []
-	for destination in legal_destinations_for_active_stack(battle):
+	var destinations: Array = (
+		preloaded_legal_destinations
+		if preloaded_legal_destinations is Array
+		else legal_destinations_for_active_stack(battle)
+	)
+	for destination in destinations:
 		if not (destination is Dictionary):
 			continue
 		intents.append(movement_intent_for_destination(
 			battle,
 			int(destination.get("q", -1)),
-			int(destination.get("r", -1))
+			int(destination.get("r", -1)),
+			destinations
 		))
 	return intents
+
+static func _legal_destination_from_preloaded(destinations: Array, q: int, r: int) -> Dictionary:
+	for destination_value in destinations:
+		if not (destination_value is Dictionary):
+			continue
+		var destination: Dictionary = destination_value
+		if int(destination.get("q", -1)) == q and int(destination.get("r", -1)) == r:
+			return destination
+	return {}
 
 static func board_click_attack_intent_for_target(battle: Dictionary, battle_id: String) -> Dictionary:
 	var active_stack = get_active_stack(battle)
@@ -1767,18 +1801,19 @@ static func _attack_legality_for_target(active_stack: Dictionary, target: Dictio
 static func battle_hex_state_summary(battle: Dictionary) -> Dictionary:
 	var active_stack = get_active_stack(battle)
 	var active_hex := _stack_hex(active_stack)
+	var legal_destinations := legal_destinations_for_active_stack(battle)
 	var selected_legality := selected_target_legality(battle)
 	var selected_click_intent := selected_target_board_click_intent(battle)
 	var selected_continuity_context := selected_target_continuity_context(battle)
 	var selected_closing_context := selected_target_closing_context(battle)
-	var movement_click_intent := active_movement_board_click_intent(battle)
+	var movement_click_intent := active_movement_board_click_intent(battle, legal_destinations)
 	var selected_action_label := String(selected_click_intent.get("label", ""))
 	return {
 		"columns": BATTLE_HEX_COLUMNS,
 		"rows": BATTLE_HEX_ROWS,
 		"occupied_hexes": _build_occupancy_map(battle),
-		"legal_destinations": legal_destinations_for_active_stack(battle),
-		"legal_movement_intents": legal_movement_intents_for_active_stack(battle),
+		"legal_destinations": legal_destinations,
+		"legal_movement_intents": legal_movement_intents_for_active_stack(battle, legal_destinations),
 		"legal_melee_targets": legal_attack_targets_for_active_stack(battle, false),
 		"legal_ranged_targets": legal_attack_targets_for_active_stack(battle, true),
 		"active_hex": active_hex,

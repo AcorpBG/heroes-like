@@ -36,6 +36,27 @@ func _run() -> void:
 	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
 	add_child(shell)
 	await _settle()
+	var refresh_authority_before: Dictionary = session.to_dict()
+	var cached_intent_forecast: Dictionary = shell.get("_last_refresh_intent_forecast")
+	var fresh_intent_forecast: Dictionary = BattleRules.intent_forecast_payload(session)
+	var cached_battle_hash: int = int(shell.get("_last_refresh_intent_forecast_battle_hash"))
+	var cached_preferred_focus: Control = shell.call("_preferred_battle_keyboard_focus")
+	shell.set("_last_refresh_intent_forecast_battle_hash", 0)
+	var fallback_preferred_focus: Control = shell.call("_preferred_battle_keyboard_focus")
+	shell.set("_last_refresh_intent_forecast_battle_hash", hash(session.battle))
+	if cached_intent_forecast.is_empty() \
+			or cached_intent_forecast != fresh_intent_forecast \
+			or cached_battle_hash != hash(session.battle) \
+			or not is_same(cached_preferred_focus, fallback_preferred_focus) \
+			or session.to_dict() != refresh_authority_before:
+		return _fail("Battle refresh intent forecast cache did not preserve exact fresh fallback focus/session authority: cached=%s fresh=%s cached_hash=%s battle_hash=%s cached_focus=%s fallback_focus=%s." % [
+			cached_intent_forecast,
+			fresh_intent_forecast,
+			cached_battle_hash,
+			hash(session.battle),
+			cached_preferred_focus,
+			fallback_preferred_focus,
+		])
 
 	var board: Control = shell.get_node("%BattleBoard")
 	var battle_live: Label = shell.get_node("%BattleBoardCursorLive")

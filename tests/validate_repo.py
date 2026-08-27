@@ -675,6 +675,7 @@ STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_SCENE_PATH = ROOT / "tests" / "strategi
 STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-long-run-seed-matrix-report.md"
 BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_intent_forecast_report.gd"
 BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH = ROOT / "tests" / "battle_intent_forecast_report.tscn"
+BATTLE_CONTROLLER_BOARD_NAVIGATION_SMOKE_SCRIPT_PATH = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
 AI_HERO_TASK_NORMALIZER_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
@@ -29436,6 +29437,154 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
 
     scene_text = BATTLE_INTENT_FORECAST_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure("battle_intent_forecast_report.gd" in scene_text, errors, "battle_intent_forecast_report.tscn must reference its report script")
+
+
+def validate_battle_refresh_derived_surface_reuse(errors: list[str]) -> None:
+    required_paths = (
+        BATTLE_RULES_PATH,
+        BATTLE_SCRIPT_PATH,
+        BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH,
+        BATTLE_CONTROLLER_BOARD_NAVIGATION_SMOKE_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle refresh reuse owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, function_name: str) -> str:
+        match = re.search(
+            rf"^(?:static )?func {re.escape(function_name)}\([\s\S]*?(?=^(?:static )?func |\Z)",
+            text,
+            re.MULTILINE,
+        )
+        return match.group(0) if match else ""
+
+    def require_order(block: str, tokens: tuple[str, ...], message: str) -> None:
+        ensure(all(token in block for token in tokens), errors, f"{message} is missing exact ordered tokens")
+        if all(token in block for token in tokens):
+            positions = [block.index(token) for token in tokens]
+            ensure(positions == sorted(positions), errors, f"{message} order drifted")
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    movement_intent_block = function_block(battle_rules_text, "movement_intent_for_destination")
+    movement_intents_block = function_block(battle_rules_text, "legal_movement_intents_for_active_stack")
+    preloaded_destination_block = function_block(battle_rules_text, "_legal_destination_from_preloaded")
+    hex_summary_block = function_block(battle_rules_text, "battle_hex_state_summary")
+    click_intent_block = function_block(battle_rules_text, "active_movement_board_click_intent")
+    for block, owner in (
+        (movement_intent_block, "movement_intent_for_destination"),
+        (movement_intents_block, "legal_movement_intents_for_active_stack"),
+        (click_intent_block, "active_movement_board_click_intent"),
+    ):
+        ensure("preloaded_legal_destinations: Variant = null" in block, errors, f"{owner} must retain its optional invocation-local destination input")
+        ensure("if preloaded_legal_destinations is Array" in block, errors, f"{owner} must fail closed to the direct fallback when no exact Array is supplied")
+    require_order(
+        movement_intents_block,
+        (
+            "var destinations: Array = (",
+            "else legal_destinations_for_active_stack(battle)",
+            "for destination in destinations:",
+            "movement_intent_for_destination(",
+            'int(destination.get("r", -1)),\n\t\t\tdestinations',
+        ),
+        "Battle movement-intent one-enumeration reuse",
+    )
+    for required_token in (
+        "for destination_value in destinations:",
+        "if not (destination_value is Dictionary):",
+        'int(destination.get("q", -1)) == q',
+        'int(destination.get("r", -1)) == r',
+        "return destination",
+        "return {}",
+    ):
+        ensure(required_token in preloaded_destination_block, errors, f"Preloaded legal-destination lookup is missing exact ordered first-match behavior: {required_token}")
+    for forbidden_token in ("sort", "erase", "filter", "duplicate", "_legal_destination_for_stack"):
+        ensure(forbidden_token not in preloaded_destination_block, errors, f"Preloaded legal destinations must not use behavior-changing {forbidden_token}")
+    require_order(
+        hex_summary_block,
+        (
+            "var legal_destinations := legal_destinations_for_active_stack(battle)",
+            "active_movement_board_click_intent(battle, legal_destinations)",
+            '"legal_destinations": legal_destinations',
+            '"legal_movement_intents": legal_movement_intents_for_active_stack(battle, legal_destinations)',
+        ),
+        "Battle hex-state exact destination reuse",
+    )
+    ensure(hex_summary_block.count("legal_destinations_for_active_stack(battle)") == 1, errors, "Battle hex-state summary must enumerate legal destinations exactly once")
+
+    battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    refresh_block = function_block(battle_shell_text, "_refresh")
+    preferred_focus_block = function_block(battle_shell_text, "_preferred_battle_keyboard_focus")
+    position_check_block = function_block(battle_shell_text, "_battle_position_check_cue_surface")
+    for required_token in (
+        "var _last_refresh_intent_forecast: Dictionary = {}",
+        "var _last_refresh_intent_forecast_battle_hash := 0",
+    ):
+        ensure(required_token in battle_shell_text, errors, f"BattleShell refresh reuse is missing invocation-local field: {required_token}")
+    require_order(
+        refresh_block,
+        (
+            "_last_refresh_intent_forecast = {}",
+            "_last_refresh_intent_forecast_battle_hash = 0",
+            "var intent_forecast := BattleRules.intent_forecast_payload(_session)",
+            "_last_refresh_intent_forecast = intent_forecast",
+            "_last_refresh_intent_forecast_battle_hash = hash(_session.battle)",
+            'call_deferred("_configure_battle_keyboard_focus", false)',
+        ),
+        "Battle refresh forecast lifecycle",
+    )
+    require_order(
+        preferred_focus_block,
+        (
+            "var intent_forecast := _last_refresh_intent_forecast",
+            "if intent_forecast.is_empty() or _last_refresh_intent_forecast_battle_hash != hash(_session.battle):",
+            "intent_forecast = BattleRules.intent_forecast_payload(_session)",
+            'var action_id := String(intent_forecast.get("action_id", ""))',
+        ),
+        "Battle preferred-focus cache validation and fresh fallback",
+    )
+    require_order(
+        position_check_block,
+        (
+            "var legal_destinations := BattleRules.legal_destinations_for_active_stack(battle)",
+            "BattleRules.active_movement_board_click_intent(battle, legal_destinations)",
+            "BattleRules.legal_movement_intents_for_active_stack(battle, legal_destinations)",
+        ),
+        "Battle position-check destination reuse",
+    )
+    ensure(position_check_block.count("legal_destinations_for_active_stack(battle)") == 1, errors, "Battle position-check cue must enumerate legal destinations exactly once")
+    ensure("session.battle[\"_last_refresh_intent_forecast\"]" not in battle_shell_text, errors, "Battle forecast reuse must never enter battle/save authority")
+
+    forecast_report_text = BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "var movement_authority_before: Dictionary = player_session.to_dict()",
+        "var legal_destinations: Array = BattleRulesScript.legal_destinations_for_active_stack(player_session.battle)",
+        "legacy_movement_intents.append(BattleRulesScript.movement_intent_for_destination(",
+        "var preloaded_movement_intents: Array = BattleRulesScript.legal_movement_intents_for_active_stack(",
+        "var direct_movement_intents: Array = BattleRulesScript.legal_movement_intents_for_active_stack(player_session.battle)",
+        "direct_movement_click != preloaded_movement_click",
+        'hex_summary.get("legal_movement_intents", []) != legacy_movement_intents',
+        "player_session.to_dict() != movement_authority_before",
+        '"whole_ordered_parity": true',
+    ):
+        ensure(required_token in forecast_report_text, errors, f"Battle intent report is missing exact old-vs-preloaded movement parity: {required_token}")
+    ensure("legacy_movement_intents.sort" not in forecast_report_text, errors, "Battle movement parity control must preserve production destination order")
+
+    controller_text = BATTLE_CONTROLLER_BOARD_NAVIGATION_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    require_order(
+        controller_text,
+        (
+            "var refresh_authority_before: Dictionary = session.to_dict()",
+            'var cached_intent_forecast: Dictionary = shell.get("_last_refresh_intent_forecast")',
+            "var fresh_intent_forecast: Dictionary = BattleRules.intent_forecast_payload(session)",
+            'var cached_preferred_focus: Control = shell.call("_preferred_battle_keyboard_focus")',
+            'shell.set("_last_refresh_intent_forecast_battle_hash", 0)',
+            'var fallback_preferred_focus: Control = shell.call("_preferred_battle_keyboard_focus")',
+            "not is_same(cached_preferred_focus, fallback_preferred_focus)",
+            "session.to_dict() != refresh_authority_before",
+        ),
+        "Battle controller cached/fallback focus parity",
+    )
 
 
 def validate_battle_spell_timing_board(errors: list[str]) -> None:
@@ -71027,6 +71176,7 @@ def main() -> int:
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)
     validate_battle_intent_forecast(errors)
+    validate_battle_refresh_derived_surface_reuse(errors)
     validate_battle_spell_timing_board(errors)
     validate_battle_faction_identity(errors)
     validate_town_faction_progression(errors)

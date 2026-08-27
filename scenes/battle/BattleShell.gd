@@ -155,6 +155,8 @@ var _compact_layout_active := false
 var _compact_system_panel_style := StyleBoxEmpty.new()
 var _wide_system_panel_style: StyleBox = null
 var _action_guide_source_text := ""
+var _last_refresh_intent_forecast: Dictionary = {}
+var _last_refresh_intent_forecast_battle_hash := 0
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -1483,6 +1485,8 @@ func _complete_battle_exit_animation_handoff(route_target: String) -> void:
 func _refresh() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
+	_last_refresh_intent_forecast = {}
+	_last_refresh_intent_forecast_battle_hash = 0
 	_apply_responsive_layout()
 	if _session.battle.is_empty():
 		return
@@ -1638,6 +1642,8 @@ func _refresh() -> void:
 	var position_check := _battle_position_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	var intent_forecast := BattleRules.intent_forecast_payload(_session)
+	_last_refresh_intent_forecast = intent_forecast
+	_last_refresh_intent_forecast_battle_hash = hash(_session.battle)
 	_action_guide.visible = true
 	_set_battle_action_guide(
 		"%s\n%s\n%s" % [
@@ -1858,7 +1864,10 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 func _preferred_battle_keyboard_focus() -> Control:
 	if _briefing_consumption_autosave_failure_pending:
 		return _save_button
-	var action_id := String(BattleRules.intent_forecast_payload(_session).get("action_id", ""))
+	var intent_forecast := _last_refresh_intent_forecast
+	if intent_forecast.is_empty() or _last_refresh_intent_forecast_battle_hash != hash(_session.battle):
+		intent_forecast = BattleRules.intent_forecast_payload(_session)
+	var action_id := String(intent_forecast.get("action_id", ""))
 	match action_id:
 		"advance":
 			return _advance_button
@@ -2297,9 +2306,10 @@ func _battle_position_check_cue_surface() -> Dictionary:
 	var battle := _session.battle
 	var active_stack := BattleRules.get_active_stack(battle)
 	var selected_target := BattleRules.get_selected_target(battle)
+	var legal_destinations := BattleRules.legal_destinations_for_active_stack(battle)
 	var click_intent := BattleRules.selected_target_board_click_intent(battle)
-	var movement_intent := BattleRules.active_movement_board_click_intent(battle)
-	var movement_options := BattleRules.legal_movement_intents_for_active_stack(battle)
+	var movement_intent := BattleRules.active_movement_board_click_intent(battle, legal_destinations)
+	var movement_options := BattleRules.legal_movement_intents_for_active_stack(battle, legal_destinations)
 	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(battle)
 	var active_label := _battle_position_stack_label(active_stack)
 	var target_label := _battle_position_stack_label(selected_target)

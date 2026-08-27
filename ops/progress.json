@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
-    "title": "Large RMG Objective-Anchor Catalog Reuse",
+    "id": "performance-battle-refresh-derived-surface-reuse-10184",
+    "title": "Battle Refresh Derived-Surface Reuse",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T18:52:23Z",
-    "updatedAt": "2026-08-27T20:19:57Z",
-    "completedAt": "2026-08-27T20:19:57Z",
+    "startedAt": "2026-08-27T20:43:00Z",
+    "updatedAt": "2026-08-27T21:07:57Z",
+    "completedAt": "2026-08-27T21:07:57Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed exact invocation-local objective-anchor reuse. On the same natural-fog 108x108 generated save, all 701 ordered legacy catalog rows and session authority are exact while catalog materialization falls 515335->87.9 ms; descriptor materialization falls 532783->86 ms; two-origin projection falls 39216->414 ms; and a real End Turn falls from no completion within 30 minutes to 14372 ms with exact scenario/day/public-event authority. Generated Large 22.8 MB save/overwrite/recovery/schema, cold/warm restore, strategic-AI compatibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The fresh full visual Large gate timed out silently at 600 seconds and supplies no result; packaged Large interaction, native RMG parity expansion, hardware, signing, whole-game, and release-readiness claims remain excluded."
+    "notes": "Completed exact synchronous Battle derived-surface reuse. Independent old-path/preloaded controls preserve five ordered movement intents, click/hex payloads, focus and session authority. Isolated movement intents improve 15.6->6.8 ms, position/hex surfaces about 16.5-16.9->7.0-7.1 ms, and deferred preferred focus 39.7->0.013 ms. The real 28-refresh board profile improves its surface/board bucket 2521.2->2303.5 ms and full span 39.8->36.8 seconds. Deterministic RNG, legality, balance breadth signature 829808c9, input/focus/accessibility, animation, quick resolve, withdrawal, save/reload, core, static/editor, Linux export/startup, and Windows export/fresh-Wine startup are green; packaged Battle interaction, hardware, signing, whole-game, and release-readiness remain excluded."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "No slice is selected. Large RMG invocation-local objective-anchor reuse is completed with exact catalog/scoring/session parity, measured Large End Turn improvement, save/restore validation, compatibility, static/editor, and bounded platform startup evidence.",
+  "currentNotes": "Battle refresh derived-surface reuse is completed with exact parity, measured refresh/focus improvement, full Battle compatibility, and bounded Linux/Windows export/startup evidence. Select the next tracker-approved release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
-  "currentSliceId": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
-  "currentSliceNotes": "Completed: exact invocation-local objective reuse reduces the generated Large 701-row catalog 515335->87.9 ms and real End Turn from >30 minutes to 14372 ms while generated identity, ordered payloads, AI events, saves/restores, compatibility, and bounded platform startup remain authoritative.",
+  "currentSlice": "performance-battle-refresh-derived-surface-reuse-10184",
+  "currentSliceId": "performance-battle-refresh-derived-surface-reuse-10184",
+  "currentSliceNotes": "Completed: exact invocation-local reuse reduces movement intent, position/hex, and deferred focus costs while deterministic results, legality, balance, focus/accessibility, saves, animation, compatibility, and bounded platform startup remain authoritative.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Large RMG Objective-Anchor Catalog Reuse",
-  "currentSliceUpdatedAt": "2026-08-27T20:19:57Z",
+  "currentSliceTitle": "Battle Refresh Derived-Surface Reuse",
+  "currentSliceUpdatedAt": "2026-08-27T21:07:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20641,7 +20641,7 @@
       }
     }
   },
-  "guardrailNote": "Implement only the measured Town full-state cache reuse slice; preserve exact gameplay, input/focus, accessibility, save, route, content, and Native RMG authority.",
+  "guardrailNote": "Select the next tracker-approved bounded implementation slice; preserve completed Battle RNG/results, legality, balance, animation, input/focus/accessibility, save/schema, content, and Native RMG authority.",
   "lastValidation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -20851,10 +20851,38 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Implement only invocation-local exact objective-anchor reuse; preserve generated payloads, AI scoring/order/events, save schema/bytes, and completed Town/runtime behavior.",
-  "notes": "Large RMG objective-anchor catalog reuse is active from direct 523872 ms known-world and 532783 ms descriptor catalog reds; blockers are empty because the repeated generated-scenario copy/rescan owner is source-proven and bounded.",
+  "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
+  "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
-    {
+  {
+    "id": "performance-battle-refresh-derived-surface-reuse-10184",
+    "title": "Battle Refresh Derived-Surface Reuse",
+    "status": "completed",
+    "classification": "implementation_slice",
+    "source": "PLAN.md",
+    "startedAt": "2026-08-27T20:43:00Z",
+    "updatedAt": "2026-08-27T21:07:57Z",
+    "completedAt": "2026-08-27T21:07:57Z",
+    "implementationTargets": [
+      "PLAN.md",
+      "ops/progress.json",
+      "scripts/core/BattleRules.gd",
+      "scenes/battle/BattleShell.gd",
+      "tests/battle_controller_board_navigation_smoke.gd",
+      "tests/battle_intent_forecast_report.gd",
+      "tests/validate_repo.py"
+    ],
+    "purpose": "Eliminate repeated reachable-cell, movement-intent, tactical-forecast, and related derived-surface work inside one unchanged production Battle refresh.",
+    "completionCriteria": "Independent direct/preloaded whole-payload parity passes; production Battle refresh and deferred-focus timings materially improve; deterministic RNG/results, legality, balance breadth, navigation/accessibility, animation, quick resolve, withdrawal, save/resume, compatibility, static/editor, and bounded Linux/Windows startup authority remain green.",
+    "nonGoals": [
+      "No battle rules, RNG, initiative, action/target legality, AI scoring, balance/content, animation timing/cues, focus/accessibility semantics, save/schema, map/generation, or Native RMG behavior change.",
+      "No persistent/global/session/day cache, deferred gameplay mutation, skipped destination/target, heuristic cutoff, packaged Battle interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+    ],
+    "blockedReason": null,
+    "remainingWork": "Completed. Select the next tracker-approved release-readiness slice.",
+    "completionEvidence": "Independent old-path/preloaded whole-payload and focus fallback parity are exact. Isolated movement intents improve 15.6->6.8 ms, position/hex surfaces about 16.5-16.9->7.0-7.1 ms, and preferred focus 39.7->0.013 ms; the real board smoke surface/board bucket improves 2521.2->2303.5 ms and span 39.8->36.8 seconds. Battle behavior, balance, saves, accessibility, animation, core, static/editor, and bounded Linux/Windows startup gates pass."
+  },
+  {
     "id": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
     "title": "Large RMG Objective-Anchor Catalog Reuse",
     "status": "completed",
@@ -105419,7 +105447,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "large_rmg_objective_anchor_catalog_reuse_completed",
+  "result": "battle_refresh_derived_surface_reuse_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

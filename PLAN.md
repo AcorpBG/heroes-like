@@ -26,6 +26,36 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Battle Refresh Derived-Surface Reuse
+
+id: `performance-battle-refresh-derived-surface-reuse-10184`
+
+Status: completed.
+
+Current finding:
+- production Battle refreshes take about 222-480 ms in representative entry, board-navigation, withdrawal, and animation owners even though the corresponding rules action is about 17 ms;
+- the same unchanged refresh recomputes action/spell/consequence/intent surfaces across buttons, readiness cues, tactical rails, and deferred preferred focus. The preferred-focus pass alone repeats the full tactical intent forecast at about 39.7 ms immediately after refresh;
+- legal movement intents average 15.6 ms because each destination re-runs the same reachable-cell materialization, while the base legal-destination computation is about 0.27 ms.
+
+Implementation boundary:
+- materialize legal destinations once per movement-intent/hex-state request and reuse that exact ordered array for every destination intent, preserving direct fresh fallback behavior for all public callers;
+- retain the exact refresh-produced tactical forecast and reuse it only for the deferred preferred-focus selection belonging to that refresh, with fail-closed fresh fallback outside that lifecycle;
+- reuse exact action, spell, and consequence values only within one synchronous Battle refresh where source ordering and state authority are unchanged; do not persist derived surfaces into battle/session/save state.
+
+Completion criteria:
+- independent direct-vs-preloaded controls prove exact legal destination/intents/order, selected-target and board-click payloads, action/spell/consequence/forecast payloads, preferred focus, and whole battle/session/save authority across blocked, movable, melee, ranged, spell, status, enemy-turn, and post-action states;
+- current-HEAD production profiles show materially lower Battle refresh and post-refresh focus latency without worsening rules-action, entry, quick-resolve, withdrawal, animation, or save/resume timings;
+- deterministic RNG/results, action and target legality, active-scenario balance breadth, board navigation/focus/accessibility, animation/event cues, quick resolve, withdrawal, battle save/reload/resume, core, repository/editor, and bounded Linux/Windows startup gates pass.
+
+Completion evidence:
+- exact old-path versus preloaded destination controls preserve all five ordered movement intents, click intent, hex summary, session authority, and fresh fallback behavior; refresh-produced intent forecast and preferred focus also match the fresh fallback exactly;
+- the isolated production fixture reduces movement-intent construction from 15.6 to 6.8 ms, position/hex surfaces from about 16.5-16.9 to 7.0-7.1 ms, and deferred preferred focus from 39.7 to 0.013 ms; the real 28-refresh board smoke reduces the surface/board bucket 2521.2->2303.5 ms and full profiled span 39.8->36.8 seconds;
+- deterministic RNG, quick resolve, withdrawal, animation, battle-entry/resolution autosave and reload authority, controller/accessibility/focus, 24-scenario/77-encounter balance breadth with queue signature `829808c9`, runtime consequence matrices, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green.
+
+Non-goals:
+- no battle damage, RNG draw/order, initiative, action legality, target selection, AI scoring/policy, unit/spell/artifact/content, balance, animation duration/cue identity, input/focus order, accessibility semantics, save schema/version/bytes, map, generation, or Native RMG behavior change;
+- no persistent/global/session/day cache, deferred gameplay mutation, skipped target/destination, heuristic cutoff, packaged Battle interaction claim, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Large RMG Objective-Anchor Catalog Reuse
 
 id: `performance-large-rmg-objective-anchor-catalog-reuse-10184`

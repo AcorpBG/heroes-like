@@ -44,6 +44,48 @@ func _run() -> void:
 		])
 		return
 
+	var movement_authority_before: Dictionary = player_session.to_dict()
+	var legal_destinations: Array = BattleRulesScript.legal_destinations_for_active_stack(player_session.battle)
+	if legal_destinations.is_empty():
+		_fail("Intent forecast movement fixture has no legal destinations.")
+		return
+	var legacy_movement_intents: Array = []
+	for destination_value in legal_destinations:
+		if not (destination_value is Dictionary):
+			continue
+		var destination: Dictionary = destination_value
+		legacy_movement_intents.append(BattleRulesScript.movement_intent_for_destination(
+			player_session.battle,
+			int(destination.get("q", -1)),
+			int(destination.get("r", -1))
+		))
+	var preloaded_movement_intents: Array = BattleRulesScript.legal_movement_intents_for_active_stack(
+		player_session.battle,
+		legal_destinations
+	)
+	var direct_movement_intents: Array = BattleRulesScript.legal_movement_intents_for_active_stack(player_session.battle)
+	var direct_movement_click: Dictionary = BattleRulesScript.active_movement_board_click_intent(player_session.battle)
+	var preloaded_movement_click: Dictionary = BattleRulesScript.active_movement_board_click_intent(
+		player_session.battle,
+		legal_destinations
+	)
+	var hex_summary: Dictionary = BattleRulesScript.battle_hex_state_summary(player_session.battle)
+	if legacy_movement_intents != preloaded_movement_intents \
+			or direct_movement_intents != preloaded_movement_intents \
+			or direct_movement_click != preloaded_movement_click \
+			or hex_summary.get("legal_destinations", []) != legal_destinations \
+			or hex_summary.get("legal_movement_intents", []) != legacy_movement_intents \
+			or player_session.to_dict() != movement_authority_before:
+		_fail("Preloaded legal destinations changed ordered movement intent/click/hex authority: legacy=%s preloaded=%s direct=%s click=%s/%s summary=%s" % [
+			legacy_movement_intents,
+			preloaded_movement_intents,
+			direct_movement_intents,
+			direct_movement_click,
+			preloaded_movement_click,
+			hex_summary,
+		])
+		return
+
 	var damage_spell_session := _damage_spell_session()
 	var damage_spell_before: Dictionary = damage_spell_session.to_dict()
 	var damage_spell_forecast: Dictionary = BattleRulesScript.intent_forecast_payload(damage_spell_session)
@@ -132,6 +174,12 @@ func _run() -> void:
 		"rejected_spell_fallback_action_id": fallback_action_id,
 		"unavailable_spell_fallback_action_id": unavailable_fallback_action_id,
 		"enemy_forecast": enemy_forecast,
+		"movement_reuse": {
+			"destination_count": legal_destinations.size(),
+			"intent_count": preloaded_movement_intents.size(),
+			"whole_ordered_parity": true,
+			"session_authority_exact": true,
+		},
 		"mutation_check": {
 			"active_stack_id": String(player_session.battle.get("active_stack_id", "")),
 			"selected_target_id": String(player_session.battle.get("selected_target_id", "")),
