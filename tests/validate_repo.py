@@ -26648,14 +26648,20 @@ def validate_overworld_fog(errors: list[str]) -> None:
     visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
     ninefold_path = ROOT / "tests" / "ninefold_scenario_smoke.gd"
     generated_live_path = ROOT / "tests" / "random_map_live_overworld_render_move_report.gd"
-    unexplored_shroud_texture_path = ROOT / "art" / "overworld" / "runtime" / "fog" / "unexplored_cartographic_veil.png"
+    legacy_unexplored_shroud_texture_path = ROOT / "art" / "overworld" / "runtime" / "fog" / "unexplored_cartographic_veil.png"
+    unexplored_shroud_texture_path = ROOT / "art" / "overworld" / "runtime" / "fog" / "unexplored_cartographic_veil_rich.png"
     ensure(map_view_path.exists(), errors, "Missing OverworldMapView.gd fog-shroud renderer")
     ensure(visual_smoke_path.exists(), errors, "Missing Overworld visual fog-shroud owner")
     ensure(ninefold_path.exists(), errors, "Missing Ninefold soft fog-frontier owner")
     ensure(generated_live_path.exists(), errors, "Missing generated natural-fog frontier owner")
-    ensure(unexplored_shroud_texture_path.exists(), errors, "Missing original Overworld unexplored cartographic veil texture")
+    ensure(legacy_unexplored_shroud_texture_path.exists(), errors, "Missing preserved legacy Overworld unexplored cartographic veil texture")
+    ensure(unexplored_shroud_texture_path.exists(), errors, "Missing rich Overworld unexplored cartographic veil texture")
     if unexplored_shroud_texture_path.exists():
-        ensure(png_size(unexplored_shroud_texture_path) == (1024, 1024), errors, "Overworld unexplored cartographic veil must remain an exact 1024x1024 PNG")
+        rich_asset_bytes = unexplored_shroud_texture_path.read_bytes()
+        ensure(png_size(unexplored_shroud_texture_path) == (1024, 1024), errors, "Rich Overworld unexplored cartographic veil must remain an exact 1024x1024 PNG")
+        ensure(len(rich_asset_bytes) > 25 and rich_asset_bytes[:8] == b"\x89PNG\r\n\x1a\n" and rich_asset_bytes[25] == 2, errors, "Rich Overworld unexplored cartographic veil must remain an opaque RGB PNG")
+        if legacy_unexplored_shroud_texture_path.exists():
+            ensure(rich_asset_bytes != legacy_unexplored_shroud_texture_path.read_bytes(), errors, "Rich Overworld unexplored veil must remain byte-distinct from the preserved near-black source")
     if not all(path.exists() for path in (map_view_path, visual_smoke_path, ninefold_path, generated_live_path)):
         return
     map_view_text = map_view_path.read_text(encoding="utf-8")
@@ -26680,7 +26686,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
         'const UNEXPLORED_SHROUD_MODEL := "continuous_identity_silent_textured_cartographic_veil"',
         "const UNEXPLORED_SHROUD_BASE",
         "const UNEXPLORED_SHROUD_LAYER_COUNT := 2",
-        'const UNEXPLORED_SHROUD_TEXTURE_PATH := "res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"',
+        'const UNEXPLORED_SHROUD_TEXTURE_PATH := "res://art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png"',
         "const UNEXPLORED_SHROUD_TEXTURE_SIZE := Vector2i(1024, 1024)",
         "const UNEXPLORED_SHROUD_TEXTURE_MODULATE := Color(0.80, 0.88, 0.82, 0.80)",
     ):
@@ -26743,7 +26749,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
         'String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "none_contiguous"',
         'bool(unexplored_terrain.get("unexplored_shroud_repeated_stamps", true))',
         'not bool(unexplored_terrain.get("unexplored_shroud_texture_loaded", false))',
-        'String(unexplored_terrain.get("unexplored_shroud_texture_path", "")) != "res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"',
+        'String(unexplored_terrain.get("unexplored_shroud_texture_path", "")) != "res://art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png"',
         'unexplored_terrain.get("unexplored_shroud_texture_size", {}) != {"x": 1024, "y": 1024}',
         'String(unexplored_terrain.get("unexplored_shroud_texture_mapping", "")) != "whole_board_normalized_once_clipped_by_hidden_cells"',
         'bool(unexplored_terrain.get("unexplored_shroud_texture_terrain_identity_sampled", true))',
@@ -26934,7 +26940,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
         'int(summary.get("invalid_direction_count", -1)) != 0',
         '["inward_gradient_irregular_cartographic_contour"]',
         '["continuous_identity_silent_textured_cartographic_veil"]',
-        '["res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"]',
+        '["res://art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png"]',
         '["whole_board_normalized_once_clipped_by_hidden_cells"]',
     ):
         ensure(required_token in generated_frontier_assert_block, errors, f"Generated natural-fog assertion must fail closed on continuity or hidden-identity drift: {required_token}")

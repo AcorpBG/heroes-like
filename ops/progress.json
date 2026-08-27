@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from fresh inspected game pixels."
+    "Implement and validate the selected Overworld rich cartographic shroud slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "Outcome status ambient drift is complete from inspected victory/defeat captures, focused deterministic/accessibility runtime, compatibility, static/editor, and bounded platform export/startup gates; select the next graphical-polish slice.",
+  "currentNotes": "The rich Overworld shroud slice is complete. Select the next graphical-polish slice from direct rendered evidence while preserving gameplay, input, session/save authority, and Native RMG behavior.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-outcome-status-ambient-drift-10184",
-  "currentSliceId": "presentation-outcome-status-ambient-drift-10184",
-  "currentSliceNotes": "Completed deterministic victory golden drift and defeat cold ash/ember ambience behind every unchanged Outcome content surface.",
+  "currentSlice": "presentation-overworld-rich-cartographic-shroud-10184",
+  "currentSliceId": "presentation-overworld-rich-cartographic-shroud-10184",
+  "currentSliceNotes": "Completed rich identity-silent Overworld fog art with exact authored/generated runtime, compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Outcome Status Ambient Drift",
-  "currentSliceUpdatedAt": "2026-08-27T04:07:32Z",
+  "currentSliceTitle": "Overworld Rich Cartographic Shroud",
+  "currentSliceUpdatedAt": "2026-08-27T04:28:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104738,6 +104738,33 @@
       "blockedReason": null,
       "notes": "Completed deterministic status-specific Outcome ambience. Fresh 1280/1920 victory and defeat captures preserve the dominant panoramas and readable content while showing restrained golden drift or cold ash/ember motion. Focused runtime proves exact profile identity/count/containment, normal motion, Reduced Motion static composition, High Contrast hiding, unmapped fallback, draw order, detached summaries, and unchanged session authority. Outcome normal-focus, safe-cancel, autosave-recovery, shared keyboard-focus, accessibility, core, validate_repo, pycompile, editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-27T04:07:32Z"
+    },
+    {
+      "id": "presentation-overworld-rich-cartographic-shroud-10184",
+      "title": "Overworld Rich Cartographic Shroud",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T04:28:47Z",
+      "startedAt": "2026-08-27T04:12:28Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the technically textured but visually near-black unexplored Overworld void with richer identity-silent cartographic fog art on the existing exact renderer boundary.",
+      "completionCriteria": "Inspected authored/generated 1280/1920 natural-fog captures show a richly dark shroud without identity leakage or repeated stamps; focused runtime proves opaque 1024 art, normalized hidden-only sampling, and unchanged authority; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No fog state/radius/exploration, frontier geometry, terrain/road/object/hero/town/route/selection rendering, camera, movement, interaction, content, rules, AI, save/schema, generated placement, or Native RMG change.",
+        "No animation, shader, random/wall-clock source, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed one opaque 1024x1024 identity-silent rich cartographic veil. Fresh 1280x720 and 1920x1080 authored captures show the dark-teal smoky field and restrained gold survey traces without terrain identity leakage. Focused Overworld visual and generated live-movement reports prove exact normalized hidden-only sampling, soft frontier behavior, movement, save, and session authority. Movement/input ownership, active keyboard focus, accessibility, core, validate_repo, pycompile, editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-27T04:28:47Z"
     }
   ],
   "project": "heroes-like",

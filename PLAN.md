@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next bounded graphical-polish slice from fresh inspected game pixels.
+- Selected implementation slice: none; select the next tracker-approved graphical-polish slice from direct rendered evidence.
+
+## Overworld Rich Cartographic Shroud
+
+id: `presentation-overworld-rich-cartographic-shroud-10184`
+
+Status: completed.
+
+Result:
+- the unexplored Overworld now uses one opaque 1024x1024 rich dark-teal cartographic veil with broad smoky structure and restrained antique-gold survey traces, replacing the near-black void without revealing terrain identity;
+- authored 1280x720 and 1920x1080 captures show the normalized shroud as an intentional scenic surface, while focused authored/generated runtime proves exact hidden-only sampling, soft frontier behavior, movement, save, and session authority;
+- Overworld movement/input/focus/accessibility/core compatibility, repository validation, editor parsing, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 play-surface captures show the existing unexplored veil correctly hiding terrain identity, but its near-black source collapses to an empty rectangular void at gameplay scale;
+- the current renderer already owns one normalized whole-board texture pass and a softened explored frontier, so replacing only the veil source with richer identity-silent cartography directly improves the shipped play surface without changing fog logic.
+
+Implementation boundary:
+- adopt one new opaque 1024x1024 dark teal cartographic veil with readable broad smoky structure, restrained antique-gold survey traces, and no map-specific identity;
+- retain the exact whole-board normalized single sampling, opaque hidden base, two-layer shroud, soft frontier contour, and all explored/unexplored presentation order;
+- preserve the previous source as history and change only the runtime veil path plus exact visual contracts.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 authored and generated natural-fog captures show a richly dark intentional shroud rather than a black void, with no terrain/object/road/route identity leakage or repeated tile motifs;
+- focused runtime proves the new original asset is opaque 1024x1024, byte-distinct, sampled once in normalized board space, hidden-only, and leaves fog/session/save/movement authority exact;
+- Overworld visual/generated movement/route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no fog-of-war state, visibility radius, exploration/scouting, frontier geometry, tile/terrain/road/object/hero/town/route/selection rendering, map camera, movement, interaction, content, rules, AI, save/schema, generated placement, or Native RMG change;
+- no animation, shader, random/wall-clock source, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Outcome Status Ambient Drift
 
