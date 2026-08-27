@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "The organic fog-frontier slice is complete; select the next bounded graphical-polish slice from direct current captures.",
+  "currentNotes": "The natural shoreline slice is complete; continue graphical polish from fresh direct rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-organic-fog-frontier-10184",
-  "currentSliceId": "presentation-overworld-organic-fog-frontier-10184",
-  "currentSliceNotes": "Completed a tuned nine-point boundary cap and eight-segment explored-side feather; inspected captures and focused/generated/compatibility/platform gates pass while hidden identity and gameplay authority remain unchanged.",
+  "currentSlice": "presentation-overworld-natural-shoreline-blend-10184",
+  "currentSliceId": "presentation-overworld-natural-shoreline-blend-10184",
+  "currentSliceNotes": "Completed a shared-boundary nine-sample shoreline blend and suppressed generic diagonal water corner hints; inspected captures and focused/generated/compatibility/platform gates pass with terrain and gameplay authority unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Organic Fog Frontier",
-  "currentSliceUpdatedAt": "2026-08-27T06:03:42Z",
+  "currentSliceTitle": "Overworld Natural Shoreline Blend",
+  "currentSliceUpdatedAt": "2026-08-27T06:32:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104847,6 +104847,33 @@
       "blockedReason": null,
       "notes": "Completed a deterministic explored-side fog frontier using a 0.54-alpha boundary cap plus eight contiguous two-stop feather segments along a nine-point 0.05-0.14 inset contour with 0.32 depth and no hidden-side intrusion. The first 0.72/0.20 high-contrast pass was rejected from rendered pixels for black teeth; the retained lower-contrast tuning visibly softens the River Pass stair-step silhouette at 1280x720 and 1920x1080 without obscuring roads, objects, shoreline, or revealed terrain. Ninefold proves all cardinal/corner/interior cases, exact normalized geometry, deterministic repetition, hidden identity silence, and session authority. Generated natural-fog movement proves 12 to 14 active frontier tiles, zero invalid directions, and exact hidden shroud authority before/after movement. Broad Overworld visual, route, input, focus, accessibility, core, validate_repo, pycompile, editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Fog discovery/visibility, terrain identity, gameplay, save schema, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
       "completedAt": "2026-08-27T06:03:42Z"
+    },
+    {
+      "id": "presentation-overworld-natural-shoreline-blend-10184",
+      "title": "Overworld Natural Shoreline Blend",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T06:32:51Z",
+      "startedAt": "2026-08-27T06:07:19Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the captured rigid grey triangular water-edge wedges with a denser, shallower deterministic natural shoreline blend without changing terrain or gameplay authority.",
+      "completionCriteria": "Inspected River Pass 1280/1920 captures show natural contained banks without triangular wedges or lost clarity; focused authored/generated runtime proves exact contained geometry, deterministic layering, terrain/passability/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No terrain id, topology, water placement, movement/passability, road/causeway, fog, generation, object/hero/town rendering, interaction, camera, session/save/schema, gameplay, AI, battle, balance, content, or Native RMG change.",
+        "No shader, animation, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed from direct 1280x720 and 1920x1080 rendered evidence. Cardinal water transition art and all bank/shallow/wet/foam layers now use a bounded nine-sample shared-boundary lattice with 11-point filled bands, three broken foam segments, shallower depth factors, and restrained alpha. Generic diagonal water corner hints are suppressed, removing the large captured grey triangular wedges while retaining non-water corners. Authored Overworld visual, Ninefold, generated 36x36 reveal-all movement/save, input ownership, full route movement, active-play focus, accessibility, core, validate_repo, pycompile, exact/generic editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain identity/passability, roads, fog, movement, session/save, gameplay, generation, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
+      "completedAt": "2026-08-27T06:32:51Z"
     }
   ],
   "project": "heroes-like",

@@ -12422,6 +12422,31 @@ Completion evidence:
 - full Overworld visual, small-map scale, generated-map render/move, faction-hero, enemy-commander, and core runtime owners exited naturally with no selected diagnostics; repository validation, Python compilation, diff checks, exact/generic editor parses, and official Linux/Windows export-startup smokes are green;
 - platform evidence is bounded to Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup; packaged Overworld interaction and hardware/accessibility certification remain unclaimed.
 
+## Overworld Natural Shoreline Blend
+
+id: `presentation-overworld-natural-shoreline-blend-10184`
+
+Status: completed.
+
+Completion result:
+- water transition art, bank, shallows, wet edge, and broken foam now follow one nine-sample shared-boundary lattice, eliminating independent per-tile depth jumps while keeping every layer shallow and contained;
+- generic diagonal water corner hints are suppressed, removing the captured grey triangular wedges without affecting non-water terrain corners or cardinal shoreline ownership;
+- inspected 1280x720 and 1920x1080 captures, authored/nine-biome/generated shoreline owners, movement/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green.
+
+Implementation boundary:
+- replace the visibly rigid grey triangular wedges around cardinal water boundaries with a denser, shallower deterministic shoreline contour that blends authored water-edge texture, bank, shallows, wet edge, and broken foam into the receiving land tile;
+- preserve exact water/land terrain identity, passability, road causeway ownership, transition source order, deterministic tile/direction seeding, draw order, and presentation-only authority;
+- tune from fresh River Pass 1280x720 and 1920x1080 captures so the lake reads as an irregular natural bank rather than a clipped tile rectangle.
+
+Completion criteria:
+- inspected River Pass captures show no large triangular edge wedges, continuous grey rim, full-tile fill, or lost water/road/object/fog clarity;
+- focused shoreline runtime proves exact denser contained geometry in every cardinal direction, restrained layered alphas, deterministic repetition, broken foam, and unchanged terrain/passability/session/save authority;
+- authored/generated Overworld movement, visual, focus/accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain id, map topology, water placement, movement cost, passability, road/causeway, fog, map generation, object/hero/town rendering, interaction, camera, session/save/schema, gameplay, AI, battle, balance, content, or Native-RMG change;
+- no shader, animation, packaged Overworld interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
