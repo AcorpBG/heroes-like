@@ -517,7 +517,9 @@ static func artifact_target_valuation_breakdown(
 	node: Variant,
 	origin_pos: Vector2i,
 	faction_id: String = "",
-	known_goal_distance: int = -1
+	known_goal_distance: int = -1,
+	preloaded_base_value: Variant = null,
+	preloaded_objective_value: Variant = null
 ) -> Dictionary:
 	if not (node is Dictionary) or bool(node.get("collected", false)):
 		return {}
@@ -557,13 +559,13 @@ static func artifact_target_valuation_breakdown(
 		and (resolved_faction_id in faction_affinity or resolved_faction_id in preferred_factions)
 	)
 	var set_id := _artifact_set_id_from_record(artifact)
-	var base_value := _artifact_target_priority(session, node)
+	var base_value: int = int(preloaded_base_value) if preloaded_base_value is int else _artifact_target_priority(session, node)
 	var taxonomy_value := _artifact_taxonomy_signal_value(artifact, role_buckets)
 	var runtime_value := _artifact_runtime_signal_value(artifact, runtime_surfaces)
 	var source_value: int = min(45, source_contexts.size() * 10 + source_context_tags.size() * 4)
 	var affinity_value: int = 32 if faction_match else 0
 	var set_context_value: int = 18 if set_id != "" else 0
-	var objective_value: int = _objective_proximity_bonus(session, target_tile.x, target_tile.y)
+	var objective_value: int = int(preloaded_objective_value) if preloaded_objective_value is int else _objective_proximity_bonus(session, target_tile.x, target_tile.y)
 	var faction_bias: int = priority_target_bonus(config, placement_id)
 	var travel_cost: int = max(0, goal_distance - 1) * 3
 	var assignment_penalty: int = _assignment_penalty(session, "artifact", placement_id)
@@ -3863,6 +3865,8 @@ static func _enemy_visible_target_catalog(
 	var catalog := []
 	if session == null or faction_id == "":
 		return catalog
+	var objective_anchor_surface := _objective_anchor_surface(session)
+	var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", []) if objective_anchor_surface.get("tiles", []) is Array else []
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -3902,7 +3906,7 @@ static func _enemy_visible_target_catalog(
 			"target_id": String(node.get("placement_id", "")),
 			"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
 			"target_tile": Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
-			"priority": _artifact_target_priority(session, node),
+			"priority": _artifact_target_priority(session, node, objective_anchor_tiles),
 		})
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
@@ -3918,7 +3922,7 @@ static func _enemy_visible_target_catalog(
 			"target_id": String(encounter.get("placement_id", "")),
 			"target_label": _encounter_target_label(session, encounter, "Frontier Camp"),
 			"target_tile": Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
-			"priority": _encounter_target_priority(session, encounter),
+			"priority": _encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface),
 		})
 	return catalog
 
@@ -9360,6 +9364,7 @@ static func _ai_hero_task_planner_candidates_from_origins(
 		"",
 		String(config.get("faction_id", ""))
 	)
+	var objective_anchor_surface := _objective_anchor_surface(session)
 	for origin_value in origins:
 		if not (origin_value is Dictionary):
 			continue
@@ -9370,7 +9375,8 @@ static func _ai_hero_task_planner_candidates_from_origins(
 			config,
 			origin_pos,
 			descriptors,
-			path_context
+			path_context,
+			objective_anchor_surface
 		)
 		profile["projection_count"] = int(profile.get("projection_count", 0)) + 1
 		profile["projected_candidate_count"] = int(profile.get("projected_candidate_count", 0)) + origin_candidates.size()
@@ -9424,6 +9430,9 @@ static func _ai_hero_task_planner_origins(
 ) -> Array:
 	var origins := []
 	var seen_tiles := {}
+	var objective_anchor_surface := _objective_anchor_surface(session)
+	var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", []) if objective_anchor_surface.get("tiles", []) is Array else []
+	var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", []) if objective_anchor_surface.get("town_placement_ids", []) is Array else []
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -9432,13 +9441,15 @@ static func _ai_hero_task_planner_origins(
 			continue
 		var x := int(town.get("x", 0))
 		var y := int(town.get("y", 0))
+		var objective_anchor := String(town.get("placement_id", "")) in objective_town_ids
+		var objective_proximity_bonus := _objective_proximity_bonus_from_tiles(objective_anchor_tiles, x, y)
 		seen_tiles["%d:%d" % [x, y]] = true
 		origins.append({
 			"kind": "town",
 			"placement_id": String(town.get("placement_id", "")),
 			"x": x,
 			"y": y,
-			"priority": _town_strategic_priority_bonus(session, town, faction_id, _town_is_objective_anchor(session, String(town.get("placement_id", "")))),
+			"priority": _town_strategic_priority_bonus(session, town, faction_id, objective_anchor, objective_proximity_bonus),
 		})
 	var spawn_points: Variant = config.get("spawn_points", [])
 	if spawn_points is Array:
@@ -9935,18 +9946,21 @@ static func _target_candidate_descriptors(
 	var descriptors := []
 	var faction_id = String(config.get("faction_id", ""))
 	var scenario = ContentService.get_scenario(session.scenario_id)
+	var objective_anchor_surface := _objective_anchor_surface(session, scenario)
+	var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", []) if objective_anchor_surface.get("tiles", []) is Array else []
+	var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", []) if objective_anchor_surface.get("town_placement_ids", []) is Array else []
 	var siege_target_id = String(config.get("siege_target_placement_id", ""))
 	if siege_target_id != "":
-		_append_town_target_descriptor(session, descriptors, seen, siege_target_id, 320, config, faction_id, include_unscouted)
+		_append_town_target_descriptor(session, descriptors, seen, siege_target_id, 320, config, faction_id, include_unscouted, objective_anchor_surface)
 
 	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 260, config, faction_id, include_unscouted)
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 260, config, faction_id, include_unscouted, objective_anchor_surface)
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 220, config, faction_id, include_unscouted)
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 220, config, faction_id, include_unscouted, objective_anchor_surface)
 
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
@@ -9954,11 +9968,11 @@ static func _target_candidate_descriptors(
 		if String(town.get("owner", "neutral")) != "player":
 			continue
 		var base_priority = 180
-		if _town_started_enemy(session, String(town.get("placement_id", ""))):
+		if _town_started_enemy_in_scenario(scenario, String(town.get("placement_id", ""))):
 			base_priority += 50
-		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
+		if String(town.get("placement_id", "")) in objective_town_ids:
 			base_priority += 20
-		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted)
+		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted, objective_anchor_surface)
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
 			continue
@@ -9967,9 +9981,9 @@ static func _target_candidate_descriptors(
 		var base_priority = 145
 		if _town_garrison_strength(town) > 0:
 			base_priority += 25
-		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
+		if String(town.get("placement_id", "")) in objective_town_ids:
 			base_priority += 45
-		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted)
+		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted, objective_anchor_surface)
 
 	for node in session.overworld.get("resource_nodes", []):
 		_append_resource_target_descriptor(
@@ -9988,7 +10002,7 @@ static func _target_candidate_descriptors(
 			descriptors,
 			seen,
 			node,
-			_artifact_target_priority(session, node),
+			_artifact_target_priority(session, node, objective_anchor_tiles),
 			config,
 			faction_id,
 			include_unscouted
@@ -10000,10 +10014,11 @@ static func _target_candidate_descriptors(
 			descriptors,
 			seen,
 			encounter,
-			_encounter_target_priority(session, encounter),
+			_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface),
 			config,
 			faction_id,
-			include_unscouted
+			include_unscouted,
+			objective_anchor_surface
 		)
 
 	_append_delivery_interception_target_descriptors(session, descriptors, seen, config, faction_id)
@@ -10016,10 +10031,17 @@ static func _target_candidates_from_descriptors(
 	config: Dictionary,
 	origin_pos: Vector2i,
 	descriptors: Array,
-	preloaded_path_context: Dictionary = {}
+	preloaded_path_context: Dictionary = {},
+	preloaded_objective_anchor_surface: Variant = null
 ) -> Array:
 	var candidates := []
 	var faction_id := String(config.get("faction_id", ""))
+	var objective_anchor_surface: Dictionary = (
+		preloaded_objective_anchor_surface
+		if preloaded_objective_anchor_surface is Dictionary
+		else _objective_anchor_surface(session)
+	)
+	var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", []) if objective_anchor_surface.get("tiles", []) is Array else []
 	var path_context := preloaded_path_context
 	if path_context.is_empty():
 		path_context = _path_distance_surface_context(session, "", faction_id)
@@ -10029,11 +10051,11 @@ static func _target_candidates_from_descriptors(
 		var descriptor: Dictionary = descriptor_value
 		match String(descriptor.get("family", "")):
 			"town":
-				_project_town_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
+				_project_town_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)
 			"resource":
-				_project_resource_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
+				_project_resource_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)
 			"artifact":
-				_project_artifact_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
+				_project_artifact_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)
 			"encounter":
 				_project_encounter_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
 			"delivery":
@@ -10051,7 +10073,8 @@ static func _append_town_target_descriptor(
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	preloaded_objective_anchor_surface: Variant = null
 ) -> void:
 	var seen_key = "town:%s" % placement_id
 	if placement_id == "" or seen.has(seen_key):
@@ -10064,8 +10087,12 @@ static func _append_town_target_descriptor(
 	var neutral_expansion := owner == "neutral"
 	if owner != "player" and not neutral_expansion:
 		return
-	var objective_anchor := _town_is_objective_anchor(session, placement_id)
-	var force_known := priority_target_bonus(config, placement_id) > 0 or objective_anchor
+	var objective_anchor: bool = (
+		placement_id in preloaded_objective_anchor_surface.get("town_placement_ids", [])
+		if preloaded_objective_anchor_surface is Dictionary
+		else _town_is_objective_anchor(session, placement_id)
+	)
+	var force_known: bool = priority_target_bonus(config, placement_id) > 0 or objective_anchor
 	if neutral_expansion and not include_unscouted and not _enemy_nonhero_target_known(
 		session,
 		config,
@@ -10096,7 +10123,8 @@ static func _project_town_target_descriptor(
 	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String,
-	path_context: Dictionary
+	path_context: Dictionary,
+	preloaded_objective_anchor_tiles: Variant = null
 ) -> void:
 	var town: Dictionary = descriptor.get("town", {}) if descriptor.get("town", {}) is Dictionary else {}
 	var placement_id := String(descriptor.get("placement_id", ""))
@@ -10108,7 +10136,12 @@ static func _project_town_target_descriptor(
 	var goal_distance = _path_distance_with_context(path_context, origin_pos, staging_tiles)
 	if goal_distance >= 9999:
 		return
-	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
+	var objective_proximity_bonus: int = (
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(town.get("x", 0)), int(town.get("y", 0)))
+		if preloaded_objective_anchor_tiles is Array
+		else _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)))
+	)
+	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor, objective_proximity_bonus)
 	var reason_codes := ["town_expansion", "neutral_town_claim"] if neutral_expansion else ["town_siege"]
 	if neutral_expansion and _town_garrison_strength(town) > 0:
 		reason_codes.append("neutral_town_siege")
@@ -10207,7 +10240,8 @@ static func _project_resource_target_descriptor(
 	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String,
-	path_context: Dictionary
+	path_context: Dictionary,
+	preloaded_objective_anchor_tiles: Variant = null
 ) -> void:
 	var node: Dictionary = descriptor.get("node", {}) if descriptor.get("node", {}) is Dictionary else {}
 	var site: Dictionary = descriptor.get("site", {}) if descriptor.get("site", {}) is Dictionary else {}
@@ -10224,7 +10258,12 @@ static func _project_resource_target_descriptor(
 	var anchor_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 	var anchor_distance := _path_distance_with_context(path_context, origin_pos, [anchor_tile])
 	var score_distance: int = anchor_distance if anchor_distance < 9999 else goal_distance
-	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id, score_distance)
+	var objective_proximity_bonus: int = (
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)))
+		if preloaded_objective_anchor_tiles is Array
+		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+	)
+	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id, score_distance, objective_proximity_bonus)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id)
 	var priority := int(breakdown.get("final_priority", 0)) + scouting_bonus
 	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
@@ -10296,7 +10335,8 @@ static func _project_artifact_target_descriptor(
 	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String,
-	path_context: Dictionary
+	path_context: Dictionary,
+	preloaded_objective_anchor_tiles: Variant = null
 ) -> void:
 	var node: Dictionary = descriptor.get("node", {}) if descriptor.get("node", {}) is Dictionary else {}
 	var placement_id := String(descriptor.get("placement_id", ""))
@@ -10310,7 +10350,21 @@ static func _project_artifact_target_descriptor(
 		var guard_distance := _path_distance_with_context(path_context, origin_pos, _encounter_staging_tiles(session, guard))
 		if guard_distance >= 9999:
 			return
-	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id, goal_distance)
+	var objective_proximity_bonus: int = (
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)))
+		if preloaded_objective_anchor_tiles is Array
+		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+	)
+	var breakdown := artifact_target_valuation_breakdown(
+		session,
+		config,
+		node,
+		origin_pos,
+		faction_id,
+		goal_distance,
+		priority,
+		objective_proximity_bonus
+	)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "artifact", placement_id)
 	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
 	if scouting_bonus > 0 and "enemy_scouting" not in reason_codes:
@@ -10351,7 +10405,8 @@ static func _append_encounter_target_descriptor(
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	preloaded_objective_anchor_surface: Variant = null
 ) -> void:
 	if not (encounter is Dictionary):
 		return
@@ -10365,7 +10420,11 @@ static func _append_encounter_target_descriptor(
 	if placement_id == "" or seen.has(seen_key):
 		return
 	var priority_bonus := priority_target_bonus(config, placement_id)
-	var objective_anchor = _encounter_is_objective_anchor(session, encounter)
+	var objective_anchor: bool = (
+		_encounter_is_objective_anchor_from_surface(encounter, preloaded_objective_anchor_surface)
+		if preloaded_objective_anchor_surface is Dictionary
+		else _encounter_is_objective_anchor(session, encounter)
+	)
 	if not include_unscouted and not _enemy_nonhero_target_known(
 		session,
 		config,
@@ -10413,7 +10472,15 @@ static func _project_encounter_target_descriptor(
 			goal_tile = encounter_tile
 	if goal_distance >= 9999:
 		return
-	var object_breakdown := neutral_encounter_object_valuation_breakdown(session, config, encounter, origin_pos, faction_id)
+	var object_breakdown := neutral_encounter_object_valuation_breakdown(
+		session,
+		config,
+		encounter,
+		origin_pos,
+		faction_id,
+		priority,
+		objective_anchor
+	)
 	var reason_codes: Array = _normalize_string_array(object_breakdown.get("reason_codes", []))
 	if reason_codes.is_empty():
 		reason_codes = _default_reason_codes_for_target("encounter", placement_id, {"objective_anchor": objective_anchor})
@@ -11007,7 +11074,9 @@ static func neutral_encounter_object_valuation_breakdown(
 	config: Dictionary,
 	encounter: Variant,
 	origin_pos: Vector2i,
-	faction_id: String = ""
+	faction_id: String = "",
+	preloaded_baseline_priority: Variant = null,
+	preloaded_objective_anchor: Variant = null
 ) -> Dictionary:
 	if not (encounter is Dictionary):
 		return {}
@@ -11039,8 +11108,8 @@ static func neutral_encounter_object_valuation_breakdown(
 	var target_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 	var staging_tiles := _encounter_staging_tiles(session, encounter)
 	var goal_distance := _path_distance(session, origin_pos, staging_tiles, "", resolved_faction_id)
-	var objective_anchor := _encounter_is_objective_anchor(session, encounter)
-	var baseline_priority := _encounter_target_priority(session, encounter)
+	var objective_anchor: bool = bool(preloaded_objective_anchor) if preloaded_objective_anchor is bool else _encounter_is_objective_anchor(session, encounter)
+	var baseline_priority: int = int(preloaded_baseline_priority) if preloaded_baseline_priority is int else _encounter_target_priority(session, encounter)
 	var route_pressure_value := 0
 	var guard_target_value := 0
 	var clearance_value := 0
@@ -11855,7 +11924,8 @@ static func resource_target_score_breakdown(
 	node: Variant,
 	origin_pos: Vector2i,
 	faction_id: String = "",
-	known_goal_distance: int = -1
+	known_goal_distance: int = -1,
+	preloaded_objective_value: Variant = null
 ) -> Dictionary:
 	if not (node is Dictionary):
 		return {}
@@ -11916,7 +11986,7 @@ static func resource_target_score_breakdown(
 		route_pressure_value = _resource_route_pressure_value(site)
 		town_enablement_value = _linked_player_town_bonus(session, node)
 		resource_affinity_value = _resource_affinity_value(claim_value, income_value, weighted_claim_value, weighted_income_value)
-		objective_value = _objective_proximity_bonus(session, target_tile.x, target_tile.y)
+		objective_value = int(preloaded_objective_value) if preloaded_objective_value is int else _objective_proximity_bonus(session, target_tile.x, target_tile.y)
 		var target_weight := strategy_target_weight(config, resolved_faction_id, "resource", placement_id, site_family, false)
 		faction_bias = priority_target_bonus(config, placement_id) + int(round(max(0.0, target_weight - 1.0) * 50.0))
 		travel_cost = max(0, goal_distance - 1) * 3
@@ -12032,9 +12102,10 @@ static func _town_strategic_priority_bonus(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	faction_id: String,
-	objective_anchor: bool = false
+	objective_anchor: bool = false,
+	preloaded_objective_proximity_bonus: Variant = null
 ) -> int:
-	var bonus = _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)))
+	var bonus: int = int(preloaded_objective_proximity_bonus) if preloaded_objective_proximity_bonus is int else _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)))
 	match OverworldRulesScript.town_strategic_role(town):
 		"capital":
 			bonus += 80
@@ -16324,7 +16395,11 @@ static func _linked_player_town_bonus(session: SessionStateStoreScript.SessionDa
 		bonus += 22
 	return bonus
 
-static func _artifact_target_priority(session: SessionStateStoreScript.SessionData, node: Variant) -> int:
+static func _artifact_target_priority(
+	session: SessionStateStoreScript.SessionData,
+	node: Variant,
+	preloaded_objective_anchor_tiles: Variant = null
+) -> int:
 	if not (node is Dictionary) or bool(node.get("collected", false)):
 		return 0
 	var artifact = ContentService.get_artifact(String(node.get("artifact_id", "")))
@@ -16336,7 +16411,11 @@ static func _artifact_target_priority(session: SessionStateStoreScript.SessionDa
 	priority += max(0, int(bonuses.get("battle_defense", 0))) * 15
 	priority += max(0, int(bonuses.get("battle_initiative", 0))) * 16
 	priority += int(min(50, _target_resource_value(bonuses.get("daily_income", {})) / 80))
-	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+	priority += (
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(node.get("x", 0)), int(node.get("y", 0)))
+		if preloaded_objective_anchor_tiles is Array
+		else _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
+	)
 	return priority
 
 static func _public_artifact_target_payload(target: Dictionary) -> Dictionary:
@@ -16551,16 +16630,29 @@ static func _artifact_public_importance(reason_codes: Array, final_priority: int
 		return "medium"
 	return "low"
 
-static func _encounter_target_priority(session: SessionStateStoreScript.SessionData, encounter: Variant) -> int:
+static func _encounter_target_priority(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Variant,
+	preloaded_objective_anchor_tiles: Variant = null,
+	preloaded_objective_anchor_surface: Variant = null
+) -> int:
 	if not (encounter is Dictionary):
 		return 0
 	if String(encounter.get("spawned_by_faction_id", "")) != "" or OverworldRulesScript.is_encounter_resolved(session, encounter):
 		return 0
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var priority = 95 + int(min(80, _target_resource_value(encounter_template.get("rewards", {})) / 130))
-	if _encounter_is_objective_anchor(session, encounter):
+	if (
+		_encounter_is_objective_anchor_from_surface(encounter, preloaded_objective_anchor_surface)
+		if preloaded_objective_anchor_surface is Dictionary
+		else _encounter_is_objective_anchor(session, encounter)
+	):
 		priority += 70
-	priority += _objective_proximity_bonus(session, int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+	priority += (
+		_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles, int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+		if preloaded_objective_anchor_tiles is Array
+		else _objective_proximity_bonus(session, int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+	)
 	return priority
 
 static func _target_resource_value(rewards: Variant) -> int:
@@ -16598,6 +16690,47 @@ static func _resource_affinity_value(claim_value: int, income_value: int, weight
 	var income_delta: int = max(0, weighted_income_value - income_value)
 	return int(min(70.0, (float(claim_delta) / 35.0) + (float(income_delta) / 18.0)))
 
+static func _objective_anchor_surface(
+	session: SessionStateStoreScript.SessionData,
+	preloaded_scenario: Variant = null
+) -> Dictionary:
+	var surface := {
+		"town_placement_ids": [],
+		"flag_ids": [],
+		"tiles": [],
+	}
+	if session == null:
+		return surface
+	var scenario: Dictionary = preloaded_scenario if preloaded_scenario is Dictionary else ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return surface
+	var town_placement_ids: Array = surface["town_placement_ids"]
+	var flag_ids: Array = surface["flag_ids"]
+	for bucket in ["victory", "defeat"]:
+		for objective_value in objectives.get(bucket, []):
+			if not (objective_value is Dictionary):
+				continue
+			var objective: Dictionary = objective_value
+			var placement_id := String(objective.get("placement_id", ""))
+			if placement_id != "" and placement_id not in town_placement_ids:
+				town_placement_ids.append(placement_id)
+			if String(objective.get("type", "")) == "flag_true":
+				var flag_id := String(objective.get("flag", ""))
+				if flag_id != "" and flag_id not in flag_ids:
+					flag_ids.append(flag_id)
+	var tiles: Array = surface["tiles"]
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("placement_id", "")) in town_placement_ids:
+			tiles.append(Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+	for encounter_value in session.overworld.get("encounters", []):
+		if encounter_value is Dictionary and _encounter_is_objective_anchor_from_surface(encounter_value, surface):
+			tiles.append(Vector2i(int(encounter_value.get("x", 0)), int(encounter_value.get("y", 0))))
+	return surface
+
 static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionData, x: int, y: int) -> int:
 	var best_distance = 9999
 	for town in session.overworld.get("towns", []):
@@ -16627,6 +16760,27 @@ static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionD
 		return 10
 	return 0
 
+static func _objective_proximity_bonus_from_tiles(anchor_tiles: Variant, x: int, y: int) -> int:
+	var best_distance = 9999
+	if not (anchor_tiles is Array):
+		return 0
+	for tile_value in anchor_tiles:
+		if not (tile_value is Vector2i):
+			continue
+		var tile: Vector2i = tile_value
+		var distance: int = abs(x - tile.x) + abs(y - tile.y)
+		if distance < best_distance:
+			best_distance = distance
+	if best_distance == 9999:
+		return 0
+	if best_distance <= 1:
+		return 45
+	if best_distance <= 3:
+		return 25
+	if best_distance <= 5:
+		return 10
+	return 0
+
 static func _assignment_penalty(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> int:
 	if placement_id == "":
 		return 0
@@ -16644,6 +16798,9 @@ static func _assignment_penalty(session: SessionStateStoreScript.SessionData, ta
 
 static func _town_started_enemy(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	var scenario = ContentService.get_scenario(session.scenario_id)
+	return _town_started_enemy_in_scenario(scenario, placement_id)
+
+static func _town_started_enemy_in_scenario(scenario: Dictionary, placement_id: String) -> bool:
 	for town in scenario.get("towns", []):
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return String(town.get("owner", "neutral")) == "enemy"
@@ -16677,6 +16834,16 @@ static func _encounter_is_objective_anchor(session: SessionStateStoreScript.Sess
 				continue
 			if String(objective.get("flag", "")) in victory_flags:
 				return true
+	return false
+
+static func _encounter_is_objective_anchor_from_surface(encounter: Dictionary, surface: Dictionary) -> bool:
+	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	var victory_flags: Array = encounter_template.get("victory_flags", [])
+	if not (victory_flags is Array) or victory_flags.is_empty():
+		return false
+	for flag_id in surface.get("flag_ids", []):
+		if String(flag_id) in victory_flags:
+			return true
 	return false
 
 static func _best_goal_tile(

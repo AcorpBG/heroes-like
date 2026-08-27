@@ -1911,17 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "performance-town-management-tab-full-state-reuse-10184",
-    "title": "Town Management-Tab Full-State Reuse",
+    "id": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
+    "title": "Large RMG Objective-Anchor Catalog Reuse",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T14:57:30Z",
-    "updatedAt": "2026-08-27T15:28:39Z",
+    "startedAt": "2026-08-27T18:52:23Z",
+    "updatedAt": "2026-08-27T20:19:57Z",
+    "completedAt": "2026-08-27T20:19:57Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed. One signature-validated full Town entity state now serves Build-Muster-Spells-Trade-Log-Build; recovery pressure invalidates it, active actions rebuild once, and dynamic affordability remains live. The same-flow five-tab sequence improved from 1583.7 ms to 150.2 ms, with exact focused authority and bounded compatibility/platform gates green."
+    "notes": "Completed exact invocation-local objective-anchor reuse. On the same natural-fog 108x108 generated save, all 701 ordered legacy catalog rows and session authority are exact while catalog materialization falls 515335->87.9 ms; descriptor materialization falls 532783->86 ms; two-origin projection falls 39216->414 ms; and a real End Turn falls from no completion within 30 minutes to 14372 ms with exact scenario/day/public-event authority. Generated Large 22.8 MB save/overwrite/recovery/schema, cold/warm restore, strategic-AI compatibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The fresh full visual Large gate timed out silently at 600 seconds and supplies no result; packaged Large interaction, native RMG parity expansion, hardware, signing, whole-game, and release-readiness claims remain excluded."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15328,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Town management-tab full-state reuse is completed. The measured five-tab sequence is 90.5% lower with exact focused state/action/session parity; select the next tracker-approved release-readiness slice.",
+  "currentNotes": "No slice is selected. Large RMG invocation-local objective-anchor reuse is completed with exact catalog/scoring/session parity, measured Large End Turn improvement, save/restore validation, compatibility, static/editor, and bounded platform startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-town-management-tab-full-state-reuse-10184",
-  "currentSliceId": "performance-town-management-tab-full-state-reuse-10184",
-  "currentSliceNotes": "Completed full-state reuse reduced the same-flow five-tab sequence from 1583.7 ms to 150.2 ms while preserving active-only invalidation, dynamic affordability, rendered/action/session authority, and bounded platform startup compatibility.",
+  "currentSlice": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
+  "currentSliceId": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
+  "currentSliceNotes": "Completed: exact invocation-local objective reuse reduces the generated Large 701-row catalog 515335->87.9 ms and real End Turn from >30 minutes to 14372 ms while generated identity, ordered payloads, AI events, saves/restores, compatibility, and bounded platform startup remain authoritative.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Management-Tab Full-State Reuse",
-  "currentSliceUpdatedAt": "2026-08-27T15:28:39Z",
+  "currentSliceTitle": "Large RMG Objective-Anchor Catalog Reuse",
+  "currentSliceUpdatedAt": "2026-08-27T20:19:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20850,9 +20851,33 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved bounded release-readiness slice from direct current behavior evidence; preserve completed Town cache and gameplay authority.",
-  "notes": "Town Management-Tab Full-State Reuse is complete from current-HEAD profiling, exact focused parity, measured same-flow improvement, compatibility/static gates, and bounded Linux/Windows export-startup evidence; blockers are empty.",
+  "nextActionGuardrailNote": "Implement only invocation-local exact objective-anchor reuse; preserve generated payloads, AI scoring/order/events, save schema/bytes, and completed Town/runtime behavior.",
+  "notes": "Large RMG objective-anchor catalog reuse is active from direct 523872 ms known-world and 532783 ms descriptor catalog reds; blockers are empty because the repeated generated-scenario copy/rescan owner is source-proven and bounded.",
   "plannedSlices": [
+    {
+    "id": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
+    "title": "Large RMG Objective-Anchor Catalog Reuse",
+    "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T18:52:23Z",
+      "updatedAt": "2026-08-27T18:52:23Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Eliminate repeated full generated-scenario objective-anchor copies and rescans from each artifact and encounter row in invocation-local known-world and target-descriptor catalogs.",
+      "completionCriteria": "Independent whole legacy parity and mutation/lifecycle controls pass; the same Large natural-fog catalog and End Turn materially improve with exact RMG identity, AI events/tasks, save/load, gameplay, compatibility, static/editor, and bounded Linux/Windows startup authority.",
+      "nonGoals": [
+        "No RMG/native parity, map/content/topology, AI scoring/policy/order/tie, difficulty, economy, combat, save schema/version, or UI/art behavior change.",
+        "No persistent/global/day/session cache, async turn mutation, target cutoff, heuristic approximation, packaged AI interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+    "remainingWork": ""
+    },
     {
       "id": "performance-town-management-tab-full-state-reuse-10184",
       "title": "Town Management-Tab Full-State Reuse",
@@ -105394,8 +105419,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "battlefield_continuous_terrain_cohesion_in_progress",
-  "status": "in_progress",
+  "result": "large_rmg_objective_anchor_catalog_reuse_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",

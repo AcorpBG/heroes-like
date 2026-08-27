@@ -14,6 +14,9 @@ func _run() -> void:
 	var preservation_case := _known_world_memory_survives_normalization()
 	if preservation_case.is_empty():
 		return
+	var objective_anchor_case := _objective_anchor_catalog_reuse_parity()
+	if objective_anchor_case.is_empty():
+		return
 	var catalog_projection_case := _known_world_target_catalog_projection_parity()
 	if catalog_projection_case.is_empty():
 		return
@@ -65,7 +68,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_faction_scoped_player_hero_route_occupancy_for_movement_and_assignment",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, catalog_projection_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exclusive_frontier_case, rebuild_relaunch_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
+		"cases": [preservation_case, objective_anchor_case, catalog_projection_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exclusive_frontier_case, rebuild_relaunch_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -117,6 +120,100 @@ func _known_world_memory_survives_normalization() -> Dictionary:
 		"scouted_target_count": scouted.size(),
 		"hero_sighting_count": sightings.size(),
 		"hero_sighting_position": {"x": int(sightings[0].get("x", -1)), "y": int(sightings[0].get("y", -1))},
+	}
+
+func _objective_anchor_catalog_reuse_parity() -> Dictionary:
+	var session = _base_session()
+	var authority_before: Dictionary = session.to_dict()
+	var legacy_surface := _legacy_objective_anchor_surface_control(session)
+	var current_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)
+	if current_surface != legacy_surface:
+		_fail("Objective-anchor surface differs from the independent legacy control: current=%s control=%s" % [JSON.stringify(current_surface), JSON.stringify(legacy_surface)])
+		return {}
+	var anchor_tiles: Array = current_surface.get("tiles", []) if current_surface.get("tiles", []) is Array else []
+	if anchor_tiles.is_empty():
+		_fail("Objective-anchor fixture did not produce a live anchor tile.")
+		return {}
+	var probe_tiles := [anchor_tiles[0], Vector2i(anchor_tiles[0].x + 1, anchor_tiles[0].y), Vector2i(anchor_tiles[0].x + 3, anchor_tiles[0].y), Vector2i(anchor_tiles[0].x + 5, anchor_tiles[0].y), Vector2i(anchor_tiles[0].x + 6, anchor_tiles[0].y)]
+	for probe_value in probe_tiles:
+		var probe: Vector2i = probe_value
+		var direct_bonus := _legacy_objective_proximity_bonus_control(session, probe.x, probe.y)
+		var preloaded_bonus := EnemyAdventureRules._objective_proximity_bonus_from_tiles(anchor_tiles, probe.x, probe.y)
+		if preloaded_bonus != direct_bonus:
+			_fail("Preloaded objective proximity differs at %s: current=%s control=%s" % [probe, preloaded_bonus, direct_bonus])
+			return {}
+	for artifact_value in session.overworld.get("artifact_nodes", []):
+		if not (artifact_value is Dictionary) or bool(artifact_value.get("collected", false)):
+			continue
+		if EnemyAdventureRules._artifact_target_priority(session, artifact_value, anchor_tiles) != EnemyAdventureRules._artifact_target_priority(session, artifact_value):
+			_fail("Preloaded artifact priority differs from the direct legacy helper.")
+			return {}
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		if EnemyAdventureRules._encounter_target_priority(session, encounter_value, anchor_tiles, current_surface) != EnemyAdventureRules._encounter_target_priority(session, encounter_value):
+			_fail("Preloaded encounter priority differs from the direct legacy helper.")
+			return {}
+	var raw_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)
+	var raw_town_ids: Array = raw_surface.get("town_placement_ids", [])
+	var raw_tiles: Array = raw_surface.get("tiles", [])
+	if raw_town_ids.is_empty() or raw_tiles.is_empty():
+		_fail("Raw objective-anchor surface is not fail-closed nonempty for detach proof.")
+		return {}
+	raw_town_ids[0] = "mutated_detached_town"
+	raw_tiles[0] = Vector2i(99, 99)
+	if session.to_dict() != authority_before or EnemyAdventureRules._objective_anchor_surface(session) != legacy_surface:
+		_fail("Detached objective-anchor surface mutation aliased the session or next invocation.")
+		return {}
+	var moved_town_id := String(legacy_surface.get("town_placement_ids", [])[0])
+	var towns: Array = session.overworld.get("towns", [])
+	var moved := false
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary) or String(towns[index].get("placement_id", "")) != moved_town_id:
+			continue
+		var town: Dictionary = towns[index]
+		town["x"] = int(town.get("x", 0)) + 1
+		towns[index] = town
+		moved = true
+		break
+	if not moved:
+		_fail("Objective-anchor fixture could not move its live town anchor.")
+		return {}
+	session.overworld["towns"] = towns
+	var moved_control := _legacy_objective_anchor_surface_control(session)
+	var moved_current: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)
+	if moved_current != moved_control or moved_current == legacy_surface:
+		_fail("Objective-anchor surface did not rebuild exactly after live movement.")
+		return {}
+	var duplicate_scenario := {
+		"objectives": {
+			"victory": [
+				{"type": "town_owned_by_player", "placement_id": moved_town_id},
+				{"type": "town_not_owned_by_player", "placement_id": moved_town_id},
+			],
+			"defeat": [{"type": "town_owned_by_player", "placement_id": moved_town_id}],
+		}
+	}
+	var duplicate_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session, duplicate_scenario)
+	if duplicate_surface.get("town_placement_ids", []) != [moved_town_id] or duplicate_surface.get("tiles", []).size() != 1:
+		_fail("Objective-anchor duplicate objectives changed first-seen unique semantics: %s" % JSON.stringify(duplicate_surface))
+		return {}
+	var no_anchor_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session, {"objectives": {"victory": [], "defeat": []}})
+	if not no_anchor_surface.get("town_placement_ids", []).is_empty() or not no_anchor_surface.get("flag_ids", []).is_empty() or not no_anchor_surface.get("tiles", []).is_empty():
+		_fail("No-objective scenario produced objective anchors: %s" % JSON.stringify(no_anchor_surface))
+		return {}
+	return {
+		"case_id": "objective_anchor_catalog_reuse_parity",
+		"town_anchor_count": legacy_surface.get("town_placement_ids", []).size(),
+		"flag_anchor_count": legacy_surface.get("flag_ids", []).size(),
+		"tile_count": anchor_tiles.size(),
+		"proximity_bands_exact": true,
+		"artifact_priority_exact": true,
+		"encounter_priority_exact": true,
+		"detach_exact": true,
+		"movement_rebuild_exact": true,
+		"duplicate_first_seen_exact": true,
+		"no_anchor_exact": true,
 	}
 
 func _known_world_target_catalog_projection_parity() -> Dictionary:
@@ -1734,6 +1831,90 @@ func _legacy_known_world_projection_control(session, config: Dictionary, faction
 		"hero_records": _legacy_known_world_hero_records_control(session, sources),
 		"target_records": _legacy_known_world_target_records_control(session, config, faction_id, sources),
 	}
+
+func _legacy_objective_anchor_surface_control(session) -> Dictionary:
+	var scenario: Dictionary = ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	var town_placement_ids := []
+	var flag_ids := []
+	if objectives is Dictionary:
+		for bucket in ["victory", "defeat"]:
+			for objective_value in objectives.get(bucket, []):
+				if not (objective_value is Dictionary):
+					continue
+				var placement_id := String(objective_value.get("placement_id", ""))
+				if placement_id != "" and placement_id not in town_placement_ids:
+					town_placement_ids.append(placement_id)
+				if String(objective_value.get("type", "")) == "flag_true":
+					var flag_id := String(objective_value.get("flag", ""))
+					if flag_id != "" and flag_id not in flag_ids:
+						flag_ids.append(flag_id)
+	var tiles := []
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var placement_id := String(town_value.get("placement_id", ""))
+		if placement_id != "" and _legacy_town_objective_anchor_control(session, placement_id):
+			tiles.append(Vector2i(int(town_value.get("x", 0)), int(town_value.get("y", 0))))
+	for encounter_value in session.overworld.get("encounters", []):
+		if encounter_value is Dictionary and _legacy_encounter_objective_anchor_control(session, encounter_value):
+			tiles.append(Vector2i(int(encounter_value.get("x", 0)), int(encounter_value.get("y", 0))))
+	return {
+		"town_placement_ids": town_placement_ids,
+		"flag_ids": flag_ids,
+		"tiles": tiles,
+	}
+
+func _legacy_town_objective_anchor_control(session, placement_id: String) -> bool:
+	var scenario: Dictionary = ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return false
+	for bucket in ["victory", "defeat"]:
+		for objective_value in objectives.get(bucket, []):
+			if objective_value is Dictionary and String(objective_value.get("placement_id", "")) == placement_id:
+				return true
+	return false
+
+func _legacy_encounter_objective_anchor_control(session, encounter: Dictionary) -> bool:
+	var encounter_template: Dictionary = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	var victory_flags: Array = encounter_template.get("victory_flags", []) if encounter_template.get("victory_flags", []) is Array else []
+	if victory_flags.is_empty():
+		return false
+	var scenario: Dictionary = ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return false
+	for bucket in ["victory", "defeat"]:
+		for objective_value in objectives.get(bucket, []):
+			if not (objective_value is Dictionary) or String(objective_value.get("type", "")) != "flag_true":
+				continue
+			if String(objective_value.get("flag", "")) in victory_flags:
+				return true
+	return false
+
+func _legacy_objective_proximity_bonus_control(session, x: int, y: int) -> int:
+	var best_distance := 9999
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var placement_id := String(town_value.get("placement_id", ""))
+		if placement_id == "" or not _legacy_town_objective_anchor_control(session, placement_id):
+			continue
+		best_distance = min(best_distance, abs(x - int(town_value.get("x", 0))) + abs(y - int(town_value.get("y", 0))))
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary) or not _legacy_encounter_objective_anchor_control(session, encounter_value):
+			continue
+		best_distance = min(best_distance, abs(x - int(encounter_value.get("x", 0))) + abs(y - int(encounter_value.get("y", 0))))
+	if best_distance == 9999:
+		return 0
+	if best_distance <= 1:
+		return 45
+	if best_distance <= 3:
+		return 25
+	if best_distance <= 5:
+		return 10
+	return 0
 
 func _legacy_known_world_sight_sources_control(session, config: Dictionary, faction_id: String) -> Array:
 	var sources := []
