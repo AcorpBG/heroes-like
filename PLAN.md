@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
 
+## Overworld Organic Fog Frontier
+
+id: `presentation-overworld-organic-fog-frontier-10184`
+
+Status: completed.
+
+Result:
+- explored tiles adjoining hidden territory now draw a deterministic dark boundary cap and eight contiguous two-stop feather segments along a nine-point irregular contour, replacing the prior rectangular fade while keeping the complete effect on the explored side;
+- the first high-contrast pass was rejected from pixels; the retained lower-contrast tuning uses a 0.54 cap, 0.34 feather edge, 0.32 depth, and 0.05-0.14 contour inset. Inspected River Pass 1280x720 and 1920x1080 captures show a softer frontier without black teeth or lost road, object, shoreline, and revealed-terrain clarity;
+- focused Ninefold and generated natural-fog runtime, broad Overworld visual, route/movement/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Hidden terrain remains identity-silent; packaged Overworld interaction and broader release claims remain unchanged/unclaimed.
+
+Current finding:
+- direct River Pass 1280x720 and 1920x1080 captures show that the textured unexplored veil is rich, but its revealed-map silhouette still reads as a hard staircase;
+- source inspection shows the existing frontier contour varies only 0.018-0.060 tile inward while the actual two-stop fade is a rectangular strip, so the contour is too shallow to reshape the visible boundary at normal play scale.
+
+Implementation boundary:
+- replace the rectangular visible-side fog strip with deterministic segmented feather polygons following a denser irregular nine-point contour on each explored tile adjoining hidden territory;
+- keep the entire feather on the explored side, sample only cardinal explored booleans, retain the existing identity-silent whole-board shroud on hidden tiles, and preserve fog, visibility, movement, interaction, session, and save authority;
+- retain deterministic repeated observation and eliminate interior explored seams, hidden-side terrain leakage, random/time dependence, animation, and collision.
+
+Completion criteria:
+- inspected River Pass 1280x720 and 1920x1080 captures show a materially softer organic frontier without obscuring nearby roads, objects, shoreline, or revealed terrain;
+- focused Ninefold and generated natural-fog runtime prove exact segment geometry, bounded inset/depth/alpha, all cardinal/corner cases, deterministic repetition, hidden identity silence, and unchanged movement/session/save authority;
+- broad Overworld visual, route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no fog-of-war discovery, vision radius, visible/explored state, terrain identity, map generation, movement, pathing, object/hero/town rendering, interaction, camera, session/save/schema, AI, battle, balance, content, or Native RMG change;
+- no new bitmap/shader, animation, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Rich Terrain-Detail Atlas
 
 id: `presentation-overworld-rich-terrain-detail-atlas-10184`

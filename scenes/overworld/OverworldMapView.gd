@@ -25,16 +25,18 @@ const UNEXPLORED_SHROUD_TEXTURE_SIZE := Vector2i(1024, 1024)
 const UNEXPLORED_SHROUD_TEXTURE_MODULATE := Color(0.80, 0.88, 0.82, 0.80)
 const EXPLORED_TERRAIN_GRID_ALPHA := 0.0
 const EXPLORED_TERRAIN_GRID_MODE := "fog_boundary_only"
-const EXPLORED_FOG_FRONTIER_MODEL := "inward_gradient_irregular_cartographic_contour"
+const EXPLORED_FOG_FRONTIER_MODEL := "segmented_deep_inward_cartographic_veil_feather"
+const EXPLORED_FOG_FRONTIER_SURFACE_MODEL := "boundary_cap_plus_contour_segment_quads"
 const EXPLORED_FOG_FRONTIER_DEPTH_FACTOR := 0.32
-const EXPLORED_FOG_FRONTIER_EDGE_ALPHA := 0.24
+const EXPLORED_FOG_FRONTIER_CAP_ALPHA := 0.54
+const EXPLORED_FOG_FRONTIER_EDGE_ALPHA := 0.34
 const EXPLORED_FOG_FRONTIER_INNER_ALPHA := 0.0
 const EXPLORED_FOG_FRONTIER_COLOR := Color(0.025, 0.035, 0.045, 1.0)
-const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.16)
+const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.22)
 const EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH := 1.0
-const EXPLORED_FOG_CONTOUR_POINT_COUNT := 5
-const EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR := 0.018
-const EXPLORED_FOG_CONTOUR_MAX_INSET_FACTOR := 0.060
+const EXPLORED_FOG_CONTOUR_POINT_COUNT := 9
+const EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR := 0.05
+const EXPLORED_FOG_CONTOUR_MAX_INSET_FACTOR := 0.14
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
 const SMALL_MAP_CARTOGRAPHIC_MATTE_MODEL := "quiet_survey_field_below_playable_board"
@@ -1809,9 +1811,7 @@ func _draw_explored_terrain_boundary(tile: Vector2i, rect: Rect2) -> void:
 		return
 	for direction_value in _explored_fog_frontier_directions(tile):
 		var direction := String(direction_value)
-		var gradient_points := _explored_fog_frontier_gradient_points(rect, direction)
-		if gradient_points.size() == 4:
-			_canvas_draw_polygon(gradient_points, _explored_fog_frontier_gradient_colors())
+		_draw_explored_fog_frontier_feather(tile, rect, direction)
 		_draw_explored_fog_frontier_edge(tile, rect, direction)
 
 func _explored_fog_frontier_directions(tile: Vector2i) -> Array:
@@ -1833,41 +1833,31 @@ func _explored_fog_frontier_directions(tile: Vector2i) -> Array:
 		directions.append(direction)
 	return directions
 
-func _explored_fog_frontier_gradient_points(rect: Rect2, direction: String) -> PackedVector2Array:
-	var depth_x := rect.size.x * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR
-	var depth_y := rect.size.y * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR
+func _explored_fog_frontier_boundary_segment(rect: Rect2, direction: String) -> PackedVector2Array:
 	match direction:
 		"N":
-			return PackedVector2Array([
-				rect.position,
-				Vector2(rect.end.x, rect.position.y),
-				Vector2(rect.end.x, rect.position.y + depth_y),
-				Vector2(rect.position.x, rect.position.y + depth_y),
-			])
+			return PackedVector2Array([rect.position, Vector2(rect.end.x, rect.position.y)])
 		"S":
-			return PackedVector2Array([
-				Vector2(rect.position.x, rect.end.y),
-				rect.end,
-				Vector2(rect.end.x, rect.end.y - depth_y),
-				Vector2(rect.position.x, rect.end.y - depth_y),
-			])
+			return PackedVector2Array([Vector2(rect.position.x, rect.end.y), rect.end])
 		"W":
-			return PackedVector2Array([
-				rect.position,
-				Vector2(rect.position.x, rect.end.y),
-				Vector2(rect.position.x + depth_x, rect.end.y),
-				Vector2(rect.position.x + depth_x, rect.position.y),
-			])
+			return PackedVector2Array([rect.position, Vector2(rect.position.x, rect.end.y)])
 		"E":
-			return PackedVector2Array([
-				Vector2(rect.end.x, rect.position.y),
-				rect.end,
-				Vector2(rect.end.x - depth_x, rect.end.y),
-				Vector2(rect.end.x - depth_x, rect.position.y),
-			])
+			return PackedVector2Array([Vector2(rect.end.x, rect.position.y), rect.end])
 	return PackedVector2Array()
 
-func _explored_fog_frontier_gradient_colors() -> PackedColorArray:
+func _explored_fog_frontier_inward_offset(rect: Rect2, direction: String) -> Vector2:
+	match direction:
+		"N":
+			return Vector2(0.0, rect.size.y * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR)
+		"S":
+			return Vector2(0.0, -rect.size.y * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR)
+		"W":
+			return Vector2(rect.size.x * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR, 0.0)
+		"E":
+			return Vector2(-rect.size.x * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR, 0.0)
+	return Vector2.ZERO
+
+func _explored_fog_frontier_feather_colors() -> PackedColorArray:
 	var edge_color := Color(
 		EXPLORED_FOG_FRONTIER_COLOR.r,
 		EXPLORED_FOG_FRONTIER_COLOR.g,
@@ -1881,6 +1871,40 @@ func _explored_fog_frontier_gradient_colors() -> PackedColorArray:
 		EXPLORED_FOG_FRONTIER_INNER_ALPHA
 	)
 	return PackedColorArray([edge_color, edge_color, inner_color, inner_color])
+
+func _explored_fog_frontier_cap_points(tile: Vector2i, rect: Rect2, direction: String) -> PackedVector2Array:
+	var boundary := _explored_fog_frontier_boundary_segment(rect, direction)
+	var contour := _explored_fog_frontier_edge_points(tile, rect, direction)
+	if boundary.size() != 2 or contour.size() != EXPLORED_FOG_CONTOUR_POINT_COUNT:
+		return PackedVector2Array()
+	var points := PackedVector2Array([boundary[0], boundary[1]])
+	for point_index in range(contour.size() - 2, 0, -1):
+		points.append(contour[point_index])
+	return points
+
+func _draw_explored_fog_frontier_feather(tile: Vector2i, rect: Rect2, direction: String) -> void:
+	var contour := _explored_fog_frontier_edge_points(tile, rect, direction)
+	if contour.size() != EXPLORED_FOG_CONTOUR_POINT_COUNT:
+		return
+	var cap_points := _explored_fog_frontier_cap_points(tile, rect, direction)
+	if cap_points.size() >= 3:
+		_canvas_draw_colored_polygon(cap_points, Color(
+			EXPLORED_FOG_FRONTIER_COLOR.r,
+			EXPLORED_FOG_FRONTIER_COLOR.g,
+			EXPLORED_FOG_FRONTIER_COLOR.b,
+			EXPLORED_FOG_FRONTIER_CAP_ALPHA
+		))
+	var inward_offset := _explored_fog_frontier_inward_offset(rect, direction)
+	var feather_colors := _explored_fog_frontier_feather_colors()
+	for point_index in range(contour.size() - 1):
+		var edge_start: Vector2 = contour[point_index]
+		var edge_end: Vector2 = contour[point_index + 1]
+		_canvas_draw_polygon(PackedVector2Array([
+			edge_start,
+			edge_end,
+			edge_end + inward_offset,
+			edge_start + inward_offset,
+		]), feather_colors)
 
 func _explored_fog_frontier_edge_points(tile: Vector2i, rect: Rect2, direction: String) -> PackedVector2Array:
 	if direction not in ["N", "E", "S", "W"] or rect.size.x <= 0.0 or rect.size.y <= 0.0:
@@ -1934,10 +1958,14 @@ func _explored_fog_frontier_payload(tile: Vector2i) -> Dictionary:
 		"directions": directions.duplicate(),
 		"direction_order": ["N", "E", "S", "W"],
 		"softened_corners": softened_corners,
+		"surface_model": EXPLORED_FOG_FRONTIER_SURFACE_MODEL,
+		"cap_alpha": EXPLORED_FOG_FRONTIER_CAP_ALPHA,
+		"cap_polygon_point_count": EXPLORED_FOG_CONTOUR_POINT_COUNT,
 		"gradient_stop_count": 2,
 		"gradient_depth_factor": EXPLORED_FOG_FRONTIER_DEPTH_FACTOR,
 		"gradient_edge_alpha": EXPLORED_FOG_FRONTIER_EDGE_ALPHA,
 		"gradient_inner_alpha": EXPLORED_FOG_FRONTIER_INNER_ALPHA,
+		"gradient_segment_count_per_direction": EXPLORED_FOG_CONTOUR_POINT_COUNT - 1,
 		"edge_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"edge_width": EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH,
 		"contour_profiles": contour_profiles.duplicate(true),

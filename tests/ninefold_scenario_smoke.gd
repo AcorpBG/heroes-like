@@ -632,20 +632,24 @@ func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) 
 		var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
 		var frontier: Dictionary = terrain.get("fog_frontier", {}) if terrain.get("fog_frontier", {}) is Dictionary else {}
 		if (
-			String(frontier.get("model", "")) != "inward_gradient_irregular_cartographic_contour"
+			String(frontier.get("model", "")) != "segmented_deep_inward_cartographic_veil_feather"
 			or frontier.get("direction_order", []) != ["N", "E", "S", "W"]
 			or frontier.get("directions", []) != case_row.get("directions", [])
 			or frontier.get("softened_corners", []) != case_row.get("corners", [])
 			or bool(frontier.get("drawn", false)) != not (case_row.get("directions", []) as Array).is_empty()
+			or String(frontier.get("surface_model", "")) != "boundary_cap_plus_contour_segment_quads"
+			or not is_equal_approx(float(frontier.get("cap_alpha", 0.0)), 0.54)
+			or int(frontier.get("cap_polygon_point_count", 0)) != 9
 			or int(frontier.get("gradient_stop_count", 0)) != 2
 			or not is_equal_approx(float(frontier.get("gradient_depth_factor", 0.0)), 0.32)
-			or not is_equal_approx(float(frontier.get("gradient_edge_alpha", 0.0)), 0.24)
+			or not is_equal_approx(float(frontier.get("gradient_edge_alpha", 0.0)), 0.34)
 			or not is_equal_approx(float(frontier.get("gradient_inner_alpha", -1.0)), 0.0)
-			or not is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.16)
+			or int(frontier.get("gradient_segment_count_per_direction", 0)) != 8
+			or not is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.22)
 			or not is_equal_approx(float(frontier.get("edge_width", 0.0)), 1.0)
-			or int(frontier.get("contour_point_count", 0)) != 5
-			or not is_equal_approx(float(frontier.get("contour_min_inset_factor", 0.0)), 0.018)
-			or not is_equal_approx(float(frontier.get("contour_max_inset_factor", 0.0)), 0.060)
+			or int(frontier.get("contour_point_count", 0)) != 9
+			or not is_equal_approx(float(frontier.get("contour_min_inset_factor", 0.0)), 0.05)
+			or not is_equal_approx(float(frontier.get("contour_max_inset_factor", 0.0)), 0.14)
 			or not bool(frontier.get("contour_endpoints_on_boundary", false))
 			or bool(frontier.get("contour_hidden_side_intrusion", true))
 			or String(frontier.get("contour_variation_basis", "")) != "explored_tile_direction_only"
@@ -670,7 +674,7 @@ func _assert_soft_fog_frontier(shell: Node, session, north_west_tile: Vector2i) 
 	if (
 		not bool(hidden_terrain.get("unexplored_hidden", false))
 		or String(hidden_terrain.get("terrain", "leaked")) != ""
-		or String(hidden_frontier.get("model", "")) != "inward_gradient_irregular_cartographic_contour"
+		or String(hidden_frontier.get("model", "")) != "segmented_deep_inward_cartographic_veil_feather"
 		or bool(hidden_frontier.get("drawn", true))
 		or String(hidden_frontier.get("draw_side", "")) != "explored_inward"
 		or bool(hidden_frontier.get("hidden_identity_sampled", true))
@@ -689,26 +693,26 @@ func _fog_contour_profiles_exact(frontier: Dictionary, expected_directions: Arra
 	for direction_value in expected_directions:
 		var direction := String(direction_value)
 		var profile: Array = profiles.get(direction, []) if profiles.get(direction, []) is Array else []
-		if profile.size() != 5:
+		if profile.size() != 9:
 			return false
 		for point_index in range(profile.size()):
 			var point: Dictionary = profile[point_index] if profile[point_index] is Dictionary else {}
 			var x := float(point.get("x", -1.0))
 			var y := float(point.get("y", -1.0))
-			var progress := float(point_index) / 4.0
-			var endpoint := point_index == 0 or point_index == 4
+			var progress := float(point_index) / 8.0
+			var endpoint := point_index == 0 or point_index == 8
 			match direction:
 				"N":
-					if not is_equal_approx(x, progress) or (endpoint and not is_zero_approx(y)) or (not endpoint and (y < 0.018 or y > 0.060)):
+					if not is_equal_approx(x, progress) or (endpoint and not is_zero_approx(y)) or (not endpoint and (y < 0.05 or y > 0.14)):
 						return false
 				"S":
-					if not is_equal_approx(x, progress) or (endpoint and not is_equal_approx(y, 1.0)) or (not endpoint and (y < 0.940 or y > 0.982)):
+					if not is_equal_approx(x, progress) or (endpoint and not is_equal_approx(y, 1.0)) or (not endpoint and (y < 0.86 or y > 0.95)):
 						return false
 				"W":
-					if not is_equal_approx(y, progress) or (endpoint and not is_zero_approx(x)) or (not endpoint and (x < 0.018 or x > 0.060)):
+					if not is_equal_approx(y, progress) or (endpoint and not is_zero_approx(x)) or (not endpoint and (x < 0.05 or x > 0.14)):
 						return false
 				"E":
-					if not is_equal_approx(y, progress) or (endpoint and not is_equal_approx(x, 1.0)) or (not endpoint and (x < 0.940 or x > 0.982)):
+					if not is_equal_approx(y, progress) or (endpoint and not is_equal_approx(x, 1.0)) or (not endpoint and (x < 0.86 or x > 0.95)):
 						return false
 				_:
 					return false
