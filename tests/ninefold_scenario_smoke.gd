@@ -509,7 +509,7 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		or detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}
 		or detail.get("atlas_grid", {}) != {"x": 4, "y": 4}
 		or detail.get("atlas_cell_size", {}) != {"x": 256, "y": 256}
-		or int(detail.get("density_modulus", 0)) != 3
+		or int(detail.get("density_modulus", 0)) != 2
 		or bool(detail.get("interactive", true))
 		or bool(detail.get("collision", true))
 		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.78)
@@ -532,7 +532,7 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		and int(source_rect.get("width", 0)) == 256
 		and int(source_rect.get("height", 0)) == 256
 		and bool(detail.get("destination_contained", false))
-		and extent_factor >= 0.22 and extent_factor <= 0.30
+		and extent_factor >= 0.34 and extent_factor <= 0.46
 		and float(offset.get("x", -1.0)) >= -0.13 and float(offset.get("x", 1.0)) <= 0.13
 		and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.12
 		and float(destination_rect.get("width", 0.0)) > 0.0

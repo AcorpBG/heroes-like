@@ -340,7 +340,7 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 				and detail.get("atlas_size", {}) == {"x": 1024, "y": 1024}
 				and detail.get("atlas_grid", {}) == {"x": 4, "y": 4}
 				and detail.get("atlas_cell_size", {}) == {"x": 256, "y": 256}
-				and int(detail.get("density_modulus", 0)) == 3
+				and int(detail.get("density_modulus", 0)) == 2
 				and not bool(detail.get("interactive", true))
 				and not bool(detail.get("collision", true))
 				and is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.78)
@@ -363,7 +363,7 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 					and int(source_rect.get("y", -1)) == floori(float(cell_id) / 4.0) * 256
 					and int(source_rect.get("width", 0)) == 256 and int(source_rect.get("height", 0)) == 256
 					and bool(detail.get("destination_contained", false))
-					and float(detail.get("extent_factor", 0.0)) >= 0.22 and float(detail.get("extent_factor", 0.0)) <= 0.30
+					and float(detail.get("extent_factor", 0.0)) >= 0.34 and float(detail.get("extent_factor", 0.0)) <= 0.46
 					and float(offset.get("x", -1.0)) >= -0.13 and float(offset.get("x", 1.0)) <= 0.13
 					and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.12
 					and float(destination_rect.get("width", 0.0)) > 0.0

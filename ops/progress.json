@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-layered-water-bank-transition-10184",
-    "title": "Overworld Layered Water-Bank Transition",
+    "id": "presentation-overworld-surface-detail-legibility-10184",
+    "title": "Overworld Surface-Detail Legibility",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T01:14:38Z",
-    "updatedAt": "2026-08-27T01:31:43Z",
-    "completedAt": "2026-08-27T01:31:43Z",
+    "startedAt": "2026-08-27T01:34:50Z",
+    "updatedAt": "2026-08-27T01:45:53Z",
+    "completedAt": "2026-08-27T01:45:53Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the layered water-bank transition. Authored water-edge textures now follow deterministic organic clip quads with earthen bank, shallow water, wet edge, and broken foam; inspected pixels and authored/generated runtime preserve terrain, route, session, and save authority. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass."
+    "notes": "Completed the surface-detail legibility pass. Existing biome-aware clusters now paint on one eligible tile in two at 34-46% tile extent; inspected pixels and authored/generated runtime preserve roads, water, objects, terrain, route, movement, session, and save authority. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The layered water-bank transition is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "currentNotes": "The surface-detail legibility slice is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-layered-water-bank-transition-10184",
-  "currentSliceId": "presentation-overworld-layered-water-bank-transition-10184",
-  "currentSliceNotes": "Completed: authored water-edge textures follow deterministic organic clip quads with a layered earthen/shallow/wet/foam bank while exact terrain and gameplay authority remain unchanged.",
+  "currentSlice": "presentation-overworld-surface-detail-legibility-10184",
+  "currentSliceId": "presentation-overworld-surface-detail-legibility-10184",
+  "currentSliceNotes": "Completed: existing biome detail is readable at normal play scale while exact terrain, road/water exclusion, object, route, movement, session, and save authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Layered Water-Bank Transition",
-  "currentSliceUpdatedAt": "2026-08-27T01:31:43Z",
+  "currentSliceTitle": "Overworld Surface-Detail Legibility",
+  "currentSliceUpdatedAt": "2026-08-27T01:45:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,8 +20852,42 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The layered water-bank presentation correction is completed with pixel, authored/generated runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
+  "notes": "The surface-detail legibility presentation correction is completed with pixel, authored/generated runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-surface-detail-legibility-10184",
+      "title": "Overworld Surface-Detail Legibility",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T01:34:50Z",
+      "updatedAt": "2026-08-27T01:45:53Z",
+      "completedAt": "2026-08-27T01:45:53Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make the shipped biome-aware ground-detail atlas readable at normal play scale by changing only deterministic presentation density and extent.",
+      "completionCriteria": "Inspected 1280/1920 captures plus authored/generated Overworld runtime prove readable subordinate ground clusters, exact deterministic density/extent and atlas identity, road/water exclusions, stable repeated presentation, and unchanged terrain/route/session authority; core, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No bitmap/import, biome cell selection, terrain/map topology, road, water, object/hero/town art or scale, fog, camera, interaction, pathing, gameplay, save/schema, AI, balance, content, generation, or Native RMG change.",
+        "No shader, animation, weather, broad terrain rewrite, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for the surface-detail legibility boundary. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "captureArtifact": "/tmp/heroes-surface-detail-capture.O8ayYN",
+        "compatibilityArtifact": "/tmp/heroes-surface-detail-compat.eDjGeF",
+        "staticAuditArtifact": "/tmp/heroes-surface-detail-static.VHlM6o",
+        "platformArtifact": "/tmp/heroes-surface-detail-platform.7oMrLm",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-overworld-layered-water-bank-transition-10184",
       "title": "Overworld Layered Water-Bank Transition",
