@@ -35522,14 +35522,18 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1",
         "const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34",
         'const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"',
-        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.44",
-        "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.88",
-        "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.08",
-        "const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 16",
-        "const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.055",
-        "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.018",
-        "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.038",
-        'const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cell_biome_palette_clustered_original_sprite"',
+        "const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 0.92",
+        "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.93",
+        "const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.07",
+        "const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 4",
+        "const GENERATED_DECORATIVE_BODY_OFFSET_X_TILES := 0.12",
+        "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES := -0.04",
+        "const GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES := 0.04",
+        "const GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES := 1.16",
+        "const GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES := 1.44",
+        "const GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES := 1.68",
+        "const GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES := 0.34",
+        'const GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL := "exact_body_cells_sparse_placement_mass_anchors_v3"',
         "var _generated_decorative_bodies_by_tile: Dictionary = {}",
         "var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}",
         "var _generated_decorative_blocker_fallback_asset_ids: Array = []",
@@ -35565,21 +35569,42 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'var package_block_tiles = object.get("package_block_tiles", null)',
         "for tile_value in _tiles_from_payloads(package_block_tiles):",
         "if body_tile.x < 0 or body_tile.y < 0 or body_tile.x >= _map_size.x or body_tile.y >= _map_size.y:",
+        "body_tiles.append(body_tile)",
+        "for body_tile_value in body_tiles:",
         "if _generated_decorative_bodies_by_tile.has(key):",
         "var presentation: Dictionary = object.duplicate(true)",
         'presentation["x"] = body_tile.x',
         'presentation["y"] = body_tile.y',
         'presentation["footprint"] = {"width": 1, "height": 1, "anchor": "bottom_center"}',
-        'presentation["overworld_sprite_asset_id"] = _generated_decorative_body_asset_id(object, body_tile)',
+        'presentation["generated_body_visual_anchor"] = false',
         '_generated_decorative_bodies_by_tile[key] = presentation',
+        "var desired_anchor_count := 1",
+        "for anchor_index in range(desired_anchor_count):",
+        "selected_anchor_tiles.append(best_tile)",
+        "var placement_bounds := {",
+        "for anchor_index in range(selected_anchor_tiles.size()):",
+        'presentation["bounds"] = placement_bounds.duplicate(true)',
+        'presentation["overworld_sprite_asset_id"] = _generated_decorative_body_asset_id(object, anchor_tile)',
+        'presentation["generated_body_motif_key"] = _generated_decorative_body_motif_key(object, anchor_tile)',
+        "var composition := _generated_decorative_body_composition(",
+        'presentation["generated_body_visual_anchor"] = true',
+        'presentation["generated_body_placement_tile_count"] = body_tiles.size()',
     ))
-    ensure(all(index >= 0 for index in index_order) and list(index_order) == sorted(index_order), errors, "Generated blocker presentation must validate exact package bodies, union collisions, detach one-cell presentation rows, and index them in order")
+    ensure(all(index >= 0 for index in index_order) and list(index_order) == sorted(index_order), errors, "Generated blocker presentation must index exact body cells before selecting bounded sparse placement-mass anchors")
     for token in (
         'presentation["generated_decorative_body_cell"] = true',
         'presentation["generated_body_presentation_model"] = GENERATED_DECORATIVE_BODY_PRESENTATION_MODEL',
         'presentation["generated_body_source_placement_ids"]',
         'existing["generated_body_source_count"] = placement_ids.size()',
-        'var composition := _generated_decorative_body_composition(object, body_tile)',
+        "if body_tiles.size() >= 9:",
+        "desired_anchor_count = 3",
+        "elif body_tiles.size() >= 5:",
+        "desired_anchor_count = 2",
+        'if bool(existing.get("generated_body_visual_anchor", false)):',
+        'presentation["generated_body_anchor_placement_id"] = source_placement_id',
+        'presentation["generated_body_anchor_index"] = anchor_index',
+        'presentation["generated_body_anchor_count"] = selected_anchor_tiles.size()',
+        'presentation["generated_body_placement_tile_count"] = body_tiles.size()',
         'presentation["generated_body_scale_factor"] = float(composition.get("scale_factor", 1.0))',
         'presentation["generated_body_offset_tiles"] = composition.get("offset_tiles", {}).duplicate(true)',
         'presentation["generated_body_sprite_extent_tiles"] = float(composition.get("sprite_extent_tiles", GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES))',
@@ -35596,20 +35621,31 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id",
         "_generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])",
         "candidates = _generated_decorative_blocker_fallback_asset_ids",
-        "terrain_id,",
-        'var cluster_x := floori(float(tile.x) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))',
-        'var cluster_y := floori(float(tile.y) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))',
-        '"%d,%d" % [cluster_x, cluster_y]',
+        "var stable_key := _generated_decorative_body_motif_key(object, tile)",
         "absi(stable_key.hash()) % candidates.size()",
     ):
         ensure(token in asset_block, errors, f"Generated blocker asset choice is missing stable terrain-matched selection: {token}")
+    motif_block = gd_function_block(map_text, "_generated_decorative_body_motif_key")
+    for token in (
+        "var terrain_id := _terrain_at(tile)",
+        "GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id",
+        'var placement_id := String(object.get("placement_id", "")).strip_edges()',
+        'placement_id = String(object.get("h3m_def_name", "")).strip_edges()',
+        'var cluster_x := floori(float(tile.x) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))',
+        'var cluster_y := floori(float(tile.y) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))',
+        'return "%s|%s|%s|%d,%d"',
+        "biome_id,",
+        "terrain_id,",
+        "placement_id,",
+    ):
+        ensure(token in motif_block, errors, f"Generated blocker motif key is missing placement-aware bounded clustering: {token}")
     for forbidden in ("rand", "randi", "seed(", "session", "_session", "sort(", "erase(", "package_block_tiles"):
-        ensure(forbidden not in asset_block, errors, f"Generated blocker asset choice must remain deterministic and presentation-only: {forbidden}")
+        ensure(forbidden not in asset_block + motif_block, errors, f"Generated blocker asset choice must remain deterministic and presentation-only: {forbidden}")
 
     composition_block = gd_function_block(map_text, "_generated_decorative_body_composition")
     for token in (
         'var placement_id := String(object.get("placement_id", "")).strip_edges()',
-        'var composition_key := "%s|%s|%d,%d"',
+        'var composition_key := "%s|%s|%d,%d|%d/%d"',
         'var scale_factor := lerpf(',
         'GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN',
         'GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX',
@@ -35617,9 +35653,18 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         '-GENERATED_DECORATIVE_BODY_OFFSET_X_TILES',
         'GENERATED_DECORATIVE_BODY_OFFSET_Y_MIN_TILES',
         'GENERATED_DECORATIVE_BODY_OFFSET_Y_MAX_TILES',
-        'var sprite_extent_tiles := GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES * scale_factor',
+        'if body_tile_count >= 9:',
+        'base_extent_tiles = GENERATED_DECORATIVE_BODY_MASS_LARGE_EXTENT_TILES',
+        'elif body_tile_count >= 5:',
+        'base_extent_tiles = GENERATED_DECORATIVE_BODY_MASS_MEDIUM_EXTENT_TILES',
+        'elif body_tile_count >= 3:',
+        'base_extent_tiles = GENERATED_DECORATIVE_BODY_MASS_SMALL_EXTENT_TILES',
+        'var sprite_extent_tiles := base_extent_tiles * scale_factor',
         'var sprite_center_tiles := Vector2(',
-        'clampf(0.5 + offset_tiles.x, half_extent, 1.0 - half_extent)',
+        'float(tile.x - min_tile.x) + 0.5 + offset_tiles.x',
+        'GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES',
+        'clampf(sprite_center_tiles.x, horizontal_inset, 1.0 - horizontal_inset)',
+        'clampf(sprite_center_tiles.y, vertical_inset, 1.0 - vertical_inset)',
         '"sprite_extent_tiles": sprite_extent_tiles',
         '"sprite_center_tiles": {"x": sprite_center_tiles.x, "y": sprite_center_tiles.y}',
     ):
@@ -35629,19 +35674,33 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     for forbidden in ("rand", "randi", "seed(", "Time.", "session", "_session", "await ", "create_timer"):
         ensure(forbidden not in composition_block + stable_fraction_block, errors, f"Generated blocker composition must be frame-stable and presentation-local: {forbidden}")
 
+    procedural_grounding_block = gd_function_block(map_text, "_procedural_grounding_fraction_metrics")
+    mapped_grounding_block = gd_function_block(map_text, "_mapped_sprite_grounding_fraction_metrics")
+    for token in ('"blocker":', "half_width = 0.43", "half_height = 0.080"):
+        ensure(token in procedural_grounding_block, errors, f"Blocker bodies must own the exact broad terrain-contact bed: {token}")
+    for token in ('"blocker":', "half_width *= 1.02", "half_height *= 1.05"):
+        ensure(token in mapped_grounding_block, errors, f"Mapped blocker bodies must retain their exact grounded mass multiplier: {token}")
+    for forbidden in ("session", "_session", "map_objects", "package_block_tiles", "await ", "create_timer", "rand"):
+        ensure(forbidden not in procedural_grounding_block + mapped_grounding_block, errors, f"Blocker grounding metrics must remain presentation-only constants: {forbidden}")
+
     lookup_block = gd_function_block(map_text, "_decorative_object_at")
     ensure(lookup_block.find("_generated_decorative_bodies_by_tile.get") < lookup_block.find("_decorative_objects_by_tile.get"), errors, "Exact generated body-cell presentation must precede legacy anchor-only decorative lookup")
     generated_draw_block = gd_function_block(map_text, "_draw_generated_decorative_body_sprite")
     for token in (
-        'object.get("generated_body_offset_tiles", {})',
-        "var composed_rect := Rect2(rect.position + offset_px, rect.size)",
-        "_draw_mapped_sprite_grounding_anchor(composed_rect, tile, \"blocker\", Vector2i(1, 1), remembered)",
+        'if not bool(object.get("generated_body_visual_anchor", false)):',
+        "return true",
+        'object.get("footprint", {})',
+        "var tile_extent := _object_world_tile_extent(rect, footprint)",
         'float(object.get("generated_body_sprite_extent_tiles", GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES))',
         'object.get("generated_body_sprite_center_tiles", {})',
         "rect.size.x * float(center_payload.get(\"x\", 0.5))",
         "rect.size.y * float(center_payload.get(\"y\", 0.5))",
-        "var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))",
-        "_canvas_draw_texture_rect(texture, sprite_rect, false, base_modulate)",
+        "var grounding_center := sprite_center + Vector2(0.0, sprite_extent * 0.38)",
+        "_draw_mapped_sprite_grounding_anchor(grounding_rect, tile, \"blocker\", footprint, remembered)",
+        "var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)",
+        'var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)',
+        'var sprite_rect: Rect2 = draw_payload.get("draw_rect",',
+        "_canvas_draw_texture_rect(draw_texture, sprite_rect, false, base_modulate)",
     ):
         ensure(token in generated_draw_block, errors, f"Generated body cells must draw bounded original blocker sprites with normal world grounding: {token}")
 
@@ -35739,12 +35798,19 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'object.get("package_block_tiles", null)',
         'expected_body_keys[_tile_key(tile)] = true',
         '"body_tile_keys_exact": indexed_keys == expected_keys',
-        '"all_body_assets_loaded": loaded_asset_count == indexed_keys.size()',
-        '"all_body_assets_terrain_matched": terrain_matched_asset_count == indexed_keys.size()',
+        '"visual_anchor_count": visual_anchor_count',
+        '"visual_anchor_placement_count": visual_anchor_placement_ids.size()',
+        '"all_generated_records_anchored": visual_anchor_placement_ids.size() == generated_record_count',
+        '"sparse_anchor_density": float(visual_anchor_count) / float(maxi(indexed_keys.size(), 1))',
+        '"all_body_assets_loaded": loaded_asset_count == visual_anchor_count',
+        '"all_body_assets_terrain_matched": terrain_matched_asset_count == visual_anchor_count',
         '"distinct_body_asset_count": distinct_asset_ids.size()',
+        '"asset_cluster_tiles": GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES',
+        '"motif_key_count": motif_keys.size()',
         '"repeated_def_multi_asset_count": repeated_def_multi_asset_count',
         '"composition_key_count": composition_key_count',
-        '"all_transformed_bounds_within_tile": transformed_bounds_within_tile_count == indexed_keys.size()',
+        '"all_transformed_bounds_within_mass_margin": transformed_bounds_within_mass_margin_count == visual_anchor_count',
+        '"mass_bounds_margin_tiles": GENERATED_DECORATIVE_BODY_MASS_BOUNDS_MARGIN_TILES',
         '"composition_signature": JSON.stringify(entries).sha256_text()',
         '"multi_tile_interactive_cap_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES',
         '"multi_tile_interactive_base_min_tiles": MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES',
@@ -35771,17 +35837,28 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'var save_reload_restored_authority := _generated_save_reload_authority(restored_session)',
         'not _save_authority_values_equal(save_reload_restored_authority, save_reload_source_authority)',
         '"save_reload_authority_exact": true',
-        'String(summary.get("presentation_model", "")) != "exact_body_cell_biome_palette_clustered_original_sprite"',
+        'String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3"',
         'int(summary.get("expected_body_tile_count", 0)) != 464',
         'not bool(summary.get("body_tile_keys_exact", false))',
         'not bool(summary.get("all_body_assets_loaded", false))',
         'not bool(summary.get("all_body_assets_terrain_matched", false))',
-        'int(summary.get("composition_key_count", 0)) != int(summary.get("indexed_body_tile_count", -1))',
-        'not bool(summary.get("all_transformed_bounds_within_tile", false))',
+        'not bool(summary.get("all_generated_records_anchored", false))',
+        'var visual_anchor_count := int(summary.get("visual_anchor_count", 0))',
+        'visual_anchor_count < int(summary.get("generated_record_count", 0))',
+        'visual_anchor_count >= indexed_body_tile_count',
+        'sparse_anchor_density < 0.25 or sparse_anchor_density > 0.75',
+        'int(summary.get("composition_key_count", 0)) != visual_anchor_count',
+        'not bool(summary.get("all_transformed_bounds_within_mass_margin", false))',
+        'float(summary.get("mass_bounds_margin_tiles", 0.0)), 0.34',
         'int(summary.get("distinct_body_asset_count", 0)) < 8',
         'int(summary.get("repeated_def_multi_asset_count", 0)) <= 0',
         'String(summary.get("composition_signature", "")).length() != 64',
-        'float(summary.get("body_sprite_extent_tiles", 0.0)), 0.44',
+        'float(summary.get("body_sprite_extent_tiles", 0.0)), 0.92',
+        'int(summary.get("asset_cluster_tiles", 0)) != 4',
+        'int(summary.get("motif_key_count", 0)) <= int(summary.get("distinct_body_asset_count", 0))',
+        'int(summary.get("motif_key_count", 0)) > visual_anchor_count',
+        'var expected_anchor_count := 3 if placement_tile_count >= 9 else (2 if placement_tile_count >= 5 else 1)',
+        'int(body_entry.get("anchor_count", 0)) > expected_anchor_count',
         'float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.80',
         'float(summary.get("multi_tile_interactive_base_min_tiles", 0.0)), 0.54',
         'float(summary.get("multi_tile_interactive_span_min_step_tiles", 0.0)), 0.06',
@@ -35810,6 +35887,66 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Generated live render/move report is missing exact body/scale/authority proof: {token}")
     ensure('float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 0.54' not in report_text, errors, "Generated live render/move report must not retain the footprint-flattening fixed multi-tile cap")
     ensure('float(summary.get("body_sprite_extent_tiles", 0.0)), 0.42' not in report_text, errors, "Generated live render/move report must not retain the rejected undersized blocker rank")
+    ensure(
+        'if OS.get_environment("RANDOM_MAP_LIVE_BLOCKER_MASS_FOCUSED_ONLY") == "1":\n\t\tawait _run_blocker_mass_focused()\n\t\treturn' in report_text,
+        errors,
+        "Generated live report must expose the exact portable focused blocker-mass runtime branch",
+    )
+    focused_run_block = gd_function_block(report_text, "_run_blocker_mass_focused")
+    focused_run_order = tuple(focused_run_block.find(token) for token in (
+        "var session := _blocker_mass_focused_session()",
+        "var authority_before: Dictionary = session.to_dict()",
+        "view.set_map_state(session,",
+        "var first_summary: Dictionary = view.validation_generated_object_visual_summary()",
+        'if not _assert_blocker_mass_focused_summary(first_summary, "initial"):',
+        "if session.to_dict() != authority_before:",
+        "OverworldRules.tile_is_blocked(session, body_tile.x, body_tile.y)",
+        "var redraw_summary: Dictionary = view.validation_generated_object_visual_summary()",
+        'redraw_summary.get("body_entries", []) != first_summary.get("body_entries", [])',
+        "var source_save_authority := _generated_save_reload_authority(session)",
+        "var save_result: Dictionary = SaveService.save_runtime_manual_session(session, 3)",
+        "var restored_session = SaveService.restore_manual_session(3)",
+        "_generated_save_reload_authority(restored_session)",
+        "OverworldRules.tile_is_blocked(restored_session, body_tile.x, body_tile.y)",
+        "restored_view.set_map_state(restored_session,",
+        "var restored_summary: Dictionary = restored_view.validation_generated_object_visual_summary()",
+        'if not _assert_blocker_mass_focused_summary(restored_summary, "restored"):',
+        'restored_summary.get("body_entries", []) != first_summary.get("body_entries", [])',
+        '"pathing_and_save_restore_exact": true',
+    ))
+    ensure(all(index >= 0 for index in focused_run_order) and list(focused_run_order) == sorted(focused_run_order), errors, "Focused blocker-mass runtime must prove initial presentation, exact body pathing, redraw stability, public save/restore, restored pathing, and rebuilt presentation in order")
+    ensure(focused_run_block.count("view.set_map_state(session,") == 2, errors, "Focused blocker-mass runtime must build and redraw the same live view exactly twice")
+    for forbidden in ("RandomMapGeneratorRules", "package_block_tiles.append", "package_block_tiles.erase", "session.overworld[", "session.overworld.erase", "set_tile", "create_timer"):
+        ensure(forbidden not in focused_run_block, errors, f"Focused blocker-mass runtime must observe presentation/pathing/save authority without changing generation: {forbidden}")
+    focused_summary_block = gd_function_block(report_text, "_assert_blocker_mass_focused_summary")
+    for token in (
+        '"focused_mass_single": 1',
+        '"focused_mass_small": 1',
+        '"focused_mass_medium": 2',
+        '"focused_mass_large": 3',
+        'String(summary.get("presentation_model", "")) != "exact_body_cells_sparse_placement_mass_anchors_v3"',
+        'int(summary.get("generated_record_count", 0)) != 4',
+        'int(summary.get("expected_body_tile_count", 0)) != 24',
+        'int(summary.get("indexed_body_tile_count", 0)) != 24',
+        'int(summary.get("visual_anchor_count", 0)) != 7',
+        'int(summary.get("visual_anchor_placement_count", 0)) != 4',
+        'float(summary.get("sparse_anchor_density", 0.0)), 7.0 / 24.0',
+        'int(summary.get("composition_key_count", 0)) != 7',
+        'not bool(summary.get("all_transformed_bounds_within_mass_margin", false))',
+        'observed_anchor_counts != expected_anchor_counts',
+    ):
+        ensure(token in focused_summary_block, errors, f"Focused blocker-mass summary is missing exact sparse placement-mass evidence: {token}")
+    focused_fixture_block = gd_function_block(report_text, "_blocker_mass_focused_session")
+    for token in (
+        '_blocker_mass_focused_object("focused_mass_single", "AVLf_single.def", [Vector2i(1, 1)])',
+        '_blocker_mass_focused_object("focused_mass_small", "AVLf_small.def"',
+        '_blocker_mass_focused_object("focused_mass_medium", "AVLf_medium.def"',
+        '_blocker_mass_focused_object("focused_mass_large", "AVLf_large.def"',
+        '"river-pass"',
+        'session.flags["generated_random_map"] = true',
+        '"materialized_map_signature": "focused-blocker-mass-24-cells"',
+    ):
+        ensure(token in focused_fixture_block, errors, f"Focused blocker-mass fixture is missing exact portable source authority: {token}")
     save_reload_order = tuple(report_text.find(token) for token in (
         'var save_reload_source_authority := _generated_save_reload_authority(SessionState.active_session)',
         'var save_result: Dictionary = SaveService.save_runtime_manual_session(SessionState.active_session, 3)',

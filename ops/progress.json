@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Battle refresh derived-surface reuse is completed with exact parity, measured refresh/focus improvement, full Battle compatibility, and bounded Linux/Windows export/startup evidence. Select the next tracker-approved release-readiness slice.",
+  "currentNotes": "Generated Overworld blocker-mass presentation is completed with placement-aware painted compositions, exact body/pathing/save authority, inspected Large-map captures, focused runtime proof, and bounded Linux/Windows export/startup evidence. Broader terrain painting and shell-density visual work remain separate future slices.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-battle-refresh-derived-surface-reuse-10184",
-  "currentSliceId": "performance-battle-refresh-derived-surface-reuse-10184",
-  "currentSliceNotes": "Completed: exact invocation-local reuse reduces movement intent, position/hex, and deferred focus costs while deterministic results, legality, balance, focus/accessibility, saves, animation, compatibility, and bounded platform startup remain authoritative.",
+  "currentSlice": "ux-generated-overworld-blocker-mass-presentation-10184",
+  "currentSliceId": "ux-generated-overworld-blocker-mass-presentation-10184",
+  "currentSliceNotes": "Completed: generated blocker placements compose deterministic biome-matched painted anchors across exact body spans; focused pathing/save restore, inspected 108x108 Large-map capture, compatibility/static/editor, and bounded Linux/Windows export-startup gates pass. Full terrain/UI art-direction parity remains unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Refresh Derived-Surface Reuse",
-  "currentSliceUpdatedAt": "2026-08-27T21:07:57Z",
+  "currentSliceTitle": "Generated Overworld Blocker-Mass Presentation",
+  "currentSliceUpdatedAt": "2026-08-27T23:29:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20854,38 +20854,38 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
-  {
-    "id": "performance-battle-refresh-derived-surface-reuse-10184",
-    "title": "Battle Refresh Derived-Surface Reuse",
-    "status": "completed",
-    "classification": "implementation_slice",
-    "source": "PLAN.md",
-    "startedAt": "2026-08-27T20:43:00Z",
-    "updatedAt": "2026-08-27T21:07:57Z",
-    "completedAt": "2026-08-27T21:07:57Z",
-    "implementationTargets": [
-      "PLAN.md",
-      "ops/progress.json",
-      "scripts/core/BattleRules.gd",
-      "scenes/battle/BattleShell.gd",
-      "tests/battle_controller_board_navigation_smoke.gd",
-      "tests/battle_intent_forecast_report.gd",
-      "tests/validate_repo.py"
-    ],
-    "purpose": "Eliminate repeated reachable-cell, movement-intent, tactical-forecast, and related derived-surface work inside one unchanged production Battle refresh.",
-    "completionCriteria": "Independent direct/preloaded whole-payload parity passes; production Battle refresh and deferred-focus timings materially improve; deterministic RNG/results, legality, balance breadth, navigation/accessibility, animation, quick resolve, withdrawal, save/resume, compatibility, static/editor, and bounded Linux/Windows startup authority remain green.",
-    "nonGoals": [
-      "No battle rules, RNG, initiative, action/target legality, AI scoring, balance/content, animation timing/cues, focus/accessibility semantics, save/schema, map/generation, or Native RMG behavior change.",
-      "No persistent/global/session/day cache, deferred gameplay mutation, skipped destination/target, heuristic cutoff, packaged Battle interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
-    ],
-    "blockedReason": null,
-    "remainingWork": "Completed. Select the next tracker-approved release-readiness slice.",
-    "completionEvidence": "Independent old-path/preloaded whole-payload and focus fallback parity are exact. Isolated movement intents improve 15.6->6.8 ms, position/hex surfaces about 16.5-16.9->7.0-7.1 ms, and preferred focus 39.7->0.013 ms; the real board smoke surface/board bucket improves 2521.2->2303.5 ms and span 39.8->36.8 seconds. Battle behavior, balance, saves, accessibility, animation, core, static/editor, and bounded Linux/Windows startup gates pass."
-  },
-  {
-    "id": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
-    "title": "Large RMG Objective-Anchor Catalog Reuse",
-    "status": "completed",
+    {
+      "id": "performance-battle-refresh-derived-surface-reuse-10184",
+      "title": "Battle Refresh Derived-Surface Reuse",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T20:43:00Z",
+      "updatedAt": "2026-08-27T21:07:57Z",
+      "completedAt": "2026-08-27T21:07:57Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/battle_intent_forecast_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Eliminate repeated reachable-cell, movement-intent, tactical-forecast, and related derived-surface work inside one unchanged production Battle refresh.",
+      "completionCriteria": "Independent direct/preloaded whole-payload parity passes; production Battle refresh and deferred-focus timings materially improve; deterministic RNG/results, legality, balance breadth, navigation/accessibility, animation, quick resolve, withdrawal, save/resume, compatibility, static/editor, and bounded Linux/Windows startup authority remain green.",
+      "nonGoals": [
+        "No battle rules, RNG, initiative, action/target legality, AI scoring, balance/content, animation timing/cues, focus/accessibility semantics, save/schema, map/generation, or Native RMG behavior change.",
+        "No persistent/global/session/day cache, deferred gameplay mutation, skipped destination/target, heuristic cutoff, packaged Battle interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed. Select the next tracker-approved release-readiness slice.",
+      "completionEvidence": "Independent old-path/preloaded whole-payload and focus fallback parity are exact. Isolated movement intents improve 15.6->6.8 ms, position/hex surfaces about 16.5-16.9->7.0-7.1 ms, and preferred focus 39.7->0.013 ms; the real board smoke surface/board bucket improves 2521.2->2303.5 ms and span 39.8->36.8 seconds. Battle behavior, balance, saves, accessibility, animation, core, static/editor, and bounded Linux/Windows startup gates pass."
+    },
+    {
+      "id": "performance-large-rmg-objective-anchor-catalog-reuse-10184",
+      "title": "Large RMG Objective-Anchor Catalog Reuse",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "startedAt": "2026-08-27T18:52:23Z",
@@ -20904,7 +20904,7 @@
         "No persistent/global/day/session cache, async turn mutation, target cutoff, heuristic approximation, packaged AI interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
       ],
       "blockedReason": null,
-    "remainingWork": ""
+      "remainingWork": ""
     },
     {
       "id": "performance-town-management-tab-full-state-reuse-10184",
@@ -105006,6 +105006,32 @@
       "notes": "Completed from direct 1280x720 and 1920x1080 victory/defeat pixels. The unchanged result identity, force summaries, actions, recap, and save controls now occupy compact responsive edge docks around one dominant scenic center. Focused compact/wide/compact runtime proves containment, non-overlap, passive convergence, exact compact restoration, full semantic/tooltips/action/save/session authority, and compatibility/static/platform gates pass. Linux evidence is export plus packaged headless startup; Windows evidence is export plus fresh-Wine Boot/MainMenu/native-DLL startup. Packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-27T07:54:37Z",
       "remainingWork": ""
+    },
+    {
+      "id": "ux-generated-overworld-blocker-mass-presentation-10184",
+      "title": "Generated Overworld Blocker-Mass Presentation",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T23:29:12Z",
+      "startedAt": "2026-08-27T22:16:10Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make generated blocker footprints read as coherent landscape masses while preserving exact generated topology and gameplay authority.",
+      "completionCriteria": "Inspected generated Large captures materially improve blocker mass composition; focused runtime proves exact body/pathing/save authority and deterministic sparse presentation; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No generation topology, placement density, passability, body/visit mask, movement, route, save/schema, AI, combat, balance, or Native RMG behavior change.",
+        "No whole terrain/UI redesign, packaged generated-map interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed from three original visual concepts plus direct before/after generated-map captures. Production now represents each generated blocker placement with one to three deterministic biome-matched painted anchors selected across its exact body span. Focused runtime preserves 24 exact body cells and public save/reload authority while rebuilding 7 anchors across 4 placements; the inspected 108x108 Large save composes 2698 anchors across 1776 placements / 5459 exact body cells with complete placement coverage. Generated render-performance, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The concepts still expose broader terrain-painting and shell-density gaps, which are not claimed complete here.",
+      "completedAt": "2026-08-27T23:29:12Z",
+      "remainingWork": ""
     }
   ],
   "project": "heroes-like",
@@ -105016,7 +105042,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Complete the selected Town management-tab full-state reuse optimization; broader product gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -105550,7 +105576,7 @@
   ],
   "summary": "Completed the Generated Town Supply Cache mapped-art correction with detailed existing cache art and preserved gameplay authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-27T14:57:30Z",
+  "updatedAt": "2026-08-27T22:16:10Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
