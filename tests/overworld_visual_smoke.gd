@@ -3650,6 +3650,37 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		if requires_controlled_reveal:
 			session.overworld["fog"] = town_structure_original_fog.duplicate(true)
 			shell.call("_refresh")
+	var generated_supply_tile := Vector2i(7, 1)
+	_reveal_validation_tiles(session, [generated_supply_tile])
+	shell.call("_refresh")
+	var generated_supply_presentation: Dictionary = shell.call("validation_tile_presentation", generated_supply_tile.x, generated_supply_tile.y)
+	if not _assert_art_sprite(generated_supply_presentation, "mapobj_moss_oath_cache", false):
+		return false
+	var generated_supply_art: Dictionary = generated_supply_presentation.get("art_presentation", {})
+	var generated_supply_layout: Dictionary = generated_supply_presentation.get("resource_draw_layout", {})
+	var generated_supply_footprint_rect := _focus_rect_from_payload(generated_supply_layout.get("footprint_rect", {}))
+	var generated_supply_draw_rect := _focus_rect_from_payload(generated_supply_layout.get("draw_rect", {}))
+	if generated_supply_art.get("sprite_asset_ids", []) != ["mapobj_moss_oath_cache"] \
+			or generated_supply_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}] \
+			or bool(generated_supply_art.get("fallback_procedural_marker", true)) \
+			or String(generated_supply_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource" \
+			or not bool(generated_supply_layout.get("town_footprint_colocated", false)) \
+			or not is_equal_approx(float(generated_supply_layout.get("extent_factor", 0.0)), 0.64) \
+			or String(generated_supply_layout.get("edge_anchor", "")) != "top_left" \
+			or generated_supply_layout.get("cell_offset", {}) != {"x": 0, "y": 0} \
+			or not generated_supply_footprint_rect.encloses(generated_supply_draw_rect) \
+			or not is_equal_approx(generated_supply_draw_rect.position.x, generated_supply_footprint_rect.position.x) \
+			or not is_equal_approx(generated_supply_draw_rect.position.y, generated_supply_footprint_rect.position.y):
+		push_error("Overworld smoke: Generated Town Supply Cache did not resolve as the exact compact top-left mapped cache sprite. presentation=%s" % generated_supply_presentation)
+		get_tree().quit(1)
+		return false
+	var repeated_generated_supply_presentation: Dictionary = shell.call("validation_tile_presentation", generated_supply_tile.x, generated_supply_tile.y)
+	if repeated_generated_supply_presentation != generated_supply_presentation:
+		push_error("Overworld smoke: Generated Town Supply Cache mapped presentation was unstable. first=%s repeat=%s" % [generated_supply_presentation, repeated_generated_supply_presentation])
+		get_tree().quit(1)
+		return false
+	session.overworld["fog"] = town_structure_original_fog.duplicate(true)
+	shell.call("_refresh")
 	if session.to_dict() != town_structure_authority_before:
 		push_error("Overworld smoke: town-adjunct multi-tile structure presentation mutated session authority.")
 		get_tree().quit(1)

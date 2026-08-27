@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The town-adjunct multi-tile structure-scale correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "currentNotes": "The Generated Town Supply Cache mapped-art correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-town-adjunct-structure-scale-10184",
-  "currentSliceId": "presentation-overworld-town-adjunct-structure-scale-10184",
-  "currentSliceNotes": "Completed: town-colocated multi-tile resource structures use compact outward-edge presentation while exact world footprints and gameplay authority remain unchanged.",
+  "currentSlice": "presentation-overworld-generated-town-supply-cache-art-10184",
+  "currentSliceId": "presentation-overworld-generated-town-supply-cache-art-10184",
+  "currentSliceNotes": "Completed: the Generated Town Supply Cache uses detailed mapped cache art while exact generated support and gameplay authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld town-adjunct structure scale",
-  "currentSliceUpdatedAt": "2026-08-27T00:54:10Z",
+  "currentSliceTitle": "Overworld Generated Town Supply Cache art",
+  "currentSliceUpdatedAt": "2026-08-27T01:07:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,8 +20852,41 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The town-adjunct multi-tile structure-scale slice is completed with pixel, runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
+  "notes": "The Generated Town Supply Cache mapped-art slice is completed with pixel, runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-generated-town-supply-cache-art-10184",
+      "title": "Overworld Generated Town Supply Cache art",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T00:57:13Z",
+      "updatedAt": "2026-08-27T01:07:54Z",
+      "completedAt": "2026-08-27T01:07:54Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the Generated Town Supply Cache procedural mine silhouette with fitting existing detailed cache art while preserving its exact generated support behavior.",
+      "completionCriteria": "Inspected 1280/1920 captures plus broad Overworld runtime prove exact mapped asset identity, compact top-left containment, no fallback, stable payloads, restored fog, and unchanged route/session authority; core, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new bitmap, asset pixel/import edit, generated support placement/content/economy, resource output, ownership/control, interaction/route, town geometry, gameplay, save/schema, AI, balance, or Native RMG change.",
+        "No broad resource remapping, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for the Generated Town Supply Cache mapped-art boundary. Inspected 1280/1920 pixels, broad Overworld runtime, route, core, repository/editor, and bounded Linux/Windows startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "broadVisualArtifact": "/tmp/heroes-supply-cache-overworld.QwoY8r",
+        "captureArtifact": "/tmp/heroes-supply-cache-capture.7upxsl",
+        "routeArtifact": "/tmp/heroes-supply-cache-overworld_full_route_movement_regression.aGMTXi",
+        "coreArtifact": "/tmp/heroes-supply-cache-core_systems_regression_smoke.eDixCw",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-overworld-town-adjunct-structure-scale-10184",
       "title": "Overworld town-adjunct structure scale",
@@ -105022,9 +105055,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the bounded town-adjunct multi-tile structure-scale correction with compact outward-edge presentation and preserved world-footprint authority.",
+  "summary": "Completed the Generated Town Supply Cache mapped-art correction with detailed existing cache art and preserved gameplay authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-27T00:54:10Z",
+  "updatedAt": "2026-08-27T01:07:54Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

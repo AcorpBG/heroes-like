@@ -1289,6 +1289,7 @@ OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
     "site_roadside_sanctum": "shrine",
     "site_ember_signal_post": "ember_signal_post",
     "site_frontier_rare_exchange": "mapobj_market_caravanserai",
+    "site_generated_town_required_source_cache": "mapobj_moss_oath_cache",
 }
 RELEASE_LOGISTICS_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers"}
 STRATEGIC_RESPONSE_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers", "lockmarsh-surge"}
@@ -41849,6 +41850,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 
     visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
     art_contract_block = gd_function_block(visual_text, "_assert_overworld_art_contract")
+    signal_contract_start = art_contract_block.find("var signal_authority_before: Dictionary = session.to_dict()")
+    signal_contract_block = art_contract_block[signal_contract_start:] if signal_contract_start >= 0 else ""
     for required_token in (
         'var signal_authority_before: Dictionary = session.to_dict()',
         'shell.call("validation_tile_presentation", 2, 3)',
@@ -41858,7 +41861,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'var repeated_signal_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)',
         'repeated_signal_presentation != signal_presentation or session.to_dict() != signal_authority_before',
     ):
-        ensure(required_token in art_contract_block, errors, f"Overworld visual smoke is missing exact Ember Signal Post field-sprite authority: {required_token}")
+        ensure(required_token in signal_contract_block, errors, f"Overworld visual smoke is missing exact Ember Signal Post field-sprite authority: {required_token}")
     for forbidden_token in (
         'unmapped faction outpost did not preserve procedural marker fallback',
         'fallback_presentation',
@@ -41867,7 +41870,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'queue_redraw',
         'create_timer',
     ):
-        ensure(forbidden_token not in art_contract_block, errors, f"Ember Signal Post visual proof must not restore fallback or mutate renderer/game authority: {forbidden_token}")
+        ensure(forbidden_token not in signal_contract_block, errors, f"Ember Signal Post visual proof must not restore fallback or mutate renderer/game authority: {forbidden_token}")
 
     decorative_manifest_path = res_path_to_disk(str(manifest.get("decorative_object_sprite_manifest", "")))
     ensure(decorative_manifest_path.exists(), errors, "Overworld art manifest must reference the decorative object sprite manifest")
@@ -42093,6 +42096,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'structure_draw_rect.position.y, structure_footprint_rect.position.y',
         'repeated_structure_presentation != structure_presentation',
         'session.to_dict() != town_structure_authority_before',
+        'var generated_supply_tile := Vector2i(7, 1)',
+        '_assert_art_sprite(generated_supply_presentation, "mapobj_moss_oath_cache", false)',
+        'generated_supply_art.get("sprite_asset_ids", []) != ["mapobj_moss_oath_cache"]',
+        'generated_supply_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}]',
+        'bool(generated_supply_art.get("fallback_procedural_marker", true))',
+        'String(generated_supply_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource"',
+        'String(generated_supply_layout.get("edge_anchor", "")) != "top_left"',
+        'generated_supply_layout.get("cell_offset", {}) != {"x": 0, "y": 0}',
+        'repeated_generated_supply_presentation != generated_supply_presentation',
     ):
         ensure(required_token in rare_exchange_smoke_text, errors, f"Overworld visual smoke is missing town-adjunct multi-tile structure-scale authority: {required_token}")
     for site_id, entry in site_sprites.items():
