@@ -26675,8 +26675,11 @@ def validate_overworld_fog(errors: list[str]) -> None:
     texture_region_block = fog_function_block(map_view_text, "_canvas_draw_texture_rect_region")
     frontier_draw_block = fog_function_block(map_view_text, "_draw_explored_terrain_boundary")
     frontier_directions_block = fog_function_block(map_view_text, "_explored_fog_frontier_directions")
-    frontier_gradient_points_block = fog_function_block(map_view_text, "_explored_fog_frontier_gradient_points")
-    frontier_gradient_colors_block = fog_function_block(map_view_text, "_explored_fog_frontier_gradient_colors")
+    frontier_boundary_block = fog_function_block(map_view_text, "_explored_fog_frontier_boundary_segment")
+    frontier_inward_offset_block = fog_function_block(map_view_text, "_explored_fog_frontier_inward_offset")
+    frontier_feather_colors_block = fog_function_block(map_view_text, "_explored_fog_frontier_feather_colors")
+    frontier_cap_points_block = fog_function_block(map_view_text, "_explored_fog_frontier_cap_points")
+    frontier_feather_draw_block = fog_function_block(map_view_text, "_draw_explored_fog_frontier_feather")
     frontier_edge_points_block = fog_function_block(map_view_text, "_explored_fog_frontier_edge_points")
     frontier_edge_block = fog_function_block(map_view_text, "_draw_explored_fog_frontier_edge")
     frontier_payload_block = fog_function_block(map_view_text, "_explored_fog_frontier_payload")
@@ -26762,15 +26765,18 @@ def validate_overworld_fog(errors: list[str]) -> None:
         ensure(forbidden_token not in fog_case_block, errors, f"Overworld visual fog owner must observe public presentation without private rendering or state mutation: {forbidden_token}")
 
     for required_token in (
-        'const EXPLORED_FOG_FRONTIER_MODEL := "inward_gradient_irregular_cartographic_contour"',
+        'const EXPLORED_FOG_FRONTIER_MODEL := "segmented_deep_inward_cartographic_veil_feather"',
+        'const EXPLORED_FOG_FRONTIER_SURFACE_MODEL := "boundary_cap_plus_contour_segment_quads"',
         "const EXPLORED_FOG_FRONTIER_DEPTH_FACTOR := 0.32",
-        "const EXPLORED_FOG_FRONTIER_EDGE_ALPHA := 0.24",
+        "const EXPLORED_FOG_FRONTIER_CAP_ALPHA := 0.54",
+        "const EXPLORED_FOG_FRONTIER_EDGE_ALPHA := 0.34",
         "const EXPLORED_FOG_FRONTIER_INNER_ALPHA := 0.0",
         "const EXPLORED_FOG_FRONTIER_COLOR := Color(0.025, 0.035, 0.045, 1.0)",
-        "const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.16)",
-        "const EXPLORED_FOG_CONTOUR_POINT_COUNT := 5",
-        "const EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR := 0.018",
-        "const EXPLORED_FOG_CONTOUR_MAX_INSET_FACTOR := 0.060",
+        "const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.22)",
+        "const EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH := 1.0",
+        "const EXPLORED_FOG_CONTOUR_POINT_COUNT := 9",
+        "const EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR := 0.05",
+        "const EXPLORED_FOG_CONTOUR_MAX_INSET_FACTOR := 0.14",
     ):
         ensure(map_view_text.count(required_token) == 1, errors, f"Soft fog frontier must own one exact bounded presentation constant: {required_token}")
     ensure(
@@ -26783,12 +26789,10 @@ def validate_overworld_fog(errors: list[str]) -> None:
     )
     for required_token in (
         "for direction_value in _explored_fog_frontier_directions(tile):",
-        "var gradient_points := _explored_fog_frontier_gradient_points(rect, direction)",
-        "if gradient_points.size() == 4:",
-        "_canvas_draw_polygon(gradient_points, _explored_fog_frontier_gradient_colors())",
+        "_draw_explored_fog_frontier_feather(tile, rect, direction)",
         "_draw_explored_fog_frontier_edge(tile, rect, direction)",
     ):
-        ensure(required_token in frontier_draw_block, errors, f"Explored fog frontier must draw one exact inward vertex gradient and edge: {required_token}")
+        ensure(required_token in frontier_draw_block, errors, f"Explored fog frontier must draw one exact segmented inward feather and edge: {required_token}")
     for required_token in (
         'for direction in ["N", "E", "S", "W"]:',
         "var neighbor: Vector2i = tile + checks[direction]",
@@ -26799,6 +26803,8 @@ def validate_overworld_fog(errors: list[str]) -> None:
         ensure(required_token in frontier_directions_block, errors, f"Fog frontier directions must derive only from ordered cardinal explored booleans: {required_token}")
     for forbidden_token in ("_terrain_at", "_road_tile_payload", "_visible_object", "_map_data", "content", "texture", "rand", "Time.", "await ", "create_timer", "queue_redraw"):
         ensure(forbidden_token not in frontier_directions_block, errors, f"Fog frontier direction ownership must never sample hidden identity or mutate timing: {forbidden_token}")
+    for required_token in ('"N":', '"S":', '"W":', '"E":', "return PackedVector2Array(["):
+        ensure(required_token in frontier_boundary_block, errors, f"Fog frontier boundary segment must retain exact cardinal tile edges: {required_token}")
     for required_token in (
         '"N":',
         '"S":',
@@ -26806,15 +26812,46 @@ def validate_overworld_fog(errors: list[str]) -> None:
         '"E":',
         "rect.size.x * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR",
         "rect.size.y * EXPLORED_FOG_FRONTIER_DEPTH_FACTOR",
-        "return PackedVector2Array([",
+        "return Vector2.ZERO",
     ):
-        ensure(required_token in frontier_gradient_points_block, errors, f"Fog frontier gradient geometry must stay contained on the explored side: {required_token}")
+        ensure(required_token in frontier_inward_offset_block, errors, f"Fog frontier feather offsets must remain inward and bounded per cardinal edge: {required_token}")
     for required_token in (
         "EXPLORED_FOG_FRONTIER_EDGE_ALPHA",
         "EXPLORED_FOG_FRONTIER_INNER_ALPHA",
         "return PackedColorArray([edge_color, edge_color, inner_color, inner_color])",
     ):
-        ensure(required_token in frontier_gradient_colors_block, errors, f"Fog frontier must interpolate from two opaque-edge vertices to two transparent-inner vertices: {required_token}")
+        ensure(required_token in frontier_feather_colors_block, errors, f"Fog frontier must interpolate each segment from two dark-edge vertices to two transparent-inner vertices: {required_token}")
+    for required_token in (
+        "var boundary := _explored_fog_frontier_boundary_segment(rect, direction)",
+        "var contour := _explored_fog_frontier_edge_points(tile, rect, direction)",
+        "var points := PackedVector2Array([boundary[0], boundary[1]])",
+        "for point_index in range(contour.size() - 2, 0, -1):",
+        "points.append(contour[point_index])",
+        "return points",
+    ):
+        ensure(required_token in frontier_cap_points_block, errors, f"Fog frontier cap must join the exact tile edge to the deterministic irregular contour: {required_token}")
+    for required_token in (
+        "var contour := _explored_fog_frontier_edge_points(tile, rect, direction)",
+        "var cap_points := _explored_fog_frontier_cap_points(tile, rect, direction)",
+        "_canvas_draw_colored_polygon(cap_points, Color(",
+        "EXPLORED_FOG_FRONTIER_CAP_ALPHA",
+        "var inward_offset := _explored_fog_frontier_inward_offset(rect, direction)",
+        "var feather_colors := _explored_fog_frontier_feather_colors()",
+        "for point_index in range(contour.size() - 1):",
+        "edge_end + inward_offset",
+        "edge_start + inward_offset",
+        "_canvas_draw_polygon(PackedVector2Array([",
+    ):
+        ensure(required_token in frontier_feather_draw_block, errors, f"Fog frontier must draw one cap plus exact contiguous segmented contour quads: {required_token}")
+    for block_name, block in (
+        ("boundary segment", frontier_boundary_block),
+        ("inward offset", frontier_inward_offset_block),
+        ("feather colors", frontier_feather_colors_block),
+        ("cap geometry", frontier_cap_points_block),
+        ("feather draw", frontier_feather_draw_block),
+    ):
+        for forbidden_token in ("_terrain_at", "_road_tile_payload", "_visible_object", "_map_data", "OverworldRulesScript", "rand", "Time.", "await ", "create_timer", "queue_redraw"):
+            ensure(forbidden_token not in block, errors, f"Fog frontier {block_name} must stay presentation-only and hidden-identity silent: {forbidden_token}")
     for required_token in (
         'direction not in ["N", "E", "S", "W"]',
         "for point_index in range(EXPLORED_FOG_CONTOUR_POINT_COUNT):",
@@ -26844,10 +26881,14 @@ def validate_overworld_fog(errors: list[str]) -> None:
         '"directions": directions.duplicate()',
         '"direction_order": ["N", "E", "S", "W"]',
         '"softened_corners": softened_corners',
+        '"surface_model": EXPLORED_FOG_FRONTIER_SURFACE_MODEL',
+        '"cap_alpha": EXPLORED_FOG_FRONTIER_CAP_ALPHA',
+        '"cap_polygon_point_count": EXPLORED_FOG_CONTOUR_POINT_COUNT',
         '"gradient_stop_count": 2',
         '"gradient_depth_factor": EXPLORED_FOG_FRONTIER_DEPTH_FACTOR',
         '"gradient_edge_alpha": EXPLORED_FOG_FRONTIER_EDGE_ALPHA',
         '"gradient_inner_alpha": EXPLORED_FOG_FRONTIER_INNER_ALPHA',
+        '"gradient_segment_count_per_direction": EXPLORED_FOG_CONTOUR_POINT_COUNT - 1',
         '"contour_profiles": contour_profiles.duplicate(true)',
         '"contour_point_count": EXPLORED_FOG_CONTOUR_POINT_COUNT',
         '"contour_min_inset_factor": EXPLORED_FOG_CONTOUR_MIN_INSET_FACTOR',
@@ -26881,10 +26922,14 @@ def validate_overworld_fog(errors: list[str]) -> None:
         '"directions": ["E", "S"], "corners": ["SE"]',
         '"directions": ["S", "W"], "corners": ["SW"]',
         '"directions": [], "corners": []',
-        'String(frontier.get("model", "")) != "inward_gradient_irregular_cartographic_contour"',
+        'String(frontier.get("model", "")) != "segmented_deep_inward_cartographic_veil_feather"',
+        'String(frontier.get("surface_model", "")) != "boundary_cap_plus_contour_segment_quads"',
+        'float(frontier.get("cap_alpha", 0.0)), 0.54',
+        'int(frontier.get("cap_polygon_point_count", 0)) != 9',
         'float(frontier.get("gradient_depth_factor", 0.0)), 0.32',
-        'float(frontier.get("gradient_edge_alpha", 0.0)), 0.24',
+        'float(frontier.get("gradient_edge_alpha", 0.0)), 0.34',
         'float(frontier.get("gradient_inner_alpha", -1.0)), 0.0',
+        'int(frontier.get("gradient_segment_count_per_direction", 0)) != 8',
         'not _fog_contour_profiles_exact(frontier, case_row.get("directions", []))',
         'String(frontier.get("neighbor_basis", "")) != "cardinal_explored_boolean_only"',
         'String(hidden_terrain.get("terrain", "leaked")) != ""',
@@ -26896,12 +26941,12 @@ def validate_overworld_fog(errors: list[str]) -> None:
     for required_token in (
         'var profiles: Dictionary = frontier.get("contour_profiles", {})',
         "if profiles.keys() != expected_directions:",
-        "if profile.size() != 5:",
-        "var progress := float(point_index) / 4.0",
-        "y < 0.018 or y > 0.060",
-        "y < 0.940 or y > 0.982",
-        "x < 0.018 or x > 0.060",
-        "x < 0.940 or x > 0.982",
+        "if profile.size() != 9:",
+        "var progress := float(point_index) / 8.0",
+        "y < 0.05 or y > 0.14",
+        "y < 0.86 or y > 0.95",
+        "x < 0.05 or x > 0.14",
+        "x < 0.86 or x > 0.95",
     ):
         ensure(required_token in ninefold_contour_block, errors, f"Ninefold fog contour owner must independently prove exact normalized endpoint and inward-inset geometry: {required_token}")
     for forbidden_token in ("_explored_fog_frontier", "_stable_unit_fraction", "_draw_", "set_map_state", "sort(", "erase(", "await ", "create_timer"):
@@ -26938,7 +26983,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
         'int(summary.get("hidden_exact_count", 0)) != hidden_count',
         'int(summary.get("hidden_textured_shroud_exact_count", 0)) != hidden_count',
         'int(summary.get("invalid_direction_count", -1)) != 0',
-        '["inward_gradient_irregular_cartographic_contour"]',
+        '["segmented_deep_inward_cartographic_veil_feather"]',
         '["continuous_identity_silent_textured_cartographic_veil"]',
         '["res://art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png"]',
         '["whole_board_normalized_once_clipped_by_hidden_cells"]',

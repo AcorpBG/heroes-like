@@ -625,14 +625,19 @@ func _fog_frontier_summary(overworld: Node) -> Dictionary:
 					invalid_direction_count += 1
 			if (
 				bool(frontier.get("drawn", false))
+				and String(frontier.get("surface_model", "")) == "boundary_cap_plus_contour_segment_quads"
+				and is_equal_approx(float(frontier.get("cap_alpha", 0.0)), 0.54)
+				and int(frontier.get("cap_polygon_point_count", 0)) == 9
 				and int(frontier.get("gradient_stop_count", 0)) == 2
 				and is_equal_approx(float(frontier.get("gradient_depth_factor", 0.0)), 0.32)
-				and is_equal_approx(float(frontier.get("gradient_edge_alpha", 0.0)), 0.24)
+				and is_equal_approx(float(frontier.get("gradient_edge_alpha", 0.0)), 0.34)
 				and is_equal_approx(float(frontier.get("gradient_inner_alpha", -1.0)), 0.0)
-				and is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.16)
-				and int(frontier.get("contour_point_count", 0)) == 5
-				and is_equal_approx(float(frontier.get("contour_min_inset_factor", 0.0)), 0.018)
-				and is_equal_approx(float(frontier.get("contour_max_inset_factor", 0.0)), 0.060)
+				and int(frontier.get("gradient_segment_count_per_direction", 0)) == 8
+				and is_equal_approx(float(frontier.get("edge_alpha", 0.0)), 0.22)
+				and is_equal_approx(float(frontier.get("edge_width", 0.0)), 1.0)
+				and int(frontier.get("contour_point_count", 0)) == 9
+				and is_equal_approx(float(frontier.get("contour_min_inset_factor", 0.0)), 0.05)
+				and is_equal_approx(float(frontier.get("contour_max_inset_factor", 0.0)), 0.14)
 				and bool(frontier.get("contour_endpoints_on_boundary", false))
 				and not bool(frontier.get("contour_hidden_side_intrusion", true))
 				and String(frontier.get("contour_variation_basis", "")) == "explored_tile_direction_only"
@@ -674,7 +679,7 @@ func _assert_fog_frontier_summary(summary: Dictionary, label: String) -> bool:
 		or int(summary.get("hidden_exact_count", 0)) != hidden_count
 		or int(summary.get("hidden_textured_shroud_exact_count", 0)) != hidden_count
 		or int(summary.get("invalid_direction_count", -1)) != 0
-		or summary.get("model_ids", []) != ["inward_gradient_irregular_cartographic_contour"]
+		or summary.get("model_ids", []) != ["segmented_deep_inward_cartographic_veil_feather"]
 		or summary.get("hidden_shroud_model_ids", []) != ["continuous_identity_silent_textured_cartographic_veil"]
 		or summary.get("hidden_shroud_texture_paths", []) != ["res://art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png"]
 		or summary.get("hidden_shroud_mapping_ids", []) != ["whole_board_normalized_once_clipped_by_hidden_cells"]

@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "The rich terrain-detail atlas slice is complete; select the next bounded graphical-polish slice from direct current captures.",
+  "currentNotes": "The organic fog-frontier slice is complete; select the next bounded graphical-polish slice from direct current captures.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-rich-terrain-detail-atlas-10184",
-  "currentSliceId": "presentation-overworld-rich-terrain-detail-atlas-10184",
-  "currentSliceNotes": "Completed one clean richer 4x4 terrain-detail bitmap on the existing deterministic biome-aware presentation boundary; broader graphical polish remains open.",
+  "currentSlice": "presentation-overworld-organic-fog-frontier-10184",
+  "currentSliceId": "presentation-overworld-organic-fog-frontier-10184",
+  "currentSliceNotes": "Completed a tuned nine-point boundary cap and eight-segment explored-side feather; inspected captures and focused/generated/compatibility/platform gates pass while hidden identity and gameplay authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Rich Terrain-Detail Atlas",
-  "currentSliceUpdatedAt": "2026-08-27T05:32:30Z",
+  "currentSliceTitle": "Overworld Organic Fog Frontier",
+  "currentSliceUpdatedAt": "2026-08-27T06:03:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104821,6 +104821,32 @@
       "blockedReason": null,
       "notes": "Completed a clean-alpha 1024x1024 4x4 atlas with sixteen isolated richer painterly terrain clusters and adopted it through the existing deterministic biome-aware renderer with bounded 0.38-0.52 extent and 0.88 alpha. Every atlas cell has a transparent 16px inset and at least 25,000 visible pixels. Inspected River Pass 1280x720 and 1920x1080 captures show richer revealed grassland without matte fringe, clutter, seams, or lost road/object/shoreline/fog clarity. Ninefold and generated 36x36 runtime prove all 16 cells, 598 generated detail draws, road/water exclusion, deterministic geometry, movement, and save/reload authority; broad Overworld visual, route, input, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
       "completedAt": "2026-08-27T05:32:30Z"
+    },
+    {
+      "id": "presentation-overworld-organic-fog-frontier-10184",
+      "title": "Overworld Organic Fog Frontier",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T06:03:42Z",
+      "startedAt": "2026-08-27T05:35:18Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the visibly shallow rectangular explored-side fog strip with a deterministic deeper segmented feather that makes the revealed-map silhouette read organically at normal play scale.",
+      "completionCriteria": "Inspected River Pass 1280/1920 captures show a softer organic frontier without lost road/object/shoreline clarity; focused authored/generated natural-fog runtime proves exact segmented geometry, hidden identity silence, deterministic repetition, and unchanged movement/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No fog discovery/visibility/explored authority, terrain identity, map generation, movement/pathing, object/hero/town rendering, interaction, camera, session/save/schema, AI, battle, balance, content, or Native RMG change.",
+        "No bitmap/shader, animation, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed a deterministic explored-side fog frontier using a 0.54-alpha boundary cap plus eight contiguous two-stop feather segments along a nine-point 0.05-0.14 inset contour with 0.32 depth and no hidden-side intrusion. The first 0.72/0.20 high-contrast pass was rejected from rendered pixels for black teeth; the retained lower-contrast tuning visibly softens the River Pass stair-step silhouette at 1280x720 and 1920x1080 without obscuring roads, objects, shoreline, or revealed terrain. Ninefold proves all cardinal/corner/interior cases, exact normalized geometry, deterministic repetition, hidden identity silence, and session authority. Generated natural-fog movement proves 12 to 14 active frontier tiles, zero invalid directions, and exact hidden shroud authority before/after movement. Broad Overworld visual, route, input, focus, accessibility, core, validate_repo, pycompile, editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Fog discovery/visibility, terrain identity, gameplay, save schema, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
+      "completedAt": "2026-08-27T06:03:42Z"
     }
   ],
   "project": "heroes-like",
