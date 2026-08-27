@@ -6,7 +6,10 @@ const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const MAX_SMALL_MAP_TILE_EXTENT := 104.0
 const SMALL_MAP_MATTE_MODEL := "quiet_survey_field_below_playable_board"
 const SMALL_MAP_MATTE_MIN_GUTTER := 48.0
-const TOWN_VISUAL_EXTENT_TILES := 1.64
+const SCALE_HIERARCHY_MODEL := "tile_relative_cartographic_rank_v2"
+const TOWN_VISUAL_EXTENT_TILES := 1.44
+const HERO_FIELD_VISUAL_EXTENT_TILES := 0.67
+const HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES := 0.4484
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -37,6 +40,7 @@ func _run() -> void:
 		"small_scenario_id": SMALL_SCENARIO_ID,
 		"large_scenario_id": LARGE_SCENARIO_ID,
 		"maximum_small_map_tile_extent": MAX_SMALL_MAP_TILE_EXTENT,
+		"scale_hierarchy_model": SCALE_HIERARCHY_MODEL,
 		"small_map_cartographic_matte_model": SMALL_MAP_MATTE_MODEL,
 		"cartographic_matte_active_rows": matte_active_rows,
 		"viewports": [[1280, 720], [1920, 1080]],
@@ -170,7 +174,8 @@ func _town_footprint_exact(shell: Node) -> bool:
 		if int(profile.get("footprint_width_tiles", 0)) != 3 \
 			or int(profile.get("footprint_height_tiles", 0)) != 2 \
 			or int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) != 5 \
-			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.82) \
+			or String(profile.get("scale_hierarchy_model", "")) != SCALE_HIERARCHY_MODEL \
+			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.72) \
 			or not is_equal_approx(float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
 			or String(profile.get("entry_role", "")) != "bottom_middle_visit_approach" \
 			or not bool(profile.get("entry_is_visit_tile", false)) \
@@ -187,7 +192,10 @@ func _hero_scale_exact(map_view: Node, tile_extent: float) -> bool:
 			return false
 		var layout: Dictionary = profile_value.get("layout", {})
 		var sprite_rect := _rect_from_payload(layout.get("sprite_rect", {}))
+		var expected_extent := HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES if bool(layout.get("town_footprint_colocated", false)) else HERO_FIELD_VISUAL_EXTENT_TILES
 		if sprite_rect.size.x <= 0.0 or sprite_rect.size.x > tile_extent + 0.01 \
+			or String(profile_value.get("scale_hierarchy_model", "")) != SCALE_HIERARCHY_MODEL \
+			or not is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), expected_extent) \
 			or not bool(layout.get("sprite_contained_in_tile", false)):
 			return false
 	return true

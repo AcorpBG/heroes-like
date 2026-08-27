@@ -1325,6 +1325,8 @@ func _validate_board_playback_lifecycle() -> void:
 	await get_tree().create_timer(0.16).timeout
 	var active_summary: Dictionary = view.validation_unit_art_summary()
 	var active_states := _observed_animation_states(active_summary)
+	var active_art_sources := _observed_token_art_sources(active_summary)
+	var active_art_source_counts: Dictionary = active_summary.get("token_art_source_counts", {}) if active_summary.get("token_art_source_counts", {}) is Dictionary else {}
 	var active_playback: Dictionary = active_summary.get("animation_playback", {}) if active_summary.get("animation_playback", {}) is Dictionary else {}
 	var active_cue: Dictionary = active_summary.get("cue_playback", {}) if active_summary.get("cue_playback", {}) is Dictionary else {}
 	var active_vfx: Dictionary = active_summary.get("vfx_playback", {}) if active_summary.get("vfx_playback", {}) is Dictionary else {}
@@ -1332,6 +1334,10 @@ func _validate_board_playback_lifecycle() -> void:
 	var active_camera: Dictionary = active_summary.get("camera_playback", {}) if active_summary.get("camera_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle active ranged state", String(active_states.get("player_0", "")), "ranged_aim_release")
 	_expect_equal("lifecycle active status state", String(active_states.get("enemy_0", "")), "status_applied")
+	_expect_equal("lifecycle active source art", String(active_art_sources.get("player_0", "")), "event_animation_sheet")
+	_expect_equal("lifecycle active target art", String(active_art_sources.get("enemy_0", "")), "event_animation_sheet")
+	if int(active_art_source_counts.get("event_animation_sheet", 0)) < 2:
+		_error("Playback lifecycle did not swap both live event owners to animation sheets: %s" % active_art_source_counts)
 	if int(active_playback.get("active_playback_count", 0)) < 2:
 		_error("Playback lifecycle did not keep both source and target events active: %s" % active_playback)
 	if int(active_cue.get("active_cue_record_count", 0)) < 2:
@@ -1345,6 +1351,8 @@ func _validate_board_playback_lifecycle() -> void:
 	await get_tree().create_timer(0.90).timeout
 	var expired_summary: Dictionary = view.validation_unit_art_summary()
 	var expired_states := _observed_animation_states(expired_summary)
+	var expired_art_sources := _observed_token_art_sources(expired_summary)
+	var expired_art_source_counts: Dictionary = expired_summary.get("token_art_source_counts", {}) if expired_summary.get("token_art_source_counts", {}) is Dictionary else {}
 	var expired_playback: Dictionary = expired_summary.get("animation_playback", {}) if expired_summary.get("animation_playback", {}) is Dictionary else {}
 	var expired_cue: Dictionary = expired_summary.get("cue_playback", {}) if expired_summary.get("cue_playback", {}) is Dictionary else {}
 	var expired_vfx: Dictionary = expired_summary.get("vfx_playback", {}) if expired_summary.get("vfx_playback", {}) is Dictionary else {}
@@ -1352,6 +1360,12 @@ func _validate_board_playback_lifecycle() -> void:
 	var expired_camera: Dictionary = expired_summary.get("camera_playback", {}) if expired_summary.get("camera_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle expired source fallback", String(expired_states.get("player_0", "")), "ready_active")
 	_expect_equal("lifecycle expired target fallback", String(expired_states.get("enemy_0", "")), "idle_hold")
+	_expect_equal("lifecycle expired source art", String(expired_art_sources.get("player_0", "")), "resting_battle_icon")
+	_expect_equal("lifecycle expired target art", String(expired_art_sources.get("enemy_0", "")), "resting_battle_icon")
+	_expect_int("lifecycle expired resting icon count", int(expired_art_source_counts.get("resting_battle_icon", -1)), int(expired_summary.get("visible_stack_count", 0)))
+	_expect_int("lifecycle expired event animation count", int(expired_art_source_counts.get("event_animation_sheet", -1)), 0)
+	_expect_int("lifecycle expired animation fallback count", int(expired_art_source_counts.get("animation_sheet_fallback", -1)), 0)
+	_expect_int("lifecycle expired glyph fallback count", int(expired_art_source_counts.get("procedural_glyph_fallback", -1)), 0)
 	if int(expired_playback.get("active_playback_count", -1)) != 0:
 		_error("Playback lifecycle did not expire event states: %s" % expired_playback)
 	if int(expired_cue.get("active_cue_record_count", -1)) != 0:
@@ -1367,6 +1381,10 @@ func _validate_board_playback_lifecycle() -> void:
 	_report["cases"]["board_playback_lifecycle"] = {
 		"active_states": active_states,
 		"expired_states": expired_states,
+		"active_art_sources": active_art_sources,
+		"expired_art_sources": expired_art_sources,
+		"active_art_source_counts": active_art_source_counts,
+		"expired_art_source_counts": expired_art_source_counts,
 		"active_playback": active_playback,
 		"expired_playback": expired_playback,
 		"active_cue_playback": active_cue,
@@ -1929,6 +1947,13 @@ func _observed_animation_states(summary: Dictionary) -> Dictionary:
 		if entry is Dictionary:
 			observed_states[String(entry.get("battle_id", ""))] = String(entry.get("animation_state", ""))
 	return observed_states
+
+func _observed_token_art_sources(summary: Dictionary) -> Dictionary:
+	var observed_sources := {}
+	for entry in summary.get("stacks", []):
+		if entry is Dictionary:
+			observed_sources[String(entry.get("battle_id", ""))] = String(entry.get("token_art_source", ""))
+	return observed_sources
 
 func _presentation_event_types(battle: Dictionary) -> Array:
 	var types := []

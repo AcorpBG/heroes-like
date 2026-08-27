@@ -166,22 +166,23 @@ const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
+const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "tile_relative_cartographic_rank_v2"
 const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.36
 const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.42
-const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.64
-const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.86
-const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.70
-const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.94
-const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.58
+const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.58
+const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.80
+const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.66
+const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.88
+const OBJECT_BLOCKER_VISIBLE_EXTENT_TILES := 0.54
 const OBJECT_DECORATION_VISIBLE_EXTENT_TILES := 0.39
-const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.52
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.82
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_MIN_STEP_TILES := 0.18
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_MIN_STEP_TILES := 0.22
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES := 0.90
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_CAP_STEP_TILES := 0.24
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_CAP_STEP_TILES := 0.28
-const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 1.56
+const OBJECT_DEFAULT_VISIBLE_EXTENT_TILES := 0.50
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_MIN_TILES := 0.74
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_MIN_STEP_TILES := 0.16
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_MIN_STEP_TILES := 0.18
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_BASE_CAP_TILES := 0.82
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_SPAN_CAP_STEP_TILES := 0.20
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_CAP_STEP_TILES := 0.22
+const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 1.32
 const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02
 const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
@@ -237,7 +238,7 @@ const HERO_ANCHOR_STYLE := "hero_foot_contact_shadow"
 const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
 const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"
 const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"
-const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.76
+const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.67
 const HERO_SPRITE_LIFT_FACTOR := 0.30
 const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.76
@@ -252,7 +253,7 @@ const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
 const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
-const TOWN_SPRITE_EXTENT_FACTOR := 0.82
+const TOWN_SPRITE_EXTENT_FACTOR := 0.72
 const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18
 const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint_resource"
 const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64
@@ -5853,6 +5854,7 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 	return {
 		"asset_id": asset_id,
 		"family": family,
+		"scale_hierarchy_model": WORLD_OBJECT_SCALE_HIERARCHY_MODEL,
 		"primary_class": String(profile.get("primary_class", "")),
 		"footprint_tier": String(profile.get("footprint_tier", "")),
 		"semantic_scale_class": _semantic_visual_scale_class(profile),
@@ -5922,6 +5924,7 @@ func validation_town_sprite_scale_payload(asset_id: String = "town_faction_ember
 	return {
 		"asset_id": asset_id,
 		"family": "town",
+		"scale_hierarchy_model": WORLD_OBJECT_SCALE_HIERARCHY_MODEL,
 		"footprint": {"width": TOWN_PRESENTATION_FOOTPRINT.x, "height": TOWN_PRESENTATION_FOOTPRINT.y},
 		"visible_scale_model": String(draw_payload.get("visible_scale_model", "")),
 		"uses_painted_bounds": bool(first_region.get("uses_painted_bounds", false)),
@@ -6822,6 +6825,7 @@ func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
 	var layout := _hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, true)
 	return {
 		"hero_id": hero_id,
+		"scale_hierarchy_model": WORLD_OBJECT_SCALE_HIERARCHY_MODEL,
 		"tile": {"x": tile.x, "y": tile.y},
 		"faction_id": faction_id,
 		"is_active": bool(hero.get("is_active", false)),
@@ -6907,6 +6911,7 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		blocked_cells.append(cell)
 	return {
 		"has_town_footprint": true,
+		"scale_hierarchy_model": WORLD_OBJECT_SCALE_HIERARCHY_MODEL,
 		"presentation_model": TOWN_PRESENTATION_MODEL,
 		"footprint_width_tiles": TOWN_PRESENTATION_FOOTPRINT.x,
 		"footprint_height_tiles": TOWN_PRESENTATION_FOOTPRINT.y,

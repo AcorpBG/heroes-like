@@ -848,13 +848,13 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		_fail("%s generated body composition signature is missing: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
 	if (
-		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 1.56)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_min_tiles", 0.0)), 0.82)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_min_step_tiles", 0.0)), 0.18)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_min_step_tiles", 0.0)), 0.22)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_cap_tiles", 0.0)), 0.90)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_cap_step_tiles", 0.0)), 0.24)
-		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_cap_step_tiles", 0.0)), 0.28)
+		not is_equal_approx(float(summary.get("multi_tile_interactive_cap_tiles", 0.0)), 1.32)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_min_tiles", 0.0)), 0.74)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_min_step_tiles", 0.0)), 0.16)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_min_step_tiles", 0.0)), 0.18)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_base_cap_tiles", 0.0)), 0.82)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_span_cap_step_tiles", 0.0)), 0.20)
+		or not is_equal_approx(float(summary.get("multi_tile_interactive_depth_cap_step_tiles", 0.0)), 0.22)
 	):
 		_fail("%s multi-tile visual cap changed: %s" % [label, summary.get("multi_tile_interactive_cap_tiles", -1.0)])
 		return false
@@ -870,8 +870,8 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 		if multi_tile:
 			var footprint_span := maxi(int(footprint.get("width", 1)), int(footprint.get("height", 1)))
 			var footprint_depth := mini(int(footprint.get("width", 1)), int(footprint.get("height", 1)))
-			var expected_min_tiles := minf(0.82 + float(footprint_span - 1) * 0.18 + float(footprint_depth - 1) * 0.22, 1.56)
-			var expected_cap_tiles := minf(0.90 + float(footprint_span - 1) * 0.24 + float(footprint_depth - 1) * 0.28, 1.56)
+			var expected_min_tiles := minf(0.74 + float(footprint_span - 1) * 0.16 + float(footprint_depth - 1) * 0.18, 1.32)
+			var expected_cap_tiles := minf(0.82 + float(footprint_span - 1) * 0.20 + float(footprint_depth - 1) * 0.22, 1.32)
 			if not bool(metrics.get("uses_multi_tile_visual_cap", false)):
 				_fail("%s multi-tile resource did not use the visual cap: %s" % [label, JSON.stringify(entry)])
 				return false
