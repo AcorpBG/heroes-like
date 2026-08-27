@@ -5081,8 +5081,6 @@ func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile:
 
 func _resource_draw_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
 	var footprint_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)
-	if _object_profile_footprint(_resource_object_profile(node)) != Vector2i(1, 1):
-		return footprint_rect
 	var town_presentation := _town_presentation_at(anchor_tile)
 	if town_presentation.is_empty():
 		return footprint_rect
@@ -5102,8 +5100,7 @@ func _resource_draw_layout_payload(node: Dictionary, anchor_rect: Rect2, anchor_
 	var footprint_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)
 	var draw_rect := _resource_draw_rect(node, anchor_rect, anchor_tile)
 	var town_presentation := _town_presentation_at(anchor_tile)
-	var one_tile := _object_profile_footprint(_resource_object_profile(node)) == Vector2i(1, 1)
-	var colocated := one_tile and not town_presentation.is_empty()
+	var colocated := not town_presentation.is_empty()
 	var cell_offset: Vector2i = town_presentation.get("cell_offset", Vector2i.ZERO) if colocated else Vector2i.ZERO
 	var anchor_right := colocated and float(cell_offset.x) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.x) * 0.5
 	var anchor_bottom := colocated and float(cell_offset.y) + 0.5 >= float(TOWN_PRESENTATION_FOOTPRINT.y) * 0.5

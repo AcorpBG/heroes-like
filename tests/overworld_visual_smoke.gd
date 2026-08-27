@@ -3593,6 +3593,67 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: Frontier Rare Exchange presentation was unstable or mutated session authority. first=%s repeat=%s" % [rare_exchange_presentation, repeated_rare_exchange_presentation])
 		get_tree().quit(1)
 		return false
+	var town_structure_authority_before: Dictionary = session.to_dict()
+	var town_structure_original_fog: Dictionary = session.overworld.get("fog", {}).duplicate(true)
+	var town_structure_cases := [
+		{
+			"tile": Vector2i(0, 1),
+			"asset_id": "mapobj_embergrain_warm_granary",
+			"footprint": {"width": 2, "height": 3},
+			"requires_controlled_reveal": false,
+		},
+		{
+			"tile": Vector2i(8, 1),
+			"asset_id": "mapobj_peatwax_reed_yard",
+			"footprint": {"width": 2, "height": 2},
+			"requires_controlled_reveal": true,
+		},
+	]
+	for town_structure_case in town_structure_cases:
+		var structure_tile: Vector2i = town_structure_case.get("tile", Vector2i(-1, -1))
+		var requires_controlled_reveal := bool(town_structure_case.get("requires_controlled_reveal", false))
+		if requires_controlled_reveal:
+			_reveal_validation_tiles(session, [structure_tile])
+			shell.call("_refresh")
+		var structure_presentation: Dictionary = shell.call("validation_tile_presentation", structure_tile.x, structure_tile.y)
+		var structure_art: Dictionary = structure_presentation.get("art_presentation", {})
+		var expected_asset_id := String(town_structure_case.get("asset_id", ""))
+		if not _assert_art_sprite(structure_presentation, expected_asset_id, false) \
+				or structure_art.get("sprite_asset_ids", []) != [expected_asset_id] \
+				or structure_art.get("sprite_footprints", []) != [town_structure_case.get("footprint", {})] \
+				or bool(structure_art.get("fallback_procedural_marker", true)):
+			push_error("Overworld smoke: town-adjunct multi-tile structure lost its exact mapped art/footprint authority. case=%s presentation=%s" % [town_structure_case, structure_presentation])
+			get_tree().quit(1)
+			return false
+		var structure_layout: Dictionary = structure_presentation.get("resource_draw_layout", {})
+		var structure_footprint_rect := _focus_rect_from_payload(structure_layout.get("footprint_rect", {}))
+		var structure_draw_rect := _focus_rect_from_payload(structure_layout.get("draw_rect", {}))
+		if String(structure_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource" \
+				or not bool(structure_layout.get("town_footprint_colocated", false)) \
+				or not is_equal_approx(float(structure_layout.get("extent_factor", 0.0)), 0.64) \
+				or String(structure_layout.get("edge_anchor", "")) != "top_right" \
+				or structure_layout.get("cell_offset", {}) != {"x": 1, "y": 0} \
+				or not bool(structure_layout.get("contained_in_footprint_tile", false)) \
+				or not structure_footprint_rect.encloses(structure_draw_rect) \
+				or not is_equal_approx(structure_draw_rect.size.x, structure_footprint_rect.size.x * 0.64) \
+				or not is_equal_approx(structure_draw_rect.size.y, structure_footprint_rect.size.y * 0.64) \
+				or not is_equal_approx(structure_draw_rect.end.x, structure_footprint_rect.end.x) \
+				or not is_equal_approx(structure_draw_rect.position.y, structure_footprint_rect.position.y):
+			push_error("Overworld smoke: town-adjunct multi-tile structure did not use exact compact top-right presentation geometry. case=%s presentation=%s" % [town_structure_case, structure_presentation])
+			get_tree().quit(1)
+			return false
+		var repeated_structure_presentation: Dictionary = shell.call("validation_tile_presentation", structure_tile.x, structure_tile.y)
+		if repeated_structure_presentation != structure_presentation:
+			push_error("Overworld smoke: town-adjunct multi-tile structure presentation was unstable. case=%s first=%s repeat=%s" % [town_structure_case, structure_presentation, repeated_structure_presentation])
+			get_tree().quit(1)
+			return false
+		if requires_controlled_reveal:
+			session.overworld["fog"] = town_structure_original_fog.duplicate(true)
+			shell.call("_refresh")
+	if session.to_dict() != town_structure_authority_before:
+		push_error("Overworld smoke: town-adjunct multi-tile structure presentation mutated session authority.")
+		get_tree().quit(1)
+		return false
 	var artifact_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 0)
 	if not _assert_art_sprite(artifact_presentation, "artifact_field_trailsinger_boots", false):
 		return false
