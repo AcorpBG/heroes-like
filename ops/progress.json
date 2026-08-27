@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next bounded graphical-polish slice from fresh rendered evidence."
+    "Select the next tracker-approved graphical-polish slice from fresh inspected game pixels."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,18 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-overworld-surface-detail-legibility-10184",
-    "title": "Overworld Surface-Detail Legibility",
+    "id": "presentation-world-object-scale-and-battle-medallions-10184",
+    "title": "World-Object Scale and Battle Icon-First Medallions",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T01:34:50Z",
-    "updatedAt": "2026-08-27T01:45:53Z",
-    "completedAt": "2026-08-27T01:45:53Z",
+    "startedAt": "2026-08-27T01:51:01Z",
+    "updatedAt": "2026-08-27T02:36:57Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the surface-detail legibility pass. Existing biome-aware clusters now paint on one eligible tile in two at 34-46% tile extent; inspected pixels and authored/generated runtime preserve roads, water, objects, terrain, route, movement, session, and save authority. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass."
+    "notes": "Completed from fresh inspected 1280/1920 Overworld and Battle pixels. Tile-relative towns, heroes, encounters, structures, waypoints, landmarks, blockers, and default objects now form one coherent cartographic hierarchy without changing logical map authority. Resting Battle stacks use exact shipped battle icons, live event playback alone swaps to animation-sheet frames, and expiry restores icons. Focused authored/generated scale, hero/commander, animation, visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged interaction and overall release readiness remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15329,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "The surface-detail legibility slice is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "currentNotes": "World-object scale and Battle icon-first medallions are complete; select the next graphical-polish slice from fresh inspected pixels.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-surface-detail-legibility-10184",
-  "currentSliceId": "presentation-overworld-surface-detail-legibility-10184",
-  "currentSliceNotes": "Completed: existing biome detail is readable at normal play scale while exact terrain, road/water exclusion, object, route, movement, session, and save authority remain unchanged.",
+  "currentSlice": "presentation-world-object-scale-and-battle-medallions-10184",
+  "currentSliceId": "presentation-world-object-scale-and-battle-medallions-10184",
+  "currentSliceNotes": "Completed: Overworld objects use a coherent tile-relative hierarchy and Battle stacks use readable resting icons with exact event-only animation swaps.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Surface-Detail Legibility",
-  "currentSliceUpdatedAt": "2026-08-27T01:45:53Z",
+  "currentSliceTitle": "World-Object Scale and Battle Icon-First Medallions",
+  "currentSliceUpdatedAt": "2026-08-27T02:36:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,8 +20851,39 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The surface-detail legibility presentation correction is completed with pixel, authored/generated runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
+  "notes": "The world-object scale and Battle icon-first medallion slice is complete from direct inspected pixels and focused runtime; blockers are empty. Select the next bounded graphical-polish slice from fresh rendered evidence.",
   "plannedSlices": [
+    {
+      "id": "presentation-world-object-scale-and-battle-medallions-10184",
+      "title": "World-Object Scale and Battle Icon-First Medallions",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T01:51:01Z",
+      "updatedAt": "2026-08-27T02:36:57Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Harmonize tile-relative Overworld object ranks and use existing detailed battle icons for resting stack medallions while retaining exact animation-sheet frames for live event playback.",
+      "completionCriteria": "Inspected 1280/1920 Overworld and Battle captures plus focused runtime prove a coherent cartographic object hierarchy with unchanged logical map authority, readable idle icons, exact event-only animation swap/restoration, fail-closed fallbacks, unchanged token/hit geometry and combat authority; focused scale, animation, Board, accessibility, visual, core, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No bitmap/import, logical map footprint/position/entry/passability/pathing, unit identity/stats/abilities, count/position/token/hit geometry, grid/layout, input/focus/accessibility semantics, combat, AI, balance, content, save/schema, town-shell, generation, or Native RMG change.",
+        "No new animation, animation timing/frame/state, VFX/audio/camera, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for this slice. Select the next tracker-approved graphical-polish slice from fresh inspected pixels; packaged interaction, hardware certification, signing/publication, whole-game validation, and overall release readiness remain open."
+    },
     {
       "id": "presentation-overworld-surface-detail-legibility-10184",
       "title": "Overworld Surface-Detail Legibility",

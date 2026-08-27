@@ -825,11 +825,20 @@ func _run_battle_smoke() -> bool:
 		return false
 	var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")
 	var token_visual: Dictionary = unit_art_summary.get("token_visual_contract", {})
+	var token_art_sources: Dictionary = unit_art_summary.get("token_art_source_counts", {})
 	var inner_fill: Color = token_visual.get("inner_fill", Color.WHITE)
 	var token_hex_radius := float(token_visual.get("hex_radius", 0.0))
 	var expected_hit_radius := clampf(token_hex_radius * 0.58, 13.0, 28.0) + 10.0
 	if (
-		String(token_visual.get("presentation_model", "")) != "character_first_dark_medallion_side_rim"
+		String(token_visual.get("presentation_model", "")) != "icon_first_medallion_event_animation_swap"
+		or String(token_visual.get("resting_art_source", "")) != "battle_icon"
+		or String(token_visual.get("event_art_source", "")) != "animation_sheet"
+		or not bool(token_visual.get("event_animation_requires_live_playback_record", false))
+		or not bool(token_visual.get("playback_expiry_restores_resting_icon", false))
+		or int(token_art_sources.get("resting_battle_icon", -1)) != int(unit_art_summary.get("visible_stack_count", 0))
+		or int(token_art_sources.get("event_animation_sheet", -1)) != 0
+		or int(token_art_sources.get("animation_sheet_fallback", -1)) != 0
+		or int(token_art_sources.get("procedural_glyph_fallback", -1)) != 0
 		or not is_equal_approx(float(token_visual.get("token_radius_factor", 0.0)), 0.68)
 		or not is_equal_approx(float(token_visual.get("token_radius_min", 0.0)), 15.0)
 		or not is_equal_approx(float(token_visual.get("token_radius_max", 0.0)), 32.0)
@@ -851,7 +860,7 @@ func _run_battle_smoke() -> bool:
 		or not bool(token_visual.get("art_contained_within_token", false))
 		or float(token_visual.get("hit_radius", 0.0)) <= float(token_visual.get("token_radius", 0.0))
 	):
-		push_error("Battle smoke: stack art did not retain the larger character-first medallion hierarchy inside unchanged hit geometry and neighboring-cell separation: %s." % token_visual)
+		push_error("Battle smoke: stack art did not retain icon-first resting medallions, event-only animation swaps, unchanged hit geometry, and neighboring-cell separation: %s / %s." % [token_visual, token_art_sources])
 		get_tree().quit(1)
 		return false
 	if not await _capture_color_cue_frame("battle_color_cues"):

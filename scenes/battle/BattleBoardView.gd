@@ -39,6 +39,7 @@ const TURN_STRIP_CHIP_FILL := Color(0.055, 0.066, 0.072, 0.96)
 const TURN_STRIP_ACTIVE_FILL := Color(0.115, 0.102, 0.060, 0.98)
 const TURN_STRIP_PORTRAIT_FILL := Color(0.018, 0.024, 0.028, 0.96)
 const TURN_STRIP_QUEUED_FRAME := Color(0.45, 0.49, 0.48, 0.78)
+const STACK_TOKEN_PRESENTATION_MODEL := "icon_first_medallion_event_animation_swap"
 const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)
 const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
 const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
@@ -937,6 +938,12 @@ func validation_unit_art_summary() -> Dictionary:
 	var missing := []
 	var presentation_motion_count := 0
 	var presentation_motion_roles := {}
+	var token_art_source_counts := {
+		"resting_battle_icon": 0,
+		"event_animation_sheet": 0,
+		"animation_sheet_fallback": 0,
+		"procedural_glyph_fallback": 0,
+	}
 	var stack_cells := _stack_cells()
 	var hex_layout := _current_hex_layout()
 	for stack in _all_visible_stacks():
@@ -954,6 +961,8 @@ func validation_unit_art_summary() -> Dictionary:
 		var animation_sheet := _unit_animation_sheet_for_stack(stack)
 		var loaded := texture != null
 		var animation_loaded := animation_sheet != null
+		var token_art_source := _stack_token_art_source(stack)
+		token_art_source_counts[token_art_source] = int(token_art_source_counts.get(token_art_source, 0)) + 1
 		if loaded:
 			loaded_count += 1
 		else:
@@ -970,6 +979,7 @@ func validation_unit_art_summary() -> Dictionary:
 			"loaded": loaded,
 			"animation_sheet": animation_path,
 			"animation_loaded": animation_loaded,
+			"token_art_source": token_art_source,
 			"animation_state": _animation_state_for_stack(stack),
 			"animation_frame_index": _animation_frame_index_for_stack(stack),
 			"cell_q": cell.x,
@@ -1002,6 +1012,7 @@ func validation_unit_art_summary() -> Dictionary:
 		"camera_playback": validation_camera_playback_summary(),
 		"presentation_motion_count": presentation_motion_count,
 		"presentation_motion_roles": presentation_motion_roles,
+		"token_art_source_counts": token_art_source_counts,
 		"token_visual_contract": _stack_token_visual_contract(hex_layout),
 		"stacks": stack_entries,
 	}
@@ -1010,7 +1021,11 @@ func _stack_token_visual_contract(hex_layout: Dictionary) -> Dictionary:
 	var hex_radius := float(hex_layout.get("radius", 1.0))
 	var token_radius := _stack_token_radius(hex_radius)
 	return {
-		"presentation_model": "character_first_dark_medallion_side_rim",
+		"presentation_model": STACK_TOKEN_PRESENTATION_MODEL,
+		"resting_art_source": "battle_icon",
+		"event_art_source": "animation_sheet",
+		"event_animation_requires_live_playback_record": true,
+		"playback_expiry_restores_resting_icon": true,
 		"token_radius": token_radius,
 		"hit_radius": _stack_hit_shape_radius(hex_radius),
 		"hex_radius": hex_radius,
@@ -2373,19 +2388,23 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		draw_circle(center, token_radius, STACK_TOKEN_INNER_FILL)
 		var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)
 		draw_circle(center, token_radius - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)
+		var art_source := _stack_token_art_source(stack)
 		var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
-		if animation_sheet != null:
+		var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
+		if art_source == "event_animation_sheet":
 			var frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR
 			var frame_rect := Rect2(center - Vector2(frame_size * 0.5, frame_size * 0.55), Vector2(frame_size, frame_size))
 			draw_texture_rect_region(animation_sheet, frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96))
+		elif art_source == "resting_battle_icon":
+			var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR
+			var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
+			draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.98))
+		elif art_source == "animation_sheet_fallback":
+			var fallback_frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR
+			var fallback_frame_rect := Rect2(center - Vector2(fallback_frame_size * 0.5, fallback_frame_size * 0.55), Vector2(fallback_frame_size, fallback_frame_size))
+			draw_texture_rect_region(animation_sheet, fallback_frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96))
 		else:
-			var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
-			if battle_icon != null:
-				var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR
-				var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
-				draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.96))
-			else:
-				_draw_unit_glyph(center, token_radius, stack)
+			_draw_unit_glyph(center, token_radius, stack)
 		_draw_stack_side_cue(center, token_radius, side)
 		_draw_stack_health_bar(center, radius, stack)
 		_draw_count_badge(center, token_radius, stack)
@@ -2398,6 +2417,18 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 				"radius": _stack_hit_shape_radius(radius),
 			}
 		)
+
+func _stack_token_art_source(stack: Dictionary) -> String:
+	var battle_id := String(stack.get("battle_id", ""))
+	var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
+	var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
+	if animation_sheet != null and not _animation_playback_record_for_stack(battle_id).is_empty():
+		return "event_animation_sheet"
+	if battle_icon != null:
+		return "resting_battle_icon"
+	if animation_sheet != null:
+		return "animation_sheet_fallback"
+	return "procedural_glyph_fallback"
 
 func _stack_presentation_center(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary) -> Vector2:
 	var motion := _stack_presentation_motion(stack, cell, hex_layout, stack_cells)

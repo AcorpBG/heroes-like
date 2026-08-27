@@ -24,7 +24,38 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
+- Selected implementation slice: none. Select the next bounded graphical-polish slice from fresh inspected game pixels.
+
+## World-Object Scale and Battle Icon-First Medallions
+
+id: `presentation-world-object-scale-and-battle-medallions-10184`
+
+Status: completed.
+
+Result:
+- Overworld towns, heroes, encounters, structures, waypoints, landmarks, blockers, and default objects now share one explicit tile-relative cartographic scale ladder; fresh inspected 1280x720 and 1920x1080 captures show towns remaining dominant, actors remaining selectable, and small objects remaining subordinate without changing any logical footprint, entry, passability, route, or interaction authority;
+- resting Battle stacks now use their exact shipped battle icons for clear silhouettes, while only a stack with a live presentation playback record uses its exact animation-sheet frame and expiry restores the resting icon;
+- authored and generated scale owners, hero and commander movement, Battle animation, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld/Battle interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Overworld captures show the 3x2 town art, field heroes, encounters, durable structures, waypoints, and landmarks use individually readable but mutually oversized ranks, making the world read as overlapping UI tokens rather than a shared cartographic scene;
+- fresh 1280x720 and 1920x1080 Battle captures show the battlefield and framing are cohesive, but normal idle/ready stack silhouettes collapse into very dark pixel figures inside equally dark medallions;
+- every production unit already ships a detailed transparent 160x160 battle icon, while the animation sheets are most valuable during actual move, attack, hit, cast, status, death, retreat, and surrender playback.
+
+Implementation boundary:
+- reduce only the painted tile-relative extent of towns, field heroes, encounters, durable structures, waypoints, landmarks, blockers, and default objects into one explicit cartographic hierarchy while retaining exact logical footprints, entry cells, anchors, hit-testing, visibility, selection, passability, routing, and source artwork;
+- render the existing detailed battle icon as the normal stack-medallion character image, and swap to the existing animation-sheet frame only while that exact stack owns a live presentation playback record;
+- preserve the exact token center/radius, hit shape, side rim, active/target/blocked rings, count, health, caption, grid, turn order, animation timing/state/frame selection, VFX/audio/camera order, and combat/session authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 Overworld captures show a coherent scale ladder—towns remain largest, structures/landmarks remain legible, heroes/encounters remain selectable, and pickups/detail remain subordinate—without changing logical tiles or interaction;
+- inspected 1280x720 and 1920x1080 Battle captures show distinct readable unit characters at rest without enlarging tokens or obscuring hexes, health, counts, captions, or tactical cues;
+- focused runtime proves every resting production stack uses its exact shipped battle icon, an active event swaps only its owning stack to the exact animation-sheet frame, expiration restores the icon, and missing-icon/animation fallbacks remain fail-closed;
+- Battle animation, Board navigation, accessibility, Town/Battle visual, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no bitmap/import, logical map footprint/position/entry/passability/pathing, unit identity/stats/abilities, stack count/position/radius/hitbox, grid/layout, input/focus/accessibility semantics, combat, AI, balance, content, save/schema, town-shell, generation, or Native RMG change;
+- no new animation, animation timing/frame/state, VFX/audio/camera, packaged Battle interaction, controller/hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Surface-Detail Legibility
 
