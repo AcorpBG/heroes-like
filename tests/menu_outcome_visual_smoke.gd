@@ -25,6 +25,12 @@ const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
 	"SavePanel": 0.80,
 }
 const OUTCOME_SCENIC_STAGE_SIZES := [Vector2(1280.0, 720.0), Vector2(1920.0, 1080.0)]
+const OUTCOME_STATUS_AMBIENT_MODEL := "deterministic_status_epilogue_drift"
+const OUTCOME_STATUS_AMBIENT_DRAW_ORDER := ["scenic_backdrop", "scenic_veil", "status_ambient", "outcome_content"]
+const OUTCOME_STATUS_AMBIENT_PROFILES := {
+	"victory": {"id": "victory_golden_drift", "kind": "golden_mote", "count": 20, "accent_modulus": 4},
+	"defeat": {"id": "defeat_cold_ash", "kind": "ash_fall", "count": 24, "accent_modulus": 6},
+}
 const OUTCOME_STATUS_EMBLEM_PATHS := {
 	"victory": "res://art/results/runtime/emblems/outcome_victory_emblem.png",
 	"defeat": "res://art/results/runtime/emblems/outcome_defeat_emblem.png",
@@ -1987,6 +1993,10 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		get_tree().quit(1)
 		return false
 	var authority_before: Dictionary = session.to_dict()
+	var original_settings: Dictionary = SettingsService.settings.duplicate(true)
+	var original_color_cue_mode := FrontierVisualKitScript.color_cue_mode()
+	_set_outcome_ambient_accessibility(false, false)
+	await get_tree().process_frame
 	var recap_tabs := shell.get_node_or_null("%RecapTabs") as TabContainer
 	if recap_tabs == null or not _shared_tab_plaque_standard_exact(recap_tabs, ["Progress", "Arc", "Carry", "After", "Journal"], 4.0):
 		push_error("Outcome smoke: recap tabs did not retain exact compact shared plaques, titles, order, current page, and fit.")
@@ -2016,7 +2026,8 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		or bool(live_summary.get("actions_panel_vertical_expand", true))
 		or not bool(live_summary.get("scenic_window_positive", false))
 		or not bool(live_summary.get("content_above_backdrop", false))
-		or live_summary.get("draw_order", []) != ["scenic_backdrop", "scenic_veil", "outcome_content"]
+		or live_summary.get("draw_order", []) != OUTCOME_STATUS_AMBIENT_DRAW_ORDER
+		or not _outcome_status_ambient_summary_exact(live_summary, "victory", true, true)
 		or not _outcome_panel_alphas_exact(live_summary.get("panel_alphas", {}), OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME)
 		or live_summary.get("panel_alpha_contract", {}) != OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME
 		or not _outcome_compact_ribbon_contract_exact(live_summary)
@@ -2052,11 +2063,62 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 				or String(summary.get("expected_path", "")) != String(OUTCOME_SCENIC_BACKDROP_PATHS[status])
 				or String(summary.get("texture_path", "")) != String(OUTCOME_SCENIC_BACKDROP_PATHS[status])
 				or not _outcome_scenic_geometry_exact(summary)
+				or not _outcome_status_ambient_summary_exact(summary, String(status), true, true)
 			):
 				push_error("Outcome smoke: %s scenic epilogue contract failed at %s: %s." % [status, stage_size, summary])
 				fixture.queue_free()
 				get_tree().quit(1)
 				return false
+			var animated_before: Dictionary = summary.duplicate(true)
+			await get_tree().process_frame
+			await get_tree().process_frame
+			var animated_after: Dictionary = fixture.validation_summary()
+			if not _outcome_status_ambient_summary_exact(animated_after, String(status), true, true) \
+					or animated_after.get("ambient_identities", []) != animated_before.get("ambient_identities", []) \
+					or animated_after.get("ambient_entries", []) == animated_before.get("ambient_entries", []) \
+					or not float(animated_after.get("ambient_phase", 0.0)) > float(animated_before.get("ambient_phase", -1.0)):
+				push_error("Outcome smoke: %s ambient drift did not advance deterministically at %s: %s / %s." % [status, stage_size, animated_before, animated_after])
+				fixture.queue_free()
+				get_tree().quit(1)
+				return false
+
+	fixture.size = OUTCOME_SCENIC_STAGE_SIZES[-1]
+	for status in OUTCOME_STATUS_AMBIENT_PROFILES:
+		fixture.set_outcome(String(status))
+		_set_outcome_ambient_accessibility(true, false)
+		var reduced_summary: Dictionary = fixture.validation_summary()
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var reduced_after: Dictionary = fixture.validation_summary()
+		if not _outcome_status_ambient_summary_exact(reduced_summary, String(status), true, false) \
+				or reduced_after != reduced_summary:
+			push_error("Outcome smoke: %s Reduced Motion ambient state was not exact and static: %s / %s." % [status, reduced_summary, reduced_after])
+			fixture.queue_free()
+			get_tree().quit(1)
+			return false
+		_set_outcome_ambient_accessibility(false, true)
+		var contrast_summary: Dictionary = fixture.validation_summary()
+		if not _outcome_status_ambient_summary_exact(contrast_summary, String(status), false, false):
+			push_error("Outcome smoke: %s High Contrast ambient state did not fail closed: %s." % [status, contrast_summary])
+			fixture.queue_free()
+			get_tree().quit(1)
+			return false
+		_set_outcome_ambient_accessibility(false, false)
+
+	fixture.set_outcome("victory")
+	var detached_ambient_summary: Dictionary = fixture.validation_summary()
+	var fresh_ambient_summary: Dictionary = detached_ambient_summary.duplicate(true)
+	if not _outcome_status_ambient_summary_exact(detached_ambient_summary, "victory", true, true):
+		push_error("Outcome smoke: detached ambient fixture did not begin from an exact nonempty victory contract.")
+		fixture.queue_free()
+		get_tree().quit(1)
+		return false
+	Array(detached_ambient_summary["ambient_entries"])[0]["center"] = Vector2.ZERO
+	if session.to_dict() != authority_before or fixture.validation_summary() != fresh_ambient_summary:
+		push_error("Outcome smoke: detached ambient validation changed live session or scenic authority.")
+		fixture.queue_free()
+		get_tree().quit(1)
+		return false
 	fixture.set_outcome("unmapped_outcome")
 	var fallback_summary: Dictionary = fixture.validation_summary()
 	if (
@@ -2064,6 +2126,9 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		or not bool(fallback_summary.get("fallback", false))
 		or String(fallback_summary.get("rendering_mode", "")) != "flat_palette_fallback"
 		or String(fallback_summary.get("expected_path", "")) != ""
+		or bool(fallback_summary.get("ambient_enabled", true))
+		or bool(fallback_summary.get("ambient_animating", true))
+		or not Array(fallback_summary.get("ambient_entries", [1])).is_empty()
 	):
 		push_error("Outcome smoke: unmapped status did not retain the flat palette fallback: %s." % fallback_summary)
 		fixture.queue_free()
@@ -2122,6 +2187,10 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		push_error("Outcome smoke: scenic epilogue or authored status-emblem selection changed live session authority.")
 		get_tree().quit(1)
 		return false
+	SettingsService.settings = original_settings.duplicate(true)
+	SettingsService.apply_settings()
+	FrontierVisualKitScript.set_color_cue_mode(original_color_cue_mode)
+	SettingsService.settings_changed.emit(SettingsService.settings.duplicate(true))
 	return true
 
 
@@ -2180,6 +2249,76 @@ func _outcome_scenic_geometry_exact(summary: Dictionary) -> bool:
 		and source_rect.size.y > 0.0
 		and is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
 	)
+
+
+func _outcome_status_ambient_summary_exact(summary: Dictionary, status: String, expected_enabled: bool, expected_animating: bool) -> bool:
+	var expected_value: Variant = OUTCOME_STATUS_AMBIENT_PROFILES.get(status, {})
+	if not expected_value is Dictionary:
+		return false
+	var expected: Dictionary = expected_value
+	var entries: Array = summary.get("ambient_entries", []) if summary.get("ambient_entries", []) is Array else []
+	var identities: Array = summary.get("ambient_identities", []) if summary.get("ambient_identities", []) is Array else []
+	if String(summary.get("ambient_model", "")) != OUTCOME_STATUS_AMBIENT_MODEL \
+			or Array(summary.get("ambient_draw_order", [])) != OUTCOME_STATUS_AMBIENT_DRAW_ORDER \
+			or String(summary.get("ambient_profile_id", "")) != String(expected.get("id", "")) \
+			or String(summary.get("ambient_kind", "")) != String(expected.get("kind", "")) \
+			or int(summary.get("ambient_profile_count", 0)) != int(expected.get("count", 0)) \
+			or bool(summary.get("ambient_enabled", false)) != expected_enabled \
+			or bool(summary.get("ambient_animating", false)) != expected_animating \
+			or String(summary.get("ambient_authority", "")) != "presentation_only_no_session_state" \
+			or not is_equal_approx(float(summary.get("ambient_phase_speed", 0.0)), 0.36) \
+			or not is_zero_approx(float(summary.get("ambient_static_phase", -1.0))):
+		return false
+	if not expected_enabled:
+		return entries.is_empty() and identities.is_empty() and int(summary.get("ambient_entry_count", -1)) == 0 and not bool(summary.get("ambient_all_contained", true))
+	if entries.size() != int(expected.get("count", 0)) \
+			or identities.size() != entries.size() \
+			or int(summary.get("ambient_entry_count", 0)) != entries.size() \
+			or not bool(summary.get("ambient_all_contained", false)):
+		return false
+	if not expected_animating and not is_zero_approx(float(summary.get("ambient_phase", -1.0))):
+		return false
+	var destination_rect: Rect2 = summary.get("destination_rect", Rect2()) if summary.get("destination_rect", Rect2()) is Rect2 else Rect2()
+	for index in range(entries.size()):
+		if not entries[index] is Dictionary or not identities[index] is Dictionary:
+			return false
+		var entry: Dictionary = entries[index]
+		var identity: Dictionary = identities[index]
+		var expected_base := Vector2(
+			0.05 + fmod(0.131 + float(index) * 0.379, 1.0) * 0.90,
+			0.05 + fmod(0.257 + float(index) * 0.587, 1.0) * 0.90
+		)
+		if int(entry.get("index", -1)) != index \
+				or int(identity.get("index", -1)) != index \
+				or String(entry.get("profile_id", "")) != String(expected.get("id", "")) \
+				or String(identity.get("profile_id", "")) != String(expected.get("id", "")) \
+				or String(entry.get("kind", "")) != String(expected.get("kind", "")) \
+				or String(identity.get("kind", "")) != String(expected.get("kind", "")) \
+				or not (entry.get("base_normalized", Vector2.ZERO) as Vector2).is_equal_approx(expected_base) \
+				or identity.get("base_normalized", Vector2.ZERO) != entry.get("base_normalized", Vector2.ZERO) \
+				or bool(entry.get("accent", false)) != (index % int(expected.get("accent_modulus", 1)) == 0) \
+				or bool(identity.get("accent", false)) != bool(entry.get("accent", false)) \
+				or float(entry.get("radius", 0.0)) <= 0.0 \
+				or float(entry.get("alpha", 0.0)) <= 0.0 \
+				or not bool(entry.get("contained", false)):
+			return false
+		var bounds: Rect2 = entry.get("bounds", Rect2()) if entry.get("bounds", Rect2()) is Rect2 else Rect2()
+		if not destination_rect.encloses(bounds):
+			return false
+	return true
+
+
+func _set_outcome_ambient_accessibility(reduced_motion: bool, high_contrast: bool) -> void:
+	var preserved_color_cue_mode := FrontierVisualKitScript.color_cue_mode()
+	var candidate: Dictionary = SettingsService.settings.duplicate(true)
+	var accessibility: Dictionary = candidate.get("accessibility", {}).duplicate(true)
+	accessibility["reduce_motion"] = reduced_motion
+	accessibility["high_contrast_ui"] = high_contrast
+	candidate["accessibility"] = accessibility
+	SettingsService.settings = candidate
+	SettingsService.apply_settings()
+	FrontierVisualKitScript.set_color_cue_mode(preserved_color_cue_mode)
+	SettingsService.settings_changed.emit(SettingsService.settings.duplicate(true))
 
 
 func _outcome_status_emblem_geometry_exact(summary: Dictionary, status: String) -> bool:

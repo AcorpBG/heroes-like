@@ -25866,9 +25866,17 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         ensure(scenic_view_text.count(f'\"{status}\": preload(\"{resource_path}\")') == 1, errors, f"OutcomeScenicBackdropView.gd must preload exactly one texture for {status}")
     ensure(len(scenic_asset_bytes) == 2 and scenic_asset_bytes[0] != scenic_asset_bytes[1], errors, "Outcome victory and defeat scenic backdrops must be distinct assets")
     for required_token in (
+        'const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")',
+        'const STATUS_AMBIENT_MODEL := "deterministic_status_epilogue_drift"',
+        'const STATUS_AMBIENT_DRAW_ORDER := ["scenic_backdrop", "scenic_veil", "status_ambient", "outcome_content"]',
+        'const STATUS_AMBIENT_PHASE_SPEED := 0.36',
+        'const STATUS_AMBIENT_STATIC_PHASE := 0.0',
+        '"victory": {"id": "victory_golden_drift", "kind": "golden_mote", "count": 20, "color": Color(1.0, 0.82, 0.34, 1.0), "accent_color": Color(1.0, 0.94, 0.66, 1.0), "alpha": 0.17, "radius_factor": 0.0024, "drift": Vector2(0.008, 0.013), "accent_modulus": 4}',
+        '"defeat": {"id": "defeat_cold_ash", "kind": "ash_fall", "count": 24, "color": Color(0.70, 0.73, 0.76, 1.0), "accent_color": Color(0.88, 0.37, 0.16, 1.0), "alpha": 0.12, "radius_factor": 0.0021, "drift": Vector2(0.012, 0.016), "accent_modulus": 6}',
         "func set_outcome(status: String) -> void:",
         "func set_fallback_color(color: Color) -> void:",
         "draw_texture_rect_region(texture, destination_rect, _cover_crop_source_rect(texture, size))",
+        "_draw_status_ambient(destination_rect)",
         "var cover_scale := maxf(destination_size.x / texture_size.x, destination_size.y / texture_size.y)",
         "var visible_size := destination_size / cover_scale",
         "return Rect2((texture_size - visible_size) * 0.5, visible_size)",
@@ -25876,10 +25884,37 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         '"rendering_mode": "cover_crop_scenic_epilogue" if texture != null else "flat_palette_fallback"',
         '"stretched": false',
         '"fallback": texture == null',
+        '"ambient_model": STATUS_AMBIENT_MODEL',
+        '"ambient_draw_order": STATUS_AMBIENT_DRAW_ORDER.duplicate()',
+        '"ambient_authority": "presentation_only_no_session_state"',
+        "func _status_ambient_profile() -> Dictionary:",
+        "func _status_ambient_available() -> bool:",
+        "func _status_ambient_should_animate() -> bool:",
+        "func _status_ambient_entries(destination_rect: Rect2, phase: float) -> Array:",
+        "func _draw_status_ambient(destination_rect: Rect2) -> void:",
+        "func _sync_processing_state() -> void:",
+        "func _on_settings_changed(_settings: Dictionary) -> void:",
+        "SettingsService.settings_changed.connect(_on_settings_changed)",
+        "SettingsService.settings_changed.disconnect(_on_settings_changed)",
+        "_status_ambient_phase = fmod(_status_ambient_phase + delta * STATUS_AMBIENT_PHASE_SPEED, TAU)",
+        "var base_normalized := Vector2(",
+        "sin(local_phase * 0.91 + float(index) * 0.27) * drift.x",
+        "cos(local_phase * 0.67 + float(index) * 0.39) * drift.y",
+        "var safe_rect := destination_rect.grow(-safe_inset)",
+        'if String(entry.get("kind", "")) == "ash_fall":',
         "SCENIC_VEIL_COLOR",
     ):
         ensure(required_token in scenic_view_text, errors, f"OutcomeScenicBackdropView.gd is missing scenic contract token: {required_token}")
     ensure("draw_texture_rect(" not in scenic_view_text, errors, "Outcome scenic view must cover-crop instead of stretching its texture")
+    scenic_ambient_entries_block = scenic_view_text.split("func _status_ambient_entries", 1)[1].split("func ", 1)[0] if "func _status_ambient_entries" in scenic_view_text else ""
+    scenic_ambient_draw_block = scenic_view_text.split("func _draw_status_ambient", 1)[1].split("func ", 1)[0] if "func _draw_status_ambient" in scenic_view_text else ""
+    scenic_ambient_lifecycle_block = scenic_view_text.split("func _ready", 1)[1].split("func _notification", 1)[0] if "func _ready" in scenic_view_text and "func _notification" in scenic_view_text else ""
+    for forbidden_token in ("SessionState", "ScenarioRules", "AppRouter", "Input.", "RandomNumberGenerator", "randf", "randi", "Time.", "Time.get", "Timer", "Tween", "GPUParticles", "CPUParticles", "Shader"):
+        ensure(forbidden_token not in scenic_ambient_entries_block + scenic_ambient_draw_block + scenic_ambient_lifecycle_block, errors, f"Outcome status ambient must remain deterministic and presentation-only: {forbidden_token}")
+    ensure(scenic_view_text.index("draw_rect(destination_rect, SCENIC_VEIL_COLOR, true)") < scenic_view_text.index("_draw_status_ambient(destination_rect)"), errors, "Outcome status ambient must draw after the scenic veil")
+    ensure(scenic_view_text.count("_draw_status_ambient(destination_rect)") == 1, errors, "Outcome status ambient must have one exact draw call")
+    ensure('return _status_texture() != null \\\n\t\tand not _status_ambient_profile().is_empty() \\\n\t\tand not FrontierVisualKitScript.high_contrast_enabled()' in scenic_view_text, errors, "Outcome status ambient must fail closed for missing art/profile and High Contrast")
+    ensure('return _status_ambient_available() and not SettingsService.reduced_motion_enabled()' in scenic_view_text, errors, "Outcome status ambient motion must obey Reduced Motion")
 
     for required_token in (
         'const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {',
@@ -25902,7 +25937,7 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         'panel.self_modulate = Color(1.0, 1.0, 1.0, float(OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME[panel.name]))',
         "func validation_scenic_epilogue_summary() -> Dictionary:",
         '"presentation_model": OUTCOME_PRESENTATION_MODEL',
-        '"draw_order": ["scenic_backdrop", "scenic_veil", "outcome_content"]',
+        '"draw_order": ["scenic_backdrop", "scenic_veil", "status_ambient", "outcome_content"]',
         '"actions_panel_vertical_expand": bool(_actions_panel.size_flags_vertical & Control.SIZE_EXPAND)',
         '"scenic_window_positive": scenic_window.size.x > 0.0 and scenic_window.size.y > 0.0',
         '"scenic_window_area_fraction": scenic_window_area_fraction',
@@ -25978,11 +26013,29 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
     for required_token in (
         "func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:",
         "var authority_before: Dictionary = session.to_dict()",
+        'const OUTCOME_STATUS_AMBIENT_MODEL := "deterministic_status_epilogue_drift"',
+        'const OUTCOME_STATUS_AMBIENT_DRAW_ORDER := ["scenic_backdrop", "scenic_veil", "status_ambient", "outcome_content"]',
+        '"victory": {"id": "victory_golden_drift", "kind": "golden_mote", "count": 20, "accent_modulus": 4}',
+        '"defeat": {"id": "defeat_cold_ash", "kind": "ash_fall", "count": 24, "accent_modulus": 6}',
+        "var original_settings: Dictionary = SettingsService.settings.duplicate(true)",
+        "_set_outcome_ambient_accessibility(false, false)",
         'String(live_summary.get("status", "")) != "victory"',
         'not _outcome_panel_alphas_exact(live_summary.get("panel_alphas", {}), OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME)',
         'not _outcome_compact_ribbon_contract_exact(live_summary)',
         "for stage_size in OUTCOME_SCENIC_STAGE_SIZES:",
         "for status in OUTCOME_SCENIC_BACKDROP_PATHS:",
+        'not _outcome_status_ambient_summary_exact(summary, String(status), true, true)',
+        'animated_after.get("ambient_identities", []) != animated_before.get("ambient_identities", [])',
+        'animated_after.get("ambient_entries", []) == animated_before.get("ambient_entries", [])',
+        'float(animated_after.get("ambient_phase", 0.0)) > float(animated_before.get("ambient_phase", -1.0))',
+        "for status in OUTCOME_STATUS_AMBIENT_PROFILES:",
+        "_set_outcome_ambient_accessibility(true, false)",
+        'not _outcome_status_ambient_summary_exact(reduced_summary, String(status), true, false)',
+        "reduced_after != reduced_summary",
+        "_set_outcome_ambient_accessibility(false, true)",
+        'not _outcome_status_ambient_summary_exact(contrast_summary, String(status), false, false)',
+        'Array(detached_ambient_summary["ambient_entries"])[0]["center"] = Vector2.ZERO',
+        "fixture.validation_summary() != fresh_ambient_summary",
         'texture_size == Vector2(1600.0, 900.0)',
         'scenic_window.size.y < viewport_size.y * 0.38',
         'float(live_summary.get("scenic_window_area_fraction", 0.0)) < 0.31',
@@ -25990,8 +26043,16 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         'action_rect.end.y > viewport_size.y * 0.61',
         'fixture.set_outcome("unmapped_outcome")',
         'String(fallback_summary.get("rendering_mode", "")) != "flat_palette_fallback"',
+        'bool(fallback_summary.get("ambient_enabled", true))',
+        'not Array(fallback_summary.get("ambient_entries", [1])).is_empty()',
         "if session.to_dict() != authority_before:",
         "func _outcome_scenic_geometry_exact(summary: Dictionary) -> bool:",
+        "func _outcome_status_ambient_summary_exact(summary: Dictionary, status: String, expected_enabled: bool, expected_animating: bool) -> bool:",
+        "func _set_outcome_ambient_accessibility(reduced_motion: bool, high_contrast: bool) -> void:",
+        'String(summary.get("ambient_authority", "")) != "presentation_only_no_session_state"',
+        'Array(summary.get("ambient_draw_order", [])) != OUTCOME_STATUS_AMBIENT_DRAW_ORDER',
+        'destination_rect.encloses(bounds)',
+        'SettingsService.settings_changed.emit(SettingsService.settings.duplicate(true))',
         "func _outcome_panel_alphas_exact(actual_value, expected: Dictionary) -> bool:",
         "func _outcome_compact_ribbon_contract_exact(summary: Dictionary) -> bool:",
         'String(summary.get("presentation_model", "")) == "scenery_first_compact_command_ribbons"',
@@ -26006,7 +26067,11 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
     ):
         ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing scenic epilogue validation token: {required_token}")
     ensure(menu_smoke_text.count("for status in OUTCOME_SCENIC_BACKDROP_PATHS:") == 1, errors, "Outcome scenic smoke must traverse the exact status map once")
+    ensure(menu_smoke_text.count("for status in OUTCOME_STATUS_AMBIENT_PROFILES:") == 1, errors, "Outcome ambient smoke must traverse both exact accessibility profiles once")
     ensure('live_summary.get("panel_alphas", {}) != OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME' not in menu_smoke_text, errors, "Outcome scenic smoke must not use byte-exact float Dictionary equality for rendered panel alphas")
+    outcome_ambient_oracle_block = menu_smoke_text.split("func _outcome_status_ambient_summary_exact", 1)[1].split("func _set_outcome_ambient_accessibility", 1)[0] if "func _outcome_status_ambient_summary_exact" in menu_smoke_text and "func _set_outcome_ambient_accessibility" in menu_smoke_text else ""
+    for forbidden_token in ("OutcomeScenicBackdropViewScript.", "call(\"_status_ambient", "sort(", "erase(", "queue_redraw", "Timer", "Tween", "Time.", "randf", "randi"):
+        ensure(forbidden_token not in outcome_ambient_oracle_block, errors, f"Outcome ambient oracle must remain passive and source-independent: {forbidden_token}")
 
     scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
     for required_token in ("ScenarioRulesScript.describe_scenario_briefing", "setup_summary"):
