@@ -109,6 +109,18 @@ const TERRAIN_TEXTURE_READABILITY_WASH := Color(0.02, 0.025, 0.022, 0.045)
 const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.78, 0.81, 0.75, 0.92)
 const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.10)
 const TERRAIN_CONTEXT_MODEL := "continuous_primary_field_with_subordinate_hex_variation"
+const TERRAIN_AMBIENT_MODEL := "deterministic_terrain_specific_passive_motes"
+const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain", "ambient_motes", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_strip", "footer"]
+const TERRAIN_AMBIENT_PHASE_SPEED := 0.52
+const TERRAIN_AMBIENT_STATIC_PHASE := 0.0
+const TERRAIN_AMBIENT_PROFILES := {
+	"grass": {"id": "sunlit_pollen", "kind": "pollen", "count": 14, "color": Color(0.96, 0.88, 0.52, 1.0), "alpha": 0.16, "radius_factor": 0.0024, "drift": Vector2(0.010, 0.014)},
+	"forest": {"id": "forest_fireflies", "kind": "firefly", "count": 11, "color": Color(0.91, 0.94, 0.48, 1.0), "alpha": 0.22, "radius_factor": 0.0025, "drift": Vector2(0.009, 0.012)},
+	"swamp": {"id": "swamp_wisps", "kind": "wisp", "count": 10, "color": Color(0.48, 0.82, 0.76, 1.0), "alpha": 0.17, "radius_factor": 0.0028, "drift": Vector2(0.012, 0.008)},
+	"rough": {"id": "roughland_dust", "kind": "dust", "count": 12, "color": Color(0.88, 0.70, 0.43, 1.0), "alpha": 0.13, "radius_factor": 0.0022, "drift": Vector2(0.016, 0.006)},
+	"road": {"id": "roadside_dust", "kind": "dust", "count": 9, "color": Color(0.86, 0.72, 0.50, 1.0), "alpha": 0.12, "radius_factor": 0.0021, "drift": Vector2(0.018, 0.005)},
+	"mire": {"id": "mire_wisps", "kind": "wisp", "count": 12, "color": Color(0.50, 0.78, 0.69, 1.0), "alpha": 0.18, "radius_factor": 0.0027, "drift": Vector2(0.011, 0.009)},
+}
 const TERRAIN_HEX_TEXTURE_INSET := 1.0
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
 const TEXTURED_HEX_LINE_COLOR := Color(0.98, 0.89, 0.62, 0.18)
@@ -176,6 +188,7 @@ var _battle_board_cursor_semantic_generation := 0
 var _battle_board_cursor_semantic_pending: Dictionary = {}
 var _battle_board_cursor_result_request_generation := 0
 var _controller_dispatch_in_progress := false
+var _terrain_ambient_phase := TERRAIN_AMBIENT_STATIC_PHASE
 
 @onready var _battle_board_cursor_live_label: Label = get_node_or_null("%BattleBoardCursorLive") as Label
 
@@ -197,8 +210,12 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not _battle.is_empty():
+		if _terrain_ambient_should_animate():
+			_terrain_ambient_phase = fmod(_terrain_ambient_phase + delta * TERRAIN_AMBIENT_PHASE_SPEED, TAU)
+		else:
+			_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE
 		_expire_animation_playback_records()
 		_activate_due_audio_cue_playback()
 		_cleanup_audio_players()
@@ -918,6 +935,51 @@ func validation_hex_layout_summary() -> Dictionary:
 
 func validation_terrain_backdrop_summary() -> Dictionary:
 	return validation_terrain_rendering_summary()
+
+func validation_terrain_ambient_summary() -> Dictionary:
+	var profile := _terrain_ambient_profile()
+	var field_rect := _current_field_rect()
+	var enabled := _terrain_ambient_available()
+	var reduced_motion := SettingsService.reduced_motion_enabled()
+	var phase := TERRAIN_AMBIENT_STATIC_PHASE if reduced_motion else _terrain_ambient_phase
+	var entries: Array = _terrain_ambient_entries(field_rect, phase) if enabled else []
+	var all_contained := enabled and not entries.is_empty()
+	var identities: Array = []
+	for entry_value in entries:
+		if not entry_value is Dictionary:
+			all_contained = false
+			continue
+		var entry: Dictionary = entry_value
+		if not bool(entry.get("contained", false)):
+			all_contained = false
+		identities.append({
+			"index": int(entry.get("index", -1)),
+			"profile_id": String(entry.get("profile_id", "")),
+			"kind": String(entry.get("kind", "")),
+			"base_normalized": entry.get("base_normalized", Vector2(-1.0, -1.0)),
+		})
+	return {
+		"model": TERRAIN_AMBIENT_MODEL,
+		"draw_order": TERRAIN_AMBIENT_DRAW_ORDER.duplicate(),
+		"terrain": _battle_terrain_id(),
+		"terrain_profile_key": _terrain_texture_id(_battle_terrain_id()),
+		"profile_id": String(profile.get("id", "")),
+		"kind": String(profile.get("kind", "")),
+		"profile_count": int(profile.get("count", 0)),
+		"enabled": enabled,
+		"reduced_motion": reduced_motion,
+		"high_contrast": FrontierVisualKitScript.high_contrast_enabled(),
+		"animating": _terrain_ambient_should_animate(),
+		"phase": phase,
+		"phase_speed": TERRAIN_AMBIENT_PHASE_SPEED,
+		"static_phase": TERRAIN_AMBIENT_STATIC_PHASE,
+		"field_rect": field_rect,
+		"entry_count": entries.size(),
+		"entries": entries.duplicate(true),
+		"identities": identities,
+		"all_contained": all_contained,
+		"session_mutation_source": "none_presentation_only",
+	}
 
 func validation_color_cue_summary() -> Dictionary:
 	return {
@@ -1709,6 +1771,7 @@ func _draw() -> void:
 	var hex_layout := _hex_layout(hex_field_rect)
 	hex_layout = _camera_adjusted_hex_layout(hex_layout)
 	var terrain_texture_loaded := _draw_terrain(field_rect, hex_layout)
+	_draw_terrain_ambient(field_rect)
 	_draw_hex_grid(hex_layout, terrain_texture_loaded)
 	_draw_field_objectives(hex_layout)
 	var stack_cells := _stack_cells()
@@ -1734,6 +1797,82 @@ func _draw_terrain(field_rect: Rect2, hex_layout: Dictionary) -> bool:
 		_draw_hex_snapped_procedural_terrain(hex_layout, terrain)
 	draw_rect(field_rect, Color(0.0, 0.0, 0.0, 0.14), false, 2.0)
 	return false
+
+func _terrain_ambient_profile() -> Dictionary:
+	var profile_value: Variant = TERRAIN_AMBIENT_PROFILES.get(_terrain_texture_id(_battle_terrain_id()), {})
+	return profile_value if profile_value is Dictionary else {}
+
+func _terrain_ambient_available() -> bool:
+	return not _battle.is_empty() \
+		and not _terrain_ambient_profile().is_empty() \
+		and not FrontierVisualKitScript.high_contrast_enabled()
+
+func _terrain_ambient_should_animate() -> bool:
+	return _terrain_ambient_available() and not SettingsService.reduced_motion_enabled()
+
+func _terrain_ambient_entries(field_rect: Rect2, phase: float) -> Array:
+	var profile := _terrain_ambient_profile()
+	if profile.is_empty() or field_rect.size.x <= 0.0 or field_rect.size.y <= 0.0:
+		return []
+	var radius := clampf(minf(field_rect.size.x, field_rect.size.y) * float(profile.get("radius_factor", 0.0024)), 1.15, 2.55)
+	var outer_radius := radius * 3.2
+	var safe_inset := maxf(10.0, outer_radius + 2.0)
+	var safe_rect := field_rect.grow(-safe_inset)
+	if safe_rect.size.x <= 0.0 or safe_rect.size.y <= 0.0:
+		return []
+	var drift: Vector2 = profile.get("drift", Vector2.ZERO)
+	var entries: Array = []
+	for index in range(int(profile.get("count", 0))):
+		var base_normalized := Vector2(
+			0.08 + fmod(0.173 + float(index) * 0.347, 1.0) * 0.84,
+			0.08 + fmod(0.291 + float(index) * 0.613, 1.0) * 0.84
+		)
+		var local_phase := phase + float(index) * 1.731
+		var motion_normalized := Vector2(
+			sin(local_phase) * drift.x,
+			cos(local_phase * 0.73 + float(index) * 0.41) * drift.y
+		)
+		var center := safe_rect.position + (base_normalized + motion_normalized) * safe_rect.size
+		var pulse := 0.78 + 0.22 * sin(local_phase * 1.19 + 0.7)
+		var bounds := Rect2(center - Vector2(outer_radius, outer_radius), Vector2(outer_radius * 2.0, outer_radius * 2.0))
+		entries.append({
+			"index": index,
+			"profile_id": String(profile.get("id", "")),
+			"kind": String(profile.get("kind", "")),
+			"base_normalized": base_normalized,
+			"center": center,
+			"radius": radius,
+			"outer_radius": outer_radius,
+			"alpha": float(profile.get("alpha", 0.0)) * pulse,
+			"color": profile.get("color", Color.TRANSPARENT),
+			"bounds": bounds,
+			"contained": field_rect.encloses(bounds),
+		})
+	return entries
+
+func _draw_terrain_ambient(field_rect: Rect2) -> void:
+	if not _terrain_ambient_available():
+		return
+	var phase := TERRAIN_AMBIENT_STATIC_PHASE if SettingsService.reduced_motion_enabled() else _terrain_ambient_phase
+	for entry_value in _terrain_ambient_entries(field_rect, phase):
+		if not entry_value is Dictionary:
+			continue
+		var entry: Dictionary = entry_value
+		var center: Vector2 = entry.get("center", Vector2.ZERO)
+		var radius := float(entry.get("radius", 0.0))
+		var alpha := float(entry.get("alpha", 0.0))
+		var color: Color = entry.get("color", Color.TRANSPARENT)
+		var halo_color := Color(color.r, color.g, color.b, alpha * 0.18)
+		var soft_color := Color(color.r, color.g, color.b, alpha * 0.38)
+		var core_color := Color(color.r, color.g, color.b, alpha)
+		if String(entry.get("kind", "")) == "dust":
+			var tangent := Vector2(1.0, -0.24).normalized()
+			draw_line(center - tangent * radius * 1.8, center + tangent * radius * 1.8, soft_color, maxf(0.7, radius * 0.72), true)
+			draw_circle(center, radius * 0.48, core_color)
+		else:
+			draw_circle(center, radius * 3.2, halo_color)
+			draw_circle(center, radius * 1.55, soft_color)
+			draw_circle(center, radius * 0.52, core_color)
 
 func _draw_terrain_context_underlay(field_rect: Rect2, texture: Texture2D) -> void:
 	var texture_size := texture.get_size()

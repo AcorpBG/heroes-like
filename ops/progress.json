@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld cartographic object scale is complete from direct owner feedback, inspected live captures, and focused authored/generated runtime; select the next graphical-polish slice.",
+  "currentNotes": "Battle terrain ambient motes are complete from inspected captures, focused all-terrain runtime, compatibility, static/editor, and bounded platform export/startup gates; select the next graphical-polish slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-cartographic-object-scale-10184",
-  "currentSliceId": "presentation-overworld-cartographic-object-scale-10184",
-  "currentSliceNotes": "Completed: towns, heroes, sites, encounters, pickups, artifacts, and generated blockers now share one restrained cartographic hierarchy with exact logical map authority.",
+  "currentSlice": "presentation-battle-terrain-ambient-motes-10184",
+  "currentSliceId": "presentation-battle-terrain-ambient-motes-10184",
+  "currentSliceNotes": "Completed: deterministic terrain-specific motes add restrained Battle depth behind every tactical surface, with Reduced Motion static, High Contrast hidden, and exact battle/session authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Cartographic Object Scale",
-  "currentSliceUpdatedAt": "2026-08-27T03:27:10Z",
+  "currentSliceTitle": "Battle Terrain Ambient Motes",
+  "currentSliceUpdatedAt": "2026-08-27T03:48:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104687,6 +104687,31 @@
       "blockedReason": null,
       "notes": "Completed the compact Skirmish intelligence disclosure. Fresh inspected 1280/1920 captures show a smaller launch-ready board with materially more scenery; the existing Commander and Operational Board cards restore exactly through the public Show Intel/Hide Intel control. Focused launch/session/save authority, Map Forge, Main Menu keyboard, menu/outcome visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. A bounded 4px Settings inner inset correction keeps the unchanged mixer fully visible at 1280. Packaged Skirmish interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-26T19:37:46Z"
+    },
+    {
+      "id": "presentation-battle-terrain-ambient-motes-10184",
+      "title": "Battle Terrain Ambient Motes",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T03:48:53Z",
+      "startedAt": "2026-08-27T03:30:54Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the otherwise static Battle terrain restrained terrain-specific ambient depth behind every tactical surface.",
+      "completionCriteria": "Inspected 1280/1920 captures show subtle atmosphere without tactical occlusion; focused runtime proves all terrain profiles, deterministic contained entries, normal motion, Reduced Motion static, High Contrast hidden, draw order, and unchanged authority; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No terrain asset/import/sampling, grid, objective, token, VFX/audio, camera, layout, input/focus, accessibility semantic, battle rule, AI, balance, content, session, save/schema, map, generation, or Native RMG change.",
+        "No Timer, Tween, particle, shader, random/wall-clock source, packaged Battle interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed the deterministic Battle terrain ambient layer. Fresh 1280/1920 captures show sparse forest fireflies behind the unchanged tactical grid and units. Focused runtime covers plains/grass/forest/swamp/rough/road/mire profiles, deterministic identity/containment, normal drift, Reduced Motion static, High Contrast hidden, unknown fallback, and exact session authority. Battle controller navigation, runtime skin, shared active-play focus, accessibility semantics, core, validate_repo, pycompile, editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-27T03:48:53Z"
     }
   ],
   "project": "heroes-like",

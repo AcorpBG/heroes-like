@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next bounded graphical-polish slice from fresh inspected game pixels.
 
+## Battle Terrain Ambient Motes
+
+id: `presentation-battle-terrain-ambient-motes-10184`
+
+Status: completed.
+
+Result:
+- grass/plains pollen, forest fireflies, swamp/mire wisps, and rough/road dust now form one sparse deterministic ambient layer between terrain and every tactical surface;
+- normal presentation drifts gently, Reduced Motion holds an exact static composition, High Contrast hides the layer, and unknown terrain fails closed without ambience;
+- inspected 1280x720 and 1920x1080 captures, focused all-terrain runtime, Battle navigation/focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh inspected Battle pixels show a cohesive continuous terrain field and readable tactical grid, but the field remains completely static between combat cues, leaving forest, mire, rough, road, and grass contexts flatter than the recently polished Town and Overworld surfaces;
+- BattleBoardView already owns continuous redraw while a battle is active and exposes the exact terrain identity and field rectangle, so a deterministic presentation-only layer can add depth without new nodes, timers, particles, or gameplay state.
+
+Implementation boundary:
+- draw one sparse terrain-specific deterministic mote layer after the continuous terrain pass and before the tactical hex grid, objectives, movement affordances, cursors, VFX, stacks, turn strip, and footer;
+- use terrain-appropriate firefly, wisp, pollen, and dust profiles with bounded field-relative positions, soft halos, and gentle phase drift in normal presentation;
+- hold an exact static composition in Reduced Motion and hide the decorative layer in High Contrast, while preserving the current terrain texture and procedural fallback paths.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 Battle captures show subtle terrain atmosphere without obscuring terrain art, grid boundaries, objectives, movement range, stack art, labels, or turn/footer surfaces;
+- focused runtime covers every authored terrain alias, exact deterministic entry identity/count/containment, normal phase motion, Reduced Motion static behavior, High Contrast hiding, draw order, and unchanged battle/session authority;
+- Battle visual/input/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain bitmap/import, texture sampling, grid, objective, token, turn strip, footer, VFX/audio, camera, layout, input/focus, accessibility semantic, battle rule, AI, balance, content, session, save/schema, map, generation, or Native RMG change;
+- no Timer, Tween, particle node, shader, wall-clock/random source, packaged Battle interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Cartographic Object Scale
 
 id: `presentation-overworld-cartographic-object-scale-10184`
