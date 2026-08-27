@@ -672,7 +672,7 @@ func _assert_fog_frontier_summary(summary: Dictionary, label: String) -> bool:
 		or int(summary.get("invalid_direction_count", -1)) != 0
 		or summary.get("model_ids", []) != ["inward_gradient_irregular_cartographic_contour"]
 		or summary.get("hidden_shroud_model_ids", []) != ["continuous_identity_silent_textured_cartographic_veil"]
-		or summary.get("hidden_shroud_texture_paths", []) != ["res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"]
+		or summary.get("hidden_shroud_texture_paths", []) != ["res://art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png"]
 		or summary.get("hidden_shroud_mapping_ids", []) != ["whole_board_normalized_once_clipped_by_hidden_cells"]
 	):
 		_fail("%s generated natural-fog frontier contract changed: %s" % [label, JSON.stringify(summary)])

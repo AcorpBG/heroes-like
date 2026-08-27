@@ -2840,7 +2840,7 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		or String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "none_contiguous"
 		or bool(unexplored_terrain.get("unexplored_shroud_repeated_stamps", true))
 		or not bool(unexplored_terrain.get("unexplored_shroud_texture_loaded", false))
-		or String(unexplored_terrain.get("unexplored_shroud_texture_path", "")) != "res://art/overworld/runtime/fog/unexplored_cartographic_veil.png"
+		or String(unexplored_terrain.get("unexplored_shroud_texture_path", "")) != "res://art/overworld/runtime/fog/unexplored_cartographic_veil_rich.png"
 		or unexplored_terrain.get("unexplored_shroud_texture_size", {}) != {"x": 1024, "y": 1024}
 		or not is_equal_approx(float(unexplored_terrain.get("unexplored_shroud_texture_modulate_alpha", 0.0)), 0.80)
 		or String(unexplored_terrain.get("unexplored_shroud_texture_mapping", "")) != "whole_board_normalized_once_clipped_by_hidden_cells"
