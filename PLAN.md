@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next graphical-polish slice from direct rendered evidence.
 
+## Outcome Scenery-First Edge Composition
+
+id: `presentation-outcome-scenery-first-edge-composition-10184`
+
+Status: completed.
+
+Result:
+- the Outcome screen now keeps its result identity in a compact upper-left pocket, Commander/Army/Rewards plus next actions in a lower-left dock, and recap/save controls in the existing right rail, leaving one dominant unobstructed center panorama;
+- inspected victory and defeat captures at 1280x720 and 1920x1080 retain readable edge information and distinct result scenery, while focused compact/wide/compact runtime proves containment, non-overlap, passive layout convergence, exact compact restoration, complete tooltips/action authority, and unchanged session/save state;
+- normal-entry focus, safe new-session cancel, autosave-failure recovery, accessibility semantics, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Outcome interaction and broader release claims remain unclaimed.
+
+Current finding:
+- direct 1920x1080 victory pixels show the existing full-width result banner, Commander/Army/Rewards card row, and Next Step card covering most of the panorama's top and center even though the validation model calls the screen scenery-first;
+- the right recap/save rail is already an appropriate edge surface, and the existing result, action, focus, save, accessibility, and routing contracts can remain intact while the other surfaces become compact top-left and lower-left docks around one large unobstructed scenic window.
+
+Implementation boundary:
+- recompose the existing Outcome banner as a compact upper-left identity pocket, the Commander/Army/Rewards and action content as a bounded lower-left dock, and retain the recap/save surface as the right edge rail;
+- make the geometry responsive at 1280x720 and 1920x1080, keep the center panorama unobstructed, and expose exact detached layout geometry for focused validation;
+- preserve every existing result string, tooltip, recap tab, save control, action, focus cycle, confirmation, recovery, accessibility behavior, and session/progression authority.
+
+Completion criteria:
+- inspected victory and defeat captures at 1280x720 and 1920x1080 show one dominant clear scenic center with no broad report-card stack across it, while all information and actions remain readable at the edges;
+- focused runtime proves exact containment/non-overlap, a materially dominant unobstructed scenic window, compact/wide/compact restoration, unchanged action/focus/save/session authority, and retained Reduced Motion/High Contrast behavior;
+- Outcome visual/focus/recovery/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no panorama/emblem bitmap, ambient profile, result text, recap/save/action semantics, progression, campaign/scenario rule, focus/input, accessibility semantic, session/save/schema, map, combat, AI, balance, generation, or Native RMG change;
+- no hiding required information, modal redesign, shader, packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Terrain Ambient Life
 
 id: `presentation-overworld-terrain-ambient-life-10184`

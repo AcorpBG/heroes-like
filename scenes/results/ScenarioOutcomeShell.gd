@@ -8,11 +8,20 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
 const OUTCOME_NEW_SESSION_CANCEL_TEXT := "Keep Outcome"
 const OUTCOME_NEW_SESSION_STALE_MESSAGE := "That follow-up changed. Review the outcome and try again."
-const OUTCOME_PRESENTATION_MODEL := "scenery_first_compact_command_ribbons"
-const OUTCOME_COMPACT_BANNER_ART_WIDTH := 260.0
-const OUTCOME_WIDE_BANNER_ART_WIDTH := 300.0
-const OUTCOME_COMPACT_EMBLEM_HEIGHT := 104.0
-const OUTCOME_WIDE_EMBLEM_HEIGHT := 176.0
+const OUTCOME_PRESENTATION_MODEL := "scenery_first_edge_docks"
+const OUTCOME_COMPACT_BANNER_WIDTH := 620.0
+const OUTCOME_WIDE_BANNER_WIDTH := 720.0
+const OUTCOME_COMPACT_BANNER_HEIGHT := 146.0
+const OUTCOME_WIDE_BANNER_HEIGHT := 180.0
+const OUTCOME_COMPACT_BANNER_ART_WIDTH := 132.0
+const OUTCOME_WIDE_BANNER_ART_WIDTH := 180.0
+const OUTCOME_COMPACT_EMBLEM_HEIGHT := 88.0
+const OUTCOME_WIDE_EMBLEM_HEIGHT := 120.0
+const OUTCOME_COMPACT_SIDEBAR_WIDTH := 320.0
+const OUTCOME_WIDE_SIDEBAR_WIDTH := 356.0
+const OUTCOME_COMPACT_DOCK_HEIGHT := 184.0
+const OUTCOME_WIDE_DOCK_HEIGHT := 204.0
+const OUTCOME_WIDE_DOCK_WIDTH := 1250.0
 const OUTCOME_RECAP_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0
 const OUTCOME_RECAP_TAB_STATE_STYLES := [
 	&"tab_selected",
@@ -70,15 +79,19 @@ const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _new_session_confirmation_dialog: ConfirmationDialog = $NewSessionConfirmationDialog
 @onready var _content_margin: MarginContainer = $ContentMargin
-@onready var _content_box: VBoxContainer = $ContentMargin/Content
+@onready var _content_box: Control = $ContentMargin/Content
+@onready var _banner: PanelContainer = $ContentMargin/Content/Banner
 @onready var _banner_pad: MarginContainer = $ContentMargin/Content/Banner/BannerPad
 @onready var _banner_columns: HBoxContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns
 @onready var _banner_art_panel: PanelContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel
 @onready var _banner_art_pad: MarginContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel/BannerArtPad
 @onready var _banner_info: VBoxContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo
-@onready var _main_row: HBoxContainer = $ContentMargin/Content/MainRow
-@onready var _command_column: VBoxContainer = $ContentMargin/Content/MainRow/CommandColumn
-@onready var _force_cards: HBoxContainer = $ContentMargin/Content/MainRow/CommandColumn/ForceCards
+@onready var _main_row: Control = $ContentMargin/Content/MainRow
+@onready var _command_column: HBoxContainer = $ContentMargin/Content/MainRow/CommandColumn
+@onready var _force_cards: VBoxContainer = $ContentMargin/Content/MainRow/CommandColumn/ForceCards
+@onready var _hero_pad: MarginContainer = $ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad
+@onready var _army_pad: MarginContainer = $ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad
+@onready var _resource_pad: MarginContainer = $ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad
 @onready var _actions_pad: MarginContainer = $ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad
 @onready var _actions_box: VBoxContainer = $ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad/ActionsBox
 @onready var _sidebar_shell: PanelContainer = $ContentMargin/Content/MainRow/SidebarShell
@@ -147,6 +160,7 @@ func _ready() -> void:
 		_recap_tabs.tab_changed.connect(_on_outcome_recap_tab_changed)
 	_configure_outcome_new_session_confirmation()
 	resized.connect(_apply_responsive_layout)
+	_content_box.resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
@@ -320,19 +334,47 @@ func _apply_responsive_layout() -> void:
 	var layout_changed := _compact_layout_active != compact_layout
 	_compact_layout_active = compact_layout
 	_set_margin(_content_margin, 8 if compact_layout else 12)
-	_content_box.add_theme_constant_override("separation", 6 if compact_layout else 8)
+	var content_size := _content_box.size
+	if content_size.x <= 0.0 or content_size.y <= 0.0:
+		call_deferred("_apply_responsive_layout")
+		return
+	var edge_gap := 6.0 if compact_layout else 8.0
+	var sidebar_width := OUTCOME_COMPACT_SIDEBAR_WIDTH if compact_layout else OUTCOME_WIDE_SIDEBAR_WIDTH
+	var left_available := maxf(0.0, content_size.x - sidebar_width - edge_gap)
+	var banner_width := minf(left_available, OUTCOME_COMPACT_BANNER_WIDTH if compact_layout else OUTCOME_WIDE_BANNER_WIDTH)
+	var banner_height := maxf(
+		OUTCOME_COMPACT_BANNER_HEIGHT if compact_layout else OUTCOME_WIDE_BANNER_HEIGHT,
+		_banner.get_combined_minimum_size().y
+	)
+	var dock_width := left_available if compact_layout else minf(left_available, OUTCOME_WIDE_DOCK_WIDTH)
+	var dock_height := minf(
+		content_size.y - banner_height - edge_gap,
+		maxf(
+			OUTCOME_COMPACT_DOCK_HEIGHT if compact_layout else OUTCOME_WIDE_DOCK_HEIGHT,
+			_command_column.get_combined_minimum_size().y
+		)
+	)
+	_banner.position = Vector2.ZERO
+	_banner.size = Vector2(banner_width, banner_height)
+	_main_row.position = Vector2.ZERO
+	_main_row.size = content_size
+	_sidebar_shell.position = Vector2(content_size.x - sidebar_width, 0.0)
+	_sidebar_shell.size = Vector2(sidebar_width, content_size.y)
+	_command_column.position = Vector2(0.0, content_size.y - dock_height)
+	_command_column.size = Vector2(dock_width, dock_height)
 	_set_margin(_banner_pad, 6 if compact_layout else 10)
 	_banner_columns.add_theme_constant_override("separation", 8 if compact_layout else 10)
 	_banner_art_panel.custom_minimum_size.x = OUTCOME_COMPACT_BANNER_ART_WIDTH if compact_layout else OUTCOME_WIDE_BANNER_ART_WIDTH
 	_set_margin(_banner_art_pad, 4 if compact_layout else 8)
 	_outcome_banner.custom_minimum_size.y = OUTCOME_COMPACT_EMBLEM_HEIGHT if compact_layout else OUTCOME_WIDE_EMBLEM_HEIGHT
 	_banner_info.add_theme_constant_override("separation", 4 if compact_layout else 6)
-	_main_row.add_theme_constant_override("separation", 6 if compact_layout else 8)
 	_command_column.add_theme_constant_override("separation", 6 if compact_layout else 8)
 	_force_cards.add_theme_constant_override("separation", 6 if compact_layout else 8)
+	_set_margin(_hero_pad, 4 if compact_layout else 6, 3 if compact_layout else 4)
+	_set_margin(_army_pad, 4 if compact_layout else 6, 3 if compact_layout else 4)
+	_set_margin(_resource_pad, 4 if compact_layout else 6, 3 if compact_layout else 4)
 	_set_margin(_actions_pad, 6 if compact_layout else 10)
 	_actions_box.add_theme_constant_override("separation", 4 if compact_layout else 6)
-	_sidebar_shell.custom_minimum_size.x = 320.0 if compact_layout else 332.0
 	_set_margin(_sidebar_pad, 6 if compact_layout else 10)
 	_sidebar_box.add_theme_constant_override("separation", 4 if compact_layout else 8)
 	_set_margin(_save_pad, 6 if compact_layout else 10, 4 if compact_layout else 8)
@@ -368,15 +410,15 @@ func _refresh() -> void:
 	_apply_result_palette(status)
 	_sync_scenic_epilogue(status)
 	_header_label.text = String(_model.get("header", "Scenario Outcome"))
-	_set_compact_label(_summary_label, String(_model.get("summary", "Scenario resolution recorded.")), 2 if _compact_layout_active else 4)
+	_set_compact_label(_summary_label, String(_model.get("summary", "Scenario resolution recorded.")), 2)
 	_mode_label.text = String(_model.get("mode_summary", ""))
 	_result_badge_label.text = _result_status_label(status)
 	if _outcome_banner.has_method("set_outcome"):
 		_outcome_banner.call("set_outcome", status)
 	_hero_portrait.set_hero_id(_live_player_hero_id())
-	_set_compact_label(_hero_label, String(_model.get("hero_summary", "Hero data unavailable.")), 2 if _compact_layout_active else 5)
-	_set_compact_label(_army_label, String(_model.get("army_summary", "Army data unavailable.")), 2 if _compact_layout_active else 5)
-	_set_compact_label(_resource_label, String(_model.get("resource_summary", "Resource data unavailable.")), 2 if _compact_layout_active else 5)
+	_set_compact_label(_hero_label, String(_model.get("hero_summary", "Hero data unavailable.")), 2)
+	_set_compact_label(_army_label, String(_model.get("army_summary", "Army data unavailable.")), 2)
+	_set_compact_label(_resource_label, String(_model.get("resource_summary", "Resource data unavailable.")), 2)
 	_set_compact_label(_progression_label, String(_model.get("progression_summary", "")), 2 if _compact_layout_active else 4)
 	_set_compact_label(_campaign_arc_label, String(_model.get("campaign_arc_summary", "")), 2 if _compact_layout_active else 4)
 	var carryover_check := _outcome_carryover_check(AppRouter.active_save_surface())
@@ -444,6 +486,7 @@ func _refresh() -> void:
 	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, retry_tooltip, action_cue_summary, visible_action_hint]).strip_edges()
 	_refresh_guide_surface()
 	_rebuild_actions()
+	call_deferred("_apply_responsive_layout")
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
@@ -1165,9 +1208,18 @@ func validation_snapshot() -> Dictionary:
 		"game_state": _session.game_state,
 		"day": _session.day,
 		"resume_target": SaveService.resume_target_for_session(_session),
-		"header": String(_model.get("header", "")),
-		"summary": String(_model.get("summary", "")),
-		"mode_summary": String(_model.get("mode_summary", "")),
+			"header": String(_model.get("header", "")),
+			"summary": String(_model.get("summary", "")),
+			"mode_summary": String(_model.get("mode_summary", "")),
+			"hero_summary": String(_model.get("hero_summary", "")),
+			"hero_visible": _hero_label.text,
+			"hero_tooltip": _hero_label.tooltip_text,
+			"army_summary": String(_model.get("army_summary", "")),
+			"army_visible": _army_label.text,
+			"army_tooltip": _army_label.tooltip_text,
+			"resource_summary": String(_model.get("resource_summary", "")),
+			"resource_visible": _resource_label.text,
+			"resource_tooltip": _resource_label.tooltip_text,
 		"progression_summary": String(_model.get("progression_summary", "")),
 		"campaign_arc_summary": String(_model.get("campaign_arc_summary", "")),
 		"carryover_summary": String(_model.get("carryover_summary", "")),
@@ -1237,32 +1289,47 @@ func validation_scenic_epilogue_summary() -> Dictionary:
 		var matches := find_children(String(panel_name), "PanelContainer", true, false)
 		if not matches.is_empty() and matches[0] is PanelContainer:
 			panel_alphas[String(panel_name)] = (matches[0] as PanelContainer).self_modulate.a
+	var banner_rect := Rect2(_banner.global_position, _banner.size)
 	var command_rect := Rect2(_command_column.global_position, _command_column.size)
 	var action_rect := Rect2(_actions_panel.global_position, _actions_panel.size)
+	var sidebar_rect := Rect2(_sidebar_shell.global_position, _sidebar_shell.size)
 	var scenic_window := Rect2(
-		Vector2(command_rect.position.x, action_rect.end.y),
-		Vector2(command_rect.size.x, maxf(0.0, command_rect.end.y - action_rect.end.y))
+		Vector2(_content_box.global_position.x, banner_rect.end.y),
+		Vector2(maxf(0.0, sidebar_rect.position.x - _content_box.global_position.x), maxf(0.0, command_rect.position.y - banner_rect.end.y))
 	)
-	var viewport_size := get_viewport_rect().size
+	var viewport_size := size
+	var shell_rect := Rect2(global_position, size)
+	var edge_docks_contained := shell_rect.encloses(banner_rect) and shell_rect.encloses(command_rect) and shell_rect.encloses(sidebar_rect)
+	var edge_docks_nonoverlapping := not banner_rect.intersects(command_rect) and not banner_rect.intersects(sidebar_rect) and not command_rect.intersects(sidebar_rect)
 	var scenic_window_area_fraction := (
 		scenic_window.size.x * scenic_window.size.y / (viewport_size.x * viewport_size.y)
 		if viewport_size.x > 0.0 and viewport_size.y > 0.0
 		else 0.0
 	)
 	backdrop_summary.merge({
-		"presentation_model": OUTCOME_PRESENTATION_MODEL,
+			"presentation_model": OUTCOME_PRESENTATION_MODEL,
 		"viewport_size": viewport_size,
 		"content_above_backdrop": _content_margin.get_index() > _backdrop.get_index(),
 		"draw_order": ["scenic_backdrop", "scenic_veil", "status_ambient", "outcome_content"],
-		"actions_panel_rect": action_rect,
+			"banner_rect": banner_rect,
+			"actions_panel_rect": action_rect,
 		"actions_panel_vertical_expand": bool(_actions_panel.size_flags_vertical & Control.SIZE_EXPAND),
-		"command_column_rect": command_rect,
+			"command_column_rect": command_rect,
+			"sidebar_rect": sidebar_rect,
+			"edge_docks_contained": edge_docks_contained,
+			"edge_docks_nonoverlapping": edge_docks_nonoverlapping,
 		"scenic_window_rect": scenic_window,
 		"scenic_window_positive": scenic_window.size.x > 0.0 and scenic_window.size.y > 0.0,
 		"scenic_window_area_fraction": scenic_window_area_fraction,
-		"content_overlay_bottom_fraction": action_rect.end.y / viewport_size.y if viewport_size.y > 0.0 else 1.0,
-		"banner_art_width": _banner_art_panel.custom_minimum_size.x,
-		"emblem_height": _outcome_banner.custom_minimum_size.y,
+			"content_overlay_top_fraction": banner_rect.end.y / viewport_size.y if viewport_size.y > 0.0 else 1.0,
+			"content_overlay_bottom_fraction": (viewport_size.y - command_rect.position.y) / viewport_size.y if viewport_size.y > 0.0 else 1.0,
+			"banner_width": _banner.size.x,
+			"banner_height": _banner.size.y,
+			"banner_minimum_size": _banner.get_combined_minimum_size(),
+			"command_minimum_size": _command_column.get_combined_minimum_size(),
+			"banner_art_width": _banner_art_panel.custom_minimum_size.x,
+			"emblem_height": _outcome_banner.custom_minimum_size.y,
+			"action_status_surface_visible": _action_status_label.get_parent().get_parent().visible,
 		"action_status_visible_line_count": _action_status_label.text.split("\n", false).size(),
 		"actions_hint_visible_line_count": _actions_hint_label.text.split("\n", false).size(),
 		"action_status_tooltip": _action_status_label.tooltip_text,
