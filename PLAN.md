@@ -26,6 +26,34 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
 
+## Overworld Layered Water-Bank Transition
+
+id: `presentation-overworld-layered-water-bank-transition-10184`
+
+Status: completed.
+
+Result:
+- authored cardinal water-edge textures now paint through four deterministic organic clip quads at 64% blend strength instead of ending on one straight opaque row, while a wider earthen bank, shallow-water wash, wet edge, and sparse broken foam establish a readable layered shoreline;
+- inspected 1280x720 and 1920x1080 River Pass captures show irregular lake banks without obscuring roads, objects, heroes, or towns, and broad authored/generated runtime preserves exact terrain, impassability, route, movement, session, and save authority;
+- nine-biome transition ownership, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 River Pass captures show the authored water interiors and cardinal edge strips working, but the opaque part of each straight 17-pixel edge strip still dominates the very faint 10%-alpha organic contour;
+- at whole-map scale the earthen wet edge collapses to roughly one pixel, so lakes retain a visibly stair-stepped tile silhouette despite the existing deterministic contour geometry.
+
+Implementation boundary:
+- soften only water-source edge-art compositing and add a wider deterministic earthen bank layer behind the existing shallow-water and broken-foam contours on land receivers;
+- retain the exact authored water tile/edge assets, direction lookup, cardinal and diagonal source order, deterministic contour geometry, water interiors, road causeways, terrain ids, map cells, passability, pathing, fog, session/save authority, and Native RMG behavior.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 River Pass captures show visibly softer, layered water banks whose wet earth and broken foam interrupt the square tile silhouette without muddying roads, objects, towns, or heroes;
+- broad Overworld runtime proves exact water/land terrain authority, contained deterministic bank/shallow/wet/foam geometry, authored edge identity, unchanged water impassability, stable repeated presentation, and exact session authority;
+- route, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain id/tile/map topology, water-body shape, texture pixel/import, road/causeway, passability/pathing, fog/visibility, object/hero/town art or scale, camera/layout, gameplay, save/schema, AI, balance, content, generation, or Native RMG change;
+- no shader, animated water, weather, broad terrain rewrite, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Generated Town Supply Cache Art
 
 id: `presentation-overworld-generated-town-supply-cache-art-10184`

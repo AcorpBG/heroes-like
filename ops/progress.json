@@ -1911,18 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "ux-main-menu-skirmish-intel-disclosure-10184",
-    "title": "Main Menu Skirmish intelligence disclosure",
+    "id": "presentation-overworld-layered-water-bank-transition-10184",
+    "title": "Overworld Layered Water-Bank Transition",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-26T18:52:34Z",
-    "updatedAt": "2026-08-26T19:37:46Z",
-    "completedAt": "2026-08-26T19:37:46Z",
+    "startedAt": "2026-08-27T01:14:38Z",
+    "updatedAt": "2026-08-27T01:31:43Z",
+    "completedAt": "2026-08-27T01:31:43Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed the compact Main Menu Skirmish intelligence disclosure. Fresh inspected 1280/1920 pixels show a launch-ready first view with materially more scenery and exact Commander/Operational cards behind Show Intel/Hide Intel. Focused launch, Map Forge, keyboard, broad visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. A bounded Settings inset correction keeps the unchanged audio mixer fully visible at 1280. Packaged Skirmish interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed."
+    "notes": "Completed the layered water-bank transition. Authored water-edge textures now follow deterministic organic clip quads with earthen bank, shallow water, wet edge, and broken foam; inspected pixels and authored/generated runtime preserve terrain, route, session, and save authority. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The Generated Town Supply Cache mapped-art correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "currentNotes": "The layered water-bank transition is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-generated-town-supply-cache-art-10184",
-  "currentSliceId": "presentation-overworld-generated-town-supply-cache-art-10184",
-  "currentSliceNotes": "Completed: the Generated Town Supply Cache uses detailed mapped cache art while exact generated support and gameplay authority remain unchanged.",
+  "currentSlice": "presentation-overworld-layered-water-bank-transition-10184",
+  "currentSliceId": "presentation-overworld-layered-water-bank-transition-10184",
+  "currentSliceNotes": "Completed: authored water-edge textures follow deterministic organic clip quads with a layered earthen/shallow/wet/foam bank while exact terrain and gameplay authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Generated Town Supply Cache art",
-  "currentSliceUpdatedAt": "2026-08-27T01:07:54Z",
+  "currentSliceTitle": "Overworld Layered Water-Bank Transition",
+  "currentSliceUpdatedAt": "2026-08-27T01:31:43Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,8 +20852,45 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The Generated Town Supply Cache mapped-art slice is completed with pixel, runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
+  "notes": "The layered water-bank presentation correction is completed with pixel, authored/generated runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-layered-water-bank-transition-10184",
+      "title": "Overworld Layered Water-Bank Transition",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T01:14:38Z",
+      "updatedAt": "2026-08-27T01:31:43Z",
+      "completedAt": "2026-08-27T01:31:43Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the visually stair-stepped water boundary with a layered authored-edge, earthen-bank, shallow-water, wet-edge, and broken-foam treatment while preserving exact terrain authority.",
+      "completionCriteria": "Inspected 1280/1920 captures plus broad Overworld runtime prove softer layered banks, exact contained deterministic geometry, authored edge identity, unchanged water impassability and terrain/session authority; route, core, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No terrain id/tile/map topology, water-body shape, texture pixel/import, road/causeway, passability/pathing, fog, object/hero/town art or scale, camera/layout, gameplay, save/schema, AI, balance, content, generation, or Native RMG change.",
+        "No shader, animated water, weather, broad terrain rewrite, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for the layered water-bank boundary. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "broadVisualArtifact": "/tmp/heroes-water-bank-overworld.kfuPt5",
+        "captureArtifact": "/tmp/heroes-water-bank-clipped-capture.AU4ieh",
+        "compatibilityArtifact": "/tmp/heroes-water-bank-compat.FsGoIg",
+        "staticAuditArtifact": "/tmp/heroes-water-bank-static-audit.BQNsRD",
+        "editorAuditArtifact": "/tmp/heroes-water-bank-editor-final.96UrXW",
+        "platformArtifact": "/tmp/heroes-water-bank-platform.iS7sVo",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-overworld-generated-town-supply-cache-art-10184",
       "title": "Overworld Generated Town Supply Cache art",

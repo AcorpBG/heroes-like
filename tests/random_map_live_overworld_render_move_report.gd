@@ -420,8 +420,8 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 				var profiles_exact := shoreline_profiles.size() == int(shoreline.get("source_count", -1))
 				for profile_value in shoreline_profiles:
 					var shoreline_profile: Dictionary = profile_value if profile_value is Dictionary else {}
-					profiles_exact = profiles_exact and int(shoreline_profile.get("shallow_band_point_count", 0)) == 7 and int(shoreline_profile.get("wet_edge_point_count", 0)) == 5 and int(shoreline_profile.get("foam_segment_count", 0)) == 2 and bool(shoreline_profile.get("geometry_contained", false))
-				if String(shoreline.get("model", "")) == "deterministic_shallow_wet_edge_and_broken_foam" and profiles_exact and not bool(shoreline.get("continuous_bright_outline", true)) and not bool(shoreline.get("full_tile_fill", true)):
+					profiles_exact = profiles_exact and int(shoreline_profile.get("bank_band_point_count", 0)) == 7 and int(shoreline_profile.get("shallow_band_point_count", 0)) == 7 and int(shoreline_profile.get("wet_edge_point_count", 0)) == 5 and int(shoreline_profile.get("foam_segment_count", 0)) == 2 and bool(shoreline_profile.get("geometry_contained", false))
+				if String(shoreline.get("model", "")) == "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam" and String(shoreline.get("authored_edge_art_model", "")) == "authored_texture_clipped_to_deterministic_organic_profile" and is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.64) and is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.215) and is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.30) and profiles_exact and not bool(shoreline.get("continuous_bright_outline", true)) and not bool(shoreline.get("full_tile_fill", true)):
 					shoreline_exact_count += 1
 			if int(terrain.get("generic_transition_overlay_relationship_count", 0)) <= 0:
 				continue

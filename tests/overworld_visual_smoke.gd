@@ -3760,19 +3760,24 @@ func _assert_water_tile_bank(shell: Node, session) -> bool:
 		get_tree().quit(1)
 		return false
 	if String(shoreline_terrain.get("terrain", "")) != "grass" \
-			or String(shoreline.get("model", "")) != "deterministic_shallow_wet_edge_and_broken_foam" \
+			or String(shoreline.get("model", "")) != "deterministic_layered_bank_shallow_water_wet_edge_and_broken_foam" \
 			or not bool(shoreline.get("active", false)) \
 			or int(shoreline.get("source_count", 0)) != 1 \
 			or shoreline.get("source_directions", []) != ["E"] \
 			or shoreline_profiles.size() != 1 \
 			or String(shoreline_profiles[0].get("source_terrain", "")) != "water" \
 			or String(shoreline_profiles[0].get("direction", "")) != "E" \
+			or int(shoreline_profiles[0].get("bank_band_point_count", 0)) != 7 \
 			or int(shoreline_profiles[0].get("shallow_band_point_count", 0)) != 7 \
 			or int(shoreline_profiles[0].get("wet_edge_point_count", 0)) != 5 \
 			or int(shoreline_profiles[0].get("foam_segment_count", 0)) != 2 \
 			or not bool(shoreline_profiles[0].get("geometry_contained", false)) \
-			or not is_equal_approx(float(shoreline.get("shallow_band_alpha", 0.0)), 0.10) \
-			or not is_equal_approx(float(shoreline.get("wet_edge_alpha", 0.0)), 0.26) \
+			or String(shoreline.get("authored_edge_art_model", "")) != "authored_texture_clipped_to_deterministic_organic_profile" \
+			or not is_equal_approx(float(shoreline.get("authored_edge_art_alpha", 0.0)), 0.64) \
+			or not is_equal_approx(float(shoreline.get("authored_edge_clip_depth_factor", 0.0)), 0.215) \
+			or not is_equal_approx(float(shoreline.get("bank_band_alpha", 0.0)), 0.30) \
+			or not is_equal_approx(float(shoreline.get("shallow_band_alpha", 0.0)), 0.19) \
+			or not is_equal_approx(float(shoreline.get("wet_edge_alpha", 0.0)), 0.38) \
 			or not is_equal_approx(float(shoreline.get("foam_alpha", 0.0)), 0.36) \
 			or int(shoreline.get("foam_segments_per_edge", 0)) != 2 \
 			or bool(shoreline.get("continuous_bright_outline", true)) \
@@ -3780,7 +3785,7 @@ func _assert_water_tile_bank(shell: Node, session) -> bool:
 			or String(shoreline.get("deterministic_seed_basis", "")) != "receiver_tile_and_cardinal_direction_only" \
 			or String(shoreline.get("draw_order", "")) != "after_authored_transition_overlay_before_macro_lighting_and_roads" \
 			or session.to_dict() != authority_before:
-		push_error("Overworld smoke: River Pass water boundary did not expose the contained organic shallow/wet/broken-foam contour while preserving terrain authority. presentation=%s" % shoreline_presentation)
+		push_error("Overworld smoke: River Pass water boundary did not expose the contained layered bank/shallow/wet/broken-foam contour while preserving terrain authority. presentation=%s" % shoreline_presentation)
 		get_tree().quit(1)
 		return false
 	return true
