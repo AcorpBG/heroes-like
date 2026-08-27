@@ -26,6 +26,36 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next bounded graphical-polish slice from fresh inspected game pixels.
 
+## Overworld Cartographic Object Scale
+
+id: `presentation-overworld-cartographic-object-scale-10184`
+
+Status: completed.
+
+Result:
+- the oversized 0.36-1.44 painted ladder is replaced by a compact 0.24 artifact, 0.30 pickup, 0.36 default, 0.42 encounter, 0.44 blocker, 0.46 waypoint, 0.50 durable-site, 0.54 landmark, 0.60 field-hero, 0.58-0.88 multi-tile, and 1.12 town hierarchy;
+- generated decorative blocker cells now use the same 0.44-tile physical rank as ordinary blockers, while the unchanged 3x2 town remains the dominant landmark and all exact logical footprints, entry/body masks, interaction, movement, session/save, and generation authority remain intact;
+- inspected 1280x720 and 1920x1080 captures, focused authored/generated runtime, route/input/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- direct owner playtest feedback and the current 1280x720 / 1920x1080 River Pass captures show portable artifacts, encounters, structures, the field hero, and especially the 3x2 town reading as oversized screen tokens instead of inhabiting one cartographic world;
+- the current painted ladder reaches 0.88 tile for one-tile landmarks and 1.44 tiles for towns, while a field hero is 0.67 tile, so several object classes compete with actors and the town/hero cluster overwhelms roads and terrain.
+
+Implementation boundary:
+- compress only the existing painted tile-relative extents into a moderate monotonic cartographic ladder, retaining the exact semantic classifier, cached alpha crop, source aspect, ground anchors, town 3x2 logical footprint, body/entry masks, and all selection/hover cues;
+- keep towns largest, heroes and encounters immediately readable, durable sites distinct from loose pickups, and portable artifacts materially subordinate to actors;
+- preserve exact assets, ids, positions, logical footprints, hit areas, passability, routes, movement, interaction, fog/reveal, camera/map fit, content, session/save authority, generated placement, and Native RMG behavior.
+
+Completion criteria:
+- fresh inspected authored 1280x720 and 1920x1080 captures show terrain and roads as the primary continuous surface, with a clearly descending town > hero > landmark/site > encounter > pickup > artifact hierarchy and no overlapping token-like mass;
+- focused runtime proves exact painted bounds/aspect/containment and semantic ordering while town body/entry masks, selection, movement, interaction, generated-map placement, and whole session/save authority remain exact;
+- authored/generated Overworld, route/input/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no bitmap/import, object identity/content, logical footprint, town body/entry mask, hit geometry, passability, pathfinding, route, movement, interaction, selection, fog, camera, save/schema, session, generated placement, or Native RMG change;
+- no terrain/road, shell/UI layout, input/focus, accessibility semantic, animation/audio/VFX, gameplay, AI, economy, or balance change;
+- no packaged Overworld interaction, controller/accessibility hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Town Painted-Light Ambient Bloom
 
 id: `presentation-town-painted-light-ambient-bloom-10184`
