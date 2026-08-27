@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next graphical-polish slice from direct rendered evidence."
+    "Select the next graphical-polish slice from direct current rendered evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,17 +1911,18 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-town-painted-light-ambient-bloom-10184",
-    "title": "Town Painted-Light Ambient Bloom",
+    "id": "presentation-outcome-scenery-first-edge-composition-10184",
+    "title": "Outcome Scenery-First Edge Composition",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T02:44:33Z",
-    "updatedAt": "2026-08-27T03:03:44Z",
+    "startedAt": "2026-08-27T07:09:46Z",
+    "updatedAt": "2026-08-27T07:54:37Z",
+    "completedAt": "2026-08-27T07:54:37Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from fresh inspected 1280/1920 Town pixels. TownStageView now maps restrained faction-specific bloom through the exact scenic cover crop and draws it behind every overlay. Normal motion gently pulses, Reduced Motion is static, High Contrast hides it, and procedural fallback stays unlit. Six-faction focused, Town/Battle visual, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction and overall release readiness remain unclaimed."
+    "notes": "Completed from direct current Outcome pixels. The result identity is now a compact upper-left pocket, force summaries plus actions are a responsive lower-left dock, and recap/save remains the right rail around one dominant scenic center. Inspected 1280/1920 victory and defeat captures are clear; focused compact/wide/compact, focus, cancel, recovery, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Result/save/action/focus/accessibility/session authority remains unchanged. Packaged Outcome interaction and broader release claims remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15328,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The terrain-ambient-life slice is complete. Select the next graphical-polish slice from direct rendered evidence; broader product gaps remain.",
+  "currentNotes": "Outcome scenery-first edge composition is completed; select the next graphical-polish slice only from direct current rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-terrain-ambient-life-10184",
-  "currentSliceId": "presentation-overworld-terrain-ambient-life-10184",
-  "currentSliceNotes": "Add a sparse deterministic terrain-aware ambient layer beneath fog, objects, routes, selection, VFX, and UI, with Reduced Motion static and High Contrast hidden.",
+  "currentSlice": "presentation-outcome-scenery-first-edge-composition-10184",
+  "currentSliceId": "presentation-outcome-scenery-first-edge-composition-10184",
+  "currentSliceNotes": "Completed with inspected 1280/1920 victory/defeat captures and focused authority, compatibility, static/editor, Linux, and Windows startup gates; packaged Outcome interaction remains unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Terrain Ambient Life",
-  "currentSliceUpdatedAt": "2026-08-27T07:05:31Z",
+  "currentSliceTitle": "Outcome Scenery-First Edge Composition",
+  "currentSliceUpdatedAt": "2026-08-27T07:54:37Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104900,6 +104901,33 @@
       "blockedReason": null,
       "notes": "Completed from direct current capture comparison. A sparse deterministic terrain-group ambience layer now draws after terrain/roads and before the authoritative fog/object layer; live settings changes animate normally, freeze at the exact Reduced Motion static phase, and hide in High Contrast. Inspected River Pass 1280x720 and 1920x1080 captures retain terrain, road, shoreline, fog, object, hero, route, selection, and UI clarity. Focused authored and generated movement/save runtime, full Overworld visual, input ownership, full route movement, active-play focus, accessibility, core, validate_repo, pycompile, exact/generic editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Gameplay, session/save, generation, Native RMG, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-27T07:05:31Z",
+      "remainingWork": ""
+    },
+    {
+      "id": "presentation-outcome-scenery-first-edge-composition-10184",
+      "title": "Outcome Scenery-First Edge Composition",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T07:54:37Z",
+      "startedAt": "2026-08-27T07:09:46Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "scenes/results/ScenarioOutcomeShell.tscn",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Reclaim the Outcome panorama's center by moving the unchanged result identity, summaries, and actions into compact responsive edge docks.",
+      "completionCriteria": "Inspected 1280/1920 victory and defeat captures show one dominant clear scenic center; focused compact/wide/compact runtime proves exact containment, non-overlap, restoration, unchanged content/actions/focus/save/session authority, and compatibility/static/platform gates pass.",
+      "nonGoals": [
+        "No panorama/emblem bitmap, ambience, result text, recap/save/action semantics, progression, campaign/scenario rule, focus/input, accessibility semantic, session/save/schema, map, combat, AI, balance, generation, or Native RMG change.",
+        "No hiding required information, modal redesign, shader, packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed from direct 1280x720 and 1920x1080 victory/defeat pixels. The unchanged result identity, force summaries, actions, recap, and save controls now occupy compact responsive edge docks around one dominant scenic center. Focused compact/wide/compact runtime proves containment, non-overlap, passive convergence, exact compact restoration, full semantic/tooltips/action/save/session authority, and compatibility/static/platform gates pass. Linux evidence is export plus packaged headless startup; Windows evidence is export plus fresh-Wine Boot/MainMenu/native-DLL startup. Packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-27T07:54:37Z",
       "remainingWork": ""
     }
   ],

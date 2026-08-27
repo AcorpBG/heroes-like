@@ -2029,25 +2029,26 @@ func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
 		or live_summary.get("draw_order", []) != OUTCOME_STATUS_AMBIENT_DRAW_ORDER
 		or not _outcome_status_ambient_summary_exact(live_summary, "victory", true, true)
 		or not _outcome_panel_alphas_exact(live_summary.get("panel_alphas", {}), OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME)
-		or live_summary.get("panel_alpha_contract", {}) != OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME
-		or not _outcome_compact_ribbon_contract_exact(live_summary)
+			or live_summary.get("panel_alpha_contract", {}) != OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME
+			or not _outcome_edge_dock_contract_exact(live_summary)
 	):
 		push_error("Outcome smoke: live victory scenic epilogue contract failed: %s." % live_summary)
 		get_tree().quit(1)
 		return false
 	var viewport_size: Vector2 = live_summary.get("viewport_size", Vector2.ZERO)
 	var scenic_window: Rect2 = live_summary.get("scenic_window_rect", Rect2())
-	var action_rect: Rect2 = live_summary.get("actions_panel_rect", Rect2())
 	if (
 		viewport_size.x <= 0.0
 		or viewport_size.y <= 0.0
-		or scenic_window.size.y < viewport_size.y * 0.38
-		or float(live_summary.get("scenic_window_area_fraction", 0.0)) < 0.31
-		or float(live_summary.get("content_overlay_bottom_fraction", 1.0)) > 0.61
-		or action_rect.end.y > viewport_size.y * 0.61
+		or scenic_window.size.y < viewport_size.y * 0.36
+		or float(live_summary.get("scenic_window_area_fraction", 0.0)) < 0.24
+		or float(live_summary.get("content_overlay_top_fraction", 1.0)) > 0.29
+		or float(live_summary.get("content_overlay_bottom_fraction", 1.0)) > 0.36
 	):
-		push_error("Outcome smoke: compact action dock did not preserve the dominant scenic stage: %s." % live_summary)
+		push_error("Outcome smoke: edge docks did not preserve the dominant scenic center: %s." % live_summary)
 		get_tree().quit(1)
+		return false
+	if not await _assert_outcome_edge_dock_responsive_contract(shell, session, authority_before):
 		return false
 
 	var fixture = OutcomeScenicBackdropViewScript.new()
@@ -2206,17 +2207,43 @@ func _outcome_panel_alphas_exact(actual_value, expected: Dictionary) -> bool:
 	return true
 
 
-func _outcome_compact_ribbon_contract_exact(summary: Dictionary) -> bool:
+func _outcome_edge_dock_contract_exact(summary: Dictionary) -> bool:
 	var viewport_size: Vector2 = summary.get("viewport_size", Vector2.ZERO)
 	var compact := viewport_size.x < 1360.0 or viewport_size.y < 760.0
-	var expected_banner_width := 260.0 if compact else 300.0
-	var expected_emblem_height := 104.0 if compact else 176.0
+	var expected_banner_width := 620.0 if compact else 720.0
+	var expected_banner_height := 146.0 if compact else 180.0
+	var expected_banner_art_width := 132.0 if compact else 180.0
+	var expected_emblem_height := 88.0 if compact else 120.0
+	var banner_rect: Rect2 = summary.get("banner_rect", Rect2())
+	var command_rect: Rect2 = summary.get("command_column_rect", Rect2())
+	var action_rect: Rect2 = summary.get("actions_panel_rect", Rect2())
+	var sidebar_rect: Rect2 = summary.get("sidebar_rect", Rect2())
+	var scenic_rect: Rect2 = summary.get("scenic_window_rect", Rect2())
+	var banner_minimum: Vector2 = summary.get("banner_minimum_size", Vector2.ZERO)
+	var command_minimum: Vector2 = summary.get("command_minimum_size", Vector2.ZERO)
 	var action_status_tooltip := String(summary.get("action_status_tooltip", ""))
 	var actions_hint_tooltip := String(summary.get("actions_hint_tooltip", ""))
 	return (
-		String(summary.get("presentation_model", "")) == "scenery_first_compact_command_ribbons"
-		and is_equal_approx(float(summary.get("banner_art_width", 0.0)), expected_banner_width)
+		String(summary.get("presentation_model", "")) == "scenery_first_edge_docks"
+		and bool(summary.get("edge_docks_contained", false))
+		and bool(summary.get("edge_docks_nonoverlapping", false))
+		and is_equal_approx(float(summary.get("banner_width", 0.0)), expected_banner_width)
+		and is_equal_approx(float(summary.get("banner_height", 0.0)), expected_banner_height)
+		and is_equal_approx(float(summary.get("banner_art_width", 0.0)), expected_banner_art_width)
 		and is_equal_approx(float(summary.get("emblem_height", 0.0)), expected_emblem_height)
+		and banner_rect.size.x >= banner_minimum.x
+		and banner_rect.size.y >= banner_minimum.y
+		and command_rect.size.x >= command_minimum.x
+		and command_rect.size.y >= command_minimum.y
+		and is_equal_approx(banner_rect.position.x, command_rect.position.x)
+		and banner_rect.end.y <= command_rect.position.y
+		and banner_rect.end.x < sidebar_rect.position.x
+		and command_rect.end.x < sidebar_rect.position.x
+		and command_rect.encloses(action_rect)
+		and scenic_rect.position.is_equal_approx(Vector2(banner_rect.position.x, banner_rect.end.y))
+		and is_equal_approx(scenic_rect.end.y, command_rect.position.y)
+		and is_equal_approx(scenic_rect.end.x, sidebar_rect.position.x)
+		and not bool(summary.get("action_status_surface_visible", true))
 		and int(summary.get("action_status_visible_line_count", 0)) == 1
 		and int(summary.get("actions_hint_visible_line_count", 0)) == 1
 		and action_status_tooltip.contains("Next step:")
@@ -2226,6 +2253,119 @@ func _outcome_compact_ribbon_contract_exact(summary: Dictionary) -> bool:
 		and actions_hint_tooltip.contains("Outcome Follow-up Check")
 		and actions_hint_tooltip.contains("Outcome Retry Check")
 	)
+
+
+func _assert_outcome_edge_dock_responsive_contract(shell: Control, session, authority_before: Dictionary) -> bool:
+	var original_size := shell.size
+	var initial_geometry := await _await_outcome_edge_dock_geometry_stable(shell)
+	if initial_geometry.is_empty():
+		push_error("Outcome smoke: initial edge-dock geometry did not converge passively.")
+		get_tree().quit(1)
+		return false
+	var initial_validation_snapshot: Dictionary = shell.call("validation_snapshot")
+	var initial_content := _outcome_layout_content_snapshot(initial_validation_snapshot)
+	var initial_save_status := String(initial_validation_snapshot.get("save_status", ""))
+	var compact_geometry: Dictionary = {}
+	var compact_save_status := ""
+	for stage_size in [Vector2(1280.0, 720.0), Vector2(1920.0, 1080.0), Vector2(1280.0, 720.0)]:
+		shell.size = stage_size
+		var geometry := await _await_outcome_edge_dock_geometry_stable(shell)
+		if geometry.is_empty():
+			push_error("Outcome smoke: edge-dock geometry did not converge passively at %s." % [stage_size])
+			shell.size = original_size
+			get_tree().quit(1)
+			return false
+		var summary: Dictionary = shell.call("validation_scenic_epilogue_summary")
+		var contract_exact: bool = _outcome_edge_dock_contract_exact(summary)
+		var area_exact: bool = float(summary.get("scenic_window_area_fraction", 0.0)) >= 0.35
+		var session_exact: bool = session.to_dict() == authority_before
+		var current_content := _outcome_layout_content_snapshot(shell.call("validation_snapshot"))
+		var content_exact: bool = current_content == initial_content
+		if not contract_exact or not area_exact or not session_exact or not content_exact:
+			var changed_content_keys: Array[String] = []
+			for content_key in initial_content:
+				if initial_content.get(content_key) != current_content.get(content_key):
+					changed_content_keys.append(String(content_key))
+			push_error("Outcome smoke: edge-dock responsive contract failed at %s: contract=%s area=%s session=%s content=%s changed_content_keys=%s summary=%s." % [stage_size, contract_exact, area_exact, session_exact, content_exact, changed_content_keys, summary])
+			shell.size = original_size
+			get_tree().quit(1)
+			return false
+		if stage_size == Vector2(1280.0, 720.0) and compact_geometry.is_empty():
+			compact_geometry = geometry.duplicate(true)
+			compact_save_status = String(shell.call("validation_snapshot").get("save_status", ""))
+		elif stage_size == Vector2(1920.0, 1080.0) and geometry == compact_geometry:
+			push_error("Outcome smoke: edge docks did not respond between compact and wide layouts.")
+			shell.size = original_size
+			get_tree().quit(1)
+			return false
+		elif stage_size == Vector2(1280.0, 720.0) and geometry != compact_geometry:
+			push_error("Outcome smoke: compact edge-dock geometry did not restore exactly after the wide layout.")
+			shell.size = original_size
+			get_tree().quit(1)
+			return false
+		elif stage_size == Vector2(1280.0, 720.0) and String(shell.call("validation_snapshot").get("save_status", "")) != compact_save_status:
+			push_error("Outcome smoke: compact save-status rendering did not restore exactly after the wide layout.")
+			shell.size = original_size
+			get_tree().quit(1)
+			return false
+	shell.size = original_size
+	var restored_geometry := await _await_outcome_edge_dock_geometry_stable(shell)
+	var restored_summary: Dictionary = shell.call("validation_scenic_epilogue_summary")
+	var restored_validation_snapshot: Dictionary = shell.call("validation_snapshot")
+	var restored_content := _outcome_layout_content_snapshot(restored_validation_snapshot)
+	var geometry_restored: bool = (
+		not restored_geometry.is_empty()
+		and restored_summary.get("viewport_size", Vector2.ZERO) == original_size
+		and _outcome_edge_dock_contract_exact(restored_summary)
+		and float(restored_summary.get("scenic_window_area_fraction", 0.0)) >= 0.35
+	)
+	var session_restored: bool = session.to_dict() == authority_before
+	var content_restored: bool = restored_content == initial_content
+	var save_status_restored: bool = String(restored_validation_snapshot.get("save_status", "")) == initial_save_status
+	if not geometry_restored or not session_restored or not content_restored or not save_status_restored:
+		push_error("Outcome smoke: live edge-dock contract/content did not restore after responsive validation: geometry=%s session=%s content=%s save_status=%s restored_geometry=%s." % [geometry_restored, session_restored, content_restored, save_status_restored, restored_geometry])
+		get_tree().quit(1)
+		return false
+	return true
+
+
+func _await_outcome_edge_dock_geometry_stable(shell: Control) -> Dictionary:
+	var previous: Dictionary = {}
+	for _frame_index in range(12):
+		await get_tree().process_frame
+		var current := _outcome_edge_dock_geometry_snapshot(shell.call("validation_scenic_epilogue_summary"))
+		if not previous.is_empty() and current == previous:
+			return current
+		previous = current
+	return {}
+
+
+func _outcome_edge_dock_geometry_snapshot(summary: Dictionary) -> Dictionary:
+	return {
+		"viewport_size": summary.get("viewport_size", Vector2.ZERO),
+		"banner_rect": summary.get("banner_rect", Rect2()),
+		"command_column_rect": summary.get("command_column_rect", Rect2()),
+		"actions_panel_rect": summary.get("actions_panel_rect", Rect2()),
+		"sidebar_rect": summary.get("sidebar_rect", Rect2()),
+		"scenic_window_rect": summary.get("scenic_window_rect", Rect2()),
+		"banner_art_width": summary.get("banner_art_width", 0.0),
+		"emblem_height": summary.get("emblem_height", 0.0),
+	}
+
+
+func _outcome_layout_content_snapshot(snapshot: Dictionary) -> Dictionary:
+	var keys := [
+		"header", "summary", "mode_summary", "hero_summary", "hero_visible", "hero_tooltip",
+		"army_summary", "army_visible", "army_tooltip", "resource_summary", "resource_visible", "resource_tooltip",
+		"progression_summary", "campaign_arc_summary", "carryover_summary", "aftermath_summary", "journal_summary",
+		"next_step_summary", "actions_hint", "actions_hint_tooltip", "action_status", "action_status_tooltip",
+		"action_ids", "action_tooltips", "actions", "save_status_tooltip",
+		"save_button_tooltip", "menu_button_label", "menu_button_tooltip",
+	]
+	var result := {}
+	for key in keys:
+		result[key] = snapshot.get(key)
+	return result
 
 
 func _outcome_scenic_geometry_exact(summary: Dictionary) -> bool:

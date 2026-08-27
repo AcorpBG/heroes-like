@@ -33,14 +33,15 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="Content" type="VBoxContainer" parent="ContentMargin"]
+[node name="Content" type="Control" parent="ContentMargin"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
 
 [node name="Banner" type="PanelContainer" parent="ContentMargin/Content"]
-layout_mode = 2
+layout_mode = 0
+offset_right = 720.0
+offset_bottom = 212.0
 
 [node name="BannerPad" type="MarginContainer" parent="ContentMargin/Content/Banner"]
 layout_mode = 2
@@ -55,7 +56,7 @@ theme_override_constants/separation = 10
 
 [node name="BannerArtPanel" type="PanelContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns"]
 layout_mode = 2
-custom_minimum_size = Vector2(356, 0)
+custom_minimum_size = Vector2(208, 0)
 
 [node name="BannerArtPad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel"]
 layout_mode = 2
@@ -66,7 +67,7 @@ theme_override_constants/margin_bottom = 8
 
 [node name="OutcomeBanner" type="Control" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel/BannerArtPad"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 220)
+custom_minimum_size = Vector2(0, 144)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -109,11 +110,13 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 2
+clip_text = true
 text = "Campaign | Captain | Day 1"
 
 [node name="Header" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
 unique_name_in_owner = true
 layout_mode = 2
+clip_text = true
 text = "Scenario Outcome"
 
 [node name="Summary" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
@@ -123,6 +126,7 @@ autowrap_mode = 3
 text = "Outcome summary"
 
 [node name="ActionStatusPanel" type="PanelContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
+visible = false
 layout_mode = 2
 
 [node name="ActionStatusPad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/ActionStatusPanel"]
@@ -138,22 +142,23 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Review the outcome, then choose the next step."
 
-[node name="MainRow" type="HBoxContainer" parent="ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="MainRow" type="Control" parent="ContentMargin/Content"]
+layout_mode = 0
+offset_right = 1896.0
+offset_bottom = 1056.0
+
+[node name="CommandColumn" type="HBoxContainer" parent="ContentMargin/Content/MainRow"]
+layout_mode = 0
+offset_top = 820.0
+offset_right = 1250.0
+offset_bottom = 1056.0
 theme_override_constants/separation = 8
 
-[node name="CommandColumn" type="VBoxContainer" parent="ContentMargin/Content/MainRow"]
+[node name="ForceCards" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="ForceCards" type="HBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
+size_flags_stretch_ratio = 1.8
+theme_override_constants/separation = 4
 
 [node name="HeroPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards"]
 layout_mode = 2
@@ -166,22 +171,24 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HeroBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad"]
+[node name="HeroBox" type="HBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 8
 
 [node name="HeroTitle" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad/HeroBox"]
+custom_minimum_size = Vector2(88, 0)
 layout_mode = 2
 text = "Commander"
 
 [node name="HeroIdentity" type="HBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad/HeroBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="HeroPortrait" type="TextureRect" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad/HeroBox/HeroIdentity"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(52, 70)
+custom_minimum_size = Vector2(42, 56)
 layout_mode = 2
 script = ExtResource("6_hero_portrait")
 
@@ -190,6 +197,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
+max_lines_visible = 2
 text = "Hero summary"
 
 [node name="ArmyPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards"]
@@ -203,18 +211,21 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ArmyBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad"]
+[node name="ArmyBox" type="HBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 8
 
 [node name="ArmyTitle" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad/ArmyBox"]
+custom_minimum_size = Vector2(88, 0)
 layout_mode = 2
 text = "Army"
 
 [node name="Army" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad/ArmyBox"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 autowrap_mode = 3
+max_lines_visible = 2
 text = "Army summary"
 
 [node name="ResourcePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards"]
@@ -228,18 +239,21 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ResourceBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad"]
+[node name="ResourceBox" type="HBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 8
 
 [node name="ResourceTitle" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad/ResourceBox"]
+custom_minimum_size = Vector2(88, 0)
 layout_mode = 2
 text = "Rewards"
 
 [node name="Resources" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad/ResourceBox"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 autowrap_mode = 3
+max_lines_visible = 2
 text = "Resource summary"
 
 [node name="ActionsPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn"]
@@ -265,6 +279,7 @@ text = "Next Step"
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
+max_lines_visible = 2
 text = "Advance the campaign, replay, or return to the frontier from one clear action rail."
 
 [node name="Actions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad/ActionsBox"]
@@ -274,9 +289,10 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
 [node name="SidebarShell" type="PanelContainer" parent="ContentMargin/Content/MainRow"]
-layout_mode = 2
-custom_minimum_size = Vector2(332, 0)
-size_flags_vertical = 3
+layout_mode = 0
+offset_left = 1540.0
+offset_right = 1896.0
+offset_bottom = 1056.0
 
 [node name="SidebarPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell"]
 layout_mode = 2
