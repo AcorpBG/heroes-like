@@ -43193,25 +43193,27 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         for forbidden in ("rand", "Time.", "session.", "_map_data", "_terrain_at", "set_map_state", "queue_redraw", "await ", "create_timer"):
             ensure(forbidden not in block, errors, f"{block_name} must remain deterministic and presentation-only: {forbidden}")
 
-    terrain_detail_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_detail_decal_atlas.png"
+    terrain_detail_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_detail_decal_atlas_rich_v2.png"
     ensure(terrain_detail_path.is_file(), errors, "Overworld terrain detail decals must ship one project-local runtime atlas.")
     if terrain_detail_path.is_file():
         terrain_detail_bytes = terrain_detail_path.read_bytes()
         ensure(png_size(terrain_detail_path) == (1024, 1024), errors, "Overworld terrain detail decal atlas must remain exactly 1024x1024.")
         ensure(len(terrain_detail_bytes) > 25 and terrain_detail_bytes[:8] == b"\x89PNG\r\n\x1a\n" and terrain_detail_bytes[25] == 6, errors, "Overworld terrain detail decal atlas must remain an RGBA PNG with transparent cutout clusters.")
+        ensure(hashlib.sha256(terrain_detail_bytes).hexdigest() == "1a079b938adc29db80637714be2783d378bc671854340915c8b705bf7a227398", errors, "Overworld rich terrain detail atlas must retain the inspected clean-alpha production bitmap.")
     for token in (
-        'const TERRAIN_DETAIL_DECAL_MODEL := "sparse_biome_aware_painterly_surface_clusters"',
-        'const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"',
+        'const TERRAIN_DETAIL_DECAL_MODEL := "rich_biome_aware_painterly_surface_clusters_v2"',
+        'const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "original_generated_clean_alpha_4x4_natural_cluster_atlas"',
+        'const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"',
         "const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)",
         "const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)",
         "const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)",
         "const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 2",
-        "const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.34",
-        "const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.46",
+        "const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.38",
+        "const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.52",
         "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.13",
         "const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08",
         "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.12",
-        "const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.92, 0.94, 0.86, 0.78)",
+        "const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.88)",
     ):
         ensure(map_view_text.count(token) == 1, errors, f"Terrain detail decals must own one exact bounded presentation constant: {token}")
     detail_cells_block = gd_function_block(map_view_text, "_terrain_detail_decal_cells_for_group")
@@ -43235,6 +43237,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "not cell_ids.is_empty() and not road_excluded and density_residue == 0",
         '"interactive": false',
         '"collision": false',
+        '"source_model": TERRAIN_DETAIL_DECAL_SOURCE_MODEL',
         '"draw_order": "after_macro_lighting_before_roads_objects_and_fog"',
         '"hidden_by_unexplored_shroud": true',
         '"variation_basis": "tile_coordinate_and_terrain_id_only"',
@@ -43264,6 +43267,42 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for block_name, block in (("terrain-detail choices", detail_cells_block), ("terrain-detail payload", detail_payload_block), ("terrain-detail draw", detail_draw_block)):
         for forbidden in ("rand", "Time.", "set_map_state", "queue_redraw", "await ", "create_timer", "collision_layer", "mouse_filter"):
             ensure(forbidden not in block, errors, f"{block_name} must remain deterministic, presentation-only, and noninteractive: {forbidden}")
+
+    ninefold_atlas_block = gd_function_block(ninefold_transition_text, "_assert_rich_terrain_detail_atlas")
+    for token in (
+        'const TERRAIN_DETAIL_ATLAS_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"',
+        "const TERRAIN_DETAIL_ATLAS_SIZE := Vector2i(1024, 1024)",
+        "const TERRAIN_DETAIL_CELL_SIZE := 256",
+        "const TERRAIN_DETAIL_CELL_INSET := 16",
+        "const TERRAIN_DETAIL_MIN_VISIBLE_PIXELS_PER_CELL := 25000",
+        "if not _assert_rich_terrain_detail_atlas():\n\t\treturn",
+    ):
+        ensure(token in ninefold_transition_text, errors, f"Ninefold must fail closed on the exact rich terrain-detail atlas contract: {token}")
+    ensure(
+        ninefold_transition_text.find("if not _assert_rich_terrain_detail_atlas():")
+        < ninefold_transition_text.find("ContentService.get_scenario(SCENARIO_ID)"),
+        errors,
+        "Ninefold must validate the rich atlas before scenario/session setup.",
+    )
+    for token in (
+        "var texture := load(TERRAIN_DETAIL_ATLAS_PATH) as Texture2D",
+        "var image := texture.get_image()",
+        "image.get_size() != TERRAIN_DETAIL_ATLAS_SIZE",
+        "for cell_id in range(16)",
+        "var cell_origin := Vector2i(cell_id % 4, floori(float(cell_id) / 4.0)) * TERRAIN_DETAIL_CELL_SIZE",
+        "for local_y in range(TERRAIN_DETAIL_CELL_SIZE)",
+        "for local_x in range(TERRAIN_DETAIL_CELL_SIZE)",
+        "if alpha >= 0.06:",
+        "visible_pixel_count += 1",
+        "local_x < TERRAIN_DETAIL_CELL_INSET",
+        "local_y >= TERRAIN_DETAIL_CELL_SIZE - TERRAIN_DETAIL_CELL_INSET",
+        "border_alpha_max = maxf(border_alpha_max, alpha)",
+        "visible_pixel_count < TERRAIN_DETAIL_MIN_VISIBLE_PIXELS_PER_CELL or border_alpha_max > 0.01",
+        "return true",
+    ):
+        ensure(token in ninefold_atlas_block, errors, f"Ninefold rich-atlas owner must inspect all isolated clean-alpha cells: {token}")
+    for forbidden in ("session", "_session", "set(", "erase(", "sort(", "rand", "Time.", "await ", "create_timer", "queue_redraw"):
+        ensure(forbidden not in ninefold_atlas_block, errors, f"Ninefold rich-atlas owner must remain image-only and observation-only: {forbidden}")
 
     for token in (
         'const WATER_SURFACE_RIPPLE_MODEL := "deterministic_broken_painterly_current_pairs"',
@@ -43470,8 +43509,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure('_assert_terrain_macro_lighting(shell, session, receiver_tile)' in gd_function_block(ninefold_transition_text, "_assert_neighbor_terrain_transitions"), errors, "Ninefold terrain boundary flow must run the focused macro-lighting owner before transition checks.")
     ninefold_detail_exact_block = gd_function_block(ninefold_transition_text, "_terrain_detail_decal_payload_exact")
     for token in (
-        'String(detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters"',
-        'String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"',
+        'String(detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2"',
+        'String(detail.get("source_model", "")) != "original_generated_clean_alpha_4x4_natural_cluster_atlas"',
+        'String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"',
         'detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}',
         'detail.get("atlas_grid", {}) != {"x": 4, "y": 4}',
         'int(detail.get("density_modulus", 0)) != 2',
@@ -43479,7 +43519,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"forest":\n\t\t\texpected_cell_ids = [3, 4, 7, 9, 13, 14]',
         '"dirt", "sand":\n\t\t\texpected_cell_ids = [2, 3, 7, 13]',
         'cell_id in expected_cell_ids',
-        'extent_factor >= 0.34 and extent_factor <= 0.46',
+        'extent_factor >= 0.38 and extent_factor <= 0.52',
         'float(offset.get("x", -1.0)) >= -0.13',
         'float(offset.get("y", -1.0)) >= -0.08',
         'bool(detail.get("destination_contained", false))',
@@ -43559,9 +43599,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"terrain_grain_texture_paths": terrain_grain_texture_paths.keys()',
 		'var detail: Dictionary = terrain.get("terrain_detail_decal", {})',
 		'terrain_detail_model_ids[String(detail.get("model", ""))] = true',
+		'terrain_detail_source_model_ids[String(detail.get("source_model", ""))] = true',
 		'"terrain_detail_drawn_count": terrain_detail_drawn_count',
 		'"terrain_detail_exact_count": terrain_detail_exact_count',
 		'"terrain_detail_invalid_count": terrain_detail_invalid_count',
+		'"terrain_detail_source_model_ids": terrain_detail_source_model_ids.keys()',
 		'"terrain_detail_texture_paths": terrain_detail_texture_paths.keys()',
 		'"terrain_detail_cell_ids": terrain_detail_cell_ids.keys()',
 		'var water_ripples: Dictionary = terrain.get("water_surface_ripples", {})',
@@ -43614,8 +43656,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 		'int(summary.get("terrain_detail_exact_count", 0)) != explored_tile_count',
 		'int(summary.get("terrain_detail_invalid_count", -1)) != 0',
 		'int(summary.get("terrain_detail_drawn_count", 0)) <= 0',
-		'["sparse_biome_aware_painterly_surface_clusters"]',
-		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"]',
+		'["rich_biome_aware_painterly_surface_clusters_v2"]',
+		'["original_generated_clean_alpha_4x4_natural_cluster_atlas"]',
+		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"]',
 		'int(summary.get("water_ripple_exact_count", 0)) != explored_tile_count',
 		'int(summary.get("water_ripple_invalid_count", -1)) != 0',
 		'int(summary.get("water_ripple_water_tile_count", 0)) <= 0',

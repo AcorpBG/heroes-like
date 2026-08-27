@@ -1,6 +1,11 @@
 extends Node
 
 const SCENARIO_ID := "ninefold-confluence"
+const TERRAIN_DETAIL_ATLAS_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"
+const TERRAIN_DETAIL_ATLAS_SIZE := Vector2i(1024, 1024)
+const TERRAIN_DETAIL_CELL_SIZE := 256
+const TERRAIN_DETAIL_CELL_INSET := 16
+const TERRAIN_DETAIL_MIN_VISIBLE_PIXELS_PER_CELL := 25000
 const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 const PRISM_MATRIX_PLACEMENT_ID := "ninefold_prism_matrix"
 const PRISM_MATRIX_PRODUCTION_STACKS := [
@@ -18,6 +23,8 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not _assert_rich_terrain_detail_atlas():
+		return
 	var scenario := ContentService.get_scenario(SCENARIO_ID)
 	if scenario.is_empty():
 		_fail("Ninefold smoke: scenario was not loaded by ContentService.")
@@ -131,6 +138,31 @@ func _run() -> void:
 		return
 
 	get_tree().quit(0)
+
+func _assert_rich_terrain_detail_atlas() -> bool:
+	var texture := load(TERRAIN_DETAIL_ATLAS_PATH) as Texture2D
+	if texture == null:
+		_fail("Ninefold smoke: rich terrain-detail atlas did not load.")
+		return false
+	var image := texture.get_image()
+	if image == null or image.is_empty() or image.get_size() != TERRAIN_DETAIL_ATLAS_SIZE:
+		_fail("Ninefold smoke: rich terrain-detail atlas did not retain exact 1024x1024 image authority.")
+		return false
+	for cell_id in range(16):
+		var cell_origin := Vector2i(cell_id % 4, floori(float(cell_id) / 4.0)) * TERRAIN_DETAIL_CELL_SIZE
+		var visible_pixel_count := 0
+		var border_alpha_max := 0.0
+		for local_y in range(TERRAIN_DETAIL_CELL_SIZE):
+			for local_x in range(TERRAIN_DETAIL_CELL_SIZE):
+				var alpha := image.get_pixelv(cell_origin + Vector2i(local_x, local_y)).a
+				if alpha >= 0.06:
+					visible_pixel_count += 1
+				if local_x < TERRAIN_DETAIL_CELL_INSET or local_x >= TERRAIN_DETAIL_CELL_SIZE - TERRAIN_DETAIL_CELL_INSET or local_y < TERRAIN_DETAIL_CELL_INSET or local_y >= TERRAIN_DETAIL_CELL_SIZE - TERRAIN_DETAIL_CELL_INSET:
+					border_alpha_max = maxf(border_alpha_max, alpha)
+		if visible_pixel_count < TERRAIN_DETAIL_MIN_VISIBLE_PIXELS_PER_CELL or border_alpha_max > 0.01:
+			_fail("Ninefold smoke: rich terrain-detail atlas cell %d is clipped, empty, or bleeding. visible=%d border_alpha=%s" % [cell_id, visible_pixel_count, border_alpha_max])
+			return false
+	return true
 
 func _assert_prism_matrix_production_line(scenario: Dictionary) -> bool:
 	var encounter: Dictionary = {}
@@ -319,7 +351,7 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		return false
 	var shoreline_detail: Dictionary = shoreline.get("terrain_detail_decal", {}) if shoreline.get("terrain_detail_decal", {}) is Dictionary else {}
 	if (
-		String(shoreline_detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters"
+		String(shoreline_detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2"
 		or String(shoreline_detail.get("terrain_group", "")) != "water"
 		or bool(shoreline_detail.get("drawn", true))
 		or not bool(shoreline_detail.get("water_excluded", false))
@@ -473,7 +505,7 @@ func _assert_terrain_macro_lighting(shell: Node, session, north_west_tile: Vecto
 	if String(hidden_grain.get("model", "")) != "single_normalized_map_space_seamless_painterly_microtexture" or bool(hidden_grain.get("drawn", true)) or not bool(hidden_grain.get("hidden_by_unexplored_shroud", false)) or bool(hidden_grain.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain grain: %s." % JSON.stringify(hidden_grain))
 		return false
-	if String(hidden_detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
+	if String(hidden_detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2" or bool(hidden_detail.get("drawn", true)) or not bool(hidden_detail.get("hidden_by_unexplored_shroud", false)) or bool(hidden_detail.get("terrain_identity_sampled", true)):
 		_fail("Ninefold smoke: unexplored fog did not remain authoritative over terrain surface detail: %s." % JSON.stringify(hidden_detail))
 		return false
 	if String(hidden_water_ripples.get("model", "")) != "deterministic_broken_painterly_current_pairs" or bool(hidden_water_ripples.get("drawn", true)) or not bool(hidden_water_ripples.get("hidden_by_unexplored_shroud", false)) or bool(hidden_water_ripples.get("terrain_identity_sampled", true)):
@@ -502,17 +534,18 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		"ash":
 			expected_cell_ids = [3, 7, 10, 13]
 	if (
-		String(detail.get("model", "")) != "sparse_biome_aware_painterly_surface_clusters"
+		String(detail.get("model", "")) != "rich_biome_aware_painterly_surface_clusters_v2"
+		or String(detail.get("source_model", "")) != "original_generated_clean_alpha_4x4_natural_cluster_atlas"
 		or String(detail.get("terrain_group", "")) != expected_group
 		or not bool(detail.get("atlas_texture_loaded", false))
-		or String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"
+		or String(detail.get("atlas_texture_path", "")) != "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png"
 		or detail.get("atlas_size", {}) != {"x": 1024, "y": 1024}
 		or detail.get("atlas_grid", {}) != {"x": 4, "y": 4}
 		or detail.get("atlas_cell_size", {}) != {"x": 256, "y": 256}
 		or int(detail.get("density_modulus", 0)) != 2
 		or bool(detail.get("interactive", true))
 		or bool(detail.get("collision", true))
-		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.78)
+		or not is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.88)
 		or String(detail.get("draw_order", "")) != "after_macro_lighting_before_roads_objects_and_fog"
 		or not bool(detail.get("hidden_by_unexplored_shroud", false))
 		or String(detail.get("variation_basis", "")) != "tile_coordinate_and_terrain_id_only"
@@ -532,7 +565,7 @@ func _terrain_detail_decal_payload_exact(detail: Dictionary, expected_group: Str
 		and int(source_rect.get("width", 0)) == 256
 		and int(source_rect.get("height", 0)) == 256
 		and bool(detail.get("destination_contained", false))
-		and extent_factor >= 0.34 and extent_factor <= 0.46
+		and extent_factor >= 0.38 and extent_factor <= 0.52
 		and float(offset.get("x", -1.0)) >= -0.13 and float(offset.get("x", 1.0)) <= 0.13
 		and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.12
 		and float(destination_rect.get("width", 0.0)) > 0.0

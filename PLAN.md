@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next graphical-polish slice from direct rendered evidence.
+- Selected implementation slice: none. Select the next tracker-approved bounded graphical-polish slice.
+
+## Overworld Rich Terrain-Detail Atlas
+
+id: `presentation-overworld-rich-terrain-detail-atlas-10184`
+
+Status: completed.
+
+Result:
+- the Overworld now uses a clean-alpha 1024x1024 atlas of sixteen richer hand-painted grass, flower, stone, reed, leaf, branch, fern, and woodland clusters, with slightly stronger but still contained scale and opacity on the existing deterministic renderer boundary;
+- inspected River Pass 1280x720 and 1920x1080 captures show materially richer revealed grassland without the former red/yellow matte fringe, grid seams, or lost road, object, shoreline, and fog clarity;
+- focused Ninefold/generated-map runtime, broad Overworld visual, route/movement/input/focus/accessibility/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unchanged and unclaimed.
+
+Current finding:
+- the post-scale-rebalance 1280x720 and 1920x1080 captures show that revealed grassland still reads as a broad flat tile field, while the current 4x4 terrain-detail atlas has conspicuous red/yellow matte fringes and small low-mass clusters;
+- the renderer already owns deterministic biome-aware selection, contained per-tile placement, road/water exclusion, fog ownership, and noninteractive presentation, so the shipped bitmap is the exact visual bottleneck.
+
+Implementation boundary:
+- adopt one new clean 1024x1024 RGBA 4x4 atlas with sixteen top-down hand-painted grass, flower, stone, reed, leaf, branch, fern, and woodland clusters, each isolated inside its 256x256 cell;
+- retain the existing deterministic cell selection, density, contained placement, draw order, fog behavior, terrain grouping, road/water exclusion, collision, and session/save authority;
+- keep the previous atlas as source history and point only the runtime terrain-detail path and exact visual contracts to the richer version.
+
+Completion criteria:
+- inspected River Pass 1280x720 and 1920x1080 captures show materially richer revealed ground without bright matte fringe, clutter, grid seams, lost road/object clarity, or terrain identity leakage through fog;
+- focused authored/generated runtime proves exact RGBA atlas dimensions/cell isolation, deterministic biome cell selection, containment/exclusion, one-frame stability, and unchanged movement/session/save authority;
+- Overworld visual/Ninefold/generated movement/route/input/focus/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no terrain id, grammar, movement cost, passability, road/water/shoreline/fog logic, map generation, density, placement, object/hero/town rendering, interaction, camera, session/save/schema, AI, battle, balance, or Native RMG change;
+- no shader, animation, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
 ## Overworld Settlement-Cluster Scale Rebalance
 

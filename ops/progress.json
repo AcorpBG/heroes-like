@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved graphical-polish slice from direct rendered evidence."
+    "Select the next tracker-approved bounded graphical-polish slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Overworld settlement-cluster scale rebalance with inspected 1280/1920 captures, focused authored/generated authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next graphical-polish slice from direct rendered evidence.",
+  "currentNotes": "The rich terrain-detail atlas slice is complete; select the next bounded graphical-polish slice from direct current captures.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-settlement-cluster-scale-rebalance-10184",
-  "currentSliceId": "ux-overworld-settlement-cluster-scale-rebalance-10184",
-  "currentSliceNotes": "Completed tighter cartographic object bands and a town-adjunct painted cap. River Pass 1280/1920 captures and focused authored/generated, movement/route/input/focus/accessibility/core, static/editor, and bounded platform gates pass; logical map authority is unchanged.",
+  "currentSlice": "presentation-overworld-rich-terrain-detail-atlas-10184",
+  "currentSliceId": "presentation-overworld-rich-terrain-detail-atlas-10184",
+  "currentSliceNotes": "Completed one clean richer 4x4 terrain-detail bitmap on the existing deterministic biome-aware presentation boundary; broader graphical polish remains open.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Settlement-Cluster Scale Rebalance",
-  "currentSliceUpdatedAt": "2026-08-27T04:54:16Z",
+  "currentSliceTitle": "Overworld Rich Terrain-Detail Atlas",
+  "currentSliceUpdatedAt": "2026-08-27T05:32:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104794,6 +104794,33 @@
       "blockedReason": null,
       "notes": "Completed balanced cartographic scale bands (0.30 artifact, 0.36 pickup, 0.46 encounter, 0.54 durable, 0.58 landmark), 0.64 field heroes, 0.80 multi-tile and 0.96 town caps, plus an independent 0.56 painted cap for town-footprint adjuncts. Inspected River Pass 1280x720 and 1920x1080 captures show the town/hero/adjunct cluster separated and loose props more legible. Focused object-scale, small-map, faction-hero, enemy-commander, generated-map movement/save, broad Overworld visual, route, input ownership, keyboard focus, accessibility, core, validate_repo, pycompile, editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Logical footprints, collision, routes, session/save authority, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
       "completedAt": "2026-08-27T04:54:16Z"
+    },
+    {
+      "id": "presentation-overworld-rich-terrain-detail-atlas-10184",
+      "title": "Overworld Rich Terrain-Detail Atlas",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T05:32:30Z",
+      "startedAt": "2026-08-27T04:59:37Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_rich_v2.png",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the visibly fringed, low-mass terrain-detail atlas with one clean richer hand-painted atlas on the existing deterministic biome-aware renderer boundary.",
+      "completionCriteria": "Inspected River Pass 1280/1920 captures show richer revealed ground without fringe/clutter/seams or lost clarity; focused authored/generated runtime proves exact atlas/cell isolation and unchanged deterministic geometry/fog/movement/session/save authority; compatibility, static/editor, and bounded platform gates pass.",
+      "nonGoals": [
+        "No terrain id, grammar, movement cost, passability, road/water/shoreline/fog logic, map generation, density, placement, object/hero/town rendering, interaction, camera, session/save/schema, AI, battle, balance, or Native RMG change.",
+        "No shader, animation, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed a clean-alpha 1024x1024 4x4 atlas with sixteen isolated richer painterly terrain clusters and adopted it through the existing deterministic biome-aware renderer with bounded 0.38-0.52 extent and 0.88 alpha. Every atlas cell has a transparent 16px inset and at least 25,000 visible pixels. Inspected River Pass 1280x720 and 1920x1080 captures show richer revealed grassland without matte fringe, clutter, seams, or lost road/object/shoreline/fog clarity. Ninefold and generated 36x36 runtime prove all 16 cells, 598 generated detail draws, road/water exclusion, deterministic geometry, movement, and save/reload authority; broad Overworld visual, route, input, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
+      "completedAt": "2026-08-27T05:32:30Z"
     }
   ],
   "project": "heroes-like",
