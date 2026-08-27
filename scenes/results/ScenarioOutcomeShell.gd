@@ -1253,7 +1253,7 @@ func validation_scenic_epilogue_summary() -> Dictionary:
 		"presentation_model": OUTCOME_PRESENTATION_MODEL,
 		"viewport_size": viewport_size,
 		"content_above_backdrop": _content_margin.get_index() > _backdrop.get_index(),
-		"draw_order": ["scenic_backdrop", "scenic_veil", "outcome_content"],
+		"draw_order": ["scenic_backdrop", "scenic_veil", "status_ambient", "outcome_content"],
 		"actions_panel_rect": action_rect,
 		"actions_panel_vertical_expand": bool(_actions_panel.size_flags_vertical & Control.SIZE_EXPAND),
 		"command_column_rect": command_rect,

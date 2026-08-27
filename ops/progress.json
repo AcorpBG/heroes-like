@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "Battle terrain ambient motes are complete from inspected captures, focused all-terrain runtime, compatibility, static/editor, and bounded platform export/startup gates; select the next graphical-polish slice.",
+  "currentNotes": "Outcome status ambient drift is complete from inspected victory/defeat captures, focused deterministic/accessibility runtime, compatibility, static/editor, and bounded platform export/startup gates; select the next graphical-polish slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-terrain-ambient-motes-10184",
-  "currentSliceId": "presentation-battle-terrain-ambient-motes-10184",
-  "currentSliceNotes": "Completed: deterministic terrain-specific motes add restrained Battle depth behind every tactical surface, with Reduced Motion static, High Contrast hidden, and exact battle/session authority.",
+  "currentSlice": "presentation-outcome-status-ambient-drift-10184",
+  "currentSliceId": "presentation-outcome-status-ambient-drift-10184",
+  "currentSliceNotes": "Completed deterministic victory golden drift and defeat cold ash/ember ambience behind every unchanged Outcome content surface.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Terrain Ambient Motes",
-  "currentSliceUpdatedAt": "2026-08-27T03:48:53Z",
+  "currentSliceTitle": "Outcome Status Ambient Drift",
+  "currentSliceUpdatedAt": "2026-08-27T04:07:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104712,6 +104712,32 @@
       "blockedReason": null,
       "notes": "Completed the deterministic Battle terrain ambient layer. Fresh 1280/1920 captures show sparse forest fireflies behind the unchanged tactical grid and units. Focused runtime covers plains/grass/forest/swamp/rough/road/mire profiles, deterministic identity/containment, normal drift, Reduced Motion static, High Contrast hidden, unknown fallback, and exact session authority. Battle controller navigation, runtime skin, shared active-play focus, accessibility semantics, core, validate_repo, pycompile, editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-27T03:48:53Z"
+    },
+    {
+      "id": "presentation-outcome-status-ambient-drift-10184",
+      "title": "Outcome Status Ambient Drift",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T04:07:32Z",
+      "startedAt": "2026-08-27T03:52:36Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/results/OutcomeScenicBackdropView.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the static victory and defeat epilogue panoramas restrained status-specific ambient life behind every existing Outcome surface.",
+      "completionCriteria": "Inspected 1280/1920 victory and defeat captures show restrained atmosphere without readability loss; focused runtime proves exact profiles, deterministic contained entries, normal motion, Reduced Motion static, High Contrast hidden, fallback, draw order, and unchanged authority; compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+      "nonGoals": [
+        "No panorama/emblem asset, crop, veil, card/layout/opacity, copy, tab, action, save, route, focus/input, accessibility semantic, rules/progression, campaign/scenario, combat, AI, balance, session/schema, map/generation, or Native RMG change.",
+        "No Timer, Tween, particle, shader, random/wall-clock source, packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed deterministic status-specific Outcome ambience. Fresh 1280/1920 victory and defeat captures preserve the dominant panoramas and readable content while showing restrained golden drift or cold ash/ember motion. Focused runtime proves exact profile identity/count/containment, normal motion, Reduced Motion static composition, High Contrast hiding, unmapped fallback, draw order, detached summaries, and unchanged session authority. Outcome normal-focus, safe-cancel, autosave-recovery, shared keyboard-focus, accessibility, core, validate_repo, pycompile, editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
+      "completedAt": "2026-08-27T04:07:32Z"
     }
   ],
   "project": "heroes-like",

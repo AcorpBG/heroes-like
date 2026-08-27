@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next bounded graphical-polish slice from fresh inspected game pixels.
 
+## Outcome Status Ambient Drift
+
+id: `presentation-outcome-status-ambient-drift-10184`
+
+Status: completed.
+
+Result:
+- victory now carries sparse deterministic golden glints, while defeat carries cold ash streaks with restrained ember accents, all behind the unchanged Outcome content;
+- normal presentation drifts gently, Reduced Motion holds an exact static composition, High Contrast hides the layer, and unmapped outcomes fail closed without ambience;
+- inspected 1280x720 and 1920x1080 victory/defeat captures, focused visual runtime, Outcome focus/cancel/recovery/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Outcome interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh inspected victory and defeat captures now meet the scenery-first layout boundary, but both 16:9 epilogue panoramas remain completely static between interactions, making the resolved screen feel flatter than the newly living Town and Battle stages;
+- OutcomeScenicBackdropView already owns the full-screen status-specific backdrop beneath every card and control, providing one exact presentation-only boundary for status-authored ambient depth.
+
+Implementation boundary:
+- add sparse deterministic golden drift to victory and cold ash/ember drift to defeat after the scenic veil and before every Outcome content surface;
+- keep all positions field-relative and bounded, animate gently in normal presentation, hold one exact static composition in Reduced Motion, and hide the decorative layer in High Contrast;
+- retain the exact panorama assets, cover crop, fallback palette, panel geometry/opacity, emblem, recap, actions, and all Outcome authority.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 victory/defeat captures show restrained status-specific atmosphere without reducing panorama, text, card, tab, action, or save-control readability;
+- focused runtime proves exact status profiles, deterministic identity/count/containment, normal phase motion, Reduced Motion static behavior, High Contrast hiding, unmapped fallback, draw order, and unchanged Outcome/session authority;
+- Outcome visual/focus/safe-cancel/recovery/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no panorama/emblem asset, crop, veil, card/layout/opacity, text, tabs, action, save, route, focus/input, accessibility semantic, rule, progression, campaign, scenario, combat, AI, balance, session, schema, map, generation, or Native RMG change;
+- no Timer, Tween, particle node, shader, random/wall-clock source, packaged Outcome interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Battle Terrain Ambient Motes
 
 id: `presentation-battle-terrain-ambient-motes-10184`
