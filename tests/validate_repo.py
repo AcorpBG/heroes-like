@@ -1288,6 +1288,7 @@ OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
     "site_ridge_quarry": "stone_quarry",
     "site_roadside_sanctum": "shrine",
     "site_ember_signal_post": "ember_signal_post",
+    "site_frontier_rare_exchange": "mapobj_market_caravanserai",
 }
 RELEASE_LOGISTICS_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers"}
 STRATEGIC_RESPONSE_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers", "lockmarsh-surge"}
@@ -42020,6 +42021,16 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         if isinstance(entry, dict):
             ensure(str(entry.get("asset_id", "")) == expected_asset_id, errors, f"Overworld art mapping {site_id} must use {expected_asset_id}")
             ensure(str(entry.get("fit", "")) != "", errors, f"Overworld art mapping {site_id} must record its semantic-fit note")
+    rare_exchange_smoke_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    for required_token in (
+        'shell.call("validation_tile_presentation", 1, 2)',
+        '_assert_art_sprite(rare_exchange_presentation, "mapobj_market_caravanserai", false)',
+        'rare_exchange_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}]',
+        'bool(rare_exchange_art.get("fallback_procedural_marker", true))',
+        'repeated_rare_exchange_presentation != rare_exchange_presentation',
+        'session.to_dict() != rare_exchange_authority_before',
+    ):
+        ensure(required_token in rare_exchange_smoke_text, errors, f"Overworld visual smoke is missing Frontier Rare Exchange mapped-art authority: {required_token}")
     for site_id, entry in site_sprites.items():
         ensure(str(site_id) in resource_sites, errors, f"Overworld art mapping references missing resource site {site_id}")
         if isinstance(entry, dict):

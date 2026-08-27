@@ -3551,6 +3551,23 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	var wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
 	if not _assert_art_sprite(wood_presentation, "lumber_wagon", false):
 		return false
+	var rare_exchange_authority_before: Dictionary = session.to_dict()
+	var rare_exchange_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
+	if not _assert_art_sprite(rare_exchange_presentation, "mapobj_market_caravanserai", false):
+		return false
+	var rare_exchange_art: Dictionary = rare_exchange_presentation.get("art_presentation", {})
+	if not bool(rare_exchange_presentation.get("has_resource", false)) \
+			or rare_exchange_art.get("sprite_asset_ids", []) != ["mapobj_market_caravanserai"] \
+			or rare_exchange_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}] \
+			or bool(rare_exchange_art.get("fallback_procedural_marker", true)):
+		push_error("Overworld smoke: Frontier Rare Exchange did not resolve as one exact mapped one-tile market sprite. presentation=%s" % rare_exchange_presentation)
+		get_tree().quit(1)
+		return false
+	var repeated_rare_exchange_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
+	if repeated_rare_exchange_presentation != rare_exchange_presentation or session.to_dict() != rare_exchange_authority_before:
+		push_error("Overworld smoke: Frontier Rare Exchange presentation was unstable or mutated session authority. first=%s repeat=%s" % [rare_exchange_presentation, repeated_rare_exchange_presentation])
+		get_tree().quit(1)
+		return false
 	var artifact_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 0)
 	if not _assert_art_sprite(artifact_presentation, "artifact_field_trailsinger_boots", false):
 		return false

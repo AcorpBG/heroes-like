@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld hero command-wing sprite-clearance correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "currentNotes": "The Frontier Rare Exchange mapped-art correction is completed; select the next bounded graphical-polish slice from fresh rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-hero-command-sprite-clearance-10184",
-  "currentSliceId": "presentation-overworld-hero-command-sprite-clearance-10184",
-  "currentSliceNotes": "Completed: compact open command wings clear exact 0.76-tile field and town-entry hero sprites while focus, route, movement, session, accessibility, and core authority remain exact.",
+  "currentSlice": "presentation-overworld-frontier-rare-exchange-mapped-art-10184",
+  "currentSliceId": "presentation-overworld-frontier-rare-exchange-mapped-art-10184",
+  "currentSliceNotes": "Completed: the Frontier Rare Exchange uses the detailed market caravanserai sprite with exact one-tile and gameplay authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld hero command-wing sprite clearance",
-  "currentSliceUpdatedAt": "2026-08-27T00:11:42Z",
+  "currentSliceTitle": "Overworld Frontier Rare Exchange mapped art",
+  "currentSliceUpdatedAt": "2026-08-27T00:25:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20852,8 +20852,41 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The hero command-wing sprite-clearance slice is completed with focused, visual, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
+  "notes": "The Frontier Rare Exchange mapped-art slice is completed with pixel, runtime, compatibility, static/editor, and bounded platform evidence; blockers are empty.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-frontier-rare-exchange-mapped-art-10184",
+      "title": "Overworld Frontier Rare Exchange mapped art",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T00:15:45Z",
+      "updatedAt": "2026-08-27T00:25:15Z",
+      "completedAt": "2026-08-27T00:25:15Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Replace the Frontier Rare Exchange procedural mine glyph with the existing detailed market caravanserai sprite while preserving its exact one-tile resource-site and gameplay authority.",
+      "completionCriteria": "Inspected 1280/1920 captures plus broad Overworld runtime prove exact mapped asset identity, one-tile containment, no procedural fallback, stable repeated presentation, and unchanged session authority; route, core, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No new bitmap, asset pixel/edit/import, site content/economy, footprint/placement, owner/control, guard, interaction/route, gameplay, save/schema, AI, balance, or Native RMG change.",
+        "No broad resource-site remapping, packaged interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for the Frontier Rare Exchange mapped-art boundary. Inspected 1280/1920 pixels, broad Overworld runtime, route, core, repository/editor, and bounded Linux/Windows startup gates pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completionEvidence": {
+        "broadVisualArtifact": "/tmp/heroes-rare-exchange-overworld-smoke-rerun.m6Sm2g",
+        "captureArtifact": "/tmp/heroes-rare-exchange-capture.ZkQNy3",
+        "routeArtifact": "/tmp/heroes-rare-exchange-overworld_full_route_movement_regression.9XpjCe",
+        "coreArtifact": "/tmp/heroes-rare-exchange-core_systems_regression_smoke.bHEwaH",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-overworld-hero-command-sprite-clearance-10184",
       "title": "Overworld hero command-wing sprite clearance",
@@ -104923,9 +104956,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the bounded Overworld hero command-wing sprite-clearance correction with exact live-sprite clearance and preserved focus, route, movement, and session authority.",
+  "summary": "Completed the bounded Frontier Rare Exchange mapped-art correction with exact one-tile presentation and preserved gameplay authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-27T00:11:42Z",
+  "updatedAt": "2026-08-27T00:25:15Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

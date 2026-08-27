@@ -3886,6 +3886,10 @@
     }
   },
   "resource_site_sprites": {
+    "site_frontier_rare_exchange": {
+      "asset_id": "mapobj_market_caravanserai",
+      "fit": "Detailed existing market caravanserai field sprite for the persistent frontier rare-resource exchange."
+    },
     "site_beacon_path_scroll": {
       "asset_id": "beacon_path_scroll",
       "fit": "Distinct original Beacon Path spell-scroll field sprite for the accepted one-time generated pickup."

@@ -26,6 +26,34 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
 
+## Overworld Frontier Rare Exchange Mapped Art
+
+id: `presentation-overworld-frontier-rare-exchange-mapped-art-10184`
+
+Status: completed.
+
+Result:
+- the Frontier Rare Exchange now uses the existing detailed transparent market caravanserai sprite instead of the flat procedural mine glyph, while retaining its exact one-tile resource-site footprint and all economy/control authority;
+- inspected 1280x720 and 1920x1080 captures plus broad Overworld runtime prove exact asset identity, one-tile containment, no procedural fallback, stable repeated presentation, and unchanged session authority;
+- route, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 River Pass captures show the repeated Frontier Rare Exchange as a large flat procedural mine glyph, visually disconnected from the detailed towns, resources, artifacts, and encounter sprites around it;
+- the shipped original `mapobj_market_caravanserai` asset is already imported, transparent, and semantically matches a persistent frontier exchange, so the defect is one missing resource-site art mapping rather than a gameplay or content-identity gap.
+
+Implementation boundary:
+- map only `site_frontier_rare_exchange` to the existing `mapobj_market_caravanserai` world sprite through the resource-site sprite manifest;
+- retain the exact one-tile resource footprint, site id/family, owner/control state, rewards/income, guard link, interaction, route, grounding, draw order, session/save authority, and existing asset pixels.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 captures show the exchange as a contained detailed market landmark rather than the procedural mine fallback;
+- broad Overworld runtime proves exact mapped asset identity, one-tile footprint, no procedural fallback, stable repeated presentation, and unchanged session authority;
+- route, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new bitmap, asset pixel/edit/import, site content/economy, footprint/placement, owner/control, guard, interaction/route, gameplay, save/schema, AI, balance, or Native RMG change;
+- no broad resource-site remapping, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Hero Command-Wing Sprite Clearance
 
 id: `presentation-overworld-hero-command-sprite-clearance-10184`
