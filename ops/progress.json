@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Implement and validate the selected Overworld rich cartographic shroud slice."
+    "Select the next tracker-approved graphical-polish slice from direct rendered evidence."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "The rich Overworld shroud slice is complete. Select the next graphical-polish slice from direct rendered evidence while preserving gameplay, input, session/save authority, and Native RMG behavior.",
+  "currentNotes": "Completed the Overworld settlement-cluster scale rebalance with inspected 1280/1920 captures, focused authored/generated authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next graphical-polish slice from direct rendered evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-rich-cartographic-shroud-10184",
-  "currentSliceId": "presentation-overworld-rich-cartographic-shroud-10184",
-  "currentSliceNotes": "Completed rich identity-silent Overworld fog art with exact authored/generated runtime, compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "ux-overworld-settlement-cluster-scale-rebalance-10184",
+  "currentSliceId": "ux-overworld-settlement-cluster-scale-rebalance-10184",
+  "currentSliceNotes": "Completed tighter cartographic object bands and a town-adjunct painted cap. River Pass 1280/1920 captures and focused authored/generated, movement/route/input/focus/accessibility/core, static/editor, and bounded platform gates pass; logical map authority is unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Rich Cartographic Shroud",
-  "currentSliceUpdatedAt": "2026-08-27T04:28:47Z",
+  "currentSliceTitle": "Overworld Settlement-Cluster Scale Rebalance",
+  "currentSliceUpdatedAt": "2026-08-27T04:54:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -104765,6 +104765,35 @@
       "blockedReason": null,
       "notes": "Completed one opaque 1024x1024 identity-silent rich cartographic veil. Fresh 1280x720 and 1920x1080 authored captures show the dark-teal smoky field and restrained gold survey traces without terrain identity leakage. Focused Overworld visual and generated live-movement reports prove exact normalized hidden-only sampling, soft frontier behavior, movement, save, and session authority. Movement/input ownership, active keyboard focus, accessibility, core, validate_repo, pycompile, editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unclaimed.",
       "completedAt": "2026-08-27T04:28:47Z"
+    },
+    {
+      "id": "ux-overworld-settlement-cluster-scale-rebalance-10184",
+      "title": "Overworld Settlement-Cluster Scale Rebalance",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-27T04:54:16Z",
+      "startedAt": "2026-08-27T04:30:58Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_small_map_visual_scale_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/random_map_live_overworld_render_move_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Correct the directly observed oversized settlement cluster by tightening the painted scale bands and compacting only resources drawn inside town footprints without changing logical map geometry.",
+      "completionCriteria": "Inspected River Pass 1280/1920 captures show coherent town, visiting-hero, adjunct-structure, and prop scale; focused authored/generated runtime proves exact scale bands and unchanged geometry/authority; compatibility, static/editor, and bounded platform export-startup gates pass.",
+      "nonGoals": [
+        "No object/town/hero identity or bitmap, content profile, logical footprint, body/entry mask, hit area, passability, placement, density, terrain, road, fog, route, pathing, interaction, camera, session/save/schema, AI, battle, balance, generation, or Native RMG change.",
+        "No shell/UI, tooltip/selection treatment, grounding/contact model, animation/audio/VFX, shader, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed balanced cartographic scale bands (0.30 artifact, 0.36 pickup, 0.46 encounter, 0.54 durable, 0.58 landmark), 0.64 field heroes, 0.80 multi-tile and 0.96 town caps, plus an independent 0.56 painted cap for town-footprint adjuncts. Inspected River Pass 1280x720 and 1920x1080 captures show the town/hero/adjunct cluster separated and loose props more legible. Focused object-scale, small-map, faction-hero, enemy-commander, generated-map movement/save, broad Overworld visual, route, input ownership, keyboard focus, accessibility, core, validate_repo, pycompile, editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Logical footprints, collision, routes, session/save authority, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, release readiness, and Native RMG remain unchanged or unclaimed.",
+      "completedAt": "2026-08-27T04:54:16Z"
     }
   ],
   "project": "heroes-like",
