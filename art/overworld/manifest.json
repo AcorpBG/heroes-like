@@ -3886,6 +3886,10 @@
     }
   },
   "resource_site_sprites": {
+    "site_generated_town_required_source_cache": {
+      "asset_id": "mapobj_moss_oath_cache",
+      "fit": "Detailed existing chest-and-standing-stone cache sprite for the generated town all-resource supply support site."
+    },
     "site_frontier_rare_exchange": {
       "asset_id": "mapobj_market_caravanserai",
       "fit": "Detailed existing market caravanserai field sprite for the persistent frontier rare-resource exchange."

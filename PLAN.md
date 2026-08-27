@@ -26,6 +26,34 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none; select the next bounded graphical-polish slice from fresh rendered evidence.
 
+## Overworld Generated Town Supply Cache Art
+
+id: `presentation-overworld-generated-town-supply-cache-art-10184`
+
+Status: completed.
+
+Result:
+- the Generated Town Supply Cache now uses the existing detailed `mapobj_moss_oath_cache` chest-and-standing-stone sprite instead of the flat black procedural mine silhouette, while retaining its exact generated one-tile support-site behavior;
+- inspected 1280x720 and 1920x1080 captures plus broad runtime prove compact top-left containment beside Duskfen, exact mapped asset identity, no fallback, stable presentation, restored fog, and unchanged session authority;
+- route, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction and release readiness remain unclaimed.
+
+Current finding:
+- fresh revealed River Pass captures and runtime presentation payloads show `duskfen_bastion_development_source_support` as a compact but flat black procedural mine silhouette beside Duskfen because `site_generated_town_required_source_cache` has no mapped sprite;
+- the existing transparent `mapobj_moss_oath_cache` chest-and-standing-stone artwork is a direct readable supply-cache fit and can replace only this fallback without changing its synthetic economy-support behavior.
+
+Implementation boundary:
+- map only `site_generated_town_required_source_cache` to the existing `mapobj_moss_oath_cache` sprite through the resource-site art manifest;
+- preserve the exact one-tile compact town-adjunct layout, generated placement, missing-resource metadata, ownership/control, income/rewards, interaction, route, session/save, content, and asset pixels.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 captures show the Duskfen support cache as a contained detailed chest landmark rather than a black procedural mine glyph;
+- broad Overworld runtime proves exact mapped asset identity, one-tile compact top-left containment, no procedural fallback, stable repeated presentation, restored fog, and unchanged session/route authority;
+- route, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no new bitmap, asset pixel/import edit, generated support placement/content/economy, resource output, ownership/control, interaction/route, town geometry, gameplay, save/schema, AI, balance, or Native RMG change;
+- no broad resource remapping, packaged Overworld interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Overworld Town-Adjunct Structure Scale
 
 id: `presentation-overworld-town-adjunct-structure-scale-10184`
