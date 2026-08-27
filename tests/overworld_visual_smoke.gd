@@ -3103,7 +3103,7 @@ func _hover_reticle_profile_exact(profile: Dictionary, hover_rect: Rect2) -> boo
 
 func _hero_command_marker_profile_exact(profile: Dictionary, focus_rect: Rect2, sprite_rect: Rect2) -> bool:
 	var extent := minf(focus_rect.size.x, focus_rect.size.y)
-	var expected_inset := maxf(3.0, extent * 0.08)
+	var expected_inset := maxf(1.25, extent * 0.035)
 	var marker_rect := _focus_rect_from_payload(profile.get("marker_rect", {}))
 	var wing_length := float(profile.get("wing_length_px", 0.0))
 	var wing_depth := float(profile.get("wing_depth_px", 0.0))
@@ -3116,8 +3116,8 @@ func _hero_command_marker_profile_exact(profile: Dictionary, focus_rect: Rect2, 
 		and marker_rect == focus_rect.grow(-expected_inset) \
 		and focus_rect.encloses(marker_rect) \
 		and is_equal_approx(center_y, focus_rect.position.y + focus_rect.size.y * 0.48) \
-		and is_equal_approx(wing_length, maxf(4.5, extent * 0.12)) \
-		and is_equal_approx(wing_depth, maxf(4.0, extent * 0.11)) \
+		and is_equal_approx(wing_length, maxf(2.5, extent * 0.075)) \
+		and is_equal_approx(wing_depth, maxf(3.0, extent * 0.085)) \
 		and (marker_rect.position.x + wing_length <= sprite_rect.position.x or is_equal_approx(marker_rect.position.x + wing_length, sprite_rect.position.x)) \
 		and (marker_rect.end.x - wing_length >= sprite_rect.end.x or is_equal_approx(marker_rect.end.x - wing_length, sprite_rect.end.x)) \
 		and center_y - wing_depth >= marker_rect.position.y \
