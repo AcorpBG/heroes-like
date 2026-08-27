@@ -3551,6 +3551,14 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	var wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
 	if not _assert_art_sprite(wood_presentation, "lumber_wagon", false):
 		return false
+	var wood_resource_layout: Dictionary = wood_presentation.get("resource_draw_layout", {})
+	if String(wood_resource_layout.get("model", "")) != "ordinary_resource_footprint" \
+			or bool(wood_resource_layout.get("town_footprint_colocated", true)) \
+			or not is_equal_approx(float(wood_resource_layout.get("extent_factor", 0.0)), 1.0) \
+			or _focus_rect_from_payload(wood_resource_layout.get("draw_rect", {})) != _focus_rect_from_payload(wood_resource_layout.get("footprint_rect", {})):
+		push_error("Overworld smoke: ordinary standalone resource presentation was compacted by the town-adjunct layout. presentation=%s" % wood_presentation)
+		get_tree().quit(1)
+		return false
 	var rare_exchange_authority_before: Dictionary = session.to_dict()
 	var rare_exchange_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
 	if not _assert_art_sprite(rare_exchange_presentation, "mapobj_market_caravanserai", false):
@@ -3561,6 +3569,23 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 			or rare_exchange_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}] \
 			or bool(rare_exchange_art.get("fallback_procedural_marker", true)):
 		push_error("Overworld smoke: Frontier Rare Exchange did not resolve as one exact mapped one-tile market sprite. presentation=%s" % rare_exchange_presentation)
+		get_tree().quit(1)
+		return false
+	var rare_exchange_layout: Dictionary = rare_exchange_presentation.get("resource_draw_layout", {})
+	var rare_exchange_footprint_rect := _focus_rect_from_payload(rare_exchange_layout.get("footprint_rect", {}))
+	var rare_exchange_draw_rect := _focus_rect_from_payload(rare_exchange_layout.get("draw_rect", {}))
+	if String(rare_exchange_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource" \
+			or not bool(rare_exchange_layout.get("town_footprint_colocated", false)) \
+			or not is_equal_approx(float(rare_exchange_layout.get("extent_factor", 0.0)), 0.64) \
+			or String(rare_exchange_layout.get("edge_anchor", "")) != "bottom_right" \
+			or rare_exchange_layout.get("cell_offset", {}) != {"x": 2, "y": 1} \
+			or not bool(rare_exchange_layout.get("contained_in_footprint_tile", false)) \
+			or not rare_exchange_footprint_rect.encloses(rare_exchange_draw_rect) \
+			or not is_equal_approx(rare_exchange_draw_rect.size.x, rare_exchange_footprint_rect.size.x * 0.64) \
+			or not is_equal_approx(rare_exchange_draw_rect.size.y, rare_exchange_footprint_rect.size.y * 0.64) \
+			or not is_equal_approx(rare_exchange_draw_rect.end.x, rare_exchange_footprint_rect.end.x) \
+			or not is_equal_approx(rare_exchange_draw_rect.end.y, rare_exchange_footprint_rect.end.y):
+		push_error("Overworld smoke: town-colocated Frontier Rare Exchange did not use the exact compact bottom-right adjunct layout. presentation=%s" % rare_exchange_presentation)
 		get_tree().quit(1)
 		return false
 	var repeated_rare_exchange_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
