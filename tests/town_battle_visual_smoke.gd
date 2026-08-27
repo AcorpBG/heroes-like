@@ -166,6 +166,9 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	if not live_board.has_method("validation_scenic_overlay_summary"):
 		push_error("Town smoke: town stage does not expose scenic-overlay validation.")
 		return false
+	if not live_board.has_method("validation_scenic_ambient_light_summary"):
+		push_error("Town smoke: town stage does not expose scenic ambient-light validation.")
+		return false
 	if not live_board.has_method("validation_command_watch_summary"):
 		push_error("Town smoke: town stage does not expose command-watch validation.")
 		return false
@@ -181,11 +184,15 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 	if not _scenic_backdrop_geometry_exact(live_summary):
 		push_error("Town smoke: live scenic backdrop crop is outside the Town stage: %s." % live_summary)
 		return false
-	var expected_overlay_order := ["scenic_or_procedural_stage", "status_plaques", "district_strip", "command_markers", "header"]
+	var expected_overlay_order := ["scenic_or_procedural_stage", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header"]
 	if Array(live_summary.get("overlay_order", [])) != expected_overlay_order:
 		push_error("Town smoke: scenic layer no longer precedes every live Town overlay: %s." % live_summary)
 		return false
 	var live_overlay_summary: Dictionary = live_board.call("validation_scenic_overlay_summary")
+	var live_ambient_summary: Dictionary = live_board.call("validation_scenic_ambient_light_summary")
+	if not _scenic_ambient_light_contract_exact(live_ambient_summary, "faction_embercourt", 3, true, true):
+		push_error("Town smoke: live Riverwatch ambient-light layer is not exact: %s." % live_ambient_summary)
+		return false
 	var live_overlay_scene_rect: Rect2 = live_overlay_summary.get("scene_rect", Rect2()) if live_overlay_summary.get("scene_rect", Rect2()) is Rect2 else Rect2()
 	var live_overlay_compact_expected := live_overlay_scene_rect.size.x < 1000.0 or live_overlay_scene_rect.size.y < 520.0
 	if not _scenic_overlay_contract_exact(live_overlay_summary, live_overlay_compact_expected):
@@ -198,14 +205,17 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 		return false
 	var fresh_live_overlay_summary := live_overlay_summary.duplicate(true)
 	var fresh_live_watch_summary := live_watch_summary.duplicate(true)
+	var fresh_live_ambient_summary := live_ambient_summary.duplicate(true)
 	var live_authority_before_detach: Dictionary = session.to_dict()
 	live_overlay_summary["status_payloads"][0]["value"] = "999"
 	live_overlay_summary["district_payloads"][0]["value"] = 999
 	live_watch_summary["payloads"][0]["value"] = 999
+	live_ambient_summary["entries"][0]["destination_position"] = Vector2.ZERO
 	if session.to_dict() != live_authority_before_detach \
 			or live_board.call("validation_scenic_overlay_summary") != fresh_live_overlay_summary \
-			or live_board.call("validation_command_watch_summary") != fresh_live_watch_summary:
-		push_error("Town smoke: detached scenic-overlay or command-watch validation changed live Town/session authority.")
+			or live_board.call("validation_command_watch_summary") != fresh_live_watch_summary \
+			or live_board.call("validation_scenic_ambient_light_summary") != fresh_live_ambient_summary:
+		push_error("Town smoke: detached scenic-overlay, ambient-light, or command-watch validation changed live Town/session authority.")
 		return false
 
 	var fixture = TownStageViewScript.new()
@@ -224,6 +234,7 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 				"threat": {"visible_marching": 2, "visible_pressuring": 1},
 			})
 			var summary: Dictionary = fixture.validation_scenic_backdrop_summary()
+			var ambient_summary: Dictionary = fixture.validation_scenic_ambient_light_summary()
 			var overlay_summary: Dictionary = fixture.validation_scenic_overlay_summary()
 			var watch_summary: Dictionary = fixture.validation_command_watch_summary()
 			if String(summary.get("faction_id", "")) != faction_id \
@@ -235,6 +246,11 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 					or Array(summary.get("overlay_order", [])) != expected_overlay_order \
 					or not _scenic_backdrop_geometry_exact(summary):
 				push_error("Town smoke: %s scenic backdrop contract failed at %s: %s." % [faction_id, stage_size, summary])
+				fixture.queue_free()
+				return false
+			var expected_anchor_count := 2 if faction_id == "faction_thornwake" else 3
+			if not _scenic_ambient_light_contract_exact(ambient_summary, faction_id, expected_anchor_count, true, true):
+				push_error("Town smoke: %s scenic ambient-light contract failed at %s: %s." % [faction_id, stage_size, ambient_summary])
 				fixture.queue_free()
 				return false
 			if not _scenic_overlay_contract_exact(overlay_summary, stage_size == Vector2(620.0, 320.0)):
@@ -260,6 +276,34 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 		fixture.queue_free()
 		return false
 	fixture.size = Vector2(1180.0, 640.0)
+	var original_settings: Dictionary = SettingsService.settings.duplicate(true)
+	var animated_before: Dictionary = fixture.validation_scenic_ambient_light_summary()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var animated_after: Dictionary = fixture.validation_scenic_ambient_light_summary()
+	_set_town_ambient_accessibility(true, false)
+	var reduced_summary: Dictionary = fixture.validation_scenic_ambient_light_summary()
+	await get_tree().process_frame
+	var reduced_after: Dictionary = fixture.validation_scenic_ambient_light_summary()
+	_set_town_ambient_accessibility(false, true)
+	var contrast_summary: Dictionary = fixture.validation_scenic_ambient_light_summary()
+	var original_color_cue_mode := FrontierVisualKitScript.color_cue_mode()
+	SettingsService.settings = original_settings.duplicate(true)
+	SettingsService.apply_settings()
+	FrontierVisualKitScript.set_color_cue_mode(original_color_cue_mode)
+	SettingsService.settings_changed.emit(SettingsService.settings.duplicate(true))
+	var restored_summary: Dictionary = fixture.validation_scenic_ambient_light_summary()
+	if not float(animated_after.get("pulse_phase", 0.0)) > float(animated_before.get("pulse_phase", -1.0)) \
+			or animated_after.get("entries", []) != animated_before.get("entries", []) \
+			or not _scenic_ambient_light_contract_exact(reduced_summary, "faction_veilmourn", 3, true, false) \
+			or reduced_after != reduced_summary \
+			or bool(contrast_summary.get("enabled", true)) \
+			or bool(contrast_summary.get("processing", true)) \
+			or not bool(contrast_summary.get("high_contrast", false)) \
+			or not _scenic_ambient_light_contract_exact(restored_summary, "faction_veilmourn", 3, true, true):
+		push_error("Town smoke: ambient-light motion/accessibility lifecycle is not exact: %s / %s / %s / %s." % [animated_after, reduced_summary, contrast_summary, restored_summary])
+		fixture.queue_free()
+		return false
 
 	fixture.set_precomputed_town_state(null, {
 		"town": {"town_id": "validation_unknown", "built_buildings": [], "garrison": [], "available_recruits": {}},
@@ -267,6 +311,7 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 		"faction": {"id": "faction_unmapped", "name": "Unmapped"},
 	})
 	var fallback_summary: Dictionary = fixture.validation_scenic_backdrop_summary()
+	var fallback_ambient_summary: Dictionary = fixture.validation_scenic_ambient_light_summary()
 	var fallback_overlay_summary: Dictionary = fixture.validation_scenic_overlay_summary()
 	var fallback_watch_summary: Dictionary = fixture.validation_command_watch_summary()
 	if String(fallback_summary.get("mapped_path", "")) != "" \
@@ -275,6 +320,12 @@ func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
 			or not bool(fallback_summary.get("procedural_fallback", false)) \
 			or Array(fallback_summary.get("overlay_order", [])) != expected_overlay_order:
 		push_error("Town smoke: unmapped faction did not fail safely to the procedural stage: %s." % fallback_summary)
+		fixture.queue_free()
+		return false
+	if bool(fallback_ambient_summary.get("enabled", true)) \
+			or int(fallback_ambient_summary.get("anchor_count", -1)) != 0 \
+			or not Array(fallback_ambient_summary.get("entries", [1])).is_empty():
+		push_error("Town smoke: procedural fallback did not fail closed without ambient scenic lights: %s." % fallback_ambient_summary)
 		fixture.queue_free()
 		return false
 	if not _scenic_overlay_contract_exact(fallback_overlay_summary, false):
@@ -399,6 +450,66 @@ func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:
 			or not bool(summary.get("destination_contained", false)):
 		return false
 	return is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
+
+func _scenic_ambient_light_contract_exact(summary: Dictionary, expected_faction_id: String, expected_anchor_count: int, expected_enabled: bool, expected_processing: bool) -> bool:
+	var entries: Array = summary.get("entries", []) if summary.get("entries", []) is Array else []
+	var source_rect: Rect2 = summary.get("source_rect", Rect2()) if summary.get("source_rect", Rect2()) is Rect2 else Rect2()
+	var destination_rect: Rect2 = summary.get("destination_rect", Rect2()) if summary.get("destination_rect", Rect2()) is Rect2 else Rect2()
+	if String(summary.get("model", "")) != "crop_aware_faction_painted_light_bloom" \
+			or String(summary.get("faction_id", "")) != expected_faction_id \
+			or bool(summary.get("enabled", false)) != expected_enabled \
+			or bool(summary.get("processing", false)) != expected_processing \
+			or int(summary.get("ring_count", 0)) != 9 \
+			or int(summary.get("anchor_count", 0)) != expected_anchor_count \
+			or entries.size() != expected_anchor_count \
+			or not bool(summary.get("all_contained", false)) \
+			or not is_equal_approx(float(summary.get("pulse_min", 0.0)), 0.82) \
+			or not is_equal_approx(float(summary.get("pulse_max", 0.0)), 1.0) \
+			or not is_equal_approx(float(summary.get("static_scale", 0.0)), 0.88) \
+			or source_rect.size.x <= 0.0 \
+			or source_rect.size.y <= 0.0 \
+			or destination_rect.size.x <= 0.0 \
+			or destination_rect.size.y <= 0.0 \
+			or Array(summary.get("draw_order", [])) != ["scenic_backdrop", "scenic_dim", "ambient_light_bloom", "status_plaques", "district_strip", "command_markers", "header", "town_action_presentation"]:
+		return false
+	if bool(summary.get("reduced_motion", false)):
+		if not is_equal_approx(float(summary.get("pulse_scale", 0.0)), 0.88) or not is_zero_approx(float(summary.get("pulse_phase", -1.0))):
+			return false
+	elif expected_enabled and not (float(summary.get("pulse_scale", 0.0)) >= 0.82 and float(summary.get("pulse_scale", 0.0)) <= 1.0):
+		return false
+	for entry_value in entries:
+		if not entry_value is Dictionary:
+			return false
+		var entry: Dictionary = entry_value
+		var source_position: Vector2 = entry.get("source_position", Vector2(-1.0, -1.0))
+		var destination_position: Vector2 = entry.get("destination_position", Vector2(-1.0, -1.0))
+		var normalized_position: Vector2 = entry.get("source_normalized_position", Vector2(-1.0, -1.0))
+		var bounds: Rect2 = entry.get("bounds", Rect2()) if entry.get("bounds", Rect2()) is Rect2 else Rect2()
+		var color: Color = entry.get("color", Color.TRANSPARENT)
+		if normalized_position.x <= 0.0 or normalized_position.x >= 1.0 \
+				or normalized_position.y <= 0.0 or normalized_position.y >= 1.0 \
+				or not source_rect.has_point(source_position) \
+				or not destination_rect.has_point(destination_position) \
+				or not destination_rect.encloses(bounds) \
+				or not bool(entry.get("contained", false)) \
+				or float(entry.get("radius", 0.0)) <= 0.0 \
+				or float(entry.get("strength", 0.0)) <= 0.0 \
+				or float(entry.get("strength", 0.0)) > 1.0 \
+				or not is_equal_approx(color.a, 1.0):
+			return false
+	return true
+
+func _set_town_ambient_accessibility(reduced_motion: bool, high_contrast: bool) -> void:
+	var preserved_color_cue_mode := FrontierVisualKitScript.color_cue_mode()
+	var candidate: Dictionary = SettingsService.settings.duplicate(true)
+	var accessibility: Dictionary = candidate.get("accessibility", {}).duplicate(true)
+	accessibility["reduce_motion"] = reduced_motion
+	accessibility["high_contrast_ui"] = high_contrast
+	candidate["accessibility"] = accessibility
+	SettingsService.settings = candidate
+	SettingsService.apply_settings()
+	FrontierVisualKitScript.set_color_cue_mode(preserved_color_cue_mode)
+	SettingsService.settings_changed.emit(SettingsService.settings.duplicate(true))
 
 func _assert_town_scenic_action_count_label_contract(live_board: Node, session) -> bool:
 	if not live_board.has_method("validation_header_action_count_summary"):

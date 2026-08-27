@@ -1911,17 +1911,17 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "presentation-world-object-scale-and-battle-medallions-10184",
-    "title": "World-Object Scale and Battle Icon-First Medallions",
+    "id": "presentation-town-painted-light-ambient-bloom-10184",
+    "title": "Town Painted-Light Ambient Bloom",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T01:51:01Z",
-    "updatedAt": "2026-08-27T02:36:57Z",
+    "startedAt": "2026-08-27T02:44:33Z",
+    "updatedAt": "2026-08-27T03:03:44Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed from fresh inspected 1280/1920 Overworld and Battle pixels. Tile-relative towns, heroes, encounters, structures, waypoints, landmarks, blockers, and default objects now form one coherent cartographic hierarchy without changing logical map authority. Resting Battle stacks use exact shipped battle icons, live event playback alone swaps to animation-sheet frames, and expiry restores icons. Focused authored/generated scale, hero/commander, animation, visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged interaction and overall release readiness remain unclaimed."
+    "notes": "Completed from fresh inspected 1280/1920 Town pixels. TownStageView now maps restrained faction-specific bloom through the exact scenic cover crop and draws it behind every overlay. Normal motion gently pulses, Reduced Motion is static, High Contrast hides it, and procedural fallback stays unlit. Six-faction focused, Town/Battle visual, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction and overall release readiness remain unclaimed."
   },
   "blocker": "",
   "completedImplementationEvidence": [
@@ -15328,14 +15328,14 @@
       }
     }
   ],
-  "currentNotes": "World-object scale and Battle icon-first medallions are complete; select the next graphical-polish slice from fresh inspected pixels.",
+  "currentNotes": "Town painted-light ambient bloom is complete; select the next graphical-polish slice from fresh inspected pixels.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-world-object-scale-and-battle-medallions-10184",
-  "currentSliceId": "presentation-world-object-scale-and-battle-medallions-10184",
-  "currentSliceNotes": "Completed: Overworld objects use a coherent tile-relative hierarchy and Battle stacks use readable resting icons with exact event-only animation swaps.",
+  "currentSlice": "presentation-town-painted-light-ambient-bloom-10184",
+  "currentSliceId": "presentation-town-painted-light-ambient-bloom-10184",
+  "currentSliceNotes": "Completed: six faction-authored Town light surfaces use restrained crop-aware bloom with exact motion-accessibility behavior behind all controls.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "World-Object Scale and Battle Icon-First Medallions",
-  "currentSliceUpdatedAt": "2026-08-27T02:36:57Z",
+  "currentSliceTitle": "Town Painted-Light Ambient Bloom",
+  "currentSliceUpdatedAt": "2026-08-27T03:03:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20851,8 +20851,42 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next graphical-polish slice only from direct rendered evidence and preserve gameplay, input, session/save authority, and Native RMG behavior.",
-  "notes": "The world-object scale and Battle icon-first medallion slice is complete from direct inspected pixels and focused runtime; blockers are empty. Select the next bounded graphical-polish slice from fresh rendered evidence.",
+  "notes": "The Town Painted-Light Ambient Bloom slice is complete from direct inspected pixels and focused runtime; blockers are empty. Select the next bounded graphical-polish slice from fresh rendered evidence.",
   "plannedSlices": [
+    {
+      "id": "presentation-town-painted-light-ambient-bloom-10184",
+      "title": "Town Painted-Light Ambient Bloom",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-27T02:44:33Z",
+      "updatedAt": "2026-08-27T03:03:44Z",
+      "completedAt": "2026-08-27T03:03:44Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/town/TownStageView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Give the six existing Town backdrops restrained faction-specific depth by blooming only their authored painted light sources behind all live UI while preserving exact Town authority.",
+      "completionCriteria": "Inspected 1280/1920 captures plus focused six-faction runtime prove exact crop-aware contained anchors, subtle normal pulse, static reduced-motion fallback, high-contrast hiding, unchanged overlay/input geometry and session/save authority; visual, focus, accessibility, core, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No bitmap/import/backdrop pixel, crop, layout, panel, overlay, command, action, focus, accessibility semantic, Town rule/economy/recruit/build, session, save/schema, content, AI, balance, map, generation, or Native RMG change.",
+        "No shader, weather, particles, new VFX/audio assets, action-presentation timing change, packaged Town interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for this bounded ambient-light slice. Select the next tracker-approved graphical-polish slice; packaged Town interaction, hardware certification, signing/publication, whole-game validation, and overall release readiness remain open.",
+      "completionEvidence": {
+        "focusedVisualArtifact": "/tmp/heroes-town-ambient-focused3.e8GSIR",
+        "captureArtifact": "/tmp/heroes-town-glow-captures",
+        "compatibilityArtifact": "/tmp/heroes-town-ambient-compat.eFCrrW",
+        "editorArtifact": "/tmp/heroes-town-ambient-editor.7qS7sW",
+        "platformArtifact": "/tmp/heroes-town-ambient-platform.Yq4Oph",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json"
+      }
+    },
     {
       "id": "presentation-world-object-scale-and-battle-medallions-10184",
       "title": "World-Object Scale and Battle Icon-First Medallions",

@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next bounded graphical-polish slice from fresh inspected game pixels.
 
+## Town Painted-Light Ambient Bloom
+
+id: `presentation-town-painted-light-ambient-bloom-10184`
+
+Status: completed.
+
+Result:
+- all six faction Town backdrops now carry restrained crop-aware bloom at their authored lamps, braziers, furnaces, crystals, portals, and moonlit focal points, drawn behind every status, district, watch, header, and action surface;
+- normal presentation gently pulses, Reduced Motion holds one static state, High Contrast hides the decorative layer, and unmapped/procedural towns fail closed without it;
+- inspected 1280x720 and 1920x1080 live Town captures, six-faction focused runtime, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Town captures show strong faction-authored scenic backdrops, but every painted lamp, brazier, furnace, crystal, and moonlit focal point remains completely static, leaving the otherwise polished Town screen flatter than the Main Menu's restrained painted-light treatment;
+- all six existing 1600x900 Town backdrops contain clear faction-specific light sources that can support a subtle presentation-only bloom without adding panels, covering scenic detail, or changing any control surface.
+
+Implementation boundary:
+- add one TownStageView-owned ambient-light layer whose source-normalized faction anchors map through the exact scenic cover crop before drawing behind every status, district, command, header, and action overlay;
+- use a restrained multi-ring bloom at authored lamp/crystal/moon positions, a gentle normal-motion pulse, a static reduced-motion state, and no ambient layer in high contrast;
+- preserve the exact backdrop assets/crop, faction/town identity, procedural fallback, all overlay geometry, input/focus/accessibility, Town actions, session/save authority, and existing action-presentation timing.
+
+Completion criteria:
+- inspected 1280x720 and 1920x1080 Town captures show subtle faction-appropriate light depth without washing out the artwork, labels, readiness ribbon, watchplate, or commands;
+- focused runtime covers all six factions, both target viewports, exact source-to-cover-crop anchor mapping/containment, normal pulse bounds, reduced-motion static behavior, high-contrast hiding, stable overlay/input geometry, and unchanged session/save authority;
+- Town/Battle visual, active-play focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no bitmap/import/backdrop pixel, crop, layout, panel, overlay, command, action, focus, accessibility semantic, Town rule/economy/recruit/build, session, save/schema, content, AI, balance, map, generation, or Native RMG change;
+- no shader, weather, particles, new VFX/audio assets, action-presentation timing change, packaged Town interaction, controller/hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## World-Object Scale and Battle Icon-First Medallions
 
 id: `presentation-world-object-scale-and-battle-medallions-10184`
