@@ -169,7 +169,10 @@ func _scale_payload_exact(payload: Dictionary) -> bool:
 		and is_equal_approx(float(payload.get("town_to_hero_extent_ratio", 0.0)), 2.125) \
 		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7) \
 		and bool(payload.get("painted_bottom_grounded_exact", false)) \
-		and bool(payload.get("sprite_contained_in_footprint", false))
+		and bool(payload.get("sprite_contained_in_footprint", false)) \
+		and String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline" \
+		and float(payload.get("sprite_silhouette_width_px", 0.0)) >= 1.4 \
+		and bool(payload.get("sprite_silhouette_contained_in_footprint", false))
 
 func _town_interaction_authority(session) -> Array:
 	var rows: Array = []

@@ -250,6 +250,19 @@ const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.76
 const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := 0.59
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.61
+const WORLD_SPRITE_SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
+const TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.010
+const TOWN_SPRITE_SILHOUETTE_MIN_PX := 1.4
+const TOWN_SPRITE_SILHOUETTE_VISIBLE := Color(0.012, 0.014, 0.010, 0.88)
+const TOWN_SPRITE_SILHOUETTE_MEMORY := Color(0.18, 0.31, 0.34, 0.78)
+const HERO_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.024
+const HERO_SPRITE_SILHOUETTE_MIN_PX := 1.35
+const HERO_SPRITE_SILHOUETTE_COLOR := Color(0.010, 0.012, 0.010, 0.92)
+const HERO_COMMAND_PENNANT_MODEL := "compact_player_command_flag"
+const HERO_COMMAND_PENNANT_WIDTH_FACTOR := 0.19
+const HERO_COMMAND_PENNANT_HEIGHT_FACTOR := 0.12
+const HERO_COMMAND_PENNANT_POLE_HEIGHT_FACTOR := 0.43
+const HERO_COMMAND_PENNANT_ALPHA := 0.96
 const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"
 const TOWN_GROUNDING_MODEL := "town_sprite_settled_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
@@ -265,18 +278,18 @@ const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint
 const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64
 const TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES := 0.56
 const TOWN_OWNER_PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"
-const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.115
-const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.078
-const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.185
+const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.140
+const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.100
+const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.220
 const TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR := 0.17
 const TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR := 0.12
-const TOWN_OWNER_PENNANT_CLOTH_ALPHA := 0.86
+const TOWN_OWNER_PENNANT_CLOTH_ALPHA := 0.96
 const TOWN_OWNER_PENNANT_MEMORY_ALPHA := 0.68
-const TOWN_OWNER_PENNANT_SHADOW_ALPHA := 0.30
+const TOWN_OWNER_PENNANT_SHADOW_ALPHA := 0.42
 const TOWN_OWNER_PENNANT_FOLD_ALPHA := 0.34
 const TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA := 0.42
 const TOWN_OWNER_PENNANT_SHADOW_OFFSET_FACTOR := 0.010
-const TOWN_OWNER_PENNANT_OUTLINE_WIDTH_FACTOR := 0.010
+const TOWN_OWNER_PENNANT_OUTLINE_WIDTH_FACTOR := 0.014
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -3867,11 +3880,27 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	var draw_payload := _town_sprite_draw_payload(asset_id, texture, rect)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(rect.get_center(), Vector2.ZERO))
+	_draw_sprite_silhouette_outline(
+		draw_texture,
+		sprite_rect,
+		TOWN_SPRITE_SILHOUETTE_MEMORY if remembered else TOWN_SPRITE_SILHOUETTE_VISIBLE,
+		maxf(TOWN_SPRITE_SILHOUETTE_MIN_PX, minf(rect.size.x, rect.size.y) * TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR)
+	)
 	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_town_owner_pennant(rect, _town_color(tile), remembered, _town_owner_id(_town_at(tile)))
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
 	return true
+
+func _draw_sprite_silhouette_outline(texture: Texture2D, rect: Rect2, color: Color, width: float) -> void:
+	if texture == null or rect.size.x <= 0.0 or rect.size.y <= 0.0 or width <= 0.0:
+		return
+	for direction in [
+		Vector2(-1.0, -1.0), Vector2(0.0, -1.0), Vector2(1.0, -1.0),
+		Vector2(-1.0, 0.0), Vector2(1.0, 0.0),
+		Vector2(-1.0, 1.0), Vector2(0.0, 1.0), Vector2(1.0, 1.0),
+	]:
+		_canvas_draw_texture_rect(texture, Rect2(rect.position + direction * width, rect.size), false, color)
 
 func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_rect: Rect2, single_tile_extent_override: float = 0.0) -> Dictionary:
 	var footprint := _object_profile_footprint(_town_object_profile())
@@ -4599,6 +4628,7 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = t
 		_draw_hero_reserve_badge(rect, tile, show_reserve_count)
 		return
 	var anchor := _draw_hero_grounding_anchor(hero_rect, tile)
+	_draw_hero_command_pennant(_hero_command_pennant_profile(hero_rect, bool(hero.get("is_active", false))))
 	var extent := minf(hero_rect.size.x, hero_rect.size.y)
 	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
 	var ground_center: Vector2 = anchor.get("center", hero_rect.get_center())
@@ -4657,9 +4687,105 @@ func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
 	var sprite_extent := maxf(16.0, extent * sprite_factor)
 	var sprite_center := ground_center + Vector2(0.0, -extent * HERO_SPRITE_LIFT_FACTOR)
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	_draw_hero_command_pennant(_hero_command_pennant_profile(rect, bool(hero.get("is_active", false))))
+	_draw_sprite_silhouette_outline(
+		texture,
+		sprite_rect,
+		HERO_SPRITE_SILHOUETTE_COLOR,
+		maxf(HERO_SPRITE_SILHOUETTE_MIN_PX, extent * HERO_SPRITE_SILHOUETTE_WIDTH_FACTOR)
+	)
 	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_hero_foreground_contact(anchor)
 	return true
+
+func _hero_command_pennant_profile(rect: Rect2, active: bool) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var width := extent * HERO_COMMAND_PENNANT_WIDTH_FACTOR
+	var height := extent * HERO_COMMAND_PENNANT_HEIGHT_FACTOR
+	var pole_top := rect.position + rect.size * Vector2(0.80, 0.14)
+	var pole_bottom := pole_top + Vector2(0.0, extent * HERO_COMMAND_PENNANT_POLE_HEIGHT_FACTOR)
+	var cloth_points := PackedVector2Array([
+		pole_top,
+		pole_top + Vector2(-width, height * 0.10),
+		pole_top + Vector2(-width * (0.78 if active else 0.64), height * 0.52),
+		pole_top + Vector2(-width, height * 0.90),
+		pole_top + Vector2(0.0, height),
+	])
+	var shadow_offset := Vector2.ONE * maxf(1.0, extent * 0.012)
+	var shadow_points := PackedVector2Array()
+	for point in cloth_points:
+		shadow_points.append(point + shadow_offset)
+	var owner_color := FrontierVisualKitScript.semantic_color("player", PLAYER_TOWN_COLOR)
+	var cloth_alpha := HERO_COMMAND_PENNANT_ALPHA if active else HERO_COMMAND_PENNANT_ALPHA * 0.82
+	return {
+		"model": HERO_COMMAND_PENNANT_MODEL,
+		"active": active,
+		"shape_id": "active_square_fold" if active else "reserve_swallowtail",
+		"extent": extent,
+		"pole_top": pole_top,
+		"pole_bottom": pole_bottom,
+		"cloth_points": cloth_points,
+		"shadow_points": shadow_points,
+		"cloth_color": Color(owner_color.r, owner_color.g, owner_color.b, cloth_alpha),
+		"outline_color": MARKER_OUTLINE_COLOR,
+		"pole_color": Color(0.94, 0.86, 0.64, 0.96),
+		"fold_line": PackedVector2Array([
+			pole_top + Vector2(-width * 0.08, height * 0.72),
+			pole_top + Vector2(-width * 0.68, height * 0.48),
+		]),
+		"highlight_line": PackedVector2Array([
+			pole_top + Vector2(-width * 0.08, height * 0.20),
+			pole_top + Vector2(-width * 0.66, height * 0.28),
+		]),
+		"width_factor": HERO_COMMAND_PENNANT_WIDTH_FACTOR,
+		"height_factor": HERO_COMMAND_PENNANT_HEIGHT_FACTOR,
+		"pole_height_factor": HERO_COMMAND_PENNANT_POLE_HEIGHT_FACTOR,
+	}
+
+func _draw_hero_command_pennant(profile: Dictionary) -> void:
+	if profile.is_empty():
+		return
+	var extent := float(profile.get("extent", 0.0))
+	var pole_top: Vector2 = profile.get("pole_top", Vector2.ZERO)
+	var pole_bottom: Vector2 = profile.get("pole_bottom", Vector2.ZERO)
+	var cloth_points: PackedVector2Array = profile.get("cloth_points", PackedVector2Array())
+	var shadow_points: PackedVector2Array = profile.get("shadow_points", PackedVector2Array())
+	if extent <= 0.0 or cloth_points.size() < 3:
+		return
+	_canvas_draw_line(pole_top, pole_bottom, MARKER_OUTLINE_COLOR, maxf(2.0, extent * 0.030))
+	_canvas_draw_line(pole_top, pole_bottom, profile.get("pole_color", Color.WHITE), maxf(1.0, extent * 0.014))
+	_canvas_draw_colored_polygon(shadow_points, Color(0.01, 0.012, 0.009, 0.46))
+	_canvas_draw_colored_polygon(cloth_points, profile.get("cloth_color", PLAYER_TOWN_COLOR))
+	var outline_points := PackedVector2Array(cloth_points)
+	outline_points.append(cloth_points[0])
+	_canvas_draw_polyline(outline_points, profile.get("outline_color", MARKER_OUTLINE_COLOR), maxf(1.25, extent * 0.020))
+	var fold_line: PackedVector2Array = profile.get("fold_line", PackedVector2Array())
+	if fold_line.size() == 2:
+		_canvas_draw_line(fold_line[0], fold_line[1], Color(0.05, 0.04, 0.02, 0.46), maxf(1.0, extent * 0.010))
+	var highlight_line: PackedVector2Array = profile.get("highlight_line", PackedVector2Array())
+	if highlight_line.size() == 2:
+		_canvas_draw_line(highlight_line[0], highlight_line[1], Color(1.0, 0.94, 0.70, 0.58), maxf(1.0, extent * 0.008))
+	_canvas_draw_circle(pole_top, maxf(1.2, extent * 0.016), profile.get("pole_color", Color.WHITE))
+
+func _hero_command_pennant_validation_payload(profile: Dictionary, containing_rect: Rect2) -> Dictionary:
+	var cloth_points: PackedVector2Array = profile.get("cloth_points", PackedVector2Array())
+	var shadow_points: PackedVector2Array = profile.get("shadow_points", PackedVector2Array())
+	return {
+		"model": String(profile.get("model", "")),
+		"active": bool(profile.get("active", false)),
+		"shape_id": String(profile.get("shape_id", "")),
+		"cloth_points": _vector2_array_payload(cloth_points),
+		"shadow_points": _vector2_array_payload(shadow_points),
+		"pole_top": _vector2_payload(profile.get("pole_top", Vector2.ZERO)),
+		"pole_bottom": _vector2_payload(profile.get("pole_bottom", Vector2.ZERO)),
+		"cloth_color": _color_payload(profile.get("cloth_color", Color.TRANSPARENT)),
+		"width_factor": float(profile.get("width_factor", 0.0)),
+		"height_factor": float(profile.get("height_factor", 0.0)),
+		"pole_height_factor": float(profile.get("pole_height_factor", 0.0)),
+		"cloth_contained": containing_rect.encloses(_points_bounds(cloth_points)),
+		"shadow_contained": containing_rect.encloses(_points_bounds(shadow_points)),
+		"pole_contained": containing_rect.has_point(profile.get("pole_top", Vector2.ZERO)) and containing_rect.has_point(profile.get("pole_bottom", Vector2.ZERO)),
+	}
 
 func _hero_draw_rect(rect: Rect2, tile: Vector2i, allow_town_footprint_layout: bool) -> Rect2:
 	if not allow_town_footprint_layout or _town_presentation_at(tile).is_empty():
@@ -4679,6 +4805,9 @@ func _hero_draw_layout_payload(rect: Rect2, tile: Vector2i, allow_town_footprint
 	var sprite_extent := maxf(16.0, hero_extent * sprite_factor)
 	var sprite_center := ground_center + Vector2(0.0, -hero_extent * HERO_SPRITE_LIFT_FACTOR)
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	var silhouette_width := maxf(HERO_SPRITE_SILHOUETTE_MIN_PX, hero_extent * HERO_SPRITE_SILHOUETTE_WIDTH_FACTOR)
+	var hero := _hero_presentation_entry(tile)
+	var command_pennant := _hero_command_pennant_validation_payload(_hero_command_pennant_profile(hero_rect, bool(hero.get("is_active", false))), rect)
 	return {
 		"mode": HERO_TOWN_FOOTPRINT_LAYOUT_MODE if uses_town_footprint_layout else HERO_FIELD_LAYOUT_MODE,
 		"town_footprint_colocated": uses_town_footprint_layout,
@@ -4687,6 +4816,10 @@ func _hero_draw_layout_payload(rect: Rect2, tile: Vector2i, allow_town_footprint
 		"hero_rect_extent_fraction": hero_extent / tile_extent if tile_extent > 0.0 else 0.0,
 		"sprite_extent_fraction": sprite_extent / tile_extent if tile_extent > 0.0 else 0.0,
 		"sprite_contained_in_tile": rect.encloses(sprite_rect),
+		"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL,
+		"sprite_silhouette_width_px": silhouette_width,
+		"sprite_silhouette_contained_in_tile": rect.encloses(sprite_rect.grow(silhouette_width)),
+		"command_pennant": command_pennant,
 		"ground_anchor_y_fraction": (ground_center.y - rect.position.y) / rect.size.y if rect.size.y > 0.0 else 0.0,
 	}
 
@@ -6224,6 +6357,7 @@ func validation_town_sprite_scale_payload(asset_id: String = "town_faction_ember
 	var draw_rect: Rect2 = draw_payload.get("draw_rect", Rect2())
 	var sprite_center: Vector2 = draw_payload.get("sprite_center", Vector2.ZERO)
 	var visible_extent_px := float(draw_payload.get("visible_extent_px", 0.0))
+	var silhouette_width_px := maxf(TOWN_SPRITE_SILHOUETTE_MIN_PX, minf(footprint_rect.size.x, footprint_rect.size.y) * TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR)
 	var painted_bottom_clearance_tiles := float(draw_payload.get("painted_bottom_clearance_px", 0.0)) / single_tile_extent
 	return {
 		"asset_id": asset_id,
@@ -6244,6 +6378,9 @@ func validation_town_sprite_scale_payload(asset_id: String = "town_faction_ember
 		"painted_bottom_clearance_tiles": painted_bottom_clearance_tiles,
 		"painted_bottom_grounded_exact": is_equal_approx(painted_bottom_clearance_tiles, TOWN_SPRITE_GROUND_CLEARANCE_TILES),
 		"sprite_contained_in_footprint": footprint_rect.encloses(draw_rect),
+		"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL,
+		"sprite_silhouette_width_px": silhouette_width_px,
+		"sprite_silhouette_contained_in_footprint": footprint_rect.encloses(draw_rect.grow(silhouette_width_px)),
 		"cache_size_before": cache_size_before,
 		"cache_size_after_first": cache_size_after_first,
 		"cache_size_after_second": cache_size_after_second,
@@ -7225,6 +7362,8 @@ func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
 		"reserve_count": _reserve_hero_count(tile),
 		"grounding_model": HERO_GROUNDING_MODEL,
 		"depth_cue_model": HERO_DEPTH_CUE_MODEL,
+		"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL,
+		"command_pennant_model": HERO_COMMAND_PENNANT_MODEL,
 		"layout": layout,
 	}
 
@@ -7335,6 +7474,10 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"owner_pennant_single_pass": true,
 		"owner_pennant_width_factor": TOWN_OWNER_PENNANT_WIDTH_FACTOR,
 		"owner_pennant_height_factor": TOWN_OWNER_PENNANT_HEIGHT_FACTOR,
+		"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL,
+		"sprite_silhouette_width_factor": TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR,
+		"sprite_silhouette_visible_alpha": TOWN_SPRITE_SILHOUETTE_VISIBLE.a,
+		"sprite_silhouette_memory_alpha": TOWN_SPRITE_SILHOUETTE_MEMORY.a,
 		"owner": String(town.get("owner", "neutral")),
 		"footprint_cells": cells,
 		"blocked_footprint_cells": blocked_cells,

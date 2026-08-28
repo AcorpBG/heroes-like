@@ -3005,6 +3005,20 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var hero_layout: Dictionary = hero_sprite.get("layout", {})
+	var hero_command_pennant: Dictionary = hero_layout.get("command_pennant", {})
+	if String(hero_sprite.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
+		or String(hero_sprite.get("command_pennant_model", "")) != "compact_player_command_flag" \
+		or String(hero_layout.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
+		or float(hero_layout.get("sprite_silhouette_width_px", 0.0)) < 1.35 \
+		or not bool(hero_layout.get("sprite_silhouette_contained_in_tile", false)) \
+		or String(hero_command_pennant.get("model", "")) != "compact_player_command_flag" \
+		or not bool(hero_command_pennant.get("active", false)) \
+		or not bool(hero_command_pennant.get("cloth_contained", false)) \
+		or not bool(hero_command_pennant.get("shadow_contained", false)) \
+		or not bool(hero_command_pennant.get("pole_contained", false)):
+		push_error("Overworld smoke: active hero lacks the contained silhouette/command-flag readability treatment. presentation=%s" % hero_presentation)
+		get_tree().quit(1)
+		return false
 	var hero_on_town_footprint := bool(hero_presentation.get("has_town_footprint", false))
 	var map_view = shell.get_node_or_null("%Map")
 	if map_view == null or not map_view.has_method("validation_tile_focus_layout"):
@@ -3321,18 +3335,22 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			return false
 		var owner_pennant: Dictionary = town_presentation.get("owner_pennant", {})
 		var pennant_cloth_color: Dictionary = owner_pennant.get("cloth_color", {})
-		var expected_pennant_alpha := 0.68 if remembered else 0.86
+		var expected_pennant_alpha := 0.68 if remembered else 0.96
 		if String(town_presentation.get("owner_pennant_model", "")) != "single_pass_compact_heraldic_cloth_pennant" \
 			or not bool(town_presentation.get("owner_pennant_single_pass", false)) \
-			or not is_equal_approx(float(town_presentation.get("owner_pennant_width_factor", 0.0)), 0.115) \
-			or not is_equal_approx(float(town_presentation.get("owner_pennant_height_factor", 0.0)), 0.078) \
+			or not is_equal_approx(float(town_presentation.get("owner_pennant_width_factor", 0.0)), 0.140) \
+			or not is_equal_approx(float(town_presentation.get("owner_pennant_height_factor", 0.0)), 0.100) \
+			or String(town_presentation.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
+			or float(town_presentation.get("sprite_silhouette_width_factor", 0.0)) < 0.010 \
+			or float(town_presentation.get("sprite_silhouette_visible_alpha", 0.0)) < 0.88 \
+			or float(town_presentation.get("sprite_silhouette_memory_alpha", 0.0)) < 0.78 \
 			or String(owner_pennant.get("model", "")) != "single_pass_compact_heraldic_cloth_pennant" \
 			or int(owner_pennant.get("single_pass_draw_count", 0)) != 1 \
 			or int(owner_pennant.get("cloth_layer_count", 0)) != 1 \
 			or not bool(owner_pennant.get("cloth_contained", false)) \
 			or not bool(owner_pennant.get("shadow_contained", false)) \
 			or not bool(owner_pennant.get("pole_contained", false)) \
-			or float(owner_pennant.get("painted_area_ratio_to_legacy", 1.0)) >= 0.50 \
+			or float(owner_pennant.get("painted_area_ratio_to_legacy", 1.0)) >= 0.75 \
 			or not is_equal_approx(float(pennant_cloth_color.get("a", 0.0)), expected_pennant_alpha):
 			push_error("Overworld smoke: town owner pennant no longer uses the compact single-pass contained cloth model. presentation=%s" % presentation)
 			get_tree().quit(1)
@@ -4080,6 +4098,9 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		or not is_equal_approx(float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18) \
 		or not bool(town.get("painted_bottom_grounded_exact", false)) \
 		or not bool(town.get("sprite_contained_in_footprint", false)) \
+		or String(town.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
+		or float(town.get("sprite_silhouette_width_px", 0.0)) < 1.4 \
+		or not bool(town.get("sprite_silhouette_contained_in_footprint", false)) \
 		or not is_equal_approx(float(town_center.get("x", 0.0)), 1.5) \
 		or float(town_center.get("y", 0.0)) <= 0.0 \
 		or float(town_center.get("y", 0.0)) >= 2.0:

@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
+- Selected implementation slice: none. Select the next tracker-approved source-backed release-readiness slice.
+
+## Overworld Town And Hero Landmark Readability
+
+id: `ux-overworld-town-hero-landmark-readability-10184`
+
+Status: completed.
+
+Current finding:
+- faction town and hero sprites are present and correctly scaled, but both are painted directly against terrain with only subtle contact treatment;
+- town ownership relies on a compact low-alpha pennant, while heroes lack a distinct player-color command flag, so their silhouettes and allegiance can disappear into detailed terrain at normal play zoom.
+
+Implementation boundary:
+- retain the current 3x2 town scale and one-tile hero containment while adding crisp alpha-silhouette separation around both sprite families;
+- strengthen the existing town ownership pennant and add a compact, contained player command flag to live player heroes, following classic adventure-map silhouette/flag readability with original assets and styling;
+- preserve terrain, fog, object draw order, town footprint/entry interaction, hero movement, selection, ownership, and save authority.
+
+Completion criteria:
+- authored and generated towns retain exact scale/footprints while their visible and remembered silhouettes remain separated from terrain and their owner flags remain contained and readable at 1280x720 and 1920x1080;
+- stationary, moving, active, reserve, and town-colocated hero sprites remain tile-contained with exact movement/selection behavior and expose the same crisp silhouette plus player command flag treatment;
+- focused visual owners, overworld movement/interaction, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes assets, names, UI, animation, or protected visual expression; no new generated art in this slice;
+- no town/hero gameplay scale, footprint, map topology, passability, pathfinding, fog/scouting, AI, economy, combat, content, save schema, Native RMG, packaged interaction, hardware certification, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- towns and heroes now retain their existing original faction art and exact gameplay scale while gaining a contained eight-direction alpha silhouette that separates their shapes from detailed terrain;
+- town owner pennants are stronger but remain below the legacy painted-area budget, and active/reserve player heroes now carry compact contained command flags without plates, labels, or map-geometry changes;
+- focused hero/town owners pass at 1280x720 and 1920x1080, the generated 108x108 Large map preserves the exact 1.36-tile town extent and six-town footprint/click authority, and route movement, town entry/body routing, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.
 
 ## Overworld Town Footprint Click Entry Routing
 

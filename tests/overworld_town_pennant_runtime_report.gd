@@ -3,11 +3,11 @@ extends Node
 const SCENARIO_ID := "river-pass"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"
-const WIDTH_FACTOR := 0.115
-const HEIGHT_FACTOR := 0.078
+const WIDTH_FACTOR := 0.140
+const HEIGHT_FACTOR := 0.100
 const LEGACY_WIDTH_FACTOR := 0.17
 const LEGACY_HEIGHT_FACTOR := 0.12
-const VISIBLE_ALPHA := 0.86
+const VISIBLE_ALPHA := 0.96
 const REMEMBERED_ALPHA := 0.68
 const EXPECTED_VARIANT_COUNT := 12
 
@@ -169,7 +169,7 @@ func _assert_town_variants(
 			and is_equal_approx(float(variant.get("legacy_width_factor", 0.0)), LEGACY_WIDTH_FACTOR) \
 			and is_equal_approx(float(variant.get("legacy_height_factor", 0.0)), LEGACY_HEIGHT_FACTOR) \
 			and is_equal_approx(float(variant.get("painted_area_ratio_to_legacy", 1.0)), expected_ratio) \
-			and expected_ratio < 0.50 \
+			and expected_ratio < 0.75 \
 			and WIDTH_FACTOR < LEGACY_WIDTH_FACTOR \
 			and HEIGHT_FACTOR < LEGACY_HEIGHT_FACTOR \
 			and is_equal_approx(float(cloth_color.get("a", 0.0)), expected_alpha)
