@@ -177,6 +177,8 @@ func _town_footprint_exact(shell: Node) -> bool:
 			or String(profile.get("scale_hierarchy_model", "")) != SCALE_HIERARCHY_MODEL \
 			or not is_equal_approx(float(profile.get("visual_sprite_extent_fraction_of_footprint", 0.0)), 0.68) \
 			or not is_equal_approx(float(profile.get("visual_sprite_extent_tiles", 0.0)), TOWN_VISUAL_EXTENT_TILES) \
+			or String(profile.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
+			or float(profile.get("sprite_silhouette_width_factor", 0.0)) < 0.010 \
 			or String(profile.get("entry_role", "")) != "bottom_middle_visit_approach" \
 			or not bool(profile.get("entry_is_visit_tile", false)) \
 			or not bool(profile.get("non_entry_tiles_blocked", false)):
@@ -196,7 +198,11 @@ func _hero_scale_exact(map_view: Node, tile_extent: float) -> bool:
 		if sprite_rect.size.x <= 0.0 or sprite_rect.size.x > tile_extent + 0.01 \
 			or String(profile_value.get("scale_hierarchy_model", "")) != SCALE_HIERARCHY_MODEL \
 			or not is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), expected_extent) \
-			or not bool(layout.get("sprite_contained_in_tile", false)):
+			or not bool(layout.get("sprite_contained_in_tile", false)) \
+			or String(layout.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
+			or not bool(layout.get("sprite_silhouette_contained_in_tile", false)) \
+			or String(layout.get("command_pennant", {}).get("model", "")) != "compact_player_command_flag" \
+			or not bool(layout.get("command_pennant", {}).get("cloth_contained", false)):
 			return false
 	return true
 

@@ -172,7 +172,10 @@ func _town_scale_exact(payload: Dictionary) -> bool:
 		and is_equal_approx(float(payload.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7) \
 		and is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0))) \
 		and bool(payload.get("painted_bottom_grounded_exact", false)) \
-		and bool(payload.get("sprite_contained_in_footprint", false))
+		and bool(payload.get("sprite_contained_in_footprint", false)) \
+		and String(payload.get("sprite_silhouette_model", "")) == "eight_direction_alpha_silhouette_outline" \
+		and float(payload.get("sprite_silhouette_width_px", 0.0)) >= 1.4 \
+		and bool(payload.get("sprite_silhouette_contained_in_footprint", false))
 
 func _reveal_town_entries(session) -> void:
 	var map_size := OverworldRules.derive_map_size(session)

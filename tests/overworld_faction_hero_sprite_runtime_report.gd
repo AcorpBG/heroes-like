@@ -2,6 +2,8 @@ extends Node
 
 const SCENARIO_ID := "ninefold-confluence"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
+const SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
+const COMMAND_PENNANT_MODEL := "compact_player_command_flag"
 const EXPECTED_FACTION_ASSETS := {
 	"faction_embercourt": "hero_faction_embercourt",
 	"faction_mireclaw": "hero_faction_mireclaw",
@@ -73,10 +75,18 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var active_tile_value: Dictionary = exact.get("active_tile", {})
 	var active_tile := Vector2i(int(active_tile_value.get("x", -1)), int(active_tile_value.get("y", -1)))
 	var moving_layout: Dictionary = map_view.call("validation_hero_draw_layout", active_tile, true)
+	var moving_pennant: Dictionary = moving_layout.get("command_pennant", {})
 	var moving_layout_exact: bool = String(moving_layout.get("mode", "")) == "full_tile_world_hero" \
 		and not bool(moving_layout.get("town_footprint_colocated", true)) \
 		and is_equal_approx(float(moving_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.64)
+		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.64) \
+		and String(moving_layout.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
+		and bool(moving_layout.get("sprite_silhouette_contained_in_tile", false)) \
+		and String(moving_pennant.get("model", "")) == COMMAND_PENNANT_MODEL \
+		and bool(moving_pennant.get("active", false)) \
+		and bool(moving_pennant.get("cloth_contained", false)) \
+		and bool(moving_pennant.get("shadow_contained", false)) \
+		and bool(moving_pennant.get("pole_contained", false))
 	if not moving_layout_exact:
 		shell.queue_free()
 		return {"ok": false, "failure": "moving_layout_control", "layout": moving_layout}
@@ -100,6 +110,8 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		and String(fallback.get("sprite_asset_id", "")) == "" \
 		and bool(fallback.get("uses_procedural_fallback", false)) \
 		and not bool(fallback.get("uses_faction_sprite", true)) \
+		and String(fallback.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
+		and String(fallback.get("command_pennant_model", "")) == COMMAND_PENNANT_MODEL \
 		and String(fallback.get("layout", {}).get("mode", "")) == "compact_town_footprint_visitor" \
 		and bool(fallback.get("layout", {}).get("sprite_contained_in_tile", false))
 
@@ -123,6 +135,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		"asset_ids": exact.get("asset_ids", []),
 		"active_identity_exact": exact.get("active_identity_exact", false),
 		"grounding_exact": exact.get("grounding_exact", false),
+		"readability_exact": exact.get("readability_exact", false),
 		"town_footprint_layout_exact": exact.get("town_footprint_layout_exact", false),
 		"ordinary_layout_exact": exact.get("ordinary_layout_exact", false),
 		"moving_layout_exact": moving_layout_exact,
@@ -146,6 +159,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 	var active_tile := Vector2i(-1, -1)
 	var ordinary_tile := Vector2i(-1, -1)
 	var geometry_exact := true
+	var readability_exact := true
 	var view_metrics: Dictionary = map_view.call("validation_view_metrics")
 	var board_rect := _rect_from_payload(view_metrics.get("board_rect", {}))
 	var map_size_value: Dictionary = view_metrics.get("map_size", {})
@@ -175,6 +189,19 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 		seen_factions[faction_id] = true
 		seen_assets[expected_asset_id] = true
 		var layout: Dictionary = profile.get("layout", {})
+		var command_pennant: Dictionary = layout.get("command_pennant", {})
+		readability_exact = readability_exact \
+			and String(profile.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
+			and String(profile.get("command_pennant_model", "")) == COMMAND_PENNANT_MODEL \
+			and String(layout.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
+			and float(layout.get("sprite_silhouette_width_px", 0.0)) >= 1.35 \
+			and bool(layout.get("sprite_silhouette_contained_in_tile", false)) \
+			and String(command_pennant.get("model", "")) == COMMAND_PENNANT_MODEL \
+			and bool(command_pennant.get("active", false)) == bool(profile.get("is_active", false)) \
+			and String(command_pennant.get("shape_id", "")) == ("active_square_fold" if bool(profile.get("is_active", false)) else "reserve_swallowtail") \
+			and bool(command_pennant.get("cloth_contained", false)) \
+			and bool(command_pennant.get("shadow_contained", false)) \
+			and bool(command_pennant.get("pole_contained", false))
 		var tile_value: Dictionary = profile.get("tile", {})
 		var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
 		if bool(layout.get("town_footprint_colocated", false)):
@@ -205,10 +232,11 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
 				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.64)
 	return {
-		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1 and grounding_exact and town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact,
+		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1 and grounding_exact and readability_exact and town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact,
 		"asset_ids": seen_assets.keys(),
 		"active_identity_exact": active_count == 1,
 		"grounding_exact": grounding_exact,
+		"readability_exact": readability_exact,
 		"town_footprint_layout_exact": town_footprint_layout_count == 1 and geometry_exact,
 		"ordinary_layout_exact": ordinary_layout_count == 5 and geometry_exact,
 		"active_tile": {"x": active_tile.x, "y": active_tile.y},
