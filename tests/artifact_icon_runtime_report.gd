@@ -21,6 +21,12 @@ const EXPECTED_ICONS := {
 	"artifact_rainstar_sextant": "res://art/artifacts/runtime/rainstar_sextant.png",
 	"artifact_asterfall_mantle": "res://art/artifacts/runtime/asterfall_mantle.png",
 	"artifact_cometwake_pennon": "res://art/artifacts/runtime/cometwake_pennon.png",
+	"artifact_bridgefire_standard": "res://art/artifacts/runtime/bridgefire_standard.png",
+	"artifact_reedshadow_waders": "res://art/artifacts/runtime/reedshadow_waders.png",
+	"artifact_prismward_mantle": "res://art/artifacts/runtime/prismward_mantle.png",
+	"artifact_graftbark_cuirass": "res://art/artifacts/runtime/graftbark_cuirass.png",
+	"artifact_quenchplate_vambrace": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+	"artifact_fogwake_deckboots": "res://art/artifacts/runtime/fogwake_deckboots.png",
 }
 
 var _original_ui_scale_percent := 100

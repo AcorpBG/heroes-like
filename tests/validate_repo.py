@@ -45235,6 +45235,12 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         "artifact_rainstar_sextant": "res://art/artifacts/runtime/rainstar_sextant.png",
         "artifact_asterfall_mantle": "res://art/artifacts/runtime/asterfall_mantle.png",
         "artifact_cometwake_pennon": "res://art/artifacts/runtime/cometwake_pennon.png",
+        "artifact_bridgefire_standard": "res://art/artifacts/runtime/bridgefire_standard.png",
+        "artifact_reedshadow_waders": "res://art/artifacts/runtime/reedshadow_waders.png",
+        "artifact_prismward_mantle": "res://art/artifacts/runtime/prismward_mantle.png",
+        "artifact_graftbark_cuirass": "res://art/artifacts/runtime/graftbark_cuirass.png",
+        "artifact_quenchplate_vambrace": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+        "artifact_fogwake_deckboots": "res://art/artifacts/runtime/fogwake_deckboots.png",
     }
     artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
     ensure(set(artifacts) == set(expected_icons), errors, "Artifact icon adoption must cover every production artifact")
@@ -45257,6 +45263,48 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         ensure(Path(f"{disk_path}.import").is_file(), errors, f"Artifact {artifact_id} icon import is missing: {icon_path}.import")
     ensure(len(set(icon_ids)) == len(expected_icons), errors, "Artifact icon ids must be unique across all production artifacts")
     ensure(len(set(icon_paths)) == len(expected_icons), errors, "Artifact icon paths must be unique across all production artifacts")
+
+    field_regalia = {
+        "artifact_bridgefire_standard": ("faction_embercourt", "banner", "river-pass", "warcrest_ruin", 5, 1),
+        "artifact_reedshadow_waders": ("faction_mireclaw", "boots", "bogbound-oath", "bogbound_boots", 2, 1),
+        "artifact_prismward_mantle": ("faction_sunvault", "armor", "prismhearth-watch", "spire_gorget", 8, 4),
+        "artifact_graftbark_cuirass": ("faction_thornwake", "armor", "mireford-skirmish", "ford_gorget", 8, 4),
+        "artifact_quenchplate_vambrace": ("faction_brasshollow", "armor", "orevein-contract", "orevein_bastion_gorget", 6, 3),
+        "artifact_fogwake_deckboots": ("faction_veilmourn", "boots", "bellwake-wreck-claim", "bellwake_trailsinger_boots", 6, 3),
+    }
+    manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = manifest.get("object_assets", {})
+    field_sprites = manifest.get("artifact_field_sprites", {})
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    source_payloads: list[bytes] = []
+    for artifact_id, (faction_id, slot, scenario_id, placement_id, x, y) in field_regalia.items():
+        artifact = artifacts.get(artifact_id, {})
+        short_id = artifact_id.removeprefix("artifact_")
+        icon_path = f"res://art/artifacts/runtime/{short_id}.png"
+        field_path = f"res://art/overworld/runtime/objects/artifacts/{short_id}.png"
+        source_path = f"res://art/artifacts/source/generated/field_regalia/{short_id}_source.png"
+        asset_id = f"artifact_field_{short_id}"
+        ensure(artifact.get("rarity") == "uncommon", errors, f"Field regalia {artifact_id} must remain uncommon")
+        ensure(artifact.get("slot") == slot, errors, f"Field regalia {artifact_id} must retain its authored equipment slot")
+        ensure(artifact.get("faction_affinity") == [faction_id], errors, f"Field regalia {artifact_id} must retain one exact faction affinity")
+        ensure(str(artifact.get("ui", {}).get("icon_path", "")) == icon_path, errors, f"Field regalia {artifact_id} must retain its separate inventory icon")
+        entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
+        ensure(field_sprites.get(artifact_id) == asset_id, errors, f"Field regalia {artifact_id} must map to its exact field asset")
+        ensure(entry.get("path") == field_path, errors, f"Field regalia {artifact_id} must retain its exact 512px field path")
+        ensure(entry.get("source_icon") == icon_path, errors, f"Field regalia {artifact_id} must retain its exact 128px inventory-icon provenance")
+        ensure(entry.get("source_generated") == source_path, errors, f"Field regalia {artifact_id} must retain original generated-source provenance")
+        ensure(entry.get("source_model") == "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field", errors, f"Field regalia {artifact_id} must name the built-in image generation source")
+        ensure(entry.get("asset_policy") == "separate_runtime_surfaces_from_shared_original_source", errors, f"Field regalia {artifact_id} must retain separate icon and field curation")
+        field_disk = res_path_to_disk(field_path)
+        source_disk = res_path_to_disk(source_path)
+        ensure(field_disk.is_file() and png_size(field_disk) == (512, 512), errors, f"Field regalia {artifact_id} must own a 512x512 field PNG")
+        ensure(source_disk.is_file() and min(png_size(source_disk)) >= 1024, errors, f"Field regalia {artifact_id} must retain a high-resolution generated source")
+        if source_disk.is_file():
+            source_payloads.append(source_disk.read_bytes())
+        scenario = scenarios.get(scenario_id, {})
+        placements = [row for row in scenario.get("artifact_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
+        ensure(placements == [{"placement_id": placement_id, "artifact_id": artifact_id, "x": x, "y": y}], errors, f"Field regalia {artifact_id} must retain its exact live scenario placement")
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six field-regalia generated sources must be present and distinct")
 
     artifact_rules_text = ARTIFACT_RULES_PATH.read_text(encoding="utf-8")
     action_block = function_block(artifact_rules_text, "artifact_id_for_management_action")
@@ -48573,7 +48621,7 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {}) if isinstance(manifest, dict) else {}
     field_sprites = manifest.get("artifact_field_sprites", {}) if isinstance(manifest, dict) else {}
-    ensure(len(artifacts) == 15, errors, "Overworld artifact pickup adoption must cover the 15 production artifacts")
+    ensure(len(artifacts) == 21, errors, "Overworld artifact pickup adoption must cover the 21 production artifacts")
     icon_ids: list[str] = []
     icon_paths: list[str] = []
     field_asset_ids: list[str] = []
@@ -48600,7 +48648,7 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         if isinstance(field_entry, dict):
             ensure(str(field_entry.get("path", "")) == expected_field_path, errors, f"Artifact {artifact_id} field asset must use its exact runtime path")
             ensure(str(field_entry.get("source_icon", "")) == expected_path, errors, f"Artifact {artifact_id} field asset must retain exact original icon provenance")
-            ensure(str(field_entry.get("source_model", "")) in {"original_identity_preserving_background_extraction", "built_in_image_gen_distinct_transparent_field_composition"}, errors, f"Artifact {artifact_id} field asset must declare its original production model")
+            ensure(str(field_entry.get("source_model", "")) in {"original_identity_preserving_background_extraction", "built_in_image_gen_distinct_transparent_field_composition", "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field"}, errors, f"Artifact {artifact_id} field asset must declare its original production model")
         field_disk_path = res_path_to_disk(expected_field_path)
         ensure(field_disk_path.is_file() and png_size(field_disk_path) == (512, 512), errors, f"Artifact {artifact_id} field asset must be a 512x512 runtime PNG")
         ensure(Path(f"{field_disk_path}.import").is_file(), errors, f"Artifact {artifact_id} field asset is missing Godot import metadata")

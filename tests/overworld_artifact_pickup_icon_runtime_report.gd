@@ -20,6 +20,12 @@ const EXPECTED_ICONS := {
 	"artifact_rainstar_sextant": "res://art/artifacts/runtime/rainstar_sextant.png",
 	"artifact_asterfall_mantle": "res://art/artifacts/runtime/asterfall_mantle.png",
 	"artifact_cometwake_pennon": "res://art/artifacts/runtime/cometwake_pennon.png",
+	"artifact_bridgefire_standard": "res://art/artifacts/runtime/bridgefire_standard.png",
+	"artifact_reedshadow_waders": "res://art/artifacts/runtime/reedshadow_waders.png",
+	"artifact_prismward_mantle": "res://art/artifacts/runtime/prismward_mantle.png",
+	"artifact_graftbark_cuirass": "res://art/artifacts/runtime/graftbark_cuirass.png",
+	"artifact_quenchplate_vambrace": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+	"artifact_fogwake_deckboots": "res://art/artifacts/runtime/fogwake_deckboots.png",
 }
 
 func _ready() -> void:
@@ -136,7 +142,7 @@ func _capture_viewport_if_requested(viewport_size: Vector2i) -> String:
 	var image := get_viewport().get_texture().get_image()
 	if image == null or image.is_empty():
 		return "capture_failed"
-	var path := "%s/asterfall-artifacts-%dx%d.png" % [absolute_dir.trim_suffix("/"), viewport_size.x, viewport_size.y]
+	var path := "%s/field-regalia-artifacts-%dx%d.png" % [absolute_dir.trim_suffix("/"), viewport_size.x, viewport_size.y]
 	if image.save_png(path) != OK:
 		return "capture_failed"
 	return path

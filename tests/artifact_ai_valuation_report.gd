@@ -69,10 +69,10 @@ func _run() -> void:
 
 	var public_targets: Array = report.get("public_targets", []) if report.get("public_targets", []) is Array else []
 	var trailsinger := _target_by_artifact(public_targets, "artifact_trailsinger_boots")
-	var warcrest := _target_by_artifact(public_targets, "artifact_warcrest_pennon")
+	var bridgefire := _target_by_artifact(public_targets, "artifact_bridgefire_standard")
 	var tally := _target_by_artifact(public_targets, "artifact_quarry_tally_rod")
 	var gorget := _target_by_artifact(public_targets, "artifact_bastion_gorget")
-	if trailsinger.is_empty() or warcrest.is_empty() or tally.is_empty() or gorget.is_empty():
+	if trailsinger.is_empty() or bridgefire.is_empty() or tally.is_empty() or gorget.is_empty():
 		_fail("Artifact AI valuation public targets omitted expected artifacts: %s" % public_targets)
 		return
 	if String(trailsinger.get("set_context", "")) != "set_piece" or String(trailsinger.get("public_reason", "")) != "route scouting relic":
@@ -81,8 +81,8 @@ func _run() -> void:
 	if String(tally.get("public_reason", "")) != "economy support relic":
 		_fail("Quarry Tally Rod did not produce economy valuation: %s" % tally)
 		return
-	if String(warcrest.get("public_reason", "")) != "command relic":
-		_fail("Warcrest Pennon did not produce command valuation: %s" % warcrest)
+	if String(bridgefire.get("public_reason", "")) != "economy support relic" or "battle_salvage" not in bridgefire.get("source_contexts", []):
+		_fail("Bridgefire Standard did not preserve economy and battle-salvage valuation: %s" % bridgefire)
 		return
 	if String(gorget.get("public_reason", "")) != "defensive relic":
 		_fail("Bastion Gorget did not produce defensive valuation: %s" % gorget)

@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-live-scenario-lead-overworld-sprites-10184`.
+- Selected implementation slice: `content-faction-field-regalia-artifacts-10184`.
+
+## Faction Field Regalia Artifacts And Original Art
+
+id: `content-faction-field-regalia-artifacts-10184`
+
+Status: completed.
+
+Current finding:
+- the live catalog has 103 units, 112 spells, 60 heroes, and 386 map objects, but only 15 artifacts across 24 authored scenarios and six factions;
+- 57 of the 74 authored artifact pickup nodes repeat Trailsinger Boots, Warcrest Pennon, or Bastion Gorget, while faction artifacts are trinket-only and the first playable scenario for each faction lacks a faction-specific non-trinket equipment choice.
+
+Implementation boundary:
+- add six original uncommon field-regalia artifacts, one per faction, distributed across boots, banner, and armor slots and using only existing movement, scouting, command, income, and resistance bonus contracts;
+- create one distinct 128x128 inventory icon and one separate transparent grounded 512x512 overworld field sprite for every new artifact, retaining high-resolution source art and stable manifest identities;
+- replace one repeated generic pickup in the first live scenario for each faction with its matching regalia, preserving node count, coordinates, content-reference saves, pickup/equipment authority, AI valuation, and existing fallback behavior.
+
+Completion criteria:
+- all six artifacts load through ContentService and ArtifactRules, expose exact taxonomy/effects, auto-equip into their intended non-trinket slots, affect live rules only through existing bonus contracts, and survive save/resume without a save-version change;
+- River Pass, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim materialize the intended faction artifact at the replaced pickup, with collection and equipment verified in the live client;
+- inspected 1280x720 and 1920x1080 captures, artifact icon/field/pickup/equipment/effect/scenario/save validation, core and repository checks, and bounded Linux/Windows export startup pass.
+
+Non-goals:
+- no copied Heroes artifacts, names, iconography, assets, text, or protected visual expression; no new artifact slot or bonus type, save schema, scenario geometry, encounter force, map/RMG behavior, renderer architecture, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- expanded the production artifact catalog from 15 to 21 with Bridgefire Standard, Reedshadow Waders, Prismward Mantle, Graftbark Cuirass, Quenchplate Vambrace, and Fogwake Deckboots, each using existing live movement, scouting, battle, resistance, and income contracts in a distinct non-trinket slot;
+- generated six original transparent high-resolution sources with the built-in image generator, curated separate 128x128 inventory icons and grounded 512x512 field sprites, and registered stable manifest provenance while keeping source art out of release packages;
+- replaced one repeated generic pickup in each faction's first playable scenario, reducing the three-item repeated-pickup total from 57 to 51 while preserving placement ids, coordinates, AI valuation, collection/equipment authority, and save version 9 round trips;
+- inspected icon, field, and live 1280x720/1920x1080 captures; artifact taxonomy/source/set/effect/icon/pickup/AI, core, and repository validation passed; fresh Linux and Windows exports started successfully with all 21 artifact field textures, source art excluded, and identical 242127536-byte PCKs under the 250 MB ceiling; signing, publication, whole-game validation, and release readiness remain unclaimed.
 
 ## Live Scenario Lead Overworld Sprites
 

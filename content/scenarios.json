@@ -225,7 +225,7 @@
       ],
       "artifact_nodes": [
         {"placement_id": "trailsinger_cache", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 0},
-        {"placement_id": "warcrest_ruin", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 1},
+        {"placement_id": "warcrest_ruin", "artifact_id": "artifact_bridgefire_standard", "x": 5, "y": 1},
         {"placement_id": "quarry_tally_cache", "artifact_id": "artifact_quarry_tally_rod", "x": 3, "y": 4},
         {"placement_id": "bastion_vault", "artifact_id": "artifact_bastion_gorget", "x": 7, "y": 2}
       ],
@@ -1969,7 +1969,7 @@
         {"placement_id": "bogbound_oath_riverwatch_hold_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 7, "y": 2, "guard_front_id": "bogbound_survey_guard", "collected_by_faction_id": "faction_embercourt"}
       ],
       "artifact_nodes": [
-        {"placement_id": "bogbound_boots", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 1},
+        {"placement_id": "bogbound_boots", "artifact_id": "artifact_reedshadow_waders", "x": 2, "y": 1},
         {"placement_id": "bogbound_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
         {"placement_id": "riverwatch_gorget", "artifact_id": "artifact_bastion_gorget", "x": 7, "y": 3}
       ],
@@ -2920,7 +2920,7 @@
       "artifact_nodes": [
         {"placement_id": "relay_boots", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 0},
         {"placement_id": "halo_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
-        {"placement_id": "spire_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+        {"placement_id": "spire_gorget", "artifact_id": "artifact_prismward_mantle", "x": 8, "y": 4}
       ],
       "encounters": [
         {
@@ -4111,7 +4111,7 @@
         },
         {
           "placement_id": "ford_gorget",
-          "artifact_id": "artifact_bastion_gorget",
+          "artifact_id": "artifact_graftbark_cuirass",
           "x": 8,
           "y": 4
         }
@@ -4320,7 +4320,7 @@
       ],
       "artifact_nodes": [
         {"placement_id": "orevein_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
-        {"placement_id": "orevein_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
+        {"placement_id": "orevein_bastion_gorget", "artifact_id": "artifact_quenchplate_vambrace", "x": 6, "y": 3},
         {"placement_id": "riverwatch_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
       ],
       "encounters": [
@@ -4472,7 +4472,7 @@
       ],
       "artifact_nodes": [
         {"placement_id": "bellwake_waymark_compass", "artifact_id": "artifact_waymark_compass", "x": 3, "y": 1},
-        {"placement_id": "bellwake_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 6, "y": 3},
+        {"placement_id": "bellwake_trailsinger_boots", "artifact_id": "artifact_fogwake_deckboots", "x": 6, "y": 3},
         {"placement_id": "prismhearth_black_sail_compass", "artifact_id": "artifact_black_sail_compass", "x": 9, "y": 4}
       ],
       "encounters": [

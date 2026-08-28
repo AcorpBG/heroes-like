@@ -473,6 +473,54 @@
       "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
       "background": "transparent"
     },
+    "artifact_field_bridgefire_standard": {
+      "path": "res://art/overworld/runtime/objects/artifacts/bridgefire_standard.png",
+      "source_icon": "res://art/artifacts/runtime/bridgefire_standard.png",
+      "source_generated": "res://art/artifacts/source/generated/field_regalia/bridgefire_standard_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "background": "transparent"
+    },
+    "artifact_field_reedshadow_waders": {
+      "path": "res://art/overworld/runtime/objects/artifacts/reedshadow_waders.png",
+      "source_icon": "res://art/artifacts/runtime/reedshadow_waders.png",
+      "source_generated": "res://art/artifacts/source/generated/field_regalia/reedshadow_waders_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "background": "transparent"
+    },
+    "artifact_field_prismward_mantle": {
+      "path": "res://art/overworld/runtime/objects/artifacts/prismward_mantle.png",
+      "source_icon": "res://art/artifacts/runtime/prismward_mantle.png",
+      "source_generated": "res://art/artifacts/source/generated/field_regalia/prismward_mantle_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "background": "transparent"
+    },
+    "artifact_field_graftbark_cuirass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/graftbark_cuirass.png",
+      "source_icon": "res://art/artifacts/runtime/graftbark_cuirass.png",
+      "source_generated": "res://art/artifacts/source/generated/field_regalia/graftbark_cuirass_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "background": "transparent"
+    },
+    "artifact_field_quenchplate_vambrace": {
+      "path": "res://art/overworld/runtime/objects/artifacts/quenchplate_vambrace.png",
+      "source_icon": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+      "source_generated": "res://art/artifacts/source/generated/field_regalia/quenchplate_vambrace_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "background": "transparent"
+    },
+    "artifact_field_fogwake_deckboots": {
+      "path": "res://art/overworld/runtime/objects/artifacts/fogwake_deckboots.png",
+      "source_icon": "res://art/artifacts/runtime/fogwake_deckboots.png",
+      "source_generated": "res://art/artifacts/source/generated/field_regalia/fogwake_deckboots_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "background": "transparent"
+    },
     "guarded_farmhouse": {
       "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
       "source_trimmed": "res://art/overworld/source/trimmed/dwellings/guarded_farmhouse-trimmed.png"
@@ -4224,7 +4272,13 @@
     "artifact_black_sail_compass": "artifact_field_black_sail_compass",
     "artifact_rainstar_sextant": "artifact_field_rainstar_sextant",
     "artifact_asterfall_mantle": "artifact_field_asterfall_mantle",
-    "artifact_cometwake_pennon": "artifact_field_cometwake_pennon"
+    "artifact_cometwake_pennon": "artifact_field_cometwake_pennon",
+    "artifact_bridgefire_standard": "artifact_field_bridgefire_standard",
+    "artifact_reedshadow_waders": "artifact_field_reedshadow_waders",
+    "artifact_prismward_mantle": "artifact_field_prismward_mantle",
+    "artifact_graftbark_cuirass": "artifact_field_graftbark_cuirass",
+    "artifact_quenchplate_vambrace": "artifact_field_quenchplate_vambrace",
+    "artifact_fogwake_deckboots": "artifact_field_fogwake_deckboots"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",
