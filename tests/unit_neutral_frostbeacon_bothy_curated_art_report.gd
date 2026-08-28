@@ -108,7 +108,7 @@ func _validate_content_authority() -> void:
 	_expect(_resource_cost_contract(site.get("claim_rewards", {})) == {"gold": 90} and _resource_cost_contract(site.get("claim_recruits", {})) == {"unit_neutral_frostbeacon_pikes": 2, "unit_neutral_snowglass_markers": 1}, "Frostbeacon Bothy claim reward/recruit contract changed.")
 	_expect(_resource_cost_contract(site.get("control_income", {})) == {"gold": 35} and _resource_cost_contract(site.get("weekly_recruits", {})) == {"unit_neutral_frostbeacon_pikes": 1}, "Frostbeacon Bothy control income/weekly muster changed.")
 	var encounter: Dictionary = ContentService.get_encounter("encounter_frostbeacon_bothy_watch")
-	_expect(String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "grass" and encounter.get("battlefield_tags", []) == ["open_lane", "reserve_wave"] and int(encounter.get("max_rounds", 0)) == 12, "Frostbeacon Bothy encounter authority changed.")
+	_expect(String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "snow" and encounter.get("battlefield_tags", []) == ["open_lane", "reserve_wave"] and int(encounter.get("max_rounds", 0)) == 12, "Frostbeacon Bothy encounter authority changed.")
 	_report["site_authority"] = {"claim_rewards": site.get("claim_rewards", {}).duplicate(true), "claim_recruits": site.get("claim_recruits", {}).duplicate(true), "control_income": site.get("control_income", {}).duplicate(true), "weekly_recruits": site.get("weekly_recruits", {}).duplicate(true), "encounter_id": encounter.get("id", ""), "enemy_group_id": encounter.get("enemy_group_id", "")}
 	var rows := []
 	for spec_variant in UNITS:
@@ -147,6 +147,7 @@ func _validate_live_frostbeacon_bothy_battle_board() -> void:
 	_expect(String(shared_army.get("id", "")) == SHARED_ARMY_ID and _stack_counts(shared_army) == expected_counts, "Shared Frostbeacon Bothy Watch ids/counts changed.")
 	var placement := {"placement_id": "frostbeacon_bothy_curated_art_fixture", "encounter_id": "encounter_frostbeacon_bothy_watch", "enemy_army": shared_army.duplicate(true), "x": 4, "y": 4, "resolved": false}
 	var battle_payload: Dictionary = BattleRulesScript.create_battle_payload(session, placement)
+	_expect(String(battle_payload.get("terrain", "")) == "snow", "Generated-map Frostbeacon Bothy watch did not enter the snow battlefield.")
 	var enemy_stacks: Array = battle_payload.get("stacks", []).filter(func(stack): return stack is Dictionary and String(stack.get("side", "")) == "enemy")
 	_expect(_battle_stack_counts(enemy_stacks) == expected_counts, "Public Frostbeacon Bothy battle payload changed its exact enemy roster.")
 	for spec_variant in UNITS:

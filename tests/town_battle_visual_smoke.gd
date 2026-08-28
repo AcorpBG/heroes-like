@@ -18,6 +18,31 @@ const BATTLE_TERRAIN_AMBIENT_EXPECTED := {
 	"rough": {"profile_key": "rough", "profile_id": "roughland_dust", "kind": "dust", "count": 12},
 	"road": {"profile_key": "road", "profile_id": "roadside_dust", "kind": "dust", "count": 9},
 	"mire": {"profile_key": "mire", "profile_id": "mire_wisps", "kind": "wisp", "count": 12},
+	"snow": {"profile_key": "snow", "profile_id": "snow_spindrift", "kind": "flake", "count": 10},
+	"coast": {"profile_key": "coast", "profile_id": "coastal_spray", "kind": "spray", "count": 10},
+	"lava": {"profile_key": "lava", "profile_id": "ember_drift", "kind": "ember", "count": 9},
+	"underground": {"profile_key": "underground", "profile_id": "glasscap_motes", "kind": "spore", "count": 11},
+}
+const DISTINCT_BATTLE_BIOME_TEXTURES := {
+	"snow": "res://art/battle/terrain/snow.png",
+	"coast": "res://art/battle/terrain/coast.png",
+	"lava": "res://art/battle/terrain/lava.png",
+	"underground": "res://art/battle/terrain/underground.png",
+}
+const DISTINCT_BATTLE_BIOME_ENCOUNTERS := {
+	"encounter_frostbeacon_bothy_watch": "snow",
+	"encounter_icehook_trapper_lodge_watch": "snow",
+	"encounter_frostwharf_house_watch": "snow",
+	"encounter_tidepool_skiffyard_watch": "coast",
+	"encounter_saltpan_camp_watch": "coast",
+	"encounter_harbor_pilot_house_watch": "coast",
+	"encounter_cinder_kiln_watch": "lava",
+	"encounter_obsidian_scar_watch": "lava",
+	"encounter_charcoal_burners_watch": "lava",
+	"encounter_glowcap_croft_watch": "underground",
+	"encounter_crystal_sump_watch": "underground",
+	"encounter_lantern_warren_watch": "underground",
+	"encounter_basalt_gatehouse_watch": "underground",
 }
 
 func _ready() -> void:
@@ -26,12 +51,47 @@ func _ready() -> void:
 func _run() -> void:
 	var original_color_cue_mode := FrontierVisualKitScript.color_cue_mode()
 	FrontierVisualKitScript.set_color_cue_mode("assisted")
+	if OS.get_environment("BATTLE_BIOME_ONLY") == "1":
+		if not await _run_distinct_battle_biome_smoke():
+			get_tree().quit(1)
+			return
+		FrontierVisualKitScript.set_color_cue_mode(original_color_cue_mode)
+		get_tree().quit(0)
+		return
 	if not await _run_town_smoke():
 		return
 	if not await _run_battle_smoke():
 		return
 	FrontierVisualKitScript.set_color_cue_mode(original_color_cue_mode)
 	get_tree().quit(0)
+
+func _run_distinct_battle_biome_smoke() -> bool:
+	var capture_size := OS.get_environment("BATTLE_BIOME_CAPTURE_SIZE").split("x")
+	if capture_size.size() == 2:
+		get_window().size = Vector2i(int(capture_size[0]), int(capture_size[1]))
+		await get_tree().process_frame
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Battle biome smoke: River Pass fixture has no encounter.")
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	SessionState.set_active_session(session)
+	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	add_child(shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var board = shell.get_node_or_null("%BattleBoard")
+	if board == null or not await _assert_distinct_battle_biome_contract(board, session):
+		shell.queue_free()
+		return false
+	var ambient_ok: bool = await call("_assert_battle_terrain_ambient_contract", board, session)
+	if not ambient_ok:
+		shell.queue_free()
+		return false
+	shell.queue_free()
+	await get_tree().process_frame
+	return true
 
 func _run_town_smoke() -> bool:
 	if not _assert_player_weekly_growth_forecast_parity():
@@ -1030,6 +1090,9 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board does not expose terrain rendering validation.")
 		get_tree().quit(1)
 		return false
+	if not await _assert_distinct_battle_biome_contract(board, session):
+		get_tree().quit(1)
+		return false
 	if not await _assert_battle_terrain_ambient_contract(board, session):
 		get_tree().quit(1)
 		return false
@@ -1253,6 +1316,81 @@ func _run_battle_smoke() -> bool:
 	await get_tree().process_frame
 	if not await _assert_battle_aftermath_transition(session):
 		get_tree().quit(1)
+		return false
+	return true
+
+func _assert_distinct_battle_biome_contract(board: Node, session) -> bool:
+	var original_terrain := String(session.battle.get("terrain", ""))
+	for terrain_value in DISTINCT_BATTLE_BIOME_TEXTURES.keys():
+		var terrain := String(terrain_value)
+		var expected_path := String(DISTINCT_BATTLE_BIOME_TEXTURES.get(terrain, ""))
+		session.battle["terrain"] = terrain
+		board.call("set_battle_state", session)
+		await get_tree().process_frame
+		var summary: Dictionary = board.call("validation_terrain_rendering_summary")
+		if String(summary.get("terrain", "")) != terrain \
+				or String(summary.get("texture_id", "")) != terrain \
+				or String(summary.get("texture_path", "")) != expected_path \
+				or not bool(summary.get("texture_loaded", false)) \
+				or bool(summary.get("fallback", true)) \
+				or bool(summary.get("mapped", true)) \
+				or int(summary.get("texture_width", 0)) != 1408 \
+				or int(summary.get("texture_height", 0)) != 768 \
+				or String(summary.get("rendering_mode", "")) != "continuous_field_with_hex_variation" \
+				or not bool(summary.get("terrain_context_primary", false)) \
+				or not bool(summary.get("terrain_context_preserves_hex_authority", false)):
+			push_error("Battle smoke: distinct %s battlefield did not load through the production terrain path: %s." % [terrain, summary])
+			session.battle["terrain"] = original_terrain
+			board.call("set_battle_state", session)
+			return false
+		if not await _capture_battle_biome_frame(terrain):
+			session.battle["terrain"] = original_terrain
+			board.call("set_battle_state", session)
+			return false
+
+	for encounter_value in DISTINCT_BATTLE_BIOME_ENCOUNTERS.keys():
+		var encounter_id := String(encounter_value)
+		var expected_terrain := String(DISTINCT_BATTLE_BIOME_ENCOUNTERS.get(encounter_id, ""))
+		var encounter: Dictionary = ContentService.get_encounter(encounter_id)
+		if encounter.is_empty() or String(encounter.get("terrain", "")) != expected_terrain:
+			push_error("Battle smoke: %s did not adopt its distinct %s battlefield identity: %s." % [encounter_id, expected_terrain, encounter])
+			return false
+
+	var ninefold = ScenarioFactory.create_session("ninefold-confluence", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	for placement_id in ["ninefold_drowned_reliquary_watch", "ninefold_basalt_gatehouse_watch"]:
+		var placement := _encounter_by_placement(ninefold, placement_id)
+		var expected_terrain := "coast" if placement_id == "ninefold_drowned_reliquary_watch" else "underground"
+		var payload: Dictionary = BattleRules.create_battle_payload(ninefold, placement)
+		if placement.is_empty() or payload.is_empty() or String(payload.get("terrain", "")) != expected_terrain:
+			push_error("Battle smoke: fixed Ninefold encounter %s did not enter a real %s battle: %s." % [placement_id, expected_terrain, payload])
+			return false
+		ninefold.battle = payload
+		var resumed = _clone_session(ninefold)
+		if String(resumed.battle.get("terrain", "")) != expected_terrain or not BattleRules.battle_payload_can_resume(resumed):
+			push_error("Battle smoke: %s battlefield did not survive session serialization and resume validation." % expected_terrain)
+			return false
+
+	session.battle["terrain"] = original_terrain
+	board.call("set_battle_state", session)
+	await get_tree().process_frame
+	return true
+
+func _capture_battle_biome_frame(terrain: String) -> bool:
+	if OS.get_environment("BATTLE_BIOME_CAPTURE") != "1":
+		return true
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var output_dir := "res://.artifacts/battle_biomes"
+	var error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
+	if error != OK and error != ERR_ALREADY_EXISTS:
+		push_error("Battle biome smoke: could not create capture directory: %s." % error)
+		return false
+	var image := get_viewport().get_texture().get_image()
+	var size := image.get_size()
+	var path := "%s/%s_%dx%d.png" % [output_dir, terrain, size.x, size.y]
+	error = image.save_png(path)
+	if error != OK:
+		push_error("Battle biome smoke: could not save %s: %s." % [path, error])
 		return false
 	return true
 
@@ -4533,5 +4671,11 @@ func _assert_battle_initiative_handoff_cue_contract(shell: Node) -> bool:
 func _first_encounter(session) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
 		if encounter is Dictionary:
+			return encounter
+	return {}
+
+func _encounter_by_placement(session, placement_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return encounter
 	return {}

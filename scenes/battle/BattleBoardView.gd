@@ -91,6 +91,11 @@ const TERRAIN_COLORS := {
 	"rough": Color(0.37, 0.32, 0.24, 1.0),
 	"road": Color(0.35, 0.30, 0.24, 1.0),
 	"mire": Color(0.21, 0.27, 0.22, 1.0),
+	"snow": Color(0.58, 0.66, 0.69, 1.0),
+	"coast": Color(0.31, 0.48, 0.49, 1.0),
+	"sand": Color(0.42, 0.45, 0.37, 1.0),
+	"lava": Color(0.28, 0.20, 0.17, 1.0),
+	"underground": Color(0.20, 0.27, 0.29, 1.0),
 }
 const TERRAIN_TEXTURE_ALIASES := {
 	"plains": "grass",
@@ -100,6 +105,11 @@ const TERRAIN_TEXTURE_ALIASES := {
 	"rough": "rough",
 	"road": "road",
 	"mire": "mire",
+	"snow": "snow",
+	"coast": "coast",
+	"sand": "coast",
+	"lava": "lava",
+	"underground": "underground",
 }
 const TERRAIN_TEXTURE_PATHS := {
 	"grass": "res://art/battle/terrain/grass.png",
@@ -108,6 +118,10 @@ const TERRAIN_TEXTURE_PATHS := {
 	"rough": "res://art/battle/terrain/hills.png",
 	"road": "res://art/battle/terrain/road.png",
 	"mire": "res://art/battle/terrain/mire.png",
+	"snow": "res://art/battle/terrain/snow.png",
+	"coast": "res://art/battle/terrain/coast.png",
+	"lava": "res://art/battle/terrain/lava.png",
+	"underground": "res://art/battle/terrain/underground.png",
 }
 const TERRAIN_TEXTURE_MODULATE := Color(0.84, 0.86, 0.80, 0.24)
 const TERRAIN_TEXTURE_READABILITY_WASH := Color(0.02, 0.025, 0.022, 0.045)
@@ -125,6 +139,10 @@ const TERRAIN_AMBIENT_PROFILES := {
 	"rough": {"id": "roughland_dust", "kind": "dust", "count": 12, "color": Color(0.88, 0.70, 0.43, 1.0), "alpha": 0.13, "radius_factor": 0.0022, "drift": Vector2(0.016, 0.006)},
 	"road": {"id": "roadside_dust", "kind": "dust", "count": 9, "color": Color(0.86, 0.72, 0.50, 1.0), "alpha": 0.12, "radius_factor": 0.0021, "drift": Vector2(0.018, 0.005)},
 	"mire": {"id": "mire_wisps", "kind": "wisp", "count": 12, "color": Color(0.50, 0.78, 0.69, 1.0), "alpha": 0.18, "radius_factor": 0.0027, "drift": Vector2(0.011, 0.009)},
+	"snow": {"id": "snow_spindrift", "kind": "flake", "count": 10, "color": Color(0.86, 0.94, 1.0, 1.0), "alpha": 0.16, "radius_factor": 0.0022, "drift": Vector2(0.015, 0.010)},
+	"coast": {"id": "coastal_spray", "kind": "spray", "count": 10, "color": Color(0.66, 0.91, 0.91, 1.0), "alpha": 0.15, "radius_factor": 0.0023, "drift": Vector2(0.014, 0.007)},
+	"lava": {"id": "ember_drift", "kind": "ember", "count": 9, "color": Color(1.0, 0.54, 0.26, 1.0), "alpha": 0.18, "radius_factor": 0.0022, "drift": Vector2(0.008, -0.013)},
+	"underground": {"id": "glasscap_motes", "kind": "spore", "count": 11, "color": Color(0.43, 0.88, 0.86, 1.0), "alpha": 0.17, "radius_factor": 0.0024, "drift": Vector2(0.009, 0.008)},
 }
 const TERRAIN_HEX_TEXTURE_INSET := 1.0
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
