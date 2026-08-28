@@ -3000,8 +3000,8 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	var hero_tile := OverworldRules.hero_position(session)
 	var hero_presentation: Dictionary = shell.call("validation_tile_presentation", hero_tile.x, hero_tile.y)
 	var hero_sprite: Dictionary = hero_presentation.get("hero_presentation", {})
-	if String(hero_sprite.get("sprite_asset_id", "")) != "hero_faction_embercourt" or not bool(hero_sprite.get("uses_faction_sprite", false)):
-		push_error("Overworld smoke: active River Pass hero did not use the exact Embercourt map sprite. presentation=%s" % hero_presentation)
+	if String(hero_sprite.get("sprite_asset_id", "")) != "hero_signature_lyra" or not bool(hero_sprite.get("uses_identity_sprite", false)) or bool(hero_sprite.get("uses_faction_sprite", true)):
+		push_error("Overworld smoke: active River Pass hero did not use Lyra's exact signature map sprite. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
 		return false
 	var hero_layout: Dictionary = hero_sprite.get("layout", {})

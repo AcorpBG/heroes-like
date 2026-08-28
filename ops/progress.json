@@ -15332,10 +15332,10 @@
   "currentNotes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-town-build-muster-popup-catalogs-10184",
-  "currentSliceId": "content-distinct-battle-biome-backdrops-10184",
-  "currentSliceNotes": "Added four original snow/coast/lava/underground battle backdrops and ambient profiles; adopted 13 matching encounters; fixed Ninefold and generated frost/lava payloads, save/resume, 1280/1920 captures, core/repo/editor, Linux native and Windows Wine export startup all passed. No rules, RMG, save-version, or release-readiness claim.",
+  "currentSliceId": "content-signature-hero-overworld-sprites-10184",
+  "currentSliceNotes": "Implemented six original identity-specific 512x512 adventure-map sprites for Lyra, Vaska, Solera, Silsa, Marka, and Ivara with high-resolution generated source provenance. OverworldMapView now resolves hero-id assets before unchanged faction/procedural fallbacks. Focused real scenario starts and save-version 9 round-trips pass at 1280x720 and 1920x1080; captures inspected; core regression, repository/editor, Linux export/headless startup, and Windows export/Wine Boot/MainMenu/native DLL startup pass. Both exports contain the runtime sprite imports, exclude source art, and produce a 236516168-byte PCK under the 250MB cap. Broad Overworld visual smoke remains stopped earlier by its existing 1280px objective-tooltip truncation oracle, outside this art slice. No gameplay, save schema, RMG, signing, publication, whole-game, or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content distinct battle biome backdrops 10184",
+  "currentSliceTitle": "content signature hero overworld sprites 10184",
   "currentSliceUpdatedAt": "2026-08-28T17:59:00Z",
   "deferredRiskRegister": [
     {
@@ -105142,6 +105142,16 @@
       "startedAt": "2026-08-28T21:01:13Z",
       "notes": "Added four original snow/coast/lava/underground battle backdrops and ambient profiles; adopted 13 matching encounters; fixed Ninefold and generated frost/lava payloads, save/resume, 1280/1920 captures, core/repo/editor, Linux native and Windows Wine export startup all passed. No rules, RMG, save-version, or release-readiness claim.",
       "completedAt": "2026-08-28T21:19:05Z"
+    },
+    {
+      "id": "content-signature-hero-overworld-sprites-10184",
+      "title": "content signature hero overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T21:52:38Z",
+      "startedAt": "2026-08-28T21:22:47Z",
+      "notes": "Implemented six original identity-specific 512x512 adventure-map sprites for Lyra, Vaska, Solera, Silsa, Marka, and Ivara with high-resolution generated source provenance. OverworldMapView now resolves hero-id assets before unchanged faction/procedural fallbacks. Focused real scenario starts and save-version 9 round-trips pass at 1280x720 and 1920x1080; captures inspected; core regression, repository/editor, Linux export/headless startup, and Windows export/Wine Boot/MainMenu/native DLL startup pass. Both exports contain the runtime sprite imports, exclude source art, and produce a 236516168-byte PCK under the 250MB cap. Broad Overworld visual smoke remains stopped earlier by its existing 1280px objective-tooltip truncation oracle, outside this art slice. No gameplay, save schema, RMG, signing, publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-28T21:52:38Z"
     }
   ],
   "project": "heroes-like",
@@ -105686,7 +105696,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T21:19:05Z",
+  "updatedAt": "2026-08-28T21:52:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
