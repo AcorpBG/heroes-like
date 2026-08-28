@@ -1165,7 +1165,16 @@ func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_fo
 	var tab_bar: TabBar = battle_tabs.get_tab_bar()
 	if tab_bar == null:
 		return _fail("Battle info-tab navigation is missing its native TabBar.")
+	var details_button: Button = shell.get_node_or_null("%TacticalDetails")
+	var sidebar: Control = shell.get_node_or_null("%SidebarShell")
+	if details_button == null or sidebar == null or not details_button.is_visible_in_tree() or sidebar.is_visible_in_tree():
+		return _fail("Battle tactical disclosure did not begin in the wide field-first state.")
 	var authority_before: Dictionary = _battle_info_tab_authority_snapshot(session)
+	details_button.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+	if not sidebar.is_visible_in_tree() or get_viewport().gui_get_focus_owner() != details_button:
+		return _fail("Battle controller confirm did not disclose the tactical rail and retain control focus.")
 	var reset: Dictionary = shell.call("validation_reset_battle_info_tab_navigation_state")
 	var expected_titles := ["Order", "Focus", "Spell", "Timing"]
 	var raw_titles: Array = reset.get("tab_titles", []) if reset.get("tab_titles", []) is Array else []
@@ -1263,9 +1272,15 @@ func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_fo
 		return _fail("Battle info-tab traversal did not return to the original suggested command: expected=%s got=%s." % [entry_focus, get_viewport().gui_get_focus_owner()])
 	var final_snapshot: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
 	if int(final_snapshot.get("active_tab", -1)) != 3 \
-			or int(final_snapshot.get("change_count", -1)) != 9 \
-			or _battle_info_tab_authority_snapshot(session) != authority_before:
+		or int(final_snapshot.get("change_count", -1)) != 9 \
+		or _battle_info_tab_authority_snapshot(session) != authority_before:
 		return _fail("Battle info-tab navigation lost selected-tab or authority state when returning to commands: %s." % final_snapshot)
+	details_button.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+	if sidebar.is_visible_in_tree() or details_button.text != "Tactical Details" \
+		or _battle_info_tab_authority_snapshot(session) != authority_before:
+		return _fail("Battle controller confirm did not restore the field-first state without authority drift.")
 	return true
 
 func _battle_info_tab_footer_contained(shell: Node) -> bool:

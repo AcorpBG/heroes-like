@@ -27337,9 +27337,15 @@ def validate_battle_info_tab_controller_navigation(errors: list[str]) -> None:
         "await _press_key(KEY_RIGHT)",
         "await _press_key(KEY_LEFT)",
         'expected_titles := ["Order", "Focus", "Spell", "Timing"]',
+        'shell.get_node_or_null("%TacticalDetails")',
+        'shell.get_node_or_null("%SidebarShell")',
+        "details_button.grab_focus()",
+        "await _press_joypad_button(JOY_BUTTON_A)",
+        "not sidebar.is_visible_in_tree()",
         'String(reset.get("tab_bar_boundary_policy", "")) != "retain"',
         'int(reset.get("tab_bar_occurrences", 0)) != 1',
         'int(post_tab_snapshot.get("active_tab", -1)) != 3',
+        'details_button.text != "Tactical Details"',
     ):
         ensure(required_token in focus_text, errors, f"Active-play focus smoke is missing Battle info-tab controller token: {required_token}")
 
@@ -27404,15 +27410,16 @@ def validate_battle_order_tab_compact_initiative_summary(errors: list[str]) -> N
             "BattleRules.describe_initiative_track(session)",
             'initiative_label.get_theme_font("font")',
             "for line_value in visible_lines:",
+            "if initiative_panel.is_visible_in_tree():",
+            "initiative_geometry_exact = widest_line <= initiative_label.size.x + 0.5",
             "handoff != expected_handoff",
-            "widest_line > initiative_label.size.x + 0.5",
-            "initiative_panel.get_global_rect().encloses(initiative_label.get_global_rect())",
+            "not initiative_geometry_exact",
             "_battle_background_authority(session) != authority_before",
         ))
         ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle Order-tab proof must bracket independent content, themed-font, containment, and authority checks in exact order")
         for required_token in (
             'visible_lines.size() != 3',
-            'initiative_label.get_line_count() != 3',
+            'initiative_label.get_line_count() == 3',
             'initiative_label.text.contains(" | Init ")',
             'initiative_label.text.contains(" | HP ")',
             'not initiative_label.tooltip_text.contains(" | Init ")',
@@ -27618,8 +27625,7 @@ def validate_battle_focus_spell_tab_body_containment(errors: list[str]) -> None:
         body = focused_match.group("body")
         ordered = tuple(body.find(token) for token in (
             "_battle_background_authority(session)",
-            "tabs.current_tab = 0",
-            "await _settle()",
+            "tabs.current_tab = 0\n\tawait _settle()",
             "var contained_tabs_height := tabs.size.y",
             'shell.call("validation_snapshot")',
             '_focus_visible_surface_for_test("Active", active_stack, stack_check)',
@@ -27757,8 +27763,7 @@ def validate_battle_timing_tab_compact_summary(errors: list[str]) -> None:
     if focused:
         focused_order = tuple(focused.find(token) for token in (
             "_battle_background_authority(session)",
-            "tabs.current_tab = 0",
-            "await _settle()",
+            "tabs.current_tab = 0\n\tawait _settle()",
             "var contained_tabs_height := tabs.size.y",
             "tabs.current_tab = 3",
             'shell.call("validation_snapshot")',
@@ -34820,23 +34825,32 @@ def validate_battle_sidebar_tactical_card_height_cap(errors: list[str]) -> None:
             'shell.get_node_or_null("%SidebarShell")',
             'shell.get_node_or_null("%CommandPanel")',
             'shell.get_node_or_null("%BattleTabs")',
+            'shell.get_node_or_null("%TacticalDetails")',
+            'shell.get_node_or_null("%Event")',
+            'shell.get_node_or_null("%BattleContext")',
+            'shell.get_node_or_null("%BattleBoard")',
             'shell.get_node_or_null("%InitiativePanel")',
             'shell.get_node_or_null("%ContextPanel")',
             'shell.get_node_or_null("%SpellPanel")',
             'shell.get_node_or_null("%TimingPanel")',
             "var authority_before: Dictionary = session.to_dict()",
             'var expected_titles := ["Order", "Focus", "Spell", "Timing"]',
+            "var compact := viewport_size.x < 1360 or viewport_size.y < 760",
+            "var collapsed_board_rect := board.get_global_rect()",
+            "var default_field_first_exact := not sidebar_shell.is_visible_in_tree()",
+            "details_button.pressed.emit()",
             "for index in range(panels.size()):",
             "titles.append(tabs.get_tab_title(index))",
             "heights.append(tabs.size.y)",
             "pages_contained = pages_contained and tabs.get_global_rect().encloses(panels[index].get_global_rect())",
-            "var compact := viewport_size.x < 1360 or viewport_size.y < 760",
             "tabs.custom_minimum_size.y, 248.0",
             "tabs.size_flags_vertical == Control.SIZE_FILL",
             "heights.all(func(height): return is_equal_approx(height, 248.0))",
             "remaining_rail_gutter >= 80.0",
             "var compact_geometry_exact := not sidebar_shell.is_visible_in_tree()",
             "tabs.current_tab = original_tab",
+            "var restored_board_rect := board.get_global_rect()",
+            "var restored_field_first_exact := not sidebar_shell.is_visible_in_tree()",
             "var authority_exact := session.to_dict() == authority_before",
         ))
         ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "All-size Battle tactical-card proof must traverse all native pages, inspect wide/compact geometry, restore selection, then verify authority")
@@ -34916,9 +34930,10 @@ def validate_battle_sidebar_heraldic_watermark(errors: list[str]) -> None:
         responsive_order = tuple(responsive.find(token) for token in (
             "var available_size := size",
             "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
-            "_sidebar_shell_panel.visible = not compact_layout",
-            "_sidebar_watermark.visible = not compact_layout and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT",
-            "_battle_context_label.visible = not compact_layout",
+            "var tactical_details_visible := not compact_layout and _tactical_details_expanded",
+            "_sidebar_shell_panel.visible = tactical_details_visible",
+            "_sidebar_watermark.visible = tactical_details_visible and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT",
+            "_battle_context_label.visible = tactical_details_visible",
         ))
         ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "BattleShell must derive watermark visibility from the existing logical responsive layout after sidebar visibility")
         ensure(responsive.count("_sidebar_watermark.visible =") == 1, errors, "BattleShell responsive layout must own exactly one watermark visibility assignment")
@@ -34948,14 +34963,19 @@ def validate_battle_sidebar_heraldic_watermark(errors: list[str]) -> None:
             "watermark_image.get_pixel(256, 256).a < 0.95",
             "for viewport_size in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:",
             "frame.size = Vector2(viewport_size)",
-            "var expected_sidebar_visible: bool = viewport_size.x >= 1360 and viewport_size.y >= 760",
-            "var expected_watermark_visible: bool = expected_sidebar_visible and viewport_size.y >= 1000",
+            "var wide_layout: bool = viewport_size.x >= 1360 and viewport_size.y >= 760",
+            "var collapsed_board_rect := board.get_global_rect()",
+            "details_button.pressed.emit()",
+            "var expected_sidebar_visible := wide_layout",
+            "var expected_watermark_visible: bool = wide_layout and viewport_size.y >= 1000",
             "sidebar.visible != expected_sidebar_visible or watermark.visible != expected_watermark_visible",
             "tabs.size.y, 248.0",
             "var watermark_rect := watermark.get_global_rect()",
             "not sidebar_rect.encloses(watermark_rect)",
             "watermark_rect.intersects(command_rect)",
             "watermark_rect.intersects(tabs_rect)",
+            'details_button.text != "Tactical Details"',
+            "board.get_global_rect().is_equal_approx(collapsed_board_rect)",
             "_battle_background_authority(session) != authority_before",
         ))
         ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle watermark proof must validate authority, real asset alpha, four logical sizes, containment, and cleanup in order")
@@ -34976,6 +34996,119 @@ def validate_battle_sidebar_heraldic_watermark(errors: list[str]) -> None:
             ensure(token in focused, errors, f"Focused Battle watermark proof is missing exact passive asset/geometry token: {token}")
         for forbidden in ("get_window().size = viewport_size", "watermark.visible =", "watermark.texture =", "watermark.self_modulate =", "custom_minimum_size =", "size_flags_vertical =", "grab_focus", "Input.", "push_input", "create_timer", "sort(", "erase("):
             ensure(forbidden not in focused, errors, f"Focused Battle watermark proof must remain observational and avoid {forbidden}")
+
+
+def validate_battle_field_first_tactical_disclosure(errors: list[str]) -> None:
+    def gd_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    controller_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
+    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path, visual_path):
+        ensure(path.exists(), errors, f"Missing Battle field-first disclosure owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path, visual_path)):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    controller_text = controller_path.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    layout_text = (ROOT / "tests" / "battle_layout_smoke.gd").read_text(encoding="utf-8")
+    button = scene_node_block(scene_text, "TacticalDetails", "Button")
+    ensure(scene_text.count('[node name="TacticalDetails" type="Button"') == 1 and button, errors, "BattleShell must author exactly one TacticalDetails button")
+    if button:
+        ensure(scene_node_parent(scene_text, "TacticalDetails", "Button") == "ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Header", errors, "Battle TacticalDetails must remain overlaid in the existing Header allocation without growing the TopBar minimum")
+        for token in (
+            "unique_name_in_owner = true",
+            "visible = false",
+            "layout_mode = 1",
+            "anchors_preset = 1",
+            "anchor_left = 1.0",
+            "anchor_right = 1.0",
+            "offset_left = -124.0",
+            "offset_bottom = 30.0",
+            "grow_horizontal = 0",
+            "focus_mode = 2",
+            "clip_text = true",
+            'text = "Tactical Details"',
+            'accessibility_name = "Tactical details"',
+        ):
+            ensure(button.count(token) == 1, errors, f"Battle TacticalDetails is missing exact authored token: {token}")
+        for forbidden in ("script =", "shortcut =", "button_pressed", "toggle_mode", "disabled = true"):
+            ensure(forbidden not in button, errors, f"Battle TacticalDetails must remain one ordinary explicit action without {forbidden}")
+
+    for token in (
+        "@onready var _tactical_details_button: Button = %TacticalDetails",
+        "var _tactical_details_expanded := false",
+        "_tactical_details_button.pressed.connect(_on_tactical_details_pressed)",
+        "_style_action_button(_tactical_details_button, false, 124)",
+        "_tactical_details_button.custom_minimum_size = Vector2.ZERO",
+    ):
+        ensure(shell_text.count(token) == 1, errors, f"Battle tactical disclosure lifecycle is missing exact token: {token}")
+    focus_cycle = gd_block(shell_text, "_configure_battle_keyboard_focus")
+    ensure(focus_cycle.count("_tactical_details_button,") == 1, errors, "Battle TacticalDetails must appear exactly once in the normal keyboard/controller focus cycle")
+    responsive = gd_block(shell_text, "_apply_responsive_layout")
+    for token in (
+        "var tactical_details_visible := not compact_layout and _tactical_details_expanded",
+        "_tactical_details_button.visible = not compact_layout",
+        "_sidebar_shell_panel.visible = tactical_details_visible",
+        "_sidebar_watermark.visible = tactical_details_visible and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT",
+        "_battle_context_label.visible = tactical_details_visible",
+        "_event_label.visible = tactical_details_visible",
+        "_sync_tactical_details_button()",
+    ):
+        ensure(responsive.count(token) == 1, errors, f"Battle field-first responsive layout is missing exact token: {token}")
+    for forbidden in ("queue_free", "reparent", "remove_child", "BattleRules", "SessionState", "SaveService", "AppRouter", "create_timer"):
+        ensure(forbidden not in responsive, errors, f"Battle disclosure must remain presentation-only and avoid {forbidden}")
+    pressed = gd_block(shell_text, "_on_tactical_details_pressed")
+    sync = gd_block(shell_text, "_sync_tactical_details_button")
+    for token in (
+        "if _compact_layout_active:",
+        "_tactical_details_expanded = not _tactical_details_expanded",
+        "_apply_responsive_layout()",
+        "_tactical_details_button.grab_focus()",
+        'call_deferred("_configure_battle_keyboard_focus", false)',
+    ):
+        ensure(pressed.count(token) == 1, errors, f"Battle tactical disclosure press handler is missing exact token: {token}")
+    for token in (
+        '"Hide Details" if _tactical_details_expanded else "Tactical Details"',
+        '"%s the full tactical report and battle detail rail." % action',
+        "_tactical_details_button.accessibility_name = _tactical_details_button.text",
+        "_tactical_details_button.accessibility_description = _tactical_details_button.tooltip_text",
+    ):
+        ensure(sync.count(token) == 1, errors, f"Battle tactical disclosure semantic sync is missing exact token: {token}")
+    for block_name, block in (("pressed", pressed), ("sync", sync)):
+        for forbidden in ("BattleRules", "SessionState", "SaveService", "AppRouter", "Input.", "create_timer", "await ", "queue_free", "reparent"):
+            ensure(forbidden not in block, errors, f"Battle disclosure {block_name} helper must not change gameplay/authority through {forbidden}")
+
+    focused = gd_block(controller_text, "_validate_battle_sidebar_watermark_responsiveness")
+    visual = gd_block(visual_text, "_battle_sidebar_tactical_card_contract")
+    for block_name, block in (("focused", focused), ("visual", visual)):
+        for token in (
+            '"%TacticalDetails"',
+            '"%Event"',
+            '"%BattleContext"',
+            '"%BattleBoard"',
+            "details_button.pressed.emit()",
+            'details_button.text != "Tactical Details"' if block_name == "focused" else 'details_button.text == "Tactical Details"',
+            "is_equal_approx(collapsed_board_rect)",
+        ):
+            ensure(token in block, errors, f"Battle {block_name} disclosure runtime proof is missing token: {token}")
+        for forbidden in ("_on_tactical_details_pressed", "_tactical_details_expanded =", "visible =", "custom_minimum_size =", "BattleRules.perform", "SaveService", "create_timer"):
+            ensure(forbidden not in block, errors, f"Battle {block_name} disclosure proof must use the public control without bypass/mutation through {forbidden}")
+    for token in (
+        'not bool(hex_summary.get("terrain_single_board_backdrop", false))',
+        'String(terrain_summary.get("rendering_mode", "")) != "continuous_field_with_hex_variation"',
+        'String(terrain_summary.get("texture_sample_mode", "")) != "continuous_field_plus_subordinate_per_hex_variation"',
+        'not bool(terrain_summary.get("terrain_context_primary", false))',
+        'not bool(terrain_summary.get("terrain_hex_variation_subordinate", false))',
+    ):
+        ensure(layout_text.count(token) == 1, errors, f"Battle layout compatibility must observe the shipped continuous terrain contract: {token}")
+    ensure('"hex_snapped_texture"' not in layout_text, errors, "Battle layout compatibility must not restore the superseded per-cell texture renderer oracle")
 
 
 def validate_battle_footer_heraldic_watermark(errors: list[str]) -> None:
@@ -71308,6 +71441,7 @@ def main() -> int:
     validate_battle_movement_range_perimeter_contour(errors)
     validate_battle_sidebar_tactical_card_height_cap(errors)
     validate_battle_sidebar_heraldic_watermark(errors)
+    validate_battle_field_first_tactical_disclosure(errors)
     validate_battle_footer_heraldic_watermark(errors)
     validate_battle_terrain_context_and_system_frame(errors)
     validate_battle_objective_pressure_slice(errors)

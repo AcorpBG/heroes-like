@@ -244,6 +244,10 @@ func _validate_battle_sidebar_watermark_responsiveness() -> bool:
 	var sidebar: PanelContainer = shell.get_node("%SidebarShell")
 	var command_panel: PanelContainer = shell.get_node("%CommandPanel")
 	var tabs: TabContainer = shell.get_node("%BattleTabs")
+	var details_button: Button = shell.get_node("%TacticalDetails")
+	var event_label: Label = shell.get_node("%Event")
+	var context_label: Label = shell.get_node("%BattleContext")
+	var board: Control = shell.get_node("%BattleBoard")
 	var watermark: TextureRect = shell.get_node("%SidebarWatermark")
 	var watermark_texture: Texture2D = watermark.texture
 	var watermark_image: Image = watermark_texture.get_image() if watermark_texture != null else null
@@ -269,8 +273,18 @@ func _validate_battle_sidebar_watermark_responsiveness() -> bool:
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:
 		frame.size = Vector2(viewport_size)
 		await _settle()
-		var expected_sidebar_visible: bool = viewport_size.x >= 1360 and viewport_size.y >= 760
-		var expected_watermark_visible: bool = expected_sidebar_visible and viewport_size.y >= 1000
+		var wide_layout: bool = viewport_size.x >= 1360 and viewport_size.y >= 760
+		var collapsed_board_rect := board.get_global_rect()
+		if sidebar.visible or event_label.visible or context_label.visible or details_button.visible != wide_layout:
+			frame.queue_free()
+			SessionState.active_session = original_session
+			get_window().size = original_window_size
+			return _fail_bool("Battle field-first default visibility mismatch at %s." % viewport_size)
+		if wide_layout:
+			details_button.pressed.emit()
+			await _settle()
+		var expected_sidebar_visible := wide_layout
+		var expected_watermark_visible: bool = wide_layout and viewport_size.y >= 1000
 		var row := {
 			"viewport": viewport_size,
 			"sidebar_visible": sidebar.visible,
@@ -307,6 +321,16 @@ func _validate_battle_sidebar_watermark_responsiveness() -> bool:
 					SessionState.active_session = original_session
 					get_window().size = original_window_size
 					return _fail_bool("Battle sidebar watermark was not confined to reclaimed rail space at %s: watermark=%s sidebar=%s command=%s tabs=%s." % [viewport_size, watermark_rect, sidebar_rect, command_rect, tabs_rect])
+		if wide_layout:
+			details_button.pressed.emit()
+			await _settle()
+			if sidebar.visible or event_label.visible or context_label.visible \
+				or details_button.text != "Tactical Details" \
+				or not board.get_global_rect().is_equal_approx(collapsed_board_rect):
+				frame.queue_free()
+				SessionState.active_session = original_session
+				get_window().size = original_window_size
+				return _fail_bool("Battle tactical details did not restore exact field-first geometry at %s." % viewport_size)
 	if _battle_background_authority(session) != authority_before:
 		frame.queue_free()
 		SessionState.active_session = original_session
@@ -1288,27 +1312,30 @@ func _validate_order_tab_compact_summary(shell: Control, session, width: int) ->
 	]
 	var full_track := BattleRules.describe_initiative_track(session)
 	var expected_tooltip := "%s\n\n%s" % [String(expected_handoff.get("tooltip_text", "")), full_track]
+	var initiative_geometry_exact := true
 	var visible_lines := initiative_label.text.split("\n", false)
 	var font := initiative_label.get_theme_font("font")
 	var font_size := initiative_label.get_theme_font_size("font_size")
 	var widest_line := 0.0
 	for line_value in visible_lines:
 		widest_line = maxf(widest_line, font.get_string_size(String(line_value), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+	if initiative_panel.is_visible_in_tree():
+		initiative_geometry_exact = widest_line <= initiative_label.size.x + 0.5 \
+			and initiative_panel.get_global_rect().encloses(initiative_label.get_global_rect()) \
+			and initiative_label.get_line_count() == 3
 	if (
 		handoff != expected_handoff
 		or initiative_label.text != expected_visible
 		or String(snapshot.get("initiative_visible_text", "")) != expected_visible
 		or initiative_label.tooltip_text != expected_tooltip
 		or visible_lines.size() != 3
-		or initiative_label.get_line_count() != 3
-		or widest_line > initiative_label.size.x + 0.5
-		or not initiative_panel.get_global_rect().encloses(initiative_label.get_global_rect())
+		or not initiative_geometry_exact
 		or initiative_label.text.contains(" | Init ")
 		or initiative_label.text.contains(" | HP ")
 		or not initiative_label.tooltip_text.contains(" | Init ")
 		or not initiative_label.tooltip_text.contains(" | HP ")
 	):
-		return _fail_bool("Battle Order-tab compact initiative summary mismatch at %d: visible=%s expected=%s width=%s/%s lines=%s/%s tooltip=%s expected_tooltip=%s handoff=%s expected_handoff=%s label_rect=%s panel_rect=%s." % [width, initiative_label.text, expected_visible, widest_line, initiative_label.size.x, visible_lines.size(), initiative_label.get_line_count(), initiative_label.tooltip_text, expected_tooltip, handoff, expected_handoff, initiative_label.get_global_rect(), initiative_panel.get_global_rect()])
+		return _fail_bool("Battle Order-tab compact initiative summary mismatch at %d: visible=%s expected=%s width=%s/%s lines=%s/%s tooltip=%s expected_tooltip=%s handoff=%s expected_handoff=%s label_rect=%s panel_rect=%s panel_visible=%s sidebar_visible=%s shell_size=%s." % [width, initiative_label.text, expected_visible, widest_line, initiative_label.size.x, visible_lines.size(), initiative_label.get_line_count(), initiative_label.tooltip_text, expected_tooltip, handoff, expected_handoff, initiative_label.get_global_rect(), initiative_panel.get_global_rect(), initiative_panel.is_visible_in_tree(), shell.get_node("%SidebarShell").is_visible_in_tree(), shell.size])
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting the Battle Order-tab compact summary changed session/save/settings authority at %d." % width)
 	return true
@@ -1326,15 +1353,16 @@ func _validate_battle_info_tab_header_fit(shell: Control, session, width: int) -
 	var bar_rect := Rect2(Vector2.ZERO, tab_bar.size)
 	var previous_right := 0.0
 	var total_width := 0.0
-	var geometry_exact := actual_titles == expected_visible_titles and semantic_tabs.size() == expected_semantic_titles.size()
+	var geometry_exact := true
 	var semantic_exact := semantic_tabs.size() == expected_semantic_titles.size()
 	for index in range(expected_visible_titles.size()):
 		var rect := tab_bar.get_tab_rect(index)
-		geometry_exact = geometry_exact \
-			and rect.size.x > 0.0 \
-			and rect.size.y > 0.0 \
-			and bar_rect.encloses(rect) \
-			and rect.position.x + 0.01 >= previous_right
+		if battle_tabs.is_visible_in_tree():
+			geometry_exact = geometry_exact \
+				and rect.size.x > 0.0 \
+				and rect.size.y > 0.0 \
+				and bar_rect.encloses(rect) \
+				and rect.position.x + 0.01 >= previous_right
 		previous_right = rect.end.x
 		total_width += rect.size.x
 		if index < semantic_tabs.size() and semantic_tabs[index] is Dictionary:
@@ -1349,7 +1377,9 @@ func _validate_battle_info_tab_header_fit(shell: Control, session, width: int) -
 				and String(battle_tabs.tooltip_text).contains(summary)
 		else:
 			semantic_exact = false
-	geometry_exact = geometry_exact and total_width <= tab_bar.size.x + 0.01 and previous_right <= tab_bar.size.x + 0.01
+	if battle_tabs.is_visible_in_tree():
+		geometry_exact = geometry_exact and total_width <= tab_bar.size.x + 0.01 and previous_right <= tab_bar.size.x + 0.01
+	semantic_exact = semantic_exact and actual_titles == expected_visible_titles
 	var selected: Dictionary = readiness.get("selected_tab", {}) if readiness.get("selected_tab", {}) is Dictionary else {}
 	semantic_exact = semantic_exact \
 		and String(selected.get("base_title", "")) == expected_semantic_titles[battle_tabs.current_tab] \
@@ -1368,6 +1398,7 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 	var sidebar_shell: PanelContainer = shell.get_node("%SidebarShell")
 	var command_panel: PanelContainer = shell.get_node("%CommandPanel")
 	var tabs: TabContainer = shell.get_node("%BattleTabs")
+	var details_button: Button = shell.get_node("%TacticalDetails")
 	var footer: Control = shell.get_node("%Footer")
 	if not is_equal_approx(tabs.custom_minimum_size.y, 248.0) \
 		or tabs.size_flags_vertical != Control.SIZE_FILL:
@@ -1401,6 +1432,11 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 			return _fail_bool("Battle system action row containment/order mismatch at %d percent scale: row=%s control=%s rect=%s previous_right=%s." % [SettingsService.ui_scale_percent(), system_actions_rect, control.name, control_rect, previous_system_right])
 		previous_system_right = control_rect.end.x
 	var initial_tab := tabs.current_tab
+	var opened_details := false
+	if width >= 1360 and not sidebar_shell.is_visible_in_tree():
+		details_button.pressed.emit()
+		await _settle()
+		opened_details = true
 	tabs.current_tab = 0
 	await _settle()
 	var contained_tabs_height := tabs.size.y
@@ -1463,23 +1499,30 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 		var texts: Array = row.get("texts", [])
 		var tooltips: Array = row.get("tooltips", [])
 		var line_counts: Array = row.get("line_counts", [])
-		var geometry_exact := is_equal_approx(tabs.size.y, contained_tabs_height) \
-			and shell.get_global_rect().encloses(footer.get_global_rect()) \
-			and tabs.get_global_rect().encloses(panel.get_global_rect())
+		var geometry_exact := true
+		if panel.is_visible_in_tree():
+			geometry_exact = is_equal_approx(tabs.size.y, contained_tabs_height) \
+				and shell.get_global_rect().encloses(footer.get_global_rect()) \
+				and tabs.get_global_rect().encloses(panel.get_global_rect())
 		for index in range(labels.size()):
 			var label: Label = labels[index]
 			var widest_line := _widest_themed_label_line_for_test(label)
 			geometry_exact = geometry_exact \
 				and label.text == String(texts[index]) \
-				and label.tooltip_text == String(tooltips[index]) \
-				and label.get_line_count() == int(line_counts[index]) \
-				and label.get_visible_line_count() == int(line_counts[index]) \
-				and widest_line <= label.size.x + 0.5 \
-				and panel.get_global_rect().encloses(label.get_global_rect())
+				and label.tooltip_text == String(tooltips[index])
+			if panel.is_visible_in_tree():
+				geometry_exact = geometry_exact \
+					and label.get_line_count() == int(line_counts[index]) \
+					and label.get_visible_line_count() == int(line_counts[index]) \
+					and widest_line <= label.size.x + 0.5 \
+					and panel.get_global_rect().encloses(label.get_global_rect())
 		if not geometry_exact:
 			return _fail_bool("Battle Focus/Spell compact body overflow/semantic mismatch at %d tab %s: tabs=%s contained_height=%s panel=%s footer=%s shell=%s labels=%s expected=%s tooltips=%s expected_tooltips=%s." % [width, row.get("tab"), tabs.get_global_rect(), contained_tabs_height, panel.get_global_rect(), footer.get_global_rect(), shell.get_global_rect(), labels.map(func(label): return {"text": label.text, "tooltip": label.tooltip_text, "rect": label.get_global_rect(), "lines": label.get_line_count(), "visible_lines": label.get_visible_line_count(), "widest": _widest_themed_label_line_for_test(label)}), texts, labels.map(func(label): return label.tooltip_text), tooltips])
 	tabs.current_tab = initial_tab
 	await _settle()
+	if opened_details:
+		details_button.pressed.emit()
+		await _settle()
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting the Battle Focus/Spell compact bodies changed session/save/settings authority at %d." % width)
 	return true
@@ -1490,6 +1533,12 @@ func _validate_battle_timing_tab_body_fit(shell: Control, session, width: int) -
 	var panel: Control = shell.get_node("%TimingPanel")
 	var timing_label: Label = shell.get_node("%Timing")
 	var footer: Control = shell.get_node("%Footer")
+	var details_button: Button = shell.get_node("%TacticalDetails")
+	var opened_details := false
+	if width >= 1360 and not tabs.is_visible_in_tree():
+		details_button.pressed.emit()
+		await _settle()
+		opened_details = true
 	var initial_tab := tabs.current_tab
 	tabs.current_tab = 0
 	await _settle()
@@ -1501,15 +1550,19 @@ func _validate_battle_timing_tab_body_fit(shell: Control, session, width: int) -
 	var full_board := BattleRules.describe_spell_timing_board(session)
 	var expected_lines := _timing_visible_lines_for_test(timing_label, timing_check)
 	var expected_visible := "\n".join(expected_lines)
+	if not panel.is_visible_in_tree():
+		expected_visible = String(snapshot.get("spell_timing_visible_text", ""))
 	var expected_tooltip := "%s\n\n%s" % [String(timing_check.get("tooltip_text", "")), full_board]
 	var widest_line := _widest_themed_label_line_for_test(timing_label)
-	var geometry_exact := is_equal_approx(tabs.size.y, contained_tabs_height) \
-		and shell.get_global_rect().encloses(footer.get_global_rect()) \
-		and tabs.get_global_rect().encloses(panel.get_global_rect()) \
-		and panel.get_global_rect().encloses(timing_label.get_global_rect()) \
-		and timing_label.get_line_count() == 3 \
-		and timing_label.get_visible_line_count() == 3 \
-		and widest_line <= timing_label.size.x + 0.5
+	var geometry_exact := true
+	if panel.is_visible_in_tree():
+		geometry_exact = is_equal_approx(tabs.size.y, contained_tabs_height) \
+			and shell.get_global_rect().encloses(footer.get_global_rect()) \
+			and tabs.get_global_rect().encloses(panel.get_global_rect()) \
+			and panel.get_global_rect().encloses(timing_label.get_global_rect()) \
+			and timing_label.get_line_count() == 3 \
+			and timing_label.get_visible_line_count() == 3 \
+			and widest_line <= timing_label.size.x + 0.5
 	var semantics_exact := timing_label.text == expected_visible \
 		and timing_label.tooltip_text == expected_tooltip \
 		and String(snapshot.get("spell_timing_text", "")) == full_board \
@@ -1523,6 +1576,9 @@ func _validate_battle_timing_tab_body_fit(shell: Control, session, width: int) -
 		return _fail_bool("Battle Timing compact body mismatch at %d: text=%s expected=%s tooltip=%s expected_tooltip=%s width=%s/%s lines=%s/%s tabs=%s contained_height=%s panel=%s label=%s footer=%s shell=%s timing=%s." % [width, timing_label.text, expected_visible, timing_label.tooltip_text, expected_tooltip, widest_line, timing_label.size.x, timing_label.get_line_count(), timing_label.get_visible_line_count(), tabs.get_global_rect(), contained_tabs_height, panel.get_global_rect(), timing_label.get_global_rect(), footer.get_global_rect(), shell.get_global_rect(), timing_check])
 	tabs.current_tab = initial_tab
 	await _settle()
+	if opened_details:
+		details_button.pressed.emit()
+		await _settle()
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting the Battle Timing compact body changed session/save/settings authority at %d." % width)
 	return true

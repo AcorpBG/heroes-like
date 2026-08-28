@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Generated Overworld blocker-mass presentation is completed with placement-aware painted compositions, exact body/pathing/save authority, inspected Large-map captures, focused runtime proof, and bounded Linux/Windows export/startup evidence. Broader terrain painting and shell-density visual work remain separate future slices.",
+  "currentNotes": "Battle field-first tactical disclosure is completed: the wide first view gains about 25% visible battlefield area while the exact existing tactical rail and dispatch remain recoverable by one accessible control; compact layouts and gameplay authority are unchanged.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-generated-overworld-blocker-mass-presentation-10184",
-  "currentSliceId": "ux-generated-overworld-blocker-mass-presentation-10184",
-  "currentSliceNotes": "Completed: generated blocker placements compose deterministic biome-matched painted anchors across exact body spans; focused pathing/save restore, inspected 108x108 Large-map capture, compatibility/static/editor, and bounded Linux/Windows export-startup gates pass. Full terrain/UI art-direction parity remains unclaimed.",
+  "currentSlice": "presentation-battle-field-first-tactical-disclosure-10184",
+  "currentSliceId": "presentation-battle-field-first-tactical-disclosure-10184",
+  "currentSliceNotes": "Completed: inspected 1920 pixels show about 25% more battlefield area; mouse/keyboard/controller disclosure restores the exact rail/dispatch and exact collapsed geometry; Battle compatibility, static/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Overworld Blocker-Mass Presentation",
-  "currentSliceUpdatedAt": "2026-08-27T23:29:12Z",
+  "currentSliceTitle": "Battle Field-First Tactical Disclosure",
+  "currentSliceUpdatedAt": "2026-08-28T01:16:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105031,6 +105031,36 @@
       "blockedReason": null,
       "notes": "Completed from three original visual concepts plus direct before/after generated-map captures. Production now represents each generated blocker placement with one to three deterministic biome-matched painted anchors selected across its exact body span. Focused runtime preserves 24 exact body cells and public save/reload authority while rebuilding 7 anchors across 4 placements; the inspected 108x108 Large save composes 2698 anchors across 1776 placements / 5459 exact body cells with complete placement coverage. Generated render-performance, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The concepts still expose broader terrain-painting and shell-density gaps, which are not claimed complete here.",
       "completedAt": "2026-08-27T23:29:12Z",
+      "remainingWork": ""
+    },
+    {
+      "id": "presentation-battle-field-first-tactical-disclosure-10184",
+      "title": "Battle Field-First Tactical Disclosure",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T01:16:49Z",
+      "startedAt": "2026-08-28T00:22:05Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/ui_runtime_skin_visual_report.gd",
+        "tests/battle_layout_smoke.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "purpose": "Make the wide Battle first view battlefield-dominant while retaining the exact existing tactical rail and dispatch behind one explicit, accessible disclosure control.",
+      "completionCriteria": "Inspected 1920 pixels show materially larger default field geometry; focused disclosure and resize runtime proves exact content/focus/restoration and unchanged Battle/session/save authority; compatibility, static/editor, and bounded platform startup gates pass.",
+      "nonGoals": [
+        "No BattleBoard terrain, grid, token, art, initiative, VFX, audio, camera, animation, combat, AI, balance, content, save/schema, map, generation, or Native RMG change.",
+        "No compact-layout redesign, information removal, packaged Battle interaction, hardware certification, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "notes": "Completed from fresh 1280/1920 current captures, three original built-in image-generation concepts, and genre-level classic hero-strategy composition. The 1920 first view gains about 25% visible battlefield area; one accessible Tactical Details control restores the exact existing rail/dispatch and closes to exact field-first geometry. Wide/compact Battle layout, controller, keyboard focus, accessibility, quick-resolve, withdrawal, animation, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-28T01:16:49Z",
       "remainingWork": ""
     }
   ],

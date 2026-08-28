@@ -363,19 +363,34 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 	var sidebar_shell := shell.get_node_or_null("%SidebarShell") as PanelContainer
 	var command_panel := shell.get_node_or_null("%CommandPanel") as PanelContainer
 	var tabs := shell.get_node_or_null("%BattleTabs") as TabContainer
+	var details_button := shell.get_node_or_null("%TacticalDetails") as Button
+	var event_label := shell.get_node_or_null("%Event") as Label
+	var context_label := shell.get_node_or_null("%BattleContext") as Label
+	var board := shell.get_node_or_null("%BattleBoard") as Control
 	var panels: Array[Control] = [
 		shell.get_node_or_null("%InitiativePanel") as Control,
 		shell.get_node_or_null("%ContextPanel") as Control,
 		shell.get_node_or_null("%SpellPanel") as Control,
 		shell.get_node_or_null("%TimingPanel") as Control,
 	]
-	if sidebar_shell == null or command_panel == null or tabs == null or panels.any(func(panel): return panel == null):
+	if sidebar_shell == null or command_panel == null or tabs == null or details_button == null or event_label == null or context_label == null or board == null or panels.any(func(panel): return panel == null):
 		return {"ok": false, "missing_authored_control": true}
 	var session = SessionState.active_session
 	var authority_before: Dictionary = session.to_dict()
 	var original_tab := tabs.current_tab
 	var expected_titles := ["Order", "Focus", "Spell", "Timing"]
 	var tab_plaque_contract := _shared_tab_plaque_contract(tabs, expected_titles, 1.0)
+	var compact := viewport_size.x < 1360 or viewport_size.y < 760
+	var collapsed_board_rect := board.get_global_rect()
+	var default_field_first_exact := not sidebar_shell.is_visible_in_tree() \
+		and not event_label.is_visible_in_tree() \
+		and not context_label.is_visible_in_tree() \
+		and details_button.is_visible_in_tree() == not compact \
+		and details_button.text == "Tactical Details"
+	if not compact:
+		details_button.pressed.emit()
+		await get_tree().process_frame
+		await get_tree().process_frame
 	var titles: Array[String] = []
 	var heights: Array[float] = []
 	var pages_contained := true
@@ -389,11 +404,13 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 	var sidebar_rect := sidebar_shell.get_global_rect()
 	var command_rect := command_panel.get_global_rect()
 	var tabs_rect := tabs.get_global_rect()
-	var compact := viewport_size.x < 1360 or viewport_size.y < 760
 	var remaining_rail_gutter := sidebar_rect.end.y - tabs_rect.end.y
 	var authored_height_exact := is_equal_approx(tabs.custom_minimum_size.y, 248.0) \
 		and tabs.size_flags_vertical == Control.SIZE_FILL
 	var wide_geometry_exact := sidebar_shell.is_visible_in_tree() \
+		and event_label.is_visible_in_tree() \
+		and context_label.is_visible_in_tree() \
+		and details_button.text == "Hide Details" \
 		and heights.all(func(height): return is_equal_approx(height, 248.0)) \
 		and sidebar_rect.encloses(command_rect) \
 		and sidebar_rect.encloses(tabs_rect) \
@@ -403,10 +420,20 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 		and remaining_rail_gutter >= 80.0
 	var compact_geometry_exact := not sidebar_shell.is_visible_in_tree()
 	tabs.current_tab = original_tab
+	if not compact:
+		details_button.pressed.emit()
 	await get_tree().process_frame
 	await get_tree().process_frame
+	var restored_board_rect := board.get_global_rect()
+	var restored_field_first_exact := not sidebar_shell.is_visible_in_tree() \
+		and not event_label.is_visible_in_tree() \
+		and not context_label.is_visible_in_tree() \
+		and details_button.text == "Tactical Details" \
+		and restored_board_rect.is_equal_approx(collapsed_board_rect)
 	var authority_exact := session.to_dict() == authority_before
-	var ok := authored_height_exact \
+	var ok := default_field_first_exact \
+		and restored_field_first_exact \
+		and authored_height_exact \
 		and titles == expected_titles \
 		and bool(tab_plaque_contract.get("ok", false)) \
 		and authority_exact \
@@ -414,6 +441,10 @@ func _battle_sidebar_tactical_card_contract(shell: Node, viewport_size: Vector2i
 	return {
 		"ok": ok,
 		"compact": compact,
+		"default_field_first_exact": default_field_first_exact,
+		"restored_field_first_exact": restored_field_first_exact,
+		"collapsed_board_rect": collapsed_board_rect,
+		"restored_board_rect": restored_board_rect,
 		"authored_height_exact": authored_height_exact,
 		"titles": titles,
 		"tab_plaques": tab_plaque_contract,

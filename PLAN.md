@@ -26,6 +26,36 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Battle Field-First Tactical Disclosure
+
+id: `presentation-battle-field-first-tactical-disclosure-10184`
+
+Status: completed.
+
+Result:
+- the 1920x1080 first view now keeps the existing battlefield, command dock, initiative ribbon, Header/Status/Pressure, and board footer visible while collapsing the full tactical rail plus Event/BattleContext behind one explicit `Tactical Details` control; the inspected battlefield frame grows from roughly 1640x677 to 1892x735 pixels, about 25% more visible field area;
+- mouse, keyboard, and controller activation restore the unchanged Order/Focus/Spell/Timing rail and dispatch/context values, retain the selected native tab and control focus, and close back to the exact field-first board geometry without battle/session/save/settings/route mutation;
+- 1920x1080, 1280x720, and 1024x600 Battle layout gates, controller board navigation, active-play keyboard focus, accessibility semantics, quick resolve, withdrawal, battle animation, core systems, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Platform evidence remains export/startup only, not packaged Battle interaction or hardware certification.
+
+Current finding:
+- fresh 1280x720 and 1920x1080 Battle captures show a richly painted and readable battlefield, but the wide first view permanently spends substantial width on the full Order/Focus/Spell/Timing rail and substantial height on multi-line dispatch/context copy, making the screen read like a tactical dashboard around a smaller board;
+- three original genre-informed concepts and classic hero-strategy reference composition consistently keep the battlefield and unit silhouettes primary, move commander/timeline identity to thin edges, and reveal detailed tactical reporting only on demand;
+- completed Battle slices already own terrain continuity, grid restraint, stack medallions/scale/captions, initiative ribbon, sidebar internal height, banner containment, compact command access, VFX, animation, and accessibility, so this slice changes only the wide shell's disclosure state rather than reopening those surfaces.
+
+Implementation boundary:
+- add one explicit, keyboard/controller-focusable `Tactical Details` control to the existing wide Battle header; default wide entry keeps the exact existing sidebar plus Event/Context detail collapsed, while activating the control restores those exact authored nodes and activating it again restores the field-first geometry;
+- retain the existing Header, Status, Pressure, board footer, initiative ribbon, command dock, action guide/tooltips, and live status/event semantics, and preserve all exact sidebar tab titles, bodies, selection, tooltips, and focus behavior when disclosed;
+- keep 1280x720, 1024x600, 130% UI-scale, and all other genuinely compact layouts on their existing composition with no new hidden command or interaction requirement.
+
+Completion criteria:
+- inspected 1920x1080 pixels show a materially larger default battlefield and substantially less persistent report chrome, while the disclosed state restores the complete existing rail/dispatch and the exact collapsed geometry returns after closing;
+- focused wide/compact/wide runtime proves default/click/keyboard disclosure, control containment and focus, exact sidebar/event/context values and tab selection, full tooltip/live-region semantics, stable resize restoration, and unchanged board hit geometry, actions, combat, RNG, session, save, settings, and route authority;
+- Battle layout, keyboard/controller focus, accessibility, animation/VFX, quick resolve, withdrawal, save/resume, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no BattleBoard terrain, grid, token/medallion, unit/hero art, caption, initiative ribbon, VFX, audio, camera, animation timing, action legality, combat/RNG, AI, balance, content, save/schema, map, generation, or Native RMG change;
+- no removal or rewriting of Order/Focus/Spell/Timing/event/context information, compact-layout redesign, packaged Battle interaction claim, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Generated Overworld Blocker-Mass Presentation
 
 id: `ux-generated-overworld-blocker-mass-presentation-10184`
