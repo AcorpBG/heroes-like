@@ -268,6 +268,62 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_ivara_blacktide.png",
       "assigned_hero_id": "hero_veilmourn_ivara_blacktide"
     },
+    "hero_lead_caelen": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_caelen.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_caelen_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_caelen.png",
+      "assigned_hero_id": "hero_caelen"
+    },
+    "hero_lead_mira": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_mira.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_mira_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_mira.png",
+      "assigned_hero_id": "hero_mira"
+    },
+    "hero_lead_thornwake_tova_rootwright": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_thornwake_tova_rootwright.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_thornwake_tova_rootwright_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_tova_rootwright.png",
+      "assigned_hero_id": "hero_thornwake_tova_rootwright"
+    },
+    "hero_lead_veilmourn_ruln_vanehook": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_veilmourn_ruln_vanehook.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_veilmourn_ruln_vanehook_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_ruln_vanehook.png",
+      "assigned_hero_id": "hero_veilmourn_ruln_vanehook"
+    },
+    "hero_lead_brasshollow_oren_bellfounder": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_brasshollow_oren_bellfounder.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_brasshollow_oren_bellfounder_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_oren_bellfounder.png",
+      "assigned_hero_id": "hero_brasshollow_oren_bellfounder"
+    },
+    "hero_lead_mireclaw_kessa_chainboom": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_mireclaw_kessa_chainboom.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_mireclaw_kessa_chainboom_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_mireclaw_kessa_chainboom.png",
+      "assigned_hero_id": "hero_mireclaw_kessa_chainboom"
+    },
+    "hero_lead_neral": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_neral.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_neral_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_neral.png",
+      "assigned_hero_id": "hero_neral"
+    },
+    "hero_lead_seren": {
+      "path": "res://art/overworld/runtime/heroes/live_leads/hero_seren.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/live_leads/hero_seren_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_seren.png",
+      "assigned_hero_id": "hero_seren"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4213,7 +4269,15 @@
     "hero_solera": "hero_signature_solera",
     "hero_thornwake_silsa_bramblehound": "hero_signature_thornwake_silsa_bramblehound",
     "hero_brasshollow_marka_ironclause": "hero_signature_brasshollow_marka_ironclause",
-    "hero_veilmourn_ivara_blacktide": "hero_signature_veilmourn_ivara_blacktide"
+    "hero_veilmourn_ivara_blacktide": "hero_signature_veilmourn_ivara_blacktide",
+    "hero_caelen": "hero_lead_caelen",
+    "hero_mira": "hero_lead_mira",
+    "hero_thornwake_tova_rootwright": "hero_lead_thornwake_tova_rootwright",
+    "hero_veilmourn_ruln_vanehook": "hero_lead_veilmourn_ruln_vanehook",
+    "hero_brasshollow_oren_bellfounder": "hero_lead_brasshollow_oren_bellfounder",
+    "hero_mireclaw_kessa_chainboom": "hero_lead_mireclaw_kessa_chainboom",
+    "hero_neral": "hero_lead_neral",
+    "hero_seren": "hero_lead_seren"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",

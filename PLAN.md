@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-authored-town-overworld-identity-sprites-10184`.
+- Selected implementation slice: `content-live-scenario-lead-overworld-sprites-10184`.
+
+## Live Scenario Lead Overworld Sprites
+
+id: `content-live-scenario-lead-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- the 24 authored scenarios start with 14 distinct named lead heroes, but the live adventure map has identity sprites for only six signature commanders;
+- Caelen Ashgrove, Mira Flintmere, Tova Rootwright, Ruln Vanehook, Oren Bellfounder, Kessa Chainboom, Neral Glasswind, and Seren Valechant therefore appear as faction-generic figures across 12 scenario starts despite having distinct portraits, specialties, command paths, and narrative roles.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each of the eight unmapped live scenario leads, preserving portrait identity, faction visual language, readable small-scale silhouette, painted grounding, movement/focus containment, and command-pennant clearance;
+- extend the existing manifest-owned hero-id mapping so all 14 authored scenario leads resolve exact identity art before the unchanged faction fallback, without changing hero content records or copying authored identity into saves;
+- validate exact adoption through all 24 authored scenario starts, representative movement, town overlap, explored-map memory, save/resume, fallback heroes, and Linux/Windows packaging.
+
+Completion criteria:
+- all eight new sprites are visually distinct from one another, their faction fallback, and the existing six signature sprites, while remaining faithful to their curated portraits and loading through the live OverworldMapView at 1280x720 and 1920x1080;
+- every authored scenario starts with one of the 14 mapped hero identities and resolves the exact intended sprite before and after save/resume, while the remaining roster and generated commanders retain faction fallback with no save-version change;
+- inspected captures, focused live-lead identity/scenario/save runtime, movement/town/fog compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no changes to hero stats, specialties, scenario rosters, movement, AI, battle rules, save schema, RMG behavior, renderer architecture, signing, publication, whole-game, or release-readiness claims.
+
+Result:
+- added eight original portrait-faithful full-body adventure-map sprites for Caelen Ashgrove, Mira Flintmere, Tova Rootwright, Ruln Vanehook, Oren Bellfounder, Kessa Chainboom, Neral Glasswind, and Seren Valechant, retaining high-resolution generated sources while shipping curated transparent 512x512 runtime assets;
+- expanded the manifest-owned identity map from six signature commanders to all 14 authored scenario leads, so every one of the 24 scenario starts now resolves its exact named hero before the unchanged faction and procedural fallbacks, with save version 9 and hero/scenario content unchanged;
+- inspected 1280x720 and 1920x1080 live captures and passed the expanded 14-hero runtime owner with exact identity/path, field and town-footprint layout, movement, focus, command-pennant, silhouette, fog, faction/procedural fallback, restored-authority, and all-24-scenario save/resume evidence;
+- core and repository validation passed, and fresh Linux and Windows release exports both started successfully with their runtime/native markers, excluded source art, and produced the same 241024116-byte PCK below the 250 MB ceiling; signing, publication, whole-game validation, and release readiness remain unclaimed.
 
 ## Authored Town Overworld Identity Sprites
 

@@ -4,29 +4,47 @@ const SCENARIO_ID := "river-pass"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
 const COMMAND_PENNANT_MODEL := "compact_player_command_flag"
-const EXPECTED_FACTION_ASSETS := {
-	"faction_embercourt": "hero_signature_lyra",
-	"faction_mireclaw": "hero_signature_vaska",
-	"faction_sunvault": "hero_signature_solera",
-	"faction_thornwake": "hero_signature_thornwake_silsa_bramblehound",
-	"faction_brasshollow": "hero_signature_brasshollow_marka_ironclause",
-	"faction_veilmourn": "hero_signature_veilmourn_ivara_blacktide",
+const EXPECTED_HERO_ASSETS := {
+	"hero_lyra": "hero_signature_lyra",
+	"hero_vaska": "hero_signature_vaska",
+	"hero_solera": "hero_signature_solera",
+	"hero_thornwake_silsa_bramblehound": "hero_signature_thornwake_silsa_bramblehound",
+	"hero_brasshollow_marka_ironclause": "hero_signature_brasshollow_marka_ironclause",
+	"hero_veilmourn_ivara_blacktide": "hero_signature_veilmourn_ivara_blacktide",
+	"hero_caelen": "hero_lead_caelen",
+	"hero_mira": "hero_lead_mira",
+	"hero_thornwake_tova_rootwright": "hero_lead_thornwake_tova_rootwright",
+	"hero_veilmourn_ruln_vanehook": "hero_lead_veilmourn_ruln_vanehook",
+	"hero_brasshollow_oren_bellfounder": "hero_lead_brasshollow_oren_bellfounder",
+	"hero_mireclaw_kessa_chainboom": "hero_lead_mireclaw_kessa_chainboom",
+	"hero_neral": "hero_lead_neral",
+	"hero_seren": "hero_lead_seren",
 }
-const REPRESENTATIVE_HERO_IDS := {
-	"faction_embercourt": "hero_lyra",
-	"faction_mireclaw": "hero_vaska",
-	"faction_sunvault": "hero_solera",
-	"faction_thornwake": "hero_thornwake_silsa_bramblehound",
-	"faction_brasshollow": "hero_brasshollow_marka_ironclause",
-	"faction_veilmourn": "hero_veilmourn_ivara_blacktide",
-}
-const SIGNATURE_SCENARIO_STARTS := {
-	"hero_lyra": "river-pass",
-	"hero_vaska": "bogbound-oath",
-	"hero_solera": "prismhearth-watch",
-	"hero_thornwake_silsa_bramblehound": "mireford-skirmish",
-	"hero_brasshollow_marka_ironclause": "orevein-contract",
-	"hero_veilmourn_ivara_blacktide": "bellwake-wreck-claim",
+const ALL_SCENARIO_STARTS := {
+	"river-pass": "hero_lyra",
+	"causeway-stand": "hero_lyra",
+	"fen-crown": "hero_lyra",
+	"stonewake-watch": "hero_caelen",
+	"reedbarrow-ferry": "hero_caelen",
+	"nightglass-redoubt": "hero_caelen",
+	"bogbound-oath": "hero_vaska",
+	"charter-pyre": "hero_vaska",
+	"lockmarsh-surge": "hero_vaska",
+	"ironbridge-stand": "hero_mira",
+	"prismhearth-watch": "hero_solera",
+	"glassroad-sundering": "hero_solera",
+	"daybreak-spire": "hero_solera",
+	"glassfen-breakers": "hero_caelen",
+	"mireford-skirmish": "hero_thornwake_silsa_bramblehound",
+	"orevein-contract": "hero_brasshollow_marka_ironclause",
+	"bellwake-wreck-claim": "hero_veilmourn_ivara_blacktide",
+	"ninefold-confluence": "hero_mira",
+	"rootgate-toll": "hero_thornwake_tova_rootwright",
+	"fogchart-mooring": "hero_veilmourn_ruln_vanehook",
+	"clauseworks-counterclaim": "hero_brasshollow_oren_bellfounder",
+	"nightglass-ledger-reversal": "hero_mireclaw_kessa_chainboom",
+	"halo-reserve-refraction-claim": "hero_neral",
+	"charter-bastion-counterseal": "hero_seren",
 }
 
 func _ready() -> void:
@@ -50,8 +68,9 @@ func _run() -> void:
 	print("OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT %s" % JSON.stringify({
 		"ok": true,
 		"production_hero_count": 60,
-		"signature_hero_count": EXPECTED_FACTION_ASSETS.size(),
-		"faction_count": EXPECTED_FACTION_ASSETS.size(),
+		"signature_hero_count": 6,
+		"scenario_lead_identity_count": EXPECTED_HERO_ASSETS.size(),
+		"faction_count": 6,
 		"scenario_starts": scenario_starts,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback": "procedural_hero_marker",
@@ -85,7 +104,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	if not bool(exact.get("ok", false)):
 		shell.queue_free()
 		return {"ok": false, "failure": "hero_profiles", "detail": exact}
-	if not await _capture_signature_heroes(viewport_size):
+	if not await _capture_scenario_leads(viewport_size):
 		shell.queue_free()
 		return {"ok": false, "failure": "capture"}
 
@@ -114,7 +133,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var first_hero: Dictionary = heroes[0]
-	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_seren"})) == "hero_faction_embercourt"
+	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_torren"})) == "hero_faction_embercourt"
 	first_hero["id"] = "hero_missing_faction_sprite_fixture"
 	shell.call("_refresh")
 	await get_tree().process_frame
@@ -168,7 +187,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	}
 
 func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
-	if profiles.size() != EXPECTED_FACTION_ASSETS.size():
+	if profiles.size() != EXPECTED_HERO_ASSETS.size():
 		return {"ok": false, "reason": "profile_count", "actual": profiles.size()}
 	var seen_factions: Dictionary = {}
 	var seen_assets: Dictionary = {}
@@ -191,10 +210,10 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 		var profile: Dictionary = profile_value
 		var hero_id := String(profile.get("hero_id", ""))
 		var faction_id := String(profile.get("faction_id", ""))
-		var expected_hero_id := String(REPRESENTATIVE_HERO_IDS.get(faction_id, ""))
-		var expected_asset_id := String(EXPECTED_FACTION_ASSETS.get(faction_id, ""))
-		var expected_path := "res://art/overworld/runtime/heroes/signature/%s.png" % hero_id
-		if hero_id != expected_hero_id or String(profile.get("sprite_asset_id", "")) != expected_asset_id:
+		var expected_asset_id := String(EXPECTED_HERO_ASSETS.get(hero_id, ""))
+		var runtime_group := "signature" if expected_asset_id.begins_with("hero_signature_") else "live_leads"
+		var expected_path := "res://art/overworld/runtime/heroes/%s/%s.png" % [runtime_group, hero_id]
+		if expected_asset_id == "" or String(profile.get("sprite_asset_id", "")) != expected_asset_id:
 			return {"ok": false, "reason": "identity", "profile": profile}
 		if String(profile.get("sprite_path", "")) != expected_path or not (load(expected_path) is Texture2D):
 			return {"ok": false, "reason": "texture", "profile": profile}
@@ -259,13 +278,13 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
 				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.64)
 	return {
-		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1 and grounding_exact and readability_exact and town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact,
+		"ok": seen_factions.size() == 6 and seen_assets.size() == EXPECTED_HERO_ASSETS.size() and active_count == 1 and grounding_exact and readability_exact and town_footprint_layout_count == 1 and ordinary_layout_count == EXPECTED_HERO_ASSETS.size() - 1 and geometry_exact,
 		"asset_ids": seen_assets.keys(),
 		"active_identity_exact": active_count == 1,
 		"grounding_exact": grounding_exact,
 		"readability_exact": readability_exact,
 		"town_footprint_layout_exact": town_footprint_layout_count == 1 and geometry_exact,
-		"ordinary_layout_exact": ordinary_layout_count == 5 and geometry_exact,
+		"ordinary_layout_exact": ordinary_layout_count == EXPECTED_HERO_ASSETS.size() - 1 and geometry_exact,
 		"active_tile": {"x": active_tile.x, "y": active_tile.y},
 		"ordinary_tile": {"x": ordinary_tile.x, "y": ordinary_tile.y},
 		"layout_rows": layout_rows,
@@ -442,17 +461,19 @@ func _configure_hero_fixture(session) -> void:
 	var source_heroes: Array = session.overworld.get("player_heroes", [])
 	var source: Dictionary = source_heroes[0].duplicate(true)
 	var heroes: Array = []
-	var faction_ids: Array = EXPECTED_FACTION_ASSETS.keys()
+	var hero_ids: Array = EXPECTED_HERO_ASSETS.keys()
 	var town_footprint_tile := _player_town_footprint_hero_tile(session)
-	for index in range(faction_ids.size()):
-		var faction_id := String(faction_ids[index])
-		var hero_id := String(REPRESENTATIVE_HERO_IDS.get(faction_id, ""))
+	var ordinary_positions := [
+		Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0),
+		Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4),
+	]
+	for index in range(hero_ids.size()):
+		var hero_id := String(hero_ids[index])
 		var template := ContentService.get_hero(hero_id)
 		var hero := source.duplicate(true)
 		hero["id"] = hero_id
 		hero["name"] = String(template.get("name", hero_id))
 		hero["is_primary"] = index == 0
-		var ordinary_positions := [Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1), Vector2i(6, 1)]
 		var position: Vector2i = town_footprint_tile if index == 0 else ordinary_positions[index - 1]
 		hero["position"] = {"x": position.x, "y": position.y}
 		heroes.append(hero)
@@ -491,9 +512,9 @@ func _configure_hero_fixture(session) -> void:
 
 func _validate_signature_scenario_starts() -> Dictionary:
 	var rows := []
-	for hero_id_value in SIGNATURE_SCENARIO_STARTS:
-		var hero_id := String(hero_id_value)
-		var scenario_id := String(SIGNATURE_SCENARIO_STARTS.get(hero_id_value, ""))
+	for scenario_id_value in ALL_SCENARIO_STARTS:
+		var scenario_id := String(scenario_id_value)
+		var hero_id := String(ALL_SCENARIO_STARTS.get(scenario_id_value, ""))
 		var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 		var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 		var clone = SessionStateStore.new_session_data()
@@ -502,21 +523,21 @@ func _validate_signature_scenario_starts() -> Dictionary:
 		rows.append({"scenario_id": scenario_id, "hero_id": hero_id, "save_resume_exact": exact})
 		if not exact:
 			return {"ok": false, "rows": rows}
-	return {"ok": rows.size() == SIGNATURE_SCENARIO_STARTS.size(), "rows": rows}
+	return {"ok": rows.size() == ALL_SCENARIO_STARTS.size(), "rows": rows}
 
-func _capture_signature_heroes(viewport_size: Vector2i) -> bool:
-	if OS.get_environment("SIGNATURE_HERO_CAPTURE") != "1":
+func _capture_scenario_leads(viewport_size: Vector2i) -> bool:
+	if OS.get_environment("SCENARIO_LEAD_CAPTURE") != "1":
 		return true
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var output_dir := "res://.artifacts/signature_hero_sprites"
+	var output_dir := "res://.artifacts/scenario_lead_sprites"
 	var error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
 	if error != OK and error != ERR_ALREADY_EXISTS:
 		return false
 	var image := get_viewport().get_texture().get_image()
 	if image == null:
 		return false
-	return image.save_png("%s/signature_heroes_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]) == OK
+	return image.save_png("%s/scenario_leads_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]) == OK
 
 func _player_town_footprint_hero_tile(session) -> Vector2i:
 	var map_size := OverworldRules.derive_map_size(session)
