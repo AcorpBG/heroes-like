@@ -50,6 +50,7 @@ const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
 @onready var _pressure_label: Label = %Pressure
+@onready var _tactical_details_button: Button = %TacticalDetails
 @onready var _event_label: Label = %Event
 @onready var _battle_context_label: Label = %BattleContext
 @onready var _briefing_label: Label = %Briefing
@@ -152,6 +153,7 @@ var _validation_battle_info_tab_resetting := false
 var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 var _compact_layout_active := false
+var _tactical_details_expanded := false
 var _compact_system_panel_style := StyleBoxEmpty.new()
 var _wide_system_panel_style: StyleBox = null
 var _action_guide_source_text := ""
@@ -163,6 +165,7 @@ func _ready() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	_tactical_details_button.custom_minimum_size = Vector2.ZERO
 	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
 	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
 	add_child(_save_written_cue_presenter)
@@ -174,6 +177,7 @@ func _ready() -> void:
 	_configure_quick_resolve_confirmation()
 	_configure_withdrawal_confirmation()
 	_configure_confirmation_input_forwarding()
+	_tactical_details_button.pressed.connect(_on_tactical_details_pressed)
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -1830,6 +1834,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		return
 	var surfaces := [
 		_battle_board_view,
+		_tactical_details_button,
 		_battle_tabs.get_tab_bar(),
 		_prev_target_button,
 		_next_target_button,
@@ -3712,14 +3717,17 @@ func _apply_responsive_layout() -> void:
 	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
 		available_size = parent_control.size
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	var tactical_details_visible := not compact_layout and _tactical_details_expanded
 	var banner_details_visible := not compact_layout or available_size.x >= 1180.0
 	var horizontal_footer := not compact_layout or available_size.x >= 1180.0
 	_compact_layout_active = compact_layout
 	_refit_battle_action_guide()
-	_sidebar_shell_panel.visible = not compact_layout
-	_sidebar_watermark.visible = not compact_layout and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT
-	_battle_context_label.visible = not compact_layout
-	_event_label.visible = not compact_layout
+	_tactical_details_button.visible = not compact_layout
+	_sidebar_shell_panel.visible = tactical_details_visible
+	_sidebar_watermark.visible = tactical_details_visible and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT
+	_battle_context_label.visible = tactical_details_visible
+	_event_label.visible = tactical_details_visible
+	_sync_tactical_details_button()
 	_status_label.visible = banner_details_visible
 	_pressure_label.visible = banner_details_visible
 	_footer_row.columns = 2 if horizontal_footer else 1
@@ -3743,6 +3751,21 @@ func _apply_responsive_layout() -> void:
 	_prev_target_button.visible = not compact_layout
 	_next_target_button.visible = not compact_layout
 	_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)
+
+func _on_tactical_details_pressed() -> void:
+	if _compact_layout_active:
+		return
+	_tactical_details_expanded = not _tactical_details_expanded
+	_apply_responsive_layout()
+	_tactical_details_button.grab_focus()
+	call_deferred("_configure_battle_keyboard_focus", false)
+
+func _sync_tactical_details_button() -> void:
+	var action := "Hide" if _tactical_details_expanded else "Show"
+	_tactical_details_button.text = "Hide Details" if _tactical_details_expanded else "Tactical Details"
+	_tactical_details_button.tooltip_text = "%s the full tactical report and battle detail rail." % action
+	_tactical_details_button.accessibility_name = _tactical_details_button.text
+	_tactical_details_button.accessibility_description = _tactical_details_button.tooltip_text
 
 func _record_action_recap(action_id: String, result: Dictionary, context: Dictionary = {}) -> void:
 	if not bool(result.get("ok", false)):
@@ -4231,6 +4254,7 @@ func _apply_visual_theme() -> void:
 
 	for button in [_prev_target_button, _next_target_button]:
 		_style_action_button(button, false, 88)
+	_style_action_button(_tactical_details_button, false, 124)
 	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _quick_resolve_button, _retreat_button, _surrender_button]:
 		_style_action_button(button, true)
 	for button in [_speed_normal_button, _speed_fast_button, _speed_instant_button]:
