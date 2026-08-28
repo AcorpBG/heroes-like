@@ -4072,9 +4072,17 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		push_error("Overworld smoke: field hero art is not contained at its proportional tile rank. payload=%s" % hero)
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 0.96) \
+	var town_center: Dictionary = town.get("sprite_center_tiles", {})
+	if not is_equal_approx(float(town.get("visible_extent_tiles", 0.0)), 1.36) \
+		or not is_equal_approx(float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 0.68) \
+		or not is_equal_approx(float(town.get("town_to_hero_extent_ratio", 0.0)), 2.125) \
+		or not is_equal_approx(float(town.get("town_to_largest_other_object_extent_ratio", 0.0)), 1.7) \
+		or not is_equal_approx(float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18) \
+		or not bool(town.get("painted_bottom_grounded_exact", false)) \
 		or not bool(town.get("sprite_contained_in_footprint", false)) \
-		or town.get("sprite_center_tiles", {}) != {"x": 1.5, "y": 1.34}:
+		or not is_equal_approx(float(town_center.get("x", 0.0)), 1.5) \
+		or float(town_center.get("y", 0.0)) <= 0.0 \
+		or float(town_center.get("y", 0.0)) >= 2.0:
 		push_error("Overworld smoke: town art no longer owns the bounded top of the shared world-scale hierarchy. payload=%s" % town)
 		get_tree().quit(1)
 		return false
