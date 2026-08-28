@@ -67,10 +67,12 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _build_actions: Container = %BuildActions
 @onready var _build_plan_label: Label = %BuildPlan
 @onready var _confirm_build_button: Button = %ConfirmBuild
+@onready var _open_build_catalog_button: Button = %OpenBuildCatalog
 @onready var _market_label: Label = %Market
 @onready var _market_actions: Container = %MarketActions
 @onready var _recruit_label: Label = %Recruitment
 @onready var _recruit_actions: Container = %RecruitActions
+@onready var _open_muster_catalog_button: Button = %OpenMusterCatalog
 @onready var _study_label: Label = %Study
 @onready var _study_actions: Container = %StudyActions
 @onready var _spellbook_label: Label = %Spellbook
@@ -90,6 +92,12 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _guide_button: Button = %Guide
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
+@onready var _town_catalog_overlay: Control = %TownCatalogOverlay
+@onready var _town_catalog_panel: PanelContainer = %TownCatalogPanel
+@onready var _town_catalog_title_label: Label = %TownCatalogTitle
+@onready var _town_catalog_subtitle_label: Label = %TownCatalogSubtitle
+@onready var _town_catalog_scroll: ScrollContainer = %TownCatalogScroll
+@onready var _town_catalog_close_button: Button = %TownCatalogClose
 @onready var _guide_overlay: Control = %TownGuideOverlay
 @onready var _guide_panel: PanelContainer = %TownGuidePanel
 @onready var _guide_title_label: Label = %TownGuideTitle
@@ -113,6 +121,8 @@ var _last_refresh_minimal := false
 var _last_town_stage_signature := ""
 var _last_departure_confirmation := {}
 var _selected_build_action_id := ""
+var _town_catalog_mode := ""
+var _town_catalog_previous_focus: Control
 var _narrow_layout_active := false
 var _narrow_orders_open := false
 var _last_management_tab_index := 0
@@ -149,6 +159,7 @@ func _ready() -> void:
 	_configure_management_tab_accessibility()
 	_configure_town_guide_surface()
 	_town_action_input_blocker.visible = false
+	_town_catalog_overlay.visible = false
 	if not _town_stage_view.town_action_presentation_blocking_changed.is_connected(_on_town_action_presentation_blocking_changed):
 		_town_stage_view.town_action_presentation_blocking_changed.connect(_on_town_action_presentation_blocking_changed)
 	_confirm_build_button.pressed.connect(_on_confirm_build_pressed)
@@ -228,6 +239,72 @@ func _apply_responsive_layout() -> void:
 	_status_label.visible = not compact_layout
 	_building_label.visible = not compact_layout
 	_town_stage_view.custom_minimum_size = Vector2(520.0, 280.0) if compact_layout else Vector2(620.0, 320.0)
+	if _town_catalog_panel != null:
+		_town_catalog_panel.custom_minimum_size = Vector2(
+			min(1080.0, max(620.0, available_size.x - 44.0)),
+			min(690.0, max(480.0, available_size.y - 44.0))
+		)
+	var catalog_columns := 2 if available_size.x < 900.0 else (3 if available_size.x < 1320.0 else 4)
+	if _build_actions is GridContainer:
+		(_build_actions as GridContainer).columns = catalog_columns
+	if _recruit_actions is GridContainer:
+		(_recruit_actions as GridContainer).columns = catalog_columns
+
+func _on_open_build_catalog_pressed() -> void:
+	_open_town_catalog("build")
+
+func _on_open_muster_catalog_pressed() -> void:
+	_open_town_catalog("muster")
+
+func _on_town_catalog_close_pressed() -> void:
+	_close_town_catalog()
+
+func _town_catalog_is_open() -> bool:
+	return _town_catalog_overlay != null and _town_catalog_overlay.visible
+
+func _open_town_catalog(mode: String) -> void:
+	if mode not in ["build", "muster"] or _session == null:
+		return
+	if _town_action_input_blocker != null and _town_action_input_blocker.visible:
+		return
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if not _town_catalog_is_open() and focus_owner is Control:
+		_town_catalog_previous_focus = focus_owner
+	_town_catalog_mode = mode
+	_build_actions.visible = mode == "build"
+	_recruit_actions.visible = mode == "muster"
+	_build_plan_label.visible = mode == "build"
+	_confirm_build_button.visible = mode == "build"
+	if mode == "build":
+		var catalog := TownRules.get_build_catalog(_session)
+		_town_catalog_title_label.text = "Construction Ledger"
+		_town_catalog_subtitle_label.text = "%d town works • standing, available, and locked plans" % catalog.size()
+		_rebuild_build_actions(catalog)
+	else:
+		var catalog := TownRules.get_muster_catalog(_session)
+		_town_catalog_title_label.text = "Muster Hall"
+		_town_catalog_subtitle_label.text = "%d roster units • tiers, reserves, weekly growth, costs, and dwelling locks" % catalog.size()
+		_rebuild_recruit_actions(catalog)
+	_town_catalog_scroll.scroll_vertical = 0
+	_town_catalog_overlay.visible = true
+	call_deferred("_configure_town_keyboard_focus", true)
+
+func _close_town_catalog(restore_focus: bool = true) -> void:
+	if not _town_catalog_is_open():
+		return
+	var focus_target := _town_catalog_previous_focus
+	_town_catalog_overlay.visible = false
+	_town_catalog_mode = ""
+	_town_catalog_previous_focus = null
+	if restore_focus and focus_target != null and is_instance_valid(focus_target) and focus_target.is_visible_in_tree():
+		call_deferred("_restore_town_catalog_focus", focus_target)
+	elif restore_focus:
+		call_deferred("_configure_town_keyboard_focus", true)
+
+func _restore_town_catalog_focus(focus_target: Control) -> void:
+	await get_tree().process_frame
+	if focus_target != null and is_instance_valid(focus_target) and focus_target.is_visible_in_tree() and not _town_catalog_is_open():
+		focus_target.grab_focus()
 
 func _on_build_action_pressed(action_id: String) -> void:
 	_select_build_action("build:%s" % action_id)
@@ -244,6 +321,7 @@ func _on_confirm_build_pressed() -> void:
 	if action.is_empty():
 		return
 	if bool(action.get("market_coverable", false)) and not bool(action.get("direct_affordable", false)):
+		_close_town_catalog(false)
 		if _management_tabs.current_tab != 3:
 			_management_tabs.current_tab = 3
 		else:
@@ -254,6 +332,7 @@ func _on_confirm_build_pressed() -> void:
 	_commit_build_action(String(action.get("id", "")).trim_prefix("build:"))
 
 func _commit_build_action(action_id: String) -> void:
+	_close_town_catalog(false)
 	var full_action_id := "build:%s" % action_id
 	var before := TownRules.town_action_consequence_signature(_session)
 	var action := _validation_action_for_id(full_action_id)
@@ -703,6 +782,11 @@ func _input(event: InputEvent) -> void:
 		return
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
 		return
+	if _town_catalog_is_open():
+		if event.is_action_pressed("ui_cancel"):
+			get_viewport().set_input_as_handled()
+			_close_town_catalog()
+		return
 	if _town_guide_is_open():
 		if event.is_action_pressed("ui_cancel"):
 			get_viewport().set_input_as_handled()
@@ -727,6 +811,15 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		return
 	if _town_action_input_blocker != null and _town_action_input_blocker.visible:
 		_town_action_input_blocker.grab_focus()
+		return
+	if _town_catalog_is_open():
+		var catalog_surfaces := [_town_catalog_close_button]
+		if _town_catalog_mode == "build":
+			catalog_surfaces.append_array([_build_actions, _confirm_build_button])
+		else:
+			catalog_surfaces.append(_recruit_actions)
+		var catalog_controls := FrontierVisualKit.configure_focus_cycle(catalog_surfaces)
+		FrontierVisualKit.grab_keyboard_focus(self, _town_catalog_close_button, catalog_controls, force)
 		return
 	if _town_guide_is_open():
 		var guide_controls := FrontierVisualKit.configure_focus_cycle([_guide_close_button])
@@ -868,9 +961,9 @@ func _control_is_in_town_focus_surfaces(control: Control, surfaces: Array) -> bo
 func _town_keyboard_focus_surfaces() -> Array:
 	match _management_tabs.current_tab:
 		0:
-			return [_build_actions, _confirm_build_button]
+			return [_open_build_catalog_button]
 		1:
-			return [_recruit_actions]
+			return [_open_muster_catalog_button]
 		2:
 			return [_study_actions]
 		3:
@@ -883,9 +976,11 @@ func _town_keyboard_focus_surfaces() -> Array:
 func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> void:
 	if not minimal:
 		_rebuild_hero_actions(view_state.get("hero_actions", []))
-		_rebuild_build_actions(view_state.get("build_actions", []))
+		if _town_catalog_is_open() and _town_catalog_mode == "build":
+			_rebuild_build_actions(view_state.get("build_actions", []))
 		_rebuild_market_actions(view_state.get("market_actions", []))
-		_rebuild_recruit_actions(view_state.get("recruit_actions", []))
+		if _town_catalog_is_open() and _town_catalog_mode == "muster":
+			_rebuild_recruit_actions(view_state.get("recruit_actions", []))
 		_rebuild_tavern_actions(view_state.get("tavern_actions", []))
 		_rebuild_transfer_actions(view_state.get("transfer_actions", []))
 		_rebuild_response_actions(view_state.get("response_actions", []))
@@ -894,9 +989,9 @@ func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> 
 		_rebuild_artifact_actions(view_state.get("artifact_actions", []))
 		return
 	var lanes := _current_town_tab_lanes()
-	if lanes.has("build"):
+	if lanes.has("build") and _town_catalog_is_open() and _town_catalog_mode == "build":
 		_rebuild_build_actions(view_state.get("build_actions", []))
-	if lanes.has("recruit"):
+	if lanes.has("recruit") and _town_catalog_is_open() and _town_catalog_mode == "muster":
 		_rebuild_recruit_actions(view_state.get("recruit_actions", []))
 	if lanes.has("study"):
 		_rebuild_study_actions(view_state.get("study_actions", []))
@@ -2474,6 +2569,9 @@ func validation_snapshot() -> Dictionary:
 		"confirm_build_button_text": _confirm_build_button.text,
 		"confirm_build_button_tooltip_text": _confirm_build_button.tooltip_text,
 		"confirm_build_button_disabled": _confirm_build_button.disabled,
+		"town_catalog": validation_town_catalog_snapshot(),
+		"build_catalog": _duplicate_action_array(TownRules.get_build_catalog(_session)),
+		"muster_catalog": _duplicate_action_array(TownRules.get_muster_catalog(_session)),
 		"narrow_layout_active": _narrow_layout_active,
 		"narrow_orders_open": _narrow_orders_open,
 		"town_orders_toggle_visible": _town_orders_toggle_button.visible,
@@ -2599,6 +2697,56 @@ func _live_player_hero_id() -> String:
 
 func validation_army_management_snapshot() -> Dictionary:
 	return _army_management.validation_snapshot()
+
+func validation_open_town_catalog(mode: String) -> Dictionary:
+	_open_town_catalog(mode)
+	return validation_town_catalog_snapshot()
+
+func validation_close_town_catalog() -> Dictionary:
+	_close_town_catalog()
+	return validation_town_catalog_snapshot()
+
+func validation_town_catalog_snapshot() -> Dictionary:
+	var focus_owner := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	var build_catalog := TownRules.get_build_catalog(_session) if _session != null else []
+	var muster_catalog := TownRules.get_muster_catalog(_session) if _session != null else []
+	return {
+		"open": _town_catalog_is_open(),
+		"mode": _town_catalog_mode,
+		"title": _town_catalog_title_label.text,
+		"subtitle": _town_catalog_subtitle_label.text,
+		"build_catalog_count": build_catalog.size(),
+		"muster_catalog_count": muster_catalog.size(),
+		"build_card_count": _build_actions.get_child_count(),
+		"muster_card_count": _recruit_actions.get_child_count(),
+		"build_ids": _catalog_ids(build_catalog, "building_id"),
+		"muster_ids": _catalog_ids(muster_catalog, "unit_id"),
+		"build_statuses": _catalog_status_counts(build_catalog),
+		"muster_statuses": _catalog_status_counts(muster_catalog),
+		"panel_rect": _town_catalog_panel.get_global_rect(),
+		"overlay_rect": _town_catalog_overlay.get_global_rect(),
+		"build_grid_visible": _build_actions.visible,
+		"muster_grid_visible": _recruit_actions.visible,
+		"confirm_build_visible": _confirm_build_button.visible,
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"focus_inside": focus_owner != null and _town_catalog_overlay.is_ancestor_of(focus_owner),
+	}
+
+func _catalog_ids(rows: Array, key: String) -> Array:
+	var ids := []
+	for row_value in rows:
+		if row_value is Dictionary:
+			ids.append(String(row_value.get(key, "")))
+	return ids
+
+func _catalog_status_counts(rows: Array) -> Dictionary:
+	var counts := {}
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			continue
+		var status := String(row_value.get("catalog_status", "Unknown"))
+		counts[status] = int(counts.get(status, 0)) + 1
+	return counts
 
 func validation_perform_army_slot_operation(
 	source_holder_id: String,
@@ -3003,7 +3151,7 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 	for child in _build_actions.get_children():
 		child.queue_free()
 
-	var actions = actions_override if actions_override is Array else TownRules.get_build_actions(_session)
+	var actions = actions_override if actions_override is Array and _catalog_rows_are_complete(actions_override, "building_id") else TownRules.get_build_catalog(_session)
 	if actions.is_empty():
 		_selected_build_action_id = ""
 		_build_actions.add_child(_make_placeholder_label("No construction orders"))
@@ -3014,18 +3162,71 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 	for action in actions:
 		if not (action is Dictionary):
 			continue
+		var card := PanelContainer.new()
+		card.custom_minimum_size = Vector2(190, 108)
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		FrontierVisualKit.apply_panel(card, _catalog_panel_tone(String(action.get("catalog_status", "Locked"))))
+		var card_box := VBoxContainer.new()
+		card_box.add_theme_constant_override("separation", 4)
+		card.add_child(card_box)
 		var button := Button.new()
 		var action_id := String(action.get("id", ""))
-		button.text = _build_plan_option_label(action)
+		button.text = "%s\n%s • %s" % [
+			_short_text(String(action.get("name", action.get("label", "Construction"))).trim_prefix("Build "), 25),
+			String(action.get("category", "support")).capitalize(),
+			String(action.get("catalog_status", "Locked")),
+		]
 		button.toggle_mode = true
 		button.button_pressed = action_id == _selected_build_action_id
 		button.disabled = action_id == ""
-		button.tooltip_text = _town_action_button_tooltip(action, "build")
+		button.tooltip_text = _catalog_build_tooltip(action)
 		_style_action_button(button, button.button_pressed)
+		button.custom_minimum_size = Vector2(190, 72)
+		button.set_meta("catalog_entry_id", action_id)
+		button.set_meta("catalog_status", String(action.get("catalog_status", "")))
 		_apply_build_action_icon(button, action)
 		button.pressed.connect(_on_build_action_pressed.bind(String(action.get("id", "")).trim_prefix("build:")))
-		_build_actions.add_child(button)
+		card_box.add_child(button)
+		var cost_label := Label.new()
+		var cost_text := TownRules._describe_resources(action.get("cost", {}))
+		cost_label.text = "Cost: %s" % (cost_text if cost_text != "" else "standing work")
+		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		cost_label.tooltip_text = button.tooltip_text
+		FrontierVisualKit.apply_label(cost_label, "muted", 11)
+		card_box.add_child(cost_label)
+		_build_actions.add_child(card)
 	_refresh_build_plan_surface(actions)
+
+func _catalog_rows_are_complete(rows: Variant, identity_key: String) -> bool:
+	if not (rows is Array) or rows.is_empty():
+		return false
+	for row_value in rows:
+		if not (row_value is Dictionary) or String(row_value.get(identity_key, "")) == "":
+			return false
+	return true
+
+func _catalog_panel_tone(status: String) -> String:
+	match status:
+		"Ready":
+			return "green"
+		"Built":
+			return "gold"
+		"Trade":
+			return "teal"
+		_:
+			return "ink"
+
+func _catalog_build_tooltip(action: Dictionary) -> String:
+	return _join_tooltip_sections([
+		"%s • %s" % [String(action.get("name", "Construction")), String(action.get("catalog_status", "Locked"))],
+		String(action.get("description", "")),
+		String(action.get("effect_summary", "")),
+		"Cost: %s" % TownRules._describe_resources(action.get("cost", {})),
+		String(action.get("catalog_status_detail", "")),
+		String(action.get("summary", "")),
+		"Select this card to inspect it. Construction only occurs after explicit confirmation.",
+	])
 
 func _apply_build_action_icon(button: Button, action: Dictionary) -> void:
 	var building_id := TownRules.building_id_for_action(String(action.get("id", "")))
@@ -3037,7 +3238,7 @@ func _apply_build_action_icon(button: Button, action: Dictionary) -> void:
 		return
 	button.icon = texture
 	button.expand_icon = true
-	button.add_theme_constant_override("icon_max_width", 24)
+	button.add_theme_constant_override("icon_max_width", 46)
 
 func _ensure_selected_build_action(actions: Array) -> void:
 	if not _build_action_for_id(_selected_build_action_id, actions).is_empty():
@@ -3054,13 +3255,13 @@ func _ensure_selected_build_action(actions: Array) -> void:
 		_selected_build_action_id = String(actions[0].get("id", ""))
 
 func _selected_build_action(actions_override: Variant = null) -> Dictionary:
-	var actions = actions_override if actions_override is Array else TownRules.get_build_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_build_catalog(_session)
 	return _build_action_for_id(_selected_build_action_id, actions)
 
 func _build_action_for_id(action_id: String, actions_override: Variant = null) -> Dictionary:
 	if action_id == "":
 		return {}
-	var actions = actions_override if actions_override is Array else TownRules.get_build_actions(_session)
+	var actions = actions_override if actions_override is Array else TownRules.get_build_catalog(_session)
 	for action_value in actions:
 		if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
 			return action_value
@@ -3086,6 +3287,18 @@ func _refresh_build_plan_surface(actions: Array) -> void:
 		return
 	var name := String(action.get("label", "Construction")).trim_prefix("Build ")
 	var cost := TownRules._describe_resources(action.get("cost", {}))
+	var catalog_status := String(action.get("catalog_status", ""))
+	if bool(action.get("built", false)) or bool(action.get("locked", false)):
+		_set_compact_label(
+			_build_plan_label,
+			"%s | %s | Cost %s\n%s" % [name, catalog_status, cost, String(action.get("catalog_status_detail", ""))],
+			2
+		)
+		_build_plan_label.tooltip_text = _catalog_build_tooltip(action)
+		_confirm_build_button.text = "Already Built" if bool(action.get("built", false)) else "Requirements Locked"
+		_confirm_build_button.tooltip_text = String(action.get("catalog_status_detail", "This construction plan is locked."))
+		_confirm_build_button.disabled = true
+		return
 	var readiness := _town_action_button_readiness(action, "build")
 	var impact := String(action.get("impact_line", "")).trim_prefix("Defense/frontier: ").trim_suffix(".")
 	_set_compact_label(
@@ -3140,7 +3353,7 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 	for child in _recruit_actions.get_children():
 		child.queue_free()
 
-	var actions = actions_override if actions_override is Array else TownRules.get_recruit_actions(_session)
+	var actions = actions_override if actions_override is Array and _catalog_rows_are_complete(actions_override, "unit_id") else TownRules.get_muster_catalog(_session)
 	if actions.is_empty():
 		_recruit_actions.add_child(_make_placeholder_label("No recruits waiting"))
 		return
@@ -3148,29 +3361,64 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 	for action in actions:
 		if not (action is Dictionary):
 			continue
-		var unit_id := _unit_id_for_recruit_action(action)
-		var portrait_path := String(ContentService.get_unit_art(unit_id).get("portrait", ""))
+		var unit_id := String(action.get("unit_id", _unit_id_for_recruit_action(action)))
+		var portrait_path := String(action.get("portrait_path", ContentService.get_unit_art(unit_id).get("portrait", "")))
 		var portrait_texture: Variant = _unit_art_texture(portrait_path)
-		var row := HBoxContainer.new()
+		var row := PanelContainer.new()
+		row.custom_minimum_size = Vector2(190, 232)
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_theme_constant_override("separation", 8)
+		FrontierVisualKit.apply_panel(row, _catalog_panel_tone(String(action.get("catalog_status", "Locked"))))
+		var row_box := VBoxContainer.new()
+		row_box.add_theme_constant_override("separation", 4)
+		row.add_child(row_box)
 		if portrait_texture is Texture2D:
 			var portrait := TextureRect.new()
 			portrait.texture = portrait_texture
 			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			portrait.custom_minimum_size = Vector2(42, 54)
-			portrait.tooltip_text = String(action.get("label", action.get("id", "Recruit")))
-			row.add_child(portrait)
+			portrait.custom_minimum_size = Vector2(88, 112)
+			portrait.tooltip_text = _catalog_muster_tooltip(action)
+			row_box.add_child(portrait)
+		var identity_label := Label.new()
+		identity_label.text = "%s • %s" % [String(action.get("tier_label", "Tier")), String(action.get("name", unit_id))]
+		identity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		identity_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		identity_label.tooltip_text = _catalog_muster_tooltip(action)
+		FrontierVisualKit.apply_label(identity_label, "body", 12)
+		row_box.add_child(identity_label)
+		var reserve_label := Label.new()
+		reserve_label.text = "%s • %d reserve • +%d/week" % [
+			String(action.get("catalog_status", "Locked")),
+			int(action.get("available_count", 0)),
+			int(action.get("weekly_growth", 0)),
+		]
+		reserve_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		reserve_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		reserve_label.tooltip_text = _catalog_muster_tooltip(action)
+		FrontierVisualKit.apply_label(reserve_label, "muted", 11)
+		row_box.add_child(reserve_label)
 		var button := Button.new()
-		button.text = String(action.get("button_label", action.get("label", action.get("id", "Recruit"))))
+		var ready_count := int(action.get("direct_affordable_count", 0))
+		button.text = "Recruit %s x%d" % [String(action.get("tier_label", "Tier")), ready_count] if ready_count > 0 else String(action.get("catalog_status", "Unavailable"))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = _town_action_button_tooltip(action, "recruit")
+		button.tooltip_text = _catalog_muster_tooltip(action)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_style_action_button(button)
+		button.set_meta("catalog_entry_id", String(action.get("id", "")))
+		button.set_meta("catalog_status", String(action.get("catalog_status", "")))
 		button.pressed.connect(_on_recruit_action_pressed.bind(String(action.get("id", "")).trim_prefix("recruit:")))
-		row.add_child(button)
+		row_box.add_child(button)
 		_recruit_actions.add_child(row)
+
+func _catalog_muster_tooltip(action: Dictionary) -> String:
+	var unit_cost := TownRules._describe_resources(action.get("unit_cost", {}))
+	return _join_tooltip_sections([
+		"%s • %s • %s" % [String(action.get("tier_label", "Tier")), String(action.get("name", "Unit")), String(action.get("catalog_status", "Locked"))],
+		"Role: %s | Cost each: %s" % [String(action.get("role", "unknown")).capitalize(), unit_cost],
+		"Reserve %d | Weekly growth +%d" % [int(action.get("available_count", 0)), int(action.get("weekly_growth", 0))],
+		String(action.get("catalog_status_detail", "")),
+		String(action.get("summary", "")),
+	])
 
 func _rebuild_tavern_actions(actions_override: Variant = null) -> void:
 	for child in _tavern_actions.get_children():
@@ -5476,6 +5724,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_study_panel, "blue")
 	FrontierVisualKit.apply_panel(_market_panel, "gold")
 	FrontierVisualKit.apply_panel(_logistics_panel, "teal")
+	FrontierVisualKit.apply_panel(_town_catalog_panel, "earth")
 	FrontierVisualKit.apply_panel(_footer_panel, "banner")
 	FrontierVisualKit.apply_art_panel(_banner_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 14, Color(0.78, 0.74, 0.66, 1.0))
 	FrontierVisualKit.apply_art_panel(_crest_panel, UI_ART_TOWN_CREST_MEDALLION, "gold", 70, 10, Color(0.82, 0.78, 0.70, 1.0))
@@ -5492,6 +5741,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_study_panel, UI_ART_TOWN_PARCHMENT_PANEL, "blue", 66, 12, Color(0.42, 0.44, 0.52, 1.0))
 	FrontierVisualKit.apply_art_panel(_market_panel, UI_ART_TOWN_RESOURCE_LEDGER, "gold", 62, 12, Color(0.56, 0.50, 0.44, 1.0))
 	FrontierVisualKit.apply_art_panel(_logistics_panel, UI_ART_TOWN_BUILD_PANEL, "teal", 58, 12, Color(0.50, 0.56, 0.54, 1.0))
+	FrontierVisualKit.apply_art_panel(_town_catalog_panel, UI_ART_TOWN_PARCHMENT_PANEL, "earth", 66, 16, Color(0.60, 0.55, 0.48, 1.0))
 	FrontierVisualKit.apply_art_panel(_footer_panel, UI_ART_TOWN_BANNER_FRAME, "banner", 68, 12, Color(0.70, 0.66, 0.60, 1.0))
 	FrontierVisualKit.apply_tab_container(_management_tabs)
 	_apply_town_management_tab_breathing_room()
@@ -5501,11 +5751,15 @@ func _apply_visual_theme() -> void:
 	_management_tabs.set_tab_title(3, "Trade")
 	_management_tabs.set_tab_title(4, "Log")
 
-	for button in [_confirm_build_button, _town_orders_toggle_button, _save_button, _leave_button, _guide_button, _settings_button, _menu_button]:
+	for button in [_confirm_build_button, _open_build_catalog_button, _open_muster_catalog_button, _town_orders_toggle_button, _save_button, _leave_button, _guide_button, _settings_button, _menu_button]:
 		_style_action_button(button, true)
+	FrontierVisualKit.apply_button(_town_catalog_close_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_guide_close_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_panel(_guide_panel, "ink")
 	_settings_button.tooltip_text = "Adjust sound, battle pace, and readability without leaving the town."
+	_open_build_catalog_button.tooltip_text = "Open a modal catalog of every standing, available, and locked building in this town."
+	_open_muster_catalog_button.tooltip_text = "Open a modal catalog of every unit tier, including locked dwellings and empty reserves."
+	_town_catalog_close_button.tooltip_text = "Close this town window and return focus to the Town screen."
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 112.0, 32.0, 12)
 
 	for label in find_children("*Title", "Label", true, false):
@@ -5517,6 +5771,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)
 	_resource_label.flat = true
 	FrontierVisualKit.apply_label(_crest_label, "title", 16)
+	FrontierVisualKit.apply_label(_town_catalog_title_label, "title", 20)
+	FrontierVisualKit.apply_label(_town_catalog_subtitle_label, "body", 12)
 	FrontierVisualKit.apply_label(_event_label, "body", 12)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
 	FrontierVisualKit.apply_label(_guide_title_label, "title", 16)

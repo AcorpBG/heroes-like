@@ -90,19 +90,20 @@ func _live_case(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+	shell.call("validation_open_town_catalog", "build")
+	await get_tree().process_frame
+	await get_tree().process_frame
 	var direct_icons_exact := true
 	for building_id in _target_building_ids():
 		var button := Button.new()
 		shell._apply_build_action_icon(button, {"id": "build:%s" % building_id})
-		direct_icons_exact = direct_icons_exact and button.icon != null and button.icon.resource_path == TownRules.building_icon_path(building_id) and button.expand_icon and button.get_theme_constant("icon_max_width") == 24
+		direct_icons_exact = direct_icons_exact and button.icon != null and button.icon.resource_path == TownRules.building_icon_path(building_id) and button.expand_icon and button.get_theme_constant("icon_max_width") == 46
 		button.free()
-	var actions: Array = TownRules.get_build_actions(session)
+	var actions: Array = TownRules.get_build_catalog(session)
 	var container := shell.get_node_or_null("%BuildActions") as Control
 	var buttons := []
 	if container != null:
-		for child in container.get_children():
-			if child is Button:
-				buttons.append(child)
+		buttons = _buttons_in(container)
 	var live_exact := buttons.size() == actions.size()
 	for index in range(min(buttons.size(), actions.size())):
 		var building_id := TownRules.building_id_for_action(String(actions[index].get("id", "")))
@@ -123,6 +124,14 @@ func _live_case(viewport_size: Vector2i) -> Dictionary:
 	SessionState.reset_session()
 	await get_tree().process_frame
 	return result
+
+func _buttons_in(node: Node) -> Array:
+	var buttons := []
+	if node is Button:
+		buttons.append(node)
+	for child in node.get_children():
+		buttons.append_array(_buttons_in(child))
+	return buttons
 
 func _unique(values: Array) -> bool:
 	var seen := {}

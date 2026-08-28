@@ -1132,6 +1132,145 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 	_read_cache_store(session, "recruit_actions", actions)
 	return actions
 
+static func get_build_catalog(session: SessionStateStoreScript.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var built_buildings := []
+	for built_value in town.get("built_buildings", []):
+		var built_id := String(built_value)
+		if built_id != "" and built_id not in built_buildings:
+			built_buildings.append(built_id)
+	var building_ids := []
+	for source in [town_template.get("starting_building_ids", []), town_template.get("buildable_building_ids", [])]:
+		if not (source is Array):
+			continue
+		for building_value in source:
+			var building_id := String(building_value)
+			if building_id != "" and building_id not in building_ids:
+				building_ids.append(building_id)
+	var actions_by_building := {}
+	for action_value in get_build_actions(session):
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		actions_by_building[building_id_for_action(String(action.get("id", "")))] = action
+	var catalog := []
+	for building_id_value in building_ids:
+		var building_id := String(building_id_value)
+		var building := ContentService.get_building(building_id)
+		if building.is_empty():
+			continue
+		var built := building_id in built_buildings
+		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id, session.day)
+		var action: Dictionary = actions_by_building.get(building_id, {})
+		var row: Dictionary = action.duplicate(true) if not action.is_empty() else {}
+		var catalog_status := "Locked"
+		var status_detail := String(status.get("blocked_message", "Prerequisites are not met."))
+		if built:
+			catalog_status = "Built"
+			status_detail = "Standing in this town."
+		elif not action.is_empty() and bool(action.get("direct_affordable", false)):
+			catalog_status = "Ready"
+			status_detail = "Ready for today's construction order."
+		elif not action.is_empty() and bool(action.get("market_coverable", false)):
+			catalog_status = "Trade"
+			status_detail = String(action.get("market_summary", "Trade can cover the missing resources."))
+		elif not action.is_empty():
+			catalog_status = "Resources"
+			status_detail = String(action.get("disabled_reason", "Current stores cannot fund this building."))
+		row.merge({
+			"id": "build:%s" % building_id,
+			"building_id": building_id,
+			"name": String(building.get("name", building_id)),
+			"label": "Build %s" % String(building.get("name", building_id)),
+			"category": String(building.get("category", "support")),
+			"description": String(building.get("description", "")),
+			"cost": building.get("cost", {}).duplicate(true) if building.get("cost", {}) is Dictionary else {},
+			"effect_summary": _building_effect_summary(building),
+			"catalog_status": catalog_status,
+			"catalog_status_detail": status_detail,
+			"built": built,
+			"locked": not built and action.is_empty(),
+			"action_available": not action.is_empty(),
+			"disabled": built or action.is_empty() or bool(action.get("disabled", false)),
+			"disabled_reason": status_detail if action.is_empty() or built else String(action.get("disabled_reason", "")),
+		}, true)
+		catalog.append(row)
+	return catalog
+
+static func get_muster_catalog(session: SessionStateStoreScript.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+	var actions_by_unit := {}
+	for action_value in get_recruit_actions(session):
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		actions_by_unit[String(action.get("id", "")).trim_prefix("recruit:")] = action
+	var catalog := []
+	for unit_id_value in _town_unit_ids(town):
+		var unit_id := String(unit_id_value)
+		var unit := ContentService.get_unit(unit_id)
+		if unit.is_empty():
+			continue
+		var action: Dictionary = actions_by_unit.get(unit_id, {})
+		var row: Dictionary = action.duplicate(true) if not action.is_empty() else {}
+		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
+		var weekly_growth := int(OverworldRulesScript.town_weekly_growth(town, session).get(unit_id, 0))
+		var unlock_building_id := _unlock_building_for_unit(town, unit_id)
+		var unlock_building := ContentService.get_building(unlock_building_id)
+		var unlocked := _unit_is_unlocked_in_town(town, unit_id)
+		var catalog_status := "Locked"
+		var status_detail := "Build %s to unlock this unit." % String(unlock_building.get("name", "its dwelling"))
+		if unlocked and available <= 0:
+			catalog_status = "Empty"
+			status_detail = "No recruits are waiting; weekly growth is +%d." % weekly_growth
+		elif not action.is_empty() and int(action.get("direct_affordable_count", 0)) > 0:
+			catalog_status = "Ready"
+			status_detail = "%d available; %d can be recruited now." % [available, int(action.get("direct_affordable_count", 0))]
+		elif not action.is_empty() and int(action.get("market_affordable_count", 0)) > 0:
+			catalog_status = "Trade"
+			status_detail = String(action.get("market_summary", "Trade can fund this muster."))
+		elif unlocked:
+			catalog_status = "Resources"
+			status_detail = String(action.get("disabled_reason", "Current stores cannot fund this muster."))
+		var unit_cost: Dictionary = OverworldRulesScript.town_recruit_cost(session, town, unit_id)
+		var art := ContentService.get_unit_art(unit_id)
+		row.merge({
+			"id": "recruit:%s" % unit_id,
+			"unit_id": unit_id,
+			"name": String(unit.get("name", unit_id)),
+			"label": "Recruit %s" % String(unit.get("name", unit_id)),
+			"unit_tier": int(unit.get("tier", 0)),
+			"tier_label": _unit_tier_label(int(unit.get("tier", 0))),
+			"role": String(unit.get("role", "")),
+			"unit_cost": unit_cost.duplicate(true),
+			"available_count": available,
+			"weekly_growth": weekly_growth,
+			"unlock_building_id": unlock_building_id,
+			"unlock_building_name": String(unlock_building.get("name", unlock_building_id)),
+			"portrait_path": String(art.get("portrait", "")),
+			"catalog_status": catalog_status,
+			"catalog_status_detail": status_detail,
+			"unlocked": unlocked,
+			"action_available": not action.is_empty(),
+			"disabled": action.is_empty() or bool(action.get("disabled", false)),
+			"disabled_reason": status_detail if action.is_empty() else String(action.get("disabled_reason", "")),
+		}, true)
+		catalog.append(row)
+	catalog.sort_custom(_muster_catalog_row_less)
+	return catalog
+
+static func _muster_catalog_row_less(left: Dictionary, right: Dictionary) -> bool:
+	var left_tier := int(left.get("unit_tier", 0))
+	var right_tier := int(right.get("unit_tier", 0))
+	if left_tier != right_tier:
+		return left_tier < right_tier
+	return String(left.get("name", "")) < String(right.get("name", ""))
+
 static func get_market_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	if _read_cache_has(session, "market_actions"):
 		return _read_cache_get(session, "market_actions")

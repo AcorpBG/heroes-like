@@ -15329,13 +15329,13 @@
       }
     }
   ],
-  "currentNotes": "Completed the production seven-slot army management bar with original unit icons and counts, explicit empty and selected states, real keyboard-focusable source and destination controls, move-all, split-half, split-one, and authoritative move, swap, merge, and split across active hero and town garrison holders. Slot metadata survives manual save and restore, reaches real battles in arranged order, and returns with survivors; over-capacity and invalid operations fail closed. Focused 1280 and 1920 hero and town runtime, legacy field and town transfers, quick resolve, full town-battle visual smoke, core, accessibility, validate and editor, Linux export and headless startup, and Windows export and fresh-Wine Boot, MainMenu, and native-DLL startup passed. Packaged army-bar interaction, controller hardware, AT-SPI or UIA certification, signing, publication, whole-game, and release readiness remain unclaimed. The broad active-play focus smoke remains independently red on the pre-existing town-footprint route-cursor reset canonicalizing an interior hero tile to the town entry; no army-bar mutation caused or masked it.",
+  "currentNotes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-army-stack-management-bar-10184",
-  "currentSliceId": "ux-army-stack-management-bar-10184",
-  "currentSliceNotes": "Completed the production seven-slot army management bar with original unit icons and counts, explicit empty and selected states, real keyboard-focusable source and destination controls, move-all, split-half, split-one, and authoritative move, swap, merge, and split across active hero and town garrison holders. Slot metadata survives manual save and restore, reaches real battles in arranged order, and returns with survivors; over-capacity and invalid operations fail closed. Focused 1280 and 1920 hero and town runtime, legacy field and town transfers, quick resolve, full town-battle visual smoke, core, accessibility, validate and editor, Linux export and headless startup, and Windows export and fresh-Wine Boot, MainMenu, and native-DLL startup passed. Packaged army-bar interaction, controller hardware, AT-SPI or UIA certification, signing, publication, whole-game, and release readiness remain unclaimed. The broad active-play focus smoke remains independently red on the pre-existing town-footprint route-cursor reset canonicalizing an interior hero tile to the town entry; no army-bar mutation caused or masked it.",
+  "currentSlice": "ux-town-build-muster-popup-catalogs-10184",
+  "currentSliceId": "ux-town-build-muster-popup-catalogs-10184",
+  "currentSliceNotes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "ux army stack management bar 10184",
+  "currentSliceTitle": "ux town build muster popup catalogs 10184",
   "currentSliceUpdatedAt": "2026-08-28T17:59:00Z",
   "deferredRiskRegister": [
     {
@@ -105112,6 +105112,16 @@
       "startedAt": "2026-08-28T17:17:54Z",
       "notes": "Completed the production seven-slot army management bar with original unit icons and counts, explicit empty and selected states, real keyboard-focusable source and destination controls, move-all, split-half, split-one, and authoritative move, swap, merge, and split across active hero and town garrison holders. Slot metadata survives manual save and restore, reaches real battles in arranged order, and returns with survivors; over-capacity and invalid operations fail closed. Focused 1280 and 1920 hero and town runtime, legacy field and town transfers, quick resolve, full town-battle visual smoke, core, accessibility, validate and editor, Linux export and headless startup, and Windows export and fresh-Wine Boot, MainMenu, and native-DLL startup passed. Packaged army-bar interaction, controller hardware, AT-SPI or UIA certification, signing, publication, whole-game, and release readiness remain unclaimed. The broad active-play focus smoke remains independently red on the pre-existing town-footprint route-cursor reset canonicalizing an interior hero tile to the town entry; no army-bar mutation caused or masked it.",
       "completedAt": "2026-08-28T17:58:37Z"
+    },
+    {
+      "id": "ux-town-build-muster-popup-catalogs-10184",
+      "title": "ux town build muster popup catalogs 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T19:08:03Z",
+      "startedAt": "2026-08-28T18:30:41Z",
+      "notes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
+      "completedAt": "2026-08-28T19:08:03Z"
     }
   ],
   "project": "heroes-like",
@@ -105656,7 +105666,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T17:59:00Z",
+  "updatedAt": "2026-08-28T19:08:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

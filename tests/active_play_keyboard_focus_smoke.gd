@@ -89,10 +89,22 @@ func _check_town_keyboard_build() -> bool:
 	if not await _check_town_management_tab_navigation(shell, session, "wide"):
 		return false
 
-	var build_actions: Control = shell.get_node("%BuildActions")
 	var focus_owner := get_viewport().gui_get_focus_owner()
-	if focus_owner == null or not build_actions.is_ancestor_of(focus_owner) or not (focus_owner is BaseButton) or focus_owner.disabled:
-		return _fail("Town entry focus did not land on a ready construction order: %s." % _focus_name())
+	var build_launcher: Button = shell.get_node("%OpenBuildCatalog")
+	if focus_owner != build_launcher:
+		return _fail("Town entry focus did not land on the construction catalog launcher: %s." % _focus_name())
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+	if not bool(shell.call("validation_town_catalog_snapshot").get("open", false)) or _focus_name() != "TownCatalogClose":
+		return _fail("Town construction launcher did not open a focus-trapped catalog: %s." % shell.call("validation_town_catalog_snapshot"))
+	for _step in range(32):
+		var candidate := get_viewport().gui_get_focus_owner()
+		if candidate is Button and String(candidate.get_meta("catalog_status", "")) == "Ready":
+			break
+		await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
+	focus_owner = get_viewport().gui_get_focus_owner()
+	if not (focus_owner is Button) or String(focus_owner.get_meta("catalog_status", "")) != "Ready":
+		return _fail("Town catalog focus cycle did not reach a ready construction card: %s." % _focus_name())
 	var first_build_focus := focus_owner
 	await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
 	var next_town_focus := get_viewport().gui_get_focus_owner()
@@ -814,10 +826,9 @@ func _check_narrow_town_keyboard_entry() -> bool:
 	await _settle()
 	if not shell.get_node("%SidebarShell").visible or shell.get_node("%StageColumn").visible:
 		return _fail("Controller-confirmed Town Orders did not open narrow management.")
-	var build_actions: Control = shell.get_node("%BuildActions")
 	var focus_owner := get_viewport().gui_get_focus_owner()
-	if focus_owner == null or not build_actions.is_ancestor_of(focus_owner) or not (focus_owner is BaseButton) or focus_owner.disabled:
-		return _fail("Narrow town management did not move focus into a ready construction order: %s." % _focus_name())
+	if focus_owner != shell.get_node("%OpenBuildCatalog"):
+		return _fail("Narrow town management did not move focus to the construction catalog launcher: %s." % _focus_name())
 	if not await _check_town_management_tab_navigation(shell, session, "narrow"):
 		return false
 	await _press_joypad_button(JOY_BUTTON_B)

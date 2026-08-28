@@ -31550,8 +31550,9 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "management_tabs.current_tab = 1",
 		"var live_session = SessionState.ensure_active_session()",
 		"var live_town: Dictionary = TownRules.get_active_town(live_session)",
-        "var recruit_row: Node = recruit_actions.get_child(selected_index)",
-        'var row_buttons: Array = recruit_row.find_children("*", "Button", true, false)',
+        'shell.call("validation_open_town_catalog", "muster")',
+        'var recruit_button := _catalog_button(recruit_actions, String(selected_action.get("id", "")))',
+        'String(node.get_meta("catalog_entry_id", "")) == action_id',
         "var control = SessionStateStoreScript.SessionData.new()",
 		"var live_before: Dictionary = live_session.to_dict()",
 		"control.from_dict(live_before.duplicate(true))",
@@ -35262,10 +35263,10 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
             ensure(watermark_body.count(token) == 1, errors, f"Town Build faction watermark is missing exact passive scene token: {token}")
         for forbidden in ("custom_minimum_size", "tooltip_text", "texture =", "script =", "focus_mode = 1", "focus_mode = 2"):
             ensure(forbidden not in watermark_body, errors, f"Town Build faction watermark must not add layout, text, authored art, script, or focus through {forbidden}")
-    confirm_index = scene_text.find('[node name="ConfirmBuild" type="Button"')
+    launcher_index = scene_text.find('[node name="OpenBuildCatalog" type="Button"')
     watermark_index = scene_text.find('[node name="BuildFactionWatermark" type="TextureRect"')
     recruit_index = scene_text.find('[node name="RecruitPanel" type="PanelContainer"')
-    ensure(0 <= confirm_index < watermark_index < recruit_index, errors, "Town Build faction watermark must remain the final BuildBox child after ConfirmBuild and before the next native page")
+    ensure(0 <= launcher_index < watermark_index < recruit_index, errors, "Town Build faction watermark must remain the final BuildBox child after the catalog launcher and before the next native page")
 
     ensure(script_text.count("@onready var _build_faction_watermark: TextureRect = %BuildFactionWatermark") == 1, errors, "TownShell must bind the Build faction watermark exactly once")
     refresh_crest = gd_function_block(script_text, "_refresh_faction_crest")
@@ -46185,7 +46186,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     helper = function_block(shell_text, "_apply_build_action_icon")
     order = [rebuild.find("_style_action_button"), rebuild.find("_apply_build_action_icon(button, action)"), rebuild.find("button.pressed.connect"), rebuild.find("add_child(button)")]
     ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town Build category icon must apply after styling and before unchanged binding/order")
-    for token in ("TownRules.building_id_for_action", "TownRules.building_icon_path", "load(icon_path) as Texture2D", "button.icon = texture", "button.expand_icon = true", 'button.add_theme_constant_override("icon_max_width", 24)'):
+    for token in ("TownRules.building_id_for_action", "TownRules.building_icon_path", "load(icon_path) as Texture2D", "button.icon = texture", "button.expand_icon = true", 'button.add_theme_constant_override("icon_max_width", 46)'):
         ensure(token in helper, errors, f"Town Build category icon helper is missing: {token}")
     for forbidden in ("button.text =", "button.tooltip_text =", "button.disabled =", "await ", "create_timer", "create_tween"):
         ensure(forbidden not in helper, errors, f"Town Build category icon helper must not alter action/timing authority: {forbidden}")

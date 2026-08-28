@@ -26,6 +26,34 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Town Build And Muster Popup Catalogs
+
+id: `ux-town-build-muster-popup-catalogs-10184`
+
+Status: completed.
+
+Current finding:
+- Build and Muster currently render as dense inline action lists inside the narrow Town management rail, so the scenic town loses visual priority while neither surface can show the complete town development or faction roster;
+- authoritative action lists intentionally contain only currently buildable buildings and recruits with a positive reserve, leaving built works, prerequisite-locked works, unlocked-but-empty units, and future unit tiers invisible to the player.
+
+Implementation boundary:
+- replace the inline Build and Muster action lists with compact launch surfaces that open dedicated modal town windows over the scenic stage;
+- expose one complete town-specific building catalog and one complete town-specific unit ladder, using the existing original building and unit art with clear built, locked, empty, blocked, trade-coverable, and ready states;
+- retain the existing construction selection/confirmation and recruitment authority, costs, prerequisites, one-build-per-day rule, focus/navigation behavior, action feedback, cache invalidation, and save/load state.
+
+Completion criteria:
+- Build opens a focus-trapped, closable, scrollable popup containing every starting and buildable town building exactly once with original icon, name, category, cost, effect/status detail, and an explicit confirmation path only for authoritative open orders;
+- Muster opens a focus-trapped, closable popup containing every town unit tier exactly once with original portrait, tier/name, reserve, weekly growth, unit cost, unlock/status detail, and recruitment only through the existing authoritative action;
+- inspected 1280x720 and 1920x1080 captures preserve a scenery-first Town view while both windows remain contained and readable, and mouse, keyboard/controller-style focus, Escape close/focus return, construction, recruitment, save/load, Town/Battle compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes UI, assets, names, text, or protected visual expression; no new generated art, building/unit content, quantity picker, construction/recruitment rule, economy/balance, town-stage art, battle, AI, map/RMG, save-schema, packaging interaction, hardware certification, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- the narrow Town Build and Muster pages now remain scenery-first launch surfaces, while reusable focus-trapped popup windows present complete town-specific building and roster catalogs with original art, costs, reserves/growth, unlock details, and explicit status states;
+- construction and recruitment still resolve only through the existing authoritative actions, including explicit build confirmation, market redirection, resource/prerequisite locks, recruitment reserves, action presentation, and save-version 9 state;
+- inspected 1280x720 and 1920x1080 captures proved contained top-open layouts, complete Riverwatch 25-building and 10-unit catalogs, icon/portrait coverage, keyboard focus trap, Escape close, and exact focus return; focused construction/recruitment controls, all 15 authored town save/resume cases, repository/core checks, and executable Linux/Windows release export startup passed.
+
 ## Hero And Town Army Stack Management Bar
 
 id: `ux-army-stack-management-bar-10184`

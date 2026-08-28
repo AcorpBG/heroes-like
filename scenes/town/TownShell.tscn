@@ -450,23 +450,15 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Buildings"
 
-[node name="BuildActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
-
-[node name="BuildPlan" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
-unique_name_in_owner = true
+[node name="BuildLauncherDescription" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Select a construction plan"
+text = "Open the construction ledger to inspect every standing, available, and locked town building."
 
-[node name="ConfirmBuild" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
+[node name="OpenBuildCatalog" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
 unique_name_in_owner = true
 layout_mode = 2
-disabled = true
-text = "Select Construction"
+text = "Open Construction Ledger"
 
 [node name="BuildFactionWatermark" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
 unique_name_in_owner = true
@@ -503,11 +495,15 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Recruitment"
 
-[node name="RecruitActions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/RecruitPanel/RecruitPad/RecruitBox"]
+[node name="MusterLauncherDescription" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/RecruitPanel/RecruitPad/RecruitBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Open the muster hall to inspect the complete faction unit ladder, reserves, growth, and costs."
+
+[node name="OpenMusterCatalog" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/RecruitPanel/RecruitPad/RecruitBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+text = "Open Muster Hall"
 
 [node name="StudyPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs"]
 unique_name_in_owner = true
@@ -740,6 +736,124 @@ focus_mode = 2
 z_index = 45
 tooltip_text = "Construction completion is resolving. Press Escape to skip."
 
+[node name="TownCatalogOverlay" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+z_index = 48
+
+[node name="CatalogShade" type="ColorRect" parent="TownCatalogOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.008, 0.012, 0.018, 0.72)
+
+[node name="CatalogCenter" type="CenterContainer" parent="TownCatalogOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TownCatalogPanel" type="PanelContainer" parent="TownCatalogOverlay/CatalogCenter"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(900, 560)
+layout_mode = 2
+
+[node name="CatalogMargin" type="MarginContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="CatalogBox" type="VBoxContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin"]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="CatalogHeader" type="HBoxContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TownCatalogTitle" type="Label" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/CatalogHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Town Catalog"
+
+[node name="TownCatalogClose" type="Button" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/CatalogHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="TownCatalogSubtitle" type="Label" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Complete town catalog"
+
+[node name="CatalogDivider" type="HSeparator" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
+layout_mode = 2
+
+[node name="TownCatalogScroll" type="ScrollContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 340)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="CatalogContent" type="VBoxContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/TownCatalogScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BuildActions" type="GridContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/TownCatalogScroll/CatalogContent"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+
+[node name="RecruitActions" type="GridContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/TownCatalogScroll/CatalogContent"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+
+[node name="BuildPlan" type="Label" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Select a construction plan"
+
+[node name="ConfirmBuild" type="Button" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+disabled = true
+text = "Select Construction"
+
 [node name="TownGuideOverlay" type="Control" parent="."]
 unique_name_in_owner = true
 visible = false
@@ -823,6 +937,9 @@ text = "Close Guide"
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Guide" to="." method="_on_guide_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox/OpenBuildCatalog" to="." method="_on_open_build_catalog_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/RecruitPanel/RecruitPad/RecruitBox/OpenMusterCatalog" to="." method="_on_open_muster_catalog_pressed"]
+[connection signal="pressed" from="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/CatalogHeader/TownCatalogClose" to="." method="_on_town_catalog_close_pressed"]
 [connection signal="pressed" from="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox/TownGuideClose" to="." method="_on_town_guide_close_pressed"]
 [connection signal="canceled" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_canceled"]
 [connection signal="confirmed" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_confirmed"]

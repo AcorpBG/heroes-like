@@ -71,16 +71,16 @@ func _run_live_case(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+	shell.call("validation_open_town_catalog", "build")
+	await get_tree().process_frame
+	await get_tree().process_frame
 	var live_session = SessionState.ensure_active_session()
-	var actions: Array = TownRules.get_build_actions(live_session)
+	var actions: Array = TownRules.get_build_catalog(live_session)
 	var container := shell.get_node_or_null("%BuildActions") as Control
 	var confirm := shell.get_node_or_null("%ConfirmBuild") as Button
 	if container == null or confirm == null or actions.is_empty():
 		return await _finish_case(shell, {"ok": false, "failure": "build_surface_missing"})
-	var buttons := []
-	for child in container.get_children():
-		if child is Button:
-			buttons.append(child)
+	var buttons := _buttons_in(container)
 	if buttons.size() != actions.size():
 		return await _finish_case(shell, {"ok": false, "failure": "button_count", "buttons": buttons.size(), "actions": actions.size()})
 	var presentation_exact := true
@@ -92,8 +92,8 @@ func _run_live_case(viewport_size: Vector2i) -> Dictionary:
 		var button: Button = buttons[index]
 		var building_id := TownRules.building_id_for_action(String(action.get("id", "")))
 		var expected_path := TownRules.building_icon_path(building_id)
-		presentation_exact = presentation_exact and button.icon != null and button.icon.resource_path == expected_path and button.expand_icon and button.get_theme_constant("icon_max_width") == 24
-		presentation_exact = presentation_exact and button.text == shell._build_plan_option_label(action) and button.tooltip_text == shell._town_action_button_tooltip(action, "build")
+		presentation_exact = presentation_exact and button.icon != null and button.icon.resource_path == expected_path and button.expand_icon and button.get_theme_constant("icon_max_width") == 46
+		presentation_exact = presentation_exact and button.text.find(String(action.get("name", ""))) >= 0 and button.text.find(String(action.get("catalog_status", ""))) >= 0 and button.tooltip_text == shell._catalog_build_tooltip(action)
 		contained = contained and container.get_global_rect().encloses(button.get_global_rect())
 		if enabled_action.is_empty() and bool(action.get("direct_affordable", false)) and not bool(action.get("disabled", true)):
 			enabled_action = action.duplicate(true)
@@ -108,10 +108,7 @@ func _run_live_case(viewport_size: Vector2i) -> Dictionary:
 	var building_id := action_id.trim_prefix("build:")
 	var selection: Dictionary = shell.validation_select_build_plan(action_id)
 	await get_tree().process_frame
-	var refreshed_buttons := []
-	for child in container.get_children():
-		if child is Button:
-			refreshed_buttons.append(child)
+	var refreshed_buttons := _buttons_in(container)
 	var selected_button: Button = refreshed_buttons[enabled_index] if enabled_index >= 0 and enabled_index < refreshed_buttons.size() else null
 	var selection_exact := bool(selection.get("ok", false)) and selected_button != null and selected_button.button_pressed and not confirm.disabled
 	var before: Dictionary = live_session.to_dict()
@@ -137,6 +134,14 @@ func _run_live_case(viewport_size: Vector2i) -> Dictionary:
 		"consequence_exact": consequence_exact,
 		"save_version_exact": int(live_session.save_version) == SessionStateStore.SAVE_VERSION,
 	})
+
+func _buttons_in(node: Node) -> Array:
+	var buttons := []
+	if node is Button:
+		buttons.append(node)
+	for child in node.get_children():
+		buttons.append_array(_buttons_in(child))
+	return buttons
 
 func _first_player_town(session) -> Dictionary:
 	for town in session.overworld.get("towns", []):
