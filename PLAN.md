@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
+- Selected implementation slice: none. Select the next tracker-approved content and original-art slice.
+
+## Asterfall Survey Artifact Set And Original Art
+
+id: `content-asterfall-survey-artifact-set-10184`
+
+Status: completed.
+
+Current finding:
+- the live game has 103 authored units and 63 encounters but only 12 artifacts and one three-piece set, while most authored scenarios repeatedly place the same four early artifacts;
+- artifact rendering already supports separate inventory icons and grounded transparent field sprites, so new content can add real collection/build variety without changing the save schema or renderer ownership.
+
+Implementation boundary:
+- add the original three-piece Asterfall Survey set with complementary exploration and battle-command effects using only existing artifact bonus contracts and equipment slots;
+- create six distinct production bitmap assets: one 128px inventory icon and one transparent grounded 512px overworld field sprite for each piece, with stable manifest identities and no reused inventory/field image;
+- place the complete set in a live authored scenario, add it to appropriate guarded reward breadth, and preserve deterministic pickup, AI valuation, equipment, cumulative-set, save/load, and fallback behavior.
+
+Completion criteria:
+- all three artifacts load through ContentService and ArtifactRules, auto-equip into compatible slots, expose readable individual and two-/three-piece effects, persist by stable content reference, and produce exact live movement/scouting/battle deltas after save/resume;
+- inspected 1280x720 and 1920x1080 captures show three visually distinct, transparent, contained field sprites and three distinct inventory icons, with the authored scenario materializing and collecting the intended pieces;
+- artifact taxonomy/icon/field-sprite/pickup/set/equipment/AI, scenario, repository/editor, core, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes artifacts, names, iconography, assets, text, or protected visual expression; no new artifact slot, bonus type, equipment rule, save version, renderer architecture, map/RMG behavior, faction balance claim, hardware certification, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- Asterfall Survey adds the Rainstar Sextant, Asterfall Mantle, and Cometwake Pennon as a second live three-piece set, with exact individual and cumulative exploration/battle effects, guarded-reward eligibility, deterministic equipment behavior, and stable save-version 9 references;
+- each piece has a distinct original 128px inventory icon and a separate transparent 512px grounded field composition, and Halo Reserve Refraction Claim now authors and materializes all three one-time pickups;
+- inspected 1280x720 and 1920x1080 captures, direct scenario collection/save-resume, artifact taxonomy/set/equipment/icon/field/pickup/AI reports, core/repository/editor checks, and executable Linux/Windows release export startup passed; signing, publication, whole-game validation, and release readiness remain unclaimed.
 
 ## Town Build And Muster Popup Catalogs
 

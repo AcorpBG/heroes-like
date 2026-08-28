@@ -17,6 +17,9 @@ const EXPECTED_ICONS := {
 	"artifact_living_bridge_knot": "res://art/artifacts/runtime/living_bridge_knot.png",
 	"artifact_pressure_gauge_reliquary": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
 	"artifact_black_sail_compass": "res://art/artifacts/runtime/black_sail_compass.png",
+	"artifact_rainstar_sextant": "res://art/artifacts/runtime/rainstar_sextant.png",
+	"artifact_asterfall_mantle": "res://art/artifacts/runtime/asterfall_mantle.png",
+	"artifact_cometwake_pennon": "res://art/artifacts/runtime/cometwake_pennon.png",
 }
 
 func _ready() -> void:
@@ -71,6 +74,10 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	if not bool(exact.get("ok", false)):
 		shell.queue_free()
 		return {"ok": false, "failure": "artifact_presentations", "detail": exact}
+	var capture_path := await _capture_viewport_if_requested(viewport_size)
+	if capture_path == "capture_failed":
+		shell.queue_free()
+		return {"ok": false, "failure": "capture_failed", "viewport": [viewport_size.x, viewport_size.y]}
 
 	var nodes: Array = session.overworld.get("artifact_nodes", [])
 	var first_node: Dictionary = nodes[0]
@@ -115,7 +122,24 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		"fallback_exact": fallback_exact,
 		"restored_exact": restored_exact,
 		"containment_exact": containment_exact,
+		"capture_path": capture_path,
 	}
+
+func _capture_viewport_if_requested(viewport_size: Vector2i) -> String:
+	var requested_dir := OS.get_environment("ARTIFACT_PICKUP_CAPTURE_DIR").strip_edges()
+	if requested_dir == "":
+		return ""
+	var absolute_dir := ProjectSettings.globalize_path(requested_dir) if requested_dir.begins_with("res://") or requested_dir.begins_with("user://") else requested_dir
+	if DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
+		return "capture_failed"
+	await RenderingServer.frame_post_draw
+	var image := get_viewport().get_texture().get_image()
+	if image == null or image.is_empty():
+		return "capture_failed"
+	var path := "%s/asterfall-artifacts-%dx%d.png" % [absolute_dir.trim_suffix("/"), viewport_size.x, viewport_size.y]
+	if image.save_png(path) != OK:
+		return "capture_failed"
+	return path
 
 func _presentation_rows(map_view: Node, nodes: Array) -> Array:
 	var rows: Array = []
@@ -180,7 +204,7 @@ func _validate_presentations(rows: Array) -> Dictionary:
 		seen_artifact_ids[artifact_id] = true
 		seen_field_asset_ids[expected_field_asset_id] = true
 	return {
-		"ok": seen_artifact_ids.size() == EXPECTED_ICONS.size() and seen_field_asset_ids.size() == EXPECTED_ICONS.size() and visible_count == 12 and remembered_count == 0 and grounding_exact,
+		"ok": seen_artifact_ids.size() == EXPECTED_ICONS.size() and seen_field_asset_ids.size() == EXPECTED_ICONS.size() and visible_count == EXPECTED_ICONS.size() and remembered_count == 0 and grounding_exact,
 		"artifact_ids": seen_artifact_ids.keys(),
 		"field_asset_ids": seen_field_asset_ids.keys(),
 		"transparent_field_sprites": true,
@@ -196,8 +220,8 @@ func _configure_fixture(session) -> void:
 		nodes.append({
 			"placement_id": "artifact_icon_fixture_%02d" % index,
 			"artifact_id": String(artifact_ids[index]),
-			"x": 2 + (index % 6) if index < 6 else 40 + (index % 6),
-			"y": 2 if index < 6 else 40,
+			"x": 2 + (index % 6),
+			"y": 2 + floori(float(index) / 6.0) * 2,
 			"collected": false,
 			"collected_by_faction_id": "",
 			"collected_day": 0,
@@ -224,12 +248,12 @@ func _configure_fixture(session) -> void:
 		var x := int(node.get("x", -1))
 		var y := int(node.get("y", -1))
 		explored_tiles[y][x] = true
-		visible_tiles[y][x] = index < 6
+		visible_tiles[y][x] = true
 	session.overworld["fog"] = {
 		"visible_tiles": visible_tiles,
 		"explored_tiles": explored_tiles,
-		"visible_count": 6,
-		"explored_count": 12,
+		"visible_count": nodes.size(),
+		"explored_count": nodes.size(),
 		"total_tiles": map_size.x * map_size.y,
 	}
 

@@ -31,6 +31,39 @@
         "source_reward_tables_active": false,
         "derived_from_equipped_pieces": true
       }
+    },
+    {
+      "id": "set_asterfall_survey",
+      "name": "Asterfall Survey",
+      "identity": "A field astronomer's command kit for reading stormlight, fixing distant routes, and bringing a measured charge onto uncertain ground.",
+      "piece_ids": [
+        "artifact_rainstar_sextant",
+        "artifact_asterfall_mantle",
+        "artifact_cometwake_pennon"
+      ],
+      "source_hint": "The complete survey is placed across the Halo Refraction expedition, while guarded artifact sites can yield individual pieces.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Two calibrated survey pieces hold a cleaner marching line between distant bearings.",
+          "bonuses": {
+            "overworld_movement": 1
+          }
+        },
+        {
+          "count": 3,
+          "summary": "The complete survey reads one ring farther and times the opening command to the falling light.",
+          "bonuses": {
+            "scouting_radius": 1,
+            "battle_initiative": 1
+          }
+        }
+      ],
+      "runtime_policy": {
+        "set_bonuses_active": true,
+        "source_reward_tables_active": false,
+        "derived_from_equipped_pieces": true
+      }
     }
   ],
   "source_reward_tables": [
@@ -113,12 +146,16 @@
         "artifact_choir_tuning_fork",
         "artifact_living_bridge_knot",
         "artifact_pressure_gauge_reliquary",
-        "artifact_black_sail_compass"
+        "artifact_black_sail_compass",
+        "artifact_rainstar_sextant",
+        "artifact_asterfall_mantle",
+        "artifact_cometwake_pennon"
       ],
       "faction_constraints": [],
       "set_constraints": {
         "allowed_set_ids": [
-          "set_wayfarer_compact"
+          "set_wayfarer_compact",
+          "set_asterfall_survey"
         ],
         "piece_limit_per_table": 2
       },
@@ -1509,6 +1546,270 @@
         "daily_income": {
           "memory_salt": 1
         }
+      }
+    },
+    {
+      "id": "artifact_rainstar_sextant",
+      "name": "Rainstar Sextant",
+      "slot": "trinket",
+      "artifact_class": "set_piece",
+      "rarity": "uncommon",
+      "family": "asterfall_survey_gear",
+      "roles": [
+        "scouting",
+        "route",
+        "combat"
+      ],
+      "accord_affinity": "lens",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "artifact_cache",
+        "set_chain"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Extends scouting range."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Improves opening-command timing."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Uncommon survey instrument for scouting and opening-command timing.",
+        "icon_id": "artifact_icon_rainstar_sextant",
+        "icon_path": "res://art/artifacts/runtime/rainstar_sextant.png",
+        "effect_tags": [
+          "scouting",
+          "initiative",
+          "survey"
+        ],
+        "comparison_priority": [
+          "scouting_radius",
+          "battle_initiative"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "scouting_reach",
+          "initiative_tempo",
+          "set_completion"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "magic"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "survey",
+          "starlight",
+          "route"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "set_asterfall_survey",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A brass field sextant whose suspended rain-glass brightens when a distant road lies under clear sky.",
+      "bonuses": {
+        "scouting_radius": 1,
+        "battle_initiative": 1
+      }
+    },
+    {
+      "id": "artifact_asterfall_mantle",
+      "name": "Asterfall Mantle",
+      "slot": "armor",
+      "artifact_class": "set_piece",
+      "rarity": "uncommon",
+      "family": "asterfall_survey_gear",
+      "roles": [
+        "defense",
+        "movement",
+        "route"
+      ],
+      "accord_affinity": "lens",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "artifact_cache",
+        "set_chain"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Improves defensive command."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Improves field movement."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Uncommon navigator's mantle for defense and sustained field movement.",
+        "icon_id": "artifact_icon_asterfall_mantle",
+        "icon_path": "res://art/artifacts/runtime/asterfall_mantle.png",
+        "effect_tags": [
+          "defense",
+          "movement",
+          "survey"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "overworld_movement"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "route_tempo",
+          "set_completion"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "defender"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "survey",
+          "weatherproof",
+          "route"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "set_asterfall_survey",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Layered midnight weathercloth weighted with pale meteor glass, cut for surveyors who keep marching through the first hard rain.",
+      "bonuses": {
+        "battle_defense": 1,
+        "overworld_movement": 1
+      }
+    },
+    {
+      "id": "artifact_cometwake_pennon",
+      "name": "Cometwake Pennon",
+      "slot": "banner",
+      "artifact_class": "set_piece",
+      "rarity": "rare",
+      "family": "asterfall_survey_gear",
+      "roles": [
+        "combat",
+        "morale"
+      ],
+      "accord_affinity": "lens",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "battle_salvage",
+        "artifact_cache",
+        "set_chain"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Improves attack command."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Improves initiative command."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Rare expedition pennon for attack and decisive command tempo.",
+        "icon_id": "artifact_icon_cometwake_pennon",
+        "icon_path": "res://art/artifacts/runtime/cometwake_pennon.png",
+        "effect_tags": [
+          "attack",
+          "initiative",
+          "survey"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "battle_initiative"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_attack",
+          "initiative_tempo",
+          "set_completion"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "survey",
+          "command",
+          "cometwake"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "set_asterfall_survey",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A split-tail survey pennon set with cloudy glass. Its falling-star line gives the advance a bearing even when no horizon is visible.",
+      "bonuses": {
+        "battle_attack": 1,
+        "battle_initiative": 1
       }
     }
   ]

@@ -264,6 +264,27 @@
       "source_icon": "res://art/artifacts/runtime/black_sail_compass.png",
       "source_model": "original_identity_preserving_background_extraction"
     },
+    "artifact_field_rainstar_sextant": {
+      "path": "res://art/overworld/runtime/objects/artifacts/rainstar_sextant.png",
+      "source_icon": "res://art/artifacts/runtime/rainstar_sextant.png",
+      "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+      "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+      "background": "transparent"
+    },
+    "artifact_field_asterfall_mantle": {
+      "path": "res://art/overworld/runtime/objects/artifacts/asterfall_mantle.png",
+      "source_icon": "res://art/artifacts/runtime/asterfall_mantle.png",
+      "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+      "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+      "background": "transparent"
+    },
+    "artifact_field_cometwake_pennon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/cometwake_pennon.png",
+      "source_icon": "res://art/artifacts/runtime/cometwake_pennon.png",
+      "source_model": "built_in_image_gen_distinct_transparent_field_composition",
+      "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+      "background": "transparent"
+    },
     "guarded_farmhouse": {
       "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
       "source_trimmed": "res://art/overworld/source/trimmed/dwellings/guarded_farmhouse-trimmed.png"
@@ -4012,7 +4033,10 @@
     "artifact_choir_tuning_fork": "artifact_field_choir_tuning_fork",
     "artifact_living_bridge_knot": "artifact_field_living_bridge_knot",
     "artifact_pressure_gauge_reliquary": "artifact_field_pressure_gauge_reliquary",
-    "artifact_black_sail_compass": "artifact_field_black_sail_compass"
+    "artifact_black_sail_compass": "artifact_field_black_sail_compass",
+    "artifact_rainstar_sextant": "artifact_field_rainstar_sextant",
+    "artifact_asterfall_mantle": "artifact_field_asterfall_mantle",
+    "artifact_cometwake_pennon": "artifact_field_cometwake_pennon"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",

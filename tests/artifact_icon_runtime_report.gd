@@ -18,13 +18,21 @@ const EXPECTED_ICONS := {
 	"artifact_living_bridge_knot": "res://art/artifacts/runtime/living_bridge_knot.png",
 	"artifact_pressure_gauge_reliquary": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
 	"artifact_black_sail_compass": "res://art/artifacts/runtime/black_sail_compass.png",
+	"artifact_rainstar_sextant": "res://art/artifacts/runtime/rainstar_sextant.png",
+	"artifact_asterfall_mantle": "res://art/artifacts/runtime/asterfall_mantle.png",
+	"artifact_cometwake_pennon": "res://art/artifacts/runtime/cometwake_pennon.png",
 }
+
+var _original_ui_scale_percent := 100
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	var original_window_size := get_window().size
+	_original_ui_scale_percent = SettingsService.ui_scale_percent()
+	SettingsService.set_ui_scale_percent(100)
+	await get_tree().process_frame
 	var catalog := _catalog_contract()
 	if not bool(catalog.get("ok", false)):
 		_fail("Artifact icon catalog failed: %s" % JSON.stringify(catalog), original_window_size)
@@ -38,6 +46,7 @@ func _run() -> void:
 				_fail("Artifact icon surface failed: %s" % JSON.stringify(row), original_window_size)
 				return
 	get_window().size = original_window_size
+	SettingsService.set_ui_scale_percent(_original_ui_scale_percent)
 	await get_tree().process_frame
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "catalog": catalog, "rows": rows})])
 	get_tree().quit(0)
@@ -62,9 +71,9 @@ func _catalog_contract() -> Dictionary:
 	distinct_paths.sort()
 	return {
 		"ok": (
-			rows.size() == 12
-			and distinct_ids.size() == 12
-			and distinct_paths.size() == 12
+			rows.size() == EXPECTED_ICONS.size()
+			and distinct_ids.size() == EXPECTED_ICONS.size()
+			and distinct_paths.size() == EXPECTED_ICONS.size()
 			and _all_unique(distinct_ids)
 			and _all_unique(distinct_paths)
 			and rows.all(func(row): return not String(row.get("icon_id", "")).contains("placeholder") and String(row.get("icon_path", "")) == String(EXPECTED_ICONS.get(String(row.get("artifact_id", "")), "")) and row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0))
@@ -256,5 +265,6 @@ func _finish_case(shell: Node, result: Dictionary) -> Dictionary:
 
 func _fail(message: String, original_window_size: Vector2i) -> void:
 	get_window().size = original_window_size
+	SettingsService.set_ui_scale_percent(_original_ui_scale_percent)
 	push_error(message)
 	get_tree().quit(1)

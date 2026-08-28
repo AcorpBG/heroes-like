@@ -15332,10 +15332,10 @@
   "currentNotes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-town-build-muster-popup-catalogs-10184",
-  "currentSliceId": "ux-town-build-muster-popup-catalogs-10184",
-  "currentSliceNotes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
+  "currentSliceId": "content-asterfall-survey-artifact-set-10184",
+  "currentSliceNotes": "Implemented the original three-piece Asterfall Survey set with six distinct inventory/field bitmap assets, live Halo Reserve Refraction Claim pickups, guarded reward breadth, exact cumulative runtime effects, save-version 9 persistence, and compact overworld drawer containment. Passed inspected 1280x720/1920x1080 visual captures, focused artifact/source/set/save checks, core/repository validation, and executable Linux/Windows export startup.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "ux town build muster popup catalogs 10184",
+  "currentSliceTitle": "content asterfall survey artifact set 10184",
   "currentSliceUpdatedAt": "2026-08-28T17:59:00Z",
   "deferredRiskRegister": [
     {
@@ -105122,6 +105122,16 @@
       "startedAt": "2026-08-28T18:30:41Z",
       "notes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
       "completedAt": "2026-08-28T19:08:03Z"
+    },
+    {
+      "id": "content-asterfall-survey-artifact-set-10184",
+      "title": "content asterfall survey artifact set 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T20:54:56Z",
+      "startedAt": "2026-08-28T20:30:52Z",
+      "notes": "Implemented the original three-piece Asterfall Survey set with six distinct inventory/field bitmap assets, live Halo Reserve Refraction Claim pickups, guarded reward breadth, exact cumulative runtime effects, save-version 9 persistence, and compact overworld drawer containment. Passed inspected 1280x720/1920x1080 visual captures, focused artifact/source/set/save checks, core/repository validation, and executable Linux/Windows export startup.",
+      "completedAt": "2026-08-28T20:54:56Z"
     }
   ],
   "project": "heroes-like",
@@ -105666,7 +105676,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T19:08:03Z",
+  "updatedAt": "2026-08-28T20:54:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
