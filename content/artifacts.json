@@ -149,7 +149,13 @@
         "artifact_black_sail_compass",
         "artifact_rainstar_sextant",
         "artifact_asterfall_mantle",
-        "artifact_cometwake_pennon"
+        "artifact_cometwake_pennon",
+        "artifact_bridgefire_standard",
+        "artifact_reedshadow_waders",
+        "artifact_prismward_mantle",
+        "artifact_graftbark_cuirass",
+        "artifact_quenchplate_vambrace",
+        "artifact_fogwake_deckboots"
       ],
       "faction_constraints": [],
       "set_constraints": {
@@ -1810,6 +1816,586 @@
       "bonuses": {
         "battle_attack": 1,
         "battle_initiative": 1
+      }
+    },
+    {
+      "id": "artifact_bridgefire_standard",
+      "name": "Bridgefire Standard",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "bridgefire_standards",
+      "roles": [
+        "combat",
+        "morale",
+        "economy"
+      ],
+      "accord_affinity": "beacon",
+      "faction_affinity": [
+        "faction_embercourt"
+      ],
+      "source_tags": [
+        "pickup",
+        "guarded_site",
+        "battle_salvage",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Improves attack command."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "gold"
+          ],
+          "cadence": "daily",
+          "public_summary": "Adds 50 gold each day from chartered bridge dues."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Embercourt field standard for attack command and steady charter income.",
+        "icon_id": "artifact_icon_bridgefire_standard",
+        "icon_path": "res://art/artifacts/runtime/bridgefire_standard.png",
+        "effect_tags": [
+          "attack",
+          "economy",
+          "beacon",
+          "embercourt"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_attack",
+          "daily_gold_income",
+          "early_build_support"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "governor"
+        ],
+        "preferred_faction_ids": [
+          "faction_embercourt"
+        ],
+        "combo_tags": [
+          "beacon",
+          "bridge",
+          "charter"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A compact red-gold field standard lit by a hooded bridge lantern. Its charter seals promise the column a paid road home.",
+      "bonuses": {
+        "battle_attack": 1,
+        "daily_income": {
+          "gold": 50
+        }
+      }
+    },
+    {
+      "id": "artifact_reedshadow_waders",
+      "name": "Reedshadow Waders",
+      "slot": "boots",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "reedshadow_waders",
+      "roles": [
+        "movement",
+        "route",
+        "combat"
+      ],
+      "accord_affinity": "mire",
+      "faction_affinity": [
+        "faction_mireclaw"
+      ],
+      "source_tags": [
+        "pickup",
+        "guarded_site",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Improves field movement."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Improves opening-command timing."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Mireclaw marsh boots for route tempo and the first strike.",
+        "icon_id": "artifact_icon_reedshadow_waders",
+        "icon_path": "res://art/artifacts/runtime/reedshadow_waders.png",
+        "effect_tags": [
+          "movement",
+          "initiative",
+          "mire",
+          "mireclaw"
+        ],
+        "comparison_priority": [
+          "overworld_movement",
+          "battle_initiative",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "route_tempo",
+          "initiative_tempo",
+          "raid_pressure"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_mireclaw"
+        ],
+        "combo_tags": [
+          "mire",
+          "reed",
+          "ambush"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Black reed-fiber waders lacquered against bogwater, with hooked soles that find purchase where a causeway has already drowned.",
+      "bonuses": {
+        "overworld_movement": 1,
+        "battle_initiative": 1
+      }
+    },
+    {
+      "id": "artifact_prismward_mantle",
+      "name": "Prismward Mantle",
+      "slot": "armor",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "prismward_mantles",
+      "roles": [
+        "defense",
+        "magic",
+        "resistance"
+      ],
+      "accord_affinity": "lens",
+      "faction_affinity": [
+        "faction_sunvault"
+      ],
+      "source_tags": [
+        "pickup",
+        "guarded_site",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Improves defensive command."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_spell_resistance_pct",
+          "public_summary": "Reduces incoming spell damage."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Sunvault mantle for defensive command and spell resistance.",
+        "icon_id": "artifact_icon_prismward_mantle",
+        "icon_path": "res://art/artifacts/runtime/prismward_mantle.png",
+        "effect_tags": [
+          "defense",
+          "resistance",
+          "lens",
+          "sunvault"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "battle_spell_resistance_pct",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "spell_resistance",
+          "countermagic"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "magic"
+        ],
+        "preferred_faction_ids": [
+          "faction_sunvault"
+        ],
+        "combo_tags": [
+          "lens",
+          "prism",
+          "ward"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A white-gold command mantle sewn with narrow aetherglass scales that turn hostile workings aside in brief bands of daylight.",
+      "bonuses": {
+        "battle_defense": 1,
+        "battle_spell_resistance_pct": 6
+      }
+    },
+    {
+      "id": "artifact_graftbark_cuirass",
+      "name": "Graftbark Cuirass",
+      "slot": "armor",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "graftbark_cuirasses",
+      "roles": [
+        "defense",
+        "economy",
+        "town_support"
+      ],
+      "accord_affinity": "root",
+      "faction_affinity": [
+        "faction_thornwake"
+      ],
+      "source_tags": [
+        "pickup",
+        "guarded_site",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Improves defensive command."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "wood"
+          ],
+          "cadence": "daily",
+          "public_summary": "Adds 1 wood each day from tended graftwood."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Thornwake living armor for defense and a steady graftwood supply.",
+        "icon_id": "artifact_icon_graftbark_cuirass",
+        "icon_path": "res://art/artifacts/runtime/graftbark_cuirass.png",
+        "effect_tags": [
+          "defense",
+          "wood",
+          "root",
+          "thornwake"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "wood_shortage",
+          "town_build_support"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "governor"
+        ],
+        "preferred_faction_ids": [
+          "faction_thornwake"
+        ],
+        "combo_tags": [
+          "root",
+          "graft",
+          "renewal"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A fitted cuirass of overlapping bark plates. Its green seams harden under blows and shed viable cuttings beside a patient campfire.",
+      "bonuses": {
+        "battle_defense": 1,
+        "daily_income": {
+          "wood": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_quenchplate_vambrace",
+      "name": "Quenchplate Vambrace",
+      "slot": "armor",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "quenchplate_vambraces",
+      "roles": [
+        "defense",
+        "economy",
+        "town_support"
+      ],
+      "accord_affinity": "furnace",
+      "faction_affinity": [
+        "faction_brasshollow"
+      ],
+      "source_tags": [
+        "pickup",
+        "guarded_site",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Improves defensive command."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "ore"
+          ],
+          "cadence": "daily",
+          "public_summary": "Adds 1 ore each day from certified salvage."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Brasshollow plated armguard for defense and certified ore salvage.",
+        "icon_id": "artifact_icon_quenchplate_vambrace",
+        "icon_path": "res://art/artifacts/runtime/quenchplate_vambrace.png",
+        "effect_tags": [
+          "defense",
+          "ore",
+          "furnace",
+          "brasshollow"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "ore_shortage",
+          "town_build_support"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "governor"
+        ],
+        "preferred_faction_ids": [
+          "faction_brasshollow"
+        ],
+        "combo_tags": [
+          "furnace",
+          "quench",
+          "salvage"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A heavy brass-and-blacksteel vambrace stamped with inspection clauses; every repaired plate is entered twice and wasted never.",
+      "bonuses": {
+        "battle_defense": 1,
+        "daily_income": {
+          "ore": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_fogwake_deckboots",
+      "name": "Fogwake Deckboots",
+      "slot": "boots",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "fogwake_deckboots",
+      "roles": [
+        "movement",
+        "scouting",
+        "route"
+      ],
+      "accord_affinity": "veil",
+      "faction_affinity": [
+        "faction_veilmourn"
+      ],
+      "source_tags": [
+        "pickup",
+        "guarded_site",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Improves field movement."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Extends fog-route scouting."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Veilmourn deck boots for sustained movement and fog-route scouting.",
+        "icon_id": "artifact_icon_fogwake_deckboots",
+        "icon_path": "res://art/artifacts/runtime/fogwake_deckboots.png",
+        "effect_tags": [
+          "movement",
+          "scouting",
+          "veil",
+          "veilmourn"
+        ],
+        "comparison_priority": [
+          "overworld_movement",
+          "scouting_radius",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "route_tempo",
+          "fog_route_scouting",
+          "salvage_reach"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_veilmourn"
+        ],
+        "combo_tags": [
+          "veil",
+          "deck",
+          "fog_route"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Salt-black deck boots with pale bell-metal cleats. On wet stone they leave a brief wake pointing toward the nearest clear passage.",
+      "bonuses": {
+        "overworld_movement": 1,
+        "scouting_radius": 1
       }
     }
   ]

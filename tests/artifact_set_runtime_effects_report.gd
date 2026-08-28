@@ -6,6 +6,14 @@ const SET_PIECES := [
 	"artifact_waymark_compass",
 	"artifact_milepost_lantern",
 ]
+const FIELD_REGALIA_SCENARIOS := {
+	"river-pass": {"placement_id": "warcrest_ruin", "artifact_id": "artifact_bridgefire_standard", "slot": "banner", "faction_id": "faction_embercourt", "bonuses": {"battle_attack": 1, "daily_income": {"gold": 50}}},
+	"bogbound-oath": {"placement_id": "bogbound_boots", "artifact_id": "artifact_reedshadow_waders", "slot": "boots", "faction_id": "faction_mireclaw", "bonuses": {"overworld_movement": 1, "battle_initiative": 1}},
+	"prismhearth-watch": {"placement_id": "spire_gorget", "artifact_id": "artifact_prismward_mantle", "slot": "armor", "faction_id": "faction_sunvault", "bonuses": {"battle_defense": 1, "battle_spell_resistance_pct": 6}},
+	"mireford-skirmish": {"placement_id": "ford_gorget", "artifact_id": "artifact_graftbark_cuirass", "slot": "armor", "faction_id": "faction_thornwake", "bonuses": {"battle_defense": 1, "daily_income": {"wood": 1}}},
+	"orevein-contract": {"placement_id": "orevein_bastion_gorget", "artifact_id": "artifact_quenchplate_vambrace", "slot": "armor", "faction_id": "faction_brasshollow", "bonuses": {"battle_defense": 1, "daily_income": {"ore": 1}}},
+	"bellwake-wreck-claim": {"placement_id": "bellwake_trailsinger_boots", "artifact_id": "artifact_fogwake_deckboots", "slot": "boots", "faction_id": "faction_veilmourn", "bonuses": {"overworld_movement": 1, "scouting_radius": 1}},
+}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -205,6 +213,11 @@ func _run() -> void:
 		_fail("Halo Refraction Asterfall ownership was lost across save/resume: %s" % restored_live_owned)
 		return
 
+	var field_regalia_rows := _validate_field_regalia_scenarios()
+	if field_regalia_rows.size() != FIELD_REGALIA_SCENARIOS.size() or not field_regalia_rows.all(func(row): return bool(row.get("ok", false))):
+		_fail("Faction field regalia did not materialize, collect, auto-equip, apply, and persist exactly: %s" % [field_regalia_rows])
+		return
+
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"claim_slots": claim_slots,
@@ -233,6 +246,7 @@ func _run() -> void:
 			"placement_count": live_placements.size(),
 			"collections_persisted": true,
 		},
+		"field_regalia_scenarios": field_regalia_rows,
 	})])
 	get_tree().quit(0)
 
@@ -254,6 +268,85 @@ func _artifact_node_result(session, placement_id: String) -> Dictionary:
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
 			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
+
+func _validate_field_regalia_scenarios() -> Array:
+	var rows: Array = []
+	for scenario_id in FIELD_REGALIA_SCENARIOS:
+		var spec: Dictionary = FIELD_REGALIA_SCENARIOS[scenario_id]
+		var session = ScenarioFactory.create_session(scenario_id, "normal", SessionStateStore.LAUNCH_MODE_SKIRMISH)
+		OverworldRules.normalize_overworld_state(session)
+		var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+		hero["artifacts"] = ArtifactRules.normalize_hero_artifacts({})
+		session.overworld["hero"] = hero
+		var active_hero_id := String(session.overworld.get("active_hero_id", hero.get("id", "")))
+		var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+		for hero_index in range(heroes.size()):
+			if heroes[hero_index] is Dictionary and String(heroes[hero_index].get("id", "")) == active_hero_id:
+				heroes[hero_index] = hero.duplicate(true)
+				break
+		session.overworld["player_heroes"] = heroes
+
+		var artifact_id := String(spec.get("artifact_id", ""))
+		var placement_id := String(spec.get("placement_id", ""))
+		var slot := String(spec.get("slot", ""))
+		var scenario := ContentService.get_scenario(scenario_id)
+		var artifact := ContentService.get_artifact(artifact_id)
+		var node_result := _artifact_node_result(session, placement_id)
+		var node: Dictionary = node_result.get("node", {}) if node_result.get("node", {}) is Dictionary else {}
+		var authored_exact: bool = String(scenario.get("player_faction_id", "")) == String(spec.get("faction_id", "")) \
+			and String(artifact.get("slot", "")) == slot \
+			and artifact.get("faction_affinity", []) == [String(spec.get("faction_id", ""))] \
+			and int(node_result.get("index", -1)) >= 0 \
+			and String(node.get("artifact_id", "")) == artifact_id \
+			and not bool(node.get("collected", true))
+		var collect_result := OverworldRules._collect_artifact_node_result(session, node_result, false) if authored_exact else {}
+		var collected_node: Dictionary = _artifact_node_result(session, placement_id).get("node", {})
+		var collected_hero: Dictionary = session.overworld.get("hero", {})
+		var equipped: Dictionary = collected_hero.get("artifacts", {}).get("equipped", {})
+		var bonuses := ArtifactRules.aggregate_bonuses(collected_hero)
+		var runtime_exact := bool(collect_result.get("ok", false)) \
+			and bool(collected_node.get("collected", false)) \
+			and String(collected_node.get("collected_by_faction_id", "")) == "player" \
+			and String(equipped.get(slot, "")) == artifact_id \
+			and _bonuses_include_exact(bonuses, spec.get("bonuses", {}))
+
+		var restored = SessionStateStore.SessionData.new()
+		restored.from_dict(JSON.parse_string(JSON.stringify(session.to_dict())))
+		var restored_hero: Dictionary = restored.overworld.get("hero", {})
+		var restored_equipped: Dictionary = restored_hero.get("artifacts", {}).get("equipped", {})
+		var restored_node: Dictionary = _artifact_node_result(restored, placement_id).get("node", {})
+		var save_exact: bool = restored.save_version == SessionStateStore.SAVE_VERSION \
+			and String(restored_equipped.get(slot, "")) == artifact_id \
+			and bool(restored_node.get("collected", false)) \
+			and String(restored_node.get("collected_by_faction_id", "")) == "player" \
+			and _bonuses_include_exact(ArtifactRules.aggregate_bonuses(restored_hero), spec.get("bonuses", {}))
+		rows.append({
+			"ok": authored_exact and runtime_exact and save_exact,
+			"scenario_id": scenario_id,
+			"placement_id": placement_id,
+			"artifact_id": artifact_id,
+			"slot": slot,
+			"authored_exact": authored_exact,
+			"runtime_exact": runtime_exact,
+			"save_exact": save_exact,
+			"save_version": restored.save_version,
+		})
+	return rows
+
+func _bonuses_include_exact(actual_value: Variant, expected_value: Variant) -> bool:
+	if not (actual_value is Dictionary) or not (expected_value is Dictionary):
+		return false
+	var actual: Dictionary = actual_value
+	var expected: Dictionary = expected_value
+	for key in expected:
+		var expected_entry = expected[key]
+		var actual_entry = actual.get(key)
+		if expected_entry is Dictionary:
+			if not _bonuses_include_exact(actual_entry, expected_entry):
+				return false
+		elif int(actual_entry) != int(expected_entry):
+			return false
+	return true
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])

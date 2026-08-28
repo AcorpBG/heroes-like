@@ -12,8 +12,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Artifact taxonomy report failed: %s" % report)
 		return
-	if int(report.get("artifact_count", 0)) != 15:
-		_fail("Expected fifteen authored artifact records after the Asterfall Survey slice: %s" % report)
+	if int(report.get("artifact_count", 0)) != 21:
+		_fail("Expected twenty-one authored artifact records after the faction field-regalia slice: %s" % report)
 		return
 	if int(report.get("complete_taxonomy_count", 0)) != int(report.get("artifact_count", 0)):
 		_fail("Not every artifact has complete taxonomy metadata: %s" % report)
@@ -32,7 +32,7 @@ func _run() -> void:
 		return
 	if not _assert_report_count(report, "class_counts", "set_piece", 6):
 		return
-	if not _assert_report_count(report, "class_counts", "faction", 6):
+	if not _assert_report_count(report, "class_counts", "faction", 12):
 		return
 	if not _assert_report_count(report, "role_counts", "economy", 1):
 		return
@@ -41,8 +41,8 @@ func _run() -> void:
 	if int(report.get("set_count", 0)) < 2 or int(report.get("set_piece_count", 0)) < 6:
 		_fail("Artifact taxonomy report did not include bounded set metadata: %s" % report)
 		return
-	if int(report.get("faction_affinity_artifact_count", 0)) < 6:
-		_fail("Artifact taxonomy report did not include six faction-affinity artifacts: %s" % report)
+	if int(report.get("faction_affinity_artifact_count", 0)) < 12:
+		_fail("Artifact taxonomy report did not include two faction-affinity artifacts per faction: %s" % report)
 		return
 
 	var boots_taxonomy := ArtifactRules.artifact_taxonomy("artifact_trailsinger_boots")

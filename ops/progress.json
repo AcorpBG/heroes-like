@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness slice."
+    "Select the next evidence-backed content or original-art slice from the remaining production gaps."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
+  "currentNotes": "Completed six original faction field-regalia artifacts with separate inventory and overworld art, one live placement per faction, save/runtime/AI validation, and Linux/Windows export startup. The artifact catalog increased from 15 to 21 and the three-item repeated-pickup total fell from 57 to 51.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-build-muster-popup-catalogs-10184",
-  "currentSliceId": "content-live-scenario-lead-overworld-sprites-10184",
-  "currentSliceNotes": "Implemented eight original portrait-faithful transparent 512x512 overworld sprites for Caelen, Mira, Tova, Ruln, Oren, Kessa, Neral, and Seren, expanding manifest-owned hero identity resolution from six signatures to all 14 authored scenario leads across all 24 scenario starts. Inspected 1280x720 and 1920x1080 captures; focused runtime passed exact identity/path, field/town layout, movement, focus, pennant, silhouette, fog, faction/procedural fallback, authority restoration, and all-scenario save version 9 round-trips. Core and repository validation passed. Fresh Linux and Windows exports/startup passed with runtime/native markers, source art excluded, identical 241024116-byte PCKs under the 250 MB cap. No release-ready claim.",
+  "currentSlice": "content-faction-field-regalia-artifacts-10184",
+  "currentSliceId": "content-faction-field-regalia-artifacts-10184",
+  "currentSliceNotes": "Completed: six original uncommon faction artifacts, six 128x128 inventory icons, six separate grounded 512x512 field sprites, six high-resolution sources, and one exact live pickup replacement per faction. Focused gameplay/save/AI/UI/field/core/static validation and fresh Linux/Windows export startup passed with save version 9 and existing rules contracts.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content live scenario lead overworld sprites 10184",
-  "currentSliceUpdatedAt": "2026-08-28T17:59:00Z",
+  "currentSliceTitle": "content faction field regalia artifacts 10184",
+  "currentSliceUpdatedAt": "2026-08-28T23:45:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105172,6 +105172,16 @@
       "startedAt": "2026-08-28T22:42:51Z",
       "notes": "Implemented eight original portrait-faithful transparent 512x512 overworld sprites for Caelen, Mira, Tova, Ruln, Oren, Kessa, Neral, and Seren, expanding manifest-owned hero identity resolution from six signatures to all 14 authored scenario leads across all 24 scenario starts. Inspected 1280x720 and 1920x1080 captures; focused runtime passed exact identity/path, field/town layout, movement, focus, pennant, silhouette, fog, faction/procedural fallback, authority restoration, and all-scenario save version 9 round-trips. Core and repository validation passed. Fresh Linux and Windows exports/startup passed with runtime/native markers, source art excluded, identical 241024116-byte PCKs under the 250 MB cap. No release-ready claim.",
       "completedAt": "2026-08-28T23:11:39Z"
+    },
+    {
+      "id": "content-faction-field-regalia-artifacts-10184",
+      "title": "content faction field regalia artifacts 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T23:45:28Z",
+      "startedAt": "2026-08-28T23:17:24Z",
+      "notes": "Expanded artifacts from 15 to 21 with six original uncommon faction regalia across banner, boots, and armor slots; added six high-resolution transparent sources, six curated 128x128 inventory icons, and six separate grounded 512x512 field sprites; replaced one repeated pickup in each faction's first live scenario, reducing the three-item repeat total from 57 to 51. Exact effects, collection, auto-equip, AI valuation, save version 9 round trips, 21-artifact icon/field presentation, core/static validation, and fresh Linux/Windows startup exports passed. Both PCKs were 242127536 bytes under the 250 MB cap with source art excluded. No release-ready claim.",
+      "completedAt": "2026-08-28T23:45:28Z"
     }
   ],
   "project": "heroes-like",
@@ -105716,7 +105726,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T23:11:39Z",
+  "updatedAt": "2026-08-28T23:45:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
