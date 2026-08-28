@@ -112,6 +112,96 @@
       "path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
       "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
     },
+    "town_identity_riverwatch": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_riverwatch.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_riverwatch_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_riverwatch"
+    },
+    "town_identity_duskfen": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_duskfen.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_duskfen_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_duskfen"
+    },
+    "town_identity_blackfen_gate": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_blackfen_gate.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_blackfen_gate_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_blackfen_gate"
+    },
+    "town_identity_highwater_keep": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_highwater_keep.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_highwater_keep_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_highwater_keep"
+    },
+    "town_identity_murkward_ford": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_murkward_ford.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_murkward_ford_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_murkward_ford"
+    },
+    "town_identity_reedbarrow_ferry": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_reedbarrow_ferry.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_reedbarrow_ferry_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_reedbarrow_ferry"
+    },
+    "town_identity_nightglass_redoubt": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_nightglass_redoubt.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_nightglass_redoubt_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_nightglass_redoubt"
+    },
+    "town_identity_prismhearth": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_prismhearth.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_prismhearth_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_prismhearth"
+    },
+    "town_identity_halo_spire": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_halo_spire.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_halo_spire_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_halo_spire"
+    },
+    "town_identity_thornwake_graftroot_caravan": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_graftroot_caravan.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_thornwake_graftroot_caravan_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_thornwake_graftroot_caravan"
+    },
+    "town_identity_thornwake_rootgate_nursery": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_rootgate_nursery.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_thornwake_rootgate_nursery_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_thornwake_rootgate_nursery"
+    },
+    "town_identity_brasshollow_orevein_gantry": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_orevein_gantry.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_brasshollow_orevein_gantry_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_brasshollow_orevein_gantry"
+    },
+    "town_identity_brasshollow_clauseworks_depot": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_clauseworks_depot.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_brasshollow_clauseworks_depot_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_brasshollow_clauseworks_depot"
+    },
+    "town_identity_veilmourn_bellwake_harbor": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_bellwake_harbor.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_veilmourn_bellwake_harbor_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_veilmourn_bellwake_harbor"
+    },
+    "town_identity_veilmourn_fogchart_mooring": {
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_fogchart_mooring.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_veilmourn_fogchart_mooring_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_town_id": "town_veilmourn_fogchart_mooring"
+    },
     "hero_faction_embercourt": {
       "path": "res://art/overworld/runtime/heroes/factions/embercourt.png",
       "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
@@ -4091,6 +4181,23 @@
     "faction_thornwake": "town_faction_thornwake",
     "faction_brasshollow": "town_faction_brasshollow",
     "faction_veilmourn": "town_faction_veilmourn"
+  },
+  "town_identity_sprites": {
+    "town_riverwatch": "town_identity_riverwatch",
+    "town_duskfen": "town_identity_duskfen",
+    "town_blackfen_gate": "town_identity_blackfen_gate",
+    "town_highwater_keep": "town_identity_highwater_keep",
+    "town_murkward_ford": "town_identity_murkward_ford",
+    "town_reedbarrow_ferry": "town_identity_reedbarrow_ferry",
+    "town_nightglass_redoubt": "town_identity_nightglass_redoubt",
+    "town_prismhearth": "town_identity_prismhearth",
+    "town_halo_spire": "town_identity_halo_spire",
+    "town_thornwake_graftroot_caravan": "town_identity_thornwake_graftroot_caravan",
+    "town_brasshollow_orevein_gantry": "town_identity_brasshollow_orevein_gantry",
+    "town_veilmourn_bellwake_harbor": "town_identity_veilmourn_bellwake_harbor",
+    "town_thornwake_rootgate_nursery": "town_identity_thornwake_rootgate_nursery",
+    "town_brasshollow_clauseworks_depot": "town_identity_brasshollow_clauseworks_depot",
+    "town_veilmourn_fogchart_mooring": "town_identity_veilmourn_fogchart_mooring"
   },
   "hero_faction_sprites": {
     "faction_embercourt": "hero_faction_embercourt",
