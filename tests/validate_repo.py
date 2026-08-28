@@ -45232,9 +45232,12 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         "artifact_living_bridge_knot": "res://art/artifacts/runtime/living_bridge_knot.png",
         "artifact_pressure_gauge_reliquary": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
         "artifact_black_sail_compass": "res://art/artifacts/runtime/black_sail_compass.png",
+        "artifact_rainstar_sextant": "res://art/artifacts/runtime/rainstar_sextant.png",
+        "artifact_asterfall_mantle": "res://art/artifacts/runtime/asterfall_mantle.png",
+        "artifact_cometwake_pennon": "res://art/artifacts/runtime/cometwake_pennon.png",
     }
     artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
-    ensure(set(artifacts) == set(expected_icons), errors, "Artifact icon adoption must cover the exact 12 production artifacts")
+    ensure(set(artifacts) == set(expected_icons), errors, "Artifact icon adoption must cover every production artifact")
     icon_ids: list[str] = []
     icon_paths: list[str] = []
     for artifact_id, expected_path in expected_icons.items():
@@ -45315,7 +45318,7 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
     for token in (
         'const REPORT_ID := "ARTIFACT_ICON_RUNTIME_REPORT"',
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        "rows.size() == 12",
+        "rows.size() == EXPECTED_ICONS.size()",
         'row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0)',
         'ArtifactRules.artifact_icon_path("artifact_missing") == ""',
         'ArtifactRules.artifact_id_for_management_action({}, "equip_artifact:artifact_missing") == ""',
@@ -48433,7 +48436,7 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {}) if isinstance(manifest, dict) else {}
     field_sprites = manifest.get("artifact_field_sprites", {}) if isinstance(manifest, dict) else {}
-    ensure(len(artifacts) == 12, errors, "Overworld artifact pickup adoption must retain the exact 12 production artifacts")
+    ensure(len(artifacts) == 15, errors, "Overworld artifact pickup adoption must cover the 15 production artifacts")
     icon_ids: list[str] = []
     icon_paths: list[str] = []
     field_asset_ids: list[str] = []
@@ -48460,7 +48463,7 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         if isinstance(field_entry, dict):
             ensure(str(field_entry.get("path", "")) == expected_field_path, errors, f"Artifact {artifact_id} field asset must use its exact runtime path")
             ensure(str(field_entry.get("source_icon", "")) == expected_path, errors, f"Artifact {artifact_id} field asset must retain exact original icon provenance")
-            ensure(str(field_entry.get("source_model", "")) == "original_identity_preserving_background_extraction", errors, f"Artifact {artifact_id} field asset must declare its original extraction model")
+            ensure(str(field_entry.get("source_model", "")) in {"original_identity_preserving_background_extraction", "built_in_image_gen_distinct_transparent_field_composition"}, errors, f"Artifact {artifact_id} field asset must declare its original production model")
         field_disk_path = res_path_to_disk(expected_field_path)
         ensure(field_disk_path.is_file() and png_size(field_disk_path) == (512, 512), errors, f"Artifact {artifact_id} field asset must be a 512x512 runtime PNG")
         ensure(Path(f"{field_disk_path}.import").is_file(), errors, f"Artifact {artifact_id} field asset is missing Godot import metadata")
@@ -48470,8 +48473,8 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
             field_hashes.append(hashlib.sha256(field_disk_path.read_bytes()).hexdigest())
         field_asset_ids.append(expected_field_asset_id)
         field_paths.append(expected_field_path)
-    ensure(len(set(icon_ids)) == 12 and len(set(icon_paths)) == 12, errors, "All 12 Overworld artifact pickup identities must remain distinct")
-    ensure(len(field_sprites) == 12 and len(set(field_asset_ids)) == 12 and len(set(field_paths)) == 12 and len(set(field_hashes)) == 12, errors, "All 12 Overworld artifacts must ship distinct field asset ids, paths, and PNG payloads")
+    ensure(len(set(icon_ids)) == len(artifacts) and len(set(icon_paths)) == len(artifacts), errors, "All Overworld artifact pickup identities must remain distinct")
+    ensure(len(field_sprites) == len(artifacts) and len(set(field_asset_ids)) == len(artifacts) and len(set(field_paths)) == len(artifacts) and len(set(field_hashes)) == len(artifacts), errors, "All Overworld artifacts must ship distinct field asset ids, paths, and PNG payloads")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_ARTIFACT_FIELD_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit imported metadata and textures for the distinct artifact field assets in the exported PCK")
@@ -48573,10 +48576,11 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         'field_image.get_pixel(field_image.get_width() - 1, field_image.get_height() - 1).a <= 0.01',
         'seen_field_asset_ids.size() == EXPECTED_ICONS.size()',
         'String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor"',
-        'visible_count == 12 and remembered_count == 0',
+        'visible_count == EXPECTED_ICONS.size() and remembered_count == 0',
         'String(art.get("mapped_sprite_grounding_model", "")) == "localized_sprite_contact_scuffs"',
-        '"x": 2 + (index % 6) if index < 6 else 40 + (index % 6)',
-        '"y": 2 if index < 6 else 40',
+        '"x": 2 + (index % 6)',
+        '"y": 2 + floori(float(index) / 6.0) * 2',
+        '"visible_count": nodes.size()',
         'first_node["artifact_id"] = "artifact_missing_pickup_icon_fixture"',
         'var fallback_exact: bool = String(fallback.get("artifact_id", ""))',
         'String(fallback.get("sprite_asset_id", "")) == "adventurers_bundle"',

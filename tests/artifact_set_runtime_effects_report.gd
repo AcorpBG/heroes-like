@@ -108,6 +108,103 @@ func _run() -> void:
 		_fail("A third trinket did not deterministically replace the primary slot while preserving Trinket II: %s" % swap_result)
 		return
 
+	var asterfall_pieces := [
+		"artifact_rainstar_sextant",
+		"artifact_asterfall_mantle",
+		"artifact_cometwake_pennon",
+	]
+	var asterfall_hero := _fixture_hero()
+	var asterfall_slots := []
+	for artifact_id in asterfall_pieces:
+		var claim := ArtifactRules.claim_artifact(asterfall_hero, artifact_id, "Halo Refraction Survey", true)
+		if not bool(claim.get("ok", false)) or not bool(claim.get("auto_equipped", false)):
+			_fail("Asterfall Survey piece did not auto-equip: %s" % claim)
+			return
+		asterfall_hero = claim.get("hero", asterfall_hero)
+		asterfall_slots.append(String(claim.get("slot", "")))
+	var asterfall_bonuses := ArtifactRules.aggregate_bonuses(asterfall_hero)
+	var asterfall_sets: Array = asterfall_bonuses.get("active_sets", []) if asterfall_bonuses.get("active_sets", []) is Array else []
+	var asterfall_set := {}
+	for active_set_value in asterfall_sets:
+		if active_set_value is Dictionary and String(active_set_value.get("set_id", "")) == "set_asterfall_survey":
+			asterfall_set = active_set_value
+			break
+	var asterfall_movement := HeroCommandRules.movement_max_for_hero(asterfall_hero, "normal") - base_movement
+	var asterfall_scouting := HeroCommandRules.scouting_radius_for_hero(asterfall_hero) - base_scouting
+	if asterfall_slots != ["trinket", "armor", "banner"] \
+			or int(asterfall_bonuses.get("overworld_movement", 0)) != 2 \
+			or int(asterfall_bonuses.get("scouting_radius", 0)) != 2 \
+			or int(asterfall_bonuses.get("battle_attack", 0)) != 1 \
+			or int(asterfall_bonuses.get("battle_defense", 0)) != 1 \
+			or int(asterfall_bonuses.get("battle_initiative", 0)) != 3 \
+			or asterfall_movement != 2 \
+			or asterfall_scouting != 2 \
+			or not bool(asterfall_set.get("complete", false)) \
+			or asterfall_set.get("active_thresholds", []).size() != 2:
+		_fail("Asterfall Survey did not apply its exact live cumulative effects: slots=%s bonuses=%s set=%s" % [asterfall_slots, asterfall_bonuses, asterfall_set])
+		return
+	var asterfall_session = SessionStateStore.new_session_data(
+		"asterfall_set_runtime_save",
+		"halo-reserve-refraction-claim",
+		String(asterfall_hero.get("id", "")),
+		7,
+		{"hero": asterfall_hero, "player_heroes": [asterfall_hero], "active_hero_id": String(asterfall_hero.get("id", ""))},
+		"normal",
+		SessionStateStore.LAUNCH_MODE_SKIRMISH
+	)
+	var asterfall_restored = SessionStateStore.SessionData.new()
+	asterfall_restored.from_dict(JSON.parse_string(JSON.stringify(asterfall_session.to_dict())))
+	var restored_asterfall_hero: Dictionary = asterfall_restored.overworld.get("hero", {})
+	var restored_asterfall_bonuses := ArtifactRules.aggregate_bonuses(restored_asterfall_hero)
+	if asterfall_restored.save_version != SessionStateStore.SAVE_VERSION or restored_asterfall_bonuses != asterfall_bonuses:
+		_fail("Asterfall Survey content references or cumulative effects changed across save/resume: %s" % restored_asterfall_bonuses)
+		return
+
+	var live_session = ScenarioFactory.create_session("halo-reserve-refraction-claim", "normal", SessionStateStore.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state(live_session)
+	var live_hero: Dictionary = live_session.overworld.get("hero", {})
+	live_hero["artifacts"] = ArtifactRules.normalize_hero_artifacts({})
+	live_session.overworld["hero"] = live_hero
+	var live_heroes: Array = live_session.overworld.get("player_heroes", [])
+	for live_hero_index in range(live_heroes.size()):
+		if live_heroes[live_hero_index] is Dictionary and String(live_heroes[live_hero_index].get("id", "")) == String(live_session.overworld.get("active_hero_id", "")):
+			live_heroes[live_hero_index] = live_hero.duplicate(true)
+	live_session.overworld["player_heroes"] = live_heroes
+	var live_placements := {
+		"halo_rainstar_sextant": "artifact_rainstar_sextant",
+		"halo_asterfall_mantle": "artifact_asterfall_mantle",
+		"rootgate_cometwake_pennon": "artifact_cometwake_pennon",
+	}
+	for placement_id in live_placements:
+		var node_result := _artifact_node_result(live_session, placement_id)
+		var node: Dictionary = node_result.get("node", {})
+		if int(node_result.get("index", -1)) < 0 or String(node.get("artifact_id", "")) != String(live_placements[placement_id]):
+			_fail("Halo Refraction did not materialize the authored Asterfall placement %s: %s" % [placement_id, node])
+			return
+		var collect_result := OverworldRules._collect_artifact_node_result(live_session, node_result, false)
+		var collected_node: Dictionary = _artifact_node_result(live_session, placement_id).get("node", {})
+		if not bool(collect_result.get("ok", false)) or not bool(collected_node.get("collected", false)) or String(collected_node.get("collected_by_faction_id", "")) != "player":
+			_fail("Halo Refraction Asterfall placement did not execute a one-time player collection: %s" % collect_result)
+			return
+	var live_owned := ArtifactRules.owned_artifact_ids(live_session.overworld.get("hero", {}))
+	var live_bonuses := ArtifactRules.aggregate_bonuses(live_session.overworld.get("hero", {}))
+	if not asterfall_pieces.all(func(artifact_id): return artifact_id in live_owned) \
+			or int(live_bonuses.get("overworld_movement", 0)) != 2 \
+			or int(live_bonuses.get("scouting_radius", 0)) != 2 \
+			or int(live_bonuses.get("battle_initiative", 0)) != 3:
+		_fail("Halo Refraction collections did not activate the complete Asterfall set: owned=%s bonuses=%s" % [live_owned, live_bonuses])
+		return
+	var restored_live_session = SessionStateStore.SessionData.new()
+	restored_live_session.from_dict(JSON.parse_string(JSON.stringify(live_session.to_dict())))
+	var restored_live_owned := ArtifactRules.owned_artifact_ids(restored_live_session.overworld.get("hero", {}))
+	for placement_id in live_placements:
+		if not bool(_artifact_node_result(restored_live_session, placement_id).get("node", {}).get("collected", false)):
+			_fail("Halo Refraction Asterfall collection state was lost across save/resume at %s." % placement_id)
+			return
+	if restored_live_session.save_version != SessionStateStore.SAVE_VERSION or not asterfall_pieces.all(func(artifact_id): return artifact_id in restored_live_owned):
+		_fail("Halo Refraction Asterfall ownership was lost across save/resume: %s" % restored_live_owned)
+		return
+
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"claim_slots": claim_slots,
@@ -122,6 +219,20 @@ func _run() -> void:
 		},
 		"full_set_complete": bool(wayfarer.get("complete", false)),
 		"swap_slot": String(swap_result.get("slot", "")),
+		"asterfall_slots": asterfall_slots,
+		"asterfall_movement_delta": asterfall_movement,
+		"asterfall_scouting_delta": asterfall_scouting,
+		"asterfall_battle_bonuses": {
+			"attack": int(asterfall_bonuses.get("battle_attack", 0)),
+			"defense": int(asterfall_bonuses.get("battle_defense", 0)),
+			"initiative": int(asterfall_bonuses.get("battle_initiative", 0)),
+		},
+		"asterfall_full_set_complete": bool(asterfall_set.get("complete", false)),
+		"asterfall_live_scenario": {
+			"scenario_id": "halo-reserve-refraction-claim",
+			"placement_count": live_placements.size(),
+			"collections_persisted": true,
+		},
 	})])
 	get_tree().quit(0)
 
@@ -135,6 +246,14 @@ func _fixture_hero() -> Dictionary:
 		"artifacts": ArtifactRules.normalize_hero_artifacts({}),
 		"specialties": [],
 	}
+
+func _artifact_node_result(session, placement_id: String) -> Dictionary:
+	var nodes: Array = session.overworld.get("artifact_nodes", []) if session.overworld.get("artifact_nodes", []) is Array else []
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			return {"index": index, "node": node}
+	return {"index": -1, "node": {}}
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])

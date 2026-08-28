@@ -5574,9 +5574,9 @@
         {"placement_id": "halo_reserve_refraction_claim_rootgate_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "halo_sporeglass_screen", "collected_by_faction_id": "faction_thornwake"}
       ],
       "artifact_nodes": [
-        {"placement_id": "halo_refraction_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
-        {"placement_id": "halo_refraction_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
-        {"placement_id": "rootgate_refraction_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
+        {"placement_id": "halo_rainstar_sextant", "artifact_id": "artifact_rainstar_sextant", "x": 3, "y": 1},
+        {"placement_id": "halo_asterfall_mantle", "artifact_id": "artifact_asterfall_mantle", "x": 6, "y": 3},
+        {"placement_id": "rootgate_cometwake_pennon", "artifact_id": "artifact_cometwake_pennon", "x": 9, "y": 4}
       ],
       "encounters": [
         {"placement_id": "halo_prism_watch", "encounter_id": "encounter_graftroot_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 23101, "enemy_army": {"id": "army_halo_prism_watch", "name": "Halo Prism Watch", "faction_id": "faction_thornwake", "stacks": [{"unit_id": "unit_thornwake_seedcutters", "count": 10}, {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 7}, {"unit_id": "unit_thornwake_sporeglass_menders", "count": 4}]}},

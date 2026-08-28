@@ -12,8 +12,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Artifact taxonomy report failed: %s" % report)
 		return
-	if int(report.get("artifact_count", 0)) != 12:
-		_fail("Expected twelve authored artifact records after the bounded set/faction slice: %s" % report)
+	if int(report.get("artifact_count", 0)) != 15:
+		_fail("Expected fifteen authored artifact records after the Asterfall Survey slice: %s" % report)
 		return
 	if int(report.get("complete_taxonomy_count", 0)) != int(report.get("artifact_count", 0)):
 		_fail("Not every artifact has complete taxonomy metadata: %s" % report)
@@ -30,7 +30,7 @@ func _run() -> void:
 		return
 	if not _assert_report_count(report, "class_counts", "crafted", 3):
 		return
-	if not _assert_report_count(report, "class_counts", "set_piece", 3):
+	if not _assert_report_count(report, "class_counts", "set_piece", 6):
 		return
 	if not _assert_report_count(report, "class_counts", "faction", 6):
 		return
@@ -38,7 +38,7 @@ func _run() -> void:
 		return
 	if not _assert_report_count(report, "source_tag_counts", "guarded_site", 4):
 		return
-	if int(report.get("set_count", 0)) < 1 or int(report.get("set_piece_count", 0)) < 3:
+	if int(report.get("set_count", 0)) < 2 or int(report.get("set_piece_count", 0)) < 6:
 		_fail("Artifact taxonomy report did not include bounded set metadata: %s" % report)
 		return
 	if int(report.get("faction_affinity_artifact_count", 0)) < 6:

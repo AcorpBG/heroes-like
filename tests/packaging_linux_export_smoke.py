@@ -48,6 +48,7 @@ REQUIRED_ARTIFACT_FIELD_NAMES = (
     "trailsinger_boots", "quarry_tally_rod", "warcrest_pennon", "bastion_gorget",
     "waymark_compass", "milepost_lantern", "tollstone_ring", "mudglass_beads",
     "choir_tuning_fork", "living_bridge_knot", "pressure_gauge_reliquary", "black_sail_compass",
+    "rainstar_sextant", "asterfall_mantle", "cometwake_pennon",
 )
 REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/artifacts/{artifact_name}.png.import"
