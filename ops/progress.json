@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Battle full-roster unit standees are completed: all 103 authored units have deterministic grounded Battle art, the live board uses facing and depth-aware standee presentation with fail-closed fallbacks, and focused behavior, compatibility, static, and bounded platform gates pass.",
+  "currentNotes": "Overworld town proportional footprint scaling is completed: authored and Large RMG towns now paint at 1.36 tiles with exact alpha-bottom grounding while retaining the existing 3x2 footprint, interaction, save, and platform authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-full-roster-unit-standees-10184",
-  "currentSliceId": "presentation-battle-full-roster-unit-standees-10184",
-  "currentSliceNotes": "Implemented 103 deterministic 192x224 grounded Battle standees from exact original curated sources; all 515 generated assets reproduce byte-exact and all standees load with unique contact-sheet fingerprints. Live 1280/1920 captures, Board/fallback/event/layout/quick-resolve/withdrawal/accessibility/core/static checks and bounded Linux/Windows export-startup gates pass; combat/hit/session/save authority unchanged and packaged Battle interaction remains unclaimed.",
+  "currentSlice": "presentation-overworld-town-proportional-footprint-scale-10184",
+  "currentSliceId": "presentation-overworld-town-proportional-footprint-scale-10184",
+  "currentSliceNotes": "Renderer scales unchanged 3x2 town footprints to 1.36 painted tiles with exact alpha-bottom grounding. Authored and 108x108 RMG 1280/1920 gates, all faction/fallback sprites, occupancy/selection/interaction authority, generated movement, 22.8 MB generated-Large save/rollback/reload, core/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Platform claims remain export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Full-Roster Unit Standees",
-  "currentSliceUpdatedAt": "2026-08-28T10:10:56Z",
+  "currentSliceTitle": "presentation overworld town proportional footprint scale 10184",
+  "currentSliceUpdatedAt": "2026-08-28T13:32:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105072,6 +105072,16 @@
       "startedAt": "2026-08-28T09:26:28Z",
       "notes": "Implemented 103 deterministic 192x224 grounded Battle standees from exact original curated sources; all 515 generated assets reproduce byte-exact and all standees load with unique contact-sheet fingerprints. Live 1280/1920 captures, Board/fallback/event/layout/quick-resolve/withdrawal/accessibility/core/static checks and bounded Linux/Windows export-startup gates pass; combat/hit/session/save authority unchanged and packaged Battle interaction remains unclaimed.",
       "completedAt": "2026-08-28T10:10:56Z"
+    },
+    {
+      "id": "presentation-overworld-town-proportional-footprint-scale-10184",
+      "title": "presentation overworld town proportional footprint scale 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T13:32:33Z",
+      "startedAt": "2026-08-28T12:07:48Z",
+      "notes": "Renderer scales unchanged 3x2 town footprints to 1.36 painted tiles with exact alpha-bottom grounding. Authored and 108x108 RMG 1280/1920 gates, all faction/fallback sprites, occupancy/selection/interaction authority, generated movement, 22.8 MB generated-Large save/rollback/reload, core/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Platform claims remain export/startup only.",
+      "completedAt": "2026-08-28T13:32:33Z"
     }
   ],
   "project": "heroes-like",
@@ -105614,9 +105624,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed full-roster Battle standees for all 103 authored units with deterministic assets, grounded live rendering, event-animation takeover, and preserved combat authority.",
+  "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T10:10:56Z",
+  "updatedAt": "2026-08-28T13:32:33Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

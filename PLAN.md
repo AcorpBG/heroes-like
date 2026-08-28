@@ -26,6 +26,38 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Overworld Town Proportional Footprint Scale
+
+id: `presentation-overworld-town-proportional-footprint-scale-10184`
+
+Status: completed.
+
+Current finding:
+- live authored-map captures at 1280x720 and 1920x1080 show town sprites reading as ordinary props rather than settlements, especially beside heroes, roads, and mapped structures;
+- towns retain an exact 3x2 logical footprint with one bottom-middle visit cell, but their painted extent is only 0.96 tile (`0.48` of the two-tile footprint depth), versus 0.64 tile for a field hero and 0.54-0.80 tile for ordinary durable or multi-tile objects;
+- the town sprites, faction mapping, alpha-bound loader, grounding, owner pennant, footprint selection, pathing, and save authority are already separate, so correcting the painted extent can remain a renderer-only behavior change.
+
+Implementation boundary:
+- increase the painted town extent to 1.36 tiles (`0.68` of the existing two-tile footprint depth), retaining source aspect, bottom grounding, faction/default fallback, remembered treatment, owner pennant, and exact footprint containment;
+- expose exact painted draw bounds and town-to-hero/world-object scale ratios for focused validation without changing gameplay data or map packages;
+- validate the same renderer path on authored and large RMG-generated maps at 1280x720 and 1920x1080, including edge towns and hero-on-town presentation.
+
+Completion criteria:
+- inspected before/after captures show towns materially larger than heroes and ordinary structures while remaining subordinate to their exact 3x2 footprint and not obscuring roads, adjacent visitable objects, owner cues, or active heroes;
+- all six faction town sprites and the default town fallback load with exact aspect, bottom grounding, 1.36-tile painted extent, footprint containment, and stable scale across supported viewport/camera modes;
+- focused runtime proves exact occupied/blocked/entry cells, selection and hover bounds, visit action, movement/path legality, generated-map town rendering, session/save/load authority, and unchanged town ownership/interaction payloads;
+- Overworld visual, generated-map interaction, save/load, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass with bounded platform claims.
+
+Non-goals:
+- no town content, faction art, map object, RMG/native generation, topology, placement, occupied cells, entry tile, pathfinding, interaction, ownership, economy, AI, save schema/version, camera, terrain, road, hero, or other object-scale change;
+- no packaged town-interaction claim, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the production renderer now paints towns at 1.36 tiles (`0.68` of their unchanged two-tile footprint depth) and grounds the actual alpha-painted bottom at the existing 0.18-tile clearance, so wide and square faction/default sprites share one stable terrain contact;
+- authored 1280x720/1920x1080 captures and real 108x108 RMG captures show towns reading materially above heroes and ordinary structures while remaining inside the exact 3x2 footprint with roads, nearby objects, active heroes, and owner pennants legible;
+- focused runtime passed all six faction sprites plus fallback, shared scale hierarchy, authored small/large layouts, real Large RMG selection/hover/hero co-location and blocked-tile authority, generated movement, generated-Large 22.8 MB save/overwrite/rollback/reload authority, and core regression;
+- repository validation, Python compile, diff checks, exact/generic Godot editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed; platform evidence remains export/startup-only with no packaged town-interaction, native-hardware, signing, publication, whole-game, or release-readiness claim.
+
 ## Battle Full-Roster Unit Standees
 
 id: `presentation-battle-full-roster-unit-standees-10184`
