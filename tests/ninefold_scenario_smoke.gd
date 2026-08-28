@@ -1013,8 +1013,8 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 		return false
 	var town_art: Dictionary = town_presentation.get("art_presentation", {})
 	var town_asset_ids: Array = town_art.get("sprite_asset_ids", [])
-	if not bool(town_art.get("uses_asset_sprite", false)) or "town_faction_embercourt" not in town_asset_ids or bool(town_art.get("fallback_procedural_marker", true)):
-		_fail("Ninefold smoke: large-map starting town is not using the exact Embercourt faction town sprite: %s." % town_presentation)
+	if not bool(town_art.get("uses_asset_sprite", false)) or "town_identity_riverwatch" not in town_asset_ids or bool(town_art.get("fallback_procedural_marker", true)):
+		_fail("Ninefold smoke: large-map starting town is not using the exact Riverwatch Hold identity sprite: %s." % town_presentation)
 		return false
 	if String(town_art.get("town_sprite_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or bool(town_art.get("town_base_ellipse", true)) or bool(town_art.get("town_cast_shadow", true)):
 		_fail("Ninefold smoke: large-map starting town sprite did not use the corrected no-ellipse/no-cast-shadow grounding: %s." % town_presentation)

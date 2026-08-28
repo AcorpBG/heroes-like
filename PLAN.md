@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-signature-hero-overworld-sprites-10184`.
+- Selected implementation slice: `content-authored-town-overworld-identity-sprites-10184`.
+
+## Authored Town Overworld Identity Sprites
+
+id: `content-authored-town-overworld-identity-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- all 15 production towns have distinct names, identity summaries, building starts, strategic roles, and live scenario placements, but the adventure map resolves them through only six faction-level sprites;
+- Riverwatch Hold and Highwater Keep are therefore visually identical, as are all five Mireclaw settlements and both named settlements in each newer faction, despite their materially different fort, ferry, redoubt, relay, caravan, gantry, harbor, nursery, depot, and mooring identities.
+
+Implementation boundary:
+- add one original transparent 512x512 adventure-map landmark for every authored town, preserving the established painterly three-quarter world-map composition, faction palette, readable silhouette, painted grounding, 3x2 footprint scaling, and owner-pennant clearance;
+- add a data-driven town-id sprite map to the existing overworld manifest and resolve it before the current faction and default fallbacks without copying authored town definitions into saves;
+- adopt and validate exact town identity through all 15 production town records and every live authored placement, including ownership changes, fog memory, hero/town overlap, entry routing, save/resume, generated-map compatibility, and Linux/Windows packaging.
+
+Completion criteria:
+- all 15 town landmarks are visually distinct from one another and from their faction fallback, import and load through the live OverworldMapView, and preserve transparency, painted grounding, scale, silhouette, owner-pennant, focus, footprint, and hero-visitor contracts at 1280x720 and 1920x1080;
+- every authored scenario town placement resolves its town id to the exact intended identity asset before and after save/resume; generated towns carrying an authored town archetype resolve the same identity, future unmapped towns retain faction fallback, and malformed towns retain the default fallback with no save-version change;
+- inspected captures, focused town identity/placement/save runtime, town entry and generated-Large compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes towns, layouts, architecture, heraldry, assets, names, text, or protected visual expression; no change to town economy, buildings, recruitment, ownership, entry rules, footprints, hero movement, scenarios, AI, save schema, RMG behavior, renderer architecture, signing, publication, whole-game, or release-readiness claims.
+
+Result:
+- added 15 original transparent town landmarks covering Riverwatch Hold, Highwater Keep, all five Mireclaw settlements, both Sunvault relays, both Thornwake settlements, both Brasshollow settlements, and both Veilmourn settlements; retained high-resolution generated sources while shipping curated 512x512 runtime assets;
+- added manifest-owned town-id mapping and live identity-first resolution ahead of the retained faction and default fallbacks, without changing save version 9, ownership, fog, 3x2 footprint, blocking, visit routing, town rules, or scenario data;
+- expanded the focused runtime owner to exercise all 15 identities at 1280x720 and 1920x1080 with exact texture, scale, grounding, silhouette, owner-pennant, visible-fog, save/resume, malformed-default-fallback, and restored-authority checks; static validation also requires all 54 live authored town placements to cover the exact 15 mapped town ids;
+- focused town identity runtime, Ninefold, generated 108x108 Large town scale/interaction, dedicated footprint click-entry, core systems, repository validation, editor import, and Linux/Windows packaging-readiness checks passed. The generic Overworld visual smoke was attempted but stopped earlier on its unrelated objective-header pixel-fit assertion before reaching the town-art assertion.
 
 ## Signature Hero Overworld Sprites
 
