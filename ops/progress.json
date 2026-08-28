@@ -15332,10 +15332,10 @@
   "currentNotes": "Overworld town proportional footprint scaling is completed: authored and Large RMG towns now paint at 1.36 tiles with exact alpha-bottom grounding while retaining the existing 3x2 footprint, interaction, save, and platform authority.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "presentation-overworld-town-proportional-footprint-scale-10184",
-  "currentSliceId": "presentation-overworld-town-proportional-footprint-scale-10184",
-  "currentSliceNotes": "Renderer scales unchanged 3x2 town footprints to 1.36 painted tiles with exact alpha-bottom grounding. Authored and 108x108 RMG 1280/1920 gates, all faction/fallback sprites, occupancy/selection/interaction authority, generated movement, 22.8 MB generated-Large save/rollback/reload, core/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Platform claims remain export/startup only.",
+  "currentSliceId": "ux-overworld-town-footprint-click-entry-routing-10184",
+  "currentSliceNotes": "Implemented live 3x2 town-footprint click routing: the bottom-middle entry remains a movement destination and does not auto-open Town on arrival, while each owned non-entry body cell opens the exact Town without moving the hero. Focused live-signal runtime, generated-Large six-town 1280/1920 routing, route movement, neutral capture, Town exit, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup passed. No town scale, topology, save schema, AI, economy, Native-RMG, packaged-interaction, hardware, or whole-release claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "presentation overworld town proportional footprint scale 10184",
+  "currentSliceTitle": "ux overworld town footprint click entry routing 10184",
   "currentSliceUpdatedAt": "2026-08-28T13:32:33Z",
   "deferredRiskRegister": [
     {
@@ -105082,6 +105082,16 @@
       "startedAt": "2026-08-28T12:07:48Z",
       "notes": "Renderer scales unchanged 3x2 town footprints to 1.36 painted tiles with exact alpha-bottom grounding. Authored and 108x108 RMG 1280/1920 gates, all faction/fallback sprites, occupancy/selection/interaction authority, generated movement, 22.8 MB generated-Large save/rollback/reload, core/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Platform claims remain export/startup only.",
       "completedAt": "2026-08-28T13:32:33Z"
+    },
+    {
+      "id": "ux-overworld-town-footprint-click-entry-routing-10184",
+      "title": "ux overworld town footprint click entry routing 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T14:56:03Z",
+      "startedAt": "2026-08-28T14:29:59Z",
+      "notes": "Implemented live 3x2 town-footprint click routing: the bottom-middle entry remains a movement destination and does not auto-open Town on arrival, while each owned non-entry body cell opens the exact Town without moving the hero. Focused live-signal runtime, generated-Large six-town 1280/1920 routing, route movement, neutral capture, Town exit, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup passed. No town scale, topology, save schema, AI, economy, Native-RMG, packaged-interaction, hardware, or whole-release claim.",
+      "completedAt": "2026-08-28T14:56:03Z"
     }
   ],
   "project": "heroes-like",
@@ -105626,7 +105636,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T13:32:33Z",
+  "updatedAt": "2026-08-28T14:56:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

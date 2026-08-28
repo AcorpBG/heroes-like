@@ -26,6 +26,35 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Overworld Town Footprint Click Entry Routing
+
+id: `ux-overworld-town-footprint-click-entry-routing-10184`
+
+Status: completed.
+
+Current finding:
+- the live map renderer indexes every cell of the exact 3x2 town presentation footprint, but the shell does not preserve whether the pointer selected the entry or the town body;
+- the exact entry coordinate is promoted straight to remote `Visit Town`, so it cannot be used as a movement destination, while the other visible town cells are not recognized as the owned town at all.
+
+Implementation boundary:
+- preserve the clicked town-footprint role from the live map view: the bottom-middle entry selects/routes to that walkable tile, while another visible footprint cell opens the owned Town screen;
+- preserve the exact 3x2 presentation footprint, single click-routed entry, town identity/ownership, route rules, movement cost, and Town-screen handoff;
+- keep ordinary tiles and resource-object interaction routing unchanged.
+
+Completion criteria:
+- pointer selection on the entry produces the exact movement route and moves the hero onto it; clicking each other in-bounds visible cell opens the exact owned Town screen without turning that blocked body cell into a route destination;
+- the entry remains the only footprint cell used as a hero route destination; non-entry presentation cells open Town and never become route destinations;
+- authored and generated-map focused interaction, movement, Town return, save/load, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no town footprint, art, scale, map topology, placement, ownership, economy, AI, save schema, generated-map, or Native-RMG behavior change;
+- no broad input remapping, camera, pathfinding policy, packaged interaction, controller/accessibility hardware certification, signing, publication, whole-game validation, or release-readiness claim.
+
+Result:
+- the bottom-middle town entry now remains a real movement destination: selecting it previews the route, activating it moves the hero onto the entry without opening Town, and the resulting current-tile action is `Visit Town`;
+- clicking any of the other five visible cells of an owned 3x2 town footprint opens that exact Town without moving the hero or changing town authority;
+- the focused live-signal fixture and generated-Large six-town 1280/1920 matrix pass, alongside full-route movement, neutral-town capture, Town exit, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates.
+
 ## Overworld Town Proportional Footprint Scale
 
 id: `presentation-overworld-town-proportional-footprint-scale-10184`

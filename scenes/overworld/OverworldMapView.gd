@@ -10808,6 +10808,20 @@ func _town_presentation_at(tile: Vector2i) -> Dictionary:
 		return {}
 	return _town_footprints_by_tile.get(_tile_key(tile), {})
 
+func town_footprint_selection(tile: Vector2i) -> Dictionary:
+	var presentation := _town_presentation_at(tile)
+	if presentation.is_empty():
+		return {}
+	var town: Dictionary = presentation.get("town", {}) if presentation.get("town", {}) is Dictionary else {}
+	var entry: Vector2i = presentation.get("entry_tile", tile) if presentation.get("entry_tile", tile) is Vector2i else tile
+	return {
+		"town_placement_id": String(town.get("placement_id", "")),
+		"owner": String(town.get("owner", "neutral")),
+		"entry_tile": entry,
+		"is_entry_tile": bool(presentation.get("is_entry_tile", false)),
+		"tile_role": String(presentation.get("tile_role", "")),
+	}.duplicate(true)
+
 func _town_entry_tile(town: Dictionary) -> Vector2i:
 	return Vector2i(int(town.get("x", -1)), int(town.get("y", -1)))
 
