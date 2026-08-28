@@ -261,7 +261,8 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 					int(stack.get("count", 0)),
 					"player",
 					index,
-					stack.get("source", {})
+					stack.get("source", {}),
+					int(stack.get("slot_index", index))
 				)
 			)
 
@@ -275,7 +276,8 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 					int(stack.get("count", 0)),
 					"enemy",
 					index,
-					_enemy_stack_source(encounter_placement, battle_context)
+					_enemy_stack_source(encounter_placement, battle_context),
+					int(stack.get("slot_index", index))
 				)
 			)
 
@@ -992,13 +994,15 @@ static func _army_stack_descriptors(army: Variant, source: Dictionary) -> Array:
 		var count = max(0, int(stack_value.get("count", 0)))
 		if unit_id == "" or count <= 0:
 			continue
-		descriptors.append(
-			{
-				"unit_id": unit_id,
-				"count": count,
-				"source": source.duplicate(true),
-			}
-		)
+		var descriptor := {
+			"unit_id": unit_id,
+			"count": count,
+			"source": source.duplicate(true),
+		}
+		var slot_index := int(stack_value.get("slot_index", -1))
+		if slot_index >= 0 and slot_index < HeroCommandRulesScript.ARMY_SLOT_COUNT:
+			descriptor["slot_index"] = slot_index
+		descriptors.append(descriptor)
 	return descriptors
 
 static func _town_defending_hero(
@@ -7807,7 +7811,8 @@ static func _build_battle_stack(
 	count: int,
 	side: String,
 	index: int,
-	source: Dictionary = {}
+	source: Dictionary = {},
+	army_slot_index: int = -1
 ) -> Dictionary:
 	var unit = ContentService.get_unit(unit_id)
 	if unit.is_empty():
@@ -7824,6 +7829,7 @@ static func _build_battle_stack(
 		"faction_id": faction_id,
 		"affiliation": affiliation,
 		"unit_id": unit_id,
+		"army_slot_index": army_slot_index if army_slot_index >= 0 and army_slot_index < 7 else index,
 		"name": String(unit.get("name", unit_id)),
 		"tier": clamp(int(unit.get("tier", 1)), 1, 7),
 		"unit_hp": unit_hp,
@@ -10865,7 +10871,11 @@ static func _battle_survivor_stacks(session: SessionStateStoreScript.SessionData
 			continue
 		if filters.has("encounter_key") and String(stack.get("source_encounter_key", "")) != String(filters.get("encounter_key", "")):
 			continue
-		survivors.append({"unit_id": String(stack.get("unit_id", "")), "count": count})
+		var survivor := {"unit_id": String(stack.get("unit_id", "")), "count": count}
+		var army_slot_index := int(stack.get("army_slot_index", -1))
+		if army_slot_index >= 0 and army_slot_index < 7:
+			survivor["slot_index"] = army_slot_index
+		survivors.append(survivor)
 	return survivors
 
 static func _award_commander_experience(session: SessionStateStoreScript.SessionData, amount: int) -> Array:

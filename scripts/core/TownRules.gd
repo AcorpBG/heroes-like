@@ -1291,6 +1291,35 @@ static func transfer_in_active_town(session: SessionStateStoreScript.SessionData
 		return {"ok": false, "message": String(result.get("message", "Transfer failed."))}
 	return _finalize_town_result(session, true, String(result.get("message", "")))
 
+static func manage_army_slots_in_active_town(
+	session: SessionStateStoreScript.SessionData,
+	source_holder_id: String,
+	source_slot_index: int,
+	target_holder_id: String,
+	target_slot_index: int,
+	amount_token: String = "all"
+) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town is available for army management."}
+	var result: Dictionary = HeroCommandRulesScript.manage_army_slots(
+		session,
+		town,
+		source_holder_id,
+		source_slot_index,
+		target_holder_id,
+		target_slot_index,
+		amount_token
+	)
+	if not bool(result.get("ok", false)):
+		return result
+	var finalized := _finalize_town_result(session, true, String(result.get("message", "")))
+	for key_value in result.keys():
+		var key := String(key_value)
+		if key not in ["ok", "message"]:
+			finalized[key] = result[key]
+	return finalized
+
 static func perform_response_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():

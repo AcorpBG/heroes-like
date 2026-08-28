@@ -59,6 +59,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _hero_actions: Container = %HeroActions
 @onready var _specialty_actions: Container = %SpecialtyActions
 @onready var _army_label: Label = %Army
+@onready var _army_management: ArmyStackBar = %ArmyManagement
 @onready var _town_label: Label = %TownSummary
 @onready var _defense_label: Label = %Defense
 @onready var _pressure_label: Label = %Pressure
@@ -153,6 +154,8 @@ func _ready() -> void:
 	_confirm_build_button.pressed.connect(_on_confirm_build_pressed)
 	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
 		_management_tabs.tab_changed.connect(_on_management_tab_changed)
+	if not _army_management.operation_requested.is_connected(_on_army_slot_operation_requested):
+		_army_management.operation_requested.connect(_on_army_slot_operation_requested)
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		push_warning("Cannot enter a town without an active scenario session.")
@@ -338,6 +341,38 @@ func _on_transfer_action_pressed(action_id: String) -> void:
 		return
 	_refresh()
 	_record_town_action_presentation("transfer", action_id, action, result, before)
+
+func _on_army_slot_operation_requested(
+	source_holder_id: String,
+	source_slot_index: int,
+	target_holder_id: String,
+	target_slot_index: int,
+	amount_token: String
+) -> void:
+	var result := TownRules.manage_army_slots_in_active_town(
+		_session,
+		source_holder_id,
+		source_slot_index,
+		target_holder_id,
+		target_slot_index,
+		amount_token
+	)
+	_last_message = String(result.get("message", "Army formation did not change."))
+	_army_management.clear_selection()
+	if bool(result.get("ok", false)):
+		_invalidate_active_town_entity_cache("army_slots", ["town", "hero_army"])
+	_refresh()
+
+func _refresh_army_management(town: Dictionary) -> void:
+	var holders := []
+	var garrison := HeroCommandRules.army_slot_snapshot(_session, town, HeroCommandRules.HOLDER_GARRISON)
+	if not garrison.is_empty():
+		holders.append(garrison)
+	var active_hero_id := String(_session.overworld.get("active_hero_id", ""))
+	var active_hero := HeroCommandRules.army_slot_snapshot(_session, town, active_hero_id)
+	if not active_hero.is_empty():
+		holders.append(active_hero)
+	_army_management.configure(holders, not holders.is_empty())
 
 func _on_response_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
@@ -550,6 +585,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_set_compact_label(_specialty_label, String(view_state.get("specialty_visible_text", "")), 2)
 	_specialty_label.tooltip_text = String(view_state.get("specialty_tooltip_text", ""))
 	_set_compact_label(_army_label, String(view_state.get("army_text", "")), 2)
+	_refresh_army_management(active_town)
 	buckets["hero_army"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	_set_compact_label(_town_label, String(view_state.get("summary_text", "")), 5)
@@ -2476,6 +2512,7 @@ func validation_snapshot() -> Dictionary:
 		"transfer_readiness_visible_text": String(transfer_readiness.get("visible_text", "")),
 		"transfer_readiness_tooltip_text": String(transfer_readiness.get("tooltip_text", "")),
 		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)),
+		"army_management": _army_management.validation_snapshot(),
 		"response_text": TownRules.describe_responses(_session),
 		"response_visible_text": _response_label.text if _response_label.text.strip_edges() != "" else _join_tooltip_sections([String(response_readiness.get("visible_text", "")), TownRules.describe_responses(_session)]),
 		"response_tooltip_text": _response_label.tooltip_text if _response_label.tooltip_text.strip_edges() != "" else _join_tooltip_sections([String(response_readiness.get("tooltip_text", "")), TownRules.describe_responses(_session)]),
@@ -2559,6 +2596,31 @@ func _live_player_hero_id() -> String:
 	if hero is Dictionary and String(hero.get("id", "")) != "":
 		return String(hero.get("id", ""))
 	return String(_session.overworld.get("active_hero_id", ""))
+
+func validation_army_management_snapshot() -> Dictionary:
+	return _army_management.validation_snapshot()
+
+func validation_perform_army_slot_operation(
+	source_holder_id: String,
+	source_slot_index: int,
+	target_holder_id: String,
+	target_slot_index: int,
+	amount_token: String = "all"
+) -> Dictionary:
+	var result := TownRules.manage_army_slots_in_active_town(
+		_session,
+		source_holder_id,
+		source_slot_index,
+		target_holder_id,
+		target_slot_index,
+		amount_token
+	)
+	_last_message = String(result.get("message", ""))
+	_army_management.clear_selection()
+	_invalidate_active_town_entity_cache("army_slots_validation", ["town", "hero_army"])
+	_refresh()
+	result["snapshot"] = _army_management.validation_snapshot()
+	return result
 
 func validation_try_progress_action() -> Dictionary:
 	var before_signature := JSON.stringify(_validation_progress_signature())
