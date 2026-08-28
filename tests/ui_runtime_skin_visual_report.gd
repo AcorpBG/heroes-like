@@ -464,8 +464,8 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 	var tabs := shell.get_node_or_null("%ManagementTabs") as TabContainer
 	var sidebar_box := tabs.get_parent() as VBoxContainer if tabs != null else null
 	var rows := [
-		{"title": "Build", "page": shell.get_node_or_null("%BuildPanel"), "controls": [shell.get_node_or_null("%Buildings"), shell.get_node_or_null("%BuildActions"), shell.get_node_or_null("%BuildPlan"), shell.get_node_or_null("%ConfirmBuild")]},
-		{"title": "Muster", "page": shell.get_node_or_null("%RecruitPanel"), "controls": [shell.get_node_or_null("%Recruitment"), shell.get_node_or_null("%RecruitActions")]},
+		{"title": "Build", "page": shell.get_node_or_null("%BuildPanel"), "controls": [shell.get_node_or_null("%Buildings"), shell.get_node_or_null("%OpenBuildCatalog")]},
+		{"title": "Muster", "page": shell.get_node_or_null("%RecruitPanel"), "controls": [shell.get_node_or_null("%Recruitment"), shell.get_node_or_null("%OpenMusterCatalog")]},
 		{"title": "Spells", "page": shell.get_node_or_null("%StudyPanel"), "controls": [shell.get_node_or_null("%StudyScroll")]},
 		{"title": "Trade", "page": shell.get_node_or_null("%MarketPanel"), "controls": [shell.get_node_or_null("%Market"), shell.get_node_or_null("%MarketActions")]},
 		{"title": "Log", "page": shell.get_node_or_null("%LogisticsPanel"), "controls": [shell.get_node_or_null("%LogisticsScroll")]},

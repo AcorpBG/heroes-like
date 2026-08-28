@@ -76,11 +76,20 @@ func _run_town_smoke() -> bool:
 	if not await _capture_color_cue_frame("town_scenic_backdrop"):
 		get_tree().quit(1)
 		return false
-	var build_actions = shell.get_node_or_null("%BuildActions")
-	if build_actions == null or build_actions.get_child_count() <= 0:
-		push_error("Town smoke: construction action surface did not populate.")
+	var build_launcher = shell.get_node_or_null("%OpenBuildCatalog")
+	if build_launcher == null or not shell.has_method("validation_open_town_catalog"):
+		push_error("Town smoke: construction catalog launcher did not populate.")
 		get_tree().quit(1)
 		return false
+	shell.call("validation_open_town_catalog", "build")
+	await get_tree().process_frame
+	var build_actions = shell.get_node_or_null("%BuildActions")
+	if build_actions == null or build_actions.get_child_count() <= 0:
+		push_error("Town smoke: construction popup catalog did not populate.")
+		get_tree().quit(1)
+		return false
+	shell.call("validation_close_town_catalog")
+	await get_tree().process_frame
 	if not _assert_town_production_overview(shell):
 		get_tree().quit(1)
 		return false

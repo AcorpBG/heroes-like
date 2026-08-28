@@ -74,6 +74,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	management_tabs.current_tab = 1
 	await get_tree().process_frame
 	await get_tree().process_frame
+	shell.call("validation_open_town_catalog", "muster")
+	await get_tree().process_frame
+	await get_tree().process_frame
 	var initial_presentation: Dictionary = stage.validation_town_action_presentation_snapshot()
 	var malformed_result: Dictionary = stage.present_town_action({"event_id": "town_units_recruited"})
 	var malformed_fail_closed := not bool(malformed_result.get("active", true)) and int(malformed_result.get("serial", -1)) == 0 and PresentationAudio.validation_records().is_empty()
@@ -87,13 +90,11 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 			selected_index = index
 			selected_action = action.duplicate(true)
 			break
-	if selected_index < 0 or selected_index >= recruit_actions.get_child_count():
+	if selected_index < 0:
 		shell.queue_free()
 		await get_tree().process_frame
 		return {"ok": false, "failure": "enabled_recruit_action_missing", "actions": actions}
-	var recruit_row: Node = recruit_actions.get_child(selected_index)
-	var row_buttons: Array = recruit_row.find_children("*", "Button", true, false) if recruit_row != null else []
-	var recruit_button := row_buttons[0] as Button if row_buttons.size() == 1 else null
+	var recruit_button := _catalog_button(recruit_actions, String(selected_action.get("id", "")))
 	if recruit_button == null or recruit_button.disabled:
 		shell.queue_free()
 		await get_tree().process_frame
@@ -252,6 +253,15 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	await get_tree().process_frame
 	PresentationAudio.validation_reset()
 	return row
+
+func _catalog_button(node: Node, action_id: String) -> Button:
+	if node is Button and String(node.get_meta("catalog_entry_id", "")) == action_id:
+		return node
+	for child in node.get_children():
+		var match := _catalog_button(child, action_id)
+		if match != null:
+			return match
+	return null
 
 func _stage_layout_snapshot(shell: Node) -> Dictionary:
 	var snapshot := {}
