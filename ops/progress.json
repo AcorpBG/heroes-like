@@ -15332,10 +15332,10 @@
   "currentNotes": "Implemented scenery-first Build and Muster launchers with complete modal town catalogs, original building/unit art, authoritative construction/recruitment actions, responsive focus-trapped layouts, and save-safe state. Passed focused 1280x720/1920x1080 visual/input smoke, live construction/recruit controls, 15-town save/resume breadth, core/repository validation, and Linux/Windows release export startup.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-town-build-muster-popup-catalogs-10184",
-  "currentSliceId": "content-authored-town-overworld-identity-sprites-10184",
-  "currentSliceNotes": "Implemented 15 original authored-town overworld identity sprites with retained high-resolution sources and curated 512x512 runtime exports; added manifest-owned town-id mapping and identity-first live resolution with faction/default fallback; all 54 authored scenario placements cover the exact 15 mapped ids. Passed focused 15-town runtime at 1280x720 and 1920x1080 including scale, grounding, silhouette, pennants, visible fog, save/resume, default fallback and authority restoration; Ninefold; generated 108x108 Large town scale/interaction; town footprint click-entry; core systems; repository validation; editor import; and Linux/Windows packaging readiness. Generic overworld_visual_smoke stopped earlier on unrelated objective-header pixel-fit assertion before its town-art assertion; no release-ready claim.",
+  "currentSliceId": "content-live-scenario-lead-overworld-sprites-10184",
+  "currentSliceNotes": "Implemented eight original portrait-faithful transparent 512x512 overworld sprites for Caelen, Mira, Tova, Ruln, Oren, Kessa, Neral, and Seren, expanding manifest-owned hero identity resolution from six signatures to all 14 authored scenario leads across all 24 scenario starts. Inspected 1280x720 and 1920x1080 captures; focused runtime passed exact identity/path, field/town layout, movement, focus, pennant, silhouette, fog, faction/procedural fallback, authority restoration, and all-scenario save version 9 round-trips. Core and repository validation passed. Fresh Linux and Windows exports/startup passed with runtime/native markers, source art excluded, identical 241024116-byte PCKs under the 250 MB cap. No release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content authored town overworld identity sprites 10184",
+  "currentSliceTitle": "content live scenario lead overworld sprites 10184",
   "currentSliceUpdatedAt": "2026-08-28T17:59:00Z",
   "deferredRiskRegister": [
     {
@@ -105162,6 +105162,16 @@
       "startedAt": "2026-08-28T21:55:53Z",
       "notes": "Implemented 15 original authored-town overworld identity sprites with retained high-resolution sources and curated 512x512 runtime exports; added manifest-owned town-id mapping and identity-first live resolution with faction/default fallback; all 54 authored scenario placements cover the exact 15 mapped ids. Passed focused 15-town runtime at 1280x720 and 1920x1080 including scale, grounding, silhouette, pennants, visible fog, save/resume, default fallback and authority restoration; Ninefold; generated 108x108 Large town scale/interaction; town footprint click-entry; core systems; repository validation; editor import; and Linux/Windows packaging readiness. Generic overworld_visual_smoke stopped earlier on unrelated objective-header pixel-fit assertion before its town-art assertion; no release-ready claim.",
       "completedAt": "2026-08-28T22:39:09Z"
+    },
+    {
+      "id": "content-live-scenario-lead-overworld-sprites-10184",
+      "title": "content live scenario lead overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T23:11:39Z",
+      "startedAt": "2026-08-28T22:42:51Z",
+      "notes": "Implemented eight original portrait-faithful transparent 512x512 overworld sprites for Caelen, Mira, Tova, Ruln, Oren, Kessa, Neral, and Seren, expanding manifest-owned hero identity resolution from six signatures to all 14 authored scenario leads across all 24 scenario starts. Inspected 1280x720 and 1920x1080 captures; focused runtime passed exact identity/path, field/town layout, movement, focus, pennant, silhouette, fog, faction/procedural fallback, authority restoration, and all-scenario save version 9 round-trips. Core and repository validation passed. Fresh Linux and Windows exports/startup passed with runtime/native markers, source art excluded, identical 241024116-byte PCKs under the 250 MB cap. No release-ready claim.",
+      "completedAt": "2026-08-28T23:11:39Z"
     }
   ],
   "project": "heroes-like",
@@ -105706,7 +105716,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T22:39:09Z",
+  "updatedAt": "2026-08-28T23:11:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
