@@ -90,7 +90,7 @@ def load_generator():
 def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path) -> dict[str, Any]:
     art_root = temp_root / "art" / "units"
     animation_root = temp_root / "art" / "animation" / "runtime" / "units"
-    for subdir in ("portraits", "battle_icons", "overworld_icons"):
+    for subdir in ("portraits", "battle_icons", "battle_standees", "overworld_icons"):
         (art_root / subdir).mkdir(parents=True, exist_ok=True)
     animation_root.mkdir(parents=True, exist_ok=True)
 
@@ -101,6 +101,7 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
         "surface_sizes": {
             "portrait": {"width": generator.PORTRAIT_SIZE[0], "height": generator.PORTRAIT_SIZE[1]},
             "battle_icon": {"width": generator.BATTLE_ICON_SIZE[0], "height": generator.BATTLE_ICON_SIZE[1]},
+            "battle_standee": {"width": generator.BATTLE_STANDEE_SIZE[0], "height": generator.BATTLE_STANDEE_SIZE[1]},
             "overworld_icon": {"width": generator.OVERWORLD_ICON_SIZE[0], "height": generator.OVERWORLD_ICON_SIZE[1]},
         },
         "items": [],
@@ -130,6 +131,7 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
         initials = generator.initials_for(str(unit.get("name", unit_id)))
         portrait_path = art_root / "portraits" / f"{unit_id}.png"
         battle_path = art_root / "battle_icons" / f"{unit_id}.png"
+        standee_path = art_root / "battle_standees" / f"{unit_id}.png"
         overworld_path = art_root / "overworld_icons" / f"{unit_id}.png"
         animation_path = animation_root / f"{unit_id}.png"
 
@@ -144,6 +146,11 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
                 generator.draw_battle_icon(unit, palette, motif, initials, battle_path)
             else:
                 generator.draw_curated_battle_icon(unit, palette, curated_source, battle_path)
+        if not generator.preserve_authored_asset(unit_id, "battle_standee", standee_path):
+            if curated_source is None:
+                generator.draw_battle_standee(unit, palette, motif, initials, standee_path)
+            else:
+                generator.draw_curated_battle_standee(unit, palette, curated_source, standee_path)
         if not generator.preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
             if curated_source is None:
                 generator.draw_overworld_icon(unit, palette, motif, initials, overworld_path)
@@ -165,6 +172,8 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
             "motif": motif,
             "portrait": f"res://art/units/portraits/{unit_id}.png",
             "battle_icon": f"res://art/units/battle_icons/{unit_id}.png",
+            "battle_standee": f"res://art/units/battle_standees/{unit_id}.png",
+            "battle_standee_anchor": {"x": 0.5, "y": 0.973214},
             "overworld_icon": f"res://art/units/overworld_icons/{unit_id}.png",
         }
         animation_record = {
@@ -187,6 +196,7 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
         assets.extend([
             {"unit_id": unit_id, "surface": "portrait", "res_path": f"res://art/units/portraits/{unit_id}.png", "temp_path": str(portrait_path)},
             {"unit_id": unit_id, "surface": "battle_icon", "res_path": f"res://art/units/battle_icons/{unit_id}.png", "temp_path": str(battle_path)},
+            {"unit_id": unit_id, "surface": "battle_standee", "res_path": f"res://art/units/battle_standees/{unit_id}.png", "temp_path": str(standee_path)},
             {"unit_id": unit_id, "surface": "overworld_icon", "res_path": f"res://art/units/overworld_icons/{unit_id}.png", "temp_path": str(overworld_path)},
             {"unit_id": unit_id, "surface": "battle_animation_sheet", "res_path": f"res://art/animation/runtime/units/{unit_id}.png", "temp_path": str(animation_path)},
         ])

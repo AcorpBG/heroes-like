@@ -1360,9 +1360,10 @@ func _validate_board_playback_lifecycle() -> void:
 	var expired_camera: Dictionary = expired_summary.get("camera_playback", {}) if expired_summary.get("camera_playback", {}) is Dictionary else {}
 	_expect_equal("lifecycle expired source fallback", String(expired_states.get("player_0", "")), "ready_active")
 	_expect_equal("lifecycle expired target fallback", String(expired_states.get("enemy_0", "")), "idle_hold")
-	_expect_equal("lifecycle expired source art", String(expired_art_sources.get("player_0", "")), "resting_battle_icon")
-	_expect_equal("lifecycle expired target art", String(expired_art_sources.get("enemy_0", "")), "resting_battle_icon")
-	_expect_int("lifecycle expired resting icon count", int(expired_art_source_counts.get("resting_battle_icon", -1)), int(expired_summary.get("visible_stack_count", 0)))
+	_expect_equal("lifecycle expired source art", String(expired_art_sources.get("player_0", "")), "resting_battle_standee")
+	_expect_equal("lifecycle expired target art", String(expired_art_sources.get("enemy_0", "")), "resting_battle_standee")
+	_expect_int("lifecycle expired resting standee count", int(expired_art_source_counts.get("resting_battle_standee", -1)), int(expired_summary.get("visible_stack_count", 0)))
+	_expect_int("lifecycle expired resting icon fallback count", int(expired_art_source_counts.get("resting_battle_icon", -1)), 0)
 	_expect_int("lifecycle expired event animation count", int(expired_art_source_counts.get("event_animation_sheet", -1)), 0)
 	_expect_int("lifecycle expired animation fallback count", int(expired_art_source_counts.get("animation_sheet_fallback", -1)), 0)
 	_expect_int("lifecycle expired glyph fallback count", int(expired_art_source_counts.get("procedural_glyph_fallback", -1)), 0)

@@ -6,7 +6,7 @@ import json
 import math
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -125,6 +125,7 @@ PRESERVED_AUTHORED_ASSET_SHA256 = {}
 
 PORTRAIT_SIZE = (384, 512)
 BATTLE_ICON_SIZE = (160, 160)
+BATTLE_STANDEE_SIZE = (192, 224)
 OVERWORLD_ICON_SIZE = (96, 96)
 ANIMATION_FRAME_SIZE = (64, 64)
 ANIMATION_FRAMES_PER_STATE = 4
@@ -193,7 +194,7 @@ PALETTES = {
 
 def main() -> int:
     units = json.loads(UNITS_PATH.read_text(encoding="utf-8")).get("items", [])
-    for subdir in ("portraits", "battle_icons", "overworld_icons"):
+    for subdir in ("portraits", "battle_icons", "battle_standees", "overworld_icons"):
         (ART_ROOT / subdir).mkdir(parents=True, exist_ok=True)
     ANIMATION_ROOT.mkdir(parents=True, exist_ok=True)
 
@@ -204,6 +205,7 @@ def main() -> int:
         "surface_sizes": {
             "portrait": {"width": PORTRAIT_SIZE[0], "height": PORTRAIT_SIZE[1]},
             "battle_icon": {"width": BATTLE_ICON_SIZE[0], "height": BATTLE_ICON_SIZE[1]},
+            "battle_standee": {"width": BATTLE_STANDEE_SIZE[0], "height": BATTLE_STANDEE_SIZE[1]},
             "overworld_icon": {"width": OVERWORLD_ICON_SIZE[0], "height": OVERWORLD_ICON_SIZE[1]},
         },
         "items": [],
@@ -233,6 +235,7 @@ def main() -> int:
         initials = initials_for(str(unit.get("name", unit_id)))
         portrait_path = ART_ROOT / "portraits" / f"{unit_id}.png"
         battle_path = ART_ROOT / "battle_icons" / f"{unit_id}.png"
+        standee_path = ART_ROOT / "battle_standees" / f"{unit_id}.png"
         overworld_path = ART_ROOT / "overworld_icons" / f"{unit_id}.png"
         animation_path = ANIMATION_ROOT / f"{unit_id}.png"
 
@@ -247,6 +250,11 @@ def main() -> int:
                 draw_battle_icon(unit, palette, motif, initials, battle_path)
             else:
                 draw_curated_battle_icon(unit, palette, curated_source, battle_path)
+        if not preserve_authored_asset(unit_id, "battle_standee", standee_path):
+            if curated_source is None:
+                draw_battle_standee(unit, palette, motif, initials, standee_path)
+            else:
+                draw_curated_battle_standee(unit, palette, curated_source, standee_path)
         if not preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
             if curated_source is None:
                 draw_overworld_icon(unit, palette, motif, initials, overworld_path)
@@ -268,6 +276,8 @@ def main() -> int:
             "motif": motif,
             "portrait": to_res_path(portrait_path),
             "battle_icon": to_res_path(battle_path),
+            "battle_standee": to_res_path(standee_path),
+            "battle_standee_anchor": {"x": 0.5, "y": 0.973214},
             "overworld_icon": to_res_path(overworld_path),
         }
         animation_record = {
@@ -355,6 +365,8 @@ def runtime_asset_path(unit_id: str, surface: str) -> Path:
         return ART_ROOT / "portraits" / f"{unit_id}.png"
     if surface == "battle_icon":
         return ART_ROOT / "battle_icons" / f"{unit_id}.png"
+    if surface == "battle_standee":
+        return ART_ROOT / "battle_standees" / f"{unit_id}.png"
     if surface == "overworld_icon":
         return ART_ROOT / "overworld_icons" / f"{unit_id}.png"
     if surface == "battle_animation_sheet":
@@ -555,6 +567,45 @@ def draw_curated_battle_icon(unit: dict, palette: dict, source: Image.Image, pat
     figure = _fit_curated_source(source, (146, 146))
     image.alpha_composite(figure, ((160 - figure.width) // 2, 7 + (146 - figure.height)))
     draw_tier_pips(draw, int(unit.get("tier", 1)), (22, 142), metal, 3)
+    image.save(path)
+
+
+def draw_battle_standee(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
+    image, draw = canvas(BATTLE_STANDEE_SIZE)
+    primary = palette["primary"]
+    secondary = palette["secondary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    center_x = BATTLE_STANDEE_SIZE[0] // 2
+    baseline = BATTLE_STANDEE_SIZE[1] - 7
+    draw.ellipse(
+        [center_x - 61, baseline - 13, center_x + 61, baseline + 3],
+        fill=with_alpha(scale_color(shadow, 0.42), 92),
+    )
+    draw.line([(center_x - 27, baseline - 8), (center_x - 18, baseline - 67)], fill=with_alpha(shadow, 245), width=16)
+    draw.line([(center_x + 27, baseline - 8), (center_x + 18, baseline - 67)], fill=with_alpha(shadow, 245), width=16)
+    draw_motif(draw, motif, (center_x, baseline - 112), 69, palette, str(unit["id"]))
+    draw_unit_signature(draw, str(unit["id"]), BATTLE_STANDEE_SIZE, metal, (18, 18), 11)
+    draw_tier_pips(draw, int(unit.get("tier", 1)), (20, baseline - 3), secondary, 3)
+    draw_centered_text(draw, initials, (center_x - 28, baseline - 88, center_x + 28, baseline - 57), font(17, True), with_alpha(primary, 230))
+    image.save(path)
+
+
+def draw_curated_battle_standee(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
+    image = Image.new("RGBA", BATTLE_STANDEE_SIZE, (0, 0, 0, 0))
+    shadow = scale_color(palette["shadow"], 0.46)
+    contact_draw = ImageDraw.Draw(image)
+    contact_draw.ellipse([43, 209, 149, 217], fill=(*shadow, 58))
+    figure = _fit_curated_source(source, (184, 212))
+    outline_alpha = figure.getchannel("A").filter(ImageFilter.MaxFilter(7))
+    outline = Image.new("RGBA", figure.size, (*shadow, 0))
+    outline.putalpha(outline_alpha.point(lambda value: min(190, value)))
+    outlined_figure = Image.alpha_composite(outline, figure)
+    destination = (
+        (BATTLE_STANDEE_SIZE[0] - outlined_figure.width) // 2,
+        BATTLE_STANDEE_SIZE[1] - 6 - outlined_figure.height,
+    )
+    image.alpha_composite(outlined_figure, destination)
     image.save(path)
 
 

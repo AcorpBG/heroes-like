@@ -39,7 +39,7 @@ const TURN_STRIP_CHIP_FILL := Color(0.055, 0.066, 0.072, 0.96)
 const TURN_STRIP_ACTIVE_FILL := Color(0.115, 0.102, 0.060, 0.98)
 const TURN_STRIP_PORTRAIT_FILL := Color(0.018, 0.024, 0.028, 0.96)
 const TURN_STRIP_QUEUED_FRAME := Color(0.45, 0.49, 0.48, 0.78)
-const STACK_TOKEN_PRESENTATION_MODEL := "icon_first_medallion_event_animation_swap"
+const STACK_TOKEN_PRESENTATION_MODEL := "grounded_full_body_standee_event_animation_swap"
 const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)
 const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
 const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
@@ -52,6 +52,11 @@ const STACK_HIT_RADIUS_MAX := 28.0
 const STACK_HIT_RADIUS_PADDING := 10.0
 const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96
 const STACK_ICON_ART_EXTENT_FACTOR := 1.86
+const STACK_STANDEE_ART_HEIGHT_FACTOR := 2.55
+const STACK_STANDEE_ART_HEIGHT_MIN := 70.0
+const STACK_STANDEE_ART_HEIGHT_MAX := 104.0
+const STACK_STANDEE_ASPECT := 192.0 / 224.0
+const STACK_STANDEE_GROUND_OFFSET_FACTOR := 0.52
 const STACK_CAPTION_PLATE_MODEL := "compact_translucent_side_accent_nameplate"
 const STACK_CAPTION_FONT_SIZE := 10
 const STACK_CAPTION_HORIZONTAL_PADDING := 5.0
@@ -161,6 +166,8 @@ var _terrain_textures: Dictionary = {}
 var _terrain_texture_missing: Dictionary = {}
 var _unit_battle_icon_textures: Dictionary = {}
 var _unit_battle_icon_missing: Dictionary = {}
+var _unit_battle_standee_textures: Dictionary = {}
+var _unit_battle_standee_missing: Dictionary = {}
 var _unit_animation_sheet_textures: Dictionary = {}
 var _unit_animation_sheet_missing: Dictionary = {}
 var _stack_animation_playback_records: Dictionary = {}
@@ -998,9 +1005,12 @@ func validation_unit_art_summary() -> Dictionary:
 	var stack_entries := []
 	var loaded_count := 0
 	var missing := []
+	var standee_loaded_count := 0
+	var missing_standees := []
 	var presentation_motion_count := 0
 	var presentation_motion_roles := {}
 	var token_art_source_counts := {
+		"resting_battle_standee": 0,
 		"resting_battle_icon": 0,
 		"event_animation_sheet": 0,
 		"animation_sheet_fallback": 0,
@@ -1018,10 +1028,13 @@ func validation_unit_art_summary() -> Dictionary:
 		var art := ContentService.get_unit_art(unit_id)
 		var path := String(art.get("battle_icon", ""))
 		var texture := _unit_battle_icon_for_stack(stack)
+		var standee_path := String(art.get("battle_standee", ""))
+		var standee_texture := _unit_battle_standee_for_stack(stack)
 		var animation := ContentService.get_unit_animation(unit_id)
 		var animation_path := String(animation.get("sprite_sheet", ""))
 		var animation_sheet := _unit_animation_sheet_for_stack(stack)
 		var loaded := texture != null
+		var standee_loaded := standee_texture != null
 		var animation_loaded := animation_sheet != null
 		var token_art_source := _stack_token_art_source(stack)
 		token_art_source_counts[token_art_source] = int(token_art_source_counts.get(token_art_source, 0)) + 1
@@ -1029,6 +1042,10 @@ func validation_unit_art_summary() -> Dictionary:
 			loaded_count += 1
 		else:
 			missing.append(unit_id)
+		if standee_loaded:
+			standee_loaded_count += 1
+		else:
+			missing_standees.append(unit_id)
 		if bool(presentation.get("presentation_motion_active", false)):
 			presentation_motion_count += 1
 			var role := String(presentation.get("presentation_motion_role", "")).strip_edges()
@@ -1039,6 +1056,10 @@ func validation_unit_art_summary() -> Dictionary:
 			"unit_id": unit_id,
 			"battle_icon": path,
 			"loaded": loaded,
+			"battle_standee": standee_path,
+			"battle_standee_loaded": standee_loaded,
+			"battle_standee_facing": "right" if String(stack.get("side", "")) == "player" else "left",
+			"battle_standee_rect": _stack_standee_rect(Vector2(float(presentation.get("presentation_x", 0.0)), float(presentation.get("presentation_y", 0.0))), float(hex_layout.get("radius", 1.0))),
 			"animation_sheet": animation_path,
 			"animation_loaded": animation_loaded,
 			"token_art_source": token_art_source,
@@ -1065,6 +1086,8 @@ func validation_unit_art_summary() -> Dictionary:
 		"visible_stack_count": stack_entries.size(),
 		"battle_icon_loaded_count": loaded_count,
 		"missing_battle_icon_units": missing,
+		"battle_standee_loaded_count": standee_loaded_count,
+		"missing_battle_standee_units": missing_standees,
 		"animation_sheet_loaded_count": stack_entries.filter(func(entry): return bool(entry.get("animation_loaded", false))).size(),
 		"missing_animation_units": stack_entries.filter(func(entry): return not bool(entry.get("animation_loaded", false))).map(func(entry): return String(entry.get("unit_id", ""))),
 		"animation_playback": validation_animation_playback_summary(),
@@ -1084,10 +1107,11 @@ func _stack_token_visual_contract(hex_layout: Dictionary) -> Dictionary:
 	var token_radius := _stack_token_radius(hex_radius)
 	return {
 		"presentation_model": STACK_TOKEN_PRESENTATION_MODEL,
-		"resting_art_source": "battle_icon",
+		"resting_art_source": "battle_standee",
 		"event_art_source": "animation_sheet",
+		"battle_icon_fallback_after_missing_standee": true,
 		"event_animation_requires_live_playback_record": true,
-		"playback_expiry_restores_resting_icon": true,
+		"playback_expiry_restores_resting_standee": true,
 		"token_radius": token_radius,
 		"hit_radius": _stack_hit_shape_radius(hex_radius),
 		"hex_radius": hex_radius,
@@ -1106,6 +1130,12 @@ func _stack_token_visual_contract(hex_layout: Dictionary) -> Dictionary:
 		"side_rim_width": maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR),
 		"animation_art_extent_factor": STACK_ANIMATION_ART_EXTENT_FACTOR,
 		"icon_art_extent_factor": STACK_ICON_ART_EXTENT_FACTOR,
+		"standee_art_height_factor": STACK_STANDEE_ART_HEIGHT_FACTOR,
+		"standee_art_height_min": STACK_STANDEE_ART_HEIGHT_MIN,
+		"standee_art_height_max": STACK_STANDEE_ART_HEIGHT_MAX,
+		"standee_aspect": STACK_STANDEE_ASPECT,
+		"standee_ground_offset_factor": STACK_STANDEE_GROUND_OFFSET_FACTOR,
+		"standee_size": _stack_standee_size(hex_radius),
 		"animation_art_diameter_fraction": STACK_ANIMATION_ART_EXTENT_FACTOR * 0.5,
 		"icon_art_diameter_fraction": STACK_ICON_ART_EXTENT_FACTOR * 0.5,
 		"art_contained_within_token": STACK_ANIMATION_ART_EXTENT_FACTOR <= 2.0 and STACK_ICON_ART_EXTENT_FACTOR <= 2.0,
@@ -1998,6 +2028,36 @@ func _unit_battle_icon_for_stack(stack: Dictionary) -> Texture2D:
 		return null
 	return _unit_battle_icon_texture(path)
 
+func _unit_battle_standee_for_stack(stack: Dictionary) -> Texture2D:
+	var unit_id := String(stack.get("unit_id", ""))
+	if unit_id == "":
+		return null
+	var art := ContentService.get_unit_art(unit_id)
+	var path := String(art.get("battle_standee", ""))
+	if path == "":
+		return null
+	return _unit_battle_standee_texture(path)
+
+func _unit_battle_standee_texture(path: String) -> Texture2D:
+	if _unit_battle_standee_textures.has(path):
+		return _unit_battle_standee_textures[path]
+	if _unit_battle_standee_missing.has(path):
+		return null
+	var texture: Texture2D = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is Texture2D:
+			texture = resource
+	if texture == null and FileAccess.file_exists(path):
+		var image := Image.new()
+		if image.load(path) == OK:
+			texture = ImageTexture.create_from_image(image)
+	if texture != null:
+		_unit_battle_standee_textures[path] = texture
+		return texture
+	_unit_battle_standee_missing[path] = true
+	return null
+
 func _unit_battle_icon_texture(path: String) -> Texture2D:
 	if _unit_battle_icon_textures.has(path):
 		return _unit_battle_icon_textures[path]
@@ -2506,6 +2566,7 @@ func _draw_controller_cursor(hex_layout: Dictionary) -> void:
 
 func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))
+	var visual_rows: Array = []
 	for stack in _all_visible_stacks():
 		if not (stack is Dictionary):
 			continue
@@ -2514,6 +2575,19 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 			continue
 		var cell: Vector2i = stack_cells.get(battle_id)
 		var center := _stack_presentation_center(stack, cell, hex_layout, stack_cells)
+		visual_rows.append({"stack": stack, "battle_id": battle_id, "center": center})
+	visual_rows.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+		var left_center: Vector2 = left.get("center", Vector2.ZERO)
+		var right_center: Vector2 = right.get("center", Vector2.ZERO)
+		if not is_equal_approx(left_center.y, right_center.y):
+			return left_center.y < right_center.y
+		return String(left.get("battle_id", "")) < String(right.get("battle_id", ""))
+	)
+	for row_value in visual_rows:
+		var row: Dictionary = row_value if row_value is Dictionary else {}
+		var stack: Dictionary = row.get("stack", {}) if row.get("stack", {}) is Dictionary else {}
+		var battle_id := String(row.get("battle_id", ""))
+		var center: Vector2 = row.get("center", Vector2.ZERO)
 		var token_radius: float = _stack_token_radius(radius)
 		var side := String(stack.get("side", ""))
 		var is_active := battle_id == String(_battle.get("active_stack_id", ""))
@@ -2522,18 +2596,25 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var fill := _side_color(side)
 		if bool(stack.get("defending", false)):
 			fill = fill.lightened(0.16)
-		draw_circle(center + Vector2(2.0, 3.0), token_radius + 4.0, SHADOW_COLOR)
-		draw_circle(center, token_radius + 3.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else (TARGET_COLOR if is_target else Color(0.11, 0.13, 0.15, 0.90))))
-		draw_circle(center, token_radius, STACK_TOKEN_INNER_FILL)
+		var ground_center := center + Vector2(0.0, radius * STACK_STANDEE_GROUND_OFFSET_FACTOR)
+		var ground_half_width := token_radius * 0.92
+		draw_set_transform(ground_center, 0.0, Vector2(1.0, 0.34))
+		draw_circle(Vector2(2.0, 5.0), ground_half_width + 4.0, SHADOW_COLOR)
+		draw_circle(Vector2.ZERO, ground_half_width + 2.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else (TARGET_COLOR if is_target else Color(0.11, 0.13, 0.15, 0.82))))
+		draw_circle(Vector2.ZERO, ground_half_width, STACK_TOKEN_INNER_FILL)
 		var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)
-		draw_circle(center, token_radius - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)
+		draw_circle(Vector2.ZERO, ground_half_width - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		var art_source := _stack_token_art_source(stack)
 		var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
+		var battle_standee: Texture2D = _unit_battle_standee_for_stack(stack)
 		var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
 		if art_source == "event_animation_sheet":
-			var frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR
-			var frame_rect := Rect2(center - Vector2(frame_size * 0.5, frame_size * 0.55), Vector2(frame_size, frame_size))
-			draw_texture_rect_region(animation_sheet, frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96))
+			var frame_size := _stack_standee_size(radius).y
+			var frame_rect := Rect2(Vector2(center.x - frame_size * 0.5, ground_center.y - frame_size), Vector2(frame_size, frame_size))
+			_draw_stack_art_region(animation_sheet, frame_rect, _animation_frame_region_for_stack(stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.96))
+		elif art_source == "resting_battle_standee":
+			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius), side == "enemy", Color(1.0, 1.0, 1.0, 0.99))
 		elif art_source == "resting_battle_icon":
 			var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR
 			var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
@@ -2560,14 +2641,50 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 func _stack_token_art_source(stack: Dictionary) -> String:
 	var battle_id := String(stack.get("battle_id", ""))
 	var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
+	var battle_standee: Texture2D = _unit_battle_standee_for_stack(stack)
 	var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
-	if animation_sheet != null and not _animation_playback_record_for_stack(battle_id).is_empty():
+	return _stack_token_art_source_for_availability(
+		animation_sheet != null,
+		battle_standee != null,
+		battle_icon != null,
+		not _animation_playback_record_for_stack(battle_id).is_empty()
+	)
+
+func _stack_token_art_source_for_availability(animation_available: bool, standee_available: bool, icon_available: bool, playback_active: bool) -> String:
+	if animation_available and playback_active:
 		return "event_animation_sheet"
-	if battle_icon != null:
+	if standee_available:
+		return "resting_battle_standee"
+	if icon_available:
 		return "resting_battle_icon"
-	if animation_sheet != null:
+	if animation_available:
 		return "animation_sheet_fallback"
 	return "procedural_glyph_fallback"
+
+func _stack_standee_size(hex_radius: float) -> Vector2:
+	var height := clampf(hex_radius * STACK_STANDEE_ART_HEIGHT_FACTOR, STACK_STANDEE_ART_HEIGHT_MIN, STACK_STANDEE_ART_HEIGHT_MAX)
+	return Vector2(height * STACK_STANDEE_ASPECT, height)
+
+func _stack_standee_rect(center: Vector2, hex_radius: float) -> Rect2:
+	var size := _stack_standee_size(hex_radius)
+	var ground_y := center.y + hex_radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
+	return Rect2(Vector2(center.x - size.x * 0.5, ground_y - size.y), size)
+
+func _draw_stack_art(texture: Texture2D, rect: Rect2, flip_horizontally: bool, modulate: Color) -> void:
+	if not flip_horizontally:
+		draw_texture_rect(texture, rect, false, modulate)
+		return
+	draw_set_transform(Vector2(rect.end.x, 0.0), 0.0, Vector2(-1.0, 1.0))
+	draw_texture_rect(texture, Rect2(Vector2(0.0, rect.position.y), rect.size), false, modulate)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+func _draw_stack_art_region(texture: Texture2D, rect: Rect2, region: Rect2, flip_horizontally: bool, modulate: Color) -> void:
+	if not flip_horizontally:
+		draw_texture_rect_region(texture, rect, region, modulate)
+		return
+	draw_set_transform(Vector2(rect.end.x, 0.0), 0.0, Vector2(-1.0, 1.0))
+	draw_texture_rect_region(texture, Rect2(Vector2(0.0, rect.position.y), rect.size), region, modulate)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 func _stack_presentation_center(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary) -> Vector2:
 	var motion := _stack_presentation_motion(stack, cell, hex_layout, stack_cells)
@@ -4039,8 +4156,8 @@ func _stack_caption_layout(center: Vector2, radius: float, stack: Dictionary) ->
 	var font := get_theme_default_font()
 	var text_size := font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE) if font != null else Vector2(float(label.length()) * 5.5, 10.0)
 	var plate_size := Vector2(ceil(text_size.x) + STACK_CAPTION_HORIZONTAL_PADDING * 2.0 + STACK_CAPTION_ACCENT_WIDTH, STACK_CAPTION_PLATE_HEIGHT)
-	var token_radius := _stack_token_radius(radius)
-	var plate_position := Vector2(round(center.x - plate_size.x * 0.5), round(center.y - token_radius - STACK_CAPTION_TOKEN_GAP - plate_size.y))
+	var upper_extent := _stack_standee_size(radius).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
+	var plate_position := Vector2(round(center.x - plate_size.x * 0.5), round(center.y - upper_extent - STACK_CAPTION_TOKEN_GAP - plate_size.y))
 	var plate_rect := Rect2(plate_position, plate_size)
 	var text_position := plate_position + Vector2(STACK_CAPTION_HORIZONTAL_PADDING + STACK_CAPTION_ACCENT_WIDTH, 12.0)
 	var text_rect := Rect2(Vector2(text_position.x, plate_position.y + 2.0), text_size)

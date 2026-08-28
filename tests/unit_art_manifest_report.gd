@@ -7,6 +7,7 @@ const UNIT_ART_MANIFEST := "res://content/unit_art_manifest.json"
 const EXPECTED_SURFACES := {
 	"portrait": Vector2i(384, 512),
 	"battle_icon": Vector2i(160, 160),
+	"battle_standee": Vector2i(192, 224),
 	"overworld_icon": Vector2i(96, 96),
 }
 
@@ -70,6 +71,8 @@ func _validate_manifest_assets() -> void:
 			_error("Unit art manifest is missing %s." % unit_id)
 			continue
 		var record: Dictionary = records_by_unit[unit_id]
+		if record.get("battle_standee_anchor", {}) != {"x": 0.5, "y": 0.973214}:
+			_error("Unit %s battle standee anchor must preserve the deterministic grounded foot line." % unit_id)
 		for surface in EXPECTED_SURFACES.keys():
 			var path := String(record.get(surface, ""))
 			if path == "":
@@ -164,6 +167,10 @@ func _validate_battle_runtime_wiring() -> void:
 		_error("Battle runtime unit art report did not see visible stacks.")
 	if int(summary.get("battle_icon_loaded_count", 0)) != int(summary.get("visible_stack_count", 0)):
 		_error("Battle runtime did not load unit art for every visible stack: %s." % JSON.stringify(summary))
+	if int(summary.get("battle_standee_loaded_count", 0)) != int(summary.get("visible_stack_count", 0)):
+		_error("Battle runtime did not load unit standees for every visible stack: %s." % JSON.stringify(summary))
+	if not (summary.get("missing_battle_standee_units", []) is Array) or not summary.get("missing_battle_standee_units", []).is_empty():
+		_error("Battle runtime reported missing unit standees: %s." % JSON.stringify(summary))
 	if int(summary.get("animation_sheet_loaded_count", 0)) != int(summary.get("visible_stack_count", 0)):
 		_error("Battle runtime did not load unit animation sheets for every visible stack: %s." % JSON.stringify(summary))
 	shell.queue_free()

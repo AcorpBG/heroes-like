@@ -1082,7 +1082,7 @@ func _validate_unit_art_manifest(unit_index: Dictionary, unit_art_index: Diction
 			push_warning("Unit art manifest is missing unit %s." % unit_id)
 			continue
 		var record: Dictionary = unit_art_index.get(unit_id, {})
-		for surface in ["portrait", "battle_icon", "overworld_icon"]:
+		for surface in ["portrait", "battle_icon", "battle_standee", "overworld_icon"]:
 			var path := String(record.get(surface, ""))
 			if path == "" or not path.begins_with("res://"):
 				push_warning("Unit art %s must define %s as a res:// path." % [unit_id, surface])

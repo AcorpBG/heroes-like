@@ -26,6 +26,38 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
 
+## Battle Full-Roster Unit Standees
+
+id: `presentation-battle-full-roster-unit-standees-10184`
+
+Status: completed.
+
+Result:
+- all 103 authored units now own committed 192x224 transparent Battle standees deterministically derived from their exact original curated character sources, with a shared grounded foot-line anchor, subtle contact shadow, exact manifest/runtime coverage, and byte-identical 515-asset regeneration;
+- the live Battle board now presents larger full-body figures on grounded side-colored plinths, faces player and enemy armies toward each other, sorts overlapping figures back-to-front, swaps to the existing animation sheet only for live events, and fails closed through standee -> battle icon -> animation -> glyph without changing hit cells or combat authority;
+- inspected 1280x720 and 1920x1080 captures retain readable terrain, grid, objectives, captions, health/count cues, and commands. The 103-unit contact sheet passes grounding/density checks with 103 distinct visual fingerprints;
+- Board navigation, 1280/1920 layout including save/route/menu round-trips, animation/VFX lifecycle, quick resolve, withdrawal/surrender, accessibility semantics, core systems, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Battle interaction and broader release claims remain unclaimed.
+
+Current finding:
+- every authored unit already owns one original transparent 512x512 curated character source, but the resting Battle renderer reduces that art to a small circular 128x128 icon drawn inside a token whose maximum radius is 32 pixels;
+- direct 1920x1080 inspection shows the painted field now dominates the screen, while unit silhouettes remain tiny medallions and therefore do not carry the scale, faction identity, or tactical presence of the source art;
+- the existing deterministic unit-art generator, manifest, ContentService resolver, animation sheets, and fail-closed procedural glyph path provide a production-safe boundary for a new Battle-only asset surface without changing combat or authored unit identity.
+
+Implementation boundary:
+- generate one deterministic transparent Battle standee PNG for every authored unit from its exact existing original curated source, with normalized visible bounds, consistent ground contact, aspect preservation, and a dedicated manifest path;
+- render the standee as the resting battlefield unit surface at a materially larger, vertically grounded extent, retaining the exact cell center, hit shape, side/active/target cues, count, health, caption, and event-animation takeover/fallback contract;
+- keep source and manifest generation reproducible, keep missing assets fail closed to the existing icon/animation/glyph chain, and preserve compact/wide resolution containment plus deterministic back-to-front visual ordering.
+
+Completion criteria:
+- all 103 authored units have committed imported standee assets, exact manifest coverage, nonempty alpha bounds, bounded dimensions, preserved source aspect/ground contact, and byte-identical regeneration;
+- inspected 1280x720 and 1920x1080 live Battle captures show materially larger readable unit silhouettes without hiding adjacent stacks, objectives, legal cells, captions, health/count cues, or the field-first composition;
+- focused runtime proves exact standee resolution/load/source selection, left/right facing, visual depth order, event-sheet takeover and resting restoration, missing-standee fallback, unchanged hit/cell/action/combat/RNG/session/save authority, and acceptable board performance;
+- Battle navigation, layout, animation/VFX, quick resolve, withdrawal, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no copied Heroes art, copyrighted character design, authored unit id/name/stat/ability/cost/growth, faction roster, encounter, combat/RNG, tactical-AI, balance, save/schema, map, generation, or Native RMG change;
+- no 3D conversion, skeletal animation, shader/particle rewrite, Battle terrain/grid/layout redesign, packaged Battle interaction claim, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
+
 ## Battle Field-First Tactical Disclosure
 
 id: `presentation-battle-field-first-tactical-disclosure-10184`
