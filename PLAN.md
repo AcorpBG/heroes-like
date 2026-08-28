@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-distinct-battle-biome-backdrops-10184`.
+- Selected implementation slice: `content-signature-hero-overworld-sprites-10184`.
+
+## Signature Hero Overworld Sprites
+
+id: `content-signature-hero-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- all 60 production heroes have distinct portraits and identities, but the live adventure map resolves them through only six faction-level sprites, so multiple named commanders from the same faction are visually identical during movement, town visits, scouting, and enemy encounters;
+- six playable signature commanders already anchor the campaign and faction breadth surfaces: Lyra Emberwell, Vaska Reedmaw, Solera Prismarch, Silsa Bramble-Hound, Marka Ironclause, and Ivara Blacktide.
+
+Implementation boundary:
+- add one original transparent 512x512 adventure-map sprite for each signature commander, preserving the established grounded full-body scale, silhouette, faction palette, and command-pennant readability;
+- add a data-driven hero-id sprite map to the existing overworld art manifest and resolve it before the current faction sprite fallback, without copying authored hero definitions into saves;
+- adopt and validate the exact hero sprite through each commander's live authored scenario, movement/town overlap, fog-memory, focus, save/resume, and packaging paths while retaining faction and procedural fallbacks for every other hero.
+
+Completion criteria:
+- all six signature sprites are visually distinct from one another and from their faction fallbacks, import and load through the live OverworldMapView, and preserve transparent containment, grounding, focus, movement, and command-pennant contracts at 1280x720 and 1920x1080;
+- representative starting scenarios for all six factions materialize the intended hero id and exact sprite asset, with hero identity and mapping preserved after save/resume and no save-version change;
+- inspected captures, focused hero runtime, scenario, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no change to hero stats, faction rules, campaign progression, movement, AI, encounter logic, save schema, RMG behavior, input authority, renderer architecture, signing, publication, whole-game, or release-readiness claims.
+
+Result:
+- added six original transparent full-body adventure-map sprites for Lyra Emberwell, Vaska Reedmaw, Solera Prismarch, Silsa Bramble-Hound, Marka Ironclause, and Ivara Blacktide, retaining high-resolution generated sources while shipping only curated 512x512 runtime assets;
+- the live overworld manifest and renderer now resolve exact hero-id art before the existing faction and procedural fallbacks, so these six scenario leads retain distinct identity through field movement, compact town-footprint composition, focus, fog, and save-version 9 serialization;
+- focused scenario-start/save-resume and dual-resolution runtime proof, inspected 1280x720 and 1920x1080 captures, core regression, repository/editor validation, and Linux/Windows release export startup passed at a 236,516,168-byte PCK with source art excluded; the broad Overworld visual smoke still stops earlier on its pre-existing 1280px objective-tooltip truncation oracle, while gameplay, save schema, RMG behavior, signing, publication, whole-game validation, and release readiness remain unchanged or unclaimed.
 
 ## Distinct Battle Biome Backdrops And Encounter Adoption
 

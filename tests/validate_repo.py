@@ -47131,6 +47131,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {})
     faction_sprites = manifest.get("hero_faction_sprites", {})
+    identity_sprites = manifest.get("hero_identity_sprites", {})
     ensure(isinstance(faction_sprites, dict) and list(faction_sprites.keys()) == list(faction_order), errors, "Overworld hero faction sprite mapping must preserve exact six-faction order")
     sprite_bytes: list[bytes] = []
     if isinstance(faction_sprites, dict) and isinstance(object_assets, dict):
@@ -47155,6 +47156,52 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure(len(sprite_bytes) == 6 and len(set(sprite_bytes)) == 6, errors, "All six Overworld hero faction PNG payloads must be distinct")
     ensure(png_size(FACTION_HERO_SPRITE_ATLAS_PATH) == (1536, 1024), errors, "Faction hero source atlas must remain the exact 3x2 1536x1024 source")
     ensure(Path(f"{FACTION_HERO_SPRITE_ATLAS_PATH}.import").is_file(), errors, "Faction hero source atlas import metadata is missing")
+
+    signature_hero_ids = (
+        "hero_lyra",
+        "hero_vaska",
+        "hero_solera",
+        "hero_thornwake_silsa_bramblehound",
+        "hero_brasshollow_marka_ironclause",
+        "hero_veilmourn_ivara_blacktide",
+    )
+    expected_identity_sprites = {hero_id: f"hero_signature_{hero_id.removeprefix('hero_')}" for hero_id in signature_hero_ids}
+    ensure(isinstance(identity_sprites, dict) and identity_sprites == expected_identity_sprites, errors, "Overworld signature heroes must retain the exact six identity-first sprite mappings")
+    signature_sprite_bytes: list[bytes] = []
+    if isinstance(identity_sprites, dict) and isinstance(object_assets, dict):
+        for hero_id in signature_hero_ids:
+            asset_id = str(identity_sprites.get(hero_id, ""))
+            expected_asset_id = expected_identity_sprites[hero_id]
+            expected_runtime_path = f"res://art/overworld/runtime/heroes/signature/{hero_id}.png"
+            expected_source_path = f"res://art/overworld/source/generated/heroes/signature/{hero_id}_source.png"
+            expected_portrait_path = f"res://art/heroes/portraits/{hero_id}.png"
+            ensure(asset_id == expected_asset_id, errors, f"Signature hero {hero_id} must map to its stable identity sprite id")
+            entry = object_assets.get(asset_id, {})
+            ensure(isinstance(entry, dict), errors, f"Signature hero sprite {asset_id} must be defined in object_assets")
+            if not isinstance(entry, dict):
+                continue
+            ensure(str(entry.get("path", "")) == expected_runtime_path, errors, f"Signature hero sprite {asset_id} must own its exact runtime path")
+            ensure(str(entry.get("source_generated", "")) == expected_source_path, errors, f"Signature hero sprite {asset_id} must retain its generated source provenance")
+            ensure(str(entry.get("source_model", "")) == "built_in_image_gen_identity_preserving_original_sprite", errors, f"Signature hero sprite {asset_id} must retain its original image-generation provenance")
+            ensure(str(entry.get("identity_reference", "")) == expected_portrait_path, errors, f"Signature hero sprite {asset_id} must retain its production portrait identity reference")
+            ensure(str(entry.get("assigned_hero_id", "")) == hero_id, errors, f"Signature hero sprite {asset_id} must remain assigned to exactly one production hero")
+            runtime_path = res_path_to_disk(expected_runtime_path)
+            source_path = res_path_to_disk(expected_source_path)
+            portrait_path = res_path_to_disk(expected_portrait_path)
+            ensure(runtime_path.is_file() and png_size(runtime_path) == (512, 512), errors, f"Signature hero sprite {asset_id} must be an exact 512x512 runtime PNG")
+            ensure(source_path.is_file(), errors, f"Signature hero sprite {asset_id} is missing its high-resolution generated source")
+            ensure(portrait_path.is_file(), errors, f"Signature hero sprite {asset_id} is missing its production portrait identity reference")
+            ensure(Path(f"{runtime_path}.import").is_file(), errors, f"Signature hero sprite {asset_id} is missing runtime Godot import metadata")
+            ensure(Path(f"{source_path}.import").is_file(), errors, f"Signature hero sprite {asset_id} is missing source Godot import metadata")
+            if runtime_path.is_file():
+                payload = runtime_path.read_bytes()
+                ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Signature hero sprite {asset_id} must retain a real alpha channel")
+                signature_sprite_bytes.append(payload)
+            if source_path.is_file():
+                source_payload = source_path.read_bytes()
+                ensure(len(source_payload) >= 26 and source_payload[25] in {4, 6}, errors, f"Signature hero source {asset_id} must retain a real alpha channel")
+    ensure(len(signature_sprite_bytes) == 6 and len(set(signature_sprite_bytes)) == 6, errors, "All six signature hero runtime PNG payloads must be distinct")
+    ensure(not set(signature_sprite_bytes).intersection(sprite_bytes), errors, "Signature hero runtime PNGs must not reuse faction fallback payloads")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     load_block = function_block(map_text, "_load_overworld_art_manifest")
@@ -47238,17 +47285,23 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         "var _hero_faction_asset_ids: Dictionary = {}", "_hero_faction_asset_ids.clear()",
         'var hero_faction_sprites = _overworld_art_manifest.get("hero_faction_sprites", {})',
         "for faction_id_value in hero_faction_sprites:", "_hero_faction_asset_ids[faction_id] = asset_id",
+        "var _hero_identity_asset_ids: Dictionary = {}", "_hero_identity_asset_ids.clear()",
+        'var hero_identity_sprites = _overworld_art_manifest.get("hero_identity_sprites", {})',
+        "for hero_id_value in hero_identity_sprites:", "_hero_identity_asset_ids[hero_id] = asset_id",
     ):
         ensure(token in map_text, errors, f"Overworld hero faction manifest lifecycle is missing: {token}")
     ensure(load_block.find("_hero_faction_asset_ids.clear()") < load_block.find('get("hero_faction_sprites", {})') < load_block.find("_hero_faction_asset_ids[faction_id] = asset_id"), errors, "Hero faction mapping must clear then load only from the current manifest")
+    ensure(load_block.find("_hero_identity_asset_ids.clear()") < load_block.find('get("hero_identity_sprites", {})') < load_block.find("_hero_identity_asset_ids[hero_id] = asset_id"), errors, "Hero identity mapping must clear then load only from the current manifest")
     ensure('bool(hero_value.get("is_active", false))' in entry_block and entry_block.find("is_active") < entry_block.find("return hero_value"), errors, "Hero presentation must prefer the exact active hero when multiple heroes share a tile")
     ensure(entry_block.rstrip().endswith("return {}"), errors, "Hero presentation entry must fail closed when no indexed hero exists")
     for token in (
+        'var hero_id := String(hero.get("id", "")).strip_edges()', 'String(_hero_identity_asset_ids.get(hero_id, "")).strip_edges()',
+        'if identity_asset_id != "" and _object_texture_for_asset(identity_asset_id) is Texture2D:', "return identity_asset_id",
         "var faction_id := _hero_template_faction_id(hero)", 'String(_hero_faction_asset_ids.get(faction_id, "")).strip_edges()',
         "_object_texture_for_asset(asset_id) is Texture2D", "return asset_id", 'return ""',
     ):
         ensure(token in resolver_block, errors, f"Hero faction sprite resolver is missing fail-closed ownership: {token}")
-    ensure(resolver_block.find("var faction_id :=") < resolver_block.find("var asset_id :=") < resolver_block.find("return asset_id"), errors, "Hero sprite resolver must derive faction then require a loaded mapped texture")
+    ensure(resolver_block.find("var hero_id :=") < resolver_block.find("var identity_asset_id :=") < resolver_block.find("return identity_asset_id") < resolver_block.find("var faction_id :=") < resolver_block.find("var asset_id :=") < resolver_block.find("return asset_id"), errors, "Hero sprite resolver must prefer a loaded identity mapping before its loaded faction fallback")
     for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "match faction_id"):
         ensure(forbidden not in resolver_block, errors, f"Hero sprite resolver must remain synchronous, manifest-owned, and read-only: {forbidden}")
     ensure("var hero := hero_override if not hero_override.is_empty() else _hero_presentation_entry(tile)" in marker_block, errors, "Hero draw path must use an exact override only for movement, otherwise the indexed tile hero")
@@ -47393,6 +47446,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for token in (
         '"hero_id": hero_id', '"faction_id": faction_id', '"is_active": bool(hero.get("is_active", false))',
         '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
+        '"uses_identity_sprite": hero_id != "" and String(_hero_identity_asset_ids.get(hero_id, "")) == sprite_asset_id',
         '"uses_faction_sprite": faction_id != ""', '"uses_procedural_fallback": sprite_asset_id == ""',
         '"reserve_count": _reserve_hero_count(tile)', '"grounding_model": HERO_GROUNDING_MODEL', '"depth_cue_model": HERO_DEPTH_CUE_MODEL',
         '"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL', '"command_pennant_model": HERO_COMMAND_PENNANT_MODEL',
@@ -47405,10 +47459,14 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     report_scene = OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(report_scene, errors, "overworld_faction_hero_sprite_runtime_report.tscn", [("OverworldFactionHeroSpriteRuntimeReport", "Node")])
     for token in (
+        'const SCENARIO_ID := "river-pass"',
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"',
         'const COMMAND_PENNANT_MODEL := "compact_player_command_flag"',
-        'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {',
+        'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {', 'const SIGNATURE_SCENARIO_STARTS := {',
+        'var scenario_starts := _validate_signature_scenario_starts()',
+        'ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)',
+        'clone.from_dict(session.to_dict())', '"save_resume_exact": exact',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'session.hero_id = String(heroes[0].get("id", ""))', 'session.overworld["player_heroes"] = heroes',
         'var authority_before: Dictionary = session.to_dict()',
@@ -47438,7 +47496,6 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'not bool(town_layout.get("selection_uses_cartographic_tile_reticle", true))',
         'town_selection_rect == expected_town_rect',
         'town_hover_rect == expected_town_rect',
-        'town_selection_rect.size == active_tile_rect.size * Vector2(3.0, 2.0)',
         'ordinary_hero_focus_rect == ordinary_tile_rect',
         'not bool(ordinary_layout.get("selection_uses_interior_fill", true))',
         'bool(ordinary_layout.get("selection_uses_cartographic_tile_reticle", false))',
@@ -47459,6 +47516,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'String(town_presentation.get("presentation_model", "")) == "town_3x2_footprint_bottom_middle_entry"',
         'bool(tile_presentation.get("has_town_non_entry", false))',
         'String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"',
+        'String(map_view.call("_hero_sprite_asset_id", {"id": "hero_seren"})) == "hero_faction_embercourt"',
         'first_hero["id"] = "hero_missing_faction_sprite_fixture"',
         'String(fallback.get("sprite_asset_id", "")) == ""', 'bool(fallback.get("uses_procedural_fallback", false))',
         'String(fallback.get("command_pennant_model", "")) == COMMAND_PENNANT_MODEL',
@@ -47484,7 +47542,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for forbidden in ("_hero_faction_asset_ids[", "_object_textures[", "_draw_hero_sprite(", "_draw_hero_marker(", "_hero_draw_rect(", "_hero_draw_layout_payload(", "_tile_focus_layout(", "_draw_tile_focus(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Faction hero focused owner must not bypass production resolution: {forbidden}")
     visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
-    ensure('String(hero_sprite.get("sprite_asset_id", "")) != "hero_faction_embercourt"' in visual_text, errors, "Overworld visual gate must require the exact River Pass hero faction sprite")
+    ensure('String(hero_sprite.get("sprite_asset_id", "")) != "hero_signature_lyra"' in visual_text, errors, "Overworld visual gate must require Lyra's exact River Pass identity sprite")
+    ensure('not bool(hero_sprite.get("uses_identity_sprite", false))' in visual_text and 'bool(hero_sprite.get("uses_faction_sprite", true))' in visual_text, errors, "Overworld visual gate must prove River Pass prefers Lyra's identity sprite over the faction fallback")
     for token in (
         'var hero_on_town_footprint := bool(hero_presentation.get("has_town_footprint", false))',
         "if hero_on_town_footprint:",

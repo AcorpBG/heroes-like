@@ -534,6 +534,7 @@ var _artifact_default_asset_id := ""
 var _artifact_field_asset_ids: Dictionary = {}
 var _town_default_asset_id := ""
 var _town_faction_asset_ids: Dictionary = {}
+var _hero_identity_asset_ids: Dictionary = {}
 var _hero_faction_asset_ids: Dictionary = {}
 var _encounter_default_asset_id := ""
 var _session_static_layer: Control = null
@@ -7357,6 +7358,7 @@ func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
 		"is_active": bool(hero.get("is_active", false)),
 		"sprite_asset_id": sprite_asset_id,
 		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
+		"uses_identity_sprite": hero_id != "" and String(_hero_identity_asset_ids.get(hero_id, "")) == sprite_asset_id,
 		"uses_faction_sprite": faction_id != "" and String(_hero_faction_asset_ids.get(faction_id, "")) == sprite_asset_id,
 		"uses_procedural_fallback": sprite_asset_id == "",
 		"reserve_count": _reserve_hero_count(tile),
@@ -10394,6 +10396,7 @@ func _load_overworld_art_manifest() -> void:
 	_artifact_field_asset_ids.clear()
 	_town_default_asset_id = ""
 	_town_faction_asset_ids.clear()
+	_hero_identity_asset_ids.clear()
 	_hero_faction_asset_ids.clear()
 	_encounter_default_asset_id = ""
 	_load_map_object_profiles()
@@ -10466,6 +10469,14 @@ func _load_overworld_art_manifest() -> void:
 			var asset_id := String(hero_faction_sprites.get(faction_id_value, "")).strip_edges()
 			if faction_id != "" and asset_id != "":
 				_hero_faction_asset_ids[faction_id] = asset_id
+
+	var hero_identity_sprites = _overworld_art_manifest.get("hero_identity_sprites", {})
+	if hero_identity_sprites is Dictionary:
+		for hero_id_value in hero_identity_sprites:
+			var hero_id := String(hero_id_value).strip_edges()
+			var asset_id := String(hero_identity_sprites.get(hero_id_value, "")).strip_edges()
+			if hero_id != "" and asset_id != "":
+				_hero_identity_asset_ids[hero_id] = asset_id
 
 	var encounter_default = _overworld_art_manifest.get("encounter_default_sprite", {})
 	if encounter_default is Dictionary:
@@ -10910,6 +10921,10 @@ func _hero_template_faction_id(hero: Dictionary) -> String:
 	return String(template.get("faction_id", "")).strip_edges()
 
 func _hero_sprite_asset_id(hero: Dictionary) -> String:
+	var hero_id := String(hero.get("id", "")).strip_edges()
+	var identity_asset_id := String(_hero_identity_asset_ids.get(hero_id, "")).strip_edges()
+	if identity_asset_id != "" and _object_texture_for_asset(identity_asset_id) is Texture2D:
+		return identity_asset_id
 	var faction_id := _hero_template_faction_id(hero)
 	var asset_id := String(_hero_faction_asset_ids.get(faction_id, "")).strip_edges()
 	if asset_id != "" and _object_texture_for_asset(asset_id) is Texture2D:

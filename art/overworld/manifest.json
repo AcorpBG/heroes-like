@@ -136,6 +136,48 @@
       "path": "res://art/overworld/runtime/heroes/factions/veilmourn.png",
       "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
     },
+    "hero_signature_lyra": {
+      "path": "res://art/overworld/runtime/heroes/signature/hero_lyra.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_lyra_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_lyra.png",
+      "assigned_hero_id": "hero_lyra"
+    },
+    "hero_signature_vaska": {
+      "path": "res://art/overworld/runtime/heroes/signature/hero_vaska.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_vaska_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_vaska.png",
+      "assigned_hero_id": "hero_vaska"
+    },
+    "hero_signature_solera": {
+      "path": "res://art/overworld/runtime/heroes/signature/hero_solera.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_solera_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_solera.png",
+      "assigned_hero_id": "hero_solera"
+    },
+    "hero_signature_thornwake_silsa_bramblehound": {
+      "path": "res://art/overworld/runtime/heroes/signature/hero_thornwake_silsa_bramblehound.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_thornwake_silsa_bramblehound_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_silsa_bramblehound.png",
+      "assigned_hero_id": "hero_thornwake_silsa_bramblehound"
+    },
+    "hero_signature_brasshollow_marka_ironclause": {
+      "path": "res://art/overworld/runtime/heroes/signature/hero_brasshollow_marka_ironclause.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_brasshollow_marka_ironclause_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_marka_ironclause.png",
+      "assigned_hero_id": "hero_brasshollow_marka_ironclause"
+    },
+    "hero_signature_veilmourn_ivara_blacktide": {
+      "path": "res://art/overworld/runtime/heroes/signature/hero_veilmourn_ivara_blacktide.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/signature/hero_veilmourn_ivara_blacktide_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_ivara_blacktide.png",
+      "assigned_hero_id": "hero_veilmourn_ivara_blacktide"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4057,6 +4099,14 @@
     "faction_thornwake": "hero_faction_thornwake",
     "faction_brasshollow": "hero_faction_brasshollow",
     "faction_veilmourn": "hero_faction_veilmourn"
+  },
+  "hero_identity_sprites": {
+    "hero_lyra": "hero_signature_lyra",
+    "hero_vaska": "hero_signature_vaska",
+    "hero_solera": "hero_signature_solera",
+    "hero_thornwake_silsa_bramblehound": "hero_signature_thornwake_silsa_bramblehound",
+    "hero_brasshollow_marka_ironclause": "hero_signature_brasshollow_marka_ironclause",
+    "hero_veilmourn_ivara_blacktide": "hero_signature_veilmourn_ivara_blacktide"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",
