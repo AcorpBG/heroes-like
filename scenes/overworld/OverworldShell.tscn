@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://overworld_scene"]
+[gd_scene load_steps=10 format=3 uid="uid://overworld_scene"]
 
 [ext_resource type="Script" path="res://scenes/overworld/OverworldShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/overworld/OverworldMapView.gd" id="2"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="6_hero_portrait"]
 [ext_resource type="Script" path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"]
 [ext_resource type="Script" path="res://scenes/overworld/OverworldSidebarOrnament.gd" id="8_sidebar_ornament"]
+[ext_resource type="Script" path="res://scenes/shared/ArmyStackBar.gd" id="9_army_stack_bar"]
 
 [node name="OverworldShell" type="Control"]
 layout_mode = 3
@@ -181,7 +182,7 @@ text = "Scenario objectives"
 
 [node name="HeroPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 142)
+custom_minimum_size = Vector2(0, 238)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -224,6 +225,12 @@ unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Army"
+
+[node name="ArmyManagement" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("9_army_stack_bar")
 
 [node name="Heroes" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true

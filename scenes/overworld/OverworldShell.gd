@@ -62,6 +62,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _hero_portrait: HeroPortraitView = %HeroPortrait
 @onready var _hero_label: Label = %Hero
 @onready var _army_label: Label = %Army
+@onready var _army_management: ArmyStackBar = %ArmyManagement
 @onready var _heroes_label: Label = %Heroes
 @onready var _action_title_label: Label = %ActionTitle
 @onready var _frontier_indicator_label: Label = %FrontierIndicator
@@ -352,6 +353,8 @@ func _ready() -> void:
 	_profile_log_enabled = _profile_log_env_enabled()
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
+	if not _army_management.operation_requested.is_connected(_on_army_slot_operation_requested):
+		_army_management.operation_requested.connect(_on_army_slot_operation_requested)
 	_spell_cast_input_blocker.visible = false
 	_artifact_acquired_input_blocker.visible = false
 	_artifact_action_cue_row.visible = false
@@ -1885,6 +1888,33 @@ func _on_hero_action_pressed(action_id: String) -> void:
 	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
+
+func _on_army_slot_operation_requested(
+	source_holder_id: String,
+	source_slot_index: int,
+	target_holder_id: String,
+	target_slot_index: int,
+	amount_token: String
+) -> void:
+	var result := HeroCommandRules.manage_army_slots(
+		_session,
+		{},
+		source_holder_id,
+		source_slot_index,
+		target_holder_id,
+		target_slot_index,
+		amount_token
+	)
+	_last_message = String(result.get("message", "Army formation did not change."))
+	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
+	_army_management.clear_selection()
+	_refresh()
+
+func _refresh_army_management() -> void:
+	var active_hero_id := String(_session.overworld.get("active_hero_id", ""))
+	var active_hero := HeroCommandRules.army_slot_snapshot(_session, {}, active_hero_id)
+	_army_management.configure([active_hero] if not active_hero.is_empty() else [], not active_hero.is_empty())
 
 func _on_rendezvous_order_selected(index: int) -> void:
 	if index < 0 or index >= _rendezvous_orders.item_count:
@@ -3686,6 +3716,7 @@ func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_wa
 	var army_rail_profile_start := _debug_refresh_profile_begin("refresh_army_rail")
 	var army_text := OverworldRules.describe_army(_session)
 	_set_rail_text(_army_label, army_text, _rail_prefixed_summary("Army", army_text), 1)
+	_refresh_army_management()
 	_debug_refresh_profile_end("refresh_army_rail", army_rail_profile_start)
 	var heroes_rail_profile_start := _debug_refresh_profile_begin("refresh_heroes_rail")
 	var heroes_text := OverworldRules.describe_heroes(_session)
@@ -3851,6 +3882,7 @@ func _refresh_generated_opening_surfaces() -> void:
 	_commitment_label.tooltip_text = ""
 	_set_rail_text(_hero_label, "%s | %s" % [hero_name, move_line], "%s | %s" % [hero_name, move_line], 2)
 	_set_rail_text(_army_label, "Army ready", "Army ready", 1)
+	_refresh_army_management()
 	_set_rail_text(_heroes_label, "Command ready", "Command ready", 1)
 	_set_rail_text(_specialty_label, "Spec ready", "Spec ready", 1)
 	_set_rail_text(_spell_label, "Spellbook ready", "Spellbook ready", 1)
@@ -10024,6 +10056,30 @@ func validation_placement_debug_overlay_snapshot() -> Dictionary:
 		"map_view": map_payload,
 	}
 
+func validation_army_management_snapshot() -> Dictionary:
+	return _army_management.validation_snapshot()
+
+func validation_perform_army_slot_operation(
+	source_slot_index: int,
+	target_slot_index: int,
+	amount_token: String = "all"
+) -> Dictionary:
+	var active_hero_id := String(_session.overworld.get("active_hero_id", ""))
+	var result := HeroCommandRules.manage_army_slots(
+		_session,
+		{},
+		active_hero_id,
+		source_slot_index,
+		active_hero_id,
+		target_slot_index,
+		amount_token
+	)
+	_last_message = String(result.get("message", ""))
+	_army_management.clear_selection()
+	_refresh()
+	result["snapshot"] = _army_management.validation_snapshot()
+	return result
+
 func validation_snapshot() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
@@ -10115,6 +10171,7 @@ func validation_snapshot() -> Dictionary:
 		"army_text": OverworldRules.describe_army(_session),
 		"army_visible_text": _army_label.text,
 		"army_tooltip_text": _army_label.tooltip_text,
+		"army_management": _army_management.validation_snapshot(),
 		"specialty_text": OverworldRules.describe_specialties(_session),
 		"specialty_visible_text": _specialty_label.text,
 		"specialty_tooltip_text": _specialty_label.tooltip_text,

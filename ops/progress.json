@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld town proportional footprint scaling is completed: authored and Large RMG towns now paint at 1.36 tiles with exact alpha-bottom grounding while retaining the existing 3x2 footprint, interaction, save, and platform authority.",
+  "currentNotes": "Completed the production seven-slot army management bar with original unit icons and counts, explicit empty and selected states, real keyboard-focusable source and destination controls, move-all, split-half, split-one, and authoritative move, swap, merge, and split across active hero and town garrison holders. Slot metadata survives manual save and restore, reaches real battles in arranged order, and returns with survivors; over-capacity and invalid operations fail closed. Focused 1280 and 1920 hero and town runtime, legacy field and town transfers, quick resolve, full town-battle visual smoke, core, accessibility, validate and editor, Linux export and headless startup, and Windows export and fresh-Wine Boot, MainMenu, and native-DLL startup passed. Packaged army-bar interaction, controller hardware, AT-SPI or UIA certification, signing, publication, whole-game, and release readiness remain unclaimed. The broad active-play focus smoke remains independently red on the pre-existing town-footprint route-cursor reset canonicalizing an interior hero tile to the town entry; no army-bar mutation caused or masked it.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-town-proportional-footprint-scale-10184",
-  "currentSliceId": "ux-overworld-town-hero-landmark-readability-10184",
-  "currentSliceNotes": "Implemented original-art overworld landmark readability: contained eight-direction alpha silhouettes for towns and faction heroes, stronger contained town owner pennants, and compact active/reserve player command flags. Existing town 1.36-tile painted extent, 3x2 footprint, hero scale, movement, fog, routing, selection, and save authority remain exact. Focused hero/town 1280/1920, generated-Large 108x108, town entry/body routing, full-route movement, core, validate/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-library startup gates passed. Broad overworld_visual_smoke remains independently red on its pre-existing End Turn copy oracle: live route-specific confirmation replaces the hard-coded generic movement sentence; no production renderer conclusion or scope expansion was taken. No copied Heroes assets, packaged interaction, hardware, signing, publication, whole-game, or release-readiness claim.",
+  "currentSlice": "ux-army-stack-management-bar-10184",
+  "currentSliceId": "ux-army-stack-management-bar-10184",
+  "currentSliceNotes": "Completed the production seven-slot army management bar with original unit icons and counts, explicit empty and selected states, real keyboard-focusable source and destination controls, move-all, split-half, split-one, and authoritative move, swap, merge, and split across active hero and town garrison holders. Slot metadata survives manual save and restore, reaches real battles in arranged order, and returns with survivors; over-capacity and invalid operations fail closed. Focused 1280 and 1920 hero and town runtime, legacy field and town transfers, quick resolve, full town-battle visual smoke, core, accessibility, validate and editor, Linux export and headless startup, and Windows export and fresh-Wine Boot, MainMenu, and native-DLL startup passed. Packaged army-bar interaction, controller hardware, AT-SPI or UIA certification, signing, publication, whole-game, and release readiness remain unclaimed. The broad active-play focus smoke remains independently red on the pre-existing town-footprint route-cursor reset canonicalizing an interior hero tile to the town entry; no army-bar mutation caused or masked it.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "ux overworld town hero landmark readability 10184",
-  "currentSliceUpdatedAt": "2026-08-28T13:32:33Z",
+  "currentSliceTitle": "ux army stack management bar 10184",
+  "currentSliceUpdatedAt": "2026-08-28T17:59:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105102,6 +105102,16 @@
       "startedAt": "2026-08-28T15:29:39Z",
       "notes": "Implemented original-art overworld landmark readability: contained eight-direction alpha silhouettes for towns and faction heroes, stronger contained town owner pennants, and compact active/reserve player command flags. Existing town 1.36-tile painted extent, 3x2 footprint, hero scale, movement, fog, routing, selection, and save authority remain exact. Focused hero/town 1280/1920, generated-Large 108x108, town entry/body routing, full-route movement, core, validate/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-library startup gates passed. Broad overworld_visual_smoke remains independently red on its pre-existing End Turn copy oracle: live route-specific confirmation replaces the hard-coded generic movement sentence; no production renderer conclusion or scope expansion was taken. No copied Heroes assets, packaged interaction, hardware, signing, publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-28T15:51:09Z"
+    },
+    {
+      "id": "ux-army-stack-management-bar-10184",
+      "title": "ux army stack management bar 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T17:59:00Z",
+      "startedAt": "2026-08-28T17:17:54Z",
+      "notes": "Completed the production seven-slot army management bar with original unit icons and counts, explicit empty and selected states, real keyboard-focusable source and destination controls, move-all, split-half, split-one, and authoritative move, swap, merge, and split across active hero and town garrison holders. Slot metadata survives manual save and restore, reaches real battles in arranged order, and returns with survivors; over-capacity and invalid operations fail closed. Focused 1280 and 1920 hero and town runtime, legacy field and town transfers, quick resolve, full town-battle visual smoke, core, accessibility, validate and editor, Linux export and headless startup, and Windows export and fresh-Wine Boot, MainMenu, and native-DLL startup passed. Packaged army-bar interaction, controller hardware, AT-SPI or UIA certification, signing, publication, whole-game, and release readiness remain unclaimed. The broad active-play focus smoke remains independently red on the pre-existing town-footprint route-cursor reset canonicalizing an interior hero tile to the town entry; no army-bar mutation caused or masked it.",
+      "completedAt": "2026-08-28T17:58:37Z"
     }
   ],
   "project": "heroes-like",
@@ -105646,7 +105656,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T15:51:09Z",
+  "updatedAt": "2026-08-28T17:59:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

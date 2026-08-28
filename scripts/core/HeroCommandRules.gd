@@ -10,6 +10,8 @@ static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyR
 const HALL_BUILDING_ID := "building_wayfarers_hall"
 const HOLDER_GARRISON := "garrison"
 const HERO_LIMIT := 4
+const ARMY_SLOT_COUNT := 7
+const ARMY_SLOT_INDEX_KEY := "slot_index"
 const DEFAULT_RECRUIT_COST := {"gold": 1200}
 const BASE_SCOUT_RADIUS := 3
 
@@ -552,6 +554,194 @@ static func get_town_transfer_actions(session: SessionStateStoreScript.SessionDa
 						}
 					)
 	return actions
+
+static func army_slot_snapshot(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	holder_id: String
+) -> Dictionary:
+	normalize_session(session)
+	if session == null or holder_id == "":
+		return {}
+	if not _army_slot_holder_is_available(session, town, holder_id):
+		return {}
+	var holder_stacks := _holder_stacks(session, town, holder_id)
+	if _valid_stack_count(holder_stacks) > ARMY_SLOT_COUNT:
+		return {
+			"model": "authoritative_seven_slot_army_bar",
+			"holder_id": holder_id,
+			"holder_label": _holder_label(session, town, holder_id),
+			"slot_count": ARMY_SLOT_COUNT,
+			"capacity_valid": false,
+			"message": "This army exceeds the seven-stack formation capacity.",
+			"slots": [],
+		}
+	var stacks := _slotted_stacks(holder_stacks)
+	var by_slot := {}
+	for stack_value in stacks:
+		if not (stack_value is Dictionary):
+			continue
+		var stack: Dictionary = stack_value
+		by_slot[int(stack.get(ARMY_SLOT_INDEX_KEY, -1))] = stack
+	var slots := []
+	var troop_count := 0
+	for slot_index in range(ARMY_SLOT_COUNT):
+		var stack: Dictionary = by_slot.get(slot_index, {})
+		var unit_id := String(stack.get("unit_id", ""))
+		var count := int(stack.get("count", 0))
+		if unit_id == "" or count <= 0:
+			slots.append({
+				"slot_index": slot_index,
+				"occupied": false,
+				"holder_id": holder_id,
+			})
+			continue
+		var unit := ContentService.get_unit(unit_id)
+		var art := ContentService.get_unit_art(unit_id)
+		troop_count += count
+		slots.append({
+			"slot_index": slot_index,
+			"occupied": true,
+			"holder_id": holder_id,
+			"unit_id": unit_id,
+			"unit_name": String(unit.get("name", unit_id)),
+			"count": count,
+			"tier": clampi(int(unit.get("tier", 1)), 1, 7),
+			"role": String(unit.get("role", "")),
+			"battle_icon": String(art.get("battle_icon", "")),
+			"portrait": String(art.get("portrait", "")),
+		})
+	return {
+		"model": "authoritative_seven_slot_army_bar",
+		"holder_id": holder_id,
+		"holder_label": _holder_label(session, town, holder_id),
+		"slot_count": ARMY_SLOT_COUNT,
+		"capacity_valid": true,
+		"occupied_slot_count": stacks.size(),
+		"troop_count": troop_count,
+		"slots": slots,
+	}
+
+static func manage_army_slots(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	source_holder_id: String,
+	source_slot_index: int,
+	target_holder_id: String,
+	target_slot_index: int,
+	amount_token: String = "all"
+) -> Dictionary:
+	normalize_session(session)
+	if session == null:
+		return {"ok": false, "message": "No expedition is available for army management."}
+	if not _army_slot_holder_is_available(session, town, source_holder_id) or not _army_slot_holder_is_available(session, town, target_holder_id):
+		return {"ok": false, "message": "Army management is limited to the active commander or holders stationed in this town."}
+	if town.is_empty() and (source_holder_id != target_holder_id or source_holder_id != String(session.overworld.get("active_hero_id", ""))):
+		return {"ok": false, "message": "Field arrangement is limited to the active commander's own formation."}
+	if source_slot_index < 0 or source_slot_index >= ARMY_SLOT_COUNT or target_slot_index < 0 or target_slot_index >= ARMY_SLOT_COUNT:
+		return {"ok": false, "message": "Choose two valid army slots."}
+	if source_holder_id == target_holder_id and source_slot_index == target_slot_index:
+		return {"ok": false, "message": "Choose a different destination slot."}
+	if _valid_stack_count(_holder_stacks(session, town, source_holder_id)) > ARMY_SLOT_COUNT or _valid_stack_count(_holder_stacks(session, town, target_holder_id)) > ARMY_SLOT_COUNT:
+		return {"ok": false, "message": "Army management is blocked because a holder exceeds the seven-stack formation capacity."}
+
+	var source_stacks := _slotted_stacks(_holder_stacks(session, town, source_holder_id))
+	var target_stacks := source_stacks.duplicate(true) if source_holder_id == target_holder_id else _slotted_stacks(_holder_stacks(session, town, target_holder_id))
+	var source_array_index := _stack_index_by_slot(source_stacks, source_slot_index)
+	if source_array_index < 0:
+		return {"ok": false, "message": "Select an occupied source slot first."}
+	var target_array_index := _stack_index_by_slot(target_stacks, target_slot_index)
+	var source_stack: Dictionary = source_stacks[source_array_index].duplicate(true)
+	var available := int(source_stack.get("count", 0))
+	var transfer_count := _resolve_transfer_amount(amount_token, available)
+	if transfer_count <= 0:
+		return {"ok": false, "message": "That split amount leaves no troops to move."}
+	var target_stack: Dictionary = target_stacks[target_array_index].duplicate(true) if target_array_index >= 0 else {}
+	var same_unit := not target_stack.is_empty() and String(target_stack.get("unit_id", "")) == String(source_stack.get("unit_id", ""))
+	if not target_stack.is_empty() and not same_unit and transfer_count != available:
+		return {"ok": false, "message": "Split stacks can move only into an empty slot or merge with the same unit."}
+
+	var operation := "move"
+	if source_holder_id == target_holder_id:
+		if target_stack.is_empty():
+			if transfer_count == available:
+				source_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
+				source_stacks[source_array_index] = source_stack
+			else:
+				source_stack["count"] = available - transfer_count
+				source_stacks[source_array_index] = source_stack
+				var split_stack := source_stack.duplicate(true)
+				split_stack["count"] = transfer_count
+				split_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
+				source_stacks.append(split_stack)
+				operation = "split"
+		elif same_unit:
+			target_stack["count"] = int(target_stack.get("count", 0)) + transfer_count
+			source_stacks[target_array_index] = target_stack
+			if transfer_count == available:
+				source_stacks.remove_at(source_array_index)
+			else:
+				source_stack["count"] = available - transfer_count
+				source_stacks[source_array_index] = source_stack
+			operation = "merge"
+		else:
+			var source_slot := int(source_stack.get(ARMY_SLOT_INDEX_KEY, source_slot_index))
+			source_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
+			target_stack[ARMY_SLOT_INDEX_KEY] = source_slot
+			source_stacks[source_array_index] = source_stack
+			source_stacks[target_array_index] = target_stack
+			operation = "swap"
+		target_stacks = source_stacks
+	else:
+		if target_stack.is_empty():
+			var moved_stack := source_stack.duplicate(true)
+			moved_stack["count"] = transfer_count
+			moved_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
+			target_stacks.append(moved_stack)
+			operation = "move" if transfer_count == available else "split"
+		elif same_unit:
+			target_stack["count"] = int(target_stack.get("count", 0)) + transfer_count
+			target_stacks[target_array_index] = target_stack
+			operation = "merge"
+		else:
+			var target_slot := int(target_stack.get(ARMY_SLOT_INDEX_KEY, target_slot_index))
+			target_stack[ARMY_SLOT_INDEX_KEY] = source_slot_index
+			source_stack[ARMY_SLOT_INDEX_KEY] = target_slot
+			target_stacks[target_array_index] = source_stack
+			source_stacks[source_array_index] = target_stack
+			operation = "swap"
+		if operation != "swap":
+			if transfer_count == available:
+				source_stacks.remove_at(source_array_index)
+			else:
+				source_stack["count"] = available - transfer_count
+				source_stacks[source_array_index] = source_stack
+
+	source_stacks = _slotted_stacks(source_stacks)
+	target_stacks = source_stacks if source_holder_id == target_holder_id else _slotted_stacks(target_stacks)
+	_set_holder_stacks(session, town, source_holder_id, source_stacks)
+	if source_holder_id != target_holder_id:
+		_set_holder_stacks(session, town, target_holder_id, target_stacks)
+	commit_active_hero(session)
+	var unit_id := String(source_stack.get("unit_id", ""))
+	var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
+	return {
+		"ok": true,
+		"operation": operation,
+		"message": "%s %d %s: %s slot %d -> %s slot %d." % [
+			operation.capitalize(), transfer_count, unit_name,
+			_holder_label(session, town, source_holder_id), source_slot_index + 1,
+			_holder_label(session, town, target_holder_id), target_slot_index + 1,
+		],
+		"source_holder_id": source_holder_id,
+		"source_slot_index": source_slot_index,
+		"target_holder_id": target_holder_id,
+		"target_slot_index": target_slot_index,
+		"unit_id": unit_id,
+		"moved_count": transfer_count,
+		"source": army_slot_snapshot(session, town, source_holder_id),
+		"target": army_slot_snapshot(session, town, target_holder_id),
+	}
 
 static func field_rendezvous_heroes(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_session(session)
@@ -1106,7 +1296,11 @@ static func _normalize_army(value: Variant, hero_id: String = "") -> Dictionary:
 			var count := int(max(0, int(stack.get("count", 0))))
 			if unit_id == "" or count <= 0:
 				continue
-			stacks.append({"unit_id": unit_id, "count": count})
+			var normalized_stack := {"unit_id": unit_id, "count": count}
+			var slot_index := int(stack.get(ARMY_SLOT_INDEX_KEY, -1))
+			if slot_index >= 0 and slot_index < ARMY_SLOT_COUNT:
+				normalized_stack[ARMY_SLOT_INDEX_KEY] = slot_index
+			stacks.append(normalized_stack)
 	return {
 		"id": String((value if value is Dictionary else {}).get("id", "%s_army" % hero_id)),
 		"name": String((value if value is Dictionary else {}).get("name", "Field Army")),
@@ -1334,6 +1528,64 @@ static func _stack_index_by_unit(stacks: Array, unit_id: String) -> int:
 	for index in range(stacks.size()):
 		var stack = stacks[index]
 		if stack is Dictionary and String(stack.get("unit_id", "")) == unit_id:
+			return index
+	return -1
+
+static func _army_slot_holder_is_available(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	holder_id: String
+) -> bool:
+	if session == null or holder_id == "":
+		return false
+	if not town.is_empty():
+		return holder_id in _stationed_holder_ids(session, town)
+	return holder_id == String(session.overworld.get("active_hero_id", "")) and not hero_by_id(session, holder_id).is_empty()
+
+static func _slotted_stacks(value: Variant) -> Array:
+	var stacks := []
+	var claimed := {}
+	if value is Array:
+		for stack_value in value:
+			if not (stack_value is Dictionary):
+				continue
+			var stack: Dictionary = stack_value.duplicate(true)
+			var unit_id := String(stack.get("unit_id", ""))
+			var count := int(stack.get("count", 0))
+			if unit_id == "" or count <= 0:
+				continue
+			var preferred_slot := int(stack.get(ARMY_SLOT_INDEX_KEY, -1))
+			if preferred_slot < 0 or preferred_slot >= ARMY_SLOT_COUNT or claimed.has(preferred_slot):
+				preferred_slot = _first_open_army_slot(claimed)
+			if preferred_slot < 0:
+				continue
+			stack[ARMY_SLOT_INDEX_KEY] = preferred_slot
+			claimed[preferred_slot] = true
+			stacks.append(stack)
+	stacks.sort_custom(_stack_slot_less)
+	return stacks
+
+static func _valid_stack_count(value: Variant) -> int:
+	var count := 0
+	if value is Array:
+		for stack_value in value:
+			if stack_value is Dictionary and String(stack_value.get("unit_id", "")) != "" and int(stack_value.get("count", 0)) > 0:
+				count += 1
+	return count
+
+static func _first_open_army_slot(claimed: Dictionary) -> int:
+	for slot_index in range(ARMY_SLOT_COUNT):
+		if not claimed.has(slot_index):
+			return slot_index
+	return -1
+
+static func _stack_slot_less(left: Dictionary, right: Dictionary) -> bool:
+	return int(left.get(ARMY_SLOT_INDEX_KEY, ARMY_SLOT_COUNT)) < int(right.get(ARMY_SLOT_INDEX_KEY, ARMY_SLOT_COUNT))
+
+static func _stack_index_by_slot(stacks: Array, slot_index: int) -> int:
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if stack is Dictionary and int(stack.get(ARMY_SLOT_INDEX_KEY, -1)) == slot_index:
 			return index
 	return -1
 

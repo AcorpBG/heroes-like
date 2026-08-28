@@ -24,7 +24,37 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved source-backed release-readiness slice.
+- Selected implementation slice: none. Select the next tracker-approved release-readiness slice.
+
+## Hero And Town Army Stack Management Bar
+
+id: `ux-army-stack-management-bar-10184`
+
+Status: completed.
+
+Current finding:
+- live hero and town armies are exposed primarily as compact text summaries and generated transfer-order buttons;
+- the underlying authoritative rules can transfer one, half, or all of a unit stack between stationed holders, but players cannot see a fixed slot formation or directly arrange, swap, merge, and split stacks into chosen positions.
+
+Implementation boundary:
+- add a shared seven-slot army bar using the existing original unit battle icons, exact counts, unit inspection tooltips, visible empty slots, selected-source state, and keyboard/controller-focusable controls;
+- expose the active hero bar on the adventure-map hero surface and paired active-hero/garrison bars in Town, with click/accept source-then-destination interaction and explicit move-all, split-half, and split-one modes;
+- add one authoritative HeroCommandRules slot operation that validates holder access and capacity, persists deterministic slot order, performs exact move/swap/merge/split mutations, synchronizes the active-hero mirror, and preserves battle formation order and save/load authority.
+
+Completion criteria:
+- all seven slots render at 1280x720 and 1920x1080 with loaded original unit icons, exact stack counts, clear empty/selected states, readable tooltips, and contained/focusable controls;
+- same-holder hero rearrange/swap/merge/split and stationed hero-to-garrison operations mutate only the intended stacks, reject invalid or over-capacity actions fail-closed, and survive save/load with exact slot order;
+- the arranged active-hero order reaches a real battle in the same order and battle resolution returns survivors without corrupting army identity/counts;
+- focused Town/Overworld live interaction, existing rendezvous/town transfer compatibility, battle, save/load, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes UI or assets, drag-only interaction, new unit art, unit-stat/balance, recruitment/economy, battle-rule/AI, hero-limit, map/RMG, save-version, controller-hardware certification, packaged interaction, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- the active hero and Town Logistics surfaces now use one shared, framed seven-slot army bar with original unit battle icons, exact counts, visible empty slots, selected-source feedback, inspection tooltips, and keyboard-focusable Move All, Split Half, and Split One interaction;
+- one authoritative core operation performs exact same-holder and hero/garrison move, swap, merge, and split mutations, rejects invalid and over-capacity operations without losing troops, and preserves deterministic slot identity through manual save/restore and real battle entry/survivor return;
+- focused live keyboard interaction and inspected 1280x720/1920x1080 captures pass, as do legacy field/Town transfers, quick resolve, full Town/Battle visual smoke, core, accessibility semantics, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-library startup;
+- packaged army-bar interaction, controller hardware, AT-SPI/UIA certification, signing, publication, whole-game validation, and release readiness remain unclaimed. The broad active-play focus smoke retains an independent pre-existing Town-footprint route-cursor reset defect; this slice does not hide or claim to fix it.
 
 ## Overworld Town And Hero Landmark Readability
 

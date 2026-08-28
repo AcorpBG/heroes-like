@@ -35294,7 +35294,7 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
         scroll_body = logistics_scroll_match.group("body")
         for token in ("unique_name_in_owner = true", "size_flags_horizontal = 3", "size_flags_vertical = 3", "horizontal_scroll_mode = 0"):
             ensure(token in scroll_body, errors, f"Town Log native scroll owner is missing exact bounded-scroll token: {token}")
-    ensure(scene_text.count("/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox") == 9, errors, "All nine Town Log labels/action surfaces must remain in exact source order beneath the one native scroll owner")
+    ensure(scene_text.count("/LogisticsPanel/LogisticsScroll/LogisticsPad/LogisticsBox") == 10, errors, "All ten Town Log army/label/action surfaces must remain in exact source order beneath the one native scroll owner")
     for forbidden in ("LogisticsPanel/LogisticsPad/LogisticsBox", "vertical_scroll_mode = 0", "clip_contents = false"):
         ensure(forbidden not in scene_text, errors, f"Town Log page must not bypass bounded native vertical scrolling via {forbidden}")
 
@@ -71727,6 +71727,148 @@ def validate_shared_heraldic_hardware_cursor(errors: list[str]) -> None:
         )
 
 
+def validate_army_stack_management_bar(errors: list[str]) -> None:
+    paths = {
+        "hero_rules": ROOT / "scripts" / "core" / "HeroCommandRules.gd",
+        "town_rules": ROOT / "scripts" / "core" / "TownRules.gd",
+        "battle_rules": ROOT / "scripts" / "core" / "BattleRules.gd",
+        "bar": ROOT / "scenes" / "shared" / "ArmyStackBar.gd",
+        "overworld_script": ROOT / "scenes" / "overworld" / "OverworldShell.gd",
+        "overworld_scene": ROOT / "scenes" / "overworld" / "OverworldShell.tscn",
+        "town_script": ROOT / "scenes" / "town" / "TownShell.gd",
+        "town_scene": ROOT / "scenes" / "town" / "TownShell.tscn",
+        "report": ROOT / "tests" / "army_stack_management_bar_runtime_report.gd",
+        "report_scene": ROOT / "tests" / "army_stack_management_bar_runtime_report.tscn",
+    }
+    for path in paths.values():
+        ensure(path.exists(), errors, f"Missing army stack management owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in paths.values()):
+        return
+
+    hero_text = paths["hero_rules"].read_text(encoding="utf-8")
+    for token in (
+        "const ARMY_SLOT_COUNT := 7",
+        'const ARMY_SLOT_INDEX_KEY := "slot_index"',
+        "static func army_slot_snapshot(",
+        "static func manage_army_slots(",
+        "ContentService.get_unit_art(unit_id)",
+        '"battle_icon": String(art.get("battle_icon", ""))',
+        '"portrait": String(art.get("portrait", ""))',
+        '"capacity_valid": false',
+        "_valid_stack_count(holder_stacks) > ARMY_SLOT_COUNT",
+        "var transfer_count := _resolve_transfer_amount(amount_token, available)",
+        'operation = "split"',
+        'operation = "merge"',
+        'operation = "swap"',
+        "_set_holder_stacks(session, town, source_holder_id, source_stacks)",
+        "commit_active_hero(session)",
+        "normalized_stack[ARMY_SLOT_INDEX_KEY] = slot_index",
+        "stacks.sort_custom(_stack_slot_less)",
+    ):
+        ensure(token in hero_text, errors, f"Hero army-slot authority is missing: {token}")
+    manage_match = re.search(r"static func manage_army_slots\(.*?\n(?P<body>.*?)(?=\nstatic func )", hero_text, re.DOTALL)
+    ensure(manage_match is not None, errors, "Could not isolate authoritative army-slot mutation")
+    if manage_match is not None:
+        body = manage_match.group("body")
+        ordered = [body.find(token) for token in (
+            "_army_slot_holder_is_available",
+            "_valid_stack_count",
+            "_stack_index_by_slot(source_stacks, source_slot_index)",
+            "_resolve_transfer_amount(amount_token, available)",
+            "_set_holder_stacks(session, town, source_holder_id, source_stacks)",
+            "commit_active_hero(session)",
+            '"source": army_slot_snapshot',
+        )]
+        ensure(all(index >= 0 for index in ordered) and ordered == sorted(ordered), errors, "Army-slot mutation must validate holder/capacity/source/amount before committing and publishing")
+        for forbidden in ("Input.", "emit_signal", "await ", "create_timer", "call_deferred", "SaveService"):
+            ensure(forbidden not in body, errors, f"Army-slot core authority must remain UI/timing/save independent: {forbidden}")
+
+    bar_text = paths["bar"].read_text(encoding="utf-8")
+    for token in (
+        "class_name ArmyStackBar",
+        "signal operation_requested(",
+        "const SLOT_COUNT := 7",
+        "const SLOT_SIZE := Vector2(38.0, 48.0)",
+        'button.add_theme_stylebox_override("normal"',
+        'button.add_theme_stylebox_override("focus"',
+        "button.focus_mode = Control.FOCUS_ALL",
+        "button.disabled = not _can_manage",
+        "button.expand_icon = true",
+        'button.add_theme_constant_override("icon_max_width", 22)',
+        'button.text = str(int(slot.get("count", 0))) if occupied else "·"',
+        'button.icon = _texture(String(slot.get("battle_icon", "")))',
+        'button.pressed.connect(_on_slot_pressed.bind(holder_id, slot_index, occupied))',
+        '"Move All"', '"Split Half"', '"Split One"',
+        "operation_requested.emit(_selected_holder_id, _selected_slot_index, holder_id, slot_index, _amount_token)",
+    ):
+        ensure(token in bar_text, errors, f"Shared army bar is missing its visible/input contract: {token}")
+    ensure(bar_text.count("for slot_index in range(SLOT_COUNT):") == 1, errors, "Each army holder must render exactly one fixed seven-slot row")
+    for forbidden in ("drag_data", "drop_data", "force_drag", "Input.warp_mouse", "create_timer", "create_tween", "SessionState", "SaveService", "BattleRules"):
+        ensure(forbidden not in bar_text, errors, f"Army bar must remain shared, authority-free, and not drag-only: {forbidden}")
+
+    battle_text = paths["battle_rules"].read_text(encoding="utf-8")
+    for token in (
+        'int(stack.get("slot_index", index))',
+        '"army_slot_index": army_slot_index if army_slot_index >= 0 and army_slot_index < 7 else index',
+        'descriptor["slot_index"] = slot_index',
+        'survivor["slot_index"] = army_slot_index',
+    ):
+        ensure(token in battle_text, errors, f"Battle handoff is missing army slot preservation: {token}")
+
+    town_rules_text = paths["town_rules"].read_text(encoding="utf-8")
+    for token in ("static func manage_army_slots_in_active_town(", "HeroCommandRulesScript.manage_army_slots(", "_finalize_town_result(session, true"):
+        ensure(token in town_rules_text, errors, f"Town army-slot authority is missing: {token}")
+
+    integration_specs = (
+        (paths["overworld_script"], paths["overworld_scene"], "HeroCommandRules.manage_army_slots", 1),
+        (paths["town_script"], paths["town_scene"], "TownRules.manage_army_slots_in_active_town", 2),
+    )
+    for script_path, scene_path, authority_call, holder_count in integration_specs:
+        script_text = script_path.read_text(encoding="utf-8")
+        scene_text = scene_path.read_text(encoding="utf-8")
+        for token in (
+            "@onready var _army_management: ArmyStackBar = %ArmyManagement",
+            "_army_management.operation_requested.connect(_on_army_slot_operation_requested)",
+            authority_call,
+            "_army_management.clear_selection()",
+            "_army_management.validation_snapshot()",
+        ):
+            ensure(token in script_text, errors, f"{script_path.name} is missing army-bar integration: {token}")
+        ensure(scene_text.count('[node name="ArmyManagement" type="VBoxContainer"') == 1, errors, f"{scene_path.name} must author exactly one shared army bar")
+        ensure('path="res://scenes/shared/ArmyStackBar.gd"' in scene_text, errors, f"{scene_path.name} must use the shared army bar owner")
+        if holder_count == 2:
+            ensure("HeroCommandRules.HOLDER_GARRISON" in script_text and "HeroCommandRules.stationed_heroes" in script_text, errors, "Town army bar must expose garrison plus stationed hero holders")
+
+    report_text = paths["report"].read_text(encoding="utf-8")
+    for token in (
+        'const REPORT_ID := "ARMY_STACK_MANAGEMENT_BAR_RUNTIME_REPORT"',
+        "const VIEWPORTS := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        'HeroCommandRules.manage_army_slots(session, town, hero_id, 0, hero_id, 2, "half")',
+        'String(swap.get("operation", "")) == "swap"',
+        'String(merge.get("operation", "")) == "merge"',
+        'String(move.get("operation", "")) == "move"',
+        "over_capacity_failed_closed",
+        "SaveService.save_runtime_manual_session(session, SAVE_SLOT)",
+        "SaveService.restore_manual_session(SAVE_SLOT)",
+        "BattleRules.create_battle_payload(restored, encounter)",
+        "BattleRules.resolve_if_battle_ready(restored)",
+        'stack_value.get("army_slot_index", -1)',
+        "source.grab_focus()",
+        "destination.grab_focus()",
+        "await _press_ui_accept()",
+        'pressed.action = &"ui_accept"',
+        "Input.parse_input_event(pressed)",
+        '_text_button(bar, "Split Half")',
+        "get_viewport().get_visible_rect().encloses(panel_rect)",
+        'print("%s %s" % [REPORT_ID',
+    ):
+        ensure(token in report_text, errors, f"Army management focused report is missing live proof: {token}")
+    for forbidden in ("_on_army_slot_operation_requested(", "_set_holder_stacks(", "_build_battle_stack(", "_battle_survivor_stacks(", "create_timer", "create_tween", "Input.warp_mouse"):
+        ensure(forbidden not in report_text, errors, f"Army management report bypasses public live ownership: {forbidden}")
+    report_scene_text = paths["report_scene"].read_text(encoding="utf-8")
+    ensure('path="res://tests/army_stack_management_bar_runtime_report.gd"' in report_scene_text, errors, "Army management focused scene must own its exact report script")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -71817,6 +71959,7 @@ def main() -> int:
     validate_difficulty_integration(errors)
     validate_hero_progression(errors)
     validate_hero_command(errors)
+    validate_army_stack_management_bar(errors)
     validate_overworld_fog(errors)
     validate_battle_deterministic_rng_state(errors)
     validate_battle_info_tab_controller_navigation(errors)
