@@ -17939,8 +17939,8 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         "var label := _stack_caption_label(stack)",
         "get_theme_default_font()",
         "font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE)",
-        "var token_radius := _stack_token_radius(radius)",
-        "center.y - token_radius - STACK_CAPTION_TOKEN_GAP - plate_size.y",
+        "var upper_extent := _stack_standee_size(radius).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR",
+        "center.y - upper_extent - STACK_CAPTION_TOKEN_GAP - plate_size.y",
         "var plate_rect := Rect2(plate_position, plate_size)",
         "var text_rect := Rect2(Vector2(text_position.x, plate_position.y + 2.0), text_size)",
         "var accent_rect := Rect2(plate_position, Vector2(STACK_CAPTION_ACCENT_WIDTH, plate_size.y))",
@@ -53347,11 +53347,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     expected_sizes = {
         "portrait": (384, 512),
         "battle_icon": (160, 160),
+        "battle_standee": (192, 224),
         "overworld_icon": (96, 96),
     }
     expected_dirs = {
         "portrait": "portraits",
         "battle_icon": "battle_icons",
+        "battle_standee": "battle_standees",
         "overworld_icon": "overworld_icons",
     }
 
@@ -54043,6 +54045,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for unit_id, unit in units.items():
         record = records_by_unit_id.get(unit_id, {})
         ensure(str(record.get("name", "")) == str(unit.get("name", "")), errors, f"Unit art manifest name mismatch for {unit_id}")
+        ensure(record.get("battle_standee_anchor") == {"x": 0.5, "y": 0.973214}, errors, f"Unit art {unit_id} battle standee must retain the exact grounded foot-line anchor")
         for surface, expected_size in expected_sizes.items():
             raw_path = str(record.get(surface, ""))
             ensure(raw_path.startswith(f"res://art/units/{expected_dirs[surface]}/"), errors, f"Unit art {unit_id} {surface} must live in art/units/{expected_dirs[surface]}")
@@ -54074,6 +54077,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "surface_sizes",
         "portrait",
         "battle_icon",
+        "battle_standee",
         "overworld_icon",
         "draw_unit_signature",
         "BATTLE_TROOP_ANIMATION_STATES",
@@ -54085,6 +54089,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "load_curated_character_source",
         "draw_curated_portrait",
         "draw_curated_battle_icon",
+        "draw_curated_battle_standee",
         "draw_curated_overworld_icon",
         "draw_curated_battle_troop_animation_sheet",
         '"art_source_kind": "curated_original_character_v1"',
@@ -54205,13 +54210,18 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 draw_portrait(unit, palette, motif, initials, portrait_path)
             else:
                 draw_curated_portrait(unit, palette, curated_source, portrait_path)''',
+        '''if not preserve_authored_asset(unit_id, "battle_standee", standee_path):
+            if curated_source is None:
+                draw_battle_standee(unit, palette, motif, initials, standee_path)
+            else:
+                draw_curated_battle_standee(unit, palette, curated_source, standee_path)''',
         '''if not preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
             if curated_source is None:
                 draw_overworld_icon(unit, palette, motif, initials, overworld_path)
             else:
                 draw_curated_overworld_icon(unit, palette, curated_source, overworld_path)''',
     ):
-        ensure(generator_text.count(required_branch) == 1, errors, "Unit art generator must preserve authored assets before the exact curated portrait/overworld branch")
+        ensure(generator_text.count(required_branch) == 1, errors, "Unit art generator must preserve authored assets before the exact curated portrait/standee/overworld branch")
     ensure(
         'if str(state.get("state", "")) == "surrender_stand_down":' in generator_text
         and 'render_state["family"] = "retreat"' in generator_text,
@@ -54228,6 +54238,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "sha256_file",
         "draw_portrait",
         "draw_battle_icon",
+        "draw_battle_standee",
         "draw_overworld_icon",
         "draw_battle_troop_animation_sheet",
         "matching_asset_count",
@@ -54235,6 +54246,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "load_curated_character_source",
         "draw_curated_portrait",
         "draw_curated_battle_icon",
+        "draw_curated_battle_standee",
         "draw_curated_overworld_icon",
         "draw_curated_battle_troop_animation_sheet",
         "curated_source_provenance",
@@ -57082,6 +57094,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func get_unit_animation",
         "func _validate_unit_art_manifest",
         "func _validate_unit_animation_manifest",
+        'for surface in ["portrait", "battle_icon", "battle_standee", "overworld_icon"]:',
     ):
         ensure(required_token in content_service_text, errors, f"ContentService.gd is missing unit art token {required_token}")
 
@@ -57249,6 +57262,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for required_token in (
         "func validation_unit_art_summary",
         "func _unit_battle_icon_for_stack",
+        "func _unit_battle_standee_for_stack",
+        "func _unit_battle_standee_texture",
+        "func _stack_token_art_source_for_availability",
         "func _unit_animation_sheet_for_stack",
         "func _animation_frame_region_for_stack",
         "func validation_animation_playback_summary",
@@ -57336,6 +57352,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "AnimationCueCatalogScript.cue_playback_policy_for_event",
         "draw_texture_rect(battle_icon",
         "draw_texture_rect_region(animation_sheet",
+        "_draw_stack_art(battle_standee",
         "animation_sheet_loaded_count",
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
@@ -57352,22 +57369,34 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "const STACK_HIT_RADIUS_PADDING := 10.0",
         "const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96",
         "const STACK_ICON_ART_EXTENT_FACTOR := 1.86",
-        'const STACK_TOKEN_PRESENTATION_MODEL := "icon_first_medallion_event_animation_swap"',
+        "const STACK_STANDEE_ART_HEIGHT_FACTOR := 2.55",
+        "const STACK_STANDEE_ART_HEIGHT_MIN := 70.0",
+        "const STACK_STANDEE_ART_HEIGHT_MAX := 104.0",
+        "const STACK_STANDEE_ASPECT := 192.0 / 224.0",
+        "const STACK_STANDEE_GROUND_OFFSET_FACTOR := 0.52",
+        'const STACK_TOKEN_PRESENTATION_MODEL := "grounded_full_body_standee_event_animation_swap"',
     ):
-        ensure(battle_board_text.count(required_token) == 1, errors, f"Battle character medallion must own one exact production constant: {required_token}")
+        ensure(battle_board_text.count(required_token) == 1, errors, f"Battle character standee renderer must own one exact production constant: {required_token}")
     stack_token_draw_block = gd_function_block(battle_board_text, "_draw_stack_tokens")
     stack_token_draw_order = tuple(stack_token_draw_block.find(token) for token in (
+        "visual_rows.sort_custom",
         "var token_radius: float = _stack_token_radius(radius)",
-        "draw_circle(center + Vector2(2.0, 3.0), token_radius + 4.0, SHADOW_COLOR)",
-        "draw_circle(center, token_radius + 3.0, ACTIVE_COLOR if is_active else",
-        "draw_circle(center, token_radius, STACK_TOKEN_INNER_FILL)",
+        "var ground_center := center + Vector2(0.0, radius * STACK_STANDEE_GROUND_OFFSET_FACTOR)",
+        "draw_set_transform(ground_center, 0.0, Vector2(1.0, 0.34))",
+        "draw_circle(Vector2(2.0, 5.0), ground_half_width + 4.0, SHADOW_COLOR)",
+        "draw_circle(Vector2.ZERO, ground_half_width + 2.0, ACTIVE_COLOR if is_active else",
+        "draw_circle(Vector2.ZERO, ground_half_width, STACK_TOKEN_INNER_FILL)",
         "var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)",
-        "draw_circle(center, token_radius - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)",
+        "draw_circle(Vector2.ZERO, ground_half_width - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)",
+        "draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)",
         "var art_source := _stack_token_art_source(stack)",
         "var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)",
+        "var battle_standee: Texture2D = _unit_battle_standee_for_stack(stack)",
         "var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)",
         'if art_source == "event_animation_sheet":',
-        "var frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR",
+        "var frame_size := _stack_standee_size(radius).y",
+        'elif art_source == "resting_battle_standee":',
+        "_draw_stack_art(battle_standee, _stack_standee_rect(center, radius), side == \"enemy\"",
         'elif art_source == "resting_battle_icon":',
         "var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR",
         'elif art_source == "animation_sheet_fallback":',
@@ -57379,7 +57408,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "_draw_stack_caption(center, radius, stack)",
         '"radius": _stack_hit_shape_radius(radius)',
     ))
-    ensure(all(index >= 0 for index in stack_token_draw_order) and list(stack_token_draw_order) == sorted(stack_token_draw_order), errors, "Battle stack medallion must preserve shadow/state ring, dark plate, side rim, contained art, overlays, and unchanged hit geometry in exact draw order")
+    ensure(all(index >= 0 for index in stack_token_draw_order) and list(stack_token_draw_order) == sorted(stack_token_draw_order), errors, "Battle standees must preserve depth order, grounded selection plinth, event/standee/icon fallbacks, overlays, and unchanged hit geometry in exact draw order")
     for forbidden_token in (
         "draw_circle(center, token_radius, fill)",
         "token_radius * 1.76",
@@ -57389,14 +57418,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'if animation_sheet != null:',
         'elif battle_icon != null:',
     ):
-        ensure(forbidden_token not in stack_token_draw_block, errors, f"Battle stack medallion must not retain the opaque disk/old art scale or mutate geometry: {forbidden_token}")
+        ensure(forbidden_token not in stack_token_draw_block, errors, f"Battle stack standee renderer must not retain the opaque disk/old art scale or mutate geometry: {forbidden_token}")
     token_contract_block = gd_function_block(battle_board_text, "_stack_token_visual_contract")
     for required_token in (
         '"presentation_model": STACK_TOKEN_PRESENTATION_MODEL',
-        '"resting_art_source": "battle_icon"',
+        '"resting_art_source": "battle_standee"',
         '"event_art_source": "animation_sheet"',
+        '"battle_icon_fallback_after_missing_standee": true',
         '"event_animation_requires_live_playback_record": true',
-        '"playback_expiry_restores_resting_icon": true',
+        '"playback_expiry_restores_resting_standee": true',
         '"token_radius": token_radius',
         '"hit_radius": _stack_hit_shape_radius(hex_radius)',
         '"hex_radius": hex_radius',
@@ -57414,9 +57444,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         '"side_rim_alpha": STACK_TOKEN_SIDE_RIM_ALPHA',
         '"animation_art_diameter_fraction": STACK_ANIMATION_ART_EXTENT_FACTOR * 0.5',
         '"icon_art_diameter_fraction": STACK_ICON_ART_EXTENT_FACTOR * 0.5',
+        '"standee_art_height_factor": STACK_STANDEE_ART_HEIGHT_FACTOR',
+        '"standee_art_height_min": STACK_STANDEE_ART_HEIGHT_MIN',
+        '"standee_art_height_max": STACK_STANDEE_ART_HEIGHT_MAX',
+        '"standee_aspect": STACK_STANDEE_ASPECT',
+        '"standee_ground_offset_factor": STACK_STANDEE_GROUND_OFFSET_FACTOR',
+        '"standee_size": _stack_standee_size(hex_radius)',
         '"art_contained_within_token": STACK_ANIMATION_ART_EXTENT_FACTOR <= 2.0 and STACK_ICON_ART_EXTENT_FACTOR <= 2.0',
     ):
-        ensure(required_token in token_contract_block, errors, f"Battle token visual contract is missing exact medallion evidence: {required_token}")
+        ensure(required_token in token_contract_block, errors, f"Battle token visual contract is missing exact grounded standee evidence: {required_token}")
     ensure('"character_first_dark_medallion_side_rim"' not in battle_board_text, errors, "Battle stack renderer must not retain the superseded animation-first resting presentation model")
     for forbidden_token in ("session", "_battle", "set(", "queue_redraw", "await ", "create_timer"):
         ensure(forbidden_token not in token_contract_block, errors, f"Battle token visual contract must remain a detached geometry observer: {forbidden_token}")
@@ -57424,20 +57460,33 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     art_source_order = tuple(art_source_block.find(token) for token in (
         'var battle_id := String(stack.get("battle_id", ""))',
         "var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)",
+        "var battle_standee: Texture2D = _unit_battle_standee_for_stack(stack)",
         "var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)",
-        "if animation_sheet != null and not _animation_playback_record_for_stack(battle_id).is_empty():",
+        "return _stack_token_art_source_for_availability(",
+        "animation_sheet != null,",
+        "battle_standee != null,",
+        "battle_icon != null,",
+        "not _animation_playback_record_for_stack(battle_id).is_empty()",
+    ))
+    ensure(all(index >= 0 for index in art_source_order) and list(art_source_order) == sorted(art_source_order), errors, "Battle token art selector must observe exact live asset/playback availability before the pure fallback selector")
+    art_availability_block = gd_function_block(battle_board_text, "_stack_token_art_source_for_availability")
+    art_availability_order = tuple(art_availability_block.find(token) for token in (
+        "if animation_available and playback_active:",
         'return "event_animation_sheet"',
-        "if battle_icon != null:",
+        "if standee_available:",
+        'return "resting_battle_standee"',
+        "if icon_available:",
         'return "resting_battle_icon"',
-        "if animation_sheet != null:",
+        "if animation_available:",
         'return "animation_sheet_fallback"',
         'return "procedural_glyph_fallback"',
     ))
-    ensure(all(index >= 0 for index in art_source_order) and list(art_source_order) == sorted(art_source_order), errors, "Battle token art selector must prefer a live event animation, then resting icon, then fail-closed fallbacks in exact order")
+    ensure(all(index >= 0 for index in art_availability_order) and list(art_availability_order) == sorted(art_availability_order), errors, "Battle token pure availability selector must prefer a live event animation, then resting standee, icon, and fail-closed fallbacks in exact order")
     for forbidden_token in ("set(", "erase(", "clear(", "queue_redraw", "await ", "create_timer", "BattleRules"):
-        ensure(forbidden_token not in art_source_block, errors, f"Battle token art selector must remain a passive presentation observer: {forbidden_token}")
+        ensure(forbidden_token not in art_source_block + art_availability_block, errors, f"Battle token art selectors must remain passive presentation observers: {forbidden_token}")
     unit_art_summary_block = gd_function_block(battle_board_text, "validation_unit_art_summary")
     for required_token in (
+        '"resting_battle_standee": 0',
         '"resting_battle_icon": 0',
         '"event_animation_sheet": 0',
         '"animation_sheet_fallback": 0',
@@ -57446,7 +57495,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         '"token_art_source": token_art_source',
         '"token_art_source_counts": token_art_source_counts',
     ):
-        ensure(required_token in unit_art_summary_block, errors, f"Battle unit-art summary is missing icon-first source evidence: {required_token}")
+        ensure(required_token in unit_art_summary_block, errors, f"Battle unit-art summary is missing standee-first source evidence: {required_token}")
     token_radius_block = gd_function_block(battle_board_text, "_stack_token_radius")
     hit_radius_block = gd_function_block(battle_board_text, "_stack_hit_shape_radius")
     ensure(
@@ -57467,12 +57516,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")',
         'var token_visual: Dictionary = unit_art_summary.get("token_visual_contract", {})',
         'var token_art_sources: Dictionary = unit_art_summary.get("token_art_source_counts", {})',
-        'String(token_visual.get("presentation_model", "")) != "icon_first_medallion_event_animation_swap"',
-        'String(token_visual.get("resting_art_source", "")) != "battle_icon"',
+        'String(token_visual.get("presentation_model", "")) != "grounded_full_body_standee_event_animation_swap"',
+        'String(token_visual.get("resting_art_source", "")) != "battle_standee"',
         'String(token_visual.get("event_art_source", "")) != "animation_sheet"',
+        'not bool(token_visual.get("battle_icon_fallback_after_missing_standee", false))',
         'not bool(token_visual.get("event_animation_requires_live_playback_record", false))',
-        'not bool(token_visual.get("playback_expiry_restores_resting_icon", false))',
-        'int(token_art_sources.get("resting_battle_icon", -1)) != int(unit_art_summary.get("visible_stack_count", 0))',
+        'not bool(token_visual.get("playback_expiry_restores_resting_standee", false))',
+        'int(unit_art_summary.get("battle_standee_loaded_count", -1)) != int(unit_art_summary.get("visible_stack_count", 0))',
+        'int(token_art_sources.get("resting_battle_standee", -1)) != int(unit_art_summary.get("visible_stack_count", 0))',
+        'int(token_art_sources.get("resting_battle_icon", -1)) != 0',
         'int(token_art_sources.get("event_animation_sheet", -1)) != 0',
         'float(token_visual.get("token_radius_factor", 0.0)), 0.68',
         'float(token_visual.get("token_radius_min", 0.0)), 15.0',
@@ -57486,15 +57538,19 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'not bool(token_visual.get("token_shadow_within_hex_radius", false))',
         'float(token_visual.get("animation_art_extent_factor", 0.0)), 1.96',
         'float(token_visual.get("icon_art_extent_factor", 0.0)), 1.86',
+        'float(token_visual.get("standee_art_height_factor", 0.0)), 2.55',
+        'float(token_visual.get("standee_art_height_min", 0.0)), 70.0',
+        'float(token_visual.get("standee_art_height_max", 0.0)), 104.0',
+        'float(token_visual.get("standee_ground_offset_factor", 0.0)), 0.52',
         'float(token_visual.get("side_rim_alpha", 0.0)), 0.92',
         'inner_fill.get_luminance() >= 0.08',
         'not bool(token_visual.get("art_contained_within_token", false))',
         'float(token_visual.get("hit_radius", 0.0)) <= float(token_visual.get("token_radius", 0.0))',
         'await _capture_color_cue_frame("battle_color_cues")',
     ):
-        ensure(required_token in battle_smoke_block, errors, f"Battle visual smoke is missing exact character-medallion runtime proof: {required_token}")
+        ensure(required_token in battle_smoke_block, errors, f"Battle visual smoke is missing exact grounded-standee runtime proof: {required_token}")
     for forbidden_token in ("board.set(", "_draw_stack_tokens", "queue_redraw", "create_timer"):
-        ensure(forbidden_token not in battle_smoke_block, errors, f"Battle medallion runtime proof must not mutate renderer/combat authority: {forbidden_token}")
+        ensure(forbidden_token not in battle_smoke_block, errors, f"Battle standee runtime proof must not mutate renderer/combat authority: {forbidden_token}")
     battle_controller_text = (ROOT / "tests" / "battle_controller_board_navigation_smoke.gd").read_text(encoding="utf-8")
     token_scale_control_block = gd_function_block(battle_controller_text, "_validate_stack_token_scale")
     for required_token in (
@@ -57502,6 +57558,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'var unit_art_summary: Dictionary = board.call("validation_unit_art_summary")',
         'var expected_token_radius := clampf(hex_radius * 0.68, 15.0, 32.0)',
         'var expected_hit_radius := clampf(hex_radius * 0.58, 13.0, 28.0) + 10.0',
+        'var expected_standee_height := clampf(hex_radius * 2.55, 70.0, 104.0)',
+        'String(token_visual.get("presentation_model", "")) != "grounded_full_body_standee_event_animation_swap"',
+        'int(token_art_sources.get("resting_battle_standee", -1)) != visible_stack_count',
+        'String(row.get("battle_standee_facing", "")) != ("right" if side == "player" else "left")',
+        'String(row.get("token_art_source", "")) != "resting_battle_standee"',
+        '"expected": "event_animation_sheet"',
+        '"expected": "resting_battle_standee"',
+        '"expected": "resting_battle_icon"',
+        '"expected": "animation_sheet_fallback"',
+        '"expected": "procedural_glyph_fallback"',
+        '"_stack_token_art_source_for_availability"',
         'token_radius * 2.0 >= sqrt(3.0) * hex_radius',
         'token_radius + 4.0 >= hex_radius',
         'if session.battle != battle_authority_before:',
@@ -57656,10 +57723,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "OverworldMapViewScript",
         "TownShellScene",
         "_unit_battle_icon_for_stack",
+        "_unit_battle_standee_for_stack",
         "_unit_animation_sheet_for_stack",
         "_encounter_overworld_icon_path",
         "_unit_art_texture",
         "animation_state_runtime_row_count",
+        "battle_standee_runtime_resolved_count",
     ):
         ensure(required_token in runtime_asset_resolution_report_text, errors, f"unit_runtime_asset_resolution_report.gd is missing token {required_token}")
 
@@ -57706,10 +57775,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for required_token in (
         "UNIT_ART_CONTACT_SHEET_REPORT",
         "CONTACT_SHEET_FILES",
+        '"battle_standee": Vector2i(192, 224)',
+        '"battle_standee": "battle_standees_contact_sheet.png"',
         "func _visual_metrics",
         "save_png",
         "alpha_coverage",
         "quantized_color_count",
+        "bottom_gap_ratio",
         "VISUAL_FINGERPRINT_BITS",
         "unique_visual_fingerprint_count",
         "func _visual_fingerprint",
@@ -57747,8 +57819,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _observed_token_art_sources",
         'String(active_art_sources.get("player_0", "")), "event_animation_sheet"',
         'String(active_art_sources.get("enemy_0", "")), "event_animation_sheet"',
-        'String(expired_art_sources.get("player_0", "")), "resting_battle_icon"',
-        'String(expired_art_sources.get("enemy_0", "")), "resting_battle_icon"',
+        'String(expired_art_sources.get("player_0", "")), "resting_battle_standee"',
+        'String(expired_art_sources.get("enemy_0", "")), "resting_battle_standee"',
+        'expired_art_source_counts.get("resting_battle_standee", -1)',
         'expired_art_source_counts.get("resting_battle_icon", -1)',
         'expired_art_source_counts.get("event_animation_sheet", -1)',
         'expired_art_source_counts.get("animation_sheet_fallback", -1)',
@@ -71701,7 +71774,7 @@ def main() -> int:
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     print("- six-faction hero rosters now keep ten live, validated heroes per faction with retained scaffold opt-in support for older scenarios")
-    print("- unit art manifests now cover every authored unit with portrait, battle-icon, overworld-icon, and cue-aligned battle animation PNG assets plus live runtime loading hooks")
+    print("- unit art manifests now cover every authored unit with portrait, battle-icon, grounded battle-standee, overworld-icon, and cue-aligned battle animation PNG assets plus live runtime loading hooks")
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- rare-resource registry/report gates now expose original rare resources as live stockpiles with sources and high-tier town costs, while normal market buying stays disabled")
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks")

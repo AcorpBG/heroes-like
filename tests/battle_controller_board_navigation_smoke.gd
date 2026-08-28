@@ -950,10 +950,27 @@ func _validate_stack_token_scale(board: Control, session) -> bool:
 	var hex_radius := float(token_visual.get("hex_radius", 0.0))
 	var token_radius := float(token_visual.get("token_radius", 0.0))
 	var hit_radius := float(token_visual.get("hit_radius", 0.0))
+	var visible_stack_count := int(unit_art_summary.get("visible_stack_count", 0))
+	var token_art_sources: Dictionary = unit_art_summary.get("token_art_source_counts", {})
+	var expected_standee_height := clampf(hex_radius * 2.55, 70.0, 104.0)
+	var expected_standee_size := Vector2(expected_standee_height * (192.0 / 224.0), expected_standee_height)
+	var standee_size: Vector2 = token_visual.get("standee_size", Vector2.ZERO) if token_visual.get("standee_size", Vector2.ZERO) is Vector2 else Vector2.ZERO
 	var expected_token_radius := clampf(hex_radius * 0.68, 15.0, 32.0)
 	var expected_hit_radius := clampf(hex_radius * 0.58, 13.0, 28.0) + 10.0
 	if (
 		hex_radius <= 0.0
+		or visible_stack_count <= 0
+		or String(token_visual.get("presentation_model", "")) != "grounded_full_body_standee_event_animation_swap"
+		or String(token_visual.get("resting_art_source", "")) != "battle_standee"
+		or String(token_visual.get("event_art_source", "")) != "animation_sheet"
+		or not bool(token_visual.get("battle_icon_fallback_after_missing_standee", false))
+		or not bool(token_visual.get("event_animation_requires_live_playback_record", false))
+		or not bool(token_visual.get("playback_expiry_restores_resting_standee", false))
+		or int(unit_art_summary.get("battle_standee_loaded_count", -1)) != visible_stack_count
+		or not Array(unit_art_summary.get("missing_battle_standee_units", ["missing"])).is_empty()
+		or int(token_art_sources.get("resting_battle_standee", -1)) != visible_stack_count
+		or int(token_art_sources.get("resting_battle_icon", -1)) != 0
+		or int(token_art_sources.get("event_animation_sheet", -1)) != 0
 		or not is_equal_approx(float(token_visual.get("token_radius_factor", 0.0)), 0.68)
 		or not is_equal_approx(float(token_visual.get("token_radius_min", 0.0)), 15.0)
 		or not is_equal_approx(float(token_visual.get("token_radius_max", 0.0)), 32.0)
@@ -966,8 +983,45 @@ func _validate_stack_token_scale(board: Control, session) -> bool:
 		or not bool(token_visual.get("painted_token_larger_than_legacy_scale", false))
 		or not bool(token_visual.get("token_diameter_within_neighbor_spacing", false))
 		or not bool(token_visual.get("token_shadow_within_hex_radius", false))
+		or not is_equal_approx(float(token_visual.get("standee_art_height_factor", 0.0)), 2.55)
+		or not is_equal_approx(float(token_visual.get("standee_art_height_min", 0.0)), 70.0)
+		or not is_equal_approx(float(token_visual.get("standee_art_height_max", 0.0)), 104.0)
+		or not is_equal_approx(float(token_visual.get("standee_aspect", 0.0)), 192.0 / 224.0)
+		or not is_equal_approx(float(token_visual.get("standee_ground_offset_factor", 0.0)), 0.52)
+		or not standee_size.is_equal_approx(expected_standee_size)
 	):
-		return _fail_bool("BattleBoard stack tokens lost the exact enlarged painted scale, unchanged hit radius, or cell separation: %s." % token_visual)
+		return _fail_bool("BattleBoard stack tokens lost the exact full-body standee, fallback, scale, unchanged hit radius, or cell separation contract: %s / %s." % [token_visual, token_art_sources])
+	for row_value in unit_art_summary.get("stacks", []):
+		if not (row_value is Dictionary):
+			return _fail_bool("BattleBoard standee summary contains a malformed stack row: %s." % row_value)
+		var row: Dictionary = row_value
+		var standee_rect: Rect2 = row.get("battle_standee_rect", Rect2()) if row.get("battle_standee_rect", Rect2()) is Rect2 else Rect2()
+		var side := String(_stack_by_battle_id(session.battle, String(row.get("battle_id", ""))).get("side", ""))
+		if (
+			String(row.get("battle_standee", "")).is_empty()
+			or not bool(row.get("battle_standee_loaded", false))
+			or not standee_rect.size.is_equal_approx(expected_standee_size)
+			or String(row.get("battle_standee_facing", "")) != ("right" if side == "player" else "left")
+			or String(row.get("token_art_source", "")) != "resting_battle_standee"
+		):
+			return _fail_bool("BattleBoard live stack lost exact standee path/load/grounded size/side-facing authority: %s." % row)
+	var fallback_cases := [
+		{"animation": true, "standee": true, "icon": true, "playback": true, "expected": "event_animation_sheet"},
+		{"animation": true, "standee": true, "icon": true, "playback": false, "expected": "resting_battle_standee"},
+		{"animation": true, "standee": false, "icon": true, "playback": false, "expected": "resting_battle_icon"},
+		{"animation": true, "standee": false, "icon": false, "playback": false, "expected": "animation_sheet_fallback"},
+		{"animation": false, "standee": false, "icon": false, "playback": false, "expected": "procedural_glyph_fallback"},
+	]
+	for fallback_case in fallback_cases:
+		var observed := String(board.call(
+			"_stack_token_art_source_for_availability",
+			bool(fallback_case.get("animation", false)),
+			bool(fallback_case.get("standee", false)),
+			bool(fallback_case.get("icon", false)),
+			bool(fallback_case.get("playback", false))
+		))
+		if observed != String(fallback_case.get("expected", "")):
+			return _fail_bool("BattleBoard standee availability fallback order drifted: case=%s observed=%s." % [fallback_case, observed])
 	if session.battle != battle_authority_before:
 		return _fail_bool("Reading the BattleBoard stack-token visual contract changed battle authority.")
 	return true

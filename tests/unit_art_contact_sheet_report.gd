@@ -5,21 +5,25 @@ const UNIT_ART_MANIFEST := "res://content/unit_art_manifest.json"
 const EXPECTED_SURFACES := {
 	"portrait": Vector2i(384, 512),
 	"battle_icon": Vector2i(160, 160),
+	"battle_standee": Vector2i(192, 224),
 	"overworld_icon": Vector2i(96, 96),
 }
 const CONTACT_THUMB_SIZES := {
 	"portrait": Vector2i(96, 128),
 	"battle_icon": Vector2i(80, 80),
+	"battle_standee": Vector2i(86, 100),
 	"overworld_icon": Vector2i(64, 64),
 }
 const CONTACT_COLUMNS := {
 	"portrait": 8,
 	"battle_icon": 10,
+	"battle_standee": 10,
 	"overworld_icon": 12,
 }
 const CONTACT_SHEET_FILES := {
 	"portrait": "portraits_contact_sheet.png",
 	"battle_icon": "battle_icons_contact_sheet.png",
+	"battle_standee": "battle_standees_contact_sheet.png",
 	"overworld_icon": "overworld_icons_contact_sheet.png",
 }
 const VISUAL_FINGERPRINT_BITS := 64
@@ -88,7 +92,7 @@ func _build_surface_report(surface: String, units: Array, manifest_by_unit: Dict
 			if source_size != expected_size:
 				_error("Unit %s %s expected %s but got %s." % [unit_id, surface, expected_size, source_size])
 			metrics = _visual_metrics(image)
-			if _metrics_pass(metrics):
+			if _metrics_pass(metrics, surface):
 				visual_pass_count += 1
 			else:
 				_error("Unit %s %s art failed visual-density gate: %s." % [unit_id, surface, JSON.stringify(metrics)])
@@ -176,17 +180,19 @@ func _visual_metrics(image: Image) -> Dictionary:
 		"visible_pixel_count": visible_pixels,
 		"bbox_width_ratio": float(bbox_width) / float(maxi(width, 1)),
 		"bbox_height_ratio": float(bbox_height) / float(maxi(height, 1)),
+		"bottom_gap_ratio": float(height - 1 - max_y) / float(maxi(height, 1)) if visible_pixels > 0 else 1.0,
 		"luminance_range": max_luma - min_luma if visible_pixels > 0 else 0,
 		"quantized_color_count": quantized_colors.size(),
 	}
 
-func _metrics_pass(metrics: Dictionary) -> bool:
+func _metrics_pass(metrics: Dictionary, surface: String) -> bool:
 	return (
 		float(metrics.get("alpha_coverage", 0.0)) >= 0.20
 		and float(metrics.get("bbox_width_ratio", 0.0)) >= 0.35
 		and float(metrics.get("bbox_height_ratio", 0.0)) >= 0.35
 		and int(metrics.get("luminance_range", 0)) >= 20
 		and int(metrics.get("quantized_color_count", 0)) >= 8
+		and (surface != "battle_standee" or float(metrics.get("bottom_gap_ratio", 1.0)) <= 0.04)
 	)
 
 func _visual_fingerprint(image: Image) -> Dictionary:

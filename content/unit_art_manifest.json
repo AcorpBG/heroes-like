@@ -11,6 +11,10 @@
       "width": 160,
       "height": 160
     },
+    "battle_standee": {
+      "width": 192,
+      "height": 224
+    },
     "overworld_icon": {
       "width": 96,
       "height": 96
@@ -27,6 +31,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_river_guard.png",
       "battle_icon": "res://art/units/battle_icons/unit_river_guard.png",
+      "battle_standee": "res://art/units/battle_standees/unit_river_guard.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_river_guard.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_river_guard.png",
@@ -42,6 +51,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_ember_archer.png",
       "battle_icon": "res://art/units/battle_icons/unit_ember_archer.png",
+      "battle_standee": "res://art/units/battle_standees/unit_ember_archer.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_ember_archer.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_ember_archer.png",
@@ -57,6 +71,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_citadel_pikeward.png",
       "battle_icon": "res://art/units/battle_icons/unit_citadel_pikeward.png",
+      "battle_standee": "res://art/units/battle_standees/unit_citadel_pikeward.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_citadel_pikeward.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_citadel_pikeward.png",
@@ -72,6 +91,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_blackbranch_cutthroat.png",
       "battle_icon": "res://art/units/battle_icons/unit_blackbranch_cutthroat.png",
+      "battle_standee": "res://art/units/battle_standees/unit_blackbranch_cutthroat.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_blackbranch_cutthroat.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_blackbranch_cutthroat.png",
@@ -87,6 +111,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_mire_slinger.png",
       "battle_icon": "res://art/units/battle_icons/unit_mire_slinger.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mire_slinger.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mire_slinger.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mire_slinger.png",
@@ -102,6 +131,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_bog_brute.png",
       "battle_icon": "res://art/units/battle_icons/unit_bog_brute.png",
+      "battle_standee": "res://art/units/battle_standees/unit_bog_brute.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_bog_brute.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_bog_brute.png",
@@ -117,6 +151,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_gorefen_ripper.png",
       "battle_icon": "res://art/units/battle_icons/unit_gorefen_ripper.png",
+      "battle_standee": "res://art/units/battle_standees/unit_gorefen_ripper.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_gorefen_ripper.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_gorefen_ripper.png",
@@ -132,6 +171,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_shard_guard.png",
       "battle_icon": "res://art/units/battle_icons/unit_shard_guard.png",
+      "battle_standee": "res://art/units/battle_standees/unit_shard_guard.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_shard_guard.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_shard_guard.png",
@@ -147,6 +191,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_prism_adept.png",
       "battle_icon": "res://art/units/battle_icons/unit_prism_adept.png",
+      "battle_standee": "res://art/units/battle_standees/unit_prism_adept.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_prism_adept.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_prism_adept.png",
@@ -162,6 +211,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_mirror_duelist.png",
       "battle_icon": "res://art/units/battle_icons/unit_mirror_duelist.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mirror_duelist.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mirror_duelist.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mirror_duelist.png",
@@ -177,6 +231,11 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_aurora_ballista.png",
       "battle_icon": "res://art/units/battle_icons/unit_aurora_ballista.png",
+      "battle_standee": "res://art/units/battle_standees/unit_aurora_ballista.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_aurora_ballista.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_aurora_ballista.png",
@@ -192,6 +251,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_embercourt_fordhook_cadets.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_fordhook_cadets.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_fordhook_cadets.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_fordhook_cadets.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png",
@@ -207,6 +271,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_embercourt_lantern_sappers.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_lantern_sappers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_lantern_sappers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_lantern_sappers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_embercourt_lantern_sappers.png",
@@ -222,6 +291,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_embercourt_bargebow_crews.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_bargebow_crews.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_bargebow_crews.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_bargebow_crews.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_embercourt_bargebow_crews.png",
@@ -237,6 +311,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_embercourt_ash_oath_bailiffs.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_ash_oath_bailiffs.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_ash_oath_bailiffs.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_ash_oath_bailiffs.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png",
@@ -252,6 +331,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_embercourt_beacon_lectors.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_beacon_lectors.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_beacon_lectors.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_beacon_lectors.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_embercourt_beacon_lectors.png",
@@ -267,6 +351,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_embercourt_sluicefire_lindworms.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_sluicefire_lindworms.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_sluicefire_lindworms.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_sluicefire_lindworms.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_embercourt_sluicefire_lindworms.png",
@@ -282,6 +371,11 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_embercourt_charter_colossus.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_charter_colossus.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_charter_colossus.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_charter_colossus.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_embercourt_charter_colossus.png",
@@ -297,6 +391,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_mireclaw_reedsnare_kin.png",
       "battle_icon": "res://art/units/battle_icons/unit_mireclaw_reedsnare_kin.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_reedsnare_kin.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_reedsnare_kin.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mireclaw_reedsnare_kin.png",
@@ -312,6 +411,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_mireclaw_mudglass_slingers.png",
       "battle_icon": "res://art/units/battle_icons/unit_mireclaw_mudglass_slingers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_mudglass_slingers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_mudglass_slingers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mireclaw_mudglass_slingers.png",
@@ -327,6 +431,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_mireclaw_bogplate_maulers.png",
       "battle_icon": "res://art/units/battle_icons/unit_mireclaw_bogplate_maulers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_bogplate_maulers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_bogplate_maulers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mireclaw_bogplate_maulers.png",
@@ -342,6 +451,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_mireclaw_ferrychain_lashers.png",
       "battle_icon": "res://art/units/battle_icons/unit_mireclaw_ferrychain_lashers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_ferrychain_lashers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_ferrychain_lashers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mireclaw_ferrychain_lashers.png",
@@ -357,6 +471,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_mireclaw_sporewake_chanters.png",
       "battle_icon": "res://art/units/battle_icons/unit_mireclaw_sporewake_chanters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_sporewake_chanters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_sporewake_chanters.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mireclaw_sporewake_chanters.png",
@@ -372,6 +491,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_mireclaw_gorefen_rippers.png",
       "battle_icon": "res://art/units/battle_icons/unit_mireclaw_gorefen_rippers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_gorefen_rippers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_gorefen_rippers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mireclaw_gorefen_rippers.png",
@@ -387,6 +511,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_mireclaw_drowned_antler_sovereign.png",
       "battle_icon": "res://art/units/battle_icons/unit_mireclaw_drowned_antler_sovereign.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_drowned_antler_sovereign.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_drowned_antler_sovereign.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_mireclaw_drowned_antler_sovereign.png",
@@ -402,6 +531,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_sunvault_shard_wardens.png",
       "battle_icon": "res://art/units/battle_icons/unit_sunvault_shard_wardens.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_shard_wardens.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_shard_wardens.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_shard_wardens.png",
@@ -417,6 +551,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_sunvault_prism_adepts.png",
       "battle_icon": "res://art/units/battle_icons/unit_sunvault_prism_adepts.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_prism_adepts.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_prism_adepts.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_prism_adepts.png",
@@ -432,6 +571,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_sunvault_mirror_duelists.png",
       "battle_icon": "res://art/units/battle_icons/unit_sunvault_mirror_duelists.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_mirror_duelists.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_mirror_duelists.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_mirror_duelists.png",
@@ -447,6 +591,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_sunvault_resonant_choristers.png",
       "battle_icon": "res://art/units/battle_icons/unit_sunvault_resonant_choristers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_resonant_choristers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_resonant_choristers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_resonant_choristers.png",
@@ -462,6 +611,11 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_sunvault_solar_array_striders.png",
       "battle_icon": "res://art/units/battle_icons/unit_sunvault_solar_array_striders.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_solar_array_striders.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_solar_array_striders.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_solar_array_striders.png",
@@ -477,6 +631,11 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_sunvault_aurora_ballistae.png",
       "battle_icon": "res://art/units/battle_icons/unit_sunvault_aurora_ballistae.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_aurora_ballistae.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_aurora_ballistae.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_aurora_ballistae.png",
@@ -492,6 +651,11 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_sunvault_daybreak_colossus.png",
       "battle_icon": "res://art/units/battle_icons/unit_sunvault_daybreak_colossus.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_daybreak_colossus.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_daybreak_colossus.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_daybreak_colossus.png",
@@ -507,6 +671,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_thornwake_seedcutters.png",
       "battle_icon": "res://art/units/battle_icons/unit_thornwake_seedcutters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_seedcutters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_seedcutters.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_thornwake_seedcutters.png",
@@ -522,6 +691,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_thornwake_thornwhip_carriers.png",
       "battle_icon": "res://art/units/battle_icons/unit_thornwake_thornwhip_carriers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_thornwhip_carriers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_thornwhip_carriers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
@@ -537,6 +711,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_thornwake_sporeglass_menders.png",
       "battle_icon": "res://art/units/battle_icons/unit_thornwake_sporeglass_menders.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_sporeglass_menders.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_sporeglass_menders.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_thornwake_sporeglass_menders.png",
@@ -552,6 +731,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_thornwake_barkmantle_rams.png",
       "battle_icon": "res://art/units/battle_icons/unit_thornwake_barkmantle_rams.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_barkmantle_rams.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_barkmantle_rams.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_thornwake_barkmantle_rams.png",
@@ -567,6 +751,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_thornwake_stagknot_runners.png",
       "battle_icon": "res://art/units/battle_icons/unit_thornwake_stagknot_runners.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_stagknot_runners.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_stagknot_runners.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_thornwake_stagknot_runners.png",
@@ -582,6 +771,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_thornwake_graft_matriarchs.png",
       "battle_icon": "res://art/units/battle_icons/unit_thornwake_graft_matriarchs.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_graft_matriarchs.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_graft_matriarchs.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_thornwake_graft_matriarchs.png",
@@ -597,6 +791,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_thornwake_worldroot_bastion.png",
       "battle_icon": "res://art/units/battle_icons/unit_thornwake_worldroot_bastion.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_worldroot_bastion.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_worldroot_bastion.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_thornwake_worldroot_bastion.png",
@@ -612,6 +811,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_brasshollow_scrip_haulers.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_scrip_haulers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_scrip_haulers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_scrip_haulers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png",
@@ -627,6 +831,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_brasshollow_rivet_hounds.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_rivet_hounds.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_rivet_hounds.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_rivet_hounds.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_brasshollow_rivet_hounds.png",
@@ -642,6 +851,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_brasshollow_furnace_pavis_teams.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_furnace_pavis_teams.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_furnace_pavis_teams.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_furnace_pavis_teams.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_brasshollow_furnace_pavis_teams.png",
@@ -657,6 +871,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_brasshollow_boiler_rivetcasters.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_boiler_rivetcasters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_boiler_rivetcasters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_boiler_rivetcasters.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_brasshollow_boiler_rivetcasters.png",
@@ -672,6 +891,11 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_brasshollow_debt_engine_exactors.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_debt_engine_exactors.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_debt_engine_exactors.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_debt_engine_exactors.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_brasshollow_debt_engine_exactors.png",
@@ -687,6 +911,11 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_brasshollow_crucible_crawlers.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_crucible_crawlers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_crucible_crawlers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_crucible_crawlers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_brasshollow_crucible_crawlers.png",
@@ -702,6 +931,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_brasshollow_foundry_saint.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_foundry_saint.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_foundry_saint.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_foundry_saint.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_brasshollow_foundry_saint.png",
@@ -717,6 +951,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_veilmourn_bellwake_oars.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_bellwake_oars.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_bellwake_oars.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_bellwake_oars.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_bellwake_oars.png",
@@ -732,6 +971,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_veilmourn_mourning_lanterns.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_mourning_lanterns.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_mourning_lanterns.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_mourning_lanterns.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_mourning_lanterns.png",
@@ -747,6 +991,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_veilmourn_maskglass_corsairs.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_maskglass_corsairs.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_maskglass_corsairs.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_maskglass_corsairs.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_maskglass_corsairs.png",
@@ -762,6 +1011,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_veilmourn_undertow_harpooners.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_undertow_harpooners.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_undertow_harpooners.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_undertow_harpooners.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_undertow_harpooners.png",
@@ -777,6 +1031,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_veilmourn_obituary_scribes.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_obituary_scribes.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_obituary_scribes.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_obituary_scribes.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_obituary_scribes.png",
@@ -792,6 +1051,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_veilmourn_mirrorkeel_reavers.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_mirrorkeel_reavers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_mirrorkeel_reavers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_mirrorkeel_reavers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_mirrorkeel_reavers.png",
@@ -807,6 +1071,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_veilmourn_fogbound_leviathan.png",
       "battle_icon": "res://art/units/battle_icons/unit_veilmourn_fogbound_leviathan.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_fogbound_leviathan.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_fogbound_leviathan.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
@@ -822,6 +1091,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_roadwardens.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_roadwardens.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_roadwardens.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_roadwardens.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_roadwardens.png",
@@ -837,6 +1111,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_hearthbow_carriers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_hearthbow_carriers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_hearthbow_carriers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_hearthbow_carriers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_hearthbow_carriers.png",
@@ -852,6 +1131,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_neutral_fenhound_runners.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_fenhound_runners.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_fenhound_runners.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_fenhound_runners.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_fenhound_runners.png",
@@ -867,6 +1151,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_mossglass_sentinels.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_mossglass_sentinels.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_mossglass_sentinels.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_mossglass_sentinels.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_mossglass_sentinels.png",
@@ -882,6 +1171,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_cliffhawk_wardens.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_cliffhawk_wardens.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_cliffhawk_wardens.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_cliffhawk_wardens.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_cliffhawk_wardens.png",
@@ -897,6 +1191,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_windglass_slingers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_windglass_slingers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_windglass_slingers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_windglass_slingers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_windglass_slingers.png",
@@ -912,6 +1211,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_reedbarge_poles.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_reedbarge_poles.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_reedbarge_poles.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_reedbarge_poles.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_reedbarge_poles.png",
@@ -927,6 +1231,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_lanternet_throwers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_lanternet_throwers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_lanternet_throwers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_lanternet_throwers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_lanternet_throwers.png",
@@ -942,6 +1251,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_glowcap_bulwarks.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_glowcap_bulwarks.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_glowcap_bulwarks.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_glowcap_bulwarks.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_glowcap_bulwarks.png",
@@ -957,6 +1271,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_sporelamp_tossers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_sporelamp_tossers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_sporelamp_tossers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_sporelamp_tossers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_sporelamp_tossers.png",
@@ -972,6 +1291,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_neutral_dustjack_blades.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_dustjack_blades.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_dustjack_blades.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_dustjack_blades.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_dustjack_blades.png",
@@ -987,6 +1311,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_scrapbow_teams.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_scrapbow_teams.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_scrapbow_teams.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_scrapbow_teams.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_scrapbow_teams.png",
@@ -1002,6 +1331,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_kilnward_mallets.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_kilnward_mallets.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_kilnward_mallets.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_kilnward_mallets.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_kilnward_mallets.png",
@@ -1017,6 +1351,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_cinderpot_hurlers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_cinderpot_hurlers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_cinderpot_hurlers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_cinderpot_hurlers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_cinderpot_hurlers.png",
@@ -1032,6 +1371,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_frostbeacon_pikes.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_frostbeacon_pikes.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_frostbeacon_pikes.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_frostbeacon_pikes.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_frostbeacon_pikes.png",
@@ -1047,6 +1391,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_snowglass_markers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_snowglass_markers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_snowglass_markers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_snowglass_markers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_snowglass_markers.png",
@@ -1062,6 +1411,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_orchard_halberds.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_orchard_halberds.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_orchard_halberds.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_orchard_halberds.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_orchard_halberds.png",
@@ -1077,6 +1431,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_millstone_slingers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_millstone_slingers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_millstone_slingers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_millstone_slingers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_millstone_slingers.png",
@@ -1092,6 +1451,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_hedgehook_watch.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_hedgehook_watch.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_hedgehook_watch.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_hedgehook_watch.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_hedgehook_watch.png",
@@ -1107,6 +1471,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_thornbow_scouts.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_thornbow_scouts.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_thornbow_scouts.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_thornbow_scouts.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_thornbow_scouts.png",
@@ -1122,6 +1491,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_neutral_tidepool_cutters.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_tidepool_cutters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_tidepool_cutters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_tidepool_cutters.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_tidepool_cutters.png",
@@ -1137,6 +1511,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_reefbolt_crews.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_reefbolt_crews.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_reefbolt_crews.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_reefbolt_crews.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_reefbolt_crews.png",
@@ -1152,6 +1531,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_switchback_pikes.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_switchback_pikes.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_switchback_pikes.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_switchback_pikes.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_switchback_pikes.png",
@@ -1167,6 +1551,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_cairnshield_porters.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_cairnshield_porters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_cairnshield_porters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_cairnshield_porters.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_cairnshield_porters.png",
@@ -1182,6 +1571,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_saltpan_bucklers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_saltpan_bucklers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_saltpan_bucklers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_saltpan_bucklers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_saltpan_bucklers.png",
@@ -1197,6 +1591,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_suncrack_throwers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_suncrack_throwers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_suncrack_throwers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_suncrack_throwers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_suncrack_throwers.png",
@@ -1212,6 +1611,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_sumpstone_guards.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_sumpstone_guards.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_sumpstone_guards.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_sumpstone_guards.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_sumpstone_guards.png",
@@ -1227,6 +1631,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_echodart_casts.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_echodart_casts.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_echodart_casts.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_echodart_casts.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_echodart_casts.png",
@@ -1242,6 +1651,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_icehook_trappers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_icehook_trappers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_icehook_trappers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_icehook_trappers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_icehook_trappers.png",
@@ -1257,6 +1671,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_whitepike_keepers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_whitepike_keepers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_whitepike_keepers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_whitepike_keepers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_whitepike_keepers.png",
@@ -1272,6 +1691,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_scarshield_veterans.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_scarshield_veterans.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_scarshield_veterans.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_scarshield_veterans.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_scarshield_veterans.png",
@@ -1287,6 +1711,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_ashdart_stalkers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_ashdart_stalkers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_ashdart_stalkers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_ashdart_stalkers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_ashdart_stalkers.png",
@@ -1302,6 +1731,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_greenbranch_cudgels.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_greenbranch_cudgels.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_greenbranch_cudgels.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_greenbranch_cudgels.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_greenbranch_cudgels.png",
@@ -1317,6 +1751,11 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_neutral_sapwhistle_callers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_sapwhistle_callers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_sapwhistle_callers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_sapwhistle_callers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_sapwhistle_callers.png",
@@ -1332,6 +1771,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_harbor_polearms.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_harbor_polearms.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_harbor_polearms.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_harbor_polearms.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_harbor_polearms.png",
@@ -1347,6 +1791,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_flaremast_crews.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_flaremast_crews.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_flaremast_crews.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_flaremast_crews.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_flaremast_crews.png",
@@ -1362,6 +1811,11 @@
       "motif": "beast",
       "portrait": "res://art/units/portraits/unit_neutral_kitehook_runners.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_kitehook_runners.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_kitehook_runners.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_kitehook_runners.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_kitehook_runners.png",
@@ -1377,6 +1831,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_ridgeflare_shots.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_ridgeflare_shots.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_ridgeflare_shots.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_ridgeflare_shots.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_ridgeflare_shots.png",
@@ -1392,6 +1851,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_tunnel_lanterns.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_tunnel_lanterns.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_tunnel_lanterns.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_tunnel_lanterns.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_tunnel_lanterns.png",
@@ -1407,6 +1871,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_glimmercap_needlers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_glimmercap_needlers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_glimmercap_needlers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_glimmercap_needlers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_glimmercap_needlers.png",
@@ -1422,6 +1891,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_bogbell_mauls.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_bogbell_mauls.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_bogbell_mauls.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_bogbell_mauls.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_bogbell_mauls.png",
@@ -1437,6 +1911,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_peatflare_jarriers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_peatflare_jarriers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_peatflare_jarriers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_peatflare_jarriers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_peatflare_jarriers.png",
@@ -1452,6 +1931,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_milestone_bucklers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_milestone_bucklers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_milestone_bucklers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_milestone_bucklers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_milestone_bucklers.png",
@@ -1467,6 +1951,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_cartbow_tenders.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_cartbow_tenders.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_cartbow_tenders.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_cartbow_tenders.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_cartbow_tenders.png",
@@ -1482,6 +1971,11 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_neutral_frostwharf_cutters.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_frostwharf_cutters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_frostwharf_cutters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_frostwharf_cutters.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_frostwharf_cutters.png",
@@ -1497,6 +1991,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_lanternskate_throwers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_lanternskate_throwers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_lanternskate_throwers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_lanternskate_throwers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_lanternskate_throwers.png",
@@ -1512,6 +2011,11 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_charcoal_mauls.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_charcoal_mauls.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_charcoal_mauls.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_charcoal_mauls.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_charcoal_mauls.png",
@@ -1527,6 +2031,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_emberpack_lobbers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_emberpack_lobbers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_emberpack_lobbers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_emberpack_lobbers.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_emberpack_lobbers.png",
@@ -1542,6 +2051,11 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_basalt_wardens.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_basalt_wardens.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_basalt_wardens.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_basalt_wardens.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_basalt_wardens.png",
@@ -1557,6 +2071,11 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_tunnelmark_bolters.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_tunnelmark_bolters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_tunnelmark_bolters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
       "overworld_icon": "res://art/units/overworld_icons/unit_neutral_tunnelmark_bolters.png",
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_tunnelmark_bolters.png",

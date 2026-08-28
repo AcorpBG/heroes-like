@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Battle field-first tactical disclosure is completed: the wide first view gains about 25% visible battlefield area while the exact existing tactical rail and dispatch remain recoverable by one accessible control; compact layouts and gameplay authority are unchanged.",
+  "currentNotes": "Battle full-roster unit standees are completed: all 103 authored units have deterministic grounded Battle art, the live board uses facing and depth-aware standee presentation with fail-closed fallbacks, and focused behavior, compatibility, static, and bounded platform gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-field-first-tactical-disclosure-10184",
-  "currentSliceId": "presentation-battle-field-first-tactical-disclosure-10184",
-  "currentSliceNotes": "Completed: inspected 1920 pixels show about 25% more battlefield area; mouse/keyboard/controller disclosure restores the exact rail/dispatch and exact collapsed geometry; Battle compatibility, static/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.",
+  "currentSlice": "presentation-battle-full-roster-unit-standees-10184",
+  "currentSliceId": "presentation-battle-full-roster-unit-standees-10184",
+  "currentSliceNotes": "Implemented 103 deterministic 192x224 grounded Battle standees from exact original curated sources; all 515 generated assets reproduce byte-exact and all standees load with unique contact-sheet fingerprints. Live 1280/1920 captures, Board/fallback/event/layout/quick-resolve/withdrawal/accessibility/core/static checks and bounded Linux/Windows export-startup gates pass; combat/hit/session/save authority unchanged and packaged Battle interaction remains unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Field-First Tactical Disclosure",
-  "currentSliceUpdatedAt": "2026-08-28T01:16:49Z",
+  "currentSliceTitle": "Battle Full-Roster Unit Standees",
+  "currentSliceUpdatedAt": "2026-08-28T10:10:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105062,6 +105062,16 @@
       "notes": "Completed from fresh 1280/1920 current captures, three original built-in image-generation concepts, and genre-level classic hero-strategy composition. The 1920 first view gains about 25% visible battlefield area; one accessible Tactical Details control restores the exact existing rail/dispatch and closes to exact field-first geometry. Wide/compact Battle layout, controller, keyboard focus, accessibility, quick-resolve, withdrawal, animation, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-28T01:16:49Z",
       "remainingWork": ""
+    },
+    {
+      "id": "presentation-battle-full-roster-unit-standees-10184",
+      "title": "presentation battle full roster unit standees 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-28T10:10:56Z",
+      "startedAt": "2026-08-28T09:26:28Z",
+      "notes": "Implemented 103 deterministic 192x224 grounded Battle standees from exact original curated sources; all 515 generated assets reproduce byte-exact and all standees load with unique contact-sheet fingerprints. Live 1280/1920 captures, Board/fallback/event/layout/quick-resolve/withdrawal/accessibility/core/static checks and bounded Linux/Windows export-startup gates pass; combat/hit/session/save authority unchanged and packaged Battle interaction remains unclaimed.",
+      "completedAt": "2026-08-28T10:10:56Z"
     }
   ],
   "project": "heroes-like",
@@ -105604,9 +105614,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the Generated Town Supply Cache mapped-art correction with detailed existing cache art and preserved gameplay authority.",
+  "summary": "Completed full-roster Battle standees for all 103 authored units with deterministic assets, grounded live rendering, event-animation takeover, and preserved combat authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-27T22:16:10Z",
+  "updatedAt": "2026-08-28T10:10:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

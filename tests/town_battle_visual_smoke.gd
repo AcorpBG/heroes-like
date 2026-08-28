@@ -950,12 +950,16 @@ func _run_battle_smoke() -> bool:
 	var token_hex_radius := float(token_visual.get("hex_radius", 0.0))
 	var expected_hit_radius := clampf(token_hex_radius * 0.58, 13.0, 28.0) + 10.0
 	if (
-		String(token_visual.get("presentation_model", "")) != "icon_first_medallion_event_animation_swap"
-		or String(token_visual.get("resting_art_source", "")) != "battle_icon"
+		String(token_visual.get("presentation_model", "")) != "grounded_full_body_standee_event_animation_swap"
+		or String(token_visual.get("resting_art_source", "")) != "battle_standee"
 		or String(token_visual.get("event_art_source", "")) != "animation_sheet"
+		or not bool(token_visual.get("battle_icon_fallback_after_missing_standee", false))
 		or not bool(token_visual.get("event_animation_requires_live_playback_record", false))
-		or not bool(token_visual.get("playback_expiry_restores_resting_icon", false))
-		or int(token_art_sources.get("resting_battle_icon", -1)) != int(unit_art_summary.get("visible_stack_count", 0))
+		or not bool(token_visual.get("playback_expiry_restores_resting_standee", false))
+		or int(unit_art_summary.get("battle_standee_loaded_count", -1)) != int(unit_art_summary.get("visible_stack_count", 0))
+		or not Array(unit_art_summary.get("missing_battle_standee_units", ["missing"])).is_empty()
+		or int(token_art_sources.get("resting_battle_standee", -1)) != int(unit_art_summary.get("visible_stack_count", 0))
+		or int(token_art_sources.get("resting_battle_icon", -1)) != 0
 		or int(token_art_sources.get("event_animation_sheet", -1)) != 0
 		or int(token_art_sources.get("animation_sheet_fallback", -1)) != 0
 		or int(token_art_sources.get("procedural_glyph_fallback", -1)) != 0
@@ -972,6 +976,11 @@ func _run_battle_smoke() -> bool:
 		or not bool(token_visual.get("token_shadow_within_hex_radius", false))
 		or not is_equal_approx(float(token_visual.get("animation_art_extent_factor", 0.0)), 1.96)
 		or not is_equal_approx(float(token_visual.get("icon_art_extent_factor", 0.0)), 1.86)
+		or not is_equal_approx(float(token_visual.get("standee_art_height_factor", 0.0)), 2.55)
+		or not is_equal_approx(float(token_visual.get("standee_art_height_min", 0.0)), 70.0)
+		or not is_equal_approx(float(token_visual.get("standee_art_height_max", 0.0)), 104.0)
+		or not is_equal_approx(float(token_visual.get("standee_aspect", 0.0)), 192.0 / 224.0)
+		or not is_equal_approx(float(token_visual.get("standee_ground_offset_factor", 0.0)), 0.52)
 		or not is_equal_approx(float(token_visual.get("animation_art_diameter_fraction", 0.0)), 0.98)
 		or not is_equal_approx(float(token_visual.get("icon_art_diameter_fraction", 0.0)), 0.93)
 		or not is_equal_approx(float(token_visual.get("side_rim_alpha", 0.0)), 0.92)
@@ -980,7 +989,7 @@ func _run_battle_smoke() -> bool:
 		or not bool(token_visual.get("art_contained_within_token", false))
 		or float(token_visual.get("hit_radius", 0.0)) <= float(token_visual.get("token_radius", 0.0))
 	):
-		push_error("Battle smoke: stack art did not retain icon-first resting medallions, event-only animation swaps, unchanged hit geometry, and neighboring-cell separation: %s / %s." % [token_visual, token_art_sources])
+		push_error("Battle smoke: stack art did not retain grounded full-body standees, event-only animation swaps, icon fallback, unchanged hit geometry, and neighboring-cell separation: %s / %s." % [token_visual, token_art_sources])
 		get_tree().quit(1)
 		return false
 	if not await _capture_color_cue_frame("battle_color_cues"):

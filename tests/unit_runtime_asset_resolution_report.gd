@@ -9,6 +9,7 @@ const OUTPUT_DIR := "res://.artifacts/unit_runtime_asset_resolution_report"
 const EXPECTED_ART_SIZES := {
 	"portrait": Vector2i(384, 512),
 	"battle_icon": Vector2i(160, 160),
+	"battle_standee": Vector2i(192, 224),
 	"overworld_icon": Vector2i(96, 96),
 }
 const EXPECTED_ANIMATION_SHEET_SIZE := Vector2i(256, 896)
@@ -40,6 +41,7 @@ var _report := {
 	"content_service_animation_record_count": 0,
 	"stack_materialized_count": 0,
 	"battle_icon_runtime_resolved_count": 0,
+	"battle_standee_runtime_resolved_count": 0,
 	"overworld_icon_runtime_resolved_count": 0,
 	"portrait_runtime_resolved_count": 0,
 	"animation_sheet_runtime_resolved_count": 0,
@@ -100,6 +102,7 @@ func _validate_unit(unit: Dictionary) -> void:
 
 	var portrait_summary := _validate_surface(unit_id, art, "portrait")
 	var battle_icon_summary := _validate_surface(unit_id, art, "battle_icon")
+	var battle_standee_summary := _validate_surface(unit_id, art, "battle_standee")
 	var overworld_icon_summary := _validate_surface(unit_id, art, "overworld_icon")
 	var animation_summary := _validate_animation(unit_id, animation, stack)
 	_report["units"].append({
@@ -107,6 +110,7 @@ func _validate_unit(unit: Dictionary) -> void:
 		"name": String(unit.get("name", unit_id)),
 		"portrait": portrait_summary,
 		"battle_icon": battle_icon_summary,
+		"battle_standee": battle_standee_summary,
 		"overworld_icon": overworld_icon_summary,
 		"animation": animation_summary,
 	})
@@ -129,6 +133,12 @@ func _validate_surface(unit_id: String, art: Dictionary, surface: String) -> Dic
 			runtime_loaded = _battle_board.call("_unit_battle_icon_for_stack", stack) is Texture2D
 			if runtime_loaded:
 				_report["battle_icon_runtime_resolved_count"] = int(_report["battle_icon_runtime_resolved_count"]) + 1
+		"battle_standee":
+			var stack: Dictionary = BattleRulesScript._build_battle_stack(unit_id, 3, "player", 0, {"source_type": "unit_runtime_asset_resolution_report"})
+			stack["battle_id"] = "asset_resolution_%s" % unit_id
+			runtime_loaded = _battle_board.call("_unit_battle_standee_for_stack", stack) is Texture2D
+			if runtime_loaded:
+				_report["battle_standee_runtime_resolved_count"] = int(_report["battle_standee_runtime_resolved_count"]) + 1
 		"overworld_icon":
 			var encounter := {"unit_id": unit_id}
 			var resolved_path := String(_overworld_view.call("_encounter_overworld_icon_path", encounter))
@@ -209,6 +219,7 @@ func _summary_payload() -> Dictionary:
 		"content_service_animation_record_count": int(_report.get("content_service_animation_record_count", 0)),
 		"stack_materialized_count": int(_report.get("stack_materialized_count", 0)),
 		"battle_icon_runtime_resolved_count": int(_report.get("battle_icon_runtime_resolved_count", 0)),
+		"battle_standee_runtime_resolved_count": int(_report.get("battle_standee_runtime_resolved_count", 0)),
 		"overworld_icon_runtime_resolved_count": int(_report.get("overworld_icon_runtime_resolved_count", 0)),
 		"portrait_runtime_resolved_count": int(_report.get("portrait_runtime_resolved_count", 0)),
 		"animation_sheet_runtime_resolved_count": int(_report.get("animation_sheet_runtime_resolved_count", 0)),
