@@ -983,7 +983,7 @@
       "name": "Glowcap Croft Watch",
       "enemy_group_id": "army_neutral_glowcap_croft_watch",
       "affiliation": "neutral",
-      "terrain": "rough",
+      "terrain": "underground",
       "battlefield_tags": [
         "fog_bank",
         "chokepoint"
@@ -1072,7 +1072,7 @@
       "name": "Cinder Kiln Watch",
       "enemy_group_id": "army_neutral_cinder_kiln_watch",
       "affiliation": "neutral",
-      "terrain": "road",
+      "terrain": "lava",
       "battlefield_tags": [
         "battery_nest",
         "wall_pressure"
@@ -1116,7 +1116,7 @@
       "name": "Frostbeacon Bothy Watch",
       "enemy_group_id": "army_neutral_frostbeacon_bothy_watch",
       "affiliation": "neutral",
-      "terrain": "grass",
+      "terrain": "snow",
       "battlefield_tags": [
         "open_lane",
         "reserve_wave"
@@ -1249,7 +1249,7 @@
       "name": "Tidepool Skiffyard Watch",
       "enemy_group_id": "army_neutral_tidepool_skiffyard_watch",
       "affiliation": "neutral",
-      "terrain": "road",
+      "terrain": "coast",
       "battlefield_tags": [
         "fog_bank",
         "open_lane"
@@ -1338,7 +1338,7 @@
       "name": "Saltpan Camp Watch",
       "enemy_group_id": "army_neutral_saltpan_camp_watch",
       "affiliation": "neutral",
-      "terrain": "road",
+      "terrain": "coast",
       "battlefield_tags": [
         "open_lane",
         "wall_pressure"
@@ -1382,7 +1382,7 @@
       "name": "Crystal Sump Watch",
       "enemy_group_id": "army_neutral_crystal_sump_watch",
       "affiliation": "neutral",
-      "terrain": "rough",
+      "terrain": "underground",
       "battlefield_tags": [
         "chokepoint",
         "fog_bank"
@@ -1427,7 +1427,7 @@
       "name": "Icehook Trapper Lodge Watch",
       "enemy_group_id": "army_neutral_icehook_trapper_lodge_watch",
       "affiliation": "neutral",
-      "terrain": "forest",
+      "terrain": "snow",
       "battlefield_tags": [
         "fog_bank",
         "ambush_cover"
@@ -1472,7 +1472,7 @@
       "name": "Obsidian Scar Camp Watch",
       "enemy_group_id": "army_neutral_obsidian_scar_watch",
       "affiliation": "neutral",
-      "terrain": "road",
+      "terrain": "lava",
       "battlefield_tags": [
         "open_lane",
         "wall_pressure"
@@ -1561,7 +1561,7 @@
       "name": "Harbor Pilot House Watch",
       "enemy_group_id": "army_neutral_harbor_pilot_house_watch",
       "affiliation": "neutral",
-      "terrain": "road",
+      "terrain": "coast",
       "battlefield_tags": [
         "open_lane",
         "fog_bank"
@@ -1650,7 +1650,7 @@
       "name": "Lantern Warren Watch",
       "enemy_group_id": "army_neutral_lantern_warren_watch",
       "affiliation": "neutral",
-      "terrain": "rough",
+      "terrain": "underground",
       "battlefield_tags": [
         "chokepoint",
         "fog_bank"
@@ -1784,7 +1784,7 @@
       "name": "Frostwharf House Watch",
       "enemy_group_id": "army_neutral_frostwharf_house_watch",
       "affiliation": "neutral",
-      "terrain": "grass",
+      "terrain": "snow",
       "battlefield_tags": [
         "fog_bank",
         "open_lane"
@@ -1828,7 +1828,7 @@
       "name": "Charcoal Burners Camp Watch",
       "enemy_group_id": "army_neutral_charcoal_burners_watch",
       "affiliation": "neutral",
-      "terrain": "road",
+      "terrain": "lava",
       "battlefield_tags": [
         "wall_pressure",
         "battery_nest"
@@ -1872,7 +1872,7 @@
       "name": "Basalt Gatehouse Watch",
       "enemy_group_id": "army_neutral_basalt_gatehouse_watch",
       "affiliation": "neutral",
-      "terrain": "rough",
+      "terrain": "underground",
       "battlefield_tags": [
         "fortress_lane",
         "chokepoint"

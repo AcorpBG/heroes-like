@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved content and original-art slice.
+- Selected implementation slice: `content-distinct-battle-biome-backdrops-10184`.
+
+## Distinct Battle Biome Backdrops And Encounter Adoption
+
+id: `content-distinct-battle-biome-backdrops-10184`
+
+Status: completed.
+
+Current finding:
+- all 63 authored encounters currently collapse onto only grass, forest, mire, rough, or road battle terrain even though the world, neutral dwellings, and generated maps already use snow, coast, lava, and underground biome identities;
+- fixed Ninefold Confluence battles on water/coast and underground tiles therefore render through unrelated road and rough backdrops, while frost and ash-dwelling battles have no distinct field presentation at all.
+
+Implementation boundary:
+- add four original production battlefield backdrops for snow, coast, lava, and underground terrain, with distinct restrained ambient profiles that remain subordinate to tactical readability and accessibility settings;
+- adopt those terrain ids in the existing neutral-dwelling encounter catalog where the dwelling identity and biome contract already call for them, including fixed Ninefold coast and underground battles plus generated-map frost and ash/cavern watches;
+- preserve battle rules, encounter armies, field objectives, difficulty, deterministic seeds, save version, tactical input, AI authority, reduced motion, high contrast, and renderer fallback behavior.
+
+Completion criteria:
+- all four textures load through the live battle board without fallback and preserve the continuous-field plus authoritative hex-variation rendering contract at 1280x720 and 1920x1080;
+- thirteen existing encounter definitions resolve to the intended new biome identities, the fixed Ninefold coast and underground encounters enter real battles with exact terrain/art mappings, and representative generated-map frost and lava watches resolve through the same content records;
+- inspected captures, battle terrain/ambient/accessibility, encounter, save/resume, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no copied Heroes terrain, symbols, assets, maps, text, or protected visual expression; no new battle rule, terrain modifier, unit, encounter army, objective, AI behavior, save schema, map/RMG generation rule, renderer architecture replacement, hardware certification, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- added four original 1408x768 battle backdrops for snow, coast, lava, and underground, each with a restrained terrain-specific ambient profile and exact live renderer mapping while preserving authoritative hex variation, reduced motion, high contrast, and missing-texture fallback;
+- thirteen existing neutral-watch encounters now use their matching biome identity; fixed Ninefold Drowned Reliquary and Basalt Gatehouse battles resolve to coast and underground, while generated-map Frostbeacon Bothy and Cinder Kiln watch payloads resolve to snow and lava through the same content authority;
+- inspected 1280x720 and 1920x1080 captures, exact terrain/art/ambient/accessibility and save-resume smoke, representative dwelling battles, core regression, repository/editor checks, and Linux/Windows release export startup passed; battle rules, encounter forces, map generation, save version, signing, publication, whole-game validation, and release readiness remain unchanged or unclaimed.
 
 ## Asterfall Survey Artifact Set And Original Art
 

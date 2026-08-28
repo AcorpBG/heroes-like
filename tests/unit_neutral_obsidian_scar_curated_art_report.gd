@@ -108,7 +108,7 @@ func _validate_content_authority() -> void:
 	_expect(_resource_cost_contract(site.get("claim_rewards", {})) == {"gold": 90} and _resource_cost_contract(site.get("claim_recruits", {})) == {"unit_neutral_scarshield_veterans": 2, "unit_neutral_ashdart_stalkers": 1}, "Obsidian Scar claim reward/recruit contract changed.")
 	_expect(_resource_cost_contract(site.get("control_income", {})) == {"gold": 35} and _resource_cost_contract(site.get("weekly_recruits", {})) == {"unit_neutral_scarshield_veterans": 1}, "Obsidian Scar control income/weekly muster changed.")
 	var encounter: Dictionary = ContentService.get_encounter("encounter_obsidian_scar_watch")
-	_expect(String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "road" and int(encounter.get("max_rounds", 0)) == 14, "Obsidian Scar encounter authority changed.")
+	_expect(String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "lava" and int(encounter.get("max_rounds", 0)) == 14, "Obsidian Scar encounter authority changed.")
 	_report["site_authority"] = {"claim_rewards": site.get("claim_rewards", {}).duplicate(true), "claim_recruits": site.get("claim_recruits", {}).duplicate(true), "control_income": site.get("control_income", {}).duplicate(true), "weekly_recruits": site.get("weekly_recruits", {}).duplicate(true), "encounter_id": encounter.get("id", ""), "enemy_group_id": encounter.get("enemy_group_id", "")}
 	var rows := []
 	for spec_variant in UNITS:

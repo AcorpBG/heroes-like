@@ -112,7 +112,7 @@ func _validate_content_authority() -> void:
 	_expect(_resource_cost_contract(site.get("claim_rewards", {})) == {"gold": 75} and _resource_cost_contract(site.get("claim_recruits", {})) == {"unit_neutral_lanternskate_throwers": 1, "unit_neutral_frostwharf_cutters": 2}, "Frostwharf House claim reward/recruit contract changed.")
 	_expect(_resource_cost_contract(site.get("control_income", {})) == {"gold": 30} and _resource_cost_contract(site.get("weekly_recruits", {})) == {"unit_neutral_frostwharf_cutters": 1}, "Frostwharf House control income/weekly muster changed.")
 	var encounter: Dictionary = ContentService.get_encounter("encounter_frostwharf_house_watch")
-	_expect(String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "grass" and encounter.get("battlefield_tags", []) == ["fog_bank", "open_lane"] and int(encounter.get("max_rounds", 0)) == 12, "Frostwharf House encounter authority changed.")
+	_expect(String(encounter.get("enemy_group_id", "")) == SHARED_ARMY_ID and String(encounter.get("terrain", "")) == "snow" and encounter.get("battlefield_tags", []) == ["fog_bank", "open_lane"] and int(encounter.get("max_rounds", 0)) == 12, "Frostwharf House encounter authority changed.")
 	_report["site_authority"] = {"claim_rewards": site.get("claim_rewards", {}).duplicate(true), "claim_recruits": site.get("claim_recruits", {}).duplicate(true), "control_income": site.get("control_income", {}).duplicate(true), "weekly_recruits": site.get("weekly_recruits", {}).duplicate(true), "encounter_id": encounter.get("id", ""), "enemy_group_id": encounter.get("enemy_group_id", "")}
 	var rows := []
 	for spec_variant in UNITS:

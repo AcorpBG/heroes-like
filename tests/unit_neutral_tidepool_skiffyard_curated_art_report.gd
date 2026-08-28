@@ -123,6 +123,7 @@ func _validate_live_tidepool_battle_board() -> void:
 	var shared_army: Dictionary = ContentService.get_army_group(SHARED_ARMY_ID)
 	_expect(String(shared_army.get("id", "")) == SHARED_ARMY_ID and _stack_counts(shared_army) == expected_shared, "Shared Tidepool Skiffyard Watch ids/counts changed.")
 	var battle_payload: Dictionary = BattleRulesScript.create_battle_payload(session, placement)
+	_expect(String(battle_payload.get("terrain", "")) == "coast", "Ninefold Drowned Reliquary did not enter the coast battlefield.")
 	var enemy_stacks: Array = battle_payload.get("stacks", []).filter(func(stack): return stack is Dictionary and String(stack.get("side", "")) == "enemy")
 	_expect(_battle_stack_counts(enemy_stacks) == expected_local, "Public Drowned Reliquary battle payload changed its exact enemy roster.")
 	for spec_variant in UNITS:
