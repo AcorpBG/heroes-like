@@ -172,6 +172,8 @@ MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCENE_PATH = ROOT / "tests" / "map_editor_
 OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
 OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+OVERWORLD_TOWN_FOOTPRINT_CLICK_ENTRY_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_town_footprint_click_entry_routing_report.gd"
+OVERWORLD_TOWN_FOOTPRINT_CLICK_ENTRY_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_town_footprint_click_entry_routing_report.tscn"
 OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_full_route_movement_regression.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.tscn"
@@ -46906,6 +46908,11 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
             'map_view.call("validation_town_sprite_scale_payload", String(profile.get("sprite_asset_id", "")))',
             'int(profile.get("footprint_width_tiles", 0)) == 3',
             'int(profile.get("footprint_height_tiles", 0)) == 2',
+            'var click_routing_exact := scale_exact',
+            'map_view.call("town_footprint_selection", clicked_tile)',
+            'click_selection.get("entry_tile", Vector2i(-1, -1)) == expected_entry',
+            'bool(click_selection.get("is_entry_tile", false)) == bool(cell.get("is_entry_tile", false))',
+            '"click_routing_exact": click_routing_exact',
             'selection_rect == hover_rect',
             'bool(focus_layout.get("selection_uses_town_footprint_rect", false))',
             'bool(focus_layout.get("hover_uses_town_footprint_rect", false))',
@@ -46948,6 +46955,129 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ensure('"town_faction_embercourt" not in town_asset_ids' in ninefold_text, errors, "Ninefold large-map gate must require the exact Embercourt town sprite")
     ensure('_assert_art_sprite(town_presentation, "town_faction_embercourt", false)' in visual_text, errors, "Overworld visual gate must require the exact River Pass Embercourt town sprite")
     ensure('expected_asset_id.begins_with("town_faction_")' in visual_text, errors, "Overworld visual town grounding gate must recognize faction town asset ids")
+
+
+def validate_overworld_town_footprint_click_entry_routing(errors: list[str]) -> None:
+    def local_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        next_function = re.search(r"\n(?:static )?func ", text[start + 1 :])
+        if next_function is None:
+            return text[start:]
+        return text[start : start + 1 + next_function.start()]
+
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_RULES_PATH,
+        OVERWORLD_TOWN_FOOTPRINT_CLICK_ENTRY_REPORT_SCRIPT_PATH,
+        OVERWORLD_TOWN_FOOTPRINT_CLICK_ENTRY_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing town footprint click-entry owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    report_text = OVERWORLD_TOWN_FOOTPRINT_CLICK_ENTRY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = OVERWORLD_TOWN_FOOTPRINT_CLICK_ENTRY_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+
+    map_selection = local_function_block(map_text, "town_footprint_selection")
+    for token in (
+        "var presentation := _town_presentation_at(tile)",
+        "if presentation.is_empty():",
+        '"town_placement_id": String(town.get("placement_id", ""))',
+        '"owner": String(town.get("owner", "neutral"))',
+        '"entry_tile": entry',
+        '"is_entry_tile": bool(presentation.get("is_entry_tile", false))',
+        '"tile_role": String(presentation.get("tile_role", ""))',
+        ".duplicate(true)",
+    ):
+        ensure(token in map_selection, errors, f"Town footprint selection must retain exact detached live presentation ownership: {token}")
+    for forbidden in ("TOWN_ENTRY_OFFSET +", "TOWN_ENTRY_OFFSET -", "session.overworld", "sort(", "erase(", "await ", "create_timer"):
+        ensure(forbidden not in map_selection, errors, f"Town footprint selection must use the existing renderer index without topology or timing changes: {forbidden}")
+
+    pointer = local_function_block(shell_text, "_on_map_tile_pressed")
+    pointer_order = tuple(pointer.find(token) for token in (
+        "var town_footprint_selection := _town_footprint_selection(tile)",
+        "var route_tile := _selection_route_tile(tile)",
+        'not bool(town_footprint_selection.get("is_entry_tile", false))',
+        'String(town_footprint_selection.get("owner", "neutral")) == "player"',
+        "_set_selected_tile(route_tile)",
+        '"open_town_from_footprint"',
+        "_visit_selected_town()",
+        "if route_tile == _selected_tile:",
+    ))
+    ensure(all(index >= 0 for index in pointer_order) and list(pointer_order) == sorted(pointer_order), errors, "Town body clicks must open an owned Town before entry-route confirmation, while retaining exact entry selection")
+
+    route_selection = local_function_block(shell_text, "_selection_route_tile")
+    for token in (
+        "var town_selection := _town_footprint_selection(tile)",
+        'town_selection.get("entry_tile", tile)',
+        '"object_kind": "town"',
+        '"is_entry_tile": bool(town_selection.get("is_entry_tile", false))',
+        "return town_entry",
+        "var node := _resource_node_at(tile.x, tile.y)",
+    ):
+        ensure(token in route_selection, errors, f"Town selection must resolve through the renderer-owned entry before existing resource routing: {token}")
+    ensure(route_selection.find("return town_entry") < route_selection.find("var node :="), errors, "Town footprint entry resolution must precede resource-object routing")
+
+    target = local_function_block(shell_text, "_is_selected_owned_town_visit_target")
+    ensure("_is_selected_owned_town_target()" in target and "_selected_tile == OverworldRules.hero_position(_session)" in target, errors, "Visit Town must be promoted only after the hero occupies the selected entry")
+    visit = local_function_block(shell_text, "_visit_selected_town")
+    ensure("if not _is_selected_owned_town_target():" in visit, errors, "Town body inspection must retain the existing owned-town remote management boundary")
+
+    descriptor = local_function_block(shell_text, "_selected_route_destination_execution_descriptor")
+    for token in (
+        'var owner := String(town.get("owner", "neutral"))',
+        '"open" if owner == "player" and tile != OverworldRules.hero_position(_session) else "town"',
+        'descriptor["town_entry_movement"] = descriptor["kind"] == "open"',
+    ):
+        ensure(token in descriptor, errors, f"Owned-town entry movement must suppress automatic Town opening only until arrival: {token}")
+    move = local_function_block(shell_text, "_move_toward_selected_tile")
+    ensure('not bool(destination_descriptor.get("town_entry_movement", false))' in move, errors, "Fallback route execution must preserve the owned-town entry movement intent")
+    ensure("OverworldRules.try_move_along_route(_session, route, -1, resolve_fallback_destination_interaction)" in move, errors, "Fallback entry routing must pass its exact interaction policy to core movement")
+    ensure('result["town_entry_movement_arrival"] = true' in move, errors, "Successful gate arrival must mark the exact Town-entry refresh handoff")
+    move_result = local_function_block(shell_text, "_handle_move_result")
+    ensure('if preserve_selection and bool(result.get("town_entry_movement_arrival", false)):' in move_result and "_refresh()" in move_result, errors, "Town-entry arrival must rebuild current-tile Visit Town actions after movement")
+
+    movement = local_function_block(rules_text, "try_move_along_route")
+    ensure("resolve_destination_interaction: bool = true" in movement, errors, "Core route movement must keep interaction resolution enabled for every existing caller by default")
+    ensure("if reached_destination and resolve_destination_interaction:" in movement, errors, "Only the explicit owned-town gate movement may suppress arrival interaction")
+    for forbidden in ("owner == \"player\"", "town_entry", "ACTIVE_TOWN", "session.flags"):
+        ensure(forbidden not in movement, errors, f"Core movement must not hardcode Town policy or mutate visit authority: {forbidden}")
+
+    ensure_scene_nodes(report_scene, errors, "overworld_town_footprint_click_entry_routing_report.tscn", [("OverworldTownFootprintClickEntryRoutingReport", "Node")])
+    for token in (
+        'const TOWN_ENTRY := Vector2i(4, 2)',
+        'const TOWN_ORIGIN := Vector2i(3, 1)',
+        'for y_offset in range(2):',
+        'for x_offset in range(3):',
+        'map_view.call("town_footprint_selection", clicked_tile)',
+        'footprint_rows.size() != 6 or body_cells.size() != 5',
+        'shell.call("validation_select_tile", HERO_START.x, HERO_START.y)',
+        'shell.call("validation_click_tile", TOWN_ENTRY.x, TOWN_ENTRY.y)',
+        'String(first_primary.get("id", "")) != "advance_route"',
+        'OverworldRules.hero_position(session) != HERO_START',
+        'OverworldRules.hero_position(session) != TOWN_ENTRY',
+        'String(session.game_state) != "overworld"',
+        'String(arrival_primary.get("id", "")) != "visit_town"',
+        'var scene_tree := get_tree()',
+        'map_view.tile_pressed.emit(body_tile)',
+        'String(session.game_state) != "town"',
+        'String(session.flags.get(OverworldRules.ACTIVE_TOWN_PLACEMENT_KEY, "")) != TOWN_PLACEMENT_ID',
+        'session.overworld.get("movement", {}) != movement_after_entry',
+        'session.overworld.get("towns", []) != towns_before',
+        '"entry_route_moves_without_opening": true',
+        '"body_click_opens_town": true',
+        'session.overworld["command_briefing"] = {"signature": "town_footprint_click_fixture|campaign", "shown": true, "shown_day": 1}',
+    ):
+        ensure(token in report_text, errors, f"Town footprint click-entry focused runtime is missing exact shipped behavior proof: {token}")
+    for forbidden in ("_on_map_tile_pressed", "_selection_route_tile", "_visit_selected_town", "try_move_along_route", "execute_prevalidated_route", "set_active_town_visit", "TOWN_ENTRY_OFFSET", "create_timer", "OS.delay"):
+        ensure(forbidden not in report_text, errors, f"Town footprint focused runtime must drive public validation/live click surfaces without bypassing production: {forbidden}")
 
 
 def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
@@ -71706,6 +71836,7 @@ def main() -> int:
     validate_town_embercourt_production_dwelling_icons(errors)
     validate_town_faction_crest_runtime(errors)
     validate_overworld_faction_town_sprite_runtime(errors)
+    validate_overworld_town_footprint_click_entry_routing(errors)
     validate_overworld_faction_hero_sprite_runtime(errors)
     validate_overworld_town_selection_cartographic_perimeter(errors)
     validate_overworld_cartographic_hover_reticle(errors)

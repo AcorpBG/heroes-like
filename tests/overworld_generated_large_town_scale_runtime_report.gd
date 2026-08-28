@@ -88,6 +88,7 @@ func _viewport_row(session, shell, viewport_size: Vector2i, authority_before: Di
 	var profile_ids: Dictionary = {}
 	var scale_exact := profiles.size() == towns.size() and not profiles.is_empty()
 	var footprint_exact := scale_exact
+	var click_routing_exact := scale_exact
 	for profile_value in profiles:
 		if not (profile_value is Dictionary):
 			scale_exact = false
@@ -104,6 +105,23 @@ func _viewport_row(session, shell, viewport_size: Vector2i, authority_before: Di
 			and bool(profile.get("entry_is_visit_tile", false)) \
 			and bool(profile.get("non_entry_tiles_blocked", false)) \
 			and String(profile.get("presentation_passability", "")) == "entry_only"
+		var profile_entry: Dictionary = profile.get("entry_tile", {}) if profile.get("entry_tile", {}) is Dictionary else {}
+		var expected_entry := Vector2i(int(profile_entry.get("x", -1)), int(profile_entry.get("y", -1)))
+		var profile_cells: Array = profile.get("footprint_cells", []) if profile.get("footprint_cells", []) is Array else []
+		click_routing_exact = click_routing_exact and profile_cells.size() > 0
+		for cell_value in profile_cells:
+			if not (cell_value is Dictionary):
+				click_routing_exact = false
+				continue
+			var cell: Dictionary = cell_value
+			if not bool(cell.get("in_bounds", false)):
+				continue
+			var clicked_tile := Vector2i(int(cell.get("x", -1)), int(cell.get("y", -1)))
+			var click_selection: Dictionary = map_view.call("town_footprint_selection", clicked_tile)
+			click_routing_exact = click_routing_exact \
+				and String(click_selection.get("town_placement_id", "")) == String(profile.get("town_placement_id", "")) \
+				and click_selection.get("entry_tile", Vector2i(-1, -1)) == expected_entry \
+				and bool(click_selection.get("is_entry_tile", false)) == bool(cell.get("is_entry_tile", false))
 	var player_town := _first_player_town(session)
 	if player_town.is_empty() or not profile_ids.has(String(player_town.get("placement_id", ""))):
 		return {"ok": false, "failure": "player_town_profile"}
@@ -132,12 +150,13 @@ func _viewport_row(session, shell, viewport_size: Vector2i, authority_before: Di
 	var shell_rect: Rect2 = shell.get_global_rect() if shell is Control else Rect2()
 	var containment_exact := get_viewport().get_visible_rect().encloses(shell_rect)
 	return {
-		"ok": scale_exact and footprint_exact and interaction_geometry_exact and authority_exact and containment_exact,
+		"ok": scale_exact and footprint_exact and click_routing_exact and interaction_geometry_exact and authority_exact and containment_exact,
 		"viewport": [viewport_size.x, viewport_size.y],
 		"tile_extent": tile_extent,
 		"town_profile_count": profiles.size(),
 		"scale_exact": scale_exact,
 		"footprint_exact": footprint_exact,
+		"click_routing_exact": click_routing_exact,
 		"interaction_geometry_exact": interaction_geometry_exact,
 		"authority_exact": authority_exact,
 		"containment_exact": containment_exact,

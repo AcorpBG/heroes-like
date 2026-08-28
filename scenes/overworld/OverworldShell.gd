@@ -1942,6 +1942,7 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	var handler_started_usec := Time.get_ticks_usec()
 	if not _tile_in_bounds(tile):
 		return
+	var town_footprint_selection := _town_footprint_selection(tile)
 	if _controller_route_cursor_active:
 		_deactivate_controller_route_cursor(false, false)
 	_opening_route_suggested = false
@@ -1950,6 +1951,16 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	_debug_record_phase_usec("input_handler_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "map_tile_pressed"})
 	var route_tile := _selection_route_tile(tile)
 	_debug_set_path_command_target(route_tile)
+	if (
+		not town_footprint_selection.is_empty()
+		and not bool(town_footprint_selection.get("is_entry_tile", false))
+		and String(town_footprint_selection.get("owner", "neutral")) == "player"
+	):
+		_set_selected_tile(route_tile)
+		_debug_set_path_command_type("open_town_from_footprint")
+		_visit_selected_town()
+		_debug_finish_path_command()
+		return
 	if route_tile == _selected_tile:
 		_debug_set_path_command_type("click_existing_selection")
 		if not _activate_primary_action():
@@ -1958,11 +1969,6 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		return
 
 	_set_selected_tile(route_tile)
-	if _is_selected_owned_town_visit_target():
-		_debug_set_path_command_type("select_town")
-		_visit_selected_town()
-		_debug_finish_path_command()
-		return
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, route_tile):
 		_debug_set_path_command_type("adjacent_move")
@@ -1989,7 +1995,7 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 	_profile_end("hover", profile_start, {"tile": {"x": tile.x, "y": tile.y}})
 
 func _visit_selected_town() -> bool:
-	if not _is_selected_owned_town_visit_target():
+	if not _is_selected_owned_town_target():
 		_last_message = "Select an owned town to enter it."
 		_last_enemy_activity_text = ""
 		_last_turn_resolution_text = ""
@@ -2072,7 +2078,10 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		if debug_started:
 			_debug_finish_path_command()
 		return
-	if preserve_selection and _last_route_execution.has("reached_destination"):
+	if preserve_selection and bool(result.get("town_entry_movement_arrival", false)):
+		_post_route_execution_compact_context = false
+		_refresh()
+	elif preserve_selection and _last_route_execution.has("reached_destination"):
 		_post_route_execution_compact_context = _should_use_post_route_execution_compact_context()
 		_refresh_selected_route_preview("route_execution_changed")
 		_post_route_execution_compact_context = false
@@ -2102,7 +2111,8 @@ func _move_toward_selected_tile() -> void:
 			_debug_finish_path_command()
 		return
 	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
-	var result: Dictionary = OverworldRules.execute_prevalidated_route(_session, route, preview, -1, destination_descriptor) if use_cached_execution else OverworldRules.try_move_along_route(_session, route)
+	var resolve_fallback_destination_interaction := not bool(destination_descriptor.get("town_entry_movement", false))
+	var result: Dictionary = OverworldRules.execute_prevalidated_route(_session, route, preview, -1, destination_descriptor) if use_cached_execution else OverworldRules.try_move_along_route(_session, route, -1, resolve_fallback_destination_interaction)
 	var executed_steps := 0
 	var route_steps = result.get("route_steps", [])
 	if route_steps is Array:
@@ -2110,6 +2120,8 @@ func _move_toward_selected_tile() -> void:
 	var route_execution: Dictionary = result.get("route_execution", {}) if result.get("route_execution", {}) is Dictionary else {}
 	var reachable_steps := int(route_execution.get("reachable_steps", executed_steps))
 	var destination_reached := bool(route_execution.get("reached_destination", false))
+	if bool(destination_descriptor.get("town_entry_movement", false)) and destination_reached and bool(result.get("ok", false)):
+		result["town_entry_movement_arrival"] = true
 	var validation_mode := String(result.get("route_validation_mode", route_execution.get("route_validation_mode", "cached_prevalidated" if use_cached_execution else "full_revalidation")))
 	_debug_phase_end(
 		"movement_rules",
@@ -4567,6 +4579,9 @@ func _selected_owned_town_visit_action() -> Dictionary:
 	}
 
 func _is_selected_owned_town_visit_target() -> bool:
+	return _is_selected_owned_town_target() and _selected_tile == OverworldRules.hero_position(_session)
+
+func _is_selected_owned_town_target() -> bool:
 	if not _tile_in_bounds(_selected_tile):
 		return false
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
@@ -5749,6 +5764,9 @@ func _selected_route_compact_decision_surface(
 	}
 
 func _selected_route_compact_destination_name(descriptor: Dictionary, destination_kind: String) -> String:
+	if bool(descriptor.get("town_entry_movement", false)):
+		var entry_town_data := ContentService.get_town(String(descriptor.get("town_id", "")))
+		return String(entry_town_data.get("name", descriptor.get("placement_id", "Town entry")))
 	match destination_kind:
 		"current":
 			return "Current Position"
@@ -5974,10 +5992,12 @@ func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Diction
 		return descriptor
 	var town := _town_at(tile.x, tile.y)
 	if not town.is_empty():
-		descriptor["kind"] = "town"
+		var owner := String(town.get("owner", "neutral"))
+		descriptor["kind"] = "open" if owner == "player" and tile != OverworldRules.hero_position(_session) else "town"
 		descriptor["placement_id"] = String(town.get("placement_id", ""))
 		descriptor["town_id"] = String(town.get("town_id", ""))
-		descriptor["owner"] = String(town.get("owner", "neutral"))
+		descriptor["owner"] = owner
+		descriptor["town_entry_movement"] = descriptor["kind"] == "open"
 		return descriptor
 	var node := _resource_node_at(tile.x, tile.y)
 	if not node.is_empty():
@@ -8833,6 +8853,18 @@ func _active_resource_nodes() -> Array:
 
 func _selection_route_tile(tile: Vector2i) -> Vector2i:
 	var selection_started_usec := _debug_phase_begin("tile_object_selection_resolution")
+	var town_selection := _town_footprint_selection(tile)
+	if not town_selection.is_empty():
+		var town_entry: Vector2i = town_selection.get("entry_tile", tile) if town_selection.get("entry_tile", tile) is Vector2i else tile
+		_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {
+			"raw": _debug_tile_payload(tile),
+			"resolved": _debug_tile_payload(town_entry),
+			"object": true,
+			"object_kind": "town",
+			"placement_id": String(town_selection.get("town_placement_id", "")),
+			"is_entry_tile": bool(town_selection.get("is_entry_tile", false)),
+		})
+		return town_entry
 	var node := _resource_node_at(tile.x, tile.y)
 	if node.is_empty():
 		_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {"raw": _debug_tile_payload(tile), "resolved": _debug_tile_payload(tile), "object": false})
@@ -8845,6 +8877,12 @@ func _selection_route_tile(tile: Vector2i) -> Vector2i:
 		"placement_id": String(node.get("placement_id", "")),
 	})
 	return resolved
+
+func _town_footprint_selection(tile: Vector2i) -> Dictionary:
+	if _map_view == null or not _map_view.has_method("town_footprint_selection"):
+		return {}
+	var selection = _map_view.call("town_footprint_selection", tile)
+	return selection if selection is Dictionary else {}
 
 func _resource_node_route_tile(node: Dictionary, fallback: Vector2i) -> Vector2i:
 	var body_visit_started_usec := _debug_phase_begin("body_visit_tile_resolution")

@@ -683,7 +683,8 @@ static func active_linked_transit_signature(session: SessionStateStoreScript.Ses
 static func try_move_along_route(
 	session: SessionStateStoreScript.SessionData,
 	route_tiles: Variant,
-	movement_budget: int = -1
+	movement_budget: int = -1,
+	resolve_destination_interaction: bool = true
 ) -> Dictionary:
 	normalize_overworld_state_for_runtime(session)
 	var path := _normalize_route_tiles(route_tiles)
@@ -738,7 +739,7 @@ static func try_move_along_route(
 		])
 	var target_context := _post_action_tile_context(session, final_tile)
 	var interaction_result := {"ok": true, "message": "", "route": ""}
-	if reached_destination:
+	if reached_destination and resolve_destination_interaction:
 		interaction_result = _resolve_post_move_interaction(session)
 		var interaction_message := String(interaction_result.get("message", ""))
 		if interaction_message != "":
