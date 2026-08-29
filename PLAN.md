@@ -24,8 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-recurring-encounter-landmarks-10184`.
-- Package boundary: the completed slice leaves 19424 bytes below the strict 250000000-byte PCK ceiling by using six 48x48 regions in one imported atlas and keeping full generated sources outside release packages.
+- Selected implementation slice: `content-recurring-encounter-landmarks-wave2-10184`.
+- Package boundary: both release exports now measure 249993744 bytes, leaving 6256 bytes below the strict 250000000-byte PCK ceiling; the slice extends the existing imported atlas without adding a second runtime texture or another loading system, and full generated sources remain outside release packages.
+
+## Recurring Encounter Landmarks Wave 2
+
+id: `content-recurring-encounter-landmarks-wave2-10184`
+
+Status: completed.
+
+Current finding:
+- exact live Overworld identity now covers all 60 heroes, all 15 towns, and 12 of 63 authored encounters; the remaining 51 encounter definitions still rely on faction landmark, unit-icon, or generic fallbacks;
+- Nightglass Drum Circle, Gate Marshals, Charter Bastion Reserve, Ford Reavers, Glasswing Sortie, Hollow Mire, and Silt Hunters are tied as the seven highest-frequency remaining exact-art gaps, covering 14 authored placements including five high-difficulty fronts.
+
+Implementation boundary:
+- create one original readable field landmark for each selected encounter from its exact terrain, commander, army, objective, and faction language, then extend the existing compact recurring-encounter atlas from six to thirteen immutable 48x48 regions;
+- register exact encounter/faction/role ownership and generated-source provenance through the existing data-driven manifest and live commander-first exact-encounter/faction/unit/generic fallback chain;
+- preserve the first-wave six regions and bytes semantically, encounter ids/names/armies/commanders/placements/difficulty/objectives/AI/interaction/battle launch, session/save version 9, accessibility, and Windows/Linux behavior.
+
+Completion criteria:
+- seven new byte-distinct original transparent sources and a single compact thirteen-region runtime atlas retain genuine alpha, distinct non-color silhouettes at live map scale, exact encounter ownership, and source-art package exclusion;
+- focused runtime proves all thirteen exact `AtlasTexture` regions, representative live placement breadth, fallback order, invalid/missing fail-closed behavior, descriptions, and unchanged encounter/session/save authority;
+- inspected 1280x720 and 1920x1080 captures, existing encounter/core/repository/editor validation, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- Nightglass Drum Circle, Gate Marshals, Charter Bastion Reserve, Ford Reavers, Glasswing Sortie, Hollow Mire, and Silt Hunters now own seven byte-distinct original transparent generated sources and exact appended 48x48 regions in the single 624x48 recurring landmark atlas; all prior regions retain their coordinates and all thirteen entries expose exact encounter/faction roles plus non-color descriptions;
+- live Overworld proof resolves all thirteen exact `AtlasTexture` regions at both supported validation viewports, rejects the out-of-bounds region, preserves commander-first exact/faction/unit/generic fallback order, and leaves encounter/session/save-version-9 authority unchanged;
+- the runtime contact sheet and 1280x720/1920x1080 captures were inspected; focused recurring/signature/commander runtime, core, repository, and Linux/Windows package checks pass with generated source art excluded and matching 249993744-byte PCKs, 6256 bytes below the unchanged ceiling. Exact encounter identity is now 19 of 63; this does not claim the remaining 44 identities or unrelated release gaps are complete.
+
+Non-goals:
+- no copied Heroes encounter, object, creature, icon, heraldry, name, text, or protected visual expression; no encounter rules, armies, balance, AI, objective, placement, battle, save-schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Recurring Encounter Landmarks
 
