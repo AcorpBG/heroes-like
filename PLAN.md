@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-tavern-strategic-officer-overworld-sprites-10184`.
+- Selected implementation slice: `content-tavern-ritual-scholar-overworld-sprites-10184`.
+
+## Tavern Ritual-Scholar Overworld Sprites
+
+id: `content-tavern-ritual-scholar-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- towns are 15/15 identity-mapped, authored map objects are 386/386 distinct, decorative/blocker objects are 200/200 distinct, and unit art is catalog-complete, while 22 of 60 production heroes still collapse to faction-generic adventure figures;
+- Orra Cinderquill, Nix Votivejaw, Essa Daynote, Osmund Pollenglass, Odrik Heatpriest, and Thir Obituary-Ink form a coherent six-faction ritual-scholar wave spanning fire-control writs, kill-tempo rites, harmonic resonance, pollen medicine, furnace transmutation, and salvage memory; Orra and Nix are already exercised as explicit generic-fallback identities.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each selected ritual scholar, preserving production portrait identity, faction material language, role-defining implements, readable small-scale silhouette, grounding, focus, and command-pennant clearance;
+- expand manifest-owned hero-id mapping from 38 to 44 exact identities while keeping the remaining 16 heroes on the existing faction fallback and preserving renderer, movement, town-footprint, fog, strategic-enemy, and save ownership;
+- prove each selected hero through the real first-scenario Wayfarers Hall authority, authored recruitment cost, active-command switch, exact field presentation, and save/resume, including mapped Nix hostile presentation beside an explicit remaining-unmapped faction fallback.
+
+Completion criteria:
+- six distinct original sources and curated runtime sprites retain exact manifest provenance, genuine alpha, unique payloads, portrait references, and source-art exclusion from release exports;
+- River Pass, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim offer the intended ritual scholar, charge the authored cost, add exactly one commander, preserve save version 9, and resolve the exact mapped sprite after switching and reload;
+- inspected 1280x720 and 1920x1080 captures, ritual-scholar recruitment/identity/movement/town/fog/fallback/enemy/save runtime, core and repository checks, and bounded Linux/Windows export startup pass within the 250 MB PCK ceiling.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no hero rules, economy, AI, movement, save-schema, RMG, renderer-architecture, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- added six distinct original portrait-faithful ritual-scholar adventure figures for Orra Cinderquill, Nix Votivejaw, Essa Daynote, Osmund Pollenglass, Odrik Heatpriest, and Thir Obituary-Ink, raising exact hero identity coverage from 38 to 44 of 60;
+- the real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active-command switch, exact field presentation, mapped Nix enemy identity beside unmapped Jorun faction fallback, and save/resume all pass at save version 9;
+- inspected 1280x720 and 1920x1080 captures preserve readable silhouettes and map priority, while core/static checks and Linux/Windows packaged startup pass with identical 246502020-byte PCKs containing all six runtime textures and excluding all high-resolution source art.
 
 ## Tavern Strategic-Officer Overworld Sprites
 

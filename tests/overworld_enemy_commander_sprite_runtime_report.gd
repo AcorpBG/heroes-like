@@ -11,8 +11,8 @@ const EXPECTED_FACTION_ASSETS := {
 	"faction_veilmourn": "hero_faction_veilmourn",
 }
 const REPRESENTATIVE_HERO_IDS := {
-	"faction_embercourt": "hero_embercourt_orra_cinderquill",
-	"faction_mireclaw": "hero_orrik",
+	"faction_embercourt": "hero_embercourt_jorun_beaconscribe",
+	"faction_mireclaw": "hero_mireclaw_nix_votivejaw",
 	"faction_sunvault": "hero_sunvault_ilyr_glassmarshal",
 	"faction_thornwake": "hero_thornwake_ardren_briarmarshal",
 	"faction_brasshollow": "hero_brasshollow_daxis_chaincaptain",
@@ -20,7 +20,7 @@ const REPRESENTATIVE_HERO_IDS := {
 }
 const EXPECTED_COMMANDER_ASSETS := {
 	"faction_embercourt": "hero_faction_embercourt",
-	"faction_mireclaw": "hero_strategic_orrik",
+	"faction_mireclaw": "hero_ritual_mireclaw_nix_votivejaw",
 	"faction_sunvault": "hero_field_sunvault_ilyr_glassmarshal",
 	"faction_thornwake": "hero_tavern_thornwake_ardren_briarmarshal",
 	"faction_brasshollow": "hero_tavern_brasshollow_daxis_chaincaptain",
@@ -28,7 +28,7 @@ const EXPECTED_COMMANDER_ASSETS := {
 }
 const EXPECTED_COMMANDER_PATHS := {
 	"faction_embercourt": "res://art/overworld/runtime/heroes/factions/embercourt.png",
-	"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_orrik.png",
+	"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_mireclaw_nix_votivejaw.png",
 	"faction_sunvault": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal.png",
 	"faction_thornwake": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
 	"faction_brasshollow": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
