@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: `content-six-faction-live-landmarks-10184`.
-- Package boundary: both release exports now measure 248142688 bytes, 1857312 bytes below the unchanged 250000000-byte ceiling. Both recurring resource-site atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Active implementation slice: `content-six-faction-standalone-hero-contracts-10184`.
+- Package boundary: both release exports now measure 248230552 bytes, 1769448 bytes below the unchanged 250000000-byte ceiling. All three encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Standalone Hero Contracts
+
+id: `content-six-faction-standalone-hero-contracts-10184`
+
+Status: completed.
+
+Current finding:
+- all 103 units, 60 heroes, 15 towns, 112 spells, and 133 buildings are referenced by live content systems, while exact production art covers every hero and unit, so another definition-only roster or fallback-art pass is not the highest-value gap;
+- only 14 of the 60 live heroes currently headline an authored scenario, leaving most exact hero identities visible mainly through tavern surfaces rather than a playable command role;
+- six skirmish-only contracts can add one new map and one new hero lead per production faction without changing the 24-chapter campaign authority, while new exact boss landmarks give each contract a distinct battlefield and overworld identity.
+
+Implementation boundary:
+- author six original standalone skirmish scenarios led by Torren Pikeward, Sable Muckscribe, Varis Mirrorstep, Ardren Briar-Marshal, Kuld Varn, and Cela Mist-Corsair, with distinct terrain routes, enemy factions, towns, objectives, resource pressure, artifacts, reactive hooks, and save-version-9 authority;
+- add six original boss encounters and matching army groups using existing production units, supported commander traits/spells, deterministic combat seeds, field objectives, rewards, and victory flags;
+- generate six original transparent boss landmarks in one compact atlas and wire exact encounter identity, accessible descriptions, source provenance, live scenario placement, and Linux/Windows package inclusion;
+- keep all six scenarios skirmish-only so campaign chapter order, carryover, chapter seals, and campaign progression remain unchanged.
+
+Completion criteria:
+- all six contracts appear in live skirmish selection, create valid production sessions with their intended exact hero identity, expose unique objectives and scenario state, launch the exact boss battle, resolve authored rewards/flags, and round-trip through save version 9;
+- six byte-distinct original sources produce one compact imported atlas with exact regions, genuine alpha, readable non-color silhouettes, missing-art fallback, and generated-source package exclusion;
+- one combined six-contract smoke covers selection, scenario creation, map rendering, battle construction/resolution, outcome authority, representative captures, and save round trips; repository validation and Linux/Windows package startup pass below the unchanged PCK ceiling.
+
+Completion evidence:
+- six skirmish-only 11x6 contracts now promote Torren, Sable, Varis, Ardren, Kuld, and Cela into exact player-command roles with six contract-specific expedition armies, twelve town placements, sixty resource placements, eighteen artifacts, eighteen placed fronts, and thirty reactive hooks while campaign authority remains exactly twenty-four chapters;
+- six original transparent generated sources produce a compact 288x48 imported atlas whose exact boss identities remain readable beside the active hero in representative 1280x720 captures;
+- one combined six-case live smoke passed exact skirmish availability, scenario/session construction, renderer identity, deterministic boss victories, 210-gold faction-rare rewards, victory flags, and save-version-9 round trips; repository validation and matching Linux/Windows release exports passed at 248230552 bytes with generated source art excluded.
+
+Non-goals:
+- no campaign chapter, campaign progression, carryover, unit roster, town template, spell, artifact definition, battle formula, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes scenario, map, commander, encounter, landmark, name, text, or protected visual expression.
 
 ## Six-Faction Live Landmark Activation
 

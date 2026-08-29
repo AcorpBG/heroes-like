@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six live production-faction landmarks with exact original art, differentiated rewards, income, scouting or pressure effects, persistent control, and authored scenario presence.",
+  "currentNotes": "Completed six standalone skirmish contracts that promote underused exact hero identities into playable command roles with distinct maps, boss encounters, expedition armies, and original compact art.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-live-landmarks-10184",
-  "currentSliceId": "content-six-faction-live-landmarks-10184",
-  "currentSliceNotes": "Completed six live faction landmarks across six authored scenarios with exact compact original art. One combined 31-case smoke passed claim rewards, income/pressure effects, exact rendering, repeat rejection, map captures, and save v9; repository validation and matching Linux/Windows 248142688-byte package boots passed with source art excluded.",
+  "currentSlice": "content-six-faction-standalone-hero-contracts-10184",
+  "currentSliceId": "content-six-faction-standalone-hero-contracts-10184",
+  "currentSliceNotes": "Completed six skirmish-only maps led by previously tavern-only production heroes. One combined six-case smoke passed exact art, deterministic boss victories, rewards/flags, captures, and save v9; repository validation and matching Linux/Windows 248230552-byte package boots passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction live landmarks 10184",
-  "currentSliceUpdatedAt": "2026-08-29T16:10:36Z",
+  "currentSliceTitle": "content six faction standalone hero contracts 10184",
+  "currentSliceUpdatedAt": "2026-08-29T16:43:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106074,6 +106074,16 @@
       "startedAt": "2026-08-29T15:43:45Z",
       "notes": "Completed six live faction landmarks across six authored scenarios with exact compact original art. One combined 31-case smoke passed claim rewards, income/pressure effects, exact rendering, repeat rejection, map captures, and save v9; repository validation and matching Linux/Windows 248142688-byte package boots passed with source art excluded.",
       "completedAt": "2026-08-29T16:10:36Z"
+    },
+    {
+      "id": "content-six-faction-standalone-hero-contracts-10184",
+      "title": "content six faction standalone hero contracts 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T16:43:45Z",
+      "startedAt": "2026-08-29T16:17:42Z",
+      "notes": "Completed six skirmish-only maps led by Torren, Sable, Varis, Ardren, Kuld, and Cela, with contract-specific expedition armies, six exact boss encounters, and one compact original atlas. One combined six-case smoke passed exact selection/rendering, deterministic victories, rewards/flags, captures, and save v9; repository validation and matching Linux/Windows 248230552-byte package boots passed.",
+      "completedAt": "2026-08-29T16:43:45Z"
     }
   ],
   "project": "heroes-like",
@@ -106083,8 +106093,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The six production-faction landmarks are now live, but broader content breadth, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next substantial implementation batch for the broader content and distinctive-art goal; do not infer whole-game or release readiness from this completed landmark slice.",
+  "remainingGap": "Twenty of 60 exact live heroes now headline authored scenarios, leaving forty production identities without a player-facing command map. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next coherent production-content batch from remaining hero-command, scenario, encounter, artifact, spell, and faction-art gaps; do not infer whole-game release readiness from this completed slice.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106618,7 +106628,7 @@
   ],
   "summary": "Completed six collectible faction artifact sets with original compact insignia and live Town and Overworld equipment integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T16:10:36Z",
+  "updatedAt": "2026-08-29T16:43:45Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

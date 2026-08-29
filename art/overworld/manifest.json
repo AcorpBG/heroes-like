@@ -5439,6 +5439,42 @@
       "assigned_resource_site_id": "site_veilmourn_bell_mast",
       "presentation_role": "shiprib_fog_bell_salvage_mast",
       "accessible_description": "A salt-black ship-rib mast leans over a cracked fog bell, cold lanterns, shell markers, and ballast stones."
+    },
+    "encounter_contract_tollglass_drowned_tally": {
+      "path": "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/standalone_contracts/tollglass_drowned_tally_source.png", "source_model": "built_in_image_gen_original_standalone_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_tollglass_drowned_tally", "assigned_faction_id": "faction_veilmourn", "presentation_role": "sunken_toll_chest_shiprib_bell",
+      "accessible_description": "A barnacled toll chest rests beneath a broken ship-rib arch with drowned ledgers and a hanging bronze bell."
+    },
+    "encounter_contract_muckscript_prism_inquest": {
+      "path": "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/standalone_contracts/muckscript_prism_inquest_source.png", "source_model": "built_in_image_gen_original_standalone_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_muckscript_prism_inquest", "assigned_faction_id": "faction_sunvault", "presentation_role": "prism_censor_reliquary_cage",
+      "accessible_description": "A faceted crystal censor cage locks around a mud-caked reliquary with angular lens vanes and snapped chain seals."
+    },
+    "encounter_contract_mirrorstep_redline_calibrators": {
+      "path": "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/standalone_contracts/mirrorstep_redline_calibrators_source.png", "source_model": "built_in_image_gen_original_standalone_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_mirrorstep_redline_calibrators", "assigned_faction_id": "faction_brasshollow", "presentation_role": "redline_gauge_caliper_barricade",
+      "accessible_description": "A red pressure gauge dominates an iron survey barricade fitted with needle calipers and broken mirror shards."
+    },
+    "encounter_contract_briarmarshal_drum_cordon": {
+      "path": "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/standalone_contracts/briarmarshal_drum_cordon_source.png", "source_model": "built_in_image_gen_original_standalone_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_briarmarshal_drum_cordon", "assigned_faction_id": "faction_mireclaw", "presentation_role": "briarbound_war_drum_cordon",
+      "accessible_description": "A squat hide war drum is swallowed by thorn roots, crossed crook sticks, glowing seed pods, and damp rope."
+    },
+    "encounter_contract_railhead_lockward_auditors": {
+      "path": "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/standalone_contracts/railhead_lockward_auditors_source.png", "source_model": "built_in_image_gen_original_standalone_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_railhead_lockward_auditors", "assigned_faction_id": "faction_embercourt", "presentation_role": "charter_lockgate_railhead",
+      "accessible_description": "An iron railhead ends at a fortified lockgate beneath a burning wax charter seal and hooked brass counterweight."
+    },
+    "encounter_contract_mistcorsair_graftwake_cordon": {
+      "path": "res://art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/standalone_contracts/mistcorsair_graftwake_cordon_source.png", "source_model": "built_in_image_gen_original_standalone_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_mistcorsair_graftwake_cordon", "assigned_faction_id": "faction_thornwake", "presentation_role": "graftwake_root_wreck_mooring",
+      "accessible_description": "A living root bollard twists around a wrecked mast, taut ghost rope, torn sail hook, and pale mist lantern."
     }
   },
   "resource_site_sprites": {
@@ -5870,7 +5906,13 @@
     "encounter_parallax_choir": "encounter_dissident_parallax_choir",
     "encounter_graftbound_pilgrims": "encounter_dissident_graftbound_pilgrims",
     "encounter_redline_foreclosure": "encounter_dissident_redline_foreclosure",
-    "encounter_drowned_bell_procession": "encounter_dissident_drowned_bell_procession"
+    "encounter_drowned_bell_procession": "encounter_dissident_drowned_bell_procession",
+    "encounter_tollglass_drowned_tally": "encounter_contract_tollglass_drowned_tally",
+    "encounter_muckscript_prism_inquest": "encounter_contract_muckscript_prism_inquest",
+    "encounter_mirrorstep_redline_calibrators": "encounter_contract_mirrorstep_redline_calibrators",
+    "encounter_briarmarshal_drum_cordon": "encounter_contract_briarmarshal_drum_cordon",
+    "encounter_railhead_lockward_auditors": "encounter_contract_railhead_lockward_auditors",
+    "encounter_mistcorsair_graftwake_cordon": "encounter_contract_mistcorsair_graftwake_cordon"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

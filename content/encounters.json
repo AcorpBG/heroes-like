@@ -2160,6 +2160,78 @@
       ],
       "rewards": {"gold": 190, "memory_salt": 1, "experience": 200},
       "victory_flags": ["drowned_bell_procession_broken"]
+    },
+    {
+      "id": "encounter_tollglass_drowned_tally",
+      "name": "Tollglass Drowned Tally",
+      "enemy_group_id": "army_tollglass_drowned_tally",
+      "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "chokepoint"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Purser Neme Blackwake", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": [], "battle_traits": ["linekeeper", "ambusher"]},
+      "field_objectives": [{"id": "sunken_toll_chest", "type": "supply_post", "label": "Sunken Toll Chest", "summary": "Drowned ledgers and a toll bell keep the wreck-claimants paid until the chest is seized.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["reinforcement", "cohesion", "urgency"]}],
+      "rewards": {"gold": 210, "memory_salt": 1, "experience": 220},
+      "victory_flags": ["tollglass_drowned_tally_broken"]
+    },
+    {
+      "id": "encounter_muckscript_prism_inquest",
+      "name": "Muckscript Prism Inquest",
+      "enemy_group_id": "army_muckscript_prism_inquest",
+      "terrain": "rough",
+      "battlefield_tags": ["fortified_line", "open_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Canon Ilessa Whitefacet", "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 0}, "starting_spell_ids": [], "battle_traits": ["linekeeper", "artillerist"]},
+      "field_objectives": [{"id": "prism_censor_reliquary", "type": "ritual_pylon", "label": "Prism Censor Reliquary", "summary": "A censor cage refracts the inquest's commands until its mud-sealed reliquary is opened.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["commander", "initiative", "urgency"]}],
+      "rewards": {"gold": 210, "aetherglass": 1, "experience": 220},
+      "victory_flags": ["muckscript_prism_inquest_broken"]
+    },
+    {
+      "id": "encounter_mirrorstep_redline_calibrators",
+      "name": "Mirrorstep Redline Calibrators",
+      "enemy_group_id": "army_mirrorstep_redline_calibrators",
+      "terrain": "rough",
+      "battlefield_tags": ["chokepoint", "fortress_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Surveyor Krail Nine-Needle", "command": {"attack": 2, "defense": 1, "power": 0, "knowledge": 0}, "starting_spell_ids": [], "battle_traits": ["vanguard", "linekeeper"]},
+      "field_objectives": [{"id": "redline_calibration_gate", "type": "supply_post", "label": "Redline Calibration Gate", "summary": "A pressure gauge and mirror calipers feed exact firing lines until the rail barricade is taken.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["reinforcement", "momentum", "urgency"]}],
+      "rewards": {"gold": 210, "brass_scrip": 1, "experience": 220},
+      "victory_flags": ["mirrorstep_redline_calibrators_broken"]
+    },
+    {
+      "id": "encounter_briarmarshal_drum_cordon",
+      "name": "Briarmarshal Drum Cordon",
+      "enemy_group_id": "army_briarmarshal_drum_cordon",
+      "terrain": "marsh",
+      "battlefield_tags": ["ambush_cover", "bog_channels"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Croak-Captain Vorga", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": [], "battle_traits": ["ambusher", "linekeeper"]},
+      "field_objectives": [{"id": "briarbound_war_drum", "type": "ritual_pylon", "label": "Briarbound War Drum", "summary": "A root-choked drum keeps the cordon moving in step until its thorn lashings are cut.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["cohesion", "momentum", "urgency"]}],
+      "rewards": {"gold": 210, "peatwax": 1, "experience": 220},
+      "victory_flags": ["briarmarshal_drum_cordon_broken"]
+    },
+    {
+      "id": "encounter_railhead_lockward_auditors",
+      "name": "Railhead Lockward Auditors",
+      "enemy_group_id": "army_railhead_lockward_auditors",
+      "terrain": "rough",
+      "battlefield_tags": ["fortress_lane", "chokepoint"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Lockwarden Asta Brighthook", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": [], "battle_traits": ["linekeeper", "vanguard"]},
+      "field_objectives": [{"id": "charter_lockgate_railhead", "type": "cover_line", "label": "Charter Lockgate Railhead", "summary": "A burning charter seal holds the audit line together until the lockgate counterweight falls.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 210, "embergrain": 1, "experience": 220},
+      "victory_flags": ["railhead_lockward_auditors_broken"]
+    },
+    {
+      "id": "encounter_mistcorsair_graftwake_cordon",
+      "name": "Mistcorsair Graftwake Cordon",
+      "enemy_group_id": "army_mistcorsair_graftwake_cordon",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "fortified_line"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Root-Censor Elva Seedlock", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": [], "battle_traits": ["ambusher", "linekeeper"]},
+      "field_objectives": [{"id": "graftwake_root_mooring", "type": "cover_line", "label": "Graftwake Root Mooring", "summary": "A living bollard traps the wreck mast and shelters the cordon until its ghost-rope is severed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["cohesion", "initiative", "urgency"]}],
+      "rewards": {"gold": 210, "verdant_grafts": 1, "experience": 220},
+      "victory_flags": ["mistcorsair_graftwake_cordon_broken"]
     }
   ]
 }
