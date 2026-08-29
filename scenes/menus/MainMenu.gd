@@ -216,6 +216,7 @@ var _pending_save_delete_identity := {}
 var _campaign_entries: Array = []
 var _selected_campaign_id := ""
 var _campaign_chapter_entries: Array = []
+var _campaign_chapter_seal_texture_cache: Dictionary = {}
 var _selected_campaign_scenario_id := ""
 var _pending_campaign_restart_id := ""
 var _campaign_restart_notice := ""
@@ -391,6 +392,7 @@ func _on_campaign_selected(index: int) -> Dictionary:
 		)
 	_rebuild_campaign_chapter_browser()
 	_refresh_campaign_browser()
+	call_deferred("_refresh_stage_accessibility")
 	return result.duplicate(true)
 
 func _on_chapter_selected(index: int) -> Dictionary:
@@ -409,6 +411,7 @@ func _on_chapter_selected(index: int) -> Dictionary:
 			"select_scenario"
 		)
 	_refresh_campaign_browser()
+	call_deferred("_refresh_stage_accessibility")
 	return result.duplicate(true)
 
 func _on_previous_campaign_arc_pressed() -> void:
@@ -1844,6 +1847,9 @@ func _rebuild_campaign_chapter_browser() -> void:
 	for index in range(_campaign_chapter_entries.size()):
 		var entry = _campaign_chapter_entries[index]
 		_chapter_list.add_item(String(entry.get("label", entry.get("scenario_id", "Chapter"))))
+		var seal_texture := _load_campaign_chapter_seal_texture(String(entry.get("seal_path", "")))
+		if seal_texture != null:
+			_chapter_list.set_item_icon(index, seal_texture)
 		if String(entry.get("scenario_id", "")) == preferred_scenario_id:
 			selected_index = index
 
@@ -1994,6 +2000,20 @@ func _load_campaign_emblem_texture(emblem_path: String) -> Texture2D:
 		return null
 	return load(normalized_path) as Texture2D
 
+func _load_campaign_chapter_seal_texture(seal_path: String) -> Texture2D:
+	var normalized_path := seal_path.strip_edges()
+	if not normalized_path.begins_with("res://art/campaigns/runtime/chapter_seals/") or not normalized_path.ends_with(".png"):
+		return null
+	if _campaign_chapter_seal_texture_cache.has(normalized_path):
+		return _campaign_chapter_seal_texture_cache[normalized_path] as Texture2D
+	if _campaign_chapter_seal_texture_cache.size() >= 6:
+		return null
+	var texture: Texture2D = null
+	if ResourceLoader.exists(normalized_path, "Texture2D"):
+		texture = load(normalized_path) as Texture2D
+	_campaign_chapter_seal_texture_cache[normalized_path] = texture
+	return texture
+
 func _campaign_launch_actions_are_exact(chapter_action: Dictionary, primary_action: Dictionary) -> bool:
 	return not chapter_action.is_empty() and chapter_action == primary_action
 
@@ -2008,6 +2028,7 @@ func _refresh_campaign_row_tooltips() -> void:
 		var scenario_id := String(_campaign_chapter_entries[index].get("scenario_id", ""))
 		var action := CampaignProgression.chapter_action(_selected_campaign_id, scenario_id, _selected_difficulty)
 		_chapter_list.set_item_tooltip(index, _join_nonempty_lines([
+			String(_campaign_chapter_entries[index].get("seal_alt_text", "")),
 			CampaignProgression.chapter_details(_selected_campaign_id, scenario_id, _selected_difficulty),
 			String(action.get("summary", "")),
 		]))
@@ -4165,6 +4186,7 @@ func _campaign_layout_snapshot() -> Dictionary:
 		"detail_surface_visibility": surface_visibility,
 		"control_rects": control_rects,
 		"campaign_items": _campaign_item_rows(),
+		"chapter_list_fixed_icon_size": _chapter_list.fixed_icon_size,
 		"chapter_items": _chapter_item_rows(),
 	}
 
@@ -4263,6 +4285,8 @@ func _chapter_item_rows() -> Array:
 	for index in range(mini(_chapter_list.item_count, _campaign_chapter_entries.size())):
 		rows.append({
 			"id": String(_campaign_chapter_entries[index].get("scenario_id", "")),
+			"seal_path": _chapter_list.get_item_icon(index).resource_path if _chapter_list.get_item_icon(index) is Texture2D else "",
+			"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", "")),
 			"label": _chapter_list.get_item_text(index),
 			"tooltip": _chapter_list.get_item_tooltip(index),
 			"selected": _chapter_list.is_selected(index),

@@ -22,6 +22,12 @@
       "scenarios": [
         {
           "scenario_id": "river-pass",
+          "seal_id": "campaign_chapter_seal_river_pass",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/river_pass_break.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/river_pass_break_source.png",
+          "seal_alt_text": "A broken stone bridge, amber watch-lantern, and marsh reeds frame the rushing River Pass.",
+          "seal_source_sha256": "d450ac3f483cdbc5ac9f93e5d06630198227071e7959707b633a1817a492fdb7",
+          "seal_runtime_sha256": "d63a5bac8f158aecf84bd55e82d5b9ec646b23cd4b56359db1d3c3f6cfcb5ab3",
           "label": "Chapter I: River Pass",
           "description": "Hold Riverwatch, purge the raiders, and seize Duskfen Bastion before the Mireclaw warhost breaks the pass.",
           "chapter_index": 1,
@@ -129,6 +135,12 @@
       "scenarios": [
         {
           "scenario_id": "stonewake-watch",
+          "seal_id": "campaign_chapter_seal_stonewake_watch",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/stonewake_watch.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/stonewake_watch_source.png",
+          "seal_alt_text": "A blue-beacon watchstone rises from a chained basin rim at Stonewake Watch.",
+          "seal_source_sha256": "ee76be3995be59f4986dac8c39ef4703504caaff86d12c9b9addf5a72ba263b2",
+          "seal_runtime_sha256": "5849acd0882bdf8232c0a7b8ef3fd33ffdba2e041bbb70024f7cf56302884561",
           "label": "Chapter I: Stonewake Watch",
           "description": "Hold Highwater Keep, secure Willow Mill, and seize Murkward Ford before the inland host cuts the basin open.",
           "chapter_index": 1,
@@ -237,6 +249,12 @@
       "scenarios": [
         {
           "scenario_id": "bogbound-oath",
+          "seal_id": "campaign_chapter_seal_bogbound_oath",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/bogbound_riverwatch.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/bogbound_riverwatch_source.png",
+          "seal_alt_text": "Crooked mangrove roots and a pale oath cord bind a fen-lit Riverwatch marker.",
+          "seal_source_sha256": "14b61d19f0dc89257aff566dbb6bffc6160fa813676cad2ea117d313292950ad",
+          "seal_runtime_sha256": "62aa1bdd5c245c5ceaa085004ddb374d0e7de943014203c5a183f245646ce15c",
           "label": "Chapter I: Bogbound Oath",
           "description": "Hold Duskfen, break the lantern scouts and survey train, and seize Riverwatch Hold before Embercourt relief seals the road.",
           "chapter_index": 1,
@@ -345,6 +363,12 @@
       "scenarios": [
         {
           "scenario_id": "prismhearth-watch",
+          "seal_id": "campaign_chapter_seal_prismhearth_watch",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/prismhearth_relay.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/prismhearth_relay_source.png",
+          "seal_alt_text": "Three sun-glass prisms focus warm rays into a relit Prismhearth relay.",
+          "seal_source_sha256": "d4b17671ae0068ef9df681338d6a319d98a4578a2cd52d1d9fc0f3c210953b29",
+          "seal_runtime_sha256": "3ce752a69e733e48bf6160a5bcd77385fbd69e80765a46e0cff649cb5c371bf9",
           "label": "Chapter I: Prismhearth Watch",
           "description": "Hold Prismhearth, reclaim Halo Spire, and break the saboteur bands before Mireclaw drowns the relay chain.",
           "chapter_index": 1,
@@ -453,6 +477,12 @@
       "scenarios": [
         {
           "scenario_id": "ironbridge-stand",
+          "seal_id": "campaign_chapter_seal_ironbridge_stand",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/ironbridge_stand.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/ironbridge_stand_source.png",
+          "seal_alt_text": "A brass survey tripod stands on a riveted iron bridge above a cold river channel.",
+          "seal_source_sha256": "b4fe4a6fd0781265495338f2f37bdfab77147e2d918c4b0c76495e0a3056e810",
+          "seal_runtime_sha256": "b94c9c9d0ee95ca0f0fd047c5f218d9a5b05fc8036ca5cf1e04ba029eb9b8d41",
           "label": "Chapter I: Ironbridge Stand",
           "description": "Turn Highwater's bridgehead into a clean advance, retake Murkward Ford, and keep the marsh raiders off the road.",
           "chapter_index": 1,
@@ -561,6 +591,12 @@
       "scenarios": [
         {
           "scenario_id": "mireford-skirmish",
+          "seal_id": "campaign_chapter_seal_mireford_skirmish",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/rootbound_mireford.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/rootbound_mireford_source.png",
+          "seal_alt_text": "Living roots form a greenwood arch over three stepping stones at Rootbound Mireford.",
+          "seal_source_sha256": "ff4b59b5fbca2abd8e26972163688ba9a3faa3c5bbdf7a55a2a9a910758f9b11",
+          "seal_runtime_sha256": "97493928b398bc2c0cb343b82c28c49aef3f118cefcc8473f171abd1a622dc52",
           "label": "Chapter I: Rootbound Mireford",
           "description": "Reclaim Murkward, break the ford raiders, and mark a living Thornwake route toward the eastern claims.",
           "chapter_index": 1,

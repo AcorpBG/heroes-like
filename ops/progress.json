@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and register the next highest-impact live original-content or art gap without weakening the release package ceiling."
+    "Audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 252496-byte release-package headroom."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed ten original live battle status-effect badges with exact package coverage and no combat, authority, or save-schema change.",
+  "currentNotes": "Completed six original live opening-chapter seals across all campaign arcs with exact scenario authority, 24x24 row presentation, fail-closed fallback, accessibility refresh, and no campaign or save-schema change.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-battle-status-effect-badges-10184",
-  "currentSliceId": "content-battle-status-effect-badges-10184",
-  "currentSliceNotes": "Completed ten byte-distinct original transparent 64x64 badges for every live combat status. The battle board filters expiry, deduplicates exact ids, orders by expiry then id, caps visible badges at two with overflow, distinguishes harmful and beneficial effects through non-color foundation shapes, retains authoritative focus text, caches imports and missing paths, and falls back to exact procedural marks. Focused runtime, repository, 429-second battle layout/save-resume, inspected capture, and Linux/Windows package validation pass; both packages boot with ten exact compiled textures, source art excluded, save version 9 unchanged, and a 249694476-byte PCK below the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
+  "currentSlice": "content-campaign-opening-chapter-seals-10184",
+  "currentSliceId": "content-campaign-opening-chapter-seals-10184",
+  "currentSliceNotes": "Completed six byte-distinct original transparent 64x64 cartographic seals for River Pass, Stonewake Watch, Bogbound Oath, Prismhearth Watch, Ironbridge Stand, and Rootbound Mireford. Exact starting-scenario authority, 24x24 chapter-row presentation, six-entry caching, non-color tooltip descriptions, selection-triggered accessibility refresh, missing-art fail-closed behavior, and all 18 later text-only rows pass. Focused runtime, campaign compatibility, accessibility, core, repository, inspected capture, and Linux/Windows package validation pass; both packages boot with six exact compiled textures, source art excluded, save version 9 unchanged, and a 249747504-byte PCK below the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content battle status effect badges 10184",
-  "currentSliceUpdatedAt": "2026-08-29T06:43:23Z",
+  "currentSliceTitle": "content campaign opening chapter seals 10184",
+  "currentSliceUpdatedAt": "2026-08-29T07:29:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105292,6 +105292,16 @@
       "startedAt": "2026-08-29T05:49:26Z",
       "notes": "Completed ten byte-distinct original transparent 64x64 badges for harried, mire-harried, staggered, rooted, fogbound, obituary-marked, overheated, rivet-exposed, flare-revealed, and readiness-prepared. The live battle board filters expired effects, deduplicates exact ids, orders by expiry then id, caps visible badges at two with overflow, uses broken-diamond versus upward-pentagon non-color polarity foundations, retains authoritative label-and-duration focus text, caches imports and missing paths, and fails closed to exact procedural marks. Focused runtime, repository, 429-second battle layout/save-resume, and inspected capture validation pass. Linux and Windows packages boot with ten exact compiled textures, source art excluded, save version 9 unchanged, and a 249694476-byte PCK below the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T06:43:23Z"
+    },
+    {
+      "id": "content-campaign-opening-chapter-seals-10184",
+      "title": "content campaign opening chapter seals 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T07:29:32Z",
+      "startedAt": "2026-08-29T06:51:08Z",
+      "notes": "Completed six byte-distinct original transparent 64x64 cartographic seals for the always-visible opening chapter of every live campaign. Exact starting-scenario authority, 24x24 chapter-row presentation, six-entry caching, non-color descriptions, accessibility refresh, missing-art fallback, and all 18 later text-only rows pass. Focused runtime, campaign compatibility, accessibility, core, repository, inspected capture, and Linux/Windows package validation pass. Both packages contain six exact compiled textures, exclude source art, boot successfully, retain save version 9, and produce a 249747504-byte PCK under the strict ceiling. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T07:29:32Z"
     }
   ],
   "project": "heroes-like",
@@ -105301,8 +105311,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 60 production heroes have exact adventure-map identities, all 38 faction-authored encounters resolve six faction field-command landmarks, all six playable campaign arcs own distinct live browser identity art, all 53 authored battle field objectives resolve eight type-distinct landmarks, and all ten live combat statuses now resolve persistent stack-token badges. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit and register the next bounded live original-content or art slice while preserving the remaining 305524-byte strict release-package headroom; broader product gaps remain.",
+  "remainingGap": "All six campaign opening chapters now own exact live cartographic seals, while the 18 later chapter rows remain text-only and are an explicit follow-up gap. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and register the next bounded original-content or art slice while preserving the remaining 252496-byte strict release-package headroom; later chapter art and broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

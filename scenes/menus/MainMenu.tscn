@@ -344,6 +344,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_vertical = 3
+fixed_icon_size = Vector2i(24, 24)
 allow_reselect = true
 
 [node name="ChapterDetailsPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser"]

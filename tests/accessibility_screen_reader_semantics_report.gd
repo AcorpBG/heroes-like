@@ -246,6 +246,16 @@ func _run() -> void:
 	var campaign_settings_before: Dictionary = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())
 	var campaign_save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
 	var campaign_profile_before: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	var semantic_campaign_ids: Array = CampaignRules.campaign_ids()
+	if semantic_campaign_ids.is_empty():
+		return _fail("Main-menu Campaign native semantics needs at least one campaign arc.")
+	var semantic_campaign_id := String(semantic_campaign_ids[0])
+	var semantic_profile := CampaignRules.normalize_profile(campaign_profile_before)
+	semantic_profile["campaign_states"][semantic_campaign_id] = {}
+	semantic_profile["last_campaign_id"] = semantic_campaign_id
+	semantic_profile["last_scenario_id"] = ""
+	CampaignProgression.profile = CampaignRules.normalize_profile(semantic_profile)
+	CampaignProgression.save_profile()
 	menu.call("validation_open_campaign_stage")
 	await _settle()
 	var previous_arc := menu.find_child("PreviousCampaignArc", true, false) as Button

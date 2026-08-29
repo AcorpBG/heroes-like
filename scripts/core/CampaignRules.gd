@@ -291,6 +291,8 @@ static func build_campaign_chapter_entries(profile: Dictionary, campaign_id: Str
 		entries.append(
 			{
 				"scenario_id": scenario_id,
+				"seal_path": campaign_chapter_seal_path(campaign_id, scenario_id),
+				"seal_alt_text": campaign_chapter_seal_alt_text(campaign_id, scenario_id),
 				"label": "%s | %s" % [_chapter_heading(scenario_entry, scenario_id), _scenario_status_label(unlocked, record)],
 				"summary": _menu_action_summary(normalized, campaign_id, scenario_entry, unlocked, record),
 				"selected": scenario_id == selected_scenario,
@@ -298,6 +300,29 @@ static func build_campaign_chapter_entries(profile: Dictionary, campaign_id: Str
 			}
 		)
 	return entries
+
+static func campaign_chapter_seal_path(campaign_id: String, scenario_id: String) -> String:
+	var campaign := ContentService.get_campaign(campaign_id)
+	if campaign.is_empty() or String(campaign.get("id", "")) != campaign_id:
+		return ""
+	var scenario_entry := _find_scenario_entry(campaign, scenario_id)
+	if scenario_entry.is_empty():
+		return ""
+	var expected_id := "campaign_chapter_seal_%s" % scenario_id.replace("-", "_")
+	if String(scenario_entry.get("seal_id", "")) != expected_id:
+		return ""
+	var seal_path := String(scenario_entry.get("seal_path", "")).strip_edges()
+	if not seal_path.begins_with("res://art/campaigns/runtime/chapter_seals/") or not seal_path.ends_with(".png"):
+		return ""
+	if not ResourceLoader.exists(seal_path, "Texture2D"):
+		return ""
+	return seal_path
+
+static func campaign_chapter_seal_alt_text(campaign_id: String, scenario_id: String) -> String:
+	if campaign_chapter_seal_path(campaign_id, scenario_id) == "":
+		return ""
+	var scenario_entry := _find_scenario_entry(ContentService.get_campaign(campaign_id), scenario_id)
+	return String(scenario_entry.get("seal_alt_text", "")).strip_edges()
 
 static func build_menu_actions(profile: Dictionary, campaign_id: String) -> Array:
 	var normalized := normalize_profile(profile)

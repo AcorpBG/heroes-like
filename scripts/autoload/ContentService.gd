@@ -1933,6 +1933,7 @@ func _validate_campaign(campaign: Dictionary, scenario_index: Dictionary) -> voi
 		else:
 			seen_scenarios.append(scenario_id)
 
+		_validate_campaign_chapter_seal(campaign_id, scenario_id, scenario_entry)
 		_validate_campaign_requirements(campaign_id, scenario_id, scenario_entry, scenario_index)
 		_validate_campaign_carryover(campaign_id, scenario_id, scenario_entry, scenario_index)
 
@@ -1941,6 +1942,31 @@ func _validate_campaign(campaign: Dictionary, scenario_index: Dictionary) -> voi
 		push_warning("Campaign %s must define a valid starting_scenario_id." % campaign_id)
 	elif starting_scenario_id not in seen_scenarios:
 		push_warning("Campaign %s starting_scenario_id %s is not listed in campaign scenarios." % [campaign_id, starting_scenario_id])
+
+func _validate_campaign_chapter_seal(campaign_id: String, scenario_id: String, scenario_entry: Dictionary) -> void:
+	var seal_id := String(scenario_entry.get("seal_id", "")).strip_edges()
+	var seal_path := String(scenario_entry.get("seal_path", "")).strip_edges()
+	var source_path := String(scenario_entry.get("seal_source_path", "")).strip_edges()
+	var alt_text := String(scenario_entry.get("seal_alt_text", "")).strip_edges()
+	var has_seal_data := seal_id != "" or seal_path != "" or source_path != "" or alt_text != ""
+	if not has_seal_data:
+		return
+	var expected_id := "campaign_chapter_seal_%s" % scenario_id.replace("-", "_")
+	if seal_id != expected_id:
+		push_warning("Campaign %s scenario %s must define exact seal id %s." % [campaign_id, scenario_id, expected_id])
+	if not seal_path.begins_with("res://art/campaigns/runtime/chapter_seals/") or not seal_path.ends_with(".png"):
+		push_warning("Campaign %s scenario %s must define a runtime chapter-seal PNG." % [campaign_id, scenario_id])
+	elif not ResourceLoader.exists(seal_path, "Texture2D"):
+		push_warning("Campaign %s scenario %s references missing chapter seal %s." % [campaign_id, scenario_id, seal_path])
+	if not source_path.begins_with("res://art/campaigns/source/generated/chapter_seals/") or not source_path.ends_with("_source.png"):
+		push_warning("Campaign %s scenario %s must retain generated chapter-seal provenance." % [campaign_id, scenario_id])
+	elif OS.has_feature("editor") and not FileAccess.file_exists(source_path):
+		push_warning("Campaign %s scenario %s references missing chapter-seal source %s." % [campaign_id, scenario_id, source_path])
+	if alt_text == "":
+		push_warning("Campaign %s scenario %s must define non-color chapter-seal alt text." % [campaign_id, scenario_id])
+	for hash_key in ["seal_source_sha256", "seal_runtime_sha256"]:
+		if String(scenario_entry.get(hash_key, "")).length() != 64:
+			push_warning("Campaign %s scenario %s must define a full %s digest." % [campaign_id, scenario_id, hash_key])
 
 func _validate_campaign_requirements(
 	campaign_id: String,
