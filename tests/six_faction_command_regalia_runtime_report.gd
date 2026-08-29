@@ -10,6 +10,12 @@ const CASES := {
 	"artifact_briarcrown_covenant_standard": {"faction_id": "faction_thornwake", "scenario_id": "mireford-skirmish", "placement_id": "bridge_pennon", "x": 5, "y": 3, "bonuses": {"battle_defense": 1, "overworld_movement": 1}},
 	"artifact_redline_warrant_gonfalon": {"faction_id": "faction_brasshollow", "scenario_id": "orevein-contract", "placement_id": "riverwatch_warcrest_pennon", "x": 9, "y": 4, "bonuses": {"battle_attack": 1, "battle_defense": 1}},
 	"artifact_wakebell_mourning_ensign": {"faction_id": "faction_veilmourn", "scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_waymark_compass", "x": 3, "y": 1, "bonuses": {"battle_initiative": 1, "scouting_radius": 1}},
+	"artifact_lockward_beacon_key": {"faction_id": "faction_embercourt", "scenario_id": "charter-bastion-counterseal", "placement_id": "counterseal_trailsinger_boots", "x": 3, "y": 1, "slot": "trinket", "bonuses": {"overworld_movement": 1, "battle_defense": 1}},
+	"artifact_fenhound_scent_bell": {"faction_id": "faction_mireclaw", "scenario_id": "nightglass-ledger-reversal", "placement_id": "nightglass_trailsinger_boots", "x": 3, "y": 1, "slot": "trinket", "bonuses": {"battle_attack": 1, "scouting_radius": 1}},
+	"artifact_meridian_relay_lens": {"faction_id": "faction_sunvault", "scenario_id": "prismhearth-watch", "placement_id": "relay_boots", "x": 2, "y": 0, "slot": "trinket", "bonuses": {"battle_initiative": 1, "battle_spell_resistance_pct": 5}},
+	"artifact_rootpath_seed_compass": {"faction_id": "faction_thornwake", "scenario_id": "rootgate-toll", "placement_id": "rootgate_trailsinger_boots", "x": 3, "y": 1, "slot": "trinket", "bonuses": {"overworld_movement": 1, "scouting_radius": 1}},
+	"artifact_redline_survey_dial": {"faction_id": "faction_brasshollow", "scenario_id": "clauseworks-counterclaim", "placement_id": "clauseworks_quarry_tally", "x": 3, "y": 1, "slot": "trinket", "bonuses": {"battle_defense": 1, "overworld_movement": 1}},
+	"artifact_drowned_star_astrolabe": {"faction_id": "faction_veilmourn", "scenario_id": "fogchart-mooring", "placement_id": "fogchart_waymark_compass", "x": 3, "y": 1, "slot": "trinket", "bonuses": {"scouting_radius": 1, "battle_initiative": 1}},
 }
 
 func _ready() -> void:
@@ -68,7 +74,7 @@ func _runtime_case(artifact_id: String, expected: Dictionary) -> Dictionary:
 	for bonus_key in expected_bonuses:
 		authored_bonuses_exact = authored_bonuses_exact and int(artifact_bonuses.get(bonus_key, 0)) == int(expected_bonuses.get(bonus_key, 0))
 	var taxonomy_exact: bool = not artifact.is_empty() \
-		and String(artifact.get("slot", "")) == "banner" \
+		and String(artifact.get("slot", "")) == String(expected.get("slot", "banner")) \
 		and String(artifact.get("rarity", "")) == "uncommon" \
 		and artifact.get("faction_affinity", []) == [String(expected.get("faction_id", ""))] \
 		and authored_bonuses_exact \
@@ -112,7 +118,7 @@ func _runtime_case(artifact_id: String, expected: Dictionary) -> Dictionary:
 		bonuses_exact = bonuses_exact and int(aggregate.get(bonus_key, 0)) == int(expected.get("bonuses", {}).get(bonus_key, 0))
 	var collect_exact: bool = bool(collect.get("ok", false)) \
 		and String(location.get("location", "")) == "equipped" \
-		and String(location.get("slot", "")) == "banner" \
+		and String(location.get("slot", "")) == String(expected.get("slot", "banner")) \
 		and bool(collected_node.get("collected", false)) \
 		and bonuses_exact
 

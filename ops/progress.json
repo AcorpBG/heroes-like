@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Implement and validate six original faction command-regalia artifacts through six representative live scenario placements."
+    "Audit and register the next player-visible live content/art gap; do not create art for the 26 unplaced encounter definitions unless the same slice wires them into playable content."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15703,14 +15703,14 @@
       }
     }
   ],
-  "currentNotes": "Six-faction command regalia is completed with six live scenario placements, exact inventory and field art, runtime collection/equip/AI/save proof, and Linux/Windows package validation.",
+  "currentNotes": "Six-faction expedition instruments are completed with six live faction-aligned placements, exact inventory and field art, runtime collection/trinket-equip/AI/save proof, and Linux/Windows package validation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "",
-  "currentSliceId": "",
-  "currentSliceNotes": "No implementation slice is active after completing six-faction command regalia.",
+  "currentSlice": "content-six-faction-expedition-instruments-10184",
+  "currentSliceId": "content-six-faction-expedition-instruments-10184",
+  "currentSliceNotes": "Six-faction expedition instruments are completed; no implementation slice is active until the next live content/art gap is selected.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "",
-  "currentSliceUpdatedAt": "2026-08-29T12:44:20Z",
+  "currentSliceTitle": "Six-Faction Expedition Instruments",
+  "currentSliceUpdatedAt": "2026-08-29T13:16:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21151,19 +21151,20 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "src/gdextension/src/h3maped_rmg_core.cpp",
-    "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+    "content/artifacts.json",
+    "content/scenarios.json",
+    "art/artifacts/source/generated/expedition_instruments_wave1/manifest.json",
+    "art/overworld/manifest.json",
+    "tests/six_faction_command_regalia_runtime_report.gd",
+    "tests/overworld_artifact_pickup_icon_runtime_report.gd",
+    "tests/validate_repo.py",
+    "tests/packaging_linux_export_smoke.py",
+    "tests/packaging_windows_export_smoke.py",
     "PLAN.md",
-    "ops/progress.json",
-    "bin/h3maped_rmg_core_selftest",
-    "bin/rmg_native_batch_export_cli",
-    ".artifacts/rmg_native_4a901a_identity/medium_seed10_setup1_2p.phase_snapshot.json",
-    ".artifacts/rmg_native_4a901a_identity/medium_seed10_setup1_2p.final_payload.bin",
-    ".artifacts/rmg_native_4a901a_identity/medium_seed10_setup1_2p.final_payload_sections.json",
-    ".artifacts/rmg_native_4a901a_identity/final_payload_compare.json"
+    "ops/progress.json"
   ],
-  "latestEvidenceId": "native-rmg-4a7605-source-owned-monolith-dispatch-20260714",
-  "latestFinding": "Six original arcane-controller adventure sprites raise exact production-hero identity coverage from 44 to 50 of 60. Live tavern hire, authored costs, active switching, mapped hostile Jorun presentation, unmapped Pell faction fallback, save version 9, dual-resolution captures, core/static validation, and both platform package startup pass; both PCKs are 247376284 bytes with runtime art present and source art excluded.",
+  "latestEvidenceId": "content-six-faction-expedition-instruments-20260829",
+  "latestFinding": "Six original faction expedition instruments raise the production artifact catalog from 27 to 33 and faction-affinity breadth to four per faction. All six are fixed live rewards with exact inventory/field art, collection/trinket equip, bonuses, positive faction AI valuation, save version 9, dual-resolution presentation, core/repository validation, and matching 247899952-byte Linux/Windows package boots with source art excluded.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -21226,8 +21227,40 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
-  "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
+  "notes": "Six-faction expedition instruments are completed with six live fixed placements, exact inventory and field art, runtime collection/equip/AI/save proof, and Linux/Windows package validation. The broader content/art goal remains active across future bounded slices.",
   "plannedSlices": [
+    {
+      "id": "content-six-faction-expedition-instruments-10184",
+      "title": "Six-Faction Expedition Instruments",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T12:51:18Z",
+      "updatedAt": "2026-08-29T13:16:59Z",
+      "completedAt": "2026-08-29T13:16:59Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "content/artifacts.json",
+        "content/scenarios.json",
+        "art/artifacts/runtime",
+        "art/artifacts/source/generated/expedition_instruments_wave1",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/artifacts",
+        "tests/six_faction_command_regalia_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Expand live faction equipment and campaign loot with one original expedition instrument per faction, each collectible from a stable faction-aligned authored placement and visible in inventory, field, Town, and AI equipment paths.",
+      "completionCriteria": "Six exact transparent generated sources produce distinct 128x128 inventory and 512x512 field surfaces; all six live placements, bonuses, collection/equip/AI valuation, accessibility, fail-closed art, save-version-9 round trip, captures, repository/core, and Linux/Windows package gates pass below the unchanged 250000000-byte ceiling.",
+      "nonGoals": [
+        "No new artifact slot, bonus mechanic, random reward-table change, set, commission, battle salvage rule, scenario geometry, encounter, objective, AI algorithm, or save-schema change.",
+        "No copied Heroes expression, unused art-only definitions, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed. Six live faction trinkets, exact source/icon/field art, collection/equip/AI/save behavior, dual-resolution captures, regressions, and both release package gates are validated."
+    },
     {
       "id": "content-six-faction-command-regalia-10184",
       "title": "Six-Faction Command Regalia",
@@ -105938,8 +105971,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Thirty-seven of 63 authored encounters own exact live Overworld identity, covering every one of the 77 active authored scenario placements; 26 unmatched definitions have no active authored placement and intentionally retain fallback behavior. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader faction/town/object/presentation art, strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Complete and validate eleven high-difficulty encounter landmarks in the existing atlas after excluding `reports/` from both release presets; then audit the remaining medium/low placed identities and other live content/art gaps. Separately diagnose the existing Overworld request-local watch-context reuse regression and objective-header ellipsis assertion; broader product gaps remain.",
+  "remainingGap": "All 77 active authored encounter placements, all 292 active resource-site placements, all 60 production heroes, all 15 towns, and all 33 production artifacts own exact live art. Twenty-six encounter definitions remain unplaced and intentionally have no unused exact art. The unrelated Overworld request-local watch-context reuse regression and 1280px objective-header ellipsis assertion remain outside this slice; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native hardware, whole-game, and release-readiness gaps remain.",
+  "remainingWork": "Audit and register the next bounded player-visible content/art gap with a live consumer in the same slice. Do not add art for dormant encounter definitions without playable placement, and do not claim whole-game or release readiness from this artifact slice.",
   "reportOnlyEvidence": [
     {
       "entries": [

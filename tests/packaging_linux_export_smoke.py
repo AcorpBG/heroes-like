@@ -54,6 +54,8 @@ REQUIRED_ARTIFACT_FIELD_NAMES = (
     "graftbark_cuirass", "quenchplate_vambrace", "fogwake_deckboots",
     "lockflame_writ_banner", "mirechain_hunt_totem", "zenith_prism_pennon",
     "briarcrown_covenant_standard", "redline_warrant_gonfalon", "wakebell_mourning_ensign",
+    "lockward_beacon_key", "fenhound_scent_bell", "meridian_relay_lens",
+    "rootpath_seed_compass", "redline_survey_dial", "drowned_star_astrolabe",
 )
 REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/artifacts/{artifact_name}.png.import"

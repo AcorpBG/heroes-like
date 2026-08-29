@@ -2918,7 +2918,7 @@
         {"placement_id": "prismhearth_watch_halo_spire_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 1, "guard_front_id": "prismhearth_halo_reserve", "collected_by_faction_id": "faction_mireclaw"}
       ],
       "artifact_nodes": [
-        {"placement_id": "relay_boots", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 0},
+        {"placement_id": "relay_boots", "artifact_id": "artifact_meridian_relay_lens", "x": 2, "y": 0},
         {"placement_id": "halo_pennon", "artifact_id": "artifact_zenith_prism_pennon", "x": 5, "y": 3},
         {"placement_id": "spire_gorget", "artifact_id": "artifact_prismward_mantle", "x": 8, "y": 4}
       ],
@@ -5009,7 +5009,7 @@
         {"placement_id": "rootgate_toll_clauseworks_toll_depot_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "rootgate_bastion_reserve", "collected_by_faction_id": "faction_brasshollow"}
       ],
       "artifact_nodes": [
-        {"placement_id": "rootgate_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
+        {"placement_id": "rootgate_trailsinger_boots", "artifact_id": "artifact_rootpath_seed_compass", "x": 3, "y": 1},
         {"placement_id": "rootgate_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
         {"placement_id": "clauseworks_quarry_tally", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 4}
       ],
@@ -5223,7 +5223,7 @@
         {"placement_id": "fogchart_mooring_halo_registry_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "fogchart_mirror_lancers", "collected_by_faction_id": "faction_sunvault"}
       ],
       "artifact_nodes": [
-        {"placement_id": "fogchart_waymark_compass", "artifact_id": "artifact_waymark_compass", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
+        {"placement_id": "fogchart_waymark_compass", "artifact_id": "artifact_drowned_star_astrolabe", "x": 3, "y": 1},
         {"placement_id": "fogchart_black_sail_compass", "artifact_id": "artifact_black_sail_compass", "x": 6, "y": 3},
         {"placement_id": "halo_registry_tuning_fork", "artifact_id": "artifact_choir_tuning_fork", "x": 9, "y": 4}
       ],
@@ -5416,7 +5416,7 @@
         {"placement_id": "clauseworks_counterclaim_highwater_audit_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "clauseworks_bridge_levies", "collected_by_faction_id": "faction_embercourt"}
       ],
       "artifact_nodes": [
-        {"placement_id": "clauseworks_quarry_tally", "artifact_id": "artifact_quarry_tally_rod", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
+        {"placement_id": "clauseworks_quarry_tally", "artifact_id": "artifact_redline_survey_dial", "x": 3, "y": 1},
         {"placement_id": "clauseworks_pressure_gauge", "artifact_id": "artifact_pressure_gauge_reliquary", "x": 6, "y": 3},
         {"placement_id": "highwater_milepost_lantern", "artifact_id": "artifact_milepost_lantern", "x": 9, "y": 4}
       ],
@@ -5495,7 +5495,7 @@
         {"placement_id": "nightglass_ledger_reversal_clauseworks_counter_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "nightglass_rivet_auditors", "collected_by_faction_id": "faction_brasshollow"}
       ],
       "artifact_nodes": [
-        {"placement_id": "nightglass_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
+        {"placement_id": "nightglass_trailsinger_boots", "artifact_id": "artifact_fenhound_scent_bell", "x": 3, "y": 1},
         {"placement_id": "nightglass_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 6, "y": 3},
         {"placement_id": "clauseworks_pressure_gauge", "artifact_id": "artifact_pressure_gauge_reliquary", "x": 9, "y": 4}
       ],
@@ -5653,7 +5653,7 @@
         {"placement_id": "charter_bastion_counterseal_halo_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "counterseal_mirror_lancers", "collected_by_faction_id": "faction_sunvault"}
       ],
       "artifact_nodes": [
-        {"placement_id": "counterseal_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "counterseal_trailsinger_boots", "artifact_id": "artifact_lockward_beacon_key", "x": 3, "y": 1},
         {"placement_id": "counterseal_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
         {"placement_id": "counterseal_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
       ],

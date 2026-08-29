@@ -19,8 +19,8 @@ func _run() -> void:
 	if int(report.get("set_piece_count", 0)) != 6:
 		_fail("Expected three pieces in each of two artifact sets: %s" % report)
 		return
-	if int(report.get("faction_affinity_artifact_count", 0)) != 12:
-		_fail("Expected two faction-affinity artifacts for each of six factions: %s" % report)
+	if int(report.get("faction_affinity_artifact_count", 0)) != 24:
+		_fail("Expected four faction-affinity artifacts for each of six factions: %s" % report)
 		return
 
 	var set_piece_counts: Dictionary = report.get("set_piece_counts", {}) if report.get("set_piece_counts", {}) is Dictionary else {}
@@ -37,7 +37,7 @@ func _run() -> void:
 		"faction_brasshollow",
 		"faction_veilmourn",
 	]:
-		if int(faction_counts.get(faction_id, 0)) != 2:
+		if int(faction_counts.get(faction_id, 0)) != 4:
 			_fail("Faction affinity count missing %s: %s" % [faction_id, report])
 			return
 

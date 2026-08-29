@@ -1390,6 +1390,60 @@
       "visual_description": "Torn sailcloth stretched between curved ship ribs beneath a cracked bell, with a side lantern and chain keel.",
       "background": "transparent"
     },
+    "artifact_field_lockward_beacon_key": {
+      "path": "res://art/overworld/runtime/objects/artifacts/lockward_beacon_key.png",
+      "source_icon": "res://art/artifacts/runtime/lockward_beacon_key.png",
+      "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/lockward_beacon_key_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Tall bridge-lock key built through a hooded glowing beacon, with side writ rolls, wax seals, and a hanging brass weight.",
+      "background": "transparent"
+    },
+    "artifact_field_fenhound_scent_bell": {
+      "path": "res://art/overworld/runtime/objects/artifacts/fenhound_scent_bell.png",
+      "source_icon": "res://art/artifacts/runtime/fenhound_scent_bell.png",
+      "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/fenhound_scent_bell_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Crooked bog-hound jaw over a heavy patterned bell, flanked by two scent vials and a long hide tassel.",
+      "background": "transparent"
+    },
+    "artifact_field_meridian_relay_lens": {
+      "path": "res://art/overworld/runtime/objects/artifacts/meridian_relay_lens.png",
+      "source_icon": "res://art/artifacts/runtime/meridian_relay_lens.png",
+      "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/meridian_relay_lens_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Symmetrical gold meridian frame around a large blue diamond lens, with two raised mirror vanes and a sun-point crown.",
+      "background": "transparent"
+    },
+    "artifact_field_rootpath_seed_compass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/rootpath_seed_compass.png",
+      "source_icon": "res://art/artifacts/runtime/rootpath_seed_compass.png",
+      "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/rootpath_seed_compass_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Leaf-pointed seed compass enclosed by four forked living roots, side leaves, thorn tips, and a rope carry loop.",
+      "background": "transparent"
+    },
+    "artifact_field_redline_survey_dial": {
+      "path": "res://art/overworld/runtime/objects/artifacts/redline_survey_dial.png",
+      "source_icon": "res://art/artifacts/runtime/redline_survey_dial.png",
+      "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/redline_survey_dial_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Round black iron pressure dial with a bright red needle, furnace vents, folding brass sights, and a chain plumb.",
+      "background": "transparent"
+    },
+    "artifact_field_drowned_star_astrolabe": {
+      "path": "res://art/overworld/runtime/objects/artifacts/drowned_star_astrolabe.png",
+      "source_icon": "res://art/artifacts/runtime/drowned_star_astrolabe.png",
+      "source_generated": "res://art/artifacts/source/generated/expedition_instruments_wave1/drowned_star_astrolabe_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Open crescent astrolabe around a pale hanging shard, with curved ship ribs, a cracked bell, and a narrow fogglass vial.",
+      "background": "transparent"
+    },
     "guarded_farmhouse": {
       "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
       "source_trimmed": "res://art/overworld/source/trimmed/dwellings/guarded_farmhouse-trimmed.png"
@@ -5173,7 +5227,13 @@
     "artifact_zenith_prism_pennon": "artifact_field_zenith_prism_pennon",
     "artifact_briarcrown_covenant_standard": "artifact_field_briarcrown_covenant_standard",
     "artifact_redline_warrant_gonfalon": "artifact_field_redline_warrant_gonfalon",
-    "artifact_wakebell_mourning_ensign": "artifact_field_wakebell_mourning_ensign"
+    "artifact_wakebell_mourning_ensign": "artifact_field_wakebell_mourning_ensign",
+    "artifact_lockward_beacon_key": "artifact_field_lockward_beacon_key",
+    "artifact_fenhound_scent_bell": "artifact_field_fenhound_scent_bell",
+    "artifact_meridian_relay_lens": "artifact_field_meridian_relay_lens",
+    "artifact_rootpath_seed_compass": "artifact_field_rootpath_seed_compass",
+    "artifact_redline_survey_dial": "artifact_field_redline_survey_dial",
+    "artifact_drowned_star_astrolabe": "artifact_field_drowned_star_astrolabe"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",
