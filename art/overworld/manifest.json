@@ -5505,6 +5505,86 @@
       "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
       "assigned_resource_site_id": "site_frost_tithe_cellar", "presentation_role": "opened_claimed_state", "accessible_description": "The Frost Tithe Cellar hatch stands open around an orderly blue-lit muster alcove."
     },
+    "resource_site_neutral_orchard_levy_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/orchard_levy_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_orchard_levy", "presentation_role": "controlled_muster_state", "accessible_description": "The Orchard Levy storehouse stands open beneath laden boughs, ordered levy pikes, packed fruit stores, working lanterns, and teal claim pennants."
+    },
+    "resource_site_neutral_bramble_hedge_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/bramble_hedge_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_bramble_hedge", "presentation_role": "controlled_muster_state", "accessible_description": "The Bramble Hedge passage stands trimmed and open beside ordered bows, quivers, field packs, a warm lantern, and teal claim ribbons."
+    },
+    "resource_site_neutral_tidepool_skiffyard_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/tidepool_skiffyard_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_tidepool_skiffyard", "presentation_role": "controlled_muster_state", "accessible_description": "The Tidepool skiff rests ready beside ordered oars, nets, rope, supply boxes, a bright pier lantern, and teal signal sails."
+    },
+    "resource_site_neutral_switchback_hostel_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/switchback_hostel_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_switchback_hostel", "presentation_role": "controlled_muster_state", "accessible_description": "The Switchback Hostel glows with open access, bright windows, ordered pikes, shields, travel packs, and teal route pennants."
+    },
+    "resource_site_neutral_saltpan_camp_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/saltpan_camp_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_saltpan_camp", "presentation_role": "controlled_muster_state", "accessible_description": "The Saltpan Camp holds worked trays, filled sacks, ordered bucklers and throwing spears beneath a clean teal-and-ivory canopy."
+    },
+    "resource_site_neutral_crystal_sump_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/crystal_sump_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_crystal_sump", "presentation_role": "controlled_muster_state", "accessible_description": "The Crystal Sump shines around a secured lifting bucket, ordered stone shields and dart cases, and a teal claim ribbon."
+    },
+    "resource_site_neutral_icehook_trapper_lodge_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/icehook_trapper_lodge_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_icehook_trapper_lodge", "presentation_role": "controlled_muster_state", "accessible_description": "The Icehook Lodge door stands warm and open beside cleared steps, ordered hooks, traps, pikes, winter packs, and teal claim cloth."
+    },
+    "resource_site_neutral_obsidian_scar_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [336, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/obsidian_scar_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_obsidian_scar", "presentation_role": "controlled_muster_state", "accessible_description": "The Obsidian Scar burns steadily behind an open chain, ordered black shields, ash darts, travel packs, and teal claim pennants."
+    },
+    "resource_site_neutral_harbor_pilot_house_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [384, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/harbor_pilot_house_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_harbor_pilot_house", "presentation_role": "controlled_muster_state", "accessible_description": "The Harbor Pilot House and mast glow beside ordered polearms, oars, flare crates, coiled rope, and teal signal cloth."
+    },
+    "resource_site_neutral_kite_signal_eyrie_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [432, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/kite_signal_eyrie_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_kite_signal_eyrie", "presentation_role": "controlled_muster_state", "accessible_description": "The Kite Signal Eyrie holds taut lines, a bright signal fire, ordered ridge bows, route packs, and teal claim pennants."
+    },
+    "resource_site_neutral_lantern_warren_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [480, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/lantern_warren_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_lantern_warren", "presentation_role": "controlled_muster_state", "accessible_description": "The Lantern Warren opens under bright lamps beside ordered packs, needle cases, small shields, and teal claim ribbons."
+    },
+    "resource_site_neutral_bogbell_croft_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [528, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/bogbell_croft_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_bogbell_croft", "presentation_role": "controlled_muster_state", "accessible_description": "The Bogbell Croft has cleared steps, a lit bell and lamps, ordered mauls, peat jars, packs, and teal claim ribbons."
+    },
+    "resource_site_neutral_milestone_arsenal_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [576, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/milestone_arsenal_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_milestone_arsenal", "presentation_role": "controlled_muster_state", "accessible_description": "The Milestone Arsenal stands open around ready bucklers, pikes, cartbows, bolt crates, field packs, and a teal claim pennant."
+    },
+    "resource_site_neutral_frostwharf_house_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [624, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/frostwharf_house_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_frostwharf_house", "presentation_role": "controlled_muster_state", "accessible_description": "The Frostwharf House glows above a cleared landing with ordered cutters, lanternskate cases, rope, winter packs, and teal claim cloth."
+    },
+    "resource_site_neutral_charcoal_burners_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [672, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/charcoal_burners_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_charcoal_burners", "presentation_role": "controlled_muster_state", "accessible_description": "The Charcoal Burners clamp vents steady smoke beside ordered sacks, mauls, ember packs, tools, and a teal claim pennant."
+    },
+    "resource_site_neutral_basalt_gatehouse_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [720, 0, 48, 48], "atlas_size": [768, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/basalt_gatehouse_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_basalt_gatehouse", "presentation_role": "controlled_muster_state", "accessible_description": "The Basalt Gatehouse stands open beneath bright cyan markers, ready pikes, bolt cases, shields, packs, and teal claim banners."
+    },
     "resource_site_neutral_roadward_lodge_claimed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [384, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/roadward_lodge_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
@@ -6145,31 +6225,38 @@
       "fit": "Exact original steep-roof crystal beacon shelter for the persistent Frostbeacon Bothy neutral dwelling identity."
     },
     "site_bramble_hedge": {
-      "asset_id": "resource_site_neutral_bramble_hedge",
+      "asset_id": "resource_site_neutral_bramble_hedge_claimed",
+      "unclaimed_asset_id": "mapobj_bramble_hedge",
       "fit": "Exact original thorn-arch watch-croft landmark for the persistent Bramble Hedge neutral dwelling identity."
     },
     "site_tidepool_skiffyard": {
-      "asset_id": "resource_site_neutral_tidepool_skiffyard",
+      "asset_id": "resource_site_neutral_tidepool_skiffyard_claimed",
+      "unclaimed_asset_id": "mapobj_tidepool_skiffyard",
       "fit": "Exact original drydock skiff and lantern-net yard for the persistent Tidepool Skiffyard neutral dwelling identity."
     },
     "site_switchback_hostel": {
-      "asset_id": "resource_site_neutral_switchback_hostel",
+      "asset_id": "resource_site_neutral_switchback_hostel_claimed",
+      "unclaimed_asset_id": "mapobj_switchback_hostel",
       "fit": "Exact original stepped mountain hostel and zigzag stair for the persistent Switchback Hostel neutral dwelling identity."
     },
     "site_saltpan_camp": {
-      "asset_id": "resource_site_neutral_saltpan_camp",
+      "asset_id": "resource_site_neutral_saltpan_camp_claimed",
+      "unclaimed_asset_id": "mapobj_saltpan_camp",
       "fit": "Exact original striped awning and evaporation trays for the persistent Saltpan Camp neutral dwelling identity."
     },
     "site_crystal_sump": {
-      "asset_id": "resource_site_neutral_crystal_sump",
+      "asset_id": "resource_site_neutral_crystal_sump_claimed",
+      "unclaimed_asset_id": "mapobj_crystal_sump",
       "fit": "Exact original three-spire crystal well station for the persistent Crystal Sump neutral dwelling identity."
     },
     "site_icehook_trapper_lodge": {
-      "asset_id": "resource_site_neutral_icehook_trapper_lodge",
+      "asset_id": "resource_site_neutral_icehook_trapper_lodge_claimed",
+      "unclaimed_asset_id": "mapobj_icehook_trapper_lodge",
       "fit": "Exact original crescent-hook snow lodge for the persistent Icehook Trapper Lodge neutral dwelling identity."
     },
     "site_obsidian_scar": {
-      "asset_id": "resource_site_neutral_obsidian_scar",
+      "asset_id": "resource_site_neutral_obsidian_scar_claimed",
+      "unclaimed_asset_id": "mapobj_obsidian_scar",
       "fit": "Exact original triple-obsidian forge arch for the persistent Obsidian Scar neutral dwelling identity."
     },
     "site_waystone_cache": {
@@ -6194,7 +6281,8 @@
       "fit": "Best-effort lodge/yard dwelling match for the River Pass faction-linked site."
     },
     "site_orchard_levy": {
-      "asset_id": "resource_site_neutral_orchard_levy",
+      "asset_id": "resource_site_neutral_orchard_levy_claimed",
+      "unclaimed_asset_id": "mapobj_orchard_levy",
       "fit": "Exact original fruit-bough levy yard for the controlled Orchard Levy Grounds neutral dwelling identity."
     },
     "site_fenhound_kennels": {
@@ -6208,7 +6296,8 @@
       "fit": "Exact original twin-spire aviary for the controlled Cliffhawk Roost neutral dwelling identity."
     },
     "site_kite_signal_eyrie": {
-      "asset_id": "resource_site_neutral_kite_signal_eyrie",
+      "asset_id": "resource_site_neutral_kite_signal_eyrie_claimed",
+      "unclaimed_asset_id": "mapobj_kite_signal_eyrie",
       "fit": "Exact original diamond-kite signal station for the controlled Kite Signal Eyrie neutral dwelling identity."
     },
     "site_greenbranch_copse": {
@@ -6216,31 +6305,38 @@
       "fit": "Exact original living-tree copse lodge for the controlled Greenbranch Copse neutral dwelling identity."
     },
     "site_harbor_pilot_house": {
-      "asset_id": "resource_site_neutral_harbor_pilot_house",
+      "asset_id": "resource_site_neutral_harbor_pilot_house_claimed",
+      "unclaimed_asset_id": "mapobj_harbor_pilot_house",
       "fit": "Exact original narrow signal tower house for the controlled Harbor Pilot House neutral dwelling identity."
     },
     "site_lantern_warren": {
-      "asset_id": "resource_site_neutral_lantern_warren",
+      "asset_id": "resource_site_neutral_lantern_warren_claimed",
+      "unclaimed_asset_id": "mapobj_lantern_warren",
       "fit": "Exact original three-mouth lantern burrow for the controlled Lantern Warren neutral dwelling identity."
     },
     "site_bogbell_croft": {
-      "asset_id": "resource_site_neutral_bogbell_croft",
+      "asset_id": "resource_site_neutral_bogbell_croft_claimed",
+      "unclaimed_asset_id": "mapobj_bogbell_croft",
       "fit": "Exact original giant-bell stilt croft for the controlled Bogbell Croft neutral dwelling identity."
     },
     "site_milestone_arsenal": {
-      "asset_id": "resource_site_neutral_milestone_arsenal",
+      "asset_id": "resource_site_neutral_milestone_arsenal_claimed",
+      "unclaimed_asset_id": "mapobj_milestone_arsenal",
       "fit": "Exact original obelisk arsenal and buckler yard for the controlled Milestone Arsenal neutral dwelling identity."
     },
     "site_frostwharf_house": {
-      "asset_id": "resource_site_neutral_frostwharf_house",
+      "asset_id": "resource_site_neutral_frostwharf_house_claimed",
+      "unclaimed_asset_id": "mapobj_frostwharf_house",
       "fit": "Exact original crescent-cutter pile house for the controlled Frostwharf House neutral dwelling identity."
     },
     "site_charcoal_burners": {
-      "asset_id": "resource_site_neutral_charcoal_burners",
+      "asset_id": "resource_site_neutral_charcoal_burners_claimed",
+      "unclaimed_asset_id": "mapobj_charcoal_burners",
       "fit": "Exact original three-vent charcoal clamp for the controlled Charcoal Burners Camp neutral dwelling identity."
     },
     "site_basalt_gatehouse": {
-      "asset_id": "resource_site_neutral_basalt_gatehouse",
+      "asset_id": "resource_site_neutral_basalt_gatehouse_claimed",
+      "unclaimed_asset_id": "mapobj_basalt_gatehouse",
       "fit": "Exact original twin-tower basalt gate for the controlled Basalt Gatehouse neutral dwelling identity."
     },
     "site_wayfarer_infirmary": {

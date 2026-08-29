@@ -27,19 +27,19 @@ func _ready() -> void:
 
 
 func _run() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir()))
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
 	add_child(view)
 	await get_tree().process_frame
-	for case_value in CASES:
-		print("%s CASE_START %s" % [REPORT_ID, String(case_value.get("site_id", ""))])
+	for case_value in _cases():
+		print("%s CASE_START %s" % [_report_id(), String(case_value.get("site_id", ""))])
 		await _validate_case(view, case_value)
-		print("%s CASE_DONE %s" % [REPORT_ID, String(case_value.get("site_id", ""))])
-	var report := {"ok":_errors.is_empty(),"case_count":CASES.size(),"atlas_path":ATLAS_PATH,"save_version":SessionStateStoreScript.SAVE_VERSION,"rows":_rows,"errors":_errors}
-	_write_json("%s/report.json" % OUTPUT_DIR, report)
+		print("%s CASE_DONE %s" % [_report_id(), String(case_value.get("site_id", ""))])
+	var report := {"ok":_errors.is_empty(),"case_count":_cases().size(),"atlas_path":_atlas_path(),"save_version":SessionStateStoreScript.SAVE_VERSION,"rows":_rows,"errors":_errors}
+	_write_json("%s/report.json" % _output_dir(), report)
 	if _errors.is_empty():
-		print("%s %s" % [REPORT_ID, JSON.stringify({"ok":true,"case_count":CASES.size(),"save_version":SessionStateStoreScript.SAVE_VERSION})])
+		print("%s %s" % [_report_id(), JSON.stringify({"ok":true,"case_count":_cases().size(),"save_version":SessionStateStoreScript.SAVE_VERSION})])
 	view.queue_free()
 	await get_tree().process_frame
 	get_tree().quit(0 if _errors.is_empty() else 1)
@@ -92,7 +92,7 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var claimed_asset_id := String(view.call("_resource_asset_id", claimed_node))
 	var texture = view.call("_object_texture_for_asset", claimed_asset_id)
 	_expect(claimed_asset_id == String(case.get("claimed", "")), "%s did not switch to its exact controlled-state landmark." % site_id)
-	_expect(texture is AtlasTexture and texture.atlas.resource_path == ATLAS_PATH and texture.region == case.get("region"), "%s did not resolve its exact atlas region." % site_id)
+	_expect(texture is AtlasTexture and texture.atlas.resource_path == _atlas_path() and texture.region == case.get("region"), "%s did not resolve its exact atlas region." % site_id)
 
 	var town_recruits_before := _town_recruit_counts(session, weekly_recruits.keys())
 	var muster_messages := OverworldRules.apply_controlled_resource_site_musters(session, "player")
@@ -213,7 +213,7 @@ func _clone_session(source: SessionStateStoreScript.SessionData) -> SessionState
 
 
 func _capture_if_requested(stem: String) -> String:
-	var capture_dir := OS.get_environment("NEUTRAL_DWELLING_CAPTURE_DIR")
+	var capture_dir := OS.get_environment(_capture_environment_name())
 	if capture_dir == "":
 		return ""
 	await get_tree().process_frame
@@ -223,6 +223,26 @@ func _capture_if_requested(stem: String) -> String:
 	var image := get_viewport().get_texture().get_image()
 	_expect(image != null and not image.is_empty() and image.save_png(path) == OK, "%s capture failed." % stem)
 	return path
+
+
+func _report_id() -> String:
+	return REPORT_ID
+
+
+func _output_dir() -> String:
+	return OUTPUT_DIR
+
+
+func _atlas_path() -> String:
+	return ATLAS_PATH
+
+
+func _capture_environment_name() -> String:
+	return "NEUTRAL_DWELLING_CAPTURE_DIR"
+
+
+func _cases() -> Array:
+	return CASES
 
 
 func _expect(condition: bool, message: String) -> void:
