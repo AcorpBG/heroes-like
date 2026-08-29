@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the next highest-impact live content or distinctive-art gap and register a bounded implementation slice before editing it."
+    "Audit and register the next highest-impact live original-content or art gap without weakening the release package ceiling."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed eight original battle field-objective landmarks wired to all 53 authored objective instances through the live battle board.",
+  "currentNotes": "Completed ten original live battle status-effect badges with exact package coverage and no combat, authority, or save-schema change.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-battle-field-objective-landmarks-10184",
-  "currentSliceId": "content-battle-field-objective-landmarks-10184",
-  "currentSliceNotes": "Completed eight byte-distinct original transparent 128x128 field-objective landmarks with exact immutable type-to-art provenance, non-color descriptions, bounded cached battle-board loading, type-distinct silhouettes, player/enemy/neutral control shapes, retained progress pips, and fail-closed legacy geometry. All 53 authored objectives across 63 encounters resolve exact landmarks; inspected 1280x720 and 1920x1080 captures, focused runtime, repository validation, and the battle layout routing/save-resume sweep pass. Linux and Windows packages boot with eight exact compiled textures, source art excluded, save version 9 unchanged, and a 249595844-byte PCK below the unchanged 250000000-byte ceiling. No whole-game or release-ready claim.",
+  "currentSlice": "content-battle-status-effect-badges-10184",
+  "currentSliceId": "content-battle-status-effect-badges-10184",
+  "currentSliceNotes": "Completed ten byte-distinct original transparent 64x64 badges for every live combat status. The battle board filters expiry, deduplicates exact ids, orders by expiry then id, caps visible badges at two with overflow, distinguishes harmful and beneficial effects through non-color foundation shapes, retains authoritative focus text, caches imports and missing paths, and falls back to exact procedural marks. Focused runtime, repository, 429-second battle layout/save-resume, inspected capture, and Linux/Windows package validation pass; both packages boot with ten exact compiled textures, source art excluded, save version 9 unchanged, and a 249694476-byte PCK below the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content battle field objective landmarks 10184",
-  "currentSliceUpdatedAt": "2026-08-29T05:43:47Z",
+  "currentSliceTitle": "content battle status effect badges 10184",
+  "currentSliceUpdatedAt": "2026-08-29T06:43:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105282,6 +105282,16 @@
       "startedAt": "2026-08-29T05:10:27Z",
       "notes": "Completed eight byte-distinct original transparent 128x128 battlefield landmarks for cover line, obstruction line, lane battery, hazard zone, breach point, ritual pylon, signal beacon, and supply post. The live board uses immutable manifest ownership, bounded texture and missing-path caches, type-distinct silhouettes, player/enemy/neutral diamond/triangle/square control badges, retained progress pips, and legacy geometry fallback. Exact all-53 authored coverage, save version 9, session authority, inspected 1280x720 and 1920x1080 captures, focused runtime, repository validation, and the battle layout routing/save-resume sweep pass. Linux and Windows packages boot with eight exact compiled textures, source art excluded, and a 249595844-byte PCK below the unchanged 250000000-byte ceiling. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T05:43:47Z"
+    },
+    {
+      "id": "content-battle-status-effect-badges-10184",
+      "title": "content battle status effect badges 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T06:43:23Z",
+      "startedAt": "2026-08-29T05:49:26Z",
+      "notes": "Completed ten byte-distinct original transparent 64x64 badges for harried, mire-harried, staggered, rooted, fogbound, obituary-marked, overheated, rivet-exposed, flare-revealed, and readiness-prepared. The live battle board filters expired effects, deduplicates exact ids, orders by expiry then id, caps visible badges at two with overflow, uses broken-diamond versus upward-pentagon non-color polarity foundations, retains authoritative label-and-duration focus text, caches imports and missing paths, and fails closed to exact procedural marks. Focused runtime, repository, 429-second battle layout/save-resume, and inspected capture validation pass. Linux and Windows packages boot with ten exact compiled textures, source art excluded, save version 9 unchanged, and a 249694476-byte PCK below the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T06:43:23Z"
     }
   ],
   "project": "heroes-like",
@@ -105291,8 +105301,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 60 production heroes have exact adventure-map identities, all 38 faction-authored encounters resolve six faction field-command landmarks, all six playable campaign arcs own distinct live browser identity art, and all 53 authored battle field objectives resolve eight type-distinct landmarks. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit and register the next highest-impact bounded live content or distinctive-art slice while preserving the strict release package ceiling; broader product gaps remain.",
+  "remainingGap": "All 60 production heroes have exact adventure-map identities, all 38 faction-authored encounters resolve six faction field-command landmarks, all six playable campaign arcs own distinct live browser identity art, all 53 authored battle field objectives resolve eight type-distinct landmarks, and all ten live combat statuses now resolve persistent stack-token badges. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and register the next bounded live original-content or art slice while preserving the remaining 305524-byte strict release-package headroom; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

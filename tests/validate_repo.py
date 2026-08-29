@@ -48798,6 +48798,138 @@ def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
             ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing battle field-objective identity {stem}")
 
 
+def validate_battle_status_effect_badges(errors: list[str]) -> None:
+    manifest_path = CONTENT_DIR / "battle_status_effect_art_manifest.json"
+    unit_path = CONTENT_DIR / "units.json"
+    spell_path = CONTENT_DIR / "spells.json"
+    board_path = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
+    battle_rules_path = ROOT / "scripts" / "core" / "BattleRules.gd"
+    report_script_path = ROOT / "tests" / "battle_status_effect_badge_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "battle_status_effect_badge_runtime_report.tscn"
+    required_paths = (manifest_path, unit_path, spell_path, board_path, battle_rules_path, report_script_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing battle status-effect badge owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    expected = {
+        "status_harried": ("status_harried_hooked_pennant", "diagonal_hooked_pennant", "harmful", "H", "e189367b9a941bc274e23b469838241a6d4063e966ec0112a226d643e8eaf223", "72caf970295a43f5619c46afac33961fca190ab0b916d46b5d36784a4f5c8b14"),
+        "status_mire_harried": ("status_mire_harried_reedjaw_track", "round_reedjaw_track", "harmful", "M", "bb082a4e1cd10a8d076aeb901df913cd70532d40f0da9c7fa08b1624c65e8ff9", "2b0a55a6fe4d4d6d515c98271cf0721fb6c221ad2f569509cc8d4d110ae7388b"),
+        "status_staggered": ("status_staggered_dented_helm", "tilted_helm_splinters", "harmful", "S", "23928c497196b8152df7d578f0d108ea331a17efad3d54e3220ba2d4154b6687", "2b446351164fbc5aa63c7a3a9d6bccf330150072f959c836f989b2bc5505e263"),
+        "status_rooted": ("status_rooted_thornbound_boot", "thornbound_boot", "harmful", "R", "c2d404685a91c9af62d948d8b5fb1669e547c15e85188816f534b5ae3246b29c", "7dd4f5e35325082eaaf59464a3d00ab064996c29131b6c382ece28a4ceb91baf"),
+        "status_fogbound": ("status_fogbound_mist_lantern", "mist_wrapped_lantern", "harmful", "F", "c7146b23806c915cba7b43099c66bf2ff4d2ba72e6463dddd9bca46a88525be5", "bd84bd155962e3e4d67ec1916954454588c56d1a28cab0b4771418d9f1f8330e"),
+        "status_obituary_marked": ("status_obituary_marked_mourning_bell", "mourning_bell_ribbon", "harmful", "O", "27ab5957455cafbe7481891fc41fca23f4242a674cccef11506c6bc428ba7230", "c0b51e7963fcdce58f80bc57f98f4c8e5ce2e0a6cfe857e8a9f528f37824c8b8"),
+        "status_overheated": ("status_overheated_vent_plate", "vented_furnace_plate", "harmful", "V", "5ea4e78d2566ba8cbcace004a53fb2dc54465cdd21bc8696b16a58bc120bdf43", "fed43c4101cff97200f54551864564b47c0a5629f5376f0c40b2694a7f995279"),
+        "status_rivet_exposed": ("status_rivet_exposed_broken_seam", "split_plate_flying_rivet", "harmful", "E", "0a59590625aac47d74518992514dfe1573814fe25fe4aceb7eb6195bd0de5208", "5cdcc7e52ee98207c1f558007d5884ab49dd5cadc3875edda931b4360fd45951"),
+        "status_flare_revealed": ("status_flare_revealed_open_shutter", "open_shutters_flare", "harmful", "L", "b9c0cdf0fce3f6a6f86cc7c8a72f8dd7672a2c123f8077ceef60131798bdc075", "4373e7a124b990d3b3bfedac6ac708ca1e7eed3b159f1eb7af63f70b74dc4e16"),
+        "status_readiness_prepared": ("status_readiness_prepared_command_writ", "upright_braced_writ", "beneficial", "P", "80ef8912cfd97280b962e07e3011b599b431b57363ede8f4127a389cc1596f85", "76e9c9aa7d78dc0f8d2c046a67e2c2d6217550c23d69e1531f8ecbf8cd7a6d39"),
+    }
+    manifest = load_json(manifest_path)
+    ensure(manifest.get("schema_id") == "battle_status_effect_art_manifest_v1", errors, "Battle status-effect art manifest must retain its production schema")
+    ensure(manifest.get("source_model") == "built_in_image_gen_original_battle_status_effect_badge", errors, "Battle status-effect badges must retain built-in image-generation provenance")
+    ensure(manifest.get("runtime_canvas") == {"width": 64, "height": 64}, errors, "Battle status-effect badges must retain their compact 64x64 runtime canvas")
+    ensure(manifest.get("presentation_model") == "compact_imported_status_badges_with_non_color_polarity_foundation_and_procedural_mark_fallback", errors, "Battle status-effect badge presentation model changed")
+    ensure(manifest.get("render") == {"icon_size_factor": 0.42, "icon_size_min": 14.0, "icon_size_max": 18.0, "max_visible_badges": 2, "texture_alpha": 0.98}, errors, "Battle status-effect badge render bounds changed")
+    ensure(manifest.get("polarity_foundations") == {"harmful": "broken_diamond", "beneficial": "upward_pentagon"}, errors, "Battle status polarity must remain identifiable without color")
+    statuses = manifest.get("statuses", {})
+    ensure(isinstance(statuses, dict) and set(statuses) == set(expected), errors, "Battle status-effect art must cover exactly the ten live authored statuses")
+    source_payloads: list[bytes] = []
+    runtime_payloads: list[bytes] = []
+    if isinstance(statuses, dict):
+        for status_id, (stem, silhouette, polarity, fallback_mark, source_sha, runtime_sha) in expected.items():
+            entry = statuses.get(status_id, {})
+            ensure(isinstance(entry, dict), errors, f"Missing battle status-effect art entry {status_id}")
+            if not isinstance(entry, dict):
+                continue
+            source_res = f"res://art/battle/source/generated/status_effects/{stem}_source.png"
+            runtime_res = f"res://art/battle/runtime/status_effects/{stem}.png"
+            ensure(entry.get("id") == f"battle_{stem}", errors, f"Battle status-effect {status_id} must retain exact art identity")
+            ensure(entry.get("source_path") == source_res and entry.get("path") == runtime_res, errors, f"Battle status-effect {status_id} must retain exact source/runtime ownership")
+            ensure(entry.get("silhouette") == silhouette and bool(str(entry.get("alt_text", "")).strip()), errors, f"Battle status-effect {status_id} must retain distinct silhouette and alt text")
+            ensure(entry.get("polarity") == polarity and entry.get("fallback_mark") == fallback_mark, errors, f"Battle status-effect {status_id} must retain polarity and fallback identity")
+            ensure(entry.get("source_sha256") == source_sha and entry.get("runtime_sha256") == runtime_sha, errors, f"Battle status-effect {status_id} manifest digests changed")
+            source_path = res_path_to_disk(source_res)
+            runtime_path = res_path_to_disk(runtime_res)
+            source_size = png_size(source_path) if source_path.is_file() else None
+            ensure(source_path.is_file() and source_size is not None and min(source_size) >= 1024, errors, f"Battle status-effect {status_id} is missing its high-resolution generated source")
+            ensure(runtime_path.is_file() and png_size(runtime_path) == (64, 64), errors, f"Battle status-effect {status_id} must retain its compact runtime badge")
+            ensure(Path(f"{runtime_path}.import").is_file(), errors, f"Battle status-effect {status_id} is missing runtime Godot import metadata")
+            if source_path.is_file():
+                payload = source_path.read_bytes()
+                ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Battle status-effect {status_id} generated-source bytes or alpha changed")
+                source_payloads.append(payload)
+            if runtime_path.is_file():
+                payload = runtime_path.read_bytes()
+                ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Battle status-effect {status_id} runtime bytes or alpha changed")
+                runtime_payloads.append(payload)
+    ensure(len(source_payloads) == 10 and len(set(source_payloads)) == 10, errors, "All ten battle status-effect generated sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 10 and len(set(runtime_payloads)) == 10, errors, "All ten battle status-effect runtime badges must remain byte-distinct")
+
+    def status_strings(value: object) -> set[str]:
+        found: set[str] = set()
+        if isinstance(value, dict):
+            for child in value.values():
+                found.update(status_strings(child))
+        elif isinstance(value, list):
+            for child in value:
+                found.update(status_strings(child))
+        elif isinstance(value, str) and value.startswith("status_"):
+            found.add(value)
+        return found
+
+    live_unit_statuses = status_strings(load_json(unit_path))
+    live_spell_statuses = status_strings(load_json(spell_path))
+    ensure(live_unit_statuses == set(expected), errors, "Battle status-effect badge coverage must exactly match all ten unit-authored live statuses")
+    ensure(live_spell_statuses == {"status_harried", "status_rooted", "status_staggered"}, errors, "Battle spell status identity changed outside the mapped live status set")
+    battle_rules_text = battle_rules_path.read_text(encoding="utf-8")
+    ensure('var effect_summary = SpellRulesScript.effect_summary(stack, battle)' in battle_rules_text and 'lines.append("Effects: %s"' in battle_rules_text, errors, "Battle stack focus must retain authoritative effect labels and durations")
+
+    board_text = board_path.read_text(encoding="utf-8")
+    for token in (
+        'const BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH := "res://content/battle_status_effect_art_manifest.json"',
+        'const BATTLE_STATUS_EFFECT_ART_PRESENTATION_MODEL := "compact_imported_status_badges_with_non_color_polarity_foundation_and_procedural_mark_fallback"',
+        "func validation_battle_status_effect_art_summary()", "func validation_battle_status_effect_art_profile(",
+        "func validation_stack_status_effect_badges(", "func _active_mapped_status_effects(",
+        'var current_round := int(_battle.get("round", 1))', 'expires_after_round < current_round',
+        'return String(left.get("effect_id", "")) < String(right.get("effect_id", ""))',
+        "func _draw_stack_status_effect_badges(", "func _draw_status_effect_polarity_foundation(",
+        'foundation == "upward_pentagon"', '"broken_diamond"', '"+%d" % overflow_count',
+        '"focus_authority": "BattleRules_stack_focus_summary_effects"',
+    ):
+        ensure(token in board_text, errors, f"Battle status-effect badge runtime is missing production ownership: {token}")
+    draw_start = board_text.find("func _draw_stack_tokens")
+    draw_end = board_text.find("\nfunc ", draw_start + 1)
+    draw_block = board_text[draw_start:draw_end]
+    draw_order = [draw_block.find(token) for token in ("_draw_stack_side_cue", "_draw_stack_status_effect_badges", "_draw_stack_health_bar", "_draw_count_badge", "_draw_stack_caption")]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Battle stack draw order must retain side cue, status badges, health, count, and caption")
+    badge_start = board_text.find("func _draw_stack_status_effect_badges")
+    badge_end = board_text.find("\nfunc ", badge_start + 1)
+    badge_block = board_text[badge_start:badge_end]
+    for forbidden in ("SessionStateStore.SAVE_VERSION =", "BattleRulesScript.", "_session.", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in badge_block, errors, f"Battle status-effect badge drawing must remain presentation-only: {forbidden}")
+
+    report_text = report_script_path.read_text(encoding="utf-8")
+    report_scene = report_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, report_scene_path.name, [("BattleStatusEffectBadgeRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"status_readiness_prepared": "res://art/battle/runtime/status_effects/status_readiness_prepared_command_writ.png"',
+        '"expired_effect_filtered":', '"deterministic_order_exact":', '"missing_asset_fails_closed": missing_fails_closed',
+        '"remaining_identities_exact": remaining_identities_exact', '"set_c_remaining"',
+        '"session_authority_exact": authority_exact', "SessionStateStore.SAVE_VERSION == 9",
+        'OS.get_environment("BATTLE_STATUS_EFFECT_CAPTURE")', 'await get_tree().process_frame',
+        'print("BATTLE_STATUS_EFFECT_BADGE_RUNTIME_REPORT',
+    ):
+        ensure(token in report_text, errors, f"Battle status-effect focused report is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_BATTLE_STATUS_EFFECT_BADGE_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_BATTLE_STATUS_EFFECT_BADGE_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all ten battle status-effect badges")
+        ensure('bool(terrain_payload["battle_status_effect_badge_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when battle status-effect badges are absent")
+        ensure('"battle_status_effect_badge_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged battle status-effect coverage")
+        for stem, _silhouette, _polarity, _mark, _source_sha, _runtime_sha in expected.values():
+            ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing battle status-effect identity {stem}")
+
+
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -72752,6 +72884,7 @@ def main() -> int:
     validate_faction_encounter_landmarks(errors)
     validate_campaign_arc_emblems(errors)
     validate_battle_field_objective_landmarks(errors)
+    validate_battle_status_effect_badges(errors)
     validate_overworld_enemy_commander_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)

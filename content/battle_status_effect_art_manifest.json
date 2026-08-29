@@ -1,0 +1,129 @@
+{
+  "schema_id": "battle_status_effect_art_manifest_v1",
+  "source_model": "built_in_image_gen_original_battle_status_effect_badge",
+  "runtime_canvas": {"width": 64, "height": 64},
+  "presentation_model": "compact_imported_status_badges_with_non_color_polarity_foundation_and_procedural_mark_fallback",
+  "render": {
+    "icon_size_factor": 0.42,
+    "icon_size_min": 14.0,
+    "icon_size_max": 18.0,
+    "max_visible_badges": 2,
+    "texture_alpha": 0.98
+  },
+  "polarity_foundations": {
+    "harmful": "broken_diamond",
+    "beneficial": "upward_pentagon"
+  },
+  "statuses": {
+    "status_harried": {
+      "id": "battle_status_harried_hooked_pennant",
+      "path": "res://art/battle/runtime/status_effects/status_harried_hooked_pennant.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_harried_hooked_pennant_source.png",
+      "alt_text": "A hooked pursuit arrow tears through a weathered field pennant.",
+      "silhouette": "diagonal_hooked_pennant",
+      "polarity": "harmful",
+      "fallback_mark": "H",
+      "source_sha256": "e189367b9a941bc274e23b469838241a6d4063e966ec0112a226d643e8eaf223",
+      "runtime_sha256": "72caf970295a43f5619c46afac33961fca190ab0b916d46b5d36784a4f5c8b14"
+    },
+    "status_mire_harried": {
+      "id": "battle_status_mire_harried_reedjaw_track",
+      "path": "res://art/battle/runtime/status_effects/status_mire_harried_reedjaw_track.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_mire_harried_reedjaw_track_source.png",
+      "alt_text": "Bound bog-reed jaws close around a mud-stamped webbed track.",
+      "silhouette": "round_reedjaw_track",
+      "polarity": "harmful",
+      "fallback_mark": "M",
+      "source_sha256": "bb082a4e1cd10a8d076aeb901df913cd70532d40f0da9c7fa08b1624c65e8ff9",
+      "runtime_sha256": "2b0a55a6fe4d4d6d515c98271cf0721fb6c221ad2f569509cc8d4d110ae7388b"
+    },
+    "status_staggered": {
+      "id": "battle_status_staggered_dented_helm",
+      "path": "res://art/battle/runtime/status_effects/status_staggered_dented_helm.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_staggered_dented_helm_source.png",
+      "alt_text": "A dented bronze levy helmet tips beneath three offset impact splinters.",
+      "silhouette": "tilted_helm_splinters",
+      "polarity": "harmful",
+      "fallback_mark": "S",
+      "source_sha256": "23928c497196b8152df7d578f0d108ea331a17efad3d54e3220ba2d4154b6687",
+      "runtime_sha256": "2b446351164fbc5aa63c7a3a9d6bccf330150072f959c836f989b2bc5505e263"
+    },
+    "status_rooted": {
+      "id": "battle_status_rooted_thornbound_boot",
+      "path": "res://art/battle/runtime/status_effects/status_rooted_thornbound_boot.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_rooted_thornbound_boot_source.png",
+      "alt_text": "Hooked living roots knot around a rugged frontier boot.",
+      "silhouette": "thornbound_boot",
+      "polarity": "harmful",
+      "fallback_mark": "R",
+      "source_sha256": "c2d404685a91c9af62d948d8b5fb1669e547c15e85188816f534b5ae3246b29c",
+      "runtime_sha256": "7dd4f5e35325082eaaf59464a3d00ab064996c29131b6c382ece28a4ceb91baf"
+    },
+    "status_fogbound": {
+      "id": "battle_status_fogbound_mist_lantern",
+      "path": "res://art/battle/runtime/status_effects/status_fogbound_mist_lantern.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_fogbound_mist_lantern_source.png",
+      "alt_text": "A hooded signal lantern is swallowed by two curls of pale marsh mist.",
+      "silhouette": "mist_wrapped_lantern",
+      "polarity": "harmful",
+      "fallback_mark": "F",
+      "source_sha256": "c7146b23806c915cba7b43099c66bf2ff4d2ba72e6463dddd9bca46a88525be5",
+      "runtime_sha256": "bd84bd155962e3e4d67ec1916954454588c56d1a28cab0b4771418d9f1f8330e"
+    },
+    "status_obituary_marked": {
+      "id": "battle_status_obituary_marked_mourning_bell",
+      "path": "res://art/battle/runtime/status_effects/status_obituary_marked_mourning_bell.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_obituary_marked_mourning_bell_source.png",
+      "alt_text": "A cracked iron remembrance bell hangs beneath torn mourning cloth and three wax drops.",
+      "silhouette": "mourning_bell_ribbon",
+      "polarity": "harmful",
+      "fallback_mark": "O",
+      "source_sha256": "27ab5957455cafbe7481891fc41fca23f4242a674cccef11506c6bc428ba7230",
+      "runtime_sha256": "c0b51e7963fcdce58f80bc57f98f4c8e5ce2e0a6cfe857e8a9f528f37824c8b8"
+    },
+    "status_overheated": {
+      "id": "battle_status_overheated_vent_plate",
+      "path": "res://art/battle/runtime/status_effects/status_overheated_vent_plate.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_overheated_vent_plate_source.png",
+      "alt_text": "A riveted furnace plate splits around three glowing vents and two steam jets.",
+      "silhouette": "vented_furnace_plate",
+      "polarity": "harmful",
+      "fallback_mark": "V",
+      "source_sha256": "5ea4e78d2566ba8cbcace004a53fb2dc54465cdd21bc8696b16a58bc120bdf43",
+      "runtime_sha256": "fed43c4101cff97200f54551864564b47c0a5629f5376f0c40b2694a7f995279"
+    },
+    "status_rivet_exposed": {
+      "id": "battle_status_rivet_exposed_broken_seam",
+      "path": "res://art/battle/runtime/status_effects/status_rivet_exposed_broken_seam.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_rivet_exposed_broken_seam_source.png",
+      "alt_text": "Two armor plates split apart around an empty hole and one flying brass rivet.",
+      "silhouette": "split_plate_flying_rivet",
+      "polarity": "harmful",
+      "fallback_mark": "E",
+      "source_sha256": "0a59590625aac47d74518992514dfe1573814fe25fe4aceb7eb6195bd0de5208",
+      "runtime_sha256": "5cdcc7e52ee98207c1f558007d5884ab49dd5cadc3875edda931b4360fd45951"
+    },
+    "status_flare_revealed": {
+      "id": "battle_status_flare_revealed_open_shutter",
+      "path": "res://art/battle/runtime/status_effects/status_flare_revealed_open_shutter.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_flare_revealed_open_shutter_source.png",
+      "alt_text": "Blackened signal shutters peel apart around a sharp white-gold flare.",
+      "silhouette": "open_shutters_flare",
+      "polarity": "harmful",
+      "fallback_mark": "L",
+      "source_sha256": "b9c0cdf0fce3f6a6f86cc7c8a72f8dd7672a2c123f8077ceef60131798bdc075",
+      "runtime_sha256": "4373e7a124b990d3b3bfedac6ac708ca1e7eed3b159f1eb7af63f70b74dc4e16"
+    },
+    "status_readiness_prepared": {
+      "id": "battle_status_readiness_prepared_command_writ",
+      "path": "res://art/battle/runtime/status_effects/status_readiness_prepared_command_writ.png",
+      "source_path": "res://art/battle/source/generated/status_effects/status_readiness_prepared_command_writ_source.png",
+      "alt_text": "A blank command writ is secured beneath an upright bronze field brace.",
+      "silhouette": "upright_braced_writ",
+      "polarity": "beneficial",
+      "fallback_mark": "P",
+      "source_sha256": "80ef8912cfd97280b962e07e3011b599b431b57363ede8f4127a389cc1596f85",
+      "runtime_sha256": "76e9c9aa7d78dc0f8d2c046a67e2c2d6217550c23d69e1531f8ecbf8cd7a6d39"
+    }
+  }
+}

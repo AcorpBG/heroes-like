@@ -167,6 +167,8 @@ const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_VFX_MANIFEST_PATH := "res://content/battle_vfx_manifest.json"
 const BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH := "res://content/battle_field_objective_art_manifest.json"
 const BATTLE_FIELD_OBJECTIVE_ART_PRESENTATION_MODEL := "type_distinct_imported_landmark_with_non_color_control_shape_and_legacy_geometry_fallback"
+const BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH := "res://content/battle_status_effect_art_manifest.json"
+const BATTLE_STATUS_EFFECT_ART_PRESENTATION_MODEL := "compact_imported_status_badges_with_non_color_polarity_foundation_and_procedural_mark_fallback"
 const BATTLE_AUDIO_PRIORITY_VALUES := {"low": 1, "normal": 2, "high": 3, "critical": 4}
 const BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS := "normal"
 const BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC := 80
@@ -206,6 +208,10 @@ var _field_objective_art_manifest: Dictionary = {}
 var _field_objective_art_manifest_loaded := false
 var _field_objective_art_textures: Dictionary = {}
 var _field_objective_art_texture_missing: Dictionary = {}
+var _battle_status_effect_art_manifest: Dictionary = {}
+var _battle_status_effect_art_manifest_loaded := false
+var _battle_status_effect_art_textures: Dictionary = {}
+var _battle_status_effect_art_texture_missing: Dictionary = {}
 var _audio_last_started_msec_by_cue: Dictionary = {}
 var _audio_mix_counters: Dictionary = {
 	"played": 0,
@@ -234,6 +240,7 @@ func _ready() -> void:
 	_load_terrain_textures()
 	_load_battle_vfx_manifest()
 	_load_field_objective_art_manifest()
+	_load_battle_status_effect_art_manifest()
 
 func _exit_tree() -> void:
 	_cancel_battle_board_cursor_semantic()
@@ -855,6 +862,7 @@ func validation_hex_layout_summary() -> Dictionary:
 				"legal_melee_target": battle_id in legal_melee_targets,
 				"legal_ranged_target": battle_id in legal_ranged_targets,
 				"legal_attack_target": battle_id in legal_melee_targets or battle_id in legal_ranged_targets,
+				"status_effect_badges": _stack_status_effect_badge_summary(stack),
 			}
 		)
 
@@ -1406,6 +1414,56 @@ func validation_field_objective_art_summary() -> Dictionary:
 
 func validation_field_objective_art_profile(objective_type: String, override_path: String = "") -> Dictionary:
 	return _field_objective_art_profile(objective_type, override_path)
+
+func validation_battle_status_effect_art_summary() -> Dictionary:
+	_load_battle_status_effect_art_manifest()
+	var statuses: Dictionary = _battle_status_effect_art_manifest.get("statuses", {}) if _battle_status_effect_art_manifest.get("statuses", {}) is Dictionary else {}
+	var status_ids: Array = statuses.keys()
+	status_ids.sort()
+	var profiles := []
+	var loaded_texture_paths := []
+	var missing_texture_paths := []
+	var silhouettes := []
+	var polarities := {}
+	for status_id_value in status_ids:
+		var status_id := String(status_id_value)
+		var profile := _battle_status_effect_art_profile(status_id)
+		profiles.append(profile)
+		var texture_path := String(profile.get("art_path", ""))
+		if bool(profile.get("art_loaded", false)):
+			loaded_texture_paths.append(texture_path)
+		elif texture_path != "":
+			missing_texture_paths.append(texture_path)
+		var silhouette := String(profile.get("silhouette", ""))
+		if silhouette != "" and not silhouettes.has(silhouette):
+			silhouettes.append(silhouette)
+		var polarity := String(profile.get("polarity", ""))
+		polarities[polarity] = int(polarities.get(polarity, 0)) + 1
+	var render_spec: Dictionary = _battle_status_effect_art_manifest.get("render", {}) if _battle_status_effect_art_manifest.get("render", {}) is Dictionary else {}
+	return {
+		"manifest_path": BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH,
+		"manifest_loaded": _battle_status_effect_art_manifest_loaded,
+		"schema_id": String(_battle_status_effect_art_manifest.get("schema_id", "")),
+		"presentation_model": BATTLE_STATUS_EFFECT_ART_PRESENTATION_MODEL,
+		"mapped_status_count": status_ids.size(),
+		"mapped_status_ids": status_ids,
+		"loaded_texture_count": loaded_texture_paths.size(),
+		"loaded_texture_paths": loaded_texture_paths,
+		"missing_texture_paths": missing_texture_paths,
+		"unique_silhouette_count": silhouettes.size(),
+		"polarity_counts": polarities,
+		"polarity_foundations": _battle_status_effect_art_manifest.get("polarity_foundations", {}).duplicate(true),
+		"max_visible_badges": int(render_spec.get("max_visible_badges", 2)),
+		"profiles": profiles,
+		"texture_cache_count": _battle_status_effect_art_textures.size(),
+		"missing_cache_count": _battle_status_effect_art_texture_missing.size(),
+	}
+
+func validation_battle_status_effect_art_profile(status_id: String, override_path: String = "") -> Dictionary:
+	return _battle_status_effect_art_profile(status_id, override_path)
+
+func validation_stack_status_effect_badges(stack: Dictionary) -> Dictionary:
+	return _stack_status_effect_badge_summary(stack)
 
 func validation_audio_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
@@ -2717,6 +2775,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		else:
 			_draw_unit_glyph(center, token_radius, stack)
 		_draw_stack_side_cue(center, token_radius, side)
+		_draw_stack_status_effect_badges(center, radius, token_radius, stack)
 		_draw_stack_health_bar(center, radius, stack)
 		_draw_count_badge(center, token_radius, stack)
 		_draw_stack_caption(center, radius, stack)
@@ -2728,6 +2787,134 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 				"radius": _stack_hit_shape_radius(radius),
 			}
 		)
+
+func _active_mapped_status_effects(stack: Dictionary) -> Array:
+	_load_battle_status_effect_art_manifest()
+	var statuses: Dictionary = _battle_status_effect_art_manifest.get("statuses", {}) if _battle_status_effect_art_manifest.get("statuses", {}) is Dictionary else {}
+	var current_round := int(_battle.get("round", 1))
+	var by_status_id := {}
+	var effects: Array = stack.get("effects", []) if stack.get("effects", []) is Array else []
+	for effect_value in effects:
+		if not (effect_value is Dictionary):
+			continue
+		var effect: Dictionary = effect_value
+		var status_id := String(effect.get("effect_id", "")).strip_edges()
+		if status_id == "" or not statuses.has(status_id):
+			continue
+		var expires_after_round := int(effect.get("expires_after_round", 0))
+		if expires_after_round < current_round:
+			continue
+		var prior: Dictionary = by_status_id.get(status_id, {}) if by_status_id.get(status_id, {}) is Dictionary else {}
+		if prior.is_empty() or expires_after_round < int(prior.get("expires_after_round", expires_after_round)):
+			by_status_id[status_id] = effect.duplicate(true)
+	var mapped: Array = by_status_id.values()
+	mapped.sort_custom(func(left_value, right_value) -> bool:
+		var left: Dictionary = left_value if left_value is Dictionary else {}
+		var right: Dictionary = right_value if right_value is Dictionary else {}
+		var left_expiry := int(left.get("expires_after_round", 0))
+		var right_expiry := int(right.get("expires_after_round", 0))
+		if left_expiry != right_expiry:
+			return left_expiry < right_expiry
+		return String(left.get("effect_id", "")) < String(right.get("effect_id", ""))
+	)
+	return mapped
+
+func _stack_status_effect_badge_summary(stack: Dictionary) -> Dictionary:
+	var mapped := _active_mapped_status_effects(stack)
+	var render_spec: Dictionary = _battle_status_effect_art_manifest.get("render", {}) if _battle_status_effect_art_manifest.get("render", {}) is Dictionary else {}
+	var max_visible := clampi(int(render_spec.get("max_visible_badges", 2)), 1, 2)
+	var ordered_status_ids := []
+	var visible_status_ids := []
+	var profiles := []
+	for index in range(mapped.size()):
+		var effect: Dictionary = mapped[index] if mapped[index] is Dictionary else {}
+		var status_id := String(effect.get("effect_id", ""))
+		ordered_status_ids.append(status_id)
+		if index < max_visible:
+			visible_status_ids.append(status_id)
+			profiles.append(_battle_status_effect_art_profile(status_id))
+	return {
+		"presentation_model": BATTLE_STATUS_EFFECT_ART_PRESENTATION_MODEL,
+		"active_status_count": mapped.size(),
+		"ordered_status_ids": ordered_status_ids,
+		"visible_status_ids": visible_status_ids,
+		"visible_badge_count": visible_status_ids.size(),
+		"max_visible_badges": max_visible,
+		"overflow_count": maxi(0, mapped.size() - max_visible),
+		"ordering": "expires_after_round_then_status_id",
+		"expiry_filter": "expires_after_round_gte_current_round",
+		"deduplication": "one_badge_per_status_id_earliest_expiry",
+		"non_color_polarity_cues": true,
+		"focus_authority": "BattleRules_stack_focus_summary_effects",
+		"profiles": profiles,
+	}
+
+func _draw_stack_status_effect_badges(center: Vector2, hex_radius: float, token_radius: float, stack: Dictionary) -> void:
+	var mapped := _active_mapped_status_effects(stack)
+	if mapped.is_empty():
+		return
+	var render_spec: Dictionary = _battle_status_effect_art_manifest.get("render", {}) if _battle_status_effect_art_manifest.get("render", {}) is Dictionary else {}
+	var max_visible := clampi(int(render_spec.get("max_visible_badges", 2)), 1, 2)
+	var visible_count := mini(mapped.size(), max_visible)
+	var icon_size := clampf(
+		hex_radius * float(render_spec.get("icon_size_factor", 0.42)),
+		float(render_spec.get("icon_size_min", 14.0)),
+		float(render_spec.get("icon_size_max", 18.0))
+	)
+	var badge_centers := _stack_status_effect_badge_centers(center, token_radius, visible_count)
+	for index in range(visible_count):
+		var effect: Dictionary = mapped[index] if mapped[index] is Dictionary else {}
+		var status_id := String(effect.get("effect_id", ""))
+		var profile := _battle_status_effect_art_profile(status_id)
+		var badge_center: Vector2 = badge_centers[index]
+		_draw_status_effect_polarity_foundation(badge_center, icon_size, String(profile.get("polarity_foundation", "broken_diamond")))
+		var art_path := String(profile.get("art_path", ""))
+		var texture: Texture2D = _battle_status_effect_art_texture_for_path(art_path) as Texture2D
+		if texture != null:
+			var texture_rect := Rect2(badge_center - Vector2(icon_size, icon_size) * 0.5, Vector2(icon_size, icon_size))
+			draw_texture_rect(texture, texture_rect, false, Color(1.0, 1.0, 1.0, float(render_spec.get("texture_alpha", 0.98))))
+		else:
+			_draw_centered_text(String(profile.get("fallback_mark", "?")), badge_center + Vector2(0.0, 2.5), TEXT_COLOR, 8)
+	var overflow_count := mapped.size() - visible_count
+	if overflow_count > 0:
+		var overflow_center: Vector2 = badge_centers[visible_count - 1] + Vector2(icon_size * 0.39, icon_size * 0.37)
+		var overflow_radius := clampf(icon_size * 0.29, 4.0, 5.2)
+		draw_circle(overflow_center, overflow_radius, Color(0.025, 0.032, 0.038, 0.98))
+		draw_circle(overflow_center, overflow_radius, Color(0.98, 0.88, 0.64, 0.92), false, 1.0)
+		_draw_centered_text("+%d" % overflow_count, overflow_center + Vector2(0.0, 2.0), TEXT_COLOR, 6)
+
+func _stack_status_effect_badge_centers(center: Vector2, token_radius: float, visible_count: int) -> Array:
+	if visible_count <= 1:
+		return [center + Vector2(token_radius * 0.64, -token_radius * 0.62)]
+	return [
+		center + Vector2(0.0, -token_radius * 0.74),
+		center + Vector2(token_radius * 0.92, -token_radius * 0.58),
+	]
+
+func _draw_status_effect_polarity_foundation(center: Vector2, icon_size: float, foundation: String) -> void:
+	var extent := icon_size * 0.67
+	var fill := Color(0.018, 0.024, 0.030, 0.96)
+	var outline := Color(0.98, 0.88, 0.64, 0.94)
+	if foundation == "upward_pentagon":
+		var pentagon := PackedVector2Array()
+		for index in range(5):
+			var angle := -PI * 0.5 + TAU * float(index) / 5.0
+			pentagon.append(center + Vector2(cos(angle), sin(angle)) * extent)
+		draw_colored_polygon(pentagon, fill)
+		draw_polyline(_closed_points(pentagon), outline, 1.3, true)
+		return
+	var diamond := PackedVector2Array([
+		center + Vector2(0.0, -extent),
+		center + Vector2(extent, 0.0),
+		center + Vector2(0.0, extent),
+		center + Vector2(-extent, 0.0),
+	])
+	draw_colored_polygon(diamond, fill)
+	for index in range(4):
+		var start: Vector2 = diamond[index]
+		var finish: Vector2 = diamond[(index + 1) % 4]
+		draw_line(start.lerp(finish, 0.08), start.lerp(finish, 0.42), outline, 1.3, true)
+		draw_line(start.lerp(finish, 0.58), start.lerp(finish, 0.92), outline, 1.3, true)
 
 func _stack_token_art_source(stack: Dictionary) -> String:
 	var battle_id := String(stack.get("battle_id", ""))
@@ -3834,6 +4021,86 @@ func _field_objective_control_shape(control_side: String) -> String:
 	if shape in ["diamond", "downward_triangle", "hollow_square"]:
 		return shape
 	return {"player": "diamond", "enemy": "downward_triangle", "neutral": "hollow_square"}.get(normalized_side, "hollow_square")
+
+func _load_battle_status_effect_art_manifest() -> void:
+	if _battle_status_effect_art_manifest_loaded:
+		return
+	_battle_status_effect_art_manifest_loaded = true
+	_battle_status_effect_art_manifest = {}
+	_battle_status_effect_art_textures.clear()
+	_battle_status_effect_art_texture_missing.clear()
+	if not FileAccess.file_exists(BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_battle_status_effect_art_manifest = parsed
+
+func _battle_status_effect_art_spec(status_id: String) -> Dictionary:
+	_load_battle_status_effect_art_manifest()
+	var statuses: Dictionary = _battle_status_effect_art_manifest.get("statuses", {}) if _battle_status_effect_art_manifest.get("statuses", {}) is Dictionary else {}
+	var spec: Dictionary = statuses.get(status_id, {}) if statuses.get(status_id, {}) is Dictionary else {}
+	var art_path := String(spec.get("path", "")).strip_edges()
+	var polarity := String(spec.get("polarity", "")).strip_edges()
+	var fallback_mark := String(spec.get("fallback_mark", "")).strip_edges()
+	if String(spec.get("id", "")).strip_edges() == "" \
+		or String(spec.get("alt_text", "")).strip_edges() == "" \
+		or String(spec.get("silhouette", "")).strip_edges() == "" \
+		or not polarity in ["harmful", "beneficial"] \
+		or fallback_mark.length() != 1 \
+		or not art_path.begins_with("res://art/battle/runtime/status_effects/") \
+		or not art_path.ends_with(".png"):
+		return {}
+	return spec.duplicate(true)
+
+func _battle_status_effect_art_profile(status_id: String, override_path: String = "") -> Dictionary:
+	var spec := _battle_status_effect_art_spec(status_id)
+	var art_path := override_path.strip_edges() if override_path.strip_edges() != "" else String(spec.get("path", "")).strip_edges()
+	var texture = _battle_status_effect_art_texture_for_path(art_path)
+	var polarity := String(spec.get("polarity", ""))
+	return {
+		"status_id": status_id,
+		"art_id": String(spec.get("id", "")),
+		"art_path": art_path,
+		"source_path": String(spec.get("source_path", "")),
+		"alt_text": String(spec.get("alt_text", "")),
+		"silhouette": String(spec.get("silhouette", "")),
+		"polarity": polarity,
+		"polarity_foundation": _battle_status_effect_polarity_foundation(polarity),
+		"fallback_mark": String(spec.get("fallback_mark", "?")),
+		"art_loaded": texture is Texture2D,
+		"uses_procedural_mark_fallback": not (texture is Texture2D),
+	}
+
+func _battle_status_effect_art_texture_for_path(texture_path: String):
+	if not texture_path.begins_with("res://art/battle/runtime/status_effects/") \
+		or not texture_path.ends_with(".png") \
+		or _battle_status_effect_art_texture_missing.has(texture_path):
+		return null
+	if _battle_status_effect_art_textures.has(texture_path):
+		return _battle_status_effect_art_textures.get(texture_path)
+	if not ResourceLoader.exists(texture_path, "Texture2D"):
+		_battle_status_effect_art_texture_missing[texture_path] = true
+		return null
+	var loaded = load(texture_path)
+	if loaded is Texture2D:
+		_battle_status_effect_art_textures[texture_path] = loaded
+		return loaded
+	_battle_status_effect_art_texture_missing[texture_path] = true
+	return null
+
+func _battle_status_effect_polarity_foundation(polarity: String) -> String:
+	_load_battle_status_effect_art_manifest()
+	var foundations: Dictionary = _battle_status_effect_art_manifest.get("polarity_foundations", {}) if _battle_status_effect_art_manifest.get("polarity_foundations", {}) is Dictionary else {}
+	var normalized := polarity if polarity in ["harmful", "beneficial"] else "harmful"
+	var shape := String(foundations.get(normalized, ""))
+	if normalized == "beneficial" and shape == "upward_pentagon":
+		return shape
+	if normalized == "harmful" and shape == "broken_diamond":
+		return shape
+	return "upward_pentagon" if normalized == "beneficial" else "broken_diamond"
 
 func _load_battle_sfx_manifest() -> void:
 	if _battle_sfx_manifest_loaded:

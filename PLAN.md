@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-battle-field-objective-landmarks-10184`.
+- Most recently completed implementation slice: `content-battle-status-effect-badges-10184`.
+- Next selection boundary: audit and register the next highest-impact live original-content or art gap without weakening the release package ceiling.
+
+## Battle Status-Effect Badges
+
+id: `content-battle-status-effect-badges-10184`
+
+Status: completed.
+
+Current finding:
+- battle rules already apply ten stable status identities across the production unit and spell catalogs: harried, mire-harried, staggered, rooted, fogbound, obituary-marked, overheated, rivet-exposed, flare-revealed, and readiness-prepared;
+- these effects alter live combat and appear in text summaries, but the battlefield stack tokens carry no persistent visual status identity, forcing players to leave the primary play surface or parse prose to distinguish active pressure.
+
+Implementation boundary:
+- add one original transparent compact status badge for each of the ten live status ids, using distinct material and silhouette language rather than copied Heroes spell/status icon expression;
+- register immutable status-to-art paths, polarity, accessible descriptions, and procedural fallback marks; load them through a bounded battle-board cache and render a compact ordered row on affected stack tokens without covering unit identity, health, count, captions, objectives, movement/target affordances, or neighboring hexes;
+- preserve exact effect application, modifiers, expiry, stacking, resistance, cleansing, AI valuation, battle/session authority, deterministic combat, input, reduced motion, high contrast, and save version 9.
+
+Completion criteria:
+- ten byte-distinct original sources and compact 64x64 runtime textures retain genuine alpha, exact provenance, small-board readability, and source-art exclusion from release PCKs;
+- every live status id resolves an exact badge, active non-expired effects render in deterministic order with bounded overflow and non-color polarity treatment, tooltip/focus text remains authoritative, and missing/invalid art fails closed to a distinct procedural mark;
+- inspected representative 1280x720 and 1920x1080 captures cover all ten identities; focused status/runtime, battle layout/save-authority, repository, and Linux/Windows packaged startup pass without exceeding the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- harried, mire-harried, staggered, rooted, fogbound, obituary-marked, overheated, rivet-exposed, flare-revealed, and readiness-prepared now own ten byte-distinct original transparent badges with immutable 1254x1254 source and compact 64x64 runtime provenance, distinct silhouettes, accessible descriptions, and one beneficial versus nine harmful polarity records;
+- the live battle board filters expired effects, deduplicates exact status ids, orders badges by expiry then id, draws at most two beside affected stack tokens with a compact overflow count, distinguishes polarity through broken-diamond versus upward-pentagon foundations, caches imported textures and missing paths, and fails closed to exact procedural marks without changing effect rules, AI, battle authority, input, or save version 9; existing stack-focus text remains the label-and-duration authority;
+- the focused all-ten runtime report, repository validator, and 429-second battle layout routing/save-resume sweep pass; inspected 1280x720 and 1920x1080 captures cover all ten identities and overflow, while Linux and Windows exports contain ten exact compiled textures, exclude source art, boot successfully, and produce a 249694476-byte PCK under the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no copied Heroes status/spell icons, assets, names, text, UI layout, or protected visual expression; no unit, spell, effect, combat, AI, balance, save-schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Battle Field-Objective Landmarks
 
