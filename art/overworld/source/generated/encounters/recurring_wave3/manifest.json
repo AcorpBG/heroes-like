@@ -1,0 +1,94 @@
+{
+  "schema": "recurring_encounter_landmark_wave3_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "generation_session_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+    "size": [1152, 48],
+    "cell_size": [48, 48],
+    "previous_region_count": 13,
+    "wave3_region_count": 11,
+    "total_region_count": 24,
+    "sha256": "07e6110648628769f6ea3b84c816091e4b41bafeeb544afc2040ca629e0eb118",
+    "package_policy": "single_imported_atlas_only"
+  },
+  "sources": [
+    {
+      "encounter_id": "encounter_tidepool_skiffyard_watch",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/tidepool_skiffyard_watch_source.png",
+      "sha256": "536760be529153cd59c4875a3afcbd86516bc3bf52c0a86a5d747265f30226fb",
+      "atlas_region": [624, 0, 48, 48],
+      "prompt_summary": "Neutral salt-weathered skiff racks with three tide boats, rope winch, reefbolt stand, supplies, and shell-marked tide gauge."
+    },
+    {
+      "encounter_id": "encounter_survey_guard",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/survey_guard_source.png",
+      "sha256": "81cccad4237c96bbede8ef3e59c8cec62139972f98c17c0ade684568979132c4",
+      "atlas_region": [672, 0, 48, 48],
+      "prompt_summary": "Embercourt brass theodolite tripod over a charter map table with river pikes, pavise, compass chain, and ember lantern."
+    },
+    {
+      "encounter_id": "encounter_road_chaplains",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/road_chaplains_source.png",
+      "sha256": "8a643b0aecec5bac5bcd163f2fcf7e2dd41aef19bdde22cec4ecf12b63b0e0ed",
+      "atlas_region": [720, 0, 48, 48],
+      "prompt_summary": "Embercourt two-wheeled portable road shrine with twin lantern reliquaries, hymn lectern, supplies, and pike fan."
+    },
+    {
+      "encounter_id": "encounter_mill_levies",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/mill_levies_source.png",
+      "sha256": "3ada694f23cd8bb8598c0effe3ae3a32d78e4757ad88418ebb02df536a89649a",
+      "atlas_region": [768, 0, 48, 48],
+      "prompt_summary": "Embercourt half mill wheel and grain stores defended by short pavises, levy pikes, flour chest, and ember lantern."
+    },
+    {
+      "encounter_id": "encounter_reedbarrow_chain",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/reedbarrow_chain_source.png",
+      "sha256": "b0813c1c5e1ee8eb33820967cc691e0970119015bf6cc90377e9cc83e3151829",
+      "atlas_region": [816, 0, 48, 48],
+      "prompt_summary": "Mireclaw sagging ferry chain between unequal peat stanchions with levee stakes, sling bolts, hooked winch, and rush flags."
+    },
+    {
+      "encounter_id": "encounter_nightglass_dominion",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/nightglass_dominion_source.png",
+      "sha256": "e3341aa0d5f698d6ffc7a44bee49cdd3989dc3928115e47859e1e1135a74f429",
+      "atlas_region": [864, 0, 48, 48],
+      "prompt_summary": "Mireclaw crown of three nightglass spires behind a clawed peat palisade, command drum, bone lanterns, and hooked walls."
+    },
+    {
+      "encounter_id": "encounter_mirror_causeway",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/mirror_causeway_source.png",
+      "sha256": "4b9373b9281eeb809de920d6019522cdc3b788a388dd62b40a6683a147eba278",
+      "atlas_region": [912, 0, 48, 48],
+      "prompt_summary": "Mireclaw diagonal cracked mirror stepping slabs between hooked reed pilings, harrow hooks, bloodwake drum, and rush pennant."
+    },
+    {
+      "encounter_id": "encounter_halo_reserve",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/halo_reserve_source.png",
+      "sha256": "b26091b1af256ed6141e8502878663f3c4a99ebbe59a0bd3ca39b411306e2c5f",
+      "atlas_region": [960, 0, 48, 48],
+      "prompt_summary": "Sunvault concentric prism halo in an ivory tuning rack with four shard shields, an aurora bolt, and resonant chimes."
+    },
+    {
+      "encounter_id": "encounter_daybreak_matrix",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/daybreak_matrix_source.png",
+      "sha256": "d7a55eb048d355e995195ccf75d0c142756a50055c9302731fd8d4ac432143ad",
+      "atlas_region": [1008, 0, 48, 48],
+      "prompt_summary": "Sunvault square battery matrix of four corner prisms linked to a tall central beacon, shelter fins, and relay depot."
+    },
+    {
+      "encounter_id": "encounter_daybreak_array",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/daybreak_array_source.png",
+      "sha256": "37db4876c995154c80c112940dcd942173dc0b93bf643978f3d44bd503ba78a0",
+      "atlas_region": [1056, 0, 48, 48],
+      "prompt_summary": "Sunvault fan of three long sunlance mirrors on elevated ivory rails with a tuning chime and split cobalt pennant."
+    },
+    {
+      "encounter_id": "encounter_basalt_gatehouse_watch",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave3/basalt_gatehouse_watch_source.png",
+      "sha256": "d90b37744e7ce1be3ee8f60e4701b93de654b9d26543d6b59472ff96c93b0fc3",
+      "atlas_region": [1104, 0, 48, 48],
+      "prompt_summary": "Neutral black-basalt arch and iron portcullis around an amber tunnel throat with twin bolter buttresses and chain winch."
+    }
+  ]
+}
