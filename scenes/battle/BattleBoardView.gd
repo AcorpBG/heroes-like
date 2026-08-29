@@ -165,6 +165,8 @@ const BATTLE_AUDIO_REDUCED_REPETITION_COOLDOWN_MULTIPLIER := 2
 const BATTLE_AUDIO_BUS := "Effects"
 const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_VFX_MANIFEST_PATH := "res://content/battle_vfx_manifest.json"
+const BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH := "res://content/battle_field_objective_art_manifest.json"
+const BATTLE_FIELD_OBJECTIVE_ART_PRESENTATION_MODEL := "type_distinct_imported_landmark_with_non_color_control_shape_and_legacy_geometry_fallback"
 const BATTLE_AUDIO_PRIORITY_VALUES := {"low": 1, "normal": 2, "high": 3, "critical": 4}
 const BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS := "normal"
 const BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC := 80
@@ -200,6 +202,10 @@ var _battle_vfx_manifest: Dictionary = {}
 var _battle_vfx_manifest_loaded := false
 var _battle_vfx_textures: Dictionary = {}
 var _battle_vfx_texture_missing: Dictionary = {}
+var _field_objective_art_manifest: Dictionary = {}
+var _field_objective_art_manifest_loaded := false
+var _field_objective_art_textures: Dictionary = {}
+var _field_objective_art_texture_missing: Dictionary = {}
 var _audio_last_started_msec_by_cue: Dictionary = {}
 var _audio_mix_counters: Dictionary = {
 	"played": 0,
@@ -227,6 +233,7 @@ func _ready() -> void:
 	_configure_battle_board_cursor_semantic_timer()
 	_load_terrain_textures()
 	_load_battle_vfx_manifest()
+	_load_field_objective_art_manifest()
 
 func _exit_tree() -> void:
 	_cancel_battle_board_cursor_semantic()
@@ -857,14 +864,34 @@ func validation_hex_layout_summary() -> Dictionary:
 		if not (objective_value is Dictionary):
 			continue
 		var objective: Dictionary = objective_value
-		var cell := _objective_cell(index, String(objective.get("type", "")))
+		var objective_type := String(objective.get("type", ""))
+		var cell := _objective_cell(index, objective_type)
+		var art_profile := _field_objective_art_profile(objective_type)
+		var control_side := String(objective.get("control_side", "neutral"))
+		var render_spec: Dictionary = _field_objective_art_manifest.get("render", {}) if _field_objective_art_manifest.get("render", {}) is Dictionary else {}
+		var landmark_extent := clampf(
+			hex_radius * float(render_spec.get("extent_factor", 0.82)),
+			float(render_spec.get("extent_min", 19.0)),
+			float(render_spec.get("extent_max", 28.0))
+		)
+		var landmark_center := _hex_center(cell, layout)
 		objective_entries.append(
 			{
 				"id": String(objective.get("id", "")),
-				"type": String(objective.get("type", "")),
+				"type": objective_type,
 				"q": cell.x,
 				"r": cell.y,
-				"control_side": String(objective.get("control_side", "neutral")),
+				"control_side": control_side,
+				"control_shape": _field_objective_control_shape(control_side),
+				"art_id": String(art_profile.get("art_id", "")),
+				"art_path": String(art_profile.get("art_path", "")),
+				"alt_text": String(art_profile.get("alt_text", "")),
+				"art_loaded": bool(art_profile.get("art_loaded", false)),
+				"uses_legacy_geometry_fallback": bool(art_profile.get("uses_legacy_geometry_fallback", true)),
+				"marker_rect": Rect2(
+					landmark_center - Vector2(landmark_extent, landmark_extent),
+					Vector2(landmark_extent * 2.0, landmark_extent * 2.0)
+				),
 			}
 		)
 
@@ -874,6 +901,7 @@ func validation_hex_layout_summary() -> Dictionary:
 		"rows": HEX_ROWS,
 		"hex_count": HEX_COLUMNS * HEX_ROWS,
 		"hex_radius": hex_radius,
+		"board_rect": Rect2(Vector2.ZERO, size),
 		"stack_hit_shape_radius": _stack_hit_shape_radius(hex_radius),
 		"neighboring_stack_hit_shape_overlap_possible": _neighboring_stack_hit_shape_overlap_possible(hex_radius),
 		"terrain": terrain_id,
@@ -1333,6 +1361,51 @@ func validation_vfx_asset_summary() -> Dictionary:
 		"loaded_texture_paths": loaded_texture_paths,
 		"missing_texture_paths": missing_texture_paths,
 	}
+
+func validation_field_objective_art_summary() -> Dictionary:
+	_load_field_objective_art_manifest()
+	var objectives: Dictionary = _field_objective_art_manifest.get("objectives", {}) if _field_objective_art_manifest.get("objectives", {}) is Dictionary else {}
+	var objective_types: Array = objectives.keys()
+	objective_types.sort()
+	var profiles := []
+	var loaded_texture_paths := []
+	var missing_texture_paths := []
+	var silhouettes := []
+	for objective_type_value in objective_types:
+		var objective_type := String(objective_type_value)
+		var profile := _field_objective_art_profile(objective_type)
+		profiles.append(profile)
+		var texture_path := String(profile.get("art_path", ""))
+		if bool(profile.get("art_loaded", false)):
+			loaded_texture_paths.append(texture_path)
+		elif texture_path != "":
+			missing_texture_paths.append(texture_path)
+		var silhouette := String(profile.get("silhouette", ""))
+		if silhouette != "" and not silhouettes.has(silhouette):
+			silhouettes.append(silhouette)
+	return {
+		"manifest_path": BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH,
+		"manifest_loaded": _field_objective_art_manifest_loaded,
+		"schema_id": String(_field_objective_art_manifest.get("schema_id", "")),
+		"presentation_model": BATTLE_FIELD_OBJECTIVE_ART_PRESENTATION_MODEL,
+		"mapped_objective_type_count": objective_types.size(),
+		"mapped_objective_types": objective_types,
+		"loaded_texture_count": loaded_texture_paths.size(),
+		"loaded_texture_paths": loaded_texture_paths,
+		"missing_texture_paths": missing_texture_paths,
+		"unique_silhouette_count": silhouettes.size(),
+		"control_shapes": {
+			"player": _field_objective_control_shape("player"),
+			"enemy": _field_objective_control_shape("enemy"),
+			"neutral": _field_objective_control_shape("neutral"),
+		},
+		"profiles": profiles,
+		"texture_cache_count": _field_objective_art_textures.size(),
+		"missing_cache_count": _field_objective_art_texture_missing.size(),
+	}
+
+func validation_field_objective_art_profile(objective_type: String, override_path: String = "") -> Dictionary:
+	return _field_objective_art_profile(objective_type, override_path)
 
 func validation_audio_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
@@ -3692,6 +3765,76 @@ func _battle_vfx_texture_for_path(texture_path: String):
 	_battle_vfx_texture_missing[texture_path] = true
 	return null
 
+func _load_field_objective_art_manifest() -> void:
+	if _field_objective_art_manifest_loaded:
+		return
+	_field_objective_art_manifest_loaded = true
+	_field_objective_art_manifest = {}
+	_field_objective_art_textures.clear()
+	_field_objective_art_texture_missing.clear()
+	if not FileAccess.file_exists(BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_field_objective_art_manifest = parsed
+
+func _field_objective_art_spec(objective_type: String) -> Dictionary:
+	_load_field_objective_art_manifest()
+	var objectives: Dictionary = _field_objective_art_manifest.get("objectives", {}) if _field_objective_art_manifest.get("objectives", {}) is Dictionary else {}
+	var spec: Dictionary = objectives.get(objective_type, {}) if objectives.get(objective_type, {}) is Dictionary else {}
+	var art_path := String(spec.get("path", "")).strip_edges()
+	if String(spec.get("id", "")).strip_edges() == "" \
+		or String(spec.get("alt_text", "")).strip_edges() == "" \
+		or String(spec.get("silhouette", "")).strip_edges() == "" \
+		or not art_path.begins_with("res://art/battle/runtime/field_objectives/") \
+		or not art_path.ends_with(".png"):
+		return {}
+	return spec.duplicate(true)
+
+func _field_objective_art_profile(objective_type: String, override_path: String = "") -> Dictionary:
+	var spec := _field_objective_art_spec(objective_type)
+	var art_path := override_path.strip_edges() if override_path.strip_edges() != "" else String(spec.get("path", "")).strip_edges()
+	var texture = _field_objective_art_texture_for_path(art_path)
+	return {
+		"objective_type": objective_type,
+		"art_id": String(spec.get("id", "")),
+		"art_path": art_path,
+		"source_path": String(spec.get("source_path", "")),
+		"alt_text": String(spec.get("alt_text", "")),
+		"silhouette": String(spec.get("silhouette", "")),
+		"art_loaded": texture is Texture2D,
+		"uses_legacy_geometry_fallback": not (texture is Texture2D),
+	}
+
+func _field_objective_art_texture_for_path(texture_path: String):
+	if not texture_path.begins_with("res://art/battle/runtime/field_objectives/") \
+		or not texture_path.ends_with(".png") \
+		or _field_objective_art_texture_missing.has(texture_path):
+		return null
+	if _field_objective_art_textures.has(texture_path):
+		return _field_objective_art_textures.get(texture_path)
+	if not ResourceLoader.exists(texture_path, "Texture2D"):
+		_field_objective_art_texture_missing[texture_path] = true
+		return null
+	var loaded = load(texture_path)
+	if loaded is Texture2D:
+		_field_objective_art_textures[texture_path] = loaded
+		return loaded
+	_field_objective_art_texture_missing[texture_path] = true
+	return null
+
+func _field_objective_control_shape(control_side: String) -> String:
+	_load_field_objective_art_manifest()
+	var normalized_side := control_side if control_side in ["player", "enemy"] else "neutral"
+	var control_shapes: Dictionary = _field_objective_art_manifest.get("control_shapes", {}) if _field_objective_art_manifest.get("control_shapes", {}) is Dictionary else {}
+	var shape := String(control_shapes.get(normalized_side, ""))
+	if shape in ["diamond", "downward_triangle", "hollow_square"]:
+		return shape
+	return {"player": "diamond", "enemy": "downward_triangle", "neutral": "hollow_square"}.get(normalized_side, "hollow_square")
+
 func _load_battle_sfx_manifest() -> void:
 	if _battle_sfx_manifest_loaded:
 		return
@@ -4067,6 +4210,72 @@ func _controller_cursor_cell_role() -> String:
 
 func _draw_objective_marker(center: Vector2, objective: Dictionary, color: Color, radius: float) -> void:
 	var objective_type := String(objective.get("type", ""))
+	var art_spec := _field_objective_art_spec(objective_type)
+	var art_path := String(art_spec.get("path", ""))
+	var art_texture: Texture2D = _field_objective_art_texture_for_path(art_path) as Texture2D
+	var render_spec: Dictionary = _field_objective_art_manifest.get("render", {}) if _field_objective_art_manifest.get("render", {}) is Dictionary else {}
+	var extent := clampf(
+		radius * float(render_spec.get("extent_factor", 0.82)),
+		float(render_spec.get("extent_min", 19.0)),
+		float(render_spec.get("extent_max", 28.0))
+	)
+	var control_side := String(objective.get("control_side", "neutral"))
+	_draw_field_objective_control_foundation(center, color, extent)
+	if art_texture != null:
+		var texture_rect := Rect2(center - Vector2(extent, extent), Vector2(extent * 2.0, extent * 2.0))
+		draw_texture_rect(
+			art_texture,
+			texture_rect,
+			false,
+			Color(1.0, 1.0, 1.0, float(render_spec.get("texture_alpha", 0.98)))
+		)
+	else:
+		_draw_legacy_objective_marker(center, objective_type, color, radius)
+	_draw_field_objective_control_badge(
+		center + Vector2(extent * 0.60, -extent * 0.58),
+		_field_objective_control_shape(control_side),
+		color,
+		extent
+	)
+	var progress_side := String(objective.get("progress_side", ""))
+	var progress_value := int(objective.get("progress_value", 0))
+	var threshold: int = maxi(1, int(objective.get("capture_threshold", 2)))
+	if progress_side != "" and progress_value > 0:
+		for pip in range(threshold):
+			var pip_center := center + Vector2((float(pip) - float(threshold - 1) * 0.5) * 6.0, extent * 0.86 + 5.0)
+			draw_circle(pip_center, 2.0, _controller_color(progress_side) if pip < progress_value else Color(0.08, 0.10, 0.12, 0.55))
+
+func _draw_field_objective_control_foundation(center: Vector2, color: Color, extent: float) -> void:
+	draw_circle(center, extent * 0.78, Color(0.018, 0.024, 0.028, 0.62))
+	draw_circle(center, extent * 0.79, color.darkened(0.10), false, 2.2)
+	draw_circle(center, extent * 0.69, Color(0.96, 0.88, 0.66, 0.20), false, 1.0)
+
+func _draw_field_objective_control_badge(center: Vector2, shape: String, color: Color, extent: float) -> void:
+	var badge_size := clampf(extent * 0.22, 4.5, 6.5)
+	match shape:
+		"diamond":
+			var points := PackedVector2Array([
+				center + Vector2(0.0, -badge_size),
+				center + Vector2(badge_size, 0.0),
+				center + Vector2(0.0, badge_size),
+				center + Vector2(-badge_size, 0.0),
+			])
+			draw_colored_polygon(points, color)
+			draw_polyline(_closed_points(points), Color(0.02, 0.025, 0.03, 0.94), 1.5, true)
+		"downward_triangle":
+			var points := PackedVector2Array([
+				center + Vector2(-badge_size, -badge_size * 0.66),
+				center + Vector2(badge_size, -badge_size * 0.66),
+				center + Vector2(0.0, badge_size),
+			])
+			draw_colored_polygon(points, color)
+			draw_polyline(_closed_points(points), Color(0.02, 0.025, 0.03, 0.94), 1.5, true)
+		_:
+			var badge_rect := Rect2(center - Vector2(badge_size, badge_size), Vector2(badge_size * 2.0, badge_size * 2.0))
+			draw_rect(badge_rect, Color(0.02, 0.025, 0.03, 0.86), true)
+			draw_rect(badge_rect, color, false, 1.8)
+
+func _draw_legacy_objective_marker(center: Vector2, objective_type: String, color: Color, radius: float) -> void:
 	var size: float = clampf(radius * 0.46, 10.0, 20.0)
 	match objective_type:
 		"cover_line":
@@ -4093,13 +4302,6 @@ func _draw_objective_marker(center: Vector2, objective: Dictionary, color: Color
 		_:
 			draw_circle(center, size * 0.76, color)
 			draw_circle(center, size * 0.76, Color(0.08, 0.10, 0.12, 0.82), false, 1.8)
-	var progress_side := String(objective.get("progress_side", ""))
-	var progress_value := int(objective.get("progress_value", 0))
-	var threshold: int = maxi(1, int(objective.get("capture_threshold", 2)))
-	if progress_side != "" and progress_value > 0:
-		for pip in range(threshold):
-			var pip_center := center + Vector2((float(pip) - float(threshold - 1) * 0.5) * 6.0, size + 5.0)
-			draw_circle(pip_center, 2.0, _controller_color(progress_side) if pip < progress_value else Color(0.08, 0.10, 0.12, 0.55))
 
 func _draw_unit_glyph(center: Vector2, radius: float, stack: Dictionary) -> void:
 	var glyph_color := Color(0.08, 0.10, 0.12, 0.88)

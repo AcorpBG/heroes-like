@@ -48697,6 +48697,107 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing campaign emblem identity {stem}")
 
 
+def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
+    manifest_path = CONTENT_DIR / "battle_field_objective_art_manifest.json"
+    encounter_path = CONTENT_DIR / "encounters.json"
+    board_path = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
+    report_script_path = ROOT / "tests" / "battle_field_objective_landmark_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "battle_field_objective_landmark_runtime_report.tscn"
+    required_paths = (manifest_path, encounter_path, board_path, report_script_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing battle field-objective landmark owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    expected = {
+        "cover_line": ("cover_line_briar_bulwark", "wide_low_screen", "5e4fa6d09fa68cfc9b8e366a902ed0fe451484c65837e74bb00c2949b4507484", "0388e12ed1999b20b26ebd36aab4639c587a2eabf1acfe87fb824b1599a5303a", 9),
+        "obstruction_line": ("obstruction_line_crossed_stakes", "crossed_blockade", "732641d6c1601d8b05163e200a10d41a43020f7d54abe1e0065d498f7eac45ab", "10ab7b65b83e9decc00cfefe68935c718b6a98191c3648f05b8b6f0cd6641b26", 6),
+        "lane_battery": ("lane_battery_splitrail", "wide_tripod_battery", "18ea6d6a5e4c10d7199af20ec0e8905057e1f41fce43a5a2beaf5232a21a6bd0", "f07dc42f4465ec1b1f1e6842a87b6627f3f9f29d6b34ef40ef2f67c93711087e", 4),
+        "hazard_zone": ("hazard_zone_mireglass_basin", "triangular_hazard_basin", "5c185a4ab871c5282cc6d2f6ca72287c9b14e32255ba6a8998c6db15ecde21bc", "c0728d03eae332c0e22e2faf550ac4cf33fbe0c4fb14617e7b46257d04a749e0", 8),
+        "breach_point": ("breach_point_broken_gate", "open_gate_jaws", "03c05efb753e2798d69acc6fe7a8adea8d2a9f67f9247b235ec3a60f3152d9b8", "6d54f8bafd3de39f0c5388f8de020f61938cdcf548a9f658f5c9342f4a601dea", 3),
+        "ritual_pylon": ("ritual_pylon_resonance_stone", "forked_pylon_ring", "4d9cd897c8de2db226eedfc7ffea89d201bd7084362f120c4541abb873cdb3fc", "fd34c158e482c75df9e9ea4f3c55c3550581d0cb6db1cdfbde9dfea2aec2ab5f", 2),
+        "signal_beacon": ("signal_beacon_tripod_lantern", "tall_tripod_signal", "1378c2af521c2289facddfcafd80637a3cf4af151a80d0272e76e5561b18ff61", "1a60f989e3e2d6be729ec39aacbffc9afe46ba024576d4bdcc8f76f76c68f30d", 9),
+        "supply_post": ("supply_post_frontier_stores", "stepped_stores_cluster", "a135172d1706ae24fba228f8ff60c3fcca2b90e12c9fe84934192072f91b9afe", "13baf08cd4f966fe0f8afc36f5e7bc2b22e3f04c3fd31d814927b83d8548ed72", 12),
+    }
+    manifest = load_json(manifest_path)
+    ensure(manifest.get("schema_id") == "battle_field_objective_art_manifest_v1", errors, "Battle field-objective art manifest must retain its production schema")
+    ensure(manifest.get("source_model") == "built_in_image_gen_original_field_objective_landmark", errors, "Battle field-objective art manifest must retain built-in image-generation provenance")
+    ensure(manifest.get("runtime_canvas") == {"width": 128, "height": 128}, errors, "Battle field-objective landmarks must retain their compact 128x128 runtime canvas")
+    ensure(manifest.get("render") == {"extent_factor": 0.82, "extent_min": 19.0, "extent_max": 28.0, "texture_alpha": 0.98}, errors, "Battle field-objective landmark render bounds changed")
+    ensure(manifest.get("control_shapes") == {"player": "diamond", "enemy": "downward_triangle", "neutral": "hollow_square"}, errors, "Battle field-objective control must remain identifiable without color")
+    objectives = manifest.get("objectives", {})
+    ensure(isinstance(objectives, dict) and set(objectives) == set(expected), errors, "Battle field-objective art must cover exactly the eight authored objective types")
+    source_payloads: list[bytes] = []
+    runtime_payloads: list[bytes] = []
+    if isinstance(objectives, dict):
+        for objective_type, (stem, silhouette, source_sha, runtime_sha, _count) in expected.items():
+            entry = objectives.get(objective_type, {})
+            ensure(isinstance(entry, dict), errors, f"Missing battle field-objective art entry {objective_type}")
+            if not isinstance(entry, dict):
+                continue
+            source_res = f"res://art/battle/source/generated/field_objectives/{stem}_source.png"
+            runtime_res = f"res://art/battle/runtime/field_objectives/{stem}.png"
+            ensure(entry.get("id") == f"field_objective_{stem}", errors, f"Battle field-objective {objective_type} must retain exact art identity")
+            ensure(entry.get("source_path") == source_res and entry.get("path") == runtime_res, errors, f"Battle field-objective {objective_type} must retain exact source/runtime ownership")
+            ensure(entry.get("silhouette") == silhouette and bool(str(entry.get("alt_text", "")).strip()), errors, f"Battle field-objective {objective_type} must retain distinct silhouette and alt text")
+            ensure(entry.get("source_sha256") == source_sha and entry.get("runtime_sha256") == runtime_sha, errors, f"Battle field-objective {objective_type} manifest digests changed")
+            source_path = res_path_to_disk(source_res)
+            runtime_path = res_path_to_disk(runtime_res)
+            source_size = png_size(source_path) if source_path.is_file() else None
+            ensure(source_path.is_file() and source_size is not None and min(source_size) >= 1024, errors, f"Battle field-objective {objective_type} is missing its high-resolution generated source")
+            ensure(runtime_path.is_file() and png_size(runtime_path) == (128, 128), errors, f"Battle field-objective {objective_type} must retain its compact runtime landmark")
+            ensure(Path(f"{runtime_path}.import").is_file(), errors, f"Battle field-objective {objective_type} is missing runtime Godot import metadata")
+            if source_path.is_file():
+                payload = source_path.read_bytes()
+                ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Battle field-objective {objective_type} generated-source bytes or alpha changed")
+                source_payloads.append(payload)
+            if runtime_path.is_file():
+                payload = runtime_path.read_bytes()
+                ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Battle field-objective {objective_type} runtime bytes or alpha changed")
+                runtime_payloads.append(payload)
+    ensure(len(source_payloads) == 8 and len(set(source_payloads)) == 8, errors, "All eight battle field-objective generated sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 8 and len(set(runtime_payloads)) == 8, errors, "All eight battle field-objective runtime landmarks must remain byte-distinct")
+
+    encounter_values = load_json(encounter_path).get("items", [])
+    encounters = [row for row in encounter_values if isinstance(row, dict)] if isinstance(encounter_values, list) else []
+    type_counts = {objective_type: 0 for objective_type in expected}
+    authored_objective_count = 0
+    for encounter in encounters:
+        for objective in encounter.get("field_objectives", []):
+            if isinstance(objective, dict):
+                objective_type = str(objective.get("type", ""))
+                ensure(objective_type in expected, errors, f"Authored encounter uses unmapped field-objective type {objective_type}")
+                if objective_type in type_counts:
+                    type_counts[objective_type] += 1
+                authored_objective_count += 1
+    ensure(len(encounters) == 63 and authored_objective_count == 53, errors, "Battle field-objective adoption must retain all 63 encounters and 53 authored objectives")
+    ensure(type_counts == {key: row[4] for key, row in expected.items()}, errors, "Battle field-objective authored type coverage changed")
+
+    board_text = board_path.read_text(encoding="utf-8")
+    for token in ('const BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH := "res://content/battle_field_objective_art_manifest.json"', 'const BATTLE_FIELD_OBJECTIVE_ART_PRESENTATION_MODEL := "type_distinct_imported_landmark_with_non_color_control_shape_and_legacy_geometry_fallback"', "func validation_field_objective_art_summary()", "func validation_field_objective_art_profile(", "func _field_objective_art_texture_for_path(", 'ResourceLoader.exists(texture_path, "Texture2D")', "func _draw_field_objective_control_foundation(", "func _draw_field_objective_control_badge(", '"diamond":', '"downward_triangle":', "func _draw_legacy_objective_marker(", 'var progress_side := String(objective.get("progress_side", ""))'):
+        ensure(token in board_text, errors, f"Battle field-objective runtime is missing production ownership: {token}")
+    draw_start = board_text.find("func _draw_objective_marker")
+    draw_end = board_text.find("\nfunc ", draw_start + 1)
+    draw_block = board_text[draw_start:draw_end]
+    draw_order = [draw_block.find(token) for token in ("_draw_field_objective_control_foundation", "draw_texture_rect(", "_draw_legacy_objective_marker", "_draw_field_objective_control_badge", "for pip in range(threshold)")]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Battle field-objective draw order must retain foundation, imported art or fallback, non-color badge, and progress pips")
+    for forbidden in ("SessionStateStore.SAVE_VERSION =", "BattleRules.", "_session.", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in draw_block, errors, f"Battle field-objective art drawing must remain presentation-only: {forbidden}")
+
+    report_text = report_script_path.read_text(encoding="utf-8")
+    report_scene = report_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, report_scene_path.name, [("BattleFieldObjectiveLandmarkRuntimeReport", "Node")])
+    for token in ('const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]', '"marker_count": marker_rows.size()', '"missing_asset_fails_closed": missing_fails_closed', '"session_authority_exact": authority_exact', "SessionStateStore.SAVE_VERSION == 9", 'OS.get_environment("BATTLE_FIELD_OBJECTIVE_CAPTURE")', "await RenderingServer.frame_post_draw", 'print("BATTLE_FIELD_OBJECTIVE_LANDMARK_RUNTIME_REPORT'):
+        ensure(token in report_text, errors, f"Battle field-objective focused report is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_FIELD_OBJECTIVE_LANDMARK_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_FIELD_OBJECTIVE_LANDMARK_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all eight battle field-objective landmarks")
+        ensure('bool(terrain_payload["field_objective_landmark_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when battle field-objective landmarks are absent")
+        ensure('"field_objective_landmark_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged battle field-objective coverage")
+        for stem, _silhouette, _source_sha, _runtime_sha, _count in expected.values():
+            ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing battle field-objective identity {stem}")
+
+
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -72650,6 +72751,7 @@ def main() -> int:
     validate_overworld_contained_hover_card(errors)
     validate_faction_encounter_landmarks(errors)
     validate_campaign_arc_emblems(errors)
+    validate_battle_field_objective_landmarks(errors)
     validate_overworld_enemy_commander_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)

@@ -1,0 +1,93 @@
+{
+  "schema_id": "battle_field_objective_art_manifest_v1",
+  "source_model": "built_in_image_gen_original_field_objective_landmark",
+  "runtime_canvas": {
+    "width": 128,
+    "height": 128
+  },
+  "render": {
+    "extent_factor": 0.82,
+    "extent_min": 19.0,
+    "extent_max": 28.0,
+    "texture_alpha": 0.98
+  },
+  "control_shapes": {
+    "player": "diamond",
+    "enemy": "downward_triangle",
+    "neutral": "hollow_square"
+  },
+  "objectives": {
+    "cover_line": {
+      "id": "field_objective_cover_line_briar_bulwark",
+      "path": "res://art/battle/runtime/field_objectives/cover_line_briar_bulwark.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/cover_line_briar_bulwark_source.png",
+      "alt_text": "A low woven briar-and-timber bulwark with a narrow firing gap.",
+      "silhouette": "wide_low_screen",
+      "source_sha256": "5e4fa6d09fa68cfc9b8e366a902ed0fe451484c65837e74bb00c2949b4507484",
+      "runtime_sha256": "0388e12ed1999b20b26ebd36aab4639c587a2eabf1acfe87fb824b1599a5303a"
+    },
+    "obstruction_line": {
+      "id": "field_objective_obstruction_line_crossed_stakes",
+      "path": "res://art/battle/runtime/field_objectives/obstruction_line_crossed_stakes.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/obstruction_line_crossed_stakes_source.png",
+      "alt_text": "Two chained timber stake barriers cross into a route-blocking X.",
+      "silhouette": "crossed_blockade",
+      "source_sha256": "732641d6c1601d8b05163e200a10d41a43020f7d54abe1e0065d498f7eac45ab",
+      "runtime_sha256": "10ab7b65b83e9decc00cfefe68935c718b6a98191c3648f05b8b6f0cd6641b26"
+    },
+    "lane_battery": {
+      "id": "field_objective_lane_battery_splitrail",
+      "path": "res://art/battle/runtime/field_objectives/lane_battery_splitrail.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/lane_battery_splitrail_source.png",
+      "alt_text": "An unmanned tripod split-rail bolt thrower spans the firing lane.",
+      "silhouette": "wide_tripod_battery",
+      "source_sha256": "18ea6d6a5e4c10d7199af20ec0e8905057e1f41fce43a5a2beaf5232a21a6bd0",
+      "runtime_sha256": "f07dc42f4465ec1b1f1e6842a87b6627f3f9f29d6b34ef40ef2f67c93711087e"
+    },
+    "hazard_zone": {
+      "id": "field_objective_hazard_zone_mireglass_basin",
+      "path": "res://art/battle/runtime/field_objectives/hazard_zone_mireglass_basin.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/hazard_zone_mireglass_basin_source.png",
+      "alt_text": "A cracked basin bubbles around three jagged amber-green mireglass shards.",
+      "silhouette": "triangular_hazard_basin",
+      "source_sha256": "5c185a4ab871c5282cc6d2f6ca72287c9b14e32255ba6a8998c6db15ecde21bc",
+      "runtime_sha256": "c0728d03eae332c0e22e2faf550ac4cf33fbe0c4fb14617e7b46257d04a749e0"
+    },
+    "breach_point": {
+      "id": "field_objective_breach_point_broken_gate",
+      "path": "res://art/battle/runtime/field_objectives/breach_point_broken_gate.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/breach_point_broken_gate_source.png",
+      "alt_text": "Two broken gate jaws lean away from an open rubble-strewn passage.",
+      "silhouette": "open_gate_jaws",
+      "source_sha256": "03c05efb753e2798d69acc6fe7a8adea8d2a9f67f9247b235ec3a60f3152d9b8",
+      "runtime_sha256": "6d54f8bafd3de39f0c5388f8de020f61938cdcf548a9f658f5c9342f4a601dea"
+    },
+    "ritual_pylon": {
+      "id": "field_objective_ritual_pylon_resonance_stone",
+      "path": "res://art/battle/runtime/field_objectives/ritual_pylon_resonance_stone.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/ritual_pylon_resonance_stone_source.png",
+      "alt_text": "A forked resonance stone rises through bronze rings inside six low oath stones.",
+      "silhouette": "forked_pylon_ring",
+      "source_sha256": "4d9cd897c8de2db226eedfc7ffea89d201bd7084362f120c4541abb873cdb3fc",
+      "runtime_sha256": "fd34c158e482c75df9e9ea4f3c55c3550581d0cb6db1cdfbde9dfea2aec2ab5f"
+    },
+    "signal_beacon": {
+      "id": "field_objective_signal_beacon_tripod_lantern",
+      "path": "res://art/battle/runtime/field_objectives/signal_beacon_tripod_lantern.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/signal_beacon_tripod_lantern_source.png",
+      "alt_text": "A tripod signal mast carries a hooded amber lantern and two blank streamers.",
+      "silhouette": "tall_tripod_signal",
+      "source_sha256": "1378c2af521c2289facddfcafd80637a3cf4af151a80d0272e76e5561b18ff61",
+      "runtime_sha256": "1a60f989e3e2d6be729ec39aacbffc9afe46ba024576d4bdcc8f76f76c68f30d"
+    },
+    "supply_post": {
+      "id": "field_objective_supply_post_frontier_stores",
+      "path": "res://art/battle/runtime/field_objectives/supply_post_frontier_stores.png",
+      "source_path": "res://art/battle/source/generated/field_objectives/supply_post_frontier_stores_source.png",
+      "alt_text": "Stacked field crates, a water cask, ration sacks, and a rolled blanket form a supply post.",
+      "silhouette": "stepped_stores_cluster",
+      "source_sha256": "a135172d1706ae24fba228f8ff60c3fcca2b90e12c9fe84934192072f91b9afe",
+      "runtime_sha256": "13baf08cd4f966fe0f8afc36f5e7bc2b22e3f04c3fd31d814927b83d8548ed72"
+    }
+  }
+}

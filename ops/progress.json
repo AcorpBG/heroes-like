@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and select the next bounded high-impact live content and original-art gap without weakening the release package ceiling."
+    "Audit the next highest-impact live content or distinctive-art gap and register a bounded implementation slice before editing it."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six original campaign arc emblems wired into the live campaign browser and selected-arc header, with exact runtime provenance, accessibility, fallback, capture, and package proof.",
+  "currentNotes": "Completed eight original battle field-objective landmarks wired to all 53 authored objective instances through the live battle board.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-campaign-arc-emblems-10184",
-  "currentSliceId": "content-campaign-arc-emblems-10184",
-  "currentSliceNotes": "Completed six byte-distinct original transparent campaign arc emblems with exact immutable campaign-content paths and accessible descriptions, 24x24 list icons, 30x30 selected-arc header presentation, keyboard/controller refresh, fail-closed fallback, inspected dual-resolution captures, save version 9, and Linux/Windows package proof. Both PCKs are 249478160 bytes with six exact compiled textures, source art excluded, successful packaged startup, and the unchanged 250000000-byte ceiling.",
+  "currentSlice": "content-battle-field-objective-landmarks-10184",
+  "currentSliceId": "content-battle-field-objective-landmarks-10184",
+  "currentSliceNotes": "Completed eight byte-distinct original transparent 128x128 field-objective landmarks with exact immutable type-to-art provenance, non-color descriptions, bounded cached battle-board loading, type-distinct silhouettes, player/enemy/neutral control shapes, retained progress pips, and fail-closed legacy geometry. All 53 authored objectives across 63 encounters resolve exact landmarks; inspected 1280x720 and 1920x1080 captures, focused runtime, repository validation, and the battle layout routing/save-resume sweep pass. Linux and Windows packages boot with eight exact compiled textures, source art excluded, save version 9 unchanged, and a 249595844-byte PCK below the unchanged 250000000-byte ceiling. No whole-game or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content campaign arc emblems 10184",
-  "currentSliceUpdatedAt": "2026-08-29T04:58:55Z",
+  "currentSliceTitle": "content battle field objective landmarks 10184",
+  "currentSliceUpdatedAt": "2026-08-29T05:43:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105272,6 +105272,16 @@
       "startedAt": "2026-08-29T04:08:43Z",
       "notes": "Completed original transparent emblems for Reedfall, Stonewake, Bogbound Oath, Shards of Daybreak, Ninefold Survey, and Frontier Claims. The live campaign list uses exact 24x24 icons and the existing selected-arc header uses the matching 30x30 emblem with non-color accessibility text, keyboard/controller refresh, and fail-closed missing-art behavior. Focused runtime and isolated legacy campaign-menu smokes, repository validation, and inspected 1280x720 and 1920x1080 captures pass. Linux and Windows packages boot with six exact compiled textures, source art excluded, save version 9 unchanged, and a 249478160-byte PCK below the unchanged 250000000-byte ceiling. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T04:58:55Z"
+    },
+    {
+      "id": "content-battle-field-objective-landmarks-10184",
+      "title": "content battle field objective landmarks 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T05:43:47Z",
+      "startedAt": "2026-08-29T05:10:27Z",
+      "notes": "Completed eight byte-distinct original transparent 128x128 battlefield landmarks for cover line, obstruction line, lane battery, hazard zone, breach point, ritual pylon, signal beacon, and supply post. The live board uses immutable manifest ownership, bounded texture and missing-path caches, type-distinct silhouettes, player/enemy/neutral diamond/triangle/square control badges, retained progress pips, and legacy geometry fallback. Exact all-53 authored coverage, save version 9, session authority, inspected 1280x720 and 1920x1080 captures, focused runtime, repository validation, and the battle layout routing/save-resume sweep pass. Linux and Windows packages boot with eight exact compiled textures, source art excluded, and a 249595844-byte PCK below the unchanged 250000000-byte ceiling. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T05:43:47Z"
     }
   ],
   "project": "heroes-like",
@@ -105281,8 +105291,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 60 production heroes have exact adventure-map identities, all 38 faction-authored encounters resolve six faction field-command landmarks, and all six playable campaign arcs now own distinct live browser identity art. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit and select the next bounded high-impact live content and original-art gap while preserving the strict release package ceiling; broader product gaps remain.",
+  "remainingGap": "All 60 production heroes have exact adventure-map identities, all 38 faction-authored encounters resolve six faction field-command landmarks, all six playable campaign arcs own distinct live browser identity art, and all 53 authored battle field objectives resolve eight type-distinct landmarks. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and register the next highest-impact bounded live content or distinctive-art slice while preserving the strict release package ceiling; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
