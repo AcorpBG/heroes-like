@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the six-site major guarded-reward tier with exact guards, live artifact and special rewards, and compact post-claim unsealed landmark art across existing maps.",
+  "currentNotes": "Completed the three-site creature-bank-like family with exact guards, one-time neutral recruit and resource rewards, and compact opened-state fort art across existing maps.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-major-vault-unsealing-10184",
-  "currentSliceId": "content-six-major-vault-unsealing-10184",
-  "currentSliceNotes": "Completed all six major guarded sites across existing maps with exact guards, deterministic artifacts, supported spell, recruit, and one-time scouting rewards, and one compact six-state unsealed landmark atlas. The combined smoke, repository validation, and both packaged startups passed.",
+  "currentSlice": "content-three-creature-bank-forts-10184",
+  "currentSliceId": "content-three-creature-bank-forts-10184",
+  "currentSliceNotes": "Completed Sealed Muster Fort, Kiln Chain Redoubt, and Brasswake Depot as live guarded creature-bank sites with exact scenario guards, distinct neutral recruit bundles, and one compact opened-state atlas. Repository validation, the single three-case smoke with inspected captures, and both packaged startups passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six major vault unsealing 10184",
-  "currentSliceUpdatedAt": "2026-08-29T21:09:58Z",
+  "currentSliceTitle": "content three creature bank forts 10184",
+  "currentSliceUpdatedAt": "2026-08-29T21:31:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106174,6 +106174,16 @@
       "startedAt": "2026-08-29T20:47:22Z",
       "notes": "Completed six live major guarded vaults across six existing maps with exact guard blocking, deterministic standard-table artifacts, supported spell, recruit, and one-time scouting rewards, and one compact original six-state unsealed atlas. The single six-case smoke passed blocking, production battle construction, rewards, claimed art, repeat safety, inspected captures, and save v9; repository validation and matching Linux/Windows 249073568-byte package boots passed.",
       "completedAt": "2026-08-29T21:09:58Z"
+    },
+    {
+      "id": "content-three-creature-bank-forts-10184",
+      "title": "content three creature bank forts 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T21:31:46Z",
+      "startedAt": "2026-08-29T21:14:14Z",
+      "notes": "Completed all three creature-bank-like sites with exact guards, distinct one-time neutral recruit and resource rewards, and one compact opened-state fort atlas. Repository validation, the single three-case smoke with inspected captures, and matching Linux/Windows 249089640-byte package boots passed.",
+      "completedAt": "2026-08-29T21:31:46Z"
     }
   ],
   "project": "heroes-like",
@@ -106183,8 +106193,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Eighteen of 32 guarded-reward sites remain metadata-only despite complete site and map-object records. Those sites and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices rather than placement-only claims. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next runtime-backed content family while preserving the remaining 926432-byte package headroom rather than treating metadata placement as implementation progress.",
+  "remainingGap": "Fifteen of 32 guarded-reward sites remain metadata-only despite complete site and map-object records. Those sites and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices rather than placement-only claims. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next runtime-backed content family while preserving the remaining 910360-byte package headroom rather than treating metadata placement as implementation progress.",
   "reportOnlyEvidence": [
     {
       "entries": [
