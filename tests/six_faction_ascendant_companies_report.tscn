@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/six_faction_ascendant_companies_report.gd" id="1"]
+
+[node name="SixFactionAscendantCompaniesReport" type="Node"]
+script = ExtResource("1")

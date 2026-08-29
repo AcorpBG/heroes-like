@@ -24,8 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-mireclaw-sunvault-frontier-contracts-10184`.
-- Package boundary: both release exports now measure 248364940 bytes, 1635060 bytes below the unchanged 250000000-byte ceiling. All five encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Active implementation slice: none; the ascendant-company batch is complete and the next production-content batch has not yet been selected.
+- Package boundary: both release exports now measure 248443380 bytes, 1556620 bytes below the unchanged 250000000-byte ceiling. All six encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Ascendant Companies
+
+id: `content-six-faction-ascendant-companies-10184`
+
+Status: completed.
+
+Current finding:
+- eighteen fully authored, fully illustrated tier-five-through-tier-seven production units—exactly three per faction—still appear in no army group, so their rules, art, and faction battle language remain absent from every playable battle;
+- each faction has five exact live heroes without a player-command scenario, while every faction now has exactly five distinct authored scenario leads;
+- a large pool of exact-art mines, services, route controls, shrines, and objective sites remains unplaced, so a six-map faction showcase can activate existing production content instead of adding another definition-only catalog wave.
+
+Implementation boundary:
+- author six original skirmish-only 11x6 contracts led by Helva Tollbrand, Tarn Fenhook, Thalen Choirward, Merek Greenbarrow, Vellum Quench, and Damar Oriflag, raising every faction to six distinct scenario leads;
+- add six player ascendant companies and six opposing boss companies so all eighteen currently unused production units enter both live player and enemy battle contexts;
+- activate eighteen selected dormant exact-art sites, add six original boss encounters with distinct objectives/rewards, and generate six transparent silhouette-distinct landmarks in one compact atlas;
+- preserve save version 9, campaign chapter authority, data-driven rules ownership, deterministic combat, accessibility, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all eighteen previously unused production units appear in authored army groups and launch through production battle construction with their existing abilities and exact art;
+- all six maps appear in skirmish selection, create the intended hero/faction/session, expose complete town/economy/objective content, render the exact boss landmark, deterministically resolve authored rewards/flags, and round-trip through save version 9;
+- all eighteen selected dormant sites become live authored placements with exact existing art and no procedural fallback;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete batch, followed by repository validation and Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion evidence:
+- forty-six active scenarios now expose thirty-six distinct lead heroes; Helva, Tarn, Thalen, Merek, Vellum, and Damar each own a complete skirmish contract, while all eighteen selected tier-five-through-seven production units now appear in both player and opposing boss army contexts;
+- the batch adds twelve persistent army groups, six boss encounters, twelve town placements, sixty resource placements activating all eighteen selected dormant exact-art sites, eighteen artifacts, eighteen battle fronts, thirty hooks, and six distinct tactical field objectives;
+- six original transparent generated sources produce one compact 288x48 imported atlas; the combined six-case smoke passed deterministic victories, exact army and landmark rendering, rewards/flags, visual captures, and save-version-9 round trips after a defect-driven Damar company balance correction;
+- repository validation and matching Linux/Windows release-package startup gates passed at 248443380 bytes, with generated source originals and development reports excluded.
+
+Non-goals:
+- no new unit definition, balance-formula change, campaign chapter, town template, artifact, spell, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes unit, map, hero, encounter, landmark, name, text, or protected visual expression.
 
 ## Mireclaw-Sunvault Frontier Contracts
 
