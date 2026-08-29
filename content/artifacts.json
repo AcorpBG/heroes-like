@@ -175,6 +175,39 @@
       }
     },
     {
+      "id": "artifact_source_authored_command_regalia",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "pickup",
+      "reward_context": "authored_scenario_placement",
+      "eligible_object_families": ["pickup"],
+      "eligible_site_families": ["one_shot_pickup"],
+      "required_object_tags": ["small_reward"],
+      "required_reward_categories": [],
+      "guard_tiers": ["unguarded", "light"],
+      "rarity_bands": ["uncommon"],
+      "artifact_ids": [
+        "artifact_lockflame_writ_banner",
+        "artifact_mirechain_hunt_totem",
+        "artifact_zenith_prism_pennon",
+        "artifact_briarcrown_covenant_standard",
+        "artifact_redline_warrant_gonfalon",
+        "artifact_wakebell_mourning_ensign"
+      ],
+      "faction_constraints": [],
+      "set_constraints": {
+        "allowed_set_ids": [],
+        "piece_limit_per_table": 0
+      },
+      "runtime_policy": {
+        "metadata_only": true,
+        "live_drop_execution": false,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
+    },
+    {
       "id": "artifact_source_shrine_accord_rare",
       "schema": "artifact_source_reward_v1",
       "source_tag": "shrine",
@@ -2397,6 +2430,210 @@
         "overworld_movement": 1,
         "scouting_radius": 1
       }
+    },
+    {
+      "id": "artifact_lockflame_writ_banner",
+      "name": "Lockflame Writ Banner",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "lockflame_writ_banners",
+      "roles": ["combat", "defense", "morale"],
+      "accord_affinity": "beacon",
+      "faction_affinity": ["faction_embercourt"],
+      "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Improves defensive command."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Improves initiative command."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {
+        "summary": "Embercourt lock-bridge standard for holding a line and answering the signal quickly.",
+        "icon_id": "artifact_icon_lockflame_writ_banner",
+        "icon_path": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+        "effect_tags": ["defense", "initiative", "beacon", "embercourt"],
+        "comparison_priority": ["battle_defense", "battle_initiative", "faction_affinity"]
+      },
+      "ai_hints": {
+        "value_drivers": ["frontline_survival", "initiative_tempo", "bridge_control"],
+        "preferred_hero_roles": ["defender", "might"],
+        "preferred_faction_ids": ["faction_embercourt"],
+        "combo_tags": ["beacon", "lock", "writ"]
+      },
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A forked road writ hung beneath a hooded lock-lantern. Its wax clauses glow whenever the bearer braces a contested crossing.",
+      "bonuses": {"battle_defense": 1, "battle_initiative": 1}
+    },
+    {
+      "id": "artifact_mirechain_hunt_totem",
+      "name": "Mirechain Hunt Totem",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "mirechain_hunt_totems",
+      "roles": ["combat", "morale"],
+      "accord_affinity": "mire",
+      "faction_affinity": ["faction_mireclaw"],
+      "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Improves attack command."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Improves initiative command."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {
+        "summary": "Mireclaw hunt totem for a faster opening and more vicious first strike.",
+        "icon_id": "artifact_icon_mirechain_hunt_totem",
+        "icon_path": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+        "effect_tags": ["attack", "initiative", "mire", "mireclaw"],
+        "comparison_priority": ["battle_attack", "battle_initiative", "faction_affinity"]
+      },
+      "ai_hints": {
+        "value_drivers": ["frontline_attack", "initiative_tempo", "ambush_pressure"],
+        "preferred_hero_roles": ["raider", "might"],
+        "preferred_faction_ids": ["faction_mireclaw"],
+        "combo_tags": ["mire", "chain", "hunt"]
+      },
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A hooked reedwood totem burdened with ferry chain, horn, and wet hide. Its bone clappers sound just before a mire hunt breaks cover.",
+      "bonuses": {"battle_attack": 1, "battle_initiative": 1}
+    },
+    {
+      "id": "artifact_zenith_prism_pennon",
+      "name": "Zenith Prism Pennon",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "zenith_prism_pennons",
+      "roles": ["combat", "magic", "resistance"],
+      "accord_affinity": "lens",
+      "faction_affinity": ["faction_sunvault"],
+      "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Improves initiative command."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_spell_resistance_pct", "public_summary": "Reduces incoming spell damage."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {
+        "summary": "Sunvault calibration pennon for measured initiative and spell resistance.",
+        "icon_id": "artifact_icon_zenith_prism_pennon",
+        "icon_path": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+        "effect_tags": ["initiative", "resistance", "lens", "sunvault"],
+        "comparison_priority": ["battle_initiative", "battle_spell_resistance_pct", "faction_affinity"]
+      },
+      "ai_hints": {
+        "value_drivers": ["initiative_tempo", "spell_damage_pressure", "relay_control"],
+        "preferred_hero_roles": ["magic", "defender"],
+        "preferred_faction_ids": ["faction_sunvault"],
+        "combo_tags": ["lens", "zenith", "calibration"]
+      },
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "An ivory calibration frame suspends a split pennon beneath a turning zenith prism. Commanders time their advance by its orbiting points of light.",
+      "bonuses": {"battle_initiative": 1, "battle_spell_resistance_pct": 5}
+    },
+    {
+      "id": "artifact_briarcrown_covenant_standard",
+      "name": "Briarcrown Covenant Standard",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "briarcrown_covenant_standards",
+      "roles": ["defense", "movement", "route"],
+      "accord_affinity": "root",
+      "faction_affinity": ["faction_thornwake"],
+      "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Improves defensive command."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Improves field movement."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {
+        "summary": "Thornwake living standard for a rooted line that keeps growing down the road.",
+        "icon_id": "artifact_icon_briarcrown_covenant_standard",
+        "icon_path": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+        "effect_tags": ["defense", "movement", "root", "thornwake"],
+        "comparison_priority": ["battle_defense", "overworld_movement", "faction_affinity"]
+      },
+      "ai_hints": {
+        "value_drivers": ["frontline_survival", "route_tempo", "living_road_control"],
+        "preferred_hero_roles": ["defender", "scout"],
+        "preferred_faction_ids": ["faction_thornwake"],
+        "combo_tags": ["root", "covenant", "briar"]
+      },
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A living standard grafted around a seed-cairn and thorn halo. Its leafcloth tightens against blows while its roots feel for the next roadbed.",
+      "bonuses": {"battle_defense": 1, "overworld_movement": 1}
+    },
+    {
+      "id": "artifact_redline_warrant_gonfalon",
+      "name": "Redline Warrant Gonfalon",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "redline_warrant_gonfalons",
+      "roles": ["combat", "defense"],
+      "accord_affinity": "furnace",
+      "faction_affinity": ["faction_brasshollow"],
+      "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Improves attack command."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Improves defensive command."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {
+        "summary": "Brasshollow pressure warrant for disciplined attack and plated defense.",
+        "icon_id": "artifact_icon_redline_warrant_gonfalon",
+        "icon_path": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+        "effect_tags": ["attack", "defense", "furnace", "brasshollow"],
+        "comparison_priority": ["battle_attack", "battle_defense", "faction_affinity"]
+      },
+      "ai_hints": {
+        "value_drivers": ["frontline_attack", "frontline_survival", "formation_pressure"],
+        "preferred_hero_roles": ["might", "defender"],
+        "preferred_faction_ids": ["faction_brasshollow"],
+        "combo_tags": ["furnace", "redline", "warrant"]
+      },
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A segmented iron gonfalon built around a sealed pressure gauge. Its warrant plates authorize the line to advance exactly to the red mark and hold.",
+      "bonuses": {"battle_attack": 1, "battle_defense": 1}
+    },
+    {
+      "id": "artifact_wakebell_mourning_ensign",
+      "name": "Wakebell Mourning Ensign",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "uncommon",
+      "family": "wakebell_mourning_ensigns",
+      "roles": ["combat", "scouting", "route"],
+      "accord_affinity": "veil",
+      "faction_affinity": ["faction_veilmourn"],
+      "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Improves initiative command."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Extends fog-route scouting."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {
+        "summary": "Veilmourn wreck ensign for prompt response and one farther ring of fog-route sight.",
+        "icon_id": "artifact_icon_wakebell_mourning_ensign",
+        "icon_path": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
+        "effect_tags": ["initiative", "scouting", "veil", "veilmourn"],
+        "comparison_priority": ["battle_initiative", "scouting_radius", "faction_affinity"]
+      },
+      "ai_hints": {
+        "value_drivers": ["initiative_tempo", "fog_route_scouting", "wreck_navigation"],
+        "preferred_hero_roles": ["scout", "raider"],
+        "preferred_faction_ids": ["faction_veilmourn"],
+        "combo_tags": ["veil", "wakebell", "mourning"]
+      },
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "Torn sailcloth hangs between black ship ribs beneath a cracked wake bell. Its fog lantern marks hazards before the mourning note reaches them.",
+      "bonuses": {"battle_initiative": 1, "scouting_radius": 1}
     }
   ]
 }

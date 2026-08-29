@@ -1,0 +1,75 @@
+{
+  "schema": "generated_artifact_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "generated_at_utc": "2026-08-29T12:18:00Z",
+  "generation_originals_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
+  "processing": "alpha_trim_then_aspect_fit_within_116x116_centered_on_transparent_128x128_inventory_canvas_and_within_470x470_south_anchored_on_transparent_512x512_field_canvas",
+  "assets": [
+    {
+      "artifact_id": "artifact_lockflame_writ_banner",
+      "path": "res://art/artifacts/source/generated/command_regalia_wave1/lockflame_writ_banner_source.png",
+      "generation_original": "exec-7c7a53ce-bdf7-48e6-8241-0d1411ef66bc.png",
+      "sha256": "8c044013d04ea69e3f78ce773d4f7375f75e0c73b388ea88d70e1f5fd6bee10e",
+      "inventory_path": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+      "inventory_sha256": "c7606b62c963b10b8af7838d5221eef5b0af583584370fb122be63542df9dbc9",
+      "field_path": "res://art/overworld/runtime/objects/artifacts/lockflame_writ_banner.png",
+      "field_sha256": "2c47b5a0f55632a3b6e47d3ba69c8ade38c720304e0768598761e6ed71653af6",
+      "prompt_summary": "Forked Embercourt cloth banner on a bridge-lock crossbar with hooded lantern, wax writ tabs, and brass counterweight."
+    },
+    {
+      "artifact_id": "artifact_mirechain_hunt_totem",
+      "path": "res://art/artifacts/source/generated/command_regalia_wave1/mirechain_hunt_totem_source.png",
+      "generation_original": "exec-cf04c214-f624-4c08-b88d-dfe4cb736ba3.png",
+      "sha256": "94d308fe3c20a10a040ec14c050e2149be0f6820a067d590b627ce1d827a6757",
+      "inventory_path": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+      "inventory_sha256": "af360e865ce0f40037a321fc20a08d05a240b1ccde4568f81c1e371f226404fb",
+      "field_path": "res://art/overworld/runtime/objects/artifacts/mirechain_hunt_totem.png",
+      "field_sha256": "b88dde93f664e30e1a425c2f849b7dd720408addb04dab2fc11e9068ddecb8bd",
+      "prompt_summary": "Crooked Mireclaw reedwood totem with hooked hide pennant, ferry-chain loops, antler jaw, and bone clappers."
+    },
+    {
+      "artifact_id": "artifact_zenith_prism_pennon",
+      "path": "res://art/artifacts/source/generated/command_regalia_wave1/zenith_prism_pennon_source.png",
+      "generation_original": "exec-2c39b54d-d318-4760-a723-61e9dae709d3.png",
+      "sha256": "1b85479b764512a2445606ab68bb15c77da88e73c00f0b3c1554307d7d2501fd",
+      "inventory_path": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+      "inventory_sha256": "6eda9b72ac83a10cd9f336e02c4e70a2020a19892bf6318e83a44d336281c542",
+      "field_path": "res://art/overworld/runtime/objects/artifacts/zenith_prism_pennon.png",
+      "field_sha256": "90850f214920ab5ffa4b1b02cc04044db2ef0c468071e0586e8e248733f5e984",
+      "prompt_summary": "Sunvault split-tail pennon in an ivory frame with a diamond prism, mirror vanes, and orbiting calibration rings."
+    },
+    {
+      "artifact_id": "artifact_briarcrown_covenant_standard",
+      "path": "res://art/artifacts/source/generated/command_regalia_wave1/briarcrown_covenant_standard_source.png",
+      "generation_original": "exec-de2aff10-6c21-4fe8-aeb5-35f253d73ca9.png",
+      "sha256": "85da65090e2375e940d74976876e513ef9cba33e5663d7656191264b82814f2a",
+      "inventory_path": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+      "inventory_sha256": "4cc79f44a4ce8b35f94351a4ba79dc4989578d6c650608ef68e9315d19caa48f",
+      "field_path": "res://art/overworld/runtime/objects/artifacts/briarcrown_covenant_standard.png",
+      "field_sha256": "15b795cdb203fe4598c3f1c9e93a7a81058b25ea817bbc9acdc5902f525320ec",
+      "prompt_summary": "Living Thornwake forked sapling standard with leafcloth, thorn halo, grafting clasps, and seed-cairn weight."
+    },
+    {
+      "artifact_id": "artifact_redline_warrant_gonfalon",
+      "path": "res://art/artifacts/source/generated/command_regalia_wave1/redline_warrant_gonfalon_source.png",
+      "generation_original": "exec-152a7323-4c4a-4c3d-b62b-562f3a8eb9a9.png",
+      "sha256": "6f87b9d2a54cbc35ced8c05a87867bc51ae8522a88d966a89b41ae18ecf6686c",
+      "inventory_path": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+      "inventory_sha256": "51f7a04d27dfcef0a9342a0d11a15d9e66c8e5c40020124141357081e543a29a",
+      "field_path": "res://art/overworld/runtime/objects/artifacts/redline_warrant_gonfalon.png",
+      "field_sha256": "cc068d86eae76c2ca030ef3c37487f31b2abedcc116a4303f5b428cee60c8131",
+      "prompt_summary": "Segmented Brasshollow metal gonfalon with pressure-gauge crossbeam, toothed redline dial, warrant plates, and furnace vent."
+    },
+    {
+      "artifact_id": "artifact_wakebell_mourning_ensign",
+      "path": "res://art/artifacts/source/generated/command_regalia_wave1/wakebell_mourning_ensign_source.png",
+      "generation_original": "exec-50bad9f3-0d1c-4fe6-a110-566e6f125650.png",
+      "sha256": "4073d19184384c8d04931419f12b16f39e63c1a749613569696f83c35ce34a84",
+      "inventory_path": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
+      "inventory_sha256": "d810ae020bafc73481d2d0484528769906ed0e182cf317317b7c872b1c2a6a54",
+      "field_path": "res://art/overworld/runtime/objects/artifacts/wakebell_mourning_ensign.png",
+      "field_sha256": "854d4948e31faeefde0799742d4a159510d0056fcca99a3d9c2847c757cf2d1b",
+      "prompt_summary": "Veilmourn torn sailcloth ensign between ship ribs with cracked wake bell, fog lantern, slate tally tags, and chain keel."
+    }
+  ]
+}

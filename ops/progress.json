@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and register the next bounded live content/art gap; all currently placed resource-site identities now resolve to exact art."
+    "Implement and validate six original faction command-regalia artifacts through six representative live scenario placements."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1910,22 +1910,62 @@
     },
     "blockedReason": ""
   },
-  "active_slice": {
-    "id": "content-recurring-resource-site-landmarks-wave1-10184",
-    "title": "Recurring Resource-Site Landmarks Wave 1",
-    "status": "completed",
-    "classification": "implementation_slice",
-    "source": "PLAN.md",
-    "startedAt": "2026-08-29T11:42:23Z",
-    "updatedAt": "2026-08-29T12:06:12Z",
-    "completedAt": "2026-08-29T12:06:12Z",
-    "currentBlocker": "",
-    "blocker": "",
-    "blockedReason": null,
-    "notes": "Completed exact original compact-atlas landmarks for all five resource-site identities that reached the live procedural fallback, covering 15 active authored placements without changing site behavior or save authority."
-  },
+  "active_slice": null,
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-six-faction-command-regalia-20260829",
+      "title": "Six-faction command regalia",
+      "sliceId": "content-six-faction-command-regalia-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T12:44:20Z",
+      "updatedAt": "2026-08-29T12:44:20Z",
+      "latestFinding": "Six original faction-aligned uncommon banner artifacts now replace repeated neutral loot in six representative live scenarios, expanding the production catalog from 21 to 27 exact-art artifacts without changing save version, scenario geometry, objectives, guards, or random reward selection.",
+      "artifacts": [
+        "content/artifacts.json",
+        "content/scenarios.json",
+        "art/artifacts/source/generated/command_regalia_wave1",
+        "art/artifacts/runtime",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/artifacts",
+        "tests/six_faction_command_regalia_runtime_report.gd",
+        "tests/overworld_artifact_pickup_icon_runtime_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/six_faction_command_regalia_runtime_report/command-regalia-town-1280x720.png",
+        ".artifacts/six_faction_command_regalia_runtime_report/command-regalia-town-1920x1080.png",
+        ".artifacts/overworld_artifact_pickup_icon_runtime_report/field-regalia-artifacts-1280x720.png",
+        ".artifacts/overworld_artifact_pickup_icon_runtime_report/field-regalia-artifacts-1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "artifact_count_before": 21,
+        "artifact_count_after": 27,
+        "command_regalia_artifact_count": 6,
+        "faction_count": 6,
+        "live_replaced_placement_count": 6,
+        "generated_source_count": 6,
+        "inventory_icon_count_added": 6,
+        "field_sprite_count_added": 6,
+        "linux_pck_size_bytes": 247095548,
+        "windows_pck_size_bytes": 247095548,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 2904452,
+        "artifact_field_pck_entry_count": 27,
+        "development_reports_pck_excluded": true,
+        "source_art_pck_excluded": true,
+        "save_version": 9,
+        "source_backed_behavior_progress": true,
+        "whole_game_release_ready_claimed": false
+      },
+      "checks": [
+        "Focused runtime passed exact placement, collection, automatic banner equip, authored bonus aggregation, positive faction-matched AI valuation, fail-closed unknown icons, and save-version-9 round trips for all six artifacts.",
+        "All-artifact Overworld runtime passed 27 distinct field identities, genuine alpha, containment, fallback restoration, and both supported viewports; inspected Town captures expose all six keyboard-focusable tooltip-bearing actions in the scrollable Logistics surface.",
+        "Repository validation, core systems, artifact taxonomy/source/effects/AI/icon reports, fixed-pickup execution, and affected scenario regressions passed.",
+        "Linux export/boot and Windows export/Wine boot passed with all 27 artifact imports present, generated sources absent, and matching PCKs below the unchanged ceiling."
+      ],
+      "remainingWork": "Completed. Select another bounded live content or exact-art gap; this evidence does not claim whole-game or release readiness."
+    },
     {
       "id": "content-recurring-resource-site-landmarks-wave1-20260829",
       "title": "Recurring resource-site landmarks wave 1",
@@ -15663,14 +15703,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact original field landmarks for the five former procedural-marker resource-site identities; all 292 active authored placements now resolve to exact art.",
+  "currentNotes": "Six-faction command regalia is completed with six live scenario placements, exact inventory and field art, runtime collection/equip/AI/save proof, and Linux/Windows package validation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-recurring-resource-site-landmarks-wave1-10184",
-  "currentSliceId": "content-recurring-resource-site-landmarks-wave1-10184",
-  "currentSliceNotes": "Prism Watch Relay, Lens House Barracks, Bog Drum Outpost, Bellwake Wreck Ledger, and Orevein Assay Depot now own exact compact-atlas art across 15 placements; no placed resource-site identity remains procedural.",
+  "currentSlice": "",
+  "currentSliceId": "",
+  "currentSliceNotes": "No implementation slice is active after completing six-faction command regalia.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "recurring resource site landmarks wave1 10184",
-  "currentSliceUpdatedAt": "2026-08-29T12:06:12Z",
+  "currentSliceTitle": "",
+  "currentSliceUpdatedAt": "2026-08-29T12:44:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21188,6 +21228,38 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
+    {
+      "id": "content-six-faction-command-regalia-10184",
+      "title": "Six-Faction Command Regalia",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T12:12:37Z",
+      "updatedAt": "2026-08-29T12:44:20Z",
+      "completedAt": "2026-08-29T12:44:20Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "content/artifacts.json",
+        "content/scenarios.json",
+        "art/artifacts/runtime",
+        "art/artifacts/source/generated/command_regalia_wave1",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/artifacts",
+        "tests/six_faction_command_regalia_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Expand actual faction equipment and loot identity with one original command-regalia artifact per faction, each collectible from a representative authored scenario and visible in inventory, field, Town, and AI equipment paths.",
+      "completionCriteria": "Six exact transparent generated sources produce distinct 128x128 inventory and 512x512 field surfaces; all six live placements, bonuses, collection/equip/AI valuation, accessibility, fail-closed art, save-version-9 round trip, captures, repository/core, and Linux/Windows package gates pass below the unchanged 250000000-byte ceiling.",
+      "nonGoals": [
+        "No new artifact slot, bonus mechanic, random reward-table change, set, commission, battle salvage rule, scenario geometry, objective, AI algorithm, or save-schema change.",
+        "No copied Heroes expression, unused art-only definitions, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed. Six live faction artifacts, exact runtime art, collection/equip/AI/save behavior, captures, regressions, and both release package gates are validated."
+    },
     {
       "id": "content-recurring-resource-site-landmarks-wave1-10184",
       "title": "Recurring Resource-Site Landmarks Wave 1",

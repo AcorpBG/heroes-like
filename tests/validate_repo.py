@@ -45213,6 +45213,9 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
 
 
 def validate_artifact_icon_runtime(errors: list[str]) -> None:
+    command_source_manifest_path = ROOT / "art" / "artifacts" / "source" / "generated" / "command_regalia_wave1" / "manifest.json"
+    command_runtime_report_path = ROOT / "tests" / "six_faction_command_regalia_runtime_report.gd"
+    command_runtime_scene_path = ROOT / "tests" / "six_faction_command_regalia_runtime_report.tscn"
     required_paths = (
         CONTENT_DIR / "artifacts.json",
         ARTIFACT_RULES_PATH,
@@ -45220,6 +45223,9 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         TOWN_SCRIPT_PATH,
         ARTIFACT_ICON_RUNTIME_REPORT_SCRIPT_PATH,
         ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH,
+        command_source_manifest_path,
+        command_runtime_report_path,
+        command_runtime_scene_path,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing artifact icon runtime owner: {path.relative_to(ROOT)}")
@@ -45256,6 +45262,12 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         "artifact_graftbark_cuirass": "res://art/artifacts/runtime/graftbark_cuirass.png",
         "artifact_quenchplate_vambrace": "res://art/artifacts/runtime/quenchplate_vambrace.png",
         "artifact_fogwake_deckboots": "res://art/artifacts/runtime/fogwake_deckboots.png",
+        "artifact_lockflame_writ_banner": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+        "artifact_mirechain_hunt_totem": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+        "artifact_zenith_prism_pennon": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+        "artifact_briarcrown_covenant_standard": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+        "artifact_redline_warrant_gonfalon": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+        "artifact_wakebell_mourning_ensign": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
     }
     artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
     ensure(set(artifacts) == set(expected_icons), errors, "Artifact icon adoption must cover every production artifact")
@@ -45280,28 +45292,45 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
     ensure(len(set(icon_paths)) == len(expected_icons), errors, "Artifact icon paths must be unique across all production artifacts")
 
     field_regalia = {
-        "artifact_bridgefire_standard": ("faction_embercourt", "banner", "river-pass", "warcrest_ruin", 5, 1),
-        "artifact_reedshadow_waders": ("faction_mireclaw", "boots", "bogbound-oath", "bogbound_boots", 2, 1),
-        "artifact_prismward_mantle": ("faction_sunvault", "armor", "prismhearth-watch", "spire_gorget", 8, 4),
-        "artifact_graftbark_cuirass": ("faction_thornwake", "armor", "mireford-skirmish", "ford_gorget", 8, 4),
-        "artifact_quenchplate_vambrace": ("faction_brasshollow", "armor", "orevein-contract", "orevein_bastion_gorget", 6, 3),
-        "artifact_fogwake_deckboots": ("faction_veilmourn", "boots", "bellwake-wreck-claim", "bellwake_trailsinger_boots", 6, 3),
+        "artifact_bridgefire_standard": ("faction_embercourt", "banner", "river-pass", "warcrest_ruin", 5, 1, "field_regalia"),
+        "artifact_reedshadow_waders": ("faction_mireclaw", "boots", "bogbound-oath", "bogbound_boots", 2, 1, "field_regalia"),
+        "artifact_prismward_mantle": ("faction_sunvault", "armor", "prismhearth-watch", "spire_gorget", 8, 4, "field_regalia"),
+        "artifact_graftbark_cuirass": ("faction_thornwake", "armor", "mireford-skirmish", "ford_gorget", 8, 4, "field_regalia"),
+        "artifact_quenchplate_vambrace": ("faction_brasshollow", "armor", "orevein-contract", "orevein_bastion_gorget", 6, 3, "field_regalia"),
+        "artifact_fogwake_deckboots": ("faction_veilmourn", "boots", "bellwake-wreck-claim", "bellwake_trailsinger_boots", 6, 3, "field_regalia"),
+        "artifact_lockflame_writ_banner": ("faction_embercourt", "banner", "causeway-stand", "causeway_pennon", 5, 3, "command_regalia_wave1"),
+        "artifact_mirechain_hunt_totem": ("faction_mireclaw", "banner", "bogbound-oath", "bogbound_pennon", 5, 3, "command_regalia_wave1"),
+        "artifact_zenith_prism_pennon": ("faction_sunvault", "banner", "prismhearth-watch", "halo_pennon", 5, 3, "command_regalia_wave1"),
+        "artifact_briarcrown_covenant_standard": ("faction_thornwake", "banner", "mireford-skirmish", "bridge_pennon", 5, 3, "command_regalia_wave1"),
+        "artifact_redline_warrant_gonfalon": ("faction_brasshollow", "banner", "orevein-contract", "riverwatch_warcrest_pennon", 9, 4, "command_regalia_wave1"),
+        "artifact_wakebell_mourning_ensign": ("faction_veilmourn", "banner", "bellwake-wreck-claim", "bellwake_waymark_compass", 3, 1, "command_regalia_wave1"),
+    }
+    command_regalia_bonuses = {
+        "artifact_lockflame_writ_banner": {"battle_defense": 1, "battle_initiative": 1},
+        "artifact_mirechain_hunt_totem": {"battle_attack": 1, "battle_initiative": 1},
+        "artifact_zenith_prism_pennon": {"battle_initiative": 1, "battle_spell_resistance_pct": 5},
+        "artifact_briarcrown_covenant_standard": {"battle_defense": 1, "overworld_movement": 1},
+        "artifact_redline_warrant_gonfalon": {"battle_attack": 1, "battle_defense": 1},
+        "artifact_wakebell_mourning_ensign": {"battle_initiative": 1, "scouting_radius": 1},
     }
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {})
     field_sprites = manifest.get("artifact_field_sprites", {})
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     source_payloads: list[bytes] = []
-    for artifact_id, (faction_id, slot, scenario_id, placement_id, x, y) in field_regalia.items():
+    for artifact_id, (faction_id, slot, scenario_id, placement_id, x, y, source_folder) in field_regalia.items():
         artifact = artifacts.get(artifact_id, {})
         short_id = artifact_id.removeprefix("artifact_")
         icon_path = f"res://art/artifacts/runtime/{short_id}.png"
         field_path = f"res://art/overworld/runtime/objects/artifacts/{short_id}.png"
-        source_path = f"res://art/artifacts/source/generated/field_regalia/{short_id}_source.png"
+        source_path = f"res://art/artifacts/source/generated/{source_folder}/{short_id}_source.png"
         asset_id = f"artifact_field_{short_id}"
         ensure(artifact.get("rarity") == "uncommon", errors, f"Field regalia {artifact_id} must remain uncommon")
         ensure(artifact.get("slot") == slot, errors, f"Field regalia {artifact_id} must retain its authored equipment slot")
         ensure(artifact.get("faction_affinity") == [faction_id], errors, f"Field regalia {artifact_id} must retain one exact faction affinity")
+        if artifact_id in command_regalia_bonuses:
+            ensure(artifact.get("bonuses") == command_regalia_bonuses[artifact_id], errors, f"Command regalia {artifact_id} must retain its exact supported live bonuses")
+            ensure(artifact.get("artifact_class") == "faction" and artifact.get("accord_affinity") in {"beacon", "mire", "lens", "root", "furnace", "veil"}, errors, f"Command regalia {artifact_id} must retain its faction artifact identity")
         ensure(str(artifact.get("ui", {}).get("icon_path", "")) == icon_path, errors, f"Field regalia {artifact_id} must retain its separate inventory icon")
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         ensure(field_sprites.get(artifact_id) == asset_id, errors, f"Field regalia {artifact_id} must map to its exact field asset")
@@ -45310,6 +45339,8 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         ensure(entry.get("source_generated") == source_path, errors, f"Field regalia {artifact_id} must retain original generated-source provenance")
         ensure(entry.get("source_model") == "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field", errors, f"Field regalia {artifact_id} must name the built-in image generation source")
         ensure(entry.get("asset_policy") == "separate_runtime_surfaces_from_shared_original_source", errors, f"Field regalia {artifact_id} must retain separate icon and field curation")
+        if artifact_id in command_regalia_bonuses:
+            ensure(len(str(entry.get("visual_description", "")).strip()) >= 48, errors, f"Command regalia {artifact_id} must retain a non-color silhouette description")
         field_disk = res_path_to_disk(field_path)
         source_disk = res_path_to_disk(source_path)
         ensure(field_disk.is_file() and png_size(field_disk) == (512, 512), errors, f"Field regalia {artifact_id} must own a 512x512 field PNG")
@@ -45319,7 +45350,48 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         scenario = scenarios.get(scenario_id, {})
         placements = [row for row in scenario.get("artifact_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
         ensure(placements == [{"placement_id": placement_id, "artifact_id": artifact_id, "x": x, "y": y}], errors, f"Field regalia {artifact_id} must retain its exact live scenario placement")
-    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six field-regalia generated sources must be present and distinct")
+    ensure(len(source_payloads) == 12 and len(set(source_payloads)) == 12, errors, "All twelve faction-regalia generated sources must be present and distinct")
+
+    command_source_manifest = load_json(command_source_manifest_path)
+    command_source_rows = {
+        str(row.get("artifact_id", "")): row
+        for row in command_source_manifest.get("assets", [])
+        if isinstance(row, dict)
+    }
+    ensure(command_source_manifest.get("generation_mode") == "built_in_image_gen", errors, "Command-regalia source manifest must retain built-in image generation provenance")
+    ensure("alpha_trim_then_aspect_fit" in str(command_source_manifest.get("processing", "")), errors, "Command-regalia source manifest must retain deterministic alpha-safe derivation")
+    ensure(set(command_source_rows) == set(command_regalia_bonuses), errors, "Command-regalia source manifest must cover exactly the six live faction artifacts")
+    for artifact_id in command_regalia_bonuses:
+        short_id = artifact_id.removeprefix("artifact_")
+        row = command_source_rows.get(artifact_id, {})
+        source_disk = ROOT / "art" / "artifacts" / "source" / "generated" / "command_regalia_wave1" / f"{short_id}_source.png"
+        icon_disk = ROOT / "art" / "artifacts" / "runtime" / f"{short_id}.png"
+        field_disk = ROOT / "art" / "overworld" / "runtime" / "objects" / "artifacts" / f"{short_id}.png"
+        ensure(row.get("path") == f"res://art/artifacts/source/generated/command_regalia_wave1/{short_id}_source.png", errors, f"Command-regalia source manifest path changed for {artifact_id}")
+        ensure(row.get("inventory_path") == f"res://art/artifacts/runtime/{short_id}.png" and row.get("field_path") == f"res://art/overworld/runtime/objects/artifacts/{short_id}.png", errors, f"Command-regalia runtime provenance changed for {artifact_id}")
+        ensure(len(str(row.get("prompt_summary", "")).strip()) >= 64, errors, f"Command-regalia source manifest must retain a specific prompt summary for {artifact_id}")
+        for disk_path, hash_key in ((source_disk, "sha256"), (icon_disk, "inventory_sha256"), (field_disk, "field_sha256")):
+            if disk_path.is_file():
+                ensure(row.get(hash_key) == hashlib.sha256(disk_path.read_bytes()).hexdigest(), errors, f"Command-regalia manifest hash changed for {artifact_id} {hash_key}")
+
+    command_report_text = command_runtime_report_path.read_text(encoding="utf-8")
+    command_scene_text = command_runtime_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(command_scene_text, errors, "six_faction_command_regalia_runtime_report.tscn", [("SixFactionCommandRegaliaRuntimeReport", "Node")])
+    for token in (
+        'const REPORT_ID := "SIX_FACTION_COMMAND_REGALIA_RUNTIME_REPORT"',
+        "OverworldRules.collect_active_artifact(session)",
+        "EnemyAdventureRules.artifact_target_valuation_breakdown(",
+        "ArtifactRules.aggregate_bonuses(equipped_hero)",
+        "restored.from_dict(payload.duplicate(true))",
+        'int(payload.get("save_version", -1)) == 9',
+        'load("res://scenes/town/TownShell.tscn").instantiate()',
+        'shell.call("validation_toggle_narrow_town_orders")',
+        'ArtifactRules.artifact_icon_path("artifact_missing_command_regalia") != ""',
+        'OS.get_environment("COMMAND_REGALIA_CAPTURE_DIR")',
+    ):
+        ensure(token in command_report_text, errors, f"Command-regalia runtime report is missing live proof token: {token}")
+    for artifact_id in command_regalia_bonuses:
+        ensure(command_report_text.count(f'"{artifact_id}"') >= 1, errors, f"Command-regalia runtime report must cover {artifact_id}")
 
     artifact_rules_text = ARTIFACT_RULES_PATH.read_text(encoding="utf-8")
     action_block = function_block(artifact_rules_text, "artifact_id_for_management_action")
@@ -50009,7 +50081,7 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {}) if isinstance(manifest, dict) else {}
     field_sprites = manifest.get("artifact_field_sprites", {}) if isinstance(manifest, dict) else {}
-    ensure(len(artifacts) == 21, errors, "Overworld artifact pickup adoption must cover the 21 production artifacts")
+    ensure(len(artifacts) == 27, errors, "Overworld artifact pickup adoption must cover the 27 production artifacts")
     icon_ids: list[str] = []
     icon_paths: list[str] = []
     field_asset_ids: list[str] = []
