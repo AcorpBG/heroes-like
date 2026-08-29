@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six standalone skirmish contracts that promote underused exact hero identities into playable command roles with distinct maps, boss encounters, expedition armies, and original compact art.",
+  "currentNotes": "Completed one substantial six-scenario content batch for the three underrepresented production factions with one consolidated gameplay/runtime/visual smoke.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-standalone-hero-contracts-10184",
-  "currentSliceId": "content-six-faction-standalone-hero-contracts-10184",
-  "currentSliceNotes": "Completed six skirmish-only maps led by previously tavern-only production heroes. One combined six-case smoke passed exact art, deterministic boss victories, rewards/flags, captures, and save v9; repository validation and matching Linux/Windows 248230552-byte package boots passed.",
+  "currentSlice": "content-three-faction-outer-reach-contracts-10184",
+  "currentSliceId": "content-three-faction-outer-reach-contracts-10184",
+  "currentSliceNotes": "Completed six skirmish-only contracts led by Selka, Daxis, Halen, Veyra, Jessa, and Morwen, activating fifteen dormant exact-art sites with one compact six-boss atlas. One combined six-case smoke passed, repository validation passed, and matching Linux/Windows 248310728-byte packages booted below the ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction standalone hero contracts 10184",
-  "currentSliceUpdatedAt": "2026-08-29T16:43:45Z",
+  "currentSliceTitle": "content three faction outer reach contracts 10184",
+  "currentSliceUpdatedAt": "2026-08-29T17:18:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106084,6 +106084,16 @@
       "startedAt": "2026-08-29T16:17:42Z",
       "notes": "Completed six skirmish-only maps led by Torren, Sable, Varis, Ardren, Kuld, and Cela, with contract-specific expedition armies, six exact boss encounters, and one compact original atlas. One combined six-case smoke passed exact selection/rendering, deterministic victories, rewards/flags, captures, and save v9; repository validation and matching Linux/Windows 248230552-byte package boots passed.",
       "completedAt": "2026-08-29T16:43:45Z"
+    },
+    {
+      "id": "content-three-faction-outer-reach-contracts-10184",
+      "title": "content three faction outer reach contracts 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T17:18:05Z",
+      "startedAt": "2026-08-29T16:49:08Z",
+      "notes": "Completed six skirmish-only maps led by Selka, Daxis, Halen, Veyra, Jessa, and Morwen, with contract-specific player companies, fifteen activated exact-art sites, six boss fronts, and one compact original atlas. One consolidated six-case smoke passed deterministic victories, rewards/flags, captures, and save v9; repository validation and matching Linux/Windows 248310728-byte package boots passed.",
+      "completedAt": "2026-08-29T17:18:05Z"
     }
   ],
   "project": "heroes-like",
@@ -106093,8 +106103,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Twenty of 60 exact live heroes now headline authored scenarios, leaving forty production identities without a player-facing command map. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next coherent production-content batch from remaining hero-command, scenario, encounter, artifact, spell, and faction-art gaps; do not infer whole-game release readiness from this completed slice.",
+  "remainingGap": "Twenty-six of 60 exact live heroes now headline authored scenarios, leaving thirty-four production identities without a player-facing command map. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next coherent production-content batch from remaining hero-command, scenario, encounter, artifact, spell, and faction-art gaps; preserve the 1689272-byte package headroom and do not infer whole-game release readiness from this completed slice.",
   "reportOnlyEvidence": [
     {
       "entries": [

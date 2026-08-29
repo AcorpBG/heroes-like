@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_outer_reach_contract_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/outer_reach_contracts/outer_reach_contracts_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "4ee0c4402661948ccb9734a4662b4f818c2091c985892db89f8e3faee4ac2011",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_42x42_and_south_anchor_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six original painterly orthographic outer-reach objective landmarks with strong non-color silhouettes and genuine transparency; no characters, text, logos, terrain cards, watermarks, or copied franchise expression.",
+  "items": [
+    {"encounter_id":"encounter_selka_peat_chain_levy","asset_id":"encounter_outer_reach_peat_chain_tally_pit","source_path":"res://art/overworld/source/generated/encounters/outer_reach_contracts/peat_chain_tally_pit_source.png","source_sha256":"3788f8d722e1dcc192d960aa9116ce142f89f8f4dbf7b326266055e618af9b00","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ab04b2ec-ed84-4009-8f32-3d922520516c.png","atlas_region":[0,0,48,48],"presentation_role":"peat_chain_tally_pit"},
+    {"encounter_id":"encounter_daxis_meridian_impound","asset_id":"encounter_outer_reach_meridian_prism_impound","source_path":"res://art/overworld/source/generated/encounters/outer_reach_contracts/meridian_prism_impound_source.png","source_sha256":"3caab08bc5b5c8a6a4fb58d0b2638c00b9da90f39dfb244786cdcdb08a06960c","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-755876d8-71f4-45e4-9a85-18526168dc6d.png","atlas_region":[48,0,48,48],"presentation_role":"meridian_prism_impound"},
+    {"encounter_id":"encounter_halen_furnace_railbreak","asset_id":"encounter_outer_reach_furnace_railblock","source_path":"res://art/overworld/source/generated/encounters/outer_reach_contracts/furnace_railblock_source.png","source_sha256":"fe6b99d7da37513173292bd220eb37f0c9df0d203686b2922423a97fa0941562","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-bae33046-c7cc-4efc-b678-96aef9290757.png","atlas_region":[96,0,48,48],"presentation_role":"furnace_railblock"},
+    {"encounter_id":"encounter_veyra_drowned_orchard","asset_id":"encounter_outer_reach_drowned_seed_bell","source_path":"res://art/overworld/source/generated/encounters/outer_reach_contracts/drowned_seed_bell_source.png","source_sha256":"a637cef61fd3dd553912c31865dc1a5324fade1eeaf3f1c36160e28b243aa2c0","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ced70b03-ff8c-4ca4-a6ad-d62fe42bbf65.png","atlas_region":[144,0,48,48],"presentation_role":"drowned_seed_bell"},
+    {"encounter_id":"encounter_jessa_lockfire_boom","asset_id":"encounter_outer_reach_lockfire_chain_buoy","source_path":"res://art/overworld/source/generated/encounters/outer_reach_contracts/lockfire_chain_buoy_source.png","source_sha256":"714893ee09ea0ce93437f27304c0776271288dc5427574300ab7b773efe79f8a","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-bd91a331-ee5a-4c09-9595-9bec9d0b54d2.png","atlas_region":[192,0,48,48],"presentation_role":"lockfire_chain_buoy"},
+    {"encounter_id":"encounter_morwen_rootwake_vigil","asset_id":"encounter_outer_reach_rootwake_ghost_mast","source_path":"res://art/overworld/source/generated/encounters/outer_reach_contracts/rootwake_ghost_mast_source.png","source_sha256":"a85351ff530a476c6d833c5f04d4532cb3509e12566a9e4bb8361019b766bb8a","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0c820ae3-b649-400b-ab34-1d8b3af94368.png","atlas_region":[240,0,48,48],"presentation_role":"rootwake_ghost_mast"}
+  ]
+}
