@@ -73,7 +73,7 @@ func _run() -> void:
 		"authored_neutral_encounter_count": 25,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback_cases": FALLBACK_CASES,
-		"fallback_order": ["faction_encounter_landmark", "primary_unit_icon", "mapped_or_default_encounter_sprite"],
+		"fallback_order": ["exact_encounter_landmark", "faction_encounter_landmark", "primary_unit_icon", "mapped_or_default_encounter_sprite"],
 		"rows": rows,
 		"save_version": SessionStateStore.SAVE_VERSION,
 	}))
@@ -132,6 +132,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		var fallback_exact: bool = not fallback.is_empty() \
 			and String(fallback.get("sprite_asset_id", "")) == "" \
 			and not bool(fallback.get("uses_commander_sprite", true)) \
+			and not bool(fallback.get("uses_identity_encounter_sprite", true)) \
 			and String(fallback.get("faction_encounter_asset_id", "")) == expected_faction_asset_id \
 			and String(fallback.get("faction_encounter_path", "")) == expected_faction_path \
 			and load(expected_faction_path) is Texture2D \
@@ -193,6 +194,7 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 		if String(profile.get("sprite_path", "")) != expected_path or not (load(expected_path) is Texture2D):
 			return {"ok": false, "reason": "texture", "profile": profile}
 		if not bool(profile.get("uses_commander_sprite", false)) \
+			or bool(profile.get("uses_identity_encounter_sprite", true)) \
 			or bool(profile.get("uses_faction_encounter_sprite", true)) \
 			or bool(profile.get("uses_unit_icon_fallback", true)) \
 			or bool(profile.get("uses_encounter_sprite_fallback", true)):
@@ -228,10 +230,12 @@ func _validate_faction_landmark_profiles(profiles: Array) -> Dictionary:
 		var expected_path := String(EXPECTED_FACTION_ENCOUNTER_PATHS.get(faction_id, ""))
 		var exact: bool = expected_asset_id != "" \
 			and String(profile.get("sprite_asset_id", "")) == "" \
+			and String(profile.get("identity_encounter_asset_id", "")) == "" \
 			and String(profile.get("faction_encounter_asset_id", "")) == expected_asset_id \
 			and String(profile.get("faction_encounter_path", "")) == expected_path \
 			and load(expected_path) is Texture2D \
 			and not bool(profile.get("uses_commander_sprite", true)) \
+			and not bool(profile.get("uses_identity_encounter_sprite", true)) \
 			and bool(profile.get("uses_faction_encounter_sprite", false)) \
 			and not bool(profile.get("uses_unit_icon_fallback", true)) \
 			and not bool(profile.get("uses_encounter_sprite_fallback", true)) \
@@ -245,14 +249,18 @@ func _validate_faction_landmark_profiles(profiles: Array) -> Dictionary:
 
 func _validate_non_faction_fallbacks(map_view: Node) -> Dictionary:
 	var neutral: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_roadward_lodge_watch"})
-	var neutral_exact: bool = String(neutral.get("faction_encounter_asset_id", "")) == "" \
+	var neutral_exact: bool = String(neutral.get("identity_encounter_asset_id", "")) == "" \
+		and String(neutral.get("faction_encounter_asset_id", "")) == "" \
+		and not bool(neutral.get("uses_identity_encounter_sprite", true)) \
 		and not bool(neutral.get("uses_faction_encounter_sprite", true)) \
 		and bool(neutral.get("uses_unit_icon_fallback", false)) \
 		and not bool(neutral.get("uses_encounter_sprite_fallback", true)) \
 		and String(neutral.get("unit_icon_path", "")) != "" \
 		and load(String(neutral.get("unit_icon_path", ""))) is Texture2D
 	var unknown: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_missing_presentation_fixture"})
-	var unknown_exact: bool = String(unknown.get("faction_encounter_asset_id", "")) == "" \
+	var unknown_exact: bool = String(unknown.get("identity_encounter_asset_id", "")) == "" \
+		and String(unknown.get("faction_encounter_asset_id", "")) == "" \
+		and not bool(unknown.get("uses_identity_encounter_sprite", true)) \
 		and not bool(unknown.get("uses_faction_encounter_sprite", true)) \
 		and not bool(unknown.get("uses_unit_icon_fallback", true)) \
 		and bool(unknown.get("uses_encounter_sprite_fallback", false)) \

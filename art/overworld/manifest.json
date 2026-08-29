@@ -694,6 +694,60 @@
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "bellwake_signal_mooring_field_command"
     },
+    "encounter_signature_reed_totemists": {
+      "path": "res://art/overworld/runtime/objects/encounters/signatures/reed_totemists.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/signatures/reed_totemists_source.png",
+      "source_model": "built_in_image_gen_original_signature_encounter_landmark",
+      "assigned_encounter_id": "encounter_reed_totemists",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "reed_jaw_totem_cluster",
+      "accessible_description": "A crooked cluster of reed poles carries a carved boar-jaw mask, bone chimes, moss, and an amber ward lantern."
+    },
+    "encounter_signature_archive_wardens": {
+      "path": "res://art/overworld/runtime/objects/encounters/signatures/archive_wardens.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/signatures/archive_wardens_source.png",
+      "source_model": "built_in_image_gen_original_signature_encounter_landmark",
+      "assigned_encounter_id": "encounter_archive_wardens",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "fortified_field_archive",
+      "accessible_description": "An iron-bound red field archive stands beneath an amber lantern between two short warding pikes."
+    },
+    "encounter_signature_relay_pickets": {
+      "path": "res://art/overworld/runtime/objects/encounters/signatures/relay_pickets.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/signatures/relay_pickets_source.png",
+      "source_model": "built_in_image_gen_original_signature_encounter_landmark",
+      "assigned_encounter_id": "encounter_relay_pickets",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "portable_prism_relay",
+      "accessible_description": "A pale-gold prism and two mirrored signal vanes rise behind three cord-linked ivory boundary stakes."
+    },
+    "encounter_signature_graftroot_wardens": {
+      "path": "res://art/overworld/runtime/objects/encounters/signatures/graftroot_wardens.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/signatures/graftroot_wardens_source.png",
+      "source_model": "built_in_image_gen_original_signature_encounter_landmark",
+      "assigned_encounter_id": "encounter_graftroot_wardens",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "living_graftroot_ward",
+      "accessible_description": "Two antler-like living roots and a copper thorn loop guard a luminous green sapstone."
+    },
+    "encounter_signature_orevein_exactors": {
+      "path": "res://art/overworld/runtime/objects/encounters/signatures/orevein_exactors.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/signatures/orevein_exactors_source.png",
+      "source_model": "built_in_image_gen_original_signature_encounter_landmark",
+      "assigned_encounter_id": "encounter_orevein_exactors",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "portable_assay_station",
+      "accessible_description": "A black iron assay tripod carries brass scales above a hot sample crucible and locked ore strongbox."
+    },
+    "encounter_signature_bellwake_privateers": {
+      "path": "res://art/overworld/runtime/objects/encounters/signatures/bellwake_privateers.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/signatures/bellwake_privateers_source.png",
+      "source_model": "built_in_image_gen_original_signature_encounter_landmark",
+      "assigned_encounter_id": "encounter_bellwake_privateers",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "fog_coast_signal_mooring",
+      "accessible_description": "A leaning weathered mast holds a dark ship bell, torn teal pennant, anchor hook, rope, and pale harbor lantern."
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4760,6 +4814,14 @@
     "faction_thornwake": "encounter_faction_thornwake",
     "faction_brasshollow": "encounter_faction_brasshollow",
     "faction_veilmourn": "encounter_faction_veilmourn"
+  },
+  "encounter_identity_sprites": {
+    "encounter_reed_totemists": "encounter_signature_reed_totemists",
+    "encounter_archive_wardens": "encounter_signature_archive_wardens",
+    "encounter_relay_pickets": "encounter_signature_relay_pickets",
+    "encounter_graftroot_wardens": "encounter_signature_graftroot_wardens",
+    "encounter_orevein_exactors": "encounter_signature_orevein_exactors",
+    "encounter_bellwake_privateers": "encounter_signature_bellwake_privateers"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 92216-byte release-package headroom."
+    "Audit and register the next bounded original-content or art gap with an explicit strategy for the remaining 48436-byte release-package headroom."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,63 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "performance-battle-refresh-derived-surface-reuse-10184",
-    "title": "Battle Refresh Derived-Surface Reuse",
+    "id": "content-signature-encounter-landmarks-10184",
+    "title": "Signature Encounter Landmarks",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-27T20:43:00Z",
-    "updatedAt": "2026-08-27T21:07:57Z",
-    "completedAt": "2026-08-27T21:07:57Z",
+    "startedAt": "2026-08-29T08:45:00Z",
+    "updatedAt": "2026-08-29T08:53:17Z",
+    "completedAt": "2026-08-29T08:53:17Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed exact synchronous Battle derived-surface reuse. Independent old-path/preloaded controls preserve five ordered movement intents, click/hex payloads, focus and session authority. Isolated movement intents improve 15.6->6.8 ms, position/hex surfaces about 16.5-16.9->7.0-7.1 ms, and deferred preferred focus 39.7->0.013 ms. The real 28-refresh board profile improves its surface/board bucket 2521.2->2303.5 ms and full span 39.8->36.8 seconds. Deterministic RNG, legality, balance breadth signature 829808c9, input/focus/accessibility, animation, quick resolve, withdrawal, save/reload, core, static/editor, Linux export/startup, and Windows export/fresh-Wine startup are green; packaged Battle interaction, hardware, signing, whole-game, and release-readiness remain excluded."
+    "notes": "Completed six byte-distinct original signature encounter landmarks. Commander, exact identity, faction, unit, and generic fallback order; session/save authority; focused runtime; existing commander regression; accessibility; core; repository/editor; inspected captures; and Linux/Windows package boots pass. Both PCKs are 249951564 bytes with all six compiled textures present and source art excluded. The unrelated broad Overworld visual smoke still has its pre-existing 1280px objective-header ellipsis assertion."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-signature-encounter-landmarks-20260829",
+      "title": "Signature encounter landmarks",
+      "sliceId": "content-signature-encounter-landmarks-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T08:53:17Z",
+      "updatedAt": "2026-08-29T08:53:17Z",
+      "latestFinding": "Six original compact landmarks give Reed Totemists, Archive Wardens, Relay Pickets, Graftroot Wardens, Orevein Exactors, and Bellwake Privateers exact live Overworld identity while preserving commander-first and faction/unit/generic fallback authority.",
+      "artifacts": [
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/signatures",
+        "art/overworld/source/generated/encounters/signatures",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_signature_encounter_landmark_runtime_report.gd",
+        "tests/overworld_signature_encounter_landmark_runtime_report.tscn",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        ".artifacts/signature_encounter_landmarks/runtime_contact_sheet.png",
+        ".artifacts/signature_encounter_landmarks/captures/signature_encounters_1280x720.png",
+        ".artifacts/signature_encounter_landmarks/captures/signature_encounters_1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "exact_signature_encounter_count": 6,
+        "runtime_texture_size_px": 64,
+        "fallback_order_exact": true,
+        "save_version": 9,
+        "session_authority_exact": true,
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "source_art_excluded": true,
+        "pck_size_bytes": 249951564,
+        "pck_ceiling_bytes": 250000000,
+        "pck_remaining_headroom_bytes": 48436,
+        "overworld_visual_smoke_unrelated_objective_header_ellipsis_red": true,
+        "whole_game_release_ready_claimed": false
+      }
+    },
     {
       "id": "ux-battle-movement-range-alternating-edge-cues-20260826",
       "title": "Battle movement-range alternating edge cues",
@@ -15329,14 +15371,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact original cartographic seals for all 24 live campaign chapters with strict scenario authority, compact live presentation, and no campaign or save-schema change.",
+  "currentNotes": "Completed exact signature encounter landmarks for one live encounter per production faction with compact art and unchanged gameplay/session authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-campaign-later-chapter-seals-10184",
-  "currentSliceId": "content-campaign-later-chapter-seals-10184",
-  "currentSliceNotes": "Completed 18 byte-distinct original later-chapter seals, bringing exact live coverage to 24/24 chapters. Scenario authority, 24x24 presentation, 24-entry bounded caching, non-color tooltips, accessibility refresh, and missing-art fail-closed behavior pass with save version 9 unchanged. Focused runtime, campaign compatibility, accessibility, core, repository, inspected captures, and Linux/Windows package validation pass; both packages contain 24 exact compiled textures, exclude source art, boot successfully, and produce a 249907784-byte PCK under the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
+  "currentSlice": "content-signature-encounter-landmarks-10184",
+  "currentSliceId": "content-signature-encounter-landmarks-10184",
+  "currentSliceNotes": "Completed six byte-distinct original transparent 64x64 landmarks for Reed Totemists, Archive Wardens, Relay Pickets, Graftroot Wardens, Orevein Exactors, and Bellwake Privateers. Live fallback order, session/save authority, focused/runtime/static validation, inspected 1280x720 and 1920x1080 captures, and Linux/Windows package boots pass; both PCKs are 249951564 bytes, source art is excluded, and 48436 bytes remain below the strict ceiling. The unrelated broad Overworld visual smoke retains its pre-existing objective-header ellipsis red.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content campaign later chapter seals 10184",
-  "currentSliceUpdatedAt": "2026-08-29T08:19:34Z",
+  "currentSliceTitle": "content signature encounter landmarks 10184",
+  "currentSliceUpdatedAt": "2026-08-29T08:53:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20854,6 +20896,37 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
+    {
+      "id": "content-signature-encounter-landmarks-10184",
+      "title": "Signature Encounter Landmarks",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T08:45:00Z",
+      "updatedAt": "2026-08-29T08:53:17Z",
+      "completedAt": "2026-08-29T08:53:17Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/signatures",
+        "art/overworld/source/generated/encounters/signatures",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_signature_encounter_landmark_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tools/packaging_linux_export_smoke.py",
+        "tools/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Give six live signature faction encounters exact overworld identities instead of collapsing them into generic faction landmarks.",
+      "completionCriteria": "Six exact transparent 64x64 runtime landmarks with immutable source provenance render after commander identity and before faction fallback; focused, visual, compatibility, repository/editor, and bounded Linux/Windows package gates pass below the unchanged 250000000-byte PCK ceiling.",
+      "nonGoals": [
+        "No encounter rules, armies, balance, AI, objectives, placement, battle, save/schema, map generation, or Native RMG behavior change.",
+        "No copied Heroes expression, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "",
+      "completionEvidence": "Six exact byte-distinct transparent landmark sources and 64x64 runtimes are wired after commander identity and before faction fallback. Focused identity/fallback runtime, existing commander/faction regression, accessibility semantics, core, repository/editor, inspected captures, and Linux/Windows exports and boots pass. Both PCKs are 249951564 bytes with all six compiled textures present and source art excluded; the unrelated broad Overworld visual smoke objective-header ellipsis assertion remains outside this slice."
+    },
     {
       "id": "performance-battle-refresh-derived-surface-reuse-10184",
       "title": "Battle Refresh Derived-Surface Reuse",
@@ -105321,8 +105394,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 24 campaign chapters own exact live cartographic seals. Only 92216 bytes remain below the strict release-package ceiling, so future packaged art needs an explicit size strategy. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit and register the next bounded original-content or art slice with an explicit package-size strategy; broader product gaps remain.",
+  "remainingGap": "Six signature faction encounters now own exact live Overworld landmarks and all 24 campaign chapters retain exact seals. Only 48436 bytes remain below the strict release-package ceiling, so future packaged art needs a tighter explicit size strategy. The unrelated 1280px Overworld objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and register the next bounded original-content or art slice with an explicit strategy for the remaining 48436-byte package headroom; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -105753,7 +105826,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_tavern_arcane_controller_overworld_sprites_completed",
+  "result": "content_signature_encounter_landmarks_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -105854,9 +105927,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed six original arcane-controller overworld hero sprites, raising exact hero identity coverage to 50 of 60 with live hire, presentation, save, and Linux/Windows package validation.",
+  "summary": "Completed six original signature encounter landmarks with exact live identity, fallback, session/save, inspected capture, and Linux/Windows package validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T02:42:12Z",
+  "updatedAt": "2026-08-29T08:53:17Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

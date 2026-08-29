@@ -24,8 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-campaign-later-chapter-seals-10184`.
-- Next selection boundary: audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 92216-byte release-package headroom.
+- Most recently completed implementation slice: `content-signature-encounter-landmarks-10184`.
+- Next selection boundary: only 48436 bytes remain below the strict 250000000-byte PCK ceiling, so the next original-content or art slice requires a still tighter explicit package-size strategy.
+
+## Signature Encounter Landmarks
+
+id: `content-signature-encounter-landmarks-10184`
+
+Status: completed.
+
+Current finding:
+- all 63 authored encounters are playable and the 38 faction-authored encounters resolve one of six production faction landmarks, but no exact encounter identity currently reaches the live Overworld unless a commander sprite is present;
+- Reed Totemists, Archive Wardens, Relay Pickets, Graftroot Wardens, Orevein Exactors, and Bellwake Privateers form one coherent six-faction signature wave: they are live campaign fronts, include the most recurrent encounter identities for three factions, and give every production faction one exact non-hero field silhouette.
+
+Implementation boundary:
+- add one original transparent compact overworld landmark for each selected encounter id, with distinct material, silhouette, and field-command language derived from its authored name and faction rather than copied Heroes expression or faction-landmark recolors;
+- register immutable encounter-to-asset ownership and generated-source provenance in the existing Overworld art manifest, then resolve commander sprite first, exact encounter landmark second, faction landmark third, unit icon fourth, and the generic hostile camp last;
+- preserve encounter ids, armies, difficulty, placement, objectives, AI, interaction, battle launch, session/save version 9, generated encounter faction fallbacks, accessibility, and Windows/Linux behavior.
+
+Completion criteria:
+- six byte-distinct original transparent sources and 64x64 runtime textures retain genuine alpha, legible live silhouettes, exact encounter ownership, and source-art exclusion from release packages;
+- focused runtime proves all six exact identities, fallback order, missing/unknown fail-closed behavior, contained hostile markers, and unchanged encounter/session/save authority;
+- inspected 1280x720 and 1920x1080 captures, Overworld/core/repository/editor validation, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- Reed Totemists, Archive Wardens, Relay Pickets, Graftroot Wardens, Orevein Exactors, and Bellwake Privateers now own six byte-distinct original transparent generated sources and compact 64x64 runtime landmarks with immutable encounter/faction roles and non-color descriptions;
+- live Overworld presentation resolves valid commander art first, exact encounter landmark second, faction landmark third, unit icon fourth, and generic hostile camp last, while encounter rules, armies, placement, objectives, session authority, and save version 9 remain unchanged;
+- the six-identity contact sheet and direct 1280x720/1920x1080 fixture captures were inspected; focused exact/fallback runtime, existing commander/faction regression, accessibility semantics, core, repository/editor, and Linux/Windows package boots pass with all six compiled textures present, source art excluded, and matching 249951564-byte PCKs under the unchanged ceiling. The unrelated broad Overworld visual smoke retains its pre-existing 1280px objective-header ellipsis assertion and is not claimed green by this slice.
+
+Non-goals:
+- no copied Heroes encounter, object, creature, icon, heraldry, name, text, or protected visual expression; no encounter rules, armies, balance, AI, objective, placement, battle, save-schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Campaign Later-Chapter Seals
 
