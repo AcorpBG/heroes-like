@@ -3,11 +3,11 @@
   "generator_mode": "built_in_image_gen",
   "source_model": "original_transparent_orthographic_resource_site_landmark",
   "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
-  "runtime_atlas_size": [240, 48],
-  "runtime_atlas_sha256": "26c940c6021f2f8f153c9c589c6a1425b2a7847bea896becb02d57c709105c4f",
+  "runtime_atlas_size": [816, 48],
+  "runtime_atlas_sha256": "55b46e7db2ded5541e9386a7ee6e6e2dc623d126ee31460bb26e943f3aff1187",
   "runtime_region_size": [48, 48],
   "processing": "alpha_trim_then_aspect_fit_within_44x44_and_south_anchor_on_transparent_48x48_cell",
-  "prompt_set_summary": "Five original hand-painted orthographic field landmarks derived from each live resource site's faction, family, service, reward, and scenario language; strong non-color silhouettes; genuine transparency; no characters, text, logos, copied franchise expression, terrain cards, or opaque backdrops.",
+  "prompt_set_summary": "Seventeen original hand-painted orthographic field landmarks derived from each live recurring resource site's faction, family, service, reward, dwelling roster, biome, and scenario language; strong non-color silhouettes; genuine transparency; no characters, text, logos, copied franchise expression, terrain cards, or opaque backdrops.",
   "items": [
     {
       "resource_site_id": "site_prism_watch_relay",
@@ -53,6 +53,114 @@
       "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b89420b0-a1e0-4e33-8695-7af39153cd10.png",
       "atlas_region": [192, 0, 48, 48],
       "presentation_role": "balance_crusher_assay_house"
+    },
+    {
+      "resource_site_id": "site_reedbarge_mooring",
+      "asset_id": "resource_site_neutral_reedbarge_mooring",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/reedbarge_mooring_source.png",
+      "source_sha256": "02b6f766f0653ee2791bbd1b51f6087fb015a25fdf04517b5c09bcc3b21ea147",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-02fca7e7-da12-4255-8d4b-2d4b41ae27db.png",
+      "atlas_region": [240, 0, 48, 48],
+      "presentation_role": "reed_barge_pier_lantern"
+    },
+    {
+      "resource_site_id": "site_glowcap_croft",
+      "asset_id": "resource_site_neutral_glowcap_croft",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/glowcap_croft_source.png",
+      "source_sha256": "3f5f81432cb26608205250506310fa823718169a68d06a1356248f224d76af85",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3e557ea2-af38-4aeb-a388-fdaeac2623fc.png",
+      "atlas_region": [288, 0, 48, 48],
+      "presentation_role": "mushroom_cap_turf_croft"
+    },
+    {
+      "resource_site_id": "site_dustjack_yard",
+      "asset_id": "resource_site_neutral_dustjack_yard",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/dustjack_yard_source.png",
+      "source_sha256": "6462c6cf23ab498f9fe7b845decca7e92759c2ed7c5868f8b2729f8a14ac6aec",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6b8d7814-e2fa-40bc-8883-d7b040469f0a.png",
+      "atlas_region": [336, 0, 48, 48],
+      "presentation_role": "scrap_canvas_cart_yard"
+    },
+    {
+      "resource_site_id": "site_cinder_kiln",
+      "asset_id": "resource_site_neutral_cinder_kiln",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/cinder_kiln_source.png",
+      "source_sha256": "a599ab35dc62aa73349f18cd2e73e4af8829d13e467ae0f695054b38e6566bb6",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-816ce229-d8ec-4db4-9837-cd7afc6c9fce.png",
+      "atlas_region": [384, 0, 48, 48],
+      "presentation_role": "domed_ember_kiln_compound"
+    },
+    {
+      "resource_site_id": "site_frostbeacon_bothy",
+      "asset_id": "resource_site_neutral_frostbeacon_bothy",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/frostbeacon_bothy_source.png",
+      "source_sha256": "2ea5a96eba09a6b5e6d6403dd24aca1361f27637f044a0754cb380aa942e7204",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-efa8732a-9618-4e4c-a367-0f5d08a5e791.png",
+      "atlas_region": [432, 0, 48, 48],
+      "presentation_role": "steep_roof_crystal_beacon_bothy"
+    },
+    {
+      "resource_site_id": "site_bramble_hedge",
+      "asset_id": "resource_site_neutral_bramble_hedge",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bramble_hedge_source.png",
+      "source_sha256": "78601012ff5692471bbe2389bf7848d69ff407466b07dd9705fbb6e3243b4fb1",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4ed871c5-a0e6-4762-8d84-dbdfbbb87bc4.png",
+      "atlas_region": [480, 0, 48, 48],
+      "presentation_role": "thorn_arch_watch_croft"
+    },
+    {
+      "resource_site_id": "site_tidepool_skiffyard",
+      "asset_id": "resource_site_neutral_tidepool_skiffyard",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/tidepool_skiffyard_source.png",
+      "source_sha256": "d8e046d185cd1fc9e6bf7c0942e4b492322aec5f431d62b7cc29e58ce2079653",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f5bac119-d31a-4f74-88dd-959fa1223108.png",
+      "atlas_region": [528, 0, 48, 48],
+      "presentation_role": "drydock_skiff_lanternet_yard"
+    },
+    {
+      "resource_site_id": "site_switchback_hostel",
+      "asset_id": "resource_site_neutral_switchback_hostel",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/switchback_hostel_source.png",
+      "source_sha256": "d971a5b0850a65929f14150e2eec73e0977e10584478eb787a34b474d261171a",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e66c46a2-ed2c-4851-a31d-778b6dad4930.png",
+      "atlas_region": [576, 0, 48, 48],
+      "presentation_role": "stepped_hostel_switchback_stair"
+    },
+    {
+      "resource_site_id": "site_saltpan_camp",
+      "asset_id": "resource_site_neutral_saltpan_camp",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/saltpan_camp_source.png",
+      "source_sha256": "bfadef8770afe7fa9f75acd8fe8e433f97d06779a48645de9bd73582c6d460fa",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1e4d595f-1c11-4c2d-91b9-e77df5e0739d.png",
+      "atlas_region": [624, 0, 48, 48],
+      "presentation_role": "striped_awning_salt_trays"
+    },
+    {
+      "resource_site_id": "site_crystal_sump",
+      "asset_id": "resource_site_neutral_crystal_sump",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/crystal_sump_source.png",
+      "source_sha256": "ea3a6bb5c3ccecd4690e57ddafa98b8b63a05578f4aa974c9c3375cfa3f7354b",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7054f00c-05dc-43b9-bf5a-c5e1cb3b9b60.png",
+      "atlas_region": [672, 0, 48, 48],
+      "presentation_role": "crystal_well_lifting_frame"
+    },
+    {
+      "resource_site_id": "site_icehook_trapper_lodge",
+      "asset_id": "resource_site_neutral_icehook_trapper_lodge",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/icehook_trapper_lodge_source.png",
+      "source_sha256": "e928c653bbf546e9ed151079b795389d85d9406383dd61bc3b15f4daace9a813",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f9ac488b-401d-4410-9c93-47f419f3093b.png",
+      "atlas_region": [720, 0, 48, 48],
+      "presentation_role": "crescent_hook_snow_lodge"
+    },
+    {
+      "resource_site_id": "site_obsidian_scar",
+      "asset_id": "resource_site_neutral_obsidian_scar",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/obsidian_scar_source.png",
+      "source_sha256": "0cfd1bb648783ba10c5770b910ae879c3e04e43f0975afce1196ed470faf96f5",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8a80b36e-e5e9-451e-b2fa-44868556afe0.png",
+      "atlas_region": [768, 0, 48, 48],
+      "presentation_role": "triple_obsidian_forge_arch"
     }
   ]
 }

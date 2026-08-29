@@ -1160,7 +1160,7 @@
     "resource_site_recurring_prism_watch_relay": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [0, 0, 48, 48],
-      "atlas_size": [240, 48],
+      "atlas_size": [816, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/prism_watch_relay_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_prism_watch_relay",
@@ -1170,7 +1170,7 @@
     "resource_site_recurring_lens_house_barracks": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [48, 0, 48, 48],
-      "atlas_size": [240, 48],
+      "atlas_size": [816, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/lens_house_barracks_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_lens_house",
@@ -1180,7 +1180,7 @@
     "resource_site_recurring_bog_drum_outpost": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [96, 0, 48, 48],
-      "atlas_size": [240, 48],
+      "atlas_size": [816, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bog_drum_outpost_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_bog_drum_outpost",
@@ -1190,7 +1190,7 @@
     "resource_site_recurring_bellwake_wreck_ledger": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [144, 0, 48, 48],
-      "atlas_size": [240, 48],
+      "atlas_size": [816, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bellwake_wreck_ledger_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_bellwake_wreck_ledger",
@@ -1200,12 +1200,132 @@
     "resource_site_recurring_orevein_assay_depot": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [192, 0, 48, 48],
-      "atlas_size": [240, 48],
+      "atlas_size": [816, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/orevein_assay_depot_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_orevein_assay_depot",
       "presentation_role": "balance_crusher_assay_house",
       "accessible_description": "An oversized balance scale rises above a toothed ore crusher, stepped sample drawers, assay cups, and a narrow glowing furnace cupola."
+    },
+    "resource_site_neutral_reedbarge_mooring": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [240, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/reedbarge_mooring_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_reedbarge_mooring",
+      "presentation_role": "reed_barge_pier_lantern",
+      "accessible_description": "A crescent reed barge rests against a crooked pier beneath a tall square lantern, crossed ferry poles, bundled reeds, and a small canvas awning."
+    },
+    "resource_site_neutral_glowcap_croft": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [288, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/glowcap_croft_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_glowcap_croft",
+      "presentation_role": "mushroom_cap_turf_croft",
+      "accessible_description": "Three oversized mushroom caps shelter a round turf croft with a stout door, fenced fungus bed, spore lanterns, and one shield-like leaning cap."
+    },
+    "resource_site_neutral_dustjack_yard": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [336, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/dustjack_yard_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_dustjack_yard",
+      "presentation_role": "scrap_canvas_cart_yard",
+      "accessible_description": "A patched canvas lean-to crowds a scrapwood bench, bent rabbit-ear vane, crossed blades, bundled bow, metal plates, and a broad spoked cart wheel."
+    },
+    "resource_site_neutral_cinder_kiln": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [384, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/cinder_kiln_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_cinder_kiln",
+      "presentation_role": "domed_ember_kiln_compound",
+      "accessible_description": "A black-brick dome kiln glows through its arched mouth below a crooked chimney, with a heavy mallet, sealed cinder pots, and an iron rack."
+    },
+    "resource_site_neutral_frostbeacon_bothy": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [432, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/frostbeacon_bothy_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_frostbeacon_bothy",
+      "presentation_role": "steep_roof_crystal_beacon_bothy",
+      "accessible_description": "A steep snow-capped stone bothy stands beside a forked crystal beacon, crossed long pikes, a marker post, and a blanket-framed doorway."
+    },
+    "resource_site_neutral_bramble_hedge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [480, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bramble_hedge_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_bramble_hedge",
+      "presentation_role": "thorn_arch_watch_croft",
+      "accessible_description": "A circular thorn arch encloses a tiny thatched watch hut beneath a hooked polearm, with a short bow rack, carved trail stones, and a pennant."
+    },
+    "resource_site_neutral_tidepool_skiffyard": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [528, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/tidepool_skiffyard_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_tidepool_skiffyard",
+      "presentation_role": "drydock_skiff_lanternet_yard",
+      "accessible_description": "A crescent skiff rests on timber cradles beside a tilted pennant mast, hanging lantern-net, shell-float baskets, rope winch, and curved drying rack."
+    },
+    "resource_site_neutral_switchback_hostel": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [576, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/switchback_hostel_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_switchback_hostel",
+      "presentation_role": "stepped_hostel_switchback_stair",
+      "accessible_description": "A narrow three-level stone hostel rises along a zigzag exterior stair beside a covered hitch, trail horn, paired cairns, and a single window."
+    },
+    "resource_site_neutral_saltpan_camp": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [624, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/saltpan_camp_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_saltpan_camp",
+      "presentation_role": "striped_awning_salt_trays",
+      "accessible_description": "A striped raised awning shelters two geometric evaporation trays, a forked rake, stacked salt bricks, woven crystal baskets, and a sun disk."
+    },
+    "resource_site_neutral_crystal_sump": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [672, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/crystal_sump_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_crystal_sump",
+      "presentation_role": "crystal_well_lifting_frame",
+      "accessible_description": "Three asymmetric crystal spires rise behind a stone-lined well, timber lifting frame, suspended faceted bucket, crystal lantern, and low tool chest."
+    },
+    "resource_site_neutral_icehook_trapper_lodge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [720, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/icehook_trapper_lodge_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_icehook_trapper_lodge",
+      "presentation_role": "crescent_hook_snow_lodge",
+      "accessible_description": "A broad snow-capped log lodge bears an oversized crescent ice hook above crossed snowshoes, a fur drying beam, trap stakes, and a glass lantern."
+    },
+    "resource_site_neutral_obsidian_scar": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [768, 0, 48, 48],
+      "atlas_size": [816, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/obsidian_scar_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_obsidian_scar",
+      "presentation_role": "triple_obsidian_forge_arch",
+      "accessible_description": "Three jagged black-glass blades arch around a riveted shelter, suspended forge bowl, broad cutting pick, stacked mirror slabs, and hauling sled."
     },
     "artifact_field_trailsinger_boots": {
       "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
@@ -5117,6 +5237,54 @@
     "site_orevein_assay_depot": {
       "asset_id": "resource_site_recurring_orevein_assay_depot",
       "fit": "Exact original balance-and-crusher assay landmark for the Orevein Assay Depot identity."
+    },
+    "site_reedbarge_mooring": {
+      "asset_id": "resource_site_neutral_reedbarge_mooring",
+      "fit": "Exact original reed-barge, pier, and lantern landmark for the persistent Reedbarge Mooring neutral dwelling identity."
+    },
+    "site_glowcap_croft": {
+      "asset_id": "resource_site_neutral_glowcap_croft",
+      "fit": "Exact original mushroom-cap turf croft landmark for the persistent Glowcap Croft neutral dwelling identity."
+    },
+    "site_dustjack_yard": {
+      "asset_id": "resource_site_neutral_dustjack_yard",
+      "fit": "Exact original patched-canvas scrap yard landmark for the persistent Dustjack Yard neutral dwelling identity."
+    },
+    "site_cinder_kiln": {
+      "asset_id": "resource_site_neutral_cinder_kiln",
+      "fit": "Exact original domed ember kiln landmark for the persistent Cinder Kiln neutral dwelling identity."
+    },
+    "site_frostbeacon_bothy": {
+      "asset_id": "resource_site_neutral_frostbeacon_bothy",
+      "fit": "Exact original steep-roof crystal beacon shelter for the persistent Frostbeacon Bothy neutral dwelling identity."
+    },
+    "site_bramble_hedge": {
+      "asset_id": "resource_site_neutral_bramble_hedge",
+      "fit": "Exact original thorn-arch watch-croft landmark for the persistent Bramble Hedge neutral dwelling identity."
+    },
+    "site_tidepool_skiffyard": {
+      "asset_id": "resource_site_neutral_tidepool_skiffyard",
+      "fit": "Exact original drydock skiff and lantern-net yard for the persistent Tidepool Skiffyard neutral dwelling identity."
+    },
+    "site_switchback_hostel": {
+      "asset_id": "resource_site_neutral_switchback_hostel",
+      "fit": "Exact original stepped mountain hostel and zigzag stair for the persistent Switchback Hostel neutral dwelling identity."
+    },
+    "site_saltpan_camp": {
+      "asset_id": "resource_site_neutral_saltpan_camp",
+      "fit": "Exact original striped awning and evaporation trays for the persistent Saltpan Camp neutral dwelling identity."
+    },
+    "site_crystal_sump": {
+      "asset_id": "resource_site_neutral_crystal_sump",
+      "fit": "Exact original three-spire crystal well station for the persistent Crystal Sump neutral dwelling identity."
+    },
+    "site_icehook_trapper_lodge": {
+      "asset_id": "resource_site_neutral_icehook_trapper_lodge",
+      "fit": "Exact original crescent-hook snow lodge for the persistent Icehook Trapper Lodge neutral dwelling identity."
+    },
+    "site_obsidian_scar": {
+      "asset_id": "resource_site_neutral_obsidian_scar",
+      "fit": "Exact original triple-obsidian forge arch for the persistent Obsidian Scar neutral dwelling identity."
     },
     "site_waystone_cache": {
       "asset_id": "ruined_obelisk",

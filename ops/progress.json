@@ -2214,7 +2214,10 @@
         "exact_encounter_count_added": 6,
         "authored_placement_count": 21,
         "high_difficulty_placement_count": 17,
-        "runtime_atlas_size_px": [288, 48],
+        "runtime_atlas_size_px": [
+          288,
+          48
+        ],
         "runtime_cell_size_px": 48,
         "runtime_atlas_bytes": 4963,
         "atlas_sha256": "3e3aca265b88d3de405986a58c3fc8c363e456fb29fa20c9fd6b47b047a91859",
@@ -2222,7 +2225,10 @@
         "session_authority_exact": true,
         "invalid_region_fail_closed": true,
         "missing_asset_fail_closed": true,
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "linux_export_startup_ok": true,
         "windows_export_wine_startup_ok": true,
         "source_art_excluded": true,
@@ -2264,12 +2270,18 @@
       ],
       "metrics": {
         "exact_specialty_count": 7,
-        "runtime_atlas_size_px": [196, 28],
+        "runtime_atlas_size_px": [
+          196,
+          28
+        ],
         "runtime_icon_cell_size_px": 28,
         "atlas_sha256": "7e7f88c9b3ac4692e294c951b6b69261391f6b69b1beb08c76056bde753aa36e",
         "save_version": 9,
         "session_authority_exact": true,
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "linux_export_startup_ok": true,
         "windows_export_wine_startup_ok": true,
         "source_art_excluded": true,
@@ -2313,7 +2325,10 @@
         "fallback_order_exact": true,
         "save_version": 9,
         "session_authority_exact": true,
-        "inspected_viewports": ["1280x720", "1920x1080"],
+        "inspected_viewports": [
+          "1280x720",
+          "1920x1080"
+        ],
         "linux_export_startup_ok": true,
         "windows_export_wine_startup_ok": true,
         "source_art_excluded": true,
@@ -15730,10 +15745,10 @@
   "currentNotes": "Completed six live faction artifact sets and original compact insignia using existing gameplay-wired faction equipment and representative authored scenarios.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-faction-artifact-sets-10184",
-  "currentSliceId": "content-six-faction-artifact-sets-10184",
-  "currentSliceNotes": "Six faction sets, five fixed reward replacements, compact set insignia, live equipment presentation, AI set progress, save, captures, regressions, and both package gates are complete.",
+  "currentSliceId": "content-neutral-dwelling-landmarks-wave1-10184",
+  "currentSliceNotes": "Completed 12 original claimed-state neutral-dwelling landmarks in one compact 816x48 atlas. One combined 12-site live smoke passes exact unclaimed/claimed resolver state, claims, rewards, recruits, repeat rejection, rendering, and save version 9. Repository validation and Linux/Windows packaged boots pass; both PCKs are 248008160 bytes with source art excluded and 1991840 bytes headroom. No whole-game or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six-Faction Artifact Sets And Insignia",
+  "currentSliceTitle": "content neutral dwelling landmarks wave1 10184",
   "currentSliceUpdatedAt": "2026-08-29T14:01:35Z",
   "deferredRiskRegister": [
     {
@@ -106019,6 +106034,16 @@
       "startedAt": "2026-08-29T07:38:41Z",
       "notes": "Completed 18 byte-distinct original later-chapter seals for exact 24/24 campaign chapter coverage. Live scenario authority, compact presentation, accessibility, missing-art fallback, save version 9, focused/runtime/static validation, and Linux/Windows packaged boots pass. Both packages contain all 24 compiled textures, exclude source art, and produce a 249907784-byte PCK under the strict ceiling. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T08:19:34Z"
+    },
+    {
+      "id": "content-neutral-dwelling-landmarks-wave1-10184",
+      "title": "content neutral dwelling landmarks wave1 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T14:42:43Z",
+      "startedAt": "2026-08-29T14:10:38Z",
+      "notes": "Completed 12 original claimed-state neutral-dwelling landmarks in one compact 816x48 atlas. One combined 12-site live smoke passes exact unclaimed/claimed resolver state, claims, rewards, recruits, repeat rejection, rendering, and save version 9. Repository validation and Linux/Windows packaged boots pass; both PCKs are 248008160 bytes with source art excluded and 1991840 bytes headroom. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T14:42:43Z"
     }
   ],
   "project": "heroes-like",
@@ -106563,7 +106588,7 @@
   ],
   "summary": "Completed six collectible faction artifact sets with original compact insignia and live Town and Overworld equipment integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T14:01:35Z",
+  "updatedAt": "2026-08-29T14:42:43Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

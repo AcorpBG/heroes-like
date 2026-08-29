@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the most recently completed slice is `content-six-faction-artifact-sets-10184`.
-- Package boundary: both release exports now measure 247949888 bytes, 2050112 bytes below the unchanged 250000000-byte ceiling. All 33 artifact field identities and the compact faction-set insignia atlas ship while development reports and generated source originals remain excluded on both platforms.
+- Active implementation slice: none; the most recently completed slice is `content-neutral-dwelling-landmarks-wave1-10184`.
+- Package boundary: both release exports now measure 248008160 bytes, 1991840 bytes below the unchanged 250000000-byte ceiling. The expanded compact recurring-site atlas ships while generated source originals and development reports remain excluded on both platforms.
+
+## Neutral-Dwelling Landmark Art Wave 1
+
+id: `content-neutral-dwelling-landmarks-wave1-10184`
+
+Status: completed.
+
+Current finding:
+- all 25 neutral dwellings already own data-driven rosters, guards, recruitment, control, and exact unclaimed map-object art, but their persistent controlled state reuses the same static landmark after a faction claims the site;
+- twelve selected sites are all placed in the live Ninefold Confluence scenario and span coast, mire, grassland, lava, snow, forest, highland, desert, and underground identities;
+- giving this broader set of twelve existing interactive sites a distinct claimed-state landmark makes persistent control visible across the representative map without adding unused definitions or changing scenario balance.
+
+Implementation boundary:
+- create twelve original transparent contracted neutral-dwelling landmarks with distinct non-color silhouettes and append them to the existing compact immutable recurring-site atlas while retaining its first five cells exactly;
+- register exact site-scoped claimed-state art for Reedbarge Mooring, Glowcap Croft, Dustjack Yard, Cinder Kiln, Frostbeacon Bothy, Bramble Hedge, Tidepool Skiffyard, Switchback Hostel, Saltpan Camp, Crystal Sump, Icehook Trapper Lodge, and Obsidian Scar, selecting it only when `collected_by_faction_id` is non-empty while retaining each existing map-object sprite when uncontrolled;
+- preserve site coordinates, footprints, pathing, claim rewards, guards, recruitment, persistent control, strategic AI, save version 9, and Windows/Linux behavior.
+
+Completion criteria:
+- twelve byte-distinct generated originals produce twelve exact atlas regions with genuine alpha, grounded readable silhouettes, accessible descriptions, immutable source provenance, and source-art package exclusion;
+- each selected live Ninefold Confluence placement resolves its existing exact unclaimed texture before control and its exact claimed `AtlasTexture` afterward through the live renderer, while unknown or invalid mappings continue to fail closed;
+- representative claim, recruitment, repeat rejection, persistent control, and save-version-9 behavior remain unchanged, with repository/core/neutral-dwelling regressions and Linux/Windows packaged startup passing below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- twelve byte-distinct original transparent sources now extend the existing recurring-site atlas from five to seventeen immutable 48x48 cells while retaining the first five cells exactly; each new entry owns exact source provenance, a distinct non-color silhouette, a site-specific accessible description, and genuine alpha;
+- the live renderer now keeps each dwelling's existing exact map-object texture while uncontrolled and selects the exact contracted atlas landmark only after persistent control gains a non-empty `collected_by_faction_id`, with missing or invalid claimed art falling back to the existing unclaimed path;
+- one combined twelve-site smoke exercises the authored Ninefold Confluence placements through real player claim authority and proves exact reward and recruit deltas, renderer swaps, mutation-free repeat rejection, persistent control, and save-version-9 restoration for every site;
+- repository validation and JSON/editor import checks pass. Linux export/native boot and Windows export/fresh-Wine boot pass with one exact atlas import, all generated source originals excluded, and matching 248008160-byte PCKs, 1991840 bytes below the unchanged ceiling. This closes only the claimed-state landmark wave and does not claim whole-game or release readiness.
+
+Non-goals:
+- no new dwelling, unit, encounter, reward, guard, economy rule, scenario placement, geometry, pathing rule, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes dwelling, sprite, name, text, or protected visual expression.
 
 ## Six-Faction Artifact Sets And Insignia
 
