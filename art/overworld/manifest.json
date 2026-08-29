@@ -5643,6 +5643,120 @@
       "source_generated": "res://art/overworld/source/generated/encounters/spellwright_expeditions/harbor_pilot_house_watch_source.png", "source_model": "built_in_image_gen_original_spellwright_expedition_landmark_atlas",
       "assigned_encounter_id": "encounter_harbor_pilot_house_watch", "assigned_affiliation": "neutral", "presentation_role": "harbor_pilot_house_watch",
       "accessible_description": "A steep-roof pilot house stands on short pilings beneath a flare mast, crescent lookout balcony, crossed mooring poles, and rope winch."
+    },
+    "encounter_ritual_relay_frostbeacon_bothy_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/frostbeacon_bothy_watch_source.png",
+      "source_model": "built_in_image_gen_original_ritual_relay_circuit_landmark_atlas",
+      "assigned_encounter_id": "encounter_frostbeacon_bothy_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "frostbeacon_bothy_watch",
+      "accessible_description": "A steep-roof stone bothy supports a tall forked crystal beacon and round signal mirror between two short snowbreak palisades."
+    },
+    "encounter_ritual_relay_reedbarge_mooring_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/reedbarge_mooring_watch_source.png",
+      "source_model": "built_in_image_gen_original_ritual_relay_circuit_landmark_atlas",
+      "assigned_encounter_id": "encounter_reedbarge_mooring_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "reedbarge_mooring_watch",
+      "accessible_description": "Twin reed barges are chained beneath a long diagonal boom gate beside a roofed ledger booth and forked lantern mast."
+    },
+    "encounter_ritual_relay_crystal_sump_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/crystal_sump_watch_source.png",
+      "source_model": "built_in_image_gen_original_ritual_relay_circuit_landmark_atlas",
+      "assigned_encounter_id": "encounter_crystal_sump_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "crystal_sump_watch",
+      "accessible_description": "A ringed stone sump holds clustered crystals beneath a crooked echo-horn lifting frame and two offset low guard walls."
+    },
+    "encounter_ritual_relay_switchback_hostel_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/switchback_hostel_watch_source.png",
+      "source_model": "built_in_image_gen_original_ritual_relay_circuit_landmark_atlas",
+      "assigned_encounter_id": "encounter_switchback_hostel_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "switchback_hostel_watch",
+      "accessible_description": "Three stacked hostel levels climb around a zigzag exterior stair toward a pack-sled arch and tall cairn signal post."
+    },
+    "encounter_ritual_relay_dustjack_yard_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/dustjack_yard_watch_source.png",
+      "source_model": "built_in_image_gen_original_ritual_relay_circuit_landmark_atlas",
+      "assigned_encounter_id": "encounter_dustjack_yard_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "dustjack_yard_watch",
+      "accessible_description": "A crooked salvage wind scoop towers above a riveted scrap shed, uneven vanes, narrow lookout gantry, and crescent plate wall."
+    },
+    "encounter_ritual_relay_saltpan_camp_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        288,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/saltpan_camp_watch_source.png",
+      "source_model": "built_in_image_gen_original_ritual_relay_circuit_landmark_atlas",
+      "assigned_encounter_id": "encounter_saltpan_camp_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "saltpan_camp_watch",
+      "accessible_description": "Six shallow salt trays fan around a striped shade mast, brine wheel, low round-shield barricade, and tally shelter."
     }
   },
   "resource_site_sprites": {
@@ -6108,7 +6222,13 @@
     "encounter_kite_signal_eyrie_watch": "encounter_spellwright_kite_signal_eyrie_watch",
     "encounter_orchard_levy_watch": "encounter_spellwright_orchard_levy_watch",
     "encounter_milestone_arsenal_watch": "encounter_spellwright_milestone_arsenal_watch",
-    "encounter_harbor_pilot_house_watch": "encounter_spellwright_harbor_pilot_house_watch"
+    "encounter_harbor_pilot_house_watch": "encounter_spellwright_harbor_pilot_house_watch",
+    "encounter_frostbeacon_bothy_watch": "encounter_ritual_relay_frostbeacon_bothy_watch",
+    "encounter_reedbarge_mooring_watch": "encounter_ritual_relay_reedbarge_mooring_watch",
+    "encounter_crystal_sump_watch": "encounter_ritual_relay_crystal_sump_watch",
+    "encounter_switchback_hostel_watch": "encounter_ritual_relay_switchback_hostel_watch",
+    "encounter_dustjack_yard_watch": "encounter_ritual_relay_dustjack_yard_watch",
+    "encounter_saltpan_camp_watch": "encounter_ritual_relay_saltpan_camp_watch"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",
