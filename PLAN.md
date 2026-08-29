@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: `content-six-faction-standalone-hero-contracts-10184`.
-- Package boundary: both release exports now measure 248230552 bytes, 1769448 bytes below the unchanged 250000000-byte ceiling. All three encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Active implementation slice: `content-three-faction-outer-reach-contracts-10184`.
+- Package boundary: both release exports now measure 248310728 bytes, 1689272 bytes below the unchanged 250000000-byte ceiling. All four encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Three-Faction Outer-Reach Contracts
+
+id: `content-three-faction-outer-reach-contracts-10184`
+
+Status: completed.
+
+Current finding:
+- Brasshollow, Thornwake, and Veilmourn each have only three authored scenarios, versus five each for Mireclaw and Sunvault and eleven for Embercourt;
+- six exact production heroes from those three factions still lack a player-command scenario, while fifteen already-authored faction sites with exact art remain unused by authored maps;
+- one two-contract batch per faction can close both gaps without changing the twenty-four-chapter campaign authority or adding package-heavy unit art.
+
+Implementation boundary:
+- author six original skirmish-only 11x6 contracts led by Selka Pitmarshal, Daxis Chaincaptain, Halen Thorncart, Veyra Seedseer, Jessa Keelwarden, and Morwen Wakeoracle;
+- add six contract-specific player armies, six exact boss encounters and enemy groups, twelve town placements, sixty resource placements that activate at least fifteen dormant exact-art sites, eighteen artifacts, eighteen encounter fronts, and thirty reactive hooks;
+- generate six original transparent boss landmarks in one compact atlas and wire exact identity, descriptions, provenance, live placement, and cross-platform package inclusion;
+- preserve save version 9 and campaign chapter, carryover, seal, and progression authority.
+
+Completion criteria:
+- all six contracts appear in skirmish selection, create valid sessions with their intended hero identity, expose unique objectives and state, launch and resolve the exact boss front, grant authored rewards and flags, and round-trip through save version 9;
+- one combined six-contract gameplay/runtime/visual smoke covers the complete batch once, followed by repository validation and Linux/Windows packaged startup below the unchanged 250000000-byte PCK ceiling;
+- source originals and development reports remain excluded from release packages, and no whole-game or release-readiness claim is made.
+
+Completion evidence:
+- six skirmish-only contracts now promote Selka, Daxis, Halen, Veyra, Jessa, and Morwen into exact player-command roles, bringing Brasshollow, Thornwake, and Veilmourn to five scenarios each and the authored lead-hero breadth to twenty-six of sixty;
+- the batch adds six contract-specific player companies, six boss groups and encounters, twelve town placements, sixty resource placements, eighteen artifacts, eighteen battle fronts, thirty hooks, and activates fifteen previously unused exact-art resource sites;
+- six original transparent sources produce one compact 288x48 imported atlas; one combined six-case runtime/visual smoke passed deterministic victories, 210-gold faction-rare rewards, exact landmarks, flags, captures, and save-version-9 round trips;
+- repository validation and matching Linux/Windows release exports passed at 248310728 bytes with source originals and development reports excluded.
+
+Non-goals:
+- no campaign, unit roster, town template, battle formula, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes scenario, map, hero, landmark, name, text, or protected visual expression.
 
 ## Six-Faction Standalone Hero Contracts
 
