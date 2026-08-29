@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 64,
+  "player_facing_active_scenario_count": 70,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -9988,6 +9988,4836 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26255,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "rainledger-cinder-convergence",
+      "name": "Rainledger Cinder Census",
+      "selection": {
+        "summary": "Belis Rainledger crosses a fourteen-league grand convergence to secure the Charcoal Burners Camp Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Grand Convergence (14x9)",
+        "player_summary": "Belis Rainledger commands Belis's Cinder-Census Company from Highwater Keep.",
+        "enemy_summary": "Nightglass Redoubt contests six fronts around the Charcoal Burners Camp Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 9
+      },
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_belis_grand_convergence_company",
+      "hero_id": "hero_embercourt_belis_rainledger",
+      "starting_resources": {
+        "gold": 1400,
+        "wood": 5,
+        "ore": 5,
+        "embergrain": 3
+      },
+      "map": [
+        [
+          "dirt",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "grass",
+          "grass",
+          "dirt",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "dirt",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "dirt",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "lava",
+          "grass",
+          "grass",
+          "dirt",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "grass",
+          "dirt",
+          "grass",
+          "grass",
+          "grass",
+          "lava"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "dirt",
+          "lava",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "dirt",
+          "lava",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "lava",
+          "grass",
+          "dirt",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass",
+          "dirt",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "lava",
+          "grass"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_embercourt_belis_rainledger"
+      ],
+      "objectives": {
+        "victory_text": "Belis Rainledger closes the complete Rainledger Cinder Census route.",
+        "defeat_text": "Nightglass Redoubt breaks the grand convergence before Belis Rainledger secures its primary front.",
+        "victory": [
+          {
+            "id": "claim_rainledger_enemy_town",
+            "label": "Claim Nightglass Redoubt",
+            "type": "town_owned_by_player",
+            "placement_id": "rainledger_enemy_town"
+          },
+          {
+            "id": "secure_rainledger_primary",
+            "label": "Secure the Charcoal Burners Camp Watch",
+            "type": "encounter_resolved",
+            "placement_id": "rainledger_charcoal_burners_watch"
+          },
+          {
+            "id": "clear_rainledger_march_a",
+            "label": "Clear the western convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "rainledger_march_a"
+          },
+          {
+            "id": "clear_rainledger_march_b",
+            "label": "Clear the central convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "rainledger_march_b"
+          },
+          {
+            "id": "clear_rainledger_march_c",
+            "label": "Clear the northern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "rainledger_march_c"
+          },
+          {
+            "id": "clear_rainledger_march_d",
+            "label": "Clear the southern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "rainledger_march_d"
+          },
+          {
+            "id": "clear_rainledger_march_e",
+            "label": "Clear the eastern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "rainledger_march_e"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_rainledger_player_town",
+            "label": "Keep Highwater Keep",
+            "type": "town_not_owned_by_player",
+            "placement_id": "rainledger_player_town"
+          },
+          {
+            "id": "rainledger_hero_survives",
+            "label": "Belis Rainledger must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_rainledger_pressure",
+            "label": "Keep enemy pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_mireclaw",
+            "threshold": 15
+          },
+          {
+            "id": "finish_rainledger_in_time",
+            "label": "Finish before Day 20",
+            "type": "day_at_least",
+            "day": 20
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "rainledger_convergence_muster",
+          "priority": 126,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "rainledger_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 380,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "rainledger_player_town",
+              "recruits": {
+                "unit_embercourt_fordhook_cadets": 2,
+                "unit_embercourt_bargebow_crews": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Highwater Keep sends Belis Rainledger a convergence reserve."
+            }
+          ]
+        },
+        {
+          "id": "rainledger_town_claimed",
+          "priority": 116,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_rainledger_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "rainledger_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "rainledger_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Belis Rainledger anchors the convergence charter at Nightglass Redoubt."
+            }
+          ]
+        },
+        {
+          "id": "rainledger_counterstroke",
+          "priority": 102,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "rainledger_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "rainledger_counterstroke",
+                "encounter_id": "encounter_nightglass_dominion",
+                "x": 13,
+                "y": 8,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Nightglass Redoubt sends a counterstroke around the outer march."
+            }
+          ]
+        },
+        {
+          "id": "rainledger_unsecured_primary",
+          "priority": 94,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_rainledger_primary"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Charcoal Burners Camp Watch keeps the convergence route divided."
+            }
+          ]
+        },
+        {
+          "id": "rainledger_march_c_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_rainledger_march_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northern convergence front begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "rainledger_march_e_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_rainledger_march_e"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The eastern convergence front hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "rainledger_middle_front_salvage",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "rainledger_march_b"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 160,
+                "embergrain": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 90
+            },
+            {
+              "type": "set_flag",
+              "flag": "rainledger_middle_front_salvaged",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Belis Rainledger recovers the central march ledger and its reserve stores."
+            }
+          ]
+        },
+        {
+          "id": "rainledger_primary_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "rainledger_charcoal_burners_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "embergrain": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 210
+            },
+            {
+              "type": "set_flag",
+              "flag": "rainledger_charcoal_burners_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Belis Rainledger secures the Charcoal Burners Camp Watch and closes the grand convergence."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "rainledger_player_town",
+          "town_id": "town_highwater_keep",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "rainledger_enemy_town",
+          "town_id": "town_nightglass_redoubt",
+          "x": 13,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Nightglass Census Breakers",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "peatwax": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_nightglass_dominion"
+          ],
+          "spawn_points": [
+            {
+              "x": 12,
+              "y": 1
+            },
+            {
+              "x": 12,
+              "y": 7
+            }
+          ],
+          "siege_target_placement_id": "rainledger_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "rainledger_faction_landmark",
+          "site_id": "site_ember_signal_brazier",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "rainledger_primary_site",
+          "site_id": "site_charcoal_burners",
+          "x": 10,
+          "y": 5
+        },
+        {
+          "placement_id": "rainledger_player_rare",
+          "site_id": "site_embergrain_warm_granary",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "rainledger_enemy_rare",
+          "site_id": "site_peatwax_reed_yard",
+          "x": 13,
+          "y": 1,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "rainledger_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "rainledger_ore",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 8,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "rainledger_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "rainledger_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 12,
+          "y": 2,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "rainledger_feature_1",
+          "site_id": "site_bramble_hedge",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "rainledger_feature_2",
+          "site_id": "site_riverwatch_free_company_yard",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "rainledger_feature_3",
+          "site_id": "site_glowcap_croft",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "placement_id": "rainledger_feature_4",
+          "site_id": "site_greenbranch_copse",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "rainledger_feature_5",
+          "site_id": "site_cinder_kiln",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "rainledger_feature_6",
+          "site_id": "site_cliffhawk_roost",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "placement_id": "rainledger_feature_7",
+          "site_id": "site_watchtower_beacon",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "placement_id": "rainledger_feature_8",
+          "site_id": "site_roadside_sanctum",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "rainledger_artifact_1",
+          "artifact_id": "artifact_asterfall_mantle",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "rainledger_artifact_2",
+          "artifact_id": "artifact_bridgefire_standard",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "rainledger_artifact_3",
+          "artifact_id": "artifact_milepost_lantern",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "rainledger_artifact_4",
+          "artifact_id": "artifact_waymark_compass",
+          "x": 9,
+          "y": 8
+        },
+        {
+          "placement_id": "rainledger_artifact_5",
+          "artifact_id": "artifact_briarcrown_covenant_standard",
+          "x": 11,
+          "y": 1
+        },
+        {
+          "placement_id": "rainledger_artifact_6",
+          "artifact_id": "artifact_choir_tuning_fork",
+          "x": 12,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "rainledger_march_a",
+          "encounter_id": "encounter_nightglass_dominion",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26301,
+          "enemy_army": {
+            "id": "army_rainledger_march_a",
+            "name": "Nightglass Redoubt Convergence Front A",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_reedsnare_kin",
+                "count": 9
+              },
+              {
+                "unit_id": "unit_mireclaw_mudglass_slingers",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "rainledger_march_b",
+          "encounter_id": "encounter_nightglass_dominion",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26302,
+          "enemy_army": {
+            "id": "army_rainledger_march_b",
+            "name": "Nightglass Redoubt Convergence Front B",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_mudglass_slingers",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_mireclaw_bogplate_maulers",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "rainledger_march_c",
+          "encounter_id": "encounter_nightglass_dominion",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26303,
+          "enemy_army": {
+            "id": "army_rainledger_march_c",
+            "name": "Nightglass Redoubt Convergence Front C",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_bogplate_maulers",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_mireclaw_ferrychain_lashers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "rainledger_march_d",
+          "encounter_id": "encounter_nightglass_dominion",
+          "x": 9,
+          "y": 7,
+          "difficulty": "medium",
+          "combat_seed": 26304,
+          "enemy_army": {
+            "id": "army_rainledger_march_d",
+            "name": "Nightglass Redoubt Convergence Front D",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_ferrychain_lashers",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_mireclaw_sporewake_chanters",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "rainledger_march_e",
+          "encounter_id": "encounter_nightglass_dominion",
+          "x": 11,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26305,
+          "enemy_army": {
+            "id": "army_rainledger_march_e",
+            "name": "Nightglass Redoubt Convergence Front E",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_sporewake_chanters",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_mireclaw_reedsnare_kin",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "rainledger_charcoal_burners_watch",
+          "encounter_id": "encounter_charcoal_burners_watch",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26306,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "fenwake-bogbell-convergence",
+      "name": "Fenwake Bogbell Cadence",
+      "selection": {
+        "summary": "Zhorra Fenwake crosses a fourteen-league grand convergence to secure the Bogbell Croft Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Grand Convergence (14x9)",
+        "player_summary": "Zhorra Fenwake commands Zhorra's Bogbell Cadence Company from Reedbarrow Ferry.",
+        "enemy_summary": "Halo Spire contests six fronts around the Bogbell Croft Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 9
+      },
+      "player_faction_id": "faction_mireclaw",
+      "player_army_id": "army_zhorra_grand_convergence_company",
+      "hero_id": "hero_mireclaw_zhorra_fenwake",
+      "starting_resources": {
+        "gold": 1400,
+        "wood": 5,
+        "ore": 5,
+        "peatwax": 3
+      },
+      "map": [
+        [
+          "dirt",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "mire",
+          "mire",
+          "dirt",
+          "mire",
+          "mire"
+        ],
+        [
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "dirt",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire"
+        ],
+        [
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "dirt",
+          "mire",
+          "mire",
+          "mire"
+        ],
+        [
+          "mire",
+          "grass",
+          "mire",
+          "mire",
+          "dirt",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire"
+        ],
+        [
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "mire",
+          "dirt",
+          "mire",
+          "mire",
+          "mire",
+          "grass"
+        ],
+        [
+          "mire",
+          "mire",
+          "mire",
+          "dirt",
+          "grass",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "mire"
+        ],
+        [
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "dirt",
+          "grass",
+          "mire",
+          "mire",
+          "mire",
+          "mire"
+        ],
+        [
+          "grass",
+          "mire",
+          "dirt",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "dirt"
+        ],
+        [
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire",
+          "dirt",
+          "mire",
+          "mire",
+          "mire",
+          "mire",
+          "grass",
+          "mire"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_mireclaw_zhorra_fenwake"
+      ],
+      "objectives": {
+        "victory_text": "Zhorra Fenwake closes the complete Fenwake Bogbell Cadence route.",
+        "defeat_text": "Halo Spire breaks the grand convergence before Zhorra Fenwake secures its primary front.",
+        "victory": [
+          {
+            "id": "claim_fenwake_enemy_town",
+            "label": "Claim Halo Spire",
+            "type": "town_owned_by_player",
+            "placement_id": "fenwake_enemy_town"
+          },
+          {
+            "id": "secure_fenwake_primary",
+            "label": "Secure the Bogbell Croft Watch",
+            "type": "encounter_resolved",
+            "placement_id": "fenwake_bogbell_croft_watch"
+          },
+          {
+            "id": "clear_fenwake_march_a",
+            "label": "Clear the western convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "fenwake_march_a"
+          },
+          {
+            "id": "clear_fenwake_march_b",
+            "label": "Clear the central convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "fenwake_march_b"
+          },
+          {
+            "id": "clear_fenwake_march_c",
+            "label": "Clear the northern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "fenwake_march_c"
+          },
+          {
+            "id": "clear_fenwake_march_d",
+            "label": "Clear the southern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "fenwake_march_d"
+          },
+          {
+            "id": "clear_fenwake_march_e",
+            "label": "Clear the eastern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "fenwake_march_e"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_fenwake_player_town",
+            "label": "Keep Reedbarrow Ferry",
+            "type": "town_not_owned_by_player",
+            "placement_id": "fenwake_player_town"
+          },
+          {
+            "id": "fenwake_hero_survives",
+            "label": "Zhorra Fenwake must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_fenwake_pressure",
+            "label": "Keep enemy pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_sunvault",
+            "threshold": 15
+          },
+          {
+            "id": "finish_fenwake_in_time",
+            "label": "Finish before Day 20",
+            "type": "day_at_least",
+            "day": 20
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "fenwake_convergence_muster",
+          "priority": 126,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "fenwake_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 380,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "fenwake_player_town",
+              "recruits": {
+                "unit_mireclaw_reedsnare_kin": 2,
+                "unit_mireclaw_bogplate_maulers": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Reedbarrow Ferry sends Zhorra Fenwake a convergence reserve."
+            }
+          ]
+        },
+        {
+          "id": "fenwake_town_claimed",
+          "priority": 116,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_fenwake_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "fenwake_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "fenwake_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Zhorra Fenwake anchors the convergence charter at Halo Spire."
+            }
+          ]
+        },
+        {
+          "id": "fenwake_counterstroke",
+          "priority": 102,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "fenwake_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "fenwake_counterstroke",
+                "encounter_id": "encounter_parallax_choir",
+                "x": 13,
+                "y": 8,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Halo Spire sends a counterstroke around the outer march."
+            }
+          ]
+        },
+        {
+          "id": "fenwake_unsecured_primary",
+          "priority": 94,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_fenwake_primary"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Bogbell Croft Watch keeps the convergence route divided."
+            }
+          ]
+        },
+        {
+          "id": "fenwake_march_c_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_fenwake_march_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northern convergence front begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "fenwake_march_e_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_fenwake_march_e"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The eastern convergence front hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "fenwake_middle_front_salvage",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "fenwake_march_b"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 160,
+                "peatwax": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 90
+            },
+            {
+              "type": "set_flag",
+              "flag": "fenwake_middle_front_salvaged",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Zhorra Fenwake recovers the central march ledger and its reserve stores."
+            }
+          ]
+        },
+        {
+          "id": "fenwake_primary_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "fenwake_bogbell_croft_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "peatwax": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 210
+            },
+            {
+              "type": "set_flag",
+              "flag": "fenwake_bogbell_croft_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Zhorra Fenwake secures the Bogbell Croft Watch and closes the grand convergence."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "fenwake_player_town",
+          "town_id": "town_reedbarrow_ferry",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "fenwake_enemy_town",
+          "town_id": "town_halo_spire",
+          "x": 13,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_sunvault",
+          "label": "Halo Spire Cadence Ward",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "aetherglass": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_parallax_choir"
+          ],
+          "spawn_points": [
+            {
+              "x": 12,
+              "y": 1
+            },
+            {
+              "x": 12,
+              "y": 7
+            }
+          ],
+          "siege_target_placement_id": "fenwake_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "fenwake_faction_landmark",
+          "site_id": "site_bog_drum_totem",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "fenwake_primary_site",
+          "site_id": "site_bogbell_croft",
+          "x": 10,
+          "y": 5
+        },
+        {
+          "placement_id": "fenwake_player_rare",
+          "site_id": "site_peatwax_reed_yard",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "fenwake_enemy_rare",
+          "site_id": "site_aetherglass_lens_house",
+          "x": 13,
+          "y": 1,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "fenwake_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "fenwake_ore",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 8,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "fenwake_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "fenwake_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 12,
+          "y": 2,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "fenwake_feature_1",
+          "site_id": "site_crystal_sump",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "fenwake_feature_2",
+          "site_id": "site_dustjack_yard",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "fenwake_feature_3",
+          "site_id": "site_saltpan_camp",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "placement_id": "fenwake_feature_4",
+          "site_id": "site_switchback_hostel",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "fenwake_feature_5",
+          "site_id": "site_bog_drum_outpost",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "fenwake_feature_6",
+          "site_id": "site_reedscript_shrine",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "placement_id": "fenwake_feature_7",
+          "site_id": "site_harbor_pilot_house",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "placement_id": "fenwake_feature_8",
+          "site_id": "site_tidepool_skiffyard",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "fenwake_artifact_1",
+          "artifact_id": "artifact_cometwake_pennon",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "fenwake_artifact_2",
+          "artifact_id": "artifact_lockflame_writ_banner",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "fenwake_artifact_3",
+          "artifact_id": "artifact_mudglass_beads",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "fenwake_artifact_4",
+          "artifact_id": "artifact_prismward_mantle",
+          "x": 9,
+          "y": 8
+        },
+        {
+          "placement_id": "fenwake_artifact_5",
+          "artifact_id": "artifact_rainstar_sextant",
+          "x": 11,
+          "y": 1
+        },
+        {
+          "placement_id": "fenwake_artifact_6",
+          "artifact_id": "artifact_redline_warrant_gonfalon",
+          "x": 12,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "fenwake_march_a",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26311,
+          "enemy_army": {
+            "id": "army_fenwake_march_a",
+            "name": "Halo Spire Convergence Front A",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_shard_wardens",
+                "count": 9
+              },
+              {
+                "unit_id": "unit_sunvault_prism_adepts",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "fenwake_march_b",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26312,
+          "enemy_army": {
+            "id": "army_fenwake_march_b",
+            "name": "Halo Spire Convergence Front B",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_prism_adepts",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_sunvault_mirror_duelists",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "fenwake_march_c",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26313,
+          "enemy_army": {
+            "id": "army_fenwake_march_c",
+            "name": "Halo Spire Convergence Front C",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_mirror_duelists",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_sunvault_resonant_choristers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "fenwake_march_d",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 9,
+          "y": 7,
+          "difficulty": "medium",
+          "combat_seed": 26314,
+          "enemy_army": {
+            "id": "army_fenwake_march_d",
+            "name": "Halo Spire Convergence Front D",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_resonant_choristers",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_sunvault_solar_array_striders",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "fenwake_march_e",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 11,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26315,
+          "enemy_army": {
+            "id": "army_fenwake_march_e",
+            "name": "Halo Spire Convergence Front E",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_solar_array_striders",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_sunvault_shard_wardens",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "fenwake_bogbell_croft_watch",
+          "encounter_id": "encounter_bogbell_croft_watch",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26316,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "halometer-icehook-convergence",
+      "name": "Halometer Icehook Meridian",
+      "selection": {
+        "summary": "Mirro Halometer crosses a fourteen-league grand convergence to secure the Icehook Trapper Lodge Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Grand Convergence (14x9)",
+        "player_summary": "Mirro Halometer commands Mirro's Icehook Meridian Company from Prismhearth.",
+        "enemy_summary": "Rootgate Nursery contests six fronts around the Icehook Trapper Lodge Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 9
+      },
+      "player_faction_id": "faction_sunvault",
+      "player_army_id": "army_mirro_grand_convergence_company",
+      "hero_id": "hero_sunvault_mirro_halometer",
+      "starting_resources": {
+        "gold": 1400,
+        "wood": 5,
+        "ore": 5,
+        "aetherglass": 3
+      },
+      "map": [
+        [
+          "sand",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "sand",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "sand",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "sand",
+          "snow",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "sand",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "sand",
+          "snow",
+          "snow",
+          "snow",
+          "grass"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "sand",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "sand",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow"
+        ],
+        [
+          "grass",
+          "snow",
+          "sand",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "sand"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "sand",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_sunvault_mirro_halometer"
+      ],
+      "objectives": {
+        "victory_text": "Mirro Halometer closes the complete Halometer Icehook Meridian route.",
+        "defeat_text": "Rootgate Nursery breaks the grand convergence before Mirro Halometer secures its primary front.",
+        "victory": [
+          {
+            "id": "claim_halometer_enemy_town",
+            "label": "Claim Rootgate Nursery",
+            "type": "town_owned_by_player",
+            "placement_id": "halometer_enemy_town"
+          },
+          {
+            "id": "secure_halometer_primary",
+            "label": "Secure the Icehook Trapper Lodge Watch",
+            "type": "encounter_resolved",
+            "placement_id": "halometer_icehook_trapper_lodge_watch"
+          },
+          {
+            "id": "clear_halometer_march_a",
+            "label": "Clear the western convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "halometer_march_a"
+          },
+          {
+            "id": "clear_halometer_march_b",
+            "label": "Clear the central convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "halometer_march_b"
+          },
+          {
+            "id": "clear_halometer_march_c",
+            "label": "Clear the northern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "halometer_march_c"
+          },
+          {
+            "id": "clear_halometer_march_d",
+            "label": "Clear the southern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "halometer_march_d"
+          },
+          {
+            "id": "clear_halometer_march_e",
+            "label": "Clear the eastern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "halometer_march_e"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_halometer_player_town",
+            "label": "Keep Prismhearth",
+            "type": "town_not_owned_by_player",
+            "placement_id": "halometer_player_town"
+          },
+          {
+            "id": "halometer_hero_survives",
+            "label": "Mirro Halometer must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_halometer_pressure",
+            "label": "Keep enemy pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_thornwake",
+            "threshold": 15
+          },
+          {
+            "id": "finish_halometer_in_time",
+            "label": "Finish before Day 20",
+            "type": "day_at_least",
+            "day": 20
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "halometer_convergence_muster",
+          "priority": 126,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "halometer_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 380,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "halometer_player_town",
+              "recruits": {
+                "unit_sunvault_shard_wardens": 2,
+                "unit_sunvault_mirror_duelists": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Prismhearth sends Mirro Halometer a convergence reserve."
+            }
+          ]
+        },
+        {
+          "id": "halometer_town_claimed",
+          "priority": 116,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_halometer_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "halometer_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "halometer_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Mirro Halometer anchors the convergence charter at Rootgate Nursery."
+            }
+          ]
+        },
+        {
+          "id": "halometer_counterstroke",
+          "priority": 102,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "halometer_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "halometer_counterstroke",
+                "encounter_id": "encounter_graftbound_pilgrims",
+                "x": 13,
+                "y": 8,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_thornwake",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Rootgate Nursery sends a counterstroke around the outer march."
+            }
+          ]
+        },
+        {
+          "id": "halometer_unsecured_primary",
+          "priority": 94,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_halometer_primary"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_thornwake",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Icehook Trapper Lodge Watch keeps the convergence route divided."
+            }
+          ]
+        },
+        {
+          "id": "halometer_march_c_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_halometer_march_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_thornwake",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northern convergence front begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "halometer_march_e_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_halometer_march_e"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_thornwake",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The eastern convergence front hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "halometer_middle_front_salvage",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "halometer_march_b"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 160,
+                "aetherglass": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 90
+            },
+            {
+              "type": "set_flag",
+              "flag": "halometer_middle_front_salvaged",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Mirro Halometer recovers the central march ledger and its reserve stores."
+            }
+          ]
+        },
+        {
+          "id": "halometer_primary_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "halometer_icehook_trapper_lodge_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "aetherglass": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 210
+            },
+            {
+              "type": "set_flag",
+              "flag": "halometer_icehook_trapper_lodge_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Mirro Halometer secures the Icehook Trapper Lodge Watch and closes the grand convergence."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "halometer_player_town",
+          "town_id": "town_prismhearth",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "halometer_enemy_town",
+          "town_id": "town_thornwake_rootgate_nursery",
+          "x": 13,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_thornwake",
+          "label": "Rootgate Meridian Tangle",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "verdant_grafts": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_graftbound_pilgrims"
+          ],
+          "spawn_points": [
+            {
+              "x": 12,
+              "y": 1
+            },
+            {
+              "x": 12,
+              "y": 7
+            }
+          ],
+          "siege_target_placement_id": "halometer_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "halometer_faction_landmark",
+          "site_id": "site_prism_relay_lens",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "halometer_primary_site",
+          "site_id": "site_icehook_trapper_lodge",
+          "x": 10,
+          "y": 5
+        },
+        {
+          "placement_id": "halometer_player_rare",
+          "site_id": "site_aetherglass_lens_house",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "halometer_enemy_rare",
+          "site_id": "site_verdant_graft_nursery",
+          "x": 13,
+          "y": 1,
+          "collected_by_faction_id": "faction_thornwake"
+        },
+        {
+          "placement_id": "halometer_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "halometer_ore",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 8,
+          "collected_by_faction_id": "faction_thornwake"
+        },
+        {
+          "placement_id": "halometer_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "halometer_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 12,
+          "y": 2,
+          "collected_by_faction_id": "faction_thornwake"
+        },
+        {
+          "placement_id": "halometer_feature_1",
+          "site_id": "site_frostbeacon_bothy",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "halometer_feature_2",
+          "site_id": "site_reedbarge_mooring",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "halometer_feature_3",
+          "site_id": "site_kite_signal_eyrie",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "placement_id": "halometer_feature_4",
+          "site_id": "site_milestone_arsenal",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "halometer_feature_5",
+          "site_id": "site_obsidian_scar",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "halometer_feature_6",
+          "site_id": "site_orchard_levy",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "placement_id": "halometer_feature_7",
+          "site_id": "site_beacon_path_scroll",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "placement_id": "halometer_feature_8",
+          "site_id": "site_lens_house",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "halometer_artifact_1",
+          "artifact_id": "artifact_tollstone_ring",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "halometer_artifact_2",
+          "artifact_id": "artifact_zenith_prism_pennon",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "halometer_artifact_3",
+          "artifact_id": "artifact_drowned_star_astrolabe",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "halometer_artifact_4",
+          "artifact_id": "artifact_fenhound_scent_bell",
+          "x": 9,
+          "y": 8
+        },
+        {
+          "placement_id": "halometer_artifact_5",
+          "artifact_id": "artifact_fogwake_deckboots",
+          "x": 11,
+          "y": 1
+        },
+        {
+          "placement_id": "halometer_artifact_6",
+          "artifact_id": "artifact_living_bridge_knot",
+          "x": 12,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "halometer_march_a",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26321,
+          "enemy_army": {
+            "id": "army_halometer_march_a",
+            "name": "Rootgate Nursery Convergence Front A",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_seedcutters",
+                "count": 9
+              },
+              {
+                "unit_id": "unit_thornwake_thornwhip_carriers",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "halometer_march_b",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26322,
+          "enemy_army": {
+            "id": "army_halometer_march_b",
+            "name": "Rootgate Nursery Convergence Front B",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_thornwhip_carriers",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_thornwake_sporeglass_menders",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "halometer_march_c",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26323,
+          "enemy_army": {
+            "id": "army_halometer_march_c",
+            "name": "Rootgate Nursery Convergence Front C",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_sporeglass_menders",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_thornwake_barkmantle_rams",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "halometer_march_d",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 9,
+          "y": 7,
+          "difficulty": "medium",
+          "combat_seed": 26324,
+          "enemy_army": {
+            "id": "army_halometer_march_d",
+            "name": "Rootgate Nursery Convergence Front D",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_barkmantle_rams",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_thornwake_stagknot_runners",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "halometer_march_e",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 11,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26325,
+          "enemy_army": {
+            "id": "army_halometer_march_e",
+            "name": "Rootgate Nursery Convergence Front E",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_stagknot_runners",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_thornwake_seedcutters",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "halometer_icehook_trapper_lodge_watch",
+          "encounter_id": "encounter_icehook_trapper_lodge_watch",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26326,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "graftsibyl-lantern-convergence",
+      "name": "Graft-Sibyl Lantern Root",
+      "selection": {
+        "summary": "Nara Graft-Sibyl crosses a fourteen-league grand convergence to secure the Lantern Warren Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Grand Convergence (14x9)",
+        "player_summary": "Nara Graft-Sibyl commands Nara's Lantern-Root Company from Graftroot Caravan.",
+        "enemy_summary": "Clauseworks Depot contests six fronts around the Lantern Warren Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 9
+      },
+      "player_faction_id": "faction_thornwake",
+      "player_army_id": "army_nara_grand_convergence_company",
+      "hero_id": "hero_thornwake_nara_graftsibyl",
+      "starting_resources": {
+        "gold": 1400,
+        "wood": 5,
+        "ore": 5,
+        "verdant_grafts": 3
+      },
+      "map": [
+        [
+          "mire",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "grass",
+          "grass",
+          "mire",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "mire",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "mire",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "underground",
+          "grass",
+          "grass",
+          "mire",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "grass",
+          "mire",
+          "grass",
+          "grass",
+          "grass",
+          "underground"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "mire",
+          "underground",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "mire",
+          "underground",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "underground",
+          "grass",
+          "mire",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "mire"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass",
+          "mire",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "underground",
+          "grass"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_thornwake_nara_graftsibyl"
+      ],
+      "objectives": {
+        "victory_text": "Nara Graft-Sibyl closes the complete Graft-Sibyl Lantern Root route.",
+        "defeat_text": "Clauseworks Depot breaks the grand convergence before Nara Graft-Sibyl secures its primary front.",
+        "victory": [
+          {
+            "id": "claim_graftsibyl_enemy_town",
+            "label": "Claim Clauseworks Depot",
+            "type": "town_owned_by_player",
+            "placement_id": "graftsibyl_enemy_town"
+          },
+          {
+            "id": "secure_graftsibyl_primary",
+            "label": "Secure the Lantern Warren Watch",
+            "type": "encounter_resolved",
+            "placement_id": "graftsibyl_lantern_warren_watch"
+          },
+          {
+            "id": "clear_graftsibyl_march_a",
+            "label": "Clear the western convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "graftsibyl_march_a"
+          },
+          {
+            "id": "clear_graftsibyl_march_b",
+            "label": "Clear the central convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "graftsibyl_march_b"
+          },
+          {
+            "id": "clear_graftsibyl_march_c",
+            "label": "Clear the northern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "graftsibyl_march_c"
+          },
+          {
+            "id": "clear_graftsibyl_march_d",
+            "label": "Clear the southern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "graftsibyl_march_d"
+          },
+          {
+            "id": "clear_graftsibyl_march_e",
+            "label": "Clear the eastern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "graftsibyl_march_e"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_graftsibyl_player_town",
+            "label": "Keep Graftroot Caravan",
+            "type": "town_not_owned_by_player",
+            "placement_id": "graftsibyl_player_town"
+          },
+          {
+            "id": "graftsibyl_hero_survives",
+            "label": "Nara Graft-Sibyl must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_graftsibyl_pressure",
+            "label": "Keep enemy pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_brasshollow",
+            "threshold": 15
+          },
+          {
+            "id": "finish_graftsibyl_in_time",
+            "label": "Finish before Day 20",
+            "type": "day_at_least",
+            "day": 20
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "graftsibyl_convergence_muster",
+          "priority": 126,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "graftsibyl_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 380,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "graftsibyl_player_town",
+              "recruits": {
+                "unit_thornwake_seedcutters": 2,
+                "unit_thornwake_sporeglass_menders": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Graftroot Caravan sends Nara Graft-Sibyl a convergence reserve."
+            }
+          ]
+        },
+        {
+          "id": "graftsibyl_town_claimed",
+          "priority": 116,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_graftsibyl_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "graftsibyl_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "graftsibyl_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Nara Graft-Sibyl anchors the convergence charter at Clauseworks Depot."
+            }
+          ]
+        },
+        {
+          "id": "graftsibyl_counterstroke",
+          "priority": 102,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "graftsibyl_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "graftsibyl_counterstroke",
+                "encounter_id": "encounter_redline_foreclosure",
+                "x": 13,
+                "y": 8,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_brasshollow",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Clauseworks Depot sends a counterstroke around the outer march."
+            }
+          ]
+        },
+        {
+          "id": "graftsibyl_unsecured_primary",
+          "priority": 94,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_graftsibyl_primary"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_brasshollow",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Lantern Warren Watch keeps the convergence route divided."
+            }
+          ]
+        },
+        {
+          "id": "graftsibyl_march_c_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_graftsibyl_march_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_brasshollow",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northern convergence front begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "graftsibyl_march_e_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_graftsibyl_march_e"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_brasshollow",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The eastern convergence front hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "graftsibyl_middle_front_salvage",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "graftsibyl_march_b"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 160,
+                "verdant_grafts": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 90
+            },
+            {
+              "type": "set_flag",
+              "flag": "graftsibyl_middle_front_salvaged",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Nara Graft-Sibyl recovers the central march ledger and its reserve stores."
+            }
+          ]
+        },
+        {
+          "id": "graftsibyl_primary_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "graftsibyl_lantern_warren_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "verdant_grafts": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 210
+            },
+            {
+              "type": "set_flag",
+              "flag": "graftsibyl_lantern_warren_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Nara Graft-Sibyl secures the Lantern Warren Watch and closes the grand convergence."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "graftsibyl_player_town",
+          "town_id": "town_thornwake_graftroot_caravan",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "graftsibyl_enemy_town",
+          "town_id": "town_brasshollow_clauseworks_depot",
+          "x": 13,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_brasshollow",
+          "label": "Clauseworks Root Severance",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "brass_scrip": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_redline_foreclosure"
+          ],
+          "spawn_points": [
+            {
+              "x": 12,
+              "y": 1
+            },
+            {
+              "x": 12,
+              "y": 7
+            }
+          ],
+          "siege_target_placement_id": "graftsibyl_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "graftsibyl_faction_landmark",
+          "site_id": "site_thornwake_graft_arch",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "graftsibyl_primary_site",
+          "site_id": "site_lantern_warren",
+          "x": 10,
+          "y": 5
+        },
+        {
+          "placement_id": "graftsibyl_player_rare",
+          "site_id": "site_verdant_graft_nursery",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "graftsibyl_enemy_rare",
+          "site_id": "site_brass_scrip_mint",
+          "x": 13,
+          "y": 1,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "graftsibyl_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "graftsibyl_ore",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 8,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "graftsibyl_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "graftsibyl_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 12,
+          "y": 2,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "graftsibyl_feature_1",
+          "site_id": "site_fenhound_kennels",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "graftsibyl_feature_2",
+          "site_id": "site_free_company_yard",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "graftsibyl_feature_3",
+          "site_id": "site_frostwharf_house",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "placement_id": "graftsibyl_feature_4",
+          "site_id": "site_orevein_assay_depot",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "graftsibyl_feature_5",
+          "site_id": "site_starlens_sanctum",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "graftsibyl_feature_6",
+          "site_id": "site_wayfarer_infirmary",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "placement_id": "graftsibyl_feature_7",
+          "site_id": "site_brightwood_sawmill",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "placement_id": "graftsibyl_feature_8",
+          "site_id": "site_prism_watch_relay",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "graftsibyl_artifact_1",
+          "artifact_id": "artifact_meridian_relay_lens",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "graftsibyl_artifact_2",
+          "artifact_id": "artifact_mirechain_hunt_totem",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "graftsibyl_artifact_3",
+          "artifact_id": "artifact_reedshadow_waders",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "graftsibyl_artifact_4",
+          "artifact_id": "artifact_wakebell_mourning_ensign",
+          "x": 9,
+          "y": 8
+        },
+        {
+          "placement_id": "graftsibyl_artifact_5",
+          "artifact_id": "artifact_graftbark_cuirass",
+          "x": 11,
+          "y": 1
+        },
+        {
+          "placement_id": "graftsibyl_artifact_6",
+          "artifact_id": "artifact_lockward_beacon_key",
+          "x": 12,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "graftsibyl_march_a",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26331,
+          "enemy_army": {
+            "id": "army_graftsibyl_march_a",
+            "name": "Clauseworks Depot Convergence Front A",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_scrip_haulers",
+                "count": 9
+              },
+              {
+                "unit_id": "unit_brasshollow_rivet_hounds",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "graftsibyl_march_b",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26332,
+          "enemy_army": {
+            "id": "army_graftsibyl_march_b",
+            "name": "Clauseworks Depot Convergence Front B",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_rivet_hounds",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_brasshollow_furnace_pavis_teams",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "graftsibyl_march_c",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26333,
+          "enemy_army": {
+            "id": "army_graftsibyl_march_c",
+            "name": "Clauseworks Depot Convergence Front C",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_furnace_pavis_teams",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_brasshollow_boiler_rivetcasters",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "graftsibyl_march_d",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 9,
+          "y": 7,
+          "difficulty": "medium",
+          "combat_seed": 26334,
+          "enemy_army": {
+            "id": "army_graftsibyl_march_d",
+            "name": "Clauseworks Depot Convergence Front D",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_boiler_rivetcasters",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_brasshollow_debt_engine_exactors",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "graftsibyl_march_e",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 11,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26335,
+          "enemy_army": {
+            "id": "army_graftsibyl_march_e",
+            "name": "Clauseworks Depot Convergence Front E",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_debt_engine_exactors",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_brasshollow_scrip_haulers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "graftsibyl_lantern_warren_watch",
+          "encounter_id": "encounter_lantern_warren_watch",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26336,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "debtrune-default-convergence",
+      "name": "Debt-Rune Default March",
+      "selection": {
+        "summary": "Harro Debt-Rune crosses a fourteen-league grand convergence to secure the Default-Clause Collectors.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Grand Convergence (14x9)",
+        "player_summary": "Harro Debt-Rune commands Harro's Default-Clause Company from Orevein Gantry.",
+        "enemy_summary": "Fogchart Mooring contests six fronts around the Default-Clause Collectors.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 9
+      },
+      "player_faction_id": "faction_brasshollow",
+      "player_army_id": "army_harro_grand_convergence_company",
+      "hero_id": "hero_brasshollow_harro_debtrune",
+      "starting_resources": {
+        "gold": 1400,
+        "wood": 5,
+        "ore": 5,
+        "brass_scrip": 3
+      },
+      "map": [
+        [
+          "underground",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "lava",
+          "lava",
+          "underground",
+          "lava",
+          "lava"
+        ],
+        [
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "underground",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava"
+        ],
+        [
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "underground",
+          "lava",
+          "lava",
+          "lava"
+        ],
+        [
+          "lava",
+          "dirt",
+          "lava",
+          "lava",
+          "underground",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava"
+        ],
+        [
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "lava",
+          "underground",
+          "lava",
+          "lava",
+          "lava",
+          "dirt"
+        ],
+        [
+          "lava",
+          "lava",
+          "lava",
+          "underground",
+          "dirt",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "lava"
+        ],
+        [
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "underground",
+          "dirt",
+          "lava",
+          "lava",
+          "lava",
+          "lava"
+        ],
+        [
+          "dirt",
+          "lava",
+          "underground",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "underground"
+        ],
+        [
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava",
+          "underground",
+          "lava",
+          "lava",
+          "lava",
+          "lava",
+          "dirt",
+          "lava"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_brasshollow_harro_debtrune"
+      ],
+      "objectives": {
+        "victory_text": "Harro Debt-Rune closes the complete Debt-Rune Default March route.",
+        "defeat_text": "Fogchart Mooring breaks the grand convergence before Harro Debt-Rune secures its primary front.",
+        "victory": [
+          {
+            "id": "claim_debtrune_enemy_town",
+            "label": "Claim Fogchart Mooring",
+            "type": "town_owned_by_player",
+            "placement_id": "debtrune_enemy_town"
+          },
+          {
+            "id": "secure_debtrune_primary",
+            "label": "Secure the Default-Clause Collectors",
+            "type": "encounter_resolved",
+            "placement_id": "debtrune_default_collectors"
+          },
+          {
+            "id": "clear_debtrune_march_a",
+            "label": "Clear the western convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "debtrune_march_a"
+          },
+          {
+            "id": "clear_debtrune_march_b",
+            "label": "Clear the central convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "debtrune_march_b"
+          },
+          {
+            "id": "clear_debtrune_march_c",
+            "label": "Clear the northern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "debtrune_march_c"
+          },
+          {
+            "id": "clear_debtrune_march_d",
+            "label": "Clear the southern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "debtrune_march_d"
+          },
+          {
+            "id": "clear_debtrune_march_e",
+            "label": "Clear the eastern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "debtrune_march_e"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_debtrune_player_town",
+            "label": "Keep Orevein Gantry",
+            "type": "town_not_owned_by_player",
+            "placement_id": "debtrune_player_town"
+          },
+          {
+            "id": "debtrune_hero_survives",
+            "label": "Harro Debt-Rune must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_debtrune_pressure",
+            "label": "Keep enemy pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_veilmourn",
+            "threshold": 15
+          },
+          {
+            "id": "finish_debtrune_in_time",
+            "label": "Finish before Day 20",
+            "type": "day_at_least",
+            "day": 20
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "debtrune_convergence_muster",
+          "priority": 126,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "debtrune_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 380,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "debtrune_player_town",
+              "recruits": {
+                "unit_brasshollow_scrip_haulers": 2,
+                "unit_brasshollow_furnace_pavis_teams": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Orevein Gantry sends Harro Debt-Rune a convergence reserve."
+            }
+          ]
+        },
+        {
+          "id": "debtrune_town_claimed",
+          "priority": 116,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_debtrune_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "debtrune_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "debtrune_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Harro Debt-Rune anchors the convergence charter at Fogchart Mooring."
+            }
+          ]
+        },
+        {
+          "id": "debtrune_counterstroke",
+          "priority": 102,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "debtrune_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "debtrune_counterstroke",
+                "encounter_id": "encounter_bellwake_privateers",
+                "x": 13,
+                "y": 8,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_veilmourn",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Fogchart Mooring sends a counterstroke around the outer march."
+            }
+          ]
+        },
+        {
+          "id": "debtrune_unsecured_primary",
+          "priority": 94,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_debtrune_primary"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Default-Clause Collectors keeps the convergence route divided."
+            }
+          ]
+        },
+        {
+          "id": "debtrune_march_c_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_debtrune_march_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northern convergence front begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "debtrune_march_e_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_debtrune_march_e"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The eastern convergence front hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "debtrune_middle_front_salvage",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "debtrune_march_b"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 160,
+                "brass_scrip": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 90
+            },
+            {
+              "type": "set_flag",
+              "flag": "debtrune_middle_front_salvaged",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Harro Debt-Rune recovers the central march ledger and its reserve stores."
+            }
+          ]
+        },
+        {
+          "id": "debtrune_primary_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "debtrune_default_collectors"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "brass_scrip": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 210
+            },
+            {
+              "type": "set_flag",
+              "flag": "debtrune_default_collectors_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Harro Debt-Rune secures the Default-Clause Collectors and closes the grand convergence."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "debtrune_player_town",
+          "town_id": "town_brasshollow_orevein_gantry",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "debtrune_enemy_town",
+          "town_id": "town_veilmourn_fogchart_mooring",
+          "x": 13,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_veilmourn",
+          "label": "Fogchart Default Pressure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "memory_salt": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_bellwake_privateers"
+          ],
+          "spawn_points": [
+            {
+              "x": 12,
+              "y": 1
+            },
+            {
+              "x": 12,
+              "y": 7
+            }
+          ],
+          "siege_target_placement_id": "debtrune_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "debtrune_faction_landmark",
+          "site_id": "site_brasshollow_gauge_shrine",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "debtrune_primary_site",
+          "site_id": "site_orevein_assay_depot",
+          "x": 10,
+          "y": 5
+        },
+        {
+          "placement_id": "debtrune_player_rare",
+          "site_id": "site_brass_scrip_mint",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "debtrune_enemy_rare",
+          "site_id": "site_memory_salt_pan",
+          "x": 13,
+          "y": 1,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "debtrune_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "debtrune_ore",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 8,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "debtrune_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "debtrune_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 12,
+          "y": 2,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "debtrune_feature_1",
+          "site_id": "site_bramble_hedge",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "debtrune_feature_2",
+          "site_id": "site_basalt_gatehouse",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "debtrune_feature_3",
+          "site_id": "site_glowcap_croft",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "placement_id": "debtrune_feature_4",
+          "site_id": "site_greenbranch_copse",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "debtrune_feature_5",
+          "site_id": "site_cinder_kiln",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "debtrune_feature_6",
+          "site_id": "site_cliffhawk_roost",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "placement_id": "debtrune_feature_7",
+          "site_id": "site_harbor_pilot_house",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "placement_id": "debtrune_feature_8",
+          "site_id": "site_reef_coin_assay",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "debtrune_artifact_1",
+          "artifact_id": "artifact_quarry_tally_rod",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "debtrune_artifact_2",
+          "artifact_id": "artifact_quenchplate_vambrace",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "debtrune_artifact_3",
+          "artifact_id": "artifact_redline_survey_dial",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "debtrune_artifact_4",
+          "artifact_id": "artifact_black_sail_compass",
+          "x": 9,
+          "y": 8
+        },
+        {
+          "placement_id": "debtrune_artifact_5",
+          "artifact_id": "artifact_pressure_gauge_reliquary",
+          "x": 11,
+          "y": 1
+        },
+        {
+          "placement_id": "debtrune_artifact_6",
+          "artifact_id": "artifact_rootpath_seed_compass",
+          "x": 12,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "debtrune_march_a",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26341,
+          "enemy_army": {
+            "id": "army_debtrune_march_a",
+            "name": "Fogchart Mooring Convergence Front A",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_bellwake_oars",
+                "count": 9
+              },
+              {
+                "unit_id": "unit_veilmourn_mourning_lanterns",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "debtrune_march_b",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26342,
+          "enemy_army": {
+            "id": "army_debtrune_march_b",
+            "name": "Fogchart Mooring Convergence Front B",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_mourning_lanterns",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_veilmourn_maskglass_corsairs",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "debtrune_march_c",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26343,
+          "enemy_army": {
+            "id": "army_debtrune_march_c",
+            "name": "Fogchart Mooring Convergence Front C",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_maskglass_corsairs",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_veilmourn_undertow_harpooners",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "debtrune_march_d",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 9,
+          "y": 7,
+          "difficulty": "medium",
+          "combat_seed": 26344,
+          "enemy_army": {
+            "id": "army_debtrune_march_d",
+            "name": "Fogchart Mooring Convergence Front D",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_undertow_harpooners",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_veilmourn_obituary_scribes",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "debtrune_march_e",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 11,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26345,
+          "enemy_army": {
+            "id": "army_debtrune_march_e",
+            "name": "Fogchart Mooring Convergence Front E",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_obituary_scribes",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_veilmourn_bellwake_oars",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "debtrune_default_collectors",
+          "encounter_id": "encounter_debtrune_default_collectors",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26346,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "nightchart-meridian-convergence",
+      "name": "Nightchart False Meridian",
+      "selection": {
+        "summary": "Orso Nightchart crosses a fourteen-league grand convergence to secure the False-Meridian Pilots.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Grand Convergence (14x9)",
+        "player_summary": "Orso Nightchart commands Orso's False-Meridian Company from Bellwake Harbor.",
+        "enemy_summary": "Riverwatch Hold contests six fronts around the False-Meridian Pilots.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 9
+      },
+      "player_faction_id": "faction_veilmourn",
+      "player_army_id": "army_orso_grand_convergence_company",
+      "hero_id": "hero_veilmourn_orso_nightchart",
+      "starting_resources": {
+        "gold": 1400,
+        "wood": 5,
+        "ore": 5,
+        "memory_salt": 3
+      },
+      "map": [
+        [
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "underground",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "underground"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "underground",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "snow"
+        ],
+        [
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "underground",
+          "snow",
+          "snow",
+          "snow",
+          "snow"
+        ],
+        [
+          "underground",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "grass"
+        ],
+        [
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow",
+          "grass",
+          "snow",
+          "snow",
+          "snow",
+          "snow",
+          "underground",
+          "snow"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_veilmourn_orso_nightchart"
+      ],
+      "objectives": {
+        "victory_text": "Orso Nightchart closes the complete Nightchart False Meridian route.",
+        "defeat_text": "Riverwatch Hold breaks the grand convergence before Orso Nightchart secures its primary front.",
+        "victory": [
+          {
+            "id": "claim_nightchart_enemy_town",
+            "label": "Claim Riverwatch Hold",
+            "type": "town_owned_by_player",
+            "placement_id": "nightchart_enemy_town"
+          },
+          {
+            "id": "secure_nightchart_primary",
+            "label": "Secure the False-Meridian Pilots",
+            "type": "encounter_resolved",
+            "placement_id": "nightchart_false_meridian"
+          },
+          {
+            "id": "clear_nightchart_march_a",
+            "label": "Clear the western convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "nightchart_march_a"
+          },
+          {
+            "id": "clear_nightchart_march_b",
+            "label": "Clear the central convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "nightchart_march_b"
+          },
+          {
+            "id": "clear_nightchart_march_c",
+            "label": "Clear the northern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "nightchart_march_c"
+          },
+          {
+            "id": "clear_nightchart_march_d",
+            "label": "Clear the southern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "nightchart_march_d"
+          },
+          {
+            "id": "clear_nightchart_march_e",
+            "label": "Clear the eastern convergence front",
+            "type": "encounter_resolved",
+            "placement_id": "nightchart_march_e"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_nightchart_player_town",
+            "label": "Keep Bellwake Harbor",
+            "type": "town_not_owned_by_player",
+            "placement_id": "nightchart_player_town"
+          },
+          {
+            "id": "nightchart_hero_survives",
+            "label": "Orso Nightchart must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_nightchart_pressure",
+            "label": "Keep enemy pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_embercourt",
+            "threshold": 15
+          },
+          {
+            "id": "finish_nightchart_in_time",
+            "label": "Finish before Day 20",
+            "type": "day_at_least",
+            "day": 20
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "nightchart_convergence_muster",
+          "priority": 126,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "nightchart_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 380,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "nightchart_player_town",
+              "recruits": {
+                "unit_veilmourn_bellwake_oars": 2,
+                "unit_veilmourn_maskglass_corsairs": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Bellwake Harbor sends Orso Nightchart a convergence reserve."
+            }
+          ]
+        },
+        {
+          "id": "nightchart_town_claimed",
+          "priority": 116,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_nightchart_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "nightchart_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "nightchart_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Orso Nightchart anchors the convergence charter at Riverwatch Hold."
+            }
+          ]
+        },
+        {
+          "id": "nightchart_counterstroke",
+          "priority": 102,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "nightchart_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "nightchart_counterstroke",
+                "encounter_id": "encounter_charter_guard",
+                "x": 13,
+                "y": 8,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Riverwatch Hold sends a counterstroke around the outer march."
+            }
+          ]
+        },
+        {
+          "id": "nightchart_unsecured_primary",
+          "priority": 94,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_nightchart_primary"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_embercourt",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The False-Meridian Pilots keeps the convergence route divided."
+            }
+          ]
+        },
+        {
+          "id": "nightchart_march_c_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_nightchart_march_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_embercourt",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northern convergence front begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "nightchart_march_e_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_nightchart_march_e"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_embercourt",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The eastern convergence front hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "nightchart_middle_front_salvage",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "nightchart_march_b"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 160,
+                "memory_salt": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 90
+            },
+            {
+              "type": "set_flag",
+              "flag": "nightchart_middle_front_salvaged",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Orso Nightchart recovers the central march ledger and its reserve stores."
+            }
+          ]
+        },
+        {
+          "id": "nightchart_primary_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "nightchart_false_meridian"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "memory_salt": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 210
+            },
+            {
+              "type": "set_flag",
+              "flag": "nightchart_false_meridian_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Orso Nightchart secures the False-Meridian Pilots and closes the grand convergence."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "nightchart_player_town",
+          "town_id": "town_veilmourn_bellwake_harbor",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "nightchart_enemy_town",
+          "town_id": "town_riverwatch",
+          "x": 13,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Riverwatch Meridian Closure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "embergrain": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_charter_guard"
+          ],
+          "spawn_points": [
+            {
+              "x": 12,
+              "y": 1
+            },
+            {
+              "x": 12,
+              "y": 7
+            }
+          ],
+          "siege_target_placement_id": "nightchart_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "nightchart_faction_landmark",
+          "site_id": "site_veilmourn_bell_mast",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "nightchart_primary_site",
+          "site_id": "site_veilmourn_bell_mast",
+          "x": 10,
+          "y": 5
+        },
+        {
+          "placement_id": "nightchart_player_rare",
+          "site_id": "site_memory_salt_pan",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "nightchart_enemy_rare",
+          "site_id": "site_embergrain_warm_granary",
+          "x": 13,
+          "y": 1,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "nightchart_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "nightchart_ore",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 8,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "nightchart_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "nightchart_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 12,
+          "y": 2,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "nightchart_feature_1",
+          "site_id": "site_crystal_sump",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "nightchart_feature_2",
+          "site_id": "site_dustjack_yard",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "nightchart_feature_3",
+          "site_id": "site_saltpan_camp",
+          "x": 6,
+          "y": 8
+        },
+        {
+          "placement_id": "nightchart_feature_4",
+          "site_id": "site_switchback_hostel",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "nightchart_feature_5",
+          "site_id": "site_kite_signal_eyrie",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "nightchart_feature_6",
+          "site_id": "site_milestone_arsenal",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "placement_id": "nightchart_feature_7",
+          "site_id": "site_orchard_levy",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "placement_id": "nightchart_feature_8",
+          "site_id": "site_watchtower_beacon",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "nightchart_artifact_1",
+          "artifact_id": "artifact_trailsinger_boots",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "nightchart_artifact_2",
+          "artifact_id": "artifact_warcrest_pennon",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "nightchart_artifact_3",
+          "artifact_id": "artifact_bastion_gorget",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "nightchart_artifact_4",
+          "artifact_id": "artifact_asterfall_mantle",
+          "x": 9,
+          "y": 8
+        },
+        {
+          "placement_id": "nightchart_artifact_5",
+          "artifact_id": "artifact_bridgefire_standard",
+          "x": 11,
+          "y": 1
+        },
+        {
+          "placement_id": "nightchart_artifact_6",
+          "artifact_id": "artifact_milepost_lantern",
+          "x": 12,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "nightchart_march_a",
+          "encounter_id": "encounter_charter_guard",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26351,
+          "enemy_army": {
+            "id": "army_nightchart_march_a",
+            "name": "Riverwatch Hold Convergence Front A",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_fordhook_cadets",
+                "count": 9
+              },
+              {
+                "unit_id": "unit_embercourt_lantern_sappers",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "nightchart_march_b",
+          "encounter_id": "encounter_charter_guard",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26352,
+          "enemy_army": {
+            "id": "army_nightchart_march_b",
+            "name": "Riverwatch Hold Convergence Front B",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_lantern_sappers",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_embercourt_bargebow_crews",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "nightchart_march_c",
+          "encounter_id": "encounter_charter_guard",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26353,
+          "enemy_army": {
+            "id": "army_nightchart_march_c",
+            "name": "Riverwatch Hold Convergence Front C",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_bargebow_crews",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_embercourt_ash_oath_bailiffs",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "nightchart_march_d",
+          "encounter_id": "encounter_charter_guard",
+          "x": 9,
+          "y": 7,
+          "difficulty": "medium",
+          "combat_seed": 26354,
+          "enemy_army": {
+            "id": "army_nightchart_march_d",
+            "name": "Riverwatch Hold Convergence Front D",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_ash_oath_bailiffs",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_embercourt_beacon_lectors",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "nightchart_march_e",
+          "encounter_id": "encounter_charter_guard",
+          "x": 11,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26355,
+          "enemy_army": {
+            "id": "army_nightchart_march_e",
+            "name": "Riverwatch Hold Convergence Front E",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_beacon_lectors",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_embercourt_fordhook_cadets",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "nightchart_false_meridian",
+          "encounter_id": "encounter_nightchart_false_meridian",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26356,
           "prefer_identity_landmark": true
         }
       ]

@@ -1200,6 +1200,206 @@
           "count": 1
         }
       ]
+    },
+    {
+      "id": "army_belis_grand_convergence_company",
+      "name": "Belis's Cinder-Census Company",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_embercourt_bargebow_crews",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_embercourt_ash_oath_bailiffs",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_embercourt_sluicefire_lindworms",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_embercourt_charter_colossus",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "army_zhorra_grand_convergence_company",
+      "name": "Zhorra's Bogbell Cadence Company",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_mireclaw_bogplate_maulers",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_mireclaw_ferrychain_lashers",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_mireclaw_gorefen_rippers",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "army_mirro_grand_convergence_company",
+      "name": "Mirro's Icehook Meridian Company",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_sunvault_mirror_duelists",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_sunvault_resonant_choristers",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_sunvault_aurora_ballistae",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_sunvault_daybreak_colossus",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "army_nara_grand_convergence_company",
+      "name": "Nara's Lantern-Root Company",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_thornwake_sporeglass_menders",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_thornwake_barkmantle_rams",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_thornwake_graft_matriarchs",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_thornwake_worldroot_bastion",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "army_harro_grand_convergence_company",
+      "name": "Harro's Default-Clause Company",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_brasshollow_furnace_pavis_teams",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_brasshollow_crucible_crawlers",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_brasshollow_foundry_saint",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "army_orso_grand_convergence_company",
+      "name": "Orso's False-Meridian Company",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 10
+        },
+        {
+          "unit_id": "unit_veilmourn_maskglass_corsairs",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_veilmourn_undertow_harpooners",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_veilmourn_fogbound_leviathan",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "army_debtrune_default_collectors",
+      "name": "Default-Clause Collectors",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_rivet_hounds",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_brasshollow_debt_engine_exactors",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_nightchart_false_meridian_pilots",
+      "name": "False-Meridian Pilots",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_veilmourn_undertow_harpooners",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_veilmourn_obituary_scribes",
+          "count": 2
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_high_three_quarter_grand_convergence_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "42a0912d11cfd3184e55d1dac6343cccf9902dfa941ad791260cdf5ce696ea29",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_42x42_and_center_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six original painterly high-three-quarter grand-convergence landmarks with strong non-color silhouettes and genuine transparency: a triangular triple-clamp charcoal camp, a giant-bell reed croft, a twin-hook snow lodge, a broad lantern-warren arch, a crawler-mounted vertical writ press, and a tilted-ring false-meridian beacon; no characters, creatures, text, logos, terrain cards, watermarks, or copied franchise expression.",
+  "items": [
+    {
+      "encounter_id": "encounter_charcoal_burners_watch",
+      "asset_id": "encounter_grand_convergence_charcoal_burners_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_marches/charcoal_burners_watch_source.png",
+      "source_sha256": "b384b7502924c73e4f8c834c4ea90175929bf937e37f995727dc7a0269f7e642",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-06c2d0b8-0bce-4b4c-bb29-91efc8df12fd.png",
+      "atlas_region": [0, 0, 48, 48],
+      "presentation_role": "charcoal_burners_watch"
+    },
+    {
+      "encounter_id": "encounter_bogbell_croft_watch",
+      "asset_id": "encounter_grand_convergence_bogbell_croft_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_marches/bogbell_croft_watch_source.png",
+      "source_sha256": "0ec35e107c05d87da5bc3cb01c9d9d482a0eee8e30f3a917dd80652ccd81b340",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f495ac4c-5e40-4f45-b1c1-ac04770112f4.png",
+      "atlas_region": [48, 0, 48, 48],
+      "presentation_role": "bogbell_croft_watch"
+    },
+    {
+      "encounter_id": "encounter_icehook_trapper_lodge_watch",
+      "asset_id": "encounter_grand_convergence_icehook_trapper_lodge_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_marches/icehook_trapper_lodge_watch_source.png",
+      "source_sha256": "aaa37db5191f95f0b52af12647732a423fb6ecd53c672688b1667fee44458711",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-19e10768-05b4-47f0-95c7-79236dd37b25.png",
+      "atlas_region": [96, 0, 48, 48],
+      "presentation_role": "icehook_trapper_lodge_watch"
+    },
+    {
+      "encounter_id": "encounter_lantern_warren_watch",
+      "asset_id": "encounter_grand_convergence_lantern_warren_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_marches/lantern_warren_watch_source.png",
+      "source_sha256": "c48d5cc4e525d4756972ecd780bd9cb6bd2a5101158cc5ad9daefcf29e6c2ada",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0c927557-3c5c-4257-9bd9-3e0f2d5c6e1b.png",
+      "atlas_region": [144, 0, 48, 48],
+      "presentation_role": "lantern_warren_watch"
+    },
+    {
+      "encounter_id": "encounter_debtrune_default_collectors",
+      "asset_id": "encounter_grand_convergence_default_clause_collectors",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_marches/default_clause_collectors_source.png",
+      "source_sha256": "306940c519cb04c626688003e4d404677d93f37a8dd09accff2fd90acbe83c51",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-bfd510b2-98c3-4e5c-994a-0a7c01d67c3e.png",
+      "atlas_region": [192, 0, 48, 48],
+      "presentation_role": "default_clause_collectors"
+    },
+    {
+      "encounter_id": "encounter_nightchart_false_meridian",
+      "asset_id": "encounter_grand_convergence_false_meridian_pilots",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_marches/false_meridian_pilots_source.png",
+      "source_sha256": "3d6859078ccd0c15342148737ad8919c3553c6764fdda335c85dd8d3906e0ef7",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-14e10dd5-63cc-41af-8014-631622bb8c64.png",
+      "atlas_region": [240, 0, 48, 48],
+      "presentation_role": "false_meridian_pilots"
+    }
+  ]
+}
