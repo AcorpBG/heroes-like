@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the six-faction ritual-scholar art wave. Exact production-hero adventure identity coverage is now 44 of 60; the remaining 16 heroes retain intentional faction-generic fallback pending later content slices.",
+  "currentNotes": "Completed the six-faction arcane-controller art wave. Exact production-hero adventure identity coverage is now 50 of 60; the remaining ten heroes retain intentional faction-generic fallback pending later content slices.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-tavern-ritual-scholar-overworld-sprites-10184",
-  "currentSliceId": "content-tavern-ritual-scholar-overworld-sprites-10184",
-  "currentSliceNotes": "Completed six original portrait-faithful ritual-scholar adventure sprites for Orra Cinderquill, Nix Votivejaw, Essa Daynote, Osmund Pollenglass, Odrik Heatpriest, and Thir Obituary-Ink; exact mapping increased from 38 to 44 of 60. Live tavern hire, field and hostile presentation, explicit remaining fallback, save version 9, dual-resolution captures, core/static validation, and Windows/Linux package startup passed with source art excluded.",
+  "currentSlice": "content-tavern-arcane-controller-overworld-sprites-10184",
+  "currentSliceId": "content-tavern-arcane-controller-overworld-sprites-10184",
+  "currentSliceNotes": "Completed six original portrait-faithful arcane-controller adventure sprites for Jorun Beaconscribe, Edda Rotlamp, Mirro Halometer, Elian Loamchant, Lina Gauge-Savant, and Sael Mirrorbell; exact mapping increased from 44 to 50 of 60. Live tavern hire, field and hostile presentation, explicit remaining fallback, save version 9, dual-resolution captures, core/static validation, and Windows/Linux package startup passed with source art excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content tavern ritual scholar overworld sprites 10184",
-  "currentSliceUpdatedAt": "2026-08-29T02:16:39Z",
+  "currentSliceTitle": "content tavern arcane controller overworld sprites 10184",
+  "currentSliceUpdatedAt": "2026-08-29T02:42:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20789,7 +20789,7 @@
     ".artifacts/rmg_native_4a901a_identity/final_payload_compare.json"
   ],
   "latestEvidenceId": "native-rmg-4a7605-source-owned-monolith-dispatch-20260714",
-  "latestFinding": "Six original ritual-scholar adventure sprites raise exact production-hero identity coverage from 38 to 44 of 60. Live tavern hire, authored costs, active switching, mapped hostile Nix presentation, unmapped Jorun faction fallback, save version 9, dual-resolution captures, core/static validation, and both platform package startup pass; both PCKs are 246502020 bytes with runtime art present and source art excluded.",
+  "latestFinding": "Six original arcane-controller adventure sprites raise exact production-hero identity coverage from 44 to 50 of 60. Live tavern hire, authored costs, active switching, mapped hostile Jorun presentation, unmapped Pell faction fallback, save version 9, dual-resolution captures, core/static validation, and both platform package startup pass; both PCKs are 247376284 bytes with runtime art present and source art excluded.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -105232,6 +105232,16 @@
       "startedAt": "2026-08-29T01:58:24Z",
       "notes": "Added six distinct original portrait-faithful ritual-scholar adventure figures for Orra Cinderquill, Nix Votivejaw, Essa Daynote, Osmund Pollenglass, Odrik Heatpriest, and Thir Obituary-Ink, expanding exact hero identity coverage from 38 to 44 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, mapped Nix enemy identity beside unmapped Jorun Embercourt fallback, save version 9, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 246502020 bytes with all six ritual-scholar textures present and source art excluded. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T02:16:39Z"
+    },
+    {
+      "id": "content-tavern-arcane-controller-overworld-sprites-10184",
+      "title": "content tavern arcane controller overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T02:42:12Z",
+      "startedAt": "2026-08-29T02:23:53Z",
+      "notes": "Added six distinct original portrait-faithful arcane-controller adventure figures for Jorun Beaconscribe, Edda Rotlamp, Mirro Halometer, Elian Loamchant, Lina Gauge-Savant, and Sael Mirrorbell, expanding exact hero identity coverage from 44 to 50 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, mapped Jorun enemy identity beside unmapped Pell Mireclaw fallback, save version 9, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 247376284 bytes with all six arcane-controller textures present and source art excluded. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T02:42:12Z"
     }
   ],
   "project": "heroes-like",
@@ -105241,7 +105251,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Sixteen of 60 production heroes still use faction-generic adventure figures. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingGap": "Ten of 60 production heroes still use faction-generic adventure figures. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved original-content or art slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
@@ -105673,7 +105683,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_tavern_ritual_scholar_overworld_sprites_completed",
+  "result": "content_tavern_arcane_controller_overworld_sprites_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -105774,9 +105784,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed six original ritual-scholar overworld hero sprites, raising exact hero identity coverage to 44 of 60 with live hire, presentation, save, and Linux/Windows package validation.",
+  "summary": "Completed six original arcane-controller overworld hero sprites, raising exact hero identity coverage to 50 of 60 with live hire, presentation, save, and Linux/Windows package validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T02:16:39Z",
+  "updatedAt": "2026-08-29T02:42:12Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

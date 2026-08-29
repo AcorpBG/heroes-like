@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-tavern-ritual-scholar-overworld-sprites-10184`.
+- Selected implementation slice: `content-tavern-arcane-controller-overworld-sprites-10184`.
+
+## Tavern Arcane-Controller Overworld Sprites
+
+id: `content-tavern-arcane-controller-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- exact adventure-map identity now covers 44 of 60 production heroes, while the remaining 16 still collapse to faction-generic figures; towns, authored map objects, decorative/blocker objects, and the unit-art catalog remain fully identity-covered;
+- Jorun Beaconscribe, Edda Rotlamp, Mirro Halometer, Elian Loamchant, Lina Gauge-Savant, and Sael Mirrorbell form a coherent six-faction arcane-controller wave spanning formation signals, rot-blind pressure, relay calibration, bind duration, machine accuracy, and displacement navigation; Jorun is already exercised as an explicit generic fallback.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each selected controller, preserving production portrait identity, faction material language, role-defining control implement, readable small-scale silhouette, grounding, focus, and command-pennant clearance;
+- expand manifest-owned hero-id mapping from 44 to 50 exact identities while keeping the remaining ten heroes on the existing faction fallback and preserving renderer, movement, town-footprint, fog, strategic-enemy, and save ownership;
+- prove each selected hero through the real first-scenario Wayfarers Hall authority, authored recruitment cost, active-command switch, exact field presentation, and save/resume, including mapped Jorun hostile presentation beside explicit remaining-unmapped Mireclaw fallback Pell Reedscript.
+
+Completion criteria:
+- six distinct original sources and curated runtime sprites retain exact manifest provenance, genuine alpha, unique payloads, portrait references, and source-art exclusion from release exports;
+- River Pass, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim offer the intended controller, charge the authored cost, add exactly one commander, preserve save version 9, and resolve the exact mapped sprite after switching and reload;
+- inspected 1280x720 and 1920x1080 captures, controller recruitment/identity/movement/town/fog/fallback/enemy/save runtime, core and repository checks, and bounded Linux/Windows export startup pass within the 250 MB PCK ceiling.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no hero rules, economy, AI, movement, save-schema, RMG, renderer-architecture, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- added six distinct original portrait-faithful arcane-controller adventure figures for Jorun Beaconscribe, Edda Rotlamp, Mirro Halometer, Elian Loamchant, Lina Gauge-Savant, and Sael Mirrorbell, raising exact hero identity coverage from 44 to 50 of 60;
+- the real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active-command switch, exact field presentation, mapped Jorun enemy identity beside unmapped Pell Mireclaw fallback, and save/resume all pass at save version 9;
+- inspected 1280x720 and 1920x1080 captures preserve readable silhouettes and map priority, while core/static checks and Linux/Windows packaged startup pass with identical 247376284-byte PCKs containing all six runtime textures and excluding all high-resolution source art.
 
 ## Tavern Ritual-Scholar Overworld Sprites
 

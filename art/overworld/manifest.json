@@ -534,6 +534,48 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_thir_obituaryink.png",
       "assigned_hero_id": "hero_veilmourn_thir_obituaryink"
     },
+    "hero_arcane_embercourt_jorun_beaconscribe": {
+      "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_embercourt_jorun_beaconscribe.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_embercourt_jorun_beaconscribe_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_embercourt_jorun_beaconscribe.png",
+      "assigned_hero_id": "hero_embercourt_jorun_beaconscribe"
+    },
+    "hero_arcane_mireclaw_edda_rotlamp": {
+      "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_mireclaw_edda_rotlamp.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_mireclaw_edda_rotlamp_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_mireclaw_edda_rotlamp.png",
+      "assigned_hero_id": "hero_mireclaw_edda_rotlamp"
+    },
+    "hero_arcane_sunvault_mirro_halometer": {
+      "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_sunvault_mirro_halometer.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_sunvault_mirro_halometer_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_sunvault_mirro_halometer.png",
+      "assigned_hero_id": "hero_sunvault_mirro_halometer"
+    },
+    "hero_arcane_thornwake_elian_loamchant": {
+      "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_thornwake_elian_loamchant.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_thornwake_elian_loamchant_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_elian_loamchant.png",
+      "assigned_hero_id": "hero_thornwake_elian_loamchant"
+    },
+    "hero_arcane_brasshollow_lina_gaugesavant": {
+      "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_brasshollow_lina_gaugesavant.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_brasshollow_lina_gaugesavant_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_lina_gaugesavant.png",
+      "assigned_hero_id": "hero_brasshollow_lina_gaugesavant"
+    },
+    "hero_arcane_veilmourn_sael_mirrorbell": {
+      "path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_veilmourn_sael_mirrorbell.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_arcane_controllers/hero_veilmourn_sael_mirrorbell_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_sael_mirrorbell.png",
+      "assigned_hero_id": "hero_veilmourn_sael_mirrorbell"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4571,7 +4613,13 @@
     "hero_sunvault_essa_daynote": "hero_ritual_sunvault_essa_daynote",
     "hero_thornwake_osmund_pollenglass": "hero_ritual_thornwake_osmund_pollenglass",
     "hero_brasshollow_odrik_heatpriest": "hero_ritual_brasshollow_odrik_heatpriest",
-    "hero_veilmourn_thir_obituaryink": "hero_ritual_veilmourn_thir_obituaryink"
+    "hero_veilmourn_thir_obituaryink": "hero_ritual_veilmourn_thir_obituaryink",
+    "hero_embercourt_jorun_beaconscribe": "hero_arcane_embercourt_jorun_beaconscribe",
+    "hero_mireclaw_edda_rotlamp": "hero_arcane_mireclaw_edda_rotlamp",
+    "hero_sunvault_mirro_halometer": "hero_arcane_sunvault_mirro_halometer",
+    "hero_thornwake_elian_loamchant": "hero_arcane_thornwake_elian_loamchant",
+    "hero_brasshollow_lina_gaugesavant": "hero_arcane_brasshollow_lina_gaugesavant",
+    "hero_veilmourn_sael_mirrorbell": "hero_arcane_veilmourn_sael_mirrorbell"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",
