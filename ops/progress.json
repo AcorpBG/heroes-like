@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six ritual-relay circuits, raising authored scenario breadth to 64 and distinct lead heroes to 54 of 60 while activating six neutral-watch encounters with original exact-art landmarks. Eight encounter definitions remain unplaced; the game remains in Phase 6 production alpha and whole-game release readiness is not claimed.",
+  "currentNotes": "Completed six grand-convergence marches, raising authored scenario breadth to 70 and giving all 60 production heroes a player-command map while activating the final four purpose-built neutral watches, adding two placed dissident fronts, and shipping six exact-art landmarks.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-ritual-relay-circuits-10184",
-  "currentSliceId": "content-six-faction-ritual-relay-circuits-10184",
-  "currentSliceNotes": "Completed six 13x8 skirmish circuits led by Jorun, Pell, Calis, Ralka, Pava, and Nacre with persistent four-stack cadres, fifteen starting spells, six activated neutral watches, matching dwellings, and one compact exact-art atlas. One consolidated six-case smoke, repository validation, and matching Linux/Windows 248631140-byte package boots passed.",
+  "currentSlice": "content-six-faction-grand-convergence-marches-10184",
+  "currentSliceId": "content-six-faction-grand-convergence-marches-10184",
+  "currentSliceNotes": "Completed six 14x9 skirmish marches led by Belis, Zhorra, Mirro, Nara, Harro, and Orso with persistent five-stack companies, fifteen starting spells, four activated neutral watches, two placed dissident fronts, and one compact six-landmark atlas. One combined six-case smoke, repository validation, and matching Linux/Windows 248910416-byte package boots passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction ritual relay circuits 10184",
-  "currentSliceUpdatedAt": "2026-08-29T19:25:57Z",
+  "currentSliceTitle": "content six faction grand convergence marches 10184",
+  "currentSliceUpdatedAt": "2026-08-29T19:58:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106144,6 +106144,16 @@
       "startedAt": "2026-08-29T19:03:47Z",
       "notes": "Completed six 13x8 ritual-relay circuits led by Jorun, Pell, Calis, Ralka, Pava, and Nacre with persistent four-stack faction cadres, fifteen live starting spells, six activated neutral-watch encounters beside matching dwellings, thirty artifact placements, and one compact original atlas. The single consolidated six-case smoke passed exact spellbooks, deterministic battles, rewards and flags, exact art, inspected captures, and save v9; repository validation and matching Linux/Windows 248631140-byte package boots passed.",
       "completedAt": "2026-08-29T19:25:57Z"
+    },
+    {
+      "id": "content-six-faction-grand-convergence-marches-10184",
+      "title": "content six faction grand convergence marches 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T19:58:30Z",
+      "startedAt": "2026-08-29T19:31:17Z",
+      "notes": "Completed six 14x9 grand-convergence marches led by Belis, Zhorra, Mirro, Nara, Harro, and Orso with persistent five-stack companies, fifteen live starting spells, four activated neutral watches, two new placed dissident fronts, broadened low-use artifact and exact-art site placement, and one compact original atlas. The single combined smoke passed exact map and roster contracts, deterministic battles, rewards and flags, inspected captures, and save v9; repository validation and matching Linux/Windows 248910416-byte package boots passed.",
+      "completedAt": "2026-08-29T19:58:30Z"
     }
   ],
   "project": "heroes-like",
@@ -106153,8 +106163,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Forty-eight of 60 exact live heroes now headline authored scenarios, leaving twelve production identities without a player-facing command map; fourteen authored encounter definitions remain unplaced. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Complete the active six-faction ritual-relay-circuits batch, then select the final six-hero production-content cohort; preserve the 1400844-byte package headroom and do not infer whole-game release readiness from bounded content slices.",
+  "remainingGap": "All 60 exact live heroes now headline authored scenarios. Four encounter definitions intentionally lack static placement: two generic runtime templates and two script-spawned encounters. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next substantial production-content batch, preserve the 1089584-byte package headroom, and do not infer whole-game release readiness from complete hero lead coverage or any bounded content slice.",
   "reportOnlyEvidence": [
     {
       "entries": [

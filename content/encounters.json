@@ -2248,6 +2248,100 @@
     {"id":"encounter_thalen_foundry_eclipse","name":"Foundry Eclipse","enemy_group_id":"army_thalen_foundry_eclipse","terrain":"rough","battlefield_tags":["fortress_lane","open_lane"],"max_rounds":16,"enemy_commander":{"name":"Crucible-Deacon Morra Redglass","command":{"attack":1,"defense":2,"power":1,"knowledge":0},"starting_spell_ids":[],"battle_traits":["artillerist","vanguard"]},"field_objectives":[{"id":"foundry_eclipse_gauge","type":"lane_battery","label":"Foundry Eclipse Gauge","summary":"Foundry Eclipse Gauge anchors the enemy ascendant company until its claim is broken.","starting_side":"enemy","capture_threshold":2,"urgency_round":3,"pressure_tags":["cohesion","commander","urgency"]}],"rewards":{"gold":240,"brass_scrip":1,"experience":260},"victory_flags":["choirward_foundry_eclipse_gauge_broken"]},
     {"id":"encounter_merek_cinder_writ","name":"Cinder Writ","enemy_group_id":"army_merek_cinder_writ","terrain":"forest","battlefield_tags":["fortified_line","chokepoint"],"max_rounds":16,"enemy_commander":{"name":"Writ-Marshal Elda Sluicebrand","command":{"attack":1,"defense":2,"power":1,"knowledge":0},"starting_spell_ids":[],"battle_traits":["vanguard","linekeeper"]},"field_objectives":[{"id":"cinderwrit_graft_brazier","type":"supply_post","label":"Cinderwrit Graft Brazier","summary":"Cinderwrit Graft Brazier anchors the enemy ascendant company until its claim is broken.","starting_side":"enemy","capture_threshold":2,"urgency_round":3,"pressure_tags":["cohesion","commander","urgency"]}],"rewards":{"gold":240,"embergrain":1,"experience":260},"victory_flags":["greenbarrow_cinderwrit_graft_brazier_broken"]},
     {"id":"encounter_vellum_gorefen_audit","name":"Gorefen Audit","enemy_group_id":"army_vellum_gorefen_audit","terrain":"marsh","battlefield_tags":["ambush_cover","bog_channels"],"max_rounds":16,"enemy_commander":{"name":"Cull-Reeve Hessa Mireantler","command":{"attack":1,"defense":2,"power":1,"knowledge":0},"starting_spell_ids":[],"battle_traits":["ambusher","vanguard"]},"field_objectives":[{"id":"gorefen_debt_totem","type":"hazard_zone","label":"Gorefen Debt Totem","summary":"Gorefen Debt Totem anchors the enemy ascendant company until its claim is broken.","starting_side":"enemy","capture_threshold":2,"urgency_round":3,"pressure_tags":["cohesion","commander","urgency"]}],"rewards":{"gold":240,"peatwax":1,"experience":260},"victory_flags":["quench_gorefen_debt_totem_broken"]},
-    {"id":"encounter_damar_worldroot_wake","name":"Worldroot Wake","enemy_group_id":"army_damar_worldroot_wake","terrain":"forest","battlefield_tags":["fog_bank","fortified_line"],"max_rounds":16,"enemy_commander":{"name":"Rootwake Matriarch Sena Boughmast","command":{"attack":1,"defense":2,"power":1,"knowledge":0},"starting_spell_ids":[],"battle_traits":["linekeeper","bogwise"]},"field_objectives":[{"id":"worldroot_wake_seal","type":"obstruction_line","label":"Worldroot Wake Seal","summary":"Worldroot Wake Seal anchors the enemy ascendant company until its claim is broken.","starting_side":"enemy","capture_threshold":2,"urgency_round":3,"pressure_tags":["cohesion","commander","urgency"]}],"rewards":{"gold":240,"verdant_grafts":1,"experience":260},"victory_flags":["oriflag_worldroot_wake_seal_broken"]}
+    {"id":"encounter_damar_worldroot_wake","name":"Worldroot Wake","enemy_group_id":"army_damar_worldroot_wake","terrain":"forest","battlefield_tags":["fog_bank","fortified_line"],"max_rounds":16,"enemy_commander":{"name":"Rootwake Matriarch Sena Boughmast","command":{"attack":1,"defense":2,"power":1,"knowledge":0},"starting_spell_ids":[],"battle_traits":["linekeeper","bogwise"]},"field_objectives":[{"id":"worldroot_wake_seal","type":"obstruction_line","label":"Worldroot Wake Seal","summary":"Worldroot Wake Seal anchors the enemy ascendant company until its claim is broken.","starting_side":"enemy","capture_threshold":2,"urgency_round":3,"pressure_tags":["cohesion","commander","urgency"]}],"rewards":{"gold":240,"verdant_grafts":1,"experience":260},"victory_flags":["oriflag_worldroot_wake_seal_broken"]},
+    {
+      "id": "encounter_debtrune_default_collectors",
+      "name": "Default-Clause Collectors",
+      "enemy_group_id": "army_debtrune_default_collectors",
+      "affiliation": "faction_brasshollow",
+      "terrain": "lava",
+      "battlefield_tags": [
+        "chokepoint",
+        "battery_nest"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Forecloser Venn Ashmark",
+        "command": {
+          "attack": 1,
+          "defense": 2,
+          "power": 1,
+          "knowledge": 1
+        },
+        "starting_spell_ids": [
+          "spell_pressure_clause"
+        ],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "debtrune_writ_press",
+          "type": "supply_post",
+          "label": "Writ Press",
+          "summary": "The collectors renew their stamped claims until Harro captures the mobile writ press.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 3,
+          "pressure_tags": [
+            "cohesion",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 180,
+        "brass_scrip": 1,
+        "experience": 220
+      }
+    },
+    {
+      "id": "encounter_nightchart_false_meridian",
+      "name": "False-Meridian Pilots",
+      "enemy_group_id": "army_nightchart_false_meridian_pilots",
+      "affiliation": "faction_veilmourn",
+      "terrain": "snow",
+      "battlefield_tags": [
+        "fog_bank",
+        "ambush_cover"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Pilot-Mourner Sel Voss",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 1,
+          "knowledge": 2
+        },
+        "starting_spell_ids": [
+          "spell_fogwake_step"
+        ],
+        "battle_traits": [
+          "ambusher"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "nightchart_false_beacon",
+          "type": "signal_beacon",
+          "label": "False Meridian",
+          "summary": "A misaligned fog beacon keeps the pilots one route ahead until Orso seizes its charting ring.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 3,
+          "pressure_tags": [
+            "initiative",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 180,
+        "memory_salt": 1,
+        "experience": 220
+      }
+    }
   ]
 }

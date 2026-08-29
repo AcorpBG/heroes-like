@@ -5757,6 +5757,72 @@
       "assigned_affiliation": "neutral",
       "presentation_role": "saltpan_camp_watch",
       "accessible_description": "Six shallow salt trays fan around a striped shade mast, brine wheel, low round-shield barricade, and tally shelter."
+    },
+    "encounter_grand_convergence_charcoal_burners_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_marches/charcoal_burners_watch_source.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_landmark_atlas",
+      "assigned_encounter_id": "encounter_charcoal_burners_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "charcoal_burners_watch",
+      "accessible_description": "Three glowing charcoal clamps rise beneath a crooked smoke hood beside a timber fire cage and hanging iron mallets."
+    },
+    "encounter_grand_convergence_bogbell_croft_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_marches/bogbell_croft_watch_source.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_landmark_atlas",
+      "assigned_encounter_id": "encounter_bogbell_croft_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "bogbell_croft_watch",
+      "accessible_description": "An oversized bronze marsh bell hangs above a stilted reed croft, curved plank approach, peat jars, and bundled rushes."
+    },
+    "encounter_grand_convergence_icehook_trapper_lodge_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_marches/icehook_trapper_lodge_watch_source.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_landmark_atlas",
+      "assigned_encounter_id": "encounter_icehook_trapper_lodge_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "icehook_trapper_lodge_watch",
+      "accessible_description": "Two enormous antler hook cranes arch over a steep snow lodge with net racks, blue iceglass lamps, and a narrow porch."
+    },
+    "encounter_grand_convergence_lantern_warren_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png",
+      "atlas_region": [144, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_marches/lantern_warren_watch_source.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_landmark_atlas",
+      "assigned_encounter_id": "encounter_lantern_warren_watch",
+      "assigned_affiliation": "neutral",
+      "presentation_role": "lantern_warren_watch",
+      "accessible_description": "A broad stone burrow arch glows beneath two crooked lantern towers, brass needle rails, and pale mushroom-glass caps."
+    },
+    "encounter_grand_convergence_default_clause_collectors": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png",
+      "atlas_region": [192, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_marches/default_clause_collectors_source.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_landmark_atlas",
+      "assigned_encounter_id": "encounter_debtrune_default_collectors",
+      "assigned_affiliation": "faction_brasshollow",
+      "presentation_role": "default_clause_collectors",
+      "accessible_description": "A towering brass stamping arm crowns a three-wheeled mobile writ press loaded with chained scrip drums and sealed canisters."
+    },
+    "encounter_grand_convergence_false_meridian_pilots": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_marches/grand_convergence_marches_atlas.png",
+      "atlas_region": [240, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_marches/false_meridian_pilots_source.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_landmark_atlas",
+      "assigned_encounter_id": "encounter_nightchart_false_meridian",
+      "assigned_affiliation": "faction_veilmourn",
+      "presentation_role": "false_meridian_pilots",
+      "accessible_description": "A tilted meridian ring circles a narrow bell beacon above a dark skiff prow, blue-white lenses, and a misaligned compass needle."
     }
   },
   "resource_site_sprites": {
@@ -6228,7 +6294,13 @@
     "encounter_crystal_sump_watch": "encounter_ritual_relay_crystal_sump_watch",
     "encounter_switchback_hostel_watch": "encounter_ritual_relay_switchback_hostel_watch",
     "encounter_dustjack_yard_watch": "encounter_ritual_relay_dustjack_yard_watch",
-    "encounter_saltpan_camp_watch": "encounter_ritual_relay_saltpan_camp_watch"
+    "encounter_saltpan_camp_watch": "encounter_ritual_relay_saltpan_camp_watch",
+    "encounter_charcoal_burners_watch": "encounter_grand_convergence_charcoal_burners_watch",
+    "encounter_bogbell_croft_watch": "encounter_grand_convergence_bogbell_croft_watch",
+    "encounter_icehook_trapper_lodge_watch": "encounter_grand_convergence_icehook_trapper_lodge_watch",
+    "encounter_lantern_warren_watch": "encounter_grand_convergence_lantern_warren_watch",
+    "encounter_debtrune_default_collectors": "encounter_grand_convergence_default_clause_collectors",
+    "encounter_nightchart_false_meridian": "encounter_grand_convergence_false_meridian_pilots"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

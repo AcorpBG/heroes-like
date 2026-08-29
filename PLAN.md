@@ -24,8 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-faction-ritual-relay-circuits-10184`.
-- Package boundary: both release exports now measure 248631140 bytes, 1368860 bytes below the unchanged 250000000-byte ceiling. All nine encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-six-faction-grand-convergence-marches-10184`.
+- Package boundary: both release exports now measure 248910416 bytes, 1089584 bytes below the unchanged 250000000-byte ceiling. All ten encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Grand Convergence Marches
+
+id: `content-six-faction-grand-convergence-marches-10184`
+
+Status: completed.
+
+Completion result:
+- six original 14x9 marches now give all sixty production heroes an authored player-command scenario while preserving the selected fifteen-spell union, persistent five-stack companies, two towns, sixteen resource sites, six artifacts, six battle fronts, seven objectives, and eight hooks per map;
+- Icehook Trapper Lodge, Lantern Warren, Bogbell Croft, and Charcoal Burners Camp now have live static placements, while the Brasshollow and Veilmourn marches add two persistent dissident armies and encounter definitions;
+- one compact six-landmark atlas supplies distinct exact art for the six primary fronts; the single combined smoke passed all six maps, deterministic battles, rewards, flags, inspected captures, and save version 9, followed by repository validation and matching Linux/Windows packaged startup.
+
+Implementation boundary:
+- author six original skirmish-only 14x9 grand-convergence marches with two towns, sixteen resource sites, six artifacts, six battle fronts, seven victory objectives, and eight reactive hooks each;
+- promote Belis, Zhorra, Mirro, Nara, Harro, and Orso into exact player-command roles with persistent five-stack faction companies and preserve their fifteen-spell union through live overworld and battle commander state;
+- activate the final four neutral watches beside their matching dwellings, add two original placed dissident encounters for the Brasshollow and Veilmourn marches, and give all six primary fronts distinct transparent exact-art landmarks in one compact atlas;
+- preserve save version 9, deterministic combat, data-driven rules, accessibility descriptions, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all six marches enter skirmish selection and create the intended hero, faction, five-stack company, complete 14x9 contract, exact fifteen-spell union, primary battle, authored rewards/flags, and save-version-9 round trip;
+- the four dormant watch definitions become live exact-art placements using their existing eight neutral unit identities and field objectives, while both new dissident definitions ship with persistent armies, field objectives, rewards, exact art, and authored placement;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new spell, unit, artifact, dwelling, town, building, battle formula, AI algorithm, campaign chapter, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes hero, scenario, map, dwelling, encounter, landmark, name, text, or protected visual expression.
 
 ## Six-Faction Ritual Relay Circuits
 
