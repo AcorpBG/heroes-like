@@ -19,7 +19,21 @@ const EXPECTED_HERO_ASSETS := {
 	"hero_mireclaw_kessa_chainboom": "hero_lead_mireclaw_kessa_chainboom",
 	"hero_neral": "hero_lead_neral",
 	"hero_seren": "hero_lead_seren",
+	"hero_embercourt_belis_rainledger": "hero_tavern_embercourt_belis_rainledger",
+	"hero_sable": "hero_tavern_sable",
+	"hero_sunvault_calis_sunvein": "hero_tavern_sunvault_calis_sunvein",
+	"hero_thornwake_ardren_briarmarshal": "hero_tavern_thornwake_ardren_briarmarshal",
+	"hero_brasshollow_daxis_chaincaptain": "hero_tavern_brasshollow_daxis_chaincaptain",
+	"hero_veilmourn_cela_mistcorsair": "hero_tavern_veilmourn_cela_mistcorsair",
 }
+const TAVERN_VANGUARD_CASES := [
+	{"scenario_id": "river-pass", "hero_id": "hero_embercourt_belis_rainledger"},
+	{"scenario_id": "bogbound-oath", "hero_id": "hero_sable"},
+	{"scenario_id": "prismhearth-watch", "hero_id": "hero_sunvault_calis_sunvein"},
+	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_ardren_briarmarshal"},
+	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_daxis_chaincaptain"},
+	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_cela_mistcorsair"},
+]
 const ALL_SCENARIO_STARTS := {
 	"river-pass": "hero_lyra",
 	"causeway-stand": "hero_lyra",
@@ -55,6 +69,10 @@ func _run() -> void:
 	if not bool(scenario_starts.get("ok", false)):
 		_fail("Signature hero scenario-start validation failed: %s" % scenario_starts)
 		return
+	var tavern_vanguard := _validate_tavern_vanguard_recruitment()
+	if not bool(tavern_vanguard.get("ok", false)):
+		_fail("Tavern-vanguard recruitment validation failed: %s" % tavern_vanguard)
+		return
 	var original_window_size := get_window().size
 	var rows: Array = []
 	for viewport_size in VIEWPORT_SIZES:
@@ -69,9 +87,11 @@ func _run() -> void:
 		"ok": true,
 		"production_hero_count": 60,
 		"signature_hero_count": 6,
-		"scenario_lead_identity_count": EXPECTED_HERO_ASSETS.size(),
+		"mapped_hero_identity_count": EXPECTED_HERO_ASSETS.size(),
+		"tavern_vanguard_count": TAVERN_VANGUARD_CASES.size(),
 		"faction_count": 6,
 		"scenario_starts": scenario_starts,
+		"tavern_vanguard": tavern_vanguard,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback": "procedural_hero_marker",
 		"rows": rows,
@@ -104,7 +124,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	if not bool(exact.get("ok", false)):
 		shell.queue_free()
 		return {"ok": false, "failure": "hero_profiles", "detail": exact}
-	if not await _capture_scenario_leads(viewport_size):
+	if not await _capture_hero_identities(viewport_size):
 		shell.queue_free()
 		return {"ok": false, "failure": "capture"}
 
@@ -211,7 +231,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 		var hero_id := String(profile.get("hero_id", ""))
 		var faction_id := String(profile.get("faction_id", ""))
 		var expected_asset_id := String(EXPECTED_HERO_ASSETS.get(hero_id, ""))
-		var runtime_group := "signature" if expected_asset_id.begins_with("hero_signature_") else "live_leads"
+		var runtime_group := "signature" if expected_asset_id.begins_with("hero_signature_") else ("live_leads" if expected_asset_id.begins_with("hero_lead_") else "tavern_vanguard")
 		var expected_path := "res://art/overworld/runtime/heroes/%s/%s.png" % [runtime_group, hero_id]
 		if expected_asset_id == "" or String(profile.get("sprite_asset_id", "")) != expected_asset_id:
 			return {"ok": false, "reason": "identity", "profile": profile}
@@ -464,8 +484,9 @@ func _configure_hero_fixture(session) -> void:
 	var hero_ids: Array = EXPECTED_HERO_ASSETS.keys()
 	var town_footprint_tile := _player_town_footprint_hero_tile(session)
 	var ordinary_positions := [
-		Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0),
-		Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4),
+		Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0), Vector2i(8, 0),
+		Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(7, 4), Vector2i(8, 4),
+		Vector2i(4, 1),
 	]
 	for index in range(hero_ids.size()):
 		var hero_id := String(hero_ids[index])
@@ -525,19 +546,90 @@ func _validate_signature_scenario_starts() -> Dictionary:
 			return {"ok": false, "rows": rows}
 	return {"ok": rows.size() == ALL_SCENARIO_STARTS.size(), "rows": rows}
 
-func _capture_scenario_leads(viewport_size: Vector2i) -> bool:
-	if OS.get_environment("SCENARIO_LEAD_CAPTURE") != "1":
+func _validate_tavern_vanguard_recruitment() -> Dictionary:
+	var rows: Array = []
+	for case_value in TAVERN_VANGUARD_CASES:
+		var case: Dictionary = case_value
+		var scenario_id := String(case.get("scenario_id", ""))
+		var hero_id := String(case.get("hero_id", ""))
+		var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+		var town := _first_player_town(session)
+		if town.is_empty():
+			return {"ok": false, "failure": "player_town_missing", "scenario_id": scenario_id}
+		_move_active_hero_to_town(session, town)
+		var buildings: Array = town.get("built_buildings", []).duplicate(true)
+		if HeroCommandRules.HALL_BUILDING_ID not in buildings:
+			buildings.append(HeroCommandRules.HALL_BUILDING_ID)
+		town["built_buildings"] = buildings
+		var hero_template := ContentService.get_hero(hero_id)
+		var cost: Dictionary = HeroCommandRules.hero_recruit_cost(hero_template)
+		var resources: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+		for resource_id_value in cost:
+			var resource_id := String(resource_id_value)
+			resources[resource_id] = int(cost.get(resource_id, 0)) + 1000
+		session.overworld["resources"] = resources
+		var before: Dictionary = session.to_dict()
+		var before_count: int = session.overworld.get("player_heroes", []).size()
+		var action_id := "hire_hero:%s" % hero_id
+		var matching_actions: Array = TownRules.get_tavern_actions(session).filter(func(row): return row is Dictionary and String(row.get("id", "")) == action_id and not bool(row.get("disabled", true)))
+		var hire_result: Dictionary = TownRules.hire_hero_at_active_town(session, hero_id)
+		var switch_result: Dictionary = TownRules.switch_active_hero_at_town(session, hero_id)
+		var clone = SessionStateStore.new_session_data()
+		clone.from_dict(session.to_dict())
+		var hired_hero := _hero_by_id(clone.overworld.get("player_heroes", []), hero_id)
+		var deltas_exact := true
+		for resource_id_value in cost:
+			var resource_id := String(resource_id_value)
+			deltas_exact = deltas_exact and int(before.get("overworld", {}).get("resources", {}).get(resource_id, 0)) - int(clone.overworld.get("resources", {}).get(resource_id, 0)) == int(cost.get(resource_id, 0))
+		var exact: bool = matching_actions.size() == 1 \
+			and bool(hire_result.get("ok", false)) \
+			and bool(switch_result.get("ok", false)) \
+			and clone.overworld.get("player_heroes", []).size() == before_count + 1 \
+			and String(clone.overworld.get("active_hero_id", "")) == hero_id \
+			and not hired_hero.is_empty() \
+			and deltas_exact
+		rows.append({"scenario_id": scenario_id, "hero_id": hero_id, "action_id": action_id, "cost": cost, "hire_exact": exact, "save_version": SessionStateStore.SAVE_VERSION})
+		if not exact:
+			return {"ok": false, "rows": rows, "hire_result": hire_result, "switch_result": switch_result}
+	return {"ok": rows.size() == TAVERN_VANGUARD_CASES.size(), "rows": rows}
+
+func _hero_by_id(heroes: Array, hero_id: String) -> Dictionary:
+	for hero_value in heroes:
+		if hero_value is Dictionary and String(hero_value.get("id", "")) == hero_id:
+			return hero_value
+	return {}
+
+func _first_player_town(session) -> Dictionary:
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+			return town_value
+	return {}
+
+func _move_active_hero_to_town(session, town: Dictionary) -> void:
+	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	hero["position"] = position.duplicate(true)
+	session.overworld["hero"] = hero
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for index in range(heroes.size()):
+		if heroes[index] is Dictionary and String(heroes[index].get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			heroes[index] = hero.duplicate(true)
+	session.overworld["player_heroes"] = heroes
+
+func _capture_hero_identities(viewport_size: Vector2i) -> bool:
+	if OS.get_environment("HERO_IDENTITY_CAPTURE") != "1":
 		return true
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var output_dir := "res://.artifacts/scenario_lead_sprites"
+	var output_dir := "res://.artifacts/hero_identity_sprites"
 	var error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
 	if error != OK and error != ERR_ALREADY_EXISTS:
 		return false
 	var image := get_viewport().get_texture().get_image()
 	if image == null:
 		return false
-	return image.save_png("%s/scenario_leads_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]) == OK
+	return image.save_png("%s/hero_identities_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]) == OK
 
 func _player_town_footprint_hero_tile(session) -> Vector2i:
 	var map_size := OverworldRules.derive_map_size(session)
