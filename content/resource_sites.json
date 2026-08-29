@@ -9802,6 +9802,28 @@
       "name": "Ember Signal Brazier",
       "family": "faction_landmark",
       "persistent_control": true,
+      "claim_rewards": {
+        "gold": 120,
+        "embergrain": 1
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "vision_radius": 3,
+      "pressure_guard": 1,
+      "response_profile": {
+        "action_label": "Relight Signal",
+        "summary": "Brazier crews relight the road mirrors and restore the oath watch.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 120,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 1
+      },
       "batch007_role": "faction_landmark",
       "faction_id": "faction_embercourt",
       "faction_landmark_contract": {
@@ -9815,8 +9837,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -9826,19 +9848,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
@@ -9848,6 +9870,28 @@
       "name": "Bog Drum Totem",
       "family": "faction_landmark",
       "persistent_control": true,
+      "claim_rewards": {
+        "gold": 110,
+        "peatwax": 1
+      },
+      "control_income": {
+        "gold": 20
+      },
+      "vision_radius": 2,
+      "pressure_bonus": 1,
+      "response_profile": {
+        "action_label": "Sound Ambush Drum",
+        "summary": "Drum keepers sound the wet-lane code and rally hidden route watchers.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 100,
+          "ore": 1
+        },
+        "watch_days": 3,
+        "readiness_bonus": 4,
+        "pressure_bonus": 2,
+        "pressure_guard_bonus": 1
+      },
       "batch007_role": "faction_landmark",
       "faction_id": "faction_mireclaw",
       "faction_landmark_contract": {
@@ -9861,8 +9905,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -9872,19 +9916,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
@@ -9894,6 +9938,27 @@
       "name": "Prism Relay Lens",
       "family": "faction_landmark",
       "persistent_control": true,
+      "claim_rewards": {
+        "gold": 100,
+        "aetherglass": 1
+      },
+      "control_income": {
+        "gold": 20
+      },
+      "vision_radius": 4,
+      "response_profile": {
+        "action_label": "Align Relay",
+        "summary": "Lenswrights align the relay vanes and restore the long sightline.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 110,
+          "ore": 1
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 3,
+        "pressure_guard_bonus": 1
+      },
       "batch007_role": "faction_landmark",
       "faction_id": "faction_sunvault",
       "faction_landmark_contract": {
@@ -9907,8 +9972,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -9918,19 +9983,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
@@ -9940,6 +10005,29 @@
       "name": "Thornwake Graft Arch",
       "family": "faction_landmark",
       "persistent_control": true,
+      "claim_rewards": {
+        "gold": 100,
+        "verdant_grafts": 1
+      },
+      "control_income": {
+        "wood": 1
+      },
+      "vision_radius": 2,
+      "pressure_guard": 1,
+      "response_profile": {
+        "action_label": "Bind Living Route",
+        "summary": "Graft keepers bind the arch and send restorative sap along the controlled road.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 100,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 2,
+        "recovery_relief": 2,
+        "pressure_guard_bonus": 2
+      },
       "batch007_role": "faction_landmark",
       "faction_id": "faction_thornwake",
       "faction_landmark_contract": {
@@ -9953,8 +10041,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -9964,19 +10052,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
@@ -9986,6 +10074,29 @@
       "name": "Brasshollow Gauge Shrine",
       "family": "faction_landmark",
       "persistent_control": true,
+      "claim_rewards": {
+        "gold": 130,
+        "brass_scrip": 1
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "vision_radius": 1,
+      "pressure_bonus": 1,
+      "response_profile": {
+        "action_label": "Recalibrate Gauges",
+        "summary": "Gauge tenders certify the route pressure and release contracted repair stock.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 130,
+          "ore": 1
+        },
+        "watch_days": 3,
+        "quality_bonus": 3,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "pressure_guard_bonus": 1
+      },
       "batch007_role": "faction_landmark",
       "faction_id": "faction_brasshollow",
       "faction_landmark_contract": {
@@ -9999,8 +10110,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -10010,19 +10121,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
@@ -10032,6 +10143,29 @@
       "name": "Veilmourn Bell Mast",
       "family": "faction_landmark",
       "persistent_control": true,
+      "claim_rewards": {
+        "gold": 100,
+        "memory_salt": 1
+      },
+      "control_income": {
+        "gold": 20
+      },
+      "vision_radius": 3,
+      "pressure_guard": 1,
+      "response_profile": {
+        "action_label": "Ring Fog Watch",
+        "summary": "Bell crews restore the fog code and guide salvage patrols through the lane.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 100,
+          "wood": 1
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 3,
+        "recovery_relief": 1,
+        "pressure_guard_bonus": 2
+      },
       "batch007_role": "faction_landmark",
       "faction_id": "faction_veilmourn",
       "faction_landmark_contract": {
@@ -10045,8 +10179,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -10056,19 +10190,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_faction_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "decc9e53f70f19329df9a77bbb7bd6e9337c6fe2fd6be180f7e918424df73863",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_44x44_and_south_anchor_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six original orthographic faction landmarks with silhouette-led faction identity, genuine transparency, no characters, text, logos, copied franchise expression, terrain cards, or opaque backdrops.",
+  "items": [
+    {
+      "resource_site_id": "site_ember_signal_brazier",
+      "asset_id": "resource_site_live_ember_signal_brazier",
+      "source_path": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/ember_signal_brazier.png",
+      "source_sha256": "7e46248a274dd98e2eec7eef82477abc19e2bc80bfd2793e28dc5bad9d101300",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e0e96def-68a2-4a48-9f1c-b1a3c06afa8d.png",
+      "atlas_region": [0, 0, 48, 48],
+      "presentation_role": "tripod_brazier_ember_mirror_signal"
+    },
+    {
+      "resource_site_id": "site_bog_drum_totem",
+      "asset_id": "resource_site_live_bog_drum_totem",
+      "source_path": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/bog_drum_totem.png",
+      "source_sha256": "1306f5d580579fc65284695a0be821d7922f1b1ac8131cf7f165a6154de4ef84",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-38970f42-ba73-424e-88f5-881a96506ef5.png",
+      "atlas_region": [48, 0, 48, 48],
+      "presentation_role": "forked_blackwood_bog_drum_totem"
+    },
+    {
+      "resource_site_id": "site_prism_relay_lens",
+      "asset_id": "resource_site_live_prism_relay_lens",
+      "source_path": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/prism_relay_lens.png",
+      "source_sha256": "e33ede76b7e6c551c710c39e90df0f6be621b3d1c2731c9a6dd0da4c4171f3d8",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-021c628e-2a43-4c4c-9d4e-ab2ca86df438.png",
+      "atlas_region": [96, 0, 48, 48],
+      "presentation_role": "offset_crystal_lens_ray_vane_relay"
+    },
+    {
+      "resource_site_id": "site_thornwake_graft_arch",
+      "asset_id": "resource_site_live_thornwake_graft_arch",
+      "source_path": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/thornwake_graft_arch.png",
+      "source_sha256": "77c67057e2f53f574f26af34b504566dce33841fb9ce6f5f6b8d2b9ab2e95fbd",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a498d8e2-e975-4b85-b06b-4427593ca99d.png",
+      "atlas_region": [144, 0, 48, 48],
+      "presentation_role": "living_graft_arch_seed_basket_hooks"
+    },
+    {
+      "resource_site_id": "site_brasshollow_gauge_shrine",
+      "asset_id": "resource_site_live_brasshollow_gauge_shrine",
+      "source_path": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/brasshollow_gauge_shrine.png",
+      "source_sha256": "ddd6a82cb0288b0ea9286b2101d0c10c4187b9908af69bfb05eb2d677bd3dbc2",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2c88eeb9-a2b2-422d-9523-43f4b4a90464.png",
+      "atlas_region": [192, 0, 48, 48],
+      "presentation_role": "riveted_gauge_column_gear_offerings"
+    },
+    {
+      "resource_site_id": "site_veilmourn_bell_mast",
+      "asset_id": "resource_site_live_veilmourn_bell_mast",
+      "source_path": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/veilmourn_bell_mast.png",
+      "source_sha256": "6393d24b5ed783fcf537a9ecb9e56d42e6ce48c5b772c831bd1ad3fd9d421e7c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0ab22be2-2e80-4129-b5bd-600f6a71811c.png",
+      "atlas_region": [240, 0, 48, 48],
+      "presentation_role": "shiprib_fog_bell_salvage_mast"
+    }
+  ]
+}

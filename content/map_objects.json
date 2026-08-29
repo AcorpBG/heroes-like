@@ -4322,7 +4322,8 @@
       "secondary_tags": [
         "faction_pressure",
         "world_lore",
-        "counter_capture_target"
+        "counter_capture_target",
+        "sightline"
       ],
       "resource_site_id": "site_ember_signal_brazier",
       "batch007_role": "faction_landmark",
@@ -4387,8 +4388,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+      "state_metadata_only": false,
+      "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_ember_signal_brazier",
@@ -4401,8 +4402,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+      "ownership_state_metadata_only": false,
+      "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -4412,19 +4413,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+      "status": "live",
+      "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+      "ownership_capture_runtime_adopted": true,
+      "save_payload_required": true,
+      "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+      "route_effect_runtime_adopted": true,
+      "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+      "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -4524,8 +4525,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+      "state_metadata_only": false,
+      "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_bog_drum_totem",
@@ -4538,8 +4539,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+      "ownership_state_metadata_only": false,
+      "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -4549,19 +4550,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+      "status": "live",
+      "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+      "ownership_capture_runtime_adopted": true,
+      "save_payload_required": true,
+      "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+      "route_effect_runtime_adopted": true,
+      "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+      "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -4661,8 +4662,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+      "state_metadata_only": false,
+      "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_prism_relay_lens",
@@ -4675,8 +4676,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+      "ownership_state_metadata_only": false,
+      "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -4686,19 +4687,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+      "status": "live",
+      "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+      "ownership_capture_runtime_adopted": true,
+      "save_payload_required": true,
+      "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+      "route_effect_runtime_adopted": true,
+      "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+      "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -37948,8 +37949,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+      "state_metadata_only": false,
+      "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_thornwake_graft_arch",
@@ -37962,8 +37963,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+      "ownership_state_metadata_only": false,
+      "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -37973,19 +37974,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+      "status": "live",
+      "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+      "ownership_capture_runtime_adopted": true,
+      "save_payload_required": true,
+      "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+      "route_effect_runtime_adopted": true,
+      "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+      "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -38100,8 +38101,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+      "state_metadata_only": false,
+      "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_brasshollow_gauge_shrine",
@@ -38114,8 +38115,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+      "ownership_state_metadata_only": false,
+      "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38125,19 +38126,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+      "status": "live",
+      "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+      "ownership_capture_runtime_adopted": true,
+      "save_payload_required": true,
+      "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+      "route_effect_runtime_adopted": true,
+      "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+      "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -38247,8 +38248,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+      "state_metadata_only": false,
+      "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_veilmourn_bell_mast",
@@ -38261,8 +38262,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+      "ownership_state_metadata_only": false,
+      "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38272,19 +38273,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+      "status": "live",
+      "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+      "ownership_capture_runtime_adopted": true,
+      "save_payload_required": true,
+      "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+      "route_effect_runtime_adopted": true,
+      "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false,
+      "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [

@@ -5379,9 +5379,93 @@
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_withered_rootgate_marker",
       "assigned_map_object_family": "scenario_objective"
+    },
+    "resource_site_live_ember_signal_brazier": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/ember_signal_brazier.png",
+      "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
+      "assigned_resource_site_id": "site_ember_signal_brazier",
+      "presentation_role": "tripod_brazier_ember_mirror_signal",
+      "accessible_description": "A caged signal flame rises from an iron tripod between hinged ember mirrors and a heavy oath chain."
+    },
+    "resource_site_live_bog_drum_totem": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/bog_drum_totem.png",
+      "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
+      "assigned_resource_site_id": "site_bog_drum_totem",
+      "presentation_role": "forked_blackwood_bog_drum_totem",
+      "accessible_description": "An oval hide drum hangs between forked blackwood stilts with jawbone clappers and reed charms."
+    },
+    "resource_site_live_prism_relay_lens": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/prism_relay_lens.png",
+      "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
+      "assigned_resource_site_id": "site_prism_relay_lens",
+      "presentation_role": "offset_crystal_lens_ray_vane_relay",
+      "accessible_description": "An offset crystal lens and ray vanes pivot above an ivory and bronze relay stand."
+    },
+    "resource_site_live_thornwake_graft_arch": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
+      "atlas_region": [144, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/thornwake_graft_arch.png",
+      "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
+      "assigned_resource_site_id": "site_thornwake_graft_arch",
+      "presentation_role": "living_graft_arch_seed_basket_hooks",
+      "accessible_description": "Two sap-lit living roots form a grafted arch hung with seed baskets, pruning hooks, and a leaf bell."
+    },
+    "resource_site_live_brasshollow_gauge_shrine": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
+      "atlas_region": [192, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/brasshollow_gauge_shrine.png",
+      "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
+      "assigned_resource_site_id": "site_brasshollow_gauge_shrine",
+      "presentation_role": "riveted_gauge_column_gear_offerings",
+      "accessible_description": "A riveted pressure column carries mismatched gauges, copper pipes, a flywheel, and gear offering trays."
+    },
+    "resource_site_live_veilmourn_bell_mast": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
+      "atlas_region": [240, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/faction_landmarks_live/veilmourn_bell_mast.png",
+      "source_model": "built_in_image_gen_original_live_faction_landmark_atlas",
+      "assigned_resource_site_id": "site_veilmourn_bell_mast",
+      "presentation_role": "shiprib_fog_bell_salvage_mast",
+      "accessible_description": "A salt-black ship-rib mast leans over a cracked fog bell, cold lanterns, shell markers, and ballast stones."
     }
   },
   "resource_site_sprites": {
+    "site_ember_signal_brazier": {
+      "asset_id": "resource_site_live_ember_signal_brazier",
+      "fit": "Exact original Embercourt live landmark art with a signal brazier, ember mirrors, and oath chain."
+    },
+    "site_bog_drum_totem": {
+      "asset_id": "resource_site_live_bog_drum_totem",
+      "fit": "Exact original Mireclaw live landmark art with a forked blackwood drum and jawbone clappers."
+    },
+    "site_prism_relay_lens": {
+      "asset_id": "resource_site_live_prism_relay_lens",
+      "fit": "Exact original Sunvault live landmark art with an offset relay lens and ray vanes."
+    },
+    "site_thornwake_graft_arch": {
+      "asset_id": "resource_site_live_thornwake_graft_arch",
+      "fit": "Exact original Thornwake live landmark art with graft bindings, seed baskets, and pruning hooks."
+    },
+    "site_brasshollow_gauge_shrine": {
+      "asset_id": "resource_site_live_brasshollow_gauge_shrine",
+      "fit": "Exact original Brasshollow live landmark art with pressure gauges, pipes, and gear offerings."
+    },
+    "site_veilmourn_bell_mast": {
+      "asset_id": "resource_site_live_veilmourn_bell_mast",
+      "fit": "Exact original Veilmourn live landmark art with a ship-rib mast, fog bell, and salvage lanterns."
+    },
     "site_generated_town_required_source_cache": {
       "asset_id": "mapobj_moss_oath_cache",
       "fit": "Detailed existing chest-and-standing-stone cache sprite for the generated town all-resource supply support site."

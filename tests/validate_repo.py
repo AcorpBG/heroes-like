@@ -6974,6 +6974,14 @@ def build_overworld_object_content_batch_007_section(
         "scenario_objective": 7,
         "state_variant": 4,
     }
+    live_promoted_landmark_ids = {
+        "object_ember_signal_brazier",
+        "object_bog_drum_totem",
+        "object_prism_relay_lens",
+        "object_thornwake_graft_arch",
+        "object_brasshollow_gauge_shrine",
+        "object_veilmourn_bell_mast",
+    }
     section = {
         "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_007_ID,
         "object_count": len(batch_objects),
@@ -7205,10 +7213,11 @@ def build_overworld_object_content_batch_007_section(
             add_error(f"{object_id}: Batch 007 objects must author editor_placement")
         if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
             section["metadata_only_boundary_count"] += 1
-        else:
+        elif object_id not in live_promoted_landmark_ids:
             add_error(f"{object_id}: Batch 007 object and site must keep explicit metadata-only runtime boundaries")
         if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
-            add_error(f"{object_id}: Batch 007 must not activate rare resources in live site fields")
+            if object_id not in live_promoted_landmark_ids:
+                add_error(f"{object_id}: Batch 007 must not activate rare resources in live site fields")
         else:
             section["no_rare_resource_activation_count"] += 1
         if public_text_boundary_is_safe(obj, site):
@@ -7230,9 +7239,13 @@ def build_overworld_object_content_batch_007_section(
         for role, expected_count in expected_role_counts.items():
             if int(section["role_counts"].get(role, 0)) != expected_count:
                 add_error(f"Batch 007 must include {expected_count} {role} objects")
-        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "metadata_only_boundary_count", "no_rare_resource_activation_count", "public_text_boundary_count"):
+        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "public_text_boundary_count"):
             if int(section[counter_key]) != len(batch_objects):
                 add_error(f"Batch 007 {counter_key} must match object count")
+        if section["metadata_only_boundary_count"] != len(batch_objects) - len(live_promoted_landmark_ids):
+            add_error("Batch 007 metadata_only_boundary_count must retain the 14 inactive object/site pairs")
+        if section["no_rare_resource_activation_count"] != len(batch_objects) - len(live_promoted_landmark_ids):
+            add_error("Batch 007 no_rare_resource_activation_count must retain the 14 inactive object/site pairs")
         if section["landmark_contract_count"] != expected_role_counts["faction_landmark"]:
             add_error("Batch 007 landmark contracts must match landmark object count")
         if section["objective_contract_count"] != expected_role_counts["scenario_objective"]:
@@ -42927,6 +42940,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (1488, 48)
             elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
                 expected_canvas = (1440, 48)
+            elif source_model == "built_in_image_gen_original_live_faction_landmark_atlas":
+                expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
                 expected_canvas = (288, 48)
             else:
@@ -49480,7 +49495,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 24 and len(placements) == 292 and len(placed_site_ids) == 59, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 24 and len(placements) == 297 and len(placed_site_ids) == 64, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -49502,8 +49517,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 59, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 39, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(not unresolved and len(resolver_paths) == 64, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 44, errors, "Placed resource-site map-object resolver coverage changed")
     ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 20, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
@@ -49555,6 +49570,81 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
         "SessionStateStoreScript.SAVE_VERSION",
     ):
         ensure(token in claimed_report_text, errors, f"Neutral-dwelling claimed landmark report is missing live behavior proof: {token}")
+
+
+def validate_live_faction_landmarks(errors: list[str]) -> None:
+    expected = {
+        "site_ember_signal_brazier": ("object_ember_signal_brazier", "charter-bastion-counterseal", "counterseal_signal_brazier", "resource_site_live_ember_signal_brazier", "ember_signal_brazier", "7e46248a274dd98e2eec7eef82477abc19e2bc80bfd2793e28dc5bad9d101300", [0, 0, 48, 48], {"gold": 120, "embergrain": 1}, {"gold": 25}, 3, 1, 0),
+        "site_bog_drum_totem": ("object_bog_drum_totem", "nightglass-ledger-reversal", "nightglass_bog_drum_totem", "resource_site_live_bog_drum_totem", "bog_drum_totem", "1306f5d580579fc65284695a0be821d7922f1b1ac8131cf7f165a6154de4ef84", [48, 0, 48, 48], {"gold": 110, "peatwax": 1}, {"gold": 20}, 2, 0, 1),
+        "site_prism_relay_lens": ("object_prism_relay_lens", "halo-reserve-refraction-claim", "halo_prism_relay_lens", "resource_site_live_prism_relay_lens", "prism_relay_lens", "e33ede76b7e6c551c710c39e90df0f6be621b3d1c2731c9a6dd0da4c4171f3d8", [96, 0, 48, 48], {"gold": 100, "aetherglass": 1}, {"gold": 20}, 4, 0, 0),
+        "site_thornwake_graft_arch": ("object_thornwake_graft_arch", "rootgate-toll", "rootgate_graft_arch", "resource_site_live_thornwake_graft_arch", "thornwake_graft_arch", "77c67057e2f53f574f26af34b504566dce33841fb9ce6f5f6b8d2b9ab2e95fbd", [144, 0, 48, 48], {"gold": 100, "verdant_grafts": 1}, {"wood": 1}, 2, 1, 0),
+        "site_brasshollow_gauge_shrine": ("object_brasshollow_gauge_shrine", "clauseworks-counterclaim", "clauseworks_gauge_shrine", "resource_site_live_brasshollow_gauge_shrine", "brasshollow_gauge_shrine", "ddd6a82cb0288b0ea9286b2101d0c10c4187b9908af69bfb05eb2d677bd3dbc2", [192, 0, 48, 48], {"gold": 130, "brass_scrip": 1}, {"gold": 35}, 1, 0, 1),
+        "site_veilmourn_bell_mast": ("object_veilmourn_bell_mast", "fogchart-mooring", "fogchart_bell_mast", "resource_site_live_veilmourn_bell_mast", "veilmourn_bell_mast", "6393d24b5ed783fcf537a9ecb9e56d42e6ce48c5b772c831bd1ad3fd9d421e7c", [240, 0, 48, 48], {"gold": 100, "memory_salt": 1}, {"gold": 20}, 3, 1, 0),
+    }
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    art_manifest = load_json(ROOT / "art" / "overworld" / "manifest.json")
+    object_assets = art_manifest.get("object_assets", {})
+    site_sprites = art_manifest.get("resource_site_sprites", {})
+    source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "faction_landmarks_live" / "manifest.json"
+    source_manifest = load_json(source_manifest_path)
+    source_rows = {str(row.get("resource_site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "faction_landmarks_live" / "faction_landmarks_live_atlas.png"
+    ensure(atlas_path.is_file() and png_size(atlas_path) == (288, 48), errors, "Live faction landmarks must retain one compact 288x48 runtime atlas")
+    if atlas_path.is_file():
+        ensure(hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "decc9e53f70f19329df9a77bbb7bd6e9337c6fe2fd6be180f7e918424df73863", errors, "Live faction-landmark runtime atlas bytes changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Live faction-landmark runtime atlas import metadata is missing")
+    ensure(
+        source_manifest.get("schema_version") == 1
+        and source_manifest.get("generator_mode") == "built_in_image_gen"
+        and source_manifest.get("runtime_atlas_size") == [288, 48]
+        and source_manifest.get("runtime_region_size") == [48, 48]
+        and source_manifest.get("runtime_atlas_sha256") == "decc9e53f70f19329df9a77bbb7bd6e9337c6fe2fd6be180f7e918424df73863"
+        and len(str(source_manifest.get("prompt_set_summary", "")).strip()) >= 80,
+        errors,
+        "Live faction-landmark generation manifest changed",
+    )
+    ensure(set(source_rows) == set(expected), errors, "Live faction-landmark source manifest must own exactly six identities")
+    source_payloads: list[bytes] = []
+    for site_id, (object_id, scenario_id, placement_id, asset_id, stem, source_sha, region, rewards, income, vision, guard, pressure) in expected.items():
+        site = sites.get(site_id, {})
+        map_object = objects.get(object_id, {})
+        scenario = scenarios.get(scenario_id, {})
+        placements = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and str(node.get("placement_id", "")) == placement_id]
+        ensure(site.get("family") == "faction_landmark" and bool(site.get("persistent_control", False)), errors, f"{site_id} must remain a persistent faction landmark")
+        ensure(site.get("claim_rewards") == rewards and site.get("control_income") == income, errors, f"{site_id} live reward or income changed")
+        ensure(int(site.get("vision_radius", 0)) == vision and int(site.get("pressure_guard", 0)) == guard and int(site.get("pressure_bonus", 0)) == pressure, errors, f"{site_id} strategic effect changed")
+        boundary = site.get("runtime_boundary", {})
+        ensure(boundary.get("status") == "live" and bool(boundary.get("live_reward_grants", False)) and bool(boundary.get("ownership_capture_runtime_adopted", False)) and bool(boundary.get("save_payload_required", False)) and bool(boundary.get("renderer_sprite_required", False)) and bool(boundary.get("scenario_placement_migration", False)), errors, f"{site_id} live runtime boundary changed")
+        ownership = map_object.get("ownership", {})
+        ensure(map_object.get("resource_site_id") == site_id and ownership.get("capture_model") == "capturable" and not bool(ownership.get("state_metadata_only", True)) and bool(ownership.get("runtime_capture_adopted", False)), errors, f"{object_id} live capture contract changed")
+        expected_x = 3 if site_id == "site_brasshollow_gauge_shrine" else 4
+        ensure(len(placements) == 1 and int(placements[0].get("x", -1)) == expected_x and int(placements[0].get("y", -1)) == 3, errors, f"{site_id} must retain one authored central placement in {scenario_id}")
+        mapping = site_sprites.get(site_id, {})
+        asset = object_assets.get(asset_id, {})
+        source_res = f"res://art/overworld/source/generated/resource_sites/faction_landmarks_live/{stem}.png"
+        source_path = res_path_to_disk(source_res)
+        ensure(mapping.get("asset_id") == asset_id and len(str(mapping.get("fit", "")).strip()) >= 32, errors, f"{site_id} exact live art mapping changed")
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [288, 48], errors, f"{site_id} live atlas region changed")
+        ensure(asset.get("source_generated") == source_res and asset.get("source_model") == "built_in_image_gen_original_live_faction_landmark_atlas" and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", "")).strip()) >= 40, errors, f"{site_id} art provenance changed")
+        ensure(source_path.is_file() and min(png_size(source_path)) >= 1024, errors, f"{site_id} high-resolution generated source is missing")
+        ensure(Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated source import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] == 6, errors, f"{site_id} generated source bytes or RGBA format changed")
+            source_payloads.append(payload)
+        row = source_rows.get(site_id, {})
+        ensure(row.get("asset_id") == asset_id and row.get("source_path") == source_res and row.get("source_sha256") == source_sha and row.get("atlas_region") == region and str(row.get("generation_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{site_id} source manifest row changed")
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six live faction landmarks must retain distinct generated sources")
+    report_text = (ROOT / "tests" / "neutral_dwelling_claimed_landmark_report.gd").read_text(encoding="utf-8")
+    map_view_text = (ROOT / "scenes" / "overworld" / "OverworldMapView.gd").read_text(encoding="utf-8")
+    for token in ("FACTION_LANDMARK_CAPTURE", "controlled_resource_site_income", "player_resource_site_pressure_guard", "controlled_resource_site_pressure_bonus", 'case.get("scenario_id", "ninefold-confluence")'):
+        ensure(token in report_text, errors, f"Combined landmark smoke is missing live proof: {token}")
+    ensure('String(site.get("family", "")) == "faction_landmark"' in map_view_text and "landmark_asset_id" in map_view_text, errors, "Overworld renderer must prioritize exact live faction-landmark art")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME" in packaging_text and "faction_landmarks_live_atlas.png.import" in packaging_text, errors, f"{packaging_path.name} must audit the live faction-landmark atlas")
 
 
 def validate_hero_specialty_insignia(errors: list[str]) -> None:
@@ -74079,6 +74169,7 @@ def main() -> int:
     validate_six_faction_dissident_fronts(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_recurring_resource_site_landmarks(errors)
+    validate_live_faction_landmarks(errors)
     validate_hero_specialty_insignia(errors)
     validate_campaign_arc_emblems(errors)
     validate_campaign_chapter_seals(errors)

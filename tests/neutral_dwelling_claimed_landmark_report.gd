@@ -6,6 +6,12 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const REPORT_ID := "NEUTRAL_DWELLING_CLAIMED_LANDMARK_REPORT"
 const OUTPUT_DIR := "res://.artifacts/neutral_dwelling_claimed_landmark_report"
 const CASES := [
+	{"scenario_id": "charter-bastion-counterseal", "site_id": "site_ember_signal_brazier", "placement_id": "counterseal_signal_brazier", "unclaimed_asset_id": "resource_site_live_ember_signal_brazier", "claimed_asset_id": "resource_site_live_ember_signal_brazier", "is_faction_landmark": true, "control_income": {"gold": 25}, "vision_radius": 3, "pressure_guard": 1, "pressure_bonus": 0},
+	{"scenario_id": "nightglass-ledger-reversal", "site_id": "site_bog_drum_totem", "placement_id": "nightglass_bog_drum_totem", "unclaimed_asset_id": "resource_site_live_bog_drum_totem", "claimed_asset_id": "resource_site_live_bog_drum_totem", "is_faction_landmark": true, "control_income": {"gold": 20}, "vision_radius": 2, "pressure_guard": 0, "pressure_bonus": 1},
+	{"scenario_id": "halo-reserve-refraction-claim", "site_id": "site_prism_relay_lens", "placement_id": "halo_prism_relay_lens", "unclaimed_asset_id": "resource_site_live_prism_relay_lens", "claimed_asset_id": "resource_site_live_prism_relay_lens", "is_faction_landmark": true, "control_income": {"gold": 20}, "vision_radius": 4, "pressure_guard": 0, "pressure_bonus": 0},
+	{"scenario_id": "rootgate-toll", "site_id": "site_thornwake_graft_arch", "placement_id": "rootgate_graft_arch", "unclaimed_asset_id": "resource_site_live_thornwake_graft_arch", "claimed_asset_id": "resource_site_live_thornwake_graft_arch", "is_faction_landmark": true, "control_income": {"wood": 1}, "vision_radius": 2, "pressure_guard": 1, "pressure_bonus": 0},
+	{"scenario_id": "clauseworks-counterclaim", "site_id": "site_brasshollow_gauge_shrine", "placement_id": "clauseworks_gauge_shrine", "unclaimed_asset_id": "resource_site_live_brasshollow_gauge_shrine", "claimed_asset_id": "resource_site_live_brasshollow_gauge_shrine", "is_faction_landmark": true, "control_income": {"gold": 35}, "vision_radius": 1, "pressure_guard": 0, "pressure_bonus": 1},
+	{"scenario_id": "fogchart-mooring", "site_id": "site_veilmourn_bell_mast", "placement_id": "fogchart_bell_mast", "unclaimed_asset_id": "resource_site_live_veilmourn_bell_mast", "claimed_asset_id": "resource_site_live_veilmourn_bell_mast", "is_faction_landmark": true, "control_income": {"gold": 20}, "vision_radius": 3, "pressure_guard": 1, "pressure_bonus": 0},
 	{"site_id": "site_reedbarge_mooring", "placement_id": "dwelling_reedbarge_mooring", "unclaimed_asset_id": "mapobj_reedbarge_mooring", "claimed_asset_id": "resource_site_neutral_reedbarge_mooring"},
 	{"site_id": "site_glowcap_croft", "placement_id": "dwelling_glowcap_croft", "unclaimed_asset_id": "mapobj_glowcap_croft", "claimed_asset_id": "resource_site_neutral_glowcap_croft"},
 	{"site_id": "site_dustjack_yard", "placement_id": "dwelling_dustjack_yard", "unclaimed_asset_id": "mapobj_dustjack_yard", "claimed_asset_id": "resource_site_neutral_dustjack_yard"},
@@ -49,8 +55,9 @@ func _run() -> void:
 		await _validate_case(view, case_value)
 	var report := {
 		"ok": _errors.is_empty(),
-		"scenario_id": "ninefold-confluence",
+		"scenario_id": "multiple_authored_scenarios",
 		"case_count": CASES.size(),
+		"faction_landmark_count": 6,
 		"save_version": SessionStateStoreScript.SAVE_VERSION,
 		"rows": _rows,
 		"errors": _errors,
@@ -63,7 +70,8 @@ func _run() -> void:
 	get_tree().quit(0 if _errors.is_empty() else 1)
 
 func _validate_case(view: Control, case: Dictionary) -> void:
-	var session: SessionStateStoreScript.SessionData = ScenarioFactory.create_session("ninefold-confluence", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var scenario_id := String(case.get("scenario_id", "ninefold-confluence"))
+	var session: SessionStateStoreScript.SessionData = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
 	var placement_id := String(case.get("placement_id", ""))
 	var site_id := String(case.get("site_id", ""))
@@ -86,12 +94,23 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var recruits: Dictionary = site.get("claim_recruits", {}) if site.get("claim_recruits", {}) is Dictionary else {}
 	var resources_before := _resource_counts(session, rewards.keys())
 	var recruits_before := _army_counts(session, recruits.keys())
+	var expected_income: Dictionary = case.get("control_income", {}) if case.get("control_income", {}) is Dictionary else {}
+	var income_before: Dictionary = OverworldRules.controlled_resource_site_income(session, "player")
+	var pressure_guard_before := OverworldRules.player_resource_site_pressure_guard(session)
+	var pressure_bonus_before := OverworldRules.controlled_resource_site_pressure_bonus(session, "player")
 	var claim_result: Dictionary = OverworldRules.collect_active_resource(session)
 	_expect(bool(claim_result.get("ok", false)), "%s live claim failed: %s" % [site_id, claim_result.get("message", "")])
 	var claimed_node := _resource_node(session, placement_id)
 	_expect(String(claimed_node.get("collected_by_faction_id", "")) == "player" and bool(claimed_node.get("collected", false)), "%s did not enter persistent player control." % site_id)
 	_expect(_resource_delta_exact(resources_before, _resource_counts(session, rewards.keys()), rewards), "%s claim rewards changed." % site_id)
 	_expect(_resource_delta_exact(recruits_before, _army_counts(session, recruits.keys()), recruits), "%s claim recruits changed." % site_id)
+	if bool(case.get("is_faction_landmark", false)):
+		_expect(String(site.get("family", "")) == "faction_landmark", "%s lost its live faction-landmark family." % site_id)
+		_expect(_resource_payload_matches(site.get("control_income", {}), expected_income), "%s control income contract changed." % site_id)
+		_expect(int(site.get("vision_radius", 0)) == int(case.get("vision_radius", 0)), "%s vision radius contract changed." % site_id)
+		_expect(_resource_delta_exact(income_before, OverworldRules.controlled_resource_site_income(session, "player"), expected_income), "%s live controlled income did not activate." % site_id)
+		_expect(OverworldRules.player_resource_site_pressure_guard(session) - pressure_guard_before == int(case.get("pressure_guard", 0)), "%s live pressure guard did not activate." % site_id)
+		_expect(OverworldRules.controlled_resource_site_pressure_bonus(session, "player") - pressure_bonus_before == int(case.get("pressure_bonus", 0)), "%s live pressure bonus did not activate." % site_id)
 	view.set_map_state(session, session.overworld.get("map", []), map_size, tile)
 	await get_tree().process_frame
 	var claimed_asset_id := String(view.call("_resource_asset_id", claimed_node))
@@ -99,6 +118,18 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var claimed_art: Dictionary = claimed_presentation.get("art_presentation", {}) if claimed_presentation.get("art_presentation", {}) is Dictionary else {}
 	_expect(claimed_asset_id == String(case.get("claimed_asset_id", "")), "%s did not select its exact claimed landmark." % site_id)
 	_expect(bool(claimed_art.get("uses_asset_sprite", false)) and not bool(claimed_art.get("fallback_procedural_marker", true)) and claimed_art.get("sprite_asset_ids", []) == [claimed_asset_id], "%s claimed landmark did not reach the live renderer." % site_id)
+	var capture_path := ""
+	if bool(case.get("is_faction_landmark", false)) and OS.get_environment("FACTION_LANDMARK_CAPTURE") == "1":
+		_set_hero_position(session, tile.x, tile.y + 1)
+		view.set_map_state(session, session.overworld.get("map", []), map_size, tile)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		capture_path = "%s/%s.png" % [ProjectSettings.globalize_path(OUTPUT_DIR), site_id]
+		var capture_image := get_viewport().get_texture().get_image()
+		_expect(capture_image != null and not capture_image.is_empty() and capture_image.save_png(capture_path) == OK, "%s live landmark capture failed." % site_id)
+		_set_hero_position(session, tile.x, tile.y)
+		view.set_map_state(session, session.overworld.get("map", []), map_size, tile)
+		await get_tree().process_frame
 
 	var authority_after_claim := session.to_dict()
 	var repeat_result: Dictionary = OverworldRules.collect_active_resource(session)
@@ -117,6 +148,10 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 		"claimed_asset_id": claimed_asset_id,
 		"claim_rewards": rewards,
 		"claim_recruits": recruits,
+		"scenario_id": scenario_id,
+		"control_income": expected_income,
+		"vision_radius": int(case.get("vision_radius", 0)),
+		"capture_path": capture_path,
 		"repeat_rejected_without_mutation": not bool(repeat_result.get("ok", true)) and session.to_dict() == authority_after_claim,
 		"save_round_trip_exact": restored_node == claimed_node and restored_asset_id == claimed_asset_id,
 	})
@@ -183,6 +218,20 @@ func _resource_delta_exact(before: Dictionary, after: Dictionary, expected: Dict
 	for key_value in expected.keys():
 		var key := String(key_value)
 		if int(after.get(key, 0)) - int(before.get(key, 0)) != int(expected.get(key_value, 0)):
+			return false
+	return true
+
+func _resource_payload_matches(actual_value: Variant, expected: Dictionary) -> bool:
+	if not (actual_value is Dictionary):
+		return false
+	var actual: Dictionary = actual_value
+	for key_value in actual.keys():
+		var key := String(key_value)
+		if int(actual.get(key_value, 0)) != int(expected.get(key, 0)):
+			return false
+	for key_value in expected.keys():
+		var key := String(key_value)
+		if int(actual.get(key, 0)) != int(expected.get(key_value, 0)):
 			return false
 	return true
 
