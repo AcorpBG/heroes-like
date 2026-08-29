@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 252496-byte release-package headroom."
+    "Audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 92216-byte release-package headroom."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six original live opening-chapter seals across all campaign arcs with exact scenario authority, 24x24 row presentation, fail-closed fallback, accessibility refresh, and no campaign or save-schema change.",
+  "currentNotes": "Completed exact original cartographic seals for all 24 live campaign chapters with strict scenario authority, compact live presentation, and no campaign or save-schema change.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-campaign-opening-chapter-seals-10184",
-  "currentSliceId": "content-campaign-opening-chapter-seals-10184",
-  "currentSliceNotes": "Completed six byte-distinct original transparent 64x64 cartographic seals for River Pass, Stonewake Watch, Bogbound Oath, Prismhearth Watch, Ironbridge Stand, and Rootbound Mireford. Exact starting-scenario authority, 24x24 chapter-row presentation, six-entry caching, non-color tooltip descriptions, selection-triggered accessibility refresh, missing-art fail-closed behavior, and all 18 later text-only rows pass. Focused runtime, campaign compatibility, accessibility, core, repository, inspected capture, and Linux/Windows package validation pass; both packages boot with six exact compiled textures, source art excluded, save version 9 unchanged, and a 249747504-byte PCK below the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
+  "currentSlice": "content-campaign-later-chapter-seals-10184",
+  "currentSliceId": "content-campaign-later-chapter-seals-10184",
+  "currentSliceNotes": "Completed 18 byte-distinct original later-chapter seals, bringing exact live coverage to 24/24 chapters. Scenario authority, 24x24 presentation, 24-entry bounded caching, non-color tooltips, accessibility refresh, and missing-art fail-closed behavior pass with save version 9 unchanged. Focused runtime, campaign compatibility, accessibility, core, repository, inspected captures, and Linux/Windows package validation pass; both packages contain 24 exact compiled textures, exclude source art, boot successfully, and produce a 249907784-byte PCK under the strict 250000000-byte ceiling. No whole-game or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content campaign opening chapter seals 10184",
-  "currentSliceUpdatedAt": "2026-08-29T07:29:32Z",
+  "currentSliceTitle": "content campaign later chapter seals 10184",
+  "currentSliceUpdatedAt": "2026-08-29T08:19:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105302,6 +105302,16 @@
       "startedAt": "2026-08-29T06:51:08Z",
       "notes": "Completed six byte-distinct original transparent 64x64 cartographic seals for the always-visible opening chapter of every live campaign. Exact starting-scenario authority, 24x24 chapter-row presentation, six-entry caching, non-color descriptions, accessibility refresh, missing-art fallback, and all 18 later text-only rows pass. Focused runtime, campaign compatibility, accessibility, core, repository, inspected capture, and Linux/Windows package validation pass. Both packages contain six exact compiled textures, exclude source art, boot successfully, retain save version 9, and produce a 249747504-byte PCK under the strict ceiling. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T07:29:32Z"
+    },
+    {
+      "id": "content-campaign-later-chapter-seals-10184",
+      "title": "content campaign later chapter seals 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T08:19:34Z",
+      "startedAt": "2026-08-29T07:38:41Z",
+      "notes": "Completed 18 byte-distinct original later-chapter seals for exact 24/24 campaign chapter coverage. Live scenario authority, compact presentation, accessibility, missing-art fallback, save version 9, focused/runtime/static validation, and Linux/Windows packaged boots pass. Both packages contain all 24 compiled textures, exclude source art, and produce a 249907784-byte PCK under the strict ceiling. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T08:19:34Z"
     }
   ],
   "project": "heroes-like",
@@ -105311,8 +105321,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All six campaign opening chapters now own exact live cartographic seals, while the 18 later chapter rows remain text-only and are an explicit follow-up gap. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit and register the next bounded original-content or art slice while preserving the remaining 252496-byte strict release-package headroom; later chapter art and broader product gaps remain.",
+  "remainingGap": "All 24 campaign chapters own exact live cartographic seals. Only 92216 bytes remain below the strict release-package ceiling, so future packaged art needs an explicit size strategy. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and register the next bounded original-content or art slice with an explicit package-size strategy; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

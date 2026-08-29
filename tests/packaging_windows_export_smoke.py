@@ -159,6 +159,13 @@ REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES = tuple(
 REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES = (
     "river_pass_break", "stonewake_watch", "bogbound_riverwatch",
     "prismhearth_relay", "ironbridge_stand", "rootbound_mireford",
+    "causeway_stand", "fen_crown", "reedbarrow_ferry",
+    "nightglass_redoubt", "charter_pyre", "lockmarsh_surge",
+    "glassroad_sundering", "daybreak_spire", "glassfen_breakers",
+    "ninefold_confluence", "orevein_contract", "bellwake_wreck_claim",
+    "rootgate_toll", "fogchart_mooring", "clauseworks_counterclaim",
+    "nightglass_ledger_reversal", "halo_reserve_refraction",
+    "charter_bastion_counterseal",
 )
 REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/chapter_seals/{seal_name}.png.import"
