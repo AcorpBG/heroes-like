@@ -12065,21 +12065,15 @@ def validate_content(errors: list[str]) -> None:
     pickup_table_id = "artifact_source_pickup_caches_common"
     pickup_table = next((table for table in payloads["artifacts"].get("source_reward_tables", []) if isinstance(table, dict) and str(table.get("id", "")) == pickup_table_id), {})
     ensure(string_list(pickup_table.get("artifact_ids", [])) == ["artifact_trailsinger_boots", "artifact_quarry_tally_rod"], errors, "Common pickup source table must expose both bounded common candidates")
-    pickup_cases = {
-        "mireford-skirmish": ("bridge_boots", "artifact_trailsinger_boots"),
-        "orevein-contract": ("orevein_trailsinger_boots", "artifact_quarry_tally_rod"),
+    faction_set_fixed_cases = {
+        "mireford-skirmish": ("bridge_boots", "artifact_rootpath_seed_compass"),
+        "orevein-contract": ("orevein_trailsinger_boots", "artifact_redline_survey_dial"),
     }
-    for scenario_id, (placement_id, expected_artifact_id) in pickup_cases.items():
+    for scenario_id, (placement_id, expected_artifact_id) in faction_set_fixed_cases.items():
         artifact_nodes = scenarios.get(scenario_id, {}).get("artifact_nodes", [])
         placement = next((node for node in artifact_nodes if isinstance(node, dict) and str(node.get("placement_id", "")) == placement_id), {}) if isinstance(artifact_nodes, list) else {}
-        ensure(str(placement.get("artifact_reward_table_id", "")) == pickup_table_id, errors, f"{scenario_id} {placement_id} must opt into the common pickup source table")
-        source_key = f"{scenario_id}:{placement_id}:pickup"
-        value = 0
-        for character in source_key:
-            value = (value * 131 + ord(character)) % 2147483647
-        candidates = string_list(pickup_table.get("artifact_ids", []))
-        materialized_artifact_id = candidates[value % len(candidates)] if candidates else ""
-        ensure(materialized_artifact_id == expected_artifact_id, errors, f"{scenario_id} {placement_id} must deterministically materialize {expected_artifact_id}")
+        ensure(str(placement.get("artifact_reward_table_id", "")) == "", errors, f"{scenario_id} {placement_id} faction-set pickup must remain fixed")
+        ensure(str(placement.get("artifact_id", "")) == expected_artifact_id, errors, f"{scenario_id} {placement_id} must materialize {expected_artifact_id}")
     ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
     starlens = resource_sites.get("site_starlens_sanctum", {})
     starlens_contract = starlens.get("artifact_reward_contract", {}) if isinstance(starlens.get("artifact_reward_contract"), dict) else {}
@@ -45215,8 +45209,11 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
 def validate_artifact_icon_runtime(errors: list[str]) -> None:
     command_source_manifest_path = ROOT / "art" / "artifacts" / "source" / "generated" / "command_regalia_wave1" / "manifest.json"
     expedition_source_manifest_path = ROOT / "art" / "artifacts" / "source" / "generated" / "expedition_instruments_wave1" / "manifest.json"
+    faction_set_source_manifest_path = ROOT / "art" / "artifacts" / "source" / "generated" / "faction_set_insignia_wave1" / "manifest.json"
     command_runtime_report_path = ROOT / "tests" / "six_faction_command_regalia_runtime_report.gd"
     command_runtime_scene_path = ROOT / "tests" / "six_faction_command_regalia_runtime_report.tscn"
+    faction_set_runtime_report_path = ROOT / "tests" / "faction_artifact_set_runtime_report.gd"
+    faction_set_runtime_scene_path = ROOT / "tests" / "faction_artifact_set_runtime_report.tscn"
     required_paths = (
         CONTENT_DIR / "artifacts.json",
         ARTIFACT_RULES_PATH,
@@ -45226,8 +45223,11 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH,
         command_source_manifest_path,
         expedition_source_manifest_path,
+        faction_set_source_manifest_path,
         command_runtime_report_path,
         command_runtime_scene_path,
+        faction_set_runtime_report_path,
+        faction_set_runtime_scene_path,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing artifact icon runtime owner: {path.relative_to(ROOT)}")
@@ -45352,10 +45352,11 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         ensure(artifact.get("faction_affinity") == [faction_id], errors, f"Field regalia {artifact_id} must retain one exact faction affinity")
         if artifact_id in command_regalia_bonuses:
             ensure(artifact.get("bonuses") == command_regalia_bonuses[artifact_id], errors, f"Command regalia {artifact_id} must retain its exact supported live bonuses")
-            ensure(artifact.get("artifact_class") == "faction" and artifact.get("accord_affinity") in {"beacon", "mire", "lens", "root", "furnace", "veil"}, errors, f"Command regalia {artifact_id} must retain its faction artifact identity")
+            ensure(artifact.get("artifact_class") == "set_piece" and artifact.get("accord_affinity") in {"beacon", "mire", "lens", "root", "furnace", "veil"}, errors, f"Command regalia {artifact_id} must retain its faction set-piece identity")
         if artifact_id in expedition_instrument_bonuses:
             ensure(artifact.get("bonuses") == expedition_instrument_bonuses[artifact_id], errors, f"Expedition instrument {artifact_id} must retain its exact supported live bonuses")
-            ensure(artifact.get("artifact_class") == "faction" and artifact.get("accord_affinity") in {"beacon", "mire", "lens", "root", "furnace", "veil"}, errors, f"Expedition instrument {artifact_id} must retain its faction artifact identity")
+            expected_class = "faction" if artifact_id == "artifact_drowned_star_astrolabe" else "set_piece"
+            ensure(artifact.get("artifact_class") == expected_class and artifact.get("accord_affinity") in {"beacon", "mire", "lens", "root", "furnace", "veil"}, errors, f"Expedition instrument {artifact_id} must retain its faction or faction-set identity")
         ensure(str(artifact.get("ui", {}).get("icon_path", "")) == icon_path, errors, f"Field regalia {artifact_id} must retain its separate inventory icon")
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         ensure(field_sprites.get(artifact_id) == asset_id, errors, f"Field regalia {artifact_id} must map to its exact field asset")
@@ -45424,6 +45425,64 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
                 ensure(row.get(hash_key) == hashlib.sha256(disk_path.read_bytes()).hexdigest(), errors, f"Expedition-instrument manifest hash changed for {artifact_id} {hash_key}")
     ensure(len(expedition_originals) == 6 and len(set(expedition_originals)) == 6 and all(name.endswith(".png") for name in expedition_originals), errors, "Expedition-instrument source manifest must retain six distinct built-in generation original filenames")
 
+    expected_faction_sets = {
+        "set_lockward_charter": ("faction_embercourt", 0),
+        "set_fenhound_pursuit": ("faction_mireclaw", 64),
+        "set_meridian_relay": ("faction_sunvault", 128),
+        "set_rootpath_covenant": ("faction_thornwake", 192),
+        "set_redline_survey_warrant": ("faction_brasshollow", 256),
+        "set_drowned_wake_chart": ("faction_veilmourn", 320),
+    }
+    faction_set_manifest = load_json(faction_set_source_manifest_path)
+    faction_set_rows = {
+        str(row.get("set_id", "")): row
+        for row in faction_set_manifest.get("items", [])
+        if isinstance(row, dict)
+    }
+    ensure(faction_set_manifest.get("generation_mode") == "built_in_imagegen", errors, "Faction-set insignia manifest must retain built-in image generation provenance")
+    ensure(set(faction_set_rows) == set(expected_faction_sets), errors, "Faction-set insignia manifest must cover exactly the six faction sets")
+    atlas_contract = faction_set_manifest.get("runtime_atlas", {})
+    atlas_path = str(atlas_contract.get("path", ""))
+    atlas_disk = res_path_to_disk(atlas_path)
+    ensure(atlas_path == "res://art/artifacts/runtime/faction_set_insignia_atlas.png", errors, "Faction-set insignia atlas must remain in the artifact runtime domain")
+    ensure(atlas_contract.get("width") == 384 and atlas_contract.get("height") == 64 and atlas_contract.get("cell_width") == 64 and atlas_contract.get("cell_height") == 64, errors, "Faction-set insignia atlas contract must retain six exact 64px cells")
+    ensure(atlas_disk.is_file() and png_size(atlas_disk) == (384, 64), errors, "Faction-set insignia runtime atlas must be a 384x64 PNG")
+    if atlas_disk.is_file():
+        atlas_payload = atlas_disk.read_bytes()
+        ensure(atlas_contract.get("sha256") == hashlib.sha256(atlas_payload).hexdigest(), errors, "Faction-set insignia atlas hash changed from its source manifest")
+        ensure(len(atlas_payload) >= 26 and atlas_payload[25] == 6, errors, "Faction-set insignia atlas must retain an RGBA alpha channel")
+
+    artifact_payload = load_json(CONTENT_DIR / "artifacts.json")
+    artifact_sets = {
+        str(row.get("id", "")): row
+        for row in artifact_payload.get("sets", [])
+        if isinstance(row, dict)
+    }
+    faction_set_sources: list[bytes] = []
+    faction_set_originals: list[str] = []
+    for set_id, (faction_id, atlas_x) in expected_faction_sets.items():
+        row = faction_set_rows.get(set_id, {})
+        source_path = str(row.get("source_path", ""))
+        source_disk = res_path_to_disk(source_path)
+        expected_region = {"x": atlas_x, "y": 0, "width": 64, "height": 64}
+        ensure(row.get("faction_id") == faction_id, errors, f"Faction-set insignia faction changed for {set_id}")
+        ensure(row.get("atlas_region") == expected_region, errors, f"Faction-set insignia atlas region changed for {set_id}")
+        ensure(len(str(row.get("prompt_summary", "")).strip()) >= 72, errors, f"Faction-set insignia must retain a specific prompt summary for {set_id}")
+        ensure(source_disk.is_file() and min(png_size(source_disk)) >= 1024, errors, f"Faction-set insignia {set_id} must retain a high-resolution generated source")
+        if source_disk.is_file():
+            source_payload = source_disk.read_bytes()
+            faction_set_sources.append(source_payload)
+            ensure(row.get("source_sha256") == hashlib.sha256(source_payload).hexdigest(), errors, f"Faction-set insignia source hash changed for {set_id}")
+            ensure(len(source_payload) >= 26 and source_payload[25] == 6, errors, f"Faction-set insignia source must retain RGBA alpha for {set_id}")
+        faction_set_originals.append(str(row.get("generation_original_filename", "")))
+        set_record = artifact_sets.get(set_id, {})
+        ui = set_record.get("ui", {}) if isinstance(set_record.get("ui", {}), dict) else {}
+        ensure(set_record.get("faction_affinity_id") == faction_id and len(set_record.get("piece_ids", [])) == 3, errors, f"Faction artifact set must retain its faction and three-piece identity: {set_id}")
+        ensure(ui.get("insignia_id") == f"artifact_set_insignia_{set_id.removeprefix('set_')}", errors, f"Faction artifact set must retain a stable insignia id: {set_id}")
+        ensure(ui.get("atlas_path") == atlas_path and ui.get("atlas_region") == expected_region and len(str(ui.get("alt_text", "")).strip()) >= 48, errors, f"Faction artifact set must own its exact accessible atlas cell: {set_id}")
+    ensure(len(faction_set_sources) == 6 and len(set(faction_set_sources)) == 6, errors, "All six faction-set generated insignia sources must be present and distinct")
+    ensure(len(faction_set_originals) == 6 and len(set(faction_set_originals)) == 6 and all(name.endswith(".png") for name in faction_set_originals), errors, "Faction-set insignia manifest must retain six distinct built-in generation original filenames")
+
     command_report_text = command_runtime_report_path.read_text(encoding="utf-8")
     command_scene_text = command_runtime_scene_path.read_text(encoding="utf-8")
     ensure_scene_nodes(command_scene_text, errors, "six_faction_command_regalia_runtime_report.tscn", [("SixFactionCommandRegaliaRuntimeReport", "Node")])
@@ -45445,9 +45504,32 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
     for artifact_id in expedition_instrument_bonuses:
         ensure(command_report_text.count(f'"{artifact_id}"') >= 1, errors, f"Faction-artifact runtime report must cover expedition instrument {artifact_id}")
 
+    faction_set_report_text = faction_set_runtime_report_path.read_text(encoding="utf-8")
+    faction_set_scene_text = faction_set_runtime_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(faction_set_scene_text, errors, "faction_artifact_set_runtime_report.tscn", [("FactionArtifactSetRuntimeReport", "Node")])
+    for token in (
+        'const REPORT_ID := "FACTION_ARTIFACT_SET_RUNTIME_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        "OverworldRules._collect_artifact_node_result(session, node_result, false)",
+        "ArtifactRules.aggregate_bonuses(equipped_hero)",
+        "EnemyAdventureRules.artifact_target_valuation_breakdown(",
+        "restored.from_dict(payload.duplicate(true))",
+        "restored.to_dict() != payload",
+        'ArtifactRules.artifact_set_insignia_state("set_missing").is_empty()',
+        'town.call("validation_artifact_set_insignia_rows")',
+        'overworld.call("validation_artifact_set_insignia_rows")',
+        'OS.get_environment("FACTION_SET_CAPTURE_DIR")',
+        "_atlas_has_transparency()",
+    ):
+        ensure(token in faction_set_report_text, errors, f"Faction artifact-set runtime report is missing live proof token: {token}")
+    for set_id in expected_faction_sets:
+        ensure(faction_set_report_text.count(f'"{set_id}"') >= 1, errors, f"Faction artifact-set runtime report must cover {set_id}")
+
     artifact_rules_text = ARTIFACT_RULES_PATH.read_text(encoding="utf-8")
     action_block = function_block(artifact_rules_text, "artifact_id_for_management_action")
     icon_block = function_block(artifact_rules_text, "artifact_icon_path")
+    set_record_block = function_block(artifact_rules_text, "artifact_set_record")
+    set_insignia_block = function_block(artifact_rules_text, "artifact_set_insignia_state")
     for token in (
         'action_id.begins_with("equip_artifact:")',
         'locate_artifact(hero_state, inventory_artifact_id)',
@@ -45472,11 +45554,27 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         ensure(token in icon_block, errors, f"Artifact icon path resolver is missing fail-closed token: {token}")
     ensure(icon_block.find("begins_with") < icon_block.find("ResourceLoader.exists") < icon_block.rfind("return icon_path"), errors, "Artifact icon paths must validate the owned domain and imported texture before publication")
     ensure("load(" not in icon_block and "preload(" not in icon_block, errors, "ArtifactRules must validate icon ownership without loading presentation resources")
+    for token in (
+        "ContentService.load_json(ContentService.ARTIFACTS_PATH)",
+        'String(set_value.get("id", "")) == normalized_id',
+        "return set_value.duplicate(true)",
+    ):
+        ensure(token in set_record_block, errors, f"Artifact set record resolver is missing exact content authority: {token}")
+    for token in (
+        "artifact_set_record(set_id)",
+        'atlas_path.begins_with("res://art/artifacts/runtime/")',
+        "x < 0 or y < 0 or width <= 0 or height <= 0",
+        '"atlas_region": {"x": x, "y": y, "width": width, "height": height}',
+        '"alt_text": alt_text',
+    ):
+        ensure(token in set_insignia_block, errors, f"Artifact set insignia resolver is missing fail-closed ownership token: {token}")
 
     for shell_path in (OVERWORLD_SCRIPT_PATH, TOWN_SCRIPT_PATH):
         shell_text = shell_path.read_text(encoding="utf-8")
         rebuild_block = function_block(shell_text, "_rebuild_artifact_actions")
         helper_block = function_block(shell_text, "_apply_artifact_action_icon")
+        set_rows_block = function_block(shell_text, "_append_artifact_set_insignia_rows")
+        set_texture_block = function_block(shell_text, "_artifact_set_insignia_texture")
         ensure(shell_text.count("func _apply_artifact_action_icon") == 1, errors, f"{shell_path.name} must define one artifact action icon helper")
         order = [
             rebuild_block.find("_style_"),
@@ -45498,6 +45596,22 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
             ensure(token in helper_block, errors, f"{shell_path.name} artifact icon helper is missing exact live token: {token}")
         for forbidden in ("action[\"icon", "ContentService.get_artifact", "button.text =", "button.tooltip_text =", "button.disabled =", "queue_free", "await ", "create_timer"):
             ensure(forbidden not in helper_block, errors, f"{shell_path.name} artifact icon helper must not change action or layout authority: {forbidden}")
+        ensure("_append_artifact_set_insignia_rows()" in rebuild_block, errors, f"{shell_path.name} must append live set progress to the artifact-management surface")
+        for token in (
+            "ArtifactRules.artifact_set_runtime_state(hero)",
+            "_artifact_set_insignia_texture(insignia)",
+            'icon.custom_minimum_size = Vector2(28, 28)',
+            'label.text = "%s %d/%d"',
+            "_artifact_actions.add_child(row)",
+        ):
+            ensure(token in set_rows_block, errors, f"{shell_path.name} faction-set row is missing compact live presentation token: {token}")
+        for token in (
+            "load(atlas_path) as Texture2D",
+            "rect.end.x > atlas_size.x or rect.end.y > atlas_size.y",
+            "var texture := AtlasTexture.new()",
+            "texture.region = rect",
+        ):
+            ensure(token in set_texture_block, errors, f"{shell_path.name} faction-set atlas resolver is missing fail-closed token: {token}")
 
     report_text = ARTIFACT_ICON_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     report_scene_text = ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")

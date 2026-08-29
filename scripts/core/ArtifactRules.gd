@@ -227,8 +227,52 @@ static func artifact_set_runtime_state(hero_state: Dictionary) -> Array:
 			"active_thresholds": active_thresholds,
 			"next_threshold_count": next_threshold_count,
 			"complete": not piece_ids.is_empty() and equipped_piece_ids.size() == piece_ids.size(),
+			"faction_affinity_id": String(artifact_set.get("faction_affinity_id", "")),
+			"insignia": artifact_set_insignia_state(String(artifact_set.get("id", ""))),
 		})
 	return result
+
+static func artifact_set_record(set_id: String) -> Dictionary:
+	var normalized_id := set_id.strip_edges()
+	if normalized_id == "":
+		return {}
+	var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
+	var sets = raw.get("sets", [])
+	if not (sets is Array):
+		return {}
+	for set_value in sets:
+		if set_value is Dictionary and String(set_value.get("id", "")) == normalized_id:
+			return set_value.duplicate(true)
+	return {}
+
+static func artifact_set_insignia_state(set_id: String) -> Dictionary:
+	var artifact_set := artifact_set_record(set_id)
+	if artifact_set.is_empty():
+		return {}
+	var ui = artifact_set.get("ui", {})
+	if not (ui is Dictionary):
+		return {}
+	var atlas_path := String(ui.get("atlas_path", "")).strip_edges()
+	var region_value = ui.get("atlas_region", {})
+	var alt_text := String(ui.get("alt_text", "")).strip_edges()
+	if not atlas_path.begins_with("res://art/artifacts/runtime/") or not (region_value is Dictionary) or alt_text == "":
+		return {}
+	var region: Dictionary = region_value
+	var x := int(region.get("x", -1))
+	var y := int(region.get("y", -1))
+	var width := int(region.get("width", 0))
+	var height := int(region.get("height", 0))
+	if x < 0 or y < 0 or width <= 0 or height <= 0:
+		return {}
+	return {
+		"set_id": String(artifact_set.get("id", "")),
+		"name": String(artifact_set.get("name", set_id)),
+		"faction_affinity_id": String(artifact_set.get("faction_affinity_id", "")),
+		"insignia_id": String(ui.get("insignia_id", "")),
+		"atlas_path": atlas_path,
+		"atlas_region": {"x": x, "y": y, "width": width, "height": height},
+		"alt_text": alt_text,
+	}
 
 static func spell_affinity_records(hero_state: Dictionary, spell: Dictionary = {}) -> Array:
 	var records := []

@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and register the next player-visible live content/art gap; do not create art for the 26 unplaced encounter definitions unless the same slice wires them into playable content."
+    "Implement and validate the active six-faction artifact-set and insignia slice through live collection, equipment, AI valuation, save version 9, presentation, and both release packages."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1913,6 +1913,30 @@
   "active_slice": null,
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-six-faction-artifact-sets-20260829",
+      "title": "Six-faction artifact sets and insignia",
+      "sliceId": "content-six-faction-artifact-sets-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T14:01:35Z",
+      "updatedAt": "2026-08-29T14:01:35Z",
+      "latestFinding": "Six exact three-piece faction sets are collectible in representative authored scenarios and use one compact six-cell original insignia atlas on live Town and Overworld management surfaces.",
+      "artifacts": [
+        "content/artifacts.json",
+        "content/scenarios.json",
+        "art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "art/artifacts/source/generated/faction_set_insignia_wave1/manifest.json",
+        "scripts/core/ArtifactRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "tests/faction_artifact_set_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "validation": "Focused six-set collection/equip/AI/save and visible UI proof, inspected 1280x720 and 1920x1080 captures, artifact/scenario/core/repository regressions, Linux native boot, and Windows fresh-Wine boot pass. Both PCKs are 247949888 bytes, contain the atlas, exclude generated source originals, and remain below 250000000 bytes.",
+      "nonClaim": "This completes only the bounded faction-set content and original-insignia slice; the broader content/art goal and release readiness remain open."
+    },
     {
       "id": "content-six-faction-command-regalia-20260829",
       "title": "Six-faction command regalia",
@@ -15703,14 +15727,14 @@
       }
     }
   ],
-  "currentNotes": "Six-faction expedition instruments are completed with six live faction-aligned placements, exact inventory and field art, runtime collection/trinket-equip/AI/save proof, and Linux/Windows package validation.",
+  "currentNotes": "Completed six live faction artifact sets and original compact insignia using existing gameplay-wired faction equipment and representative authored scenarios.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-expedition-instruments-10184",
-  "currentSliceId": "content-six-faction-expedition-instruments-10184",
-  "currentSliceNotes": "Six-faction expedition instruments are completed; no implementation slice is active until the next live content/art gap is selected.",
+  "currentSlice": "content-six-faction-artifact-sets-10184",
+  "currentSliceId": "content-six-faction-artifact-sets-10184",
+  "currentSliceNotes": "Six faction sets, five fixed reward replacements, compact set insignia, live equipment presentation, AI set progress, save, captures, regressions, and both package gates are complete.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Six-Faction Expedition Instruments",
-  "currentSliceUpdatedAt": "2026-08-29T13:16:59Z",
+  "currentSliceTitle": "Six-Faction Artifact Sets And Insignia",
+  "currentSliceUpdatedAt": "2026-08-29T14:01:35Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21164,7 +21188,7 @@
     "ops/progress.json"
   ],
   "latestEvidenceId": "content-six-faction-expedition-instruments-20260829",
-  "latestFinding": "Six original faction expedition instruments raise the production artifact catalog from 27 to 33 and faction-affinity breadth to four per faction. All six are fixed live rewards with exact inventory/field art, collection/trinket equip, bonuses, positive faction AI valuation, save version 9, dual-resolution presentation, core/repository validation, and matching 247899952-byte Linux/Windows package boots with source art excluded.",
+  "latestFinding": "The 33-artifact catalog now contains eight live sets and 24 set pieces. Six faction sets are fully collectible in representative authored scenarios, expose exact compact insignia on Town and Overworld management surfaces, preserve save version 9, and ship in matching 247949888-byte Linux and Windows PCKs with source originals excluded.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -21227,8 +21251,41 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
-  "notes": "Six-faction expedition instruments are completed with six live fixed placements, exact inventory and field art, runtime collection/equip/AI/save proof, and Linux/Windows package validation. The broader content/art goal remains active across future bounded slices.",
+  "notes": "The six-faction artifact-set and original-insignia slice is complete. The broader user goal to expand production content and distinctive art remains active for future selected slices.",
   "plannedSlices": [
+    {
+      "id": "content-six-faction-artifact-sets-10184",
+      "title": "Six-Faction Artifact Sets And Insignia",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T13:25:40Z",
+      "updatedAt": "2026-08-29T14:01:35Z",
+      "completedAt": "2026-08-29T14:01:35Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "content/artifacts.json",
+        "content/scenarios.json",
+        "art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "art/artifacts/source/generated/faction_set_insignia_wave1",
+        "scripts/core/ArtifactRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "tests/faction_artifact_set_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Turn existing live faction equipment into six collectible faction sets, replace five remaining generic rewards in representative scenarios, and add six original set insignia to live equipment presentation.",
+      "completionCriteria": "Six exact compatible faction sets, full-set collection/equip/AI/save proof, six exact compact insignia with fail-closed live presentation, dual-resolution captures, regressions, and Linux/Windows package gates pass below the unchanged 250000000-byte ceiling.",
+      "nonGoals": [
+        "No new artifact item, slot, bonus type, set mechanic, random table behavior, scenario geometry, encounter, objective, AI algorithm, or save schema.",
+        "No copied Heroes expression, unused art-only set, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed. Six collectible faction sets, five exact fixed reward replacements, original insignia atlas, live Town and Overworld presentation, AI/save/runtime proof, dual-resolution captures, regressions, and both release package gates are validated."
+    },
     {
       "id": "content-six-faction-expedition-instruments-10184",
       "title": "Six-Faction Expedition Instruments",
@@ -105971,8 +106028,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 77 active authored encounter placements, all 292 active resource-site placements, all 60 production heroes, all 15 towns, and all 33 production artifacts own exact live art. Twenty-six encounter definitions remain unplaced and intentionally have no unused exact art. The unrelated Overworld request-local watch-context reuse regression and 1280px objective-header ellipsis assertion remain outside this slice; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native hardware, whole-game, and release-readiness gaps remain.",
-  "remainingWork": "Audit and register the next bounded player-visible content/art gap with a live consumer in the same slice. Do not add art for dormant encounter definitions without playable placement, and do not claim whole-game or release readiness from this artifact slice.",
+  "remainingGap": "Faction artifacts have exact individual art and live placement but no faction set identity, cumulative build incentives, or set insignia. The unrelated Overworld request-local watch-context reuse regression and 1280px objective-header ellipsis assertion remain outside this slice; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native hardware, whole-game, and release-readiness gaps remain.",
+  "remainingWork": "Select the next bounded implementation slice for the broader content and distinctive-art goal; do not infer whole-game or release readiness from the completed faction-set slice.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106403,7 +106460,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_placed_encounter_landmarks_completion_completed",
+  "result": "content_six_faction_artifact_sets_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106504,9 +106561,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Implementing six original recurring encounter landmarks with compact atlas ownership and live Overworld integration.",
+  "summary": "Completed six collectible faction artifact sets with original compact insignia and live Town and Overworld equipment integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T11:37:38Z",
+  "updatedAt": "2026-08-29T14:01:35Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

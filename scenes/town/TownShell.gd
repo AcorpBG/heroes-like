@@ -3516,6 +3516,7 @@ func _apply_spell_action_icon(button: Button, action: Dictionary) -> void:
 func _rebuild_artifact_actions(actions_override: Variant = null) -> void:
 	for child in _artifact_actions.get_children():
 		child.queue_free()
+	_append_artifact_set_insignia_rows()
 
 	var actions = actions_override if actions_override is Array else TownRules.get_artifact_actions(_session)
 	if actions.is_empty():
@@ -3546,6 +3547,87 @@ func _apply_artifact_action_icon(button: Button, action: Dictionary) -> void:
 	button.icon = texture
 	button.expand_icon = true
 	button.add_theme_constant_override("icon_max_width", 24)
+
+func _append_artifact_set_insignia_rows() -> void:
+	if _session == null:
+		return
+	var hero: Dictionary = _session.overworld.get("hero", {})
+	for set_state_value in ArtifactRules.artifact_set_runtime_state(hero):
+		if not (set_state_value is Dictionary):
+			continue
+		var set_state: Dictionary = set_state_value
+		var insignia = set_state.get("insignia", {})
+		if not (insignia is Dictionary):
+			continue
+		var texture := _artifact_set_insignia_texture(insignia)
+		if texture == null:
+			continue
+		var row := HBoxContainer.new()
+		row.name = "ArtifactSetInsignia_%s" % String(set_state.get("set_id", "set"))
+		row.set_meta("artifact_set_id", String(set_state.get("set_id", "")))
+		row.set_meta("artifact_set_complete", bool(set_state.get("complete", false)))
+		row.tooltip_text = String(insignia.get("alt_text", ""))
+		var icon := TextureRect.new()
+		icon.name = "SetInsignia"
+		icon.custom_minimum_size = Vector2(28, 28)
+		icon.texture = texture
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var label := Label.new()
+		label.name = "SetProgress"
+		label.text = "%s %d/%d" % [
+			String(set_state.get("name", "Artifact Set")),
+			int(set_state.get("equipped_piece_count", 0)),
+			int(set_state.get("piece_count", 0)),
+		]
+		label.tooltip_text = row.tooltip_text
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(icon)
+		row.add_child(label)
+		_artifact_actions.add_child(row)
+
+func _artifact_set_insignia_texture(insignia: Dictionary) -> Texture2D:
+	var atlas_path := String(insignia.get("atlas_path", "")).strip_edges()
+	var region_value = insignia.get("atlas_region", {})
+	if atlas_path == "" or not (region_value is Dictionary):
+		return null
+	var atlas := load(atlas_path) as Texture2D
+	if atlas == null:
+		return null
+	var region: Dictionary = region_value
+	var rect := Rect2(
+		float(region.get("x", -1)),
+		float(region.get("y", -1)),
+		float(region.get("width", 0)),
+		float(region.get("height", 0))
+	)
+	var atlas_size := atlas.get_size()
+	if rect.position.x < 0.0 or rect.position.y < 0.0 or rect.size.x <= 0.0 or rect.size.y <= 0.0 or rect.end.x > atlas_size.x or rect.end.y > atlas_size.y:
+		return null
+	var texture := AtlasTexture.new()
+	texture.atlas = atlas
+	texture.region = rect
+	return texture
+
+func validation_artifact_set_insignia_rows() -> Array:
+	var rows: Array = []
+	for child in _artifact_actions.get_children():
+		if not child.has_meta("artifact_set_id"):
+			continue
+		var icon := child.get_node_or_null("SetInsignia") as TextureRect
+		var label := child.get_node_or_null("SetProgress") as Label
+		var atlas_texture := icon.texture as AtlasTexture if icon != null else null
+		rows.append({
+			"set_id": String(child.get_meta("artifact_set_id", "")),
+			"complete": bool(child.get_meta("artifact_set_complete", false)),
+			"label": label.text if label != null else "",
+			"tooltip": child.tooltip_text,
+			"atlas_path": atlas_texture.atlas.resource_path if atlas_texture != null and atlas_texture.atlas != null else "",
+			"atlas_region": atlas_texture.region if atlas_texture != null else Rect2(),
+			"visible": child.is_visible_in_tree(),
+		})
+	return rows
 
 func _rebuild_specialty_actions(actions_override: Variant = null) -> void:
 	for child in _specialty_actions.get_children():

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generation_mode": "built_in_imagegen",
+  "runtime_atlas": {
+    "path": "res://art/artifacts/runtime/faction_set_insignia_atlas.png",
+    "width": 384,
+    "height": 64,
+    "cell_width": 64,
+    "cell_height": 64,
+    "sha256": "986e1c6b48e118441b820928b865ab29c6a037f6fd18d0fbebd8731448eb65eb"
+  },
+  "items": [
+    {
+      "set_id": "set_lockward_charter",
+      "faction_id": "faction_embercourt",
+      "source_path": "res://art/artifacts/source/generated/faction_set_insignia_wave1/lockward_charter_source.png",
+      "source_sha256": "946d6f05f4bb2f3e698a5221fd326dbf0f3bdd36c08c0ebfe0201e874058241b",
+      "generation_original_filename": "exec-2deddf96-7bda-4881-b033-e0cd7b1903f7.png",
+      "atlas_region": {"x": 0, "y": 0, "width": 64, "height": 64},
+      "prompt_summary": "Transparent original hexagonal lock-gate charter insignia with hooded beacon and crossed bridge keys."
+    },
+    {
+      "set_id": "set_fenhound_pursuit",
+      "faction_id": "faction_mireclaw",
+      "source_path": "res://art/artifacts/source/generated/faction_set_insignia_wave1/fenhound_pursuit_source.png",
+      "source_sha256": "5e01fb557c70a49f6eb8d79b2bb63f6f505b022752d0fcbf6b9ed05b6cc29a72",
+      "generation_original_filename": "exec-5de68881-aa77-4c16-93fb-6d99cddff93a.png",
+      "atlas_region": {"x": 64, "y": 0, "width": 64, "height": 64},
+      "prompt_summary": "Transparent original crescent fenhound-jaw insignia around a scent bell and reed blades."
+    },
+    {
+      "set_id": "set_meridian_relay",
+      "faction_id": "faction_sunvault",
+      "source_path": "res://art/artifacts/source/generated/faction_set_insignia_wave1/meridian_relay_source.png",
+      "source_sha256": "3330ae0805bae29d02cba5f23afabd31f63794f245ac9eeb596a83657c2ab8fb",
+      "generation_original_filename": "exec-70f55bf4-0d55-4d7f-9ef1-d652f34b6f6c.png",
+      "atlas_region": {"x": 128, "y": 0, "width": 64, "height": 64},
+      "prompt_summary": "Transparent original diamond-prism insignia within broken meridian rings and a noon ray."
+    },
+    {
+      "set_id": "set_rootpath_covenant",
+      "faction_id": "faction_thornwake",
+      "source_path": "res://art/artifacts/source/generated/faction_set_insignia_wave1/rootpath_covenant_source.png",
+      "source_sha256": "68624a406d53eacb8af8138428e077bcc26ee3e36885f9837fa24686884c3474",
+      "generation_original_filename": "exec-1e4bfcba-ba25-4150-8c96-664b62430156.png",
+      "atlas_region": {"x": 192, "y": 0, "width": 64, "height": 64},
+      "prompt_summary": "Transparent original split-seed insignia rising from braided roots beneath a briar crown."
+    },
+    {
+      "set_id": "set_redline_survey_warrant",
+      "faction_id": "faction_brasshollow",
+      "source_path": "res://art/artifacts/source/generated/faction_set_insignia_wave1/redline_survey_warrant_source.png",
+      "source_sha256": "72859505983bd7751d1c931e5194aac8f80c5b29caad20c9fbfe4be7095675b8",
+      "generation_original_filename": "exec-5679e515-30c8-4ce6-9a3d-5c93fd5bb3a0.png",
+      "atlas_region": {"x": 256, "y": 0, "width": 64, "height": 64},
+      "prompt_summary": "Transparent original square cog-warrant insignia with pressure gauge and survey arms."
+    },
+    {
+      "set_id": "set_drowned_wake_chart",
+      "faction_id": "faction_veilmourn",
+      "source_path": "res://art/artifacts/source/generated/faction_set_insignia_wave1/drowned_wake_chart_source.png",
+      "source_sha256": "ac3492c6105390ec71427608983dce9939017f0b68d95c7b943126298018f0bb",
+      "generation_original_filename": "exec-0e31737d-fe3b-424a-b6b2-aa86acba572c.png",
+      "atlas_region": {"x": 320, "y": 0, "width": 64, "height": 64},
+      "prompt_summary": "Transparent original teardrop wreck-chart insignia with ship ribs, drowned star, and cracked bell."
+    }
+  ]
+}

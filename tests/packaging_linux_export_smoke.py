@@ -215,6 +215,10 @@ REQUIRED_HERO_SPECIALTY_ATLAS_NAME = "hero_specialty_insignia_atlas"
 REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES = (
     "art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png.import",
 )
+REQUIRED_FACTION_SET_ATLAS_NAME = "faction_set_insignia_atlas"
+REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES = (
+    "art/artifacts/runtime/faction_set_insignia_atlas.png.import",
+)
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
     "Parse Error",
@@ -418,6 +422,7 @@ def pck_terrain_payload_summary() -> dict:
     required_field_objective_landmark_texture_entries = imported_payload_paths_for(REQUIRED_FIELD_OBJECTIVE_LANDMARK_PCK_IMPORT_ENTRIES)
     required_battle_status_effect_badge_texture_entries = imported_payload_paths_for(REQUIRED_BATTLE_STATUS_EFFECT_BADGE_PCK_IMPORT_ENTRIES)
     required_hero_specialty_atlas_texture_entries = imported_payload_paths_for(REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES)
+    required_faction_set_atlas_texture_entries = imported_payload_paths_for(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES)
     summary = {
         "checked": False,
         "valid_directory": False,
@@ -508,6 +513,12 @@ def pck_terrain_payload_summary() -> dict:
         "hero_specialty_atlas_texture_entries": [],
         "hero_specialty_atlas_texture_names": [],
         "hero_specialty_atlas_entries_present": False,
+        "required_faction_set_atlas_import_entries": list(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES),
+        "required_faction_set_atlas_texture_entries": sorted(required_faction_set_atlas_texture_entries),
+        "faction_set_atlas_import_entries": [],
+        "faction_set_atlas_texture_entries": [],
+        "faction_set_atlas_texture_names": [],
+        "faction_set_atlas_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -612,6 +623,10 @@ def pck_terrain_payload_summary() -> dict:
                     summary["hero_specialty_atlas_import_entries"].append(entry_path)
                 if entry_path in required_hero_specialty_atlas_texture_entries:
                     summary["hero_specialty_atlas_texture_entries"].append(entry_path)
+                if entry_path in REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES:
+                    summary["faction_set_atlas_import_entries"].append(entry_path)
+                if entry_path in required_faction_set_atlas_texture_entries:
+                    summary["faction_set_atlas_texture_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
@@ -632,6 +647,8 @@ def pck_terrain_payload_summary() -> dict:
                         summary["final_roster_hero_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_HERO_SPECIALTY_ATLAS_NAME:
                         summary["hero_specialty_atlas_texture_names"].append(imported_name)
+                    if imported_name == REQUIRED_FACTION_SET_ATLAS_NAME:
+                        summary["faction_set_atlas_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME:
                         summary["recurring_encounter_atlas_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME:
@@ -659,6 +676,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["field_objective_landmark_entries_present"] = len(required_field_objective_landmark_texture_entries) == len(REQUIRED_FIELD_OBJECTIVE_LANDMARK_NAMES) and set(summary["field_objective_landmark_import_entries"]) == set(REQUIRED_FIELD_OBJECTIVE_LANDMARK_PCK_IMPORT_ENTRIES) and set(summary["field_objective_landmark_texture_entries"]) == required_field_objective_landmark_texture_entries
     summary["battle_status_effect_badge_entries_present"] = len(required_battle_status_effect_badge_texture_entries) == len(REQUIRED_BATTLE_STATUS_EFFECT_BADGE_NAMES) and set(summary["battle_status_effect_badge_import_entries"]) == set(REQUIRED_BATTLE_STATUS_EFFECT_BADGE_PCK_IMPORT_ENTRIES) and set(summary["battle_status_effect_badge_texture_entries"]) == required_battle_status_effect_badge_texture_entries
     summary["hero_specialty_atlas_entries_present"] = len(required_hero_specialty_atlas_texture_entries) == 1 and set(summary["hero_specialty_atlas_import_entries"]) == set(REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["hero_specialty_atlas_texture_entries"]) == required_hero_specialty_atlas_texture_entries and set(summary["hero_specialty_atlas_texture_names"]) == {REQUIRED_HERO_SPECIALTY_ATLAS_NAME}
+    summary["faction_set_atlas_entries_present"] = len(required_faction_set_atlas_texture_entries) == 1 and set(summary["faction_set_atlas_import_entries"]) == set(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["faction_set_atlas_texture_entries"]) == required_faction_set_atlas_texture_entries and set(summary["faction_set_atlas_texture_names"]) == {REQUIRED_FACTION_SET_ATLAS_NAME}
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -726,6 +744,7 @@ def main() -> int:
         and bool(terrain_payload["field_objective_landmark_entries_present"])
         and bool(terrain_payload["battle_status_effect_badge_entries_present"])
         and bool(terrain_payload["hero_specialty_atlas_entries_present"])
+        and bool(terrain_payload["faction_set_atlas_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -845,6 +864,9 @@ def main() -> int:
         "hero_specialty_atlas_pck_import_entry_count": len(terrain_payload["hero_specialty_atlas_import_entries"]),
         "hero_specialty_atlas_pck_texture_count": len(terrain_payload["hero_specialty_atlas_texture_entries"]),
         "hero_specialty_atlas_pck_entries_present": terrain_payload["hero_specialty_atlas_entries_present"],
+        "faction_set_atlas_pck_import_entry_count": len(terrain_payload["faction_set_atlas_import_entries"]),
+        "faction_set_atlas_pck_texture_count": len(terrain_payload["faction_set_atlas_texture_entries"]),
+        "faction_set_atlas_pck_entries_present": terrain_payload["faction_set_atlas_entries_present"],
         "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],

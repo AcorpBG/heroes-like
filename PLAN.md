@@ -24,8 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing `content-six-faction-expedition-instruments-10184`.
-- Package boundary: both release exports now measure 247899952 bytes, 2100048 bytes below the unchanged 250000000-byte ceiling. All 33 artifact field identities ship while development reports and generated source originals remain excluded on both platforms.
+- Active implementation slice: none; the most recently completed slice is `content-six-faction-artifact-sets-10184`.
+- Package boundary: both release exports now measure 247949888 bytes, 2050112 bytes below the unchanged 250000000-byte ceiling. All 33 artifact field identities and the compact faction-set insignia atlas ship while development reports and generated source originals remain excluded on both platforms.
+
+## Six-Faction Artifact Sets And Insignia
+
+id: `content-six-faction-artifact-sets-10184`
+
+Status: completed.
+
+Current finding:
+- the production catalog contains 24 faction-affinity artifacts, four per faction, but all six factions still have zero artifact sets while the only two active sets are neutral exploration kits;
+- Causeway Stand, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim already expose compatible faction equipment across banner, armor or boots, and trinket slots, yet five fixed generic rewards still occupy slots needed to complete those live kits;
+- converting these existing gameplay-wired items into six faction sets adds collection and build identity without unused definitions, a save migration, another equipment slot, or large package growth, while exact set insignia can make the new progression readable on the live equipment surfaces.
+
+Implementation boundary:
+- define one original three-piece set per faction from existing compatible faction artifacts, with bounded two- and three-piece bonuses using only current artifact bonus authority;
+- replace five repeated generic fixed rewards in the representative live scenarios so all six complete sets can be collected and equipped in one authored scenario while preserving placement ids, coordinates, encounters, objectives, guards, geometry, and save-version-9 authority;
+- create six original transparent set insignia, pack them into one compact immutable atlas, and expose exact fail-closed set art and non-color descriptions through the live Overworld and Town artifact-management presentation;
+- preserve individual artifact bonuses and art, equipment slots, deterministic pickup, campaign carryover, strategic-AI artifact valuation, accessibility, performance, and Windows/Linux behavior.
+
+Completion criteria:
+- six valid faction sets expose exact compatible piece ownership, faction alignment, two- and three-piece bonuses, positive set-progress AI valuation, and full-set runtime aggregation without changing individual artifact authority;
+- six byte-distinct original transparent sources produce one compact set-insignia atlas with exact regions, distinct non-color silhouettes, missing/invalid fail-closed behavior, live equipment presentation, and source-art package exclusion;
+- representative scenario collection/equip and save-version-9 round trips pass for all six complete sets, with inspected 1280x720 and 1920x1080 captures, repository/core/artifact/scenario regressions, and Linux/Windows package startup below the unchanged 250000000-byte ceiling.
+
+Completed evidence:
+- the production catalog now contains eight live sets and 24 set pieces: Lockward Charter, Fenhound Pursuit, Meridian Relay, Rootpath Covenant, Redline Survey Warrant, and Drowned Wake Chart each bind three existing faction artifacts, exact two- and three-piece bonuses, faction affinity, source guidance, and fixed collectible paths in one representative scenario;
+- five generic fixed rewards were replaced without changing placement ids or coordinates, while the six complete-set runtime proof collects through production Overworld authority, auto-equips compatible slots, verifies exact aggregate bonuses and positive faction-matched set-progress AI value, and round-trips exactly through save version 9;
+- six byte-distinct transparent generated originals produce one 384x64 runtime atlas with immutable 64x64 cells, exact hashes, distinct non-color silhouettes, accessible descriptions, genuine transparency, and invalid-region fail-closed behavior;
+- inspected 1280x720 and 1920x1080 Town and Overworld captures expose the compact insignia plus live 3/3 progress inside the existing scrollable management rails without covering the dominant scenery or map surface;
+- artifact taxonomy, source rewards, set effects, AI valuation, command-regalia, affected scenario, core systems, repository, JSON, editor-import, and focused runtime checks pass. Linux export/native boot and Windows export/fresh-Wine boot pass with the new atlas present, source originals absent, and matching 247949888-byte PCKs below the unchanged ceiling. This closes only the faction-set content slice and does not claim whole-game or release readiness.
+
+Non-goals:
+- no new artifact item, slot, bonus type, set rule, random reward-table behavior, scenario geometry, encounter, objective, guard, economy resource, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes set, insignia, heraldry, name, icon, text, or protected visual expression, and no art-only set definition without a collectible live path.
 
 ## Six-Faction Expedition Instruments
 

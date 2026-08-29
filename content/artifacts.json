@@ -64,6 +64,198 @@
         "source_reward_tables_active": false,
         "derived_from_equipped_pieces": true
       }
+    },
+    {
+      "id": "set_lockward_charter",
+      "name": "Lockward Charter",
+      "identity": "An Embercourt field charter that funds the crossing, answers the lock signal, and holds the opened road.",
+      "faction_affinity_id": "faction_embercourt",
+      "accord_affinity": "beacon",
+      "piece_ids": [
+        "artifact_tollstone_ring",
+        "artifact_lockflame_writ_banner",
+        "artifact_lockward_beacon_key"
+      ],
+      "source_hint": "The complete charter is fixed across Causeway Stand's three artifact pickups.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Two charter instruments steady the line while the crossing is opened.",
+          "bonuses": {"battle_defense": 1}
+        },
+        {
+          "count": 3,
+          "summary": "The complete charter keeps the column moving beyond the secured lock.",
+          "bonuses": {"overworld_movement": 1, "scouting_radius": 1}
+        }
+      ],
+      "ui": {
+        "insignia_id": "artifact_set_insignia_lockward_charter",
+        "atlas_path": "res://art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "atlas_region": {"x": 0, "y": 0, "width": 64, "height": 64},
+        "alt_text": "A broken hexagonal lock gate surrounds a hooded beacon and crossed bridge keys."
+      },
+      "runtime_policy": {"set_bonuses_active": true, "source_reward_tables_active": false, "derived_from_equipped_pieces": true}
+    },
+    {
+      "id": "set_fenhound_pursuit",
+      "name": "Fenhound Pursuit",
+      "identity": "A Mireclaw hunting kit that crosses drowned ground, sounds the pack, and closes on a fresh trail.",
+      "faction_affinity_id": "faction_mireclaw",
+      "accord_affinity": "mire",
+      "piece_ids": [
+        "artifact_reedshadow_waders",
+        "artifact_mirechain_hunt_totem",
+        "artifact_fenhound_scent_bell"
+      ],
+      "source_hint": "The complete pursuit kit is fixed across Bogbound Oath's three artifact pickups.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Two pursuit pieces synchronize the pack's opening rush.",
+          "bonuses": {"battle_initiative": 1}
+        },
+        {
+          "count": 3,
+          "summary": "The complete pursuit reads the trail and drives the attack home.",
+          "bonuses": {"battle_attack": 1, "scouting_radius": 1}
+        }
+      ],
+      "ui": {
+        "insignia_id": "artifact_set_insignia_fenhound_pursuit",
+        "atlas_path": "res://art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "atlas_region": {"x": 64, "y": 0, "width": 64, "height": 64},
+        "alt_text": "An open fenhound jaw curves around a hanging scent bell and three reed blades."
+      },
+      "runtime_policy": {"set_bonuses_active": true, "source_reward_tables_active": false, "derived_from_equipped_pieces": true}
+    },
+    {
+      "id": "set_meridian_relay",
+      "name": "Meridian Relay",
+      "identity": "A Sunvault calibration array that turns prism warding, command timing, and measured resistance into one relay.",
+      "faction_affinity_id": "faction_sunvault",
+      "accord_affinity": "lens",
+      "piece_ids": [
+        "artifact_prismward_mantle",
+        "artifact_zenith_prism_pennon",
+        "artifact_meridian_relay_lens"
+      ],
+      "source_hint": "The complete relay is fixed across Prismhearth Watch's three artifact pickups.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Two calibrated pieces spread hostile magic across a steadier prism lattice.",
+          "bonuses": {"battle_spell_resistance_pct": 5}
+        },
+        {
+          "count": 3,
+          "summary": "The complete relay finds the next line of sight and answers at the exact moment.",
+          "bonuses": {"battle_initiative": 1, "scouting_radius": 1}
+        }
+      ],
+      "ui": {
+        "insignia_id": "artifact_set_insignia_meridian_relay",
+        "atlas_path": "res://art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "atlas_region": {"x": 128, "y": 0, "width": 64, "height": 64},
+        "alt_text": "A tall diamond prism hangs inside broken meridian rings beneath a sharp noon ray."
+      },
+      "runtime_policy": {"set_bonuses_active": true, "source_reward_tables_active": false, "derived_from_equipped_pieces": true}
+    },
+    {
+      "id": "set_rootpath_covenant",
+      "name": "Rootpath Covenant",
+      "identity": "A Thornwake living-road covenant that roots the line, follows buried paths, and grows a route beyond sight.",
+      "faction_affinity_id": "faction_thornwake",
+      "accord_affinity": "root",
+      "piece_ids": [
+        "artifact_graftbark_cuirass",
+        "artifact_briarcrown_covenant_standard",
+        "artifact_rootpath_seed_compass"
+      ],
+      "source_hint": "The complete covenant is fixed across Mireford Skirmish's three artifact pickups.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Two living pieces knit a harder defensive root line.",
+          "bonuses": {"battle_defense": 1}
+        },
+        {
+          "count": 3,
+          "summary": "The complete covenant extends the root road beyond the visible frontier.",
+          "bonuses": {"overworld_movement": 1, "scouting_radius": 1}
+        }
+      ],
+      "ui": {
+        "insignia_id": "artifact_set_insignia_rootpath_covenant",
+        "atlas_path": "res://art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "atlas_region": {"x": 192, "y": 0, "width": 64, "height": 64},
+        "alt_text": "A split seed rises from three braided roots beneath an antler-like briar crown."
+      },
+      "runtime_policy": {"set_bonuses_active": true, "source_reward_tables_active": false, "derived_from_equipped_pieces": true}
+    },
+    {
+      "id": "set_redline_survey_warrant",
+      "name": "Redline Survey Warrant",
+      "identity": "A Brasshollow field warrant that measures the advance, plates the halt, and authorizes pressure at the red line.",
+      "faction_affinity_id": "faction_brasshollow",
+      "accord_affinity": "furnace",
+      "piece_ids": [
+        "artifact_quenchplate_vambrace",
+        "artifact_redline_warrant_gonfalon",
+        "artifact_redline_survey_dial"
+      ],
+      "source_hint": "The complete warrant is fixed across Orevein Contract's three artifact pickups.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Two certified pieces reinforce the surveyed halt.",
+          "bonuses": {"battle_defense": 1}
+        },
+        {
+          "count": 3,
+          "summary": "The complete warrant advances on pressure and seizes the opening beat.",
+          "bonuses": {"battle_attack": 1, "battle_initiative": 1}
+        }
+      ],
+      "ui": {
+        "insignia_id": "artifact_set_insignia_redline_survey_warrant",
+        "atlas_path": "res://art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "atlas_region": {"x": 256, "y": 0, "width": 64, "height": 64},
+        "alt_text": "A square cog warrant frames a pressure gauge with a hard diagonal needle and survey arms."
+      },
+      "runtime_policy": {"set_bonuses_active": true, "source_reward_tables_active": false, "derived_from_equipped_pieces": true}
+    },
+    {
+      "id": "set_drowned_wake_chart",
+      "name": "Drowned Wake Chart",
+      "identity": "A Veilmourn wreck chart that fixes a route through fog, sounds the hazard, and carries the command across wet ground.",
+      "faction_affinity_id": "faction_veilmourn",
+      "accord_affinity": "veil",
+      "piece_ids": [
+        "artifact_fogwake_deckboots",
+        "artifact_wakebell_mourning_ensign",
+        "artifact_black_sail_compass"
+      ],
+      "source_hint": "The complete chart is fixed across Bellwake Wreck Claim's three artifact pickups.",
+      "piece_thresholds": [
+        {
+          "count": 2,
+          "summary": "Two wake pieces read one farther ring through fog and spray.",
+          "bonuses": {"scouting_radius": 1}
+        },
+        {
+          "count": 3,
+          "summary": "The complete chart keeps the command moving and answers the bell before the hazard closes.",
+          "bonuses": {"overworld_movement": 1, "battle_initiative": 1}
+        }
+      ],
+      "ui": {
+        "insignia_id": "artifact_set_insignia_drowned_wake_chart",
+        "atlas_path": "res://art/artifacts/runtime/faction_set_insignia_atlas.png",
+        "atlas_region": {"x": 320, "y": 0, "width": 64, "height": 64},
+        "alt_text": "Two black ship ribs enclose a pale drowned star and cracked hanging wake bell."
+      },
+      "runtime_policy": {"set_bonuses_active": true, "source_reward_tables_active": false, "derived_from_equipped_pieces": true}
     }
   ],
   "source_reward_tables": [
@@ -161,7 +353,13 @@
       "set_constraints": {
         "allowed_set_ids": [
           "set_wayfarer_compact",
-          "set_asterfall_survey"
+          "set_asterfall_survey",
+          "set_lockward_charter",
+          "set_fenhound_pursuit",
+          "set_meridian_relay",
+          "set_rootpath_covenant",
+          "set_redline_survey_warrant",
+          "set_drowned_wake_chart"
         ],
         "piece_limit_per_table": 2
       },
@@ -195,8 +393,15 @@
       ],
       "faction_constraints": [],
       "set_constraints": {
-        "allowed_set_ids": [],
-        "piece_limit_per_table": 0
+        "allowed_set_ids": [
+          "set_lockward_charter",
+          "set_fenhound_pursuit",
+          "set_meridian_relay",
+          "set_rootpath_covenant",
+          "set_redline_survey_warrant",
+          "set_drowned_wake_chart"
+        ],
+        "piece_limit_per_table": 1
       },
       "runtime_policy": {
         "metadata_only": true,
@@ -227,7 +432,16 @@
         "artifact_drowned_star_astrolabe"
       ],
       "faction_constraints": [],
-      "set_constraints": {"allowed_set_ids": [], "piece_limit_per_table": 0},
+      "set_constraints": {
+        "allowed_set_ids": [
+          "set_lockward_charter",
+          "set_fenhound_pursuit",
+          "set_meridian_relay",
+          "set_rootpath_covenant",
+          "set_redline_survey_warrant"
+        ],
+        "piece_limit_per_table": 1
+      },
       "runtime_policy": {"metadata_only": true, "live_drop_execution": false, "save_version_bump": false, "equipment_runtime_effects": false, "ai_valuation_behavior": false, "rare_resource_activation": false}
     },
     {
@@ -375,8 +589,8 @@
         ]
       },
       "set_constraints": {
-        "allowed_set_ids": [],
-        "piece_limit_per_table": 0
+        "allowed_set_ids": ["set_lockward_charter"],
+        "piece_limit_per_table": 1
       },
       "runtime_policy": {
         "metadata_only": false,
@@ -420,8 +634,8 @@
         "faction_veilmourn"
       ],
       "set_constraints": {
-        "allowed_set_ids": [],
-        "piece_limit_per_table": 0
+        "allowed_set_ids": ["set_drowned_wake_chart"],
+        "piece_limit_per_table": 1
       },
       "runtime_policy": {
         "metadata_only": false,
@@ -959,9 +1173,10 @@
       "id": "artifact_tollstone_ring",
       "name": "Tollstone Ring",
       "slot": "trinket",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "rare",
       "family": "tollstone_rings",
+      "set_id": "set_lockward_charter",
       "roles": [
         "economy",
         "route",
@@ -1513,9 +1728,10 @@
       "id": "artifact_black_sail_compass",
       "name": "Black-Sail Compass",
       "slot": "trinket",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "rare",
       "family": "black_sail_compasses",
+      "set_id": "set_drowned_wake_chart",
       "roles": [
         "scouting",
         "route",
@@ -1978,9 +2194,10 @@
       "id": "artifact_reedshadow_waders",
       "name": "Reedshadow Waders",
       "slot": "boots",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "reedshadow_waders",
+      "set_id": "set_fenhound_pursuit",
       "roles": [
         "movement",
         "route",
@@ -2072,9 +2289,10 @@
       "id": "artifact_prismward_mantle",
       "name": "Prismward Mantle",
       "slot": "armor",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "prismward_mantles",
+      "set_id": "set_meridian_relay",
       "roles": [
         "defense",
         "magic",
@@ -2166,9 +2384,10 @@
       "id": "artifact_graftbark_cuirass",
       "name": "Graftbark Cuirass",
       "slot": "armor",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "graftbark_cuirasses",
+      "set_id": "set_rootpath_covenant",
       "roles": [
         "defense",
         "economy",
@@ -2265,9 +2484,10 @@
       "id": "artifact_quenchplate_vambrace",
       "name": "Quenchplate Vambrace",
       "slot": "armor",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "quenchplate_vambraces",
+      "set_id": "set_redline_survey_warrant",
       "roles": [
         "defense",
         "economy",
@@ -2364,9 +2584,10 @@
       "id": "artifact_fogwake_deckboots",
       "name": "Fogwake Deckboots",
       "slot": "boots",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "fogwake_deckboots",
+      "set_id": "set_drowned_wake_chart",
       "roles": [
         "movement",
         "scouting",
@@ -2458,9 +2679,10 @@
       "id": "artifact_lockflame_writ_banner",
       "name": "Lockflame Writ Banner",
       "slot": "banner",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "lockflame_writ_banners",
+      "set_id": "set_lockward_charter",
       "roles": ["combat", "defense", "morale"],
       "accord_affinity": "beacon",
       "faction_affinity": ["faction_embercourt"],
@@ -2492,9 +2714,10 @@
       "id": "artifact_mirechain_hunt_totem",
       "name": "Mirechain Hunt Totem",
       "slot": "banner",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "mirechain_hunt_totems",
+      "set_id": "set_fenhound_pursuit",
       "roles": ["combat", "morale"],
       "accord_affinity": "mire",
       "faction_affinity": ["faction_mireclaw"],
@@ -2526,9 +2749,10 @@
       "id": "artifact_zenith_prism_pennon",
       "name": "Zenith Prism Pennon",
       "slot": "banner",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "zenith_prism_pennons",
+      "set_id": "set_meridian_relay",
       "roles": ["combat", "magic", "resistance"],
       "accord_affinity": "lens",
       "faction_affinity": ["faction_sunvault"],
@@ -2560,9 +2784,10 @@
       "id": "artifact_briarcrown_covenant_standard",
       "name": "Briarcrown Covenant Standard",
       "slot": "banner",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "briarcrown_covenant_standards",
+      "set_id": "set_rootpath_covenant",
       "roles": ["defense", "movement", "route"],
       "accord_affinity": "root",
       "faction_affinity": ["faction_thornwake"],
@@ -2594,9 +2819,10 @@
       "id": "artifact_redline_warrant_gonfalon",
       "name": "Redline Warrant Gonfalon",
       "slot": "banner",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "redline_warrant_gonfalons",
+      "set_id": "set_redline_survey_warrant",
       "roles": ["combat", "defense"],
       "accord_affinity": "furnace",
       "faction_affinity": ["faction_brasshollow"],
@@ -2628,9 +2854,10 @@
       "id": "artifact_wakebell_mourning_ensign",
       "name": "Wakebell Mourning Ensign",
       "slot": "banner",
-      "artifact_class": "faction",
+      "artifact_class": "set_piece",
       "rarity": "uncommon",
       "family": "wakebell_mourning_ensigns",
+      "set_id": "set_drowned_wake_chart",
       "roles": ["combat", "scouting", "route"],
       "accord_affinity": "veil",
       "faction_affinity": ["faction_veilmourn"],
@@ -2659,7 +2886,7 @@
       "bonuses": {"battle_initiative": 1, "scouting_radius": 1}
     },
     {
-      "id": "artifact_lockward_beacon_key", "name": "Lockward Beacon Key", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "lockward_beacon_keys",
+      "id": "artifact_lockward_beacon_key", "name": "Lockward Beacon Key", "slot": "trinket", "artifact_class": "set_piece", "rarity": "uncommon", "family": "lockward_beacon_keys", "set_id": "set_lockward_charter",
       "roles": ["movement", "defense", "route"], "accord_affinity": "beacon", "faction_affinity": ["faction_embercourt"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
       "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
       "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Improves field movement."}, {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Improves defensive command."}],
@@ -2671,7 +2898,7 @@
       "bonuses": {"overworld_movement": 1, "battle_defense": 1}
     },
     {
-      "id": "artifact_fenhound_scent_bell", "name": "Fenhound Scent Bell", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "fenhound_scent_bells",
+      "id": "artifact_fenhound_scent_bell", "name": "Fenhound Scent Bell", "slot": "trinket", "artifact_class": "set_piece", "rarity": "uncommon", "family": "fenhound_scent_bells", "set_id": "set_fenhound_pursuit",
       "roles": ["combat", "scouting", "route"], "accord_affinity": "mire", "faction_affinity": ["faction_mireclaw"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
       "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
       "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Improves attack command."}, {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Extends fog-route scouting."}],
@@ -2683,7 +2910,7 @@
       "bonuses": {"battle_attack": 1, "scouting_radius": 1}
     },
     {
-      "id": "artifact_meridian_relay_lens", "name": "Meridian Relay Lens", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "meridian_relay_lenses",
+      "id": "artifact_meridian_relay_lens", "name": "Meridian Relay Lens", "slot": "trinket", "artifact_class": "set_piece", "rarity": "uncommon", "family": "meridian_relay_lenses", "set_id": "set_meridian_relay",
       "roles": ["combat", "magic", "resistance"], "accord_affinity": "lens", "faction_affinity": ["faction_sunvault"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
       "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
       "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Improves initiative command."}, {"bonus_type": "stat", "scope": "equipped", "stat": "battle_spell_resistance_pct", "public_summary": "Reduces incoming spell damage."}],
@@ -2695,7 +2922,7 @@
       "bonuses": {"battle_initiative": 1, "battle_spell_resistance_pct": 5}
     },
     {
-      "id": "artifact_rootpath_seed_compass", "name": "Rootpath Seed Compass", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "rootpath_seed_compasses",
+      "id": "artifact_rootpath_seed_compass", "name": "Rootpath Seed Compass", "slot": "trinket", "artifact_class": "set_piece", "rarity": "uncommon", "family": "rootpath_seed_compasses", "set_id": "set_rootpath_covenant",
       "roles": ["movement", "scouting", "route"], "accord_affinity": "root", "faction_affinity": ["faction_thornwake"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
       "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
       "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Improves field movement."}, {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Extends fog-route scouting."}],
@@ -2707,7 +2934,7 @@
       "bonuses": {"overworld_movement": 1, "scouting_radius": 1}
     },
     {
-      "id": "artifact_redline_survey_dial", "name": "Redline Survey Dial", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "redline_survey_dials",
+      "id": "artifact_redline_survey_dial", "name": "Redline Survey Dial", "slot": "trinket", "artifact_class": "set_piece", "rarity": "uncommon", "family": "redline_survey_dials", "set_id": "set_redline_survey_warrant",
       "roles": ["movement", "defense", "route"], "accord_affinity": "furnace", "faction_affinity": ["faction_brasshollow"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
       "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
       "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Improves defensive command."}, {"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Improves field movement."}],
