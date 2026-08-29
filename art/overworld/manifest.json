@@ -5440,6 +5440,36 @@
       "presentation_role": "unsealed_claimed_state",
       "accessible_description": "The Basalt Oath Tomb doors stand open beneath steady gold runes and blue-amber interior light."
     },
+    "resource_site_creature_bank_sealed_muster_fort_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [144, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/sealed_muster_fort_opened_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas",
+      "assigned_resource_site_id": "site_sealed_muster_fort",
+      "presentation_role": "opened_claimed_state",
+      "accessible_description": "The Sealed Muster Fort gate stands open around a lit courtyard with orderly shield and spear racks."
+    },
+    "resource_site_creature_bank_kiln_chain_redoubt_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [144, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/kiln_chain_redoubt_opened_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas",
+      "assigned_resource_site_id": "site_kiln_chain_redoubt",
+      "presentation_role": "opened_claimed_state",
+      "accessible_description": "The Kiln Chain Redoubt glows with controlled furnace light behind an open gate and lowered chains."
+    },
+    "resource_site_creature_bank_brasswake_depot_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [144, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/brasswake_depot_opened_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas",
+      "assigned_resource_site_id": "site_brasswake_depot",
+      "presentation_role": "opened_claimed_state",
+      "accessible_description": "The Brasswake Depot hatch stands open above a loading ramp, uncovered supply crates, and a clean steam plume."
+    },
     "resource_site_live_ember_signal_brazier": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [0, 0, 48, 48],
@@ -5915,6 +5945,21 @@
       "asset_id": "resource_site_major_vault_basalt_oath_tomb_unsealed",
       "unclaimed_asset_id": "mapobj_basalt_oath_tomb",
       "fit": "Exact open-door claimed state paired with the original sealed Basalt Oath Tomb landmark."
+    },
+    "site_sealed_muster_fort": {
+      "asset_id": "resource_site_creature_bank_sealed_muster_fort_opened",
+      "unclaimed_asset_id": "mapobj_sealed_muster_fort",
+      "fit": "Exact open-gate claimed state paired with the original locked Sealed Muster Fort landmark."
+    },
+    "site_kiln_chain_redoubt": {
+      "asset_id": "resource_site_creature_bank_kiln_chain_redoubt_opened",
+      "unclaimed_asset_id": "mapobj_kiln_chain_redoubt",
+      "fit": "Exact lowered-chain claimed state paired with the original closed Kiln Chain Redoubt landmark."
+    },
+    "site_brasswake_depot": {
+      "asset_id": "resource_site_creature_bank_brasswake_depot_opened",
+      "unclaimed_asset_id": "mapobj_brasswake_depot",
+      "fit": "Exact open-hatch claimed state paired with the original closed Brasswake Depot landmark."
     },
     "site_ember_signal_brazier": {
       "asset_id": "resource_site_live_ember_signal_brazier",

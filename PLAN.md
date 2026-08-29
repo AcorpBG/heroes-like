@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-major-vault-unsealing-10184`; select the next runtime-backed content family before beginning more implementation.
-- Package boundary: both release exports now measure 249073568 bytes, 926432 bytes below the unchanged 250000000-byte ceiling. The compact major-vault atlas ships while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-three-creature-bank-forts-10184`; select the next runtime-backed content family before beginning more implementation.
+- Package boundary: both release exports now measure 249089640 bytes, 910360 bytes below the unchanged 250000000-byte ceiling. The compact creature-bank opened atlas ships while generated source originals and development reports remain excluded on both platforms.
+
+## Three Creature-Bank Forts
+
+id: `content-three-creature-bank-forts-10184`
+
+Status: completed.
+
+Completion result:
+- Sealed Muster Fort, Kiln Chain Redoubt, and Brasswake Depot now join the live guarded-site roster on three existing maps with exact Milestone Arsenal, Basalt Gatehouse, and Crystal Sump guards, raising Batch 006 to seventeen live sites and leaving fifteen metadata-only sites;
+- every fort grants its authored resource payload plus a distinct two-stack neutral recruit bundle exactly once, while explicit guard-front links prevent collection until the production battle is cleared and preserve save version 9;
+- three original transparent opened-state landmarks preserve each sealed fort identity while exposing open gates, active yards, or released depot machinery in one 144x48 runtime atlas generated through built-in precise-object editing;
+- repository validation and the single consolidated three-case gameplay/runtime/visual smoke passed, all three captures were inspected, and matching Linux/Windows 249089640-byte packaged startup passed.
+
+Current finding:
+- Sealed Muster Fort, Kiln Chain Redoubt, and Brasswake Depot are the complete remaining creature-bank-like family in Batch 006, but all three are metadata-only and only Brasswake Depot has a dormant scenario placement;
+- each fort already has distinct closed map-object art and an exact production neutral-watch encounter on a suitable existing map, so the family can become guarded gameplay without adding a disconnected scenario or new combat formula;
+- their staged recruit, resource, and town-support identities can be expressed through supported one-time recruit and resource grants while keeping broader route and town-state mechanics out of this slice.
+
+Implementation boundary:
+- activate all three creature-bank-like forts with exact guard blocking, authored resource payloads, and distinct one-time neutral recruit rewards;
+- place Sealed Muster Fort beside the Milestone Arsenal Watch, Kiln Chain Redoubt beside the Basalt Gatehouse Watch, and Brasswake Depot beside the Crystal Sump Watch on their matching existing scenarios;
+- create three original transparent opened-state fort landmarks derived from their closed identities, pack them into one compact runtime atlas, and switch to them only after a successful claim;
+- preserve save version 9, deterministic rewards, existing scenario objectives, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- each fort blocks before its exact guard clears, constructs the production guard battle, grants its resources and distinct recruit bundle once, rejects repeat claims without mutation, and round-trips exactly through save version 9;
+- each fort renders its existing sealed identity before claim and a distinct opened state after claim with genuine alpha, strict fallback behavior, and no high-resolution source payload in release packages;
+- one consolidated three-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no route-opening runtime, town-building grant, new unit, hero, town, spell, artifact, scenario, campaign chapter, save schema, battle formula, strategic-AI algorithm, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes fort, creature bank, reward, landmark, name, text, or protected visual expression.
 
 ## Six Major Vault Unsealings
 

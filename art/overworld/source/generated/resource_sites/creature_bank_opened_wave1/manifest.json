@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "precise_object_edit_from_existing_original_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png",
+  "runtime_atlas_size": [144, 48],
+  "runtime_atlas_sha256": "2da0921c877cb7febea8819afbb521fba14eb17507c3110ddb913f10241e6d92",
+  "runtime_region_size": [48, 48],
+  "processing": "background_alpha_cleanup_then_trim_and_aspect_fit_within_42x42_centered_on_transparent_48x48_cell",
+  "prompt_set_summary": "Three precise opened-state edits of existing original creature-bank landmarks, preserving each identity, silhouette, and isometric camera while opening its entrance and adding restrained operational cues; no characters, text, logos, franchise symbols, terrain cards, frames, or runtime opaque backdrops.",
+  "items": [
+    {
+      "resource_site_id": "site_sealed_muster_fort",
+      "asset_id": "resource_site_creature_bank_sealed_muster_fort_opened",
+      "source_path": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/sealed_muster_fort_opened_source.png",
+      "source_sha256": "322794ee4de51702ec530fe88a06894be6bf4e0a83ee8eb27f08f346a34e5a67",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2e0810ff-aa97-4e98-a458-09d4ae37e70f.png",
+      "atlas_region": [0, 0, 48, 48],
+      "presentation_role": "opened_claimed_state"
+    },
+    {
+      "resource_site_id": "site_kiln_chain_redoubt",
+      "asset_id": "resource_site_creature_bank_kiln_chain_redoubt_opened",
+      "source_path": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/kiln_chain_redoubt_opened_source.png",
+      "source_sha256": "4a139a6dfc65c6640aa18c929235a3ed1402f90a8d81b6cd6d8fe87f1c20411e",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-eea62ba4-3a57-4abe-a98b-6712ae8b0c06.png",
+      "atlas_region": [48, 0, 48, 48],
+      "presentation_role": "opened_claimed_state"
+    },
+    {
+      "resource_site_id": "site_brasswake_depot",
+      "asset_id": "resource_site_creature_bank_brasswake_depot_opened",
+      "source_path": "res://art/overworld/source/generated/resource_sites/creature_bank_opened_wave1/brasswake_depot_opened_source.png",
+      "source_sha256": "8694673c47386b35dcba2c0cf8aab60f1ee49666a028ee0cc21ec783a99bce26",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5c1921b8-be95-4e42-adb6-73ea9451e177.png",
+      "atlas_region": [96, 0, 48, 48],
+      "presentation_role": "opened_claimed_state"
+    }
+  ]
+}

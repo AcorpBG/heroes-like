@@ -6663,6 +6663,7 @@ def build_overworld_object_content_batch_006_section(
         "route_hybrid_count": 0,
         "metadata_only_boundary_count": 0,
         "live_artifact_boundary_count": 0,
+        "live_recruit_boundary_count": 0,
         "no_rare_resource_activation_count": 0,
         "normalized_existing_count": 0,
         "errors": [],
@@ -6735,6 +6736,36 @@ def build_overworld_object_content_batch_006_section(
             and bool(contract.get("runtime_guard_resolution_adopted", False))
         )
 
+    def live_guarded_recruit_boundary_is_safe(site: dict) -> bool:
+        boundary = site.get("runtime_boundary", {}) if isinstance(site.get("runtime_boundary", {}), dict) else {}
+        contract = site.get("guarded_reward_contract", {}) if isinstance(site.get("guarded_reward_contract", {}), dict) else {}
+        selected_site = str(site.get("id", "")) in {
+            "site_sealed_muster_fort",
+            "site_kiln_chain_redoubt",
+            "site_brasswake_depot",
+        }
+        recruits = site.get("claim_recruits", {})
+        return (
+            selected_site
+            and str(boundary.get("status", "")) == "resource_and_recruit_rewards_live"
+            and bool(boundary.get("live_reward_grants", False))
+            and bool(boundary.get("guard_resolution_runtime_adopted", False))
+            and not bool(boundary.get("broad_reward_runtime_migration", True))
+            and not bool(boundary.get("neutral_encounter_migration", True))
+            and not bool(boundary.get("save_payload_required", True))
+            and bool(boundary.get("renderer_sprite_required", False))
+            and not bool(boundary.get("pathing_runtime_adopted", True))
+            and not bool(boundary.get("route_effect_runtime_adopted", True))
+            and bool(boundary.get("rare_resource_activation", False))
+            and not bool(boundary.get("market_changes", True))
+            and bool(boundary.get("scenario_placement_migration", False))
+            and not bool(contract.get("metadata_only_guard_contract", True))
+            and bool(contract.get("runtime_guard_resolution_adopted", False))
+            and isinstance(recruits, dict)
+            and len(recruits) == 2
+            and all(str(unit_id).startswith("unit_neutral_") and int(count) > 0 for unit_id, count in recruits.items())
+        )
+
     def check_body_and_approach(object_id: str, obj: dict, width: int, height: int) -> bool:
         body_tiles = obj.get("body_tiles", [])
         approach = obj.get("approach", {}) if isinstance(obj.get("approach", {}), dict) else {}
@@ -6784,7 +6815,7 @@ def build_overworld_object_content_batch_006_section(
             ready = False
         return ready
 
-    def guard_ready(object_id: str, guard: dict, guard_link: dict, site_guard: dict, site_live_artifact: bool) -> bool:
+    def guard_ready(object_id: str, guard: dict, guard_link: dict, site_guard: dict, site_live_boundary: bool) -> bool:
         ready = True
         guard_group_id = str(guard.get("guard_army_group_id", ""))
         guard_encounter_id = str(guard.get("guard_encounter_id", ""))
@@ -6815,8 +6846,8 @@ def build_overworld_object_content_batch_006_section(
             ready = False
         site_guard_metadata_only = bool(site_guard.get("metadata_only", False)) and not bool(site_guard.get("runtime_guard_resolution_adopted", True))
         site_guard_live = not bool(site_guard.get("metadata_only", True)) and bool(site_guard.get("runtime_guard_resolution_adopted", False))
-        if not site_guard_metadata_only and not (site_live_artifact and site_guard_live):
-            add_error(f"{object_id}: Batch 006 site guard_profile must be metadata-only or explicitly live for guarded artifact execution")
+        if not site_guard_metadata_only and not (site_live_boundary and site_guard_live):
+            add_error(f"{object_id}: Batch 006 site guard_profile must be metadata-only or explicitly live for its guarded reward execution")
             ready = False
         return ready
 
@@ -6898,7 +6929,9 @@ def build_overworld_object_content_batch_006_section(
         if risk_tier not in NEUTRAL_ENCOUNTER_RISK_TIERS:
             add_error(f"{object_id}: Batch 006 guard tier is missing or unsupported")
         site_live_artifact = live_guarded_artifact_boundary_is_safe(site)
-        if guard_ready(object_id, guard, guard_link, site_guard, site_live_artifact):
+        site_live_recruit = live_guarded_recruit_boundary_is_safe(site)
+        site_live_boundary = site_live_artifact or site_live_recruit
+        if guard_ready(object_id, guard, guard_link, site_guard, site_live_boundary):
             section["guard_contract_ready_count"] += 1
         if guard_link:
             section["guard_link_count"] += 1
@@ -6916,8 +6949,10 @@ def build_overworld_object_content_batch_006_section(
             section["metadata_only_boundary_count"] += 1
         elif metadata_boundary_is_safe(obj) and site_live_artifact:
             section["live_artifact_boundary_count"] += 1
+        elif metadata_boundary_is_safe(obj) and site_live_recruit:
+            section["live_recruit_boundary_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 006 object and site must keep an explicit metadata-only or guarded-artifact runtime boundary")
+            add_error(f"{object_id}: Batch 006 object and site must keep an explicit metadata-only, guarded-artifact, or guarded-recruit runtime boundary")
         if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 006 must not activate rare resources in live site fields")
         else:
@@ -6939,10 +6974,12 @@ def build_overworld_object_content_batch_006_section(
         for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "guard_link_count", "guard_contract_ready_count", "reward_contract_ready_count", "no_rare_resource_activation_count"):
             if int(section[counter_key]) != len(batch_objects):
                 add_error(f"Batch 006 {counter_key} must match object count")
-        if section["metadata_only_boundary_count"] != len(batch_objects) - 14:
-            add_error("Batch 006 metadata_only_boundary_count must retain the 18 inactive object/site pairs")
+        if section["metadata_only_boundary_count"] != len(batch_objects) - 17:
+            add_error("Batch 006 metadata_only_boundary_count must retain the 15 inactive object/site pairs")
         if section["live_artifact_boundary_count"] != 14:
             add_error("Batch 006 live_artifact_boundary_count must cover the two legacy vaults, six faction relic roads, and six major vaults")
+        if section["live_recruit_boundary_count"] != 3:
+            add_error("Batch 006 live_recruit_boundary_count must cover all three creature-bank forts")
         if section["normalized_existing_count"] != 2:
             add_error("Batch 006 must normalize the two existing guarded reward site records")
         if section["route_hybrid_count"] != expected_role_counts["guarded_route_reward_hybrid"]:
@@ -42963,6 +43000,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas":
                 expected_canvas = (288, 48)
+            elif source_model == "built_in_image_gen_precise_object_edit_creature_bank_opened_atlas":
+                expected_canvas = (144, 48)
             elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_standalone_contract_landmark_atlas":
@@ -49145,7 +49184,7 @@ def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
     scenarios = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "scenarios.json").get("items", []) if isinstance(row, dict)}
     ensure(len(encounters) == 93 and len(groups) == 151 and len(scenarios) == 70, errors, "Expanded contract roster must retain 93 encounters, 151 army groups, and 70 scenarios")
     all_placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(all_placements) == 265 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 89, errors, "Authored battle fronts must retain the expanded 265-placement, 89-identity playable breadth")
+    ensure(len(all_placements) == 267 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 89, errors, "Authored battle fronts must retain the expanded 267-placement, 89-identity playable breadth")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -49335,7 +49374,7 @@ def validate_three_faction_outer_reach_contracts(errors: list[str]) -> None:
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
         ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
         ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id, errors, f"{scenario_id} lost its selected hero or faction")
-        expected_encounter_count = 4 if scenario_id == "keelwarden-lockfire-run" else 3
+        expected_encounter_count = 4 if scenario_id in {"keelwarden-lockfire-run", "pitmarshal-peat-chain-seizure"} else 3
         ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 10 and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("encounters", [])) == expected_encounter_count and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} lost its complete authored contract")
         activated_site_ids.update(str(row.get("site_id", "")) for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and str(row.get("site_id", "")) in dormant_site_ids)
         placements = [row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
@@ -49659,8 +49698,9 @@ def validate_six_faction_waywatch_trials(errors: list[str]) -> None:
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
         ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
         ensure(scenario.get("hero_id") == contract["hero"] and scenario.get("player_faction_id") == contract["faction"] and scenario.get("player_army_id") == contract["player_group"], errors, f"{scenario_id} lost its hero, faction, or player company")
-        expected_resource_count = 11 if scenario_id in {"pollenglass-greenbranch-copse", "heatpriest-obsidian-scar"} else 10
-        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == expected_resource_count and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("encounters", [])) == 3 and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} lost its complete authored map contract")
+        expected_resource_count = 11 if scenario_id in {"pollenglass-greenbranch-copse", "heatpriest-obsidian-scar", "lockmaster-cinder-kiln"} else 10
+        expected_encounter_count = 4 if scenario_id == "lockmaster-cinder-kiln" else 3
+        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == expected_resource_count and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("encounters", [])) == expected_encounter_count and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} lost its complete authored map contract")
         scenario_site_ids = {str(row.get("site_id", "")) for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
         scenario_artifact_ids = {str(row.get("artifact_id", "")) for row in scenario.get("artifact_nodes", []) if isinstance(row, dict)}
         ensure(contract["boss_site"] in scenario_site_ids and contract["sites"].issubset(scenario_site_ids), errors, f"{scenario_id} lost its watch site or selected dormant resource sites")
@@ -49812,7 +49852,8 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
         ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
         ensure(scenario.get("hero_id") == contract["hero"] and scenario.get("player_faction_id") == contract["faction"] and scenario.get("player_army_id") == contract["player_group"], errors, f"{scenario_id} lost its spellwright hero, faction, or cadre")
         ensure(scenario.get("map_size") == {"width": 12, "height": 7} and len(scenario.get("map", [])) == 7 and all(len(row) == 12 for row in scenario.get("map", [])), errors, f"{scenario_id} lost its exact 12x7 map")
-        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 12 and len(scenario.get("artifact_nodes", [])) == 4 and len(scenario.get("encounters", [])) == 4 and len(scenario.get("script_hooks", [])) == 6 and len(scenario.get("objectives", {}).get("victory", [])) == 5, errors, f"{scenario_id} lost its complete expedition contract")
+        expected_resource_count = 13 if scenario_id == "gaugesavant-milestone-calibration" else 12
+        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == expected_resource_count and len(scenario.get("artifact_nodes", [])) == 4 and len(scenario.get("encounters", [])) == 4 and len(scenario.get("script_hooks", [])) == 6 and len(scenario.get("objectives", {}).get("victory", [])) == 5, errors, f"{scenario_id} lost its complete expedition contract")
         site_ids = {str(row.get("site_id", "")) for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
         artifact_ids = {str(row.get("artifact_id", "")) for row in scenario.get("artifact_nodes", []) if isinstance(row, dict)}
         ensure(contract["landmark_site"] in site_ids and contract["boss_site"] in site_ids, errors, f"{scenario_id} lost its faction landmark or matching neutral dwelling")
@@ -49982,7 +50023,7 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
         placement = placements[0] if len(placements) == 1 else {}
         ensure(placement.get("encounter_id") == contract["encounter"] and placement.get("difficulty") == "medium" and placement.get("combat_seed") == contract["seed"] and placement.get("prefer_identity_landmark") is True, errors, f"{scenario_id} lost its deterministic watch placement")
         global_placements = [row for other in all_scenario_rows for row in other.get("encounters", []) if isinstance(other, dict) and isinstance(row, dict) and row.get("encounter_id") == contract["encounter"]]
-        expected_global_placements = 2 if contract["encounter"] == "encounter_saltpan_camp_watch" else 1
+        expected_global_placements = 2 if contract["encounter"] in {"encounter_saltpan_camp_watch", "encounter_crystal_sump_watch"} else 1
         ensure(len(global_placements) == expected_global_placements, errors, f"{contract['encounter']} playable placement count changed")
         definition = encounters.get(contract["encounter"], {})
         objectives = definition.get("field_objectives", []) if isinstance(definition, dict) else []
@@ -50092,7 +50133,7 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
     scenarios = items_index(scenario_payload)
     ensure(len(scenarios) == 70 and len(encounters) == 93 and len(groups) == 151 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 70, errors, "Grand-convergence batch must retain the 70-scenario, 93-encounter, 151-army roster")
     placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(placements) == 265 and len({str(row.get("encounter_id", "")) for row in placements}) == 89, errors, "Grand-convergence batch must retain 265 authored battle placements across 89 identities")
+    ensure(len(placements) == 267 and len({str(row.get("encounter_id", "")) for row in placements}) == 89, errors, "Grand-convergence batch must retain 267 authored battle placements across 89 identities")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -50357,6 +50398,93 @@ def validate_six_major_vault_unsealing(errors: list[str]) -> None:
         ensure("REQUIRED_MAJOR_VAULT_UNSEALED_ATLAS_NAME" in packaging_text and 'major_vault_unsealed_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the major-vault runtime atlas")
 
 
+def validate_three_creature_bank_forts(errors: list[str]) -> None:
+    expected = {
+        "site_sealed_muster_fort": {
+            "scenario": "gaugesavant-milestone-calibration", "placement": "gaugesavant_sealed_muster_fort", "site_xy": (10, 4),
+            "guard_placement": "gaugesavant_milestone_arsenal_watch", "guard": "encounter_milestone_arsenal_watch", "guard_xy": (9, 4), "seed": 26144,
+            "rewards": {"gold": 700, "wood": 2, "ore": 3, "experience": 240},
+            "recruits": {"unit_neutral_milestone_bucklers": 3, "unit_neutral_cartbow_tenders": 2},
+            "unclaimed": "mapobj_sealed_muster_fort", "claimed": "resource_site_creature_bank_sealed_muster_fort_opened",
+            "stem": "sealed_muster_fort_opened", "sha": "322794ee4de51702ec530fe88a06894be6bf4e0a83ee8eb27f08f346a34e5a67", "region": [0, 0, 48, 48],
+        },
+        "site_kiln_chain_redoubt": {
+            "scenario": "lockmaster-cinder-kiln", "placement": "lockmaster_kiln_chain_redoubt", "site_xy": (3, 3),
+            "guard_placement": "lockmaster_basalt_gatehouse_watch", "guard": "encounter_basalt_gatehouse_watch", "guard_xy": (4, 2), "seed": 26511,
+            "rewards": {"gold": 920, "ore": 4, "experience": 315},
+            "recruits": {"unit_neutral_basalt_wardens": 3, "unit_neutral_tunnelmark_bolters": 2},
+            "unclaimed": "mapobj_kiln_chain_redoubt", "claimed": "resource_site_creature_bank_kiln_chain_redoubt_opened",
+            "stem": "kiln_chain_redoubt_opened", "sha": "4a139a6dfc65c6640aa18c929235a3ed1402f90a8d81b6cd6d8fe87f1c20411e", "region": [48, 0, 48, 48],
+        },
+        "site_brasswake_depot": {
+            "scenario": "pitmarshal-peat-chain-seizure", "placement": "pitmarshal_brasswake_depot", "site_xy": (3, 2),
+            "guard_placement": "pitmarshal_crystal_sump_watch", "guard": "encounter_crystal_sump_watch", "guard_xy": (4, 2), "seed": 26512,
+            "rewards": {"gold": 960, "ore": 5, "experience": 335},
+            "recruits": {"unit_neutral_sumpstone_guards": 3, "unit_neutral_echodart_casts": 2},
+            "unclaimed": "mapobj_brasswake_depot", "claimed": "resource_site_creature_bank_brasswake_depot_opened",
+            "stem": "brasswake_depot_opened", "sha": "8694673c47386b35dcba2c0cf8aab60f1ee49666a028ee0cc21ec783a99bce26", "region": [96, 0, 48, 48],
+        },
+    }
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "creature_bank_opened_atlas.png"
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "creature_bank_opened_wave1"
+    source_manifest_path = source_dir / "manifest.json"
+    report_script_path = ROOT / "tests" / "three_creature_bank_forts_report.gd"
+    report_scene_path = ROOT / "tests" / "three_creature_bank_forts_report.tscn"
+    required_paths = (atlas_path, source_manifest_path, report_script_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing creature-bank fort owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    atlas_payload = atlas_path.read_bytes()
+    atlas_sha = hashlib.sha256(atlas_payload).hexdigest()
+    ensure(png_size(atlas_path) == (144, 48) and atlas_sha == "2da0921c877cb7febea8819afbb521fba14eb17507c3110ddb913f10241e6d92", errors, "Creature-bank opened atlas bytes or compact dimensions changed")
+    ensure(len(atlas_payload) >= 26 and atlas_payload[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Creature-bank opened atlas alpha or import metadata is missing")
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = art_manifest.get("object_assets", {})
+    site_sprites = art_manifest.get("resource_site_sprites", {})
+    source_manifest = load_json(source_manifest_path)
+    source_rows = {str(row.get("resource_site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
+    ensure(source_manifest.get("schema_version") == 1 and source_manifest.get("generator_mode") == "built_in_image_gen", errors, "Creature-bank source provenance changed")
+    ensure(source_manifest.get("runtime_atlas_size") == [144, 48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha, errors, "Creature-bank source atlas ownership changed")
+    ensure(set(source_rows) == set(expected), errors, "Creature-bank source manifest must own exactly the three selected forts")
+    source_payloads: list[bytes] = []
+    for site_id, contract in expected.items():
+        site = sites.get(site_id, {})
+        guard_contract = site.get("guarded_reward_contract", {})
+        boundary = site.get("runtime_boundary", {})
+        ensure(site.get("rewards") == contract["rewards"] and site.get("claim_recruits") == contract["recruits"], errors, f"{site_id} resource or recruit reward changed")
+        ensure(guard_contract.get("metadata_only_guard_contract") is False and guard_contract.get("runtime_guard_resolution_adopted") is True and guard_contract.get("artifact_reward_table_id") is None, errors, f"{site_id} guarded recruit contract changed")
+        ensure(boundary.get("status") == "resource_and_recruit_rewards_live" and boundary.get("live_reward_grants") is True and boundary.get("guard_resolution_runtime_adopted") is True and boundary.get("renderer_sprite_required") is True and boundary.get("scenario_placement_migration") is True and boundary.get("save_payload_required") is False, errors, f"{site_id} live runtime boundary changed")
+        scenario = scenarios.get(contract["scenario"], {})
+        node = next((row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == contract["placement"]), {})
+        guard = next((row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == contract["guard_placement"]), {})
+        ensure(node == {"placement_id": contract["placement"], "site_id": site_id, "x": contract["site_xy"][0], "y": contract["site_xy"][1], "guard_front_id": contract["guard_placement"]}, errors, f"{site_id} exact scenario placement changed")
+        ensure(guard.get("encounter_id") == contract["guard"] and (guard.get("x"), guard.get("y")) == contract["guard_xy"] and guard.get("difficulty") == "medium" and guard.get("combat_seed") == contract["seed"] and guard.get("prefer_identity_landmark") is True, errors, f"{site_id} exact guard placement changed")
+        mapping = site_sprites.get(site_id, {})
+        entry = object_assets.get(contract["claimed"], {})
+        ensure(mapping.get("asset_id") == contract["claimed"] and mapping.get("unclaimed_asset_id") == contract["unclaimed"], errors, f"{site_id} opened/sealed art mapping changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/creature_bank_opened_atlas.png" and entry.get("atlas_region") == contract["region"] and entry.get("atlas_size") == [144, 48] and entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == "opened_claimed_state", errors, f"{site_id} opened atlas entry changed")
+        source_path = source_dir / f"{contract['stem']}_source.png"
+        ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{site_id} transparent generated source or import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == contract["sha"] and len(payload) >= 26 and payload[25] == 6, errors, f"{site_id} generated source bytes or alpha changed")
+            source_payloads.append(payload)
+        source_row = source_rows.get(site_id, {})
+        ensure(source_row.get("asset_id") == contract["claimed"] and source_row.get("source_sha256") == contract["sha"] and source_row.get("atlas_region") == contract["region"] and str(source_row.get("generation_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{site_id} source manifest row changed")
+    ensure(len(source_payloads) == 3 and len(set(source_payloads)) == 3, errors, "All three creature-bank generated sources must remain byte-distinct")
+    ensure_scene_nodes(report_scene_path.read_text(encoding="utf-8"), errors, "three_creature_bank_forts_report.tscn", [("ThreeCreatureBankFortsReport", "Node")])
+    report_text = report_script_path.read_text(encoding="utf-8")
+    for token in ('const REPORT_ID := "THREE_CREATURE_BANK_FORTS_REPORT"', 'OverworldRules.resource_site_blocking_guard(', 'BattleRulesScript.create_battle_payload(', 'OverworldRules._collect_resource_node_result(', '_army_counts(session, recruits.keys())', 'view.call("_resource_asset_id"', 'SessionStateStoreScript.SAVE_VERSION', 'CREATURE_BANK_CAPTURE_DIR'):
+        ensure(token in report_text, errors, f"Creature-bank combined smoke is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_CREATURE_BANK_OPENED_ATLAS_NAME = "creature_bank_opened_atlas"' in packaging_text and 'creature_bank_opened_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the creature-bank opened atlas")
+
+
 def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     expected = {
         "encounter_beacon_wardens": ("encounter_recurring_beacon_wardens", "beacon_wardens", "recurring", "faction_embercourt", "twin_lantern_beacon_watch", "e38bf9da4ba3527d1b467b5fc01046abc6780267f2ec4db52c6aa69c8c94cee3", [0, 0, 48, 48], 4, 3),
@@ -50382,7 +50510,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         "encounter_halo_reserve": ("encounter_recurring_halo_reserve", "halo_reserve", "recurring_wave3", "faction_sunvault", "concentric_prism_halo_reserve_rack", "b26091b1af256ed6141e8502878663f3c4a99ebbe59a0bd3ca39b411306e2c5f", [960, 0, 48, 48], 1, 1),
         "encounter_daybreak_matrix": ("encounter_recurring_daybreak_matrix", "daybreak_matrix", "recurring_wave3", "faction_sunvault", "four_node_daybreak_battery_matrix", "d7a55eb048d355e995195ccf75d0c142756a50055c9302731fd8d4ac432143ad", [1008, 0, 48, 48], 1, 1),
         "encounter_daybreak_array": ("encounter_recurring_daybreak_array", "daybreak_array", "recurring_wave3", "faction_sunvault", "triple_sunlance_daybreak_array", "37db4876c995154c80c112940dcd942173dc0b93bf643978f3d44bd503ba78a0", [1056, 0, 48, 48], 1, 1),
-        "encounter_basalt_gatehouse_watch": ("encounter_recurring_basalt_gatehouse_watch", "basalt_gatehouse_watch", "recurring_wave3", "", "basalt_portcullis_gatehouse_watch", "d90b37744e7ce1be3ee8f60e4701b93de654b9d26543d6b59472ff96c93b0fc3", [1104, 0, 48, 48], 1, 1),
+        "encounter_basalt_gatehouse_watch": ("encounter_recurring_basalt_gatehouse_watch", "basalt_gatehouse_watch", "recurring_wave3", "", "basalt_portcullis_gatehouse_watch", "d90b37744e7ce1be3ee8f60e4701b93de654b9d26543d6b59472ff96c93b0fc3", [1104, 0, 48, 48], 2, 1),
         "encounter_barrow_pickets": ("encounter_recurring_barrow_pickets", "barrow_pickets", "recurring_wave4", "faction_mireclaw", "peat_barrow_hook_picket_ring", "26f850099417ba1dd556521fee433a5c41f7e818fc627c2717ef6c69f429a0ef", [1152, 0, 48, 48], 1, 0),
         "encounter_bramble_hedge_watch": ("encounter_recurring_bramble_hedge_watch", "bramble_hedge_watch", "recurring_wave4", "", "bramble_crescent_vault_watch", "31515600af74988a0508caca487fde9ff4e22992c4f2e47f0210a6b6ca9af890", [1200, 0, 48, 48], 2, 1),
         "encounter_lantern_patrol": ("encounter_recurring_lantern_patrol", "lantern_patrol", "recurring_wave4", "faction_embercourt", "forked_lantern_lane_battery", "b1e19ad352187c7b66fffc4e19195be406ae0552e44b062b7fabf332a01b8a96", [1248, 0, 48, 48], 1, 0),
@@ -50527,7 +50655,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         group = groups.get(str(definition.get("enemy_group_id", "")), {}) if isinstance(definition, dict) else {}
         ensure(str(group.get("faction_id", "")) == faction_id, errors, f"Recurring encounter {encounter_id} authored faction changed")
         ensure(placement_counts[encounter_id] == placements and high_counts[encounter_id] == high, errors, f"Recurring encounter {encounter_id} playable placement coverage changed")
-    ensure(sum(placement_counts.values()) == 75 and sum(high_counts.values()) == 34, errors, "Recurring encounter landmarks must retain 75 authored placements including 34 high-difficulty placements")
+    ensure(sum(placement_counts.values()) == 76 and sum(high_counts.values()) == 34, errors, "Recurring encounter landmarks must retain 76 authored placements including 34 high-difficulty placements")
     all_placement_ids = [
         str(placement.get("encounter_id", ""))
         for scenario in scenario_rows
@@ -50537,7 +50665,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     ] if isinstance(scenario_rows, list) else []
     placed_identity_ids = set(all_placement_ids)
     unplaced_definition_ids = set(encounters) - placed_identity_ids
-    ensure(len(all_placement_ids) == 265 and len(placed_identity_ids) == 89, errors, "Authored scenarios must retain exactly 265 placements across 89 distinct encounter identities")
+    ensure(len(all_placement_ids) == 267 and len(placed_identity_ids) == 89, errors, "Authored scenarios must retain exactly 267 placements across 89 distinct encounter identities")
     ensure(placed_identity_ids.issubset(set(identity_sprites)), errors, "Every encounter identity placed in an authored scenario must own exact live Overworld art")
     ensure(len(encounters) == 93 and len(unplaced_definition_ids) == 4 and not (set(identity_sprites) & unplaced_definition_ids), errors, "Exact encounter art must cover the 89 live placed definitions without creating unused mappings for the 4 system-owned or scripted-only definitions")
 
@@ -50750,7 +50878,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 70 and len(placements) == 839 and len(placed_site_ids) == 133, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 70 and len(placements) == 841 and len(placed_site_ids) == 135, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -50772,8 +50900,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 133, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 112, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(not unresolved and len(resolver_paths) == 135, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 114, errors, "Placed resource-site map-object resolver coverage changed")
     ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 21, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
@@ -75446,6 +75574,7 @@ def main() -> int:
     validate_six_faction_grand_convergence_marches(errors)
     validate_six_faction_guarded_relic_roads(errors)
     validate_six_major_vault_unsealing(errors)
+    validate_three_creature_bank_forts(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_recurring_resource_site_landmarks(errors)
     validate_live_faction_landmarks(errors)
