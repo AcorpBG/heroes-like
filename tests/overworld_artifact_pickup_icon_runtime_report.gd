@@ -32,6 +32,12 @@ const EXPECTED_ICONS := {
 	"artifact_briarcrown_covenant_standard": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
 	"artifact_redline_warrant_gonfalon": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
 	"artifact_wakebell_mourning_ensign": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
+	"artifact_lockward_beacon_key": "res://art/artifacts/runtime/lockward_beacon_key.png",
+	"artifact_fenhound_scent_bell": "res://art/artifacts/runtime/fenhound_scent_bell.png",
+	"artifact_meridian_relay_lens": "res://art/artifacts/runtime/meridian_relay_lens.png",
+	"artifact_rootpath_seed_compass": "res://art/artifacts/runtime/rootpath_seed_compass.png",
+	"artifact_redline_survey_dial": "res://art/artifacts/runtime/redline_survey_dial.png",
+	"artifact_drowned_star_astrolabe": "res://art/artifacts/runtime/drowned_star_astrolabe.png",
 }
 
 func _ready() -> void:

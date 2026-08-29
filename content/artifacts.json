@@ -208,6 +208,29 @@
       }
     },
     {
+      "id": "artifact_source_authored_expedition_instruments",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "pickup",
+      "reward_context": "authored_scenario_placement",
+      "eligible_object_families": ["pickup"],
+      "eligible_site_families": ["one_shot_pickup"],
+      "required_object_tags": ["small_reward"],
+      "required_reward_categories": [],
+      "guard_tiers": ["unguarded", "light"],
+      "rarity_bands": ["uncommon"],
+      "artifact_ids": [
+        "artifact_lockward_beacon_key",
+        "artifact_fenhound_scent_bell",
+        "artifact_meridian_relay_lens",
+        "artifact_rootpath_seed_compass",
+        "artifact_redline_survey_dial",
+        "artifact_drowned_star_astrolabe"
+      ],
+      "faction_constraints": [],
+      "set_constraints": {"allowed_set_ids": [], "piece_limit_per_table": 0},
+      "runtime_policy": {"metadata_only": true, "live_drop_execution": false, "save_version_bump": false, "equipment_runtime_effects": false, "ai_valuation_behavior": false, "rare_resource_activation": false}
+    },
+    {
       "id": "artifact_source_shrine_accord_rare",
       "schema": "artifact_source_reward_v1",
       "source_tag": "shrine",
@@ -2634,6 +2657,78 @@
       "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
       "description": "Torn sailcloth hangs between black ship ribs beneath a cracked wake bell. Its fog lantern marks hazards before the mourning note reaches them.",
       "bonuses": {"battle_initiative": 1, "scouting_radius": 1}
+    },
+    {
+      "id": "artifact_lockward_beacon_key", "name": "Lockward Beacon Key", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "lockward_beacon_keys",
+      "roles": ["movement", "defense", "route"], "accord_affinity": "beacon", "faction_affinity": ["faction_embercourt"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Improves field movement."}, {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Improves defensive command."}],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Embercourt route key for reaching the next lock quickly and holding it once opened.", "icon_id": "artifact_icon_lockward_beacon_key", "icon_path": "res://art/artifacts/runtime/lockward_beacon_key.png", "effect_tags": ["movement", "defense", "beacon", "embercourt"], "comparison_priority": ["overworld_movement", "battle_defense", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["route_tempo", "frontline_survival", "lock_control"], "preferred_hero_roles": ["defender", "scout"], "preferred_faction_ids": ["faction_embercourt"], "combo_tags": ["beacon", "lock", "route"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A bridge-lock key built through a hooded route lantern and weighted with sealed writs. The beacon warms as the next defensible crossing draws near.",
+      "bonuses": {"overworld_movement": 1, "battle_defense": 1}
+    },
+    {
+      "id": "artifact_fenhound_scent_bell", "name": "Fenhound Scent Bell", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "fenhound_scent_bells",
+      "roles": ["combat", "scouting", "route"], "accord_affinity": "mire", "faction_affinity": ["faction_mireclaw"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Improves attack command."}, {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Extends fog-route scouting."}],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Mireclaw scent bell for finding prey through fog and striking before the trail cools.", "icon_id": "artifact_icon_fenhound_scent_bell", "icon_path": "res://art/artifacts/runtime/fenhound_scent_bell.png", "effect_tags": ["attack", "scouting", "mire", "mireclaw"], "comparison_priority": ["battle_attack", "scouting_radius", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["frontline_attack", "fog_route_scouting", "pursuit_pressure"], "preferred_hero_roles": ["raider", "scout"], "preferred_faction_ids": ["faction_mireclaw"], "combo_tags": ["mire", "hound", "scent"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A wet-bronze bell lashed beneath a carved fenhound jaw. Its bone clappers answer only when a fresh trail crosses the commander's route.",
+      "bonuses": {"battle_attack": 1, "scouting_radius": 1}
+    },
+    {
+      "id": "artifact_meridian_relay_lens", "name": "Meridian Relay Lens", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "meridian_relay_lenses",
+      "roles": ["combat", "magic", "resistance"], "accord_affinity": "lens", "faction_affinity": ["faction_sunvault"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Improves initiative command."}, {"bonus_type": "stat", "scope": "equipped", "stat": "battle_spell_resistance_pct", "public_summary": "Reduces incoming spell damage."}],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Sunvault relay lens for precise timing and measured resistance to hostile magic.", "icon_id": "artifact_icon_meridian_relay_lens", "icon_path": "res://art/artifacts/runtime/meridian_relay_lens.png", "effect_tags": ["initiative", "resistance", "lens", "sunvault"], "comparison_priority": ["battle_initiative", "battle_spell_resistance_pct", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["initiative_tempo", "spell_damage_pressure", "relay_control"], "preferred_hero_roles": ["magic", "defender"], "preferred_faction_ids": ["faction_sunvault"], "combo_tags": ["lens", "meridian", "relay"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A diamond lens turns inside nested meridian rings between mirrored sighting vanes. Its noon-point clicks one breath before hostile magic lands.",
+      "bonuses": {"battle_initiative": 1, "battle_spell_resistance_pct": 5}
+    },
+    {
+      "id": "artifact_rootpath_seed_compass", "name": "Rootpath Seed Compass", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "rootpath_seed_compasses",
+      "roles": ["movement", "scouting", "route"], "accord_affinity": "root", "faction_affinity": ["faction_thornwake"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Improves field movement."}, {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Extends fog-route scouting."}],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Thornwake living compass for following root roads beyond the visible frontier.", "icon_id": "artifact_icon_rootpath_seed_compass", "icon_path": "res://art/artifacts/runtime/rootpath_seed_compass.png", "effect_tags": ["movement", "scouting", "root", "thornwake"], "comparison_priority": ["overworld_movement", "scouting_radius", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["route_tempo", "fog_route_scouting", "living_road_control"], "preferred_hero_roles": ["scout", "raider"], "preferred_faction_ids": ["faction_thornwake"], "combo_tags": ["root", "seed", "path"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A split seed turns within a fork of living roots, pointing its leaf needle toward old roadbeds hidden beneath the frontier.",
+      "bonuses": {"overworld_movement": 1, "scouting_radius": 1}
+    },
+    {
+      "id": "artifact_redline_survey_dial", "name": "Redline Survey Dial", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "redline_survey_dials",
+      "roles": ["movement", "defense", "route"], "accord_affinity": "furnace", "faction_affinity": ["faction_brasshollow"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Improves defensive command."}, {"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Improves field movement."}],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Brasshollow survey dial for setting a hard marching line and holding it under pressure.", "icon_id": "artifact_icon_redline_survey_dial", "icon_path": "res://art/artifacts/runtime/redline_survey_dial.png", "effect_tags": ["defense", "movement", "furnace", "brasshollow"], "comparison_priority": ["battle_defense", "overworld_movement", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["frontline_survival", "route_tempo", "survey_control"], "preferred_hero_roles": ["defender", "might"], "preferred_faction_ids": ["faction_brasshollow"], "combo_tags": ["furnace", "redline", "survey"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A riveted survey gauge with folding sight arms and a furnace-fed redline needle. It marks the farthest safe advance and the strongest place to stop.",
+      "bonuses": {"battle_defense": 1, "overworld_movement": 1}
+    },
+    {
+      "id": "artifact_drowned_star_astrolabe", "name": "Drowned-Star Astrolabe", "slot": "trinket", "artifact_class": "faction", "rarity": "uncommon", "family": "drowned_star_astrolabes",
+      "roles": ["combat", "scouting", "route"], "accord_affinity": "veil", "faction_affinity": ["faction_veilmourn"], "source_tags": ["pickup", "guarded_site", "artifact_cache"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [{"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Extends fog-route scouting."}, {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Improves initiative command."}],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Veilmourn astrolabe for reading drowned routes and answering their hazards quickly.", "icon_id": "artifact_icon_drowned_star_astrolabe", "icon_path": "res://art/artifacts/runtime/drowned_star_astrolabe.png", "effect_tags": ["scouting", "initiative", "veil", "veilmourn"], "comparison_priority": ["scouting_radius", "battle_initiative", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["fog_route_scouting", "initiative_tempo", "wreck_navigation"], "preferred_hero_roles": ["scout", "raider"], "preferred_faction_ids": ["faction_veilmourn"], "combo_tags": ["veil", "drowned_star", "astrolabe"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A pale drowned-star shard hangs within salt-pitted rings, a cracked wake bell, and a fogglass plumb. It points toward hazards before the mist reveals them.",
+      "bonuses": {"scouting_radius": 1, "battle_initiative": 1}
     }
   ]
 }

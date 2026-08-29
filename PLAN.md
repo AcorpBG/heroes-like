@@ -24,8 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none selected after completing `content-six-faction-command-regalia-10184`.
-- Package boundary: both release exports now measure 247095548 bytes, 2904452 bytes below the unchanged 250000000-byte ceiling. All 27 artifact field identities ship while development reports and generated source originals remain excluded on both platforms.
+- Active implementation slice: none selected after completing `content-six-faction-expedition-instruments-10184`.
+- Package boundary: both release exports now measure 247899952 bytes, 2100048 bytes below the unchanged 250000000-byte ceiling. All 33 artifact field identities ship while development reports and generated source originals remain excluded on both platforms.
+
+## Six-Faction Expedition Instruments
+
+id: `content-six-faction-expedition-instruments-10184`
+
+Status: completed.
+
+Current finding:
+- the 27-artifact production catalog has complete art and live placement, but repeated neutral loot still dominates faction campaign routes: Trailsinger Boots remain in 16 placements, while Waymark Compass and Quarry Tally Rod stand in for faction rewards in later chapters;
+- Charter Bastion Counterseal, Nightglass Ledger Reversal, Prismhearth Watch, Rootgate Toll, Clauseworks Counterclaim, and Fogchart Mooring each expose a stable generic pickup that can become faction-specific without changing coordinates, guards, objectives, or scenario geometry;
+- one expedition instrument per faction expands actual equipment choice, overworld decision-making, campaign loot identity, inventory and field art, AI valuation, and faction expression without adding a new slot, bonus type, or unused definition.
+
+Implementation boundary:
+- author Lockward Beacon Key, Fenhound Scent Bell, Meridian Relay Lens, Rootpath Seed Compass, Redline Survey Dial, and Drowned-Star Astrolabe as six uncommon faction-aligned trinkets using only existing movement, scouting, attack, defense, initiative, and spell-resistance bonus authority;
+- create one original transparent high-resolution source for each, derive exact 128x128 inventory and 512x512 field surfaces, and register icon/field ownership plus non-color visual descriptions through the existing artifact and Overworld resolvers;
+- replace one repeated generic artifact placement in each selected live faction scenario while preserving every placement id and coordinate, encounter, objective, guard, economy, map, campaign order, and save-version-9 authority;
+- retain deterministic content lookup, automatic empty-slot equip, existing same-slot stow behavior, strategic-AI valuation, accessibility, performance, and Windows/Linux behavior.
+
+Completion criteria:
+- six byte-distinct original transparent sources and twelve derived runtime surfaces retain genuine alpha, distinct non-color silhouettes, exact artifact/faction/trinket ownership, and generated-source package exclusion;
+- the extended six-faction artifact runtime owner proves all six instruments load exact icons and field sprites, appear in the six intended authored placements, collect/equip with exact bonuses and positive faction-matched AI value, fail closed for unknown art, and round-trip through save version 9 without authority drift;
+- inspected 1280x720 and 1920x1080 Overworld/Town management captures, repository/core/artifact and affected-scenario regressions, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- the production artifact catalog now contains 33 entries and four faction-affinity artifacts per faction; six new uncommon trinkets use only existing live bonus authority and replace fixed generic loot in Prismhearth Watch, Rootgate Toll, Fogchart Mooring, Clauseworks Counterclaim, Nightglass Ledger Reversal, and Charter Bastion Counterseal without changing placement ids or coordinates;
+- six byte-distinct transparent 1024x1536 built-in generation sources produce separate 128x128 inventory icons and 512x512 field sprites, with exact hashes, generation-original filenames, prompt summaries, non-color silhouettes, and source exclusion retained in the new manifest;
+- the extended faction-artifact runtime owner proves all twelve faction items, including exact placement, collection, automatic banner/trinket equip, authored bonus aggregation, positive faction-matched AI valuation, unknown icon fail-closed behavior, and save-version-9 round trips; all 33 field identities resolve distinctly with fallback restoration at both supported resolutions;
+- inspected 1280x720 and 1920x1080 Town and Overworld captures preserve scrollable, focusable icon actions and grounded field presentation. Artifact taxonomy/source/equip/set/AI/pickup, five directly affected campaign-chapter reports, core systems, repository validation, JSON, and diff checks pass;
+- Linux export/boot and Windows export/fresh-Wine boot pass with 33 artifact imports present, generated source art and development reports absent, and matching 247899952-byte PCKs, 2100048 bytes below the unchanged ceiling. This closes only the expedition-instrument content slice and does not claim whole-game or release readiness.
+
+Non-goals:
+- no new artifact slot, bonus mechanic, reward-table randomization, set, town commission, battle salvage rule, resource, scenario geometry, encounter, guard, objective, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes artifact, heraldry, name, icon, text, or protected visual expression, and no art-only unused artifact definitions.
 
 ## Six-Faction Command Regalia
 

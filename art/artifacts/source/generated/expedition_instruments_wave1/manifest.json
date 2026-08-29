@@ -1,0 +1,33 @@
+{
+  "schema": "generated_artifact_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "generated_at_utc": "2026-08-29T12:56:00Z",
+  "generation_originals_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
+  "processing": "alpha_trim_then_aspect_fit_within_116x116_centered_on_transparent_128x128_inventory_canvas_and_within_470x470_centered_on_transparent_512x512_field_canvas",
+  "assets": [
+    {
+      "artifact_id": "artifact_lockward_beacon_key", "path": "res://art/artifacts/source/generated/expedition_instruments_wave1/lockward_beacon_key_source.png", "generation_original": "exec-88791686-6cc9-471e-b8b8-a045a0a44163.png", "sha256": "a77218a6a1d20bbc11fc76c683a8e0c60a2bfaa2fa4069f7b54170c41979645d",
+      "inventory_path": "res://art/artifacts/runtime/lockward_beacon_key.png", "inventory_sha256": "266b08f8b8f242309bff3f904350bf8a36b16653fe1bf36c9be7b2ae2a26b1e2", "field_path": "res://art/overworld/runtime/objects/artifacts/lockward_beacon_key.png", "field_sha256": "638402a0551b7e130e4a9b15169951a1fc59447900a907a3d96f415d98991b87", "prompt_summary": "Embercourt bridge-lock key with hooded beacon, wax writ seals, brass counterweight, and forked iron key bit."
+    },
+    {
+      "artifact_id": "artifact_fenhound_scent_bell", "path": "res://art/artifacts/source/generated/expedition_instruments_wave1/fenhound_scent_bell_source.png", "generation_original": "exec-4238a2f9-a2cc-4697-9231-83de66a77b39.png", "sha256": "6348d014b7c997facb94bc3f1d0aa5df3c48ff92efd7abf299e2d26bedc10a8f",
+      "inventory_path": "res://art/artifacts/runtime/fenhound_scent_bell.png", "inventory_sha256": "3a47b222d8b6883ac98b2fe2e0e712b08359332d8b182218c99b83c5bec79846", "field_path": "res://art/overworld/runtime/objects/artifacts/fenhound_scent_bell.png", "field_sha256": "e986eea461c958ade0b28ec1fddc725702e63ca9f0ffcecfb58b73302e375c06", "prompt_summary": "Mireclaw wet-bronze bell beneath a carved bog-hound jaw with reed cord, scent vials, and hooked bone clappers."
+    },
+    {
+      "artifact_id": "artifact_meridian_relay_lens", "path": "res://art/artifacts/source/generated/expedition_instruments_wave1/meridian_relay_lens_source.png", "generation_original": "exec-7c515e1f-f310-4bc6-9ac7-30bf9feabf51.png", "sha256": "96a8e8f17893c5abeef8319cacb268c7f5fca21e4447fe20b543576c6b4c4a26",
+      "inventory_path": "res://art/artifacts/runtime/meridian_relay_lens.png", "inventory_sha256": "d43552dbb363abcefb7b873125ab4484ce56038c4fe5126bf2ce7f87333ceb36", "field_path": "res://art/overworld/runtime/objects/artifacts/meridian_relay_lens.png", "field_sha256": "8d5ec5046223e0b9d23520084890df9d13ba172bb75b48aa52383d7f7af96e3c", "prompt_summary": "Sunvault diamond lens in an ivory-brass meridian frame with mirror vanes, sun pointer, and calibration rings."
+    },
+    {
+      "artifact_id": "artifact_rootpath_seed_compass", "path": "res://art/artifacts/source/generated/expedition_instruments_wave1/rootpath_seed_compass_source.png", "generation_original": "exec-85c40aed-d96c-46f8-8607-b2e33a13ce65.png", "sha256": "0c1f34ec90bd94907e31246f56244ecf72488a51cc0b5b421a3926fd18a7ee65",
+      "inventory_path": "res://art/artifacts/runtime/rootpath_seed_compass.png", "inventory_sha256": "879eaf92e3762203c5ea7f61d61d235f6648e706a4baef5aa2bf3e702e953790", "field_path": "res://art/overworld/runtime/objects/artifacts/rootpath_seed_compass.png", "field_sha256": "4fa7f393efb9ec254ea96755a88150f05d12927cbe231442859a43152aa11f06", "prompt_summary": "Thornwake living forked-root compass around a split seed with leaf pointer, thorn marks, and grafting clasps."
+    },
+    {
+      "artifact_id": "artifact_redline_survey_dial", "path": "res://art/artifacts/source/generated/expedition_instruments_wave1/redline_survey_dial_source.png", "generation_original": "exec-2a26508d-10ca-40e6-81e2-3bd0a7a08a5d.png", "sha256": "ed7279e181ecdcb2bc1ab028294e2d7b7ef60115526256204eccfccb37c0a4c4",
+      "inventory_path": "res://art/artifacts/runtime/redline_survey_dial.png", "inventory_sha256": "04235ce7884581360c2a848b796ecf3d45c7531b3d74570d9b95ae3146ee74ca", "field_path": "res://art/overworld/runtime/objects/artifacts/redline_survey_dial.png", "field_sha256": "841dbba346ff6bd259bfe9ca775ee49123f162acc32197fe957183da317cc40f", "prompt_summary": "Brasshollow pressure survey gauge with toothed redline needle, folding sight arms, plumb weight, and furnace vents."
+    },
+    {
+      "artifact_id": "artifact_drowned_star_astrolabe", "path": "res://art/artifacts/source/generated/expedition_instruments_wave1/drowned_star_astrolabe_source.png", "generation_original": "exec-fac09bca-63f0-4d3b-ac74-91f7bf3d2ec8.png", "sha256": "0e4823a7e6a079b86f2b1c5b390fdb0532e8feb55ef948190b5051adabb99619",
+      "inventory_path": "res://art/artifacts/runtime/drowned_star_astrolabe.png", "inventory_sha256": "3dacc8a5025ba597d71635917de25cb75008c07ed42f2203b5f680dd5b9a0f8d", "field_path": "res://art/overworld/runtime/objects/artifacts/drowned_star_astrolabe.png", "field_sha256": "9208a1393b8e26bb0106e48aaf7e52281bca643801297a575f33cacb37223b7e", "prompt_summary": "Veilmourn salt-pitted astrolabe around a drowned-star shard with crescent sight, cracked bell, ship ribs, and fogglass vial."
+    }
+  ]
+}
