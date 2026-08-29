@@ -15745,10 +15745,10 @@
   "currentNotes": "Completed six live faction artifact sets and original compact insignia using existing gameplay-wired faction equipment and representative authored scenarios.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-faction-artifact-sets-10184",
-  "currentSliceId": "content-neutral-dwelling-landmarks-wave1-10184",
-  "currentSliceNotes": "Completed 12 original claimed-state neutral-dwelling landmarks in one compact 816x48 atlas. One combined 12-site live smoke passes exact unclaimed/claimed resolver state, claims, rewards, recruits, repeat rejection, rendering, and save version 9. Repository validation and Linux/Windows packaged boots pass; both PCKs are 248008160 bytes with source art excluded and 1991840 bytes headroom. No whole-game or release-ready claim.",
+  "currentSliceId": "content-neutral-dwelling-landmarks-wave2-10184",
+  "currentSliceNotes": "Completed one 13-site content batch: all 25 neutral dwellings now retain their uncontrolled presentation and resolve exact original claimed-state landmarks. One combined 25-site live smoke passed claim rewards/recruits, persistent control, repeat rejection, and save v9; repository validation and matching Linux/Windows 248071472-byte package boots passed with sources/reports excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content neutral dwelling landmarks wave1 10184",
+  "currentSliceTitle": "content neutral dwelling landmarks wave2 10184",
   "currentSliceUpdatedAt": "2026-08-29T14:01:35Z",
   "deferredRiskRegister": [
     {
@@ -106044,6 +106044,16 @@
       "startedAt": "2026-08-29T14:10:38Z",
       "notes": "Completed 12 original claimed-state neutral-dwelling landmarks in one compact 816x48 atlas. One combined 12-site live smoke passes exact unclaimed/claimed resolver state, claims, rewards, recruits, repeat rejection, rendering, and save version 9. Repository validation and Linux/Windows packaged boots pass; both PCKs are 248008160 bytes with source art excluded and 1991840 bytes headroom. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T14:42:43Z"
+    },
+    {
+      "id": "content-neutral-dwelling-landmarks-wave2-10184",
+      "title": "content neutral dwelling landmarks wave2 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T15:08:22Z",
+      "startedAt": "2026-08-29T14:44:49Z",
+      "notes": "Completed one 13-site content batch: all 25 neutral dwellings now retain their uncontrolled presentation and resolve exact original claimed-state landmarks. One combined 25-site live smoke passed claim rewards/recruits, persistent control, repeat rejection, and save v9; repository validation and matching Linux/Windows 248071472-byte package boots passed with sources/reports excluded.",
+      "completedAt": "2026-08-29T15:08:22Z"
     }
   ],
   "project": "heroes-like",
@@ -106588,7 +106598,7 @@
   ],
   "summary": "Completed six collectible faction artifact sets with original compact insignia and live Town and Overworld equipment integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T14:42:43Z",
+  "updatedAt": "2026-08-29T15:08:22Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

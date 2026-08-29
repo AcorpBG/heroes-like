@@ -1160,7 +1160,7 @@
     "resource_site_recurring_prism_watch_relay": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [0, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/prism_watch_relay_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_prism_watch_relay",
@@ -1170,7 +1170,7 @@
     "resource_site_recurring_lens_house_barracks": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [48, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/lens_house_barracks_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_lens_house",
@@ -1180,7 +1180,7 @@
     "resource_site_recurring_bog_drum_outpost": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [96, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bog_drum_outpost_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_bog_drum_outpost",
@@ -1190,7 +1190,7 @@
     "resource_site_recurring_bellwake_wreck_ledger": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [144, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bellwake_wreck_ledger_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_bellwake_wreck_ledger",
@@ -1200,7 +1200,7 @@
     "resource_site_recurring_orevein_assay_depot": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [192, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/orevein_assay_depot_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_orevein_assay_depot",
@@ -1210,7 +1210,7 @@
     "resource_site_neutral_reedbarge_mooring": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [240, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/reedbarge_mooring_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_reedbarge_mooring",
@@ -1220,7 +1220,7 @@
     "resource_site_neutral_glowcap_croft": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [288, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/glowcap_croft_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_glowcap_croft",
@@ -1230,7 +1230,7 @@
     "resource_site_neutral_dustjack_yard": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [336, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/dustjack_yard_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_dustjack_yard",
@@ -1240,7 +1240,7 @@
     "resource_site_neutral_cinder_kiln": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [384, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/cinder_kiln_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_cinder_kiln",
@@ -1250,7 +1250,7 @@
     "resource_site_neutral_frostbeacon_bothy": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [432, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/frostbeacon_bothy_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_frostbeacon_bothy",
@@ -1260,7 +1260,7 @@
     "resource_site_neutral_bramble_hedge": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [480, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bramble_hedge_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_bramble_hedge",
@@ -1270,7 +1270,7 @@
     "resource_site_neutral_tidepool_skiffyard": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [528, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/tidepool_skiffyard_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_tidepool_skiffyard",
@@ -1280,7 +1280,7 @@
     "resource_site_neutral_switchback_hostel": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [576, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/switchback_hostel_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_switchback_hostel",
@@ -1290,7 +1290,7 @@
     "resource_site_neutral_saltpan_camp": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [624, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/saltpan_camp_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_saltpan_camp",
@@ -1300,7 +1300,7 @@
     "resource_site_neutral_crystal_sump": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [672, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/crystal_sump_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_crystal_sump",
@@ -1310,7 +1310,7 @@
     "resource_site_neutral_icehook_trapper_lodge": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [720, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/icehook_trapper_lodge_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_icehook_trapper_lodge",
@@ -1320,12 +1320,142 @@
     "resource_site_neutral_obsidian_scar": {
       "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
       "atlas_region": [768, 0, 48, 48],
-      "atlas_size": [816, 48],
+      "atlas_size": [1440, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/obsidian_scar_source.png",
       "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
       "assigned_resource_site_id": "site_obsidian_scar",
       "presentation_role": "triple_obsidian_forge_arch",
       "accessible_description": "Three jagged black-glass blades arch around a riveted shelter, suspended forge bowl, broad cutting pick, stacked mirror slabs, and hauling sled."
+    },
+    "resource_site_neutral_roadward_lodge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [816, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/roadward_lodge_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_free_company_yard",
+      "presentation_role": "toll_gate_pikehook_lodge",
+      "accessible_description": "A sturdy stone-and-timber toll lodge stands beside a covered gate beam, crossed pikehooks, curved bow rack, hanging road lantern, and boundary stones."
+    },
+    "resource_site_neutral_fenhound_kennels": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [864, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/fenhound_kennels_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_fenhound_kennels",
+      "presentation_role": "three_bay_mossglass_kennel",
+      "accessible_description": "A long reed-thatch kennel presents three arched hound bays beneath a carved running-hound post, mossglass shield panels, trough, and handler staff."
+    },
+    "resource_site_neutral_cliffhawk_roost": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [912, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/cliffhawk_roost_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_cliffhawk_roost",
+      "presentation_role": "twin_spire_hawk_roost",
+      "accessible_description": "Two split-stone spires support a timber nesting platform with an empty angular perch, diamond sling target, hanging feed baskets, and steep ladder."
+    },
+    "resource_site_neutral_orchard_levy": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [960, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/orchard_levy_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_orchard_levy",
+      "presentation_role": "fruit_bough_levy_yard",
+      "accessible_description": "A fruit-laden bough arches over a half-timber storehouse, upright halberd racks, round millstone sling wheel, harvest baskets, and levy bell."
+    },
+    "resource_site_neutral_kite_signal_eyrie": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1008, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/kite_signal_eyrie_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_kite_signal_eyrie",
+      "presentation_role": "diamond_kite_signal_eyrie",
+      "accessible_description": "A tall tripod mast holds a split-tail diamond kite above a low ridge shelter, circular flare basket, hooked runner poles, and rolled kite cloth."
+    },
+    "resource_site_neutral_greenbranch_copse": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1056, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/greenbranch_copse_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_greenbranch_copse",
+      "presentation_role": "living_tree_copse_lodge",
+      "accessible_description": "Two bent living trees form a green arch over a hollow-stump doorway with bundled cudgels, hanging sap whistles, resin bowls, and woven fence."
+    },
+    "resource_site_neutral_harbor_pilot_house": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1104, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/harbor_pilot_house_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_harbor_pilot_house",
+      "presentation_role": "harbor_pilot_signal_tower",
+      "accessible_description": "A narrow shingle pilot house rises on short piles beside a striped signal mast, crossed polearms, hanging anchor, rope drum, and round beacon window."
+    },
+    "resource_site_neutral_lantern_warren": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1152, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/lantern_warren_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_lantern_warren",
+      "presentation_role": "three_mouth_lantern_warren",
+      "accessible_description": "A rounded root-and-stone mound has three tunnel mouths, five stepping lantern niches, a crown of glimmercaps, a needle-dart rack, and hand winch."
+    },
+    "resource_site_neutral_bogbell_croft": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1200, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/bogbell_croft_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_bogbell_croft",
+      "presentation_role": "giant_bell_stilt_croft",
+      "accessible_description": "A stilted reed croft wraps around an oversized bronze bog bell with broad peat mauls, sealed flare jars, crooked stair, and marsh-lantern post."
+    },
+    "resource_site_neutral_milestone_arsenal": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1248, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/milestone_arsenal_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_milestone_arsenal",
+      "presentation_role": "milestone_obelisk_arsenal",
+      "accessible_description": "A squat stone armory surrounds a tall blank faceted milestone beside a circular buckler rack, folded cartbow, bolt crates, and roof pennant."
+    },
+    "resource_site_neutral_frostwharf_house": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1296, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/frostwharf_house_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_frostwharf_house",
+      "presentation_role": "crescent_cutter_wharf_house",
+      "accessible_description": "A snow-capped timber wharf house stands on ice-braced piles beneath a crescent cutter blade, paired lantern-skates, net drum, and mooring post."
+    },
+    "resource_site_neutral_charcoal_burners": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1344, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/charcoal_burners_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_charcoal_burners",
+      "presentation_role": "three_vent_charcoal_clamp",
+      "accessible_description": "A broad turf-covered charcoal clamp has three short vents beside a rough lean-to, crossed mauls, stacked ember packs, log rack, and shielded glow."
+    },
+    "resource_site_neutral_basalt_gatehouse": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [1392, 0, 48, 48],
+      "atlas_size": [1440, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave2/basalt_gatehouse_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_basalt_gatehouse",
+      "presentation_role": "twin_tower_basalt_gatehouse",
+      "accessible_description": "Two black-basalt towers join above a deep angular arch and raised portcullis, with glowing marker stones, heavy bolter rack, and chain winch."
     },
     "artifact_field_trailsinger_boots": {
       "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
@@ -5299,28 +5429,61 @@
       "fit": "Direct ore crates pickup match."
     },
     "site_free_company_yard": {
-      "asset_id": "guarded_farmhouse",
-      "fit": "Best-effort Roadward Lodge style dwelling match."
+      "asset_id": "resource_site_neutral_roadward_lodge",
+      "fit": "Exact original toll-gate and pikehook lodge for the controlled Roadward Lodge neutral dwelling identity."
     },
     "site_riverwatch_free_company_yard": {
       "asset_id": "guarded_farmhouse",
       "fit": "Best-effort lodge/yard dwelling match for the River Pass faction-linked site."
     },
     "site_orchard_levy": {
-      "asset_id": "guarded_farmhouse",
-      "fit": "Best-effort farm/orchard dwelling match."
+      "asset_id": "resource_site_neutral_orchard_levy",
+      "fit": "Exact original fruit-bough levy yard for the controlled Orchard Levy Grounds neutral dwelling identity."
     },
     "site_fenhound_kennels": {
-      "asset_id": "kennel",
-      "fit": "Direct kennel/fenhound dwelling match."
+      "asset_id": "resource_site_neutral_fenhound_kennels",
+      "unclaimed_asset_id": "kennel",
+      "fit": "Exact original three-bay mossglass kennel for the controlled Fenhound Kennels neutral dwelling identity."
     },
     "site_cliffhawk_roost": {
-      "asset_id": "falconers_nest",
-      "fit": "Best-effort cliffhawk/falconer roost match."
+      "asset_id": "resource_site_neutral_cliffhawk_roost",
+      "fit": "Exact original twin-spire aviary for the controlled Cliffhawk Roost neutral dwelling identity."
     },
     "site_kite_signal_eyrie": {
-      "asset_id": "falconers_nest",
-      "fit": "Best-effort aerial eyrie match."
+      "asset_id": "resource_site_neutral_kite_signal_eyrie",
+      "fit": "Exact original diamond-kite signal station for the controlled Kite Signal Eyrie neutral dwelling identity."
+    },
+    "site_greenbranch_copse": {
+      "asset_id": "resource_site_neutral_greenbranch_copse",
+      "fit": "Exact original living-tree copse lodge for the controlled Greenbranch Copse neutral dwelling identity."
+    },
+    "site_harbor_pilot_house": {
+      "asset_id": "resource_site_neutral_harbor_pilot_house",
+      "fit": "Exact original narrow signal tower house for the controlled Harbor Pilot House neutral dwelling identity."
+    },
+    "site_lantern_warren": {
+      "asset_id": "resource_site_neutral_lantern_warren",
+      "fit": "Exact original three-mouth lantern burrow for the controlled Lantern Warren neutral dwelling identity."
+    },
+    "site_bogbell_croft": {
+      "asset_id": "resource_site_neutral_bogbell_croft",
+      "fit": "Exact original giant-bell stilt croft for the controlled Bogbell Croft neutral dwelling identity."
+    },
+    "site_milestone_arsenal": {
+      "asset_id": "resource_site_neutral_milestone_arsenal",
+      "fit": "Exact original obelisk arsenal and buckler yard for the controlled Milestone Arsenal neutral dwelling identity."
+    },
+    "site_frostwharf_house": {
+      "asset_id": "resource_site_neutral_frostwharf_house",
+      "fit": "Exact original crescent-cutter pile house for the controlled Frostwharf House neutral dwelling identity."
+    },
+    "site_charcoal_burners": {
+      "asset_id": "resource_site_neutral_charcoal_burners",
+      "fit": "Exact original three-vent charcoal clamp for the controlled Charcoal Burners Camp neutral dwelling identity."
+    },
+    "site_basalt_gatehouse": {
+      "asset_id": "resource_site_neutral_basalt_gatehouse",
+      "fit": "Exact original twin-tower basalt gate for the controlled Basalt Gatehouse neutral dwelling identity."
     },
     "site_wayfarer_infirmary": {
       "asset_id": "alchemists_hut",

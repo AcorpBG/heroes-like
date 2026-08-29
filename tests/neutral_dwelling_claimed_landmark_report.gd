@@ -18,6 +18,19 @@ const CASES := [
 	{"site_id": "site_crystal_sump", "placement_id": "dwelling_crystal_sump", "unclaimed_asset_id": "mapobj_crystal_sump", "claimed_asset_id": "resource_site_neutral_crystal_sump"},
 	{"site_id": "site_icehook_trapper_lodge", "placement_id": "dwelling_icehook_trapper_lodge", "unclaimed_asset_id": "mapobj_icehook_trapper_lodge", "claimed_asset_id": "resource_site_neutral_icehook_trapper_lodge"},
 	{"site_id": "site_obsidian_scar", "placement_id": "dwelling_obsidian_scar", "unclaimed_asset_id": "mapobj_obsidian_scar", "claimed_asset_id": "resource_site_neutral_obsidian_scar"},
+	{"site_id": "site_free_company_yard", "placement_id": "dwelling_roadward_lodge", "unclaimed_asset_id": "mapobj_roadward_lodge", "claimed_asset_id": "resource_site_neutral_roadward_lodge"},
+	{"site_id": "site_fenhound_kennels", "placement_id": "dwelling_fenhound_kennels", "unclaimed_asset_id": "kennel", "claimed_asset_id": "resource_site_neutral_fenhound_kennels"},
+	{"site_id": "site_cliffhawk_roost", "placement_id": "dwelling_cliffhawk_roost", "unclaimed_asset_id": "mapobj_cliffhawk_roost", "claimed_asset_id": "resource_site_neutral_cliffhawk_roost"},
+	{"site_id": "site_orchard_levy", "placement_id": "dwelling_orchard_levy", "unclaimed_asset_id": "mapobj_orchard_levy", "claimed_asset_id": "resource_site_neutral_orchard_levy"},
+	{"site_id": "site_kite_signal_eyrie", "placement_id": "dwelling_kite_signal_eyrie", "unclaimed_asset_id": "mapobj_kite_signal_eyrie", "claimed_asset_id": "resource_site_neutral_kite_signal_eyrie"},
+	{"site_id": "site_greenbranch_copse", "placement_id": "dwelling_greenbranch_copse", "unclaimed_asset_id": "mapobj_greenbranch_copse", "claimed_asset_id": "resource_site_neutral_greenbranch_copse"},
+	{"site_id": "site_harbor_pilot_house", "placement_id": "dwelling_harbor_pilot_house", "unclaimed_asset_id": "mapobj_harbor_pilot_house", "claimed_asset_id": "resource_site_neutral_harbor_pilot_house"},
+	{"site_id": "site_lantern_warren", "placement_id": "dwelling_lantern_warren", "unclaimed_asset_id": "mapobj_lantern_warren", "claimed_asset_id": "resource_site_neutral_lantern_warren"},
+	{"site_id": "site_bogbell_croft", "placement_id": "dwelling_bogbell_croft", "unclaimed_asset_id": "mapobj_bogbell_croft", "claimed_asset_id": "resource_site_neutral_bogbell_croft"},
+	{"site_id": "site_milestone_arsenal", "placement_id": "dwelling_milestone_arsenal", "unclaimed_asset_id": "mapobj_milestone_arsenal", "claimed_asset_id": "resource_site_neutral_milestone_arsenal"},
+	{"site_id": "site_frostwharf_house", "placement_id": "dwelling_frostwharf_house", "unclaimed_asset_id": "mapobj_frostwharf_house", "claimed_asset_id": "resource_site_neutral_frostwharf_house"},
+	{"site_id": "site_charcoal_burners", "placement_id": "dwelling_charcoal_burners", "unclaimed_asset_id": "mapobj_charcoal_burners", "claimed_asset_id": "resource_site_neutral_charcoal_burners"},
+	{"site_id": "site_basalt_gatehouse", "placement_id": "dwelling_basalt_gatehouse", "unclaimed_asset_id": "mapobj_basalt_gatehouse", "claimed_asset_id": "resource_site_neutral_basalt_gatehouse"},
 ]
 
 var _errors: Array[String] = []
