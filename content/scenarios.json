@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 58,
+  "player_facing_active_scenario_count": 64,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -5785,6 +5785,4212 @@
     {"id":"daynote-kite-signal-accord","name":"Daynote Kite-Signal Accord","selection":{"summary":"Essa leads a spellwright expedition across a contested twelve-league front to secure the Kite Signal Eyrie Watch.","recommended_difficulty":"normal","map_size_label":"Kite-Signal Harmonic Reach (12x7)","player_summary":"Essa commands Essa's Harmonic Survey Cadre from Prismhearth.","enemy_summary":"Rootgate Nursery contests the spellwright route around the neutral Kite Signal Eyrie Watch.","availability":{"campaign":false,"skirmish":true}},"map_size":{"width":12,"height":7},"player_faction_id":"faction_sunvault","player_army_id":"army_essa_spellwright_cadre","hero_id":"hero_sunvault_essa_daynote","starting_resources":{"gold":1100,"wood":4,"ore":4,"aetherglass":2},"map":[["grass","rough","snow","grass","rough","snow","grass","rough","snow","grass","rough","snow"],["snow","grass","rough","snow","grass","rough","snow","grass","rough","snow","grass","rough"],["rough","snow","grass","rough","snow","grass","rough","snow","grass","rough","snow","grass"],["grass","rough","snow","grass","rough","snow","grass","rough","snow","grass","rough","snow"],["snow","grass","rough","snow","grass","rough","snow","grass","rough","snow","grass","rough"],["rough","snow","grass","rough","snow","grass","rough","snow","grass","rough","snow","grass"],["grass","rough","snow","grass","rough","snow","grass","rough","snow","grass","rough","snow"]],"start":{"x":0,"y":3},"hero_starts":["hero_sunvault_essa_daynote"],"objectives":{"victory_text":"Essa secures the Kite Signal Eyrie Watch and completes the spellwright expedition line.","defeat_text":"Rootgate Nursery closes the expedition line before Essa can secure the watch.","victory":[{"id":"claim_daynote_enemy_town","label":"Claim Rootgate Nursery","type":"town_owned_by_player","placement_id":"daynote_enemy_town"},{"id":"secure_daynote_watch","label":"Secure the Kite Signal Eyrie Watch","type":"encounter_resolved","placement_id":"daynote_kite_signal_eyrie_watch"},{"id":"clear_daynote_screen_a","label":"Clear the western spellward screen","type":"encounter_resolved","placement_id":"daynote_screen_a"},{"id":"clear_daynote_screen_b","label":"Clear the central spellward screen","type":"encounter_resolved","placement_id":"daynote_screen_b"},{"id":"clear_daynote_screen_c","label":"Clear the eastern spellward screen","type":"encounter_resolved","placement_id":"daynote_screen_c"}],"defeat":[{"id":"hold_daynote_player_town","label":"Keep Prismhearth","type":"town_not_owned_by_player","placement_id":"daynote_player_town"},{"id":"daynote_hero_survives","label":"Essa must survive","type":"session_flag_equals","flag":"campaign","value":"defeat"},{"id":"contain_daynote_pressure","label":"Keep enemy pressure below 13","type":"enemy_pressure_at_least","faction_id":"faction_thornwake","threshold":13},{"id":"finish_daynote_in_time","label":"Finish before Day 16","type":"day_at_least","day":16}]},"script_hooks":[{"id":"daynote_spellwright_muster","priority":122,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"daynote_player_town"}],"effects":[{"type":"add_resources","resources":{"gold":320,"wood":1}},{"type":"town_add_recruits","placement_id":"daynote_player_town","recruits":{"unit_sunvault_resonant_choristers":2,"unit_sunvault_solar_array_striders":1}},{"type":"message","text":"Prismhearth sends Essa a spellwright reserve."}]},{"id":"daynote_town_claimed","priority":112,"conditions":[{"type":"objective_met","objective_id":"claim_daynote_enemy_town"}],"effects":[{"type":"town_add_building","placement_id":"daynote_enemy_town","building_id":"building_wayfarers_hall"},{"type":"set_flag","flag":"daynote_enemy_town_claimed","value":true},{"type":"message","text":"Essa posts the expedition charter at Rootgate Nursery."}]},{"id":"daynote_counterstroke","priority":98,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"daynote_player_town"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"daynote_counterstroke","encounter_id":"encounter_graftbound_pilgrims","x":11,"y":6,"difficulty":"scripted","spawned_by_faction_id":"faction_thornwake","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Rootgate Nursery sends a counterstroke along the southern expedition road."}]},{"id":"daynote_unsecured_watch","priority":90,"conditions":[{"type":"day_at_least","day":5},{"type":"objective_not_met","objective_id":"secure_daynote_watch"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_thornwake","amount":2},{"type":"message","text":"The Kite Signal Eyrie Watch keeps the expedition line divided."}]},{"id":"daynote_eastern_screen_pressure","priority":86,"conditions":[{"type":"day_at_least","day":7},{"type":"objective_not_met","objective_id":"clear_daynote_screen_c"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_thornwake","amount":1},{"type":"message","text":"The eastern spellward screen begins relaying hostile survey marks."}]},{"id":"daynote_watch_secured","priority":84,"conditions":[{"type":"encounter_resolved","placement_id":"daynote_kite_signal_eyrie_watch"}],"effects":[{"type":"add_resources","resources":{"aetherglass":1}},{"type":"award_experience","amount":150},{"type":"set_flag","flag":"daynote_kite_signal_eyrie_watch_secured","value":true},{"type":"message","text":"Essa secures the Kite Signal Eyrie Watch and completes its spellwright survey."}]}],"towns":[{"placement_id":"daynote_player_town","town_id":"town_prismhearth","x":0,"y":3,"owner":"player"},{"placement_id":"daynote_enemy_town","town_id":"town_thornwake_rootgate_nursery","x":11,"y":3,"owner":"enemy"}],"enemy_factions":[{"faction_id":"faction_thornwake","label":"Rootgate Nursery Spellward Pressure","pressure_per_day":2,"pressure_per_enemy_town":1,"raid_threshold":5,"max_active_raids":2,"raid_pillage_delay":1,"raid_pillage":{"gold":170,"verdant_grafts":1},"raid_encounter_ids":["encounter_graftbound_pilgrims"],"spawn_points":[{"x":10,"y":1},{"x":10,"y":5}],"siege_target_placement_id":"daynote_player_town","siege_active_raid_threshold":2,"siege_capture_progress":2}],"resource_nodes":[{"placement_id":"daynote_faction_landmark","site_id":"site_prism_relay_lens","x":1,"y":2},{"placement_id":"daynote_watch_dwelling","site_id":"site_kite_signal_eyrie","x":8,"y":4},{"placement_id":"daynote_player_rare","site_id":"site_aetherglass_lens_house","x":0,"y":1},{"placement_id":"daynote_enemy_rare","site_id":"site_verdant_graft_nursery","x":11,"y":1,"collected_by_faction_id":"faction_thornwake"},{"placement_id":"daynote_wood","site_id":"site_wood_wagon","x":2,"y":0},{"placement_id":"daynote_ore","site_id":"site_ore_crates","x":10,"y":6,"collected_by_faction_id":"faction_thornwake"},{"placement_id":"daynote_player_exchange","site_id":"site_frontier_rare_exchange","x":2,"y":5},{"placement_id":"daynote_enemy_exchange","site_id":"site_frontier_rare_exchange","x":10,"y":2,"collected_by_faction_id":"faction_thornwake"},{"placement_id":"daynote_feature_1","site_id":"site_beacon_path_scroll","x":3,"y":3},{"placement_id":"daynote_feature_2","site_id":"site_orevein_assay_depot","x":5,"y":0},{"placement_id":"daynote_feature_3","site_id":"site_watchtower_beacon","x":6,"y":6},{"placement_id":"daynote_feature_4","site_id":"site_ridge_quarry","x":9,"y":5}],"artifact_nodes":[{"placement_id":"daynote_artifact_1","artifact_id":"artifact_waymark_compass","x":3,"y":0},{"placement_id":"daynote_artifact_2","artifact_id":"artifact_choir_tuning_fork","x":5,"y":5},{"placement_id":"daynote_artifact_3","artifact_id":"artifact_cometwake_pennon","x":7,"y":2},{"placement_id":"daynote_artifact_4","artifact_id":"artifact_meridian_relay_lens","x":9,"y":6}],"encounters":[{"placement_id":"daynote_screen_a","encounter_id":"encounter_graftbound_pilgrims","x":4,"y":1,"difficulty":"medium","combat_seed":26121,"enemy_army":{"id":"army_daynote_screen_a","name":"Rootgate Nursery Spellward Screen A","faction_id":"faction_thornwake","stacks":[{"unit_id":"unit_thornwake_seedcutters","count":7},{"unit_id":"unit_thornwake_thornwhip_carriers","count":4}]}},{"placement_id":"daynote_screen_b","encounter_id":"encounter_graftbound_pilgrims","x":6,"y":3,"difficulty":"medium","combat_seed":26122,"enemy_army":{"id":"army_daynote_screen_b","name":"Rootgate Nursery Spellward Screen B","faction_id":"faction_thornwake","stacks":[{"unit_id":"unit_thornwake_seedcutters","count":8},{"unit_id":"unit_thornwake_sporeglass_menders","count":3}]}},{"placement_id":"daynote_screen_c","encounter_id":"encounter_graftbound_pilgrims","x":8,"y":1,"difficulty":"medium","combat_seed":26123,"enemy_army":{"id":"army_daynote_screen_c","name":"Rootgate Nursery Spellward Screen C","faction_id":"faction_thornwake","stacks":[{"unit_id":"unit_thornwake_seedcutters","count":6},{"unit_id":"unit_thornwake_barkmantle_rams","count":2}]}},{"placement_id":"daynote_kite_signal_eyrie_watch","encounter_id":"encounter_kite_signal_eyrie_watch","x":9,"y":4,"difficulty":"medium","combat_seed":26124,"prefer_identity_landmark":true}]},
     {"id":"loamchant-orchard-binding","name":"Loamchant Orchard Binding","selection":{"summary":"Elian leads a spellwright expedition across a contested twelve-league front to secure the Orchard Levy Grounds Watch.","recommended_difficulty":"normal","map_size_label":"Orchard Binding Reach (12x7)","player_summary":"Elian commands Elian's Loam-Binding Cadre from Rootgate Nursery.","enemy_summary":"Clauseworks Depot contests the spellwright route around the neutral Orchard Levy Grounds Watch.","availability":{"campaign":false,"skirmish":true}},"map_size":{"width":12,"height":7},"player_faction_id":"faction_thornwake","player_army_id":"army_elian_spellwright_cadre","hero_id":"hero_thornwake_elian_loamchant","starting_resources":{"gold":1100,"wood":4,"ore":4,"verdant_grafts":2},"map":[["forest","grass","dirt","forest","grass","dirt","forest","grass","dirt","forest","grass","dirt"],["dirt","forest","grass","dirt","forest","grass","dirt","forest","grass","dirt","forest","grass"],["grass","dirt","forest","grass","dirt","forest","grass","dirt","forest","grass","dirt","forest"],["forest","grass","dirt","forest","grass","dirt","forest","grass","dirt","forest","grass","dirt"],["dirt","forest","grass","dirt","forest","grass","dirt","forest","grass","dirt","forest","grass"],["grass","dirt","forest","grass","dirt","forest","grass","dirt","forest","grass","dirt","forest"],["forest","grass","dirt","forest","grass","dirt","forest","grass","dirt","forest","grass","dirt"]],"start":{"x":0,"y":3},"hero_starts":["hero_thornwake_elian_loamchant"],"objectives":{"victory_text":"Elian secures the Orchard Levy Grounds Watch and completes the spellwright expedition line.","defeat_text":"Clauseworks Depot closes the expedition line before Elian can secure the watch.","victory":[{"id":"claim_loamchant_enemy_town","label":"Claim Clauseworks Depot","type":"town_owned_by_player","placement_id":"loamchant_enemy_town"},{"id":"secure_loamchant_watch","label":"Secure the Orchard Levy Grounds Watch","type":"encounter_resolved","placement_id":"loamchant_orchard_levy_watch"},{"id":"clear_loamchant_screen_a","label":"Clear the western spellward screen","type":"encounter_resolved","placement_id":"loamchant_screen_a"},{"id":"clear_loamchant_screen_b","label":"Clear the central spellward screen","type":"encounter_resolved","placement_id":"loamchant_screen_b"},{"id":"clear_loamchant_screen_c","label":"Clear the eastern spellward screen","type":"encounter_resolved","placement_id":"loamchant_screen_c"}],"defeat":[{"id":"hold_loamchant_player_town","label":"Keep Rootgate Nursery","type":"town_not_owned_by_player","placement_id":"loamchant_player_town"},{"id":"loamchant_hero_survives","label":"Elian must survive","type":"session_flag_equals","flag":"campaign","value":"defeat"},{"id":"contain_loamchant_pressure","label":"Keep enemy pressure below 13","type":"enemy_pressure_at_least","faction_id":"faction_brasshollow","threshold":13},{"id":"finish_loamchant_in_time","label":"Finish before Day 16","type":"day_at_least","day":16}]},"script_hooks":[{"id":"loamchant_spellwright_muster","priority":122,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"loamchant_player_town"}],"effects":[{"type":"add_resources","resources":{"gold":320,"wood":1}},{"type":"town_add_recruits","placement_id":"loamchant_player_town","recruits":{"unit_thornwake_sporeglass_menders":2,"unit_thornwake_barkmantle_rams":1}},{"type":"message","text":"Rootgate Nursery sends Elian a spellwright reserve."}]},{"id":"loamchant_town_claimed","priority":112,"conditions":[{"type":"objective_met","objective_id":"claim_loamchant_enemy_town"}],"effects":[{"type":"town_add_building","placement_id":"loamchant_enemy_town","building_id":"building_wayfarers_hall"},{"type":"set_flag","flag":"loamchant_enemy_town_claimed","value":true},{"type":"message","text":"Elian posts the expedition charter at Clauseworks Depot."}]},{"id":"loamchant_counterstroke","priority":98,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"loamchant_player_town"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"loamchant_counterstroke","encounter_id":"encounter_redline_foreclosure","x":11,"y":6,"difficulty":"scripted","spawned_by_faction_id":"faction_brasshollow","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Clauseworks Depot sends a counterstroke along the southern expedition road."}]},{"id":"loamchant_unsecured_watch","priority":90,"conditions":[{"type":"day_at_least","day":5},{"type":"objective_not_met","objective_id":"secure_loamchant_watch"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_brasshollow","amount":2},{"type":"message","text":"The Orchard Levy Grounds Watch keeps the expedition line divided."}]},{"id":"loamchant_eastern_screen_pressure","priority":86,"conditions":[{"type":"day_at_least","day":7},{"type":"objective_not_met","objective_id":"clear_loamchant_screen_c"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_brasshollow","amount":1},{"type":"message","text":"The eastern spellward screen begins relaying hostile survey marks."}]},{"id":"loamchant_watch_secured","priority":84,"conditions":[{"type":"encounter_resolved","placement_id":"loamchant_orchard_levy_watch"}],"effects":[{"type":"add_resources","resources":{"verdant_grafts":1}},{"type":"award_experience","amount":150},{"type":"set_flag","flag":"loamchant_orchard_levy_watch_secured","value":true},{"type":"message","text":"Elian secures the Orchard Levy Grounds Watch and completes its spellwright survey."}]}],"towns":[{"placement_id":"loamchant_player_town","town_id":"town_thornwake_rootgate_nursery","x":0,"y":3,"owner":"player"},{"placement_id":"loamchant_enemy_town","town_id":"town_brasshollow_clauseworks_depot","x":11,"y":3,"owner":"enemy"}],"enemy_factions":[{"faction_id":"faction_brasshollow","label":"Clauseworks Depot Spellward Pressure","pressure_per_day":2,"pressure_per_enemy_town":1,"raid_threshold":5,"max_active_raids":2,"raid_pillage_delay":1,"raid_pillage":{"gold":170,"brass_scrip":1},"raid_encounter_ids":["encounter_redline_foreclosure"],"spawn_points":[{"x":10,"y":1},{"x":10,"y":5}],"siege_target_placement_id":"loamchant_player_town","siege_active_raid_threshold":2,"siege_capture_progress":2}],"resource_nodes":[{"placement_id":"loamchant_faction_landmark","site_id":"site_thornwake_graft_arch","x":1,"y":2},{"placement_id":"loamchant_watch_dwelling","site_id":"site_orchard_levy","x":8,"y":4},{"placement_id":"loamchant_player_rare","site_id":"site_verdant_graft_nursery","x":0,"y":1},{"placement_id":"loamchant_enemy_rare","site_id":"site_brass_scrip_mint","x":11,"y":1,"collected_by_faction_id":"faction_brasshollow"},{"placement_id":"loamchant_wood","site_id":"site_wood_wagon","x":2,"y":0},{"placement_id":"loamchant_ore","site_id":"site_ore_crates","x":10,"y":6,"collected_by_faction_id":"faction_brasshollow"},{"placement_id":"loamchant_player_exchange","site_id":"site_frontier_rare_exchange","x":2,"y":5},{"placement_id":"loamchant_enemy_exchange","site_id":"site_frontier_rare_exchange","x":10,"y":2,"collected_by_faction_id":"faction_brasshollow"},{"placement_id":"loamchant_feature_1","site_id":"site_brightwood_sawmill","x":3,"y":3},{"placement_id":"loamchant_feature_2","site_id":"site_wayfarer_infirmary","x":5,"y":0},{"placement_id":"loamchant_feature_3","site_id":"site_scout_shrine","x":6,"y":6},{"placement_id":"loamchant_feature_4","site_id":"site_ridge_quarry","x":9,"y":5}],"artifact_nodes":[{"placement_id":"loamchant_artifact_1","artifact_id":"artifact_briarcrown_covenant_standard","x":3,"y":0},{"placement_id":"loamchant_artifact_2","artifact_id":"artifact_living_bridge_knot","x":5,"y":5},{"placement_id":"loamchant_artifact_3","artifact_id":"artifact_graftbark_cuirass","x":7,"y":2},{"placement_id":"loamchant_artifact_4","artifact_id":"artifact_rootpath_seed_compass","x":9,"y":6}],"encounters":[{"placement_id":"loamchant_screen_a","encounter_id":"encounter_redline_foreclosure","x":4,"y":1,"difficulty":"medium","combat_seed":26131,"enemy_army":{"id":"army_loamchant_screen_a","name":"Clauseworks Depot Spellward Screen A","faction_id":"faction_brasshollow","stacks":[{"unit_id":"unit_brasshollow_scrip_haulers","count":7},{"unit_id":"unit_brasshollow_rivet_hounds","count":4}]}},{"placement_id":"loamchant_screen_b","encounter_id":"encounter_redline_foreclosure","x":6,"y":3,"difficulty":"medium","combat_seed":26132,"enemy_army":{"id":"army_loamchant_screen_b","name":"Clauseworks Depot Spellward Screen B","faction_id":"faction_brasshollow","stacks":[{"unit_id":"unit_brasshollow_scrip_haulers","count":8},{"unit_id":"unit_brasshollow_furnace_pavis_teams","count":3}]}},{"placement_id":"loamchant_screen_c","encounter_id":"encounter_redline_foreclosure","x":8,"y":1,"difficulty":"medium","combat_seed":26133,"enemy_army":{"id":"army_loamchant_screen_c","name":"Clauseworks Depot Spellward Screen C","faction_id":"faction_brasshollow","stacks":[{"unit_id":"unit_brasshollow_scrip_haulers","count":6},{"unit_id":"unit_brasshollow_boiler_rivetcasters","count":2}]}},{"placement_id":"loamchant_orchard_levy_watch","encounter_id":"encounter_orchard_levy_watch","x":9,"y":4,"difficulty":"medium","combat_seed":26134,"prefer_identity_landmark":true}]},
     {"id":"gaugesavant-milestone-calibration","name":"Gauge-Savant Milestone Calibration","selection":{"summary":"Lina leads a spellwright expedition across a contested twelve-league front to secure the Milestone Arsenal Watch.","recommended_difficulty":"normal","map_size_label":"Milestone Calibration Reach (12x7)","player_summary":"Lina commands Lina's Pressure-Math Cadre from Clauseworks Depot.","enemy_summary":"Fogchart Mooring contests the spellwright route around the neutral Milestone Arsenal Watch.","availability":{"campaign":false,"skirmish":true}},"map_size":{"width":12,"height":7},"player_faction_id":"faction_brasshollow","player_army_id":"army_lina_spellwright_cadre","hero_id":"hero_brasshollow_lina_gaugesavant","starting_resources":{"gold":1100,"wood":4,"ore":4,"brass_scrip":2},"map":[["underground","rough","dirt","underground","rough","dirt","underground","rough","dirt","underground","rough","dirt"],["dirt","underground","rough","dirt","underground","rough","dirt","underground","rough","dirt","underground","rough"],["rough","dirt","underground","rough","dirt","underground","rough","dirt","underground","rough","dirt","underground"],["underground","rough","dirt","underground","rough","dirt","underground","rough","dirt","underground","rough","dirt"],["dirt","underground","rough","dirt","underground","rough","dirt","underground","rough","dirt","underground","rough"],["rough","dirt","underground","rough","dirt","underground","rough","dirt","underground","rough","dirt","underground"],["underground","rough","dirt","underground","rough","dirt","underground","rough","dirt","underground","rough","dirt"]],"start":{"x":0,"y":3},"hero_starts":["hero_brasshollow_lina_gaugesavant"],"objectives":{"victory_text":"Lina secures the Milestone Arsenal Watch and completes the spellwright expedition line.","defeat_text":"Fogchart Mooring closes the expedition line before Lina can secure the watch.","victory":[{"id":"claim_gaugesavant_enemy_town","label":"Claim Fogchart Mooring","type":"town_owned_by_player","placement_id":"gaugesavant_enemy_town"},{"id":"secure_gaugesavant_watch","label":"Secure the Milestone Arsenal Watch","type":"encounter_resolved","placement_id":"gaugesavant_milestone_arsenal_watch"},{"id":"clear_gaugesavant_screen_a","label":"Clear the western spellward screen","type":"encounter_resolved","placement_id":"gaugesavant_screen_a"},{"id":"clear_gaugesavant_screen_b","label":"Clear the central spellward screen","type":"encounter_resolved","placement_id":"gaugesavant_screen_b"},{"id":"clear_gaugesavant_screen_c","label":"Clear the eastern spellward screen","type":"encounter_resolved","placement_id":"gaugesavant_screen_c"}],"defeat":[{"id":"hold_gaugesavant_player_town","label":"Keep Clauseworks Depot","type":"town_not_owned_by_player","placement_id":"gaugesavant_player_town"},{"id":"gaugesavant_hero_survives","label":"Lina must survive","type":"session_flag_equals","flag":"campaign","value":"defeat"},{"id":"contain_gaugesavant_pressure","label":"Keep enemy pressure below 13","type":"enemy_pressure_at_least","faction_id":"faction_veilmourn","threshold":13},{"id":"finish_gaugesavant_in_time","label":"Finish before Day 16","type":"day_at_least","day":16}]},"script_hooks":[{"id":"gaugesavant_spellwright_muster","priority":122,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"gaugesavant_player_town"}],"effects":[{"type":"add_resources","resources":{"gold":320,"wood":1}},{"type":"town_add_recruits","placement_id":"gaugesavant_player_town","recruits":{"unit_brasshollow_boiler_rivetcasters":2,"unit_brasshollow_debt_engine_exactors":1}},{"type":"message","text":"Clauseworks Depot sends Lina a spellwright reserve."}]},{"id":"gaugesavant_town_claimed","priority":112,"conditions":[{"type":"objective_met","objective_id":"claim_gaugesavant_enemy_town"}],"effects":[{"type":"town_add_building","placement_id":"gaugesavant_enemy_town","building_id":"building_wayfarers_hall"},{"type":"set_flag","flag":"gaugesavant_enemy_town_claimed","value":true},{"type":"message","text":"Lina posts the expedition charter at Fogchart Mooring."}]},{"id":"gaugesavant_counterstroke","priority":98,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"gaugesavant_player_town"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"gaugesavant_counterstroke","encounter_id":"encounter_bellwake_privateers","x":11,"y":6,"difficulty":"scripted","spawned_by_faction_id":"faction_veilmourn","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Fogchart Mooring sends a counterstroke along the southern expedition road."}]},{"id":"gaugesavant_unsecured_watch","priority":90,"conditions":[{"type":"day_at_least","day":5},{"type":"objective_not_met","objective_id":"secure_gaugesavant_watch"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_veilmourn","amount":2},{"type":"message","text":"The Milestone Arsenal Watch keeps the expedition line divided."}]},{"id":"gaugesavant_eastern_screen_pressure","priority":86,"conditions":[{"type":"day_at_least","day":7},{"type":"objective_not_met","objective_id":"clear_gaugesavant_screen_c"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_veilmourn","amount":1},{"type":"message","text":"The eastern spellward screen begins relaying hostile survey marks."}]},{"id":"gaugesavant_watch_secured","priority":84,"conditions":[{"type":"encounter_resolved","placement_id":"gaugesavant_milestone_arsenal_watch"}],"effects":[{"type":"add_resources","resources":{"brass_scrip":1}},{"type":"award_experience","amount":150},{"type":"set_flag","flag":"gaugesavant_milestone_arsenal_watch_secured","value":true},{"type":"message","text":"Lina secures the Milestone Arsenal Watch and completes its spellwright survey."}]}],"towns":[{"placement_id":"gaugesavant_player_town","town_id":"town_brasshollow_clauseworks_depot","x":0,"y":3,"owner":"player"},{"placement_id":"gaugesavant_enemy_town","town_id":"town_veilmourn_fogchart_mooring","x":11,"y":3,"owner":"enemy"}],"enemy_factions":[{"faction_id":"faction_veilmourn","label":"Fogchart Mooring Spellward Pressure","pressure_per_day":2,"pressure_per_enemy_town":1,"raid_threshold":5,"max_active_raids":2,"raid_pillage_delay":1,"raid_pillage":{"gold":170,"memory_salt":1},"raid_encounter_ids":["encounter_bellwake_privateers"],"spawn_points":[{"x":10,"y":1},{"x":10,"y":5}],"siege_target_placement_id":"gaugesavant_player_town","siege_active_raid_threshold":2,"siege_capture_progress":2}],"resource_nodes":[{"placement_id":"gaugesavant_faction_landmark","site_id":"site_brasshollow_gauge_shrine","x":1,"y":2},{"placement_id":"gaugesavant_watch_dwelling","site_id":"site_milestone_arsenal","x":8,"y":4},{"placement_id":"gaugesavant_player_rare","site_id":"site_brass_scrip_mint","x":0,"y":1},{"placement_id":"gaugesavant_enemy_rare","site_id":"site_memory_salt_pan","x":11,"y":1,"collected_by_faction_id":"faction_veilmourn"},{"placement_id":"gaugesavant_wood","site_id":"site_wood_wagon","x":2,"y":0},{"placement_id":"gaugesavant_ore","site_id":"site_ore_crates","x":10,"y":6,"collected_by_faction_id":"faction_veilmourn"},{"placement_id":"gaugesavant_player_exchange","site_id":"site_frontier_rare_exchange","x":2,"y":5},{"placement_id":"gaugesavant_enemy_exchange","site_id":"site_frontier_rare_exchange","x":10,"y":2,"collected_by_faction_id":"faction_veilmourn"},{"placement_id":"gaugesavant_feature_1","site_id":"site_orevein_assay_depot","x":3,"y":3},{"placement_id":"gaugesavant_feature_2","site_id":"site_road_writ_purse","x":5,"y":0},{"placement_id":"gaugesavant_feature_3","site_id":"site_reef_coin_assay","x":6,"y":6},{"placement_id":"gaugesavant_feature_4","site_id":"site_ridge_quarry","x":9,"y":5}],"artifact_nodes":[{"placement_id":"gaugesavant_artifact_1","artifact_id":"artifact_redline_warrant_gonfalon","x":3,"y":0},{"placement_id":"gaugesavant_artifact_2","artifact_id":"artifact_quarry_tally_rod","x":5,"y":5},{"placement_id":"gaugesavant_artifact_3","artifact_id":"artifact_quenchplate_vambrace","x":7,"y":2},{"placement_id":"gaugesavant_artifact_4","artifact_id":"artifact_redline_survey_dial","x":9,"y":6}],"encounters":[{"placement_id":"gaugesavant_screen_a","encounter_id":"encounter_bellwake_privateers","x":4,"y":1,"difficulty":"medium","combat_seed":26141,"enemy_army":{"id":"army_gaugesavant_screen_a","name":"Fogchart Mooring Spellward Screen A","faction_id":"faction_veilmourn","stacks":[{"unit_id":"unit_veilmourn_bellwake_oars","count":7},{"unit_id":"unit_veilmourn_mourning_lanterns","count":4}]}},{"placement_id":"gaugesavant_screen_b","encounter_id":"encounter_bellwake_privateers","x":6,"y":3,"difficulty":"medium","combat_seed":26142,"enemy_army":{"id":"army_gaugesavant_screen_b","name":"Fogchart Mooring Spellward Screen B","faction_id":"faction_veilmourn","stacks":[{"unit_id":"unit_veilmourn_bellwake_oars","count":8},{"unit_id":"unit_veilmourn_maskglass_corsairs","count":3}]}},{"placement_id":"gaugesavant_screen_c","encounter_id":"encounter_bellwake_privateers","x":8,"y":1,"difficulty":"medium","combat_seed":26143,"enemy_army":{"id":"army_gaugesavant_screen_c","name":"Fogchart Mooring Spellward Screen C","faction_id":"faction_veilmourn","stacks":[{"unit_id":"unit_veilmourn_bellwake_oars","count":6},{"unit_id":"unit_veilmourn_undertow_harpooners","count":2}]}},{"placement_id":"gaugesavant_milestone_arsenal_watch","encounter_id":"encounter_milestone_arsenal_watch","x":9,"y":4,"difficulty":"medium","combat_seed":26144,"prefer_identity_landmark":true}]},
-    {"id":"mirrorbell-harbor-echo","name":"Mirrorbell Harbor Echo","selection":{"summary":"Sael leads a spellwright expedition across a contested twelve-league front to secure the Harbor Pilot House Watch.","recommended_difficulty":"normal","map_size_label":"Harbor Echo Reach (12x7)","player_summary":"Sael commands Sael's Mirror-Navigation Cadre from Fogchart Mooring.","enemy_summary":"Riverwatch Hold contests the spellwright route around the neutral Harbor Pilot House Watch.","availability":{"campaign":false,"skirmish":true}},"map_size":{"width":12,"height":7},"player_faction_id":"faction_veilmourn","player_army_id":"army_sael_spellwright_cadre","hero_id":"hero_veilmourn_sael_mirrorbell","starting_resources":{"gold":1100,"wood":4,"ore":4,"memory_salt":2},"map":[["sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough"],["rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass"],["grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand"],["sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough"],["rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass"],["grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand"],["sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough"]],"start":{"x":0,"y":3},"hero_starts":["hero_veilmourn_sael_mirrorbell"],"objectives":{"victory_text":"Sael secures the Harbor Pilot House Watch and completes the spellwright expedition line.","defeat_text":"Riverwatch Hold closes the expedition line before Sael can secure the watch.","victory":[{"id":"claim_mirrorbell_enemy_town","label":"Claim Riverwatch Hold","type":"town_owned_by_player","placement_id":"mirrorbell_enemy_town"},{"id":"secure_mirrorbell_watch","label":"Secure the Harbor Pilot House Watch","type":"encounter_resolved","placement_id":"mirrorbell_harbor_pilot_house_watch"},{"id":"clear_mirrorbell_screen_a","label":"Clear the western spellward screen","type":"encounter_resolved","placement_id":"mirrorbell_screen_a"},{"id":"clear_mirrorbell_screen_b","label":"Clear the central spellward screen","type":"encounter_resolved","placement_id":"mirrorbell_screen_b"},{"id":"clear_mirrorbell_screen_c","label":"Clear the eastern spellward screen","type":"encounter_resolved","placement_id":"mirrorbell_screen_c"}],"defeat":[{"id":"hold_mirrorbell_player_town","label":"Keep Fogchart Mooring","type":"town_not_owned_by_player","placement_id":"mirrorbell_player_town"},{"id":"mirrorbell_hero_survives","label":"Sael must survive","type":"session_flag_equals","flag":"campaign","value":"defeat"},{"id":"contain_mirrorbell_pressure","label":"Keep enemy pressure below 13","type":"enemy_pressure_at_least","faction_id":"faction_embercourt","threshold":13},{"id":"finish_mirrorbell_in_time","label":"Finish before Day 16","type":"day_at_least","day":16}]},"script_hooks":[{"id":"mirrorbell_spellwright_muster","priority":122,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"mirrorbell_player_town"}],"effects":[{"type":"add_resources","resources":{"gold":320,"wood":1}},{"type":"town_add_recruits","placement_id":"mirrorbell_player_town","recruits":{"unit_veilmourn_undertow_harpooners":2,"unit_veilmourn_obituary_scribes":1}},{"type":"message","text":"Fogchart Mooring sends Sael a spellwright reserve."}]},{"id":"mirrorbell_town_claimed","priority":112,"conditions":[{"type":"objective_met","objective_id":"claim_mirrorbell_enemy_town"}],"effects":[{"type":"town_add_building","placement_id":"mirrorbell_enemy_town","building_id":"building_wayfarers_hall"},{"type":"set_flag","flag":"mirrorbell_enemy_town_claimed","value":true},{"type":"message","text":"Sael posts the expedition charter at Riverwatch Hold."}]},{"id":"mirrorbell_counterstroke","priority":98,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"mirrorbell_player_town"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"mirrorbell_counterstroke","encounter_id":"encounter_charter_guard","x":11,"y":6,"difficulty":"scripted","spawned_by_faction_id":"faction_embercourt","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Riverwatch Hold sends a counterstroke along the southern expedition road."}]},{"id":"mirrorbell_unsecured_watch","priority":90,"conditions":[{"type":"day_at_least","day":5},{"type":"objective_not_met","objective_id":"secure_mirrorbell_watch"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_embercourt","amount":2},{"type":"message","text":"The Harbor Pilot House Watch keeps the expedition line divided."}]},{"id":"mirrorbell_eastern_screen_pressure","priority":86,"conditions":[{"type":"day_at_least","day":7},{"type":"objective_not_met","objective_id":"clear_mirrorbell_screen_c"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_embercourt","amount":1},{"type":"message","text":"The eastern spellward screen begins relaying hostile survey marks."}]},{"id":"mirrorbell_watch_secured","priority":84,"conditions":[{"type":"encounter_resolved","placement_id":"mirrorbell_harbor_pilot_house_watch"}],"effects":[{"type":"add_resources","resources":{"memory_salt":1}},{"type":"award_experience","amount":150},{"type":"set_flag","flag":"mirrorbell_harbor_pilot_house_watch_secured","value":true},{"type":"message","text":"Sael secures the Harbor Pilot House Watch and completes its spellwright survey."}]}],"towns":[{"placement_id":"mirrorbell_player_town","town_id":"town_veilmourn_fogchart_mooring","x":0,"y":3,"owner":"player"},{"placement_id":"mirrorbell_enemy_town","town_id":"town_riverwatch","x":11,"y":3,"owner":"enemy"}],"enemy_factions":[{"faction_id":"faction_embercourt","label":"Riverwatch Hold Spellward Pressure","pressure_per_day":2,"pressure_per_enemy_town":1,"raid_threshold":5,"max_active_raids":2,"raid_pillage_delay":1,"raid_pillage":{"gold":170,"embergrain":1},"raid_encounter_ids":["encounter_charter_guard"],"spawn_points":[{"x":10,"y":1},{"x":10,"y":5}],"siege_target_placement_id":"mirrorbell_player_town","siege_active_raid_threshold":2,"siege_capture_progress":2}],"resource_nodes":[{"placement_id":"mirrorbell_faction_landmark","site_id":"site_veilmourn_bell_mast","x":1,"y":2},{"placement_id":"mirrorbell_watch_dwelling","site_id":"site_harbor_pilot_house","x":8,"y":4},{"placement_id":"mirrorbell_player_rare","site_id":"site_memory_salt_pan","x":0,"y":1},{"placement_id":"mirrorbell_enemy_rare","site_id":"site_embergrain_warm_granary","x":11,"y":1,"collected_by_faction_id":"faction_embercourt"},{"placement_id":"mirrorbell_wood","site_id":"site_wood_wagon","x":2,"y":0},{"placement_id":"mirrorbell_ore","site_id":"site_ore_crates","x":10,"y":6,"collected_by_faction_id":"faction_embercourt"},{"placement_id":"mirrorbell_player_exchange","site_id":"site_frontier_rare_exchange","x":2,"y":5},{"placement_id":"mirrorbell_enemy_exchange","site_id":"site_frontier_rare_exchange","x":10,"y":2,"collected_by_faction_id":"faction_embercourt"},{"placement_id":"mirrorbell_feature_1","site_id":"site_bellwake_wreck_ledger","x":3,"y":3},{"placement_id":"mirrorbell_feature_2","site_id":"site_reef_coin_assay","x":5,"y":0},{"placement_id":"mirrorbell_feature_3","site_id":"site_wind_press","x":6,"y":6},{"placement_id":"mirrorbell_feature_4","site_id":"site_watchtower_beacon","x":9,"y":5}],"artifact_nodes":[{"placement_id":"mirrorbell_artifact_1","artifact_id":"artifact_drowned_star_astrolabe","x":3,"y":0},{"placement_id":"mirrorbell_artifact_2","artifact_id":"artifact_fogwake_deckboots","x":5,"y":5},{"placement_id":"mirrorbell_artifact_3","artifact_id":"artifact_wakebell_mourning_ensign","x":7,"y":2},{"placement_id":"mirrorbell_artifact_4","artifact_id":"artifact_black_sail_compass","x":9,"y":6}],"encounters":[{"placement_id":"mirrorbell_screen_a","encounter_id":"encounter_charter_guard","x":4,"y":1,"difficulty":"medium","combat_seed":26151,"enemy_army":{"id":"army_mirrorbell_screen_a","name":"Riverwatch Hold Spellward Screen A","faction_id":"faction_embercourt","stacks":[{"unit_id":"unit_river_guard","count":7},{"unit_id":"unit_ember_archer","count":4}]}},{"placement_id":"mirrorbell_screen_b","encounter_id":"encounter_charter_guard","x":6,"y":3,"difficulty":"medium","combat_seed":26152,"enemy_army":{"id":"army_mirrorbell_screen_b","name":"Riverwatch Hold Spellward Screen B","faction_id":"faction_embercourt","stacks":[{"unit_id":"unit_river_guard","count":8},{"unit_id":"unit_citadel_pikeward","count":3}]}},{"placement_id":"mirrorbell_screen_c","encounter_id":"encounter_charter_guard","x":8,"y":1,"difficulty":"medium","combat_seed":26153,"enemy_army":{"id":"army_mirrorbell_screen_c","name":"Riverwatch Hold Spellward Screen C","faction_id":"faction_embercourt","stacks":[{"unit_id":"unit_river_guard","count":6},{"unit_id":"unit_embercourt_ash_oath_bailiffs","count":2}]}},{"placement_id":"mirrorbell_harbor_pilot_house_watch","encounter_id":"encounter_harbor_pilot_house_watch","x":9,"y":4,"difficulty":"medium","combat_seed":26154,"prefer_identity_landmark":true}]}
+    {"id":"mirrorbell-harbor-echo","name":"Mirrorbell Harbor Echo","selection":{"summary":"Sael leads a spellwright expedition across a contested twelve-league front to secure the Harbor Pilot House Watch.","recommended_difficulty":"normal","map_size_label":"Harbor Echo Reach (12x7)","player_summary":"Sael commands Sael's Mirror-Navigation Cadre from Fogchart Mooring.","enemy_summary":"Riverwatch Hold contests the spellwright route around the neutral Harbor Pilot House Watch.","availability":{"campaign":false,"skirmish":true}},"map_size":{"width":12,"height":7},"player_faction_id":"faction_veilmourn","player_army_id":"army_sael_spellwright_cadre","hero_id":"hero_veilmourn_sael_mirrorbell","starting_resources":{"gold":1100,"wood":4,"ore":4,"memory_salt":2},"map":[["sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough"],["rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass"],["grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand"],["sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough"],["rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass"],["grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough","sand"],["sand","grass","rough","sand","grass","rough","sand","grass","rough","sand","grass","rough"]],"start":{"x":0,"y":3},"hero_starts":["hero_veilmourn_sael_mirrorbell"],"objectives":{"victory_text":"Sael secures the Harbor Pilot House Watch and completes the spellwright expedition line.","defeat_text":"Riverwatch Hold closes the expedition line before Sael can secure the watch.","victory":[{"id":"claim_mirrorbell_enemy_town","label":"Claim Riverwatch Hold","type":"town_owned_by_player","placement_id":"mirrorbell_enemy_town"},{"id":"secure_mirrorbell_watch","label":"Secure the Harbor Pilot House Watch","type":"encounter_resolved","placement_id":"mirrorbell_harbor_pilot_house_watch"},{"id":"clear_mirrorbell_screen_a","label":"Clear the western spellward screen","type":"encounter_resolved","placement_id":"mirrorbell_screen_a"},{"id":"clear_mirrorbell_screen_b","label":"Clear the central spellward screen","type":"encounter_resolved","placement_id":"mirrorbell_screen_b"},{"id":"clear_mirrorbell_screen_c","label":"Clear the eastern spellward screen","type":"encounter_resolved","placement_id":"mirrorbell_screen_c"}],"defeat":[{"id":"hold_mirrorbell_player_town","label":"Keep Fogchart Mooring","type":"town_not_owned_by_player","placement_id":"mirrorbell_player_town"},{"id":"mirrorbell_hero_survives","label":"Sael must survive","type":"session_flag_equals","flag":"campaign","value":"defeat"},{"id":"contain_mirrorbell_pressure","label":"Keep enemy pressure below 13","type":"enemy_pressure_at_least","faction_id":"faction_embercourt","threshold":13},{"id":"finish_mirrorbell_in_time","label":"Finish before Day 16","type":"day_at_least","day":16}]},"script_hooks":[{"id":"mirrorbell_spellwright_muster","priority":122,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"mirrorbell_player_town"}],"effects":[{"type":"add_resources","resources":{"gold":320,"wood":1}},{"type":"town_add_recruits","placement_id":"mirrorbell_player_town","recruits":{"unit_veilmourn_undertow_harpooners":2,"unit_veilmourn_obituary_scribes":1}},{"type":"message","text":"Fogchart Mooring sends Sael a spellwright reserve."}]},{"id":"mirrorbell_town_claimed","priority":112,"conditions":[{"type":"objective_met","objective_id":"claim_mirrorbell_enemy_town"}],"effects":[{"type":"town_add_building","placement_id":"mirrorbell_enemy_town","building_id":"building_wayfarers_hall"},{"type":"set_flag","flag":"mirrorbell_enemy_town_claimed","value":true},{"type":"message","text":"Sael posts the expedition charter at Riverwatch Hold."}]},{"id":"mirrorbell_counterstroke","priority":98,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"mirrorbell_player_town"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"mirrorbell_counterstroke","encounter_id":"encounter_charter_guard","x":11,"y":6,"difficulty":"scripted","spawned_by_faction_id":"faction_embercourt","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Riverwatch Hold sends a counterstroke along the southern expedition road."}]},{"id":"mirrorbell_unsecured_watch","priority":90,"conditions":[{"type":"day_at_least","day":5},{"type":"objective_not_met","objective_id":"secure_mirrorbell_watch"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_embercourt","amount":2},{"type":"message","text":"The Harbor Pilot House Watch keeps the expedition line divided."}]},{"id":"mirrorbell_eastern_screen_pressure","priority":86,"conditions":[{"type":"day_at_least","day":7},{"type":"objective_not_met","objective_id":"clear_mirrorbell_screen_c"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_embercourt","amount":1},{"type":"message","text":"The eastern spellward screen begins relaying hostile survey marks."}]},{"id":"mirrorbell_watch_secured","priority":84,"conditions":[{"type":"encounter_resolved","placement_id":"mirrorbell_harbor_pilot_house_watch"}],"effects":[{"type":"add_resources","resources":{"memory_salt":1}},{"type":"award_experience","amount":150},{"type":"set_flag","flag":"mirrorbell_harbor_pilot_house_watch_secured","value":true},{"type":"message","text":"Sael secures the Harbor Pilot House Watch and completes its spellwright survey."}]}],"towns":[{"placement_id":"mirrorbell_player_town","town_id":"town_veilmourn_fogchart_mooring","x":0,"y":3,"owner":"player"},{"placement_id":"mirrorbell_enemy_town","town_id":"town_riverwatch","x":11,"y":3,"owner":"enemy"}],"enemy_factions":[{"faction_id":"faction_embercourt","label":"Riverwatch Hold Spellward Pressure","pressure_per_day":2,"pressure_per_enemy_town":1,"raid_threshold":5,"max_active_raids":2,"raid_pillage_delay":1,"raid_pillage":{"gold":170,"embergrain":1},"raid_encounter_ids":["encounter_charter_guard"],"spawn_points":[{"x":10,"y":1},{"x":10,"y":5}],"siege_target_placement_id":"mirrorbell_player_town","siege_active_raid_threshold":2,"siege_capture_progress":2}],"resource_nodes":[{"placement_id":"mirrorbell_faction_landmark","site_id":"site_veilmourn_bell_mast","x":1,"y":2},{"placement_id":"mirrorbell_watch_dwelling","site_id":"site_harbor_pilot_house","x":8,"y":4},{"placement_id":"mirrorbell_player_rare","site_id":"site_memory_salt_pan","x":0,"y":1},{"placement_id":"mirrorbell_enemy_rare","site_id":"site_embergrain_warm_granary","x":11,"y":1,"collected_by_faction_id":"faction_embercourt"},{"placement_id":"mirrorbell_wood","site_id":"site_wood_wagon","x":2,"y":0},{"placement_id":"mirrorbell_ore","site_id":"site_ore_crates","x":10,"y":6,"collected_by_faction_id":"faction_embercourt"},{"placement_id":"mirrorbell_player_exchange","site_id":"site_frontier_rare_exchange","x":2,"y":5},{"placement_id":"mirrorbell_enemy_exchange","site_id":"site_frontier_rare_exchange","x":10,"y":2,"collected_by_faction_id":"faction_embercourt"},{"placement_id":"mirrorbell_feature_1","site_id":"site_bellwake_wreck_ledger","x":3,"y":3},{"placement_id":"mirrorbell_feature_2","site_id":"site_reef_coin_assay","x":5,"y":0},{"placement_id":"mirrorbell_feature_3","site_id":"site_wind_press","x":6,"y":6},{"placement_id":"mirrorbell_feature_4","site_id":"site_watchtower_beacon","x":9,"y":5}],"artifact_nodes":[{"placement_id":"mirrorbell_artifact_1","artifact_id":"artifact_drowned_star_astrolabe","x":3,"y":0},{"placement_id":"mirrorbell_artifact_2","artifact_id":"artifact_fogwake_deckboots","x":5,"y":5},{"placement_id":"mirrorbell_artifact_3","artifact_id":"artifact_wakebell_mourning_ensign","x":7,"y":2},{"placement_id":"mirrorbell_artifact_4","artifact_id":"artifact_black_sail_compass","x":9,"y":6}],"encounters":[{"placement_id":"mirrorbell_screen_a","encounter_id":"encounter_charter_guard","x":4,"y":1,"difficulty":"medium","combat_seed":26151,"enemy_army":{"id":"army_mirrorbell_screen_a","name":"Riverwatch Hold Spellward Screen A","faction_id":"faction_embercourt","stacks":[{"unit_id":"unit_river_guard","count":7},{"unit_id":"unit_ember_archer","count":4}]}},{"placement_id":"mirrorbell_screen_b","encounter_id":"encounter_charter_guard","x":6,"y":3,"difficulty":"medium","combat_seed":26152,"enemy_army":{"id":"army_mirrorbell_screen_b","name":"Riverwatch Hold Spellward Screen B","faction_id":"faction_embercourt","stacks":[{"unit_id":"unit_river_guard","count":8},{"unit_id":"unit_citadel_pikeward","count":3}]}},{"placement_id":"mirrorbell_screen_c","encounter_id":"encounter_charter_guard","x":8,"y":1,"difficulty":"medium","combat_seed":26153,"enemy_army":{"id":"army_mirrorbell_screen_c","name":"Riverwatch Hold Spellward Screen C","faction_id":"faction_embercourt","stacks":[{"unit_id":"unit_river_guard","count":6},{"unit_id":"unit_embercourt_ash_oath_bailiffs","count":2}]}},{"placement_id":"mirrorbell_harbor_pilot_house_watch","encounter_id":"encounter_harbor_pilot_house_watch","x":9,"y":4,"difficulty":"medium","combat_seed":26154,"prefer_identity_landmark":true}]},
+    {
+      "id": "beaconscribe-frostbeacon-circuit",
+      "name": "Beaconscribe Frostbeacon Circuit",
+      "selection": {
+        "summary": "Jorun traces a contested ritual relay across thirteen leagues to secure the Frostbeacon Bothy Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Frostsignal Ladder (13x8)",
+        "player_summary": "Jorun commands Jorun's Beacon-Ladder Cadre from Highwater Keep.",
+        "enemy_summary": "Duskfen Bastion contests the relay circuit around the neutral Frostbeacon Bothy Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 13,
+        "height": 8
+      },
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_jorun_ritual_relay_cadre",
+      "hero_id": "hero_embercourt_jorun_beaconscribe",
+      "starting_resources": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4,
+        "embergrain": 2
+      },
+      "map": [
+        [
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough"
+        ],
+        [
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough"
+        ],
+        [
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_embercourt_jorun_beaconscribe"
+      ],
+      "objectives": {
+        "victory_text": "Jorun closes the complete Frostsignal Ladder ritual circuit.",
+        "defeat_text": "Duskfen Bastion breaks the ritual relay before Jorun secures its watch.",
+        "victory": [
+          {
+            "id": "claim_beaconscribe_enemy_town",
+            "label": "Claim Duskfen Bastion",
+            "type": "town_owned_by_player",
+            "placement_id": "beaconscribe_enemy_town"
+          },
+          {
+            "id": "secure_beaconscribe_watch",
+            "label": "Secure the Frostbeacon Bothy Watch",
+            "type": "encounter_resolved",
+            "placement_id": "beaconscribe_frostbeacon_bothy_watch"
+          },
+          {
+            "id": "clear_beaconscribe_relay_a",
+            "label": "Clear the northwestern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "beaconscribe_relay_a"
+          },
+          {
+            "id": "clear_beaconscribe_relay_b",
+            "label": "Clear the central ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "beaconscribe_relay_b"
+          },
+          {
+            "id": "clear_beaconscribe_relay_c",
+            "label": "Clear the northeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "beaconscribe_relay_c"
+          },
+          {
+            "id": "clear_beaconscribe_relay_d",
+            "label": "Clear the southeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "beaconscribe_relay_d"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_beaconscribe_player_town",
+            "label": "Keep Highwater Keep",
+            "type": "town_not_owned_by_player",
+            "placement_id": "beaconscribe_player_town"
+          },
+          {
+            "id": "beaconscribe_hero_survives",
+            "label": "Jorun must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_beaconscribe_pressure",
+            "label": "Keep enemy pressure below 14",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_mireclaw",
+            "threshold": 14
+          },
+          {
+            "id": "finish_beaconscribe_in_time",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "beaconscribe_ritual_muster",
+          "priority": 124,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "beaconscribe_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 340,
+                "wood": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "beaconscribe_player_town",
+              "recruits": {
+                "unit_embercourt_lantern_sappers": 2,
+                "unit_embercourt_bargebow_crews": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Highwater Keep sends Jorun a ritual-relay reserve."
+            }
+          ]
+        },
+        {
+          "id": "beaconscribe_town_claimed",
+          "priority": 114,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_beaconscribe_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "beaconscribe_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "beaconscribe_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Jorun anchors the relay charter at Duskfen Bastion."
+            }
+          ]
+        },
+        {
+          "id": "beaconscribe_counterstroke",
+          "priority": 100,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "beaconscribe_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "beaconscribe_counterstroke",
+                "encounter_id": "encounter_mossglass_moonhunt",
+                "x": 12,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Duskfen Bastion sends a counterstroke down the outer relay."
+            }
+          ]
+        },
+        {
+          "id": "beaconscribe_unsecured_watch",
+          "priority": 92,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_beaconscribe_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Frostbeacon Bothy Watch keeps the ritual circuit divided."
+            }
+          ]
+        },
+        {
+          "id": "beaconscribe_relay_c_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_beaconscribe_relay_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northeastern ritual relay begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "beaconscribe_relay_d_pressure",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_beaconscribe_relay_d"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The southeastern ritual relay hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "beaconscribe_watch_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "beaconscribe_frostbeacon_bothy_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "embergrain": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 170
+            },
+            {
+              "type": "set_flag",
+              "flag": "beaconscribe_frostbeacon_bothy_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Jorun secures the Frostbeacon Bothy Watch and closes its relay seal."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "beaconscribe_player_town",
+          "town_id": "town_highwater_keep",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "beaconscribe_enemy_town",
+          "town_id": "town_duskfen",
+          "x": 12,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Duskfen Frostline Pressure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "peatwax": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_mossglass_moonhunt"
+          ],
+          "spawn_points": [
+            {
+              "x": 11,
+              "y": 1
+            },
+            {
+              "x": 11,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "beaconscribe_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "beaconscribe_faction_landmark",
+          "site_id": "site_ember_signal_brazier",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "beaconscribe_watch_dwelling",
+          "site_id": "site_frostbeacon_bothy",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "placement_id": "beaconscribe_player_rare",
+          "site_id": "site_embergrain_warm_granary",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "beaconscribe_enemy_rare",
+          "site_id": "site_peatwax_reed_yard",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "beaconscribe_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "beaconscribe_ore",
+          "site_id": "site_ore_crates",
+          "x": 12,
+          "y": 7,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "beaconscribe_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "beaconscribe_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 11,
+          "y": 2,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "beaconscribe_feature_1",
+          "site_id": "site_cinder_kiln",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "beaconscribe_feature_2",
+          "site_id": "site_cliffhawk_roost",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "beaconscribe_feature_3",
+          "site_id": "site_roadside_sanctum",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "placement_id": "beaconscribe_feature_4",
+          "site_id": "site_brightwood_sawmill",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "beaconscribe_feature_5",
+          "site_id": "site_wayfarer_infirmary",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "beaconscribe_feature_6",
+          "site_id": "site_beacon_path_scroll",
+          "x": 4,
+          "y": 7
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "beaconscribe_artifact_1",
+          "artifact_id": "artifact_asterfall_mantle",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "beaconscribe_artifact_2",
+          "artifact_id": "artifact_bridgefire_standard",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "placement_id": "beaconscribe_artifact_3",
+          "artifact_id": "artifact_milepost_lantern",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "beaconscribe_artifact_4",
+          "artifact_id": "artifact_waymark_compass",
+          "x": 9,
+          "y": 7
+        },
+        {
+          "placement_id": "beaconscribe_artifact_5",
+          "artifact_id": "artifact_briarcrown_covenant_standard",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "beaconscribe_relay_a",
+          "encounter_id": "encounter_mossglass_moonhunt",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26201,
+          "enemy_army": {
+            "id": "army_beaconscribe_relay_a",
+            "name": "Duskfen Bastion Relay Screen A",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_reedsnare_kin",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_mireclaw_mudglass_slingers",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "beaconscribe_relay_b",
+          "encounter_id": "encounter_mossglass_moonhunt",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 26202,
+          "enemy_army": {
+            "id": "army_beaconscribe_relay_b",
+            "name": "Duskfen Bastion Relay Screen B",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_reedsnare_kin",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_mireclaw_bogplate_maulers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "beaconscribe_relay_c",
+          "encounter_id": "encounter_mossglass_moonhunt",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26203,
+          "enemy_army": {
+            "id": "army_beaconscribe_relay_c",
+            "name": "Duskfen Bastion Relay Screen C",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_mudglass_slingers",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_mireclaw_ferrychain_lashers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "beaconscribe_relay_d",
+          "encounter_id": "encounter_mossglass_moonhunt",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26204,
+          "enemy_army": {
+            "id": "army_beaconscribe_relay_d",
+            "name": "Duskfen Bastion Relay Screen D",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {
+                "unit_id": "unit_mireclaw_bogplate_maulers",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_mireclaw_ferrychain_lashers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "beaconscribe_frostbeacon_bothy_watch",
+          "encounter_id": "encounter_frostbeacon_bothy_watch",
+          "x": 9,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26205,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "reedscript-reedbarge-circuit",
+      "name": "Reedscript Reedbarge Circuit",
+      "selection": {
+        "summary": "Pell traces a contested ritual relay across thirteen leagues to secure the Reedbarge Mooring Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Reedbarge Refrain (13x8)",
+        "player_summary": "Pell commands Pell's Reed-Relay Cadre from Reedbarrow Ferry.",
+        "enemy_summary": "Halo Spire contests the relay circuit around the neutral Reedbarge Mooring Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 13,
+        "height": 8
+      },
+      "player_faction_id": "faction_mireclaw",
+      "player_army_id": "army_pell_ritual_relay_cadre",
+      "hero_id": "hero_mireclaw_pell_reedscript",
+      "starting_resources": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4,
+        "peatwax": 2
+      },
+      "map": [
+        [
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass"
+        ],
+        [
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough"
+        ],
+        [
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass"
+        ],
+        [
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough"
+        ],
+        [
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass"
+        ],
+        [
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_mireclaw_pell_reedscript"
+      ],
+      "objectives": {
+        "victory_text": "Pell closes the complete Reedbarge Refrain ritual circuit.",
+        "defeat_text": "Halo Spire breaks the ritual relay before Pell secures its watch.",
+        "victory": [
+          {
+            "id": "claim_reedscript_enemy_town",
+            "label": "Claim Halo Spire",
+            "type": "town_owned_by_player",
+            "placement_id": "reedscript_enemy_town"
+          },
+          {
+            "id": "secure_reedscript_watch",
+            "label": "Secure the Reedbarge Mooring Watch",
+            "type": "encounter_resolved",
+            "placement_id": "reedscript_reedbarge_mooring_watch"
+          },
+          {
+            "id": "clear_reedscript_relay_a",
+            "label": "Clear the northwestern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "reedscript_relay_a"
+          },
+          {
+            "id": "clear_reedscript_relay_b",
+            "label": "Clear the central ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "reedscript_relay_b"
+          },
+          {
+            "id": "clear_reedscript_relay_c",
+            "label": "Clear the northeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "reedscript_relay_c"
+          },
+          {
+            "id": "clear_reedscript_relay_d",
+            "label": "Clear the southeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "reedscript_relay_d"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_reedscript_player_town",
+            "label": "Keep Reedbarrow Ferry",
+            "type": "town_not_owned_by_player",
+            "placement_id": "reedscript_player_town"
+          },
+          {
+            "id": "reedscript_hero_survives",
+            "label": "Pell must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_reedscript_pressure",
+            "label": "Keep enemy pressure below 14",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_sunvault",
+            "threshold": 14
+          },
+          {
+            "id": "finish_reedscript_in_time",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "reedscript_ritual_muster",
+          "priority": 124,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "reedscript_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 340,
+                "wood": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "reedscript_player_town",
+              "recruits": {
+                "unit_mireclaw_mudglass_slingers": 2,
+                "unit_mireclaw_bogplate_maulers": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Reedbarrow Ferry sends Pell a ritual-relay reserve."
+            }
+          ]
+        },
+        {
+          "id": "reedscript_town_claimed",
+          "priority": 114,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_reedscript_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "reedscript_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "reedscript_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Pell anchors the relay charter at Halo Spire."
+            }
+          ]
+        },
+        {
+          "id": "reedscript_counterstroke",
+          "priority": 100,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "reedscript_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "reedscript_counterstroke",
+                "encounter_id": "encounter_parallax_choir",
+                "x": 12,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Halo Spire sends a counterstroke down the outer relay."
+            }
+          ]
+        },
+        {
+          "id": "reedscript_unsecured_watch",
+          "priority": 92,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_reedscript_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Reedbarge Mooring Watch keeps the ritual circuit divided."
+            }
+          ]
+        },
+        {
+          "id": "reedscript_relay_c_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_reedscript_relay_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northeastern ritual relay begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "reedscript_relay_d_pressure",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_reedscript_relay_d"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The southeastern ritual relay hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "reedscript_watch_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "reedscript_reedbarge_mooring_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "peatwax": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 170
+            },
+            {
+              "type": "set_flag",
+              "flag": "reedscript_reedbarge_mooring_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Pell secures the Reedbarge Mooring Watch and closes its relay seal."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "reedscript_player_town",
+          "town_id": "town_reedbarrow_ferry",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "reedscript_enemy_town",
+          "town_id": "town_halo_spire",
+          "x": 12,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_sunvault",
+          "label": "Halo Spire Reedline Pressure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "aetherglass": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_parallax_choir"
+          ],
+          "spawn_points": [
+            {
+              "x": 11,
+              "y": 1
+            },
+            {
+              "x": 11,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "reedscript_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "reedscript_faction_landmark",
+          "site_id": "site_bog_drum_totem",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "reedscript_watch_dwelling",
+          "site_id": "site_reedbarge_mooring",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "placement_id": "reedscript_player_rare",
+          "site_id": "site_peatwax_reed_yard",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "reedscript_enemy_rare",
+          "site_id": "site_aetherglass_lens_house",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "reedscript_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "reedscript_ore",
+          "site_id": "site_ore_crates",
+          "x": 12,
+          "y": 7,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "reedscript_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "reedscript_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 11,
+          "y": 2,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "reedscript_feature_1",
+          "site_id": "site_glowcap_croft",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "reedscript_feature_2",
+          "site_id": "site_reedscript_shrine",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "reedscript_feature_3",
+          "site_id": "site_harbor_pilot_house",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "placement_id": "reedscript_feature_4",
+          "site_id": "site_tidepool_skiffyard",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "reedscript_feature_5",
+          "site_id": "site_free_company_yard",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "reedscript_feature_6",
+          "site_id": "site_bellwake_wreck_ledger",
+          "x": 4,
+          "y": 7
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "reedscript_artifact_1",
+          "artifact_id": "artifact_choir_tuning_fork",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "reedscript_artifact_2",
+          "artifact_id": "artifact_cometwake_pennon",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "placement_id": "reedscript_artifact_3",
+          "artifact_id": "artifact_lockflame_writ_banner",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "reedscript_artifact_4",
+          "artifact_id": "artifact_mudglass_beads",
+          "x": 9,
+          "y": 7
+        },
+        {
+          "placement_id": "reedscript_artifact_5",
+          "artifact_id": "artifact_prismward_mantle",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "reedscript_relay_a",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26211,
+          "enemy_army": {
+            "id": "army_reedscript_relay_a",
+            "name": "Halo Spire Relay Screen A",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_shard_wardens",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_sunvault_prism_adepts",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "reedscript_relay_b",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 26212,
+          "enemy_army": {
+            "id": "army_reedscript_relay_b",
+            "name": "Halo Spire Relay Screen B",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_shard_wardens",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_sunvault_mirror_duelists",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "reedscript_relay_c",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26213,
+          "enemy_army": {
+            "id": "army_reedscript_relay_c",
+            "name": "Halo Spire Relay Screen C",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_prism_adepts",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_sunvault_resonant_choristers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "reedscript_relay_d",
+          "encounter_id": "encounter_parallax_choir",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26214,
+          "enemy_army": {
+            "id": "army_reedscript_relay_d",
+            "name": "Halo Spire Relay Screen D",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {
+                "unit_id": "unit_sunvault_mirror_duelists",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_sunvault_resonant_choristers",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "reedscript_reedbarge_mooring_watch",
+          "encounter_id": "encounter_reedbarge_mooring_watch",
+          "x": 9,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26215,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "sunvein-crystal-sump-circuit",
+      "name": "Sunvein Crystal Sump Circuit",
+      "selection": {
+        "summary": "Calis traces a contested ritual relay across thirteen leagues to secure the Crystal Sump Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Sumpglass Refraction (13x8)",
+        "player_summary": "Calis commands Calis's Sumpglass Cadre from Prismhearth.",
+        "enemy_summary": "Graftroot Caravan contests the relay circuit around the neutral Crystal Sump Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 13,
+        "height": 8
+      },
+      "player_faction_id": "faction_sunvault",
+      "player_army_id": "army_calis_ritual_relay_cadre",
+      "hero_id": "hero_sunvault_calis_sunvein",
+      "starting_resources": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4,
+        "aetherglass": 2
+      },
+      "map": [
+        [
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass"
+        ],
+        [
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass"
+        ],
+        [
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt",
+          "snow",
+          "grass",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_sunvault_calis_sunvein"
+      ],
+      "objectives": {
+        "victory_text": "Calis closes the complete Sumpglass Refraction ritual circuit.",
+        "defeat_text": "Graftroot Caravan breaks the ritual relay before Calis secures its watch.",
+        "victory": [
+          {
+            "id": "claim_sunvein_enemy_town",
+            "label": "Claim Graftroot Caravan",
+            "type": "town_owned_by_player",
+            "placement_id": "sunvein_enemy_town"
+          },
+          {
+            "id": "secure_sunvein_watch",
+            "label": "Secure the Crystal Sump Watch",
+            "type": "encounter_resolved",
+            "placement_id": "sunvein_crystal_sump_watch"
+          },
+          {
+            "id": "clear_sunvein_relay_a",
+            "label": "Clear the northwestern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "sunvein_relay_a"
+          },
+          {
+            "id": "clear_sunvein_relay_b",
+            "label": "Clear the central ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "sunvein_relay_b"
+          },
+          {
+            "id": "clear_sunvein_relay_c",
+            "label": "Clear the northeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "sunvein_relay_c"
+          },
+          {
+            "id": "clear_sunvein_relay_d",
+            "label": "Clear the southeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "sunvein_relay_d"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_sunvein_player_town",
+            "label": "Keep Prismhearth",
+            "type": "town_not_owned_by_player",
+            "placement_id": "sunvein_player_town"
+          },
+          {
+            "id": "sunvein_hero_survives",
+            "label": "Calis must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_sunvein_pressure",
+            "label": "Keep enemy pressure below 14",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_thornwake",
+            "threshold": 14
+          },
+          {
+            "id": "finish_sunvein_in_time",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "sunvein_ritual_muster",
+          "priority": 124,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "sunvein_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 340,
+                "wood": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "sunvein_player_town",
+              "recruits": {
+                "unit_sunvault_prism_adepts": 2,
+                "unit_sunvault_mirror_duelists": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Prismhearth sends Calis a ritual-relay reserve."
+            }
+          ]
+        },
+        {
+          "id": "sunvein_town_claimed",
+          "priority": 114,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_sunvein_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "sunvein_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "sunvein_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Calis anchors the relay charter at Graftroot Caravan."
+            }
+          ]
+        },
+        {
+          "id": "sunvein_counterstroke",
+          "priority": 100,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "sunvein_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "sunvein_counterstroke",
+                "encounter_id": "encounter_graftbound_pilgrims",
+                "x": 12,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_thornwake",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Graftroot Caravan sends a counterstroke down the outer relay."
+            }
+          ]
+        },
+        {
+          "id": "sunvein_unsecured_watch",
+          "priority": 92,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_sunvein_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_thornwake",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Crystal Sump Watch keeps the ritual circuit divided."
+            }
+          ]
+        },
+        {
+          "id": "sunvein_relay_c_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_sunvein_relay_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_thornwake",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northeastern ritual relay begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "sunvein_relay_d_pressure",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_sunvein_relay_d"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_thornwake",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The southeastern ritual relay hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "sunvein_watch_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "sunvein_crystal_sump_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "aetherglass": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 170
+            },
+            {
+              "type": "set_flag",
+              "flag": "sunvein_crystal_sump_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Calis secures the Crystal Sump Watch and closes its relay seal."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "sunvein_player_town",
+          "town_id": "town_prismhearth",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "sunvein_enemy_town",
+          "town_id": "town_thornwake_graftroot_caravan",
+          "x": 12,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_thornwake",
+          "label": "Graftroot Refraction Pressure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "verdant_grafts": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_graftbound_pilgrims"
+          ],
+          "spawn_points": [
+            {
+              "x": 11,
+              "y": 1
+            },
+            {
+              "x": 11,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "sunvein_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "sunvein_faction_landmark",
+          "site_id": "site_prism_relay_lens",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "sunvein_watch_dwelling",
+          "site_id": "site_crystal_sump",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "placement_id": "sunvein_player_rare",
+          "site_id": "site_aetherglass_lens_house",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "sunvein_enemy_rare",
+          "site_id": "site_verdant_graft_nursery",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_thornwake"
+        },
+        {
+          "placement_id": "sunvein_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "sunvein_ore",
+          "site_id": "site_ore_crates",
+          "x": 12,
+          "y": 7,
+          "collected_by_faction_id": "faction_thornwake"
+        },
+        {
+          "placement_id": "sunvein_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "sunvein_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 11,
+          "y": 2,
+          "collected_by_faction_id": "faction_thornwake"
+        },
+        {
+          "placement_id": "sunvein_feature_1",
+          "site_id": "site_kite_signal_eyrie",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "sunvein_feature_2",
+          "site_id": "site_frostwharf_house",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "sunvein_feature_3",
+          "site_id": "site_brightwood_sawmill",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "placement_id": "sunvein_feature_4",
+          "site_id": "site_beacon_path_scroll",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "sunvein_feature_5",
+          "site_id": "site_roadside_sanctum",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "sunvein_feature_6",
+          "site_id": "site_cliffhawk_roost",
+          "x": 4,
+          "y": 7
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "sunvein_artifact_1",
+          "artifact_id": "artifact_rainstar_sextant",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "sunvein_artifact_2",
+          "artifact_id": "artifact_redline_warrant_gonfalon",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "placement_id": "sunvein_artifact_3",
+          "artifact_id": "artifact_tollstone_ring",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "sunvein_artifact_4",
+          "artifact_id": "artifact_zenith_prism_pennon",
+          "x": 9,
+          "y": 7
+        },
+        {
+          "placement_id": "sunvein_artifact_5",
+          "artifact_id": "artifact_drowned_star_astrolabe",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "sunvein_relay_a",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26221,
+          "enemy_army": {
+            "id": "army_sunvein_relay_a",
+            "name": "Graftroot Caravan Relay Screen A",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_seedcutters",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_thornwake_thornwhip_carriers",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "sunvein_relay_b",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 26222,
+          "enemy_army": {
+            "id": "army_sunvein_relay_b",
+            "name": "Graftroot Caravan Relay Screen B",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_seedcutters",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_thornwake_sporeglass_menders",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "sunvein_relay_c",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26223,
+          "enemy_army": {
+            "id": "army_sunvein_relay_c",
+            "name": "Graftroot Caravan Relay Screen C",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_thornwhip_carriers",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_thornwake_barkmantle_rams",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "sunvein_relay_d",
+          "encounter_id": "encounter_graftbound_pilgrims",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26224,
+          "enemy_army": {
+            "id": "army_sunvein_relay_d",
+            "name": "Graftroot Caravan Relay Screen D",
+            "faction_id": "faction_thornwake",
+            "stacks": [
+              {
+                "unit_id": "unit_thornwake_sporeglass_menders",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_thornwake_barkmantle_rams",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "sunvein_crystal_sump_watch",
+          "encounter_id": "encounter_crystal_sump_watch",
+          "x": 9,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26225,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "mossvein-switchback-circuit",
+      "name": "Mossvein Switchback Circuit",
+      "selection": {
+        "summary": "Ralka traces a contested ritual relay across thirteen leagues to secure the Switchback Hostel Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Switchback Rootline (13x8)",
+        "player_summary": "Ralka commands Ralka's Switchroot Cadre from Rootgate Nursery.",
+        "enemy_summary": "Clauseworks Depot contests the relay circuit around the neutral Switchback Hostel Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 13,
+        "height": 8
+      },
+      "player_faction_id": "faction_thornwake",
+      "player_army_id": "army_ralka_ritual_relay_cadre",
+      "hero_id": "hero_thornwake_ralka_mossvein",
+      "starting_resources": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4,
+        "verdant_grafts": 2
+      },
+      "map": [
+        [
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest"
+        ],
+        [
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass"
+        ],
+        [
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest"
+        ],
+        [
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass"
+        ],
+        [
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest"
+        ],
+        [
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt",
+          "forest",
+          "grass",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_thornwake_ralka_mossvein"
+      ],
+      "objectives": {
+        "victory_text": "Ralka closes the complete Switchback Rootline ritual circuit.",
+        "defeat_text": "Clauseworks Depot breaks the ritual relay before Ralka secures its watch.",
+        "victory": [
+          {
+            "id": "claim_mossvein_enemy_town",
+            "label": "Claim Clauseworks Depot",
+            "type": "town_owned_by_player",
+            "placement_id": "mossvein_enemy_town"
+          },
+          {
+            "id": "secure_mossvein_watch",
+            "label": "Secure the Switchback Hostel Watch",
+            "type": "encounter_resolved",
+            "placement_id": "mossvein_switchback_hostel_watch"
+          },
+          {
+            "id": "clear_mossvein_relay_a",
+            "label": "Clear the northwestern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "mossvein_relay_a"
+          },
+          {
+            "id": "clear_mossvein_relay_b",
+            "label": "Clear the central ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "mossvein_relay_b"
+          },
+          {
+            "id": "clear_mossvein_relay_c",
+            "label": "Clear the northeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "mossvein_relay_c"
+          },
+          {
+            "id": "clear_mossvein_relay_d",
+            "label": "Clear the southeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "mossvein_relay_d"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_mossvein_player_town",
+            "label": "Keep Rootgate Nursery",
+            "type": "town_not_owned_by_player",
+            "placement_id": "mossvein_player_town"
+          },
+          {
+            "id": "mossvein_hero_survives",
+            "label": "Ralka must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_mossvein_pressure",
+            "label": "Keep enemy pressure below 14",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_brasshollow",
+            "threshold": 14
+          },
+          {
+            "id": "finish_mossvein_in_time",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "mossvein_ritual_muster",
+          "priority": 124,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "mossvein_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 340,
+                "wood": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "mossvein_player_town",
+              "recruits": {
+                "unit_thornwake_thornwhip_carriers": 2,
+                "unit_thornwake_sporeglass_menders": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Rootgate Nursery sends Ralka a ritual-relay reserve."
+            }
+          ]
+        },
+        {
+          "id": "mossvein_town_claimed",
+          "priority": 114,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_mossvein_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "mossvein_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "mossvein_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Ralka anchors the relay charter at Clauseworks Depot."
+            }
+          ]
+        },
+        {
+          "id": "mossvein_counterstroke",
+          "priority": 100,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "mossvein_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "mossvein_counterstroke",
+                "encounter_id": "encounter_redline_foreclosure",
+                "x": 12,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_brasshollow",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Clauseworks Depot sends a counterstroke down the outer relay."
+            }
+          ]
+        },
+        {
+          "id": "mossvein_unsecured_watch",
+          "priority": 92,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_mossvein_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_brasshollow",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Switchback Hostel Watch keeps the ritual circuit divided."
+            }
+          ]
+        },
+        {
+          "id": "mossvein_relay_c_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_mossvein_relay_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_brasshollow",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northeastern ritual relay begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "mossvein_relay_d_pressure",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_mossvein_relay_d"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_brasshollow",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The southeastern ritual relay hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "mossvein_watch_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "mossvein_switchback_hostel_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "verdant_grafts": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 170
+            },
+            {
+              "type": "set_flag",
+              "flag": "mossvein_switchback_hostel_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Ralka secures the Switchback Hostel Watch and closes its relay seal."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "mossvein_player_town",
+          "town_id": "town_thornwake_rootgate_nursery",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "mossvein_enemy_town",
+          "town_id": "town_brasshollow_clauseworks_depot",
+          "x": 12,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_brasshollow",
+          "label": "Clauseworks Switchback Pressure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "brass_scrip": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_redline_foreclosure"
+          ],
+          "spawn_points": [
+            {
+              "x": 11,
+              "y": 1
+            },
+            {
+              "x": 11,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "mossvein_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "mossvein_faction_landmark",
+          "site_id": "site_thornwake_graft_arch",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "mossvein_watch_dwelling",
+          "site_id": "site_switchback_hostel",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "placement_id": "mossvein_player_rare",
+          "site_id": "site_verdant_graft_nursery",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "mossvein_enemy_rare",
+          "site_id": "site_brass_scrip_mint",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "mossvein_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "mossvein_ore",
+          "site_id": "site_ore_crates",
+          "x": 12,
+          "y": 7,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "mossvein_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "mossvein_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 11,
+          "y": 2,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "mossvein_feature_1",
+          "site_id": "site_orchard_levy",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "mossvein_feature_2",
+          "site_id": "site_greenbranch_copse",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "mossvein_feature_3",
+          "site_id": "site_bramble_hedge",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "placement_id": "mossvein_feature_4",
+          "site_id": "site_wayfarer_infirmary",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "mossvein_feature_5",
+          "site_id": "site_riverwatch_free_company_yard",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "mossvein_feature_6",
+          "site_id": "site_basalt_gatehouse",
+          "x": 4,
+          "y": 7
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "mossvein_artifact_1",
+          "artifact_id": "artifact_fenhound_scent_bell",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "mossvein_artifact_2",
+          "artifact_id": "artifact_fogwake_deckboots",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "placement_id": "mossvein_artifact_3",
+          "artifact_id": "artifact_living_bridge_knot",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "mossvein_artifact_4",
+          "artifact_id": "artifact_meridian_relay_lens",
+          "x": 9,
+          "y": 7
+        },
+        {
+          "placement_id": "mossvein_artifact_5",
+          "artifact_id": "artifact_mirechain_hunt_totem",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "mossvein_relay_a",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26231,
+          "enemy_army": {
+            "id": "army_mossvein_relay_a",
+            "name": "Clauseworks Depot Relay Screen A",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_scrip_haulers",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_brasshollow_rivet_hounds",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "mossvein_relay_b",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 26232,
+          "enemy_army": {
+            "id": "army_mossvein_relay_b",
+            "name": "Clauseworks Depot Relay Screen B",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_scrip_haulers",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_brasshollow_furnace_pavis_teams",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "mossvein_relay_c",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26233,
+          "enemy_army": {
+            "id": "army_mossvein_relay_c",
+            "name": "Clauseworks Depot Relay Screen C",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_rivet_hounds",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_brasshollow_boiler_rivetcasters",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "mossvein_relay_d",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26234,
+          "enemy_army": {
+            "id": "army_mossvein_relay_d",
+            "name": "Clauseworks Depot Relay Screen D",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {
+                "unit_id": "unit_brasshollow_furnace_pavis_teams",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_brasshollow_boiler_rivetcasters",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "mossvein_switchback_hostel_watch",
+          "encounter_id": "encounter_switchback_hostel_watch",
+          "x": 9,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26235,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "ashmeter-dustjack-circuit",
+      "name": "Ashmeter Dustjack Circuit",
+      "selection": {
+        "summary": "Pava traces a contested ritual relay across thirteen leagues to secure the Dustjack Yard Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Dustjack Calibration (13x8)",
+        "player_summary": "Pava commands Pava's Dustjack Cadre from Orevein Gantry.",
+        "enemy_summary": "Fogchart Mooring contests the relay circuit around the neutral Dustjack Yard Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 13,
+        "height": 8
+      },
+      "player_faction_id": "faction_brasshollow",
+      "player_army_id": "army_pava_ritual_relay_cadre",
+      "hero_id": "hero_brasshollow_pava_ashmeter",
+      "starting_resources": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4,
+        "brass_scrip": 2
+      },
+      "map": [
+        [
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough"
+        ],
+        [
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt"
+        ],
+        [
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava"
+        ],
+        [
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough"
+        ],
+        [
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt"
+        ],
+        [
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava"
+        ],
+        [
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough"
+        ],
+        [
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt",
+          "rough",
+          "lava",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_brasshollow_pava_ashmeter"
+      ],
+      "objectives": {
+        "victory_text": "Pava closes the complete Dustjack Calibration ritual circuit.",
+        "defeat_text": "Fogchart Mooring breaks the ritual relay before Pava secures its watch.",
+        "victory": [
+          {
+            "id": "claim_ashmeter_enemy_town",
+            "label": "Claim Fogchart Mooring",
+            "type": "town_owned_by_player",
+            "placement_id": "ashmeter_enemy_town"
+          },
+          {
+            "id": "secure_ashmeter_watch",
+            "label": "Secure the Dustjack Yard Watch",
+            "type": "encounter_resolved",
+            "placement_id": "ashmeter_dustjack_yard_watch"
+          },
+          {
+            "id": "clear_ashmeter_relay_a",
+            "label": "Clear the northwestern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "ashmeter_relay_a"
+          },
+          {
+            "id": "clear_ashmeter_relay_b",
+            "label": "Clear the central ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "ashmeter_relay_b"
+          },
+          {
+            "id": "clear_ashmeter_relay_c",
+            "label": "Clear the northeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "ashmeter_relay_c"
+          },
+          {
+            "id": "clear_ashmeter_relay_d",
+            "label": "Clear the southeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "ashmeter_relay_d"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_ashmeter_player_town",
+            "label": "Keep Orevein Gantry",
+            "type": "town_not_owned_by_player",
+            "placement_id": "ashmeter_player_town"
+          },
+          {
+            "id": "ashmeter_hero_survives",
+            "label": "Pava must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_ashmeter_pressure",
+            "label": "Keep enemy pressure below 14",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_veilmourn",
+            "threshold": 14
+          },
+          {
+            "id": "finish_ashmeter_in_time",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "ashmeter_ritual_muster",
+          "priority": 124,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "ashmeter_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 340,
+                "wood": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "ashmeter_player_town",
+              "recruits": {
+                "unit_brasshollow_rivet_hounds": 2,
+                "unit_brasshollow_furnace_pavis_teams": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Orevein Gantry sends Pava a ritual-relay reserve."
+            }
+          ]
+        },
+        {
+          "id": "ashmeter_town_claimed",
+          "priority": 114,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_ashmeter_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "ashmeter_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "ashmeter_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Pava anchors the relay charter at Fogchart Mooring."
+            }
+          ]
+        },
+        {
+          "id": "ashmeter_counterstroke",
+          "priority": 100,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "ashmeter_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "ashmeter_counterstroke",
+                "encounter_id": "encounter_bellwake_privateers",
+                "x": 12,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_veilmourn",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Fogchart Mooring sends a counterstroke down the outer relay."
+            }
+          ]
+        },
+        {
+          "id": "ashmeter_unsecured_watch",
+          "priority": 92,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_ashmeter_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Dustjack Yard Watch keeps the ritual circuit divided."
+            }
+          ]
+        },
+        {
+          "id": "ashmeter_relay_c_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_ashmeter_relay_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northeastern ritual relay begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "ashmeter_relay_d_pressure",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_ashmeter_relay_d"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The southeastern ritual relay hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "ashmeter_watch_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "ashmeter_dustjack_yard_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "brass_scrip": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 170
+            },
+            {
+              "type": "set_flag",
+              "flag": "ashmeter_dustjack_yard_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Pava secures the Dustjack Yard Watch and closes its relay seal."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "ashmeter_player_town",
+          "town_id": "town_brasshollow_orevein_gantry",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "ashmeter_enemy_town",
+          "town_id": "town_veilmourn_fogchart_mooring",
+          "x": 12,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_veilmourn",
+          "label": "Fogchart Calibration Pressure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "memory_salt": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_bellwake_privateers"
+          ],
+          "spawn_points": [
+            {
+              "x": 11,
+              "y": 1
+            },
+            {
+              "x": 11,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "ashmeter_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "ashmeter_faction_landmark",
+          "site_id": "site_brasshollow_gauge_shrine",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "ashmeter_watch_dwelling",
+          "site_id": "site_dustjack_yard",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "placement_id": "ashmeter_player_rare",
+          "site_id": "site_brass_scrip_mint",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "ashmeter_enemy_rare",
+          "site_id": "site_memory_salt_pan",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "ashmeter_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "ashmeter_ore",
+          "site_id": "site_ore_crates",
+          "x": 12,
+          "y": 7,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "ashmeter_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "ashmeter_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 11,
+          "y": 2,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "ashmeter_feature_1",
+          "site_id": "site_milestone_arsenal",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "ashmeter_feature_2",
+          "site_id": "site_obsidian_scar",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "ashmeter_feature_3",
+          "site_id": "site_orevein_assay_depot",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "placement_id": "ashmeter_feature_4",
+          "site_id": "site_reef_coin_assay",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "ashmeter_feature_5",
+          "site_id": "site_basalt_gatehouse",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "ashmeter_feature_6",
+          "site_id": "site_cinder_kiln",
+          "x": 4,
+          "y": 7
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "ashmeter_artifact_1",
+          "artifact_id": "artifact_reedshadow_waders",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "ashmeter_artifact_2",
+          "artifact_id": "artifact_wakebell_mourning_ensign",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "placement_id": "ashmeter_artifact_3",
+          "artifact_id": "artifact_graftbark_cuirass",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "ashmeter_artifact_4",
+          "artifact_id": "artifact_lockward_beacon_key",
+          "x": 9,
+          "y": 7
+        },
+        {
+          "placement_id": "ashmeter_artifact_5",
+          "artifact_id": "artifact_quarry_tally_rod",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "ashmeter_relay_a",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26241,
+          "enemy_army": {
+            "id": "army_ashmeter_relay_a",
+            "name": "Fogchart Mooring Relay Screen A",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_bellwake_oars",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_veilmourn_mourning_lanterns",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "ashmeter_relay_b",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 26242,
+          "enemy_army": {
+            "id": "army_ashmeter_relay_b",
+            "name": "Fogchart Mooring Relay Screen B",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_bellwake_oars",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_veilmourn_maskglass_corsairs",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "ashmeter_relay_c",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26243,
+          "enemy_army": {
+            "id": "army_ashmeter_relay_c",
+            "name": "Fogchart Mooring Relay Screen C",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_mourning_lanterns",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_veilmourn_undertow_harpooners",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "ashmeter_relay_d",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26244,
+          "enemy_army": {
+            "id": "army_ashmeter_relay_d",
+            "name": "Fogchart Mooring Relay Screen D",
+            "faction_id": "faction_veilmourn",
+            "stacks": [
+              {
+                "unit_id": "unit_veilmourn_maskglass_corsairs",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_veilmourn_undertow_harpooners",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "ashmeter_dustjack_yard_watch",
+          "encounter_id": "encounter_dustjack_yard_watch",
+          "x": 9,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26245,
+          "prefer_identity_landmark": true
+        }
+      ]
+    },
+    {
+      "id": "vowless-saltpan-circuit",
+      "name": "Vowless Saltpan Circuit",
+      "selection": {
+        "summary": "Nacre traces a contested ritual relay across thirteen leagues to secure the Saltpan Camp Watch.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Saltpan Vigil (13x8)",
+        "player_summary": "Nacre commands Nacre's Salt-Vigil Cadre from Bellwake Harbor.",
+        "enemy_summary": "Riverwatch Hold contests the relay circuit around the neutral Saltpan Camp Watch.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 13,
+        "height": 8
+      },
+      "player_faction_id": "faction_veilmourn",
+      "player_army_id": "army_nacre_ritual_relay_cadre",
+      "hero_id": "hero_veilmourn_nacre_vowless",
+      "starting_resources": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4,
+        "memory_salt": 2
+      },
+      "map": [
+        [
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough"
+        ],
+        [
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough"
+        ],
+        [
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow"
+        ],
+        [
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt",
+          "snow",
+          "rough",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_veilmourn_nacre_vowless"
+      ],
+      "objectives": {
+        "victory_text": "Nacre closes the complete Saltpan Vigil ritual circuit.",
+        "defeat_text": "Riverwatch Hold breaks the ritual relay before Nacre secures its watch.",
+        "victory": [
+          {
+            "id": "claim_vowless_enemy_town",
+            "label": "Claim Riverwatch Hold",
+            "type": "town_owned_by_player",
+            "placement_id": "vowless_enemy_town"
+          },
+          {
+            "id": "secure_vowless_watch",
+            "label": "Secure the Saltpan Camp Watch",
+            "type": "encounter_resolved",
+            "placement_id": "vowless_saltpan_camp_watch"
+          },
+          {
+            "id": "clear_vowless_relay_a",
+            "label": "Clear the northwestern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "vowless_relay_a"
+          },
+          {
+            "id": "clear_vowless_relay_b",
+            "label": "Clear the central ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "vowless_relay_b"
+          },
+          {
+            "id": "clear_vowless_relay_c",
+            "label": "Clear the northeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "vowless_relay_c"
+          },
+          {
+            "id": "clear_vowless_relay_d",
+            "label": "Clear the southeastern ritual relay",
+            "type": "encounter_resolved",
+            "placement_id": "vowless_relay_d"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_vowless_player_town",
+            "label": "Keep Bellwake Harbor",
+            "type": "town_not_owned_by_player",
+            "placement_id": "vowless_player_town"
+          },
+          {
+            "id": "vowless_hero_survives",
+            "label": "Nacre must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_vowless_pressure",
+            "label": "Keep enemy pressure below 14",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_embercourt",
+            "threshold": 14
+          },
+          {
+            "id": "finish_vowless_in_time",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "vowless_ritual_muster",
+          "priority": 124,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "vowless_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 340,
+                "wood": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "vowless_player_town",
+              "recruits": {
+                "unit_veilmourn_mourning_lanterns": 2,
+                "unit_veilmourn_maskglass_corsairs": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Bellwake Harbor sends Nacre a ritual-relay reserve."
+            }
+          ]
+        },
+        {
+          "id": "vowless_town_claimed",
+          "priority": 114,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_vowless_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "vowless_enemy_town",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "set_flag",
+              "flag": "vowless_enemy_town_claimed",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Nacre anchors the relay charter at Riverwatch Hold."
+            }
+          ]
+        },
+        {
+          "id": "vowless_counterstroke",
+          "priority": 100,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "vowless_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "vowless_counterstroke",
+                "encounter_id": "encounter_charter_guard",
+                "x": 12,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Riverwatch Hold sends a counterstroke down the outer relay."
+            }
+          ]
+        },
+        {
+          "id": "vowless_unsecured_watch",
+          "priority": 92,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "secure_vowless_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_embercourt",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The Saltpan Camp Watch keeps the ritual circuit divided."
+            }
+          ]
+        },
+        {
+          "id": "vowless_relay_c_pressure",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_vowless_relay_c"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_embercourt",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The northeastern ritual relay begins transmitting hostile marks."
+            }
+          ]
+        },
+        {
+          "id": "vowless_relay_d_pressure",
+          "priority": 86,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 9
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clear_vowless_relay_d"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_embercourt",
+              "amount": 1
+            },
+            {
+              "type": "message",
+              "text": "The southeastern ritual relay hardens into a second pressure line."
+            }
+          ]
+        },
+        {
+          "id": "vowless_watch_secured",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "vowless_saltpan_camp_watch"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "memory_salt": 1
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 170
+            },
+            {
+              "type": "set_flag",
+              "flag": "vowless_saltpan_camp_watch_secured",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Nacre secures the Saltpan Camp Watch and closes its relay seal."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "vowless_player_town",
+          "town_id": "town_veilmourn_bellwake_harbor",
+          "x": 0,
+          "y": 4,
+          "owner": "player"
+        },
+        {
+          "placement_id": "vowless_enemy_town",
+          "town_id": "town_riverwatch",
+          "x": 12,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Riverwatch Saltline Pressure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "embergrain": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_charter_guard"
+          ],
+          "spawn_points": [
+            {
+              "x": 11,
+              "y": 1
+            },
+            {
+              "x": 11,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "vowless_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "vowless_faction_landmark",
+          "site_id": "site_veilmourn_bell_mast",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "vowless_watch_dwelling",
+          "site_id": "site_saltpan_camp",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "placement_id": "vowless_player_rare",
+          "site_id": "site_memory_salt_pan",
+          "x": 0,
+          "y": 1
+        },
+        {
+          "placement_id": "vowless_enemy_rare",
+          "site_id": "site_embergrain_warm_granary",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "vowless_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 0
+        },
+        {
+          "placement_id": "vowless_ore",
+          "site_id": "site_ore_crates",
+          "x": 12,
+          "y": 7,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "vowless_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "vowless_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 11,
+          "y": 2,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "vowless_feature_1",
+          "site_id": "site_harbor_pilot_house",
+          "x": 3,
+          "y": 4
+        },
+        {
+          "placement_id": "vowless_feature_2",
+          "site_id": "site_bellwake_wreck_ledger",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "vowless_feature_3",
+          "site_id": "site_tidepool_skiffyard",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "placement_id": "vowless_feature_4",
+          "site_id": "site_frostwharf_house",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "vowless_feature_5",
+          "site_id": "site_reef_coin_assay",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "vowless_feature_6",
+          "site_id": "site_icehook_trapper_lodge",
+          "x": 4,
+          "y": 7
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "vowless_artifact_1",
+          "artifact_id": "artifact_quenchplate_vambrace",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "vowless_artifact_2",
+          "artifact_id": "artifact_redline_survey_dial",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "placement_id": "vowless_artifact_3",
+          "artifact_id": "artifact_black_sail_compass",
+          "x": 7,
+          "y": 2
+        },
+        {
+          "placement_id": "vowless_artifact_4",
+          "artifact_id": "artifact_pressure_gauge_reliquary",
+          "x": 9,
+          "y": 7
+        },
+        {
+          "placement_id": "vowless_artifact_5",
+          "artifact_id": "artifact_rootpath_seed_compass",
+          "x": 11,
+          "y": 0
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "vowless_relay_a",
+          "encounter_id": "encounter_charter_guard",
+          "x": 4,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 26251,
+          "enemy_army": {
+            "id": "army_vowless_relay_a",
+            "name": "Riverwatch Hold Relay Screen A",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_fordhook_cadets",
+                "count": 8
+              },
+              {
+                "unit_id": "unit_embercourt_lantern_sappers",
+                "count": 4
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "vowless_relay_b",
+          "encounter_id": "encounter_charter_guard",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 26252,
+          "enemy_army": {
+            "id": "army_vowless_relay_b",
+            "name": "Riverwatch Hold Relay Screen B",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_fordhook_cadets",
+                "count": 7
+              },
+              {
+                "unit_id": "unit_embercourt_bargebow_crews",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "vowless_relay_c",
+          "encounter_id": "encounter_charter_guard",
+          "x": 8,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 26253,
+          "enemy_army": {
+            "id": "army_vowless_relay_c",
+            "name": "Riverwatch Hold Relay Screen C",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_lantern_sappers",
+                "count": 6
+              },
+              {
+                "unit_id": "unit_embercourt_ash_oath_bailiffs",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "vowless_relay_d",
+          "encounter_id": "encounter_charter_guard",
+          "x": 10,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26254,
+          "enemy_army": {
+            "id": "army_vowless_relay_d",
+            "name": "Riverwatch Hold Relay Screen D",
+            "faction_id": "faction_embercourt",
+            "stacks": [
+              {
+                "unit_id": "unit_embercourt_bargebow_crews",
+                "count": 5
+              },
+              {
+                "unit_id": "unit_embercourt_ash_oath_bailiffs",
+                "count": 3
+              }
+            ]
+          }
+        },
+        {
+          "placement_id": "vowless_saltpan_camp_watch",
+          "encounter_id": "encounter_saltpan_camp_watch",
+          "x": 9,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 26255,
+          "prefer_identity_landmark": true
+        }
+      ]
+    }
   ]
 }

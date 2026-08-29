@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_high_three_quarter_ritual_relay_watch_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/ritual_relay_circuits/ritual_relay_circuits_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "b9fbf72ae9aad2c5791bdecae7b15dad5cd88774706e6ec60a5979a4cac459f8",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_44x44_and_center_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six original painterly high-three-quarter ritual-relay watch landmarks with strong non-color silhouettes and genuine transparency: chained twin reed barges and boom gate, crooked scrap-wind yard, forked frost beacon bothy, three-tier switchback hostel, radial saltpan camp, and ringed crystal sump with echo horn; no characters, creatures, text, logos, terrain cards, watermarks, or copied franchise expression.",
+  "items": [
+    {
+      "encounter_id": "encounter_reedbarge_mooring_watch",
+      "asset_id": "encounter_ritual_relay_reedbarge_mooring_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/reedbarge_mooring_watch_source.png",
+      "source_sha256": "99e92bdcdeead0031244639e27d6ca2682a9098852418932cb0922c87e18f235",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-31a70854-a650-4bcf-86bc-26b02f2c7e81.png",
+      "atlas_region": [0, 0, 48, 48],
+      "presentation_role": "reedbarge_mooring_watch"
+    },
+    {
+      "encounter_id": "encounter_dustjack_yard_watch",
+      "asset_id": "encounter_ritual_relay_dustjack_yard_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/dustjack_yard_watch_source.png",
+      "source_sha256": "fcd5ef9e36269b32414a2aab0c647b42f943faafb8b627aacf766c911e8e2e22",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-772403a5-de4c-47ca-9c5d-bfdc9f7f7910.png",
+      "atlas_region": [48, 0, 48, 48],
+      "presentation_role": "dustjack_yard_watch"
+    },
+    {
+      "encounter_id": "encounter_frostbeacon_bothy_watch",
+      "asset_id": "encounter_ritual_relay_frostbeacon_bothy_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/frostbeacon_bothy_watch_source.png",
+      "source_sha256": "2612aa5958d764632fac597453c3bc1ca1385acf28f32cc5d0c59f750a73774d",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-27fe5cd1-9de7-4e8a-87ed-85b6810ca118.png",
+      "atlas_region": [96, 0, 48, 48],
+      "presentation_role": "frostbeacon_bothy_watch"
+    },
+    {
+      "encounter_id": "encounter_switchback_hostel_watch",
+      "asset_id": "encounter_ritual_relay_switchback_hostel_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/switchback_hostel_watch_source.png",
+      "source_sha256": "a9a4966858d1df02ed0895ccd3da0159efeeae39c61b272ba576da88c5a9af17",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3df7be62-303d-4c79-bca9-65ee04c7ff86.png",
+      "atlas_region": [144, 0, 48, 48],
+      "presentation_role": "switchback_hostel_watch"
+    },
+    {
+      "encounter_id": "encounter_saltpan_camp_watch",
+      "asset_id": "encounter_ritual_relay_saltpan_camp_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/saltpan_camp_watch_source.png",
+      "source_sha256": "a1868e73f3cf203a90f5f4631bcd805d9f6a70aa1da4a41b64370af2936f930b",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-51378706-bf1b-4178-a034-eb32a69abb19.png",
+      "atlas_region": [192, 0, 48, 48],
+      "presentation_role": "saltpan_camp_watch"
+    },
+    {
+      "encounter_id": "encounter_crystal_sump_watch",
+      "asset_id": "encounter_ritual_relay_crystal_sump_watch",
+      "source_path": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/crystal_sump_watch_source.png",
+      "source_sha256": "18b84ea2119b6fab78ae1a6f91a70c2410e05a23c01f0378a8eb0880ea9aebc2",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e9aaeee0-338c-450d-b9ef-fc6214dcc387.png",
+      "atlas_region": [240, 0, 48, 48],
+      "presentation_role": "crystal_sump_watch"
+    }
+  ]
+}

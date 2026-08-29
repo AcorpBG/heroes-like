@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-faction-spellwright-expeditions-10184`.
-- Package boundary: both release exports now measure 248599156 bytes, 1400844 bytes below the unchanged 250000000-byte ceiling. All eight encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-six-faction-ritual-relay-circuits-10184`.
+- Package boundary: both release exports now measure 248631140 bytes, 1368860 bytes below the unchanged 250000000-byte ceiling. All nine encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Ritual Relay Circuits
+
+id: `content-six-faction-ritual-relay-circuits-10184`
+
+Status: completed.
+
+Current finding:
+- twelve of sixty production heroes still lack a player-command scenario, exactly two magic-command heroes per faction; Jorun Beaconscribe, Pell Reedscript, Calis Sunvein, Ralka Mossvein, Pava Ashmeter, and Nacre Vowless form a balanced six-faction cohort with fifteen distinct starting spells;
+- ten complete neutral-dwelling watch encounters remain unplaced, while the selected Frostbeacon Bothy, Reedbarge Mooring, Crystal Sump, Switchback Hostel, Dustjack Yard, and Saltpan Camp watches already own persistent neutral armies, tactical objectives, rewards, matching exact-art sites, and twelve unused neutral battle identities;
+- low-use artifacts and exact-art resource sites remain concentrated at only one to four authored placements despite being live production content.
+
+Implementation boundary:
+- author six original skirmish-only 13x8 ritual-relay circuits with two towns, fourteen resource sites, five artifacts, five battle fronts, six victory objectives, and seven reactive hooks each;
+- promote Jorun, Pell, Calis, Ralka, Pava, and Nacre into exact player-command roles with persistent four-stack faction cadres, preserving their fifteen-spell union through live overworld and battle commander state;
+- activate the six selected neutral watches beside their matching dwellings, add one original transparent exact watch landmark per encounter in a compact atlas, and broaden underused site and artifact placement;
+- preserve save version 9, deterministic combat, data-driven rules, accessibility descriptions, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all six circuits enter skirmish selection and create the intended hero, faction, four-stack cadre, complete 13x8 contract, exact fifteen-spell union, neutral-watch battle, authored rewards/flags, and save-version-9 round trip;
+- all six watch definitions become live exact-art placements using their existing twelve neutral unit identities and field objectives without duplicating gameplay definitions;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- six skirmish circuits now raise player-facing scenario breadth from 58 to 64 and distinct authored lead heroes from 48 to 54, with six persistent four-stack faction cadres, fifteen starting spells, twelve towns, eighty-four resource sites, thirty artifact placements, thirty battle fronts, thirty-six victory objectives, and forty-two reactive hooks across the batch;
+- Frostbeacon Bothy, Reedbarge Mooring, Crystal Sump, Switchback Hostel, Dustjack Yard, and Saltpan Camp now enter authored play beside their matching dwellings with existing neutral armies, objectives, rewards, twelve unit identities, and six original exact-art watch landmarks in one 288x48 runtime atlas; placed encounter breadth rises from 77 to 83 definitions and only eight definitions remain unplaced;
+- the single consolidated six-case Godot smoke passed scenario creation, exact hero spellbooks, player and neutral armies, deterministic double autoresolve, rewards and flags, exact landmark presentation, six inspected captures, and save-version-9 round trips with no errors;
+- repository validation passes, and official Linux and Windows exports both boot with matching 248631140-byte PCKs, 1368860 bytes below the unchanged ceiling, while generated source art and development reports remain excluded. This completes only the ritual-relay content slice and does not claim whole-game or release readiness.
+
+Non-goals:
+- no new spell, unit, artifact, dwelling, town, building, battle formula, AI algorithm, campaign chapter, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes hero, scenario, map, dwelling, encounter, landmark, name, text, or protected visual expression.
 
 ## Six-Faction Spellwright Expeditions
 
