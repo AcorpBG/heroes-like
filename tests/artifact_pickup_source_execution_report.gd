@@ -10,7 +10,7 @@ const OREVEIN_PLACEMENT_ID := "orevein_trailsinger_boots"
 const FIXED_PLACEMENT_ID := "bellwake_waymark_compass"
 const BOOTS_ID := "artifact_trailsinger_boots"
 const ROD_ID := "artifact_quarry_tally_rod"
-const FIXED_ARTIFACT_ID := "artifact_waymark_compass"
+const FIXED_ARTIFACT_ID := "artifact_wakebell_mourning_ensign"
 const AI_FACTION_ID := "faction_mireclaw"
 const SAVE_SLOT := 3
 

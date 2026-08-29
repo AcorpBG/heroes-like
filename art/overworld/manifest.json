@@ -1336,6 +1336,60 @@
       "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
       "background": "transparent"
     },
+    "artifact_field_lockflame_writ_banner": {
+      "path": "res://art/overworld/runtime/objects/artifacts/lockflame_writ_banner.png",
+      "source_icon": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+      "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/lockflame_writ_banner_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Forked cloth standard beneath a hooded lantern, with asymmetric wax writ tabs and a heavy brass plumb weight.",
+      "background": "transparent"
+    },
+    "artifact_field_mirechain_hunt_totem": {
+      "path": "res://art/overworld/runtime/objects/artifacts/mirechain_hunt_totem.png",
+      "source_icon": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+      "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/mirechain_hunt_totem_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Crooked antler-crowned reedwood totem with a hooked hide pennant, coarse chain loops, and hanging bone clappers.",
+      "background": "transparent"
+    },
+    "artifact_field_zenith_prism_pennon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/zenith_prism_pennon.png",
+      "source_icon": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+      "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/zenith_prism_pennon_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Tall symmetrical ivory frame holding a diamond prism, split pennon, side mirror vanes, and orbiting calibration rings.",
+      "background": "transparent"
+    },
+    "artifact_field_briarcrown_covenant_standard": {
+      "path": "res://art/overworld/runtime/objects/artifacts/briarcrown_covenant_standard.png",
+      "source_icon": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+      "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/briarcrown_covenant_standard_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Living forked sapling standard with woven leafcloth, a spined thorn halo, graft clasps, and rooted seed weight.",
+      "background": "transparent"
+    },
+    "artifact_field_redline_warrant_gonfalon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/redline_warrant_gonfalon.png",
+      "source_icon": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+      "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/redline_warrant_gonfalon_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Broad segmented metal gonfalon built around a round pressure gauge, warrant plates, furnace vents, and caliper feet.",
+      "background": "transparent"
+    },
+    "artifact_field_wakebell_mourning_ensign": {
+      "path": "res://art/overworld/runtime/objects/artifacts/wakebell_mourning_ensign.png",
+      "source_icon": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
+      "source_generated": "res://art/artifacts/source/generated/command_regalia_wave1/wakebell_mourning_ensign_source.png",
+      "source_model": "built_in_image_gen_transparent_artifact_source_curated_for_icon_and_field",
+      "asset_policy": "separate_runtime_surfaces_from_shared_original_source",
+      "visual_description": "Torn sailcloth stretched between curved ship ribs beneath a cracked bell, with a side lantern and chain keel.",
+      "background": "transparent"
+    },
     "guarded_farmhouse": {
       "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
       "source_trimmed": "res://art/overworld/source/trimmed/dwellings/guarded_farmhouse-trimmed.png"
@@ -5113,7 +5167,13 @@
     "artifact_prismward_mantle": "artifact_field_prismward_mantle",
     "artifact_graftbark_cuirass": "artifact_field_graftbark_cuirass",
     "artifact_quenchplate_vambrace": "artifact_field_quenchplate_vambrace",
-    "artifact_fogwake_deckboots": "artifact_field_fogwake_deckboots"
+    "artifact_fogwake_deckboots": "artifact_field_fogwake_deckboots",
+    "artifact_lockflame_writ_banner": "artifact_field_lockflame_writ_banner",
+    "artifact_mirechain_hunt_totem": "artifact_field_mirechain_hunt_totem",
+    "artifact_zenith_prism_pennon": "artifact_field_zenith_prism_pennon",
+    "artifact_briarcrown_covenant_standard": "artifact_field_briarcrown_covenant_standard",
+    "artifact_redline_warrant_gonfalon": "artifact_field_redline_warrant_gonfalon",
+    "artifact_wakebell_mourning_ensign": "artifact_field_wakebell_mourning_ensign"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",

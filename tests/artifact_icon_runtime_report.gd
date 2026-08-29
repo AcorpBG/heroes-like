@@ -27,6 +27,12 @@ const EXPECTED_ICONS := {
 	"artifact_graftbark_cuirass": "res://art/artifacts/runtime/graftbark_cuirass.png",
 	"artifact_quenchplate_vambrace": "res://art/artifacts/runtime/quenchplate_vambrace.png",
 	"artifact_fogwake_deckboots": "res://art/artifacts/runtime/fogwake_deckboots.png",
+	"artifact_lockflame_writ_banner": "res://art/artifacts/runtime/lockflame_writ_banner.png",
+	"artifact_mirechain_hunt_totem": "res://art/artifacts/runtime/mirechain_hunt_totem.png",
+	"artifact_zenith_prism_pennon": "res://art/artifacts/runtime/zenith_prism_pennon.png",
+	"artifact_briarcrown_covenant_standard": "res://art/artifacts/runtime/briarcrown_covenant_standard.png",
+	"artifact_redline_warrant_gonfalon": "res://art/artifacts/runtime/redline_warrant_gonfalon.png",
+	"artifact_wakebell_mourning_ensign": "res://art/artifacts/runtime/wakebell_mourning_ensign.png",
 }
 
 var _original_ui_scale_percent := 100

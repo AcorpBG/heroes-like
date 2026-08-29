@@ -12,8 +12,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Artifact taxonomy report failed: %s" % report)
 		return
-	if int(report.get("artifact_count", 0)) != 21:
-		_fail("Expected twenty-one authored artifact records after the faction field-regalia slice: %s" % report)
+	if int(report.get("artifact_count", 0)) != 27:
+		_fail("Expected twenty-seven authored artifact records after the command-regalia slice: %s" % report)
 		return
 	if int(report.get("complete_taxonomy_count", 0)) != int(report.get("artifact_count", 0)):
 		_fail("Not every artifact has complete taxonomy metadata: %s" % report)

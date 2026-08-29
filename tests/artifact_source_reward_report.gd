@@ -15,8 +15,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Artifact source/reward report failed: %s" % report)
 		return
-	if int(report.get("table_count", 0)) != 6:
-		_fail("Expected six bounded artifact source/reward tables: %s" % report)
+	if int(report.get("table_count", 0)) != 7:
+		_fail("Expected six live source/reward tables plus one authored-placement metadata table: %s" % report)
 		return
 	if int(report.get("eligible_artifact_count", 0)) != int(report.get("artifact_count", 0)):
 		_fail("Source/reward tables did not cover every authored artifact: %s" % report)

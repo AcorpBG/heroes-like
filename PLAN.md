@@ -24,8 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-recurring-resource-site-landmarks-wave1-10184`; select the next bounded live content/art gap before further implementation.
-- Package boundary: both release exports now measure 246212768 bytes, 3787232 bytes below the unchanged 250000000-byte ceiling. Development reports and generated source originals remain excluded while the compact recurring encounter and resource-site atlases ship on both platforms.
+- Active implementation slice: none selected after completing `content-six-faction-command-regalia-10184`.
+- Package boundary: both release exports now measure 247095548 bytes, 2904452 bytes below the unchanged 250000000-byte ceiling. All 27 artifact field identities ship while development reports and generated source originals remain excluded on both platforms.
+
+## Six-Faction Command Regalia
+
+id: `content-six-faction-command-regalia-10184`
+
+Status: completed.
+
+Current finding:
+- all 21 authored artifacts own exact live icon and field art, but faction breadth stops at two relics per faction and 16 authored placements still reuse the neutral Warcrest Pennon while 19 reuse Trailsinger Boots;
+- five representative faction scenarios still place the same neutral Warcrest Pennon, and Bellwake Wreck Claim repeats a neutral Waymark Compass despite each scenario already having a distinct player faction and authored visual language;
+- adding one command-regalia artifact per faction and replacing those six repeated placements expands actual equipment choices, map loot, faction identity, inventory art, field art, AI valuation, and battle/adventure bonuses without adding unused definitions or new save fields.
+
+Implementation boundary:
+- author Lockflame Writ Banner, Mirechain Hunt Totem, Zenith Prism Pennon, Briarcrown Covenant Standard, Redline Warrant Gonfalon, and Wakebell Mourning Ensign as six uncommon faction-aligned banner-slot artifacts using only existing data-driven bonus types;
+- create one original transparent high-resolution source for each, derive exact 128x128 inventory and 512x512 field surfaces, and register icon/field ownership plus non-color visual descriptions through the existing artifact and Overworld resolvers;
+- replace one repeated neutral artifact placement in Causeway Stand, Bogbound Oath, Prismhearth Watch, Rootbound Mireford, Orevein Contract, and Bellwake Wreck Claim so every new artifact is immediately collectible in a representative live scenario;
+- preserve placement ids and coordinates, scenario objectives and guards, artifact slot/equip/save structures, save version 9, deterministic content lookup, accessibility, performance, and Windows/Linux behavior.
+
+Completion criteria:
+- six byte-distinct original transparent sources and twelve derived runtime surfaces retain genuine alpha, distinct non-color silhouettes, exact artifact/faction/slot ownership, and generated-source package exclusion;
+- focused live runtime proves all six artifacts load exact icons and field sprites, appear in the six intended authored placements, can be collected/equipped with their authored bonuses and AI value, reject unknown/missing art fail closed, and round-trip through save version 9 without authority drift;
+- inspected 1280x720 and 1920x1080 Overworld/Town management captures, repository/core/artifact regressions, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- the production artifact catalog now contains 27 entries, including six original uncommon faction banner artifacts with supported battle, movement, scouting, and resistance bonuses; the same six fixed placement ids and coordinates now yield them in Causeway Stand, Bogbound Oath, Prismhearth Watch, Rootbound Mireford, Orevein Contract, and Bellwake Wreck Claim;
+- six byte-distinct transparent 1024x1536 generation sources produce separate 128x128 inventory icons and 512x512 south-anchored field sprites, with exact hashes, prompt summaries, non-color silhouette descriptions, and built-in generation provenance retained in the source and Overworld manifests;
+- focused live runtime proves exact placement, collection, automatic banner equip, authored bonus aggregation, positive faction-matched AI valuation, unknown icon fail-closed behavior, and save-version-9 authority round trips for all six; the all-artifact Overworld resolver proves 27/27 distinct transparent field sprites and fallback restoration at both supported resolutions;
+- inspected 1280x720 and 1920x1080 Town Orders captures expose all six icon-bearing actions as keyboard-focusable with tooltips in the scrollable Logistics surface, while the paired Overworld captures keep the field sprites grounded and contained;
+- repository validation, core systems, artifact taxonomy/source/effects/AI/icon reports, fixed-pickup execution, and the affected Bogbound, Mireford, Orevein, and Bellwake scenario regressions pass. The pre-existing unrelated broad-overworld 1280px objective-brief tooltip/ellipsis assertion was not changed by this slice;
+- Linux export/boot and Windows export/Wine boot pass with all 27 artifact imports present, no generated source payloads or development reports packaged, and matching 247095548-byte PCKs, 2904452 bytes below the unchanged ceiling. This closes only the six-faction command-regalia content slice and does not claim whole-game or release readiness.
+
+Non-goals:
+- no new artifact slot, bonus mechanic, reward-table randomization, set, town commission, battle salvage rule, economy resource, scenario geometry, guard, objective, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes artifact, banner, heraldry, name, icon, text, or protected visual expression, and no art-only unused artifact definitions.
 
 ## Recurring Resource-Site Landmarks Wave 1
 
