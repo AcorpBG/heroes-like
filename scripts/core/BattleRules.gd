@@ -7031,12 +7031,20 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 	var delivery_summary := _apply_delivery_route_aftermath(session, "victory")
 	_append_nonempty_message(messages, delivery_summary)
 	_sync_enemy_force_from_battle(session, true)
+	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
+	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
+	OverworldRulesScript._add_resources(session, rewards)
+	var reward_summary = OverworldRulesScript._describe_resource_delta(rewards)
+	if reward_summary != "":
+		messages.append("Battle rewards %s." % reward_summary)
+	var experience_amount = max(0, int(rewards.get("experience", 0)))
+	if experience_amount > 0:
+		var hero_name = String(_player_commander_state(session).get("name", "The commander"))
+		messages.append("%s gains %d experience." % [hero_name, experience_amount])
+		messages.append_array(_award_commander_experience(session, experience_amount))
 	HeroCommandRulesScript.commit_active_hero(session)
 	OverworldRulesScript.refresh_fog_of_war(session)
-	_apply_encounter_victory_flags(
-		session,
-		ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	)
+	_apply_encounter_victory_flags(session, encounter)
 	session.flags["last_battle_outcome"] = outcome_id
 	_record_battle_aftermath(
 		session,
@@ -7044,6 +7052,7 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 		base_summary,
 		{
 			"display_outcome": "surrender" if outcome_id == "enemy_surrender" else "withdrawal",
+			"resource_summary": "Battle rewards %s." % reward_summary if reward_summary != "" else "",
 			"pressure_summary": front_summary,
 			"recovery_summary": commander_summary,
 			"logistics_summary": delivery_summary,

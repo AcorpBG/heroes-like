@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_dissident_front_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "5629ffe1f45e311c6994fcc83d781832bb6a6cae04f526e02e12744c04ee3342",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_44x44_and_south_anchor_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six original hand-painted orthographic field landmarks derived from each live dissident army, commander, tactical objective, material language, and faction route; strong non-color silhouettes, genuine transparency, no characters, text, logos, copied franchise expression, terrain cards, or opaque backdrops.",
+  "items": [
+    {
+      "encounter_id": "encounter_lockflame_turncoats",
+      "asset_id": "encounter_dissident_lockflame_turncoats",
+      "source_path": "res://art/overworld/source/generated/encounters/dissident_fronts/lockflame_turncoats_source.png",
+      "source_sha256": "174c5c1321036645d6969cbc520815cacf6301fb5908187d9e5f82eafd3986a8",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-be45194c-93f4-4466-a472-dd02be1bdb0d.png",
+      "atlas_region": [0, 0, 48, 48],
+      "presentation_role": "broken_sluice_turncoat_battery"
+    },
+    {
+      "encounter_id": "encounter_mossglass_moonhunt",
+      "asset_id": "encounter_dissident_mossglass_moonhunt",
+      "source_path": "res://art/overworld/source/generated/encounters/dissident_fronts/mossglass_moonhunt_source.png",
+      "source_sha256": "18e154d1d26cbc37fc1d2bac905970dde1ff71ee0e7fa3fe185ed06ef50690e3",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3d92530b-fb27-4368-b580-9979e84a0be5.png",
+      "atlas_region": [48, 0, 48, 48],
+      "presentation_role": "antler_scent_gate_moonhunt"
+    },
+    {
+      "encounter_id": "encounter_parallax_choir",
+      "asset_id": "encounter_dissident_parallax_choir",
+      "source_path": "res://art/overworld/source/generated/encounters/dissident_fronts/parallax_choir_source.png",
+      "source_sha256": "e5ad9a262fe6ed2580030e732960ab668d0bfad1305777b475519eb60efb648c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1c097a39-2058-4478-bac5-50417aa08b8b.png",
+      "atlas_region": [96, 0, 48, 48],
+      "presentation_role": "forked_mirror_prism_chime"
+    },
+    {
+      "encounter_id": "encounter_graftbound_pilgrims",
+      "asset_id": "encounter_dissident_graftbound_pilgrims",
+      "source_path": "res://art/overworld/source/generated/encounters/dissident_fronts/graftbound_pilgrims_source.png",
+      "source_sha256": "86cb337f1f2e7f40f52ffafd3e918dcf942389f9766bc1d29fee1ade2370eff6",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-78d00272-061c-41d9-a09f-a70476c6fd14.png",
+      "atlas_region": [144, 0, 48, 48],
+      "presentation_role": "walking_root_pilgrim_arch"
+    },
+    {
+      "encounter_id": "encounter_redline_foreclosure",
+      "asset_id": "encounter_dissident_redline_foreclosure",
+      "source_path": "res://art/overworld/source/generated/encounters/dissident_fronts/redline_foreclosure_source.png",
+      "source_sha256": "8c2b8de6b9134bc2e49da3f015d35587b0c4f6b372fa9d69952b01a47c5307d1",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-cd754ba3-02b9-4f9b-b3ab-d50b3e2268ae.png",
+      "atlas_region": [192, 0, 48, 48],
+      "presentation_role": "seizure_gauge_foreclosure_post"
+    },
+    {
+      "encounter_id": "encounter_drowned_bell_procession",
+      "asset_id": "encounter_dissident_drowned_bell_procession",
+      "source_path": "res://art/overworld/source/generated/encounters/dissident_fronts/drowned_bell_procession_source.png",
+      "source_sha256": "90ea55485a09b14245959b63fe1ac5f1dae67856f8e17ae9f0320fc359fe7d1c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e7dea9d2-0d1a-4d6e-8e71-22db6eb58a13.png",
+      "atlas_region": [240, 0, 48, 48],
+      "presentation_role": "ribbed_skiff_funeral_bell"
+    }
+  ]
+}

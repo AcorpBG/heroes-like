@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-neutral-dwelling-landmarks-wave2-10184`.
-- Package boundary: both release exports now measure 248071472 bytes, 1928528 bytes below the unchanged 250000000-byte ceiling. The expanded compact recurring-site atlas ships while generated source originals and development reports remain excluded on both platforms.
+- Latest completed implementation slice: `content-six-faction-dissident-fronts-10184`.
+- Package boundary: both release exports now measure 248112828 bytes, 1887172 bytes below the unchanged 250000000-byte ceiling. Both compact encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Dissident Fronts
+
+id: `content-six-faction-dissident-fronts-10184`
+
+Status: completed.
+
+Current finding:
+- exact production art now covers every live hero, unit, town building, campaign chapter, neutral dwelling state, and all 77 existing authored encounter placements, so another fallback-only art pass would add less player value than new playable battle breadth;
+- Causeway Stand, Bogbound Oath, Prismhearth Watch, Rootbound Mireford, Orevein Contract, and Bellwake Wreck Claim each expose a different production faction and stable optional route space, but none currently features an internal rival company using that faction's full production roster language;
+- one optional medium front per faction can add six genuinely new battles, six army compositions, six commanders, six objectives, six rare-resource rewards, and six exact field landmarks without adding unused definitions or changing required objectives.
+
+Implementation boundary:
+- author Lockflame Turncoats, Mossglass Moonhunt, Parallax Choir, Graftbound Pilgrims, Redline Foreclosure, and Drowned Bell Procession as original optional faction-aligned encounters using existing production units, supported commander traits/spells, battle tags, objective authority, and bounded rare-resource rewards;
+- place one front on an unoccupied traversable route tile in each selected live scenario while preserving every existing placement, objective, town, site, artifact, map cell, campaign order, and save-version-9 authority;
+- create six original transparent silhouette-distinct field landmarks, pack them into one compact immutable atlas, and register exact encounter ownership, provenance, and non-color descriptions through the existing commander/exact/faction/unit/generic resolver;
+- preserve deterministic combat seeds, strategic AI and battle-rule ownership, accessibility, performance, generated-source package exclusion, and Windows/Linux behavior.
+
+Completion criteria:
+- six new army groups and encounter definitions are each referenced by exactly one live authored placement, use only existing supported units/rules, expose distinct commanders/objectives/rewards, and launch through the production battle path without mutating unrelated scenario authority;
+- six byte-distinct original transparent sources produce one compact atlas with exact regions, genuine alpha, readable non-color silhouettes, strict missing/invalid fail-closed behavior, and no source payload in release packages;
+- one combined live smoke proves all six scenario placements, exact map presentation, battle construction, deterministic resolution, reward/flag application, and save-version-9 round trips; repository validation and Linux/Windows packaged startup pass below the unchanged PCK ceiling.
+
+Completion evidence:
+- one combined six-case live report passed exact landmark selection, production battle construction, deterministic victory, authored rewards and flags, and save-version-9 round trips for every front;
+- the batch fixed enemy surrender resolution so cleared encounters now grant their authored resources and commander experience instead of only applying flags and placement resolution;
+- repository validation and both Linux and Windows release exports passed at 248112828 bytes, with the two exact-encounter atlases present and all generated high-resolution sources excluded.
+
+Non-goals:
+- no new unit, spell, artifact, resource, faction, campaign chapter, required scenario objective, map geometry, AI algorithm, battle formula, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes encounter, army, commander, landmark, heraldry, name, text, or protected visual expression.
 
 ## Neutral-Dwelling Landmark Art Wave 2
 

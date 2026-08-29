@@ -42927,6 +42927,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (1488, 48)
             elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
                 expected_canvas = (1440, 48)
+            elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
+                expected_canvas = (288, 48)
             else:
                 expected_canvas = (512, 512)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -48815,8 +48817,8 @@ def validate_faction_encounter_landmarks(errors: list[str]) -> None:
     groups = {str(row.get("id", "")): row for row in groups_value if isinstance(row, dict)} if isinstance(groups_value, list) else {}
     owned_encounters = [row for row in encounters if str(groups.get(str(row.get("enemy_group_id", "")), {}).get("faction_id", "")) in expected]
     neutral_encounters = [row for row in encounters if row not in owned_encounters]
-    ensure(len(encounters) == 63, errors, "Faction encounter landmark adoption must retain all 63 authored encounters")
-    ensure(len(owned_encounters) == 38 and len(neutral_encounters) == 25, errors, "Faction encounter landmark adoption must resolve exactly 38 faction and 25 neutral authored encounters")
+    ensure(len(encounters) == 69, errors, "Faction encounter landmark adoption must retain all 69 authored encounters")
+    ensure(len(owned_encounters) == 44 and len(neutral_encounters) == 25, errors, "Faction encounter landmark adoption must resolve exactly 44 faction and 25 neutral authored encounters")
     ensure({str(groups.get(str(row.get("enemy_group_id", "")), {}).get("faction_id", "")) for row in owned_encounters} == set(expected), errors, "Authored faction encounters must exercise all six landmark identities")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -48991,6 +48993,98 @@ def validate_signature_encounter_landmarks(errors: list[str]) -> None:
         ensure('"signature_encounter_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged signature encounter coverage")
         for _encounter_id, (_asset_id, stem, _faction_id, _role, _source_sha, _runtime_sha) in expected.items():
             ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing signature encounter identity {stem}")
+
+
+def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
+    expected = {
+        "encounter_lockflame_turncoats": ("encounter_dissident_lockflame_turncoats", "lockflame_turncoats", "army_lockflame_turncoats", "faction_embercourt", [("unit_embercourt_fordhook_cadets", 8), ("unit_embercourt_lantern_sappers", 5), ("unit_embercourt_bargebow_crews", 3), ("unit_embercourt_ash_oath_bailiffs", 1)], "causeway-stand", "causeway_lockflame_turncoats", 2204, "lockflame_broken_sluice", "lane_battery", "embergrain", "lockflame_turncoats_broken", [0, 0, 48, 48], "174c5c1321036645d6969cbc520815cacf6301fb5908187d9e5f82eafd3986a8"),
+        "encounter_mossglass_moonhunt": ("encounter_dissident_mossglass_moonhunt", "mossglass_moonhunt", "army_mossglass_moonhunt", "faction_mireclaw", [("unit_mireclaw_reedsnare_kin", 8), ("unit_mireclaw_mudglass_slingers", 5), ("unit_mireclaw_bogplate_maulers", 3), ("unit_mireclaw_ferrychain_lashers", 1)], "bogbound-oath", "bogbound_mossglass_moonhunt", 7204, "moonhunt_scent_gate", "hazard_zone", "peatwax", "mossglass_moonhunt_broken", [48, 0, 48, 48], "18e154d1d26cbc37fc1d2bac905970dde1ff71ee0e7fa3fe185ed06ef50690e3"),
+        "encounter_parallax_choir": ("encounter_dissident_parallax_choir", "parallax_choir", "army_parallax_choir", "faction_sunvault", [("unit_sunvault_shard_wardens", 2), ("unit_sunvault_prism_adepts", 2), ("unit_sunvault_mirror_duelists", 1), ("unit_sunvault_resonant_choristers", 1)], "prismhearth-watch", "prismhearth_parallax_choir", 11204, "parallax_chime_frame", "signal_beacon", "aetherglass", "parallax_choir_broken", [96, 0, 48, 48], "e5ad9a262fe6ed2580030e732960ab668d0bfad1305777b475519eb60efb648c"),
+        "encounter_graftbound_pilgrims": ("encounter_dissident_graftbound_pilgrims", "graftbound_pilgrims", "army_graftbound_pilgrims", "faction_thornwake", [("unit_thornwake_seedcutters", 8), ("unit_thornwake_thornwhip_carriers", 5), ("unit_thornwake_sporeglass_menders", 3), ("unit_thornwake_barkmantle_rams", 1)], "mireford-skirmish", "mireford_graftbound_pilgrims", 10204, "graftbound_walking_arch", "cover_line", "verdant_grafts", "graftbound_pilgrims_broken", [144, 0, 48, 48], "86cb337f1f2e7f40f52ffafd3e918dcf942389f9766bc1d29fee1ade2370eff6"),
+        "encounter_redline_foreclosure": ("encounter_dissident_redline_foreclosure", "redline_foreclosure", "army_redline_foreclosure", "faction_brasshollow", [("unit_brasshollow_scrip_haulers", 8), ("unit_brasshollow_rivet_hounds", 5), ("unit_brasshollow_furnace_pavis_teams", 3), ("unit_brasshollow_boiler_rivetcasters", 1)], "orevein-contract", "orevein_redline_foreclosure", 17204, "redline_seizure_gauge", "supply_post", "brass_scrip", "redline_foreclosure_broken", [192, 0, 48, 48], "8c2b8de6b9134bc2e49da3f015d35587b0c4f6b372fa9d69952b01a47c5307d1"),
+        "encounter_drowned_bell_procession": ("encounter_dissident_drowned_bell_procession", "drowned_bell_procession", "army_drowned_bell_procession", "faction_veilmourn", [("unit_veilmourn_bellwake_oars", 8), ("unit_veilmourn_mourning_lanterns", 5), ("unit_veilmourn_maskglass_corsairs", 3), ("unit_veilmourn_undertow_harpooners", 1)], "bellwake-wreck-claim", "bellwake_drowned_bell_procession", 18204, "drowned_procession_bell", "ritual_pylon", "memory_salt", "drowned_bell_procession_broken", [240, 0, 48, 48], "90ea55485a09b14245959b63fe1ac5f1dae67856f8e17ae9f0320fc359fe7d1c"),
+    }
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "dissident_fronts"
+    source_manifest_path = source_dir / "manifest.json"
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "dissident_fronts" / "dissident_fronts_atlas.png"
+    report_script_path = ROOT / "tests" / "six_faction_dissident_fronts_report.gd"
+    report_scene_path = ROOT / "tests" / "six_faction_dissident_fronts_report.tscn"
+    required_paths = (OVERWORLD_ART_MANIFEST_PATH, source_manifest_path, atlas_path, report_script_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing six-faction dissident-front owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (288, 48), errors, "Dissident-front atlas must remain a compact 288x48 strip")
+    ensure(hashlib.sha256(atlas_payload).hexdigest() == "5629ffe1f45e311c6994fcc83d781832bb6a6cae04f526e02e12744c04ee3342" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Dissident-front atlas bytes or alpha changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Dissident-front atlas import metadata is missing")
+
+    encounters = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "encounters.json").get("items", []) if isinstance(row, dict)}
+    groups = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "army_groups.json").get("items", []) if isinstance(row, dict)}
+    scenarios = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "scenarios.json").get("items", []) if isinstance(row, dict)}
+    ensure(len(encounters) == 69 and len(groups) == 81 and len(scenarios) == 24, errors, "Dissident-front batch must retain 69 encounters, 81 army groups, and 24 scenarios")
+    all_placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
+    ensure(len(all_placements) == 83 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 43, errors, "Dissident fronts must retain the expanded 83-placement, 43-identity playable breadth")
+
+    art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = art_manifest.get("object_assets", {})
+    identity_sprites = art_manifest.get("encounter_identity_sprites", {})
+    source_manifest = load_json(source_manifest_path)
+    source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
+    ensure(source_manifest.get("schema_version") == 1 and source_manifest.get("generator_mode") == "built_in_image_gen", errors, "Dissident-front source manifest provenance changed")
+    ensure(source_manifest.get("runtime_atlas_size") == [288, 48] and source_manifest.get("runtime_atlas_sha256") == "5629ffe1f45e311c6994fcc83d781832bb6a6cae04f526e02e12744c04ee3342", errors, "Dissident-front source manifest atlas contract changed")
+    ensure(set(source_rows) == set(expected), errors, "Dissident-front source manifest must own exactly the six selected encounters")
+
+    source_payloads = []
+    for encounter_id, contract in expected.items():
+        asset_id, stem, group_id, faction_id, units, scenario_id, placement_id, seed, objective_id, objective_type, resource_id, victory_flag, region, source_sha = contract
+        definition = encounters.get(encounter_id, {})
+        group = groups.get(group_id, {})
+        stacks = [(str(row.get("unit_id", "")), int(row.get("count", 0))) for row in group.get("stacks", []) if isinstance(row, dict)]
+        objectives = definition.get("field_objectives", [])
+        objective = objectives[0] if isinstance(objectives, list) and len(objectives) == 1 and isinstance(objectives[0], dict) else {}
+        rewards = definition.get("rewards", {})
+        ensure(definition.get("enemy_group_id") == group_id and definition.get("max_rounds") == 14, errors, f"{encounter_id} lost its battle owner or round cap")
+        ensure(group.get("faction_id") == faction_id and stacks == units, errors, f"{encounter_id} lost its exact faction army composition")
+        ensure(objective.get("id") == objective_id and objective.get("type") == objective_type, errors, f"{encounter_id} lost its faction-specific field objective")
+        ensure(rewards.get("gold") == 190 and rewards.get("experience") == 200 and rewards.get(resource_id) == 1 and definition.get("victory_flags") == [victory_flag], errors, f"{encounter_id} reward or victory-state contract changed")
+
+        scenario = scenarios.get(scenario_id, {})
+        placements = [row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
+        placement = placements[0] if len(placements) == 1 else {}
+        ensure(len(placements) == 1 and placement.get("encounter_id") == encounter_id and [placement.get("x"), placement.get("y")] == [2, 4] and placement.get("difficulty") == "medium" and placement.get("combat_seed") == seed and placement.get("prefer_identity_landmark") is True, errors, f"{encounter_id} must remain one optional medium landmark placement at (2,4) with its fixed seed")
+        occupied = [row for kind in ("towns", "resource_nodes", "artifact_nodes") for row in scenario.get(kind, []) if isinstance(row, dict) and [row.get("x"), row.get("y")] == [2, 4]]
+        competing = [row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") != placement_id and [row.get("x"), row.get("y")] == [2, 4]]
+        terrain_map = scenario.get("map", [])
+        terrain = terrain_map[4][2] if isinstance(terrain_map, list) and len(terrain_map) > 4 and isinstance(terrain_map[4], list) and len(terrain_map[4]) > 2 else ""
+        ensure(not occupied and not competing and terrain not in {"", "water"}, errors, f"{encounter_id} optional route tile must remain free and traversable")
+
+        entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
+        source_res = f"res://art/overworld/source/generated/encounters/dissident_fronts/{stem}_source.png"
+        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png", errors, f"{encounter_id} exact live art mapping is missing")
+        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48] and entry.get("source_generated") == source_res, errors, f"{encounter_id} atlas region or source ownership changed")
+        ensure(entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == faction_id and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"{encounter_id} art assignment or non-color description changed")
+        source_path = res_path_to_disk(source_res)
+        ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{encounter_id} must retain its imported high-resolution generated source")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"{encounter_id} source bytes or alpha changed")
+            source_payloads.append(payload)
+        source_row = source_rows.get(encounter_id, {})
+        ensure(source_row.get("asset_id") == asset_id and source_row.get("source_path") == source_res and source_row.get("source_sha256") == source_sha and source_row.get("atlas_region") == region, errors, f"{encounter_id} generated-source manifest row changed")
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six dissident-front sources must remain byte-distinct")
+
+    report_text = report_script_path.read_text(encoding="utf-8")
+    report_scene = report_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "six_faction_dissident_fronts_report.tscn", [("SixFactionDissidentFrontsReport", "Node")])
+    for token in ('const CASES := [', 'CASES.size()', 'ScenarioFactory.create_session(', 'validation_encounter_presentation_payload', 'texture is AtlasTexture', 'BattleRulesScript.create_battle_payload', 'BattleAutoResolveRulesScript.resolve_active_battle', 'SessionStateStoreScript.SAVE_VERSION', 'print("%s %s" % [REPORT_ID'):
+        ensure(token in report_text, errors, f"Dissident-front combined smoke is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME = "dissident_fronts_atlas"' in packaging_text and 'dissident_fronts/dissident_fronts_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the compact dissident-front atlas")
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure('bool(encounter.get("prefer_identity_landmark", false))' in map_text and '_draw_preferred_encounter_landmark' in map_text, errors, "Dissident fronts must retain their live exact-landmark presentation route")
 
 
 def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
@@ -49173,9 +49267,9 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     ] if isinstance(scenario_rows, list) else []
     placed_identity_ids = set(all_placement_ids)
     unplaced_definition_ids = set(encounters) - placed_identity_ids
-    ensure(len(all_placement_ids) == 77 and len(placed_identity_ids) == 37, errors, "Authored scenarios must retain exactly 77 placements across 37 distinct encounter identities")
+    ensure(len(all_placement_ids) == 83 and len(placed_identity_ids) == 43, errors, "Authored scenarios must retain exactly 83 placements across 43 distinct encounter identities")
     ensure(placed_identity_ids.issubset(set(identity_sprites)), errors, "Every encounter identity placed in an authored scenario must own exact live Overworld art")
-    ensure(len(encounters) == 63 and len(unplaced_definition_ids) == 26 and not (set(identity_sprites) & unplaced_definition_ids), errors, "Exact encounter art must cover the 37 live placed definitions without creating unused mappings for the 26 unplaced definitions")
+    ensure(len(encounters) == 69 and len(unplaced_definition_ids) == 26 and not (set(identity_sprites) & unplaced_definition_ids), errors, "Exact encounter art must cover the 43 live placed definitions without creating unused mappings for the 26 unplaced definitions")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
@@ -49805,14 +49899,14 @@ def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
         return
 
     expected = {
-        "cover_line": ("cover_line_briar_bulwark", "wide_low_screen", "5e4fa6d09fa68cfc9b8e366a902ed0fe451484c65837e74bb00c2949b4507484", "0388e12ed1999b20b26ebd36aab4639c587a2eabf1acfe87fb824b1599a5303a", 9),
+        "cover_line": ("cover_line_briar_bulwark", "wide_low_screen", "5e4fa6d09fa68cfc9b8e366a902ed0fe451484c65837e74bb00c2949b4507484", "0388e12ed1999b20b26ebd36aab4639c587a2eabf1acfe87fb824b1599a5303a", 10),
         "obstruction_line": ("obstruction_line_crossed_stakes", "crossed_blockade", "732641d6c1601d8b05163e200a10d41a43020f7d54abe1e0065d498f7eac45ab", "10ab7b65b83e9decc00cfefe68935c718b6a98191c3648f05b8b6f0cd6641b26", 6),
-        "lane_battery": ("lane_battery_splitrail", "wide_tripod_battery", "18ea6d6a5e4c10d7199af20ec0e8905057e1f41fce43a5a2beaf5232a21a6bd0", "f07dc42f4465ec1b1f1e6842a87b6627f3f9f29d6b34ef40ef2f67c93711087e", 4),
-        "hazard_zone": ("hazard_zone_mireglass_basin", "triangular_hazard_basin", "5c185a4ab871c5282cc6d2f6ca72287c9b14e32255ba6a8998c6db15ecde21bc", "c0728d03eae332c0e22e2faf550ac4cf33fbe0c4fb14617e7b46257d04a749e0", 8),
+        "lane_battery": ("lane_battery_splitrail", "wide_tripod_battery", "18ea6d6a5e4c10d7199af20ec0e8905057e1f41fce43a5a2beaf5232a21a6bd0", "f07dc42f4465ec1b1f1e6842a87b6627f3f9f29d6b34ef40ef2f67c93711087e", 5),
+        "hazard_zone": ("hazard_zone_mireglass_basin", "triangular_hazard_basin", "5c185a4ab871c5282cc6d2f6ca72287c9b14e32255ba6a8998c6db15ecde21bc", "c0728d03eae332c0e22e2faf550ac4cf33fbe0c4fb14617e7b46257d04a749e0", 9),
         "breach_point": ("breach_point_broken_gate", "open_gate_jaws", "03c05efb753e2798d69acc6fe7a8adea8d2a9f67f9247b235ec3a60f3152d9b8", "6d54f8bafd3de39f0c5388f8de020f61938cdcf548a9f658f5c9342f4a601dea", 3),
-        "ritual_pylon": ("ritual_pylon_resonance_stone", "forked_pylon_ring", "4d9cd897c8de2db226eedfc7ffea89d201bd7084362f120c4541abb873cdb3fc", "fd34c158e482c75df9e9ea4f3c55c3550581d0cb6db1cdfbde9dfea2aec2ab5f", 2),
-        "signal_beacon": ("signal_beacon_tripod_lantern", "tall_tripod_signal", "1378c2af521c2289facddfcafd80637a3cf4af151a80d0272e76e5561b18ff61", "1a60f989e3e2d6be729ec39aacbffc9afe46ba024576d4bdcc8f76f76c68f30d", 9),
-        "supply_post": ("supply_post_frontier_stores", "stepped_stores_cluster", "a135172d1706ae24fba228f8ff60c3fcca2b90e12c9fe84934192072f91b9afe", "13baf08cd4f966fe0f8afc36f5e7bc2b22e3f04c3fd31d814927b83d8548ed72", 12),
+        "ritual_pylon": ("ritual_pylon_resonance_stone", "forked_pylon_ring", "4d9cd897c8de2db226eedfc7ffea89d201bd7084362f120c4541abb873cdb3fc", "fd34c158e482c75df9e9ea4f3c55c3550581d0cb6db1cdfbde9dfea2aec2ab5f", 3),
+        "signal_beacon": ("signal_beacon_tripod_lantern", "tall_tripod_signal", "1378c2af521c2289facddfcafd80637a3cf4af151a80d0272e76e5561b18ff61", "1a60f989e3e2d6be729ec39aacbffc9afe46ba024576d4bdcc8f76f76c68f30d", 10),
+        "supply_post": ("supply_post_frontier_stores", "stepped_stores_cluster", "a135172d1706ae24fba228f8ff60c3fcca2b90e12c9fe84934192072f91b9afe", "13baf08cd4f966fe0f8afc36f5e7bc2b22e3f04c3fd31d814927b83d8548ed72", 13),
     }
     manifest = load_json(manifest_path)
     ensure(manifest.get("schema_id") == "battle_field_objective_art_manifest_v1", errors, "Battle field-objective art manifest must retain its production schema")
@@ -49865,7 +49959,7 @@ def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
                 if objective_type in type_counts:
                     type_counts[objective_type] += 1
                 authored_objective_count += 1
-    ensure(len(encounters) == 63 and authored_objective_count == 53, errors, "Battle field-objective adoption must retain all 63 encounters and 53 authored objectives")
+    ensure(len(encounters) == 69 and authored_objective_count == 59, errors, "Battle field-objective adoption must retain all 69 encounters and 59 authored objectives")
     ensure(type_counts == {key: row[4] for key, row in expected.items()}, errors, "Battle field-objective authored type coverage changed")
 
     board_text = board_path.read_text(encoding="utf-8")
@@ -73982,6 +74076,7 @@ def main() -> int:
     validate_overworld_contained_hover_card(errors)
     validate_faction_encounter_landmarks(errors)
     validate_signature_encounter_landmarks(errors)
+    validate_six_faction_dissident_fronts(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_recurring_resource_site_landmarks(errors)
     validate_hero_specialty_insignia(errors)

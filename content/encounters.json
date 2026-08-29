@@ -1992,6 +1992,174 @@
         }
       ],
       "rewards": {"gold": 170, "wood": 1, "experience": 150}
+    },
+    {
+      "id": "encounter_lockflame_turncoats",
+      "name": "Lockflame Turncoats",
+      "enemy_group_id": "army_lockflame_turncoats",
+      "terrain": "road",
+      "battlefield_tags": ["fortified_line", "battery_nest"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Bailiff Corra Ashlock",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 0},
+        "starting_spell_ids": ["spell_lantern_phalanx", "spell_quickmarch_hymn"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "field_objectives": [
+        {
+          "id": "lockflame_broken_sluice",
+          "type": "lane_battery",
+          "label": "Broken Sluice Battery",
+          "summary": "Turncoat bargebows range the causeway through a stolen lockgate until the battery frame is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["ranged", "initiative", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 190, "embergrain": 1, "experience": 200},
+      "victory_flags": ["lockflame_turncoats_broken"]
+    },
+    {
+      "id": "encounter_mossglass_moonhunt",
+      "name": "Mossglass Moonhunt",
+      "enemy_group_id": "army_mossglass_moonhunt",
+      "terrain": "mire",
+      "battlefield_tags": ["fog_bank", "ambush_cover"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Huntspeaker Urr Fen-Eye",
+        "command": {"attack": 2, "defense": 1, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_bloodwake_drum", "spell_stone_veil"],
+        "battle_traits": ["bogwise", "packhunter"]
+      },
+      "field_objectives": [
+        {
+          "id": "moonhunt_scent_gate",
+          "type": "hazard_zone",
+          "label": "Moonhunt Scent Gate",
+          "summary": "Mossglass scent braziers turn the reed lanes into a hunting maze until the antler gate is broken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "initiative", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 190, "peatwax": 1, "experience": 200},
+      "victory_flags": ["mossglass_moonhunt_broken"]
+    },
+    {
+      "id": "encounter_parallax_choir",
+      "name": "Parallax Choir",
+      "enemy_group_id": "army_parallax_choir",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "battery_nest"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Cantor Edris Split-Ray",
+        "command": {"attack": 1, "defense": 1, "power": 2, "knowledge": 1},
+        "starting_spell_ids": ["spell_prism_bastion", "spell_resonant_chorus"],
+        "battle_traits": ["artillerist", "linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "parallax_chime_frame",
+          "type": "signal_beacon",
+          "label": "Parallax Chime Frame",
+          "summary": "A forked mirror choir keeps every ray in cadence until the suspended prism is claimed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "commander", "initiative"]
+        }
+      ],
+      "rewards": {"gold": 190, "aetherglass": 1, "experience": 200},
+      "victory_flags": ["parallax_choir_broken"]
+    },
+    {
+      "id": "encounter_graftbound_pilgrims",
+      "name": "Graftbound Pilgrims",
+      "enemy_group_id": "army_graftbound_pilgrims",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "fortified_line"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Root-Pilgrim Mave",
+        "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["ambusher", "linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "graftbound_walking_arch",
+          "type": "cover_line",
+          "label": "Walking-Root Arch",
+          "summary": "A living pilgrim arch advances thorn screens over the lane until its graft baskets are cut down.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 3,
+          "pressure_tags": ["cohesion", "commander", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 190, "verdant_grafts": 1, "experience": 200},
+      "victory_flags": ["graftbound_pilgrims_broken"]
+    },
+    {
+      "id": "encounter_redline_foreclosure",
+      "name": "Redline Foreclosure",
+      "enemy_group_id": "army_redline_foreclosure",
+      "terrain": "rough",
+      "battlefield_tags": ["chokepoint", "fortress_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Auditor Venn Red-Gauge",
+        "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["linekeeper", "vanguard"]
+      },
+      "field_objectives": [
+        {
+          "id": "redline_seizure_gauge",
+          "type": "supply_post",
+          "label": "Seizure Gauge",
+          "summary": "A red gauge wheel releases rivets and scrip to the foreclosure line until its counterweight is seized.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["reinforcement", "cohesion", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 190, "brass_scrip": 1, "experience": 200},
+      "victory_flags": ["redline_foreclosure_broken"]
+    },
+    {
+      "id": "encounter_drowned_bell_procession",
+      "name": "Drowned Bell Procession",
+      "enemy_group_id": "army_drowned_bell_procession",
+      "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "open_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Bellbearer Sorn",
+        "command": {"attack": 2, "defense": 1, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["ambusher", "vanguard"]
+      },
+      "field_objectives": [
+        {
+          "id": "drowned_procession_bell",
+          "type": "ritual_pylon",
+          "label": "Drowned Procession Bell",
+          "summary": "A funeral bell sounded from a ribbed skiff drives the procession onward until the mast is silenced.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["momentum", "initiative", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 190, "memory_salt": 1, "experience": 200},
+      "victory_flags": ["drowned_bell_procession_broken"]
     }
   ]
 }
