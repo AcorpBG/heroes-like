@@ -24,8 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-battle-status-effect-badges-10184`.
-- Next selection boundary: audit and register the next highest-impact live original-content or art gap without weakening the release package ceiling.
+- Most recently completed implementation slice: `content-campaign-opening-chapter-seals-10184`.
+- Next selection boundary: audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 252496-byte release-package headroom.
+
+## Campaign Opening-Chapter Seals
+
+id: `content-campaign-opening-chapter-seals-10184`
+
+Status: completed.
+
+Current finding:
+- all six playable campaign arcs have distinct live emblems, but all 24 chapter rows remain text-only and reuse no scenario-specific visual identity;
+- the six always-available opening chapters are the highest-impact coherent first wave because every new campaign player sees one and they span River Pass, Stonewake Watch, Bogbound Oath, Prismhearth Watch, Ironbridge Stand, and Rootbound Mireford.
+
+Implementation boundary:
+- add one original transparent cartographic seal for each campaign opening chapter, using the exact authored first-objective landmark and terrain language rather than faction heraldry, arc-emblem reuse, or copied Heroes expression;
+- expose immutable scenario seal paths, provenance, and non-color descriptions through campaign content and rules, then render the exact seal in the existing chapter list row without adding panels or changing campaign progression, locks, carryover, launch, save, or scenario rules;
+- retain text labels, keyboard/controller selection, high contrast, bounded texture caching, missing/invalid-art fallback, source-art release exclusion, save version 9, and the strict 250000000-byte PCK ceiling.
+
+Completion criteria:
+- six byte-distinct original sources and compact 64x64 runtime textures retain genuine alpha, exact content provenance, and legible silhouettes at the live 24x24 chapter-row size;
+- each campaign opening chapter resolves its exact seal while all 18 later chapters honestly remain text-only, malformed or missing seal authority fails closed, and accessibility/tooltips preserve the exact authored visual description;
+- inspected 1280x720 and 1920x1080 captures cover all six opening rows; campaign/menu/core/static validation and Linux/Windows packaged startup pass within the remaining release-package headroom.
+
+Completed evidence:
+- River Pass, Stonewake Watch, Bogbound Oath, Prismhearth Watch, Ironbridge Stand, and Rootbound Mireford now own six byte-distinct original transparent cartographic seals with immutable source/runtime provenance and exact non-color descriptions;
+- the live campaign chapter list resolves each opening seal through strict scenario authority and a six-entry texture cache at 24x24, refreshes native accessibility semantics after every selection path, and retains all 18 later chapters as honest text-only rows with missing-art fail-closed behavior and save version 9 unchanged;
+- the focused all-six runtime report, campaign launch/restart compatibility smoke, accessibility semantics, core regression, repository validator, and inspected 1280x720/1920x1080 captures pass; Linux and Windows packages contain six exact compiled textures, exclude source art, boot successfully, and produce a 249747504-byte PCK under the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no copied Heroes campaign, scenario, map, icon, heraldry, names, text, or protected visual expression; no later-chapter art claim, campaign rules, carryover, scenario content, save-schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Battle Status-Effect Badges
 

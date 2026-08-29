@@ -9,6 +9,7 @@ const CAMPAIGN_DOCK_FIRST_VIEW_MIN_HEIGHT := 460.0
 const CAMPAIGN_DOCK_MAX_HEIGHT_RATIO := 0.640
 
 var _original_profile := {}
+var _original_settings := {}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -17,6 +18,12 @@ func _run() -> void:
 	var tree := get_tree()
 	ContentService.clear_cache()
 	_original_profile = CampaignProgression.ensure_profile().duplicate(true)
+	_original_settings = SettingsService.ensure_settings().duplicate(true)
+	var test_settings := _original_settings.duplicate(true)
+	test_settings["accessibility"]["ui_scale_percent"] = 100
+	test_settings["accessibility"]["large_ui_text"] = false
+	SettingsService.settings = test_settings
+	SettingsService.apply_settings()
 	var clean_profile := CampaignRules.normalize_profile(_original_profile)
 	clean_profile["campaign_states"][CAMPAIGN_ID] = {}
 	clean_profile["last_campaign_id"] = CAMPAIGN_ID
@@ -654,13 +661,18 @@ func _expected_chapter_rows() -> Array:
 	for entry in CampaignProgression.campaign_chapter_entries(CAMPAIGN_ID):
 		var scenario_id := String(entry.get("scenario_id", ""))
 		var action := CampaignProgression.chapter_action(CAMPAIGN_ID, scenario_id, CAMPAIGN_DIFFICULTY)
+		var seal_alt_text := String(entry.get("seal_alt_text", ""))
+		var tooltip_lines := []
+		if seal_alt_text != "":
+			tooltip_lines.append(seal_alt_text)
+		tooltip_lines.append(CampaignProgression.chapter_details(CAMPAIGN_ID, scenario_id, CAMPAIGN_DIFFICULTY))
+		tooltip_lines.append(String(action.get("summary", "")))
 		rows.append({
 			"id": scenario_id,
+			"seal_path": String(entry.get("seal_path", "")),
+			"seal_alt_text": seal_alt_text,
 			"label": String(entry.get("label", scenario_id)),
-			"tooltip": "\n".join([
-				CampaignProgression.chapter_details(CAMPAIGN_ID, scenario_id, CAMPAIGN_DIFFICULTY),
-				String(action.get("summary", "")),
-			]),
+			"tooltip": "\n".join(tooltip_lines),
 			"selected": scenario_id == START_SCENARIO_ID,
 		})
 	return rows
@@ -701,6 +713,9 @@ func _fail(message: String) -> void:
 	get_tree().quit(1)
 
 func _restore_original_profile() -> void:
+	if not _original_settings.is_empty():
+		SettingsService.settings = _original_settings.duplicate(true)
+		SettingsService.apply_settings()
 	if _original_profile.is_empty():
 		return
 	CampaignProgression.profile = CampaignRules.normalize_profile(_original_profile)

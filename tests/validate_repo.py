@@ -16854,7 +16854,7 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         and main_menu_text.count("func _refresh_stage_accessibility() -> void:") == 1
         and main_menu_text.count("_queue_stage_accessibility_refresh()") == 2
         and main_menu_text.count('call_deferred("_finalize_stage_accessibility")') == 1
-        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 6,
+        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 8,
         errors,
         "Main Menu must own exactly one post-focus secondary-board accessibility chain plus exact Skirmish-front, Skirmish-difficulty, Campaign-arc, Campaign-chapter, and Campaign-difficulty semantic refreshes",
     )
@@ -48697,6 +48697,76 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing campaign emblem identity {stem}")
 
 
+def validate_campaign_opening_chapter_seals(errors: list[str]) -> None:
+    expected = {
+        "campaign_reedfall": ("river-pass", "river_pass_break", "d450ac3f483cdbc5ac9f93e5d06630198227071e7959707b633a1817a492fdb7", "d63a5bac8f158aecf84bd55e82d5b9ec646b23cd4b56359db1d3c3f6cfcb5ab3"),
+        "campaign_stonewake": ("stonewake-watch", "stonewake_watch", "ee76be3995be59f4986dac8c39ef4703504caaff86d12c9b9addf5a72ba263b2", "5849acd0882bdf8232c0a7b8ef3fd33ffdba2e041bbb70024f7cf56302884561"),
+        "campaign_bogbound_oath": ("bogbound-oath", "bogbound_riverwatch", "14b61d19f0dc89257aff566dbb6bffc6160fa813676cad2ea117d313292950ad", "62aa1bdd5c245c5ceaa085004ddb374d0e7de943014203c5a183f245646ce15c"),
+        "campaign_shards_of_daybreak": ("prismhearth-watch", "prismhearth_relay", "d4b17671ae0068ef9df681338d6a319d98a4578a2cd52d1d9fc0f3c210953b29", "3ce752a69e733e48bf6160a5bcd77385fbd69e80765a46e0cff649cb5c371bf9"),
+        "campaign_ninefold_survey": ("ironbridge-stand", "ironbridge_stand", "b4fe4a6fd0781265495338f2f37bdfab77147e2d918c4b0c76495e0a3056e810", "b94c9c9d0ee95ca0f0fd047c5f218d9a5b05fc8036ca5cf1e04ba029eb9b8d41"),
+        "campaign_frontier_claims": ("mireford-skirmish", "rootbound_mireford", "ff4b59b5fbca2abd8e26972163688ba9a3faa3c5bbdf7a55a2a9a910758f9b11", "97493928b398bc2c0cb343b82c28c49aef3f118cefcc8473f171abd1a622dc52"),
+    }
+    campaigns_value = load_json(CONTENT_DIR / "campaigns.json").get("items", [])
+    campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
+    source_payloads: list[bytes] = []
+    runtime_payloads: list[bytes] = []
+    chapter_count = 0
+    sealed_count = 0
+    for campaign_id, (scenario_id, stem, source_sha, runtime_sha) in expected.items():
+        campaign = campaigns.get(campaign_id, {})
+        scenarios = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
+        chapter_count += len(scenarios)
+        sealed_rows = [row for row in scenarios if isinstance(row, dict) and str(row.get("seal_id", ""))]
+        sealed_count += len(sealed_rows)
+        ensure(len(sealed_rows) == 1, errors, f"Campaign {campaign_id} must expose exactly one opening chapter seal")
+        scenario = sealed_rows[0] if sealed_rows else {}
+        expected_id = f"campaign_chapter_seal_{scenario_id.replace('-', '_')}"
+        source_res = f"res://art/campaigns/source/generated/chapter_seals/{stem}_source.png"
+        runtime_res = f"res://art/campaigns/runtime/chapter_seals/{stem}.png"
+        ensure(str(campaign.get("starting_scenario_id", "")) == scenario_id, errors, f"Campaign {campaign_id} opening seal must belong to the starting scenario")
+        ensure(str(scenario.get("scenario_id", "")) == scenario_id and int(scenario.get("chapter_index", 0)) == 1, errors, f"Campaign {campaign_id} seal must remain on chapter one")
+        ensure(str(scenario.get("seal_id", "")) == expected_id, errors, f"Campaign {campaign_id} opening seal identity changed")
+        ensure(str(scenario.get("seal_source_path", "")) == source_res and str(scenario.get("seal_path", "")) == runtime_res, errors, f"Campaign {campaign_id} opening seal paths changed")
+        ensure(str(scenario.get("seal_source_sha256", "")) == source_sha and str(scenario.get("seal_runtime_sha256", "")) == runtime_sha, errors, f"Campaign {campaign_id} opening seal digests changed")
+        ensure(bool(str(scenario.get("seal_alt_text", "")).strip()), errors, f"Campaign {campaign_id} opening seal needs non-color alt text")
+        source_path = res_path_to_disk(source_res)
+        runtime_path = res_path_to_disk(runtime_res)
+        ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"Campaign {campaign_id} opening seal source must remain 1254x1254")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (64, 64), errors, f"Campaign {campaign_id} opening seal runtime texture must remain 64x64")
+        ensure(Path(f"{source_path}.import").is_file() and Path(f"{runtime_path}.import").is_file(), errors, f"Campaign {campaign_id} opening seal import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} opening seal source bytes or alpha changed")
+            source_payloads.append(payload)
+        if runtime_path.is_file():
+            payload = runtime_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} opening seal runtime bytes or alpha changed")
+            runtime_payloads.append(payload)
+    ensure(chapter_count == 24 and sealed_count == 6, errors, "Campaign chapter-seal scope must remain six opening seals and eighteen text-only later chapters")
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6 and len(runtime_payloads) == 6 and len(set(runtime_payloads)) == 6, errors, "Campaign opening chapter seals must remain byte-distinct")
+
+    content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    rules_text = (ROOT / "scripts/core/CampaignRules.gd").read_text(encoding="utf-8")
+    menu_text = (ROOT / "scenes/menus/MainMenu.gd").read_text(encoding="utf-8")
+    scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    for token in ("func _validate_campaign_chapter_seal", 'expected_id := "campaign_chapter_seal_%s"', 'seal_path.begins_with("res://art/campaigns/runtime/chapter_seals/")', 'source_path.begins_with("res://art/campaigns/source/generated/chapter_seals/")'):
+        ensure(token in content_text, errors, f"Campaign content service is missing chapter-seal ownership: {token}")
+    for token in ('"seal_path": campaign_chapter_seal_path(campaign_id, scenario_id)', '"seal_alt_text": campaign_chapter_seal_alt_text(campaign_id, scenario_id)', "static func campaign_chapter_seal_path", "static func campaign_chapter_seal_alt_text"):
+        ensure(token in rules_text, errors, f"Campaign rules are missing chapter-seal authority: {token}")
+    for token in ("_campaign_chapter_seal_texture_cache", "_chapter_list.set_item_icon(index, seal_texture)", "func _load_campaign_chapter_seal_texture", '"seal_path": _chapter_list.get_item_icon(index).resource_path', '"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", ""))'):
+        ensure(token in menu_text, errors, f"Campaign menu is missing live chapter-seal presentation: {token}")
+    chapter_scene_start = scene_text.find('[node name="ChapterList" type="ItemList"')
+    chapter_scene_end = scene_text.find("\n[node ", chapter_scene_start + 1)
+    ensure("fixed_icon_size = Vector2i(24, 24)" in scene_text[chapter_scene_start:chapter_scene_end], errors, "Campaign chapter list must retain compact 24x24 seals")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all six opening chapter seals")
+        ensure('bool(terrain_payload["campaign_chapter_seal_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when chapter seals are absent")
+        ensure('"campaign_chapter_seal_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged chapter-seal coverage")
+        for _scenario_id, stem, _source_sha, _runtime_sha in expected.values():
+            ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing opening chapter seal {stem}")
+
+
 def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
     manifest_path = CONTENT_DIR / "battle_field_objective_art_manifest.json"
     encounter_path = CONTENT_DIR / "encounters.json"
@@ -72883,6 +72953,7 @@ def main() -> int:
     validate_overworld_contained_hover_card(errors)
     validate_faction_encounter_landmarks(errors)
     validate_campaign_arc_emblems(errors)
+    validate_campaign_opening_chapter_seals(errors)
     validate_battle_field_objective_landmarks(errors)
     validate_battle_status_effect_badges(errors)
     validate_overworld_enemy_commander_sprite_runtime(errors)
