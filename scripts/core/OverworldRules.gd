@@ -1113,6 +1113,10 @@ static func _collect_resource_node_result(
 	var spell_message := _learn_site_spell(session, String(site.get("learn_spell_id", "")))
 	if spell_message != "":
 		messages.append(spell_message)
+	var site_vision_radius: int = max(0, int(site.get("vision_radius", 0)))
+	var site_reveal_tiles: int = _reveal_resource_site_claim_fog(session, node, site_vision_radius)
+	if site_reveal_tiles > 0:
+		messages.append("Surveyed %d new map tile%s." % [site_reveal_tiles, "" if site_reveal_tiles == 1 else "s"])
 	if disruption_message != "":
 		messages.append(disruption_message)
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
@@ -1132,6 +1136,9 @@ static func _collect_resource_node_result(
 		mutation_facts["artifact_ids"] = [String(artifact_reward.get("artifact_id", ""))]
 		mutation_facts["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, mutation_facts)
+	if site_vision_radius > 0:
+		result["site_vision_radius"] = site_vision_radius
+		result["site_reveal_tiles"] = site_reveal_tiles
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
 	result["interaction_result"] = _interactable_result_payload("resource_site", node, mutation_facts, topology_facts)
@@ -11951,6 +11958,25 @@ static func _reveal_spell_fog(session: SessionStateStoreScript.SessionData, radi
 		radius,
 		map_size
 	)
+	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
+	var payload := _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
+	session.overworld[FOG_KEY] = payload
+	return max(0, int(payload.get("explored_count", before_count)) - before_count)
+
+static func _reveal_resource_site_claim_fog(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	radius: int
+) -> int:
+	if session == null or radius <= 0 or node.is_empty():
+		return 0
+	if not _fog_state_ready(session):
+		_normalize_fog_of_war(session)
+	var map_size := derive_map_size(session)
+	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
+	var before_count := int(fog.get("explored_count", 0))
+	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
+	_apply_site_reveal(explored_tiles, node, radius, map_size)
 	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
 	var payload := _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
 	session.overworld[FOG_KEY] = payload

@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six faction relic roads with original capstone relics and icons, six newly live guarded reward sites, exact guard placements across the grand-convergence maps, and a shared explicit-guard interaction fix.",
+  "currentNotes": "Completed the six-site major guarded-reward tier with exact guards, live artifact and special rewards, and compact post-claim unsealed landmark art across existing maps.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-guarded-relic-roads-10184",
-  "currentSliceId": "content-six-faction-guarded-relic-roads-10184",
-  "currentSliceNotes": "Completed six faction-bound capstone relics and icons, adopted six metadata-only heavy or elite sites into live guarded resource and artifact rewards, and placed each site with its exact guard in the matching grand-convergence map. One combined six-case smoke, repository validation, and matching Linux/Windows 249038712-byte package boots passed.",
+  "currentSlice": "content-six-major-vault-unsealing-10184",
+  "currentSliceId": "content-six-major-vault-unsealing-10184",
+  "currentSliceNotes": "Completed all six major guarded sites across existing maps with exact guards, deterministic artifacts, supported spell, recruit, and one-time scouting rewards, and one compact six-state unsealed landmark atlas. The combined smoke, repository validation, and both packaged startups passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction guarded relic roads 10184",
-  "currentSliceUpdatedAt": "2026-08-29T20:38:05Z",
+  "currentSliceTitle": "content six major vault unsealing 10184",
+  "currentSliceUpdatedAt": "2026-08-29T21:09:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106164,6 +106164,16 @@
       "startedAt": "2026-08-29T20:05:47Z",
       "notes": "Completed six original faction capstone relics and icons, activated six heavy or elite sites as live guarded resource-and-artifact roads, placed each site beside its exact guard in the matching grand-convergence map, and fixed explicit node-to-guard interaction blocking. The single six-case smoke passed battle, reward, equipment, repeat-claim, inspected capture, and save v9 coverage; repository validation and matching Linux/Windows 249038712-byte package boots passed.",
       "completedAt": "2026-08-29T20:38:05Z"
+    },
+    {
+      "id": "content-six-major-vault-unsealing-10184",
+      "title": "content six major vault unsealing 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T21:09:58Z",
+      "startedAt": "2026-08-29T20:47:22Z",
+      "notes": "Completed six live major guarded vaults across six existing maps with exact guard blocking, deterministic standard-table artifacts, supported spell, recruit, and one-time scouting rewards, and one compact original six-state unsealed atlas. The single six-case smoke passed blocking, production battle construction, rewards, claimed art, repeat safety, inspected captures, and save v9; repository validation and matching Linux/Windows 249073568-byte package boots passed.",
+      "completedAt": "2026-08-29T21:09:58Z"
     }
   ],
   "project": "heroes-like",
@@ -106173,8 +106183,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Twenty-four of 32 guarded-reward sites remain metadata-only despite complete site and map-object records. Those sites and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices rather than placement-only claims. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next substantial runtime-backed content family, preserve the remaining 961288-byte package headroom, and avoid treating placement of metadata-only objects as implementation progress.",
+  "remainingGap": "Eighteen of 32 guarded-reward sites remain metadata-only despite complete site and map-object records. Those sites and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices rather than placement-only claims. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next runtime-backed content family while preserving the remaining 926432-byte package headroom rather than treating metadata placement as implementation progress.",
   "reportOnlyEvidence": [
     {
       "entries": [

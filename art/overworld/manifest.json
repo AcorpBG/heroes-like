@@ -5380,6 +5380,66 @@
       "assigned_map_object_id": "object_withered_rootgate_marker",
       "assigned_map_object_family": "scenario_objective"
     },
+    "resource_site_major_vault_mirror_archive_unsealed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/mirror_archive_unsealed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+      "assigned_resource_site_id": "site_mirror_archive",
+      "presentation_role": "unsealed_claimed_state",
+      "accessible_description": "The Mirror Archive stands open with a calm blue survey light visible through its brass-bound entrance."
+    },
+    "resource_site_major_vault_furnace_vault_unsealed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/furnace_vault_unsealed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+      "assigned_resource_site_id": "site_furnace_vault",
+      "presentation_role": "unsealed_claimed_state",
+      "accessible_description": "The Furnace Vault gate stands open around a steady amber forge glow."
+    },
+    "resource_site_major_vault_thorn_crown_hollow_unsealed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/thorn_crown_hollow_unsealed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+      "assigned_resource_site_id": "site_thorn_crown_hollow",
+      "presentation_role": "unsealed_claimed_state",
+      "accessible_description": "The Thorn Crown Hollow entrance is open beneath its living thorn dome and green claim lantern."
+    },
+    "resource_site_major_vault_storm_bell_wreck_unsealed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "atlas_region": [144, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/storm_bell_wreck_unsealed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+      "assigned_resource_site_id": "site_storm_bell_wreck",
+      "presentation_role": "unsealed_claimed_state",
+      "accessible_description": "The recovered storm bell hangs upright above calmer wreck timbers and a warm pilot lantern."
+    },
+    "resource_site_major_vault_prism_ossuary_unsealed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "atlas_region": [192, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/prism_ossuary_unsealed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+      "assigned_resource_site_id": "site_prism_ossuary",
+      "presentation_role": "unsealed_claimed_state",
+      "accessible_description": "The Prism Ossuary doors stand open around a restrained violet-white survey beam."
+    },
+    "resource_site_major_vault_basalt_oath_tomb_unsealed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+      "atlas_region": [240, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/basalt_oath_tomb_unsealed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_major_vault_unsealed_atlas",
+      "assigned_resource_site_id": "site_basalt_oath_tomb",
+      "presentation_role": "unsealed_claimed_state",
+      "accessible_description": "The Basalt Oath Tomb doors stand open beneath steady gold runes and blue-amber interior light."
+    },
     "resource_site_live_ember_signal_brazier": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [0, 0, 48, 48],
@@ -5826,6 +5886,36 @@
     }
   },
   "resource_site_sprites": {
+    "site_mirror_archive": {
+      "asset_id": "resource_site_major_vault_mirror_archive_unsealed",
+      "unclaimed_asset_id": "mapobj_mirror_archive",
+      "fit": "Exact open-door claimed state paired with the original closed Mirror Archive landmark."
+    },
+    "site_furnace_vault": {
+      "asset_id": "resource_site_major_vault_furnace_vault_unsealed",
+      "unclaimed_asset_id": "mapobj_furnace_vault",
+      "fit": "Exact open-gate claimed state paired with the original sealed Furnace Vault landmark."
+    },
+    "site_thorn_crown_hollow": {
+      "asset_id": "resource_site_major_vault_thorn_crown_hollow_unsealed",
+      "unclaimed_asset_id": "mapobj_thorn_crown_hollow",
+      "fit": "Exact open-threshold claimed state paired with the original sealed Thorn Crown Hollow landmark."
+    },
+    "site_storm_bell_wreck": {
+      "asset_id": "resource_site_major_vault_storm_bell_wreck_unsealed",
+      "unclaimed_asset_id": "mapobj_storm_bell_wreck",
+      "fit": "Exact recovered-bell claimed state paired with the original storm-damaged wreck landmark."
+    },
+    "site_prism_ossuary": {
+      "asset_id": "resource_site_major_vault_prism_ossuary_unsealed",
+      "unclaimed_asset_id": "mapobj_prism_ossuary",
+      "fit": "Exact open-door claimed state paired with the original sealed Prism Ossuary landmark."
+    },
+    "site_basalt_oath_tomb": {
+      "asset_id": "resource_site_major_vault_basalt_oath_tomb_unsealed",
+      "unclaimed_asset_id": "mapobj_basalt_oath_tomb",
+      "fit": "Exact open-door claimed state paired with the original sealed Basalt Oath Tomb landmark."
+    },
     "site_ember_signal_brazier": {
       "asset_id": "resource_site_live_ember_signal_brazier",
       "fit": "Exact original Embercourt live landmark art with a signal brazier, ember mirrors, and oath chain."
