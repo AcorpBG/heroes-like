@@ -24,8 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-signature-encounter-landmarks-10184`.
-- Next selection boundary: only 48436 bytes remain below the strict 250000000-byte PCK ceiling, so the next original-content or art slice requires a still tighter explicit package-size strategy.
+- Selected implementation slice: `content-hero-specialty-insignia-10184`.
+- Package boundary: the completed specialty atlas leaves 33076 bytes below the strict 250000000-byte PCK ceiling, so any next packaged-art slice needs an even tighter explicit size strategy.
+
+## Hero Specialty Insignia
+
+id: `content-hero-specialty-insignia-10184`
+
+Status: completed.
+
+Current finding:
+- all 112 authored spells already own exact live icons, while the seven complete hero specialties still collapse to text-only choice buttons on both the Overworld and Town progression surfaces;
+- Wayfinder, Ledgerkeeper, Spellwright, Drillmaster, Armsmaster, Muster Captain, and Border Warden are recurring player-build decisions used across all 60 heroes, making this the highest-frequency uncovered identity family that can fit the remaining package budget.
+
+Implementation boundary:
+- create one original readable insignia for each specialty, derived from its exact authored role and using non-color silhouette differences, then assemble the seven compact runtime icons into one imported atlas with immutable rect ownership and generated-source provenance;
+- expose exact fail-closed icon resolution from `HeroProgressionRules` and apply icons to live specialty choice buttons in both Overworld and Town without changing their text, tooltip, order, focus, or action binding;
+- preserve specialty ids, ranks, offered choices, bonuses, progression rules, hero content, save/session version 9, and Windows/Linux behavior.
+
+Completion criteria:
+- seven byte-distinct original transparent sources and one compact runtime atlas retain genuine alpha, distinct silhouettes at button scale, exact specialty ownership, and source-art exclusion from packages;
+- focused runtime proves every exact icon, AtlasTexture rect, both live button integrations, unknown-id fail-closed behavior, non-color descriptions, and unchanged specialty action/session/save authority;
+- inspected 1280x720 and 1920x1080 captures, progression/core/repository/editor validation, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- Wayfinder, Ledgerkeeper, Spellwright, Drillmaster, Armsmaster, Muster Captain, and Border Warden now own seven byte-distinct original transparent generated sources and exact 28x28 regions in one 196x28 runtime atlas, with non-color descriptions and fail-closed id/region/atlas authority;
+- live Overworld and Town specialty choice buttons resolve the atlas icons without changing choice order, action binding, progression rules, session state, or save version 9; the Town action width was raised only enough to keep the icon and full specialty label visible together;
+- the contact sheet and 1280x720/1920x1080 captures were inspected; focused exact-runtime, existing Town specialty feedback, broad core, repository/editor, and Linux/Windows packaged startup checks pass with the atlas present, generated source art excluded, and matching 249966924-byte PCKs under the unchanged ceiling. The existing Overworld cache regression still reports two request-local watch-context builds instead of one, and the unrelated 1280px objective-header ellipsis assertion remains red; neither is claimed fixed by this art slice.
+
+Non-goals:
+- no copied Heroes skill icon, heraldry, name, text, or protected visual expression; no specialty rules, bonuses, balance, choice generation, hero roster, battle, economy, AI, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Signature Encounter Landmarks
 

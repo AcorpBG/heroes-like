@@ -3562,10 +3562,26 @@ func _rebuild_specialty_actions(actions_override: Variant = null) -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Choose Specialty")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = _town_action_button_tooltip(action, "specialty")
+		button.tooltip_text = _join_tooltip_sections([
+			_town_action_button_tooltip(action, "specialty"),
+			HeroProgressionRules.specialty_insignia_description(
+				HeroProgressionRules.specialty_id_for_action(String(action.get("id", "")))
+			),
+		])
 		_style_action_button(button)
+		_apply_specialty_action_icon(button, action)
 		button.pressed.connect(_on_specialty_action_pressed.bind(String(action.get("id", ""))))
 		_specialty_actions.add_child(button)
+
+func _apply_specialty_action_icon(button: Button, action: Dictionary) -> void:
+	var specialty_id := HeroProgressionRules.specialty_id_for_action(String(action.get("id", "")))
+	var texture := HeroProgressionRules.specialty_insignia_texture(specialty_id)
+	if texture == null:
+		return
+	button.icon = texture
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 24)
+	button.custom_minimum_size.x = maxf(button.custom_minimum_size.x, 190.0)
 
 func _town_action_button_tooltip(action: Dictionary, lane: String) -> String:
 	var summary := String(action.get("summary", "")).strip_edges()

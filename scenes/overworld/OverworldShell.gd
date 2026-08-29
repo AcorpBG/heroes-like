@@ -7116,11 +7116,24 @@ func _rebuild_specialty_actions() -> void:
 		var specialty_check := _specialty_action_check_surface(action)
 		button.tooltip_text = _join_tooltip_sections([
 			String(action.get("summary", "")),
+			HeroProgressionRules.specialty_insignia_description(
+				HeroProgressionRules.specialty_id_for_action(String(action.get("id", "")))
+			),
 			String(specialty_check.get("tooltip_text", "")),
 		])
 		_style_rail_action_button(button)
+		_apply_specialty_action_icon(button, action)
 		button.pressed.connect(_on_specialty_action_pressed.bind(String(action.get("id", ""))))
 		_specialty_actions.add_child(button)
+
+func _apply_specialty_action_icon(button: Button, action: Dictionary) -> void:
+	var specialty_id := HeroProgressionRules.specialty_id_for_action(String(action.get("id", "")))
+	var texture := HeroProgressionRules.specialty_insignia_texture(specialty_id)
+	if texture == null:
+		return
+	button.icon = texture
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 24)
 
 func _rebuild_spell_actions() -> void:
 	for child in _spell_actions.get_children():

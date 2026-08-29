@@ -48740,6 +48740,133 @@ def validate_signature_encounter_landmarks(errors: list[str]) -> None:
             ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing signature encounter identity {stem}")
 
 
+def validate_hero_specialty_insignia(errors: list[str]) -> None:
+    def gd_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    specialty_ids = (
+        "wayfinder", "ledgerkeeper", "spellwright", "drillmaster",
+        "armsmaster", "mustercaptain", "borderwarden",
+    )
+    source_hashes = {
+        "wayfinder": "d655472042eb10b0c77ba723d0cf8187b050670052ac716907969f3153f37dd3",
+        "ledgerkeeper": "839d0dd392c51083a1d43fd3929133238b4f89f3b318c8404d63a7470566fe4c",
+        "spellwright": "5088245d3cbaaed48c1dc8d1d41abbd15c3127f2e4abe2f7badf823e2da743ae",
+        "drillmaster": "469f7543da77b79c7a9e49db84eabdfa316511b579b9d1b1514d81702fe8c480",
+        "armsmaster": "4e5deecb44119286595c1bf89aa130aab70e257434d87dc5284df10bd552cf92",
+        "mustercaptain": "7cac051613328b131d86876713f984748aa78b66879582592973d356068e8775",
+        "borderwarden": "1157f830f22a6ca386c03e70a7986d89e7fb3db6e99c1369053e3d0cf73f83c2",
+    }
+    source_dir = ROOT / "art" / "heroes" / "source" / "generated" / "specialties"
+    manifest_path = source_dir / "manifest.json"
+    atlas_path = ROOT / "art" / "heroes" / "runtime" / "specialties" / "hero_specialty_insignia_atlas.png"
+    rules_path = ROOT / "scripts" / "core" / "HeroProgressionRules.gd"
+    overworld_path = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
+    town_path = ROOT / "scenes" / "town" / "TownShell.gd"
+    report_path = ROOT / "tests" / "hero_specialty_insignia_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "hero_specialty_insignia_runtime_report.tscn"
+    required_paths = (manifest_path, atlas_path, rules_path, overworld_path, town_path, report_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing hero specialty insignia owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    manifest = load_json(manifest_path)
+    items = manifest.get("items", [])
+    ensure(manifest.get("schema") == "hero_specialty_insignia_generated_sources_v1", errors, "Hero specialty insignia source manifest schema changed")
+    ensure(manifest.get("generator") == "openai_builtin_image_generation", errors, "Hero specialty insignia sources must retain built-in image-generation provenance")
+    ensure(manifest.get("runtime_atlas") == "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png", errors, "Hero specialty insignia runtime atlas path changed")
+    ensure(manifest.get("atlas_size") == [196, 28] and manifest.get("cell_size") == [28, 28] and manifest.get("runtime_icon_content_size") == [24, 24], errors, "Hero specialty insignia compact atlas geometry changed")
+    ensure(bool(manifest.get("sources_excluded_from_release_packages", False)), errors, "Hero specialty insignia manifest must retain source-art package exclusion")
+    ensure(isinstance(items, list) and [str(row.get("specialty_id", "")) for row in items if isinstance(row, dict)] == list(specialty_ids), errors, "Hero specialty insignia manifest must own exactly seven ordered specialties")
+    source_payloads: list[bytes] = []
+    regions: list[tuple[int, int, int, int]] = []
+    descriptions: list[str] = []
+    for index, specialty_id in enumerate(specialty_ids):
+        row = items[index] if isinstance(items, list) and index < len(items) and isinstance(items[index], dict) else {}
+        expected_region = [index * 28, 0, 28, 28]
+        expected_source = f"res://art/heroes/source/generated/specialties/{specialty_id}_source.png"
+        ensure(row.get("icon_id") == f"specialty_insignia_{specialty_id}", errors, f"Specialty {specialty_id} icon ownership changed")
+        ensure(row.get("source") == expected_source and row.get("atlas_region") == expected_region, errors, f"Specialty {specialty_id} source or atlas rect changed")
+        ensure(row.get("source_sha256") == source_hashes[specialty_id] and bool(str(row.get("prompt_subject", "")).strip()), errors, f"Specialty {specialty_id} generated provenance changed")
+        source_path = res_path_to_disk(expected_source)
+        ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"Specialty {specialty_id} generated source size changed")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_hashes[specialty_id] and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Specialty {specialty_id} generated source bytes or alpha changed")
+            source_payloads.append(payload)
+        regions.append(tuple(expected_region))
+    ensure(len(source_payloads) == 7 and len(set(source_payloads)) == 7 and len(set(regions)) == 7, errors, "All seven specialty sources and atlas rects must remain distinct")
+
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (196, 28), errors, "Hero specialty insignia atlas must remain 196x28")
+    ensure(hashlib.sha256(atlas_payload).hexdigest() == "7e7f88c9b3ac4692e294c951b6b69261391f6b69b1beb08c76056bde753aa36e" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Hero specialty insignia atlas bytes or alpha changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Hero specialty insignia runtime atlas import metadata is missing")
+
+    rules_text = rules_path.read_text(encoding="utf-8")
+    for index, specialty_id in enumerate(specialty_ids):
+        ensure(f'"icon_id": "specialty_insignia_{specialty_id}"' in rules_text, errors, f"HeroProgressionRules is missing {specialty_id} icon ownership")
+        ensure(f'"icon_region": [{index * 28}, 0, 28, 28]' in rules_text, errors, f"HeroProgressionRules is missing {specialty_id} atlas rect")
+    for token in (
+        'const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"',
+        "const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)",
+        "static func specialty_id_for_action(action_id: String) -> String:",
+        "static func specialty_insignia_description(specialty_id: String) -> String:",
+        "static func specialty_insignia_texture(specialty_id: String) -> Texture2D:",
+        "ResourceLoader.exists(SPECIALTY_INSIGNIA_ATLAS_PATH, \"Texture2D\")",
+        "texture := AtlasTexture.new()",
+    ):
+        ensure(token in rules_text, errors, f"Hero specialty insignia resolver is missing exact fail-closed ownership: {token}")
+    descriptions = re.findall(r'"icon_description": "([^"]+)"', rules_text)
+    ensure(len(descriptions) == 7 and len(set(descriptions)) == 7 and all(len(value) >= 24 for value in descriptions), errors, "Hero specialty insignia non-color descriptions must remain complete and distinct")
+
+    for shell_path in (overworld_path, town_path):
+        shell_text = shell_path.read_text(encoding="utf-8")
+        helper_block = gd_function_block(shell_text, "_apply_specialty_action_icon")
+        rebuild_block = gd_function_block(shell_text, "_rebuild_specialty_actions")
+        for token in (
+            "HeroProgressionRules.specialty_id_for_action",
+            "HeroProgressionRules.specialty_insignia_texture",
+            "button.icon = texture",
+            "button.expand_icon = true",
+            'button.add_theme_constant_override("icon_max_width", 24)',
+        ):
+            ensure(token in helper_block, errors, f"{shell_path.name} specialty icon helper is missing live ownership: {token}")
+        ensure("_apply_specialty_action_icon(button, action)" in rebuild_block, errors, f"{shell_path.name} must apply insignia in the real specialty-button builder")
+        ensure("specialty_insignia_description" in rebuild_block, errors, f"{shell_path.name} must retain non-color insignia description in the live tooltip")
+        for forbidden in ("choose_specialty(", "SAVE_VERSION", "session.", "_session."):
+            ensure(forbidden not in helper_block, errors, f"{shell_path.name} specialty art helper must remain presentation-only: {forbidden}")
+    ensure('maxf(button.custom_minimum_size.x, 190.0)' in gd_function_block(town_path.read_text(encoding="utf-8"), "_apply_specialty_action_icon"), errors, "Town specialty choice width must keep the live 24px insignia visible beside full choice text")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    report_scene = report_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "hero_specialty_insignia_runtime_report.tscn", [("HeroSpecialtyInsigniaRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const SPECIALTY_IDS := [',
+        'HeroProgressionRules.specialty_insignia_texture(specialty_id)',
+        'shell.call("_apply_specialty_action_icon"',
+        'shell.call("_rebuild_specialty_actions", TownRules.get_specialty_actions(session))',
+        'session.to_dict() == authority_before',
+        'get_window().content_scale_size = viewport_size',
+        'save_png(ProjectSettings.globalize_path(capture_path))',
+        'print("HERO_SPECIALTY_INSIGNIA_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Hero specialty insignia focused owner is missing exact proof: {token}")
+
+    export_text = (ROOT / "export_presets.cfg").read_text(encoding="utf-8")
+    ensure(export_text.count("art/*/source/*") == 2, errors, "Both release presets must exclude generated specialty source art")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES" in packaging_text, errors, f"{packaging_path.name} must audit the compact specialty atlas")
+        ensure('bool(terrain_payload["hero_specialty_atlas_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when the specialty atlas is absent")
+        ensure('"hero_specialty_atlas_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged specialty atlas coverage")
+
+
 def validate_campaign_arc_emblems(errors: list[str]) -> None:
     campaign_path = CONTENT_DIR / "campaigns.json"
     campaign_rules_path = ROOT / "scripts" / "core" / "CampaignRules.gd"
@@ -73132,6 +73259,7 @@ def main() -> int:
     validate_overworld_contained_hover_card(errors)
     validate_faction_encounter_landmarks(errors)
     validate_signature_encounter_landmarks(errors)
+    validate_hero_specialty_insignia(errors)
     validate_campaign_arc_emblems(errors)
     validate_campaign_chapter_seals(errors)
     validate_battle_field_objective_landmarks(errors)
