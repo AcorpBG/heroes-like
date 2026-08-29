@@ -24,8 +24,34 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-seven-minor-guarded-caches-10184`.
-- Package boundary: both release exports now measure 249127628 bytes, 872372 bytes below the unchanged 250000000-byte ceiling. The compact minor-cache opened atlas ships while generated source originals and development reports remain excluded on both platforms.
+- Latest completed implementation slice: `content-eight-neutral-dwelling-musters-10184`.
+- Package boundary after the slice: both release exports measure 249166492 bytes, 833508 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Eight Neutral Dwelling Musters
+
+id: `content-eight-neutral-dwelling-musters-10184`
+
+Status: completed.
+
+Completion result:
+- all eight neutral dwellings now block on their authored watch, resolve through production battle construction, grant their exact initial recruit bundles once, provide recurring income and weekly town musters, expose their authored public response orders, and round-trip exactly through save version 9;
+- each controlled dwelling now uses its own original claimed-state 48x48 landmark in one compact 384x48 atlas while preserving its exact existing unclaimed identity;
+- the single consolidated eight-case gameplay/runtime/visual smoke passed on its first run, its eight captures passed direct visual review, repository validation passed, and matching Linux/Windows 249166492-byte package boots passed with generated source art excluded.
+
+Implementation boundary:
+- activate Free Company Yard, Fenhound Kennels, Cliffhawk Roost, Reedbarge Mooring, Glowcap Croft, Dustjack Yard, Cinder Kiln, and Frostbeacon Bothy as one live neutral-dwelling family across existing scenarios;
+- preserve their authored claim recruits, weekly musters, control income, town support, response orders, and exact existing neutral-watch identities without changing unit or combat formulas;
+- create eight distinct original transparent dwelling landmarks in one compact runtime atlas and bind each exact site to its own sprite and accessible description;
+- preserve save version 9, deterministic rewards, current scenario victory requirements, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all eight dwellings can be captured through the public interaction path, grant exact initial rosters once, provide exact weekly musters/income, expose their authored response order, and survive save/resume without duplication;
+- each dwelling renders its own atlas region at its live scenario placement with genuine alpha and strict fallback behavior;
+- one consolidated eight-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no guarded-dwelling migration, route-hybrid activation, new unit definition, combat balance, RMG, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes dwelling, name, text, unit, landmark, or protected visual expression.
 
 ## Seven Minor Guarded Caches
 
