@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Measure the next highest-impact live content or unique-art gap and register a bounded implementation slice before changing gameplay or assets."
+    "Implement and validate the selected six-faction tavern-specialist hero identity sprite slice."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the six-faction tavern-vanguard identity slice: exact adventure-map hero art coverage increased from 14 to 20 of 60 heroes, with real tavern hire, active-command, save version 9, enemy-commander precedence, visual, core, repository, and Linux/Windows packaged-startup proof. The broader original-content goal remains active; select the next measured gap before implementation.",
+  "currentNotes": "Completed the measured specialist-hero art slice: six distinct original portrait-faithful adventure figures now raise exact hero identity coverage from 20 to 26 of 60. All six are wired through real hire, active-command, enemy, field, and save behavior; target-resolution captures, core/static validation, and Linux/Windows packaged startup passed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-tavern-vanguard-hero-overworld-sprites-10184",
-  "currentSliceId": "content-tavern-vanguard-hero-overworld-sprites-10184",
-  "currentSliceNotes": "Completed: six original portrait-faithful 512x512 adventure sprites for Belis Rainledger, Sable Ashmere, Calis Sunvein, Ardren Briar-Marshal, Daxis Chain-Captain, and Cela Mist-Corsair; manifest exact identity resolution increased from 14 to 20; real Wayfarers Hall hire, active-command, save version 9, enemy-commander precedence, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 242844480 bytes with source art excluded. Sable replaced Brakka after repeated built-in generation attempts failed the genuine-alpha acceptance gate. No release-ready claim.",
+  "currentSlice": "content-tavern-specialist-hero-overworld-sprites-10184",
+  "currentSliceId": "content-tavern-specialist-hero-overworld-sprites-10184",
+  "currentSliceNotes": "Completed: six distinct original portrait-faithful 512x512 adventure sprites for Torren Pikeward, Brakka Mudkeel, Varis Mirrorstep, Veyra Seedseer, Selka Pitmarshal, and Morwen Wakeoracle; manifest exact identity resolution increased from 20 to 26 of 60. Exact first-scenario Wayfarers Hall hire/cost/active switch, mapped field presentation, representative enemy-commander precedence, save version 9 round-trip, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 243746716 bytes with all six specialist textures present and source art excluded. No whole-game or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content tavern vanguard hero overworld sprites 10184",
-  "currentSliceUpdatedAt": "2026-08-29T00:21:59Z",
+  "currentSliceTitle": "content tavern specialist hero overworld sprites 10184",
+  "currentSliceUpdatedAt": "2026-08-29T00:55:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105192,6 +105192,16 @@
       "startedAt": "2026-08-28T23:50:32Z",
       "notes": "Expanded exact adventure-map identity coverage from 14 to 20 of 60 production heroes with six distinct portrait-faithful original sprites for Belis Rainledger, Sable Ashmere, Calis Sunvein, Ardren Briar-Marshal, Daxis Chain-Captain, and Cela Mist-Corsair. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, enemy-commander identity precedence, save version 9, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 242844480 bytes with all six runtime textures present and source art excluded. Sable replaced Brakka Mudkeel after repeated built-in generation attempts failed the genuine-alpha gate. No release-ready claim.",
       "completedAt": "2026-08-29T00:21:59Z"
+    },
+    {
+      "id": "content-tavern-specialist-hero-overworld-sprites-10184",
+      "title": "content tavern specialist hero overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T00:55:03Z",
+      "startedAt": "2026-08-29T00:27:17Z",
+      "notes": "Added six distinct original portrait-faithful specialist adventure figures for Torren Pikeward, Brakka Mudkeel, Varis Mirrorstep, Veyra Seedseer, Selka Pitmarshal, and Morwen Wakeoracle, expanding exact hero identity coverage from 20 to 26 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, representative enemy identity precedence, save version 9, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 243746716 bytes with all six specialist textures present and source art excluded. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T00:55:03Z"
     }
   ],
   "project": "heroes-like",

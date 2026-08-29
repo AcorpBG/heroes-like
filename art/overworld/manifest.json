@@ -366,6 +366,48 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_cela_mistcorsair.png",
       "assigned_hero_id": "hero_veilmourn_cela_mistcorsair"
     },
+    "hero_specialist_torren": {
+      "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_torren.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_torren_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_torren.png",
+      "assigned_hero_id": "hero_torren"
+    },
+    "hero_specialist_mireclaw_brakka_mudkeel": {
+      "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_mireclaw_brakka_mudkeel.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_mireclaw_brakka_mudkeel_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_mireclaw_brakka_mudkeel.png",
+      "assigned_hero_id": "hero_mireclaw_brakka_mudkeel"
+    },
+    "hero_specialist_varis": {
+      "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_varis.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_varis_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_varis.png",
+      "assigned_hero_id": "hero_varis"
+    },
+    "hero_specialist_thornwake_veyra_seedseer": {
+      "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_thornwake_veyra_seedseer.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_thornwake_veyra_seedseer_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_veyra_seedseer.png",
+      "assigned_hero_id": "hero_thornwake_veyra_seedseer"
+    },
+    "hero_specialist_brasshollow_selka_pitmarshal": {
+      "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_brasshollow_selka_pitmarshal.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_brasshollow_selka_pitmarshal_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_selka_pitmarshal.png",
+      "assigned_hero_id": "hero_brasshollow_selka_pitmarshal"
+    },
+    "hero_specialist_veilmourn_morwen_wakeoracle": {
+      "path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_veilmourn_morwen_wakeoracle.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_specialists/hero_veilmourn_morwen_wakeoracle_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_morwen_wakeoracle.png",
+      "assigned_hero_id": "hero_veilmourn_morwen_wakeoracle"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4379,7 +4421,13 @@
     "hero_sunvault_calis_sunvein": "hero_tavern_sunvault_calis_sunvein",
     "hero_thornwake_ardren_briarmarshal": "hero_tavern_thornwake_ardren_briarmarshal",
     "hero_brasshollow_daxis_chaincaptain": "hero_tavern_brasshollow_daxis_chaincaptain",
-    "hero_veilmourn_cela_mistcorsair": "hero_tavern_veilmourn_cela_mistcorsair"
+    "hero_veilmourn_cela_mistcorsair": "hero_tavern_veilmourn_cela_mistcorsair",
+    "hero_torren": "hero_specialist_torren",
+    "hero_mireclaw_brakka_mudkeel": "hero_specialist_mireclaw_brakka_mudkeel",
+    "hero_varis": "hero_specialist_varis",
+    "hero_thornwake_veyra_seedseer": "hero_specialist_thornwake_veyra_seedseer",
+    "hero_brasshollow_selka_pitmarshal": "hero_specialist_brasshollow_selka_pitmarshal",
+    "hero_veilmourn_morwen_wakeoracle": "hero_specialist_veilmourn_morwen_wakeoracle"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",

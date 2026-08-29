@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-tavern-vanguard-hero-overworld-sprites-10184`.
+- Selected implementation slice: `content-tavern-specialist-hero-overworld-sprites-10184`.
+
+## Tavern Specialist Hero Overworld Sprites
+
+id: `content-tavern-specialist-hero-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- the completed scenario-lead and tavern-vanguard passes give 20 of 60 production heroes exact adventure-map identities, but 40 live recruitable commanders still collapse to six faction-generic figures after hire and when used by strategic enemy forces;
+- Torren Pikeward, Brakka Mudkeel, Varis Mirrorstep, Veyra Seedseer, Selka Pitmarshal, and Morwen Wakeoracle are live specialists spanning muster economy, bogplate defense, relay mobility, rooted terrain, ore-site defense, and fog magic, yet none currently carries those silhouettes onto the adventure map.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each selected specialist, preserving the hero's existing portrait identity, faction material language, role-defining equipment, readable small-scale silhouette, grounding, focus, and command-pennant clearance;
+- expand the manifest-owned hero-id mapping from 20 to 26 exact identities while keeping the remaining 34 heroes on the existing faction fallback and preserving renderer, movement, town-footprint, fog, strategic-enemy, and save ownership;
+- prove each selected hero through the real first-scenario Wayfarers Hall authority, authored recruitment cost, active-command switch, exact field presentation, and save/resume, including identity-first enemy-commander resolution for a representative mapped specialist.
+
+Completion criteria:
+- the six generated sources and six curated runtime sprites are distinct from one another, all existing identity sprites, portraits, and faction fallbacks, with exact manifest provenance, genuine alpha, and source art excluded from release exports;
+- River Pass, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim offer the intended specialist, charge the authored cost, add exactly one commander, preserve save version 9, and resolve the exact mapped sprite after active-command switching and reload;
+- inspected 1280x720 and 1920x1080 captures, specialist recruitment/identity/movement/town/fog/fallback/enemy/save runtime, core and repository checks, and bounded Linux/Windows export startup pass.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no hero stat, spell, specialty, recruitment-order, economy, encounter, AI, movement, save-schema, RMG, renderer-architecture, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- shipped six distinct original portrait-faithful transparent adventure-map figures for Torren Pikeward, Brakka Mudkeel, Varis Mirrorstep, Veyra Seedseer, Selka Pitmarshal, and Morwen Wakeoracle, raising exact production-hero identity coverage from 20 to 26 of 60 while retaining faction fallback for the remaining 34;
+- wired all six through the existing manifest-owned renderer, movement, town-footprint, focus, fog, and strategic-enemy paths, with exact first-scenario Wayfarers Hall hire/cost/active-switch behavior and version-9 save/resume proof;
+- inspected live 1280x720 and 1920x1080 captures and passed specialist/fallback/enemy runtime reports, core/static validation, and Linux/Windows packaged startup; both exports contain all six compiled specialist textures, exclude source art, and remain below the 250 MB PCK ceiling at 243,746,716 bytes.
 
 ## Tavern Vanguard Hero Overworld Sprites
 
