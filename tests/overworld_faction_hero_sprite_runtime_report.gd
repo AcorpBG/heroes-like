@@ -25,6 +25,12 @@ const EXPECTED_HERO_ASSETS := {
 	"hero_thornwake_ardren_briarmarshal": "hero_tavern_thornwake_ardren_briarmarshal",
 	"hero_brasshollow_daxis_chaincaptain": "hero_tavern_brasshollow_daxis_chaincaptain",
 	"hero_veilmourn_cela_mistcorsair": "hero_tavern_veilmourn_cela_mistcorsair",
+	"hero_torren": "hero_specialist_torren",
+	"hero_mireclaw_brakka_mudkeel": "hero_specialist_mireclaw_brakka_mudkeel",
+	"hero_varis": "hero_specialist_varis",
+	"hero_thornwake_veyra_seedseer": "hero_specialist_thornwake_veyra_seedseer",
+	"hero_brasshollow_selka_pitmarshal": "hero_specialist_brasshollow_selka_pitmarshal",
+	"hero_veilmourn_morwen_wakeoracle": "hero_specialist_veilmourn_morwen_wakeoracle",
 }
 const TAVERN_VANGUARD_CASES := [
 	{"scenario_id": "river-pass", "hero_id": "hero_embercourt_belis_rainledger"},
@@ -33,6 +39,14 @@ const TAVERN_VANGUARD_CASES := [
 	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_ardren_briarmarshal"},
 	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_daxis_chaincaptain"},
 	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_cela_mistcorsair"},
+]
+const TAVERN_SPECIALIST_CASES := [
+	{"scenario_id": "river-pass", "hero_id": "hero_torren"},
+	{"scenario_id": "bogbound-oath", "hero_id": "hero_mireclaw_brakka_mudkeel"},
+	{"scenario_id": "prismhearth-watch", "hero_id": "hero_varis"},
+	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_veyra_seedseer"},
+	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_selka_pitmarshal"},
+	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_morwen_wakeoracle"},
 ]
 const ALL_SCENARIO_STARTS := {
 	"river-pass": "hero_lyra",
@@ -73,6 +87,10 @@ func _run() -> void:
 	if not bool(tavern_vanguard.get("ok", false)):
 		_fail("Tavern-vanguard recruitment validation failed: %s" % tavern_vanguard)
 		return
+	var tavern_specialists := _validate_tavern_specialist_recruitment()
+	if not bool(tavern_specialists.get("ok", false)):
+		_fail("Tavern-specialist recruitment validation failed: %s" % tavern_specialists)
+		return
 	var original_window_size := get_window().size
 	var rows: Array = []
 	for viewport_size in VIEWPORT_SIZES:
@@ -89,9 +107,11 @@ func _run() -> void:
 		"signature_hero_count": 6,
 		"mapped_hero_identity_count": EXPECTED_HERO_ASSETS.size(),
 		"tavern_vanguard_count": TAVERN_VANGUARD_CASES.size(),
+		"tavern_specialist_count": TAVERN_SPECIALIST_CASES.size(),
 		"faction_count": 6,
 		"scenario_starts": scenario_starts,
 		"tavern_vanguard": tavern_vanguard,
+		"tavern_specialists": tavern_specialists,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback": "procedural_hero_marker",
 		"rows": rows,
@@ -153,7 +173,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var first_hero: Dictionary = heroes[0]
-	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_torren"})) == "hero_faction_embercourt"
+	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_embercourt_helva_tollbrand"})) == "hero_faction_embercourt"
 	first_hero["id"] = "hero_missing_faction_sprite_fixture"
 	shell.call("_refresh")
 	await get_tree().process_frame
@@ -231,7 +251,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 		var hero_id := String(profile.get("hero_id", ""))
 		var faction_id := String(profile.get("faction_id", ""))
 		var expected_asset_id := String(EXPECTED_HERO_ASSETS.get(hero_id, ""))
-		var runtime_group := "signature" if expected_asset_id.begins_with("hero_signature_") else ("live_leads" if expected_asset_id.begins_with("hero_lead_") else "tavern_vanguard")
+		var runtime_group := "signature" if expected_asset_id.begins_with("hero_signature_") else ("live_leads" if expected_asset_id.begins_with("hero_lead_") else ("tavern_specialists" if expected_asset_id.begins_with("hero_specialist_") else "tavern_vanguard"))
 		var expected_path := "res://art/overworld/runtime/heroes/%s/%s.png" % [runtime_group, hero_id]
 		if expected_asset_id == "" or String(profile.get("sprite_asset_id", "")) != expected_asset_id:
 			return {"ok": false, "reason": "identity", "profile": profile}
@@ -486,7 +506,7 @@ func _configure_hero_fixture(session) -> void:
 	var ordinary_positions := [
 		Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0), Vector2i(8, 0),
 		Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(7, 4), Vector2i(8, 4),
-		Vector2i(4, 1),
+		Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1), Vector2i(6, 1), Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3),
 	]
 	for index in range(hero_ids.size()):
 		var hero_id := String(hero_ids[index])
@@ -547,8 +567,14 @@ func _validate_signature_scenario_starts() -> Dictionary:
 	return {"ok": rows.size() == ALL_SCENARIO_STARTS.size(), "rows": rows}
 
 func _validate_tavern_vanguard_recruitment() -> Dictionary:
+	return _validate_tavern_recruitment_cases(TAVERN_VANGUARD_CASES)
+
+func _validate_tavern_specialist_recruitment() -> Dictionary:
+	return _validate_tavern_recruitment_cases(TAVERN_SPECIALIST_CASES)
+
+func _validate_tavern_recruitment_cases(cases: Array) -> Dictionary:
 	var rows: Array = []
-	for case_value in TAVERN_VANGUARD_CASES:
+	for case_value in cases:
 		var case: Dictionary = case_value
 		var scenario_id := String(case.get("scenario_id", ""))
 		var hero_id := String(case.get("hero_id", ""))
@@ -591,7 +617,7 @@ func _validate_tavern_vanguard_recruitment() -> Dictionary:
 		rows.append({"scenario_id": scenario_id, "hero_id": hero_id, "action_id": action_id, "cost": cost, "hire_exact": exact, "save_version": SessionStateStore.SAVE_VERSION})
 		if not exact:
 			return {"ok": false, "rows": rows, "hire_result": hire_result, "switch_result": switch_result}
-	return {"ok": rows.size() == TAVERN_VANGUARD_CASES.size(), "rows": rows}
+	return {"ok": rows.size() == cases.size(), "rows": rows}
 
 func _hero_by_id(heroes: Array, hero_id: String) -> Dictionary:
 	for hero_value in heroes:
