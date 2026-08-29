@@ -24,8 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-campaign-opening-chapter-seals-10184`.
-- Next selection boundary: audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 252496-byte release-package headroom.
+- Most recently completed implementation slice: `content-campaign-later-chapter-seals-10184`.
+- Next selection boundary: audit and register the next highest-impact bounded original-content or art gap without exceeding the remaining 92216-byte release-package headroom.
+
+## Campaign Later-Chapter Seals
+
+id: `content-campaign-later-chapter-seals-10184`
+
+Status: completed.
+
+Current finding:
+- all 24 authored campaign chapters now own exact live cartographic seals derived from their distinct objectives, landmarks, terrain routes, and campaign consequences;
+- the 18-asset completion wave raised the final release PCK from 249747504 to 249907784 bytes, retaining 92216 bytes below the unchanged 250000000-byte ceiling.
+
+Implementation boundary:
+- add one original transparent cartographic seal for every later chapter across Reedfall, Stonewake, Bogbound Oath, Shards of Daybreak, Ninefold Survey, and Frontier Claims, using each chapter's exact landmark and objective language rather than faction heraldry, arc-emblem reuse, or copied Heroes expression;
+- retain immutable per-scenario ids, generated-source/runtime provenance, non-color descriptions, strict fail-closed authority, and the existing 24x24 chapter-row surface while expanding the bounded cache from six openings to the full 24-chapter catalog;
+- preserve campaign progression, locks, carryover, launch rules, scenario state, save version 9, keyboard/controller selection, accessibility refresh, high contrast, source-art package exclusion, and Windows/Linux parity.
+
+Completion criteria:
+- 18 new byte-distinct original 1254x1254 transparent sources and 64x64 runtime textures complete exact art coverage from 6/24 to 24/24 chapters with legible silhouettes at live scale;
+- every campaign chapter resolves exactly one scenario seal, malformed or missing authority fails closed, selection and tooltip semantics remain exact, and no chapter rule or saved state changes;
+- inspected 1280x720 and 1920x1080 captures cover all 18 later identities; focused campaign, accessibility, core, repository/editor, and Linux/Windows package gates pass under the unchanged ceiling.
+
+Completed evidence:
+- Causeway Stand, Fen Crown, Reedbarrow Ferry, Nightglass Redoubt, Charter Pyre, Lockmarsh Surge, Glassroad Sundering, Daybreak Spire, Glassfen Breakers, Ninefold Confluence, Orevein Contract, Bellwake Wreck Claim, Rootgate Toll, Fogchart Mooring, Clauseworks Counterclaim, Nightglass Ledger Reversal, Halo Reserve Refraction Claim, and Charter Bastion Counterseal now own byte-distinct original transparent source/runtime art with immutable hashes and exact non-color descriptions;
+- the live 24x24 chapter rail resolves one exact scenario seal for every chapter through strict content authority and a 24-entry bounded cache, while missing art still fails closed and campaign progression, carryover, launch behavior, and save version 9 remain unchanged;
+- the all-24 contact sheet and live 1280x720/1920x1080 campaign captures were inspected; focused runtime, campaign compatibility, accessibility semantics, core regression, repository validation, and Linux/Windows release-package boots pass with all 24 compiled textures, source art excluded, and a 249907784-byte PCK under the strict ceiling.
+
+Non-goals:
+- no copied Heroes campaign, map, icon, heraldry, names, text, or protected visual expression; no campaign-rule, carryover, scenario, save-schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Campaign Opening-Chapter Seals
 

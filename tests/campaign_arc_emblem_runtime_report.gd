@@ -3,14 +3,32 @@ extends Node
 const REPORT_ID := "CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT"
 const CAPTURE_DIR := "res://.artifacts/campaign_arc_emblem_runtime_report"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const SEAL_CASES := {
-	"campaign_reedfall": {"scenario_id": "river-pass", "seal_id": "campaign_chapter_seal_river_pass", "path": "res://art/campaigns/runtime/chapter_seals/river_pass_break.png", "source_path": "res://art/campaigns/source/generated/chapter_seals/river_pass_break_source.png", "source_sha256": "d450ac3f483cdbc5ac9f93e5d06630198227071e7959707b633a1817a492fdb7", "runtime_sha256": "d63a5bac8f158aecf84bd55e82d5b9ec646b23cd4b56359db1d3c3f6cfcb5ab3", "alt_text": "A broken stone bridge, amber watch-lantern, and marsh reeds frame the rushing River Pass."},
-	"campaign_stonewake": {"scenario_id": "stonewake-watch", "seal_id": "campaign_chapter_seal_stonewake_watch", "path": "res://art/campaigns/runtime/chapter_seals/stonewake_watch.png", "source_path": "res://art/campaigns/source/generated/chapter_seals/stonewake_watch_source.png", "source_sha256": "ee76be3995be59f4986dac8c39ef4703504caaff86d12c9b9addf5a72ba263b2", "runtime_sha256": "5849acd0882bdf8232c0a7b8ef3fd33ffdba2e041bbb70024f7cf56302884561", "alt_text": "A blue-beacon watchstone rises from a chained basin rim at Stonewake Watch."},
-	"campaign_bogbound_oath": {"scenario_id": "bogbound-oath", "seal_id": "campaign_chapter_seal_bogbound_oath", "path": "res://art/campaigns/runtime/chapter_seals/bogbound_riverwatch.png", "source_path": "res://art/campaigns/source/generated/chapter_seals/bogbound_riverwatch_source.png", "source_sha256": "14b61d19f0dc89257aff566dbb6bffc6160fa813676cad2ea117d313292950ad", "runtime_sha256": "62aa1bdd5c245c5ceaa085004ddb374d0e7de943014203c5a183f245646ce15c", "alt_text": "Crooked mangrove roots and a pale oath cord bind a fen-lit Riverwatch marker."},
-	"campaign_shards_of_daybreak": {"scenario_id": "prismhearth-watch", "seal_id": "campaign_chapter_seal_prismhearth_watch", "path": "res://art/campaigns/runtime/chapter_seals/prismhearth_relay.png", "source_path": "res://art/campaigns/source/generated/chapter_seals/prismhearth_relay_source.png", "source_sha256": "d4b17671ae0068ef9df681338d6a319d98a4578a2cd52d1d9fc0f3c210953b29", "runtime_sha256": "3ce752a69e733e48bf6160a5bcd77385fbd69e80765a46e0cff649cb5c371bf9", "alt_text": "Three sun-glass prisms focus warm rays into a relit Prismhearth relay."},
-	"campaign_ninefold_survey": {"scenario_id": "ironbridge-stand", "seal_id": "campaign_chapter_seal_ironbridge_stand", "path": "res://art/campaigns/runtime/chapter_seals/ironbridge_stand.png", "source_path": "res://art/campaigns/source/generated/chapter_seals/ironbridge_stand_source.png", "source_sha256": "b4fe4a6fd0781265495338f2f37bdfab77147e2d918c4b0c76495e0a3056e810", "runtime_sha256": "b94c9c9d0ee95ca0f0fd047c5f218d9a5b05fc8036ca5cf1e04ba029eb9b8d41", "alt_text": "A brass survey tripod stands on a riveted iron bridge above a cold river channel."},
-	"campaign_frontier_claims": {"scenario_id": "mireford-skirmish", "seal_id": "campaign_chapter_seal_mireford_skirmish", "path": "res://art/campaigns/runtime/chapter_seals/rootbound_mireford.png", "source_path": "res://art/campaigns/source/generated/chapter_seals/rootbound_mireford_source.png", "source_sha256": "ff4b59b5fbca2abd8e26972163688ba9a3faa3c5bbdf7a55a2a9a910758f9b11", "runtime_sha256": "97493928b398bc2c0cb343b82c28c49aef3f118cefcc8473f171abd1a622dc52", "alt_text": "Living roots form a greenwood arch over three stepping stones at Rootbound Mireford."},
-}
+const SEAL_CASES := [
+	{"campaign_id": "campaign_reedfall", "scenario_id": "river-pass", "stem": "river_pass_break", "source_sha256": "d450ac3f483cdbc5ac9f93e5d06630198227071e7959707b633a1817a492fdb7", "runtime_sha256": "d63a5bac8f158aecf84bd55e82d5b9ec646b23cd4b56359db1d3c3f6cfcb5ab3", "alt_text": "A broken stone bridge, amber watch-lantern, and marsh reeds frame the rushing River Pass."},
+	{"campaign_id": "campaign_reedfall", "scenario_id": "causeway-stand", "stem": "causeway_stand", "source_sha256": "9e446b8b93c0acf4033ece8e949d1ab118afd66b3f00aa4ec2b828f5c082ef2a", "runtime_sha256": "556338390f075aa6b05632d924edad8c71e7f9b5bead4518ed6e81ca09ff16f4", "alt_text": "A flooded stone causeway crosses dark marsh water toward a chained gate lit by two bridgehead lanterns."},
+	{"campaign_id": "campaign_reedfall", "scenario_id": "fen-crown", "stem": "fen_crown", "source_sha256": "880e93ba2be1b047c6edc141ccf97885065ea938a210ad63f2b941a49fb7e91b", "runtime_sha256": "c0df9c248e0f84b77417e483e84d461bc1ae6f46868231e3a72e28e8d07a99e3", "alt_text": "Five reed towers rise around a gold-roofed command pavilion on the crown-shaped marsh isle."},
+	{"campaign_id": "campaign_stonewake", "scenario_id": "stonewake-watch", "stem": "stonewake_watch", "source_sha256": "ee76be3995be59f4986dac8c39ef4703504caaff86d12c9b9addf5a72ba263b2", "runtime_sha256": "5849acd0882bdf8232c0a7b8ef3fd33ffdba2e041bbb70024f7cf56302884561", "alt_text": "A blue-beacon watchstone rises from a chained basin rim at Stonewake Watch."},
+	{"campaign_id": "campaign_stonewake", "scenario_id": "reedbarrow-ferry", "stem": "reedbarrow_ferry", "source_sha256": "df1f77e78e88c17f3a3544d5f0fd89185a4dc12b77472c22c8466ef0bf334cc2", "runtime_sha256": "7cb1c03a3c95514eea8a17a0f901541ab81503976d684edc5ed74df7ca764fec", "alt_text": "A broken iron ferry chain spans two timber posts before a low burial barrow."},
+	{"campaign_id": "campaign_stonewake", "scenario_id": "nightglass-redoubt", "stem": "nightglass_redoubt", "source_sha256": "07260aaaa5453803cedbd284fdf396a212e88d8560c74c3a5c24ee3757bc15b8", "runtime_sha256": "6faa14b26537e4352dfab9a4e93d6fb1cc2fc05066d71cd00aa767a01423e215", "alt_text": "A luminous fracture splits the black-glass redoubt above its mirrored causeway."},
+	{"campaign_id": "campaign_bogbound_oath", "scenario_id": "bogbound-oath", "stem": "bogbound_riverwatch", "source_sha256": "14b61d19f0dc89257aff566dbb6bffc6160fa813676cad2ea117d313292950ad", "runtime_sha256": "62aa1bdd5c245c5ceaa085004ddb374d0e7de943014203c5a183f245646ce15c", "alt_text": "Crooked mangrove roots and a pale oath cord bind a fen-lit Riverwatch marker."},
+	{"campaign_id": "campaign_bogbound_oath", "scenario_id": "charter-pyre", "stem": "charter_pyre", "source_sha256": "da7ec65032e4bc12ba764c46f73d3d5952efed046b6ec0d611676612b4e82064", "runtime_sha256": "7329ae5042968c32e98f7552d3fd2162df3f83374c138cbd5b7bea85b31979d6", "alt_text": "A three-pronged beacon brazier burns a rolled road charter above two grain sheaves."},
+	{"campaign_id": "campaign_bogbound_oath", "scenario_id": "lockmarsh-surge", "stem": "lockmarsh_surge", "source_sha256": "ea4a63c459cfb2466e2c1132ae909a64a117f05f81a2602faaf5e7315da11b8d", "runtime_sha256": "63419da25b1462a06269b4138495dbe1d3a534e7d2e226757c5c594dcefd4469", "alt_text": "A curling marsh surge breaks through the square lock gate of Highwater Keep."},
+	{"campaign_id": "campaign_shards_of_daybreak", "scenario_id": "prismhearth-watch", "stem": "prismhearth_relay", "source_sha256": "d4b17671ae0068ef9df681338d6a319d98a4578a2cd52d1d9fc0f3c210953b29", "runtime_sha256": "3ce752a69e733e48bf6160a5bcd77385fbd69e80765a46e0cff649cb5c371bf9", "alt_text": "Three sun-glass prisms focus warm rays into a relit Prismhearth relay."},
+	{"campaign_id": "campaign_shards_of_daybreak", "scenario_id": "glassroad-sundering", "stem": "glassroad_sundering", "source_sha256": "ce9c5edd8be72ac9d98d1f2978a197d1bb51c835d8c882f8ea42276f75217762", "runtime_sha256": "6412db420d9f22842fbb3e4394d1cd3e33aa4426e828f04c53e5ce6ad8b64309", "alt_text": "A straight amber glass road snaps at its center in a burst of large sun-glass shards."},
+	{"campaign_id": "campaign_shards_of_daybreak", "scenario_id": "daybreak-spire", "stem": "daybreak_spire", "source_sha256": "97c5a6ab06071c51bc6da6a8a395c6a5129a00dc2fbf809a7024f43b7227cada", "runtime_sha256": "564f9b177987536e69af1ba6edbf5a2dbc7f252cf0042963067c138a2b15cdb9", "alt_text": "Three mirror batteries cast dawn rays around a slender spire while one mirror lies shattered."},
+	{"campaign_id": "campaign_ninefold_survey", "scenario_id": "ironbridge-stand", "stem": "ironbridge_stand", "source_sha256": "b4fe4a6fd0781265495338f2f37bdfab77147e2d918c4b0c76495e0a3056e810", "runtime_sha256": "b94c9c9d0ee95ca0f0fd047c5f218d9a5b05fc8036ca5cf1e04ba029eb9b8d41", "alt_text": "A brass survey tripod stands on a riveted iron bridge above a cold river channel."},
+	{"campaign_id": "campaign_ninefold_survey", "scenario_id": "glassfen-breakers", "stem": "glassfen_breakers", "source_sha256": "77231e6be6bb21975777b78d8b44006302ac5f24eca7c1d38fe548db760b0ac7", "runtime_sha256": "fc76097428a56b2d4b334398c14a542f95a62e61768bc11cacd1a87fb81ed187", "alt_text": "Three prismatic crystal shards rise from a marsh relay struck by two prepared beams."},
+	{"campaign_id": "campaign_ninefold_survey", "scenario_id": "ninefold-confluence", "stem": "ninefold_confluence", "source_sha256": "a6b78ef553c594d2aeec16db8a4ae01b5f3cdf76d9277c504bd5e8cf8892e332", "runtime_sha256": "fdbe9805ab9c069d95f1159c428f237fe180ae4899573c9489450b3174e5ad3c", "alt_text": "Nine stone routes radiate from a circular survey table marked by a brass compass."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "mireford-skirmish", "stem": "rootbound_mireford", "source_sha256": "ff4b59b5fbca2abd8e26972163688ba9a3faa3c5bbdf7a55a2a9a910758f9b11", "runtime_sha256": "97493928b398bc2c0cb343b82c28c49aef3f118cefcc8473f171abd1a622dc52", "alt_text": "Living roots form a greenwood arch over three stepping stones at Rootbound Mireford."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "orevein-contract", "stem": "orevein_contract", "source_sha256": "e2eddd6fe35fbdd63a281f8c891747562517e1d09d75bf6936bb2e9714c3d74f", "runtime_sha256": "0a503e34b9259e72db2cb161fbda611a0e873a43f426e2bb9c8d08b2e521e788", "alt_text": "A chained brass claim stamp presses a river-crossing contract beside two ore crystals."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "bellwake-wreck-claim", "stem": "bellwake_wreck_claim", "source_sha256": "8576848ca5f2c4f796834073e6db15be6d56b445a91decdafb20d75542f0ed04", "runtime_sha256": "5f181bd299ee6307fccdb358a2d98241e39021e39d4dac797bd09cdedc9da7c0", "alt_text": "A tilted verdigris bell prow rises from a drowned wreck beside a pale mirror-chart shard."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "rootgate-toll", "stem": "rootgate_toll", "source_sha256": "62370292da2fa0806d573c9a44f1a8dd576492d32e052033612568daa56e6744", "runtime_sha256": "82d4b1dbbdfc1916859bd3a8142adaf2ceaffc133e9486c493a374c71c973ad0", "alt_text": "Two massive living roots cross beneath and split an iron toll gate and its barrier."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "fogchart-mooring", "stem": "fogchart_mooring", "source_sha256": "cc2a1cc4cb815ae01c8928ec805b24194d4b2052c36ae54fb4bc66e4ccb2747a", "runtime_sha256": "e8ec1862ad25e034af3dc82931be15d3003e680005549bc6470e139a08b181cb", "alt_text": "A rope-looped mooring post stands above a sinking chart scroll amid three fog wisps."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "clauseworks-counterclaim", "stem": "clauseworks_counterclaim", "source_sha256": "621a0bbeeb64e0d327ef757fc25101e6bcbb667e57712f6b3bfda6644d36edeb", "runtime_sha256": "b081514c6501e2d5436c82cd2398590e70ddea43aae07e43366c138deada9775", "alt_text": "Two opposing claim stamps split a folded docket and burst its central sealing wax."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "nightglass-ledger-reversal", "stem": "nightglass_ledger_reversal", "source_sha256": "531665744543d8c9063d991d8be77d1c81194255019dcebcb2e430183e3e4ac9", "runtime_sha256": "08eebfc7920df09dad5859399a9187facdef309e7d726e1b12972630a871fc8e", "alt_text": "A chain shaped as a reversing arrow curls over an inverted dark-glass ledger and brass valve."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "halo-reserve-refraction-claim", "stem": "halo_reserve_refraction", "source_sha256": "161d5eecc43ed42682f14ea667973d40e147fe5cefe11926336f418f3b4272f7", "runtime_sha256": "a8f3631a68e930a4491df79a6df396fc5864ecaccf8a2768c278a23f20cb8e25", "alt_text": "A brass halo lens bends one claim beam into three rays around a thorn-root obstruction."},
+	{"campaign_id": "campaign_frontier_claims", "scenario_id": "charter-bastion-counterseal", "stem": "charter_bastion_counterseal", "source_sha256": "2b0d1308b5273e10cc19930f8b73ccc72e804dc8e1c59d4ff62ad72582d85629", "runtime_sha256": "0a3b17538d418cd704bc9e02bf4844f7bde13be4d8ed4c6da10a36d2324391cd", "alt_text": "A many-sided bastion bears a blank gold counterseal ringed by reed, stone, root, prism, ore, and parchment."},
+]
 const CASES := [
 	{
 		"campaign_id": "campaign_reedfall",
@@ -101,8 +119,9 @@ func _run() -> void:
 	print(REPORT_ID, " ", JSON.stringify({
 		"ok": true,
 		"campaign_count": CASES.size(),
-		"opening_chapter_seal_count": SEAL_CASES.size(),
-		"later_text_only_chapter_count": 18,
+		"chapter_seal_count": SEAL_CASES.size(),
+		"opening_chapter_seal_count": 6,
+		"later_chapter_seal_count": 18,
 		"unique_runtime_texture_count": CASES.size(),
 		"viewports": VIEWPORT_SIZES,
 		"list_icon_size": Vector2i(24, 24),
@@ -164,52 +183,68 @@ func _validate_content_and_bytes() -> bool:
 	var seal_count := 0
 	for case_value in CASES:
 		var campaign_id := String(case_value.get("campaign_id", ""))
-		var seal: Dictionary = SEAL_CASES.get(campaign_id, {})
 		var campaign := ContentService.get_campaign(campaign_id)
-		var scenario_id := String(seal.get("scenario_id", ""))
 		for scenario_value in campaign.get("scenarios", []):
 			if not (scenario_value is Dictionary):
 				continue
 			chapter_count += 1
 			var scenario: Dictionary = scenario_value
-			if String(scenario.get("seal_id", "")) == "":
-				continue
+			var scenario_id := String(scenario.get("scenario_id", ""))
+			var seal := _seal_case(campaign_id, scenario_id)
+			if seal.is_empty():
+				_fail("Campaign chapter is missing its exact seal manifest: %s/%s" % [campaign_id, scenario_id])
+				return false
+			var seal_id := "campaign_chapter_seal_%s" % scenario_id.replace("-", "_")
+			var source_path := _seal_source_path(seal)
+			var runtime_path := _seal_runtime_path(seal)
 			seal_count += 1
-			if String(scenario.get("scenario_id", "")) != scenario_id \
-					or String(scenario.get("seal_id", "")) != String(seal.get("seal_id", "")) \
-					or String(scenario.get("seal_path", "")) != String(seal.get("path", "")) \
-					or String(scenario.get("seal_source_path", "")) != String(seal.get("source_path", "")) \
+			if String(scenario.get("seal_id", "")) != seal_id \
+					or String(scenario.get("seal_path", "")) != runtime_path \
+					or String(scenario.get("seal_source_path", "")) != source_path \
 					or String(scenario.get("seal_alt_text", "")) != String(seal.get("alt_text", "")) \
 					or String(scenario.get("seal_source_sha256", "")) != String(seal.get("source_sha256", "")) \
 					or String(scenario.get("seal_runtime_sha256", "")) != String(seal.get("runtime_sha256", "")):
-				_fail("Campaign chapter seal provenance changed for %s: %s" % [campaign_id, JSON.stringify(scenario)])
+				_fail("Campaign chapter seal provenance changed for %s/%s: %s" % [campaign_id, scenario_id, JSON.stringify(scenario)])
 				return false
-		var source_image := _load_png(String(seal.get("source_path", "")))
-		var runtime_image := _load_png(String(seal.get("path", "")))
-		if source_image == null or source_image.get_size() != Vector2i(1254, 1254) \
-				or runtime_image == null or runtime_image.get_size() != Vector2i(64, 64) \
-				or source_image.detect_alpha() == Image.ALPHA_NONE \
-				or runtime_image.detect_alpha() == Image.ALPHA_NONE \
-				or source_image.get_pixel(0, 0).a > 0.01 \
-				or runtime_image.get_pixel(0, 0).a > 0.01 \
-				or FileAccess.get_sha256(String(seal.get("source_path", ""))) != String(seal.get("source_sha256", "")) \
-				or FileAccess.get_sha256(String(seal.get("path", ""))) != String(seal.get("runtime_sha256", "")):
-			_fail("Campaign chapter seal bytes, dimensions, or alpha changed for %s." % campaign_id)
-			return false
-		if CampaignRules.campaign_chapter_seal_path(campaign_id, scenario_id) != String(seal.get("path", "")) \
-				or CampaignRules.campaign_chapter_seal_alt_text(campaign_id, scenario_id) != String(seal.get("alt_text", "")):
-			_fail("Campaign chapter seal runtime authority rejected %s." % scenario_id)
-			return false
-		seal_source_hashes[String(seal.get("source_sha256", ""))] = true
-		seal_runtime_hashes[String(seal.get("runtime_sha256", ""))] = true
-	if chapter_count != 24 or seal_count != 6 or seal_source_hashes.size() != 6 or seal_runtime_hashes.size() != 6:
-		_fail("Campaign chapter-seal coverage must remain six opening seals and eighteen text-only later chapters.")
+			var source_image := _load_png(source_path)
+			var runtime_image := _load_png(runtime_path)
+			if source_image == null or source_image.get_size() != Vector2i(1254, 1254) \
+					or runtime_image == null or runtime_image.get_size() != Vector2i(64, 64) \
+					or source_image.detect_alpha() == Image.ALPHA_NONE \
+					or runtime_image.detect_alpha() == Image.ALPHA_NONE \
+					or source_image.get_pixel(0, 0).a > 0.01 \
+					or runtime_image.get_pixel(0, 0).a > 0.01 \
+					or FileAccess.get_sha256(source_path) != String(seal.get("source_sha256", "")) \
+					or FileAccess.get_sha256(runtime_path) != String(seal.get("runtime_sha256", "")):
+				_fail("Campaign chapter seal bytes, dimensions, or alpha changed for %s/%s." % [campaign_id, scenario_id])
+				return false
+			if CampaignRules.campaign_chapter_seal_path(campaign_id, scenario_id) != runtime_path \
+					or CampaignRules.campaign_chapter_seal_alt_text(campaign_id, scenario_id) != String(seal.get("alt_text", "")):
+				_fail("Campaign chapter seal runtime authority rejected %s/%s." % [campaign_id, scenario_id])
+				return false
+			seal_source_hashes[String(seal.get("source_sha256", ""))] = true
+			seal_runtime_hashes[String(seal.get("runtime_sha256", ""))] = true
+	if chapter_count != 24 or seal_count != 24 or seal_source_hashes.size() != 24 or seal_runtime_hashes.size() != 24:
+		_fail("Campaign chapter-seal coverage must remain exact and byte-distinct for all 24 chapters.")
 		return false
 	if CampaignRules.campaign_chapter_seal_path("campaign_reedfall", "not-authored") != "" \
 			or CampaignRules.campaign_chapter_seal_alt_text("campaign_reedfall", "not-authored") != "":
 		_fail("Unknown campaign chapter-seal authority did not fail closed.")
 		return false
 	return true
+
+func _seal_case(campaign_id: String, scenario_id: String) -> Dictionary:
+	for seal_value in SEAL_CASES:
+		var seal: Dictionary = seal_value
+		if String(seal.get("campaign_id", "")) == campaign_id and String(seal.get("scenario_id", "")) == scenario_id:
+			return seal
+	return {}
+
+func _seal_source_path(seal: Dictionary) -> String:
+	return "res://art/campaigns/source/generated/chapter_seals/%s_source.png" % String(seal.get("stem", ""))
+
+func _seal_runtime_path(seal: Dictionary) -> String:
+	return "res://art/campaigns/runtime/chapter_seals/%s.png" % String(seal.get("stem", ""))
 
 func _validate_live_menu(viewport_size: Vector2i) -> bool:
 	get_window().content_scale_size = viewport_size
@@ -239,20 +274,20 @@ func _validate_live_menu(viewport_size: Vector2i) -> bool:
 		if not _selected_emblem_exact(emblem, case, expected_item_rows):
 			_fail("Campaign menu emblem mismatch for %s at %s: %s" % [String(case.get("campaign_id", "")), viewport_size, JSON.stringify(emblem)])
 			return false
-		var seal: Dictionary = SEAL_CASES.get(String(case.get("campaign_id", "")), {})
 		var layout: Dictionary = snapshot.get("campaign_layout", {}) if snapshot.get("campaign_layout", {}) is Dictionary else {}
 		var chapter_rows: Array = layout.get("chapter_items", []) if layout.get("chapter_items", []) is Array else []
 		if layout.get("chapter_list_fixed_icon_size", Vector2i.ZERO) != Vector2i(24, 24) \
-				or chapter_rows.is_empty() \
-				or String(chapter_rows[0].get("id", "")) != String(seal.get("scenario_id", "")) \
-				or String(chapter_rows[0].get("seal_path", "")) != String(seal.get("path", "")) \
-				or String(chapter_rows[0].get("seal_alt_text", "")) != String(seal.get("alt_text", "")) \
-				or not String(chapter_rows[0].get("tooltip", "")).contains(String(seal.get("alt_text", ""))):
-			_fail("Campaign opening-chapter seal mismatch for %s at %s: %s" % [String(case.get("campaign_id", "")), viewport_size, JSON.stringify(chapter_rows)])
+				or chapter_rows.is_empty():
+			_fail("Campaign chapter-seal list is missing or has the wrong icon size for %s at %s." % [String(case.get("campaign_id", "")), viewport_size])
 			return false
-		for row_index in range(1, chapter_rows.size()):
-			if String(chapter_rows[row_index].get("seal_path", "")) != "" or String(chapter_rows[row_index].get("seal_alt_text", "")) != "":
-				_fail("Later campaign chapter incorrectly claimed opening-seal coverage: %s" % JSON.stringify(chapter_rows[row_index]))
+		for row_value in chapter_rows:
+			var row: Dictionary = row_value
+			var seal := _seal_case(String(case.get("campaign_id", "")), String(row.get("id", "")))
+			if seal.is_empty() \
+					or String(row.get("seal_path", "")) != _seal_runtime_path(seal) \
+					or String(row.get("seal_alt_text", "")) != String(seal.get("alt_text", "")) \
+					or not String(row.get("tooltip", "")).contains(String(seal.get("alt_text", ""))):
+				_fail("Campaign chapter seal mismatch for %s at %s: %s" % [String(case.get("campaign_id", "")), viewport_size, JSON.stringify(row)])
 				return false
 		await _capture(viewport_size, String(case.get("campaign_id", "")))
 	var campaign_list := shell.find_child("CampaignList", true, false) as ItemList
