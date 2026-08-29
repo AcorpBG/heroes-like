@@ -1035,12 +1035,10 @@ static func _collect_resource_node_result(
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This site has no authored payload."}
 	var guard_encounter := resource_site_blocking_guard(session, node, site)
-	if not guard_encounter.is_empty():
-		var guard_link := _resource_site_guard_link_for_encounter(guard_encounter)
-		if bool(guard_link.get("clear_required_for_target", false)):
-			_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
-			_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
-			return {"ok": false, "message": "Clear %s before claiming this site." % encounter_display_name(guard_encounter)}
+	if not guard_encounter.is_empty() and _resource_site_guard_blocks_node(guard_encounter, node):
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+		return {"ok": false, "message": "Clear %s before claiming this site." % encounter_display_name(guard_encounter)}
 	var defender_battle := _resource_defender_battle_payload(session, node, site)
 	if not defender_battle.is_empty():
 		session.battle = defender_battle

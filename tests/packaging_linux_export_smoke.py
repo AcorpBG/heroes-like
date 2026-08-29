@@ -61,6 +61,14 @@ REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/artifacts/{artifact_name}.png.import"
     for artifact_name in REQUIRED_ARTIFACT_FIELD_NAMES
 )
+REQUIRED_GUARDED_RELIC_ICON_NAMES = (
+    "lockfire_assize_seal", "miremoon_hunt_drum", "noonglass_orrery",
+    "worldroot_covenant_heartwood", "seventh_clause_pressure_key", "last_bell_tideglass",
+)
+REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES = tuple(
+    f"art/artifacts/runtime/{artifact_name}.png.import"
+    for artifact_name in REQUIRED_GUARDED_RELIC_ICON_NAMES
+)
 REQUIRED_TAVERN_HERO_IDS = (
     "hero_embercourt_belis_rainledger",
     "hero_sable",
@@ -437,6 +445,7 @@ def pck_terrain_payload_summary() -> dict:
     required_signature_encounter_texture_entries = imported_payload_paths_for(REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES)
     required_recurring_encounter_atlas_texture_entries = imported_payload_paths_for(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES)
     required_recurring_resource_site_atlas_texture_entries = imported_payload_paths_for(REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES)
+    required_guarded_relic_icon_texture_entries = imported_payload_paths_for(REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES)
     required_campaign_emblem_texture_entries = imported_payload_paths_for(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES)
     required_campaign_chapter_seal_texture_entries = imported_payload_paths_for(REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES)
     required_field_objective_landmark_texture_entries = imported_payload_paths_for(REQUIRED_FIELD_OBJECTIVE_LANDMARK_PCK_IMPORT_ENTRIES)
@@ -457,6 +466,12 @@ def pck_terrain_payload_summary() -> dict:
         "artifact_field_import_entries": [],
         "artifact_field_texture_names": [],
         "artifact_field_entries_present": False,
+        "required_guarded_relic_icon_import_entries": list(REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES),
+        "required_guarded_relic_icon_texture_entries": sorted(required_guarded_relic_icon_texture_entries),
+        "guarded_relic_icon_import_entries": [],
+        "guarded_relic_icon_texture_entries": [],
+        "guarded_relic_icon_texture_names": [],
+        "guarded_relic_icon_entries_present": False,
         "required_tavern_hero_import_entries": list(REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES),
         "tavern_hero_import_entries": [],
         "tavern_hero_texture_names": [],
@@ -593,6 +608,10 @@ def pck_terrain_payload_summary() -> dict:
                         summary["required_prefix_counts"][prefix] += 1
                 if entry_path in REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES:
                     summary["artifact_field_import_entries"].append(entry_path)
+                if entry_path in REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES:
+                    summary["guarded_relic_icon_import_entries"].append(entry_path)
+                if entry_path in required_guarded_relic_icon_texture_entries:
+                    summary["guarded_relic_icon_texture_entries"].append(entry_path)
                 if entry_path in REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES:
                     summary["tavern_hero_import_entries"].append(entry_path)
                 if entry_path in REQUIRED_SPECIALIST_HERO_PCK_IMPORT_ENTRIES:
@@ -651,6 +670,8 @@ def pck_terrain_payload_summary() -> dict:
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
                         summary["artifact_field_texture_names"].append(imported_name)
+                    if imported_name in REQUIRED_GUARDED_RELIC_ICON_NAMES:
+                        summary["guarded_relic_icon_texture_names"].append(imported_name)
                     if imported_name in REQUIRED_TAVERN_HERO_IDS:
                         summary["tavern_hero_texture_names"].append(imported_name)
                     if imported_name in REQUIRED_SPECIALIST_HERO_IDS:
@@ -680,6 +701,7 @@ def pck_terrain_payload_summary() -> dict:
         count > 0 for count in summary["required_prefix_counts"].values()
     )
     summary["artifact_field_entries_present"] = set(summary["artifact_field_import_entries"]) == set(REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES) and set(summary["artifact_field_texture_names"]) == set(REQUIRED_ARTIFACT_FIELD_NAMES)
+    summary["guarded_relic_icon_entries_present"] = set(summary["guarded_relic_icon_import_entries"]) == set(REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES) and set(summary["guarded_relic_icon_texture_entries"]) == required_guarded_relic_icon_texture_entries and set(summary["guarded_relic_icon_texture_names"]) == set(REQUIRED_GUARDED_RELIC_ICON_NAMES)
     summary["tavern_hero_entries_present"] = set(summary["tavern_hero_import_entries"]) == set(REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES) and set(summary["tavern_hero_texture_names"]) == set(REQUIRED_TAVERN_HERO_IDS)
     summary["specialist_hero_entries_present"] = set(summary["specialist_hero_import_entries"]) == set(REQUIRED_SPECIALIST_HERO_PCK_IMPORT_ENTRIES) and set(summary["specialist_hero_texture_names"]) == set(REQUIRED_SPECIALIST_HERO_IDS)
     summary["field_commander_hero_entries_present"] = set(summary["field_commander_hero_import_entries"]) == set(REQUIRED_FIELD_COMMANDER_HERO_PCK_IMPORT_ENTRIES) and set(summary["field_commander_hero_texture_names"]) == set(REQUIRED_FIELD_COMMANDER_HERO_IDS)
@@ -748,6 +770,7 @@ def main() -> int:
         and not terrain_payload["forbidden_development_entries"]
         and bool(terrain_payload["required_entries_present"])
         and bool(terrain_payload["artifact_field_entries_present"])
+        and bool(terrain_payload["guarded_relic_icon_entries_present"])
         and bool(terrain_payload["tavern_hero_entries_present"])
         and bool(terrain_payload["specialist_hero_entries_present"])
         and bool(terrain_payload["field_commander_hero_entries_present"])
@@ -836,6 +859,9 @@ def main() -> int:
         "artifact_field_pck_import_entry_count": len(terrain_payload["artifact_field_import_entries"]),
         "artifact_field_pck_texture_count": len(set(terrain_payload["artifact_field_texture_names"])),
         "artifact_field_pck_entries_present": terrain_payload["artifact_field_entries_present"],
+        "guarded_relic_icon_pck_import_entry_count": len(terrain_payload["guarded_relic_icon_import_entries"]),
+        "guarded_relic_icon_pck_texture_count": len(set(terrain_payload["guarded_relic_icon_texture_names"])),
+        "guarded_relic_icon_entries_present": terrain_payload["guarded_relic_icon_entries_present"],
         "tavern_hero_pck_import_entry_count": len(terrain_payload["tavern_hero_import_entries"]),
         "tavern_hero_pck_texture_count": len(set(terrain_payload["tavern_hero_texture_names"])),
         "tavern_hero_pck_entries_present": terrain_payload["tavern_hero_entries_present"],

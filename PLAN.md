@@ -24,8 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-faction-grand-convergence-marches-10184`.
-- Package boundary: both release exports now measure 248910416 bytes, 1089584 bytes below the unchanged 250000000-byte ceiling. All ten encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-six-faction-guarded-relic-roads-10184`.
+- Package boundary: both release exports now measure 249038712 bytes, 961288 bytes below the unchanged 250000000-byte ceiling. The six guarded-relic runtime icons ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Guarded Relic Roads
+
+id: `content-six-faction-guarded-relic-roads-10184`
+
+Status: completed.
+
+Completion result:
+- six original faction capstone relics now extend the catalog to 39 artifacts, with distinct transparent icons and supported battle, adventure, resistance, scouting, movement, and rare-income effects;
+- Lantern Crown Nave, Hive of Reeds, Glassbound Eyrie, Rootwarden Stockade, Rust Choir Foundry, and Salt-Wight Convoy now join Barrow Vault and Drowned Reliquary as live guarded resource-and-artifact sites, raising live guarded sites from two to eight while leaving 24 metadata-only sites for later authored adoption;
+- each grand-convergence march now contains seventeen resource sites and seven battle fronts, and explicit node-to-guard links use the same blocking authority for interaction as discovery and UI;
+- the single combined six-case smoke passed guard blocking and battle payloads, resource and deterministic faction-relic rewards, repeat-claim rejection, equipped bonuses, inspected map captures, and save version 9; repository validation and matching Linux/Windows 249038712-byte packaged startup passed.
+
+Implementation boundary:
+- add six original faction-bound relics with distinct production icons and supported adventure, battle, resistance, scouting, and rare-income effects;
+- activate Lantern Crown Nave, Hive of Reeds, Glassbound Eyrie, Rootwarden Stockade, Rust Choir Foundry, and Salt-Wight Convoy as live guarded reward sites with one deterministic faction-relic table;
+- place each selected site and its exact existing guard encounter into the matching grand-convergence march, raising each map to seventeen resource sites and seven battle fronts without adding disconnected files;
+- preserve save version 9, deterministic source selection, player and strategic-AI reward paths, accessibility summaries, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- each selected live map blocks its relic site before guard clearance, resolves the exact guard, grants resources plus the correct faction relic once, rejects repeat claims, and preserves artifact provenance through save version 9;
+- all six relic icons load through the inventory/inspection surfaces with distinct transparent identities and remain separate from Overworld pickup-field art because these relics exist only as guarded-site rewards;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new unit, hero, town, spell, campaign chapter, save schema, battle formula, AI algorithm, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes relic, site, scenario, name, text, icon, or protected visual expression.
 
 ## Six-Faction Grand Convergence Marches
 

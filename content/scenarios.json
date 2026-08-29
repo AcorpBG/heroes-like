@@ -10630,6 +10630,13 @@
           "site_id": "site_roadside_sanctum",
           "x": 11,
           "y": 0
+        },
+        {
+          "placement_id": "rainledger_lantern_crown_nave",
+          "site_id": "site_lantern_crown_nave",
+          "x": 2,
+          "y": 6,
+          "guard_front_id": "rainledger_lantern_crown_guard"
         }
       ],
       "artifact_nodes": [
@@ -10793,6 +10800,15 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26306,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "rainledger_lantern_crown_guard",
+          "encounter_id": "encounter_lantern_warren_watch",
+          "x": 3,
+          "y": 6,
+          "difficulty": "medium",
+          "combat_seed": 26401,
           "prefer_identity_landmark": true
         }
       ]
@@ -11435,6 +11451,13 @@
           "site_id": "site_tidepool_skiffyard",
           "x": 11,
           "y": 0
+        },
+        {
+          "placement_id": "fenwake_hive_of_reeds",
+          "site_id": "site_hive_of_reeds",
+          "x": 2,
+          "y": 6,
+          "guard_front_id": "fenwake_hive_of_reeds_guard"
         }
       ],
       "artifact_nodes": [
@@ -11598,6 +11621,15 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26316,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "fenwake_hive_of_reeds_guard",
+          "encounter_id": "encounter_bogbell_croft_watch",
+          "x": 3,
+          "y": 6,
+          "difficulty": "medium",
+          "combat_seed": 26402,
           "prefer_identity_landmark": true
         }
       ]
@@ -12240,6 +12272,13 @@
           "site_id": "site_lens_house",
           "x": 11,
           "y": 0
+        },
+        {
+          "placement_id": "halometer_glassbound_eyrie",
+          "site_id": "site_glassbound_eyrie",
+          "x": 2,
+          "y": 6,
+          "guard_front_id": "halometer_glassbound_eyrie_guard"
         }
       ],
       "artifact_nodes": [
@@ -12403,6 +12442,15 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26326,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "halometer_glassbound_eyrie_guard",
+          "encounter_id": "encounter_cliffhawk_roost_watch",
+          "x": 3,
+          "y": 6,
+          "difficulty": "high",
+          "combat_seed": 26403,
           "prefer_identity_landmark": true
         }
       ]
@@ -13045,6 +13093,13 @@
           "site_id": "site_prism_watch_relay",
           "x": 11,
           "y": 0
+        },
+        {
+          "placement_id": "graftsibyl_rootwarden_stockade",
+          "site_id": "site_rootwarden_stockade",
+          "x": 2,
+          "y": 6,
+          "guard_front_id": "graftsibyl_rootwarden_stockade_guard"
         }
       ],
       "artifact_nodes": [
@@ -13208,6 +13263,15 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26336,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "graftsibyl_rootwarden_stockade_guard",
+          "encounter_id": "encounter_bramble_hedge_watch",
+          "x": 3,
+          "y": 6,
+          "difficulty": "high",
+          "combat_seed": 26404,
           "prefer_identity_landmark": true
         }
       ]
@@ -13850,6 +13914,13 @@
           "site_id": "site_reef_coin_assay",
           "x": 11,
           "y": 0
+        },
+        {
+          "placement_id": "debtrune_rust_choir_foundry",
+          "site_id": "site_rust_choir_foundry",
+          "x": 2,
+          "y": 6,
+          "guard_front_id": "debtrune_rust_choir_foundry_guard"
         }
       ],
       "artifact_nodes": [
@@ -14013,6 +14084,15 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26346,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "debtrune_rust_choir_foundry_guard",
+          "encounter_id": "encounter_cinder_kiln_watch",
+          "x": 3,
+          "y": 6,
+          "difficulty": "high",
+          "combat_seed": 26405,
           "prefer_identity_landmark": true
         }
       ]
@@ -14655,6 +14735,13 @@
           "site_id": "site_watchtower_beacon",
           "x": 11,
           "y": 0
+        },
+        {
+          "placement_id": "nightchart_salt_wight_convoy",
+          "site_id": "site_salt_wight_convoy",
+          "x": 2,
+          "y": 6,
+          "guard_front_id": "nightchart_salt_wight_convoy_guard"
         }
       ],
       "artifact_nodes": [
@@ -14818,6 +14905,15 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26356,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "nightchart_salt_wight_convoy_guard",
+          "encounter_id": "encounter_saltpan_camp_watch",
+          "x": 3,
+          "y": 6,
+          "difficulty": "medium",
+          "combat_seed": 26406,
           "prefer_identity_landmark": true
         }
       ]

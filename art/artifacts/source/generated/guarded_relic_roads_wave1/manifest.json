@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_high_three_quarter_faction_guarded_relic",
+  "prompt_set_summary": "Six original faction capstone relic cutouts: an octagonal lockfire gate seal, a crescent jaw-frame mire hunt drum, an asymmetrical noonglass orrery, a living heartwood cuirass, a seven-toothed pressure key, and a cracked last-bell tideglass. Every source was requested as a centered production-game object with a strong small-icon silhouette, transparent padding, no scene, no text, no characters, no logos, and no borrowed franchise design.",
+  "runtime_icon_size": [128, 128],
+  "items": [
+    {
+      "artifact_id": "artifact_lockfire_assize_seal",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/lockfire_assize_seal_source.png",
+      "source_sha256": "e221623a97225b9d904111db63e79de32c2dc45c4aec76bd76b86be00387fda2",
+      "runtime_path": "res://art/artifacts/runtime/lockfire_assize_seal.png",
+      "runtime_sha256": "57ab2c1cdf7482ed6a83fc2947d081b61c4830b6be4750bd2d0de724b5d7c521",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0cdb2187-7954-4a06-b240-c515eb4f752d.png",
+      "prompt_summary": "Octagonal bronze lock-gate seal around a protected ember crystal."
+    },
+    {
+      "artifact_id": "artifact_miremoon_hunt_drum",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/miremoon_hunt_drum_source.png",
+      "source_sha256": "821d7f96ddb3642e1113288d590be5f35965214598f4d76eeee2eed6b4331e65",
+      "runtime_path": "res://art/artifacts/runtime/miremoon_hunt_drum.png",
+      "runtime_sha256": "830cecef8e9275130b011c54067c8e107e9fea4fccf5ad60792c3fb743a51c8d",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fdfc991d-4532-433f-a732-fa2523541ef7.png",
+      "prompt_summary": "Crescent bogwood and bone hunt drum with reed lashings and hooked beaters."
+    },
+    {
+      "artifact_id": "artifact_noonglass_orrery",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/noonglass_orrery_source.png",
+      "source_sha256": "d3bc6b17dd3366b3500e24d15277cd5d1af84f0e09746d73be7e2fada38dec2a",
+      "runtime_path": "res://art/artifacts/runtime/noonglass_orrery.png",
+      "runtime_sha256": "0aad86705794148c0a37b4fcc2756506d565b6b689189002106886491f115a11",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-41d3e0f2-9863-4e76-ad79-90162e9464fd.png",
+      "prompt_summary": "Open radial orrery of translucent noon-glass discs with a forked calibration arm."
+    },
+    {
+      "artifact_id": "artifact_worldroot_covenant_heartwood",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/worldroot_covenant_heartwood_source.png",
+      "source_sha256": "b1e4367563c693f208bd5353b64e7387306c3bab452bcd8907574765708b727f",
+      "runtime_path": "res://art/artifacts/runtime/worldroot_covenant_heartwood.png",
+      "runtime_sha256": "b4cf3972857453fc4c16da39c2c52b88964314d12092aeae467d5bdeb9e58f38",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d49ffcac-3db5-4984-b9f4-980d3e62b73a.png",
+      "prompt_summary": "Heart-shaped living rootwood cuirass with graft bindings and glowing seed sockets."
+    },
+    {
+      "artifact_id": "artifact_seventh_clause_pressure_key",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/seventh_clause_pressure_key_source.png",
+      "source_sha256": "e8fe1c0799f5480c5eca1b695c59e2715e2a988d61702fb0517f067c8d43bdcb",
+      "runtime_path": "res://art/artifacts/runtime/seventh_clause_pressure_key.png",
+      "runtime_sha256": "a99b14608f89dddc87ed5a2b33a3537ac98f1a6597c50b413d97065bdee6d405",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-92f5fab2-7e3d-4a71-a79e-3d366425d433.png",
+      "prompt_summary": "Seven-toothed industrial master key with a pressure gauge wheel and wax seals."
+    },
+    {
+      "artifact_id": "artifact_last_bell_tideglass",
+      "source_path": "res://art/artifacts/source/generated/guarded_relic_roads_wave1/last_bell_tideglass_source.png",
+      "source_sha256": "5f335b68ff2bf213d25eff4c80cd755cfc283f35274d19684958e8d2351ff198",
+      "runtime_path": "res://art/artifacts/runtime/last_bell_tideglass.png",
+      "runtime_sha256": "b6d1fe22ad31ff8e16e594f3c9242c340a06110d6d6f19230b9e604057ef3caa",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0db5adc4-3b8c-4e69-ac7a-35362763ce58.png",
+      "prompt_summary": "Cracked black tideglass in a broken bell frame with salt pearls climbing upward."
+    }
+  ]
+}
