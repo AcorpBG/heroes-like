@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and register the next bounded original-content or art gap with an explicit strategy for the remaining 48436-byte release-package headroom."
+    "Audit and register the next bounded original-content or art slice with an explicit strategy for the remaining 33076-byte package headroom."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,68 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "content-signature-encounter-landmarks-10184",
-    "title": "Signature Encounter Landmarks",
+    "id": "content-hero-specialty-insignia-10184",
+    "title": "Hero Specialty Insignia",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-29T08:45:00Z",
-    "updatedAt": "2026-08-29T08:53:17Z",
-    "completedAt": "2026-08-29T08:53:17Z",
+    "startedAt": "2026-08-29T08:59:04Z",
+    "updatedAt": "2026-08-29T09:35:56Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed six byte-distinct original signature encounter landmarks. Commander, exact identity, faction, unit, and generic fallback order; session/save authority; focused runtime; existing commander regression; accessibility; core; repository/editor; inspected captures; and Linux/Windows package boots pass. Both PCKs are 249951564 bytes with all six compiled textures present and source art excluded. The unrelated broad Overworld visual smoke still has its pre-existing 1280px objective-header ellipsis assertion."
+    "notes": "Completed seven original specialty insignia sources, one compact 196x28 live atlas, and exact Overworld/Town choice-button integration while preserving progression, session, and save authority. Focused runtime, Town specialty feedback, core, repository/editor, and both platform package gates pass; matching PCKs are 249966924 bytes. The unrelated Overworld cache regression still reports two request-local watch-context builds instead of one.",
+    "completedAt": "2026-08-29T09:35:56Z"
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-hero-specialty-insignia-20260829",
+      "title": "Hero specialty insignia",
+      "sliceId": "content-hero-specialty-insignia-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T09:35:56Z",
+      "updatedAt": "2026-08-29T09:35:56Z",
+      "latestFinding": "All seven live hero specialties now own exact original insignia regions in one compact atlas and display on real Overworld and Town choice buttons without changing progression, action, session, or save authority.",
+      "artifacts": [
+        "art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png",
+        "art/heroes/source/generated/specialties",
+        "scripts/core/HeroProgressionRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "tests/hero_specialty_insignia_runtime_report.gd",
+        "tests/hero_specialty_insignia_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        ".artifacts/hero_specialty_insignia/runtime_contact_sheet_8x.png",
+        ".artifacts/hero_specialty_insignia/captures/overworld_1280x720.png",
+        ".artifacts/hero_specialty_insignia/captures/town_1280x720.png",
+        ".artifacts/hero_specialty_insignia/captures/overworld_1920x1080.png",
+        ".artifacts/hero_specialty_insignia/captures/town_1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "exact_specialty_count": 7,
+        "runtime_atlas_size_px": [196, 28],
+        "runtime_icon_cell_size_px": 28,
+        "atlas_sha256": "7e7f88c9b3ac4692e294c951b6b69261391f6b69b1beb08c76056bde753aa36e",
+        "save_version": 9,
+        "session_authority_exact": true,
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "source_art_excluded": true,
+        "pck_size_bytes": 249966924,
+        "pck_ceiling_bytes": 250000000,
+        "pck_remaining_headroom_bytes": 33076,
+        "overworld_refresh_cache_unrelated_watch_context_build_count": 2,
+        "overworld_refresh_cache_expected_watch_context_build_count": 1,
+        "overworld_visual_smoke_unrelated_objective_header_ellipsis_red": true,
+        "whole_game_release_ready_claimed": false
+      }
+    },
     {
       "id": "content-signature-encounter-landmarks-20260829",
       "title": "Signature encounter landmarks",
@@ -15371,14 +15418,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact signature encounter landmarks for one live encounter per production faction with compact art and unchanged gameplay/session authority.",
+  "currentNotes": "Completed exact compact insignia for all seven live hero specialties on both Overworld and Town choice surfaces; next packaged art must fit the remaining 33076-byte PCK headroom.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-signature-encounter-landmarks-10184",
-  "currentSliceId": "content-signature-encounter-landmarks-10184",
-  "currentSliceNotes": "Completed six byte-distinct original transparent 64x64 landmarks for Reed Totemists, Archive Wardens, Relay Pickets, Graftroot Wardens, Orevein Exactors, and Bellwake Privateers. Live fallback order, session/save authority, focused/runtime/static validation, inspected 1280x720 and 1920x1080 captures, and Linux/Windows package boots pass; both PCKs are 249951564 bytes, source art is excluded, and 48436 bytes remain below the strict ceiling. The unrelated broad Overworld visual smoke retains its pre-existing objective-header ellipsis red.",
+  "currentSlice": "content-hero-specialty-insignia-10184",
+  "currentSliceId": "content-hero-specialty-insignia-10184",
+  "currentSliceNotes": "Seven distinct original generated sources now assemble into one compact runtime atlas and appear on existing Overworld and Town specialty choice buttons without changing progression, action, session, or save authority. Focused, core, static/editor, and both platform package checks pass; the unrelated Overworld cache counter regression remains red.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content signature encounter landmarks 10184",
-  "currentSliceUpdatedAt": "2026-08-29T08:53:17Z",
+  "currentSliceTitle": "content hero specialty insignia 10184",
+  "currentSliceUpdatedAt": "2026-08-29T09:35:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20896,6 +20943,38 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
+    {
+      "id": "content-hero-specialty-insignia-10184",
+      "title": "Hero Specialty Insignia",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T08:59:04Z",
+      "updatedAt": "2026-08-29T09:35:56Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "scripts/core/HeroProgressionRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "art/heroes/runtime/specialties",
+        "art/heroes/source/generated/specialties",
+        "tests/hero_specialty_insignia_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Give every live hero progression specialty an exact original insignia on both recurring choice surfaces instead of text-only identity.",
+      "completionCriteria": "Seven exact transparent insignia sources assemble into one compact runtime atlas with immutable rect ownership; both live choice surfaces, focused runtime, visual/accessibility, repository/editor, and bounded Linux/Windows package gates pass below the unchanged 250000000-byte PCK ceiling.",
+      "nonGoals": [
+        "No specialty ids, rules, ranks, bonuses, choice generation, balance, hero roster, save/schema, battle, economy, AI, or Native RMG behavior change.",
+        "No copied Heroes expression, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "",
+      "completionEvidence": "Seven exact transparent generated sources assemble into one 196x28 runtime atlas; live Overworld and Town specialty choice buttons, fail-closed lookup, non-color descriptions, session/save authority, focused runtime, Town specialty feedback, core, repository/editor, and Linux/Windows package startup pass. Matching PCKs are 249966924 bytes with source art excluded.",
+      "completedAt": "2026-08-29T09:35:56Z"
+    },
     {
       "id": "content-signature-encounter-landmarks-10184",
       "title": "Signature Encounter Landmarks",
@@ -105394,8 +105473,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Six signature faction encounters now own exact live Overworld landmarks and all 24 campaign chapters retain exact seals. Only 48436 bytes remain below the strict release-package ceiling, so future packaged art needs a tighter explicit size strategy. The unrelated 1280px Overworld objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit and register the next bounded original-content or art slice with an explicit strategy for the remaining 48436-byte package headroom; broader product gaps remain.",
+  "remainingGap": "All seven hero specialties now own exact live choice insignia, six signature faction encounters own exact live Overworld landmarks, and all 24 campaign chapters retain exact seals. Only 33076 bytes remain below the strict release-package ceiling, so future packaged art needs a tighter explicit size strategy. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and register the next bounded original-content or art slice with an explicit strategy for the remaining 33076-byte package headroom; separately diagnose the existing Overworld request-local watch-context reuse regression and objective-header ellipsis assertion; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -105826,7 +105905,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_signature_encounter_landmarks_completed",
+  "result": "content_hero_specialty_insignia_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -105927,9 +106006,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed six original signature encounter landmarks with exact live identity, fallback, session/save, inspected capture, and Linux/Windows package validation.",
+  "summary": "Completed seven original hero-specialty insignia with exact live Overworld/Town integration, session/save authority, inspected captures, and Linux/Windows package validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T08:53:17Z",
+  "updatedAt": "2026-08-29T09:35:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

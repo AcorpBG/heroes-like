@@ -2,11 +2,16 @@ class_name HeroProgressionRules
 extends RefCounted
 
 const CHOICE_SIZE := 3
+const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
+const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)
 const SPECIALTIES := [
 	{
 		"id": "wayfinder",
 		"name": "Wayfinder's Instinct",
 		"short_name": "Wayfinder",
+		"icon_id": "specialty_insignia_wayfinder",
+		"icon_region": [0, 0, 28, 28],
+		"icon_description": "A round trail compass crossed by a winding path needle.",
 		"max_rank": 2,
 		"summary": "+2 overworld movement per rank.",
 		"bonuses": {
@@ -17,6 +22,9 @@ const SPECIALTIES := [
 		"id": "ledgerkeeper",
 		"name": "Ledgerkeeper's Oath",
 		"short_name": "Ledgerkeeper",
+		"icon_id": "specialty_insignia_ledgerkeeper",
+		"icon_region": [28, 0, 28, 28],
+		"icon_description": "A square campaign ledger with a coin clasp and two tally pegs.",
 		"max_rank": 2,
 		"summary": "+100 gold, +1 wood, and +1 ore at each daybreak per rank.",
 		"bonuses": {
@@ -31,6 +39,9 @@ const SPECIALTIES := [
 		"id": "spellwright",
 		"name": "Spellwright's Reserve",
 		"short_name": "Spellwright",
+		"icon_id": "specialty_insignia_spellwright",
+		"icon_region": [56, 0, 28, 28],
+		"icon_description": "A diagonal feather quill clasping a faceted mana reservoir.",
 		"max_rank": 2,
 		"summary": "+4 max mana and -1 spell mana cost per rank.",
 		"bonuses": {
@@ -42,6 +53,9 @@ const SPECIALTIES := [
 		"id": "drillmaster",
 		"name": "Drillmaster's Cadence",
 		"short_name": "Drillmaster",
+		"icon_id": "specialty_insignia_drillmaster",
+		"icon_region": [84, 0, 28, 28],
+		"icon_description": "A broad marching drum crossed by a notched command baton.",
 		"max_rank": 2,
 		"summary": "+1 battle initiative per rank.",
 		"bonuses": {
@@ -52,6 +66,9 @@ const SPECIALTIES := [
 		"id": "armsmaster",
 		"name": "Armsmaster's Temper",
 		"short_name": "Armsmaster",
+		"icon_id": "specialty_insignia_armsmaster",
+		"icon_region": [112, 0, 28, 28],
+		"icon_description": "A sword and war hammer crossed over a low anvil.",
 		"max_rank": 2,
 		"summary": "+1 battle attack and +1 battle defense per rank.",
 		"bonuses": {
@@ -63,6 +80,9 @@ const SPECIALTIES := [
 		"id": "mustercaptain",
 		"name": "Muster Captain's Call",
 		"short_name": "Muster Captain",
+		"icon_id": "specialty_insignia_mustercaptain",
+		"icon_region": [140, 0, 28, 28],
+		"icon_description": "A curved rally horn carrying three differently cut troop pennants.",
 		"max_rank": 2,
 		"summary": "+20% recruit growth and -10% recruit cost per rank.",
 		"bonuses": {
@@ -74,6 +94,9 @@ const SPECIALTIES := [
 		"id": "borderwarden",
 		"name": "Border Warden's Watch",
 		"short_name": "Border Warden",
+		"icon_id": "specialty_insignia_borderwarden",
+		"icon_region": [168, 0, 28, 28],
+		"icon_description": "A tall lantern watchtower flanked by two uneven boundary stakes.",
 		"max_rank": 2,
 		"summary": "+1 scouting radius and enemy raids pillage 15% fewer resources per rank.",
 		"bonuses": {
@@ -273,6 +296,45 @@ static func specialty_definition(specialty_id: String) -> Dictionary:
 		if String(specialty.get("id", "")) == specialty_id:
 			return specialty.duplicate(true)
 	return {}
+
+static func specialty_id_for_action(action_id: String) -> String:
+	const PREFIX := "choose_specialty:"
+	if not action_id.begins_with(PREFIX):
+		return ""
+	var specialty_id := action_id.trim_prefix(PREFIX)
+	return specialty_id if not specialty_definition(specialty_id).is_empty() else ""
+
+static func specialty_insignia_description(specialty_id: String) -> String:
+	return String(specialty_definition(specialty_id).get("icon_description", ""))
+
+static func specialty_insignia_texture(specialty_id: String) -> Texture2D:
+	var specialty := specialty_definition(specialty_id)
+	var region_value: Variant = specialty.get("icon_region", [])
+	if specialty.is_empty() \
+		or String(specialty.get("icon_id", "")) != "specialty_insignia_%s" % specialty_id \
+		or not (region_value is Array) \
+		or region_value.size() != 4 \
+		or not ResourceLoader.exists(SPECIALTY_INSIGNIA_ATLAS_PATH, "Texture2D"):
+		return null
+	var region := Rect2(
+		float(region_value[0]),
+		float(region_value[1]),
+		float(region_value[2]),
+		float(region_value[3])
+	)
+	if region.size != Vector2(SPECIALTY_INSIGNIA_CELL_SIZE) \
+		or region.position.x < 0.0 \
+		or region.position.y < 0.0 \
+		or region.end.x > 196.0 \
+		or region.end.y > 28.0:
+		return null
+	var atlas := load(SPECIALTY_INSIGNIA_ATLAS_PATH) as Texture2D
+	if atlas == null or atlas.get_size() != Vector2(196, 28):
+		return null
+	var texture := AtlasTexture.new()
+	texture.atlas = atlas
+	texture.region = region
+	return texture
 
 static func max_rank_for_specialty(specialty_id: String) -> int:
 	return max(1, int(specialty_definition(specialty_id).get("max_rank", 1)))

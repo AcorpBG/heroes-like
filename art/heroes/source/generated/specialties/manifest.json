@@ -1,0 +1,68 @@
+{
+  "schema": "hero_specialty_insignia_generated_sources_v1",
+  "generator": "openai_builtin_image_generation",
+  "generated_at": "2026-08-29",
+  "runtime_atlas": "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png",
+  "atlas_size": [196, 28],
+  "cell_size": [28, 28],
+  "runtime_icon_content_size": [24, 24],
+  "sources_excluded_from_release_packages": true,
+  "items": [
+    {
+      "specialty_id": "wayfinder",
+      "icon_id": "specialty_insignia_wayfinder",
+      "source": "res://art/heroes/source/generated/specialties/wayfinder_source.png",
+      "source_sha256": "d655472042eb10b0c77ba723d0cf8187b050670052ac716907969f3153f37dd3",
+      "atlas_region": [0, 0, 28, 28],
+      "prompt_subject": "Brass trail compass with a winding path needle"
+    },
+    {
+      "specialty_id": "ledgerkeeper",
+      "icon_id": "specialty_insignia_ledgerkeeper",
+      "source": "res://art/heroes/source/generated/specialties/ledgerkeeper_source.png",
+      "source_sha256": "839d0dd392c51083a1d43fd3929133238b4f89f3b318c8404d63a7470566fe4c",
+      "atlas_region": [28, 0, 28, 28],
+      "prompt_subject": "Campaign ledger with a coin clasp and supply tally pegs"
+    },
+    {
+      "specialty_id": "spellwright",
+      "icon_id": "specialty_insignia_spellwright",
+      "source": "res://art/heroes/source/generated/specialties/spellwright_source.png",
+      "source_sha256": "5088245d3cbaaed48c1dc8d1d41abbd15c3127f2e4abe2f7badf823e2da743ae",
+      "atlas_region": [56, 0, 28, 28],
+      "prompt_subject": "Feather quill clasping a faceted mana reservoir"
+    },
+    {
+      "specialty_id": "drillmaster",
+      "icon_id": "specialty_insignia_drillmaster",
+      "source": "res://art/heroes/source/generated/specialties/drillmaster_source.png",
+      "source_sha256": "469f7543da77b79c7a9e49db84eabdfa316511b579b9d1b1514d81702fe8c480",
+      "atlas_region": [84, 0, 28, 28],
+      "prompt_subject": "Marching drum crossed by a command baton"
+    },
+    {
+      "specialty_id": "armsmaster",
+      "icon_id": "specialty_insignia_armsmaster",
+      "source": "res://art/heroes/source/generated/specialties/armsmaster_source.png",
+      "source_sha256": "4e5deecb44119286595c1bf89aa130aab70e257434d87dc5284df10bd552cf92",
+      "atlas_region": [112, 0, 28, 28],
+      "prompt_subject": "Sword and war hammer crossed over an anvil"
+    },
+    {
+      "specialty_id": "mustercaptain",
+      "icon_id": "specialty_insignia_mustercaptain",
+      "source": "res://art/heroes/source/generated/specialties/mustercaptain_source.png",
+      "source_sha256": "7cac051613328b131d86876713f984748aa78b66879582592973d356068e8775",
+      "atlas_region": [140, 0, 28, 28],
+      "prompt_subject": "Rally horn with three differently cut troop pennants"
+    },
+    {
+      "specialty_id": "borderwarden",
+      "icon_id": "specialty_insignia_borderwarden",
+      "source": "res://art/heroes/source/generated/specialties/borderwarden_source.png",
+      "source_sha256": "1157f830f22a6ca386c03e70a7986d89e7fb3db6e99c1369053e3d0cf73f83c2",
+      "atlas_region": [168, 0, 28, 28],
+      "prompt_subject": "Lantern watchtower flanked by two boundary stakes"
+    }
+  ]
+}
