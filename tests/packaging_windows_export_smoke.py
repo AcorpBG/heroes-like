@@ -58,6 +58,18 @@ REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/artifacts/{artifact_name}.png.import"
     for artifact_name in REQUIRED_ARTIFACT_FIELD_NAMES
 )
+REQUIRED_TAVERN_HERO_IDS = (
+    "hero_embercourt_belis_rainledger",
+    "hero_sable",
+    "hero_sunvault_calis_sunvein",
+    "hero_thornwake_ardren_briarmarshal",
+    "hero_brasshollow_daxis_chaincaptain",
+    "hero_veilmourn_cela_mistcorsair",
+)
+REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES = tuple(
+    f"art/overworld/runtime/heroes/tavern_vanguard/{hero_id}.png.import"
+    for hero_id in REQUIRED_TAVERN_HERO_IDS
+)
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
     "Parse Error",
@@ -291,6 +303,10 @@ def pck_terrain_payload_summary() -> dict:
         "artifact_field_import_entries": [],
         "artifact_field_texture_names": [],
         "artifact_field_entries_present": False,
+        "required_tavern_hero_import_entries": list(REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES),
+        "tavern_hero_import_entries": [],
+        "tavern_hero_texture_names": [],
+        "tavern_hero_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -342,10 +358,14 @@ def pck_terrain_payload_summary() -> dict:
                         summary["required_prefix_counts"][prefix] += 1
                 if entry_path in REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES:
                     summary["artifact_field_import_entries"].append(entry_path)
+                if entry_path in REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES:
+                    summary["tavern_hero_import_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
                         summary["artifact_field_texture_names"].append(imported_name)
+                    if imported_name in REQUIRED_TAVERN_HERO_IDS:
+                        summary["tavern_hero_texture_names"].append(imported_name)
             summary["valid_directory"] = handle.tell() == file_size
     except (OSError, struct.error, UnicodeError):
         return summary
@@ -353,6 +373,7 @@ def pck_terrain_payload_summary() -> dict:
         count > 0 for count in summary["required_prefix_counts"].values()
     )
     summary["artifact_field_entries_present"] = set(summary["artifact_field_import_entries"]) == set(REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES) and set(summary["artifact_field_texture_names"]) == set(REQUIRED_ARTIFACT_FIELD_NAMES)
+    summary["tavern_hero_entries_present"] = set(summary["tavern_hero_import_entries"]) == set(REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES) and set(summary["tavern_hero_texture_names"]) == set(REQUIRED_TAVERN_HERO_IDS)
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -404,6 +425,7 @@ def main() -> int:
         and not terrain_payload["forbidden_entries"]
         and bool(terrain_payload["required_entries_present"])
         and bool(terrain_payload["artifact_field_entries_present"])
+        and bool(terrain_payload["tavern_hero_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -528,6 +550,9 @@ def main() -> int:
         "artifact_field_pck_import_entry_count": len(terrain_payload["artifact_field_import_entries"]),
         "artifact_field_pck_texture_count": len(set(terrain_payload["artifact_field_texture_names"])),
         "artifact_field_pck_entries_present": terrain_payload["artifact_field_entries_present"],
+        "tavern_hero_pck_import_entry_count": len(terrain_payload["tavern_hero_import_entries"]),
+        "tavern_hero_pck_texture_count": len(set(terrain_payload["tavern_hero_texture_names"])),
+        "tavern_hero_pck_entries_present": terrain_payload["tavern_hero_entries_present"],
         "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],

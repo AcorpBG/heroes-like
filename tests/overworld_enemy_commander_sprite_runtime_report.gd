@@ -18,6 +18,22 @@ const REPRESENTATIVE_HERO_IDS := {
 	"faction_brasshollow": "hero_brasshollow_daxis_chaincaptain",
 	"faction_veilmourn": "hero_veilmourn_ruln_vanehook",
 }
+const EXPECTED_COMMANDER_ASSETS := {
+	"faction_embercourt": "hero_signature_lyra",
+	"faction_mireclaw": "hero_faction_mireclaw",
+	"faction_sunvault": "hero_faction_sunvault",
+	"faction_thornwake": "hero_tavern_thornwake_ardren_briarmarshal",
+	"faction_brasshollow": "hero_tavern_brasshollow_daxis_chaincaptain",
+	"faction_veilmourn": "hero_lead_veilmourn_ruln_vanehook",
+}
+const EXPECTED_COMMANDER_PATHS := {
+	"faction_embercourt": "res://art/overworld/runtime/heroes/signature/hero_lyra.png",
+	"faction_mireclaw": "res://art/overworld/runtime/heroes/factions/mireclaw.png",
+	"faction_sunvault": "res://art/overworld/runtime/heroes/factions/sunvault.png",
+	"faction_thornwake": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
+	"faction_brasshollow": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
+	"faction_veilmourn": "res://art/overworld/runtime/heroes/live_leads/hero_veilmourn_ruln_vanehook.png",
+}
 const FALLBACK_CASES := ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"]
 
 func _ready() -> void:
@@ -125,8 +141,8 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 		var profile: Dictionary = profile_value
 		var faction_id := String(profile.get("spawned_by_faction_id", ""))
 		var expected_hero_id := String(REPRESENTATIVE_HERO_IDS.get(faction_id, ""))
-		var expected_asset_id := String(EXPECTED_FACTION_ASSETS.get(faction_id, ""))
-		var expected_path := "res://art/overworld/runtime/heroes/factions/%s.png" % faction_id.trim_prefix("faction_")
+		var expected_asset_id := String(EXPECTED_COMMANDER_ASSETS.get(faction_id, ""))
+		var expected_path := String(EXPECTED_COMMANDER_PATHS.get(faction_id, ""))
 		if String(profile.get("hero_id", "")) != expected_hero_id \
 			or String(profile.get("commander_faction_id", "")) != faction_id \
 			or String(profile.get("authored_faction_id", "")) != faction_id \

@@ -47278,52 +47278,71 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         "hero_neral",
         "hero_seren",
     )
+    tavern_vanguard_hero_ids = (
+        "hero_embercourt_belis_rainledger",
+        "hero_sable",
+        "hero_sunvault_calis_sunvein",
+        "hero_thornwake_ardren_briarmarshal",
+        "hero_brasshollow_daxis_chaincaptain",
+        "hero_veilmourn_cela_mistcorsair",
+    )
     scenario_lead_hero_ids = signature_hero_ids + live_lead_hero_ids
+    mapped_hero_ids = scenario_lead_hero_ids + tavern_vanguard_hero_ids
     expected_identity_sprites = {
         hero_id: (
             f"hero_signature_{hero_id.removeprefix('hero_')}"
             if hero_id in signature_hero_ids
-            else f"hero_lead_{hero_id.removeprefix('hero_')}"
+            else (
+                f"hero_lead_{hero_id.removeprefix('hero_')}"
+                if hero_id in live_lead_hero_ids
+                else f"hero_tavern_{hero_id.removeprefix('hero_')}"
+            )
         )
-        for hero_id in scenario_lead_hero_ids
+        for hero_id in mapped_hero_ids
     }
-    ensure(isinstance(identity_sprites, dict) and identity_sprites == expected_identity_sprites, errors, "Overworld scenario leads must retain the exact 14 identity-first sprite mappings")
+    ensure(isinstance(identity_sprites, dict) and identity_sprites == expected_identity_sprites, errors, "Overworld hero identity mapping must retain the exact 14 scenario leads plus six tavern vanguards")
     identity_sprite_bytes: list[bytes] = []
     if isinstance(identity_sprites, dict) and isinstance(object_assets, dict):
-        for hero_id in scenario_lead_hero_ids:
+        for hero_id in mapped_hero_ids:
             asset_id = str(identity_sprites.get(hero_id, ""))
             expected_asset_id = expected_identity_sprites[hero_id]
-            group = "signature" if hero_id in signature_hero_ids else "live_leads"
+            group = "signature" if hero_id in signature_hero_ids else ("live_leads" if hero_id in live_lead_hero_ids else "tavern_vanguard")
             expected_runtime_path = f"res://art/overworld/runtime/heroes/{group}/{hero_id}.png"
             expected_source_path = f"res://art/overworld/source/generated/heroes/{group}/{hero_id}_source.png"
             expected_portrait_path = f"res://art/heroes/portraits/{hero_id}.png"
-            ensure(asset_id == expected_asset_id, errors, f"Scenario lead {hero_id} must map to its stable identity sprite id")
+            ensure(asset_id == expected_asset_id, errors, f"Mapped hero {hero_id} must map to its stable identity sprite id")
             entry = object_assets.get(asset_id, {})
-            ensure(isinstance(entry, dict), errors, f"Scenario lead sprite {asset_id} must be defined in object_assets")
+            ensure(isinstance(entry, dict), errors, f"Mapped hero sprite {asset_id} must be defined in object_assets")
             if not isinstance(entry, dict):
                 continue
-            ensure(str(entry.get("path", "")) == expected_runtime_path, errors, f"Scenario lead sprite {asset_id} must own its exact runtime path")
-            ensure(str(entry.get("source_generated", "")) == expected_source_path, errors, f"Scenario lead sprite {asset_id} must retain its generated source provenance")
-            ensure(str(entry.get("source_model", "")) == "built_in_image_gen_identity_preserving_original_sprite", errors, f"Scenario lead sprite {asset_id} must retain its original image-generation provenance")
-            ensure(str(entry.get("identity_reference", "")) == expected_portrait_path, errors, f"Scenario lead sprite {asset_id} must retain its production portrait identity reference")
-            ensure(str(entry.get("assigned_hero_id", "")) == hero_id, errors, f"Scenario lead sprite {asset_id} must remain assigned to exactly one production hero")
+            ensure(str(entry.get("path", "")) == expected_runtime_path, errors, f"Mapped hero sprite {asset_id} must own its exact runtime path")
+            ensure(str(entry.get("source_generated", "")) == expected_source_path, errors, f"Mapped hero sprite {asset_id} must retain its generated source provenance")
+            ensure(str(entry.get("source_model", "")) == "built_in_image_gen_identity_preserving_original_sprite", errors, f"Mapped hero sprite {asset_id} must retain its original image-generation provenance")
+            ensure(str(entry.get("identity_reference", "")) == expected_portrait_path, errors, f"Mapped hero sprite {asset_id} must retain its production portrait identity reference")
+            ensure(str(entry.get("assigned_hero_id", "")) == hero_id, errors, f"Mapped hero sprite {asset_id} must remain assigned to exactly one production hero")
             runtime_path = res_path_to_disk(expected_runtime_path)
             source_path = res_path_to_disk(expected_source_path)
             portrait_path = res_path_to_disk(expected_portrait_path)
-            ensure(runtime_path.is_file() and png_size(runtime_path) == (512, 512), errors, f"Scenario lead sprite {asset_id} must be an exact 512x512 runtime PNG")
-            ensure(source_path.is_file(), errors, f"Scenario lead sprite {asset_id} is missing its high-resolution generated source")
-            ensure(portrait_path.is_file(), errors, f"Scenario lead sprite {asset_id} is missing its production portrait identity reference")
-            ensure(Path(f"{runtime_path}.import").is_file(), errors, f"Scenario lead sprite {asset_id} is missing runtime Godot import metadata")
-            ensure(Path(f"{source_path}.import").is_file(), errors, f"Scenario lead sprite {asset_id} is missing source Godot import metadata")
+            ensure(runtime_path.is_file() and png_size(runtime_path) == (512, 512), errors, f"Mapped hero sprite {asset_id} must be an exact 512x512 runtime PNG")
+            ensure(source_path.is_file(), errors, f"Mapped hero sprite {asset_id} is missing its high-resolution generated source")
+            ensure(portrait_path.is_file(), errors, f"Mapped hero sprite {asset_id} is missing its production portrait identity reference")
+            ensure(Path(f"{runtime_path}.import").is_file(), errors, f"Mapped hero sprite {asset_id} is missing runtime Godot import metadata")
+            ensure(Path(f"{source_path}.import").is_file(), errors, f"Mapped hero sprite {asset_id} is missing source Godot import metadata")
             if runtime_path.is_file():
                 payload = runtime_path.read_bytes()
-                ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Scenario lead sprite {asset_id} must retain a real alpha channel")
+                ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Mapped hero sprite {asset_id} must retain a real alpha channel")
                 identity_sprite_bytes.append(payload)
             if source_path.is_file():
                 source_payload = source_path.read_bytes()
-                ensure(len(source_payload) >= 26 and source_payload[25] in {4, 6}, errors, f"Scenario lead source {asset_id} must retain a real alpha channel")
-    ensure(len(identity_sprite_bytes) == 14 and len(set(identity_sprite_bytes)) == 14, errors, "All 14 scenario-lead hero runtime PNG payloads must be distinct")
-    ensure(not set(identity_sprite_bytes).intersection(sprite_bytes), errors, "Scenario-lead hero runtime PNGs must not reuse faction fallback payloads")
+                ensure(len(source_payload) >= 26 and source_payload[25] in {4, 6}, errors, f"Mapped hero source {asset_id} must retain a real alpha channel")
+    ensure(len(identity_sprite_bytes) == 20 and len(set(identity_sprite_bytes)) == 20, errors, "All 20 mapped hero runtime PNG payloads must be distinct")
+    ensure(not set(identity_sprite_bytes).intersection(sprite_bytes), errors, "Mapped hero runtime PNGs must not reuse faction fallback payloads")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_TAVERN_HERO_IDS" in packaging_text, errors, f"{packaging_path.name} must audit imported metadata and textures for the tavern-vanguard hero sprites in the exported PCK")
+        ensure('bool(terrain_payload["tavern_hero_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail the release export when tavern-vanguard hero sprites are absent")
+        for hero_id in tavern_vanguard_hero_ids:
+            ensure(f'"{hero_id}"' in packaging_text, errors, f"{packaging_path.name} is missing packaged tavern-vanguard hero identity {hero_id}")
     scenarios = load_json(CONTENT_DIR / "scenarios.json").get("items", [])
     scenario_starts = {str(scenario.get("id", "")): str(scenario.get("hero_id", "")) for scenario in scenarios if isinstance(scenario, dict)} if isinstance(scenarios, list) else {}
     ensure(len(scenario_starts) == 24, errors, "Scenario-lead identity adoption must retain all 24 authored scenario starts")
@@ -47589,10 +47608,15 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"',
         'const COMMAND_PENNANT_MODEL := "compact_player_command_flag"',
-        'const EXPECTED_HERO_ASSETS := {', 'const ALL_SCENARIO_STARTS := {',
+        'const EXPECTED_HERO_ASSETS := {', 'const ALL_SCENARIO_STARTS := {', 'const TAVERN_VANGUARD_CASES := [',
         'var scenario_starts := _validate_signature_scenario_starts()',
+        'var tavern_vanguard := _validate_tavern_vanguard_recruitment()',
         'ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)',
         'clone.from_dict(session.to_dict())', '"save_resume_exact": exact',
+        'HeroCommandRules.HALL_BUILDING_ID', 'TownRules.get_tavern_actions(session)',
+        'TownRules.hire_hero_at_active_town(session, hero_id)', 'TownRules.switch_active_hero_at_town(session, hero_id)',
+        'before.get("overworld", {}).get("resources", {})',
+        '"mapped_hero_identity_count": EXPECTED_HERO_ASSETS.size()', '"tavern_vanguard_count": TAVERN_VANGUARD_CASES.size()',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'session.hero_id = String(heroes[0].get("id", ""))', 'session.overworld["player_heroes"] = heroes',
         'var authority_before: Dictionary = session.to_dict()',
@@ -48507,6 +48531,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {',
+        'const EXPECTED_COMMANDER_ASSETS := {', 'const EXPECTED_COMMANDER_PATHS := {',
         'const FALLBACK_CASES := ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"]',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'EnemyAdventureRules.build_raid_commander_state(encounter, hero_id, faction_id, session)',

@@ -324,6 +324,48 @@
       "identity_reference": "res://art/heroes/portraits/hero_seren.png",
       "assigned_hero_id": "hero_seren"
     },
+    "hero_tavern_embercourt_belis_rainledger": {
+      "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_embercourt_belis_rainledger.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_embercourt_belis_rainledger_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_embercourt_belis_rainledger.png",
+      "assigned_hero_id": "hero_embercourt_belis_rainledger"
+    },
+    "hero_tavern_sable": {
+      "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_sable.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_sable_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_sable.png",
+      "assigned_hero_id": "hero_sable"
+    },
+    "hero_tavern_sunvault_calis_sunvein": {
+      "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_sunvault_calis_sunvein.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_sunvault_calis_sunvein_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_sunvault_calis_sunvein.png",
+      "assigned_hero_id": "hero_sunvault_calis_sunvein"
+    },
+    "hero_tavern_thornwake_ardren_briarmarshal": {
+      "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_ardren_briarmarshal.png",
+      "assigned_hero_id": "hero_thornwake_ardren_briarmarshal"
+    },
+    "hero_tavern_brasshollow_daxis_chaincaptain": {
+      "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_daxis_chaincaptain.png",
+      "assigned_hero_id": "hero_brasshollow_daxis_chaincaptain"
+    },
+    "hero_tavern_veilmourn_cela_mistcorsair": {
+      "path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_veilmourn_cela_mistcorsair.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_vanguard/hero_veilmourn_cela_mistcorsair_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_cela_mistcorsair.png",
+      "assigned_hero_id": "hero_veilmourn_cela_mistcorsair"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4331,7 +4373,13 @@
     "hero_brasshollow_oren_bellfounder": "hero_lead_brasshollow_oren_bellfounder",
     "hero_mireclaw_kessa_chainboom": "hero_lead_mireclaw_kessa_chainboom",
     "hero_neral": "hero_lead_neral",
-    "hero_seren": "hero_lead_seren"
+    "hero_seren": "hero_lead_seren",
+    "hero_embercourt_belis_rainledger": "hero_tavern_embercourt_belis_rainledger",
+    "hero_sable": "hero_tavern_sable",
+    "hero_sunvault_calis_sunvein": "hero_tavern_sunvault_calis_sunvein",
+    "hero_thornwake_ardren_briarmarshal": "hero_tavern_thornwake_ardren_briarmarshal",
+    "hero_brasshollow_daxis_chaincaptain": "hero_tavern_brasshollow_daxis_chaincaptain",
+    "hero_veilmourn_cela_mistcorsair": "hero_tavern_veilmourn_cela_mistcorsair"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",

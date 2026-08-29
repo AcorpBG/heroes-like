@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next evidence-backed content or original-art slice from the remaining production gaps."
+    "Measure the next highest-impact live content or unique-art gap and register a bounded implementation slice before changing gameplay or assets."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six original faction field-regalia artifacts with separate inventory and overworld art, one live placement per faction, save/runtime/AI validation, and Linux/Windows export startup. The artifact catalog increased from 15 to 21 and the three-item repeated-pickup total fell from 57 to 51.",
+  "currentNotes": "Completed the six-faction tavern-vanguard identity slice: exact adventure-map hero art coverage increased from 14 to 20 of 60 heroes, with real tavern hire, active-command, save version 9, enemy-commander precedence, visual, core, repository, and Linux/Windows packaged-startup proof. The broader original-content goal remains active; select the next measured gap before implementation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-faction-field-regalia-artifacts-10184",
-  "currentSliceId": "content-faction-field-regalia-artifacts-10184",
-  "currentSliceNotes": "Completed: six original uncommon faction artifacts, six 128x128 inventory icons, six separate grounded 512x512 field sprites, six high-resolution sources, and one exact live pickup replacement per faction. Focused gameplay/save/AI/UI/field/core/static validation and fresh Linux/Windows export startup passed with save version 9 and existing rules contracts.",
+  "currentSlice": "content-tavern-vanguard-hero-overworld-sprites-10184",
+  "currentSliceId": "content-tavern-vanguard-hero-overworld-sprites-10184",
+  "currentSliceNotes": "Completed: six original portrait-faithful 512x512 adventure sprites for Belis Rainledger, Sable Ashmere, Calis Sunvein, Ardren Briar-Marshal, Daxis Chain-Captain, and Cela Mist-Corsair; manifest exact identity resolution increased from 14 to 20; real Wayfarers Hall hire, active-command, save version 9, enemy-commander precedence, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 242844480 bytes with source art excluded. Sable replaced Brakka after repeated built-in generation attempts failed the genuine-alpha acceptance gate. No release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content faction field regalia artifacts 10184",
-  "currentSliceUpdatedAt": "2026-08-28T23:45:28Z",
+  "currentSliceTitle": "content tavern vanguard hero overworld sprites 10184",
+  "currentSliceUpdatedAt": "2026-08-29T00:21:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105182,6 +105182,16 @@
       "startedAt": "2026-08-28T23:17:24Z",
       "notes": "Expanded artifacts from 15 to 21 with six original uncommon faction regalia across banner, boots, and armor slots; added six high-resolution transparent sources, six curated 128x128 inventory icons, and six separate grounded 512x512 field sprites; replaced one repeated pickup in each faction's first live scenario, reducing the three-item repeat total from 57 to 51. Exact effects, collection, auto-equip, AI valuation, save version 9 round trips, 21-artifact icon/field presentation, core/static validation, and fresh Linux/Windows startup exports passed. Both PCKs were 242127536 bytes under the 250 MB cap with source art excluded. No release-ready claim.",
       "completedAt": "2026-08-28T23:45:28Z"
+    },
+    {
+      "id": "content-tavern-vanguard-hero-overworld-sprites-10184",
+      "title": "content tavern vanguard hero overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T00:21:59Z",
+      "startedAt": "2026-08-28T23:50:32Z",
+      "notes": "Expanded exact adventure-map identity coverage from 14 to 20 of 60 production heroes with six distinct portrait-faithful original sprites for Belis Rainledger, Sable Ashmere, Calis Sunvein, Ardren Briar-Marshal, Daxis Chain-Captain, and Cela Mist-Corsair. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, enemy-commander identity precedence, save version 9, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 242844480 bytes with all six runtime textures present and source art excluded. Sable replaced Brakka Mudkeel after repeated built-in generation attempts failed the genuine-alpha gate. No release-ready claim.",
+      "completedAt": "2026-08-29T00:21:59Z"
     }
   ],
   "project": "heroes-like",
@@ -105726,7 +105736,7 @@
   ],
   "summary": "Completed proportional Overworld town scaling with authored and Large RMG rendering, unchanged interaction/save authority, and bounded Linux/Windows export-startup validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-28T23:45:28Z",
+  "updatedAt": "2026-08-28T23:50:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

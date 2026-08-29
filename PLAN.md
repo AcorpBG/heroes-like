@@ -24,7 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-faction-field-regalia-artifacts-10184`.
+- Selected implementation slice: `content-tavern-vanguard-hero-overworld-sprites-10184`.
+
+## Tavern Vanguard Hero Overworld Sprites
+
+id: `content-tavern-vanguard-hero-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- all 60 production heroes have authored identities and curated portraits, but only the 14 scenario leads own distinct adventure-map sprites, leaving 46 recruitable commanders on six faction-generic figures after tavern hire;
+- Belis Rainledger, Sable Ashmere, Calis Sunvein, Ardren Briar-Marshal, Daxis Chain-Captain, and Cela Mist-Corsair are high-visibility unmapped commanders exposed by the live tavern rosters in the six factions' first scenarios; Ardren and Daxis also appear in representative enemy-commander flow.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each selected tavern vanguard, preserving the hero's existing portrait identity, faction materials, archetype, readable small-scale silhouette, grounding, focus, and command-pennant clearance;
+- expand the manifest-owned hero-id mapping from 14 to 20 exact identities while keeping the remaining 40 heroes on the existing faction fallback and preserving renderer, movement, town-footprint, fog, and save ownership;
+- prove each selected hero is offered and can be hired through the real Wayfarers Hall authority in its faction's first scenario, then materializes with exact identity art after active-command switch and save/resume.
+
+Completion criteria:
+- the six generated sources and six curated runtime sprites are distinct from one another, their production portraits, all existing identity sprites, and faction fallbacks, with exact manifest provenance and source art excluded from release exports;
+- River Pass, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim expose the intended hero through their live tavern action, charge the authored cost, add exactly one commander, retain save version 9, and resolve the exact mapped sprite;
+- inspected 1280x720 and 1920x1080 captures, tavern recruitment/identity/movement/town/fog/fallback/save runtime, core and repository checks, and bounded Linux/Windows export startup pass.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no hero stat, spell, specialty, recruitment-order, economy, encounter, AI, movement, save-schema, RMG, renderer-architecture, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- generated and curated six original transparent full-body adventure-map sprites for Belis Rainledger, Sable Ashmere, Calis Sunvein, Ardren Briar-Marshal, Daxis Chain-Captain, and Cela Mist-Corsair, preserving the existing portrait identities while giving every faction a distinct tavern-vanguard silhouette;
+- expanded manifest-owned exact hero identity coverage from 14 to 20 without changing the remaining faction fallback, renderer ownership, movement, fog, town-footprint behavior, or save version 9;
+- proved all six commanders through their real first-scenario Wayfarers Hall actions, authored gold costs, exactly-one-hero recruitment, active-command switching, exact field sprites, and save/resume; enemy commanders now prefer those exact identities where mapped and retain the faction/unit fallbacks where unmapped or malformed;
+- inspected live 1280x720 and 1920x1080 captures and passed focused hero, enemy-commander, core, repository, Linux export/headless boot, and Windows export/fresh-Wine startup checks. Both release PCKs were 242844480 bytes under the 250 MB cap, contained all six runtime textures, and excluded generated source art.
 
 ## Faction Field Regalia Artifacts And Original Art
 
