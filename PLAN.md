@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-three-creature-bank-forts-10184`; select the next runtime-backed content family before beginning more implementation.
-- Package boundary: both release exports now measure 249089640 bytes, 910360 bytes below the unchanged 250000000-byte ceiling. The compact creature-bank opened atlas ships while generated source originals and development reports remain excluded on both platforms.
+- Latest completed implementation slice: `content-seven-minor-guarded-caches-10184`.
+- Package boundary: both release exports now measure 249127628 bytes, 872372 bytes below the unchanged 250000000-byte ceiling. The compact minor-cache opened atlas ships while generated source originals and development reports remain excluded on both platforms.
+
+## Seven Minor Guarded Caches
+
+id: `content-seven-minor-guarded-caches-10184`
+
+Status: completed.
+
+Completion result:
+- all seven remaining minor guarded caches now have live exact guard-front links across seven existing scenarios, including the newly placed Orchard Levy Watch, raising Batch 006 to twenty-four live sites and leaving only its eight route-hybrid sites metadata-only;
+- the family now executes six distinct supported reward paths: a four-tile scouting ring, two deterministic guarded-site artifacts, Survey Chain spell learning, persistent readiness/recovery town support, a scenario-reactive moss-oath objective flag, and a two-stack neutral frost muster, alongside each authored resource payload;
+- seven original transparent claimed-state edits preserve the exact closed landmark identities in one compact 336x48 runtime atlas, with generated source provenance retained outside release packages;
+- the single consolidated seven-case smoke passed exact guard blocking, production battle construction, rewards, claimed art, repeat safety, and save-v9 round trips; repository validation and matching Linux/Windows 249127628-byte package boots also passed.
+
+Current finding:
+- Toll Ruin, Wreck Locker, Amber Reliquary, Slag Purse Vault, Old Orchard Crypt, Moss Oath Cache, and Frost Tithe Cellar are the complete remaining minor-guarded-reward family in Batch 006 and remain metadata-only despite exact closed art, authored rewards, and exact neutral-watch contracts;
+- six matching watch encounters already have live placements on suitable faction trial maps, while Old Orchard Crypt already has a dormant placement with an adjacent free tile for its missing Orchard Levy Watch;
+- the seven reward identities map to supported live scouting, artifact, overworld-spell, persistent town-support, objective-flag, and neutral-recruit behaviors, so the complete family can become real content without a new save schema or combat formula.
+
+Implementation boundary:
+- activate all seven minor guarded caches with exact guard-front links and authored resource rewards across seven existing scenarios, adding only the missing Orchard Levy Watch placement;
+- give Toll Ruin a scouting ring, Wreck Locker and Old Orchard Crypt deterministic standard-table artifacts, Amber Reliquary an overworld survey spell, Slag Purse Vault persistent town support, Moss Oath Cache a scenario-reactive objective flag, and Frost Tithe Cellar a neutral recruit bundle;
+- create seven original transparent opened/depleted landmark states from their exact closed identities, pack them into one compact 336x48 runtime atlas, and switch only after a successful claim;
+- preserve save version 9, deterministic combat and rewards, existing required objectives, accessibility descriptions, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all seven caches block before their exact watch clears, construct the production guard battle, grant each authored resource and special reward once, reject repeat claims without mutation, and round-trip exactly through save version 9;
+- each cache renders its existing exact closed landmark before claim and a distinct opened/depleted state afterward with genuine alpha and strict fallback behavior;
+- one consolidated seven-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no route-hybrid activation, new faction, unit definition, hero, town, building, battle formula, strategic-AI algorithm, RMG, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes cache, vault, encounter, reward, landmark, name, text, or protected visual expression.
 
 ## Three Creature-Bank Forts
 

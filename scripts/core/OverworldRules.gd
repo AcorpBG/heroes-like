@@ -1110,6 +1110,9 @@ static func _collect_resource_node_result(
 	var recruit_message := _grant_site_claim_recruits(session, _resource_site_claim_recruits(site))
 	if recruit_message != "":
 		messages.append(recruit_message)
+	var claim_flags := _resource_site_claim_flags(site)
+	for flag_key in claim_flags.keys():
+		session.flags[String(flag_key)] = claim_flags[flag_key]
 	var spell_message := _learn_site_spell(session, String(site.get("learn_spell_id", "")))
 	if spell_message != "":
 		messages.append(spell_message)
@@ -1135,10 +1138,14 @@ static func _collect_resource_node_result(
 	if bool(artifact_reward.get("applied", false)):
 		mutation_facts["artifact_ids"] = [String(artifact_reward.get("artifact_id", ""))]
 		mutation_facts["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
+	if not claim_flags.is_empty():
+		mutation_facts["flags"] = Array(claim_flags.keys(), TYPE_STRING, "", null)
 	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, mutation_facts)
 	if site_vision_radius > 0:
 		result["site_vision_radius"] = site_vision_radius
 		result["site_reveal_tiles"] = site_reveal_tiles
+	if not claim_flags.is_empty():
+		result["site_claim_flags"] = claim_flags.duplicate(true)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
 	result["interaction_result"] = _interactable_result_payload("resource_site", node, mutation_facts, topology_facts)
@@ -6026,6 +6033,10 @@ static func _resource_site_claim_recruits(site: Dictionary) -> Dictionary:
 		if roster_recruits is Dictionary:
 			return roster_recruits
 	return {}
+
+static func _resource_site_claim_flags(site: Dictionary) -> Dictionary:
+	var claim_flags = site.get("claim_flags", {})
+	return claim_flags.duplicate(true) if claim_flags is Dictionary else {}
 
 static func _resource_site_weekly_recruits(site: Dictionary) -> Dictionary:
 	var recruits = site.get("weekly_recruits", {})

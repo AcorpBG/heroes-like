@@ -1,0 +1,23 @@
+{
+  "schema": "heroes_like_generated_resource_site_art_v1",
+  "generation_mode": "built_in_image_gen",
+  "imagegen_use_case": "precise-object-edit",
+  "family": "minor_guarded_cache_opened_wave1",
+  "prompt_summary": "Preserve each original closed landmark silhouette and painterly strategy-map style while showing a clearly opened, claimed, depleted, or safely occupied state on transparent background.",
+  "sources": [
+    {"site_id":"site_toll_ruin","path":"toll_ruin_opened_source.png","sha256":"4bea1a56d8e6bf8ed57155e0379297995e0a5c8201d6030c6359bb5dfbdfc2de","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3c4a8288-647e-4474-b7b0-e4887a582846.png","atlas_region":[0,0,48,48]},
+    {"site_id":"site_wreck_locker","path":"wreck_locker_opened_source.png","sha256":"baecce82d01022885c22f8d91cdf845059d93322e5cc9fff68fa9e26392577ea","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3541f552-924d-40c9-92b0-f04a29e6420d.png","atlas_region":[48,0,48,48]},
+    {"site_id":"site_amber_reliquary","path":"amber_reliquary_opened_source.png","sha256":"4b6586649fa8aea6b59d4238cbe855b27a8b9bef6aa35aea9819b8d82b4f08af","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c867c977-a09e-447e-a917-045bbfda10d3.png","atlas_region":[96,0,48,48]},
+    {"site_id":"site_slag_purse_vault","path":"slag_purse_vault_opened_source.png","sha256":"3a87d5aeaadbd41546c0383f6e69480bff6f5db547404b4d504122cc68e46fac","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-01c87643-7bb7-487a-b240-635059747c41.png","atlas_region":[144,0,48,48]},
+    {"site_id":"site_old_orchard_crypt","path":"old_orchard_crypt_opened_source.png","sha256":"b3bfb436506429148f2598756552cb7b6da94ca1ed7768c8275357ed714c3ca3","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f931dbb6-e861-4c30-a664-3bc8654a13a7.png","atlas_region":[192,0,48,48]},
+    {"site_id":"site_moss_oath_cache","path":"moss_oath_cache_opened_source.png","sha256":"834ab56e416249bfc373daa084d3b41175558454c7a59ea2c64ce68972aceae7","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-eea5a67c-a7d2-415b-90d3-43d4b7e85c79.png","atlas_region":[240,0,48,48]},
+    {"site_id":"site_frost_tithe_cellar","path":"frost_tithe_cellar_opened_source.png","sha256":"a60c48de0e694b08d76172b7db394e4e76ac9ad389d66189f1f1eb4d8f11abf2","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ab2ce914-afc2-4d36-a9a0-4af2a8361955.png","atlas_region":[288,0,48,48]}
+  ],
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+    "size": [336, 48],
+    "cell_size": [48, 48],
+    "sha256": "1c6c5c965a8eb371321afff30f94c30faf2747bc85875e4d4a65d0e7bd7d8c8d",
+    "package_policy": "runtime atlas ships; development source PNGs and this manifest remain excluded"
+  }
+}
