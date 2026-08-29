@@ -24,8 +24,38 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-recurring-encounter-landmarks-wave2-10184`.
-- Package boundary: both release exports now measure 249993744 bytes, leaving 6256 bytes below the strict 250000000-byte PCK ceiling; the slice extends the existing imported atlas without adding a second runtime texture or another loading system, and full generated sources remain outside release packages.
+- Most recently completed implementation slice: `content-high-difficulty-encounter-landmarks-wave3-10184`.
+- Package boundary: both release exports now measure 246122412 bytes, 3877588 bytes below the unchanged 250000000-byte ceiling. Development-only `reports/` payloads and generated source originals are excluded on both platforms while remaining preserved in the working tree.
+
+## High-Difficulty Encounter Landmarks Wave 3
+
+id: `content-high-difficulty-encounter-landmarks-wave3-10184`
+
+Status: completed.
+
+Current finding:
+- exact live Overworld identity now covers all 60 heroes, all 15 towns, and 30 of 63 authored encounters; every authored high-difficulty encounter has exact art while 33 medium/low-difficulty identities still use the fallback chain;
+- Tidepool Skiffyard Watch, Survey Guard, Road Chaplains, Reedbarrow Chain, Nightglass Dominion, Mirror Causeway, Mill Levies, Halo Reserve, Daybreak Matrix, Daybreak Array, and Basalt Gatehouse Watch closed the prior high-difficulty exact-art gaps across neutral, Embercourt, Mireclaw, and Sunvault content;
+- three local artifact-retention JSON reports with no runtime consumer remain preserved in the working tree but no longer enter either release PCK, reclaiming 3891070 packaged bytes before the compact atlas extension.
+
+Implementation boundary:
+- exclude development-only `reports/` payloads from both release presets and prove the PCK contains no `reports/` entry while preserving the files in the working tree;
+- create eleven original, silhouette-distinct field landmarks from each encounter's exact terrain, commander, army, battlefield tags, and objective language, then append immutable 48x48 regions to the existing recurring atlas;
+- register exact encounter/faction-or-neutral/role ownership and generated-source provenance through the existing commander-first exact-encounter/faction/unit/generic data path, with no new runtime texture or resolver.
+
+Completion criteria:
+- eleven byte-distinct original transparent sources and one compact twenty-four-region runtime atlas retain genuine alpha, readable non-color silhouettes, exact content ownership, and source-art/report package exclusion;
+- focused runtime proves all twenty-four exact regions, the eleven high-difficulty live identities, fallback order, invalid/missing fail-closed behavior, descriptions, and unchanged encounter/session/save-version-9 authority;
+- inspected 1280x720 and 1920x1080 captures, existing encounter/core/repository validation, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling with no packaged `reports/` entries.
+
+Completed evidence:
+- Tidepool Skiffyard Watch, Survey Guard, Road Chaplains, Reedbarrow Chain, Nightglass Dominion, Mirror Causeway, Mill Levies, Halo Reserve, Daybreak Matrix, Daybreak Array, and Basalt Gatehouse Watch now own eleven byte-distinct original transparent generated sources and immutable 48x48 regions appended to the single 1152x48 recurring landmark atlas; all thirteen earlier regions retain their coordinates;
+- live Overworld proof resolves all twenty-four exact regions at 1280x720 and 1920x1080, rejects invalid and missing regions, preserves commander-first exact/faction/unit/generic fallback order, and leaves encounter/session/save-version-9 authority unchanged; inspected captures show distinct readable silhouettes on their representative terrains;
+- repository, signature-encounter, enemy-commander, core, and Linux/Windows package checks pass. Both release PCKs are 246122412 bytes, 3877588 bytes below the unchanged ceiling, with no `reports/` or generated source payloads; the three preserved development reports formerly contributed 3891070 packaged bytes;
+- exact encounter identity is now 30 of 63 and every authored high-difficulty encounter has exact art. The remaining 33 medium/low-difficulty identities and unrelated release gaps remain open; this does not claim whole-game or release readiness.
+
+Non-goals:
+- no deletion or modification of user artifact-retention reports; no copied Heroes encounter, object, creature, icon, heraldry, name, text, or protected visual expression; no encounter rules, armies, balance, placement, objectives, AI, battle, save schema, RMG, signing, publication, whole-game, or release-readiness claim.
 
 ## Recurring Encounter Landmarks Wave 2
 

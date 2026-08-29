@@ -39,6 +39,7 @@ FORBIDDEN_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/homm3_local_prototype/",
     "art/overworld/runtime/terrain_tiles/generated/",
 )
+FORBIDDEN_DEVELOPMENT_PCK_PREFIXES = ("reports/",)
 REQUIRED_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/terrain_tiles/base/",
     "art/overworld/runtime/terrain_tiles/detail/",
@@ -414,6 +415,8 @@ def pck_terrain_payload_summary() -> dict:
         "entry_count": 0,
         "forbidden_prefixes": list(FORBIDDEN_TERRAIN_PCK_PREFIXES),
         "forbidden_entries": [],
+        "forbidden_development_prefixes": list(FORBIDDEN_DEVELOPMENT_PCK_PREFIXES),
+        "forbidden_development_entries": [],
         "required_prefix_counts": {prefix: 0 for prefix in REQUIRED_TERRAIN_PCK_PREFIXES},
         "required_entries_present": False,
         "required_artifact_field_import_entries": list(REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES),
@@ -536,6 +539,9 @@ def pck_terrain_payload_summary() -> dict:
                 for prefix in FORBIDDEN_TERRAIN_PCK_PREFIXES:
                     if entry_path.startswith(prefix):
                         summary["forbidden_entries"].append(entry_path)
+                for prefix in FORBIDDEN_DEVELOPMENT_PCK_PREFIXES:
+                    if entry_path.startswith(prefix):
+                        summary["forbidden_development_entries"].append(entry_path)
                 for prefix in REQUIRED_TERRAIN_PCK_PREFIXES:
                     if entry_path.startswith(prefix):
                         summary["required_prefix_counts"][prefix] += 1
@@ -679,6 +685,7 @@ def main() -> int:
         and bool(libraries["all_exported"])
         and bool(terrain_payload["valid_directory"])
         and not terrain_payload["forbidden_entries"]
+        and not terrain_payload["forbidden_development_entries"]
         and bool(terrain_payload["required_entries_present"])
         and bool(terrain_payload["artifact_field_entries_present"])
         and bool(terrain_payload["tavern_hero_entries_present"])
@@ -761,6 +768,8 @@ def main() -> int:
         "binary_executable": binary["executable"],
         "linux_libraries_exported": libraries["all_exported"],
         "terrain_pck_forbidden_entry_count": len(terrain_payload["forbidden_entries"]),
+        "development_pck_forbidden_entry_count": len(terrain_payload["forbidden_development_entries"]),
+        "development_reports_pck_excluded": not terrain_payload["forbidden_development_entries"],
         "terrain_pck_required_entries_present": terrain_payload["required_entries_present"],
         "artifact_field_pck_import_entry_count": len(terrain_payload["artifact_field_import_entries"]),
         "artifact_field_pck_texture_count": len(set(terrain_payload["artifact_field_texture_names"])),
