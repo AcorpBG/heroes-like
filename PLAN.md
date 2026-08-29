@@ -24,8 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the ascendant-company batch is complete and the next production-content batch has not yet been selected.
-- Package boundary: both release exports now measure 248443380 bytes, 1556620 bytes below the unchanged 250000000-byte ceiling. All six encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Most recent completed implementation slice: `content-six-faction-waywatch-trials-10184`.
+- Package boundary: both release exports now measure 248516880 bytes, 1483120 bytes below the unchanged 250000000-byte ceiling. All seven encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Waywatch Trials
+
+id: `content-six-faction-waywatch-trials-10184`
+
+Status: completed.
+
+Current finding:
+- every faction retains exactly four fully illustrated production heroes without a player-command scenario, leaving twenty-four of sixty exact hero identities outside authored command play;
+- twenty-six authored encounter definitions remain unplaced, including a complete set of neutral-dwelling watches whose armies, tactical objectives, rewards, units, and guard contracts already exist but never enter an authored battle;
+- sixteen runtime-live mines, support producers, pickups, and caches with exact original map-object art remain unplaced, while several faction and travel artifacts still appear on only one or two maps.
+
+Implementation boundary:
+- author six original skirmish-only 11x6 waywatch trials led by Saren Lockmaster, Orrik Tollreaver, Renn Facetlane, Osmund Pollenglass, Odrik Heatpriest, and Thir Obituary-Ink, raising every faction to seven distinct scenario leads;
+- add six player companies built around each hero's existing mid-ladder faction identity, and place the dormant Cinder Kiln, Roadward Lodge, Cliffhawk Roost, Greenbranch Copse, Obsidian Scar, and Frostwharf House watch encounters as real guarded objectives beside their matching neutral dwellings;
+- activate all sixteen selected runtime-live dormant exact-art sites, add eighteen underused artifact placements, and generate six original transparent watch landmarks in one compact atlas;
+- preserve save version 9, campaign authority, authored encounter and unit rules, deterministic combat, accessibility descriptions, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all six maps appear in skirmish selection, create the intended exact hero/faction/company, expose complete town/economy/objective content, render and resolve the dormant watch encounter, grant authored rewards/flags, and round-trip through save version 9;
+- the six dormant watch definitions become live placed encounters with exact original landmarks, their existing neutral armies and field objectives, and no duplicate encounter or unit definition;
+- all sixteen selected runtime-live dormant sites become authored placements with exact existing art, and the selected low-use artifacts gain live pickup coverage;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete batch, followed by repository validation and Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion evidence:
+- fifty-two active scenarios now expose forty-two distinct lead heroes; Saren, Orrik, Renn, Osmund, Odrik, and Thir each own a complete skirmish trial, six persistent faction companies, and one newly live neutral-watch objective;
+- the batch activates six previously unplaced encounter definitions with their existing twelve neutral unit identities and tactical objectives, sixteen previously unplaced runtime-live exact-art sites, eighteen underused artifacts, twelve towns, sixty resource placements, eighteen battle fronts, and thirty reactive hooks;
+- six original transparent generated sources produce one compact 288x48 imported atlas; the single combined six-case smoke passed exact hero/army/landmark construction, deterministic battle resolution, authored gold and rare-resource rewards, visual captures, and exact save-version-9 round trips;
+- repository validation and matching Linux/Windows release-package startup gates passed at 248516880 bytes, with generated source originals and development reports excluded.
+
+Non-goals:
+- no new unit, spell, artifact, town, building, encounter-rule, battle-formula, AI, save-schema, campaign, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes scenario, map, hero, dwelling, encounter, landmark, name, text, or protected visual expression.
 
 ## Six-Faction Ascendant Companies
 

@@ -5571,6 +5571,42 @@
       "source_generated": "res://art/overworld/source/generated/encounters/ascendant_companies/worldroot_wake_seal_source.png", "source_model": "built_in_image_gen_original_ascendant_company_landmark_atlas",
       "assigned_encounter_id": "encounter_damar_worldroot_wake", "assigned_faction_id": "faction_thornwake", "presentation_role": "worldroot_wake_seal",
       "accessible_description": "A broad living-root arch frames a pale seed crown, crossed by a curved fogglass keel blade, dark chain, and silver mist bells."
+    },
+    "encounter_waywatch_cinder_kiln_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/waywatch_trials/cinder_kiln_watch_source.png", "source_model": "built_in_image_gen_original_waywatch_trial_landmark_atlas",
+      "assigned_encounter_id": "encounter_cinder_kiln_watch", "assigned_affiliation": "neutral", "presentation_role": "cinder_kiln_watch",
+      "accessible_description": "A domed brick kiln sits behind a short mallet barricade beneath two copper-capped vents and paired ember-pot hoists."
+    },
+    "encounter_waywatch_roadward_lodge_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/waywatch_trials/roadward_lodge_watch_source.png", "source_model": "built_in_image_gen_original_waywatch_trial_landmark_atlas",
+      "assigned_encounter_id": "encounter_roadward_lodge_watch", "assigned_affiliation": "neutral", "presentation_role": "roadward_lodge_watch",
+      "accessible_description": "A squat timber toll lodge anchors a long hooked pike gate beside a stone chimney, covered bow rack, and chained yard."
+    },
+    "encounter_waywatch_cliffhawk_roost_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/waywatch_trials/cliffhawk_roost_watch_source.png", "source_model": "built_in_image_gen_original_waywatch_trial_landmark_atlas",
+      "assigned_encounter_id": "encounter_cliffhawk_roost_watch", "assigned_affiliation": "neutral", "presentation_role": "cliffhawk_roost_watch",
+      "accessible_description": "Twin narrow cliff spires carry sheltered slinger nests, rope bridges, a central wind perch, and hooked architectural finials."
+    },
+    "encounter_waywatch_greenbranch_copse_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/waywatch_trials/greenbranch_copse_watch_source.png", "source_model": "built_in_image_gen_original_waywatch_trial_landmark_atlas",
+      "assigned_encounter_id": "encounter_greenbranch_copse_watch", "assigned_affiliation": "neutral", "presentation_role": "greenbranch_copse_watch",
+      "accessible_description": "A circular living coppice palisade surrounds a raised leaf-roofed platform between two tall sapwhistle horn posts."
+    },
+    "encounter_waywatch_obsidian_scar_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/waywatch_trials/obsidian_scar_watch_source.png", "source_model": "built_in_image_gen_original_waywatch_trial_landmark_atlas",
+      "assigned_encounter_id": "encounter_obsidian_scar_watch", "assigned_affiliation": "neutral", "presentation_role": "obsidian_scar_watch",
+      "accessible_description": "Overlapping black-glass shield slabs ring a low fissure trench between two compact ash-dart rack towers."
+    },
+    "encounter_waywatch_frostwharf_house_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/waywatch_trials/frostwharf_house_watch_source.png", "source_model": "built_in_image_gen_original_waywatch_trial_landmark_atlas",
+      "assigned_encounter_id": "encounter_frostwharf_house_watch", "assigned_affiliation": "neutral", "presentation_role": "frostwharf_house_watch",
+      "accessible_description": "A steep-roofed wharf house stands on short frozen pilings beside a crescent pier, cutter cradle, and paired throwing racks."
     }
   },
   "resource_site_sprites": {
@@ -6024,7 +6060,13 @@
     "encounter_thalen_foundry_eclipse": "encounter_ascendant_foundry_eclipse_gauge",
     "encounter_merek_cinder_writ": "encounter_ascendant_cinderwrit_graft_brazier",
     "encounter_vellum_gorefen_audit": "encounter_ascendant_gorefen_debt_totem",
-    "encounter_damar_worldroot_wake": "encounter_ascendant_worldroot_wake_seal"
+    "encounter_damar_worldroot_wake": "encounter_ascendant_worldroot_wake_seal",
+    "encounter_cinder_kiln_watch": "encounter_waywatch_cinder_kiln_watch",
+    "encounter_roadward_lodge_watch": "encounter_waywatch_roadward_lodge_watch",
+    "encounter_cliffhawk_roost_watch": "encounter_waywatch_cliffhawk_roost_watch",
+    "encounter_greenbranch_copse_watch": "encounter_waywatch_greenbranch_copse_watch",
+    "encounter_obsidian_scar_watch": "encounter_waywatch_obsidian_scar_watch",
+    "encounter_frostwharf_house_watch": "encounter_waywatch_frostwharf_house_watch"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

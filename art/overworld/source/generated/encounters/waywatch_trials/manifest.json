@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_isometric_waywatch_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/waywatch_trials/waywatch_trials_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "2b6795ff14bc60f77831769912d3240997983fea6298910a7eea36272748a123",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_44x44_and_center_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six original painterly high-three-quarter waywatch landmarks with strong non-color silhouettes and genuine transparency: fortified kiln, toll lodge, cliff roost, living copse, obsidian trench fort, and frozen wharf house; no characters, text, logos, terrain cards, watermarks, or copied franchise expression.",
+  "items": [
+    {"encounter_id":"encounter_cinder_kiln_watch","asset_id":"encounter_waywatch_cinder_kiln_watch","source_path":"res://art/overworld/source/generated/encounters/waywatch_trials/cinder_kiln_watch_source.png","source_sha256":"4d4ccbdd4fb31f836d1f65d2010773cdae42b13fa9c1c02bdb58215d246560c0","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-859b14e0-4b1b-4221-9cdf-66fe414d3df3.png","atlas_region":[0,0,48,48],"presentation_role":"cinder_kiln_watch"},
+    {"encounter_id":"encounter_roadward_lodge_watch","asset_id":"encounter_waywatch_roadward_lodge_watch","source_path":"res://art/overworld/source/generated/encounters/waywatch_trials/roadward_lodge_watch_source.png","source_sha256":"e1fd4b27de3198ec43cdc4979e6835732125f819b01176a4726a8dedd8c86583","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2b1cdfa8-28d9-4085-bf59-0bb0b9074689.png","atlas_region":[48,0,48,48],"presentation_role":"roadward_lodge_watch"},
+    {"encounter_id":"encounter_cliffhawk_roost_watch","asset_id":"encounter_waywatch_cliffhawk_roost_watch","source_path":"res://art/overworld/source/generated/encounters/waywatch_trials/cliffhawk_roost_watch_source.png","source_sha256":"76af7f1b9c3b8a3f482c3037c00666cc4400f2447748a73ea9990a49c3e337dc","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-00afd322-406f-4acf-a350-29480511cf61.png","atlas_region":[96,0,48,48],"presentation_role":"cliffhawk_roost_watch"},
+    {"encounter_id":"encounter_greenbranch_copse_watch","asset_id":"encounter_waywatch_greenbranch_copse_watch","source_path":"res://art/overworld/source/generated/encounters/waywatch_trials/greenbranch_copse_watch_source.png","source_sha256":"a88ab20c7a9602b4c1b03db672a45601d9e82619a68447f0cf3d73354fbecfc0","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-15f06418-bb45-4018-b00c-20ac6dae7f65.png","atlas_region":[144,0,48,48],"presentation_role":"greenbranch_copse_watch"},
+    {"encounter_id":"encounter_obsidian_scar_watch","asset_id":"encounter_waywatch_obsidian_scar_watch","source_path":"res://art/overworld/source/generated/encounters/waywatch_trials/obsidian_scar_watch_source.png","source_sha256":"3487e1d3e8461528a2063251953377cda885c392c69f981036fee7b485e62c02","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e2fd667b-9179-4646-9b18-c47253114f6b.png","atlas_region":[192,0,48,48],"presentation_role":"obsidian_scar_watch"},
+    {"encounter_id":"encounter_frostwharf_house_watch","asset_id":"encounter_waywatch_frostwharf_house_watch","source_path":"res://art/overworld/source/generated/encounters/waywatch_trials/frostwharf_house_watch_source.png","source_sha256":"1aabfa5fdecc24135c40dcdd15601c48abc3eafd0791ee8641d44359aa076e8a","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8a97d03c-704b-4d42-8965-cbd4a3df4a66.png","atlas_region":[240,0,48,48],"presentation_role":"frostwharf_house_watch"}
+  ]
+}
