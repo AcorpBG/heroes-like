@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_resource_site_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+  "runtime_atlas_size": [1440, 48],
+  "runtime_atlas_sha256": "6c7a4e6a83a5e92d14087fcbc42f251057f24bc8ab3c3e5573451c4dcbf78898",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_44x44_and_south_anchor_on_transparent_48x48_cell",
+  "prompt_set_summary": "Thirteen original hand-painted orthographic claimed-state neutral-dwelling landmarks derived from each live roster, biome, service, and scenario identity; strong non-color silhouettes; genuine transparency; no characters, text, logos, copied franchise expression, terrain cards, or opaque backdrops.",
+  "items": [
+    {
+      "resource_site_id": "site_free_company_yard",
+      "asset_id": "resource_site_neutral_roadward_lodge",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/roadward_lodge_source.png",
+      "source_sha256": "441b7d377002cec321cfbe6fa5debfdb3e0f6b5c99fbd96a3a6a2af5e0cf0480",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e869b651-06fa-4b3e-9fef-299724b846b8.png",
+      "atlas_region": [816, 0, 48, 48],
+      "presentation_role": "toll_gate_pikehook_lodge"
+    },
+    {
+      "resource_site_id": "site_fenhound_kennels",
+      "asset_id": "resource_site_neutral_fenhound_kennels",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/fenhound_kennels_source.png",
+      "source_sha256": "c88fb14aa31afa19bbef261aa7aa31cf068650ca8a040d37b50d631e31d3c1d2",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-90a595ae-017d-482a-9094-033a7813ed2a.png",
+      "atlas_region": [864, 0, 48, 48],
+      "presentation_role": "three_bay_mossglass_kennel"
+    },
+    {
+      "resource_site_id": "site_cliffhawk_roost",
+      "asset_id": "resource_site_neutral_cliffhawk_roost",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/cliffhawk_roost_source.png",
+      "source_sha256": "9953ff1b895c8f1c97f4a271bb1ddf4303d45f832ca632a708b27abe201d8ff8",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-755ec588-eb30-4872-bed9-9fd5a4b90f8e.png",
+      "atlas_region": [912, 0, 48, 48],
+      "presentation_role": "twin_spire_hawk_roost"
+    },
+    {
+      "resource_site_id": "site_orchard_levy",
+      "asset_id": "resource_site_neutral_orchard_levy",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/orchard_levy_source.png",
+      "source_sha256": "7456404e38fd81e486498dff21487edc7afaa06b4526fa904d6a7e8d0f407148",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-bc0dbfc6-794d-4a1d-ad71-5a08899ac271.png",
+      "atlas_region": [960, 0, 48, 48],
+      "presentation_role": "fruit_bough_levy_yard"
+    },
+    {
+      "resource_site_id": "site_kite_signal_eyrie",
+      "asset_id": "resource_site_neutral_kite_signal_eyrie",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/kite_signal_eyrie_source.png",
+      "source_sha256": "62040991a03883ff0fc5442b7ba2b9c347d5c1f1c7f81e9c16fcf104f09c1646",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b8fdfea0-d6ac-4958-8f0b-ab0a42990862.png",
+      "atlas_region": [1008, 0, 48, 48],
+      "presentation_role": "diamond_kite_signal_eyrie"
+    },
+    {
+      "resource_site_id": "site_greenbranch_copse",
+      "asset_id": "resource_site_neutral_greenbranch_copse",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/greenbranch_copse_source.png",
+      "source_sha256": "0f19814883766e14347acea21857d52e3c15586fdcfaf2511ae56df2558f014e",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a680be19-7c04-4134-acfd-16133d56e764.png",
+      "atlas_region": [1056, 0, 48, 48],
+      "presentation_role": "living_tree_copse_lodge"
+    },
+    {
+      "resource_site_id": "site_harbor_pilot_house",
+      "asset_id": "resource_site_neutral_harbor_pilot_house",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/harbor_pilot_house_source.png",
+      "source_sha256": "a988a236231856ae1d28f7b88e0ca83014dbf77fcbb95c751463a1157e65afe2",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0f90459e-a7fb-48df-8eb1-1b689d341539.png",
+      "atlas_region": [1104, 0, 48, 48],
+      "presentation_role": "harbor_pilot_signal_tower"
+    },
+    {
+      "resource_site_id": "site_lantern_warren",
+      "asset_id": "resource_site_neutral_lantern_warren",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/lantern_warren_source.png",
+      "source_sha256": "e854c425498caef3a8df10f33a3b16dd60d2d0a0620e6f178ebdae3ae36fe3df",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-27b0737c-36da-4ee4-93da-adf04a303a0e.png",
+      "atlas_region": [1152, 0, 48, 48],
+      "presentation_role": "three_mouth_lantern_warren"
+    },
+    {
+      "resource_site_id": "site_bogbell_croft",
+      "asset_id": "resource_site_neutral_bogbell_croft",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/bogbell_croft_source.png",
+      "source_sha256": "7588b7beb6bd09dfcdfb5aa2c84a90a3dbbc809ddd169c5bc75e3e42deed885f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-972de866-7ca1-4592-b485-ecb7701b2d43.png",
+      "atlas_region": [1200, 0, 48, 48],
+      "presentation_role": "giant_bell_stilt_croft"
+    },
+    {
+      "resource_site_id": "site_milestone_arsenal",
+      "asset_id": "resource_site_neutral_milestone_arsenal",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/milestone_arsenal_source.png",
+      "source_sha256": "b0dd681e23ed2200a9d5d80e8fd2c087b0d91c2cc37c334711fbcc995fddc4c1",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-924e41d9-f0f6-4b58-9dff-3ec0819a7763.png",
+      "atlas_region": [1248, 0, 48, 48],
+      "presentation_role": "milestone_obelisk_arsenal"
+    },
+    {
+      "resource_site_id": "site_frostwharf_house",
+      "asset_id": "resource_site_neutral_frostwharf_house",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/frostwharf_house_source.png",
+      "source_sha256": "c81be35dc00387b46c3b32230bf55042c3f55d58f684597c6f13d3b83472153c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-de6d5463-5209-484e-8a94-7ce3d43d9300.png",
+      "atlas_region": [1296, 0, 48, 48],
+      "presentation_role": "crescent_cutter_wharf_house"
+    },
+    {
+      "resource_site_id": "site_charcoal_burners",
+      "asset_id": "resource_site_neutral_charcoal_burners",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/charcoal_burners_source.png",
+      "source_sha256": "343cedfecfea818f1189a505c2a1a87aa39bcf8ac9217a0665a16ea991d39e42",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-16249026-4c41-4f62-a4b8-e8205d74d33a.png",
+      "atlas_region": [1344, 0, 48, 48],
+      "presentation_role": "three_vent_charcoal_clamp"
+    },
+    {
+      "resource_site_id": "site_basalt_gatehouse",
+      "asset_id": "resource_site_neutral_basalt_gatehouse",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave2/basalt_gatehouse_source.png",
+      "source_sha256": "d164d4e221f860f0de8ab26744a366d810e35ad0fc832c5bf67ba199963a741f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6bac623a-2409-4cb5-9aff-3efdbd61ccf3.png",
+      "atlas_region": [1392, 0, 48, 48],
+      "presentation_role": "twin_tower_basalt_gatehouse"
+    }
+  ]
+}

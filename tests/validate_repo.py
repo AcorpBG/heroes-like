@@ -1290,8 +1290,8 @@ OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
     "site_wood_wagon": "lumber_wagon",
     "site_ore_crates": "ore_crates",
     "site_waystone_cache": "ruined_obelisk",
-    "site_fenhound_kennels": "kennel",
-    "site_cliffhawk_roost": "falconers_nest",
+    "site_fenhound_kennels": "resource_site_neutral_fenhound_kennels",
+    "site_cliffhawk_roost": "resource_site_neutral_cliffhawk_roost",
     "site_watchtower_beacon": "watchtower",
     "site_brightwood_sawmill": "sawmill",
     "site_ridge_quarry": "stone_quarry",
@@ -42926,7 +42926,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
                 expected_canvas = (1488, 48)
             elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
-                expected_canvas = (816, 48)
+                expected_canvas = (1440, 48)
             else:
                 expected_canvas = (512, 512)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -49236,19 +49236,47 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
         "site_crystal_sump": ("resource_site_neutral_crystal_sump", "crystal_sump", "ea3a6bb5c3ccecd4690e57ddafa98b8b63a05578f4aa974c9c3375cfa3f7354b", [672, 0, 48, 48], "crystal_well_lifting_frame", 1),
         "site_icehook_trapper_lodge": ("resource_site_neutral_icehook_trapper_lodge", "icehook_trapper_lodge", "e928c653bbf546e9ed151079b795389d85d9406383dd61bc3b15f4daace9a813", [720, 0, 48, 48], "crescent_hook_snow_lodge", 1),
         "site_obsidian_scar": ("resource_site_neutral_obsidian_scar", "obsidian_scar", "0cfd1bb648783ba10c5770b910ae879c3e04e43f0975afce1196ed470faf96f5", [768, 0, 48, 48], "triple_obsidian_forge_arch", 1),
+        "site_free_company_yard": ("resource_site_neutral_roadward_lodge", "roadward_lodge", "441b7d377002cec321cfbe6fa5debfdb3e0f6b5c99fbd96a3a6a2af5e0cf0480", [816, 0, 48, 48], "toll_gate_pikehook_lodge", 2),
+        "site_fenhound_kennels": ("resource_site_neutral_fenhound_kennels", "fenhound_kennels", "c88fb14aa31afa19bbef261aa7aa31cf068650ca8a040d37b50d631e31d3c1d2", [864, 0, 48, 48], "three_bay_mossglass_kennel", 3),
+        "site_cliffhawk_roost": ("resource_site_neutral_cliffhawk_roost", "cliffhawk_roost", "9953ff1b895c8f1c97f4a271bb1ddf4303d45f832ca632a708b27abe201d8ff8", [912, 0, 48, 48], "twin_spire_hawk_roost", 1),
+        "site_orchard_levy": ("resource_site_neutral_orchard_levy", "orchard_levy", "7456404e38fd81e486498dff21487edc7afaa06b4526fa904d6a7e8d0f407148", [960, 0, 48, 48], "fruit_bough_levy_yard", 1),
+        "site_kite_signal_eyrie": ("resource_site_neutral_kite_signal_eyrie", "kite_signal_eyrie", "62040991a03883ff0fc5442b7ba2b9c347d5c1f1c7f81e9c16fcf104f09c1646", [1008, 0, 48, 48], "diamond_kite_signal_eyrie", 1),
+        "site_greenbranch_copse": ("resource_site_neutral_greenbranch_copse", "greenbranch_copse", "0f19814883766e14347acea21857d52e3c15586fdcfaf2511ae56df2558f014e", [1056, 0, 48, 48], "living_tree_copse_lodge", 1),
+        "site_harbor_pilot_house": ("resource_site_neutral_harbor_pilot_house", "harbor_pilot_house", "a988a236231856ae1d28f7b88e0ca83014dbf77fcbb95c751463a1157e65afe2", [1104, 0, 48, 48], "harbor_pilot_signal_tower", 1),
+        "site_lantern_warren": ("resource_site_neutral_lantern_warren", "lantern_warren", "e854c425498caef3a8df10f33a3b16dd60d2d0a0620e6f178ebdae3ae36fe3df", [1152, 0, 48, 48], "three_mouth_lantern_warren", 1),
+        "site_bogbell_croft": ("resource_site_neutral_bogbell_croft", "bogbell_croft", "7588b7beb6bd09dfcdfb5aa2c84a90a3dbbc809ddd169c5bc75e3e42deed885f", [1200, 0, 48, 48], "giant_bell_stilt_croft", 1),
+        "site_milestone_arsenal": ("resource_site_neutral_milestone_arsenal", "milestone_arsenal", "b0dd681e23ed2200a9d5d80e8fd2c087b0d91c2cc37c334711fbcc995fddc4c1", [1248, 0, 48, 48], "milestone_obelisk_arsenal", 1),
+        "site_frostwharf_house": ("resource_site_neutral_frostwharf_house", "frostwharf_house", "c81be35dc00387b46c3b32230bf55042c3f55d58f684597c6f13d3b83472153c", [1296, 0, 48, 48], "crescent_cutter_wharf_house", 1),
+        "site_charcoal_burners": ("resource_site_neutral_charcoal_burners", "charcoal_burners", "343cedfecfea818f1189a505c2a1a87aa39bcf8ac9217a0665a16ea991d39e42", [1344, 0, 48, 48], "three_vent_charcoal_clamp", 1),
+        "site_basalt_gatehouse": ("resource_site_neutral_basalt_gatehouse", "basalt_gatehouse", "d164d4e221f860f0de8ab26744a366d810e35ad0fc832c5bf67ba199963a741f", [1392, 0, 48, 48], "twin_tower_basalt_gatehouse", 1),
     }
     claimed_state_sites = {
         "site_reedbarge_mooring", "site_glowcap_croft", "site_dustjack_yard",
         "site_cinder_kiln", "site_frostbeacon_bothy", "site_bramble_hedge",
         "site_tidepool_skiffyard", "site_switchback_hostel", "site_saltpan_camp",
         "site_crystal_sump", "site_icehook_trapper_lodge", "site_obsidian_scar",
+        "site_free_company_yard", "site_fenhound_kennels", "site_cliffhawk_roost",
+        "site_orchard_levy", "site_kite_signal_eyrie", "site_greenbranch_copse",
+        "site_harbor_pilot_house", "site_lantern_warren", "site_bogbell_croft",
+        "site_milestone_arsenal", "site_frostwharf_house", "site_charcoal_burners",
+        "site_basalt_gatehouse",
     }
-    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "recurring_wave1"
-    source_manifest_path = source_dir / "manifest.json"
+    wave2_sites = {
+        "site_free_company_yard", "site_fenhound_kennels", "site_cliffhawk_roost",
+        "site_orchard_levy", "site_kite_signal_eyrie", "site_greenbranch_copse",
+        "site_harbor_pilot_house", "site_lantern_warren", "site_bogbell_croft",
+        "site_milestone_arsenal", "site_frostwharf_house", "site_charcoal_burners",
+        "site_basalt_gatehouse",
+    }
+    source_dirs = {
+        "recurring_wave1": ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "recurring_wave1",
+        "recurring_wave2": ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "recurring_wave2",
+    }
+    source_manifest_paths = {wave: source_dir / "manifest.json" for wave, source_dir in source_dirs.items()}
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "recurring_resource_site_landmarks_atlas.png"
     required_paths = (
         OVERWORLD_ART_MANIFEST_PATH,
-        source_manifest_path,
+        *source_manifest_paths.values(),
         atlas_path,
         CONTENT_DIR / "resource_sites.json",
         CONTENT_DIR / "map_objects.json",
@@ -49264,9 +49292,9 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
         return
 
     atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (816, 48), errors, "Recurring resource-site landmark atlas must remain 816x48")
+    ensure(png_size(atlas_path) == (1440, 48), errors, "Recurring resource-site landmark atlas must remain 1440x48")
     ensure(
-        hashlib.sha256(atlas_payload).hexdigest() == "55b46e7db2ded5541e9386a7ee6e6e2dc623d126ee31460bb26e943f3aff1187"
+        hashlib.sha256(atlas_payload).hexdigest() == "6c7a4e6a83a5e92d14087fcbc42f251057f24bc8ab3c3e5573451c4dcbf78898"
         and len(atlas_payload) >= 26
         and atlas_payload[25] == 6,
         errors,
@@ -49277,26 +49305,39 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {})
     site_sprites = manifest.get("resource_site_sprites", {})
-    source_manifest = load_json(source_manifest_path)
-    source_rows = source_manifest.get("items", [])
-    source_by_site = {str(row.get("resource_site_id", "")): row for row in source_rows if isinstance(row, dict)} if isinstance(source_rows, list) else {}
-    ensure(source_manifest.get("schema_version") == 1 and source_manifest.get("generator_mode") == "built_in_image_gen", errors, "Recurring resource-site source manifest provenance changed")
-    ensure(source_manifest.get("source_model") == "original_transparent_orthographic_resource_site_landmark", errors, "Recurring resource-site source model changed")
+    source_manifests = {wave: load_json(path) for wave, path in source_manifest_paths.items()}
+    source_rows_by_wave = {wave: payload.get("items", []) for wave, payload in source_manifests.items()}
+    source_by_site = {
+        str(row.get("resource_site_id", "")): row
+        for rows in source_rows_by_wave.values() if isinstance(rows, list)
+        for row in rows if isinstance(row, dict)
+    }
+    for wave, source_manifest in source_manifests.items():
+        ensure(source_manifest.get("schema_version") == 1 and source_manifest.get("generator_mode") == "built_in_image_gen", errors, f"Recurring resource-site {wave} source manifest provenance changed")
+        ensure(source_manifest.get("source_model") == "original_transparent_orthographic_resource_site_landmark", errors, f"Recurring resource-site {wave} source model changed")
+        ensure(
+            source_manifest.get("runtime_atlas") == "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png"
+            and source_manifest.get("runtime_atlas_size") == [1440, 48]
+            and source_manifest.get("runtime_region_size") == [48, 48]
+            and source_manifest.get("runtime_atlas_sha256") == "6c7a4e6a83a5e92d14087fcbc42f251057f24bc8ab3c3e5573451c4dcbf78898",
+            errors,
+            f"Recurring resource-site {wave} source manifest atlas ownership changed",
+        )
+        ensure(len(str(source_manifest.get("prompt_set_summary", "")).strip()) >= 80, errors, f"Recurring resource-site {wave} source manifest must retain the original-art prompt policy")
+    wave1_sites = set(expected) - wave2_sites
     ensure(
-        source_manifest.get("runtime_atlas") == "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png"
-        and source_manifest.get("runtime_atlas_size") == [816, 48]
-        and source_manifest.get("runtime_region_size") == [48, 48]
-        and source_manifest.get("runtime_atlas_sha256") == "55b46e7db2ded5541e9386a7ee6e6e2dc623d126ee31460bb26e943f3aff1187",
+        {str(row.get("resource_site_id", "")) for row in source_rows_by_wave["recurring_wave1"] if isinstance(row, dict)} == wave1_sites
+        and {str(row.get("resource_site_id", "")) for row in source_rows_by_wave["recurring_wave2"] if isinstance(row, dict)} == wave2_sites,
         errors,
-        "Recurring resource-site source manifest atlas ownership changed",
+        "Recurring resource-site source manifests must retain exact wave ownership",
     )
-    ensure(len(str(source_manifest.get("prompt_set_summary", "")).strip()) >= 80, errors, "Recurring resource-site source manifest must retain the original-art prompt policy")
-    ensure(set(source_by_site) == set(expected), errors, "Recurring resource-site source manifest must own exactly the seventeen selected state identities")
+    ensure(set(source_by_site) == set(expected), errors, "Recurring resource-site source manifests must own exactly the thirty selected identities")
 
     source_payloads: list[bytes] = []
     descriptions: list[str] = []
     for site_id, (asset_id, stem, source_sha, region, role, _placements) in expected.items():
-        source_res = f"res://art/overworld/source/generated/resource_sites/recurring_wave1/{stem}_source.png"
+        source_wave = "recurring_wave2" if site_id in wave2_sites else "recurring_wave1"
+        source_res = f"res://art/overworld/source/generated/resource_sites/{source_wave}/{stem}_source.png"
         source_path = res_path_to_disk(source_res)
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
         mapping = site_sprites.get(site_id, {}) if isinstance(site_sprites, dict) else {}
@@ -49306,7 +49347,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             continue
         ensure(mapping.get("asset_id") == asset_id and len(str(mapping.get("fit", "")).strip()) >= 24, errors, f"Recurring resource-site exact mapping changed for {site_id}")
         ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png", errors, f"Recurring resource-site atlas path changed for {site_id}")
-        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [816, 48], errors, f"Recurring resource-site atlas region changed for {site_id}")
+        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [1440, 48], errors, f"Recurring resource-site atlas region changed for {site_id}")
         ensure(entry.get("source_generated") == source_res and entry.get("source_model") == "built_in_image_gen_original_recurring_resource_site_landmark_atlas", errors, f"Recurring resource-site generation provenance changed for {site_id}")
         ensure(entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == role, errors, f"Recurring resource-site content ownership changed for {site_id}")
         description = str(entry.get("accessible_description", "")).strip()
@@ -49328,8 +49369,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             errors,
             f"Recurring resource-site source manifest row changed for {site_id}",
         )
-    ensure(len(source_payloads) == 17 and len(set(source_payloads)) == 17, errors, "All seventeen recurring resource-site generated sources must remain byte-distinct")
-    ensure(len(descriptions) == 17 and len(set(descriptions)) == 17, errors, "All seventeen recurring resource-site accessible descriptions must remain distinct")
+    ensure(len(source_payloads) == 30 and len(set(source_payloads)) == 30, errors, "All thirty recurring resource-site generated sources must remain byte-distinct")
+    ensure(len(descriptions) == 30 and len(set(descriptions)) == 30, errors, "All thirty recurring resource-site accessible descriptions must remain distinct")
 
     site_registry = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     scenarios = load_json(CONTENT_DIR / "scenarios.json").get("items", [])
@@ -49372,7 +49413,15 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 20, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
-            ensure(site_id in first_map_object_by_site and resolver_paths.get(site_id) == "map_object", errors, f"{site_id} must retain its exact unclaimed map-object resolver path")
+            if site_id == "site_fenhound_kennels":
+                ensure(
+                    resolver_paths.get(site_id) == "site_mapping"
+                    and site_sprites.get(site_id, {}).get("unclaimed_asset_id") == "kennel",
+                    errors,
+                    "site_fenhound_kennels must retain its generic kennel before changing control",
+                )
+            else:
+                ensure(site_id in first_map_object_by_site and resolver_paths.get(site_id) == "map_object", errors, f"{site_id} must retain its exact unclaimed map-object resolver path")
         else:
             ensure(site_id not in first_map_object_by_site and not str(site_registry.get(site_id, {}).get("overworld_sprite_asset_id", "")).strip() and resolver_paths.get(site_id) == "site_mapping", errors, f"{site_id} must exercise the live exact site-mapping resolver path")
 
@@ -49396,6 +49445,13 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
         ensure('bool(terrain_payload["recurring_resource_site_atlas_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when the recurring resource-site atlas is absent")
         ensure('"recurring_resource_site_atlas_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged recurring resource-site atlas coverage")
     claimed_report_text = (ROOT / "tests" / "neutral_dwelling_claimed_landmark_report.gd").read_text(encoding="utf-8")
+    map_view_text = (ROOT / "scenes" / "overworld" / "OverworldMapView.gd").read_text(encoding="utf-8")
+    for token in (
+        "_resource_site_unclaimed_asset_ids",
+        'entry.get("unclaimed_asset_id", "")',
+        '_object_texture_for_asset(unclaimed_asset_id) is Texture2D',
+    ):
+        ensure(token in map_view_text, errors, f"Overworld map renderer is missing neutral-dwelling unclaimed-state preservation: {token}")
     for token in (
         "OverworldRules.collect_active_resource(session)",
         'collected_by_faction_id", "")) == "player"',

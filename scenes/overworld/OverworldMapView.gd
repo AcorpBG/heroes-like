@@ -530,6 +530,7 @@ var _object_texture_visible_regions: Dictionary = {}
 var _unit_art_textures: Dictionary = {}
 var _unit_art_texture_missing: Dictionary = {}
 var _resource_site_asset_ids: Dictionary = {}
+var _resource_site_unclaimed_asset_ids: Dictionary = {}
 var _resource_site_object_profiles: Dictionary = {}
 var _map_object_asset_ids: Dictionary = {}
 var _artifact_default_asset_id := ""
@@ -10447,6 +10448,7 @@ func _load_overworld_art_manifest() -> void:
 	_object_texture_missing.clear()
 	_object_texture_visible_regions.clear()
 	_resource_site_asset_ids.clear()
+	_resource_site_unclaimed_asset_ids.clear()
 	_resource_site_object_profiles.clear()
 	_map_object_asset_ids.clear()
 	_decorative_object_asset_ids.clear()
@@ -10504,6 +10506,9 @@ func _load_overworld_art_manifest() -> void:
 			var asset_id := String(entry.get("asset_id", ""))
 			if site_id != "" and asset_id != "":
 				_resource_site_asset_ids[site_id] = asset_id
+			var unclaimed_asset_id := String(entry.get("unclaimed_asset_id", ""))
+			if site_id != "" and unclaimed_asset_id != "":
+				_resource_site_unclaimed_asset_ids[site_id] = unclaimed_asset_id
 
 	var artifact_default = _overworld_art_manifest.get("artifact_default_sprite", {})
 	if artifact_default is Dictionary:
@@ -11175,6 +11180,10 @@ func _resource_asset_id(node: Dictionary) -> String:
 	var direct_asset_id := String(site.get("overworld_sprite_asset_id", ""))
 	if direct_asset_id != "":
 		return direct_asset_id
+	if String(site.get("family", "")) == "neutral_dwelling":
+		var unclaimed_asset_id := String(_resource_site_unclaimed_asset_ids.get(site_id, ""))
+		if unclaimed_asset_id != "" and _object_texture_for_asset(unclaimed_asset_id) is Texture2D:
+			return unclaimed_asset_id
 	return String(_resource_site_asset_ids.get(site_id, ""))
 
 func _artifact_sprite_asset_id(node: Dictionary) -> String:

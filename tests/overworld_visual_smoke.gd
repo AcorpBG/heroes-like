@@ -19,6 +19,19 @@ const RESOURCE_SITE_LANDMARK_CASES := [
 	{"site_id": "site_crystal_sump", "asset_id": "resource_site_neutral_crystal_sump", "unclaimed_asset_id": "mapobj_crystal_sump", "tile": Vector2i(2, 1), "region": Rect2(672, 0, 48, 48)},
 	{"site_id": "site_icehook_trapper_lodge", "asset_id": "resource_site_neutral_icehook_trapper_lodge", "unclaimed_asset_id": "mapobj_icehook_trapper_lodge", "tile": Vector2i(4, 1), "region": Rect2(720, 0, 48, 48)},
 	{"site_id": "site_obsidian_scar", "asset_id": "resource_site_neutral_obsidian_scar", "unclaimed_asset_id": "mapobj_obsidian_scar", "tile": Vector2i(6, 1), "region": Rect2(768, 0, 48, 48)},
+	{"site_id": "site_free_company_yard", "asset_id": "resource_site_neutral_roadward_lodge", "unclaimed_asset_id": "mapobj_roadward_lodge", "tile": Vector2i(0, 0), "region": Rect2(816, 0, 48, 48)},
+	{"site_id": "site_fenhound_kennels", "asset_id": "resource_site_neutral_fenhound_kennels", "unclaimed_asset_id": "kennel", "tile": Vector2i(2, 0), "region": Rect2(864, 0, 48, 48)},
+	{"site_id": "site_cliffhawk_roost", "asset_id": "resource_site_neutral_cliffhawk_roost", "unclaimed_asset_id": "mapobj_cliffhawk_roost", "tile": Vector2i(4, 0), "region": Rect2(912, 0, 48, 48)},
+	{"site_id": "site_orchard_levy", "asset_id": "resource_site_neutral_orchard_levy", "unclaimed_asset_id": "mapobj_orchard_levy", "tile": Vector2i(6, 0), "region": Rect2(960, 0, 48, 48)},
+	{"site_id": "site_kite_signal_eyrie", "asset_id": "resource_site_neutral_kite_signal_eyrie", "unclaimed_asset_id": "mapobj_kite_signal_eyrie", "tile": Vector2i(1, 1), "region": Rect2(1008, 0, 48, 48)},
+	{"site_id": "site_greenbranch_copse", "asset_id": "resource_site_neutral_greenbranch_copse", "unclaimed_asset_id": "mapobj_greenbranch_copse", "tile": Vector2i(3, 1), "region": Rect2(1056, 0, 48, 48)},
+	{"site_id": "site_harbor_pilot_house", "asset_id": "resource_site_neutral_harbor_pilot_house", "unclaimed_asset_id": "mapobj_harbor_pilot_house", "tile": Vector2i(5, 1), "region": Rect2(1104, 0, 48, 48)},
+	{"site_id": "site_lantern_warren", "asset_id": "resource_site_neutral_lantern_warren", "unclaimed_asset_id": "mapobj_lantern_warren", "tile": Vector2i(7, 1), "region": Rect2(1152, 0, 48, 48)},
+	{"site_id": "site_bogbell_croft", "asset_id": "resource_site_neutral_bogbell_croft", "unclaimed_asset_id": "mapobj_bogbell_croft", "tile": Vector2i(0, 2), "region": Rect2(1200, 0, 48, 48)},
+	{"site_id": "site_milestone_arsenal", "asset_id": "resource_site_neutral_milestone_arsenal", "unclaimed_asset_id": "mapobj_milestone_arsenal", "tile": Vector2i(2, 2), "region": Rect2(1248, 0, 48, 48)},
+	{"site_id": "site_frostwharf_house", "asset_id": "resource_site_neutral_frostwharf_house", "unclaimed_asset_id": "mapobj_frostwharf_house", "tile": Vector2i(4, 2), "region": Rect2(1296, 0, 48, 48)},
+	{"site_id": "site_charcoal_burners", "asset_id": "resource_site_neutral_charcoal_burners", "unclaimed_asset_id": "mapobj_charcoal_burners", "tile": Vector2i(6, 2), "region": Rect2(1344, 0, 48, 48)},
+	{"site_id": "site_basalt_gatehouse", "asset_id": "resource_site_neutral_basalt_gatehouse", "unclaimed_asset_id": "mapobj_basalt_gatehouse", "tile": Vector2i(0, 3), "region": Rect2(1392, 0, 48, 48)},
 ]
 
 func _ready() -> void:
@@ -312,7 +325,7 @@ func _assert_resource_site_landmark_contract(shell: Node, map_node: Node, sessio
 			and texture.region == expected_region \
 			and texture.atlas is Texture2D \
 			and texture.atlas.resource_path == RESOURCE_SITE_LANDMARK_ATLAS_PATH \
-			and texture.atlas.get_size() == Vector2(816, 48) \
+			and texture.atlas.get_size() == Vector2(1440, 48) \
 			and unclaimed_resolves_existing \
 			and repeated == presentation
 		rows.append({"site_id": site_id, "asset_id": asset_id, "region": expected_region, "exact": exact})
@@ -329,7 +342,7 @@ func _assert_resource_site_landmark_contract(shell: Node, map_node: Node, sessio
 	var object_paths: Dictionary = map_node.get("_object_asset_paths")
 	var object_regions: Dictionary = map_node.get("_object_asset_regions")
 	object_paths["resource_site_invalid_region_fixture"] = RESOURCE_SITE_LANDMARK_ATLAS_PATH
-	object_regions["resource_site_invalid_region_fixture"] = [800, 0, 48, 48]
+	object_regions["resource_site_invalid_region_fixture"] = [1420, 0, 48, 48]
 	var invalid_region_fail_closed := map_node.call("_object_texture_for_asset", "resource_site_invalid_region_fixture") == null
 	var missing_asset_fail_closed := map_node.call("_object_texture_for_asset", "resource_site_missing_asset_fixture") == null
 	if not invalid_region_fail_closed or not missing_asset_fail_closed or session.to_dict() != authority_before:
@@ -361,7 +374,7 @@ func _assert_resource_site_landmark_contract(shell: Node, map_node: Node, sessio
 		"ok": true,
 		"site_count": RESOURCE_SITE_LANDMARK_CASES.size(),
 		"atlas_path": RESOURCE_SITE_LANDMARK_ATLAS_PATH,
-		"atlas_size": [816, 48],
+		"atlas_size": [1440, 48],
 		"rows": rows,
 		"invalid_region_fail_closed": invalid_region_fail_closed,
 		"missing_asset_fail_closed": missing_asset_fail_closed,

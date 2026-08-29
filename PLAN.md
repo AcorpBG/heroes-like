@@ -24,8 +24,38 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none; the most recently completed slice is `content-neutral-dwelling-landmarks-wave1-10184`.
-- Package boundary: both release exports now measure 248008160 bytes, 1991840 bytes below the unchanged 250000000-byte ceiling. The expanded compact recurring-site atlas ships while generated source originals and development reports remain excluded on both platforms.
+- Latest completed implementation slice: `content-neutral-dwelling-landmarks-wave2-10184`.
+- Package boundary: both release exports now measure 248071472 bytes, 1928528 bytes below the unchanged 250000000-byte ceiling. The expanded compact recurring-site atlas ships while generated source originals and development reports remain excluded on both platforms.
+
+## Neutral-Dwelling Landmark Art Wave 2
+
+id: `content-neutral-dwelling-landmarks-wave2-10184`
+
+Status: completed.
+
+Current finding:
+- the first landmark wave gives twelve of the 25 live neutral dwellings exact identity-specific claimed-state art, but eight remaining dwellings still retain their unclaimed sprite after control because they have no site-scoped claimed mapping;
+- Roadward Lodge, Fenhound Kennels, Cliffhawk Roost, Orchard Levy, and Kite Signal Eyrie do have claimed mappings, but those mappings reuse older shared farmhouse, kennel, or falcon-roost imagery rather than giving the controlled site an identity-specific contracted landmark;
+- one 13-site completion batch can close exact claimed-state art coverage across the full neutral-dwelling catalog while preserving all existing unclaimed art and gameplay authority.
+
+Implementation boundary:
+- create thirteen original transparent contracted neutral-dwelling landmarks with distinct non-color silhouettes and append them to the existing immutable recurring-site atlas while retaining all seventeen existing cells exactly;
+- register exact claimed-state art for Roadward Lodge, Fenhound Kennels, Cliffhawk Roost, Orchard Levy, Kite Signal Eyrie, Greenbranch Copse, Harbor Pilot House, Lantern Warren, Bogbell Croft, Milestone Arsenal, Frostwharf House, Charcoal Burners Camp, and Basalt Gatehouse;
+- preserve site coordinates, footprints, pathing, guards, rewards, recruitment, persistent control, AI behavior, save version 9, accessibility, performance, and Windows/Linux packaging.
+
+Completion criteria:
+- thirteen byte-distinct original transparent sources extend the compact atlas to 30 immutable 48x48 cells with exact provenance, genuine alpha, distinct readable silhouettes, and non-color accessible descriptions;
+- all 25 live neutral dwellings retain their existing uncontrolled presentation and resolve an identity-specific claimed `AtlasTexture` after player or enemy control, with Fenhound Kennels retaining its former generic kennel through an explicit unclaimed-state override and invalid claimed art falling back to the existing unclaimed path;
+- one combined 25-site live smoke proves exact art-state transitions, existing claim rewards and recruits, persistent control, mutation-free repeat rejection, and save-version-9 restoration; repository validation and Linux/Windows packaged startup pass below the unchanged PCK ceiling.
+
+Non-goals:
+- no new dwelling, unit, encounter, reward, guard, economy rule, scenario placement, geometry, pathing rule, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes dwelling, sprite, name, text, or protected visual expression.
+
+Completed evidence:
+- thirteen byte-distinct original transparent sources extend the recurring-site atlas from 816x48 to 1440x48 while preserving the prior 816x48 pixel region exactly; all 25 neutral dwellings now have identity-specific claimed-state landmark art and retain their prior uncontrolled presentation;
+- the single combined live smoke passed all 25 sites with exact renderer transitions, unchanged rewards and recruits, persistent player control, mutation-free repeat rejection, and save-version-9 restoration; repository validation and source/provenance checks also pass;
+- Linux and Windows release exports both boot with the compact atlas present, exclude every high-resolution generated source and development report, and produce matching 248071472-byte PCKs, 1928528 bytes below the unchanged ceiling. This completes only the neutral-dwelling landmark content slice and does not claim whole-game or release readiness.
 
 ## Neutral-Dwelling Landmark Art Wave 1
 
