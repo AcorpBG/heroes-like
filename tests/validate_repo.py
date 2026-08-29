@@ -47326,8 +47326,20 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         "hero_brasshollow_lina_gaugesavant",
         "hero_veilmourn_sael_mirrorbell",
     )
+    tavern_final_roster_hero_ids = (
+        "hero_mireclaw_pell_reedscript",
+        "hero_mireclaw_zhorra_fenwake",
+        "hero_sunvault_dovan_lenscaptain",
+        "hero_sunvault_renn_facetlane",
+        "hero_thornwake_merek_greenbarrow",
+        "hero_thornwake_ralka_mossvein",
+        "hero_brasshollow_pava_ashmeter",
+        "hero_brasshollow_vellum_quench",
+        "hero_veilmourn_damar_oriflag",
+        "hero_veilmourn_nacre_vowless",
+    )
     scenario_lead_hero_ids = signature_hero_ids + live_lead_hero_ids
-    mapped_hero_ids = scenario_lead_hero_ids + tavern_vanguard_hero_ids + tavern_specialist_hero_ids + tavern_field_commander_hero_ids + tavern_strategic_officer_hero_ids + tavern_ritual_scholar_hero_ids + tavern_arcane_controller_hero_ids
+    mapped_hero_ids = scenario_lead_hero_ids + tavern_vanguard_hero_ids + tavern_specialist_hero_ids + tavern_field_commander_hero_ids + tavern_strategic_officer_hero_ids + tavern_ritual_scholar_hero_ids + tavern_arcane_controller_hero_ids + tavern_final_roster_hero_ids
     expected_identity_sprites = {
         hero_id: (
             f"hero_signature_{hero_id.removeprefix('hero_')}"
@@ -47350,7 +47362,11 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
                                 else (
                                     f"hero_ritual_{hero_id.removeprefix('hero_')}"
                                     if hero_id in tavern_ritual_scholar_hero_ids
-                                    else f"hero_arcane_{hero_id.removeprefix('hero_')}"
+                                    else (
+                                        f"hero_arcane_{hero_id.removeprefix('hero_')}"
+                                        if hero_id in tavern_arcane_controller_hero_ids
+                                        else f"hero_roster_{hero_id.removeprefix('hero_')}"
+                                    )
                                 )
                             )
                         )
@@ -47360,7 +47376,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         )
         for hero_id in mapped_hero_ids
     }
-    ensure(isinstance(identity_sprites, dict) and identity_sprites == expected_identity_sprites, errors, "Overworld hero identity mapping must retain the exact 14 scenario leads plus six each of tavern vanguards, specialists, field commanders, strategic officers, ritual scholars, and arcane controllers")
+    ensure(isinstance(identity_sprites, dict) and identity_sprites == expected_identity_sprites, errors, "Overworld hero identity mapping must cover all 60 production heroes exactly")
     identity_sprite_bytes: list[bytes] = []
     if isinstance(identity_sprites, dict) and isinstance(object_assets, dict):
         for hero_id in mapped_hero_ids:
@@ -47384,7 +47400,11 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
                                 else (
                                     "tavern_strategic_officers"
                                     if hero_id in tavern_strategic_officer_hero_ids
-                                    else ("tavern_ritual_scholars" if hero_id in tavern_ritual_scholar_hero_ids else "tavern_arcane_controllers")
+                                    else (
+                                        "tavern_ritual_scholars"
+                                        if hero_id in tavern_ritual_scholar_hero_ids
+                                        else ("tavern_arcane_controllers" if hero_id in tavern_arcane_controller_hero_ids else "tavern_final_roster")
+                                    )
                                 )
                             )
                         )
@@ -47419,7 +47439,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
             if source_path.is_file():
                 source_payload = source_path.read_bytes()
                 ensure(len(source_payload) >= 26 and source_payload[25] in {4, 6}, errors, f"Mapped hero source {asset_id} must retain a real alpha channel")
-    ensure(len(identity_sprite_bytes) == 50 and len(set(identity_sprite_bytes)) == 50, errors, "All 50 mapped hero runtime PNG payloads must be distinct")
+    ensure(len(identity_sprite_bytes) == 60 and len(set(identity_sprite_bytes)) == 60, errors, "All 60 production hero runtime PNG payloads must be distinct")
     ensure(not set(identity_sprite_bytes).intersection(sprite_bytes), errors, "Mapped hero runtime PNGs must not reuse faction fallback payloads")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
@@ -47447,6 +47467,10 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         ensure('bool(terrain_payload["arcane_controller_hero_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail the release export when tavern arcane-controller hero sprites are absent")
         for hero_id in tavern_arcane_controller_hero_ids:
             ensure(f'"{hero_id}"' in packaging_text, errors, f"{packaging_path.name} is missing packaged tavern arcane-controller hero identity {hero_id}")
+        ensure("REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_FINAL_ROSTER_HERO_IDS" in packaging_text, errors, f"{packaging_path.name} must audit imported metadata and textures for the tavern final-roster hero sprites in the exported PCK")
+        ensure('bool(terrain_payload["final_roster_hero_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail the release export when final-roster hero sprites are absent")
+        for hero_id in tavern_final_roster_hero_ids:
+            ensure(f'"{hero_id}"' in packaging_text, errors, f"{packaging_path.name} is missing packaged final-roster hero identity {hero_id}")
     scenarios = load_json(CONTENT_DIR / "scenarios.json").get("items", [])
     scenario_starts = {str(scenario.get("id", "")): str(scenario.get("hero_id", "")) for scenario in scenarios if isinstance(scenario, dict)} if isinstance(scenarios, list) else {}
     ensure(len(scenario_starts) == 24, errors, "Scenario-lead identity adoption must retain all 24 authored scenario starts")
@@ -47712,7 +47736,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"',
         'const COMMAND_PENNANT_MODEL := "compact_player_command_flag"',
-        'const EXPECTED_HERO_ASSETS := {', 'const PRESENTATION_HERO_IDS := [', 'const ALL_SCENARIO_STARTS := {', 'const TAVERN_VANGUARD_CASES := [', 'const TAVERN_SPECIALIST_CASES := [', 'const TAVERN_FIELD_COMMANDER_CASES := [', 'const TAVERN_STRATEGIC_OFFICER_CASES := [', 'const TAVERN_RITUAL_SCHOLAR_CASES := [', 'const TAVERN_ARCANE_CONTROLLER_CASES := [',
+        'const EXPECTED_HERO_ASSETS := {', 'const PRESENTATION_HERO_IDS := [', 'const ALL_SCENARIO_STARTS := {', 'const TAVERN_VANGUARD_CASES := [', 'const TAVERN_SPECIALIST_CASES := [', 'const TAVERN_FIELD_COMMANDER_CASES := [', 'const TAVERN_STRATEGIC_OFFICER_CASES := [', 'const TAVERN_RITUAL_SCHOLAR_CASES := [', 'const TAVERN_ARCANE_CONTROLLER_CASES := [', 'const TAVERN_FINAL_ROSTER_CASES := [',
         'var scenario_starts := _validate_signature_scenario_starts()',
         'var tavern_vanguard := _validate_tavern_vanguard_recruitment()',
         'var tavern_specialists := _validate_tavern_specialist_recruitment()',
@@ -47720,12 +47744,13 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'var tavern_strategic_officers := _validate_tavern_strategic_officer_recruitment()',
         'var tavern_ritual_scholars := _validate_tavern_ritual_scholar_recruitment()',
         'var tavern_arcane_controllers := _validate_tavern_arcane_controller_recruitment()',
+        'var tavern_final_roster := _validate_tavern_final_roster_recruitment()',
         'ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)',
         'clone.from_dict(session.to_dict())', '"save_resume_exact": exact',
         'HeroCommandRules.HALL_BUILDING_ID', 'TownRules.get_tavern_actions(session)',
         'TownRules.hire_hero_at_active_town(session, hero_id)', 'TownRules.switch_active_hero_at_town(session, hero_id)',
         'before.get("overworld", {}).get("resources", {})',
-        '"mapped_hero_identity_count": EXPECTED_HERO_ASSETS.size()', '"tavern_vanguard_count": TAVERN_VANGUARD_CASES.size()', '"tavern_specialist_count": TAVERN_SPECIALIST_CASES.size()', '"tavern_field_commander_count": TAVERN_FIELD_COMMANDER_CASES.size()', '"tavern_strategic_officer_count": TAVERN_STRATEGIC_OFFICER_CASES.size()', '"tavern_ritual_scholar_count": TAVERN_RITUAL_SCHOLAR_CASES.size()', '"tavern_arcane_controller_count": TAVERN_ARCANE_CONTROLLER_CASES.size()',
+        '"mapped_hero_identity_count": EXPECTED_HERO_ASSETS.size()', '"tavern_vanguard_count": TAVERN_VANGUARD_CASES.size()', '"tavern_specialist_count": TAVERN_SPECIALIST_CASES.size()', '"tavern_field_commander_count": TAVERN_FIELD_COMMANDER_CASES.size()', '"tavern_strategic_officer_count": TAVERN_STRATEGIC_OFFICER_CASES.size()', '"tavern_ritual_scholar_count": TAVERN_RITUAL_SCHOLAR_CASES.size()', '"tavern_arcane_controller_count": TAVERN_ARCANE_CONTROLLER_CASES.size()', '"tavern_final_roster_count": TAVERN_FINAL_ROSTER_CASES.size()',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'session.hero_id = String(heroes[0].get("id", ""))', 'session.overworld["player_heroes"] = heroes',
         'var authority_before: Dictionary = session.to_dict()',
@@ -47777,7 +47802,9 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'String(town_presentation.get("presentation_model", "")) == "town_3x2_footprint_bottom_middle_entry"',
         'bool(tile_presentation.get("has_town_non_entry", false))',
         'String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"',
-        'String(map_view.call("_hero_sprite_asset_id", {"id": "hero_mireclaw_pell_reedscript"})) == "hero_faction_mireclaw"',
+        'var faction_fallback_exact := _validate_faction_fallback(map_view)',
+        'identity_map.erase(hero_id)',
+        'String(map_view.call("_hero_sprite_asset_id", ContentService.get_hero(hero_id))) == "hero_faction_mireclaw"',
         'first_hero["id"] = "hero_missing_faction_sprite_fixture"',
         'String(fallback.get("sprite_asset_id", "")) == ""', 'bool(fallback.get("uses_procedural_fallback", false))',
         'String(fallback.get("command_pennant_model", "")) == COMMAND_PENNANT_MODEL',
@@ -48644,6 +48671,8 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {',
         'const EXPECTED_COMMANDER_ASSETS := {', 'const EXPECTED_COMMANDER_PATHS := {',
         'const FALLBACK_CASES := ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"]',
+        '"faction_mireclaw": "hero_roster_mireclaw_pell_reedscript"',
+        '"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png"',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'EnemyAdventureRules.build_raid_commander_state(encounter, hero_id, faction_id, session)',
         'map_view.call("validation_enemy_commander_presentation_profiles")',

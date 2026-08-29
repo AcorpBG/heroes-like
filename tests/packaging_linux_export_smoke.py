@@ -128,6 +128,17 @@ REQUIRED_ARCANE_CONTROLLER_HERO_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/heroes/tavern_arcane_controllers/{hero_id}.png.import"
     for hero_id in REQUIRED_ARCANE_CONTROLLER_HERO_IDS
 )
+REQUIRED_FINAL_ROSTER_HERO_IDS = (
+    "hero_mireclaw_pell_reedscript", "hero_mireclaw_zhorra_fenwake",
+    "hero_sunvault_dovan_lenscaptain", "hero_sunvault_renn_facetlane",
+    "hero_thornwake_merek_greenbarrow", "hero_thornwake_ralka_mossvein",
+    "hero_brasshollow_pava_ashmeter", "hero_brasshollow_vellum_quench",
+    "hero_veilmourn_damar_oriflag", "hero_veilmourn_nacre_vowless",
+)
+REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES = tuple(
+    f"art/overworld/runtime/heroes/tavern_final_roster/{hero_id}.png.import"
+    for hero_id in REQUIRED_FINAL_ROSTER_HERO_IDS
+)
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
     "Parse Error",
@@ -344,6 +355,10 @@ def pck_terrain_payload_summary() -> dict:
         "arcane_controller_hero_import_entries": [],
         "arcane_controller_hero_texture_names": [],
         "arcane_controller_hero_entries_present": False,
+        "required_final_roster_hero_import_entries": list(REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES),
+        "final_roster_hero_import_entries": [],
+        "final_roster_hero_texture_names": [],
+        "final_roster_hero_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -407,6 +422,8 @@ def pck_terrain_payload_summary() -> dict:
                     summary["ritual_scholar_hero_import_entries"].append(entry_path)
                 if entry_path in REQUIRED_ARCANE_CONTROLLER_HERO_PCK_IMPORT_ENTRIES:
                     summary["arcane_controller_hero_import_entries"].append(entry_path)
+                if entry_path in REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES:
+                    summary["final_roster_hero_import_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
@@ -423,6 +440,8 @@ def pck_terrain_payload_summary() -> dict:
                         summary["ritual_scholar_hero_texture_names"].append(imported_name)
                     if imported_name in REQUIRED_ARCANE_CONTROLLER_HERO_IDS:
                         summary["arcane_controller_hero_texture_names"].append(imported_name)
+                    if imported_name in REQUIRED_FINAL_ROSTER_HERO_IDS:
+                        summary["final_roster_hero_texture_names"].append(imported_name)
             summary["valid_directory"] = handle.tell() == file_size
     except (OSError, struct.error, UnicodeError):
         return summary
@@ -436,6 +455,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["strategic_officer_hero_entries_present"] = set(summary["strategic_officer_hero_import_entries"]) == set(REQUIRED_STRATEGIC_OFFICER_HERO_PCK_IMPORT_ENTRIES) and set(summary["strategic_officer_hero_texture_names"]) == set(REQUIRED_STRATEGIC_OFFICER_HERO_IDS)
     summary["ritual_scholar_hero_entries_present"] = set(summary["ritual_scholar_hero_import_entries"]) == set(REQUIRED_RITUAL_SCHOLAR_HERO_PCK_IMPORT_ENTRIES) and set(summary["ritual_scholar_hero_texture_names"]) == set(REQUIRED_RITUAL_SCHOLAR_HERO_IDS)
     summary["arcane_controller_hero_entries_present"] = set(summary["arcane_controller_hero_import_entries"]) == set(REQUIRED_ARCANE_CONTROLLER_HERO_PCK_IMPORT_ENTRIES) and set(summary["arcane_controller_hero_texture_names"]) == set(REQUIRED_ARCANE_CONTROLLER_HERO_IDS)
+    summary["final_roster_hero_entries_present"] = set(summary["final_roster_hero_import_entries"]) == set(REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES) and set(summary["final_roster_hero_texture_names"]) == set(REQUIRED_FINAL_ROSTER_HERO_IDS)
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -492,6 +512,7 @@ def main() -> int:
         and bool(terrain_payload["strategic_officer_hero_entries_present"])
         and bool(terrain_payload["ritual_scholar_hero_entries_present"])
         and bool(terrain_payload["arcane_controller_hero_entries_present"])
+        and bool(terrain_payload["final_roster_hero_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -579,6 +600,9 @@ def main() -> int:
         "arcane_controller_hero_pck_import_entry_count": len(terrain_payload["arcane_controller_hero_import_entries"]),
         "arcane_controller_hero_pck_texture_count": len(set(terrain_payload["arcane_controller_hero_texture_names"])),
         "arcane_controller_hero_pck_entries_present": terrain_payload["arcane_controller_hero_entries_present"],
+        "final_roster_hero_pck_import_entry_count": len(terrain_payload["final_roster_hero_import_entries"]),
+        "final_roster_hero_pck_texture_count": len(set(terrain_payload["final_roster_hero_texture_names"])),
+        "final_roster_hero_pck_entries_present": terrain_payload["final_roster_hero_entries_present"],
         "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],

@@ -20,7 +20,7 @@ const REPRESENTATIVE_HERO_IDS := {
 }
 const EXPECTED_COMMANDER_ASSETS := {
 	"faction_embercourt": "hero_arcane_embercourt_jorun_beaconscribe",
-	"faction_mireclaw": "hero_faction_mireclaw",
+	"faction_mireclaw": "hero_roster_mireclaw_pell_reedscript",
 	"faction_sunvault": "hero_field_sunvault_ilyr_glassmarshal",
 	"faction_thornwake": "hero_tavern_thornwake_ardren_briarmarshal",
 	"faction_brasshollow": "hero_tavern_brasshollow_daxis_chaincaptain",
@@ -28,7 +28,7 @@ const EXPECTED_COMMANDER_ASSETS := {
 }
 const EXPECTED_COMMANDER_PATHS := {
 	"faction_embercourt": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_embercourt_jorun_beaconscribe.png",
-	"faction_mireclaw": "res://art/overworld/runtime/heroes/factions/mireclaw.png",
+	"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png",
 	"faction_sunvault": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal.png",
 	"faction_thornwake": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
 	"faction_brasshollow": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",

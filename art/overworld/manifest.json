@@ -576,6 +576,76 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_sael_mirrorbell.png",
       "assigned_hero_id": "hero_veilmourn_sael_mirrorbell"
     },
+    "hero_roster_mireclaw_pell_reedscript": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_mireclaw_pell_reedscript.png",
+      "assigned_hero_id": "hero_mireclaw_pell_reedscript"
+    },
+    "hero_roster_mireclaw_zhorra_fenwake": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_zhorra_fenwake.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_mireclaw_zhorra_fenwake_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_mireclaw_zhorra_fenwake.png",
+      "assigned_hero_id": "hero_mireclaw_zhorra_fenwake"
+    },
+    "hero_roster_sunvault_dovan_lenscaptain": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_sunvault_dovan_lenscaptain.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_sunvault_dovan_lenscaptain_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_sunvault_dovan_lenscaptain.png",
+      "assigned_hero_id": "hero_sunvault_dovan_lenscaptain"
+    },
+    "hero_roster_sunvault_renn_facetlane": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_sunvault_renn_facetlane.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_sunvault_renn_facetlane_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_sunvault_renn_facetlane.png",
+      "assigned_hero_id": "hero_sunvault_renn_facetlane"
+    },
+    "hero_roster_thornwake_merek_greenbarrow": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_thornwake_merek_greenbarrow.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_thornwake_merek_greenbarrow_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_merek_greenbarrow.png",
+      "assigned_hero_id": "hero_thornwake_merek_greenbarrow"
+    },
+    "hero_roster_thornwake_ralka_mossvein": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_thornwake_ralka_mossvein.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_thornwake_ralka_mossvein_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_ralka_mossvein.png",
+      "assigned_hero_id": "hero_thornwake_ralka_mossvein"
+    },
+    "hero_roster_brasshollow_pava_ashmeter": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_brasshollow_pava_ashmeter.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_brasshollow_pava_ashmeter_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_pava_ashmeter.png",
+      "assigned_hero_id": "hero_brasshollow_pava_ashmeter"
+    },
+    "hero_roster_brasshollow_vellum_quench": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_brasshollow_vellum_quench.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_brasshollow_vellum_quench_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_vellum_quench.png",
+      "assigned_hero_id": "hero_brasshollow_vellum_quench"
+    },
+    "hero_roster_veilmourn_damar_oriflag": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_veilmourn_damar_oriflag.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_veilmourn_damar_oriflag_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_damar_oriflag.png",
+      "assigned_hero_id": "hero_veilmourn_damar_oriflag"
+    },
+    "hero_roster_veilmourn_nacre_vowless": {
+      "path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_veilmourn_nacre_vowless.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_final_roster/hero_veilmourn_nacre_vowless_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_nacre_vowless.png",
+      "assigned_hero_id": "hero_veilmourn_nacre_vowless"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4619,7 +4689,17 @@
     "hero_sunvault_mirro_halometer": "hero_arcane_sunvault_mirro_halometer",
     "hero_thornwake_elian_loamchant": "hero_arcane_thornwake_elian_loamchant",
     "hero_brasshollow_lina_gaugesavant": "hero_arcane_brasshollow_lina_gaugesavant",
-    "hero_veilmourn_sael_mirrorbell": "hero_arcane_veilmourn_sael_mirrorbell"
+    "hero_veilmourn_sael_mirrorbell": "hero_arcane_veilmourn_sael_mirrorbell",
+    "hero_mireclaw_pell_reedscript": "hero_roster_mireclaw_pell_reedscript",
+    "hero_mireclaw_zhorra_fenwake": "hero_roster_mireclaw_zhorra_fenwake",
+    "hero_sunvault_dovan_lenscaptain": "hero_roster_sunvault_dovan_lenscaptain",
+    "hero_sunvault_renn_facetlane": "hero_roster_sunvault_renn_facetlane",
+    "hero_thornwake_merek_greenbarrow": "hero_roster_thornwake_merek_greenbarrow",
+    "hero_thornwake_ralka_mossvein": "hero_roster_thornwake_ralka_mossvein",
+    "hero_brasshollow_pava_ashmeter": "hero_roster_brasshollow_pava_ashmeter",
+    "hero_brasshollow_vellum_quench": "hero_roster_brasshollow_vellum_quench",
+    "hero_veilmourn_damar_oriflag": "hero_roster_veilmourn_damar_oriflag",
+    "hero_veilmourn_nacre_vowless": "hero_roster_veilmourn_nacre_vowless"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",

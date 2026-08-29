@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-tavern-arcane-controller-overworld-sprites-10184`.
+- Selected implementation slice: `content-tavern-final-roster-overworld-sprites-10184`.
+
+## Tavern Final-Roster Overworld Sprites
+
+id: `content-tavern-final-roster-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- exact adventure-map identity covers 50 of 60 production heroes; the last ten live recruits still collapse to faction-generic figures even though towns, authored map objects, decorative/blocker objects, and the unit-art catalog are fully identity-covered;
+- Pell Reedscript, Zhorra Fenwake, Dovan Lens-Captain, Renn Facetlane, Merek Greenbarrow, Ralka Mossvein, Pava Ashmeter, Vellum Quench, Damar Oriflag, and Nacre Vowless form the complete remaining roster across linked-den growth, tempo pursuit, relay surveying, delayed focus, controlled recovery, long-fight memory, slag alchemy, cooldown smoothing, signal theft, and retaliation hexes.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each remaining production hero, preserving production portrait identity, faction material language, role-defining implement, readable small-scale silhouette, grounding, focus, and command-pennant clearance;
+- expand manifest-owned hero-id mapping from 50 to all 60 exact production identities while preserving a method-matched faction-fallback simulation for a temporarily missing identity asset, plus renderer, movement, town-footprint, fog, strategic-enemy, and save ownership;
+- prove each selected hero through the real first-scenario Wayfarers Hall authority, authored recruitment cost, active-command switch, exact field presentation, and save/resume, including exact mapped Pell hostile presentation and the existing malformed/unknown commander fallbacks.
+
+Completion criteria:
+- ten distinct original sources and curated runtime sprites retain exact manifest provenance, genuine alpha, unique payloads, portrait references, and source-art exclusion from release exports;
+- the six faction first scenarios offer all intended remaining heroes, charge each authored cost, add exactly one commander per hire, preserve save version 9, and resolve every exact mapped sprite after switching and reload;
+- inspected 1280x720 and 1920x1080 captures, all-60 identity, recruitment/movement/town/fog/fallback/enemy/save runtime, core and repository checks, and bounded Linux/Windows export startup pass without exceeding the strict 250000000-byte PCK ceiling.
+
+Result:
+- added ten distinct original portrait-faithful adventure figures for Pell Reedscript, Zhorra Fenwake, Dovan Lens-Captain, Renn Facetlane, Merek Greenbarrow, Ralka Mossvein, Pava Ashmeter, Vellum Quench, Damar Oriflag, and Nacre Vowless, raising exact hero identity coverage from 50 to all 60 production heroes;
+- the real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hires, active-command switches, exact field presentation, method-matched missing-identity faction fallback restoration, mapped Pell enemy identity, and save/resume pass at save version 9;
+- inspected 1280x720 and 1920x1080 captures preserve readable silhouettes and map priority, while core/static checks and Linux/Windows packaged startup pass with identical 248855436-byte PCKs containing all ten runtime textures, excluding all high-resolution source art, and remaining below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no hero rules, economy, AI, movement, save-schema, RMG, renderer-architecture, signing, publication, whole-game, or release-readiness claim.
 
 ## Tavern Arcane-Controller Overworld Sprites
 

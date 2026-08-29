@@ -55,14 +55,25 @@ const EXPECTED_HERO_ASSETS := {
 	"hero_thornwake_elian_loamchant": "hero_arcane_thornwake_elian_loamchant",
 	"hero_brasshollow_lina_gaugesavant": "hero_arcane_brasshollow_lina_gaugesavant",
 	"hero_veilmourn_sael_mirrorbell": "hero_arcane_veilmourn_sael_mirrorbell",
+	"hero_mireclaw_pell_reedscript": "hero_roster_mireclaw_pell_reedscript",
+	"hero_mireclaw_zhorra_fenwake": "hero_roster_mireclaw_zhorra_fenwake",
+	"hero_sunvault_dovan_lenscaptain": "hero_roster_sunvault_dovan_lenscaptain",
+	"hero_sunvault_renn_facetlane": "hero_roster_sunvault_renn_facetlane",
+	"hero_thornwake_merek_greenbarrow": "hero_roster_thornwake_merek_greenbarrow",
+	"hero_thornwake_ralka_mossvein": "hero_roster_thornwake_ralka_mossvein",
+	"hero_brasshollow_pava_ashmeter": "hero_roster_brasshollow_pava_ashmeter",
+	"hero_brasshollow_vellum_quench": "hero_roster_brasshollow_vellum_quench",
+	"hero_veilmourn_damar_oriflag": "hero_roster_veilmourn_damar_oriflag",
+	"hero_veilmourn_nacre_vowless": "hero_roster_veilmourn_nacre_vowless",
 }
 const PRESENTATION_HERO_IDS := [
 	"hero_lyra", "hero_vaska", "hero_solera", "hero_thornwake_silsa_bramblehound", "hero_brasshollow_marka_ironclause", "hero_veilmourn_ivara_blacktide",
 	"hero_neral", "hero_seren",
-	"hero_torren", "hero_mireclaw_brakka_mudkeel", "hero_varis", "hero_thornwake_veyra_seedseer", "hero_brasshollow_selka_pitmarshal", "hero_veilmourn_morwen_wakeoracle",
+	"hero_torren", "hero_varis",
 	"hero_embercourt_helva_tollbrand", "hero_tarn", "hero_sunvault_ilyr_glassmarshal", "hero_thornwake_halen_thorncart", "hero_brasshollow_kuld_varn", "hero_veilmourn_jessa_keelwarden",
 	"hero_embercourt_saren_lockmaster", "hero_orrik", "hero_thalen", "hero_thornwake_nara_graftsibyl", "hero_brasshollow_harro_debtrune", "hero_veilmourn_orso_nightchart",
-	"hero_embercourt_jorun_beaconscribe", "hero_mireclaw_edda_rotlamp", "hero_sunvault_mirro_halometer", "hero_thornwake_elian_loamchant", "hero_brasshollow_lina_gaugesavant", "hero_veilmourn_sael_mirrorbell",
+	"hero_mireclaw_pell_reedscript", "hero_mireclaw_zhorra_fenwake", "hero_sunvault_dovan_lenscaptain", "hero_sunvault_renn_facetlane", "hero_thornwake_merek_greenbarrow",
+	"hero_thornwake_ralka_mossvein", "hero_brasshollow_pava_ashmeter", "hero_brasshollow_vellum_quench", "hero_veilmourn_damar_oriflag", "hero_veilmourn_nacre_vowless",
 ]
 const TAVERN_VANGUARD_CASES := [
 	{"scenario_id": "river-pass", "hero_id": "hero_embercourt_belis_rainledger"},
@@ -111,6 +122,18 @@ const TAVERN_ARCANE_CONTROLLER_CASES := [
 	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_elian_loamchant"},
 	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_lina_gaugesavant"},
 	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_sael_mirrorbell"},
+]
+const TAVERN_FINAL_ROSTER_CASES := [
+	{"scenario_id": "bogbound-oath", "hero_id": "hero_mireclaw_pell_reedscript"},
+	{"scenario_id": "bogbound-oath", "hero_id": "hero_mireclaw_zhorra_fenwake"},
+	{"scenario_id": "prismhearth-watch", "hero_id": "hero_sunvault_dovan_lenscaptain"},
+	{"scenario_id": "prismhearth-watch", "hero_id": "hero_sunvault_renn_facetlane"},
+	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_merek_greenbarrow"},
+	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_ralka_mossvein"},
+	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_pava_ashmeter"},
+	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_vellum_quench"},
+	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_damar_oriflag"},
+	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_nacre_vowless"},
 ]
 const ALL_SCENARIO_STARTS := {
 	"river-pass": "hero_lyra",
@@ -171,6 +194,10 @@ func _run() -> void:
 	if not bool(tavern_arcane_controllers.get("ok", false)):
 		_fail("Tavern arcane-controller recruitment validation failed: %s" % tavern_arcane_controllers)
 		return
+	var tavern_final_roster := _validate_tavern_final_roster_recruitment()
+	if not bool(tavern_final_roster.get("ok", false)):
+		_fail("Tavern final-roster recruitment validation failed: %s" % tavern_final_roster)
+		return
 	var original_window_size := get_window().size
 	var rows: Array = []
 	for viewport_size in VIEWPORT_SIZES:
@@ -192,6 +219,7 @@ func _run() -> void:
 		"tavern_strategic_officer_count": TAVERN_STRATEGIC_OFFICER_CASES.size(),
 		"tavern_ritual_scholar_count": TAVERN_RITUAL_SCHOLAR_CASES.size(),
 		"tavern_arcane_controller_count": TAVERN_ARCANE_CONTROLLER_CASES.size(),
+		"tavern_final_roster_count": TAVERN_FINAL_ROSTER_CASES.size(),
 		"presentation_hero_count": PRESENTATION_HERO_IDS.size(),
 		"faction_count": 6,
 		"scenario_starts": scenario_starts,
@@ -201,6 +229,7 @@ func _run() -> void:
 		"tavern_strategic_officers": tavern_strategic_officers,
 		"tavern_ritual_scholars": tavern_ritual_scholars,
 		"tavern_arcane_controllers": tavern_arcane_controllers,
+		"tavern_final_roster": tavern_final_roster,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback": "procedural_hero_marker",
 		"rows": rows,
@@ -266,7 +295,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var first_hero: Dictionary = heroes[0]
-	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_mireclaw_pell_reedscript"})) == "hero_faction_mireclaw"
+	var faction_fallback_exact := _validate_faction_fallback(map_view)
 	first_hero["id"] = "hero_missing_faction_sprite_fixture"
 	shell.call("_refresh")
 	await get_tree().process_frame
@@ -452,7 +481,20 @@ func _hero_runtime_group(asset_id: String) -> String:
 		return "tavern_ritual_scholars"
 	if asset_id.begins_with("hero_arcane_"):
 		return "tavern_arcane_controllers"
+	if asset_id.begins_with("hero_roster_"):
+		return "tavern_final_roster"
 	return "tavern_vanguard"
+
+func _validate_faction_fallback(map_view: Node) -> bool:
+	var hero_id := "hero_mireclaw_pell_reedscript"
+	var identity_map: Dictionary = map_view.get("_hero_identity_asset_ids")
+	var exact_asset_id := String(identity_map.get(hero_id, ""))
+	if exact_asset_id != "hero_roster_mireclaw_pell_reedscript":
+		return false
+	identity_map.erase(hero_id)
+	var fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", ContentService.get_hero(hero_id))) == "hero_faction_mireclaw"
+	identity_map[hero_id] = exact_asset_id
+	return fallback_exact and String(map_view.call("_hero_sprite_asset_id", ContentService.get_hero(hero_id))) == exact_asset_id
 
 func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dictionary:
 	var active_tile_value: Dictionary = profiles_exact.get("active_tile", {})
@@ -708,6 +750,9 @@ func _validate_tavern_ritual_scholar_recruitment() -> Dictionary:
 
 func _validate_tavern_arcane_controller_recruitment() -> Dictionary:
 	return _validate_tavern_recruitment_cases(TAVERN_ARCANE_CONTROLLER_CASES)
+
+func _validate_tavern_final_roster_recruitment() -> Dictionary:
+	return _validate_tavern_recruitment_cases(TAVERN_FINAL_ROSTER_CASES)
 
 func _validate_tavern_recruitment_cases(cases: Array) -> Dictionary:
 	var rows: Array = []
