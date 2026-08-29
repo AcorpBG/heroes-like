@@ -96,6 +96,7 @@ const TAB_HELP_TOPIC := {
 @onready var _open_settings_button: Button = %OpenSettings
 @onready var _open_editor_button: Button = %OpenEditor
 @onready var _campaign_list: ItemList = %CampaignList
+@onready var _campaign_arc_emblem: TextureRect = %CampaignArcEmblem
 @onready var _previous_campaign_arc_button: Button = %PreviousCampaignArc
 @onready var _next_campaign_arc_button: Button = %NextCampaignArc
 @onready var _campaign_details_panel: PanelContainer = %CampaignDetailsPanel
@@ -1807,6 +1808,9 @@ func _rebuild_campaign_browser() -> void:
 	for index in range(_campaign_entries.size()):
 		var entry = _campaign_entries[index]
 		_campaign_list.add_item(String(entry.get("label", entry.get("campaign_id", "Campaign"))))
+		var emblem_texture := _load_campaign_emblem_texture(String(entry.get("emblem_path", "")))
+		if emblem_texture != null:
+			_campaign_list.set_item_icon(index, emblem_texture)
 		if String(entry.get("campaign_id", "")) == preferred_campaign_id:
 			selected_index = index
 
@@ -1864,6 +1868,7 @@ func _refresh_campaign_browser() -> void:
 	_sync_campaign_storage_state()
 	_sync_campaign_native_navigation()
 	_refresh_campaign_row_tooltips()
+	_refresh_selected_campaign_emblem()
 	if _campaign_entries.is_empty():
 		_set_commander_portrait(_campaign_commander_portrait, "")
 		_set_compact_label(_campaign_details_label, "Campaign board: archived campaign arcs are not active in this build.", 2, 82)
@@ -1962,6 +1967,32 @@ func _refresh_campaign_browser() -> void:
 			String(chapter_action.get("summary", "")),
 		])
 	)
+
+func _refresh_selected_campaign_emblem() -> void:
+	var selected_entry := _selected_campaign_entry()
+	var campaign_name := String(selected_entry.get("label", _selected_campaign_id)).get_slice(" | ", 0)
+	var alt_text := String(selected_entry.get("emblem_alt_text", "")).strip_edges()
+	var emblem_path := String(selected_entry.get("emblem_path", "")).strip_edges()
+	var texture := _load_campaign_emblem_texture(emblem_path)
+	_campaign_arc_emblem.texture = texture
+	_campaign_arc_emblem.visible = texture != null
+	_campaign_arc_emblem.tooltip_text = "%s emblem\n%s" % [campaign_name, alt_text] if texture != null else ""
+	_campaign_arc_emblem.accessibility_name = "%s campaign emblem" % campaign_name if texture != null else "Selected campaign emblem"
+	_campaign_arc_emblem.accessibility_description = alt_text if texture != null else "The selected campaign arc has no loaded emblem."
+
+func _selected_campaign_entry() -> Dictionary:
+	for entry in _campaign_entries:
+		if entry is Dictionary and String(entry.get("campaign_id", "")) == _selected_campaign_id:
+			return Dictionary(entry)
+	return {}
+
+func _load_campaign_emblem_texture(emblem_path: String) -> Texture2D:
+	var normalized_path := emblem_path.strip_edges()
+	if not normalized_path.begins_with("res://art/campaigns/runtime/emblems/") or not normalized_path.ends_with(".png"):
+		return null
+	if not ResourceLoader.exists(normalized_path, "Texture2D"):
+		return null
+	return load(normalized_path) as Texture2D
 
 func _campaign_launch_actions_are_exact(chapter_action: Dictionary, primary_action: Dictionary) -> bool:
 	return not chapter_action.is_empty() and chapter_action == primary_action
@@ -3650,6 +3681,7 @@ func validation_snapshot() -> Dictionary:
 		"campaign_empty_state_tooltip": _campaign_details_label.tooltip_text,
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
+		"campaign_arc_emblem": _campaign_arc_emblem_validation_snapshot(),
 		"selected_campaign_index": _selected_campaign_arc_index(),
 		"selected_campaign_chapter_index": _selected_campaign_chapter_index(),
 		"previous_campaign_arc_text": _previous_campaign_arc_button.text,
@@ -4201,6 +4233,30 @@ func _campaign_item_rows() -> Array:
 			"selected": _campaign_list.is_selected(index),
 		})
 	return rows
+
+func _campaign_arc_emblem_validation_snapshot() -> Dictionary:
+	var item_emblems := []
+	for index in range(mini(_campaign_list.item_count, _campaign_entries.size())):
+		var icon := _campaign_list.get_item_icon(index)
+		item_emblems.append({
+			"campaign_id": String(_campaign_entries[index].get("campaign_id", "")),
+			"path": icon.resource_path if icon is Texture2D else "",
+			"loaded": icon is Texture2D,
+		})
+	var selected_texture_path := _campaign_arc_emblem.texture.resource_path if _campaign_arc_emblem.texture is Texture2D else ""
+	return {
+		"visible": _campaign_arc_emblem.is_visible_in_tree(),
+		"texture_path": selected_texture_path,
+		"tooltip_text": _campaign_arc_emblem.tooltip_text,
+		"accessibility_name": _campaign_arc_emblem.accessibility_name,
+		"accessibility_description": _campaign_arc_emblem.accessibility_description,
+		"rect": _control_rect_snapshot(_campaign_arc_emblem),
+		"header_rect": _control_rect_snapshot(_campaign_arc_emblem.get_parent() as Control),
+		"stretch_mode": int(_campaign_arc_emblem.stretch_mode),
+		"expand_mode": int(_campaign_arc_emblem.expand_mode),
+		"list_fixed_icon_size": _campaign_list.fixed_icon_size,
+		"item_emblems": item_emblems,
+	}
 
 func _chapter_item_rows() -> Array:
 	var rows := []

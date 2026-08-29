@@ -123,6 +123,8 @@ ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCata
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
+CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "campaign_arc_emblem_runtime_report.gd"
+CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "campaign_arc_emblem_runtime_report.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
 MAIN_MENU_FRONTIER_CREST_PATH = ROOT / "art" / "ui" / "branding" / "aurelion_reach_frontier_crest.png"
 MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH = ROOT / "tests" / "main_menu_keyboard_navigation_smoke.gd"
@@ -48603,6 +48605,98 @@ def validate_faction_encounter_landmarks(errors: list[str]) -> None:
             ensure(f'"{short_id}"' in packaging_text, errors, f"{packaging_path.name} is missing packaged faction encounter identity {short_id}")
 
 
+def validate_campaign_arc_emblems(errors: list[str]) -> None:
+    campaign_path = CONTENT_DIR / "campaigns.json"
+    campaign_rules_path = ROOT / "scripts" / "core" / "CampaignRules.gd"
+    main_menu_script_path = ROOT / "scenes" / "menus" / "MainMenu.gd"
+    required_paths = (
+        campaign_path,
+        campaign_rules_path,
+        CONTENT_SERVICE_PATH,
+        MAIN_MENU_SCENE_PATH,
+        main_menu_script_path,
+        CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCRIPT_PATH,
+        CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing campaign arc emblem owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    expected = {
+        "campaign_reedfall": ("campaign_emblem_reedfall", "reedfall_lantern", "04f179aac96ec8b9f32e437e8e9a670dc8bf50038c7507f90601ac181fdeefcc", "5b4c3ee3a6b3a7deddeeadb31dfbb74aeb57b0bf3e6c9dbfe47cc79ec4b18c4c"),
+        "campaign_stonewake": ("campaign_emblem_stonewake", "stonewake_watchstone", "accf4f194395b3d39ad28020dca2f0b19368cb00ef3d0be2937614c621e18104", "39529488cc94ce12a61d490d02776db06cb67f173b50a4cf6152d76dd3cbf934"),
+        "campaign_bogbound_oath": ("campaign_emblem_bogbound_oath", "bogbound_oath_drum", "3a08c43387f6b45f863366b23c72b0b969316cc4873e5fcbc00129f0bc382ea8", "45d2572d109b19386ef868ee5cda135dd5d0bf8907cf58b51763e7465abce770"),
+        "campaign_shards_of_daybreak": ("campaign_emblem_shards_of_daybreak", "daybreak_shards", "34392ea0dfa071a2ec0349536904287619714b14649989fdf3dbceb19cddeebe", "e0f63a7666d560aaa8946fde4513f2350b05a4c6de618227fd34d8b6fc08d779"),
+        "campaign_ninefold_survey": ("campaign_emblem_ninefold_survey", "ninefold_survey_compass", "439ad7a4e099470a11d0776b766dfcf4205065fec827128b5aa031d421bb5cf6", "dd4b5e2903d08a4365affae64c7456721ecb12bf496bcea54086c3cd00f8ecab"),
+        "campaign_frontier_claims": ("campaign_emblem_frontier_claims", "frontier_claims_cairn", "36eea7fcce958d8ab5e08cb624d3b592129834de2543d25e4bcd2e44808a4fb5", "173d5cf7a1f5d8152f8f7f55e7c19a2c59db9139aff6581ba483fc9122b11b7d"),
+    }
+    campaigns_value = load_json(campaign_path).get("items", [])
+    campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
+    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the six live campaign arcs")
+    source_payloads: list[bytes] = []
+    runtime_payloads: list[bytes] = []
+    for campaign_id, (emblem_id, stem, source_sha, runtime_sha) in expected.items():
+        campaign = campaigns.get(campaign_id, {})
+        source_res = f"res://art/campaigns/source/generated/emblems/{stem}_source.png"
+        runtime_res = f"res://art/campaigns/runtime/emblems/{stem}.png"
+        ensure(str(campaign.get("emblem_id", "")) == emblem_id, errors, f"Campaign {campaign_id} must retain exact emblem identity")
+        ensure(str(campaign.get("emblem_source_path", "")) == source_res, errors, f"Campaign {campaign_id} must retain generated emblem provenance")
+        ensure(str(campaign.get("emblem_path", "")) == runtime_res, errors, f"Campaign {campaign_id} must retain exact runtime emblem path")
+        ensure(str(campaign.get("emblem_source_sha256", "")) == source_sha, errors, f"Campaign {campaign_id} source digest changed")
+        ensure(str(campaign.get("emblem_runtime_sha256", "")) == runtime_sha, errors, f"Campaign {campaign_id} runtime digest changed")
+        ensure(bool(str(campaign.get("emblem_alt_text", "")).strip()), errors, f"Campaign {campaign_id} must retain non-color emblem alt text")
+        source_path = res_path_to_disk(source_res)
+        runtime_path = res_path_to_disk(runtime_res)
+        ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"Campaign {campaign_id} must retain its 1254x1254 generated source")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (128, 128), errors, f"Campaign {campaign_id} must retain its compact 128x128 runtime emblem")
+        ensure(Path(f"{source_path}.import").is_file(), errors, f"Campaign {campaign_id} generated source is missing Godot import metadata")
+        ensure(Path(f"{runtime_path}.import").is_file(), errors, f"Campaign {campaign_id} runtime emblem is missing Godot import metadata")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha, errors, f"Campaign {campaign_id} generated-source bytes changed")
+            ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} generated source must retain real alpha")
+            source_payloads.append(payload)
+        if runtime_path.is_file():
+            payload = runtime_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == runtime_sha, errors, f"Campaign {campaign_id} runtime-emblem bytes changed")
+            ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} runtime emblem must retain real alpha")
+            runtime_payloads.append(payload)
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six campaign emblem sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 6 and len(set(runtime_payloads)) == 6, errors, "All six campaign runtime emblems must remain byte-distinct")
+
+    content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    rules_text = campaign_rules_path.read_text(encoding="utf-8")
+    menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    menu_text = main_menu_script_path.read_text(encoding="utf-8")
+    for token in ('expected_emblem_id := "campaign_emblem_%s"', 'emblem_path.begins_with("res://art/campaigns/runtime/emblems/")', 'emblem_source_path.begins_with("res://art/campaigns/source/generated/emblems/")', 'ResourceLoader.exists(emblem_path, "Texture2D")'):
+        ensure(token in content_text, errors, f"Campaign content validation is missing exact emblem ownership: {token}")
+    for token in ('"emblem_path": campaign_emblem_path(campaign_id)', '"emblem_alt_text": campaign_emblem_alt_text(campaign_id)', "static func campaign_emblem_path", "static func campaign_emblem_alt_text", 'ResourceLoader.exists(emblem_path, "Texture2D")'):
+        ensure(token in rules_text, errors, f"Campaign rules are missing fail-closed emblem authority: {token}")
+    for token in ('[node name="CampaignArcEmblem" type="TextureRect"', 'custom_minimum_size = Vector2(30, 30)', 'fixed_icon_size = Vector2i(24, 24)', 'accessibility_name = "Selected campaign emblem"'):
+        ensure(token in menu_scene_text, errors, f"Campaign menu scene is missing compact emblem composition: {token}")
+    for token in ("_campaign_list.set_item_icon(index, emblem_texture)", "_refresh_selected_campaign_emblem()", "func _load_campaign_emblem_texture", "func _campaign_arc_emblem_validation_snapshot", '"campaign_arc_emblem": _campaign_arc_emblem_validation_snapshot()', 'accessibility_description = alt_text'):
+        ensure(token in menu_text, errors, f"Campaign menu runtime is missing exact emblem presentation: {token}")
+    refresh_start = menu_text.find("func _refresh_selected_campaign_emblem")
+    refresh_end = menu_text.find("func _campaign_launch_actions_are_exact", refresh_start)
+    refresh_block = menu_text[refresh_start:refresh_end]
+    for forbidden in ("SessionState.SAVE_VERSION =", "SessionStateStore.SAVE_VERSION =", "CampaignProgression.profile["):
+        ensure(forbidden not in refresh_block, errors, f"Campaign emblem refresh must remain presentation-only: {forbidden}")
+
+    report_text = CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "campaign_arc_emblem_runtime_report.tscn", [("CampaignArcEmblemRuntimeReport", "Node")])
+    for token in ('const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]', 'source_image.get_size() != Vector2i(1254, 1254)', 'runtime_image.get_size() != Vector2i(128, 128)', 'campaign_list.grab_focus()', 'JOY_BUTTON_DPAD_DOWN', 'missing_campaign_emblem.png', 'SessionState.SAVE_VERSION != 9', 'OS.get_environment("CAMPAIGN_ARC_EMBLEM_CAPTURE")', 'await RenderingServer.frame_post_draw', 'print(REPORT_ID'):
+        ensure(token in report_text, errors, f"Campaign emblem focused report is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all six campaign emblems")
+        ensure('bool(terrain_payload["campaign_emblem_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when campaign emblems are absent")
+        ensure('"campaign_emblem_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report campaign emblem package coverage")
+        for _campaign_id, (_emblem_id, stem, _source_sha, _runtime_sha) in expected.items():
+            ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing campaign emblem identity {stem}")
+
+
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -72555,6 +72649,7 @@ def main() -> int:
     validate_overworld_cartographic_hover_reticle(errors)
     validate_overworld_contained_hover_card(errors)
     validate_faction_encounter_landmarks(errors)
+    validate_campaign_arc_emblems(errors)
     validate_overworld_enemy_commander_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)

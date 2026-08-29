@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Implement and validate the selected six-faction tavern-specialist hero identity sprite slice."
+    "Audit and select the next bounded high-impact live content and original-art gap without weakening the release package ceiling."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six original faction encounter landmarks and live commander/faction/unit/default presentation priority for all 38 faction-authored and 25 neutral-authored encounters.",
+  "currentNotes": "Completed six original campaign arc emblems wired into the live campaign browser and selected-arc header, with exact runtime provenance, accessibility, fallback, capture, and package proof.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-faction-encounter-landmarks-10184",
-  "currentSliceId": "content-faction-encounter-landmarks-10184",
-  "currentSliceNotes": "Completed: six byte-distinct original transparent faction encounter landmarks, commander-first then faction-landmark then unit/default fallback resolution, exact 38 faction/25 neutral authored coverage, contained hostile geometry, dual-resolution captures, save version 9, core/static/editor validation, and Linux/Windows package startup. Both PCKs are 249311144 bytes with all six imported textures present and source art excluded under the unchanged 250000000-byte ceiling.",
+  "currentSlice": "content-campaign-arc-emblems-10184",
+  "currentSliceId": "content-campaign-arc-emblems-10184",
+  "currentSliceNotes": "Completed six byte-distinct original transparent campaign arc emblems with exact immutable campaign-content paths and accessible descriptions, 24x24 list icons, 30x30 selected-arc header presentation, keyboard/controller refresh, fail-closed fallback, inspected dual-resolution captures, save version 9, and Linux/Windows package proof. Both PCKs are 249478160 bytes with six exact compiled textures, source art excluded, successful packaged startup, and the unchanged 250000000-byte ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content faction encounter landmarks 10184",
-  "currentSliceUpdatedAt": "2026-08-29T03:59:06Z",
+  "currentSliceTitle": "content campaign arc emblems 10184",
+  "currentSliceUpdatedAt": "2026-08-29T04:58:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105262,6 +105262,16 @@
       "startedAt": "2026-08-29T03:20:08Z",
       "notes": "Completed six byte-distinct original transparent field-command landmarks for Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn. Live presentation now resolves valid commander identity first, faction landmark second, neutral/unknown unit icon third, and generic hostile camp last; spawned faction wins before direct/authored army-group identity with cached immutable lookup. Exact 38 faction-authored and 25 neutral-authored coverage, four malformed commander cases, contained hostile marker geometry, save version 9, inspected 1280x720 and 1920x1080 captures, core/static/editor validation, and Linux/Windows packaged startup pass. Both PCKs are 249311144 bytes with six exact compiled landmark textures, source art excluded, and the strict 250000000-byte ceiling unchanged. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T03:59:06Z"
+    },
+    {
+      "id": "content-campaign-arc-emblems-10184",
+      "title": "content campaign arc emblems 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T04:58:55Z",
+      "startedAt": "2026-08-29T04:08:43Z",
+      "notes": "Completed original transparent emblems for Reedfall, Stonewake, Bogbound Oath, Shards of Daybreak, Ninefold Survey, and Frontier Claims. The live campaign list uses exact 24x24 icons and the existing selected-arc header uses the matching 30x30 emblem with non-color accessibility text, keyboard/controller refresh, and fail-closed missing-art behavior. Focused runtime and isolated legacy campaign-menu smokes, repository validation, and inspected 1280x720 and 1920x1080 captures pass. Linux and Windows packages boot with six exact compiled textures, source art excluded, save version 9 unchanged, and a 249478160-byte PCK below the unchanged 250000000-byte ceiling. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T04:58:55Z"
     }
   ],
   "project": "heroes-like",
@@ -105271,8 +105281,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 60 production heroes have exact adventure-map identities and all 38 faction-authored encounters now resolve six faction field-command landmarks. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved original-content or art slice; broader product gaps remain.",
+  "remainingGap": "All 60 production heroes have exact adventure-map identities, all 38 faction-authored encounters resolve six faction field-command landmarks, and all six playable campaign arcs now own distinct live browser identity art. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and select the next bounded high-impact live content and original-art gap while preserving the strict release package ceiling; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

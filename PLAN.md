@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-faction-encounter-landmarks-10184`.
+- Selected implementation slice: `content-campaign-arc-emblems-10184`.
+
+## Campaign Arc Emblems
+
+id: `content-campaign-arc-emblems-10184`
+
+Status: completed.
+
+Current finding:
+- all six playable campaign arcs are wired into the live campaign browser, chapter selection, carryover, restart, and launch flow, but the compact campaign rail presents every arc as text-only rows and the selected arc has no persistent visual identity;
+- faction crests and chapter commander portraits cannot represent the multi-region and multi-faction identity of Reedfall, Stonewake, Bogbound Oath, Shards of Daybreak, Ninefold Survey, and Frontier Claims.
+
+Implementation boundary:
+- add one original transparent campaign emblem for each playable arc, using distinct route, landmark, and campaign-objective motifs rather than faction heraldry or copied Heroes expression;
+- expose exact authored emblem paths and accessible descriptions through immutable campaign content, render compact icons in the existing arc list, and show the selected arc emblem inside the existing campaign header without adding another panel or changing campaign progression, launch, save, or scenario rules;
+- preserve text labels, keyboard/controller selection, collapsed and expanded intel layouts, missing/invalid-art fallback, high-contrast behavior, and save version 9.
+
+Completion criteria:
+- six byte-distinct original sources and compact runtime textures retain genuine alpha, exact content provenance, small-scale readability, and source-art exclusion from release PCKs;
+- all six campaign selections resolve the exact emblem in both the list and selected-arc header, with contained geometry, non-color tooltip/accessible naming, keyboard navigation, and fail-closed missing-art behavior;
+- inspected 1280x720 and 1920x1080 captures, campaign/menu/core/static validation, and Linux/Windows packaged startup pass without exceeding the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- Reedfall, Stonewake, Bogbound Oath, Shards of Daybreak, Ninefold Survey, and Frontier Claims now own byte-distinct original transparent emblems, immutable source/runtime provenance, and non-color descriptions in campaign content;
+- the live campaign list renders exact 24x24 icons and the existing selected-arc header renders the matching 30x30 emblem without another panel; keyboard and controller selection refresh both surfaces, while invalid or missing art fails closed without changing campaign progression or save version 9;
+- the focused runtime report, isolated legacy campaign-menu smoke, repository validator, and inspected 1280x720 and 1920x1080 captures pass; Linux and Windows exports both contain six exact compiled textures, exclude source art, boot successfully, and produce a 249478160-byte PCK under the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no copied Heroes heraldry, campaign icons, maps, names, text, or protected visual expression; no campaign rules, carryover, scenario content, save-schema, RMG, signing, publication, whole-game, or release-readiness claim.
 
 ## Faction Encounter Landmarks
 

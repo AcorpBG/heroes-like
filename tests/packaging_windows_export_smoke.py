@@ -148,6 +148,14 @@ REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/encounters/factions/{faction_name}.png.import"
     for faction_name in REQUIRED_FACTION_ENCOUNTER_NAMES
 )
+REQUIRED_CAMPAIGN_EMBLEM_NAMES = (
+    "reedfall_lantern", "stonewake_watchstone", "bogbound_oath_drum",
+    "daybreak_shards", "ninefold_survey_compass", "frontier_claims_cairn",
+)
+REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES = tuple(
+    f"art/campaigns/runtime/emblems/{emblem_name}.png.import"
+    for emblem_name in REQUIRED_CAMPAIGN_EMBLEM_NAMES
+)
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
     "Parse Error",
@@ -384,6 +392,7 @@ def imported_payload_paths_for(import_entries: tuple[str, ...]) -> set[str]:
 def pck_terrain_payload_summary() -> dict:
     source_art_metadata_paths, source_art_imported_payload_paths = source_art_import_payload_paths()
     required_faction_encounter_texture_entries = imported_payload_paths_for(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES)
+    required_campaign_emblem_texture_entries = imported_payload_paths_for(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES)
     summary = {
         "checked": False,
         "valid_directory": False,
@@ -429,6 +438,11 @@ def pck_terrain_payload_summary() -> dict:
         "faction_encounter_import_entries": [],
         "faction_encounter_texture_entries": [],
         "faction_encounter_entries_present": False,
+        "required_campaign_emblem_import_entries": list(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES),
+        "required_campaign_emblem_texture_entries": sorted(required_campaign_emblem_texture_entries),
+        "campaign_emblem_import_entries": [],
+        "campaign_emblem_texture_entries": [],
+        "campaign_emblem_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -498,6 +512,10 @@ def pck_terrain_payload_summary() -> dict:
                     summary["faction_encounter_import_entries"].append(entry_path)
                 if entry_path in required_faction_encounter_texture_entries:
                     summary["faction_encounter_texture_entries"].append(entry_path)
+                if entry_path in REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES:
+                    summary["campaign_emblem_import_entries"].append(entry_path)
+                if entry_path in required_campaign_emblem_texture_entries:
+                    summary["campaign_emblem_texture_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
@@ -531,6 +549,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["arcane_controller_hero_entries_present"] = set(summary["arcane_controller_hero_import_entries"]) == set(REQUIRED_ARCANE_CONTROLLER_HERO_PCK_IMPORT_ENTRIES) and set(summary["arcane_controller_hero_texture_names"]) == set(REQUIRED_ARCANE_CONTROLLER_HERO_IDS)
     summary["final_roster_hero_entries_present"] = set(summary["final_roster_hero_import_entries"]) == set(REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES) and set(summary["final_roster_hero_texture_names"]) == set(REQUIRED_FINAL_ROSTER_HERO_IDS)
     summary["faction_encounter_entries_present"] = len(required_faction_encounter_texture_entries) == len(REQUIRED_FACTION_ENCOUNTER_NAMES) and set(summary["faction_encounter_import_entries"]) == set(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["faction_encounter_texture_entries"]) == required_faction_encounter_texture_entries
+    summary["campaign_emblem_entries_present"] = len(required_campaign_emblem_texture_entries) == len(REQUIRED_CAMPAIGN_EMBLEM_NAMES) and set(summary["campaign_emblem_import_entries"]) == set(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES) and set(summary["campaign_emblem_texture_entries"]) == required_campaign_emblem_texture_entries
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -590,6 +609,7 @@ def main() -> int:
         and bool(terrain_payload["arcane_controller_hero_entries_present"])
         and bool(terrain_payload["final_roster_hero_entries_present"])
         and bool(terrain_payload["faction_encounter_entries_present"])
+        and bool(terrain_payload["campaign_emblem_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -738,6 +758,9 @@ def main() -> int:
         "faction_encounter_pck_import_entry_count": len(terrain_payload["faction_encounter_import_entries"]),
         "faction_encounter_pck_texture_count": len(terrain_payload["faction_encounter_texture_entries"]),
         "faction_encounter_pck_entries_present": terrain_payload["faction_encounter_entries_present"],
+        "campaign_emblem_pck_import_entry_count": len(terrain_payload["campaign_emblem_import_entries"]),
+        "campaign_emblem_pck_texture_count": len(terrain_payload["campaign_emblem_texture_entries"]),
+        "campaign_emblem_pck_entries_present": terrain_payload["campaign_emblem_entries_present"],
         "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],
