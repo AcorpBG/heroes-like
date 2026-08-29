@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_mire_sun_contract_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png",
+  "runtime_atlas_size": [192, 48],
+  "runtime_atlas_sha256": "4f3bf471fe1706cd74cd399412127dc85c7537bbfaad150893d815490c953d87",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_42x42_and_south_anchor_on_transparent_48x48_cell",
+  "prompt_set_summary": "Four original painterly orthographic Mireclaw and Sunvault frontier objective landmarks with strong non-color silhouettes and genuine transparency; no characters, text, logos, terrain cards, watermarks, or copied franchise expression.",
+  "items": [
+    {"encounter_id":"encounter_brakka_hive_foreclosure","asset_id":"encounter_mire_sun_hive_chain_foreclosure","source_path":"res://art/overworld/source/generated/encounters/mire_sun_contracts/hive_chain_foreclosure_source.png","source_sha256":"bd64f275ec4f1e5c604b5296b42ce9d9244578825bb0430a2aa3eba6ad988ed8","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f2bf6e33-6694-45ea-bed3-b6d7103464f0.png","atlas_region":[0,0,48,48],"presentation_role":"hive_chain_foreclosure"},
+    {"encounter_id":"encounter_nix_reedflame_vigil","asset_id":"encounter_mire_sun_reedflame_votive_gate","source_path":"res://art/overworld/source/generated/encounters/mire_sun_contracts/reedflame_votive_gate_source.png","source_sha256":"b1d6c59160c19707508034661a57bd30849a37e1f3325aad45c3a6940ae3d863","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-221283f9-0b9f-4cdb-9d3e-586f70e0806c.png","atlas_region":[48,0,48,48],"presentation_role":"reedflame_votive_gate"},
+    {"encounter_id":"encounter_ilyr_ossuary_battery","asset_id":"encounter_mire_sun_drowned_mirror_battery","source_path":"res://art/overworld/source/generated/encounters/mire_sun_contracts/drowned_mirror_battery_source.png","source_sha256":"44c79754caeb30667da871fcd560ded168bd3a2dbd782156f14582aee74cc2d6","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-544d1997-ad66-40db-8aeb-8eacd8a875a1.png","atlas_region":[96,0,48,48],"presentation_role":"drowned_mirror_battery"},
+    {"encounter_id":"encounter_dovan_greenline_survey","asset_id":"encounter_mire_sun_rootbound_survey_lens","source_path":"res://art/overworld/source/generated/encounters/mire_sun_contracts/rootbound_survey_lens_source.png","source_sha256":"cc6d9a3591e75fa18b37d2dffd69455d87556ec4347d1af4c2fceb5157c0d5c7","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f3f8dec7-bfc6-49ba-9d48-a0b07edbf659.png","atlas_region":[144,0,48,48],"presentation_role":"rootbound_survey_lens"}
+  ]
+}

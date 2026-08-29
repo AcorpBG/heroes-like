@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: `content-three-faction-outer-reach-contracts-10184`.
-- Package boundary: both release exports now measure 248310728 bytes, 1689272 bytes below the unchanged 250000000-byte ceiling. All four encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Latest completed implementation slice: `content-mireclaw-sunvault-frontier-contracts-10184`.
+- Package boundary: both release exports now measure 248364940 bytes, 1635060 bytes below the unchanged 250000000-byte ceiling. All five encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Mireclaw-Sunvault Frontier Contracts
+
+id: `content-mireclaw-sunvault-frontier-contracts-10184`
+
+Status: completed.
+
+Current finding:
+- Mireclaw and Sunvault each own five authored scenarios but only three distinct lead heroes, while Brasshollow, Thornwake, Veilmourn, and Embercourt each expose five scenario leads;
+- Brakka Mudkeel, Nix Votivejaw, Ilyr Glassmarshal, and Dovan Lens-Captain already own exact production hero art but remain tavern-only;
+- thirteen unused Mireclaw/Sunvault-themed resource sites already resolve exact map-object art and can become live route decisions inside one coherent four-map batch.
+
+Implementation boundary:
+- author four original skirmish-only 11x6 contracts led by Brakka, Nix, Ilyr, and Dovan, raising both Mireclaw and Sunvault to five distinct scenario leads;
+- add four contract-specific player armies, four boss encounters and enemy groups, eight town placements, forty resource placements activating all thirteen selected dormant exact-art sites, twelve artifacts, twelve encounter fronts, and twenty reactive hooks;
+- generate four original transparent boss landmarks in one compact 192x48 atlas and wire exact identity, descriptions, provenance, live placement, and Linux/Windows package inclusion;
+- preserve save version 9, the twenty-four-chapter campaign authority, data-driven rules ownership, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all four contracts appear in skirmish selection, create valid sessions with the intended exact hero, launch and deterministically resolve their boss front, grant authored rewards and flags, render the exact landmark, and round-trip through save version 9;
+- all thirteen selected dormant sites become live authored placements with existing exact art and no procedural fallback;
+- one combined four-contract gameplay/runtime/visual smoke covers the complete batch, followed by repository validation and Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion evidence:
+- forty active scenarios now expose thirty distinct lead heroes; Brakka, Nix, Ilyr, and Dovan each own a complete skirmish contract, while all thirteen selected exact-art sites now have live authored placements;
+- the single four-case smoke passed exact live rendering, deterministic boss victories, reward/flag application, visual captures, and save-version-9 round trips;
+- repository validation and matching Linux/Windows 248364940-byte packaged startup gates passed with the compact atlas included and all generated source originals excluded.
+
+Non-goals:
+- no campaign, unit roster, town template, battle formula, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes scenario, map, hero, landmark, name, text, or protected visual expression.
 
 ## Three-Faction Outer-Reach Contracts
 
