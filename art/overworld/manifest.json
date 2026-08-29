@@ -5505,6 +5505,41 @@
       "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
       "assigned_resource_site_id": "site_frost_tithe_cellar", "presentation_role": "opened_claimed_state", "accessible_description": "The Frost Tithe Cellar hatch stands open around an orderly blue-lit muster alcove."
     },
+    "resource_site_neutral_salt_skirmisher_pier_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/salt_skirmisher_pier_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_salt_skirmisher_pier", "presentation_role": "controlled_muster_state", "accessible_description": "The Salt Skirmisher Pier stands open above the tide beside ordered bucklers, throwing spears, packed salt sacks, bright lamps, and a teal claim pennant."
+    },
+    "resource_site_neutral_ember_cart_yard_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/ember_cart_yard_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_ember_cart_yard", "presentation_role": "controlled_muster_state", "accessible_description": "The Ember Cart Yard holds two loaded red carts beside ordered pikes, shields, coal sacks, route lamps, and teal-and-ivory muster cloth."
+    },
+    "resource_site_neutral_prism_outrider_post_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/prism_outrider_post_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_prism_outrider_post", "presentation_role": "controlled_muster_state", "accessible_description": "The Prism Outrider Post shines beside ready tack, ordered travel packs, a clear tent entrance, signal lamps, and teal claim ribbons."
+    },
+    "resource_site_neutral_storm_rook_eyrie_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/storm_rook_eyrie_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_storm_rook_eyrie", "presentation_role": "controlled_muster_state", "accessible_description": "The Storm Rook Eyrie rises over repaired platforms, a bright blue beacon, ordered climbing gear, lit stairs, and teal signal pennants."
+    },
+    "resource_site_neutral_mirror_bound_barracks_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/mirror_bound_barracks_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_mirror_bound_barracks", "presentation_role": "controlled_muster_state", "accessible_description": "The Mirror-Bound Barracks gate stands open beneath lit windows beside ordered crystal arms, ready shields, courtyard lamps, and teal claim flags."
+    },
+    "resource_site_neutral_furnace_oath_yard_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/furnace_oath_yard_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_furnace_oath_yard", "presentation_role": "controlled_muster_state", "accessible_description": "The Furnace Oath Yard burns steadily among ordered hammers, pikes, ready ingots, field packs, bright lamps, and teal-and-ivory banners."
+    },
+    "resource_site_neutral_drowned_crown_hall_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/final_neutral_dwelling_claimed_wave1/drowned_crown_hall_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_drowned_crown_hall", "presentation_role": "controlled_muster_state", "accessible_description": "The Drowned Crown Hall glows over clear flooded steps beside ordered tide arms, supply crates, warm crown doors, and teal claim banners."
+    },
     "resource_site_neutral_orchard_levy_claimed": {
       "path": "res://art/overworld/runtime/objects/resource_sites/remaining_neutral_dwelling_claimed_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [768, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/remaining_neutral_dwelling_claimed_wave1/orchard_levy_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_remaining_neutral_dwelling_claimed_atlas",
@@ -6338,6 +6373,41 @@
       "asset_id": "resource_site_neutral_basalt_gatehouse_claimed",
       "unclaimed_asset_id": "mapobj_basalt_gatehouse",
       "fit": "Exact original twin-tower basalt gate for the controlled Basalt Gatehouse neutral dwelling identity."
+    },
+    "site_salt_skirmisher_pier": {
+      "asset_id": "resource_site_neutral_salt_skirmisher_pier_claimed",
+      "unclaimed_asset_id": "mapobj_salt_skirmisher_pier",
+      "fit": "Exact original stilt pier and buckler racks for the controlled Salt Skirmisher Pier neutral dwelling identity."
+    },
+    "site_ember_cart_yard": {
+      "asset_id": "resource_site_neutral_ember_cart_yard_claimed",
+      "unclaimed_asset_id": "mapobj_ember_cart_yard",
+      "fit": "Exact original paired ember carts and coal yard for the controlled Ember Cart Yard neutral dwelling identity."
+    },
+    "site_prism_outrider_post": {
+      "asset_id": "resource_site_neutral_prism_outrider_post_claimed",
+      "unclaimed_asset_id": "mapobj_prism_outrider_post",
+      "fit": "Exact original prism obelisk and tack post for the controlled Prism Outrider Post neutral dwelling identity."
+    },
+    "site_storm_rook_eyrie": {
+      "asset_id": "resource_site_neutral_storm_rook_eyrie_claimed",
+      "unclaimed_asset_id": "mapobj_storm_rook_eyrie",
+      "fit": "Exact original storm crag and rook platforms for the controlled Storm Rook Eyrie neutral dwelling identity."
+    },
+    "site_mirror_bound_barracks": {
+      "asset_id": "resource_site_neutral_mirror_bound_barracks_claimed",
+      "unclaimed_asset_id": "mapobj_mirror_bound_barracks",
+      "fit": "Exact original pale mirror fortress and shield racks for the controlled Mirror-Bound Barracks neutral dwelling identity."
+    },
+    "site_furnace_oath_yard": {
+      "asset_id": "resource_site_neutral_furnace_oath_yard_claimed",
+      "unclaimed_asset_id": "mapobj_furnace_oath_yard",
+      "fit": "Exact original blackstone furnace court for the controlled Furnace Oath Yard neutral dwelling identity."
+    },
+    "site_drowned_crown_hall": {
+      "asset_id": "resource_site_neutral_drowned_crown_hall_claimed",
+      "unclaimed_asset_id": "mapobj_drowned_crown_hall",
+      "fit": "Exact original flooded crown hall for the controlled Drowned Crown Hall neutral dwelling identity."
     },
     "site_wayfarer_infirmary": {
       "asset_id": "alchemists_hut",

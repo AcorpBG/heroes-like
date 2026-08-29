@@ -37,6 +37,13 @@ const CASES := [
 	{"site_id": "site_frostwharf_house", "placement_id": "dwelling_frostwharf_house", "unclaimed_asset_id": "mapobj_frostwharf_house", "claimed_asset_id": "resource_site_neutral_frostwharf_house_claimed"},
 	{"site_id": "site_charcoal_burners", "placement_id": "dwelling_charcoal_burners", "unclaimed_asset_id": "mapobj_charcoal_burners", "claimed_asset_id": "resource_site_neutral_charcoal_burners_claimed"},
 	{"site_id": "site_basalt_gatehouse", "placement_id": "dwelling_basalt_gatehouse", "unclaimed_asset_id": "mapobj_basalt_gatehouse", "claimed_asset_id": "resource_site_neutral_basalt_gatehouse_claimed"},
+	{"site_id": "site_salt_skirmisher_pier", "placement_id": "dwelling_salt_skirmisher_pier", "unclaimed_asset_id": "mapobj_salt_skirmisher_pier", "claimed_asset_id": "resource_site_neutral_salt_skirmisher_pier_claimed"},
+	{"site_id": "site_ember_cart_yard", "placement_id": "dwelling_ember_cart_yard", "unclaimed_asset_id": "mapobj_ember_cart_yard", "claimed_asset_id": "resource_site_neutral_ember_cart_yard_claimed"},
+	{"site_id": "site_prism_outrider_post", "placement_id": "dwelling_prism_outrider_post", "unclaimed_asset_id": "mapobj_prism_outrider_post", "claimed_asset_id": "resource_site_neutral_prism_outrider_post_claimed"},
+	{"site_id": "site_storm_rook_eyrie", "placement_id": "dwelling_storm_rook_eyrie", "unclaimed_asset_id": "mapobj_storm_rook_eyrie", "claimed_asset_id": "resource_site_neutral_storm_rook_eyrie_claimed"},
+	{"site_id": "site_mirror_bound_barracks", "placement_id": "dwelling_mirror_bound_barracks", "unclaimed_asset_id": "mapobj_mirror_bound_barracks", "claimed_asset_id": "resource_site_neutral_mirror_bound_barracks_claimed"},
+	{"site_id": "site_furnace_oath_yard", "placement_id": "dwelling_furnace_oath_yard", "unclaimed_asset_id": "mapobj_furnace_oath_yard", "claimed_asset_id": "resource_site_neutral_furnace_oath_yard_claimed"},
+	{"site_id": "site_drowned_crown_hall", "placement_id": "dwelling_drowned_crown_hall", "unclaimed_asset_id": "mapobj_drowned_crown_hall", "claimed_asset_id": "resource_site_neutral_drowned_crown_hall_claimed"},
 ]
 
 var _errors: Array[String] = []

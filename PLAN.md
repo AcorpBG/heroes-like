@@ -24,8 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: `content-sixteen-neutral-dwelling-musters-10184`.
-- Package boundary after the slice: both release exports measure 249247696 bytes, 752304 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Active implementation slice: `content-seven-final-neutral-dwelling-musters-10184`.
+- Package boundary after the slice: both release exports measure 249287020 bytes, 712980 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Seven Final Neutral Dwelling Musters
+
+id: `content-seven-final-neutral-dwelling-musters-10184`
+
+Status: completed.
+
+Completion result:
+- Salt Skirmisher Pier, Ember Cart Yard, Prism Outrider Post, Storm Rook Eyrie, Mirror-Bound Barracks, Furnace Oath Yard, and Drowned Crown Hall are now live on Ninefold Confluence with exact watch blocking, production battle construction, one-time recruits and rewards, weekly town musters, income, response orders, and save-version-9 continuity;
+- all seven keep their exact unclaimed landmark and switch to distinct original controlled-state art in one compact 336x48 atlas; the Rootwatch Hollow reusable map-object boundary now agrees with its already-live dwelling and deterministic artifact behavior;
+- Batch 005 now has zero metadata-only site/object pairs: thirty-one standard neutral dwellings and two dwelling-plus-artifact sites are live;
+- the one consolidated seven-case gameplay/runtime smoke passed on its first run, all captures passed direct review, repository validation passed, and matching Linux/Windows 249287020-byte packaged boots passed with eight required resource-site atlases and generated source art excluded.
+
+Current finding:
+- Salt Skirmisher Pier, Ember Cart Yard, Prism Outrider Post, Storm Rook Eyrie, Mirror-Bound Barracks, Furnace Oath Yard, and Drowned Crown Hall are the seven remaining Batch 005 dwelling definitions whose original rosters, rewards, income, weekly musters, response orders, objects, and exact neutral-watch encounters exist but do not reach a live capturable map placement;
+- the seven sites cover three lighter frontier musters and four guarded high-value musters, so activating them completes the authored Batch 005 dwelling gameplay family instead of leaving the stronger variants as metadata;
+- Rootwatch Hollow's site behavior and artifact reward are already live, but its reusable map-object boundary is the last object-only Batch 005 mismatch.
+
+Implementation boundary:
+- place all seven dwellings and their exact existing neutral-watch encounters across the Ninefold Confluence showcase map, with biome-appropriate placement and explicit guard_front_id ownership;
+- activate persistent claim, initial recruits, weekly town musters, income, public response orders, pathing, rendering, and save-version-9 continuity without changing unit definitions or battle formulas;
+- create seven distinct original controlled-state landmarks derived from their existing unclaimed identities, pack them into one compact 336x48 runtime atlas, and retain accessible non-color descriptions;
+- reconcile Rootwatch Hollow's reusable map-object boundary with its already-live site behavior while preserving its deterministic artifact reward;
+- retain generated-source exclusion and remain below the unchanged 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all seven sites block on their own exact watch, construct the production battle, grant exact one-time recruits and rewards, supply exact weekly musters and income, expose their response order, reject repeat claims, and round-trip exactly through save version 9;
+- each site keeps its exact existing unclaimed landmark and switches to its own transparent 48x48 controlled-state atlas region after claim;
+- Batch 005 has no remaining metadata-only site or map-object runtime boundary;
+- one consolidated seven-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new unit definition, faction, hero, town, building, combat formula, AI algorithm, RMG behavior, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes dwelling, map, name, text, roster, landmark, or protected visual expression.
 
 ## Sixteen Neutral Dwelling Musters
 
