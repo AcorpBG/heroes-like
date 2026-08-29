@@ -862,6 +862,72 @@
         {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 5},
         {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 2}
       ]
+    },
+    {
+      "id": "army_lockflame_turncoats",
+      "name": "Lockflame Turncoats",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 8},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 5},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 3},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 1}
+      ]
+    },
+    {
+      "id": "army_mossglass_moonhunt",
+      "name": "Mossglass Moonhunt",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 8},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 5},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 3},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 1}
+      ]
+    },
+    {
+      "id": "army_parallax_choir",
+      "name": "Parallax Choir",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 2},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 2},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 1},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 1}
+      ]
+    },
+    {
+      "id": "army_graftbound_pilgrims",
+      "name": "Graftbound Pilgrims",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 8},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 5},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 3},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 1}
+      ]
+    },
+    {
+      "id": "army_redline_foreclosure",
+      "name": "Redline Foreclosure",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 8},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 5},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 3},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 1}
+      ]
+    },
+    {
+      "id": "army_drowned_bell_procession",
+      "name": "Drowned Bell Procession",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 8},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 5},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 3},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 1}
+      ]
     }
   ]
 }

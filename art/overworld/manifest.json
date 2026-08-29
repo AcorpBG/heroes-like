@@ -1089,6 +1089,72 @@
       "presentation_role": "three_hollow_blackbranch_berm",
       "accessible_description": "Three crooked hollow blackbranch trunks rise like claws behind a thorn-woven earth berm, sling nest, paired fog jars, and stone-veil cairn."
     },
+    "encounter_dissident_lockflame_turncoats": {
+      "path": "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/dissident_fronts/lockflame_turncoats_source.png",
+      "source_model": "built_in_image_gen_original_dissident_front_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_lockflame_turncoats",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "broken_sluice_turncoat_battery",
+      "accessible_description": "Two crossed brass sluice blades rise behind a broken lockgate mast, snapped oath-chain, bargebow rest, and twin ember braziers."
+    },
+    "encounter_dissident_mossglass_moonhunt": {
+      "path": "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/dissident_fronts/mossglass_moonhunt_source.png",
+      "source_model": "built_in_image_gen_original_dissident_front_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_mossglass_moonhunt",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "antler_scent_gate_moonhunt",
+      "accessible_description": "A forked bog-antler arch carries three mossglass hound masks, hooked chains, bone charms, and a central reed lantern."
+    },
+    "encounter_dissident_parallax_choir": {
+      "path": "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/dissident_fronts/parallax_choir_source.png",
+      "source_model": "built_in_image_gen_original_dissident_front_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_parallax_choir",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "forked_mirror_prism_chime",
+      "accessible_description": "Two curved ivory mirror forks surround a suspended faceted prism chime, angled reflector vanes, and a low bronze resonant bowl."
+    },
+    "encounter_dissident_graftbound_pilgrims": {
+      "path": "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png",
+      "atlas_region": [144, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/dissident_fronts/graftbound_pilgrims_source.png",
+      "source_model": "built_in_image_gen_original_dissident_front_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_graftbound_pilgrims",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "walking_root_pilgrim_arch",
+      "accessible_description": "Two bent living trunks form a walking-root arch carrying three graft baskets, a thorn bell, ram plate, red cloth, and pale fungi."
+    },
+    "encounter_dissident_redline_foreclosure": {
+      "path": "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png",
+      "atlas_region": [192, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/dissident_fronts/redline_foreclosure_source.png",
+      "source_model": "built_in_image_gen_original_dissident_front_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_redline_foreclosure",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "seizure_gauge_foreclosure_post",
+      "accessible_description": "A tall riveted seizure gauge carries an off-center brass wheel, hanging counterweight, twin red pavises, rivet hopper, and caged lamp."
+    },
+    "encounter_dissident_drowned_bell_procession": {
+      "path": "res://art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png",
+      "atlas_region": [240, 0, 48, 48],
+      "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/dissident_fronts/drowned_bell_procession_source.png",
+      "source_model": "built_in_image_gen_original_dissident_front_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_drowned_bell_procession",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "ribbed_skiff_funeral_bell",
+      "accessible_description": "Salt-worn skiff ribs arch around a suspended sea bell, two mourning lanterns, torn fog pennant, wet rope, and a long undertow harpoon."
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -5714,7 +5780,13 @@
     "encounter_reedward_camp": "encounter_recurring_reedward_camp",
     "encounter_sluice_raiders": "encounter_recurring_sluice_raiders",
     "encounter_willow_mill_pack": "encounter_recurring_willow_mill_pack",
-    "encounter_ghoul_grove": "encounter_recurring_ghoul_grove"
+    "encounter_ghoul_grove": "encounter_recurring_ghoul_grove",
+    "encounter_lockflame_turncoats": "encounter_dissident_lockflame_turncoats",
+    "encounter_mossglass_moonhunt": "encounter_dissident_mossglass_moonhunt",
+    "encounter_parallax_choir": "encounter_dissident_parallax_choir",
+    "encounter_graftbound_pilgrims": "encounter_dissident_graftbound_pilgrims",
+    "encounter_redline_foreclosure": "encounter_dissident_redline_foreclosure",
+    "encounter_drowned_bell_procession": "encounter_dissident_drowned_bell_procession"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

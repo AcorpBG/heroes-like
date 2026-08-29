@@ -3931,6 +3931,8 @@ func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_r
 	return payload
 
 func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if bool(encounter.get("prefer_identity_landmark", false)) and _draw_preferred_encounter_landmark(encounter, rect, remembered, tile):
+		return true
 	if _draw_encounter_commander_sprite(encounter, rect, remembered, tile):
 		return true
 	if _draw_encounter_identity_landmark(encounter, rect, remembered, tile):
@@ -3940,6 +3942,9 @@ func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool
 	if _draw_encounter_unit_icon(encounter, rect, remembered, tile):
 		return true
 	return _draw_object_sprite(_encounter_asset_id(encounter), rect, remembered, _encounter_object_profile(), tile)
+
+func _draw_preferred_encounter_landmark(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	return _draw_encounter_identity_landmark(encounter, rect, remembered, tile)
 
 func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var hero := _enemy_commander_hero_template(encounter)
@@ -7362,10 +7367,11 @@ func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 	var faction_encounter_loaded := faction_encounter_asset_id != "" and _object_texture_for_asset(faction_encounter_asset_id) is Texture2D
 	var encounter_asset_id := _encounter_asset_id(encounter)
 	var encounter_asset_loaded := encounter_asset_id != "" and _object_texture_for_asset(encounter_asset_id) is Texture2D
+	var prefer_identity_landmark := bool(encounter.get("prefer_identity_landmark", false)) and identity_encounter_loaded
 	var tile := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
 	var tile_rect := _tile_rect(_board_rect(), tile)
 	var ground_center := tile_rect.position + tile_rect.size * Vector2(0.50, _procedural_ground_center_y_factor("encounter"))
-	var presentation_extent := OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES if sprite_asset_id == "" and (identity_encounter_loaded or faction_encounter_loaded) else OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES
+	var presentation_extent := OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES if prefer_identity_landmark or (sprite_asset_id == "" and (identity_encounter_loaded or faction_encounter_loaded)) else OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES
 	var hostile_layout := _hostile_actor_layout(tile_rect, ground_center, false, presentation_extent)
 	var hostile_marker_profile: Dictionary = hostile_layout.get("marker_profile", {})
 	return {
@@ -7383,11 +7389,12 @@ func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 		"faction_encounter_asset_id": faction_encounter_asset_id,
 		"faction_encounter_path": faction_encounter_path,
 		"encounter_asset_id": encounter_asset_id,
-		"uses_commander_sprite": sprite_asset_id != "",
-		"uses_identity_encounter_sprite": sprite_asset_id == "" and identity_encounter_loaded,
-		"uses_faction_encounter_sprite": sprite_asset_id == "" and not identity_encounter_loaded and faction_encounter_loaded,
-		"uses_unit_icon_fallback": sprite_asset_id == "" and not identity_encounter_loaded and not faction_encounter_loaded and unit_icon_loaded,
-		"uses_encounter_sprite_fallback": sprite_asset_id == "" and not identity_encounter_loaded and not faction_encounter_loaded and not unit_icon_loaded and encounter_asset_loaded,
+		"prefer_identity_landmark": prefer_identity_landmark,
+		"uses_commander_sprite": sprite_asset_id != "" and not prefer_identity_landmark,
+		"uses_identity_encounter_sprite": sprite_asset_id == "" and identity_encounter_loaded or prefer_identity_landmark,
+		"uses_faction_encounter_sprite": sprite_asset_id == "" and not identity_encounter_loaded and faction_encounter_loaded and not prefer_identity_landmark,
+		"uses_unit_icon_fallback": sprite_asset_id == "" and not identity_encounter_loaded and not faction_encounter_loaded and unit_icon_loaded and not prefer_identity_landmark,
+		"uses_encounter_sprite_fallback": sprite_asset_id == "" and not identity_encounter_loaded and not faction_encounter_loaded and not unit_icon_loaded and encounter_asset_loaded and not prefer_identity_landmark,
 		"hostile_treatment": HOSTILE_ACTOR_MARKER_MODEL,
 		"hostile_marker_profile": _hostile_actor_marker_validation_payload(hostile_marker_profile),
 		"visible_extent_tiles": OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES,
@@ -8042,7 +8049,7 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			sprite_footprints.append({"width": artifact_footprint.x, "height": artifact_footprint.y})
 	var encounter_payload := _encounter_node_at(tile)
 	if not encounter_payload.is_empty():
-		var encounter_asset_id := _encounter_asset_id(encounter_payload)
+		var encounter_asset_id := _encounter_identity_asset_id(encounter_payload) if bool(encounter_payload.get("prefer_identity_landmark", false)) else _encounter_asset_id(encounter_payload)
 		if encounter_asset_id != "" and _object_texture_for_asset(encounter_asset_id) is Texture2D:
 			sprite_asset_ids.append(encounter_asset_id)
 			var encounter_footprint := _object_profile_footprint(_encounter_object_profile())

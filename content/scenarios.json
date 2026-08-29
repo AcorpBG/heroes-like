@@ -734,7 +734,8 @@
             "ai_hints": {"path_blocking": true, "avoid_until_strength": "standard_guard", "neutral_clearance_value": 4, "guard_target_value_hint": 3},
             "editor_placement": {"placement_mode": "scenario_encounter_overlay", "requires_clear_adjacent_target": true, "warn_if_hiding_target": true, "density_bucket": "guard_or_encounter"}
           }
-        }
+        },
+        {"placement_id": "causeway_lockflame_turncoats", "encounter_id": "encounter_lockflame_turncoats", "x": 2, "y": 4, "difficulty": "medium", "combat_seed": 2204, "prefer_identity_landmark": true}
       ]
     },
     {
@@ -1976,7 +1977,8 @@
       "encounters": [
         {"placement_id": "bogbound_lantern_patrol", "encounter_id": "encounter_lantern_patrol", "x": 3, "y": 1, "difficulty": "medium", "combat_seed": 7201},
         {"placement_id": "bogbound_survey_guard", "encounter_id": "encounter_survey_guard", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 7202},
-        {"placement_id": "bogbound_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 5, "y": 0, "difficulty": "medium", "combat_seed": 7203, "enemy_army": {"id": "army_bogbound_archive_wardens_watch", "name": "Bogbound Archive Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 8}, {"unit_id": "unit_ember_archer", "count": 12}, {"unit_id": "unit_citadel_pikeward", "count": 6}]}}
+        {"placement_id": "bogbound_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 5, "y": 0, "difficulty": "medium", "combat_seed": 7203, "enemy_army": {"id": "army_bogbound_archive_wardens_watch", "name": "Bogbound Archive Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 8}, {"unit_id": "unit_ember_archer", "count": 12}, {"unit_id": "unit_citadel_pikeward", "count": 6}]}},
+        {"placement_id": "bogbound_mossglass_moonhunt", "encounter_id": "encounter_mossglass_moonhunt", "x": 2, "y": 4, "difficulty": "medium", "combat_seed": 7204, "prefer_identity_landmark": true}
       ]
     },
     {
@@ -2954,7 +2956,8 @@
           ]
         },
         {"placement_id": "prismhearth_glasswing_sortie", "encounter_id": "encounter_glasswing_sortie", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 11202},
-        {"placement_id": "prismhearth_halo_reserve", "encounter_id": "encounter_halo_reserve", "x": 7, "y": 0, "difficulty": "high", "combat_seed": 11203, "enemy_army": {"id": "army_prismhearth_halo_reserve_watch", "name": "Prismhearth Halo Reserve Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 5}, {"unit_id": "unit_prism_adept", "count": 2}, {"unit_id": "unit_mirror_duelist", "count": 2}, {"unit_id": "unit_aurora_ballista", "count": 2}]}}
+        {"placement_id": "prismhearth_halo_reserve", "encounter_id": "encounter_halo_reserve", "x": 7, "y": 0, "difficulty": "high", "combat_seed": 11203, "enemy_army": {"id": "army_prismhearth_halo_reserve_watch", "name": "Prismhearth Halo Reserve Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 5}, {"unit_id": "unit_prism_adept", "count": 2}, {"unit_id": "unit_mirror_duelist", "count": 2}, {"unit_id": "unit_aurora_ballista", "count": 2}]}},
+        {"placement_id": "prismhearth_parallax_choir", "encounter_id": "encounter_parallax_choir", "x": 2, "y": 4, "difficulty": "medium", "combat_seed": 11204, "prefer_identity_landmark": true}
       ]
     },
     {
@@ -4169,7 +4172,8 @@
               {"unit_id": "unit_gorefen_ripper", "count": 3}
             ]
           }
-        }
+        },
+        {"placement_id": "mireford_graftbound_pilgrims", "encounter_id": "encounter_graftbound_pilgrims", "x": 2, "y": 4, "difficulty": "medium", "combat_seed": 10204, "prefer_identity_landmark": true}
       ]
     },
     {
@@ -4333,7 +4337,8 @@
           "enemy_army": {"id": "army_orevein_archive_wardens_watch", "name": "Orevein Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 11}, {"unit_id": "unit_ember_archer", "count": 11}, {"unit_id": "unit_citadel_pikeward", "count": 4}]}
         },
         {"placement_id": "orevein_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 17202, "enemy_army": {"id": "army_orevein_bridgeward_levies", "name": "Orevein Bridgeward Levies", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 4}, {"unit_id": "unit_ember_archer", "count": 6}]}},
-        {"placement_id": "orevein_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 17203, "enemy_army": {"id": "army_orevein_beacon_wardens", "name": "Orevein Beacon Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_ember_archer", "count": 4}, {"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}}
+        {"placement_id": "orevein_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 17203, "enemy_army": {"id": "army_orevein_beacon_wardens", "name": "Orevein Beacon Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_ember_archer", "count": 4}, {"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}},
+        {"placement_id": "orevein_redline_foreclosure", "encounter_id": "encounter_redline_foreclosure", "x": 2, "y": 4, "difficulty": "medium", "combat_seed": 17204, "prefer_identity_landmark": true}
       ]
     },
     {
@@ -4477,7 +4482,8 @@
       "encounters": [
         {"placement_id": "bellwake_relay_pickets", "encounter_id": "encounter_relay_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 18201, "enemy_army": {"id": "army_bellwake_relay_pickets_watch", "name": "Bellwake Relay Pickets Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_sunvault_shard_wardens", "count": 9}, {"unit_id": "unit_sunvault_prism_adepts", "count": 7}, {"unit_id": "unit_sunvault_mirror_duelists", "count": 8}]}},
         {"placement_id": "bellwake_mirror_lancers", "encounter_id": "encounter_mirror_lancers", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 18202, "enemy_army": {"id": "army_bellwake_mirror_lancers_watch", "name": "Bellwake Mirror Lancers Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 9}, {"unit_id": "unit_prism_adept", "count": 8}, {"unit_id": "unit_mirror_duelist", "count": 8}, {"unit_id": "unit_sunvault_resonant_choristers", "count": 5}]}},
-        {"placement_id": "bellwake_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 18203, "artifact_source_context": {"family": "guarded_reward_site", "secondary_tags": ["guarded_reward"], "guard_profile": {"tier": "heavy"}, "reward_preview": {"reward_categories": ["artifact"]}, "guarded_reward_contract": {"battle_salvage_reward_table_id": "artifact_source_battle_salvage_heavy"}, "runtime_boundary": {"artifact_reward_execution": true}}, "enemy_army": {"id": "army_bellwake_aurora_battery_watch", "name": "Bellwake Aurora Battery Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 8}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_aurora_ballista", "count": 3}]}}
+        {"placement_id": "bellwake_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 18203, "artifact_source_context": {"family": "guarded_reward_site", "secondary_tags": ["guarded_reward"], "guard_profile": {"tier": "heavy"}, "reward_preview": {"reward_categories": ["artifact"]}, "guarded_reward_contract": {"battle_salvage_reward_table_id": "artifact_source_battle_salvage_heavy"}, "runtime_boundary": {"artifact_reward_execution": true}}, "enemy_army": {"id": "army_bellwake_aurora_battery_watch", "name": "Bellwake Aurora Battery Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 8}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_aurora_ballista", "count": 3}]}},
+        {"placement_id": "bellwake_drowned_bell_procession", "encounter_id": "encounter_drowned_bell_procession", "x": 2, "y": 4, "difficulty": "medium", "combat_seed": 18204, "prefer_identity_landmark": true}
       ]
     },
     {
