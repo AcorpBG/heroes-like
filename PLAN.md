@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-campaign-arc-emblems-10184`.
+- Most recently completed implementation slice: `content-battle-field-objective-landmarks-10184`.
+
+## Battle Field-Objective Landmarks
+
+id: `content-battle-field-objective-landmarks-10184`
+
+Status: completed.
+
+Current finding:
+- the 63 authored encounters contain 53 live field objectives across cover line, obstruction line, lane battery, hazard zone, breach point, ritual pylon, signal beacon, and supply post rules, but the battlefield renders them as tiny generic geometry;
+- breach points, ritual pylons, signal beacons, and supply posts currently collapse to the same circle, while the other four types remain abstract bars, crosses, or triangles that do not carry the authored landmark identity visible in battle summaries.
+
+Implementation boundary:
+- add one original transparent compact battlefield landmark for each of the eight live field-objective types, using neutral frontier engineering, ritual, signal, and supply visual language rather than faction heraldry or copied Heroes expression;
+- register immutable type-to-art paths and non-color descriptions, load them through a bounded battle-board cache, and render them inside the existing objective hex with a distinct control-side shape while retaining the current progress pips and legacy geometry as the fail-closed fallback;
+- preserve all encounter records, objective mechanics, control/capture state, AI valuation, deterministic combat, board input, reduced motion, high contrast, performance, and save version 9.
+
+Completion criteria:
+- eight byte-distinct original sources and compact 128x128 runtime textures retain genuine alpha, exact provenance, small-board readability, and source-art exclusion from release PCKs;
+- all 53 authored objective instances resolve one of the eight exact landmarks, with type-distinct silhouettes, non-color player/enemy/neutral control shapes, contained board geometry, cached loading, and missing/invalid-art fallback;
+- inspected representative 1280x720 and 1920x1080 captures cover all eight types; focused battle/runtime, core/static validation, and Linux/Windows packaged startup pass without exceeding the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- cover lines, obstruction lines, lane batteries, hazard zones, breach points, ritual pylons, signal beacons, and supply posts now own eight byte-distinct original transparent landmarks with immutable source/runtime provenance, non-color descriptions, and distinct silhouettes;
+- the live battle board resolves all 53 authored objectives through a bounded texture cache, keeps imported art inside the existing objective hex, distinguishes player/enemy/neutral control with diamond/triangle/square badges, retains progress pips, and falls back to the prior procedural geometry when art is missing or invalid without changing battle authority or save version 9;
+- the focused all-eight runtime report, repository validator, and battle layout routing/save-resume sweep pass; inspected 1280x720 and 1920x1080 captures remain scenery-first, while Linux and Windows exports contain eight exact compiled textures, exclude source art, boot successfully, and produce a 249595844-byte PCK under the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no copied Heroes battlefield objects, icons, heraldry, assets, names, text, or protected visual expression; no encounter, unit, spell, field-objective, AI, battle-resolution, save-schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Campaign Arc Emblems
 
