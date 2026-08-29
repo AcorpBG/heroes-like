@@ -163,11 +163,13 @@ REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME = "recurring_encounter_landmarks_atlas"
 REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME = "dissident_fronts_atlas"
 REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME = "standalone_contracts_atlas"
 REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME = "outer_reach_contracts_atlas"
+REQUIRED_MIRE_SUN_CONTRACT_ATLAS_NAME = "mire_sun_contracts_atlas"
 REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES = (
     "art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png.import",
     "art/overworld/runtime/objects/encounters/dissident_fronts/dissident_fronts_atlas.png.import",
     "art/overworld/runtime/objects/encounters/standalone_contracts/standalone_contracts_atlas.png.import",
     "art/overworld/runtime/objects/encounters/outer_reach_contracts/outer_reach_contracts_atlas.png.import",
+    "art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png.import",
 )
 REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME = "recurring_resource_site_landmarks_atlas"
 REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME = "faction_landmarks_live_atlas"
@@ -657,7 +659,7 @@ def pck_terrain_payload_summary() -> dict:
                         summary["hero_specialty_atlas_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_FACTION_SET_ATLAS_NAME:
                         summary["faction_set_atlas_texture_names"].append(imported_name)
-                    if imported_name in {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME}:
+                    if imported_name in {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME, REQUIRED_MIRE_SUN_CONTRACT_ATLAS_NAME}:
                         summary["recurring_encounter_atlas_texture_names"].append(imported_name)
                     if imported_name in {REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME, REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME}:
                         summary["recurring_resource_site_atlas_texture_names"].append(imported_name)
@@ -677,7 +679,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["final_roster_hero_entries_present"] = set(summary["final_roster_hero_import_entries"]) == set(REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES) and set(summary["final_roster_hero_texture_names"]) == set(REQUIRED_FINAL_ROSTER_HERO_IDS)
     summary["faction_encounter_entries_present"] = len(required_faction_encounter_texture_entries) == len(REQUIRED_FACTION_ENCOUNTER_NAMES) and set(summary["faction_encounter_import_entries"]) == set(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["faction_encounter_texture_entries"]) == required_faction_encounter_texture_entries
     summary["signature_encounter_entries_present"] = len(required_signature_encounter_texture_entries) == len(REQUIRED_SIGNATURE_ENCOUNTER_NAMES) and set(summary["signature_encounter_import_entries"]) == set(REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["signature_encounter_texture_entries"]) == required_signature_encounter_texture_entries
-    summary["recurring_encounter_atlas_entries_present"] = len(required_recurring_encounter_atlas_texture_entries) == 4 and set(summary["recurring_encounter_atlas_import_entries"]) == set(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_encounter_atlas_texture_entries"]) == required_recurring_encounter_atlas_texture_entries and set(summary["recurring_encounter_atlas_texture_names"]) == {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME}
+    summary["recurring_encounter_atlas_entries_present"] = len(required_recurring_encounter_atlas_texture_entries) == 5 and set(summary["recurring_encounter_atlas_import_entries"]) == set(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_encounter_atlas_texture_entries"]) == required_recurring_encounter_atlas_texture_entries and set(summary["recurring_encounter_atlas_texture_names"]) == {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME, REQUIRED_MIRE_SUN_CONTRACT_ATLAS_NAME}
     summary["recurring_resource_site_atlas_entries_present"] = len(required_recurring_resource_site_atlas_texture_entries) == 2 and set(summary["recurring_resource_site_atlas_import_entries"]) == set(REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_resource_site_atlas_texture_entries"]) == required_recurring_resource_site_atlas_texture_entries and set(summary["recurring_resource_site_atlas_texture_names"]) == {REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME, REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME}
     summary["campaign_emblem_entries_present"] = len(required_campaign_emblem_texture_entries) == len(REQUIRED_CAMPAIGN_EMBLEM_NAMES) and set(summary["campaign_emblem_import_entries"]) == set(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES) and set(summary["campaign_emblem_texture_entries"]) == required_campaign_emblem_texture_entries
     summary["campaign_chapter_seal_entries_present"] = len(required_campaign_chapter_seal_texture_entries) == len(REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES) and set(summary["campaign_chapter_seal_import_entries"]) == set(REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES) and set(summary["campaign_chapter_seal_texture_entries"]) == required_campaign_chapter_seal_texture_entries

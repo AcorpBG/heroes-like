@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed one substantial six-scenario content batch for the three underrepresented production factions with one consolidated gameplay/runtime/visual smoke.",
+  "currentNotes": "Completed one four-scenario Mireclaw/Sunvault batch, bringing both factions to five distinct scenario leads and activating thirteen dormant exact-art sites.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-three-faction-outer-reach-contracts-10184",
-  "currentSliceId": "content-three-faction-outer-reach-contracts-10184",
-  "currentSliceNotes": "Completed six skirmish-only contracts led by Selka, Daxis, Halen, Veyra, Jessa, and Morwen, activating fifteen dormant exact-art sites with one compact six-boss atlas. One combined six-case smoke passed, repository validation passed, and matching Linux/Windows 248310728-byte packages booted below the ceiling.",
+  "currentSlice": "content-mireclaw-sunvault-frontier-contracts-10184",
+  "currentSliceId": "content-mireclaw-sunvault-frontier-contracts-10184",
+  "currentSliceNotes": "Completed four skirmish-only contracts led by Brakka, Nix, Ilyr, and Dovan, thirteen dormant-site activations, four boss fronts, and one compact atlas. The single combined smoke, repository validation, and Linux/Windows package gates passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content three faction outer reach contracts 10184",
-  "currentSliceUpdatedAt": "2026-08-29T17:18:05Z",
+  "currentSliceTitle": "content mireclaw sunvault frontier contracts 10184",
+  "currentSliceUpdatedAt": "2026-08-29T17:37:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106094,6 +106094,16 @@
       "startedAt": "2026-08-29T16:49:08Z",
       "notes": "Completed six skirmish-only maps led by Selka, Daxis, Halen, Veyra, Jessa, and Morwen, with contract-specific player companies, fifteen activated exact-art sites, six boss fronts, and one compact original atlas. One consolidated six-case smoke passed deterministic victories, rewards/flags, captures, and save v9; repository validation and matching Linux/Windows 248310728-byte package boots passed.",
       "completedAt": "2026-08-29T17:18:05Z"
+    },
+    {
+      "id": "content-mireclaw-sunvault-frontier-contracts-10184",
+      "title": "content mireclaw sunvault frontier contracts 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T17:37:04Z",
+      "startedAt": "2026-08-29T17:20:24Z",
+      "notes": "Completed four skirmish-only maps led by Brakka, Nix, Ilyr, and Dovan, with contract-specific player armies, thirteen activated exact-art sites, four boss fronts, and one compact original atlas. The single four-case smoke passed deterministic victories, rewards/flags, exact rendering, captures, and save v9; repository validation and matching Linux/Windows 248364940-byte package boots passed.",
+      "completedAt": "2026-08-29T17:37:04Z"
     }
   ],
   "project": "heroes-like",
@@ -106103,8 +106113,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Twenty-six of 60 exact live heroes now headline authored scenarios, leaving thirty-four production identities without a player-facing command map. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next coherent production-content batch from remaining hero-command, scenario, encounter, artifact, spell, and faction-art gaps; preserve the 1689272-byte package headroom and do not infer whole-game release readiness from this completed slice.",
+  "remainingGap": "Thirty of 60 exact live heroes now headline authored scenarios, leaving thirty production identities without a player-facing command map. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next coherent production-content batch from remaining hero-command, scenario, encounter, artifact, spell, and faction-art gaps; preserve the 1635060-byte package headroom and do not infer whole-game release readiness from this completed slice.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106636,9 +106646,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed six collectible faction artifact sets with original compact insignia and live Town and Overworld equipment integration.",
+  "summary": "Completed four Mireclaw and Sunvault frontier contracts with distinct lead heroes, live dormant-site placements, original compact boss art, deterministic battles, and cross-platform packaged coverage.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T16:43:45Z",
+  "updatedAt": "2026-08-29T17:37:04Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

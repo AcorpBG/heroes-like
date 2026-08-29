@@ -5511,6 +5511,30 @@
       "source_generated": "res://art/overworld/source/generated/encounters/outer_reach_contracts/rootwake_ghost_mast_source.png", "source_model": "built_in_image_gen_original_outer_reach_contract_landmark_atlas",
       "assigned_encounter_id": "encounter_morwen_rootwake_vigil", "assigned_faction_id": "faction_thornwake", "presentation_role": "rootwake_ghost_mast",
       "accessible_description": "A pale broken ship mast grows through a forked root shrine with ghost sail ribbons, seed cages, and a low tide bell."
+    },
+    "encounter_mire_sun_hive_chain_foreclosure": {
+      "path": "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [192, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/mire_sun_contracts/hive_chain_foreclosure_source.png", "source_model": "built_in_image_gen_original_mire_sun_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_brakka_hive_foreclosure", "assigned_faction_id": "faction_brasshollow", "presentation_role": "hive_chain_foreclosure",
+      "accessible_description": "A round woven reed hive hangs above a bog cradle, locked by a heavy brass chain, counting clamp, and wax seals."
+    },
+    "encounter_mire_sun_reedflame_votive_gate": {
+      "path": "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [192, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/mire_sun_contracts/reedflame_votive_gate_source.png", "source_model": "built_in_image_gen_original_mire_sun_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_nix_reedflame_vigil", "assigned_faction_id": "faction_embercourt", "presentation_role": "reedflame_votive_gate",
+      "accessible_description": "Two blackened reed pillars form a forked arch around a hanging votive charm, caged ember, and ferry-knot ropes."
+    },
+    "encounter_mire_sun_drowned_mirror_battery": {
+      "path": "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [192, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/mire_sun_contracts/drowned_mirror_battery_source.png", "source_model": "built_in_image_gen_original_mire_sun_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_ilyr_ossuary_battery", "assigned_faction_id": "faction_veilmourn", "presentation_role": "drowned_mirror_battery",
+      "accessible_description": "Three tilted blue mirrors ride a bone-white ship-rib carriage above hooked rails and a salt-dark bell counterweight."
+    },
+    "encounter_mire_sun_rootbound_survey_lens": {
+      "path": "res://art/overworld/runtime/objects/encounters/mire_sun_contracts/mire_sun_contracts_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [192, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/mire_sun_contracts/rootbound_survey_lens_source.png", "source_model": "built_in_image_gen_original_mire_sun_contract_landmark_atlas",
+      "assigned_encounter_id": "encounter_dovan_greenline_survey", "assigned_faction_id": "faction_thornwake", "presentation_role": "rootbound_survey_lens",
+      "accessible_description": "A tall brass tripod carries a circular blue survey lens gripped by living roots, side vanes, seed cages, and glass markers."
     }
   },
   "resource_site_sprites": {
@@ -5954,7 +5978,11 @@
     "encounter_halen_furnace_railbreak": "encounter_outer_reach_furnace_railblock",
     "encounter_veyra_drowned_orchard": "encounter_outer_reach_drowned_seed_bell",
     "encounter_jessa_lockfire_boom": "encounter_outer_reach_lockfire_chain_buoy",
-    "encounter_morwen_rootwake_vigil": "encounter_outer_reach_rootwake_ghost_mast"
+    "encounter_morwen_rootwake_vigil": "encounter_outer_reach_rootwake_ghost_mast",
+    "encounter_brakka_hive_foreclosure": "encounter_mire_sun_hive_chain_foreclosure",
+    "encounter_nix_reedflame_vigil": "encounter_mire_sun_reedflame_votive_gate",
+    "encounter_ilyr_ossuary_battery": "encounter_mire_sun_drowned_mirror_battery",
+    "encounter_dovan_greenline_survey": "encounter_mire_sun_rootbound_survey_lens"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",
