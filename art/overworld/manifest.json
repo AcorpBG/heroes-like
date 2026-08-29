@@ -5470,6 +5470,41 @@
       "presentation_role": "opened_claimed_state",
       "accessible_description": "The Brasswake Depot hatch stands open above a loading ramp, uncovered supply crates, and a clean steam plume."
     },
+    "resource_site_minor_cache_toll_ruin_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/toll_ruin_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+      "assigned_resource_site_id": "site_toll_ruin", "presentation_role": "opened_claimed_state", "accessible_description": "The Toll Ruin barrier stands open beneath a relit road lantern and cleared toll desk."
+    },
+    "resource_site_minor_cache_wreck_locker_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/wreck_locker_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+      "assigned_resource_site_id": "site_wreck_locker", "presentation_role": "opened_claimed_state", "accessible_description": "The wreck locker lid hangs open beside sorted salvage and a steady harbor lamp."
+    },
+    "resource_site_minor_cache_amber_reliquary_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/amber_reliquary_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+      "assigned_resource_site_id": "site_amber_reliquary", "presentation_role": "opened_claimed_state", "accessible_description": "The Amber Reliquary petals stand open around a calm survey light and empty reliquary cradle."
+    },
+    "resource_site_minor_cache_slag_purse_vault_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/slag_purse_vault_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+      "assigned_resource_site_id": "site_slag_purse_vault", "presentation_role": "opened_claimed_state", "accessible_description": "The Slag Purse Vault gate is raised over orderly ore bins and a claimed brass tally plate."
+    },
+    "resource_site_minor_cache_old_orchard_crypt_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/old_orchard_crypt_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+      "assigned_resource_site_id": "site_old_orchard_crypt", "presentation_role": "opened_claimed_state", "accessible_description": "The Old Orchard Crypt door stands open beneath trimmed roots and a warm recovery lantern."
+    },
+    "resource_site_minor_cache_moss_oath_cache_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/moss_oath_cache_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+      "assigned_resource_site_id": "site_moss_oath_cache", "presentation_role": "opened_claimed_state", "accessible_description": "The Moss Oath Cache is open beside restored tablets and a fresh green claim ribbon."
+    },
+    "resource_site_minor_cache_frost_tithe_cellar_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [336, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+      "assigned_resource_site_id": "site_frost_tithe_cellar", "presentation_role": "opened_claimed_state", "accessible_description": "The Frost Tithe Cellar hatch stands open around an orderly blue-lit muster alcove."
+    },
     "resource_site_live_ember_signal_brazier": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [0, 0, 48, 48],
@@ -5916,6 +5951,13 @@
     }
   },
   "resource_site_sprites": {
+    "site_toll_ruin": {"asset_id":"resource_site_minor_cache_toll_ruin_opened","unclaimed_asset_id":"mapobj_toll_ruin","fit":"Opened claimed state paired with the original closed Toll Ruin landmark."},
+    "site_wreck_locker": {"asset_id":"resource_site_minor_cache_wreck_locker_opened","unclaimed_asset_id":"mapobj_wreck_locker","fit":"Opened claimed state paired with the original closed Wreck Locker landmark."},
+    "site_amber_reliquary": {"asset_id":"resource_site_minor_cache_amber_reliquary_opened","unclaimed_asset_id":"mapobj_amber_reliquary","fit":"Opened claimed state paired with the original closed Amber Reliquary landmark."},
+    "site_slag_purse_vault": {"asset_id":"resource_site_minor_cache_slag_purse_vault_opened","unclaimed_asset_id":"mapobj_slag_purse_vault","fit":"Opened claimed state paired with the original closed Slag Purse Vault landmark."},
+    "site_old_orchard_crypt": {"asset_id":"resource_site_minor_cache_old_orchard_crypt_opened","unclaimed_asset_id":"mapobj_old_orchard_crypt","fit":"Opened claimed state paired with the original closed Old Orchard Crypt landmark."},
+    "site_moss_oath_cache": {"asset_id":"resource_site_minor_cache_moss_oath_cache_opened","unclaimed_asset_id":"mapobj_moss_oath_cache","fit":"Opened claimed state paired with the original closed Moss Oath Cache landmark."},
+    "site_frost_tithe_cellar": {"asset_id":"resource_site_minor_cache_frost_tithe_cellar_opened","unclaimed_asset_id":"mapobj_frost_tithe_cellar","fit":"Opened claimed state paired with the original closed Frost Tithe Cellar landmark."},
     "site_mirror_archive": {
       "asset_id": "resource_site_major_vault_mirror_archive_unsealed",
       "unclaimed_asset_id": "mapobj_mirror_archive",

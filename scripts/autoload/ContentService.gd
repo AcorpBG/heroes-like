@@ -845,6 +845,15 @@ func _validate_resource_site(
 		elif recruits is Dictionary:
 			_validate_recruit_payload("Resource site %s %s" % [site_id, recruit_key], recruits, unit_index)
 
+	if site.has("claim_flags"):
+		var claim_flags = site.get("claim_flags", {})
+		if not (claim_flags is Dictionary):
+			push_warning("Resource site %s claim_flags must be a dictionary." % site_id)
+		else:
+			for flag_key in claim_flags.keys():
+				if String(flag_key).strip_edges() == "":
+					push_warning("Resource site %s claim_flags cannot contain an empty flag key." % site_id)
+
 	var neutral_roster = site.get("neutral_roster", {})
 	if site.has("neutral_roster"):
 		if not (neutral_roster is Dictionary):
