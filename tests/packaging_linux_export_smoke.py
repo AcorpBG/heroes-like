@@ -154,6 +154,10 @@ REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/objects/encounters/signatures/{encounter_name}.png.import"
     for encounter_name in REQUIRED_SIGNATURE_ENCOUNTER_NAMES
 )
+REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME = "recurring_encounter_landmarks_atlas"
+REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES = (
+    "art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png.import",
+)
 REQUIRED_CAMPAIGN_EMBLEM_NAMES = (
     "reedfall_lantern", "stonewake_watchstone", "bogbound_oath_drum",
     "daybreak_shards", "ninefold_survey_compass", "frontier_claims_cairn",
@@ -398,6 +402,7 @@ def pck_terrain_payload_summary() -> dict:
     source_art_metadata_paths, source_art_imported_payload_paths = source_art_import_payload_paths()
     required_faction_encounter_texture_entries = imported_payload_paths_for(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES)
     required_signature_encounter_texture_entries = imported_payload_paths_for(REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES)
+    required_recurring_encounter_atlas_texture_entries = imported_payload_paths_for(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES)
     required_campaign_emblem_texture_entries = imported_payload_paths_for(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES)
     required_campaign_chapter_seal_texture_entries = imported_payload_paths_for(REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES)
     required_field_objective_landmark_texture_entries = imported_payload_paths_for(REQUIRED_FIELD_OBJECTIVE_LANDMARK_PCK_IMPORT_ENTRIES)
@@ -453,6 +458,12 @@ def pck_terrain_payload_summary() -> dict:
         "signature_encounter_import_entries": [],
         "signature_encounter_texture_entries": [],
         "signature_encounter_entries_present": False,
+        "required_recurring_encounter_atlas_import_entries": list(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES),
+        "required_recurring_encounter_atlas_texture_entries": sorted(required_recurring_encounter_atlas_texture_entries),
+        "recurring_encounter_atlas_import_entries": [],
+        "recurring_encounter_atlas_texture_entries": [],
+        "recurring_encounter_atlas_texture_names": [],
+        "recurring_encounter_atlas_entries_present": False,
         "required_campaign_emblem_import_entries": list(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES),
         "required_campaign_emblem_texture_entries": sorted(required_campaign_emblem_texture_entries),
         "campaign_emblem_import_entries": [],
@@ -552,6 +563,10 @@ def pck_terrain_payload_summary() -> dict:
                     summary["signature_encounter_import_entries"].append(entry_path)
                 if entry_path in required_signature_encounter_texture_entries:
                     summary["signature_encounter_texture_entries"].append(entry_path)
+                if entry_path in REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES:
+                    summary["recurring_encounter_atlas_import_entries"].append(entry_path)
+                if entry_path in required_recurring_encounter_atlas_texture_entries:
+                    summary["recurring_encounter_atlas_texture_entries"].append(entry_path)
                 if entry_path in REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES:
                     summary["campaign_emblem_import_entries"].append(entry_path)
                 if entry_path in required_campaign_emblem_texture_entries:
@@ -592,6 +607,8 @@ def pck_terrain_payload_summary() -> dict:
                         summary["final_roster_hero_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_HERO_SPECIALTY_ATLAS_NAME:
                         summary["hero_specialty_atlas_texture_names"].append(imported_name)
+                    if imported_name == REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME:
+                        summary["recurring_encounter_atlas_texture_names"].append(imported_name)
             summary["valid_directory"] = handle.tell() == file_size
     except (OSError, struct.error, UnicodeError):
         return summary
@@ -608,6 +625,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["final_roster_hero_entries_present"] = set(summary["final_roster_hero_import_entries"]) == set(REQUIRED_FINAL_ROSTER_HERO_PCK_IMPORT_ENTRIES) and set(summary["final_roster_hero_texture_names"]) == set(REQUIRED_FINAL_ROSTER_HERO_IDS)
     summary["faction_encounter_entries_present"] = len(required_faction_encounter_texture_entries) == len(REQUIRED_FACTION_ENCOUNTER_NAMES) and set(summary["faction_encounter_import_entries"]) == set(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["faction_encounter_texture_entries"]) == required_faction_encounter_texture_entries
     summary["signature_encounter_entries_present"] = len(required_signature_encounter_texture_entries) == len(REQUIRED_SIGNATURE_ENCOUNTER_NAMES) and set(summary["signature_encounter_import_entries"]) == set(REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["signature_encounter_texture_entries"]) == required_signature_encounter_texture_entries
+    summary["recurring_encounter_atlas_entries_present"] = len(required_recurring_encounter_atlas_texture_entries) == 1 and set(summary["recurring_encounter_atlas_import_entries"]) == set(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_encounter_atlas_texture_entries"]) == required_recurring_encounter_atlas_texture_entries and set(summary["recurring_encounter_atlas_texture_names"]) == {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME}
     summary["campaign_emblem_entries_present"] = len(required_campaign_emblem_texture_entries) == len(REQUIRED_CAMPAIGN_EMBLEM_NAMES) and set(summary["campaign_emblem_import_entries"]) == set(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES) and set(summary["campaign_emblem_texture_entries"]) == required_campaign_emblem_texture_entries
     summary["campaign_chapter_seal_entries_present"] = len(required_campaign_chapter_seal_texture_entries) == len(REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES) and set(summary["campaign_chapter_seal_import_entries"]) == set(REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES) and set(summary["campaign_chapter_seal_texture_entries"]) == required_campaign_chapter_seal_texture_entries
     summary["field_objective_landmark_entries_present"] = len(required_field_objective_landmark_texture_entries) == len(REQUIRED_FIELD_OBJECTIVE_LANDMARK_NAMES) and set(summary["field_objective_landmark_import_entries"]) == set(REQUIRED_FIELD_OBJECTIVE_LANDMARK_PCK_IMPORT_ENTRIES) and set(summary["field_objective_landmark_texture_entries"]) == required_field_objective_landmark_texture_entries
@@ -672,6 +690,7 @@ def main() -> int:
         and bool(terrain_payload["final_roster_hero_entries_present"])
         and bool(terrain_payload["faction_encounter_entries_present"])
         and bool(terrain_payload["signature_encounter_entries_present"])
+        and bool(terrain_payload["recurring_encounter_atlas_entries_present"])
         and bool(terrain_payload["campaign_emblem_entries_present"])
         and bool(terrain_payload["campaign_chapter_seal_entries_present"])
         and bool(terrain_payload["field_objective_landmark_entries_present"])
@@ -773,6 +792,9 @@ def main() -> int:
         "signature_encounter_pck_import_entry_count": len(terrain_payload["signature_encounter_import_entries"]),
         "signature_encounter_pck_texture_count": len(terrain_payload["signature_encounter_texture_entries"]),
         "signature_encounter_pck_entries_present": terrain_payload["signature_encounter_entries_present"],
+        "recurring_encounter_atlas_pck_import_entry_count": len(terrain_payload["recurring_encounter_atlas_import_entries"]),
+        "recurring_encounter_atlas_pck_texture_count": len(terrain_payload["recurring_encounter_atlas_texture_entries"]),
+        "recurring_encounter_atlas_pck_entries_present": terrain_payload["recurring_encounter_atlas_entries_present"],
         "campaign_emblem_pck_import_entry_count": len(terrain_payload["campaign_emblem_import_entries"]),
         "campaign_emblem_pck_texture_count": len(terrain_payload["campaign_emblem_texture_entries"]),
         "campaign_emblem_pck_entries_present": terrain_payload["campaign_emblem_entries_present"],

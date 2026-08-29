@@ -1,0 +1,56 @@
+{
+  "schema": "recurring_encounter_landmark_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "generation_session_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+    "size": [288, 48],
+    "cell_size": [48, 48],
+    "sha256": "3e3aca265b88d3de405986a58c3fc8c363e456fb29fa20c9fd6b47b047a91859",
+    "package_policy": "single_imported_atlas_only"
+  },
+  "sources": [
+    {
+      "encounter_id": "encounter_beacon_wardens",
+      "path": "res://art/overworld/source/generated/encounters/recurring/beacon_wardens_source.png",
+      "sha256": "e38bf9da4ba3527d1b467b5fc01046abc6780267f2ec4db52c6aa69c8c94cee3",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "Portable Embercourt brass-and-oak signal mast with three ember lanterns, blue charter pennant, and warding pikes."
+    },
+    {
+      "encounter_id": "encounter_bridgeward_levies",
+      "path": "res://art/overworld/source/generated/encounters/recurring/bridgeward_levies_source.png",
+      "sha256": "807bd33e0d81985ab4ec898366a8dd564eab2e573fa67add574b22b197eefbcd",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "Low Embercourt stone-and-timber bridge barricade with toll beam, pavise, lantern, and four levy pikes."
+    },
+    {
+      "encounter_id": "encounter_aurora_battery",
+      "path": "res://art/overworld/source/generated/encounters/recurring/aurora_battery_source.png",
+      "sha256": "671cb5c4f2df72350a902e754df10706fa380e41c03562c9748d76eb430dbe5e",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "Wide Sunvault triple-prism aurora artillery battery on an ivory-and-gold turntable."
+    },
+    {
+      "encounter_id": "encounter_bone_ferry_watch",
+      "path": "res://art/overworld/source/generated/encounters/recurring/bone_ferry_watch_source.png",
+      "sha256": "39c6065bb5cea3a79fd2f64c35fb6aa099dec3b03e5b5e79458d53434a5a5cd6",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Crooked Mireclaw bone-prowed ferry watch on bog stilts with rib hooks, peat lantern, hide drum, and torn pennant."
+    },
+    {
+      "encounter_id": "encounter_charter_guard",
+      "path": "res://art/overworld/source/generated/encounters/recurring/charter_guard_source.png",
+      "sha256": "ffb67b13f925476e45982ae5193051ac5ad227640997995167debef4847ad612",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "Fortified Embercourt red command pavilion with sealed charter lectern, supply chests, and crenellated pavises."
+    },
+    {
+      "encounter_id": "encounter_mirror_lancers",
+      "path": "res://art/overworld/source/generated/encounters/recurring/mirror_lancers_source.png",
+      "sha256": "0ff3851b0830e013409bd1b861f48f53b7906ffe8579e2dd28899e05a1df296b",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "Sunvault crossed mirrored lances above opposing faceted shields, crescent rack, and split aurora pennant."
+    }
+  ]
+}

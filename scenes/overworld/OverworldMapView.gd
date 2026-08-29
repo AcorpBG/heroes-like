@@ -523,6 +523,7 @@ var _overworld_vfx_manifest_loaded := false
 var _overworld_vfx_textures: Dictionary = {}
 var _overworld_vfx_texture_missing: Dictionary = {}
 var _object_asset_paths: Dictionary = {}
+var _object_asset_regions: Dictionary = {}
 var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
 var _object_texture_visible_regions: Dictionary = {}
@@ -10441,6 +10442,7 @@ func _road_tile_payload(tile: Vector2i) -> Dictionary:
 func _load_overworld_art_manifest() -> void:
 	_overworld_art_manifest.clear()
 	_object_asset_paths.clear()
+	_object_asset_regions.clear()
 	_object_textures.clear()
 	_object_texture_missing.clear()
 	_object_texture_visible_regions.clear()
@@ -10488,6 +10490,9 @@ func _load_overworld_art_manifest() -> void:
 			if asset_id == "" or texture_path == "":
 				continue
 			_object_asset_paths[asset_id] = texture_path
+			var atlas_region: Variant = entry.get("atlas_region", [])
+			if atlas_region is Array and not atlas_region.is_empty():
+				_object_asset_regions[asset_id] = atlas_region.duplicate(true)
 
 	var resource_site_sprites = _overworld_art_manifest.get("resource_site_sprites", {})
 	if resource_site_sprites is Dictionary:
@@ -10725,6 +10730,30 @@ func _object_texture_for_asset(asset_id: String):
 		return null
 	var texture = _texture_from_path(texture_path)
 	if texture is Texture2D:
+		var atlas_region_value: Variant = _object_asset_regions.get(normalized_asset_id, [])
+		if atlas_region_value is Array and not atlas_region_value.is_empty():
+			if atlas_region_value.size() != 4:
+				_object_texture_missing[normalized_asset_id] = texture_path
+				return null
+			var atlas_region := Rect2(
+				float(atlas_region_value[0]),
+				float(atlas_region_value[1]),
+				float(atlas_region_value[2]),
+				float(atlas_region_value[3])
+			)
+			if atlas_region.position.x < 0.0 \
+				or atlas_region.position.y < 0.0 \
+				or atlas_region.size.x <= 0.0 \
+				or atlas_region.size.y <= 0.0 \
+				or atlas_region.end.x > texture.get_width() \
+				or atlas_region.end.y > texture.get_height():
+				_object_texture_missing[normalized_asset_id] = texture_path
+				return null
+			var atlas_texture := AtlasTexture.new()
+			atlas_texture.atlas = texture
+			atlas_texture.region = atlas_region
+			_object_textures[normalized_asset_id] = atlas_texture
+			return atlas_texture
 		_object_textures[normalized_asset_id] = texture
 		return texture
 	_object_texture_missing[normalized_asset_id] = texture_path

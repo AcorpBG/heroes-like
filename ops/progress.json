@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit and register the next bounded original-content or art slice with an explicit strategy for the remaining 33076-byte package headroom."
+    "Audit the next live content/art identity gap that can fit within the remaining 19424-byte PCK headroom without weakening the release ceiling."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,70 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "content-hero-specialty-insignia-10184",
-    "title": "Hero Specialty Insignia",
+    "id": "content-recurring-encounter-landmarks-10184",
+    "title": "Recurring Encounter Landmarks",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-29T08:59:04Z",
-    "updatedAt": "2026-08-29T09:35:56Z",
+    "startedAt": "2026-08-29T09:42:01Z",
+    "updatedAt": "2026-08-29T10:09:20Z",
+    "completedAt": "2026-08-29T10:09:20Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed seven original specialty insignia sources, one compact 196x28 live atlas, and exact Overworld/Town choice-button integration while preserving progression, session, and save authority. Focused runtime, Town specialty feedback, core, repository/editor, and both platform package gates pass; matching PCKs are 249966924 bytes. The unrelated Overworld cache regression still reports two request-local watch-context builds instead of one.",
-    "completedAt": "2026-08-29T09:35:56Z"
+    "notes": "Completed six original exact recurring-encounter landmarks in one validated 288x48 atlas. Live fallback authority, inspected 1280x720 and 1920x1080 captures, repository/editor/core checks, and Linux/Windows package boots pass; matching PCKs are 249980576 bytes and generated sources are excluded."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-recurring-encounter-landmarks-20260829",
+      "title": "Recurring encounter landmarks",
+      "sliceId": "content-recurring-encounter-landmarks-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T10:09:20Z",
+      "updatedAt": "2026-08-29T10:09:20Z",
+      "latestFinding": "Six high-frequency recurring encounters now own exact original live Overworld identities through one compact atlas while preserving commander-first and exact/faction/unit/generic fallback authority.",
+      "artifacts": [
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "art/overworld/source/generated/encounters/recurring",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_recurring_encounter_landmark_runtime_report.gd",
+        "tests/overworld_recurring_encounter_landmark_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        ".artifacts/recurring_encounter_landmarks/runtime_contact_sheet_8x.png",
+        ".artifacts/recurring_encounter_landmarks/captures/recurring_encounters_1280x720.png",
+        ".artifacts/recurring_encounter_landmarks/captures/recurring_encounters_1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "exact_encounter_count_added": 6,
+        "authored_placement_count": 21,
+        "high_difficulty_placement_count": 17,
+        "runtime_atlas_size_px": [288, 48],
+        "runtime_cell_size_px": 48,
+        "runtime_atlas_bytes": 4963,
+        "atlas_sha256": "3e3aca265b88d3de405986a58c3fc8c363e456fb29fa20c9fd6b47b047a91859",
+        "save_version": 9,
+        "session_authority_exact": true,
+        "invalid_region_fail_closed": true,
+        "missing_asset_fail_closed": true,
+        "inspected_viewports": ["1280x720", "1920x1080"],
+        "linux_export_startup_ok": true,
+        "windows_export_wine_startup_ok": true,
+        "source_art_excluded": true,
+        "pck_size_bytes": 249980576,
+        "pck_ceiling_bytes": 250000000,
+        "pck_remaining_headroom_bytes": 19424,
+        "overworld_refresh_cache_unrelated_watch_context_build_count": 2,
+        "overworld_refresh_cache_expected_watch_context_build_count": 1,
+        "overworld_visual_smoke_unrelated_objective_header_ellipsis_red": true,
+        "whole_game_release_ready_claimed": false
+      }
+    },
     {
       "id": "content-hero-specialty-insignia-20260829",
       "title": "Hero specialty insignia",
@@ -15418,14 +15467,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact compact insignia for all seven live hero specialties on both Overworld and Town choice surfaces; next packaged art must fit the remaining 33076-byte PCK headroom.",
+  "currentNotes": "Completed six exact recurring encounter landmarks in one compact imported atlas with unchanged encounter, session, and save authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-hero-specialty-insignia-10184",
-  "currentSliceId": "content-hero-specialty-insignia-10184",
-  "currentSliceNotes": "Seven distinct original generated sources now assemble into one compact runtime atlas and appear on existing Overworld and Town specialty choice buttons without changing progression, action, session, or save authority. Focused, core, static/editor, and both platform package checks pass; the unrelated Overworld cache counter regression remains red.",
+  "currentSlice": "content-recurring-encounter-landmarks-10184",
+  "currentSliceId": "content-recurring-encounter-landmarks-10184",
+  "currentSliceNotes": "Beacon Wardens, Bridgeward Levies, Aurora Battery, Bone Ferry Watch, Charter Guard, and Mirror Lancers now have exact live atlas identities. Focused runtime, fallback regression, core, repository/editor, and Linux/Windows exports pass with 19424 bytes of PCK headroom.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content hero specialty insignia 10184",
-  "currentSliceUpdatedAt": "2026-08-29T09:35:56Z",
+  "currentSliceTitle": "content recurring encounter landmarks 10184",
+  "currentSliceUpdatedAt": "2026-08-29T10:09:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20943,6 +20992,37 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
+    {
+      "id": "content-recurring-encounter-landmarks-10184",
+      "title": "Recurring Encounter Landmarks",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T09:42:01Z",
+      "updatedAt": "2026-08-29T10:09:20Z",
+      "completedAt": "2026-08-29T10:09:20Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/recurring",
+        "art/overworld/source/generated/encounters/recurring",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_recurring_encounter_landmark_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Give the six highest-frequency uncovered authored encounters exact live Overworld identity instead of faction, unit, or generic fallback art.",
+      "completionCriteria": "Six exact transparent generated sources assemble into one 288x48 runtime atlas with immutable regions; live authored placements, fail-closed region handling, fallback order, accessibility, session/save authority, inspected captures, repository/editor, and bounded Linux/Windows package gates pass below the unchanged 250000000-byte PCK ceiling.",
+      "nonGoals": [
+        "No encounter ids, names, armies, commanders, placement, difficulty, objectives, AI, battle, interaction, or save-schema change.",
+        "No copied Heroes expression, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "None for this bounded slice. Audit the next content/art identity gap separately; do not infer whole-game or release readiness.",
+      "notes": "Completed six byte-distinct original sources and one 288x48 atlas. Live exact-region resolution and fail-closed bounds behavior pass at 1280x720 and 1920x1080; existing fallback/runtime/core/static checks and both release exports pass with source art excluded and a 249980576-byte PCK."
+    },
     {
       "id": "content-hero-specialty-insignia-10184",
       "title": "Hero Specialty Insignia",
@@ -105473,8 +105553,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All seven hero specialties now own exact live choice insignia, six signature faction encounters own exact live Overworld landmarks, and all 24 campaign chapters retain exact seals. Only 33076 bytes remain below the strict release-package ceiling, so future packaged art needs a tighter explicit size strategy. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit and register the next bounded original-content or art slice with an explicit strategy for the remaining 33076-byte package headroom; separately diagnose the existing Overworld request-local watch-context reuse regression and objective-header ellipsis assertion; broader product gaps remain.",
+  "remainingGap": "Twelve of 63 authored encounters now own exact live Overworld identity, leaving 51 on faction, unit-icon, or generic fallbacks. Only 19424 bytes remain below the strict release-package ceiling. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit the next live content/art identity gap against the remaining package headroom before selecting another bounded slice. Separately diagnose the existing Overworld request-local watch-context reuse regression and objective-header ellipsis assertion; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -105905,7 +105985,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_hero_specialty_insignia_completed",
+  "result": "content_recurring_encounter_landmarks_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106006,9 +106086,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed seven original hero-specialty insignia with exact live Overworld/Town integration, session/save authority, inspected captures, and Linux/Windows package validation.",
+  "summary": "Implementing six original recurring encounter landmarks with compact atlas ownership and live Overworld integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T09:35:56Z",
+  "updatedAt": "2026-08-29T09:42:01Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
