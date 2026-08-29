@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the remaining 33 medium/low-difficulty authored encounter identity gaps and register the next bounded live content/art slice without adding another runtime texture or exceeding the release package ceiling."
+    "Audit the highest-impact remaining player-visible content/art gap outside placed encounter identities, prioritizing live faction, town, overworld-object, or presentation ownership over art for unplaced definitions."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,73 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "content-high-difficulty-encounter-landmarks-wave3-10184",
-    "title": "High-Difficulty Encounter Landmarks Wave 3",
+    "id": "content-placed-encounter-landmarks-completion-10184",
+    "title": "Placed Encounter Landmark Completion",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-29T10:45:47Z",
-    "updatedAt": "2026-08-29T11:12:35Z",
-    "completedAt": "2026-08-29T11:12:35Z",
+    "startedAt": "2026-08-29T11:17:15Z",
+    "updatedAt": "2026-08-29T11:37:38Z",
+    "completedAt": "2026-08-29T11:37:38Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed all eleven remaining authored high-difficulty encounter identities through the existing recurring atlas. Both release PCKs exclude development reports and generated source art, boot successfully, and measure 246122412 bytes. Exact encounter identity is now 30 of 63; no whole-game or release-readiness claim is made."
+    "notes": "Completed exact original art for the seven remaining placed encounter identities through the existing recurring atlas. All 77 authored placements across 37 distinct encounter ids now own exact art; 26 unplaced definitions intentionally retain fallbacks. Both release PCKs boot at 246188460 bytes with source/report payloads excluded."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-placed-encounter-landmarks-completion-20260829",
+      "title": "Placed encounter landmark completion",
+      "sliceId": "content-placed-encounter-landmarks-completion-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T11:37:38Z",
+      "updatedAt": "2026-08-29T11:37:38Z",
+      "latestFinding": "All 77 active authored scenario placements across 37 distinct encounter identities now own exact original live Overworld art; the 26 remaining unmatched definitions are unplaced and retain fallbacks rather than receiving unused assets.",
+      "artifacts": [
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "art/overworld/source/generated/encounters/recurring_wave4",
+        "tests/overworld_recurring_encounter_landmark_runtime_report.gd",
+        "tests/overworld_signature_encounter_landmark_runtime_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/recurring_encounter_landmarks_wave4/wave4_contact_sheet_8x.png",
+        ".artifacts/recurring_encounter_landmarks_wave4/captures/recurring_encounters_wave4_1280x720.png",
+        ".artifacts/recurring_encounter_landmarks_wave4/captures/recurring_encounters_wave4_1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "exact_encounter_count_added": 7,
+        "exact_encounter_count_total": 37,
+        "authored_encounter_definition_count": 63,
+        "active_scenario_placement_count": 77,
+        "distinct_placed_encounter_count": 37,
+        "placed_encounter_exact_art_gap_count": 0,
+        "unplaced_encounter_definition_count": 26,
+        "runtime_atlas_region_count": 31,
+        "runtime_atlas_width": 1488,
+        "runtime_atlas_height": 48,
+        "prior_region_pixel_difference_count": 0,
+        "linux_pck_size_bytes": 246188460,
+        "windows_pck_size_bytes": 246188460,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 3811540,
+        "development_reports_pck_excluded": true,
+        "source_art_pck_excluded": true,
+        "save_version": 9,
+        "source_backed_behavior_progress": true,
+        "whole_game_release_ready_claimed": false
+      },
+      "checks": [
+        "Focused recurring landmark runtime passed all 31 exact regions, fallback order, fail-closed cases, both viewports, and save-version-9 authority.",
+        "Inspected 1280x720 and 1920x1080 captures passed distinct silhouette, terrain readability, containment, alpha, and clipping review.",
+        "Repository validation proves exact-art coverage for every one of the 77 authored placements and no unused mapping for 26 unplaced definitions.",
+        "Signature encounter, enemy commander, core regression, Linux export/boot, and Windows export/Wine boot passed.",
+        "A direct atlas comparison reports zero changed pixels across all 24 prior recurring regions."
+      ],
+      "remainingWork": "No work remains in this slice. Audit and register the next bounded live content/art gap outside placed encounter identities; the broader game and release-readiness objective remains open."
+    },
     {
       "id": "content-high-difficulty-encounter-landmarks-wave3-20260829",
       "title": "High-difficulty encounter landmarks wave 3",
@@ -15559,14 +15611,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact original landmarks for all eleven remaining authored high-difficulty encounters and excluded development-only reports from both release packages.",
+  "currentNotes": "Completed exact original landmarks for every encounter identity placed in active authored scenarios through the existing compact atlas.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-high-difficulty-encounter-landmarks-wave3-10184",
-  "currentSliceId": "content-high-difficulty-encounter-landmarks-wave3-10184",
-  "currentSliceNotes": "All eleven selected neutral, Embercourt, Mireclaw, and Sunvault high-difficulty encounter landmarks are live through the existing atlas and fallback chain. Exact identity is 30 of 63; both package targets pass with 3877588 bytes headroom.",
+  "currentSlice": "content-placed-encounter-landmarks-completion-10184",
+  "currentSliceId": "content-placed-encounter-landmarks-completion-10184",
+  "currentSliceNotes": "Barrow Pickets, Bramble Hedge Watch, Lantern Patrol, Reedward Camp, Sluice Raiders, Willow Mill Pack, and Ghoul Grove now close exact-art coverage across all 77 active authored placements and 37 distinct encounter identities.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content high difficulty encounter landmarks wave3 10184",
-  "currentSliceUpdatedAt": "2026-08-29T11:12:35Z",
+  "currentSliceTitle": "content placed encounter landmarks completion 10184",
+  "currentSliceUpdatedAt": "2026-08-29T11:37:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21084,6 +21136,35 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
+    {
+      "id": "content-placed-encounter-landmarks-completion-10184",
+      "title": "Placed Encounter Landmark Completion",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T11:17:15Z",
+      "updatedAt": "2026-08-29T11:37:38Z",
+      "completedAt": "2026-08-29T11:37:38Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "art/overworld/source/generated/encounters/recurring_wave4",
+        "tests/overworld_recurring_encounter_landmark_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Give every encounter identity currently placed in active authored scenarios exact original live Overworld art while avoiding unused art for unplaced definitions and reusing the compact atlas path.",
+      "completionCriteria": "Seven new exact transparent generated sources extend the recurring atlas to thirty-one immutable 48x48 regions; all thirty-one identities, all 77 authored placements, fail-closed regions, fallback order, accessibility, session/save authority, inspected captures, repository/core, and Linux/Windows package gates pass below the unchanged 250000000-byte ceiling.",
+      "nonGoals": [
+        "No art for 26 currently unplaced encounter definitions and no encounter ids, names, armies, commanders, placement, difficulty, objectives, AI, battle, interaction, or save-schema change.",
+        "No copied Heroes expression, new runtime texture/resolver, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed. All placed encounter identities own exact art; audit and register the next bounded live content/art gap outside the 26 unplaced encounter definitions."
+    },
     {
       "id": "content-high-difficulty-encounter-landmarks-wave3-10184",
       "title": "High-Difficulty Encounter Landmarks Wave 3",
@@ -105704,7 +105785,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Thirty of 63 authored encounters own exact live Overworld identity and every authored high-difficulty encounter now has exact art; 33 medium/low-difficulty encounter identities still use faction landmark, unit-icon, or generic fallback. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingGap": "Thirty-seven of 63 authored encounters own exact live Overworld identity, covering every one of the 77 active authored scenario placements; 26 unmatched definitions have no active authored placement and intentionally retain fallback behavior. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader faction/town/object/presentation art, strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
   "remainingWork": "Complete and validate eleven high-difficulty encounter landmarks in the existing atlas after excluding `reports/` from both release presets; then audit the remaining medium/low placed identities and other live content/art gaps. Separately diagnose the existing Overworld request-local watch-context reuse regression and objective-header ellipsis assertion; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
@@ -106136,7 +106217,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_high_difficulty_encounter_landmarks_wave3_completed",
+  "result": "content_placed_encounter_landmarks_completion_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106239,7 +106320,7 @@
   ],
   "summary": "Implementing six original recurring encounter landmarks with compact atlas ownership and live Overworld integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T11:12:35Z",
+  "updatedAt": "2026-08-29T11:37:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

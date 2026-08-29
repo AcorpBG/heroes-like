@@ -751,7 +751,7 @@
     "encounter_recurring_beacon_wardens": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [0, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring/beacon_wardens_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_beacon_wardens",
@@ -762,7 +762,7 @@
     "encounter_recurring_bridgeward_levies": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [48, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring/bridgeward_levies_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_bridgeward_levies",
@@ -773,7 +773,7 @@
     "encounter_recurring_aurora_battery": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [96, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring/aurora_battery_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_aurora_battery",
@@ -784,7 +784,7 @@
     "encounter_recurring_bone_ferry_watch": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [144, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring/bone_ferry_watch_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_bone_ferry_watch",
@@ -795,7 +795,7 @@
     "encounter_recurring_charter_guard": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [192, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring/charter_guard_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_charter_guard",
@@ -806,7 +806,7 @@
     "encounter_recurring_mirror_lancers": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [240, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring/mirror_lancers_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_mirror_lancers",
@@ -817,7 +817,7 @@
     "encounter_recurring_drum_circle": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [288, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/drum_circle_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_drum_circle",
@@ -828,7 +828,7 @@
     "encounter_recurring_gate_marshals": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [336, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/gate_marshals_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_gate_marshals",
@@ -839,7 +839,7 @@
     "encounter_recurring_charter_bastion_reserve": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [384, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/charter_bastion_reserve_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_charter_bastion_reserve",
@@ -850,7 +850,7 @@
     "encounter_recurring_ford_reavers": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [432, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/ford_reavers_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_ford_reavers",
@@ -861,7 +861,7 @@
     "encounter_recurring_glasswing_sortie": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [480, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/glasswing_sortie_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_glasswing_sortie",
@@ -872,7 +872,7 @@
     "encounter_recurring_hollow_mire": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [528, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/hollow_mire_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_hollow_mire",
@@ -883,7 +883,7 @@
     "encounter_recurring_silt_hunters": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [576, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave2/silt_hunters_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_silt_hunters",
@@ -894,7 +894,7 @@
     "encounter_recurring_tidepool_skiffyard_watch": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [624, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/tidepool_skiffyard_watch_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_tidepool_skiffyard_watch",
@@ -905,7 +905,7 @@
     "encounter_recurring_survey_guard": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [672, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/survey_guard_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_survey_guard",
@@ -916,7 +916,7 @@
     "encounter_recurring_road_chaplains": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [720, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/road_chaplains_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_road_chaplains",
@@ -927,7 +927,7 @@
     "encounter_recurring_mill_levies": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [768, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/mill_levies_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_mill_levies",
@@ -938,7 +938,7 @@
     "encounter_recurring_reedbarrow_chain": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [816, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/reedbarrow_chain_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_reedbarrow_chain",
@@ -949,7 +949,7 @@
     "encounter_recurring_nightglass_dominion": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [864, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/nightglass_dominion_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_nightglass_dominion",
@@ -960,7 +960,7 @@
     "encounter_recurring_mirror_causeway": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [912, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/mirror_causeway_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_mirror_causeway",
@@ -971,7 +971,7 @@
     "encounter_recurring_halo_reserve": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [960, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/halo_reserve_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_halo_reserve",
@@ -982,7 +982,7 @@
     "encounter_recurring_daybreak_matrix": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [1008, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/daybreak_matrix_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_daybreak_matrix",
@@ -993,7 +993,7 @@
     "encounter_recurring_daybreak_array": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [1056, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/daybreak_array_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_daybreak_array",
@@ -1004,13 +1004,90 @@
     "encounter_recurring_basalt_gatehouse_watch": {
       "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
       "atlas_region": [1104, 0, 48, 48],
-      "atlas_size": [1152, 48],
+      "atlas_size": [1488, 48],
       "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave3/basalt_gatehouse_watch_source.png",
       "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
       "assigned_encounter_id": "encounter_basalt_gatehouse_watch",
       "assigned_faction_id": "",
       "presentation_role": "basalt_portcullis_gatehouse_watch",
       "accessible_description": "A thick black-basalt arch encloses an amber-lit tunnel throat and iron portcullis between twin bolter buttresses and a heavy chain winch."
+    },
+    "encounter_recurring_barrow_pickets": {
+      "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+      "atlas_region": [1152, 0, 48, 48],
+      "atlas_size": [1488, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/barrow_pickets_source.png",
+      "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_barrow_pickets",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "peat_barrow_hook_picket_ring",
+      "accessible_description": "Two uneven rows of tall hooked reed pikes rise from a peat barrow behind a squat hide drum, clawed palisade, and bent stone marker."
+    },
+    "encounter_recurring_bramble_hedge_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+      "atlas_region": [1200, 0, 48, 48],
+      "atlas_size": [1488, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/bramble_hedge_watch_source.png",
+      "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_bramble_hedge_watch",
+      "assigned_faction_id": "",
+      "presentation_role": "bramble_crescent_vault_watch",
+      "accessible_description": "A raised wicker watch basket overlooks a crescent thorn hedge, crossed thornbow rests, and a chained root-wrapped stone vault hatch."
+    },
+    "encounter_recurring_lantern_patrol": {
+      "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+      "atlas_region": [1248, 0, 48, 48],
+      "atlas_size": [1488, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/lantern_patrol_source.png",
+      "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_lantern_patrol",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "forked_lantern_lane_battery",
+      "accessible_description": "A forked signal mast with stacked amber lanterns stands above a three-lamp brass range battery, red pavises, and road pikes."
+    },
+    "encounter_recurring_reedward_camp": {
+      "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+      "atlas_region": [1296, 0, 48, 48],
+      "atlas_size": [1488, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/reedward_camp_source.png",
+      "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_reedward_camp",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "forktorch_reedward_field_camp",
+      "accessible_description": "A forked torch beacon towers over an asymmetric reed-and-hide shelter, snare stakes, violet sling bolts, and a shallow peat supply sled."
+    },
+    "encounter_recurring_sluice_raiders": {
+      "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+      "atlas_region": [1344, 0, 48, 48],
+      "atlas_size": [1488, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/sluice_raiders_source.png",
+      "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_sluice_raiders",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "captured_claw_crank_sluice",
+      "accessible_description": "A broken diagonal timber sluice spans unequal peat-and-stone posts beside a claw-shaped crank wheel, channel planks, hook rack, and signal drum."
+    },
+    "encounter_recurring_willow_mill_pack": {
+      "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+      "atlas_region": [1392, 0, 48, 48],
+      "atlas_size": [1488, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/willow_mill_pack_source.png",
+      "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_willow_mill_pack",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "willow_bound_ruined_mill_den",
+      "accessible_description": "A leaning willow embraces a cracked half waterwheel and millstone above a low hide awning, sling-stone basket, and paired claw hooks."
+    },
+    "encounter_recurring_ghoul_grove": {
+      "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+      "atlas_region": [1440, 0, 48, 48],
+      "atlas_size": [1488, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/recurring_wave4/ghoul_grove_source.png",
+      "source_model": "built_in_image_gen_original_recurring_encounter_landmark_atlas",
+      "assigned_encounter_id": "encounter_ghoul_grove",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "three_hollow_blackbranch_berm",
+      "accessible_description": "Three crooked hollow blackbranch trunks rise like claws behind a thorn-woven earth berm, sling nest, paired fog jars, and stone-veil cairn."
     },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
@@ -5109,7 +5186,14 @@
     "encounter_halo_reserve": "encounter_recurring_halo_reserve",
     "encounter_daybreak_matrix": "encounter_recurring_daybreak_matrix",
     "encounter_daybreak_array": "encounter_recurring_daybreak_array",
-    "encounter_basalt_gatehouse_watch": "encounter_recurring_basalt_gatehouse_watch"
+    "encounter_basalt_gatehouse_watch": "encounter_recurring_basalt_gatehouse_watch",
+    "encounter_barrow_pickets": "encounter_recurring_barrow_pickets",
+    "encounter_bramble_hedge_watch": "encounter_recurring_bramble_hedge_watch",
+    "encounter_lantern_patrol": "encounter_recurring_lantern_patrol",
+    "encounter_reedward_camp": "encounter_recurring_reedward_camp",
+    "encounter_sluice_raiders": "encounter_recurring_sluice_raiders",
+    "encounter_willow_mill_pack": "encounter_recurring_willow_mill_pack",
+    "encounter_ghoul_grove": "encounter_recurring_ghoul_grove"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

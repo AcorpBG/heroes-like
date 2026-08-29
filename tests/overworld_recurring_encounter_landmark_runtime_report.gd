@@ -27,12 +27,20 @@ const EXPECTED := {
 	"encounter_daybreak_matrix": ["encounter_recurring_daybreak_matrix", Rect2(1008, 0, 48, 48)],
 	"encounter_daybreak_array": ["encounter_recurring_daybreak_array", Rect2(1056, 0, 48, 48)],
 	"encounter_basalt_gatehouse_watch": ["encounter_recurring_basalt_gatehouse_watch", Rect2(1104, 0, 48, 48)],
+	"encounter_barrow_pickets": ["encounter_recurring_barrow_pickets", Rect2(1152, 0, 48, 48)],
+	"encounter_bramble_hedge_watch": ["encounter_recurring_bramble_hedge_watch", Rect2(1200, 0, 48, 48)],
+	"encounter_lantern_patrol": ["encounter_recurring_lantern_patrol", Rect2(1248, 0, 48, 48)],
+	"encounter_reedward_camp": ["encounter_recurring_reedward_camp", Rect2(1296, 0, 48, 48)],
+	"encounter_sluice_raiders": ["encounter_recurring_sluice_raiders", Rect2(1344, 0, 48, 48)],
+	"encounter_willow_mill_pack": ["encounter_recurring_willow_mill_pack", Rect2(1392, 0, 48, 48)],
+	"encounter_ghoul_grove": ["encounter_recurring_ghoul_grove", Rect2(1440, 0, 48, 48)],
 }
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const FIXTURE_POSITIONS := [
 	Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0), Vector2i(8, 0),
 	Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1), Vector2i(6, 1), Vector2i(7, 1), Vector2i(8, 1),
 	Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3), Vector2i(4, 3), Vector2i(5, 3), Vector2i(6, 3), Vector2i(7, 3), Vector2i(8, 3),
+	Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(7, 4),
 ]
 
 func _ready() -> void:
@@ -57,7 +65,7 @@ func _run() -> void:
 		"ok": true,
 		"encounter_count": EXPECTED.size(),
 		"atlas_path": ATLAS_PATH,
-		"atlas_size": [1152, 48],
+		"atlas_size": [1488, 48],
 		"fallback_order": ["commander", "exact_encounter", "faction", "unit", "generic"],
 		"viewports": [[1280, 720], [1920, 1080]],
 		"rows": rows,
@@ -101,7 +109,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 			and texture.region == expected_region \
 			and texture.atlas is Texture2D \
 			and texture.atlas.resource_path == ATLAS_PATH \
-			and texture.atlas.get_size() == Vector2(1152, 48) \
+			and texture.atlas.get_size() == Vector2(1488, 48) \
 			and bool(payload.get("uses_identity_encounter_sprite", false)) \
 			and not bool(payload.get("uses_commander_sprite", true)) \
 			and not bool(payload.get("uses_faction_encounter_sprite", true)) \
@@ -120,7 +128,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var object_paths: Dictionary = map_view.get("_object_asset_paths")
 	var object_regions: Dictionary = map_view.get("_object_asset_regions")
 	object_paths["recurring_invalid_region_fixture"] = ATLAS_PATH
-	object_regions["recurring_invalid_region_fixture"] = [1130, 0, 48, 48]
+	object_regions["recurring_invalid_region_fixture"] = [1460, 0, 48, 48]
 	var invalid_region_fail_closed := map_view.call("_object_texture_for_asset", "recurring_invalid_region_fixture") == null
 	var missing_asset_fail_closed := map_view.call("_object_texture_for_asset", "recurring_missing_asset_fixture") == null
 	var commander: Dictionary = map_view.call("validation_encounter_presentation_payload", {
@@ -131,7 +139,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var commander_first := bool(commander.get("uses_commander_sprite", false)) \
 		and not bool(commander.get("uses_identity_encounter_sprite", true)) \
 		and String(commander.get("identity_encounter_asset_id", "")) == "encounter_recurring_beacon_wardens"
-	var faction: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_sluice_raiders"})
+	var faction: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_mire_raid"})
 	var faction_fallback := String(faction.get("identity_encounter_asset_id", "")) == "" \
 		and bool(faction.get("uses_faction_encounter_sprite", false)) \
 		and String(faction.get("faction_encounter_asset_id", "")) == "encounter_faction_mireclaw"
@@ -207,10 +215,10 @@ func _capture(viewport_size: Vector2i) -> bool:
 	if DisplayServer.get_name() == "headless":
 		return false
 	await RenderingServer.frame_post_draw
-	var output_dir := ProjectSettings.globalize_path("res://.artifacts/recurring_encounter_landmarks_wave3/captures")
+	var output_dir := ProjectSettings.globalize_path("res://.artifacts/recurring_encounter_landmarks_wave4/captures")
 	if DirAccess.make_dir_recursive_absolute(output_dir) != OK:
 		return false
-	var path := "%s/recurring_encounters_wave3_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]
+	var path := "%s/recurring_encounters_wave4_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]
 	return get_viewport().get_texture().get_image().save_png(path) == OK
 
 func _finish(shell: Node, result: Dictionary) -> Dictionary:
