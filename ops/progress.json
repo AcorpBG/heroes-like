@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the six-faction arcane-controller art wave. Exact production-hero adventure identity coverage is now 50 of 60; the remaining ten heroes retain intentional faction-generic fallback pending later content slices.",
+  "currentNotes": "Completed the final measured production-hero adventure-art gap: all 60 live production heroes now resolve exact identities. Both Linux and Windows release PCKs are 248855436 bytes under the unchanged strict 250000000-byte ceiling.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-tavern-arcane-controller-overworld-sprites-10184",
-  "currentSliceId": "content-tavern-arcane-controller-overworld-sprites-10184",
-  "currentSliceNotes": "Completed six original portrait-faithful arcane-controller adventure sprites for Jorun Beaconscribe, Edda Rotlamp, Mirro Halometer, Elian Loamchant, Lina Gauge-Savant, and Sael Mirrorbell; exact mapping increased from 44 to 50 of 60. Live tavern hire, field and hostile presentation, explicit remaining fallback, save version 9, dual-resolution captures, core/static validation, and Windows/Linux package startup passed with source art excluded.",
+  "currentSlice": "content-tavern-final-roster-overworld-sprites-10184",
+  "currentSliceId": "content-tavern-final-roster-overworld-sprites-10184",
+  "currentSliceNotes": "Completed: ten original portrait-faithful adventure sprites cover the remaining production roster, taking exact mapping from 50 to all 60; live tavern, field, enemy, method-matched missing-identity faction fallback restoration, save version 9, dual-resolution, and Windows/Linux package proof pass under the strict 250000000-byte ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content tavern arcane controller overworld sprites 10184",
-  "currentSliceUpdatedAt": "2026-08-29T02:42:12Z",
+  "currentSliceTitle": "content tavern final roster overworld sprites 10184",
+  "currentSliceUpdatedAt": "2026-08-29T03:14:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105242,6 +105242,16 @@
       "startedAt": "2026-08-29T02:23:53Z",
       "notes": "Added six distinct original portrait-faithful arcane-controller adventure figures for Jorun Beaconscribe, Edda Rotlamp, Mirro Halometer, Elian Loamchant, Lina Gauge-Savant, and Sael Mirrorbell, expanding exact hero identity coverage from 44 to 50 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, mapped Jorun enemy identity beside unmapped Pell Mireclaw fallback, save version 9, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 247376284 bytes with all six arcane-controller textures present and source art excluded. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T02:42:12Z"
+    },
+    {
+      "id": "content-tavern-final-roster-overworld-sprites-10184",
+      "title": "content tavern final roster overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T03:14:26Z",
+      "startedAt": "2026-08-29T02:46:44Z",
+      "notes": "Added ten distinct original portrait-faithful adventure figures for Pell Reedscript, Zhorra Fenwake, Dovan Lens-Captain, Renn Facetlane, Merek Greenbarrow, Ralka Mossvein, Pava Ashmeter, Vellum Quench, Damar Oriflag, and Nacre Vowless, expanding exact hero identity coverage from 50 to all 60 production heroes. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hires, active switches, exact field presentation, method-matched missing-identity faction fallback restoration, mapped Pell enemy identity, save version 9, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 248855436 bytes with all ten final-roster textures present, source art excluded, and the strict 250000000-byte ceiling unchanged. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T03:14:26Z"
     }
   ],
   "project": "heroes-like",
@@ -105251,7 +105261,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Ten of 60 production heroes still use faction-generic adventure figures. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingGap": "All 60 production heroes now have exact adventure-map identities. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved original-content or art slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
