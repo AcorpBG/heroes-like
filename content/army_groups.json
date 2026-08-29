@@ -928,6 +928,96 @@
         {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 3},
         {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 1}
       ]
+    },
+    {
+      "id": "army_tollglass_drowned_tally",
+      "name": "Tollglass Drowned Tally",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 8},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 5},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 3},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 1}
+      ]
+    },
+    {
+      "id": "army_muckscript_prism_inquest",
+      "name": "Muckscript Prism Inquest",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_shard_wardens", "count": 8},
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 5},
+        {"unit_id": "unit_sunvault_mirror_duelists", "count": 3},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 1}
+      ]
+    },
+    {
+      "id": "army_mirrorstep_redline_calibrators",
+      "name": "Mirrorstep Redline Calibrators",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 8},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 5},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 3},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 1}
+      ]
+    },
+    {
+      "id": "army_briarmarshal_drum_cordon",
+      "name": "Briarmarshal Drum Cordon",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 8},
+        {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 5},
+        {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 3},
+        {"unit_id": "unit_mireclaw_ferrychain_lashers", "count": 1}
+      ]
+    },
+    {
+      "id": "army_railhead_lockward_auditors",
+      "name": "Railhead Lockward Auditors",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 8},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 5},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 3},
+        {"unit_id": "unit_embercourt_ash_oath_bailiffs", "count": 1}
+      ]
+    },
+    {
+      "id": "army_mistcorsair_graftwake_cordon",
+      "name": "Mistcorsair Graftwake Cordon",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 8},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 5},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 3},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 1}
+      ]
+    },
+    {
+      "id": "army_torren_tollglass_relief", "name": "Torren's Tollglass Relief", "faction_id": "faction_embercourt",
+      "stacks": [{"unit_id":"unit_embercourt_fordhook_cadets","count":12},{"unit_id":"unit_embercourt_lantern_sappers","count":8},{"unit_id":"unit_embercourt_bargebow_crews","count":4},{"unit_id":"unit_embercourt_ash_oath_bailiffs","count":2}]
+    },
+    {
+      "id": "army_sable_muckscript_hunt", "name": "Sable's Muckscript Hunt", "faction_id": "faction_mireclaw",
+      "stacks": [{"unit_id":"unit_mireclaw_reedsnare_kin","count":12},{"unit_id":"unit_mireclaw_mudglass_slingers","count":8},{"unit_id":"unit_mireclaw_bogplate_maulers","count":4},{"unit_id":"unit_mireclaw_ferrychain_lashers","count":2}]
+    },
+    {
+      "id": "army_varis_mirrorstep_race", "name": "Varis's Mirrorstep Race", "faction_id": "faction_sunvault",
+      "stacks": [{"unit_id":"unit_sunvault_shard_wardens","count":12},{"unit_id":"unit_sunvault_prism_adepts","count":8},{"unit_id":"unit_sunvault_mirror_duelists","count":4},{"unit_id":"unit_sunvault_resonant_choristers","count":2}]
+    },
+    {
+      "id": "army_ardren_briar_cordon", "name": "Ardren's Briar Cordon", "faction_id": "faction_thornwake",
+      "stacks": [{"unit_id":"unit_thornwake_seedcutters","count":12},{"unit_id":"unit_thornwake_thornwhip_carriers","count":8},{"unit_id":"unit_thornwake_sporeglass_menders","count":4},{"unit_id":"unit_thornwake_barkmantle_rams","count":2}]
+    },
+    {
+      "id": "army_kuld_railhead_column", "name": "Kuld's Railhead Column", "faction_id": "faction_brasshollow",
+      "stacks": [{"unit_id":"unit_brasshollow_scrip_haulers","count":12},{"unit_id":"unit_brasshollow_rivet_hounds","count":8},{"unit_id":"unit_brasshollow_furnace_pavis_teams","count":4},{"unit_id":"unit_brasshollow_boiler_rivetcasters","count":2}]
+    },
+    {
+      "id": "army_cela_mistcorsair_raiders", "name": "Cela's Mistcorsair Raiders", "faction_id": "faction_veilmourn",
+      "stacks": [{"unit_id":"unit_veilmourn_bellwake_oars","count":12},{"unit_id":"unit_veilmourn_mourning_lanterns","count":8},{"unit_id":"unit_veilmourn_maskglass_corsairs","count":4},{"unit_id":"unit_veilmourn_undertow_harpooners","count":2}]
     }
   ]
 }
