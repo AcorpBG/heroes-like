@@ -11165,6 +11165,10 @@ func _resource_asset_id(node: Dictionary) -> String:
 		return ""
 	var site_id := String(node.get("site_id", ""))
 	var site := ContentService.get_resource_site(site_id)
+	if String(site.get("family", "")) == "faction_landmark":
+		var landmark_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
+		if landmark_asset_id != "" and _object_texture_for_asset(landmark_asset_id) is Texture2D:
+			return landmark_asset_id
 	if (
 		String(site.get("family", "")) == "neutral_dwelling"
 		and not String(node.get("collected_by_faction_id", "")).strip_edges().is_empty()

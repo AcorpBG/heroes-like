@@ -5011,7 +5011,8 @@
         {"placement_id": "clauseworks_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_brasshollow"},
         {"placement_id": "clauseworks_scrip_mint", "site_id": "site_brass_scrip_mint", "x": 10, "y": 1, "guard_front_id": "rootgate_bastion_reserve", "collected_by_faction_id": "faction_brasshollow"},
         {"placement_id": "rootgate_toll_rootgate_nursery_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "rootgate_charter_guard"},
-        {"placement_id": "rootgate_toll_clauseworks_toll_depot_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "rootgate_bastion_reserve", "collected_by_faction_id": "faction_brasshollow"}
+        {"placement_id": "rootgate_toll_clauseworks_toll_depot_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "rootgate_bastion_reserve", "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "rootgate_graft_arch", "site_id": "site_thornwake_graft_arch", "x": 4, "y": 3}
       ],
       "artifact_nodes": [
         {"placement_id": "rootgate_trailsinger_boots", "artifact_id": "artifact_rootpath_seed_compass", "x": 3, "y": 1},
@@ -5225,7 +5226,8 @@
         {"placement_id": "halo_registry_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_sunvault"},
         {"placement_id": "halo_registry_aetherglass", "site_id": "site_aetherglass_lens_house", "x": 10, "y": 1, "guard_front_id": "fogchart_mirror_lancers", "collected_by_faction_id": "faction_sunvault"},
         {"placement_id": "fogchart_mooring_fogchart_mooring_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "fogchart_relay_pickets"},
-        {"placement_id": "fogchart_mooring_halo_registry_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "fogchart_mirror_lancers", "collected_by_faction_id": "faction_sunvault"}
+        {"placement_id": "fogchart_mooring_halo_registry_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "fogchart_mirror_lancers", "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "fogchart_bell_mast", "site_id": "site_veilmourn_bell_mast", "x": 4, "y": 3}
       ],
       "artifact_nodes": [
         {"placement_id": "fogchart_waymark_compass", "artifact_id": "artifact_drowned_star_astrolabe", "x": 3, "y": 1},
@@ -5497,7 +5499,8 @@
         {"placement_id": "clauseworks_counter_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_brasshollow"},
         {"placement_id": "clauseworks_counter_scrip", "site_id": "site_brass_scrip_mint", "x": 10, "y": 1, "guard_front_id": "nightglass_rivet_auditors", "collected_by_faction_id": "faction_brasshollow"},
         {"placement_id": "nightglass_ledger_reversal_nightglass_redoubt_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "nightglass_ledger_guard"},
-        {"placement_id": "nightglass_ledger_reversal_clauseworks_counter_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "nightglass_rivet_auditors", "collected_by_faction_id": "faction_brasshollow"}
+        {"placement_id": "nightglass_ledger_reversal_clauseworks_counter_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "nightglass_rivet_auditors", "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "nightglass_bog_drum_totem", "site_id": "site_bog_drum_totem", "x": 4, "y": 3}
       ],
       "artifact_nodes": [
         {"placement_id": "nightglass_trailsinger_boots", "artifact_id": "artifact_fenhound_scent_bell", "x": 3, "y": 1},
@@ -5576,7 +5579,8 @@
         {"placement_id": "rootgate_refraction_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_thornwake"},
         {"placement_id": "rootgate_verdant_nursery", "site_id": "site_verdant_graft_nursery", "x": 10, "y": 1, "guard_front_id": "halo_sporeglass_screen", "collected_by_faction_id": "faction_thornwake"},
         {"placement_id": "halo_reserve_refraction_claim_halo_spire_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "halo_prism_watch"},
-        {"placement_id": "halo_reserve_refraction_claim_rootgate_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "halo_sporeglass_screen", "collected_by_faction_id": "faction_thornwake"}
+        {"placement_id": "halo_reserve_refraction_claim_rootgate_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "halo_sporeglass_screen", "collected_by_faction_id": "faction_thornwake"},
+        {"placement_id": "halo_prism_relay_lens", "site_id": "site_prism_relay_lens", "x": 4, "y": 3}
       ],
       "artifact_nodes": [
         {"placement_id": "halo_rainstar_sextant", "artifact_id": "artifact_rainstar_sextant", "x": 3, "y": 1},
@@ -5655,7 +5659,8 @@
         {"placement_id": "halo_counterseal_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_sunvault"},
         {"placement_id": "halo_counterseal_lens_house", "site_id": "site_aetherglass_lens_house", "x": 10, "y": 1, "guard_front_id": "counterseal_mirror_lancers", "collected_by_faction_id": "faction_sunvault"},
         {"placement_id": "charter_bastion_counterseal_charter_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "counterseal_relay_pickets"},
-        {"placement_id": "charter_bastion_counterseal_halo_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "counterseal_mirror_lancers", "collected_by_faction_id": "faction_sunvault"}
+        {"placement_id": "charter_bastion_counterseal_halo_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "counterseal_mirror_lancers", "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "counterseal_signal_brazier", "site_id": "site_ember_signal_brazier", "x": 4, "y": 3}
       ],
       "artifact_nodes": [
         {"placement_id": "counterseal_trailsinger_boots", "artifact_id": "artifact_lockward_beacon_key", "x": 3, "y": 1},

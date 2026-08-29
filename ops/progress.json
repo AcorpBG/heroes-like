@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six live faction artifact sets and original compact insignia using existing gameplay-wired faction equipment and representative authored scenarios.",
+  "currentNotes": "Completed six live production-faction landmarks with exact original art, differentiated rewards, income, scouting or pressure effects, persistent control, and authored scenario presence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-artifact-sets-10184",
-  "currentSliceId": "content-six-faction-dissident-fronts-10184",
-  "currentSliceNotes": "Completed six optional internal-rival battle fronts across six live faction scenarios with exact armies, commanders, objectives, rare rewards, and original compact landmark art. One combined six-case smoke passed deterministic victories, rewards/flags, exact presentation, and save v9; repository validation and matching Linux/Windows 248112828-byte package boots passed. Enemy surrender now also grants authored encounter rewards and experience.",
+  "currentSlice": "content-six-faction-live-landmarks-10184",
+  "currentSliceId": "content-six-faction-live-landmarks-10184",
+  "currentSliceNotes": "Completed six live faction landmarks across six authored scenarios with exact compact original art. One combined 31-case smoke passed claim rewards, income/pressure effects, exact rendering, repeat rejection, map captures, and save v9; repository validation and matching Linux/Windows 248142688-byte package boots passed with source art excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction dissident fronts 10184",
-  "currentSliceUpdatedAt": "2026-08-29T15:39:16Z",
+  "currentSliceTitle": "content six faction live landmarks 10184",
+  "currentSliceUpdatedAt": "2026-08-29T16:10:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106064,6 +106064,16 @@
       "startedAt": "2026-08-29T15:13:29Z",
       "notes": "Completed six optional internal-rival battle fronts across six live faction scenarios with exact armies, commanders, objectives, rare rewards, and original compact landmark art. One combined six-case smoke passed deterministic victories, rewards/flags, exact presentation, and save v9; repository validation and matching Linux/Windows 248112828-byte package boots passed. Enemy surrender now also grants authored encounter rewards and experience.",
       "completedAt": "2026-08-29T15:39:16Z"
+    },
+    {
+      "id": "content-six-faction-live-landmarks-10184",
+      "title": "content six faction live landmarks 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T16:10:36Z",
+      "startedAt": "2026-08-29T15:43:45Z",
+      "notes": "Completed six live faction landmarks across six authored scenarios with exact compact original art. One combined 31-case smoke passed claim rewards, income/pressure effects, exact rendering, repeat rejection, map captures, and save v9; repository validation and matching Linux/Windows 248142688-byte package boots passed with source art excluded.",
+      "completedAt": "2026-08-29T16:10:36Z"
     }
   ],
   "project": "heroes-like",
@@ -106073,8 +106083,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Faction artifacts have exact individual art and live placement but no faction set identity, cumulative build incentives, or set insignia. The unrelated Overworld request-local watch-context reuse regression and 1280px objective-header ellipsis assertion remain outside this slice; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native hardware, whole-game, and release-readiness gaps remain.",
-  "remainingWork": "Select the next bounded implementation slice for the broader content and distinctive-art goal; do not infer whole-game or release readiness from the completed faction-set slice.",
+  "remainingGap": "The six production-faction landmarks are now live, but broader content breadth, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next substantial implementation batch for the broader content and distinctive-art goal; do not infer whole-game or release readiness from this completed landmark slice.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106608,7 +106618,7 @@
   ],
   "summary": "Completed six collectible faction artifact sets with original compact insignia and live Town and Overworld equipment integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T15:39:16Z",
+  "updatedAt": "2026-08-29T16:10:36Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

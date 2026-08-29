@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-six-faction-dissident-fronts-10184`.
-- Package boundary: both release exports now measure 248112828 bytes, 1887172 bytes below the unchanged 250000000-byte ceiling. Both compact encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Active implementation slice: `content-six-faction-live-landmarks-10184`.
+- Package boundary: both release exports now measure 248142688 bytes, 1857312 bytes below the unchanged 250000000-byte ceiling. Both recurring resource-site atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Live Landmark Activation
+
+id: `content-six-faction-live-landmarks-10184`
+
+Status: completed.
+
+Current finding:
+- the repository already authored Ember Signal Brazier, Bog Drum Totem, Prism Relay Lens, Thornwake Graft Arch, Brasshollow Gauge Shrine, and Veilmourn Bell Mast as the six production-faction landmark contracts, but all six were metadata-only and had no live rewards, route effects, or exact production art; Brasshollow alone already had one dormant scenario placement;
+- five later faction scenarios retained a free traversable central route tile at `(4,3)`, while Clauseworks Counterclaim already placed its Gauge Shrine at `(3,3)`, so the dormant contracts could become genuine optional map decisions without moving existing towns, encounters, resources, artifacts, objectives, or terrain;
+- promoting the existing contracts is higher-impact than adding another definition-only catalog wave because it turns already-designed faction identity into capturable, AI-valued, save-backed gameplay across six live maps.
+
+Implementation boundary:
+- promote the six existing faction-landmark resource sites and matching map-object contracts from metadata-only to live persistent-control content with bounded faction-rare claim rewards, differentiated common income, scouting or pressure effects, and supported response profiles;
+- place one exact landmark at `(4,3)` in Charter Bastion Counterseal, Nightglass Ledger Reversal, Halo Reserve Refraction Claim, Rootgate Toll, and Fogchart Mooring, and promote the existing Clauseworks Counterclaim Gauge Shrine at `(3,3)` while preserving every prior placement and map cell;
+- create six original transparent, silhouette-distinct field landmarks in one compact atlas and register exact site ownership, source provenance, and non-color descriptions through the existing resource-site resolver;
+- preserve save version 9, deterministic content lookup, strategic-AI valuation, compact map presentation, accessibility, performance, and Linux/Windows packaging.
+
+Completion criteria:
+- all six landmarks are actual live resource nodes with exact faction ownership, claim rewards, income and route effects, positive strategic-AI value, repeat-safe persistent control, and exact save-version-9 round trips;
+- six byte-distinct original transparent sources produce one compact imported atlas with exact regions, genuine alpha, readable non-color silhouettes, fail-closed missing art, and generated-source package exclusion;
+- the existing combined landmark smoke is extended once to cover the six new live cases, including representative runtime captures; repository validation and Linux/Windows package startup pass below the unchanged PCK ceiling.
+
+Completion evidence:
+- one combined 31-case live report passed all six faction landmarks plus the 25 existing neutral-dwelling cases, including exact renderer selection, claim rewards, persistent control, daily income, pressure effects, repeat-safe rejection, representative map captures, and exact save-version-9 round trips;
+- visual review confirmed six non-color-distinct live silhouettes on their authored maps, and the Clauseworks audit removed an accidental duplicate in favor of its existing Gauge Shrine placement;
+- repository validation and matching Linux/Windows release exports passed at 248142688 bytes, with both resource-site atlases present and all generated high-resolution source art excluded.
+
+Non-goals:
+- no new faction, unit, hero, town, resource id, spell, artifact, encounter, required objective, terrain, map geometry, AI algorithm, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes landmark, shrine, heraldry, name, text, or protected visual expression.
 
 ## Six-Faction Dissident Fronts
 
