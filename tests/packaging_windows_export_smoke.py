@@ -94,6 +94,18 @@ REQUIRED_FIELD_COMMANDER_HERO_PCK_IMPORT_ENTRIES = tuple(
     f"art/overworld/runtime/heroes/tavern_field_commanders/{hero_id}.png.import"
     for hero_id in REQUIRED_FIELD_COMMANDER_HERO_IDS
 )
+REQUIRED_STRATEGIC_OFFICER_HERO_IDS = (
+    "hero_embercourt_saren_lockmaster",
+    "hero_orrik",
+    "hero_thalen",
+    "hero_thornwake_nara_graftsibyl",
+    "hero_brasshollow_harro_debtrune",
+    "hero_veilmourn_orso_nightchart",
+)
+REQUIRED_STRATEGIC_OFFICER_HERO_PCK_IMPORT_ENTRIES = tuple(
+    f"art/overworld/runtime/heroes/tavern_strategic_officers/{hero_id}.png.import"
+    for hero_id in REQUIRED_STRATEGIC_OFFICER_HERO_IDS
+)
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
     "Parse Error",
@@ -339,6 +351,10 @@ def pck_terrain_payload_summary() -> dict:
         "field_commander_hero_import_entries": [],
         "field_commander_hero_texture_names": [],
         "field_commander_hero_entries_present": False,
+        "required_strategic_officer_hero_import_entries": list(REQUIRED_STRATEGIC_OFFICER_HERO_PCK_IMPORT_ENTRIES),
+        "strategic_officer_hero_import_entries": [],
+        "strategic_officer_hero_texture_names": [],
+        "strategic_officer_hero_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -396,6 +412,8 @@ def pck_terrain_payload_summary() -> dict:
                     summary["specialist_hero_import_entries"].append(entry_path)
                 if entry_path in REQUIRED_FIELD_COMMANDER_HERO_PCK_IMPORT_ENTRIES:
                     summary["field_commander_hero_import_entries"].append(entry_path)
+                if entry_path in REQUIRED_STRATEGIC_OFFICER_HERO_PCK_IMPORT_ENTRIES:
+                    summary["strategic_officer_hero_import_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
@@ -406,6 +424,8 @@ def pck_terrain_payload_summary() -> dict:
                         summary["specialist_hero_texture_names"].append(imported_name)
                     if imported_name in REQUIRED_FIELD_COMMANDER_HERO_IDS:
                         summary["field_commander_hero_texture_names"].append(imported_name)
+                    if imported_name in REQUIRED_STRATEGIC_OFFICER_HERO_IDS:
+                        summary["strategic_officer_hero_texture_names"].append(imported_name)
             summary["valid_directory"] = handle.tell() == file_size
     except (OSError, struct.error, UnicodeError):
         return summary
@@ -416,6 +436,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["tavern_hero_entries_present"] = set(summary["tavern_hero_import_entries"]) == set(REQUIRED_TAVERN_HERO_PCK_IMPORT_ENTRIES) and set(summary["tavern_hero_texture_names"]) == set(REQUIRED_TAVERN_HERO_IDS)
     summary["specialist_hero_entries_present"] = set(summary["specialist_hero_import_entries"]) == set(REQUIRED_SPECIALIST_HERO_PCK_IMPORT_ENTRIES) and set(summary["specialist_hero_texture_names"]) == set(REQUIRED_SPECIALIST_HERO_IDS)
     summary["field_commander_hero_entries_present"] = set(summary["field_commander_hero_import_entries"]) == set(REQUIRED_FIELD_COMMANDER_HERO_PCK_IMPORT_ENTRIES) and set(summary["field_commander_hero_texture_names"]) == set(REQUIRED_FIELD_COMMANDER_HERO_IDS)
+    summary["strategic_officer_hero_entries_present"] = set(summary["strategic_officer_hero_import_entries"]) == set(REQUIRED_STRATEGIC_OFFICER_HERO_PCK_IMPORT_ENTRIES) and set(summary["strategic_officer_hero_texture_names"]) == set(REQUIRED_STRATEGIC_OFFICER_HERO_IDS)
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -470,6 +491,7 @@ def main() -> int:
         and bool(terrain_payload["tavern_hero_entries_present"])
         and bool(terrain_payload["specialist_hero_entries_present"])
         and bool(terrain_payload["field_commander_hero_entries_present"])
+        and bool(terrain_payload["strategic_officer_hero_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -603,6 +625,9 @@ def main() -> int:
         "field_commander_hero_pck_import_entry_count": len(terrain_payload["field_commander_hero_import_entries"]),
         "field_commander_hero_pck_texture_count": len(set(terrain_payload["field_commander_hero_texture_names"])),
         "field_commander_hero_pck_entries_present": terrain_payload["field_commander_hero_entries_present"],
+        "strategic_officer_hero_pck_import_entry_count": len(terrain_payload["strategic_officer_hero_import_entries"]),
+        "strategic_officer_hero_pck_texture_count": len(set(terrain_payload["strategic_officer_hero_texture_names"])),
+        "strategic_officer_hero_pck_entries_present": terrain_payload["strategic_officer_hero_entries_present"],
         "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],

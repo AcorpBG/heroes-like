@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-tavern-field-commander-overworld-sprites-10184`.
+- Selected implementation slice: `content-tavern-strategic-officer-overworld-sprites-10184`.
+
+## Tavern Strategic-Officer Overworld Sprites
+
+id: `content-tavern-strategic-officer-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- the completed scenario-lead, vanguard, specialist, and field-commander passes give 32 of 60 production heroes exact adventure-map identities, but 28 recruitable and strategic-AI commanders still collapse to six faction-generic figures;
+- Saren Lockmaster, Orrik Tollreaver, Thalen Choirward, Nara Graft-Sibyl, Harro Debt-Rune, and Orso Nightchart form a coherent six-faction operational wave spanning siege timing, dense muster, cohesion, graft growth, binding clauses, and hidden-route pressure; Orrik is already referenced across encounter, artifact, regroup, resumption, and task-lifecycle AI surfaces.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each selected strategic officer, preserving the production portrait identity, faction material language, role-defining command equipment, readable small-scale silhouette, grounding, focus, and command-pennant clearance;
+- expand the manifest-owned hero-id mapping from 32 to 38 exact identities while keeping the remaining 22 heroes on the existing faction fallback and preserving renderer, movement, town-footprint, fog, strategic-enemy, and save ownership;
+- prove each selected hero through the real first-scenario Wayfarers Hall authority, authored recruitment cost, active-command switch, exact field presentation, and save/resume, including mapped Orrik strategic-enemy presentation beside an explicit remaining-unmapped faction fallback.
+
+Completion criteria:
+- the six generated sources and six curated runtime sprites are distinct from one another, all existing identity sprites, portraits, and faction fallbacks, with exact manifest provenance, genuine alpha, and source art excluded from release exports;
+- River Pass, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim offer the intended strategic officer, charge the authored cost, add exactly one commander, preserve save version 9, and resolve the exact mapped sprite after active-command switching and reload;
+- inspected 1280x720 and 1920x1080 captures, strategic-officer recruitment/identity/movement/town/fog/fallback/enemy/save runtime, core and repository checks, and bounded Linux/Windows export startup pass within the 250 MB PCK ceiling.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no hero stat, spell, specialty, recruitment-order, economy, encounter, AI, movement, save-schema, RMG, renderer-architecture, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- shipped six distinct original portrait-faithful transparent adventure-map figures for Saren Lockmaster, Orrik Tollreaver, Thalen Choirward, Nara Graft-Sibyl, Harro Debt-Rune, and Orso Nightchart, raising exact production-hero identity coverage from 32 to 38 of 60 while retaining faction fallback for the remaining 22;
+- wired all six through the existing manifest-owned renderer, Wayfarers Hall recruitment, movement, town-footprint, focus, fog, save, and strategic-enemy paths; exact authored costs and version-9 save/resume pass, and enemy presentation now proves mapped Orrik beside an explicitly unmapped Embercourt fallback;
+- inspected live 1280x720 and 1920x1080 captures and passed strategic-officer/fallback/enemy runtime reports, core/static validation, and Linux/Windows packaged startup; both exports contain all six compiled strategic-officer textures, exclude source art, and remain below the 250 MB PCK ceiling at 245,472,304 bytes.
 
 ## Tavern Field-Commander Overworld Sprites
 
