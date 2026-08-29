@@ -408,6 +408,48 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_morwen_wakeoracle.png",
       "assigned_hero_id": "hero_veilmourn_morwen_wakeoracle"
     },
+    "hero_field_embercourt_helva_tollbrand": {
+      "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_embercourt_helva_tollbrand.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_embercourt_helva_tollbrand_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_embercourt_helva_tollbrand.png",
+      "assigned_hero_id": "hero_embercourt_helva_tollbrand"
+    },
+    "hero_field_tarn": {
+      "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_tarn.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_tarn_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_tarn.png",
+      "assigned_hero_id": "hero_tarn"
+    },
+    "hero_field_sunvault_ilyr_glassmarshal": {
+      "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_sunvault_ilyr_glassmarshal.png",
+      "assigned_hero_id": "hero_sunvault_ilyr_glassmarshal"
+    },
+    "hero_field_thornwake_halen_thorncart": {
+      "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_thornwake_halen_thorncart.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_thornwake_halen_thorncart_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_halen_thorncart.png",
+      "assigned_hero_id": "hero_thornwake_halen_thorncart"
+    },
+    "hero_field_brasshollow_kuld_varn": {
+      "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_brasshollow_kuld_varn.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_brasshollow_kuld_varn_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_kuld_varn.png",
+      "assigned_hero_id": "hero_brasshollow_kuld_varn"
+    },
+    "hero_field_veilmourn_jessa_keelwarden": {
+      "path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_veilmourn_jessa_keelwarden.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_field_commanders/hero_veilmourn_jessa_keelwarden_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_jessa_keelwarden.png",
+      "assigned_hero_id": "hero_veilmourn_jessa_keelwarden"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4427,7 +4469,13 @@
     "hero_varis": "hero_specialist_varis",
     "hero_thornwake_veyra_seedseer": "hero_specialist_thornwake_veyra_seedseer",
     "hero_brasshollow_selka_pitmarshal": "hero_specialist_brasshollow_selka_pitmarshal",
-    "hero_veilmourn_morwen_wakeoracle": "hero_specialist_veilmourn_morwen_wakeoracle"
+    "hero_veilmourn_morwen_wakeoracle": "hero_specialist_veilmourn_morwen_wakeoracle",
+    "hero_embercourt_helva_tollbrand": "hero_field_embercourt_helva_tollbrand",
+    "hero_tarn": "hero_field_tarn",
+    "hero_sunvault_ilyr_glassmarshal": "hero_field_sunvault_ilyr_glassmarshal",
+    "hero_thornwake_halen_thorncart": "hero_field_thornwake_halen_thorncart",
+    "hero_brasshollow_kuld_varn": "hero_field_brasshollow_kuld_varn",
+    "hero_veilmourn_jessa_keelwarden": "hero_field_veilmourn_jessa_keelwarden"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",
