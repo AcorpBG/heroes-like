@@ -1,5 +1,14 @@
 extends Node
 
+const RESOURCE_SITE_LANDMARK_ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png"
+const RESOURCE_SITE_LANDMARK_CASES := [
+	{"site_id": "site_prism_watch_relay", "asset_id": "resource_site_recurring_prism_watch_relay", "tile": Vector2i(1, 0), "region": Rect2(0, 0, 48, 48)},
+	{"site_id": "site_lens_house", "asset_id": "resource_site_recurring_lens_house_barracks", "tile": Vector2i(3, 0), "region": Rect2(48, 0, 48, 48)},
+	{"site_id": "site_bog_drum_outpost", "asset_id": "resource_site_recurring_bog_drum_outpost", "tile": Vector2i(5, 0), "region": Rect2(96, 0, 48, 48)},
+	{"site_id": "site_bellwake_wreck_ledger", "asset_id": "resource_site_recurring_bellwake_wreck_ledger", "tile": Vector2i(7, 0), "region": Rect2(144, 0, 48, 48)},
+	{"site_id": "site_orevein_assay_depot", "asset_id": "resource_site_recurring_orevein_assay_depot", "tile": Vector2i(4, 3), "region": Rect2(192, 0, 48, 48)},
+]
+
 func _ready() -> void:
 	call_deferred("_run")
 
@@ -13,15 +22,18 @@ func _run() -> void:
 	var road_surface_capture_only := OS.get_environment("OVERWORLD_ROAD_SURFACE_CAPTURE_ONLY") == "1"
 	var sidebar_ornament_only := OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_ONLY") == "1"
 	var terrain_ambient_only := OS.get_environment("OVERWORLD_TERRAIN_AMBIENT_ONLY") == "1"
+	var resource_site_landmarks_only := OS.get_environment("OVERWORLD_RESOURCE_SITE_LANDMARKS_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only or hero_card_only or object_scale_contract_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only or terrain_ambient_only:
+	elif objective_brief_only or hero_card_only or object_scale_contract_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only or terrain_ambient_only or resource_site_landmarks_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
+	if resource_site_landmarks_only:
+		_configure_resource_site_landmark_fixture(session)
 	SessionState.set_active_session(session)
 
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
@@ -38,6 +50,15 @@ func _run() -> void:
 		if not await _assert_terrain_ambient_life_contract(map_node, session):
 			return
 		print("OVERWORLD_TERRAIN_AMBIENT_LIFE_REPORT {\"ok\":true}")
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
+		return
+	if resource_site_landmarks_only:
+		var resource_site_result := await _assert_resource_site_landmark_contract(shell, map_node, session)
+		if not bool(resource_site_result.get("ok", false)):
+			return
+		print("OVERWORLD_RESOURCE_SITE_LANDMARK_REPORT %s" % JSON.stringify(resource_site_result))
 		shell.queue_free()
 		await get_tree().process_frame
 		get_tree().quit(0)
@@ -202,6 +223,131 @@ func _run() -> void:
 	if main_loop != null:
 		main_loop.quit(0)
 	return
+
+func _configure_resource_site_landmark_fixture(session) -> void:
+	var resource_nodes: Array = []
+	for case_value in RESOURCE_SITE_LANDMARK_CASES:
+		var case: Dictionary = case_value
+		var tile: Vector2i = case.get("tile", Vector2i(-1, -1))
+		resource_nodes.append({
+			"placement_id": "resource_site_landmark_fixture:%s" % String(case.get("site_id", "")),
+			"site_id": String(case.get("site_id", "")),
+			"x": tile.x,
+			"y": tile.y,
+			"collected": false,
+		})
+	session.overworld["resource_nodes"] = resource_nodes
+	session.overworld["towns"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+	session.overworld["map_objects"] = []
+	var map_size := OverworldRules.derive_map_size(session)
+	var visible_tiles: Array = []
+	var explored_tiles: Array = []
+	for y in range(map_size.y):
+		var visible_row: Array = []
+		var explored_row: Array = []
+		for _x in range(map_size.x):
+			visible_row.append(true)
+			explored_row.append(true)
+		visible_tiles.append(visible_row)
+		explored_tiles.append(explored_row)
+	session.overworld["fog"] = {
+		"visible_tiles": visible_tiles,
+		"explored_tiles": explored_tiles,
+		"visible_count": map_size.x * map_size.y,
+		"explored_count": map_size.x * map_size.y,
+		"total_tiles": map_size.x * map_size.y,
+	}
+
+func _assert_resource_site_landmark_contract(shell: Node, map_node: Node, session) -> Dictionary:
+	var authority_before: Dictionary = session.to_dict()
+	var manifest: Dictionary = map_node.get("_overworld_art_manifest")
+	var object_assets: Dictionary = manifest.get("object_assets", {}) if manifest.get("object_assets", {}) is Dictionary else {}
+	var resource_site_asset_ids: Dictionary = map_node.get("_resource_site_asset_ids")
+	var rows: Array = []
+	var unique_regions: Array = []
+	for case_value in RESOURCE_SITE_LANDMARK_CASES:
+		var case: Dictionary = case_value
+		var site_id := String(case.get("site_id", ""))
+		var asset_id := String(case.get("asset_id", ""))
+		var tile: Vector2i = case.get("tile", Vector2i(-1, -1))
+		var expected_region: Rect2 = case.get("region", Rect2())
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var repeated: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var art: Dictionary = presentation.get("art_presentation", {}) if presentation.get("art_presentation", {}) is Dictionary else {}
+		var entry: Dictionary = object_assets.get(asset_id, {}) if object_assets.get(asset_id, {}) is Dictionary else {}
+		var texture = map_node.call("_object_texture_for_asset", asset_id)
+		var exact: bool = bool(presentation.get("has_resource", false)) \
+			and bool(presentation.get("draws_discoverable_object", false)) \
+			and bool(art.get("uses_asset_sprite", false)) \
+			and not bool(art.get("fallback_procedural_marker", true)) \
+			and art.get("sprite_asset_ids", []) == [asset_id] \
+			and String(resource_site_asset_ids.get(site_id, "")) == asset_id \
+			and String(entry.get("assigned_resource_site_id", "")) == site_id \
+			and not String(entry.get("accessible_description", "")).strip_edges().is_empty() \
+			and texture is AtlasTexture \
+			and texture.region == expected_region \
+			and texture.atlas is Texture2D \
+			and texture.atlas.resource_path == RESOURCE_SITE_LANDMARK_ATLAS_PATH \
+			and texture.atlas.get_size() == Vector2(240, 48) \
+			and repeated == presentation
+		rows.append({"site_id": site_id, "asset_id": asset_id, "region": expected_region, "exact": exact})
+		if expected_region not in unique_regions:
+			unique_regions.append(expected_region)
+		if not exact:
+			push_error("Overworld resource-site landmarks: exact atlas identity failed. case=%s presentation=%s entry=%s" % [case, presentation, entry])
+			get_tree().quit(1)
+			return {"ok": false, "failure": "identity", "case": case}
+	if unique_regions.size() != RESOURCE_SITE_LANDMARK_CASES.size():
+		push_error("Overworld resource-site landmarks: atlas regions are not unique. regions=%s" % unique_regions)
+		get_tree().quit(1)
+		return {"ok": false, "failure": "duplicate_region"}
+	var object_paths: Dictionary = map_node.get("_object_asset_paths")
+	var object_regions: Dictionary = map_node.get("_object_asset_regions")
+	object_paths["resource_site_invalid_region_fixture"] = RESOURCE_SITE_LANDMARK_ATLAS_PATH
+	object_regions["resource_site_invalid_region_fixture"] = [220, 0, 48, 48]
+	var invalid_region_fail_closed := map_node.call("_object_texture_for_asset", "resource_site_invalid_region_fixture") == null
+	var missing_asset_fail_closed := map_node.call("_object_texture_for_asset", "resource_site_missing_asset_fixture") == null
+	if not invalid_region_fail_closed or not missing_asset_fail_closed or session.to_dict() != authority_before:
+		push_error("Overworld resource-site landmarks: fail-closed or session-authority contract changed.")
+		get_tree().quit(1)
+		return {"ok": false, "failure": "fail_closed_or_authority"}
+	var captures: Array = []
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		get_window().content_scale_size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if OS.get_environment("OVERWORLD_RESOURCE_SITE_LANDMARKS_CAPTURE") == "1":
+			if DisplayServer.get_name() == "headless":
+				push_error("Overworld resource-site landmarks: capture requested under the headless display driver.")
+				get_tree().quit(1)
+				return {"ok": false, "failure": "headless_capture"}
+			await RenderingServer.frame_post_draw
+			var output_dir := ProjectSettings.globalize_path("res://.artifacts/recurring_resource_site_landmarks_wave1/captures")
+			if DirAccess.make_dir_recursive_absolute(output_dir) != OK:
+				get_tree().quit(1)
+				return {"ok": false, "failure": "capture_directory"}
+			var path := "%s/resource_site_landmarks_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]
+			if get_viewport().get_texture().get_image().save_png(path) != OK:
+				get_tree().quit(1)
+				return {"ok": false, "failure": "capture_write", "path": path}
+			captures.append(path)
+	return {
+		"ok": true,
+		"site_count": RESOURCE_SITE_LANDMARK_CASES.size(),
+		"atlas_path": RESOURCE_SITE_LANDMARK_ATLAS_PATH,
+		"atlas_size": [240, 48],
+		"rows": rows,
+		"invalid_region_fail_closed": invalid_region_fail_closed,
+		"missing_asset_fail_closed": missing_asset_fail_closed,
+		"session_authority_exact": true,
+		"save_version": SessionStateStore.SAVE_VERSION,
+		"viewports": [[1280, 720], [1920, 1080]],
+		"captures": captures,
+	}
 
 func _assert_terrain_ambient_life_contract(map_node: Control, session) -> bool:
 	if not map_node.has_method("validation_terrain_ambient_summary"):

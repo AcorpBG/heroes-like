@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-placed-encounter-landmarks-completion-10184`.
-- Package boundary: both release exports now measure 246188460 bytes, 3811540 bytes below the unchanged 250000000-byte ceiling. Development reports and generated source originals remain excluded while one compact imported encounter atlas ships on both platforms.
+- Latest completed implementation slice: `content-recurring-resource-site-landmarks-wave1-10184`; select the next bounded live content/art gap before further implementation.
+- Package boundary: both release exports now measure 246212768 bytes, 3787232 bytes below the unchanged 250000000-byte ceiling. Development reports and generated source originals remain excluded while the compact recurring encounter and resource-site atlases ship on both platforms.
+
+## Recurring Resource-Site Landmarks Wave 1
+
+id: `content-recurring-resource-site-landmarks-wave1-10184`
+
+Status: completed.
+
+Current finding:
+- the 24 active authored scenarios contain 292 resource-site placements across 59 distinct site identities; the live resolver now gives 39 identities exact linked map-object art and 20 identities direct/shared resource mappings, leaving zero placed identities on the procedural resource marker;
+- Prism Watch Relay, Lens House Barracks, Bog Drum Outpost, Bellwake Wreck Ledger, and Orevein Assay Depot are the complete live procedural-fallback set, covering Sunvault, Mireclaw, Veilmourn, and Brasshollow scouting, dwelling, control, salvage, and economy loops;
+- all five already own gameplay behavior and scenario placement, so exact art can improve live readability without adding unused definitions or changing rewards, control, recruitment, vision, pressure, objectives, or pathing.
+
+Implementation boundary:
+- create five original silhouette-distinct field landmarks from each site's authored family, faction, reward, service, and scenario language, then pack them into one compact immutable 48x48-region runtime atlas;
+- register exact resource-site ownership, generated-source provenance, and non-color descriptions through the existing data-driven object-asset and resource-site resolver, with invalid or missing regions failing closed to the existing procedural marker;
+- preserve all resource-site definitions and placements, interaction/rules authority, map layout and occupancy, save version 9, accessibility settings, renderer cache bounds, and Windows/Linux behavior.
+
+Completion criteria:
+- five byte-distinct original transparent sources and one compact five-region runtime atlas retain genuine alpha, readable non-color silhouettes, exact site ownership, and source-art/report package exclusion;
+- focused runtime proves all five exact atlas regions and repository validation proves all 15 live placements, with deterministic repeated resolution, invalid/missing fail-closed behavior, accessible descriptions, and unchanged resource/session/save authority;
+- inspected 1280x720 and 1920x1080 captures, repository/core regressions, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- five byte-distinct, genuinely transparent generated sources now own immutable 48x48 regions in one 240x48 runtime atlas, with exact object-asset provenance, site mappings, silhouette roles, and unique non-color descriptions;
+- focused live Overworld proof resolves all five mappings through distinct `AtlasTexture` regions at both supported resolutions, rejects invalid and missing regions, remains deterministic on repeat, and leaves session authority and save version 9 unchanged;
+- repository validation audits the actual resolver precedence across all 292 placements and proves 39 placed identities resolve through map-object art, 20 through exact site mappings, and none through procedural fallback; the selected five account for the expected 6/4/3/1/1 placements;
+- inspected 1280x720 and 1920x1080 captures show grounded, unclipped, silhouette-distinct landmarks. Core systems and the focused runtime pass; the unrelated existing broad-overworld 1280px objective-brief tooltip/ellipsis assertion remains red outside this slice;
+- Linux export/boot and Windows export/Wine boot pass with the new atlas explicitly present, generated source art and reports absent, and matching 246212768-byte PCKs, 3787232 bytes below the unchanged ceiling. This closes the live placed resource-site procedural-art gap only and does not claim whole-game or release readiness.
+
+Non-goals:
+- no resource-site ids, names, rewards, control income, recruitment, vision, pressure, response behavior, scenario placement, map footprint, pathing, AI, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes object, icon, heraldry, name, text, or protected visual expression, and no replacement of the 54 already asset-backed placed resource-site identities in this bounded slice.
 
 ## Placed Encounter Landmark Completion
 
