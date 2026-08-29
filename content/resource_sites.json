@@ -8502,8 +8502,8 @@
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_lantern_crown_nave",
@@ -8521,9 +8521,10 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
-        "broad_reward_runtime_migration": false
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false,
+        "artifact_reward_table_id": "artifact_source_guarded_sites_faction_relics"
       },
       "reward_preview": {
         "reward_categories": [
@@ -8537,23 +8538,25 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
-        "no_rare_resource_activation": true
+        "spell_recruit_route_rewards_are_metadata_only": true,
+        "no_rare_resource_activation": false,
+        "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true,
+        "artifact_reward_execution": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -8659,8 +8662,8 @@
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_hive_of_reeds",
@@ -8668,7 +8671,8 @@
         "reward_site_role": "creature_bank_like",
         "reward_categories": [
           "recruit",
-          "resource"
+          "resource",
+          "artifact"
         ],
         "reward_tier": "heavy",
         "guard_army_group_id": "army_neutral_bogbell_croft_watch",
@@ -8677,37 +8681,41 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
-        "broad_reward_runtime_migration": false
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false,
+        "artifact_reward_table_id": "artifact_source_guarded_sites_faction_relics"
       },
       "reward_preview": {
         "reward_categories": [
           "recruit",
-          "resource"
+          "resource",
+          "artifact"
         ],
         "live_resource_reward_keys": [
           "experience",
           "gold",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
-        "no_rare_resource_activation": true
+        "spell_recruit_route_rewards_are_metadata_only": true,
+        "no_rare_resource_activation": false,
+        "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true,
+        "artifact_reward_execution": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -8734,8 +8742,8 @@
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_glassbound_eyrie",
@@ -8753,9 +8761,10 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
-        "broad_reward_runtime_migration": false
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false,
+        "artifact_reward_table_id": "artifact_source_guarded_sites_faction_relics"
       },
       "reward_preview": {
         "reward_categories": [
@@ -8768,23 +8777,25 @@
           "gold",
           "ore"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
-        "no_rare_resource_activation": true
+        "spell_recruit_route_rewards_are_metadata_only": true,
+        "no_rare_resource_activation": false,
+        "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true,
+        "artifact_reward_execution": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -8811,8 +8822,8 @@
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_rust_choir_foundry",
@@ -8830,9 +8841,10 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
-        "broad_reward_runtime_migration": false
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false,
+        "artifact_reward_table_id": "artifact_source_guarded_sites_faction_relics"
       },
       "reward_preview": {
         "reward_categories": [
@@ -8845,23 +8857,25 @@
           "gold",
           "ore"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
-        "no_rare_resource_activation": true
+        "spell_recruit_route_rewards_are_metadata_only": true,
+        "no_rare_resource_activation": false,
+        "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true,
+        "artifact_reward_execution": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -8889,8 +8903,8 @@
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_salt_wight_convoy",
@@ -8908,9 +8922,10 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
-        "broad_reward_runtime_migration": false
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false,
+        "artifact_reward_table_id": "artifact_source_guarded_sites_faction_relics"
       },
       "reward_preview": {
         "reward_categories": [
@@ -8924,23 +8939,25 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
-        "no_rare_resource_activation": true
+        "spell_recruit_route_rewards_are_metadata_only": true,
+        "no_rare_resource_activation": false,
+        "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true,
+        "artifact_reward_execution": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -9044,8 +9061,8 @@
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_rootwarden_stockade",
@@ -9063,9 +9080,10 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
-        "broad_reward_runtime_migration": false
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false,
+        "artifact_reward_table_id": "artifact_source_guarded_sites_faction_relics"
       },
       "reward_preview": {
         "reward_categories": [
@@ -9078,23 +9096,25 @@
           "gold",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
-        "no_rare_resource_activation": true
+        "spell_recruit_route_rewards_are_metadata_only": true,
+        "no_rare_resource_activation": false,
+        "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true,
+        "artifact_reward_execution": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },

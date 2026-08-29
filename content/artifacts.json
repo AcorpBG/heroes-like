@@ -645,6 +645,79 @@
         "ai_valuation_behavior": false,
         "rare_resource_activation": true
       }
+    },
+    {
+      "id": "artifact_source_guarded_sites_faction_relics",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "guarded_site",
+      "reward_context": "guarded_reward_site",
+      "eligible_object_families": [
+        "guarded_reward_site"
+      ],
+      "eligible_site_families": [
+        "guarded_reward_site"
+      ],
+      "required_object_tags": [
+        "guarded_reward"
+      ],
+      "required_reward_categories": [
+        "artifact"
+      ],
+      "guard_tiers": [
+        "heavy",
+        "elite"
+      ],
+      "rarity_bands": [
+        "epic"
+      ],
+      "artifact_ids": [
+        "artifact_lockfire_assize_seal",
+        "artifact_miremoon_hunt_drum",
+        "artifact_noonglass_orrery",
+        "artifact_worldroot_covenant_heartwood",
+        "artifact_seventh_clause_pressure_key",
+        "artifact_last_bell_tideglass"
+      ],
+      "artifact_ids_by_faction": {
+        "faction_embercourt": [
+          "artifact_lockfire_assize_seal"
+        ],
+        "faction_mireclaw": [
+          "artifact_miremoon_hunt_drum"
+        ],
+        "faction_sunvault": [
+          "artifact_noonglass_orrery"
+        ],
+        "faction_thornwake": [
+          "artifact_worldroot_covenant_heartwood"
+        ],
+        "faction_brasshollow": [
+          "artifact_seventh_clause_pressure_key"
+        ],
+        "faction_veilmourn": [
+          "artifact_last_bell_tideglass"
+        ]
+      },
+      "faction_constraints": [
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault",
+        "faction_thornwake",
+        "faction_brasshollow",
+        "faction_veilmourn"
+      ],
+      "set_constraints": {
+        "allowed_set_ids": [],
+        "piece_limit_per_table": 0
+      },
+      "runtime_policy": {
+        "metadata_only": false,
+        "live_drop_execution": true,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": true
+      }
     }
   ],
   "items": [
@@ -2956,6 +3029,628 @@
       "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
       "description": "A pale drowned-star shard hangs within salt-pitted rings, a cracked wake bell, and a fogglass plumb. It points toward hazards before the mist reveals them.",
       "bonuses": {"scouting_radius": 1, "battle_initiative": 1}
+    },
+    {
+      "id": "artifact_lockfire_assize_seal",
+      "name": "Lockfire Assize Seal",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "epic",
+      "family": "lockfire_assize_seals",
+      "roles": [
+        "defense",
+        "combat",
+        "economy"
+      ],
+      "accord_affinity": "beacon",
+      "faction_affinity": [
+        "faction_embercourt"
+      ],
+      "source_tags": [
+        "guarded_site"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Strengthens the command line around a defended crossing."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "embergrain"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Embergrain each day."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "An Embercourt capstone seal for fortified command and dependable Embergrain levies.",
+        "icon_id": "artifact_icon_lockfire_assize_seal",
+        "icon_path": "res://art/artifacts/runtime/lockfire_assize_seal.png",
+        "effect_tags": [
+          "defense",
+          "embergrain",
+          "beacon",
+          "embercourt"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "rare_resource_income",
+          "fortified_route_support"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "governor"
+        ],
+        "preferred_faction_ids": [
+          "faction_embercourt"
+        ],
+        "combo_tags": [
+          "beacon",
+          "lockfire",
+          "assize"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A river-court seal locked inside miniature sluice gates. Its ember cannot be taxed, dimmed, or carried across a false writ.",
+      "bonuses": {
+        "battle_defense": 2,
+        "daily_income": {
+          "embergrain": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_miremoon_hunt_drum",
+      "name": "Miremoon Hunt Drum",
+      "slot": "banner",
+      "artifact_class": "faction",
+      "rarity": "epic",
+      "family": "miremoon_hunt_drums",
+      "roles": [
+        "combat",
+        "morale",
+        "economy"
+      ],
+      "accord_affinity": "mire",
+      "faction_affinity": [
+        "faction_mireclaw"
+      ],
+      "source_tags": [
+        "guarded_site"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Drives the company into a stronger opening assault."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Sharpens the first beat of the hunt."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "peatwax"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Peatwax each day."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A Mireclaw hunt drum for attack tempo, initiative, and patient Peatwax gathering.",
+        "icon_id": "artifact_icon_miremoon_hunt_drum",
+        "icon_path": "res://art/artifacts/runtime/miremoon_hunt_drum.png",
+        "effect_tags": [
+          "attack",
+          "initiative",
+          "peatwax",
+          "mireclaw"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "battle_initiative",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "assault_pressure",
+          "initiative_tempo",
+          "rare_resource_income"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_mireclaw"
+        ],
+        "combo_tags": [
+          "mire",
+          "hunt",
+          "drum"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Wax-dark hide spans a crescent jaw frame. Its low beat tells every reed hunter which ripple belongs to prey.",
+      "bonuses": {
+        "battle_attack": 2,
+        "battle_initiative": 1,
+        "daily_income": {
+          "peatwax": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_noonglass_orrery",
+      "name": "Noonglass Orrery",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "epic",
+      "family": "noonglass_orreries",
+      "roles": [
+        "magic",
+        "combat",
+        "economy"
+      ],
+      "accord_affinity": "lens",
+      "faction_affinity": [
+        "faction_sunvault"
+      ],
+      "source_tags": [
+        "guarded_site"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_spell_resistance_pct",
+          "public_summary": "Turns hostile spell angles away from the formation."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Improves calibrated command timing."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "aetherglass"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Aetherglass each day."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A Sunvault capstone instrument for spell resistance, initiative, and Aetherglass calibration.",
+        "icon_id": "artifact_icon_noonglass_orrery",
+        "icon_path": "res://art/artifacts/runtime/noonglass_orrery.png",
+        "effect_tags": [
+          "resistance",
+          "initiative",
+          "aetherglass",
+          "sunvault"
+        ],
+        "comparison_priority": [
+          "battle_spell_resistance_pct",
+          "battle_initiative",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "spell_resistance",
+          "initiative_tempo",
+          "rare_resource_income"
+        ],
+        "preferred_hero_roles": [
+          "mage",
+          "defender"
+        ],
+        "preferred_faction_ids": [
+          "faction_sunvault"
+        ],
+        "combo_tags": [
+          "lens",
+          "noon",
+          "orrery"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "An open wheel of noon-glass discs that refuses every false horizon. A forked arm clicks once when a spell enters its true angle.",
+      "bonuses": {
+        "battle_spell_resistance_pct": 12,
+        "battle_initiative": 1,
+        "daily_income": {
+          "aetherglass": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_worldroot_covenant_heartwood",
+      "name": "Worldroot Covenant Heartwood",
+      "slot": "armor",
+      "artifact_class": "faction",
+      "rarity": "epic",
+      "family": "worldroot_covenant_heartwoods",
+      "roles": [
+        "defense",
+        "movement",
+        "economy"
+      ],
+      "accord_affinity": "root",
+      "faction_affinity": [
+        "faction_thornwake"
+      ],
+      "source_tags": [
+        "guarded_site"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Roots the battle line against displacement."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Opens living shortcuts across the field."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "verdant_grafts"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Verdant Graft each day."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A Thornwake heartwood cuirass for defense, living-road movement, and Verdant Grafts.",
+        "icon_id": "artifact_icon_worldroot_covenant_heartwood",
+        "icon_path": "res://art/artifacts/runtime/worldroot_covenant_heartwood.png",
+        "effect_tags": [
+          "defense",
+          "movement",
+          "verdant_grafts",
+          "thornwake"
+        ],
+        "comparison_priority": [
+          "battle_defense",
+          "overworld_movement",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "route_tempo",
+          "rare_resource_income"
+        ],
+        "preferred_hero_roles": [
+          "defender",
+          "scout"
+        ],
+        "preferred_faction_ids": [
+          "faction_thornwake"
+        ],
+        "combo_tags": [
+          "root",
+          "worldroot",
+          "covenant"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "A heart-shaped plate cut from a root that remembers the first covenant. Seed sockets along its rim open whenever the bearer chooses a living road.",
+      "bonuses": {
+        "battle_defense": 2,
+        "overworld_movement": 1,
+        "daily_income": {
+          "verdant_grafts": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_seventh_clause_pressure_key",
+      "name": "Seventh-Clause Pressure Key",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "epic",
+      "family": "seventh_clause_pressure_keys",
+      "roles": [
+        "combat",
+        "defense",
+        "economy"
+      ],
+      "accord_affinity": "furnace",
+      "faction_affinity": [
+        "faction_brasshollow"
+      ],
+      "source_tags": [
+        "guarded_site"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Authorizes a measured increase in battle pressure."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Locks the formation inside safe tolerances."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "brass_scrip"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Brass Scrip each day."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A Brasshollow master key balancing attack, defense, and Brass Scrip income.",
+        "icon_id": "artifact_icon_seventh_clause_pressure_key",
+        "icon_path": "res://art/artifacts/runtime/seventh_clause_pressure_key.png",
+        "effect_tags": [
+          "attack",
+          "defense",
+          "brass_scrip",
+          "brasshollow"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "battle_defense",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "battle_pressure",
+          "frontline_survival",
+          "rare_resource_income"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "governor"
+        ],
+        "preferred_faction_ids": [
+          "faction_brasshollow"
+        ],
+        "combo_tags": [
+          "furnace",
+          "pressure",
+          "clause"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Seven uneven teeth turn a gauge wheel instead of a lock. The final tooth bears a seal no foundry clerk is permitted to copy.",
+      "bonuses": {
+        "battle_attack": 1,
+        "battle_defense": 1,
+        "daily_income": {
+          "brass_scrip": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_last_bell_tideglass",
+      "name": "Last-Bell Tideglass",
+      "slot": "trinket",
+      "artifact_class": "faction",
+      "rarity": "epic",
+      "family": "last_bell_tideglasses",
+      "roles": [
+        "scouting",
+        "combat",
+        "economy"
+      ],
+      "accord_affinity": "veil",
+      "faction_affinity": [
+        "faction_veilmourn"
+      ],
+      "source_tags": [
+        "guarded_site"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Reads distant routes in the fall of black tideglass."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Marks the last safe moment to act."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "memory_salt"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Memory Salt each day."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "A Veilmourn tideglass for deep scouting, decisive timing, and Memory Salt recovery.",
+        "icon_id": "artifact_icon_last_bell_tideglass",
+        "icon_path": "res://art/artifacts/runtime/last_bell_tideglass.png",
+        "effect_tags": [
+          "scouting",
+          "initiative",
+          "memory_salt",
+          "veilmourn"
+        ],
+        "comparison_priority": [
+          "scouting_radius",
+          "battle_initiative",
+          "daily_income",
+          "faction_affinity"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "fog_route_scouting",
+          "initiative_tempo",
+          "rare_resource_income"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "raider"
+        ],
+        "preferred_faction_ids": [
+          "faction_veilmourn"
+        ],
+        "combo_tags": [
+          "veil",
+          "last_bell",
+          "tideglass"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
+      "description": "Black grains fall inside a cracked tideglass hung from a silent bell frame. Salt beads climb upward when an unseen road is about to close.",
+      "bonuses": {
+        "scouting_radius": 2,
+        "battle_initiative": 1,
+        "daily_income": {
+          "memory_salt": 1
+        }
+      }
     }
   ]
 }

@@ -39,6 +39,12 @@ const EXPECTED_ICONS := {
 	"artifact_rootpath_seed_compass": "res://art/artifacts/runtime/rootpath_seed_compass.png",
 	"artifact_redline_survey_dial": "res://art/artifacts/runtime/redline_survey_dial.png",
 	"artifact_drowned_star_astrolabe": "res://art/artifacts/runtime/drowned_star_astrolabe.png",
+	"artifact_lockfire_assize_seal": "res://art/artifacts/runtime/lockfire_assize_seal.png",
+	"artifact_miremoon_hunt_drum": "res://art/artifacts/runtime/miremoon_hunt_drum.png",
+	"artifact_noonglass_orrery": "res://art/artifacts/runtime/noonglass_orrery.png",
+	"artifact_worldroot_covenant_heartwood": "res://art/artifacts/runtime/worldroot_covenant_heartwood.png",
+	"artifact_seventh_clause_pressure_key": "res://art/artifacts/runtime/seventh_clause_pressure_key.png",
+	"artifact_last_bell_tideglass": "res://art/artifacts/runtime/last_bell_tideglass.png",
 }
 
 var _original_ui_scale_percent := 100

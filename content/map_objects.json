@@ -34457,7 +34457,7 @@
         "guard_encounter_id": "encounter_lantern_warren_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "placed guard must be cleared before the one-time resource and faction-relic reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [
@@ -34838,7 +34838,8 @@
         "reward_site_role": "creature_bank_like",
         "reward_categories": [
           "recruit",
-          "resource"
+          "resource",
+          "artifact"
         ],
         "reward_tier": "heavy",
         "guard_army_group_id": "army_neutral_bogbell_croft_watch",
@@ -34869,12 +34870,13 @@
         "guard_encounter_id": "encounter_bogbell_croft_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "placed guard must be cleared before the one-time resource and faction-relic reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [
           "recruit",
-          "resource"
+          "resource",
+          "artifact"
         ],
         "live_resource_reward_keys": [
           "experience",
@@ -35080,7 +35082,7 @@
         "guard_encounter_id": "encounter_cliffhawk_roost_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "placed guard must be cleared before the one-time resource and faction-relic reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [
@@ -35308,7 +35310,7 @@
         "guard_encounter_id": "encounter_cinder_kiln_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "placed guard must be cleared before the one-time resource and faction-relic reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [
@@ -35516,7 +35518,7 @@
         "guard_encounter_id": "encounter_saltpan_camp_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "placed guard must be cleared before the one-time resource and faction-relic reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [
@@ -35958,7 +35960,7 @@
         "guard_encounter_id": "encounter_bramble_hedge_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "placed guard must be cleared before the one-time resource and faction-relic reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [

@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six grand-convergence marches, raising authored scenario breadth to 70 and giving all 60 production heroes a player-command map while activating the final four purpose-built neutral watches, adding two placed dissident fronts, and shipping six exact-art landmarks.",
+  "currentNotes": "Completed six faction relic roads with original capstone relics and icons, six newly live guarded reward sites, exact guard placements across the grand-convergence maps, and a shared explicit-guard interaction fix.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-grand-convergence-marches-10184",
-  "currentSliceId": "content-six-faction-grand-convergence-marches-10184",
-  "currentSliceNotes": "Completed six 14x9 skirmish marches led by Belis, Zhorra, Mirro, Nara, Harro, and Orso with persistent five-stack companies, fifteen starting spells, four activated neutral watches, two placed dissident fronts, and one compact six-landmark atlas. One combined six-case smoke, repository validation, and matching Linux/Windows 248910416-byte package boots passed.",
+  "currentSlice": "content-six-faction-guarded-relic-roads-10184",
+  "currentSliceId": "content-six-faction-guarded-relic-roads-10184",
+  "currentSliceNotes": "Completed six faction-bound capstone relics and icons, adopted six metadata-only heavy or elite sites into live guarded resource and artifact rewards, and placed each site with its exact guard in the matching grand-convergence map. One combined six-case smoke, repository validation, and matching Linux/Windows 249038712-byte package boots passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction grand convergence marches 10184",
-  "currentSliceUpdatedAt": "2026-08-29T19:58:30Z",
+  "currentSliceTitle": "content six faction guarded relic roads 10184",
+  "currentSliceUpdatedAt": "2026-08-29T20:38:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106154,6 +106154,16 @@
       "startedAt": "2026-08-29T19:31:17Z",
       "notes": "Completed six 14x9 grand-convergence marches led by Belis, Zhorra, Mirro, Nara, Harro, and Orso with persistent five-stack companies, fifteen live starting spells, four activated neutral watches, two new placed dissident fronts, broadened low-use artifact and exact-art site placement, and one compact original atlas. The single combined smoke passed exact map and roster contracts, deterministic battles, rewards and flags, inspected captures, and save v9; repository validation and matching Linux/Windows 248910416-byte package boots passed.",
       "completedAt": "2026-08-29T19:58:30Z"
+    },
+    {
+      "id": "content-six-faction-guarded-relic-roads-10184",
+      "title": "content six faction guarded relic roads 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T20:38:05Z",
+      "startedAt": "2026-08-29T20:05:47Z",
+      "notes": "Completed six original faction capstone relics and icons, activated six heavy or elite sites as live guarded resource-and-artifact roads, placed each site beside its exact guard in the matching grand-convergence map, and fixed explicit node-to-guard interaction blocking. The single six-case smoke passed battle, reward, equipment, repeat-claim, inspected capture, and save v9 coverage; repository validation and matching Linux/Windows 249038712-byte package boots passed.",
+      "completedAt": "2026-08-29T20:38:05Z"
     }
   ],
   "project": "heroes-like",
@@ -106163,8 +106173,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 60 exact live heroes now headline authored scenarios. Four encounter definitions intentionally lack static placement: two generic runtime templates and two script-spawned encounters. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next substantial production-content batch, preserve the 1089584-byte package headroom, and do not infer whole-game release readiness from complete hero lead coverage or any bounded content slice.",
+  "remainingGap": "Twenty-four of 32 guarded-reward sites remain metadata-only despite complete site and map-object records. Those sites and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices rather than placement-only claims. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next substantial runtime-backed content family, preserve the remaining 961288-byte package headroom, and avoid treating placement of metadata-only objects as implementation progress.",
   "reportOnlyEvidence": [
     {
       "entries": [

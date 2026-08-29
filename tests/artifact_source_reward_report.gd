@@ -15,8 +15,8 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Artifact source/reward report failed: %s" % report)
 		return
-	if int(report.get("table_count", 0)) != 8:
-		_fail("Expected six live source/reward tables plus two authored-placement metadata tables: %s" % report)
+	if int(report.get("table_count", 0)) != 9:
+		_fail("Expected seven live source/reward tables plus two authored-placement metadata tables: %s" % report)
 		return
 	if int(report.get("eligible_artifact_count", 0)) != int(report.get("artifact_count", 0)):
 		_fail("Source/reward tables did not cover every authored artifact: %s" % report)
@@ -27,7 +27,7 @@ func _run() -> void:
 	if int(report.get("guarded_context_match_count", 0)) <= 0:
 		_fail("Source/reward tables did not connect to guarded reward contexts: %s" % report)
 		return
-	if int(report.get("live_table_count", 0)) != 6 or report.get("live_source_tags", []) != ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"]:
+	if int(report.get("live_table_count", 0)) != 7 or report.get("live_source_tags", []) != ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"]:
 		_fail("Expected pickup, guarded-site, shrine, dwelling, town, and battle-salvage source tables to execute live: %s" % report)
 		return
 
@@ -72,7 +72,7 @@ func _run() -> void:
 		"guarded_context_match_count": int(report.get("guarded_context_match_count", 0)),
 		"runtime_policy": policy,
 		"caveats": [
-			"Only explicitly opted-in pickup caches, guarded sites, Starlens Sanctum, Rootwatch Hollow, Greenbranch Copse, Lockhouse Tally, Scalehouse, and Bellwake battle salvage execute source-table rewards; other pickups, shrines, dwellings, town buildings, save migration, and broad AI changes remain outside this slice.",
+			"Only explicitly opted-in pickup caches, the two legacy vaults, six faction relic roads, Starlens Sanctum, Rootwatch Hollow, Greenbranch Copse, Lockhouse Tally, Scalehouse, and Bellwake battle salvage execute source-table rewards; other sites, save migration, and broad AI changes remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
