@@ -11152,6 +11152,14 @@ func _resource_asset_id(node: Dictionary) -> String:
 	if node.is_empty():
 		return ""
 	var site_id := String(node.get("site_id", ""))
+	var site := ContentService.get_resource_site(site_id)
+	if (
+		String(site.get("family", "")) == "neutral_dwelling"
+		and not String(node.get("collected_by_faction_id", "")).strip_edges().is_empty()
+	):
+		var claimed_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
+		if claimed_asset_id != "" and _object_texture_for_asset(claimed_asset_id) is Texture2D:
+			return claimed_asset_id
 	if String(node.get("kind", "")) == "reward_reference":
 		var reward_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
 		if reward_asset_id != "":
@@ -11164,7 +11172,6 @@ func _resource_asset_id(node: Dictionary) -> String:
 		var mapped_object_id := String(map_object.get("id", "")).strip_edges()
 		if mapped_object_id != "" and _map_object_asset_ids.has(mapped_object_id):
 			return String(_map_object_asset_ids.get(mapped_object_id, ""))
-	var site := ContentService.get_resource_site(site_id)
 	var direct_asset_id := String(site.get("overworld_sprite_asset_id", ""))
 	if direct_asset_id != "":
 		return direct_asset_id
