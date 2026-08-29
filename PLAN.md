@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-high-difficulty-encounter-landmarks-wave3-10184`.
-- Package boundary: both release exports now measure 246122412 bytes, 3877588 bytes below the unchanged 250000000-byte ceiling. Development-only `reports/` payloads and generated source originals are excluded on both platforms while remaining preserved in the working tree.
+- Most recently completed implementation slice: `content-placed-encounter-landmarks-completion-10184`.
+- Package boundary: both release exports now measure 246188460 bytes, 3811540 bytes below the unchanged 250000000-byte ceiling. Development reports and generated source originals remain excluded while one compact imported encounter atlas ships on both platforms.
+
+## Placed Encounter Landmark Completion
+
+id: `content-placed-encounter-landmarks-completion-10184`
+
+Status: completed.
+
+Current finding:
+- 37 of 63 authored encounter definitions now own exact live Overworld identity, covering all 77 placements and all 37 distinct encounters currently used by authored scenarios;
+- Barrow Pickets, Bramble Hedge Watch, Lantern Patrol, Reedward Camp, Sluice Raiders, Willow Mill Pack, and Ghoul Grove each own original exact art after previously falling through to faction or unit presentation;
+- the remaining 26 unmatched definitions have no active authored placement and intentionally retain fallback behavior instead of accumulating unused art.
+
+Implementation boundary:
+- create seven original silhouette-distinct field landmarks from the exact terrain, commander, army, battlefield tags, objective, guard role, faction, and scenario placement language, then append immutable 48x48 regions to the existing recurring atlas;
+- register exact encounter/faction-or-neutral/role ownership and generated-source provenance through the existing commander-first exact-encounter/faction/unit/generic data path, with no new runtime texture, resolver, encounter definition, or placement;
+- preserve all prior atlas coordinates and package exclusions, encounter rules, scenario content, save-version-9 authority, accessibility descriptions, and Windows/Linux behavior.
+
+Completion criteria:
+- seven byte-distinct original transparent sources and one compact thirty-one-region runtime atlas retain genuine alpha, readable non-color silhouettes, exact ownership, prior immutable regions, and source-art/report package exclusion;
+- focused runtime proves all thirty-one exact regions, all seven new live identities, fallback order, invalid/missing fail-closed behavior, descriptions, and unchanged encounter/session/save authority;
+- inspected 1280x720 and 1920x1080 captures, repository/core regressions, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- seven byte-distinct, genuinely transparent generated sources now own immutable 48x48 regions appended at x=1152 through x=1440 in the single 1488x48 recurring landmark atlas; a direct pixel comparison reports zero changed pixels across the prior 1152x48 region;
+- live Overworld proof resolves all thirty-one recurring regions at both validation resolutions, preserves commander-first exact/faction/unit/generic fallback order, rejects invalid and missing regions, retains unique non-color descriptions, and leaves encounter/session/save-version-9 authority unchanged;
+- inspected 1280x720 and 1920x1080 captures show the new landmarks as distinct, grounded, unclipped silhouettes with no checkerboard, backdrop card, or color-only identity dependency;
+- repository validation proves all 77 authored placements across 37 distinct encounter ids own exact art while the 26 unplaced definitions own no unused mapping; signature, commander, core, Linux, and Windows checks pass after moving the stale Sluice Raiders fallback fixture to the still-unmapped Mireclaw Raid definition;
+- both release PCKs boot with the recurring atlas present and source/report payloads absent at 246188460 bytes, 3811540 bytes below the unchanged ceiling. This closes placed-encounter exact-art gaps only and does not claim whole-game or release readiness.
+
+Non-goals:
+- no art for the 26 currently unplaced encounter definitions and no copied Heroes encounter, object, creature, icon, heraldry, name, text, or protected visual expression; no encounter definitions, armies, balance, placement, objectives, AI, battle, save schema, RMG, signing, publication, whole-game, or release-readiness claim.
 
 ## High-Difficulty Encounter Landmarks Wave 3
 

@@ -1,0 +1,67 @@
+{
+  "schema": "recurring_encounter_landmark_wave4_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "generation_session_directory": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+    "size": [1488, 48],
+    "cell_size": [48, 48],
+    "previous_region_count": 24,
+    "wave4_region_count": 7,
+    "total_region_count": 31,
+    "sha256": "a43eeb70a32e1a7af1ed4668ee62770adab288da30d202e9e5c77c2e1cd5d149",
+    "prior_region_pixel_difference_count": 0,
+    "package_policy": "single_imported_atlas_only"
+  },
+  "sources": [
+    {
+      "encounter_id": "encounter_barrow_pickets",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave4/barrow_pickets_source.png",
+      "sha256": "26f850099417ba1dd556521fee433a5c41f7e818fc627c2717ef6c69f429a0ef",
+      "atlas_region": [1152, 0, 48, 48],
+      "prompt_summary": "Mireclaw peat burial mound crossed by uneven hooked reed-pike rows, hide relay drum, bent stone marker, and claw-shaped palisade."
+    },
+    {
+      "encounter_id": "encounter_bramble_hedge_watch",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave4/bramble_hedge_watch_source.png",
+      "sha256": "31515600af74988a0508caca487fde9ff4e22992c4f2e47f0210a6b6ca9af890",
+      "atlas_region": [1200, 0, 48, 48],
+      "prompt_summary": "Neutral crescent thorn hedge with a raised wicker watch basket, crossed thornbow rests, and chained root-wrapped vault hatch."
+    },
+    {
+      "encounter_id": "encounter_lantern_patrol",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave4/lantern_patrol_source.png",
+      "sha256": "b1e19ad352187c7b66fffc4e19195be406ae0552e44b062b7fabf332a01b8a96",
+      "atlas_region": [1248, 0, 48, 48],
+      "prompt_summary": "Embercourt forked signal mast with stacked lantern cages, three-lamp brass range battery, compact pavises, and road pikes."
+    },
+    {
+      "encounter_id": "encounter_reedward_camp",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave4/reedward_camp_source.png",
+      "sha256": "2d6f7fa57d0324d8c182200a6b8546d89e1859e1a8bd911bc1de336d2d2db5c5",
+      "atlas_region": [1296, 0, 48, 48],
+      "prompt_summary": "Mireclaw asymmetric reed shelter under a forked torch beacon with snare stakes, violet sling bolts, and peat supply sled."
+    },
+    {
+      "encounter_id": "encounter_sluice_raiders",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave4/sluice_raiders_source.png",
+      "sha256": "9fe4076cfc003e439d5c1c29221182cb7c8a234d706a01976c1c9201e9cf80fe",
+      "atlas_region": [1344, 0, 48, 48],
+      "prompt_summary": "Mireclaw broken diagonal timber sluice with unequal posts, claw-shaped crank wheel, channel planks, hook rack, and drum."
+    },
+    {
+      "encounter_id": "encounter_willow_mill_pack",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave4/willow_mill_pack_source.png",
+      "sha256": "65a48ec0f371cd056a6910e8b77b5a64b8381cdf0486de368a78d4c0e4512944",
+      "atlas_region": [1392, 0, 48, 48],
+      "prompt_summary": "Mireclaw leaning willow embracing a cracked half waterwheel and millstone above a hide awning, sling stones, and claw hooks."
+    },
+    {
+      "encounter_id": "encounter_ghoul_grove",
+      "path": "res://art/overworld/source/generated/encounters/recurring_wave4/ghoul_grove_source.png",
+      "sha256": "f7e7fd5d5794ef94e7c0eba91d125214fc1a978775cba950726095b346219452",
+      "atlas_region": [1440, 0, 48, 48],
+      "prompt_summary": "Mireclaw three hollow blackbranch trunks behind a thorn-woven berm with sling nest, paired fog jars, and stone-veil cairn."
+    }
+  ]
+}
