@@ -24,8 +24,36 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-hero-specialty-insignia-10184`.
-- Package boundary: the completed specialty atlas leaves 33076 bytes below the strict 250000000-byte PCK ceiling, so any next packaged-art slice needs an even tighter explicit size strategy.
+- Selected implementation slice: `content-recurring-encounter-landmarks-10184`.
+- Package boundary: the completed slice leaves 19424 bytes below the strict 250000000-byte PCK ceiling by using six 48x48 regions in one imported atlas and keeping full generated sources outside release packages.
+
+## Recurring Encounter Landmarks
+
+id: `content-recurring-encounter-landmarks-10184`
+
+Status: completed.
+
+Current finding:
+- all 60 heroes and all 15 towns own exact live Overworld identities, but only 6 of 63 authored encounters do; the remaining faction landmark, unit-icon, and generic fallbacks preserve playability without carrying exact encounter identity;
+- Beacon Wardens, Bridgeward Levies, Aurora Battery, Bone Ferry Watch, Charter Guard, and Mirror Lancers are the six highest-frequency uncovered encounters, accounting for 21 authored scenario placements and 17 high-difficulty placements across Embercourt, Mireclaw, and Sunvault fronts.
+
+Implementation boundary:
+- create one original readable field landmark for each selected encounter from its exact authored command, terrain, objective, and army language, then assemble the six compact runtimes into one imported atlas with immutable region ownership and generated-source provenance;
+- extend the existing data-driven Overworld object loader to resolve fail-closed atlas regions, retain commander-first exact-encounter/faction/unit/generic fallback order, and expose the new identities through the live map and validation payload;
+- preserve encounter ids, names, armies, commanders, placement, difficulty, objectives, AI, interaction, battle launch, session/save version 9, accessibility markers, and Windows/Linux behavior.
+
+Completion criteria:
+- six byte-distinct original transparent sources and one compact atlas retain genuine alpha, distinct non-color silhouettes at live map scale, exact encounter ownership, and source-art exclusion from release packages;
+- focused runtime proves all six exact AtlasTexture regions in representative authored placements, fallback order, missing/invalid-region fail-closed behavior, accessible descriptions, and unchanged encounter/session/save authority;
+- inspected 1280x720 and 1920x1080 captures, existing encounter/core/repository/editor validation, and Linux/Windows packaged startup pass below the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- Beacon Wardens, Bridgeward Levies, Aurora Battery, Bone Ferry Watch, Charter Guard, and Mirror Lancers now own six byte-distinct original transparent generated sources and exact 48x48 regions in one compact 288x48 runtime atlas, with immutable encounter/faction roles and distinct non-color descriptions;
+- the live Overworld asset loader resolves validated atlas regions through `AtlasTexture`, rejects malformed or out-of-bounds regions, and preserves commander-first exact-encounter/faction/unit/generic fallback order without changing encounter, session, or save-version-9 authority;
+- the contact sheet and 1280x720/1920x1080 live captures were inspected; focused recurring/signature/commander runtime, core, repository/editor, and Linux/Windows package checks pass with the atlas present, generated source art excluded, and matching 249980576-byte PCKs 19424 bytes below the unchanged ceiling. The existing Overworld watch-context cache regression and unrelated 1280px objective-header ellipsis assertion are not claimed fixed by this content slice.
+
+Non-goals:
+- no copied Heroes encounter, object, creature, icon, name, text, or protected visual expression; no encounter rules, armies, balance, AI, objective, placement, battle, save-schema, RMG, signing, publication, whole-game, or release-readiness change or claim.
 
 ## Hero Specialty Insignia
 

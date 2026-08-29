@@ -112,6 +112,8 @@ OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "
 OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_enemy_commander_sprite_runtime_report.tscn"
 OVERWORLD_SIGNATURE_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_signature_encounter_landmark_runtime_report.gd"
 OVERWORLD_SIGNATURE_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_signature_encounter_landmark_runtime_report.tscn"
+OVERWORLD_RECURRING_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_recurring_encounter_landmark_runtime_report.gd"
+OVERWORLD_RECURRING_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_recurring_encounter_landmark_runtime_report.tscn"
 OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.gd"
 OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.tscn"
 RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
@@ -42924,7 +42926,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(source_trimmed_path.exists(), errors, f"Overworld object art asset {asset_id} references missing trimmed source texture {entry.get('source_trimmed')}")
         if runtime_path.exists():
             width, height = png_size(runtime_path)
-            expected_canvas = (64, 64) if str(entry.get("source_model", "")) == "built_in_image_gen_original_signature_encounter_landmark" else (512, 512)
+            source_model = str(entry.get("source_model", ""))
+            if source_model == "built_in_image_gen_original_signature_encounter_landmark":
+                expected_canvas = (64, 64)
+            elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
+                expected_canvas = (288, 48)
+            else:
+                expected_canvas = (512, 512)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
 
     ember_signal_source_path = ROOT / "art" / "overworld" / "source" / "trimmed" / "map_objects" / "distinct" / "ember_signal_post-trimmed.png"
@@ -48641,7 +48649,12 @@ def validate_signature_encounter_landmarks(errors: list[str]) -> None:
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = manifest.get("object_assets", {})
     identity_sprites = manifest.get("encounter_identity_sprites", {})
-    ensure(identity_sprites == {encounter_id: row[0] for encounter_id, row in expected.items()}, errors, "Signature encounter mapping must retain exactly the selected six identities")
+    ensure(
+        {encounter_id: identity_sprites.get(encounter_id) for encounter_id in expected}
+        == {encounter_id: row[0] for encounter_id, row in expected.items()},
+        errors,
+        "Signature encounter mapping must retain the selected six identities",
+    )
     source_payloads: list[bytes] = []
     runtime_payloads: list[bytes] = []
     for encounter_id, (asset_id, stem, faction_id, role, source_sha, runtime_sha) in expected.items():
@@ -48738,6 +48751,140 @@ def validate_signature_encounter_landmarks(errors: list[str]) -> None:
         ensure('"signature_encounter_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged signature encounter coverage")
         for _encounter_id, (_asset_id, stem, _faction_id, _role, _source_sha, _runtime_sha) in expected.items():
             ensure(f'"{stem}"' in packaging_text, errors, f"{packaging_path.name} is missing signature encounter identity {stem}")
+
+
+def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
+    expected = {
+        "encounter_beacon_wardens": ("encounter_recurring_beacon_wardens", "beacon_wardens", "faction_embercourt", "twin_lantern_beacon_watch", "e38bf9da4ba3527d1b467b5fc01046abc6780267f2ec4db52c6aa69c8c94cee3", [0, 0, 48, 48], 4, 3),
+        "encounter_bridgeward_levies": ("encounter_recurring_bridgeward_levies", "bridgeward_levies", "faction_embercourt", "fortified_bridge_toll_barricade", "807bd33e0d81985ab4ec898366a8dd564eab2e573fa67add574b22b197eefbcd", [48, 0, 48, 48], 4, 3),
+        "encounter_aurora_battery": ("encounter_recurring_aurora_battery", "aurora_battery", "faction_sunvault", "triple_prism_aurora_battery", "671cb5c4f2df72350a902e754df10706fa380e41c03562c9748d76eb430dbe5e", [96, 0, 48, 48], 4, 4),
+        "encounter_bone_ferry_watch": ("encounter_recurring_bone_ferry_watch", "bone_ferry_watch", "faction_mireclaw", "bone_prowed_ferry_ambush_watch", "39c6065bb5cea3a79fd2f64c35fb6aa099dec3b03e5b5e79458d53434a5a5cd6", [144, 0, 48, 48], 3, 3),
+        "encounter_charter_guard": ("encounter_recurring_charter_guard", "charter_guard", "faction_embercourt", "sealed_charter_command_pavilion", "ffb67b13f925476e45982ae5193051ac5ad227640997995167debef4847ad612", [192, 0, 48, 48], 3, 1),
+        "encounter_mirror_lancers": ("encounter_recurring_mirror_lancers", "mirror_lancers", "faction_sunvault", "crossed_mirror_lance_dueling_marker", "0ff3851b0830e013409bd1b861f48f53b7906ffe8579e2dd28899e05a1df296b", [240, 0, 48, 48], 3, 3),
+    }
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "recurring"
+    source_manifest_path = source_dir / "manifest.json"
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "recurring" / "recurring_encounter_landmarks_atlas.png"
+    required_paths = (
+        OVERWORLD_ART_MANIFEST_PATH,
+        source_manifest_path,
+        atlas_path,
+        CONTENT_DIR / "encounters.json",
+        CONTENT_DIR / "army_groups.json",
+        CONTENT_DIR / "scenarios.json",
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_RECURRING_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCRIPT_PATH,
+        OVERWORLD_RECURRING_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing recurring encounter landmark owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (288, 48), errors, "Recurring encounter landmark atlas must remain 288x48")
+    ensure(
+        hashlib.sha256(atlas_payload).hexdigest() == "3e3aca265b88d3de405986a58c3fc8c363e456fb29fa20c9fd6b47b047a91859"
+        and len(atlas_payload) >= 26
+        and atlas_payload[25] in {3, 4, 6},
+        errors,
+        "Recurring encounter landmark atlas bytes or alpha changed",
+    )
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Recurring encounter landmark atlas import metadata is missing")
+
+    manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = manifest.get("object_assets", {})
+    identity_sprites = manifest.get("encounter_identity_sprites", {})
+    source_payloads: list[bytes] = []
+    for encounter_id, (asset_id, stem, faction_id, role, source_sha, region, _placements, _high) in expected.items():
+        entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
+        source_res = f"res://art/overworld/source/generated/encounters/recurring/{stem}_source.png"
+        ensure(isinstance(entry, dict) and identity_sprites.get(encounter_id) == asset_id, errors, f"Recurring encounter {encounter_id} mapping is missing")
+        if not isinstance(entry, dict):
+            continue
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png", errors, f"Recurring encounter {encounter_id} atlas path changed")
+        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48], errors, f"Recurring encounter {encounter_id} atlas ownership changed")
+        ensure(entry.get("source_generated") == source_res and entry.get("source_model") == "built_in_image_gen_original_recurring_encounter_landmark_atlas", errors, f"Recurring encounter {encounter_id} generation provenance changed")
+        ensure(entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == faction_id, errors, f"Recurring encounter {encounter_id} content ownership changed")
+        ensure(entry.get("presentation_role") == role and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} role or non-color description changed")
+        source_path = res_path_to_disk(source_res)
+        ensure(source_path.is_file() and min(png_size(source_path)) >= 1024, errors, f"Recurring encounter {encounter_id} must retain its high-resolution source")
+        ensure(Path(f"{source_path}.import").is_file(), errors, f"Recurring encounter {encounter_id} source import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Recurring encounter {encounter_id} source bytes or alpha changed")
+            source_payloads.append(payload)
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six recurring encounter generated sources must remain byte-distinct")
+
+    source_manifest = load_json(source_manifest_path)
+    source_rows = source_manifest.get("sources", [])
+    source_by_id = {str(row.get("encounter_id", "")): row for row in source_rows if isinstance(row, dict)} if isinstance(source_rows, list) else {}
+    runtime_atlas = source_manifest.get("runtime_atlas", {})
+    ensure(source_manifest.get("schema") == "recurring_encounter_landmark_source_manifest_v1" and source_manifest.get("generation_mode") == "built_in_image_gen", errors, "Recurring encounter source manifest provenance changed")
+    ensure(isinstance(runtime_atlas, dict) and runtime_atlas.get("size") == [288, 48] and runtime_atlas.get("cell_size") == [48, 48] and runtime_atlas.get("sha256") == "3e3aca265b88d3de405986a58c3fc8c363e456fb29fa20c9fd6b47b047a91859" and runtime_atlas.get("package_policy") == "single_imported_atlas_only", errors, "Recurring encounter source manifest atlas contract changed")
+    ensure(set(source_by_id) == set(expected), errors, "Recurring encounter source manifest must own exactly the selected six encounters")
+    for encounter_id, (_asset_id, stem, _faction_id, _role, source_sha, region, _placements, _high) in expected.items():
+        row = source_by_id.get(encounter_id, {})
+        ensure(row.get("path") == f"res://art/overworld/source/generated/encounters/recurring/{stem}_source.png" and row.get("sha256") == source_sha and row.get("atlas_region") == region and len(str(row.get("prompt_summary", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} source manifest row changed")
+
+    encounter_rows = load_json(CONTENT_DIR / "encounters.json").get("items", [])
+    group_rows = load_json(CONTENT_DIR / "army_groups.json").get("items", [])
+    scenario_rows = load_json(CONTENT_DIR / "scenarios.json").get("items", [])
+    encounters = {str(row.get("id", "")): row for row in encounter_rows if isinstance(row, dict)} if isinstance(encounter_rows, list) else {}
+    groups = {str(row.get("id", "")): row for row in group_rows if isinstance(row, dict)} if isinstance(group_rows, list) else {}
+    placement_counts = {encounter_id: 0 for encounter_id in expected}
+    high_counts = {encounter_id: 0 for encounter_id in expected}
+    if isinstance(scenario_rows, list):
+        for scenario in scenario_rows:
+            if not isinstance(scenario, dict):
+                continue
+            for placement in scenario.get("encounters", []):
+                encounter_id = str(placement.get("encounter_id", "")) if isinstance(placement, dict) else ""
+                if encounter_id in placement_counts:
+                    placement_counts[encounter_id] += 1
+                    high_counts[encounter_id] += int(str(placement.get("difficulty", "")) == "high")
+    for encounter_id, (_asset_id, _stem, faction_id, _role, _source_sha, _region, placements, high) in expected.items():
+        definition = encounters.get(encounter_id, {})
+        group = groups.get(str(definition.get("enemy_group_id", "")), {}) if isinstance(definition, dict) else {}
+        ensure(str(group.get("faction_id", "")) == faction_id, errors, f"Recurring encounter {encounter_id} authored faction changed")
+        ensure(placement_counts[encounter_id] == placements and high_counts[encounter_id] == high, errors, f"Recurring encounter {encounter_id} playable placement coverage changed")
+    ensure(sum(placement_counts.values()) == 21 and sum(high_counts.values()) == 17, errors, "Recurring encounter landmarks must retain 21 authored placements including 17 high-difficulty placements")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "var _object_asset_regions: Dictionary = {}",
+        "_object_asset_regions.clear()",
+        'var atlas_region: Variant = entry.get("atlas_region", [])',
+        "_object_asset_regions[asset_id] = atlas_region.duplicate(true)",
+        "if atlas_region_value.size() != 4:",
+        "or atlas_region.end.x > texture.get_width()",
+        "or atlas_region.end.y > texture.get_height()",
+        "var atlas_texture := AtlasTexture.new()",
+        "atlas_texture.region = atlas_region",
+    ):
+        ensure(token in map_text, errors, f"Recurring encounter atlas runtime is missing fail-closed ownership: {token}")
+
+    report_text = OVERWORLD_RECURRING_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = OVERWORLD_RECURRING_ENCOUNTER_LANDMARK_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "overworld_recurring_encounter_landmark_runtime_report.tscn", [("OverworldRecurringEncounterLandmarkRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'texture is AtlasTexture',
+        'object_regions["recurring_invalid_region_fixture"] = [280, 0, 48, 48]',
+        '"fallback_order": ["commander", "exact_encounter", "faction", "unit", "generic"]',
+        'session.to_dict() != authority_before',
+        'OS.get_environment("RECURRING_ENCOUNTER_CAPTURE")',
+        'print("OVERWORLD_RECURRING_ENCOUNTER_LANDMARK_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Recurring encounter focused runtime owner is missing exact proof: {token}")
+
+    export_text = (ROOT / "export_presets.cfg").read_text(encoding="utf-8")
+    ensure(export_text.count("art/*/source/*") == 2, errors, "Both release presets must exclude recurring generated source art")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME" in packaging_text, errors, f"{packaging_path.name} must audit the compact recurring encounter atlas")
+        ensure('bool(terrain_payload["recurring_encounter_atlas_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when the recurring encounter atlas is absent")
+        ensure('"recurring_encounter_atlas_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged recurring encounter atlas coverage")
 
 
 def validate_hero_specialty_insignia(errors: list[str]) -> None:
@@ -73259,6 +73406,7 @@ def main() -> int:
     validate_overworld_contained_hover_card(errors)
     validate_faction_encounter_landmarks(errors)
     validate_signature_encounter_landmarks(errors)
+    validate_recurring_encounter_landmarks(errors)
     validate_hero_specialty_insignia(errors)
     validate_campaign_arc_emblems(errors)
     validate_campaign_chapter_seals(errors)
