@@ -172,6 +172,7 @@ const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "balanced_cartographic_bands_v4"
 const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.30
 const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.36
 const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.46
+const OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.82
 const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.54
 const OBJECT_WAYPOINT_VISIBLE_EXTENT_TILES := 0.50
 const OBJECT_LANDMARK_VISIBLE_EXTENT_TILES := 0.58
@@ -537,6 +538,8 @@ var _town_identity_asset_ids: Dictionary = {}
 var _town_faction_asset_ids: Dictionary = {}
 var _hero_identity_asset_ids: Dictionary = {}
 var _hero_faction_asset_ids: Dictionary = {}
+var _encounter_faction_asset_ids: Dictionary = {}
+var _encounter_faction_cache: Dictionary = {}
 var _encounter_default_asset_id := ""
 var _session_static_layer: Control = null
 var _terrain_ambient_layer: Control = null
@@ -3927,6 +3930,8 @@ func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_r
 func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if _draw_encounter_commander_sprite(encounter, rect, remembered, tile):
 		return true
+	if _draw_encounter_faction_landmark(encounter, rect, remembered, tile):
+		return true
 	if _draw_encounter_unit_icon(encounter, rect, remembered, tile):
 		return true
 	return _draw_object_sprite(_encounter_asset_id(encounter), rect, remembered, _encounter_object_profile(), tile)
@@ -3938,6 +3943,18 @@ func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, rememb
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)
+	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
+	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
+	_draw_procedural_contact_marks(anchor, "encounter", remembered)
+	return true
+
+func _draw_encounter_faction_landmark(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	var texture = _object_texture_for_asset(_encounter_faction_asset_id(encounter))
+	if not (texture is Texture2D):
+		return false
+	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
+	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered, OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES)
 	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
 	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
@@ -3959,10 +3976,14 @@ func _draw_encounter_unit_icon(encounter: Dictionary, rect: Rect2, remembered: b
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
 
-func _hostile_actor_layout(rect: Rect2, ground_center: Vector2, remembered: bool) -> Dictionary:
+func _hostile_actor_layout(rect: Rect2, ground_center: Vector2, remembered: bool, visible_extent_tiles: float = OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
-	var icon_extent := maxf(14.0, extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES)
+	var icon_extent := maxf(14.0, extent * visible_extent_tiles)
 	var icon_center := ground_center + Vector2(0.0, -extent * 0.14)
+	var marker_outset := maxf(2.0, extent * HOSTILE_ACTOR_MARKER_OUTSET_FACTOR)
+	var contained_half_extent := icon_extent * 0.5 + marker_outset + 0.25
+	icon_center.x = clampf(icon_center.x, rect.position.x + contained_half_extent, rect.end.x - contained_half_extent)
+	icon_center.y = clampf(icon_center.y, rect.position.y + contained_half_extent, rect.end.y - contained_half_extent)
 	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
 	return {
 		"tile_rect": rect,
@@ -7301,6 +7322,9 @@ func validation_enemy_commander_presentation_profiles() -> Array:
 		profiles.append(_enemy_commander_presentation_payload(encounter))
 	return profiles
 
+func validation_encounter_presentation_payload(encounter: Dictionary) -> Dictionary:
+	return _enemy_commander_presentation_payload(encounter)
+
 func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 	var commander_state: Dictionary = encounter.get("enemy_commander_state", {}) if encounter.get("enemy_commander_state", {}) is Dictionary else {}
 	var hero_id := String(commander_state.get("roster_hero_id", "")).strip_edges()
@@ -7313,12 +7337,16 @@ func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 	var unit_id := _encounter_primary_unit_id(encounter)
 	var unit_icon_path := _encounter_overworld_icon_path(encounter)
 	var unit_icon_loaded := unit_icon_path != "" and _unit_art_texture(unit_icon_path) is Texture2D
+	var faction_encounter_asset_id := _encounter_faction_asset_id(encounter)
+	var faction_encounter_path := String(_object_asset_paths.get(faction_encounter_asset_id, ""))
+	var faction_encounter_loaded := faction_encounter_asset_id != "" and _object_texture_for_asset(faction_encounter_asset_id) is Texture2D
 	var encounter_asset_id := _encounter_asset_id(encounter)
 	var encounter_asset_loaded := encounter_asset_id != "" and _object_texture_for_asset(encounter_asset_id) is Texture2D
 	var tile := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
 	var tile_rect := _tile_rect(_board_rect(), tile)
 	var ground_center := tile_rect.position + tile_rect.size * Vector2(0.50, _procedural_ground_center_y_factor("encounter"))
-	var hostile_layout := _hostile_actor_layout(tile_rect, ground_center, false)
+	var presentation_extent := OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES if sprite_asset_id == "" and faction_encounter_loaded else OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES
+	var hostile_layout := _hostile_actor_layout(tile_rect, ground_center, false, presentation_extent)
 	var hostile_marker_profile: Dictionary = hostile_layout.get("marker_profile", {})
 	return {
 		"placement_id": String(encounter.get("placement_id", "")),
@@ -7330,13 +7358,17 @@ func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
 		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
 		"primary_unit_id": unit_id,
 		"unit_icon_path": unit_icon_path,
+		"faction_encounter_asset_id": faction_encounter_asset_id,
+		"faction_encounter_path": faction_encounter_path,
 		"encounter_asset_id": encounter_asset_id,
 		"uses_commander_sprite": sprite_asset_id != "",
-		"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded,
-		"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded,
+		"uses_faction_encounter_sprite": sprite_asset_id == "" and faction_encounter_loaded,
+		"uses_unit_icon_fallback": sprite_asset_id == "" and not faction_encounter_loaded and unit_icon_loaded,
+		"uses_encounter_sprite_fallback": sprite_asset_id == "" and not faction_encounter_loaded and not unit_icon_loaded and encounter_asset_loaded,
 		"hostile_treatment": HOSTILE_ACTOR_MARKER_MODEL,
 		"hostile_marker_profile": _hostile_actor_marker_validation_payload(hostile_marker_profile),
 		"visible_extent_tiles": OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES,
+		"faction_landmark_visible_extent_tiles": OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES,
 		"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL,
 		"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL,
 	}
@@ -10271,6 +10303,9 @@ func _enemy_commander_presentation_signature(encounters: Variant) -> int:
 		var commander_state: Dictionary = encounter.get("enemy_commander_state", {}) if encounter.get("enemy_commander_state", {}) is Dictionary else {}
 		signature = _combine_cache_signature(signature, String(encounter.get("placement_id", "")).hash())
 		signature = _combine_cache_signature(signature, String(encounter.get("spawned_by_faction_id", "")).hash())
+		signature = _combine_cache_signature(signature, String(encounter.get("faction_id", "")).hash())
+		signature = _combine_cache_signature(signature, String(encounter.get("enemy_group_id", "")).hash())
+		signature = _combine_cache_signature(signature, String(encounter.get("encounter_id", encounter.get("id", ""))).hash())
 		signature = _combine_cache_signature(signature, String(commander_state.get("roster_hero_id", "")).hash())
 		signature = _combine_cache_signature(signature, String(commander_state.get("faction_id", "")).hash())
 	return signature
@@ -10401,6 +10436,8 @@ func _load_overworld_art_manifest() -> void:
 	_town_faction_asset_ids.clear()
 	_hero_identity_asset_ids.clear()
 	_hero_faction_asset_ids.clear()
+	_encounter_faction_asset_ids.clear()
+	_encounter_faction_cache.clear()
 	_encounter_default_asset_id = ""
 	_load_map_object_profiles()
 
@@ -10488,6 +10525,14 @@ func _load_overworld_art_manifest() -> void:
 			var asset_id := String(hero_identity_sprites.get(hero_id_value, "")).strip_edges()
 			if hero_id != "" and asset_id != "":
 				_hero_identity_asset_ids[hero_id] = asset_id
+
+	var encounter_faction_sprites = _overworld_art_manifest.get("encounter_faction_sprites", {})
+	if encounter_faction_sprites is Dictionary:
+		for faction_id_value in encounter_faction_sprites:
+			var faction_id := String(faction_id_value).strip_edges()
+			var asset_id := String(encounter_faction_sprites.get(faction_id_value, "")).strip_edges()
+			if faction_id != "" and asset_id != "":
+				_encounter_faction_asset_ids[faction_id] = asset_id
 
 	var encounter_default = _overworld_art_manifest.get("encounter_default_sprite", {})
 	if encounter_default is Dictionary:
@@ -11082,6 +11127,33 @@ func _encounter_asset_id(encounter: Dictionary) -> String:
 	if object_id != "" and _map_object_asset_ids.has(object_id):
 		return String(_map_object_asset_ids.get(object_id, ""))
 	return _encounter_default_asset_id
+
+func _encounter_faction_asset_id(encounter: Dictionary) -> String:
+	var faction_id := _encounter_faction_id(encounter)
+	var asset_id := String(_encounter_faction_asset_ids.get(faction_id, "")).strip_edges()
+	if asset_id != "" and _object_texture_for_asset(asset_id) is Texture2D:
+		return asset_id
+	return ""
+
+func _encounter_faction_id(encounter: Dictionary) -> String:
+	var spawned_faction_id := String(encounter.get("spawned_by_faction_id", "")).strip_edges()
+	if spawned_faction_id != "":
+		return spawned_faction_id
+	var direct_faction_id := String(encounter.get("faction_id", "")).strip_edges()
+	if direct_faction_id != "":
+		return direct_faction_id
+	var group_id := String(encounter.get("enemy_group_id", "")).strip_edges()
+	if group_id == "":
+		var encounter_id := String(encounter.get("encounter_id", encounter.get("id", ""))).strip_edges()
+		var definition := ContentService.get_encounter(encounter_id)
+		group_id = String(definition.get("enemy_group_id", "")).strip_edges()
+	if group_id == "":
+		return ""
+	if _encounter_faction_cache.has(group_id):
+		return String(_encounter_faction_cache.get(group_id, ""))
+	var faction_id := String(ContentService.get_army_group(group_id).get("faction_id", "")).strip_edges()
+	_encounter_faction_cache[group_id] = faction_id
+	return faction_id
 
 func _has_decorative_object_at(tile: Vector2i) -> bool:
 	return not _decorative_object_at(tile).is_empty()

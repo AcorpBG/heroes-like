@@ -34,6 +34,22 @@ const EXPECTED_COMMANDER_PATHS := {
 	"faction_brasshollow": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
 	"faction_veilmourn": "res://art/overworld/runtime/heroes/live_leads/hero_veilmourn_ruln_vanehook.png",
 }
+const EXPECTED_FACTION_ENCOUNTER_ASSETS := {
+	"faction_embercourt": "encounter_faction_embercourt",
+	"faction_mireclaw": "encounter_faction_mireclaw",
+	"faction_sunvault": "encounter_faction_sunvault",
+	"faction_thornwake": "encounter_faction_thornwake",
+	"faction_brasshollow": "encounter_faction_brasshollow",
+	"faction_veilmourn": "encounter_faction_veilmourn",
+}
+const EXPECTED_FACTION_ENCOUNTER_PATHS := {
+	"faction_embercourt": "res://art/overworld/runtime/objects/encounters/factions/embercourt.png",
+	"faction_mireclaw": "res://art/overworld/runtime/objects/encounters/factions/mireclaw.png",
+	"faction_sunvault": "res://art/overworld/runtime/objects/encounters/factions/sunvault.png",
+	"faction_thornwake": "res://art/overworld/runtime/objects/encounters/factions/thornwake.png",
+	"faction_brasshollow": "res://art/overworld/runtime/objects/encounters/factions/brasshollow.png",
+	"faction_veilmourn": "res://art/overworld/runtime/objects/encounters/factions/veilmourn.png",
+}
 const FALLBACK_CASES := ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"]
 
 func _ready() -> void:
@@ -53,9 +69,11 @@ func _run() -> void:
 	print("OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT %s" % JSON.stringify({
 		"ok": true,
 		"faction_count": EXPECTED_FACTION_ASSETS.size(),
+		"authored_faction_encounter_count": 38,
+		"authored_neutral_encounter_count": 25,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback_cases": FALLBACK_CASES,
-		"fallback_order": ["primary_unit_icon", "mapped_or_default_encounter_sprite"],
+		"fallback_order": ["faction_encounter_landmark", "primary_unit_icon", "mapped_or_default_encounter_sprite"],
 		"rows": rows,
 		"save_version": SessionStateStore.SAVE_VERSION,
 	}))
@@ -77,7 +95,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var map_view = shell.get_node_or_null("%Map")
-	if map_view == null or not map_view.has_method("validation_enemy_commander_presentation_profiles"):
+	if map_view == null or not map_view.has_method("validation_enemy_commander_presentation_profiles") or not map_view.has_method("validation_encounter_presentation_payload"):
 		return await _finish_case(shell, {"ok": false, "failure": "validation_surface_missing"})
 
 	var authority_before: Dictionary = session.to_dict()
@@ -85,6 +103,18 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var exact: Dictionary = _validate_profiles(profiles)
 	if not bool(exact.get("ok", false)):
 		return await _finish_case(shell, {"ok": false, "failure": "commander_profiles", "detail": exact})
+
+	session.from_dict(authority_before)
+	_remove_all_commander_states(session)
+	_set_map_view_from_session(map_view, session)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var landmark_profiles: Array = map_view.call("validation_enemy_commander_presentation_profiles")
+	var landmarks := _validate_faction_landmark_profiles(landmark_profiles)
+	if not bool(landmarks.get("ok", false)):
+		return await _finish_case(shell, {"ok": false, "failure": "faction_landmarks", "detail": landmarks})
+	if not await _capture_faction_landmarks(viewport_size):
+		return await _finish_case(shell, {"ok": false, "failure": "capture"})
 
 	var fallback_rows: Array = []
 	for case_id in FALLBACK_CASES:
@@ -96,16 +126,26 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		await get_tree().process_frame
 		var fallback_profiles: Array = map_view.call("validation_enemy_commander_presentation_profiles")
 		var fallback := _profile_by_placement(fallback_profiles, "enemy_commander_fixture:faction_embercourt")
+		var expected_faction_id := "faction_mireclaw" if case_id == "spawned_faction_mismatch" else "faction_embercourt"
+		var expected_faction_asset_id := String(EXPECTED_FACTION_ENCOUNTER_ASSETS.get(expected_faction_id, ""))
+		var expected_faction_path := String(EXPECTED_FACTION_ENCOUNTER_PATHS.get(expected_faction_id, ""))
 		var fallback_exact: bool = not fallback.is_empty() \
 			and String(fallback.get("sprite_asset_id", "")) == "" \
 			and not bool(fallback.get("uses_commander_sprite", true)) \
-			and bool(fallback.get("uses_unit_icon_fallback", false)) \
+			and String(fallback.get("faction_encounter_asset_id", "")) == expected_faction_asset_id \
+			and String(fallback.get("faction_encounter_path", "")) == expected_faction_path \
+			and load(expected_faction_path) is Texture2D \
+			and bool(fallback.get("uses_faction_encounter_sprite", false)) \
+			and not bool(fallback.get("uses_unit_icon_fallback", true)) \
 			and not bool(fallback.get("uses_encounter_sprite_fallback", true)) \
-			and String(fallback.get("unit_icon_path", "")) != "" \
-			and load(String(fallback.get("unit_icon_path", ""))) is Texture2D
+			and is_equal_approx(float(fallback.get("faction_landmark_visible_extent_tiles", 0.0)), 0.82)
 		fallback_rows.append({"case": case_id, "exact": fallback_exact})
 		if not fallback_exact:
 			return await _finish_case(shell, {"ok": false, "failure": "fallback", "case": case_id, "profile": fallback})
+
+	var non_faction_fallbacks := _validate_non_faction_fallbacks(map_view)
+	if not bool(non_faction_fallbacks.get("ok", false)):
+		return await _finish_case(shell, {"ok": false, "failure": "non_faction_fallbacks", "detail": non_faction_fallbacks})
 
 	session.from_dict(authority_before)
 	_set_map_view_from_session(map_view, session)
@@ -117,13 +157,15 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var viewport_rect: Rect2 = get_viewport().get_visible_rect()
 	var containment_exact: bool = viewport_rect.encloses(shell_rect)
 	return await _finish_case(shell, {
-		"ok": restored_exact and containment_exact and fallback_rows.all(func(row): return bool(row.get("exact", false))),
+		"ok": restored_exact and containment_exact and bool(landmarks.get("ok", false)) and bool(non_faction_fallbacks.get("ok", false)) and fallback_rows.all(func(row): return bool(row.get("exact", false))),
 		"viewport": [viewport_size.x, viewport_size.y],
 		"profile_count": profiles.size(),
 		"asset_ids": exact.get("asset_ids", []),
 		"hostile_treatment_exact": exact.get("hostile_treatment_exact", false),
 		"hostile_marker_geometry_exact": exact.get("hostile_marker_geometry_exact", false),
+		"faction_landmarks": landmarks,
 		"fallback_rows": fallback_rows,
+		"non_faction_fallbacks": non_faction_fallbacks,
 		"restored_exact": restored_exact,
 		"containment_exact": containment_exact,
 	})
@@ -151,6 +193,7 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 		if String(profile.get("sprite_path", "")) != expected_path or not (load(expected_path) is Texture2D):
 			return {"ok": false, "reason": "texture", "profile": profile}
 		if not bool(profile.get("uses_commander_sprite", false)) \
+			or bool(profile.get("uses_faction_encounter_sprite", true)) \
 			or bool(profile.get("uses_unit_icon_fallback", true)) \
 			or bool(profile.get("uses_encounter_sprite_fallback", true)):
 			return {"ok": false, "reason": "fallback_state", "profile": profile}
@@ -170,6 +213,51 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 		"hostile_treatment_exact": hostile_treatment_exact,
 		"hostile_marker_geometry_exact": hostile_marker_geometry_exact,
 	}
+
+func _validate_faction_landmark_profiles(profiles: Array) -> Dictionary:
+	if profiles.size() != EXPECTED_FACTION_ENCOUNTER_ASSETS.size():
+		return {"ok": false, "reason": "profile_count", "actual": profiles.size()}
+	var rows: Array = []
+	var seen_assets: Dictionary = {}
+	for profile_value in profiles:
+		if not (profile_value is Dictionary):
+			return {"ok": false, "reason": "profile_type"}
+		var profile: Dictionary = profile_value
+		var faction_id := String(profile.get("spawned_by_faction_id", ""))
+		var expected_asset_id := String(EXPECTED_FACTION_ENCOUNTER_ASSETS.get(faction_id, ""))
+		var expected_path := String(EXPECTED_FACTION_ENCOUNTER_PATHS.get(faction_id, ""))
+		var exact: bool = expected_asset_id != "" \
+			and String(profile.get("sprite_asset_id", "")) == "" \
+			and String(profile.get("faction_encounter_asset_id", "")) == expected_asset_id \
+			and String(profile.get("faction_encounter_path", "")) == expected_path \
+			and load(expected_path) is Texture2D \
+			and not bool(profile.get("uses_commander_sprite", true)) \
+			and bool(profile.get("uses_faction_encounter_sprite", false)) \
+			and not bool(profile.get("uses_unit_icon_fallback", true)) \
+			and not bool(profile.get("uses_encounter_sprite_fallback", true)) \
+			and is_equal_approx(float(profile.get("faction_landmark_visible_extent_tiles", 0.0)), 0.82) \
+			and _hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}))
+		rows.append({"faction_id": faction_id, "asset_id": expected_asset_id, "exact": exact})
+		if not exact:
+			return {"ok": false, "rows": rows, "profile": profile}
+		seen_assets[expected_asset_id] = true
+	return {"ok": seen_assets.size() == EXPECTED_FACTION_ENCOUNTER_ASSETS.size(), "rows": rows}
+
+func _validate_non_faction_fallbacks(map_view: Node) -> Dictionary:
+	var neutral: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_roadward_lodge_watch"})
+	var neutral_exact: bool = String(neutral.get("faction_encounter_asset_id", "")) == "" \
+		and not bool(neutral.get("uses_faction_encounter_sprite", true)) \
+		and bool(neutral.get("uses_unit_icon_fallback", false)) \
+		and not bool(neutral.get("uses_encounter_sprite_fallback", true)) \
+		and String(neutral.get("unit_icon_path", "")) != "" \
+		and load(String(neutral.get("unit_icon_path", ""))) is Texture2D
+	var unknown: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_missing_presentation_fixture"})
+	var unknown_exact: bool = String(unknown.get("faction_encounter_asset_id", "")) == "" \
+		and not bool(unknown.get("uses_faction_encounter_sprite", true)) \
+		and not bool(unknown.get("uses_unit_icon_fallback", true)) \
+		and bool(unknown.get("uses_encounter_sprite_fallback", false)) \
+		and String(unknown.get("encounter_asset_id", "")) == "hostile_camp"
+	return {"ok": neutral_exact and unknown_exact, "neutral_unit_icon_exact": neutral_exact, "unknown_default_exact": unknown_exact}
 
 func _hostile_marker_profile_exact(profile_value: Variant) -> bool:
 	if not (profile_value is Dictionary):
@@ -249,6 +337,33 @@ func _configure_commander_fixture(session) -> void:
 		"explored_count": encounters.size(),
 		"total_tiles": map_size.x * map_size.y,
 	}
+
+func _remove_all_commander_states(session) -> void:
+	var encounters: Array = session.overworld.get("encounters", []).duplicate(true)
+	for index in range(encounters.size()):
+		if encounters[index] is Dictionary:
+			var encounter: Dictionary = encounters[index]
+			encounter.erase("enemy_commander_state")
+			encounters[index] = encounter
+	session.overworld["encounters"] = encounters
+
+func _capture_faction_landmarks(viewport_size: Vector2i) -> bool:
+	if OS.get_environment("FACTION_ENCOUNTER_CAPTURE") != "1":
+		return true
+	if DisplayServer.get_name() == "headless":
+		return false
+	await RenderingServer.frame_post_draw
+	var output_dir := "res://.artifacts/faction_encounter_landmarks"
+	var error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
+	if error != OK and error != ERR_ALREADY_EXISTS:
+		return false
+	var viewport_texture := get_viewport().get_texture()
+	if viewport_texture == null:
+		return false
+	var image := viewport_texture.get_image()
+	if image == null or image.is_empty():
+		return false
+	return image.save_png("%s/faction_encounter_landmarks_%dx%d.png" % [output_dir, viewport_size.x, viewport_size.y]) == OK
 
 func _apply_fallback_case(session, placement_id: String, case_id: String) -> bool:
 	var encounters_value = session.overworld.get("encounters", [])

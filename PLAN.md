@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-tavern-final-roster-overworld-sprites-10184`.
+- Selected implementation slice: `content-faction-encounter-landmarks-10184`.
+
+## Faction Encounter Landmarks
+
+id: `content-faction-encounter-landmarks-10184`
+
+Status: completed.
+
+Current finding:
+- all 60 production heroes, 15 towns, 386 authored map objects, 200 decorative/blocker objects, and the unit-art catalog have distinct live identity coverage, but the 38 faction-owned records among 63 authored encounters do not own an encounter landmark surface;
+- commander-led enemy forces correctly prefer exact hero art, while commanderless faction patrols, batteries, reserves, raids, and wardens collapse to their most numerous troop icon and unknown/missing-unit cases collapse further to the one generic hostile-camp placeholder.
+
+Implementation boundary:
+- add one original transparent field-command landmark for each playable faction: Embercourt beacon muster, Mireclaw reedjaw war den, Sunvault prism relay array, Thornwake graftroot war lodge, Brasshollow quenchrail levy yard, and Veilmourn bellwake signal mooring;
+- resolve encounter faction from authoritative spawned-faction state first and immutable authored army-group faction second, then render exact faction landmarks after valid commander identity but before unit/default fallbacks, with a bounded content-id cache and no battle, encounter, AI, economy, or save mutation;
+- preserve neutral encounter unit icons, unknown-faction unit fallback, generic hostile-camp fallback, fog/remembered treatment, hostile marker geometry, accessibility color-cue independence, and exact map-state restoration.
+
+Completion criteria:
+- six distinct original sources and compact runtime sprites retain genuine alpha, manifest provenance, unique payloads, faction material language, and readable silhouettes at actual adventure-map scale without source-art inclusion in release PCKs;
+- all 38 authored faction encounters and representative dynamic faction raids resolve the correct stable landmark asset, all 25 neutral authored encounters retain unit-icon presentation, and commander identity still wins when valid;
+- inspected 1280x720 and 1920x1080 captures, method-matched commander/faction/unit/default fallback proof, save version 9, core/static validation, and Linux/Windows packaged startup pass without exceeding the unchanged 250000000-byte PCK ceiling.
+
+Completed evidence:
+- six byte-distinct original transparent landmarks now cover all playable factions on the production 512 canvas and retain their high-resolution generated sources, faction-town visual-language references, unique roles, and release-source exclusion;
+- the live order is exact commander identity, faction landmark, neutral/unknown unit icon, then generic hostile camp. All 38 faction-authored and 25 neutral-authored records, four malformed commander cases, spawned-faction priority, exact map-state restore, contained hostile geometry, and save version 9 pass at both registered widths;
+- repository/editor/core validation and real Linux/Windows export startup pass. Both PCKs are 249311144 bytes, contain all six imported landmark textures, exclude source art, and remain below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no copied Heroes assets, camp layouts, heraldry, names, text, or protected visual expression; no encounter roster, combat balance, strategic AI, economy, movement, save-schema, RMG, signing, publication, whole-game, or release-readiness claim.
 
 ## Tavern Final-Roster Overworld Sprites
 

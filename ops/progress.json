@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the final measured production-hero adventure-art gap: all 60 live production heroes now resolve exact identities. Both Linux and Windows release PCKs are 248855436 bytes under the unchanged strict 250000000-byte ceiling.",
+  "currentNotes": "Completed six original faction encounter landmarks and live commander/faction/unit/default presentation priority for all 38 faction-authored and 25 neutral-authored encounters.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-tavern-final-roster-overworld-sprites-10184",
-  "currentSliceId": "content-tavern-final-roster-overworld-sprites-10184",
-  "currentSliceNotes": "Completed: ten original portrait-faithful adventure sprites cover the remaining production roster, taking exact mapping from 50 to all 60; live tavern, field, enemy, method-matched missing-identity faction fallback restoration, save version 9, dual-resolution, and Windows/Linux package proof pass under the strict 250000000-byte ceiling.",
+  "currentSlice": "content-faction-encounter-landmarks-10184",
+  "currentSliceId": "content-faction-encounter-landmarks-10184",
+  "currentSliceNotes": "Completed: six byte-distinct original transparent faction encounter landmarks, commander-first then faction-landmark then unit/default fallback resolution, exact 38 faction/25 neutral authored coverage, contained hostile geometry, dual-resolution captures, save version 9, core/static/editor validation, and Linux/Windows package startup. Both PCKs are 249311144 bytes with all six imported textures present and source art excluded under the unchanged 250000000-byte ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content tavern final roster overworld sprites 10184",
-  "currentSliceUpdatedAt": "2026-08-29T03:14:26Z",
+  "currentSliceTitle": "content faction encounter landmarks 10184",
+  "currentSliceUpdatedAt": "2026-08-29T03:59:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105252,6 +105252,16 @@
       "startedAt": "2026-08-29T02:46:44Z",
       "notes": "Added ten distinct original portrait-faithful adventure figures for Pell Reedscript, Zhorra Fenwake, Dovan Lens-Captain, Renn Facetlane, Merek Greenbarrow, Ralka Mossvein, Pava Ashmeter, Vellum Quench, Damar Oriflag, and Nacre Vowless, expanding exact hero identity coverage from 50 to all 60 production heroes. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hires, active switches, exact field presentation, method-matched missing-identity faction fallback restoration, mapped Pell enemy identity, save version 9, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 248855436 bytes with all ten final-roster textures present, source art excluded, and the strict 250000000-byte ceiling unchanged. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T03:14:26Z"
+    },
+    {
+      "id": "content-faction-encounter-landmarks-10184",
+      "title": "content faction encounter landmarks 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T03:59:06Z",
+      "startedAt": "2026-08-29T03:20:08Z",
+      "notes": "Completed six byte-distinct original transparent field-command landmarks for Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn. Live presentation now resolves valid commander identity first, faction landmark second, neutral/unknown unit icon third, and generic hostile camp last; spawned faction wins before direct/authored army-group identity with cached immutable lookup. Exact 38 faction-authored and 25 neutral-authored coverage, four malformed commander cases, contained hostile marker geometry, save version 9, inspected 1280x720 and 1920x1080 captures, core/static/editor validation, and Linux/Windows packaged startup pass. Both PCKs are 249311144 bytes with six exact compiled landmark textures, source art excluded, and the strict 250000000-byte ceiling unchanged. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T03:59:06Z"
     }
   ],
   "project": "heroes-like",
@@ -105261,7 +105271,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "All 60 production heroes now have exact adventure-map identities. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingGap": "All 60 production heroes have exact adventure-map identities and all 38 faction-authored encounters now resolve six faction field-command landmarks. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved original-content or art slice; broader product gaps remain.",
   "reportOnlyEvidence": [
     {

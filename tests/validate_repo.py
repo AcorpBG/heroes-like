@@ -48497,6 +48497,112 @@ def validate_overworld_contained_hover_card(errors: list[str]) -> None:
             ensure(token in exact, errors, f"Focused hover-card contract is missing exact width/wrap/style/full-text proof: {token}")
 
 
+def validate_faction_encounter_landmarks(errors: list[str]) -> None:
+    manifest_path = ROOT / "art" / "overworld" / "manifest.json"
+    encounter_path = CONTENT_DIR / "encounters.json"
+    army_group_path = CONTENT_DIR / "army_groups.json"
+    required_paths = (manifest_path, encounter_path, army_group_path, OVERWORLD_MAP_VIEW_SCRIPT_PATH)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing faction encounter landmark owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    expected = {
+        "faction_embercourt": ("encounter_faction_embercourt", "embercourt", "encounter_embercourt_beacon_muster_source.png", "beacon_muster_field_command"),
+        "faction_mireclaw": ("encounter_faction_mireclaw", "mireclaw", "encounter_mireclaw_reedjaw_den_source.png", "reedjaw_war_den_field_command"),
+        "faction_sunvault": ("encounter_faction_sunvault", "sunvault", "encounter_sunvault_prism_relay_source.png", "prism_relay_field_command"),
+        "faction_thornwake": ("encounter_faction_thornwake", "thornwake", "encounter_thornwake_graftroot_lodge_source.png", "graftroot_war_lodge_field_command"),
+        "faction_brasshollow": ("encounter_faction_brasshollow", "brasshollow", "encounter_brasshollow_quenchrail_yard_source.png", "quenchrail_levy_yard_field_command"),
+        "faction_veilmourn": ("encounter_faction_veilmourn", "veilmourn", "encounter_veilmourn_bellwake_mooring_source.png", "bellwake_signal_mooring_field_command"),
+    }
+    manifest = load_json(manifest_path)
+    object_assets = manifest.get("object_assets", {})
+    faction_sprites = manifest.get("encounter_faction_sprites", {})
+    ensure(isinstance(object_assets, dict), errors, "Overworld art manifest object_assets must remain a dictionary")
+    ensure(faction_sprites == {faction_id: row[0] for faction_id, row in expected.items()}, errors, "Faction encounter sprite mapping must cover the exact six production factions")
+    runtime_payloads: list[bytes] = []
+    source_payloads: list[bytes] = []
+    if isinstance(object_assets, dict):
+        for faction_id, (asset_id, short_id, source_name, role) in expected.items():
+            entry = object_assets.get(asset_id, {})
+            ensure(isinstance(entry, dict), errors, f"Missing faction encounter landmark asset {asset_id}")
+            if not isinstance(entry, dict):
+                continue
+            runtime_res = f"res://art/overworld/runtime/objects/encounters/factions/{short_id}.png"
+            source_res = f"res://art/overworld/source/generated/encounters/faction_landmarks/{source_name}"
+            town_reference = f"res://art/overworld/runtime/objects/towns/factions/{short_id}.png"
+            ensure(str(entry.get("path", "")) == runtime_res, errors, f"Faction encounter landmark {asset_id} must own its exact runtime path")
+            ensure(str(entry.get("source_generated", "")) == source_res, errors, f"Faction encounter landmark {asset_id} must retain its generated source")
+            ensure(str(entry.get("source_model", "")) == "built_in_image_gen_original_faction_encounter_landmark", errors, f"Faction encounter landmark {asset_id} must retain built-in image-generation provenance")
+            ensure(str(entry.get("visual_language_reference", "")) == town_reference, errors, f"Faction encounter landmark {asset_id} must retain its faction town visual-language reference")
+            ensure(str(entry.get("assigned_faction_id", "")) == faction_id, errors, f"Faction encounter landmark {asset_id} must remain assigned to exactly {faction_id}")
+            ensure(str(entry.get("presentation_role", "")) == role, errors, f"Faction encounter landmark {asset_id} must retain its unique production role")
+            runtime_path = res_path_to_disk(runtime_res)
+            source_path = res_path_to_disk(source_res)
+            reference_path = res_path_to_disk(town_reference)
+            ensure(runtime_path.is_file() and png_size(runtime_path) == (512, 512), errors, f"Faction encounter landmark {asset_id} must use the production 512x512 runtime canvas")
+            ensure(source_path.is_file(), errors, f"Faction encounter landmark {asset_id} is missing its high-resolution generated source")
+            ensure(reference_path.is_file(), errors, f"Faction encounter landmark {asset_id} is missing its production faction reference")
+            ensure(Path(f"{runtime_path}.import").is_file(), errors, f"Faction encounter landmark {asset_id} is missing runtime Godot import metadata")
+            ensure(Path(f"{source_path}.import").is_file(), errors, f"Faction encounter landmark {asset_id} is missing source Godot import metadata")
+            if runtime_path.is_file():
+                payload = runtime_path.read_bytes()
+                ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Faction encounter landmark {asset_id} must retain a real alpha channel")
+                runtime_payloads.append(payload)
+            if source_path.is_file():
+                payload = source_path.read_bytes()
+                ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Faction encounter source {asset_id} must retain a real alpha channel")
+                source_payloads.append(payload)
+    ensure(len(runtime_payloads) == 6 and len(set(runtime_payloads)) == 6, errors, "All six faction encounter runtime PNG payloads must be distinct")
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six faction encounter generated sources must be distinct")
+
+    encounters_value = load_json(encounter_path).get("items", [])
+    groups_value = load_json(army_group_path).get("items", [])
+    encounters = [row for row in encounters_value if isinstance(row, dict)] if isinstance(encounters_value, list) else []
+    groups = {str(row.get("id", "")): row for row in groups_value if isinstance(row, dict)} if isinstance(groups_value, list) else {}
+    owned_encounters = [row for row in encounters if str(groups.get(str(row.get("enemy_group_id", "")), {}).get("faction_id", "")) in expected]
+    neutral_encounters = [row for row in encounters if row not in owned_encounters]
+    ensure(len(encounters) == 63, errors, "Faction encounter landmark adoption must retain all 63 authored encounters")
+    ensure(len(owned_encounters) == 38 and len(neutral_encounters) == 25, errors, "Faction encounter landmark adoption must resolve exactly 38 faction and 25 neutral authored encounters")
+    ensure({str(groups.get(str(row.get("enemy_group_id", "")), {}).get("faction_id", "")) for row in owned_encounters} == set(expected), errors, "Authored faction encounters must exercise all six landmark identities")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "const OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.82",
+        "var _encounter_faction_asset_ids: Dictionary = {}",
+        "var _encounter_faction_cache: Dictionary = {}",
+        '_overworld_art_manifest.get("encounter_faction_sprites", {})',
+        "_encounter_faction_asset_ids[faction_id] = asset_id",
+        "func _draw_encounter_faction_landmark(",
+        "func _encounter_faction_asset_id(",
+        "func _encounter_faction_id(",
+        'ContentService.get_army_group(group_id).get("faction_id", "")',
+        "func validation_encounter_presentation_payload(",
+        '"uses_faction_encounter_sprite": sprite_asset_id == "" and faction_encounter_loaded',
+        '"faction_landmark_visible_extent_tiles": OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES',
+    ):
+        ensure(token in map_text, errors, f"Production faction encounter landmark runtime is missing exact ownership: {token}")
+    draw_start = map_text.find("func _draw_encounter_sprite")
+    draw_end = map_text.find("\nfunc ", draw_start + 1)
+    draw_block = map_text[draw_start:draw_end]
+    draw_order = [draw_block.find(name) for name in ("_draw_encounter_commander_sprite", "_draw_encounter_faction_landmark", "_draw_encounter_unit_icon", "_draw_object_sprite")]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Encounter drawing must prefer commander, faction landmark, unit icon, then generic object fallback")
+    resolver_start = map_text.find("func _encounter_faction_id")
+    resolver_end = map_text.find("\nfunc ", resolver_start + 1)
+    resolver_block = map_text[resolver_start:resolver_end]
+    resolver_order = [resolver_block.find(token) for token in ('encounter.get("spawned_by_faction_id", "")', 'encounter.get("faction_id", "")', 'encounter.get("enemy_group_id", "")', "ContentService.get_encounter(encounter_id)", "_encounter_faction_cache.has(group_id)", "ContentService.get_army_group(group_id)")]
+    ensure(all(index >= 0 for index in resolver_order) and resolver_order == sorted(resolver_order), errors, "Faction encounter resolution must retain spawned, direct, authored encounter, cached army-group priority")
+    for forbidden in ("SessionStateStore.SAVE_VERSION =", "NativeRmg", "native_rmg"):
+        ensure(forbidden not in resolver_block + draw_block, errors, f"Faction encounter art must not change save or Native RMG authority: {forbidden}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_FACTION_ENCOUNTER_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit the six faction encounter landmarks")
+        ensure('bool(terrain_payload["faction_encounter_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail the release export when faction encounter landmarks are absent")
+        ensure('"faction_encounter_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged faction encounter coverage")
+        for _faction_id, (_asset_id, short_id, _source_name, _role) in expected.items():
+            ensure(f'"{short_id}"' in packaging_text, errors, f"{packaging_path.name} is missing packaged faction encounter identity {short_id}")
+
+
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -48520,6 +48626,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     draw_block = function_block(map_text, "_draw_encounter_sprite")
     commander_draw_block = function_block(map_text, "_draw_encounter_commander_sprite")
+    faction_draw_block = function_block(map_text, "_draw_encounter_faction_landmark")
     unit_draw_block = function_block(map_text, "_draw_encounter_unit_icon")
     hostile_layout_block = function_block(map_text, "_hostile_actor_layout")
     hostile_profile_block = function_block(map_text, "_hostile_actor_marker_profile")
@@ -48533,10 +48640,11 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
 
     draw_order = [
         draw_block.find("_draw_encounter_commander_sprite"),
+        draw_block.find("_draw_encounter_faction_landmark"),
         draw_block.find("_draw_encounter_unit_icon"),
         draw_block.find("_draw_object_sprite"),
     ]
-    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Encounter drawing must prefer exact commander sprite, then retain unit icon and mapped/default encounter fallback")
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Encounter drawing must prefer exact commander sprite, faction landmark, unit icon, then mapped/default encounter fallback")
     for token in (
         "_enemy_commander_hero_template(encounter)",
         "_object_texture_for_asset(_hero_sprite_asset_id(hero))",
@@ -48580,12 +48688,16 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         '"spawned_by_faction_id": spawned_faction_id', '"authored_faction_id": authored_faction_id',
         '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
         '"primary_unit_id": unit_id', '"unit_icon_path": unit_icon_path', '"encounter_asset_id": encounter_asset_id',
+        '"faction_encounter_asset_id": faction_encounter_asset_id',
+        '"faction_encounter_path": faction_encounter_path',
         '"uses_commander_sprite": sprite_asset_id != ""',
-        '"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded',
-        '"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded',
+        '"uses_faction_encounter_sprite": sprite_asset_id == "" and faction_encounter_loaded',
+        '"uses_unit_icon_fallback": sprite_asset_id == "" and not faction_encounter_loaded and unit_icon_loaded',
+        '"uses_encounter_sprite_fallback": sprite_asset_id == "" and not faction_encounter_loaded and not unit_icon_loaded and encounter_asset_loaded',
         '"hostile_treatment": HOSTILE_ACTOR_MARKER_MODEL',
         '"hostile_marker_profile": _hostile_actor_marker_validation_payload(hostile_marker_profile)',
         '"visible_extent_tiles": OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES',
+        '"faction_landmark_visible_extent_tiles": OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES',
         '"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL',
         '"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL',
     ):
@@ -48607,7 +48719,8 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     ):
         ensure(map_text.count(token) == 1, errors, f"Open hostile actor marker must own one exact visual constant: {token}")
     for token in (
-        "extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES",
+        "visible_extent_tiles: float = OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES",
+        "extent * visible_extent_tiles",
         '"marker_profile": _hostile_actor_marker_profile(rect, icon_rect, extent, remembered)',
     ):
         ensure(token in hostile_layout_block, errors, f"Hostile actor layout is missing exact unchanged sprite/marker geometry: {token}")
@@ -48633,7 +48746,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     ):
         ensure(token in hostile_draw_block, errors, f"Hostile actor marker draw must retain exact open chevron/notch ownership: {token}")
     for forbidden in ("_canvas_draw_circle", "_canvas_draw_rect", "_canvas_draw_colored_polygon", "session", "_session", "await ", "create_timer", "create_tween"):
-        ensure(forbidden not in hostile_draw_block + commander_draw_block + unit_draw_block, errors, f"Hostile actor presentation must not restore a filled/continuous ring or mutate gameplay/timing: {forbidden}")
+        ensure(forbidden not in hostile_draw_block + commander_draw_block + faction_draw_block + unit_draw_block, errors, f"Hostile actor presentation must not restore a filled/continuous ring or mutate gameplay/timing: {forbidden}")
     for token in (
         '"model": String(profile.get("model", ""))',
         '"flank_chevron_count": int(profile.get("flank_chevron_count", 0))',
@@ -48647,8 +48760,9 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         ensure(token in hostile_validation_block, errors, f"Hostile marker public validation is missing detached exact evidence: {token}")
     for forbidden in ("_draw_hostile_actor_marker", "session", "_session", "Input.", "await ", "create_timer", "queue_redraw"):
         ensure(forbidden not in hostile_validation_block, errors, f"Hostile marker validation must remain detached/read-only: {forbidden}")
-    ensure(hostile_layout_block.count("extent * OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES") == 1, errors, "Hostile actor layout must derive the exact semantic 0.58-tile extent once")
+    ensure(hostile_layout_block.count("extent * visible_extent_tiles") == 1, errors, "Hostile actor layout must derive its semantic extent exactly once")
     ensure(commander_draw_block.count('_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)') == 1, errors, "Enemy commander draw must use one shared hostile actor layout")
+    ensure(faction_draw_block.count('_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered, OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES)') == 1, errors, "Faction encounter landmark draw must use the shared hostile actor layout at its dedicated extent")
     ensure(unit_draw_block.count('_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)') == 1, errors, "Encounter unit fallback draw must use one shared hostile actor layout")
     ensure("extent * 0.68" not in commander_draw_block + unit_draw_block, errors, "Encounter actor drawing must not retain the oversized hard-coded 0.68-tile bypass")
 
@@ -48670,12 +48784,14 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {',
         'const EXPECTED_COMMANDER_ASSETS := {', 'const EXPECTED_COMMANDER_PATHS := {',
+        'const EXPECTED_FACTION_ENCOUNTER_ASSETS := {', 'const EXPECTED_FACTION_ENCOUNTER_PATHS := {',
         'const FALLBACK_CASES := ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"]',
         '"faction_mireclaw": "hero_roster_mireclaw_pell_reedscript"',
         '"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png"',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'EnemyAdventureRules.build_raid_commander_state(encounter, hero_id, faction_id, session)',
         'map_view.call("validation_enemy_commander_presentation_profiles")',
+        'map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_roadward_lodge_watch"})',
         'profiles.size() != EXPECTED_FACTION_ASSETS.size()',
         'String(profile.get("commander_faction_id", "")) != faction_id',
         'String(profile.get("authored_faction_id", "")) != faction_id',
@@ -48688,6 +48804,9 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'marker_rect.encloses(icon_rect)',
         'float(profile.get("visible_extent_tiles", 0.0)), 0.46',
         'session.from_dict(authority_before)',
+        '_remove_all_commander_states(session)',
+        '_validate_faction_landmark_profiles(landmark_profiles)',
+        '_validate_non_faction_fallbacks(map_view)',
         'if not _apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id):',
         'session.overworld["encounters"] = encounters',
         'return _fallback_case_mutation_exact(encounter, case_id)',
@@ -48696,8 +48815,14 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'OverworldRules.derive_map_size(session)',
         'OverworldRules.hero_position(session)',
         'String(fallback.get("sprite_asset_id", "")) == ""',
-        'bool(fallback.get("uses_unit_icon_fallback", false))',
+        'bool(fallback.get("uses_faction_encounter_sprite", false))',
+        'not bool(fallback.get("uses_unit_icon_fallback", true))',
         'not bool(fallback.get("uses_encounter_sprite_fallback", true))',
+        '"authored_faction_encounter_count": 38',
+        '"authored_neutral_encounter_count": 25',
+        '"fallback_order": ["faction_encounter_landmark", "primary_unit_icon", "mapped_or_default_encounter_sprite"]',
+        'OS.get_environment("FACTION_ENCOUNTER_CAPTURE")',
+        'await RenderingServer.frame_post_draw',
         'restored_profiles == profiles and session.to_dict() == authority_before',
         'viewport_rect.encloses(shell_rect)', 'SessionStateStore.SAVE_VERSION',
         'print("OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT %s"',
@@ -72429,6 +72554,7 @@ def main() -> int:
     validate_overworld_town_selection_cartographic_perimeter(errors)
     validate_overworld_cartographic_hover_reticle(errors)
     validate_overworld_contained_hover_card(errors)
+    validate_faction_encounter_landmarks(errors)
     validate_overworld_enemy_commander_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)

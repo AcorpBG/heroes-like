@@ -646,6 +646,54 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_nacre_vowless.png",
       "assigned_hero_id": "hero_veilmourn_nacre_vowless"
     },
+    "encounter_faction_embercourt": {
+      "path": "res://art/overworld/runtime/objects/encounters/factions/embercourt.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/faction_landmarks/encounter_embercourt_beacon_muster_source.png",
+      "source_model": "built_in_image_gen_original_faction_encounter_landmark",
+      "visual_language_reference": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "beacon_muster_field_command"
+    },
+    "encounter_faction_mireclaw": {
+      "path": "res://art/overworld/runtime/objects/encounters/factions/mireclaw.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/faction_landmarks/encounter_mireclaw_reedjaw_den_source.png",
+      "source_model": "built_in_image_gen_original_faction_encounter_landmark",
+      "visual_language_reference": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "reedjaw_war_den_field_command"
+    },
+    "encounter_faction_sunvault": {
+      "path": "res://art/overworld/runtime/objects/encounters/factions/sunvault.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/faction_landmarks/encounter_sunvault_prism_relay_source.png",
+      "source_model": "built_in_image_gen_original_faction_encounter_landmark",
+      "visual_language_reference": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "prism_relay_field_command"
+    },
+    "encounter_faction_thornwake": {
+      "path": "res://art/overworld/runtime/objects/encounters/factions/thornwake.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/faction_landmarks/encounter_thornwake_graftroot_lodge_source.png",
+      "source_model": "built_in_image_gen_original_faction_encounter_landmark",
+      "visual_language_reference": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "graftroot_war_lodge_field_command"
+    },
+    "encounter_faction_brasshollow": {
+      "path": "res://art/overworld/runtime/objects/encounters/factions/brasshollow.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/faction_landmarks/encounter_brasshollow_quenchrail_yard_source.png",
+      "source_model": "built_in_image_gen_original_faction_encounter_landmark",
+      "visual_language_reference": "res://art/overworld/runtime/objects/towns/factions/brasshollow.png",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "quenchrail_levy_yard_field_command"
+    },
+    "encounter_faction_veilmourn": {
+      "path": "res://art/overworld/runtime/objects/encounters/factions/veilmourn.png",
+      "source_generated": "res://art/overworld/source/generated/encounters/faction_landmarks/encounter_veilmourn_bellwake_mooring_source.png",
+      "source_model": "built_in_image_gen_original_faction_encounter_landmark",
+      "visual_language_reference": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "bellwake_signal_mooring_field_command"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4704,6 +4752,14 @@
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",
     "fit": "First approved generated hostile camp placeholder for unresolved overworld encounters until encounter-family-specific sprites exist."
+  },
+  "encounter_faction_sprites": {
+    "faction_embercourt": "encounter_faction_embercourt",
+    "faction_mireclaw": "encounter_faction_mireclaw",
+    "faction_sunvault": "encounter_faction_sunvault",
+    "faction_thornwake": "encounter_faction_thornwake",
+    "faction_brasshollow": "encounter_faction_brasshollow",
+    "faction_veilmourn": "encounter_faction_veilmourn"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",
