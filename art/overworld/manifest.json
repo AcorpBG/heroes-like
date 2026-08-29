@@ -5505,6 +5505,46 @@
       "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
       "assigned_resource_site_id": "site_frost_tithe_cellar", "presentation_role": "opened_claimed_state", "accessible_description": "The Frost Tithe Cellar hatch stands open around an orderly blue-lit muster alcove."
     },
+    "resource_site_neutral_roadward_lodge_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/roadward_lodge_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_free_company_yard", "presentation_role": "controlled_muster_state", "accessible_description": "The Roadward Lodge toll beam stands open beside orderly shield and spear bundles, bright road lanterns, and a teal claim pennant."
+    },
+    "resource_site_neutral_fenhound_kennels_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/fenhound_kennels_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_fenhound_kennels", "presentation_role": "controlled_muster_state", "accessible_description": "The three kennel bays stand open with clean bowls, packed bedrolls, a bright handler lantern, and teal claim ribbons."
+    },
+    "resource_site_neutral_cliffhawk_roost_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/cliffhawk_roost_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_cliffhawk_roost", "presentation_role": "controlled_muster_state", "accessible_description": "The Cliffhawk Roost has a repaired teal canopy, packed nest platform, glowing signal crystals, and a clean claim streamer."
+    },
+    "resource_site_neutral_reedbarge_mooring_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/reedbarge_mooring_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_reedbarge_mooring", "presentation_role": "controlled_muster_state", "accessible_description": "The reed barge is tied to an active pier under a clean teal canopy with packed crates, route rope, and a bright lantern."
+    },
+    "resource_site_neutral_glowcap_croft_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/glowcap_croft_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_glowcap_croft", "presentation_role": "controlled_muster_state", "accessible_description": "The Glowcap Croft door stands open to warm light beside a tended fungus bed, packed satchels, and a teal fence ribbon."
+    },
+    "resource_site_neutral_dustjack_yard_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/dustjack_yard_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_dustjack_yard", "presentation_role": "controlled_muster_state", "accessible_description": "The Dustjack Yard is tidied into spear and bow racks beside packed blankets, a supply chest, lit lantern, and teal pennant."
+    },
+    "resource_site_neutral_cinder_kiln_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/cinder_kiln_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_cinder_kiln", "presentation_role": "controlled_muster_state", "accessible_description": "The Cinder Kiln burns steadily beside ordered cinder pots, travel packs, a clean smoke plume, and a teal claim ribbon."
+    },
+    "resource_site_neutral_frostbeacon_bothy_claimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png", "atlas_region": [336, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/frostbeacon_bothy_claimed_source.png", "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+      "assigned_resource_site_id": "site_frostbeacon_bothy", "presentation_role": "controlled_muster_state", "accessible_description": "The Frostbeacon Bothy has a bright cyan beacon, open warm doorway, cleared steps, winter packs, and spare pikes ready."
+    },
     "resource_site_live_ember_signal_brazier": {
       "path": "res://art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png",
       "atlas_region": [0, 0, 48, 48],
@@ -6080,23 +6120,28 @@
       "fit": "Exact original balance-and-crusher assay landmark for the Orevein Assay Depot identity."
     },
     "site_reedbarge_mooring": {
-      "asset_id": "resource_site_neutral_reedbarge_mooring",
+      "asset_id": "resource_site_neutral_reedbarge_mooring_claimed",
+      "unclaimed_asset_id": "mapobj_reedbarge_mooring",
       "fit": "Exact original reed-barge, pier, and lantern landmark for the persistent Reedbarge Mooring neutral dwelling identity."
     },
     "site_glowcap_croft": {
-      "asset_id": "resource_site_neutral_glowcap_croft",
+      "asset_id": "resource_site_neutral_glowcap_croft_claimed",
+      "unclaimed_asset_id": "mapobj_glowcap_croft",
       "fit": "Exact original mushroom-cap turf croft landmark for the persistent Glowcap Croft neutral dwelling identity."
     },
     "site_dustjack_yard": {
-      "asset_id": "resource_site_neutral_dustjack_yard",
+      "asset_id": "resource_site_neutral_dustjack_yard_claimed",
+      "unclaimed_asset_id": "mapobj_dustjack_yard",
       "fit": "Exact original patched-canvas scrap yard landmark for the persistent Dustjack Yard neutral dwelling identity."
     },
     "site_cinder_kiln": {
-      "asset_id": "resource_site_neutral_cinder_kiln",
+      "asset_id": "resource_site_neutral_cinder_kiln_claimed",
+      "unclaimed_asset_id": "mapobj_cinder_kiln",
       "fit": "Exact original domed ember kiln landmark for the persistent Cinder Kiln neutral dwelling identity."
     },
     "site_frostbeacon_bothy": {
-      "asset_id": "resource_site_neutral_frostbeacon_bothy",
+      "asset_id": "resource_site_neutral_frostbeacon_bothy_claimed",
+      "unclaimed_asset_id": "mapobj_frostbeacon_bothy",
       "fit": "Exact original steep-roof crystal beacon shelter for the persistent Frostbeacon Bothy neutral dwelling identity."
     },
     "site_bramble_hedge": {
@@ -6140,7 +6185,8 @@
       "fit": "Direct ore crates pickup match."
     },
     "site_free_company_yard": {
-      "asset_id": "resource_site_neutral_roadward_lodge",
+      "asset_id": "resource_site_neutral_roadward_lodge_claimed",
+      "unclaimed_asset_id": "mapobj_roadward_lodge",
       "fit": "Exact original toll-gate and pikehook lodge for the controlled Roadward Lodge neutral dwelling identity."
     },
     "site_riverwatch_free_company_yard": {
@@ -6152,12 +6198,13 @@
       "fit": "Exact original fruit-bough levy yard for the controlled Orchard Levy Grounds neutral dwelling identity."
     },
     "site_fenhound_kennels": {
-      "asset_id": "resource_site_neutral_fenhound_kennels",
+      "asset_id": "resource_site_neutral_fenhound_kennels_claimed",
       "unclaimed_asset_id": "kennel",
       "fit": "Exact original three-bay mossglass kennel for the controlled Fenhound Kennels neutral dwelling identity."
     },
     "site_cliffhawk_roost": {
-      "asset_id": "resource_site_neutral_cliffhawk_roost",
+      "asset_id": "resource_site_neutral_cliffhawk_roost_claimed",
+      "unclaimed_asset_id": "mapobj_cliffhawk_roost",
       "fit": "Exact original twin-spire aviary for the controlled Cliffhawk Roost neutral dwelling identity."
     },
     "site_kite_signal_eyrie": {

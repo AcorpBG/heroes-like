@@ -1,0 +1,29 @@
+{
+  "id": "neutral_dwelling_claimed_wave1",
+  "generation_mode": "precise-object-edit",
+  "source_model": "built_in_image_gen_precise_object_edit_neutral_dwelling_claimed_atlas",
+  "intent": "Controlled-state variants for eight original neutral-dwelling landmarks; preserve each exact base identity while making active muster readiness legible on the overworld.",
+  "shared_prompt_constraints": [
+    "Preserve exact base architecture, perspective, proportions, palette, and painterly strategy-map rendering.",
+    "Add only restrained active-muster cues such as open access, ordered supplies, lit work areas, teal-and-ivory claim cloth, and ready equipment.",
+    "No people, creatures, words, labels, UI, background, ground plane, border, copied franchise elements, or protected visual expression.",
+    "Retain genuine transparent alpha outside the object and generous transparent margins."
+  ],
+  "alpha_recovery": "Seven generated edits returned a baked pale checkerboard. Border-connected near-neutral pixels were removed with a 12 percent flood-fill tolerance; the Roadward Lodge edit arrived with genuine alpha. All eight final sources and the runtime atlas retain transparent corners.",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+    "size": [384, 48],
+    "cell_size": [48, 48],
+    "sha256": "291d52bfb6f26d1db8a8133f38d9deda2ff24ce21c0f65d523017eb63dc9ea2f"
+  },
+  "assets": [
+    {"site_id":"site_free_company_yard","source":"roadward_lodge_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-848879b9-ffbf-4eea-b212-81bddef3528a.png","region":[0,0,48,48],"sha256":"53178f2c1b78544d04c2572cb3ba7a1fc266252663935e64764b41f980fe415a","edit":"Open toll beam, ready shield-and-spear bundles, bright road lanterns, and restrained claim pennant."},
+    {"site_id":"site_fenhound_kennels","source":"fenhound_kennels_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-290849b9-77c7-46f2-ac72-e19fe84a7fea.png","region":[48,0,48,48],"sha256":"d8c65127f6b36cb17639273339f80f29de703b69155d86a36efc4c9f671eed62","edit":"Open kennel bays, clean bowls, packed bedrolls, bright handler lantern, and claim ribbons."},
+    {"site_id":"site_cliffhawk_roost","source":"cliffhawk_roost_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5632b508-fa5c-4a5d-b957-fa0ff7d7de3a.png","region":[96,0,48,48],"sha256":"5916bd8da0d0f827e95a44c64489370490c376367bbd2206a23657ba49158761","edit":"Repaired canopy, packed nesting platform, lit signal crystals, and claim streamer."},
+    {"site_id":"site_reedbarge_mooring","source":"reedbarge_mooring_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b76825b6-3737-497d-a707-99d265ce4040.png","region":[144,0,48,48],"sha256":"73541a8d1c660dfb65b4b203ef98ddd69cf5d3638f12d181c23c1cae282d539a","edit":"Secured barge, clean canopy, supply crates, route rope, bright lantern, and pier pennant."},
+    {"site_id":"site_glowcap_croft","source":"glowcap_croft_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ccbf523a-725b-4bdf-bd55-dc858b0afa5d.png","region":[192,0,48,48],"sha256":"6f8b8d3bfc9281fe24af20d239035ced6fec3927b1c4cb119e438ffec61bc274","edit":"Open warm doorway, tended fungus bed, packed satchels, stronger cap glow, and fence ribbon."},
+    {"site_id":"site_dustjack_yard","source":"dustjack_yard_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8ad39b46-2a50-4c6c-bfc1-0b7bf31a165a.png","region":[240,0,48,48],"sha256":"0f104bf8b0887341e6df7169863947a17dcf803314b7d43b88e24e974dedab71","edit":"Ordered weapon racks, packed blankets, supply chest, lit lantern, repaired canvas, and pennant."},
+    {"site_id":"site_cinder_kiln","source":"cinder_kiln_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-14adf608-c1c1-4ecf-89a8-3d0f3080b747.png","region":[288,0,48,48],"sha256":"6fed1f4cc64fa13e1544fba1286367ef90ee98baf65bcf56a0754df3b55e6e2c","edit":"Steady furnace, clean smoke plume, ordered tools and pots, travel packs, and claim ribbon."},
+    {"site_id":"site_frostbeacon_bothy","source":"frostbeacon_bothy_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b1828039-11fd-4049-90f6-aa8733aa3487.png","region":[336,0,48,48],"sha256":"4bd5bb1cc2dde5cb2cd48b03913eae7d317ad10794abc511940943584c19af5a","edit":"Open warm doorway, lit cyan beacon, cleared steps, winter packs, spare pikes, and claim pennant."}
+  ]
+}

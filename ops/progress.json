@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the seven-site minor guarded cache family with exact guards, six distinct live reward paths, compact claimed-state art, one combined smoke, and matching Linux/Windows package boots.",
+  "currentNotes": "Completed eight neutral dwellings as one content batch with live guard resolution, exact initial and weekly recruits, income, response orders, save continuity, and distinct claimed-state atlas art.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-seven-minor-guarded-caches-10184",
-  "currentSliceId": "content-seven-minor-guarded-caches-10184",
-  "currentSliceNotes": "Completed all seven remaining minor guarded caches with exact watch fronts, distinct scouting/artifact/spell/town-support/objective/recruit rewards, one compact seven-state claimed atlas, a green combined smoke, repository validation, and matching 249127628-byte Linux/Windows package boots.",
+  "currentSlice": "content-eight-neutral-dwelling-musters-10184",
+  "currentSliceId": "content-eight-neutral-dwelling-musters-10184",
+  "currentSliceNotes": "Completed all eight authored neutral dwellings together. The single combined eight-case smoke, direct capture review, repository validation, and matching Linux/Windows package boots passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content seven minor guarded caches 10184",
-  "currentSliceUpdatedAt": "2026-08-29T22:01:29Z",
+  "currentSliceTitle": "content eight neutral dwelling musters 10184",
+  "currentSliceUpdatedAt": "2026-08-29T22:26:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21190,20 +21190,22 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "content/artifacts.json",
+    "content/resource_sites.json",
+    "content/map_objects.json",
     "content/scenarios.json",
-    "art/artifacts/source/generated/expedition_instruments_wave1/manifest.json",
+    "art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
+    "art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/manifest.json",
     "art/overworld/manifest.json",
-    "tests/six_faction_command_regalia_runtime_report.gd",
-    "tests/overworld_artifact_pickup_icon_runtime_report.gd",
+    "tests/eight_neutral_dwelling_musters_report.gd",
+    "tests/eight_neutral_dwelling_musters_report.tscn",
     "tests/validate_repo.py",
     "tests/packaging_linux_export_smoke.py",
     "tests/packaging_windows_export_smoke.py",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-six-faction-expedition-instruments-20260829",
-  "latestFinding": "The 33-artifact catalog now contains eight live sets and 24 set pieces. Six faction sets are fully collectible in representative authored scenarios, expose exact compact insignia on Town and Overworld management surfaces, preserve save version 9, and ship in matching 247949888-byte Linux and Windows PCKs with source originals excluded.",
+  "latestEvidenceId": "content-eight-neutral-dwelling-musters-20260829",
+  "latestFinding": "Eight authored neutral dwellings now resolve their exact guards, grant one-time initial recruits, produce recurring income and weekly town musters, expose public response orders, preserve save version 9, render distinct claimed-state art, and ship in matching 249166492-byte Linux and Windows PCKs with source originals excluded.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106194,6 +106196,16 @@
       "startedAt": "2026-08-29T21:45:13Z",
       "notes": "Completed Toll Ruin, Wreck Locker, Amber Reliquary, Slag Purse Vault, Old Orchard Crypt, Moss Oath Cache, and Frost Tithe Cellar with exact live guards, distinct scouting/artifact/spell/town-support/objective/recruit rewards, one compact claimed-state atlas, a green combined seven-case smoke, repository validation, and matching 249127628-byte Linux/Windows package boots.",
       "completedAt": "2026-08-29T22:01:29Z"
+    },
+    {
+      "id": "content-eight-neutral-dwelling-musters-10184",
+      "title": "content eight neutral dwelling musters 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T22:26:57Z",
+      "startedAt": "2026-08-29T22:05:41Z",
+      "notes": "Completed all eight selected neutral dwellings as one batch with exact live guards, claim and weekly musters, income, response orders, save-v9 continuity, and one compact claimed-state atlas. The single combined eight-case smoke passed on its first run, captures passed direct review, repository validation passed, and matching Linux/Windows 249166492-byte package boots passed.",
+      "completedAt": "2026-08-29T22:26:57Z"
     }
   ],
   "project": "heroes-like",
@@ -106203,8 +106215,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Fifteen of 32 guarded-reward sites remain metadata-only despite complete site and map-object records. Those sites and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices rather than placement-only claims. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next runtime-backed content family while preserving the remaining 910360-byte package headroom rather than treating metadata placement as implementation progress.",
+  "remainingGap": "Twenty-three Batch 005 artifact/service identities and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices. Route hybrids without authored route-effect payloads cannot be called live from placement alone. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "No work remains in this eight-dwelling slice. Select another coherent multi-content family with real runtime behavior and keep verification batched into one combined smoke plus final repository and package gates; 833508 bytes of enforced package headroom remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106635,7 +106647,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_six_faction_artifact_sets_completed",
+  "result": "content_eight_neutral_dwelling_musters_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
