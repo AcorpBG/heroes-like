@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next coherent production-content batch from the remaining eighteen exact heroes without player-command scenarios and twenty unplaced encounter definitions while preserving package headroom."
+    "Select the next coherent production-content batch from the remaining twelve heroes without command scenarios and fourteen unplaced encounter definitions."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed one six-faction waywatch-trials batch that promotes six exact heroes, activates six dormant neutral-watch encounters, places sixteen runtime-live exact-art sites, and adds one compact original landmark atlas.",
+  "currentNotes": "Completed the six-faction spellwright-expeditions batch: six larger skirmish maps, six persistent magic-command cadres, fourteen live starting spells, six activated neutral-watch encounters, and one compact original landmark atlas.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-faction-waywatch-trials-10184",
-  "currentSliceId": "content-six-faction-waywatch-trials-10184",
-  "currentSliceNotes": "Completed six skirmish trials led by Saren, Orrik, Renn, Osmund, Odrik, and Thir with six persistent player companies, six newly live neutral-watch encounters, sixteen activated exact-art sites, eighteen artifact placements, and one compact six-watch atlas. The single combined smoke, repository gate, and both package gates passed.",
+  "currentSlice": "content-six-faction-spellwright-expeditions-10184",
+  "currentSliceId": "content-six-faction-spellwright-expeditions-10184",
+  "currentSliceNotes": "Completed six larger 12x7 skirmish expeditions led by Orra, Edda, Essa, Elian, Lina, and Sael; six persistent spellwright cadres preserve fourteen starting spells in live session and battle state; six neutral-watch encounters now sit beside matching dwellings with one compact six-watch atlas. The one consolidated smoke, repository validation, and Linux/Windows package gates passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six faction waywatch trials 10184",
-  "currentSliceUpdatedAt": "2026-08-29T18:30:36Z",
+  "currentSliceTitle": "content six faction spellwright expeditions 10184",
+  "currentSliceUpdatedAt": "2026-08-29T18:59:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106124,6 +106124,16 @@
       "startedAt": "2026-08-29T18:09:10Z",
       "notes": "Completed six skirmish-only maps led by Saren, Orrik, Renn, Osmund, Odrik, and Thir, with six persistent player companies, six activated neutral-watch encounters using their existing twelve neutral unit identities and field objectives, sixteen activated exact-art sites, eighteen artifact placements, and one compact original atlas. The single combined six-case smoke passed exact armies, deterministic battles, rewards, captures, and save v9; repository validation and matching Linux/Windows 248516880-byte package boots passed.",
       "completedAt": "2026-08-29T18:30:36Z"
+    },
+    {
+      "id": "content-six-faction-spellwright-expeditions-10184",
+      "title": "content six faction spellwright expeditions 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T18:59:26Z",
+      "startedAt": "2026-08-29T18:35:45Z",
+      "notes": "Completed six larger 12x7 skirmish expeditions led by Orra, Edda, Essa, Elian, Lina, and Sael, with six persistent three-stack faction cadres, fourteen live starting spells, six activated neutral-watch encounters beside matching dwellings, six exact faction landmarks, twenty-four artifact placements, and one compact original atlas. The consolidated six-case smoke passed exact hero spellbooks, deterministic battles, rewards/flags, exact landmark rendering, captures, and save v9; repository validation and matching Linux/Windows 248599156-byte package boots passed.",
+      "completedAt": "2026-08-29T18:59:26Z"
     }
   ],
   "project": "heroes-like",
@@ -106133,8 +106143,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Forty-two of 60 exact live heroes now headline authored scenarios, leaving eighteen production identities without a player-facing command map; twenty authored encounter definitions remain unplaced. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "Select the next coherent production-content batch from remaining hero-command, scenario, encounter, artifact, spell, and faction-art gaps; preserve the 1483120-byte package headroom and do not infer whole-game release readiness from this completed slice.",
+  "remainingGap": "Forty-eight of 60 exact live heroes now headline authored scenarios, leaving twelve production identities without a player-facing command map; fourteen authored encounter definitions remain unplaced. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next coherent production-content batch from remaining hero-command, scenario, encounter, artifact, spell, and faction-art gaps; preserve the 1400844-byte package headroom and do not infer whole-game release readiness from this completed slice.",
   "reportOnlyEvidence": [
     {
       "entries": [

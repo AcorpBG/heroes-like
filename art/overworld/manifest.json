@@ -5607,6 +5607,42 @@
       "source_generated": "res://art/overworld/source/generated/encounters/waywatch_trials/frostwharf_house_watch_source.png", "source_model": "built_in_image_gen_original_waywatch_trial_landmark_atlas",
       "assigned_encounter_id": "encounter_frostwharf_house_watch", "assigned_affiliation": "neutral", "presentation_role": "frostwharf_house_watch",
       "accessible_description": "A steep-roofed wharf house stands on short frozen pilings beside a crescent pier, cutter cradle, and paired throwing racks."
+    },
+    "encounter_spellwright_fenhound_kennel_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/spellwright_expeditions/fenhound_kennel_watch_source.png", "source_model": "built_in_image_gen_original_spellwright_expedition_landmark_atlas",
+      "assigned_encounter_id": "encounter_fenhound_kennel_watch", "assigned_affiliation": "neutral", "presentation_role": "fenhound_kennel_watch",
+      "accessible_description": "Two hooked-roof kennel sheds flank a fenced training ring beneath a raised bell post and stacked oval shields."
+    },
+    "encounter_spellwright_glowcap_croft_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/spellwright_expeditions/glowcap_croft_watch_source.png", "source_model": "built_in_image_gen_original_spellwright_expedition_landmark_atlas",
+      "assigned_encounter_id": "encounter_glowcap_croft_watch", "assigned_affiliation": "neutral", "presentation_role": "glowcap_croft_watch",
+      "accessible_description": "Three broad mushroom caps shelter a stone cellar croft, guarded entry stair, drying frames, and a hanging spore-lamp gantry."
+    },
+    "encounter_spellwright_kite_signal_eyrie_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/spellwright_expeditions/kite_signal_eyrie_watch_source.png", "source_model": "built_in_image_gen_original_spellwright_expedition_landmark_atlas",
+      "assigned_encounter_id": "encounter_kite_signal_eyrie_watch", "assigned_affiliation": "neutral", "presentation_role": "kite_signal_eyrie_watch",
+      "accessible_description": "A split stone spire carries a compact signal cabin, two broad angular kite frames, a wind-vane crown, and zigzag rope stairs."
+    },
+    "encounter_spellwright_orchard_levy_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/spellwright_expeditions/orchard_levy_watch_source.png", "source_model": "built_in_image_gen_original_spellwright_expedition_landmark_atlas",
+      "assigned_encounter_id": "encounter_orchard_levy_watch", "assigned_affiliation": "neutral", "presentation_role": "orchard_levy_watch",
+      "accessible_description": "Twin orchard trunks arch around a leaf-roof levy pavilion, round millstone platform, upright polearm racks, and harvest baskets."
+    },
+    "encounter_spellwright_milestone_arsenal_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/spellwright_expeditions/milestone_arsenal_watch_source.png", "source_model": "built_in_image_gen_original_spellwright_expedition_landmark_atlas",
+      "assigned_encounter_id": "encounter_milestone_arsenal_watch", "assigned_affiliation": "neutral", "presentation_role": "milestone_arsenal_watch",
+      "accessible_description": "A tall faceted milestone rises through a low riveted armory between paired cartbow racks, shield stacks, and an iron awning."
+    },
+    "encounter_spellwright_harbor_pilot_house_watch": {
+      "path": "res://art/overworld/runtime/objects/encounters/spellwright_expeditions/spellwright_expeditions_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/spellwright_expeditions/harbor_pilot_house_watch_source.png", "source_model": "built_in_image_gen_original_spellwright_expedition_landmark_atlas",
+      "assigned_encounter_id": "encounter_harbor_pilot_house_watch", "assigned_affiliation": "neutral", "presentation_role": "harbor_pilot_house_watch",
+      "accessible_description": "A steep-roof pilot house stands on short pilings beneath a flare mast, crescent lookout balcony, crossed mooring poles, and rope winch."
     }
   },
   "resource_site_sprites": {
@@ -6066,7 +6102,13 @@
     "encounter_cliffhawk_roost_watch": "encounter_waywatch_cliffhawk_roost_watch",
     "encounter_greenbranch_copse_watch": "encounter_waywatch_greenbranch_copse_watch",
     "encounter_obsidian_scar_watch": "encounter_waywatch_obsidian_scar_watch",
-    "encounter_frostwharf_house_watch": "encounter_waywatch_frostwharf_house_watch"
+    "encounter_frostwharf_house_watch": "encounter_waywatch_frostwharf_house_watch",
+    "encounter_fenhound_kennel_watch": "encounter_spellwright_fenhound_kennel_watch",
+    "encounter_glowcap_croft_watch": "encounter_spellwright_glowcap_croft_watch",
+    "encounter_kite_signal_eyrie_watch": "encounter_spellwright_kite_signal_eyrie_watch",
+    "encounter_orchard_levy_watch": "encounter_spellwright_orchard_levy_watch",
+    "encounter_milestone_arsenal_watch": "encounter_spellwright_milestone_arsenal_watch",
+    "encounter_harbor_pilot_house_watch": "encounter_spellwright_harbor_pilot_house_watch"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

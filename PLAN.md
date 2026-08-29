@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recent completed implementation slice: `content-six-faction-waywatch-trials-10184`.
-- Package boundary: both release exports now measure 248516880 bytes, 1483120 bytes below the unchanged 250000000-byte ceiling. All seven encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-six-faction-spellwright-expeditions-10184`.
+- Package boundary: both release exports now measure 248599156 bytes, 1400844 bytes below the unchanged 250000000-byte ceiling. All eight encounter atlases ship while generated source originals and development reports remain excluded on both platforms.
+
+## Six-Faction Spellwright Expeditions
+
+id: `content-six-faction-spellwright-expeditions-10184`
+
+Status: completed.
+
+Current finding:
+- exactly eighteen of sixty production heroes still lack a player-command scenario, split evenly at three per faction; Orra Cinderquill, Edda Rotlamp, Essa Daynote, Elian Loamchant, Lina Gauge-Savant, and Sael Mirrorbell form one complete six-faction magic-command cohort with fourteen distinct starting spells;
+- sixteen complete neutral-dwelling watch encounters remain unplaced despite owning persistent armies, tactical field objectives, rewards, unit art, and matching dwellings in the live content graph;
+- the six exact faction landmarks appear on only one to three authored maps, while the least-used artifacts have only two or three placements.
+
+Implementation boundary:
+- author six original skirmish-only 12x7 spellwright expeditions with two towns, twelve resource sites, four artifacts, four battle fronts, five victory objectives, and six reactive hooks each, creating a larger and more contested format than the prior 11x6 trials;
+- promote Orra, Edda, Essa, Elian, Lina, and Sael into exact player-command roles with persistent three-stack faction cadres, preserving all fourteen existing spell identities through live overworld and battle commander state;
+- activate the dormant Fenhound Kennel, Glowcap Croft, Kite Signal Eyrie, Orchard Levy Grounds, Milestone Arsenal, and Harbor Pilot House watch encounters beside their matching dwellings, and give each an original transparent exact landmark in one compact atlas;
+- feature each faction's exact live landmark, broaden low-use artifact placement, preserve save version 9, data-driven rules, deterministic combat, accessibility descriptions, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all six expeditions appear in skirmish selection and create the intended hero, faction, cadre, complete map contract, exact fourteen-spell union, neutral-watch battle, authored rewards/flags, and save-version-9 round trip;
+- the six dormant watch definitions become live placements with their existing twelve neutral unit identities and field objectives, matching neutral dwellings, six exact original landmarks, and no duplicate gameplay definition;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- the six 12x7 expeditions, six persistent cadres, twenty-four battle fronts, seventy-two resource placements, twenty-four artifacts, thirty-six hooks, and six exact watch landmarks raise the live roster to fifty-eight scenarios, forty-eight distinct command heroes, 137 persistent army groups, and seventy-seven placed encounter identities;
+- the consolidated six-case runtime/visual smoke passed all six deterministic victories, the exact fourteen-spell union, authored rewards and flags, exact landmark rendering, and save-version-9 round trips;
+- repository validation and matching Linux/Windows 248599156-byte package startup passed with the compact atlas present and generated source art excluded.
+
+Non-goals:
+- no new spell, unit, artifact, dwelling, town, building, battle formula, AI algorithm, campaign chapter, save schema, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes hero, scenario, map, dwelling, encounter, landmark, name, text, or protected visual expression.
 
 ## Six-Faction Waywatch Trials
 
