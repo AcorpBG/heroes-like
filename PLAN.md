@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-faction-guarded-relic-roads-10184`.
-- Package boundary: both release exports now measure 249038712 bytes, 961288 bytes below the unchanged 250000000-byte ceiling. The six guarded-relic runtime icons ship while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-six-major-vault-unsealing-10184`; select the next runtime-backed content family before beginning more implementation.
+- Package boundary: both release exports now measure 249073568 bytes, 926432 bytes below the unchanged 250000000-byte ceiling. The compact major-vault atlas ships while generated source originals and development reports remain excluded on both platforms.
+
+## Six Major Vault Unsealings
+
+id: `content-six-major-vault-unsealing-10184`
+
+Status: completed.
+
+Completion result:
+- Mirror Archive, Furnace Vault, Thorn Crown Hollow, Storm-Bell Wreck, Prism Ossuary, and Basalt Oath Tomb now have exact authored map placements and guard links across six existing scenarios, raising Batch 006 to fourteen live guarded sites and leaving eighteen metadata-only sites;
+- each vault grants its resource payload and one deterministic standard-table artifact, with distinct live spell, claim-recruit, or one-time scouting rewards; one-time scouting now reveals from the claimed site itself without changing save version 9;
+- six original transparent post-claim landmarks preserve the closed-site identities while exposing readable open or activated states in one 288x48 runtime atlas, and the renderer switches from exact closed map-object art only after claim;
+- the single combined six-case smoke passed blocking, production battle payload, rewards, unsealed art, repeat rejection, inspected captures, and exact save-version-9 round trips; repository validation and matching Linux/Windows 249073568-byte packaged startup passed.
+
+Current finding:
+- all 103 units, 112 spells, 60 heroes, and 39 artifacts now reach live play, while 24 of the 32 guarded-reward sites remain metadata-only;
+- Mirror Archive, Furnace Vault, Thorn Crown Hollow, Storm-Bell Wreck, Prism Ossuary, and Basalt Oath Tomb form the complete unused major-guarded-reward tier and already own exact map-object art, authored guards, rewards, and supported spell, scouting, recruit, route, or objective identities;
+- Storm-Bell Wreck and Prism Ossuary already occupy dormant scenario slots, and four other selected maps already place the exact guards required by the remaining vaults, so this batch can convert staged content into guarded gameplay without adding another scenario or disconnected definition wave.
+
+Implementation boundary:
+- activate all six remaining major guarded reward sites with exact guard blocking, deterministic live artifact rewards, and site-specific supported spell, scouting, recruit, movement, or objective effects;
+- bind Mirror Archive, Furnace Vault, Thorn Crown Hollow, and Basalt Oath Tomb to exact existing guard fronts in Sunvein Crystal Sump Circuit, Heatpriest Obsidian Scar, Pollenglass Greenbranch Copse, and Ninefold Confluence, while adding the missing exact guards beside the already-placed Storm-Bell Wreck and Prism Ossuary;
+- create six original transparent unsealed-state landmarks derived from the existing closed vault identities, pack them into one compact 288x48 atlas, and switch to them only after a successful claim;
+- preserve save version 9, deterministic rewards, prior scenario objectives, compact play-surface composition, accessibility descriptions, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all six sites block before exact guard clearance, construct the production guard battle, grant resources plus an artifact and their authored special effect once, reject repeat claims without mutation, and round-trip exactly through save version 9;
+- each site renders its existing closed identity before claim and its distinct unsealed atlas region after claim, with genuine alpha, non-color-readable state change, strict fallback behavior, and no high-resolution source payload in release packages;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit, hero, town, scenario, campaign chapter, save schema, battle formula, strategic-AI algorithm, RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes vault, reward, landmark, name, text, or protected visual expression.
 
 ## Six-Faction Guarded Relic Roads
 

@@ -11176,6 +11176,13 @@ func _resource_asset_id(node: Dictionary) -> String:
 		var claimed_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
 		if claimed_asset_id != "" and _object_texture_for_asset(claimed_asset_id) is Texture2D:
 			return claimed_asset_id
+	if (
+		not String(node.get("collected_by_faction_id", "")).strip_edges().is_empty()
+		and _resource_site_unclaimed_asset_ids.has(site_id)
+	):
+		var claimed_state_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
+		if claimed_state_asset_id != "" and _object_texture_for_asset(claimed_state_asset_id) is Texture2D:
+			return claimed_state_asset_id
 	if String(node.get("kind", "")) == "reward_reference":
 		var reward_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
 		if reward_asset_id != "":

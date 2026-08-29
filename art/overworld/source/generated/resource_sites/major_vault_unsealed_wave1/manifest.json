@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "precise_object_edit_from_existing_original_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/major_vault_unsealed_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "d63393db95d6fa3e6a5fd347a4233de9478565539b077286da752403e79f51d4",
+  "runtime_region_size": [48, 48],
+  "processing": "background_alpha_cleanup_then_trim_and_aspect_fit_within_42x42_centered_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six precise post-claim edits of existing original major-vault landmarks, preserving each silhouette and camera while opening its seal and adding restrained active light; no characters, text, logos, franchise symbols, terrain cards, frames, or runtime opaque backdrops.",
+  "items": [
+    {
+      "resource_site_id": "site_mirror_archive",
+      "asset_id": "resource_site_major_vault_mirror_archive_unsealed",
+      "source_path": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/mirror_archive_unsealed_source.png",
+      "source_sha256": "e87028b691e9a056f6d522cbd30ae0658c3396f8f4340be52ad855f1f7f906bb",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3711f8ed-f962-4000-b5e1-8d12a0624dd3.png",
+      "atlas_region": [0, 0, 48, 48],
+      "presentation_role": "unsealed_claimed_state"
+    },
+    {
+      "resource_site_id": "site_furnace_vault",
+      "asset_id": "resource_site_major_vault_furnace_vault_unsealed",
+      "source_path": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/furnace_vault_unsealed_source.png",
+      "source_sha256": "3f0abd140c4ab34adf98cc7ee917daa94b5daf2bbc044a1fc9f2f8274066dc3f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8f62ed16-5745-4745-b740-aa0a3b9fee37.png",
+      "atlas_region": [48, 0, 48, 48],
+      "presentation_role": "unsealed_claimed_state"
+    },
+    {
+      "resource_site_id": "site_thorn_crown_hollow",
+      "asset_id": "resource_site_major_vault_thorn_crown_hollow_unsealed",
+      "source_path": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/thorn_crown_hollow_unsealed_source.png",
+      "source_sha256": "352125ade4941db4c915cae7e0391e74a61bbfeed60d5421de1e8f743505d32b",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c79832df-7425-44fd-860b-cb6e7b063ae2.png",
+      "atlas_region": [96, 0, 48, 48],
+      "presentation_role": "unsealed_claimed_state"
+    },
+    {
+      "resource_site_id": "site_storm_bell_wreck",
+      "asset_id": "resource_site_major_vault_storm_bell_wreck_unsealed",
+      "source_path": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/storm_bell_wreck_unsealed_source.png",
+      "source_sha256": "2fe6232cc93e7feb84fc1bcf3549ad092843ca41b8a0ff4f6f1d63e3d5d5488a",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ea36cc8e-d470-4669-ab08-e9dd91321083.png",
+      "atlas_region": [144, 0, 48, 48],
+      "presentation_role": "unsealed_claimed_state"
+    },
+    {
+      "resource_site_id": "site_prism_ossuary",
+      "asset_id": "resource_site_major_vault_prism_ossuary_unsealed",
+      "source_path": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/prism_ossuary_unsealed_source.png",
+      "source_sha256": "d70a0c7ddda6729f2aa0de7980affde61e62f2eb5ee7c630d002975f4832baa8",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e4c1cd5a-d2a0-4f17-b662-8e3bde7ee626.png",
+      "atlas_region": [192, 0, 48, 48],
+      "presentation_role": "unsealed_claimed_state"
+    },
+    {
+      "resource_site_id": "site_basalt_oath_tomb",
+      "asset_id": "resource_site_major_vault_basalt_oath_tomb_unsealed",
+      "source_path": "res://art/overworld/source/generated/resource_sites/major_vault_unsealed_wave1/basalt_oath_tomb_unsealed_source.png",
+      "source_sha256": "ee3d74c4ec92e34f7c9ed24341300de353f84deaae4b4283ddfdf4c652c17e82",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c52540d3-6e1a-4054-bf21-dea21428c6e9.png",
+      "atlas_region": [240, 0, 48, 48],
+      "presentation_role": "unsealed_claimed_state"
+    }
+  ]
+}
