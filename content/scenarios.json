@@ -698,9 +698,9 @@
         {"placement_id": "causeway_stand_blackfen_gate_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 1, "guard_front_id": "causeway_gate_marshals", "collected_by_faction_id": "faction_mireclaw"}
       ],
       "artifact_nodes": [
-        {"placement_id": "causeway_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "causeway_boots", "artifact_id": "artifact_lockward_beacon_key", "x": 3, "y": 1},
         {"placement_id": "causeway_pennon", "artifact_id": "artifact_lockflame_writ_banner", "x": 5, "y": 3},
-        {"placement_id": "blackfen_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+        {"placement_id": "blackfen_gorget", "artifact_id": "artifact_tollstone_ring", "x": 8, "y": 4}
       ],
       "encounters": [
         {"placement_id": "causeway_reed_camp", "encounter_id": "encounter_reedward_camp", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 2201, "enemy_army": {"id": "army_causeway_reed_camp_pickets", "name": "Causeway Reed Camp Pickets", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_mireclaw_reedsnare_kin", "count": 7}, {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 4}, {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 1}]}},
@@ -1971,7 +1971,7 @@
       "artifact_nodes": [
         {"placement_id": "bogbound_boots", "artifact_id": "artifact_reedshadow_waders", "x": 2, "y": 1},
         {"placement_id": "bogbound_pennon", "artifact_id": "artifact_mirechain_hunt_totem", "x": 5, "y": 3},
-        {"placement_id": "riverwatch_gorget", "artifact_id": "artifact_bastion_gorget", "x": 7, "y": 3}
+        {"placement_id": "riverwatch_gorget", "artifact_id": "artifact_fenhound_scent_bell", "x": 7, "y": 3}
       ],
       "encounters": [
         {"placement_id": "bogbound_lantern_patrol", "encounter_id": "encounter_lantern_patrol", "x": 3, "y": 1, "difficulty": "medium", "combat_seed": 7201},
@@ -4098,8 +4098,7 @@
       "artifact_nodes": [
         {
           "placement_id": "bridge_boots",
-          "artifact_id": "artifact_trailsinger_boots",
-          "artifact_reward_table_id": "artifact_source_pickup_caches_common",
+          "artifact_id": "artifact_rootpath_seed_compass",
           "x": 3,
           "y": 1
         },
@@ -4319,7 +4318,7 @@
         {"placement_id": "orevein_contract_riverwatch_contract_crossing_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "orevein_beacon_wardens", "collected_by_faction_id": "faction_embercourt"}
       ],
       "artifact_nodes": [
-        {"placement_id": "orevein_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
+        {"placement_id": "orevein_trailsinger_boots", "artifact_id": "artifact_redline_survey_dial", "x": 3, "y": 1},
         {"placement_id": "orevein_bastion_gorget", "artifact_id": "artifact_quenchplate_vambrace", "x": 6, "y": 3},
         {"placement_id": "riverwatch_warcrest_pennon", "artifact_id": "artifact_redline_warrant_gonfalon", "x": 9, "y": 4}
       ],

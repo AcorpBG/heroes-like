@@ -13,11 +13,11 @@ func _run() -> void:
 	if not bool(report.get("ok", false)):
 		_fail("Artifact set/faction report failed: %s" % report)
 		return
-	if int(report.get("set_count", 0)) != 2:
-		_fail("Expected Wayfarer Compact and Asterfall Survey: %s" % report)
+	if int(report.get("set_count", 0)) != 8:
+		_fail("Expected two neutral sets and six faction sets: %s" % report)
 		return
-	if int(report.get("set_piece_count", 0)) != 6:
-		_fail("Expected three pieces in each of two artifact sets: %s" % report)
+	if int(report.get("set_piece_count", 0)) != 24:
+		_fail("Expected three pieces in each of eight artifact sets: %s" % report)
 		return
 	if int(report.get("faction_affinity_artifact_count", 0)) != 24:
 		_fail("Expected four faction-affinity artifacts for each of six factions: %s" % report)
@@ -27,6 +27,17 @@ func _run() -> void:
 	if int(set_piece_counts.get("set_wayfarer_compact", 0)) != 3 or int(set_piece_counts.get("set_asterfall_survey", 0)) != 3:
 		_fail("Artifact set piece counts were not reported correctly: %s" % report)
 		return
+	for set_id in [
+		"set_lockward_charter",
+		"set_fenhound_pursuit",
+		"set_meridian_relay",
+		"set_rootpath_covenant",
+		"set_redline_survey_warrant",
+		"set_drowned_wake_chart",
+	]:
+		if int(set_piece_counts.get(set_id, 0)) != 3:
+			_fail("Faction set did not contain exactly three pieces for %s: %s" % [set_id, report])
+			return
 
 	var faction_counts: Dictionary = report.get("faction_affinity_counts", {}) if report.get("faction_affinity_counts", {}) is Dictionary else {}
 	for faction_id in [
@@ -55,6 +66,29 @@ func _run() -> void:
 	if int(asterfall_slots.get("trinket", 0)) != 1 or int(asterfall_slots.get("armor", 0)) != 1 or int(asterfall_slots.get("banner", 0)) != 1:
 		_fail("Asterfall Survey should fit three distinct equipment slots: %s" % report)
 		return
+	var expected_insignia_x := 0
+	for set_id in [
+		"set_lockward_charter",
+		"set_fenhound_pursuit",
+		"set_meridian_relay",
+		"set_rootpath_covenant",
+		"set_redline_survey_warrant",
+		"set_drowned_wake_chart",
+	]:
+		var insignia := ArtifactRules.artifact_set_insignia_state(set_id)
+		var region: Dictionary = insignia.get("atlas_region", {}) if insignia.get("atlas_region", {}) is Dictionary else {}
+		if String(insignia.get("atlas_path", "")) != "res://art/artifacts/runtime/faction_set_insignia_atlas.png" \
+				or int(region.get("x", -1)) != expected_insignia_x \
+				or int(region.get("y", -1)) != 0 \
+				or int(region.get("width", 0)) != 64 \
+				or int(region.get("height", 0)) != 64 \
+				or String(insignia.get("alt_text", "")).strip_edges() == "":
+			_fail("Faction set insignia authority failed for %s: %s" % [set_id, insignia])
+			return
+		expected_insignia_x += 64
+	if not ArtifactRules.artifact_set_insignia_state("set_missing_faction_set").is_empty():
+		_fail("Unknown faction-set insignia did not fail closed.")
+		return
 
 	var policy: Dictionary = report.get("runtime_policy", {}) if report.get("runtime_policy", {}) is Dictionary else {}
 	if bool(policy.get("save_version_bump", true)) or bool(policy.get("source_reward_tables_active", true)) or not bool(policy.get("set_bonuses_active", false)) or bool(policy.get("ai_valuation_behavior", true)) or not bool(policy.get("rare_resource_activation", false)):
@@ -73,6 +107,9 @@ func _run() -> void:
 	var tollstone_factions: Array = tollstone_taxonomy.get("faction_affinity", []) if tollstone_taxonomy.get("faction_affinity", []) is Array else []
 	if "faction_embercourt" not in tollstone_factions:
 		_fail("Faction affinity helper did not expose Embercourt Tollstone Ring: %s" % tollstone_taxonomy)
+		return
+	if not ArtifactRules.artifact_set_context("artifact_tollstone_ring").contains("Lockward Charter"):
+		_fail("Faction set context helper did not expose Lockward Charter.")
 		return
 
 	if not _assert_public_payload("artifact set/faction report", report):
