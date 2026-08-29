@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the next live content/art identity gap that can fit within the remaining 19424-byte PCK headroom without weakening the release ceiling."
+    "Audit the next highest-impact live content and art gap after exact encounter identity reached 19 of 63, while respecting the remaining 6256-byte release PCK headroom."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,61 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "content-recurring-encounter-landmarks-10184",
-    "title": "Recurring Encounter Landmarks",
+    "id": "content-recurring-encounter-landmarks-wave2-10184",
+    "title": "Recurring Encounter Landmarks Wave 2",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-29T09:42:01Z",
-    "updatedAt": "2026-08-29T10:09:20Z",
-    "completedAt": "2026-08-29T10:09:20Z",
+    "startedAt": "2026-08-29T10:13:36Z",
+    "updatedAt": "2026-08-29T10:38:53Z",
+    "completedAt": "2026-08-29T10:38:53Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed six original exact recurring-encounter landmarks in one validated 288x48 atlas. Live fallback authority, inspected 1280x720 and 1920x1080 captures, repository/editor/core checks, and Linux/Windows package boots pass; matching PCKs are 249980576 bytes and generated sources are excluded."
+    "notes": "Seven original second-wave landmarks now extend the live recurring atlas from six to thirteen regions. Focused runtime, inspected captures, repository/core, and Linux/Windows package gates pass with exact identity at 19 of 63 and matching 249993744-byte PCKs."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-recurring-encounter-landmarks-wave2-20260829",
+      "title": "Recurring encounter landmarks wave 2",
+      "sliceId": "content-recurring-encounter-landmarks-wave2-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T10:38:53Z",
+      "updatedAt": "2026-08-29T10:38:53Z",
+      "latestFinding": "Seven additional high-frequency authored encounters now own exact original live Overworld identities through the existing compact atlas, raising exact encounter coverage from 12 of 63 to 19 of 63 without changing gameplay or save authority.",
+      "artifacts": [
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "art/overworld/source/generated/encounters/recurring_wave2",
+        "tests/overworld_recurring_encounter_landmark_runtime_report.gd",
+        "tests/overworld_signature_encounter_landmark_runtime_report.gd",
+        "tests/validate_repo.py",
+        ".artifacts/recurring_encounter_landmarks_wave2/runtime_contact_sheet_8x.png",
+        ".artifacts/recurring_encounter_landmarks_wave2/captures/recurring_encounters_wave2_1280x720.png",
+        ".artifacts/recurring_encounter_landmarks_wave2/captures/recurring_encounters_wave2_1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "exact_encounter_count_added": 7,
+        "exact_encounter_count_total": 19,
+        "authored_encounter_count": 63,
+        "authored_placement_count": 14,
+        "high_difficulty_placement_count": 5,
+        "runtime_atlas_region_count": 13,
+        "runtime_atlas_width": 624,
+        "runtime_atlas_height": 48,
+        "linux_pck_size_bytes": 249993744,
+        "windows_pck_size_bytes": 249993744,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 6256,
+        "source_art_pck_excluded": true,
+        "save_version": 9,
+        "source_backed_behavior_progress": true,
+        "whole_game_release_ready_claimed": false
+      }
+    },
     {
       "id": "content-recurring-encounter-landmarks-20260829",
       "title": "Recurring encounter landmarks",
@@ -15467,14 +15507,14 @@
       }
     }
   ],
-  "currentNotes": "Completed six exact recurring encounter landmarks in one compact imported atlas with unchanged encounter, session, and save authority.",
+  "currentNotes": "Completed seven second-wave exact recurring encounter landmarks in the existing compact atlas with unchanged encounter, session, and save authority; next content/art gap remains to be selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-recurring-encounter-landmarks-10184",
-  "currentSliceId": "content-recurring-encounter-landmarks-10184",
-  "currentSliceNotes": "Beacon Wardens, Bridgeward Levies, Aurora Battery, Bone Ferry Watch, Charter Guard, and Mirror Lancers now have exact live atlas identities. Focused runtime, fallback regression, core, repository/editor, and Linux/Windows exports pass with 19424 bytes of PCK headroom.",
+  "currentSlice": "content-recurring-encounter-landmarks-wave2-10184",
+  "currentSliceId": "content-recurring-encounter-landmarks-wave2-10184",
+  "currentSliceNotes": "Selected Nightglass Drum Circle, Gate Marshals, Charter Bastion Reserve, Ford Reavers, Glasswing Sortie, Hollow Mire, and Silt Hunters as the seven tied highest-frequency remaining exact-art gaps. Reuse of the live atlas resolver avoids a second runtime system.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content recurring encounter landmarks 10184",
-  "currentSliceUpdatedAt": "2026-08-29T10:09:20Z",
+  "currentSliceTitle": "content recurring encounter landmarks wave2 10184",
+  "currentSliceUpdatedAt": "2026-08-29T10:38:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20992,6 +21032,35 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
+    {
+      "id": "content-recurring-encounter-landmarks-wave2-10184",
+      "title": "Recurring Encounter Landmarks Wave 2",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T10:13:36Z",
+      "updatedAt": "2026-08-29T10:38:53Z",
+      "completedAt": "2026-08-29T10:38:53Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png",
+        "art/overworld/source/generated/encounters/recurring",
+        "tests/overworld_recurring_encounter_landmark_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Give the seven highest-frequency remaining authored encounters exact live Overworld identity by extending the existing compact atlas rather than adding another runtime system.",
+      "completionCriteria": "Seven new exact transparent generated sources extend the recurring atlas to thirteen immutable 48x48 regions; all thirteen live identities, fail-closed region handling, fallback order, accessibility, session/save authority, inspected captures, repository/editor, and bounded Linux/Windows package gates pass below the unchanged 250000000-byte PCK ceiling.",
+      "nonGoals": [
+        "No encounter ids, names, armies, commanders, placement, difficulty, objectives, AI, battle, interaction, or save-schema change.",
+        "No copied Heroes expression, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed. Audit and register the next bounded live content/art gap separately; only 6256 bytes remain below the release PCK ceiling."
+    },
     {
       "id": "content-recurring-encounter-landmarks-10184",
       "title": "Recurring Encounter Landmarks",
@@ -105553,8 +105622,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Twelve of 63 authored encounters now own exact live Overworld identity, leaving 51 on faction, unit-icon, or generic fallbacks. Only 19424 bytes remain below the strict release-package ceiling. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
-  "remainingWork": "Audit the next live content/art identity gap against the remaining package headroom before selecting another bounded slice. Separately diagnose the existing Overworld request-local watch-context reuse regression and objective-header ellipsis assertion; broader product gaps remain.",
+  "remainingGap": "Nineteen of 63 authored encounters now own exact live Overworld identity; 44 still use faction landmark, unit-icon, or generic fallback. Only 6256 bytes remain below the strict release-package ceiling. The unrelated Overworld refresh-cache test still reports two request-local watch-context builds instead of one and the 1280px objective-header ellipsis assertion remains red; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, and native Windows certification gaps remain. The game is not release-ready.",
+  "remainingWork": "Audit and register the next bounded live content/art gap with the remaining 6256-byte PCK headroom; favor reuse or replacement over adding imported runtime textures. Separately diagnose the existing Overworld request-local watch-context reuse regression and objective-header ellipsis assertion; broader product gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -105985,7 +106054,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_recurring_encounter_landmarks_completed",
+  "result": "content_recurring_encounter_landmarks_wave2_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106088,7 +106157,7 @@
   ],
   "summary": "Implementing six original recurring encounter landmarks with compact atlas ownership and live Overworld integration.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T09:42:01Z",
+  "updatedAt": "2026-08-29T10:38:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

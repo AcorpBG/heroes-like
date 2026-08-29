@@ -42930,7 +42930,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             if source_model == "built_in_image_gen_original_signature_encounter_landmark":
                 expected_canvas = (64, 64)
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
-                expected_canvas = (288, 48)
+                expected_canvas = (624, 48)
             else:
                 expected_canvas = (512, 512)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -48755,19 +48755,29 @@ def validate_signature_encounter_landmarks(errors: list[str]) -> None:
 
 def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     expected = {
-        "encounter_beacon_wardens": ("encounter_recurring_beacon_wardens", "beacon_wardens", "faction_embercourt", "twin_lantern_beacon_watch", "e38bf9da4ba3527d1b467b5fc01046abc6780267f2ec4db52c6aa69c8c94cee3", [0, 0, 48, 48], 4, 3),
-        "encounter_bridgeward_levies": ("encounter_recurring_bridgeward_levies", "bridgeward_levies", "faction_embercourt", "fortified_bridge_toll_barricade", "807bd33e0d81985ab4ec898366a8dd564eab2e573fa67add574b22b197eefbcd", [48, 0, 48, 48], 4, 3),
-        "encounter_aurora_battery": ("encounter_recurring_aurora_battery", "aurora_battery", "faction_sunvault", "triple_prism_aurora_battery", "671cb5c4f2df72350a902e754df10706fa380e41c03562c9748d76eb430dbe5e", [96, 0, 48, 48], 4, 4),
-        "encounter_bone_ferry_watch": ("encounter_recurring_bone_ferry_watch", "bone_ferry_watch", "faction_mireclaw", "bone_prowed_ferry_ambush_watch", "39c6065bb5cea3a79fd2f64c35fb6aa099dec3b03e5b5e79458d53434a5a5cd6", [144, 0, 48, 48], 3, 3),
-        "encounter_charter_guard": ("encounter_recurring_charter_guard", "charter_guard", "faction_embercourt", "sealed_charter_command_pavilion", "ffb67b13f925476e45982ae5193051ac5ad227640997995167debef4847ad612", [192, 0, 48, 48], 3, 1),
-        "encounter_mirror_lancers": ("encounter_recurring_mirror_lancers", "mirror_lancers", "faction_sunvault", "crossed_mirror_lance_dueling_marker", "0ff3851b0830e013409bd1b861f48f53b7906ffe8579e2dd28899e05a1df296b", [240, 0, 48, 48], 3, 3),
+        "encounter_beacon_wardens": ("encounter_recurring_beacon_wardens", "beacon_wardens", "recurring", "faction_embercourt", "twin_lantern_beacon_watch", "e38bf9da4ba3527d1b467b5fc01046abc6780267f2ec4db52c6aa69c8c94cee3", [0, 0, 48, 48], 4, 3),
+        "encounter_bridgeward_levies": ("encounter_recurring_bridgeward_levies", "bridgeward_levies", "recurring", "faction_embercourt", "fortified_bridge_toll_barricade", "807bd33e0d81985ab4ec898366a8dd564eab2e573fa67add574b22b197eefbcd", [48, 0, 48, 48], 4, 3),
+        "encounter_aurora_battery": ("encounter_recurring_aurora_battery", "aurora_battery", "recurring", "faction_sunvault", "triple_prism_aurora_battery", "671cb5c4f2df72350a902e754df10706fa380e41c03562c9748d76eb430dbe5e", [96, 0, 48, 48], 4, 4),
+        "encounter_bone_ferry_watch": ("encounter_recurring_bone_ferry_watch", "bone_ferry_watch", "recurring", "faction_mireclaw", "bone_prowed_ferry_ambush_watch", "39c6065bb5cea3a79fd2f64c35fb6aa099dec3b03e5b5e79458d53434a5a5cd6", [144, 0, 48, 48], 3, 3),
+        "encounter_charter_guard": ("encounter_recurring_charter_guard", "charter_guard", "recurring", "faction_embercourt", "sealed_charter_command_pavilion", "ffb67b13f925476e45982ae5193051ac5ad227640997995167debef4847ad612", [192, 0, 48, 48], 3, 1),
+        "encounter_mirror_lancers": ("encounter_recurring_mirror_lancers", "mirror_lancers", "recurring", "faction_sunvault", "crossed_mirror_lance_dueling_marker", "0ff3851b0830e013409bd1b861f48f53b7906ffe8579e2dd28899e05a1df296b", [240, 0, 48, 48], 3, 3),
+        "encounter_drum_circle": ("encounter_recurring_drum_circle", "drum_circle", "recurring_wave2", "faction_mireclaw", "nightglass_drum_ritual_pylon", "54fa28da2f99ce48a34fba17ae2462ec8efca305fe8f8330c31fb0ba6bdfbaef", [288, 0, 48, 48], 2, 2),
+        "encounter_gate_marshals": ("encounter_recurring_gate_marshals", "gate_marshals", "recurring_wave2", "faction_mireclaw", "chained_bog_gate_marshal_post", "05ce01b9ac069d3eea2e4fb9e78cf2352b94976f6904f7be1bf03c93ad1749a1", [336, 0, 48, 48], 2, 2),
+        "encounter_charter_bastion_reserve": ("encounter_recurring_charter_bastion_reserve", "charter_bastion_reserve", "recurring_wave2", "faction_embercourt", "charter_bastion_reserve_fortification", "09558e6e821ef86a48acc2c825ba05de83e89aae3b64f5f68078e97e9701e769", [384, 0, 48, 48], 2, 1),
+        "encounter_ford_reavers": ("encounter_recurring_ford_reavers", "ford_reavers", "recurring_wave2", "faction_mireclaw", "hooked_ford_reaver_skiff_mooring", "35896d3512a5dadb4e58466b2f4d0531f8a3d747e245d774b5a18efb57504af0", [432, 0, 48, 48], 2, 0),
+        "encounter_glasswing_sortie": ("encounter_recurring_glasswing_sortie", "glasswing_sortie", "recurring_wave2", "faction_sunvault", "glasswing_sortie_launch_rack", "8d0520ba4c9ea9d0980dcc167374dfe887c58ee707679ece593805114b13c877", [480, 0, 48, 48], 2, 0),
+        "encounter_hollow_mire": ("encounter_recurring_hollow_mire", "hollow_mire", "recurring_wave2", "faction_mireclaw", "sunken_hollow_mire_ambush_basin", "a2eb31e479ff7500d6a4b38bbd380ea0d7eea7a23b6c4c5ffde05a74e9adc233", [528, 0, 48, 48], 2, 0),
+        "encounter_silt_hunters": ("encounter_recurring_silt_hunters", "silt_hunters", "recurring_wave2", "faction_mireclaw", "silt_hunter_trap_field", "c23c5c7f441e02f7532c5d493f4a062af1e923a5c6b6d9f2d28b0fbc3a110b2e", [576, 0, 48, 48], 2, 0),
     }
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "recurring"
     source_manifest_path = source_dir / "manifest.json"
+    wave2_source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "recurring_wave2"
+    wave2_source_manifest_path = wave2_source_dir / "manifest.json"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "recurring" / "recurring_encounter_landmarks_atlas.png"
     required_paths = (
         OVERWORLD_ART_MANIFEST_PATH,
         source_manifest_path,
+        wave2_source_manifest_path,
         atlas_path,
         CONTENT_DIR / "encounters.json",
         CONTENT_DIR / "army_groups.json",
@@ -48782,9 +48792,9 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         return
 
     atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (288, 48), errors, "Recurring encounter landmark atlas must remain 288x48")
+    ensure(png_size(atlas_path) == (624, 48), errors, "Recurring encounter landmark atlas must remain 624x48")
     ensure(
-        hashlib.sha256(atlas_payload).hexdigest() == "3e3aca265b88d3de405986a58c3fc8c363e456fb29fa20c9fd6b47b047a91859"
+        hashlib.sha256(atlas_payload).hexdigest() == "a6142999c2fc38a9fb450c2990d67e8d4ee55d3b91246b8101f22fe2489f50be"
         and len(atlas_payload) >= 26
         and atlas_payload[25] in {3, 4, 6},
         errors,
@@ -48796,14 +48806,14 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     object_assets = manifest.get("object_assets", {})
     identity_sprites = manifest.get("encounter_identity_sprites", {})
     source_payloads: list[bytes] = []
-    for encounter_id, (asset_id, stem, faction_id, role, source_sha, region, _placements, _high) in expected.items():
+    for encounter_id, (asset_id, stem, source_folder, faction_id, role, source_sha, region, _placements, _high) in expected.items():
         entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
-        source_res = f"res://art/overworld/source/generated/encounters/recurring/{stem}_source.png"
+        source_res = f"res://art/overworld/source/generated/encounters/{source_folder}/{stem}_source.png"
         ensure(isinstance(entry, dict) and identity_sprites.get(encounter_id) == asset_id, errors, f"Recurring encounter {encounter_id} mapping is missing")
         if not isinstance(entry, dict):
             continue
         ensure(entry.get("path") == "res://art/overworld/runtime/objects/encounters/recurring/recurring_encounter_landmarks_atlas.png", errors, f"Recurring encounter {encounter_id} atlas path changed")
-        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [288, 48], errors, f"Recurring encounter {encounter_id} atlas ownership changed")
+        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [624, 48], errors, f"Recurring encounter {encounter_id} atlas ownership changed")
         ensure(entry.get("source_generated") == source_res and entry.get("source_model") == "built_in_image_gen_original_recurring_encounter_landmark_atlas", errors, f"Recurring encounter {encounter_id} generation provenance changed")
         ensure(entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == faction_id, errors, f"Recurring encounter {encounter_id} content ownership changed")
         ensure(entry.get("presentation_role") == role and len(str(entry.get("accessible_description", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} role or non-color description changed")
@@ -48814,18 +48824,33 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
             payload = source_path.read_bytes()
             ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Recurring encounter {encounter_id} source bytes or alpha changed")
             source_payloads.append(payload)
-    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six recurring encounter generated sources must remain byte-distinct")
+    ensure(len(source_payloads) == 13 and len(set(source_payloads)) == 13, errors, "All thirteen recurring encounter generated sources must remain byte-distinct")
 
     source_manifest = load_json(source_manifest_path)
     source_rows = source_manifest.get("sources", [])
     source_by_id = {str(row.get("encounter_id", "")): row for row in source_rows if isinstance(row, dict)} if isinstance(source_rows, list) else {}
     runtime_atlas = source_manifest.get("runtime_atlas", {})
     ensure(source_manifest.get("schema") == "recurring_encounter_landmark_source_manifest_v1" and source_manifest.get("generation_mode") == "built_in_image_gen", errors, "Recurring encounter source manifest provenance changed")
-    ensure(isinstance(runtime_atlas, dict) and runtime_atlas.get("size") == [288, 48] and runtime_atlas.get("cell_size") == [48, 48] and runtime_atlas.get("sha256") == "3e3aca265b88d3de405986a58c3fc8c363e456fb29fa20c9fd6b47b047a91859" and runtime_atlas.get("package_policy") == "single_imported_atlas_only", errors, "Recurring encounter source manifest atlas contract changed")
-    ensure(set(source_by_id) == set(expected), errors, "Recurring encounter source manifest must own exactly the selected six encounters")
-    for encounter_id, (_asset_id, stem, _faction_id, _role, source_sha, region, _placements, _high) in expected.items():
+    ensure(isinstance(runtime_atlas, dict) and runtime_atlas.get("size") == [624, 48] and runtime_atlas.get("cell_size") == [48, 48] and runtime_atlas.get("sha256") == "a6142999c2fc38a9fb450c2990d67e8d4ee55d3b91246b8101f22fe2489f50be" and runtime_atlas.get("package_policy") == "single_imported_atlas_only", errors, "Recurring encounter source manifest atlas contract changed")
+    wave1_ids = {encounter_id for encounter_id, row in expected.items() if row[2] == "recurring"}
+    ensure(set(source_by_id) == wave1_ids, errors, "Recurring encounter first-wave source manifest must own exactly its selected six encounters")
+    for encounter_id in wave1_ids:
+        _asset_id, stem, source_folder, _faction_id, _role, source_sha, region, _placements, _high = expected[encounter_id]
         row = source_by_id.get(encounter_id, {})
-        ensure(row.get("path") == f"res://art/overworld/source/generated/encounters/recurring/{stem}_source.png" and row.get("sha256") == source_sha and row.get("atlas_region") == region and len(str(row.get("prompt_summary", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} source manifest row changed")
+        ensure(row.get("path") == f"res://art/overworld/source/generated/encounters/{source_folder}/{stem}_source.png" and row.get("sha256") == source_sha and row.get("atlas_region") == region and len(str(row.get("prompt_summary", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} source manifest row changed")
+
+    wave2_source_manifest = load_json(wave2_source_manifest_path)
+    wave2_source_rows = wave2_source_manifest.get("sources", [])
+    wave2_source_by_id = {str(row.get("encounter_id", "")): row for row in wave2_source_rows if isinstance(row, dict)} if isinstance(wave2_source_rows, list) else {}
+    wave2_runtime_atlas = wave2_source_manifest.get("runtime_atlas", {})
+    ensure(wave2_source_manifest.get("schema") == "recurring_encounter_landmark_wave2_source_manifest_v1" and wave2_source_manifest.get("generation_mode") == "built_in_image_gen", errors, "Recurring encounter second-wave source manifest provenance changed")
+    ensure(isinstance(wave2_runtime_atlas, dict) and wave2_runtime_atlas.get("size") == [624, 48] and wave2_runtime_atlas.get("cell_size") == [48, 48] and wave2_runtime_atlas.get("first_wave_region_count") == 6 and wave2_runtime_atlas.get("total_region_count") == 13 and wave2_runtime_atlas.get("sha256") == "a6142999c2fc38a9fb450c2990d67e8d4ee55d3b91246b8101f22fe2489f50be" and wave2_runtime_atlas.get("package_policy") == "single_imported_atlas_only", errors, "Recurring encounter second-wave atlas contract changed")
+    wave2_ids = {encounter_id for encounter_id, row in expected.items() if row[2] == "recurring_wave2"}
+    ensure(set(wave2_source_by_id) == wave2_ids, errors, "Recurring encounter second-wave source manifest must own exactly its selected seven encounters")
+    for encounter_id in wave2_ids:
+        _asset_id, stem, source_folder, _faction_id, _role, source_sha, region, _placements, _high = expected[encounter_id]
+        row = wave2_source_by_id.get(encounter_id, {})
+        ensure(row.get("path") == f"res://art/overworld/source/generated/encounters/{source_folder}/{stem}_source.png" and row.get("sha256") == source_sha and row.get("atlas_region") == region and len(str(row.get("prompt_summary", "")).strip()) >= 24, errors, f"Recurring encounter {encounter_id} second-wave source manifest row changed")
 
     encounter_rows = load_json(CONTENT_DIR / "encounters.json").get("items", [])
     group_rows = load_json(CONTENT_DIR / "army_groups.json").get("items", [])
@@ -48843,12 +48868,12 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
                 if encounter_id in placement_counts:
                     placement_counts[encounter_id] += 1
                     high_counts[encounter_id] += int(str(placement.get("difficulty", "")) == "high")
-    for encounter_id, (_asset_id, _stem, faction_id, _role, _source_sha, _region, placements, high) in expected.items():
+    for encounter_id, (_asset_id, _stem, _source_folder, faction_id, _role, _source_sha, _region, placements, high) in expected.items():
         definition = encounters.get(encounter_id, {})
         group = groups.get(str(definition.get("enemy_group_id", "")), {}) if isinstance(definition, dict) else {}
         ensure(str(group.get("faction_id", "")) == faction_id, errors, f"Recurring encounter {encounter_id} authored faction changed")
         ensure(placement_counts[encounter_id] == placements and high_counts[encounter_id] == high, errors, f"Recurring encounter {encounter_id} playable placement coverage changed")
-    ensure(sum(placement_counts.values()) == 21 and sum(high_counts.values()) == 17, errors, "Recurring encounter landmarks must retain 21 authored placements including 17 high-difficulty placements")
+    ensure(sum(placement_counts.values()) == 35 and sum(high_counts.values()) == 22, errors, "Recurring encounter landmarks must retain 35 authored placements including 22 high-difficulty placements")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
@@ -48870,7 +48895,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'texture is AtlasTexture',
-        'object_regions["recurring_invalid_region_fixture"] = [280, 0, 48, 48]',
+        'object_regions["recurring_invalid_region_fixture"] = [600, 0, 48, 48]',
         '"fallback_order": ["commander", "exact_encounter", "faction", "unit", "generic"]',
         'session.to_dict() != authority_before',
         'OS.get_environment("RECURRING_ENCOUNTER_CAPTURE")',
