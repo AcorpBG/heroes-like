@@ -24,7 +24,35 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: `content-tavern-specialist-hero-overworld-sprites-10184`.
+- Selected implementation slice: `content-tavern-field-commander-overworld-sprites-10184`.
+
+## Tavern Field-Commander Overworld Sprites
+
+id: `content-tavern-field-commander-overworld-sprites-10184`
+
+Status: completed.
+
+Current finding:
+- the completed scenario-lead, tavern-vanguard, and tavern-specialist passes give 26 of 60 production heroes exact adventure-map identities, but 34 live recruitable and strategic-AI commanders still collapse to six faction-generic figures;
+- Helva Tollbrand, Tarn Fenhook, Ilyr Glassmarshal, Halen Thorncart, Kuld Varn, and Jessa Keelwarden are live might-path field commanders spanning road crossings, fog-lane tracking, artillery batteries, rooted pilgrimage, mine railheads, and controlled withdrawals; Tarn is also directly exercised throughout strategic-AI task and raid ownership.
+
+Implementation boundary:
+- add one original transparent 512x512 full-body adventure-map sprite for each selected field commander, preserving the hero's production portrait identity, faction material language, role-defining travel or command equipment, readable small-scale silhouette, grounding, focus, and command-pennant clearance;
+- expand the manifest-owned hero-id mapping from 26 to 32 exact identities while keeping the remaining 28 heroes on the existing faction fallback and preserving renderer, movement, town-footprint, fog, strategic-enemy, and save ownership;
+- prove each selected hero through the real first-scenario Wayfarers Hall authority, authored recruitment cost, active-command switch, exact field presentation, and save/resume, including identity-first enemy-commander resolution for a mapped artillery captain and an explicit remaining-unmapped faction fallback.
+
+Completion criteria:
+- the six generated sources and six curated runtime sprites are distinct from one another, all existing identity sprites, portraits, and faction fallbacks, with exact manifest provenance, genuine alpha, and source art excluded from release exports;
+- River Pass, Bogbound Oath, Prismhearth Watch, Mireford Skirmish, Orevein Contract, and Bellwake Wreck Claim offer the intended field commander, charge the authored cost, add exactly one commander, preserve save version 9, and resolve the exact mapped sprite after active-command switching and reload;
+- inspected 1280x720 and 1920x1080 captures, field-commander recruitment/identity/movement/town/fog/fallback/enemy/save runtime, core and repository checks, and bounded Linux/Windows export startup pass within the 250 MB PCK ceiling.
+
+Non-goals:
+- no copied Heroes characters, poses, costumes, heraldry, assets, names, text, or protected visual expression; no hero stat, spell, specialty, recruitment-order, economy, encounter, AI, movement, save-schema, RMG, renderer-architecture, signing, publication, whole-game, or release-readiness claim.
+
+Result:
+- shipped six distinct original portrait-faithful transparent adventure-map figures for Helva Tollbrand, Tarn Fenhook, Ilyr Glassmarshal, Halen Thorncart, Kuld Varn, and Jessa Keelwarden, raising exact production-hero identity coverage from 26 to 32 of 60 while retaining faction fallback for the remaining 28;
+- wired all six through the existing manifest-owned renderer, movement, town-footprint, focus, fog, and strategic-enemy paths, with exact first-scenario Wayfarers Hall hire/cost/active-switch behavior and version-9 save/resume proof; the enemy commander owner now proves mapped Ilyr artillery identity alongside an unmapped Mireclaw faction fallback;
+- inspected live 1280x720 and 1920x1080 captures and passed field-commander/fallback/enemy runtime reports, core/static validation, and Linux/Windows packaged startup; both exports contain all six compiled field-commander textures, exclude source art, and remain below the 250 MB PCK ceiling at 244,614,216 bytes.
 
 ## Tavern Specialist Hero Overworld Sprites
 

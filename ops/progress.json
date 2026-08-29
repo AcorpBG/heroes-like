@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the measured specialist-hero art slice: six distinct original portrait-faithful adventure figures now raise exact hero identity coverage from 20 to 26 of 60. All six are wired through real hire, active-command, enemy, field, and save behavior; target-resolution captures, core/static validation, and Linux/Windows packaged startup passed.",
+  "currentNotes": "Completed the measured field-commander art slice: six distinct original portrait-faithful adventure figures now raise exact hero identity coverage from 26 to 32 of 60. All six are wired through real hire, active-command, enemy, field, and save behavior; target-resolution captures, core/static validation, and Linux/Windows packaged startup passed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-tavern-specialist-hero-overworld-sprites-10184",
-  "currentSliceId": "content-tavern-specialist-hero-overworld-sprites-10184",
-  "currentSliceNotes": "Completed: six distinct original portrait-faithful 512x512 adventure sprites for Torren Pikeward, Brakka Mudkeel, Varis Mirrorstep, Veyra Seedseer, Selka Pitmarshal, and Morwen Wakeoracle; manifest exact identity resolution increased from 20 to 26 of 60. Exact first-scenario Wayfarers Hall hire/cost/active switch, mapped field presentation, representative enemy-commander precedence, save version 9 round-trip, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 243746716 bytes with all six specialist textures present and source art excluded. No whole-game or release-ready claim.",
+  "currentSlice": "content-tavern-field-commander-overworld-sprites-10184",
+  "currentSliceId": "content-tavern-field-commander-overworld-sprites-10184",
+  "currentSliceNotes": "Completed: six distinct original portrait-faithful 512x512 adventure sprites for Helva Tollbrand, Tarn Fenhook, Ilyr Glassmarshal, Halen Thorncart, Kuld Varn, and Jessa Keelwarden; manifest exact identity resolution increased from 26 to 32 of 60. Exact first-scenario Wayfarers Hall hire/cost/active switch, mapped field presentation, Ilyr enemy-commander precedence beside an unmapped Mireclaw faction fallback, save version 9 round-trip, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 244614216 bytes with all six field-commander textures present and source art excluded. No whole-game or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content tavern specialist hero overworld sprites 10184",
-  "currentSliceUpdatedAt": "2026-08-29T00:55:03Z",
+  "currentSliceTitle": "content tavern field commander overworld sprites 10184",
+  "currentSliceUpdatedAt": "2026-08-29T01:18:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105202,6 +105202,16 @@
       "startedAt": "2026-08-29T00:27:17Z",
       "notes": "Added six distinct original portrait-faithful specialist adventure figures for Torren Pikeward, Brakka Mudkeel, Varis Mirrorstep, Veyra Seedseer, Selka Pitmarshal, and Morwen Wakeoracle, expanding exact hero identity coverage from 20 to 26 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, representative enemy identity precedence, save version 9, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 243746716 bytes with all six specialist textures present and source art excluded. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T00:55:03Z"
+    },
+    {
+      "id": "content-tavern-field-commander-overworld-sprites-10184",
+      "title": "content tavern field commander overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T01:18:04Z",
+      "startedAt": "2026-08-29T00:58:06Z",
+      "notes": "Added six distinct original portrait-faithful field-commander adventure figures for Helva Tollbrand, Tarn Fenhook, Ilyr Glassmarshal, Halen Thorncart, Kuld Varn, and Jessa Keelwarden, expanding exact hero identity coverage from 26 to 32 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, Ilyr enemy identity precedence beside an unmapped Mireclaw fallback, save version 9, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 244614216 bytes with all six field-commander textures present and source art excluded. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T01:18:04Z"
     }
   ],
   "project": "heroes-like",
