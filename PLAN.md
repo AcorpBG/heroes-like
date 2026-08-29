@@ -24,8 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-eight-neutral-dwelling-musters-10184`.
-- Package boundary after the slice: both release exports measure 249166492 bytes, 833508 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Active implementation slice: `content-sixteen-neutral-dwelling-musters-10184`.
+- Package boundary after the slice: both release exports measure 249247696 bytes, 752304 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Sixteen Neutral Dwelling Musters
+
+id: `content-sixteen-neutral-dwelling-musters-10184`
+
+Status: completed.
+
+Completion result:
+- Orchard Levy Grounds, Bramble Hedge, Tidepool Skiffyard, Switchback Hostel, Saltpan Camp, Crystal Sump, Icehook Trapper Lodge, Obsidian Scar Camp, Harbor Pilot House, Kite Signal Eyrie, Lantern Warren, Bogbell Croft, Milestone Arsenal, Frostwharf House, Charcoal Burners Camp, and Basalt Gatehouse are now live persistent neutral dwellings with exact watch blocking, battle construction, initial recruits, weekly town musters, income, response orders, and save-version-9 continuity;
+- thirteen sites reuse their exact existing representative watch placement, while Bramble Hedge, Tidepool Skiffyard, and Basalt Gatehouse gained one adjacent medium watch each, bringing authored battle breadth to 271 placements without adding encounter identities or changing combat formulas;
+- sixteen original controlled-state landmark edits retain each unclaimed identity and occupy one compact 768x48 atlas; Greenbranch Copse's map-object boundary now agrees with its already-live artifact/dwelling behavior;
+- the single combined sixteen-case gameplay/runtime/visual smoke passed on its first run, all captures passed direct review, repository validation passed, and matching Linux/Windows 249247696-byte packaged boots passed with seven required resource-site atlases and generated source art excluded.
+
+Current finding:
+- sixteen selected Batch 005 neutral dwellings already owned original names, exact two-unit neutral rosters, one-time recruits, weekly musters, control income, town support, response profiles, map placements, and complete watch encounters, but their runtime boundaries were metadata-only;
+- thirteen have an exact matching watch placement beside a representative authored scenario dwelling, while Bramble Hedge, Tidepool Skiffyard, and Basalt Gatehouse require one new adjacent placement of their existing watch encounter;
+- Greenbranch Copse gameplay is already live with its artifact reward, but its matching map-object runtime boundary still incorrectly says metadata-only.
+
+Implementation boundary:
+- activate Orchard Levy Grounds, Bramble Hedge, Tidepool Skiffyard, Switchback Hostel, Saltpan Camp, Crystal Sump, Icehook Trapper Lodge, Obsidian Scar Camp, Harbor Pilot House, Kite Signal Eyrie, Lantern Warren, Bogbell Croft, Milestone Arsenal, Frostwharf House, Charcoal Burners Camp, and Basalt Gatehouse as one live neutral-dwelling family;
+- link thirteen existing exact watches, place the three missing exact watches on free adjacent tiles, and reconcile the Greenbranch Copse map-object boundary with its already-live site behavior;
+- preserve each authored claim roster, weekly muster, income, town support, response profile, encounter identity, unit definition, and battle formula;
+- create sixteen distinct original transparent claimed-state landmarks in one compact runtime atlas while preserving every existing unclaimed landmark identity;
+- preserve save version 9, deterministic rewards, current victory requirements, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all sixteen dwellings block on their exact representative watch, construct the production battle, grant exact initial recruits once, provide exact weekly musters and income, expose their public response action, and round-trip exactly through save version 9;
+- each dwelling resolves its existing exact unclaimed art and its own claimed-state atlas region with genuine transparency and accessible description;
+- all sixteen selected site/object pairs have live runtime boundaries; the seven guarded high-value dwelling pairs and Rootwatch Hollow's reusable object boundary remain separately scoped metadata-only work;
+- one consolidated sixteen-case gameplay/runtime/visual smoke covers the whole batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new unit definition, faction, hero, town, building, combat formula, AI algorithm, RMG behavior, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes dwelling, name, text, unit, landmark, or protected visual expression.
 
 ## Eight Neutral Dwelling Musters
 

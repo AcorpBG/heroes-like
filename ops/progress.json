@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed eight neutral dwellings as one content batch with live guard resolution, exact initial and weekly recruits, income, response orders, save continuity, and distinct claimed-state atlas art.",
+  "currentNotes": "Completed the sixteen-dwelling Batch 005 batch with exact guards, initial and weekly recruits, income, town support, response orders, save continuity, and one compact claimed-state atlas.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-eight-neutral-dwelling-musters-10184",
-  "currentSliceId": "content-eight-neutral-dwelling-musters-10184",
-  "currentSliceNotes": "Completed all eight authored neutral dwellings together. The single combined eight-case smoke, direct capture review, repository validation, and matching Linux/Windows package boots passed.",
+  "currentSlice": "content-sixteen-neutral-dwelling-musters-10184",
+  "currentSliceId": "content-sixteen-neutral-dwelling-musters-10184",
+  "currentSliceNotes": "Activated all sixteen selected Batch 005 neutral dwellings together, added only three missing exact watch placements, reconciled Greenbranch Copse object status, and passed one combined sixteen-case smoke plus repository and Linux/Windows package gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content eight neutral dwelling musters 10184",
-  "currentSliceUpdatedAt": "2026-08-29T22:26:57Z",
+  "currentSliceTitle": "content sixteen neutral dwelling musters 10184",
+  "currentSliceUpdatedAt": "2026-08-29T23:05:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106206,6 +106206,16 @@
       "startedAt": "2026-08-29T22:05:41Z",
       "notes": "Completed all eight selected neutral dwellings as one batch with exact live guards, claim and weekly musters, income, response orders, save-v9 continuity, and one compact claimed-state atlas. The single combined eight-case smoke passed on its first run, captures passed direct review, repository validation passed, and matching Linux/Windows 249166492-byte package boots passed.",
       "completedAt": "2026-08-29T22:26:57Z"
+    },
+    {
+      "id": "content-sixteen-neutral-dwelling-musters-10184",
+      "title": "content sixteen neutral dwelling musters 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T23:05:39Z",
+      "startedAt": "2026-08-29T22:30:43Z",
+      "notes": "Completed sixteen neutral dwellings with exact guard blocking and battle payloads, one-time recruits, weekly musters, income, response orders, save-v9 continuity, sixteen controlled-state landmarks in one 768x48 atlas, one passing combined smoke, repository validation, and matching 249247696-byte Linux/Windows packages.",
+      "completedAt": "2026-08-29T23:05:39Z"
     }
   ],
   "project": "heroes-like",
@@ -106215,8 +106225,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Twenty-three Batch 005 artifact/service identities and other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices. Route hybrids without authored route-effect payloads cannot be called live from placement alone. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
-  "remainingWork": "No work remains in this eight-dwelling slice. Select another coherent multi-content family with real runtime behavior and keep verification batched into one combined smoke plus final repository and package gates; 833508 bytes of enforced package headroom remain.",
+  "remainingGap": "Seven guarded high-value Batch 005 dwelling pairs and Rootwatch Hollow's reusable map-object boundary remain metadata-only. Other metadata-only services, transit objects, objectives, and state variants still require behavior-specific runtime slices. Broader content variety, balance, accessibility certification, publication/signing, native-hardware coverage, whole-game, and release-readiness gaps remain outside this bounded slice.",
+  "remainingWork": "Select the next substantial content family while preserving the 752304-byte package headroom and the one combined-smoke-per-batch cadence.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106647,7 +106657,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_eight_neutral_dwelling_musters_completed",
+  "result": "content_sixteen_neutral_dwelling_musters_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106750,7 +106760,7 @@
   ],
   "summary": "Building six ascendant-company maps to activate all eighteen currently unused production units, six unused heroes, eighteen dormant sites, and six original boss landmarks.",
   "taskId": "10184",
-  "updatedAt": "2026-08-29T17:40:06Z",
+  "updatedAt": "2026-08-29T23:05:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
