@@ -492,6 +492,48 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_orso_nightchart.png",
       "assigned_hero_id": "hero_veilmourn_orso_nightchart"
     },
+    "hero_ritual_embercourt_orra_cinderquill": {
+      "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_embercourt_orra_cinderquill.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_embercourt_orra_cinderquill_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_embercourt_orra_cinderquill.png",
+      "assigned_hero_id": "hero_embercourt_orra_cinderquill"
+    },
+    "hero_ritual_mireclaw_nix_votivejaw": {
+      "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_mireclaw_nix_votivejaw.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_mireclaw_nix_votivejaw_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_mireclaw_nix_votivejaw.png",
+      "assigned_hero_id": "hero_mireclaw_nix_votivejaw"
+    },
+    "hero_ritual_sunvault_essa_daynote": {
+      "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_sunvault_essa_daynote.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_sunvault_essa_daynote_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_sunvault_essa_daynote.png",
+      "assigned_hero_id": "hero_sunvault_essa_daynote"
+    },
+    "hero_ritual_thornwake_osmund_pollenglass": {
+      "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_thornwake_osmund_pollenglass.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_thornwake_osmund_pollenglass_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_osmund_pollenglass.png",
+      "assigned_hero_id": "hero_thornwake_osmund_pollenglass"
+    },
+    "hero_ritual_brasshollow_odrik_heatpriest": {
+      "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_brasshollow_odrik_heatpriest.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_brasshollow_odrik_heatpriest_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_odrik_heatpriest.png",
+      "assigned_hero_id": "hero_brasshollow_odrik_heatpriest"
+    },
+    "hero_ritual_veilmourn_thir_obituaryink": {
+      "path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_veilmourn_thir_obituaryink.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_ritual_scholars/hero_veilmourn_thir_obituaryink_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_thir_obituaryink.png",
+      "assigned_hero_id": "hero_veilmourn_thir_obituaryink"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4523,7 +4565,13 @@
     "hero_thalen": "hero_strategic_thalen",
     "hero_thornwake_nara_graftsibyl": "hero_strategic_thornwake_nara_graftsibyl",
     "hero_brasshollow_harro_debtrune": "hero_strategic_brasshollow_harro_debtrune",
-    "hero_veilmourn_orso_nightchart": "hero_strategic_veilmourn_orso_nightchart"
+    "hero_veilmourn_orso_nightchart": "hero_strategic_veilmourn_orso_nightchart",
+    "hero_embercourt_orra_cinderquill": "hero_ritual_embercourt_orra_cinderquill",
+    "hero_mireclaw_nix_votivejaw": "hero_ritual_mireclaw_nix_votivejaw",
+    "hero_sunvault_essa_daynote": "hero_ritual_sunvault_essa_daynote",
+    "hero_thornwake_osmund_pollenglass": "hero_ritual_thornwake_osmund_pollenglass",
+    "hero_brasshollow_odrik_heatpriest": "hero_ritual_brasshollow_odrik_heatpriest",
+    "hero_veilmourn_thir_obituaryink": "hero_ritual_veilmourn_thir_obituaryink"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",

@@ -43,14 +43,20 @@ const EXPECTED_HERO_ASSETS := {
 	"hero_thornwake_nara_graftsibyl": "hero_strategic_thornwake_nara_graftsibyl",
 	"hero_brasshollow_harro_debtrune": "hero_strategic_brasshollow_harro_debtrune",
 	"hero_veilmourn_orso_nightchart": "hero_strategic_veilmourn_orso_nightchart",
+	"hero_embercourt_orra_cinderquill": "hero_ritual_embercourt_orra_cinderquill",
+	"hero_mireclaw_nix_votivejaw": "hero_ritual_mireclaw_nix_votivejaw",
+	"hero_sunvault_essa_daynote": "hero_ritual_sunvault_essa_daynote",
+	"hero_thornwake_osmund_pollenglass": "hero_ritual_thornwake_osmund_pollenglass",
+	"hero_brasshollow_odrik_heatpriest": "hero_ritual_brasshollow_odrik_heatpriest",
+	"hero_veilmourn_thir_obituaryink": "hero_ritual_veilmourn_thir_obituaryink",
 }
 const PRESENTATION_HERO_IDS := [
 	"hero_lyra", "hero_vaska", "hero_solera", "hero_thornwake_silsa_bramblehound", "hero_brasshollow_marka_ironclause", "hero_veilmourn_ivara_blacktide",
 	"hero_neral", "hero_seren",
-	"hero_embercourt_belis_rainledger", "hero_sable", "hero_sunvault_calis_sunvein", "hero_thornwake_ardren_briarmarshal", "hero_brasshollow_daxis_chaincaptain", "hero_veilmourn_cela_mistcorsair",
 	"hero_torren", "hero_mireclaw_brakka_mudkeel", "hero_varis", "hero_thornwake_veyra_seedseer", "hero_brasshollow_selka_pitmarshal", "hero_veilmourn_morwen_wakeoracle",
 	"hero_embercourt_helva_tollbrand", "hero_tarn", "hero_sunvault_ilyr_glassmarshal", "hero_thornwake_halen_thorncart", "hero_brasshollow_kuld_varn", "hero_veilmourn_jessa_keelwarden",
 	"hero_embercourt_saren_lockmaster", "hero_orrik", "hero_thalen", "hero_thornwake_nara_graftsibyl", "hero_brasshollow_harro_debtrune", "hero_veilmourn_orso_nightchart",
+	"hero_embercourt_orra_cinderquill", "hero_mireclaw_nix_votivejaw", "hero_sunvault_essa_daynote", "hero_thornwake_osmund_pollenglass", "hero_brasshollow_odrik_heatpriest", "hero_veilmourn_thir_obituaryink",
 ]
 const TAVERN_VANGUARD_CASES := [
 	{"scenario_id": "river-pass", "hero_id": "hero_embercourt_belis_rainledger"},
@@ -83,6 +89,14 @@ const TAVERN_STRATEGIC_OFFICER_CASES := [
 	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_nara_graftsibyl"},
 	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_harro_debtrune"},
 	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_orso_nightchart"},
+]
+const TAVERN_RITUAL_SCHOLAR_CASES := [
+	{"scenario_id": "river-pass", "hero_id": "hero_embercourt_orra_cinderquill"},
+	{"scenario_id": "bogbound-oath", "hero_id": "hero_mireclaw_nix_votivejaw"},
+	{"scenario_id": "prismhearth-watch", "hero_id": "hero_sunvault_essa_daynote"},
+	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_osmund_pollenglass"},
+	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_odrik_heatpriest"},
+	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_thir_obituaryink"},
 ]
 const ALL_SCENARIO_STARTS := {
 	"river-pass": "hero_lyra",
@@ -135,6 +149,10 @@ func _run() -> void:
 	if not bool(tavern_strategic_officers.get("ok", false)):
 		_fail("Tavern strategic-officer recruitment validation failed: %s" % tavern_strategic_officers)
 		return
+	var tavern_ritual_scholars := _validate_tavern_ritual_scholar_recruitment()
+	if not bool(tavern_ritual_scholars.get("ok", false)):
+		_fail("Tavern ritual-scholar recruitment validation failed: %s" % tavern_ritual_scholars)
+		return
 	var original_window_size := get_window().size
 	var rows: Array = []
 	for viewport_size in VIEWPORT_SIZES:
@@ -154,6 +172,7 @@ func _run() -> void:
 		"tavern_specialist_count": TAVERN_SPECIALIST_CASES.size(),
 		"tavern_field_commander_count": TAVERN_FIELD_COMMANDER_CASES.size(),
 		"tavern_strategic_officer_count": TAVERN_STRATEGIC_OFFICER_CASES.size(),
+		"tavern_ritual_scholar_count": TAVERN_RITUAL_SCHOLAR_CASES.size(),
 		"presentation_hero_count": PRESENTATION_HERO_IDS.size(),
 		"faction_count": 6,
 		"scenario_starts": scenario_starts,
@@ -161,6 +180,7 @@ func _run() -> void:
 		"tavern_specialists": tavern_specialists,
 		"tavern_field_commanders": tavern_field_commanders,
 		"tavern_strategic_officers": tavern_strategic_officers,
+		"tavern_ritual_scholars": tavern_ritual_scholars,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback": "procedural_hero_marker",
 		"rows": rows,
@@ -226,7 +246,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var first_hero: Dictionary = heroes[0]
-	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_embercourt_orra_cinderquill"})) == "hero_faction_embercourt"
+	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_embercourt_jorun_beaconscribe"})) == "hero_faction_embercourt"
 	first_hero["id"] = "hero_missing_faction_sprite_fixture"
 	shell.call("_refresh")
 	await get_tree().process_frame
@@ -408,6 +428,8 @@ func _hero_runtime_group(asset_id: String) -> String:
 		return "tavern_field_commanders"
 	if asset_id.begins_with("hero_strategic_"):
 		return "tavern_strategic_officers"
+	if asset_id.begins_with("hero_ritual_"):
+		return "tavern_ritual_scholars"
 	return "tavern_vanguard"
 
 func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dictionary:
@@ -658,6 +680,9 @@ func _validate_tavern_field_commander_recruitment() -> Dictionary:
 
 func _validate_tavern_strategic_officer_recruitment() -> Dictionary:
 	return _validate_tavern_recruitment_cases(TAVERN_STRATEGIC_OFFICER_CASES)
+
+func _validate_tavern_ritual_scholar_recruitment() -> Dictionary:
+	return _validate_tavern_recruitment_cases(TAVERN_RITUAL_SCHOLAR_CASES)
 
 func _validate_tavern_recruitment_cases(cases: Array) -> Dictionary:
 	var rows: Array = []
