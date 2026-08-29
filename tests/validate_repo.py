@@ -42931,6 +42931,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (64, 64)
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
                 expected_canvas = (1488, 48)
+            elif source_model == "built_in_image_gen_original_recurring_resource_site_landmark_atlas":
+                expected_canvas = (240, 48)
             else:
                 expected_canvas = (512, 512)
             ensure((width, height) == expected_canvas, errors, f"Overworld runtime object asset {asset_id} must use the {expected_canvas[0]} canvas, found {width}x{height}")
@@ -48975,6 +48977,162 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure('"recurring_encounter_atlas_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged recurring encounter atlas coverage")
         ensure('FORBIDDEN_DEVELOPMENT_PCK_PREFIXES = ("reports/",)' in packaging_text and 'not terrain_payload["forbidden_development_entries"]' in packaging_text, errors, f"{packaging_path.name} must fail when development reports enter the PCK")
         ensure('"development_reports_pck_excluded"' in packaging_text, errors, f"{packaging_path.name} must report development-report exclusion")
+
+
+def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
+    expected = {
+        "site_prism_watch_relay": ("resource_site_recurring_prism_watch_relay", "prism_watch_relay", "f10b1fdadc85856a3f0a633512687cfbe35a5e43e9f3f232fac3355fc17a5586", [0, 0, 48, 48], "split_prism_signal_tripod", 6),
+        "site_lens_house": ("resource_site_recurring_lens_house_barracks", "lens_house_barracks", "78e4d59c547821ae3d2b4d85911dde7ab7a732670afaf9949ca6c7a62fe9c3e0", [48, 0, 48, 48], "round_lens_guard_barracks", 4),
+        "site_bog_drum_outpost": ("resource_site_recurring_bog_drum_outpost", "bog_drum_outpost", "db5e8da2fe8c4555f4108f041c01481013e045c1e7395d26c2d0288c44582b0f", [96, 0, 48, 48], "stilted_hide_drum_watch", 3),
+        "site_bellwake_wreck_ledger": ("resource_site_recurring_bellwake_wreck_ledger", "bellwake_wreck_ledger", "351ec02a6cdbb1002826833de1ad994177057c95937e1a138a6dedffbf198880", [144, 0, 48, 48], "bell_shiprib_salvage_ledger", 1),
+        "site_orevein_assay_depot": ("resource_site_recurring_orevein_assay_depot", "orevein_assay_depot", "18790abade65ad322231ee660a040536e91c3f3d356e2ef869a4e892546bc3ae", [192, 0, 48, 48], "balance_crusher_assay_house", 1),
+    }
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "recurring_wave1"
+    source_manifest_path = source_dir / "manifest.json"
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "recurring_resource_site_landmarks_atlas.png"
+    required_paths = (
+        OVERWORLD_ART_MANIFEST_PATH,
+        source_manifest_path,
+        atlas_path,
+        CONTENT_DIR / "resource_sites.json",
+        CONTENT_DIR / "map_objects.json",
+        CONTENT_DIR / "scenarios.json",
+        ROOT / "art" / "overworld" / "map_object_sprites.json",
+        ROOT / "tests" / "overworld_visual_smoke.gd",
+    )
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing recurring resource-site landmark owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (240, 48), errors, "Recurring resource-site landmark atlas must remain 240x48")
+    ensure(
+        hashlib.sha256(atlas_payload).hexdigest() == "26c940c6021f2f8f153c9c589c6a1425b2a7847bea896becb02d57c709105c4f"
+        and len(atlas_payload) >= 26
+        and atlas_payload[25] == 6,
+        errors,
+        "Recurring resource-site landmark atlas bytes or RGBA format changed",
+    )
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Recurring resource-site landmark atlas import metadata is missing")
+
+    manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = manifest.get("object_assets", {})
+    site_sprites = manifest.get("resource_site_sprites", {})
+    source_manifest = load_json(source_manifest_path)
+    source_rows = source_manifest.get("items", [])
+    source_by_site = {str(row.get("resource_site_id", "")): row for row in source_rows if isinstance(row, dict)} if isinstance(source_rows, list) else {}
+    ensure(source_manifest.get("schema_version") == 1 and source_manifest.get("generator_mode") == "built_in_image_gen", errors, "Recurring resource-site source manifest provenance changed")
+    ensure(source_manifest.get("source_model") == "original_transparent_orthographic_resource_site_landmark", errors, "Recurring resource-site source model changed")
+    ensure(
+        source_manifest.get("runtime_atlas") == "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png"
+        and source_manifest.get("runtime_atlas_size") == [240, 48]
+        and source_manifest.get("runtime_region_size") == [48, 48]
+        and source_manifest.get("runtime_atlas_sha256") == "26c940c6021f2f8f153c9c589c6a1425b2a7847bea896becb02d57c709105c4f",
+        errors,
+        "Recurring resource-site source manifest atlas ownership changed",
+    )
+    ensure(len(str(source_manifest.get("prompt_set_summary", "")).strip()) >= 80, errors, "Recurring resource-site source manifest must retain the original-art prompt policy")
+    ensure(set(source_by_site) == set(expected), errors, "Recurring resource-site source manifest must own exactly the five selected fallback identities")
+
+    source_payloads: list[bytes] = []
+    descriptions: list[str] = []
+    for site_id, (asset_id, stem, source_sha, region, role, _placements) in expected.items():
+        source_res = f"res://art/overworld/source/generated/resource_sites/recurring_wave1/{stem}_source.png"
+        source_path = res_path_to_disk(source_res)
+        entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
+        mapping = site_sprites.get(site_id, {}) if isinstance(site_sprites, dict) else {}
+        row = source_by_site.get(site_id, {})
+        ensure(isinstance(entry, dict) and isinstance(mapping, dict), errors, f"Recurring resource-site mapping is missing for {site_id}")
+        if not isinstance(entry, dict) or not isinstance(mapping, dict):
+            continue
+        ensure(mapping.get("asset_id") == asset_id and len(str(mapping.get("fit", "")).strip()) >= 24, errors, f"Recurring resource-site exact mapping changed for {site_id}")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png", errors, f"Recurring resource-site atlas path changed for {site_id}")
+        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [240, 48], errors, f"Recurring resource-site atlas region changed for {site_id}")
+        ensure(entry.get("source_generated") == source_res and entry.get("source_model") == "built_in_image_gen_original_recurring_resource_site_landmark_atlas", errors, f"Recurring resource-site generation provenance changed for {site_id}")
+        ensure(entry.get("assigned_resource_site_id") == site_id and entry.get("presentation_role") == role, errors, f"Recurring resource-site content ownership changed for {site_id}")
+        description = str(entry.get("accessible_description", "")).strip()
+        ensure(len(description) >= 40, errors, f"Recurring resource-site {site_id} must retain a non-color accessible description")
+        descriptions.append(description)
+        ensure(source_path.is_file() and min(png_size(source_path)) >= 1024, errors, f"Recurring resource-site {site_id} must retain its high-resolution source")
+        ensure(Path(f"{source_path}.import").is_file(), errors, f"Recurring resource-site {site_id} source import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] == 6, errors, f"Recurring resource-site {site_id} source bytes or RGBA format changed")
+            source_payloads.append(payload)
+        ensure(
+            row.get("asset_id") == asset_id
+            and row.get("source_path") == source_res
+            and row.get("source_sha256") == source_sha
+            and row.get("atlas_region") == region
+            and row.get("presentation_role") == role
+            and str(row.get("generation_original", "")).startswith("/root/.codex/generated_images/"),
+            errors,
+            f"Recurring resource-site source manifest row changed for {site_id}",
+        )
+    ensure(len(source_payloads) == 5 and len(set(source_payloads)) == 5, errors, "All five recurring resource-site generated sources must remain byte-distinct")
+    ensure(len(descriptions) == 5 and len(set(descriptions)) == 5, errors, "All five recurring resource-site accessible descriptions must remain distinct")
+
+    site_registry = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    scenarios = load_json(CONTENT_DIR / "scenarios.json").get("items", [])
+    map_objects = load_json(CONTENT_DIR / "map_objects.json").get("items", [])
+    map_sprite_mappings = load_json(ROOT / "art" / "overworld" / "map_object_sprites.json").get("object_sprite_mappings", {})
+    first_map_object_by_site: dict[str, dict] = {}
+    for map_object in map_objects if isinstance(map_objects, list) else []:
+        if not isinstance(map_object, dict):
+            continue
+        site_id = str(map_object.get("resource_site_id", "")).strip()
+        if site_id and site_id not in first_map_object_by_site:
+            first_map_object_by_site[site_id] = map_object
+    placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
+    placed_site_ids = {str(node.get("site_id", "")) for node in placements}
+    placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
+    ensure(len(scenarios) == 24 and len(placements) == 292 and len(placed_site_ids) == 59, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
+
+    resolver_paths: dict[str, str] = {}
+    unresolved: set[str] = set()
+    for site_id in placed_site_ids:
+        site_nodes = [node for node in placements if str(node.get("site_id", "")) == site_id]
+        direct_node_object_ids = [str(node.get("object_id", "")).strip() for node in site_nodes if str(node.get("object_id", "")).strip()]
+        if any(object_id in map_sprite_mappings for object_id in direct_node_object_ids):
+            resolver_paths[site_id] = "map_object"
+            continue
+        linked_object_id = str(first_map_object_by_site.get(site_id, {}).get("id", "")).strip()
+        if linked_object_id in map_sprite_mappings:
+            resolver_paths[site_id] = "map_object"
+            continue
+        if str(site_registry.get(site_id, {}).get("overworld_sprite_asset_id", "")).strip():
+            resolver_paths[site_id] = "direct"
+            continue
+        if site_id in site_sprites:
+            resolver_paths[site_id] = "site_mapping"
+            continue
+        unresolved.add(site_id)
+    ensure(not unresolved and len(resolver_paths) == 59, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 39, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 20, errors, "Placed resource-site exact site-mapping coverage changed")
+    for site_id in expected:
+        ensure(site_id not in first_map_object_by_site and not str(site_registry.get(site_id, {}).get("overworld_sprite_asset_id", "")).strip() and resolver_paths.get(site_id) == "site_mapping", errors, f"{site_id} must exercise the live exact site-mapping resolver path")
+
+    smoke_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    for token in (
+        'OS.get_environment("OVERWORLD_RESOURCE_SITE_LANDMARKS_ONLY") == "1"',
+        '_configure_resource_site_landmark_fixture(session)',
+        '_assert_resource_site_landmark_contract(shell, map_node, session)',
+        'texture.atlas.resource_path == RESOURCE_SITE_LANDMARK_ATLAS_PATH',
+        'unique_regions.size() != RESOURCE_SITE_LANDMARK_CASES.size()',
+        'session.to_dict() != authority_before',
+        'OS.get_environment("OVERWORLD_RESOURCE_SITE_LANDMARKS_CAPTURE") == "1"',
+        'resource_site_landmarks_%dx%d.png',
+        'OVERWORLD_RESOURCE_SITE_LANDMARK_REPORT',
+    ):
+        ensure(token in smoke_text, errors, f"Overworld visual smoke is missing recurring resource-site runtime proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME" in packaging_text, errors, f"{packaging_path.name} must audit the compact recurring resource-site atlas")
+        ensure('bool(terrain_payload["recurring_resource_site_atlas_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when the recurring resource-site atlas is absent")
+        ensure('"recurring_resource_site_atlas_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged recurring resource-site atlas coverage")
 
 
 def validate_hero_specialty_insignia(errors: list[str]) -> None:
@@ -73497,6 +73655,7 @@ def main() -> int:
     validate_faction_encounter_landmarks(errors)
     validate_signature_encounter_landmarks(errors)
     validate_recurring_encounter_landmarks(errors)
+    validate_recurring_resource_site_landmarks(errors)
     validate_hero_specialty_insignia(errors)
     validate_campaign_arc_emblems(errors)
     validate_campaign_chapter_seals(errors)

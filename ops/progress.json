@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Audit the highest-impact remaining player-visible content/art gap outside placed encounter identities, prioritizing live faction, town, overworld-object, or presentation ownership over art for unplaced definitions."
+    "Audit and register the next bounded live content/art gap; all currently placed resource-site identities now resolve to exact art."
   ],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
@@ -1911,21 +1911,73 @@
     "blockedReason": ""
   },
   "active_slice": {
-    "id": "content-placed-encounter-landmarks-completion-10184",
-    "title": "Placed Encounter Landmark Completion",
+    "id": "content-recurring-resource-site-landmarks-wave1-10184",
+    "title": "Recurring Resource-Site Landmarks Wave 1",
     "status": "completed",
     "classification": "implementation_slice",
     "source": "PLAN.md",
-    "startedAt": "2026-08-29T11:17:15Z",
-    "updatedAt": "2026-08-29T11:37:38Z",
-    "completedAt": "2026-08-29T11:37:38Z",
+    "startedAt": "2026-08-29T11:42:23Z",
+    "updatedAt": "2026-08-29T12:06:12Z",
+    "completedAt": "2026-08-29T12:06:12Z",
     "currentBlocker": "",
     "blocker": "",
     "blockedReason": null,
-    "notes": "Completed exact original art for the seven remaining placed encounter identities through the existing recurring atlas. All 77 authored placements across 37 distinct encounter ids now own exact art; 26 unplaced definitions intentionally retain fallbacks. Both release PCKs boot at 246188460 bytes with source/report payloads excluded."
+    "notes": "Completed exact original compact-atlas landmarks for all five resource-site identities that reached the live procedural fallback, covering 15 active authored placements without changing site behavior or save authority."
   },
   "blocker": "",
   "completedImplementationEvidence": [
+    {
+      "id": "content-recurring-resource-site-landmarks-wave1-20260829",
+      "title": "Recurring resource-site landmarks wave 1",
+      "sliceId": "content-recurring-resource-site-landmarks-wave1-10184",
+      "status": "completed",
+      "validatedAt": "2026-08-29T12:06:12Z",
+      "updatedAt": "2026-08-29T12:06:12Z",
+      "latestFinding": "All 292 active authored resource-site placements across 59 distinct identities now resolve to exact live art: 39 through linked map-object art and 20 through direct/shared resource-site mappings, with zero procedural-fallback identities.",
+      "artifacts": [
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+        "art/overworld/source/generated/resource_sites/recurring_wave1",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        ".artifacts/recurring_resource_site_landmarks_wave1/runtime_atlas_8x.png",
+        ".artifacts/recurring_resource_site_landmarks_wave1/captures/resource_site_landmarks_1280x720.png",
+        ".artifacts/recurring_resource_site_landmarks_wave1/captures/resource_site_landmarks_1920x1080.png",
+        ".artifacts/packaging_linux_export_smoke/report.json",
+        ".artifacts/packaging_windows_export_smoke/report.json"
+      ],
+      "metrics": {
+        "active_scenario_count": 24,
+        "resource_site_placement_count": 292,
+        "distinct_placed_resource_site_count": 59,
+        "map_object_art_identity_count": 39,
+        "site_mapping_art_identity_count": 20,
+        "procedural_fallback_identity_count": 0,
+        "exact_resource_site_count_added": 5,
+        "selected_placement_count": 15,
+        "runtime_atlas_region_count": 5,
+        "runtime_atlas_width": 240,
+        "runtime_atlas_height": 48,
+        "linux_pck_size_bytes": 246212768,
+        "windows_pck_size_bytes": 246212768,
+        "pck_ceiling_bytes": 250000000,
+        "pck_headroom_bytes": 3787232,
+        "development_reports_pck_excluded": true,
+        "source_art_pck_excluded": true,
+        "save_version": 9,
+        "source_backed_behavior_progress": true,
+        "whole_game_release_ready_claimed": false
+      },
+      "checks": [
+        "Focused resource-site landmark runtime passed all five exact regions, deterministic repeat, fail-closed cases, both viewports, and save-version-9 authority.",
+        "Inspected 1280x720 and 1920x1080 captures passed distinct silhouette, terrain readability, containment, alpha, and clipping review.",
+        "Repository validation proves exact-art resolution across all 292 placements and zero remaining procedural resource marker identities.",
+        "Core systems, Linux export/boot, and Windows export/Wine boot passed; the unrelated broad-overworld 1280px objective-brief tooltip/ellipsis assertion remains red outside this slice."
+      ],
+      "remainingWork": "Completed. Audit and register the next bounded live content/art gap; this evidence does not claim whole-game or release readiness."
+    },
     {
       "id": "content-placed-encounter-landmarks-completion-20260829",
       "title": "Placed encounter landmark completion",
@@ -15611,14 +15663,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact original landmarks for every encounter identity placed in active authored scenarios through the existing compact atlas.",
+  "currentNotes": "Completed exact original field landmarks for the five former procedural-marker resource-site identities; all 292 active authored placements now resolve to exact art.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-placed-encounter-landmarks-completion-10184",
-  "currentSliceId": "content-placed-encounter-landmarks-completion-10184",
-  "currentSliceNotes": "Barrow Pickets, Bramble Hedge Watch, Lantern Patrol, Reedward Camp, Sluice Raiders, Willow Mill Pack, and Ghoul Grove now close exact-art coverage across all 77 active authored placements and 37 distinct encounter identities.",
+  "currentSlice": "content-recurring-resource-site-landmarks-wave1-10184",
+  "currentSliceId": "content-recurring-resource-site-landmarks-wave1-10184",
+  "currentSliceNotes": "Prism Watch Relay, Lens House Barracks, Bog Drum Outpost, Bellwake Wreck Ledger, and Orevein Assay Depot now own exact compact-atlas art across 15 placements; no placed resource-site identity remains procedural.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content placed encounter landmarks completion 10184",
-  "currentSliceUpdatedAt": "2026-08-29T11:37:38Z",
+  "currentSliceTitle": "recurring resource site landmarks wave1 10184",
+  "currentSliceUpdatedAt": "2026-08-29T12:06:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21136,6 +21188,35 @@
   "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice with direct current behavior evidence; do not reopen completed Battle or Large RMG optimizations without a new measured red.",
   "notes": "Battle refresh derived-surface reuse is completed. Exact invocation-local movement and forecast reuse materially reduces measured Battle interaction work without changing RNG/results, legality, balance, focus/accessibility, animation, save authority, or bounded platform startup behavior.",
   "plannedSlices": [
+    {
+      "id": "content-recurring-resource-site-landmarks-wave1-10184",
+      "title": "Recurring Resource-Site Landmarks Wave 1",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-29T11:42:23Z",
+      "updatedAt": "2026-08-29T12:06:12Z",
+      "completedAt": "2026-08-29T12:06:12Z",
+      "implementationTargets": [
+        "PLAN.md",
+        "ops/progress.json",
+        "art/overworld/manifest.json",
+        "art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+        "art/overworld/source/generated/resource_sites/recurring_wave1",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py"
+      ],
+      "purpose": "Give every resource-site identity that still reaches the live procedural marker exact original Overworld art through the existing data-driven resolver and a compact atlas.",
+      "completionCriteria": "Five exact transparent generated sources form one immutable 48x48-region atlas; all five identities across 15 placements, fail-closed regions, deterministic resolver/cache behavior, accessibility descriptions, session/save authority, inspected captures, repository/core, and Linux/Windows package gates pass below the unchanged 250000000-byte ceiling.",
+      "nonGoals": [
+        "No resource-site ids, names, rewards, control, recruitment, vision, pressure, response behavior, scenario placement, footprint, pathing, AI, or save-schema change.",
+        "No copied Heroes expression, replacement of the 54 already asset-backed placed site identities, source-art packaging, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "blockedReason": null,
+      "remainingWork": "Completed. Audit and register the next bounded live content/art gap; the unrelated broad-overworld 1280px objective-brief tooltip/ellipsis assertion remains outside this slice."
+    },
     {
       "id": "content-placed-encounter-landmarks-completion-10184",
       "title": "Placed Encounter Landmark Completion",

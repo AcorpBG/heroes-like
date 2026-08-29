@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_resource_site_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+  "runtime_atlas_size": [240, 48],
+  "runtime_atlas_sha256": "26c940c6021f2f8f153c9c589c6a1425b2a7847bea896becb02d57c709105c4f",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_44x44_and_south_anchor_on_transparent_48x48_cell",
+  "prompt_set_summary": "Five original hand-painted orthographic field landmarks derived from each live resource site's faction, family, service, reward, and scenario language; strong non-color silhouettes; genuine transparency; no characters, text, logos, copied franchise expression, terrain cards, or opaque backdrops.",
+  "items": [
+    {
+      "resource_site_id": "site_prism_watch_relay",
+      "asset_id": "resource_site_recurring_prism_watch_relay",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/prism_watch_relay_source.png",
+      "source_sha256": "f10b1fdadc85856a3f0a633512687cfbe35a5e43e9f3f232fac3355fc17a5586",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c5175285-eec4-444e-b392-28d040fcbcc6.png",
+      "atlas_region": [0, 0, 48, 48],
+      "presentation_role": "split_prism_signal_tripod"
+    },
+    {
+      "resource_site_id": "site_lens_house",
+      "asset_id": "resource_site_recurring_lens_house_barracks",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/lens_house_barracks_source.png",
+      "source_sha256": "78e4d59c547821ae3d2b4d85911dde7ab7a732670afaf9949ca6c7a62fe9c3e0",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-68ba29b7-ad2b-49ab-bb6e-450a7a397416.png",
+      "atlas_region": [48, 0, 48, 48],
+      "presentation_role": "round_lens_guard_barracks"
+    },
+    {
+      "resource_site_id": "site_bog_drum_outpost",
+      "asset_id": "resource_site_recurring_bog_drum_outpost",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bog_drum_outpost_source.png",
+      "source_sha256": "db5e8da2fe8c4555f4108f041c01481013e045c1e7395d26c2d0288c44582b0f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4504a84f-6ad2-463f-9cf4-1ce6d0c32d8d.png",
+      "atlas_region": [96, 0, 48, 48],
+      "presentation_role": "stilted_hide_drum_watch"
+    },
+    {
+      "resource_site_id": "site_bellwake_wreck_ledger",
+      "asset_id": "resource_site_recurring_bellwake_wreck_ledger",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bellwake_wreck_ledger_source.png",
+      "source_sha256": "351ec02a6cdbb1002826833de1ad994177057c95937e1a138a6dedffbf198880",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-db7768be-6b48-43b9-af1b-003397843900.png",
+      "atlas_region": [144, 0, 48, 48],
+      "presentation_role": "bell_shiprib_salvage_ledger"
+    },
+    {
+      "resource_site_id": "site_orevein_assay_depot",
+      "asset_id": "resource_site_recurring_orevein_assay_depot",
+      "source_path": "res://art/overworld/source/generated/resource_sites/recurring_wave1/orevein_assay_depot_source.png",
+      "source_sha256": "18790abade65ad322231ee660a040536e91c3f3d356e2ef869a4e892546bc3ae",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b89420b0-a1e0-4e33-8695-7af39153cd10.png",
+      "atlas_region": [192, 0, 48, 48],
+      "presentation_role": "balance_crusher_assay_house"
+    }
+  ]
+}

@@ -1157,6 +1157,56 @@
       "background": "transparent",
       "assigned_resource_site_id": "site_reef_coin_assay"
     },
+    "resource_site_recurring_prism_watch_relay": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/prism_watch_relay_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_prism_watch_relay",
+      "presentation_role": "split_prism_signal_tripod",
+      "accessible_description": "A tall split-diamond prism stands on an ivory tripod between two angled mirror shutters, grounding stakes, and a rack of spare lens plates."
+    },
+    "resource_site_recurring_lens_house_barracks": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/lens_house_barracks_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_lens_house",
+      "presentation_role": "round_lens_guard_barracks",
+      "accessible_description": "A stepped ivory guardhouse carries one oversized round prism window beside crossed shard pikes, a training target, and a crenellated roof."
+    },
+    "resource_site_recurring_bog_drum_outpost": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bog_drum_outpost_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_bog_drum_outpost",
+      "presentation_role": "stilted_hide_drum_watch",
+      "accessible_description": "A broad hide war drum hangs between crooked reedwood stilts above ditch stakes, a forked pennant mast, and a peat lantern."
+    },
+    "resource_site_recurring_bellwake_wreck_ledger": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [144, 0, 48, 48],
+      "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/bellwake_wreck_ledger_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_bellwake_wreck_ledger",
+      "presentation_role": "bell_shiprib_salvage_ledger",
+      "accessible_description": "A cracked ship bell hangs beneath black wreck ribs above blank slate ledgers, six salvage baskets, a hooked crane, and a torn mirror sail."
+    },
+    "resource_site_recurring_orevein_assay_depot": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png",
+      "atlas_region": [192, 0, 48, 48],
+      "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/recurring_wave1/orevein_assay_depot_source.png",
+      "source_model": "built_in_image_gen_original_recurring_resource_site_landmark_atlas",
+      "assigned_resource_site_id": "site_orevein_assay_depot",
+      "presentation_role": "balance_crusher_assay_house",
+      "accessible_description": "An oversized balance scale rises above a toothed ore crusher, stepped sample drawers, assay cups, and a narrow glowing furnace cupola."
+    },
     "artifact_field_trailsinger_boots": {
       "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
       "source_icon": "res://art/artifacts/runtime/trailsinger_boots.png",
@@ -4939,6 +4989,26 @@
     "site_reef_coin_assay": {
       "asset_id": "resource_pickup_gold",
       "fit": "Distinct original Reef coin-coffer field sprite for the accepted loose-resource identity."
+    },
+    "site_prism_watch_relay": {
+      "asset_id": "resource_site_recurring_prism_watch_relay",
+      "fit": "Exact original split-prism signal-tripod landmark for the persistent Prism Watch Relay identity."
+    },
+    "site_lens_house": {
+      "asset_id": "resource_site_recurring_lens_house_barracks",
+      "fit": "Exact original round-lens guardhouse landmark for the persistent Lens House Barracks identity."
+    },
+    "site_bog_drum_outpost": {
+      "asset_id": "resource_site_recurring_bog_drum_outpost",
+      "fit": "Exact original stilted hide-drum landmark for the persistent Bog Drum Outpost identity."
+    },
+    "site_bellwake_wreck_ledger": {
+      "asset_id": "resource_site_recurring_bellwake_wreck_ledger",
+      "fit": "Exact original bell-and-ship-rib salvage landmark for the Bellwake Wreck Ledger identity."
+    },
+    "site_orevein_assay_depot": {
+      "asset_id": "resource_site_recurring_orevein_assay_depot",
+      "fit": "Exact original balance-and-crusher assay landmark for the Orevein Assay Depot identity."
     },
     "site_waystone_cache": {
       "asset_id": "ruined_obelisk",
