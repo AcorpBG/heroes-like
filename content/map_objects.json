@@ -30466,15 +30466,15 @@
         "avoid_until_strength": "light"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_live",
         "neutral_dwelling_site_runtime_supported": true,
         "guarded_variant_runtime_migration": false,
         "recruitment_ui_overhaul": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "rare_resource_activation": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "guard_resolution_runtime_adopted": true
       },
       "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
@@ -30603,8 +30603,9 @@
         "avoid_until_strength": "standard"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_and_artifact_rewards_live",
         "neutral_dwelling_site_runtime_supported": true,
+        "artifact_reward_execution": true,
         "guarded_variant_runtime_migration": false,
         "recruitment_ui_overhaul": false,
         "save_payload_required": false,
@@ -30730,15 +30731,15 @@
         "avoid_until_strength": "standard"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_live",
         "neutral_dwelling_site_runtime_supported": true,
         "guarded_variant_runtime_migration": false,
         "recruitment_ui_overhaul": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "rare_resource_activation": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "guard_resolution_runtime_adopted": true
       },
       "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
@@ -30857,15 +30858,15 @@
         "avoid_until_strength": "standard"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_live",
         "neutral_dwelling_site_runtime_supported": true,
         "guarded_variant_runtime_migration": false,
         "recruitment_ui_overhaul": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "rare_resource_activation": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "guard_resolution_runtime_adopted": true
       },
       "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
@@ -30967,7 +30968,7 @@
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
-        "metadata_only_guard_contract": true,
+        "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": true
       },
       "guard_expectation": {
@@ -30996,16 +30997,16 @@
         "avoid_until_strength": "heavy"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_live",
         "neutral_dwelling_site_runtime_supported": true,
-        "guarded_variant_runtime_migration": false,
+        "guarded_variant_runtime_migration": true,
         "recruitment_ui_overhaul": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "rare_resource_activation": false,
-        "scenario_placement_migration": false,
-        "guard_resolution_runtime_adopted": false
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
       },
       "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
       "batch005_role": "guarded_high_value_dwelling"
@@ -31121,7 +31122,7 @@
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
-        "metadata_only_guard_contract": true,
+        "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": true
       },
       "guard_expectation": {
@@ -31150,16 +31151,16 @@
         "avoid_until_strength": "heavy"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_live",
         "neutral_dwelling_site_runtime_supported": true,
-        "guarded_variant_runtime_migration": false,
+        "guarded_variant_runtime_migration": true,
         "recruitment_ui_overhaul": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "rare_resource_activation": false,
-        "scenario_placement_migration": false,
-        "guard_resolution_runtime_adopted": false
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
       },
       "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
       "batch005_role": "guarded_high_value_dwelling"
@@ -31275,7 +31276,7 @@
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
-        "metadata_only_guard_contract": true,
+        "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": true
       },
       "guard_expectation": {
@@ -31304,16 +31305,16 @@
         "avoid_until_strength": "heavy"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_live",
         "neutral_dwelling_site_runtime_supported": true,
-        "guarded_variant_runtime_migration": false,
+        "guarded_variant_runtime_migration": true,
         "recruitment_ui_overhaul": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "rare_resource_activation": false,
-        "scenario_placement_migration": false,
-        "guard_resolution_runtime_adopted": false
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
       },
       "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
       "batch005_role": "guarded_high_value_dwelling"
@@ -31444,7 +31445,7 @@
         "recruit_policy": "weekly_muster",
         "recurring_recruit_access": true,
         "guarded_variant": true,
-        "metadata_only_guard_contract": true,
+        "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": true
       },
       "guard_expectation": {
@@ -31473,16 +31474,16 @@
         "avoid_until_strength": "elite"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_live",
         "neutral_dwelling_site_runtime_supported": true,
-        "guarded_variant_runtime_migration": false,
+        "guarded_variant_runtime_migration": true,
         "recruitment_ui_overhaul": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "rare_resource_activation": false,
-        "scenario_placement_migration": false,
-        "guard_resolution_runtime_adopted": false
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
       },
       "content_batch_id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
       "batch005_role": "guarded_high_value_dwelling"

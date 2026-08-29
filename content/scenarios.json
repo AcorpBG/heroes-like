@@ -4593,6 +4593,13 @@
         {"placement_id": "dwelling_frostwharf_house", "site_id": "site_frostwharf_house", "x": 52, "y": 34, "collected_by_faction_id": "faction_veilmourn"},
         {"placement_id": "dwelling_charcoal_burners", "site_id": "site_charcoal_burners", "x": 44, "y": 30},
         {"placement_id": "dwelling_basalt_gatehouse", "site_id": "site_basalt_gatehouse", "x": 60, "y": 36, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "dwelling_salt_skirmisher_pier", "site_id": "site_salt_skirmisher_pier", "x": 55, "y": 12, "guard_front_id": "ninefold_salt_skirmisher_pier_watch"},
+        {"placement_id": "dwelling_ember_cart_yard", "site_id": "site_ember_cart_yard", "x": 45, "y": 12, "guard_front_id": "ninefold_ember_cart_yard_watch"},
+        {"placement_id": "dwelling_prism_outrider_post", "site_id": "site_prism_outrider_post", "x": 11, "y": 28, "guard_front_id": "ninefold_prism_outrider_post_watch"},
+        {"placement_id": "dwelling_storm_rook_eyrie", "site_id": "site_storm_rook_eyrie", "x": 5, "y": 4, "guard_front_id": "ninefold_storm_rook_eyrie_watch"},
+        {"placement_id": "dwelling_mirror_bound_barracks", "site_id": "site_mirror_bound_barracks", "x": 56, "y": 18, "guard_front_id": "ninefold_mirror_bound_barracks_watch"},
+        {"placement_id": "dwelling_furnace_oath_yard", "site_id": "site_furnace_oath_yard", "x": 46, "y": 30, "guard_front_id": "ninefold_furnace_oath_yard_watch"},
+        {"placement_id": "dwelling_drowned_crown_hall", "site_id": "site_drowned_crown_hall", "x": 55, "y": 34, "guard_front_id": "ninefold_drowned_crown_hall_watch"},
         {"placement_id": "ninefold_basalt_oath_tomb", "site_id": "site_basalt_oath_tomb", "x": 59, "y": 52, "guard_front_id": "ninefold_basalt_gatehouse_watch"},
         {"placement_id": "north_snow_wood", "site_id": "site_wood_wagon", "x": 2, "y": 6},
         {"placement_id": "forest_waystone_cache", "site_id": "site_waystone_cache", "x": 16, "y": 6},
@@ -4756,7 +4763,15 @@
             "density_bucket": "guard_or_encounter"
           }
         }
-      }]
+      },
+        {"placement_id": "ninefold_salt_skirmisher_pier_watch", "encounter_id": "encounter_saltpan_camp_watch", "x": 54, "y": 12, "difficulty": "medium", "combat_seed": 26421, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_ember_cart_yard_watch", "encounter_id": "encounter_charcoal_burners_watch", "x": 46, "y": 12, "difficulty": "medium", "combat_seed": 26422, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_prism_outrider_post_watch", "encounter_id": "encounter_kite_signal_eyrie_watch", "x": 12, "y": 28, "difficulty": "medium", "combat_seed": 26423, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_storm_rook_eyrie_watch", "encounter_id": "encounter_cliffhawk_roost_watch", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 26424, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_mirror_bound_barracks_watch", "encounter_id": "encounter_crystal_sump_watch", "x": 57, "y": 18, "difficulty": "high", "combat_seed": 26425, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_furnace_oath_yard_watch", "encounter_id": "encounter_cinder_kiln_watch", "x": 47, "y": 30, "difficulty": "high", "combat_seed": 26426, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_drowned_crown_hall_watch", "encounter_id": "encounter_tidepool_skiffyard_watch", "x": 54, "y": 34, "difficulty": "high", "combat_seed": 26427, "prefer_identity_landmark": true}
+      ]
     },
     {
       "id": "rootgate-toll",

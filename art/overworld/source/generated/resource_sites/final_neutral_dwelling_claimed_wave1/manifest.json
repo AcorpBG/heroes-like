@@ -1,0 +1,28 @@
+{
+  "id": "final_neutral_dwelling_claimed_wave1",
+  "generation_mode": "precise-object-edit",
+  "source_model": "built_in_image_gen_precise_object_edit_final_neutral_dwelling_claimed_atlas",
+  "intent": "Controlled-state variants for the final seven original neutral-dwelling landmarks; preserve each exact base identity while making active muster readiness legible on the overworld.",
+  "shared_prompt_constraints": [
+    "Preserve exact base architecture, perspective, proportions, palette, and painterly strategy-map rendering.",
+    "Add only restrained active-muster cues such as open access, ordered supplies, lit work areas, teal-and-ivory claim cloth, and ready equipment.",
+    "No people, creatures, words, labels, UI, background, ground plane, border, copied franchise elements, or protected visual expression.",
+    "Retain genuine transparent alpha outside the object and generous transparent margins."
+  ],
+  "alpha_recovery": "Three generated edits returned a baked pale checkerboard after the model background-extraction pass. Only the border-connected near-neutral field was removed with a 10 percent flood-fill tolerance. All seven final sources and the runtime atlas retain transparent corners.",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png",
+    "size": [336, 48],
+    "cell_size": [48, 48],
+    "sha256": "300708e46ea7d0136f354f7206afb1a345383a7829d10b9a09f4d42cfa50fb9b"
+  },
+  "assets": [
+    {"site_id":"site_salt_skirmisher_pier","source":"salt_skirmisher_pier_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-56d78866-315d-47c0-9d2b-54f19c020460.png","region":[0,0,48,48],"sha256":"1a89c28122b1ec8b3d7b2b1f3529f0ab774dd7c7e8a8085c11de765550617efa","edit":"Open stilt-pier muster deck, ordered bucklers and throwing spears, lit lamps, packed sacks, and teal claim pennant."},
+    {"site_id":"site_ember_cart_yard","source":"ember_cart_yard_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d7f3cf1a-7af6-491d-8d44-31e04173e4fb.png","region":[48,0,48,48],"sha256":"bf9c0e8b8e9c1ef2ad8b4cca477a94bdf217bc29af35fea067c04d18fdc65307","edit":"Loaded ember carts, ordered shields and pikes, stacked coal sacks, route lamps, and teal-and-ivory muster cloth."},
+    {"site_id":"site_prism_outrider_post","source":"prism_outrider_post_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-959fb6d1-a57c-4c34-818b-b98a512acd62.png","region":[96,0,48,48],"sha256":"5f24b7219f81c54765c8414220319b4717a094267fc326845854de364c0932c8","edit":"Bright prism signal, ready outrider tack and travel packs, clean tent access, signal lamps, and claim ribbons."},
+    {"site_id":"site_storm_rook_eyrie","source":"storm_rook_eyrie_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-04892bf6-0685-4124-b78f-73248800944a.png","region":[144,0,48,48],"sha256":"b42a0ccdae90a610b3a3c487d38e600704d4c20f830e69eed0c59bf29562923e","edit":"Repaired rook platforms, bright storm beacon, ordered climbing gear and packs, lit stairs, and teal signal pennants."},
+    {"site_id":"site_mirror_bound_barracks","source":"mirror_bound_barracks_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-49e77075-54ff-4ccf-9048-091199042d2b.png","region":[192,0,48,48],"sha256":"2487c3a7b4c66617c10370ba3b431e320b8fee9eecbba3dc3cc86222166ac66d","edit":"Open mirror barracks gate, lit windows and courtyard, ordered crystal arms, ready shields, and teal claim flags."},
+    {"site_id":"site_furnace_oath_yard","source":"furnace_oath_yard_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-9b137c0a-2d95-4eb7-b6fe-4df26d7174fb.png","region":[240,0,48,48],"sha256":"6ebbfba24ad7a4e4869438df443b140d42d267ebf5e9bb79823db823c2569572","edit":"Steady oath furnace, ordered hammers and pikes, ready ingots and packs, bright lamps, and teal-and-ivory banners."},
+    {"site_id":"site_drowned_crown_hall","source":"drowned_crown_hall_claimed_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a0f51eb8-edc1-4ec7-8f77-94c6988db9c4.png","region":[288,0,48,48],"sha256":"22da3aeb61671410614fe1e7d75574bd9357394824f42170841d511e59cc89fe","edit":"Open flooded hall, lit crown doors, ordered tide arms and supply crates, clear landing steps, and teal claim banners."}
+  ]
+}
