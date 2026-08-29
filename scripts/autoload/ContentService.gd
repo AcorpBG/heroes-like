@@ -1896,6 +1896,25 @@ func _append_unique_string(values: Array[String], value: String) -> void:
 
 func _validate_campaign(campaign: Dictionary, scenario_index: Dictionary) -> void:
 	var campaign_id := String(campaign.get("id", ""))
+	var expected_emblem_id := "campaign_emblem_%s" % campaign_id.trim_prefix("campaign_")
+	var emblem_path := String(campaign.get("emblem_path", "")).strip_edges()
+	var emblem_source_path := String(campaign.get("emblem_source_path", "")).strip_edges()
+	var emblem_alt_text := String(campaign.get("emblem_alt_text", "")).strip_edges()
+	if String(campaign.get("emblem_id", "")) != expected_emblem_id:
+		push_warning("Campaign %s must define exact emblem id %s." % [campaign_id, expected_emblem_id])
+	if not emblem_path.begins_with("res://art/campaigns/runtime/emblems/") or not emblem_path.ends_with(".png"):
+		push_warning("Campaign %s must define a runtime campaign emblem PNG." % campaign_id)
+	elif not ResourceLoader.exists(emblem_path, "Texture2D"):
+		push_warning("Campaign %s references missing emblem texture %s." % [campaign_id, emblem_path])
+	if not emblem_source_path.begins_with("res://art/campaigns/source/generated/emblems/") or not emblem_source_path.ends_with("_source.png"):
+		push_warning("Campaign %s must retain exact generated emblem-source provenance." % campaign_id)
+	elif OS.has_feature("editor") and not FileAccess.file_exists(emblem_source_path):
+		push_warning("Campaign %s references missing emblem source %s." % [campaign_id, emblem_source_path])
+	if emblem_alt_text == "":
+		push_warning("Campaign %s must define non-color emblem alt text." % campaign_id)
+	for hash_key in ["emblem_source_sha256", "emblem_runtime_sha256"]:
+		if String(campaign.get(hash_key, "")).length() != 64:
+			push_warning("Campaign %s must define a full %s digest." % [campaign_id, hash_key])
 	var scenarios = campaign.get("scenarios", [])
 	if not (scenarios is Array) or scenarios.is_empty():
 		push_warning("Campaign %s must define at least one scenario entry." % campaign_id)

@@ -234,6 +234,9 @@ static func build_campaign_browser_entries(profile: Dictionary) -> Array:
 		entries.append(
 			{
 				"campaign_id": campaign_id,
+				"emblem_id": String(campaign.get("emblem_id", "")),
+				"emblem_path": campaign_emblem_path(campaign_id),
+				"emblem_alt_text": campaign_emblem_alt_text(campaign_id),
 				"label": "%s | %s" % [String(campaign.get("name", campaign_id)), _campaign_status_label(progress)],
 				"summary": "%s\nRegion: %s | Chapters %d | Victories %d\n%s" % [
 					String(campaign.get("summary", campaign.get("description", ""))),
@@ -246,6 +249,28 @@ static func build_campaign_browser_entries(profile: Dictionary) -> Array:
 			}
 		)
 	return entries
+
+static func campaign_emblem_path(campaign_id: String) -> String:
+	var campaign := ContentService.get_campaign(campaign_id)
+	if campaign.is_empty() or String(campaign.get("id", "")) != campaign_id:
+		return ""
+	var expected_emblem_id := "campaign_emblem_%s" % campaign_id.trim_prefix("campaign_")
+	if String(campaign.get("emblem_id", "")) != expected_emblem_id:
+		return ""
+	var emblem_path := String(campaign.get("emblem_path", "")).strip_edges()
+	if not emblem_path.begins_with("res://art/campaigns/runtime/emblems/") or not emblem_path.ends_with(".png"):
+		return ""
+	if not ResourceLoader.exists(emblem_path, "Texture2D"):
+		return ""
+	return emblem_path
+
+static func campaign_emblem_alt_text(campaign_id: String) -> String:
+	var campaign := ContentService.get_campaign(campaign_id)
+	if campaign.is_empty() or String(campaign.get("id", "")) != campaign_id:
+		return ""
+	if campaign_emblem_path(campaign_id) == "":
+		return ""
+	return String(campaign.get("emblem_alt_text", "")).strip_edges()
 
 static func build_campaign_chapter_entries(profile: Dictionary, campaign_id: String) -> Array:
 	var normalized := normalize_profile(profile)
