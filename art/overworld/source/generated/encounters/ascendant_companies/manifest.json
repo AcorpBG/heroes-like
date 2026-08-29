@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_ascendant_company_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "9a856946c5dff74c3dfb2d7f97f7139b529913eef64e378243224fcd66b9baa5",
+  "runtime_region_size": [48, 48],
+  "processing": "alpha_trim_then_aspect_fit_within_42x42_and_south_anchor_on_transparent_48x48_cell",
+  "prompt_set_summary": "Six original painterly orthographic ascendant-company objective landmarks combining paired faction materials with strong non-color silhouettes and genuine transparency; no characters, text, logos, terrain cards, watermarks, or copied franchise expression.",
+  "items": [
+    {"encounter_id":"encounter_helva_blackwake_levy","asset_id":"encounter_ascendant_blackwake_obituary_mooring","source_path":"res://art/overworld/source/generated/encounters/ascendant_companies/blackwake_obituary_mooring_source.png","source_sha256":"1f349091ddb0d6ca21b964fcfbdebf79deafd5afbd070096121257d891efa81f","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c1e62526-daf9-40f3-9643-6021e857ed04.png","atlas_region":[0,0,48,48],"presentation_role":"blackwake_obituary_mooring"},
+    {"encounter_id":"encounter_tarn_daybreak_hunt","asset_id":"encounter_ascendant_daybreak_reed_prism","source_path":"res://art/overworld/source/generated/encounters/ascendant_companies/daybreak_reed_prism_source.png","source_sha256":"0414e82399ae73c298f4a99bbf38b7e23838d039b11e3ceee892e631db9729bc","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-000aa037-5034-443a-b5b2-a89618b37093.png","atlas_region":[48,0,48,48],"presentation_role":"daybreak_reed_prism"},
+    {"encounter_id":"encounter_thalen_foundry_eclipse","asset_id":"encounter_ascendant_foundry_eclipse_gauge","source_path":"res://art/overworld/source/generated/encounters/ascendant_companies/foundry_eclipse_gauge_source.png","source_sha256":"0231c56fb7b3f2b1c45a8c3ed9a64ff46e316e8d4d4d0b93b79367643e477115","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-639002ec-59d0-447a-a92b-6f12c152d435.png","atlas_region":[96,0,48,48],"presentation_role":"foundry_eclipse_gauge"},
+    {"encounter_id":"encounter_merek_cinder_writ","asset_id":"encounter_ascendant_cinderwrit_graft_brazier","source_path":"res://art/overworld/source/generated/encounters/ascendant_companies/cinderwrit_graft_brazier_source.png","source_sha256":"490f1e90e7915097c242fc0b200a92f716804c082b7a0d3206e07ecf90c11641","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-28108417-77ec-4b82-89ee-7d76ad0e5789.png","atlas_region":[144,0,48,48],"presentation_role":"cinderwrit_graft_brazier"},
+    {"encounter_id":"encounter_vellum_gorefen_audit","asset_id":"encounter_ascendant_gorefen_debt_totem","source_path":"res://art/overworld/source/generated/encounters/ascendant_companies/gorefen_debt_totem_source.png","source_sha256":"10dbd654293ab2a3d8af12938b2291c12f09c0e460e0eae478b9e692219a9689","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-619580c8-1b0a-4e7d-a82e-bb7fea195465.png","atlas_region":[192,0,48,48],"presentation_role":"gorefen_debt_totem"},
+    {"encounter_id":"encounter_damar_worldroot_wake","asset_id":"encounter_ascendant_worldroot_wake_seal","source_path":"res://art/overworld/source/generated/encounters/ascendant_companies/worldroot_wake_seal_source.png","source_sha256":"c985d2e744741d25b5d2b60c00aea28d5afa50b1411fce66e1240850f4b3cb3b","generation_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f6d53987-0efd-40a1-8534-fbf36131f36b.png","atlas_region":[240,0,48,48],"presentation_role":"worldroot_wake_seal"}
+  ]
+}

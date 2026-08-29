@@ -5535,6 +5535,42 @@
       "source_generated": "res://art/overworld/source/generated/encounters/mire_sun_contracts/rootbound_survey_lens_source.png", "source_model": "built_in_image_gen_original_mire_sun_contract_landmark_atlas",
       "assigned_encounter_id": "encounter_dovan_greenline_survey", "assigned_faction_id": "faction_thornwake", "presentation_role": "rootbound_survey_lens",
       "accessible_description": "A tall brass tripod carries a circular blue survey lens gripped by living roots, side vanes, seed cages, and glass markers."
+    },
+    "encounter_ascendant_blackwake_obituary_mooring": {
+      "path": "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/ascendant_companies/blackwake_obituary_mooring_source.png", "source_model": "built_in_image_gen_original_ascendant_company_landmark_atlas",
+      "assigned_encounter_id": "encounter_helva_blackwake_levy", "assigned_faction_id": "faction_veilmourn", "presentation_role": "blackwake_obituary_mooring",
+      "accessible_description": "A hooked black driftwood mast rises from a curved keel brace with dark sail ribbons, a memorial bell, and one violet fog lantern."
+    },
+    "encounter_ascendant_daybreak_reed_prism": {
+      "path": "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/ascendant_companies/daybreak_reed_prism_source.png", "source_model": "built_in_image_gen_original_ascendant_company_landmark_atlas",
+      "assigned_encounter_id": "encounter_tarn_daybreak_hunt", "assigned_faction_id": "faction_sunvault", "presentation_role": "daybreak_reed_prism",
+      "accessible_description": "A tall three-legged reed and bone cradle suspends an amber sun prism above a mirrored basin between three radial glass fins."
+    },
+    "encounter_ascendant_foundry_eclipse_gauge": {
+      "path": "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/ascendant_companies/foundry_eclipse_gauge_source.png", "source_model": "built_in_image_gen_original_ascendant_company_landmark_atlas",
+      "assigned_encounter_id": "encounter_thalen_foundry_eclipse", "assigned_faction_id": "faction_brasshollow", "presentation_role": "foundry_eclipse_gauge",
+      "accessible_description": "A broad circular pressure gauge is half covered by a black crescent shutter between two short furnace stacks and curved copper pipes."
+    },
+    "encounter_ascendant_cinderwrit_graft_brazier": {
+      "path": "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/ascendant_companies/cinderwrit_graft_brazier_source.png", "source_model": "built_in_image_gen_original_ascendant_company_landmark_atlas",
+      "assigned_encounter_id": "encounter_merek_cinder_writ", "assigned_faction_id": "faction_embercourt", "presentation_role": "cinderwrit_graft_brazier",
+      "accessible_description": "Three living root arms curl around a split stone brazier with green graft buds, a disciplined white flame, and a bronze charter clasp."
+    },
+    "encounter_ascendant_gorefen_debt_totem": {
+      "path": "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/ascendant_companies/gorefen_debt_totem_source.png", "source_model": "built_in_image_gen_original_ascendant_company_landmark_atlas",
+      "assigned_encounter_id": "encounter_vellum_gorefen_audit", "assigned_faction_id": "faction_mireclaw", "presentation_role": "gorefen_debt_totem",
+      "accessible_description": "Three crooked antler-capped bogwood stakes form a triangle around hanging brass tally plates, a wax seal, and a green basin."
+    },
+    "encounter_ascendant_worldroot_wake_seal": {
+      "path": "res://art/overworld/runtime/objects/encounters/ascendant_companies/ascendant_companies_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/ascendant_companies/worldroot_wake_seal_source.png", "source_model": "built_in_image_gen_original_ascendant_company_landmark_atlas",
+      "assigned_encounter_id": "encounter_damar_worldroot_wake", "assigned_faction_id": "faction_thornwake", "presentation_role": "worldroot_wake_seal",
+      "accessible_description": "A broad living-root arch frames a pale seed crown, crossed by a curved fogglass keel blade, dark chain, and silver mist bells."
     }
   },
   "resource_site_sprites": {
@@ -5982,7 +6018,13 @@
     "encounter_brakka_hive_foreclosure": "encounter_mire_sun_hive_chain_foreclosure",
     "encounter_nix_reedflame_vigil": "encounter_mire_sun_reedflame_votive_gate",
     "encounter_ilyr_ossuary_battery": "encounter_mire_sun_drowned_mirror_battery",
-    "encounter_dovan_greenline_survey": "encounter_mire_sun_rootbound_survey_lens"
+    "encounter_dovan_greenline_survey": "encounter_mire_sun_rootbound_survey_lens",
+    "encounter_helva_blackwake_levy": "encounter_ascendant_blackwake_obituary_mooring",
+    "encounter_tarn_daybreak_hunt": "encounter_ascendant_daybreak_reed_prism",
+    "encounter_thalen_foundry_eclipse": "encounter_ascendant_foundry_eclipse_gauge",
+    "encounter_merek_cinder_writ": "encounter_ascendant_cinderwrit_graft_brazier",
+    "encounter_vellum_gorefen_audit": "encounter_ascendant_gorefen_debt_totem",
+    "encounter_damar_worldroot_wake": "encounter_ascendant_worldroot_wake_seal"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",
