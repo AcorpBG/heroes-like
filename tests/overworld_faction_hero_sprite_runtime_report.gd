@@ -37,7 +37,21 @@ const EXPECTED_HERO_ASSETS := {
 	"hero_thornwake_halen_thorncart": "hero_field_thornwake_halen_thorncart",
 	"hero_brasshollow_kuld_varn": "hero_field_brasshollow_kuld_varn",
 	"hero_veilmourn_jessa_keelwarden": "hero_field_veilmourn_jessa_keelwarden",
+	"hero_embercourt_saren_lockmaster": "hero_strategic_embercourt_saren_lockmaster",
+	"hero_orrik": "hero_strategic_orrik",
+	"hero_thalen": "hero_strategic_thalen",
+	"hero_thornwake_nara_graftsibyl": "hero_strategic_thornwake_nara_graftsibyl",
+	"hero_brasshollow_harro_debtrune": "hero_strategic_brasshollow_harro_debtrune",
+	"hero_veilmourn_orso_nightchart": "hero_strategic_veilmourn_orso_nightchart",
 }
+const PRESENTATION_HERO_IDS := [
+	"hero_lyra", "hero_vaska", "hero_solera", "hero_thornwake_silsa_bramblehound", "hero_brasshollow_marka_ironclause", "hero_veilmourn_ivara_blacktide",
+	"hero_neral", "hero_seren",
+	"hero_embercourt_belis_rainledger", "hero_sable", "hero_sunvault_calis_sunvein", "hero_thornwake_ardren_briarmarshal", "hero_brasshollow_daxis_chaincaptain", "hero_veilmourn_cela_mistcorsair",
+	"hero_torren", "hero_mireclaw_brakka_mudkeel", "hero_varis", "hero_thornwake_veyra_seedseer", "hero_brasshollow_selka_pitmarshal", "hero_veilmourn_morwen_wakeoracle",
+	"hero_embercourt_helva_tollbrand", "hero_tarn", "hero_sunvault_ilyr_glassmarshal", "hero_thornwake_halen_thorncart", "hero_brasshollow_kuld_varn", "hero_veilmourn_jessa_keelwarden",
+	"hero_embercourt_saren_lockmaster", "hero_orrik", "hero_thalen", "hero_thornwake_nara_graftsibyl", "hero_brasshollow_harro_debtrune", "hero_veilmourn_orso_nightchart",
+]
 const TAVERN_VANGUARD_CASES := [
 	{"scenario_id": "river-pass", "hero_id": "hero_embercourt_belis_rainledger"},
 	{"scenario_id": "bogbound-oath", "hero_id": "hero_sable"},
@@ -61,6 +75,14 @@ const TAVERN_FIELD_COMMANDER_CASES := [
 	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_halen_thorncart"},
 	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_kuld_varn"},
 	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_jessa_keelwarden"},
+]
+const TAVERN_STRATEGIC_OFFICER_CASES := [
+	{"scenario_id": "river-pass", "hero_id": "hero_embercourt_saren_lockmaster"},
+	{"scenario_id": "bogbound-oath", "hero_id": "hero_orrik"},
+	{"scenario_id": "prismhearth-watch", "hero_id": "hero_thalen"},
+	{"scenario_id": "mireford-skirmish", "hero_id": "hero_thornwake_nara_graftsibyl"},
+	{"scenario_id": "orevein-contract", "hero_id": "hero_brasshollow_harro_debtrune"},
+	{"scenario_id": "bellwake-wreck-claim", "hero_id": "hero_veilmourn_orso_nightchart"},
 ]
 const ALL_SCENARIO_STARTS := {
 	"river-pass": "hero_lyra",
@@ -109,6 +131,10 @@ func _run() -> void:
 	if not bool(tavern_field_commanders.get("ok", false)):
 		_fail("Tavern field-commander recruitment validation failed: %s" % tavern_field_commanders)
 		return
+	var tavern_strategic_officers := _validate_tavern_strategic_officer_recruitment()
+	if not bool(tavern_strategic_officers.get("ok", false)):
+		_fail("Tavern strategic-officer recruitment validation failed: %s" % tavern_strategic_officers)
+		return
 	var original_window_size := get_window().size
 	var rows: Array = []
 	for viewport_size in VIEWPORT_SIZES:
@@ -127,11 +153,14 @@ func _run() -> void:
 		"tavern_vanguard_count": TAVERN_VANGUARD_CASES.size(),
 		"tavern_specialist_count": TAVERN_SPECIALIST_CASES.size(),
 		"tavern_field_commander_count": TAVERN_FIELD_COMMANDER_CASES.size(),
+		"tavern_strategic_officer_count": TAVERN_STRATEGIC_OFFICER_CASES.size(),
+		"presentation_hero_count": PRESENTATION_HERO_IDS.size(),
 		"faction_count": 6,
 		"scenario_starts": scenario_starts,
 		"tavern_vanguard": tavern_vanguard,
 		"tavern_specialists": tavern_specialists,
 		"tavern_field_commanders": tavern_field_commanders,
+		"tavern_strategic_officers": tavern_strategic_officers,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback": "procedural_hero_marker",
 		"rows": rows,
@@ -159,6 +188,10 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		shell.queue_free()
 		return {"ok": false, "failure": "validation_surface_missing"}
 	var authority_before: Dictionary = session.to_dict()
+	var identity_mapping := _validate_identity_mapping(map_view)
+	if not bool(identity_mapping.get("ok", false)):
+		shell.queue_free()
+		return {"ok": false, "failure": "identity_mapping", "detail": identity_mapping}
 	var profiles: Array = map_view.call("validation_hero_presentation_profiles")
 	var exact := _validate_profiles(profiles, map_view)
 	if not bool(exact.get("ok", false)):
@@ -193,7 +226,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var first_hero: Dictionary = heroes[0]
-	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_embercourt_saren_lockmaster"})) == "hero_faction_embercourt"
+	var faction_fallback_exact: bool = String(map_view.call("_hero_sprite_asset_id", {"id": "hero_embercourt_orra_cinderquill"})) == "hero_faction_embercourt"
 	first_hero["id"] = "hero_missing_faction_sprite_fixture"
 	shell.call("_refresh")
 	await get_tree().process_frame
@@ -226,10 +259,12 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
-		"ok": faction_fallback_exact and fallback_exact and restored_exact and containment_exact and moving_layout_exact and bool(focus_exact.get("ok", false)),
+		"ok": bool(identity_mapping.get("ok", false)) and faction_fallback_exact and fallback_exact and restored_exact and containment_exact and moving_layout_exact and bool(focus_exact.get("ok", false)),
 		"viewport": [viewport_size.x, viewport_size.y],
 		"profile_count": profiles.size(),
 		"asset_ids": exact.get("asset_ids", []),
+		"mapped_asset_ids": identity_mapping.get("asset_ids", []),
+		"identity_mapping_exact": identity_mapping.get("ok", false),
 		"active_identity_exact": exact.get("active_identity_exact", false),
 		"grounding_exact": exact.get("grounding_exact", false),
 		"readability_exact": exact.get("readability_exact", false),
@@ -247,7 +282,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	}
 
 func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
-	if profiles.size() != EXPECTED_HERO_ASSETS.size():
+	if profiles.size() != PRESENTATION_HERO_IDS.size():
 		return {"ok": false, "reason": "profile_count", "actual": profiles.size()}
 	var seen_factions: Dictionary = {}
 	var seen_assets: Dictionary = {}
@@ -271,7 +306,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 		var hero_id := String(profile.get("hero_id", ""))
 		var faction_id := String(profile.get("faction_id", ""))
 		var expected_asset_id := String(EXPECTED_HERO_ASSETS.get(hero_id, ""))
-		var runtime_group := "signature" if expected_asset_id.begins_with("hero_signature_") else ("live_leads" if expected_asset_id.begins_with("hero_lead_") else ("tavern_specialists" if expected_asset_id.begins_with("hero_specialist_") else ("tavern_field_commanders" if expected_asset_id.begins_with("hero_field_") else "tavern_vanguard")))
+		var runtime_group := _hero_runtime_group(expected_asset_id)
 		var expected_path := "res://art/overworld/runtime/heroes/%s/%s.png" % [runtime_group, hero_id]
 		if expected_asset_id == "" or String(profile.get("sprite_asset_id", "")) != expected_asset_id:
 			return {"ok": false, "reason": "identity", "profile": profile}
@@ -338,17 +373,42 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
 				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.64)
 	return {
-		"ok": seen_factions.size() == 6 and seen_assets.size() == EXPECTED_HERO_ASSETS.size() and active_count == 1 and grounding_exact and readability_exact and town_footprint_layout_count == 1 and ordinary_layout_count == EXPECTED_HERO_ASSETS.size() - 1 and geometry_exact,
+		"ok": seen_factions.size() == 6 and seen_assets.size() == PRESENTATION_HERO_IDS.size() and active_count == 1 and grounding_exact and readability_exact and town_footprint_layout_count == 1 and ordinary_layout_count == PRESENTATION_HERO_IDS.size() - 1 and geometry_exact,
 		"asset_ids": seen_assets.keys(),
 		"active_identity_exact": active_count == 1,
 		"grounding_exact": grounding_exact,
 		"readability_exact": readability_exact,
 		"town_footprint_layout_exact": town_footprint_layout_count == 1 and geometry_exact,
-		"ordinary_layout_exact": ordinary_layout_count == EXPECTED_HERO_ASSETS.size() - 1 and geometry_exact,
+		"ordinary_layout_exact": ordinary_layout_count == PRESENTATION_HERO_IDS.size() - 1 and geometry_exact,
 		"active_tile": {"x": active_tile.x, "y": active_tile.y},
 		"ordinary_tile": {"x": ordinary_tile.x, "y": ordinary_tile.y},
 		"layout_rows": layout_rows,
 	}
+
+func _validate_identity_mapping(map_view: Node) -> Dictionary:
+	var asset_ids: Array = []
+	for hero_id_value in EXPECTED_HERO_ASSETS:
+		var hero_id := String(hero_id_value)
+		var expected_asset_id := String(EXPECTED_HERO_ASSETS.get(hero_id, ""))
+		var actual_asset_id := String(map_view.call("_hero_sprite_asset_id", ContentService.get_hero(hero_id)))
+		var expected_path := "res://art/overworld/runtime/heroes/%s/%s.png" % [_hero_runtime_group(expected_asset_id), hero_id]
+		if actual_asset_id != expected_asset_id or not (load(expected_path) is Texture2D):
+			return {"ok": false, "hero_id": hero_id, "expected_asset_id": expected_asset_id, "actual_asset_id": actual_asset_id, "expected_path": expected_path}
+		asset_ids.append(actual_asset_id)
+	return {"ok": asset_ids.size() == EXPECTED_HERO_ASSETS.size(), "asset_ids": asset_ids}
+
+func _hero_runtime_group(asset_id: String) -> String:
+	if asset_id.begins_with("hero_signature_"):
+		return "signature"
+	if asset_id.begins_with("hero_lead_"):
+		return "live_leads"
+	if asset_id.begins_with("hero_specialist_"):
+		return "tavern_specialists"
+	if asset_id.begins_with("hero_field_"):
+		return "tavern_field_commanders"
+	if asset_id.begins_with("hero_strategic_"):
+		return "tavern_strategic_officers"
+	return "tavern_vanguard"
 
 func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dictionary:
 	var active_tile_value: Dictionary = profiles_exact.get("active_tile", {})
@@ -521,7 +581,7 @@ func _configure_hero_fixture(session) -> void:
 	var source_heroes: Array = session.overworld.get("player_heroes", [])
 	var source: Dictionary = source_heroes[0].duplicate(true)
 	var heroes: Array = []
-	var hero_ids: Array = EXPECTED_HERO_ASSETS.keys()
+	var hero_ids: Array = PRESENTATION_HERO_IDS
 	var town_footprint_tile := _player_town_footprint_hero_tile(session)
 	var ordinary_positions := [
 		Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0), Vector2i(8, 0),
@@ -595,6 +655,9 @@ func _validate_tavern_specialist_recruitment() -> Dictionary:
 
 func _validate_tavern_field_commander_recruitment() -> Dictionary:
 	return _validate_tavern_recruitment_cases(TAVERN_FIELD_COMMANDER_CASES)
+
+func _validate_tavern_strategic_officer_recruitment() -> Dictionary:
+	return _validate_tavern_recruitment_cases(TAVERN_STRATEGIC_OFFICER_CASES)
 
 func _validate_tavern_recruitment_cases(cases: Array) -> Dictionary:
 	var rows: Array = []

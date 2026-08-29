@@ -15329,14 +15329,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the measured field-commander art slice: six distinct original portrait-faithful adventure figures now raise exact hero identity coverage from 26 to 32 of 60. All six are wired through real hire, active-command, enemy, field, and save behavior; target-resolution captures, core/static validation, and Linux/Windows packaged startup passed.",
+  "currentNotes": "Completed the strategic-officer art wave: exact adventure-map identity coverage is now 38 of 60 production heroes, with six new original figures fully wired through recruitment, field, enemy, save, and release-export paths.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-tavern-field-commander-overworld-sprites-10184",
-  "currentSliceId": "content-tavern-field-commander-overworld-sprites-10184",
-  "currentSliceNotes": "Completed: six distinct original portrait-faithful 512x512 adventure sprites for Helva Tollbrand, Tarn Fenhook, Ilyr Glassmarshal, Halen Thorncart, Kuld Varn, and Jessa Keelwarden; manifest exact identity resolution increased from 26 to 32 of 60. Exact first-scenario Wayfarers Hall hire/cost/active switch, mapped field presentation, Ilyr enemy-commander precedence beside an unmapped Mireclaw faction fallback, save version 9 round-trip, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 244614216 bytes with all six field-commander textures present and source art excluded. No whole-game or release-ready claim.",
+  "currentSlice": "content-tavern-strategic-officer-overworld-sprites-10184",
+  "currentSliceId": "content-tavern-strategic-officer-overworld-sprites-10184",
+  "currentSliceNotes": "Completed: six original portrait-faithful strategic-officer sprites; exact identity mapping 32 to 38; live first-scenario tavern hire, authored cost, active-command, field, enemy, fallback, save-version-9, inspected dual-resolution, core/static, and Linux/Windows package proof all pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content tavern field commander overworld sprites 10184",
-  "currentSliceUpdatedAt": "2026-08-29T01:18:04Z",
+  "currentSliceTitle": "content tavern strategic officer overworld sprites 10184",
+  "currentSliceUpdatedAt": "2026-08-29T01:53:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -105212,6 +105212,16 @@
       "startedAt": "2026-08-29T00:58:06Z",
       "notes": "Added six distinct original portrait-faithful field-commander adventure figures for Helva Tollbrand, Tarn Fenhook, Ilyr Glassmarshal, Halen Thorncart, Kuld Varn, and Jessa Keelwarden, expanding exact hero identity coverage from 26 to 32 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, Ilyr enemy identity precedence beside an unmapped Mireclaw fallback, save version 9, both target resolutions, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 244614216 bytes with all six field-commander textures present and source art excluded. No whole-game or release-ready claim.",
       "completedAt": "2026-08-29T01:18:04Z"
+    },
+    {
+      "id": "content-tavern-strategic-officer-overworld-sprites-10184",
+      "title": "content tavern strategic officer overworld sprites 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-29T01:53:11Z",
+      "startedAt": "2026-08-29T01:22:27Z",
+      "notes": "Added six distinct original portrait-faithful strategic-officer adventure figures for Saren Lockmaster, Orrik Tollreaver, Thalen Choirward, Nara Graft-Sibyl, Harro Debt-Rune, and Orso Nightchart, expanding exact hero identity coverage from 32 to 38 of 60. Real first-scenario Wayfarers Hall offers, authored costs, exactly-one-hero hire, active switch, exact field presentation, mapped Orrik enemy identity beside an unmapped Embercourt fallback, save version 9, inspected 1280x720 and 1920x1080 captures, core/static validation, and Linux/Windows packaged startup passed. Both PCKs were 245472304 bytes with all six strategic-officer textures present and source art excluded. No whole-game or release-ready claim.",
+      "completedAt": "2026-08-29T01:53:11Z"
     }
   ],
   "project": "heroes-like",

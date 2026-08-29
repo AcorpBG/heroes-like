@@ -450,6 +450,48 @@
       "identity_reference": "res://art/heroes/portraits/hero_veilmourn_jessa_keelwarden.png",
       "assigned_hero_id": "hero_veilmourn_jessa_keelwarden"
     },
+    "hero_strategic_embercourt_saren_lockmaster": {
+      "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_embercourt_saren_lockmaster.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_embercourt_saren_lockmaster_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_embercourt_saren_lockmaster.png",
+      "assigned_hero_id": "hero_embercourt_saren_lockmaster"
+    },
+    "hero_strategic_orrik": {
+      "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_orrik.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_orrik_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_orrik.png",
+      "assigned_hero_id": "hero_orrik"
+    },
+    "hero_strategic_thalen": {
+      "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thalen.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_thalen_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thalen.png",
+      "assigned_hero_id": "hero_thalen"
+    },
+    "hero_strategic_thornwake_nara_graftsibyl": {
+      "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_thornwake_nara_graftsibyl.png",
+      "assigned_hero_id": "hero_thornwake_nara_graftsibyl"
+    },
+    "hero_strategic_brasshollow_harro_debtrune": {
+      "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_brasshollow_harro_debtrune.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_brasshollow_harro_debtrune_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_brasshollow_harro_debtrune.png",
+      "assigned_hero_id": "hero_brasshollow_harro_debtrune"
+    },
+    "hero_strategic_veilmourn_orso_nightchart": {
+      "path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart.png",
+      "source_generated": "res://art/overworld/source/generated/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart_source.png",
+      "source_model": "built_in_image_gen_identity_preserving_original_sprite",
+      "identity_reference": "res://art/heroes/portraits/hero_veilmourn_orso_nightchart.png",
+      "assigned_hero_id": "hero_veilmourn_orso_nightchart"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -4475,7 +4517,13 @@
     "hero_sunvault_ilyr_glassmarshal": "hero_field_sunvault_ilyr_glassmarshal",
     "hero_thornwake_halen_thorncart": "hero_field_thornwake_halen_thorncart",
     "hero_brasshollow_kuld_varn": "hero_field_brasshollow_kuld_varn",
-    "hero_veilmourn_jessa_keelwarden": "hero_field_veilmourn_jessa_keelwarden"
+    "hero_veilmourn_jessa_keelwarden": "hero_field_veilmourn_jessa_keelwarden",
+    "hero_embercourt_saren_lockmaster": "hero_strategic_embercourt_saren_lockmaster",
+    "hero_orrik": "hero_strategic_orrik",
+    "hero_thalen": "hero_strategic_thalen",
+    "hero_thornwake_nara_graftsibyl": "hero_strategic_thornwake_nara_graftsibyl",
+    "hero_brasshollow_harro_debtrune": "hero_strategic_brasshollow_harro_debtrune",
+    "hero_veilmourn_orso_nightchart": "hero_strategic_veilmourn_orso_nightchart"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",

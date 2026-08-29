@@ -11,24 +11,24 @@ const EXPECTED_FACTION_ASSETS := {
 	"faction_veilmourn": "hero_faction_veilmourn",
 }
 const REPRESENTATIVE_HERO_IDS := {
-	"faction_embercourt": "hero_lyra",
-	"faction_mireclaw": "hero_mireclaw_nix_votivejaw",
+	"faction_embercourt": "hero_embercourt_orra_cinderquill",
+	"faction_mireclaw": "hero_orrik",
 	"faction_sunvault": "hero_sunvault_ilyr_glassmarshal",
 	"faction_thornwake": "hero_thornwake_ardren_briarmarshal",
 	"faction_brasshollow": "hero_brasshollow_daxis_chaincaptain",
 	"faction_veilmourn": "hero_veilmourn_ruln_vanehook",
 }
 const EXPECTED_COMMANDER_ASSETS := {
-	"faction_embercourt": "hero_signature_lyra",
-	"faction_mireclaw": "hero_faction_mireclaw",
+	"faction_embercourt": "hero_faction_embercourt",
+	"faction_mireclaw": "hero_strategic_orrik",
 	"faction_sunvault": "hero_field_sunvault_ilyr_glassmarshal",
 	"faction_thornwake": "hero_tavern_thornwake_ardren_briarmarshal",
 	"faction_brasshollow": "hero_tavern_brasshollow_daxis_chaincaptain",
 	"faction_veilmourn": "hero_lead_veilmourn_ruln_vanehook",
 }
 const EXPECTED_COMMANDER_PATHS := {
-	"faction_embercourt": "res://art/overworld/runtime/heroes/signature/hero_lyra.png",
-	"faction_mireclaw": "res://art/overworld/runtime/heroes/factions/mireclaw.png",
+	"faction_embercourt": "res://art/overworld/runtime/heroes/factions/embercourt.png",
+	"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_orrik.png",
 	"faction_sunvault": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal.png",
 	"faction_thornwake": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
 	"faction_brasshollow": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
