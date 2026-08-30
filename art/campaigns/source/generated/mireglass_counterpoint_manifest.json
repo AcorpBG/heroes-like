@@ -1,0 +1,24 @@
+{
+  "schema_id": "mireglass_counterpoint_campaign_art_v1",
+  "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+  "campaign_id": "campaign_mireglass_counterpoint",
+  "generation_mode": "built_in_image_gen_with_mechanical_runtime_derivation",
+  "assets": [
+    {
+      "id": "campaign_emblem_mireglass_counterpoint",
+      "source_path": "res://art/campaigns/source/generated/emblems/mireglass_counterpoint_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/mireglass_counterpoint.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a57d2f65-1755-474d-a60f-ea0d2ee07150.png",
+      "source_sha256": "3d338809c8249ea2d5283bc02594803272b2bf9fa7c35e245054433fc4043b9e",
+      "runtime_sha256": "ec8d4d14b191bdbee341a2ea84db01ab54dd7ecf769f0d57f67d2ce9a5423fb2",
+      "prompt_summary": "A dark woven marsh-reed spiral and clear faceted prism cadence balance across two tuning weights and one neutral brass counterseal."
+    },
+    {"id": "campaign_chapter_seal_siltglass_index", "source_path": "res://art/campaigns/source/generated/chapter_seals/siltglass_index_source.png", "runtime_path": "res://art/campaigns/runtime/chapter_seals/siltglass_index.png", "source_sha256": "211d58316aab9d76e0b7accfd1a7b0cc1a0a01b6e115a5d85d3e1ecfd29a4935", "runtime_sha256": "54e9d6be256488be27eacda098383f1c2265814bc6ed41f2292e0a6240264cc5"},
+    {"id": "campaign_chapter_seal_greenline_lens_table", "source_path": "res://art/campaigns/source/generated/chapter_seals/greenline_lens_table_source.png", "runtime_path": "res://art/campaigns/runtime/chapter_seals/greenline_lens_table.png", "source_sha256": "24b7db93c9edacc86fc5e975cc27e3c450c428ae0c5a4f3eb50b71ef22208b78", "runtime_sha256": "cd20ee44f50d3a59e70d896da46fbb9b02b6466e18fb70dd10e928be588b6839"},
+    {"id": "campaign_chapter_seal_reedflame_votive_frame", "source_path": "res://art/campaigns/source/generated/chapter_seals/reedflame_votive_frame_source.png", "runtime_path": "res://art/campaigns/runtime/chapter_seals/reedflame_votive_frame.png", "source_sha256": "971c2866f5961ca5cb60faa0597f02391fe8e6258def1375bdcdf2f865c0c740", "runtime_sha256": "5ebf9414fafd63acd5c1dec09a2b7833f8e631e2bf34b58a736319fbe76e4bfb"},
+    {"id": "campaign_chapter_seal_ossuary_prism_choir", "source_path": "res://art/campaigns/source/generated/chapter_seals/ossuary_prism_choir_source.png", "runtime_path": "res://art/campaigns/runtime/chapter_seals/ossuary_prism_choir.png", "source_sha256": "9db668d4d4f0d5018b98a136837f2302e0bb1c0d215ab63319d10e45245bbf9a", "runtime_sha256": "95c544e4316b600c7e4d08e862adc5524f3afb7c19ee70175fc230c2532a4f1e"},
+    {"id": "campaign_chapter_seal_glowcap_echo_bell", "source_path": "res://art/campaigns/source/generated/chapter_seals/glowcap_echo_bell_source.png", "runtime_path": "res://art/campaigns/runtime/chapter_seals/glowcap_echo_bell.png", "source_sha256": "3cb334a2065d410dbe91e3f5b7cbc3f318015ae0513ff1b9dcc7c6a075dfddf3", "runtime_sha256": "b9d8cb2658b1e680a96faed04ec9f25a0187a865838c30f094cf9cc57903808a"},
+    {"id": "campaign_chapter_seal_kite_signal_countermast", "source_path": "res://art/campaigns/source/generated/chapter_seals/kite_signal_countermast_source.png", "runtime_path": "res://art/campaigns/runtime/chapter_seals/kite_signal_countermast.png", "source_sha256": "a77996d54a1127a359f293dc66dcd90d70d349b41113fb3bbb89bb4860b4ba96", "runtime_sha256": "8ba7701427f55bdefe0305ef610e7e28c6428be8e1968635f0e55fd6fb410bd3"}
+  ],
+  "derivation": "The 128x128 emblem is a transparent trim-and-reduction of its generated master. Each 64x64 chapter seal is a transparent trim-and-reduction of the corresponding original landmark master with a consistent thin brass chapter ring; no painted background is introduced."
+}

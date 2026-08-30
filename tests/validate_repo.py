@@ -43528,6 +43528,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (640, 128)
             elif source_model in {"built_in_image_gen_original_pactwright_waydesk_with_runtime_state_derivation", "built_in_image_gen_original_pactwright_waydesk_with_six_mark_runtime_state_derivation"}:
                 expected_canvas = (96, 48)
+            elif source_model == "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation":
+                expected_canvas = (576, 48)
             elif source_model == "curated_original_character_unit_landmark_reuse":
                 expected_canvas = (96, 96)
             else:
@@ -50016,10 +50018,10 @@ def validate_mireclaw_sunvault_frontier_contracts(errors: list[str]) -> None:
         hero_id, faction_id, encounter_id, group_id, placement_id, rare_id, objective_id, objective_type, asset_id, stem, region, source_sha = contract
         scenario = scenarios.get(scenario_id, {})
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
-        ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
+        ensure(availability == {"campaign": True, "skirmish": True}, errors, f"{scenario_id} must remain live in the Mireglass campaign and skirmish")
         ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id, errors, f"{scenario_id} lost its selected hero or faction")
         expected_encounter_count = 4 if scenario_id == "glassmarshal-ossuary-battery" else 3
-        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 10 and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("encounters", [])) == expected_encounter_count and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} lost its complete authored contract")
+        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 11 and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("encounters", [])) == expected_encounter_count and len(scenario.get("script_hooks", [])) == 6 and len(scenario.get("objectives", {}).get("victory", [])) == 5, errors, f"{scenario_id} lost its complete authored and counterpoint contract")
         activated_site_ids.update(str(row.get("site_id", "")) for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and str(row.get("site_id", "")) in dormant_site_ids)
         placements = [row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
         placement = placements[0] if len(placements) == 1 else {}
@@ -50406,11 +50408,15 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
     for scenario_id, contract in expected.items():
         scenario = scenarios.get(scenario_id, {})
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
-        ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
+        expected_availability = {"campaign": scenario_id in {"rotlamp-glowcap-refrain", "daynote-kite-signal-accord"}, "skirmish": True}
+        ensure(availability == expected_availability, errors, f"{scenario_id} lost its exact campaign/skirmish availability")
         ensure(scenario.get("hero_id") == contract["hero"] and scenario.get("player_faction_id") == contract["faction"] and scenario.get("player_army_id") == contract["player_group"], errors, f"{scenario_id} lost its spellwright hero, faction, or cadre")
         ensure(scenario.get("map_size") == {"width": 12, "height": 7} and len(scenario.get("map", [])) == 7 and all(len(row) == 12 for row in scenario.get("map", [])), errors, f"{scenario_id} lost its exact 12x7 map")
-        expected_resource_count = 13 if scenario_id in {"gaugesavant-milestone-calibration", "mirrorbell-harbor-echo"} else 12
-        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == expected_resource_count and len(scenario.get("artifact_nodes", [])) == 4 and len(scenario.get("encounters", [])) == 4 and len(scenario.get("script_hooks", [])) == 6 and len(scenario.get("objectives", {}).get("victory", [])) == 5, errors, f"{scenario_id} lost its complete expedition contract")
+        counterpoint_chapter = scenario_id in {"rotlamp-glowcap-refrain", "daynote-kite-signal-accord"}
+        expected_resource_count = 13 if scenario_id in {"gaugesavant-milestone-calibration", "mirrorbell-harbor-echo", "rotlamp-glowcap-refrain", "daynote-kite-signal-accord"} else 12
+        expected_hook_count = 7 if counterpoint_chapter else 6
+        expected_objective_count = 6 if counterpoint_chapter else 5
+        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == expected_resource_count and len(scenario.get("artifact_nodes", [])) == 4 and len(scenario.get("encounters", [])) == 4 and len(scenario.get("script_hooks", [])) == expected_hook_count and len(scenario.get("objectives", {}).get("victory", [])) == expected_objective_count, errors, f"{scenario_id} lost its complete expedition and campaign contract")
         site_ids = {str(row.get("site_id", "")) for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
         artifact_ids = {str(row.get("artifact_id", "")) for row in scenario.get("artifact_nodes", []) if isinstance(row, dict)}
         ensure(contract["landmark_site"] in site_ids and contract["boss_site"] in site_ids, errors, f"{scenario_id} lost its faction landmark or matching neutral dwelling")
@@ -52149,7 +52155,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 87 and len(placements) == 1096 and len(placed_site_ids) == 195, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 87 and len(placements) == 1102 and len(placed_site_ids) == 201, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -52171,9 +52177,9 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 195, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(not unresolved and len(resolver_paths) == 201, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
     ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 170, errors, "Placed resource-site map-object resolver coverage changed")
-    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 25, errors, "Placed resource-site exact site-mapping coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 31, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
             if site_id == "site_fenhound_kennels":
@@ -52459,10 +52465,11 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         "campaign_sixfold_testament": ("campaign_emblem_sixfold_testament", "sixfold_testament", "77d25dbaad3584214313867ab04fe6cd94d831a9ff9bbadf799c28da75188f94", "fc6dafad1784c2020bbf0182897f92faea2b91038f939812e9f83c5a6bd0091e"),
         "campaign_horn_glass_accord": ("campaign_emblem_horn_glass_accord", "horn_glass_accord", "1a7f472617ea648db3eba251296617727c1135e35e8a1d016bddbc7d3ff084c3", "20b5186ee703641c6c30b27739a43341d222f734b57878e06bf2aa940828ee30"),
         "campaign_unbound_road_ledger": ("campaign_emblem_unbound_road_ledger", "unbound_road_ledger", "7506686538be4e1534f38eef183a86af2c0002164cda065c6804e5ca97846605", "84927535b277bf0d54504316f712d707abe35dfc5f1d51cbfe245657ff0ce5e8"),
+        "campaign_mireglass_counterpoint": ("campaign_emblem_mireglass_counterpoint", "mireglass_counterpoint", "3d338809c8249ea2d5283bc02594803272b2bf9fa7c35e245054433fc4043b9e", "ec8d4d14b191bdbee341a2ea84db01ab54dd7ecf769f0d57f67d2ce9a5423fb2"),
     }
     campaigns_value = load_json(campaign_path).get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
-    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the twelve live campaign arcs")
+    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the thirteen live campaign arcs")
     source_payloads: list[bytes] = []
     runtime_payloads: list[bytes] = []
     for campaign_id, (emblem_id, stem, source_sha, runtime_sha) in expected.items():
@@ -52491,8 +52498,8 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(hashlib.sha256(payload).hexdigest() == runtime_sha, errors, f"Campaign {campaign_id} runtime-emblem bytes changed")
             ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} runtime emblem must retain real alpha")
             runtime_payloads.append(payload)
-    ensure(len(source_payloads) == 12 and len(set(source_payloads)) == 12, errors, "All twelve campaign emblem sources must remain byte-distinct")
-    ensure(len(runtime_payloads) == 12 and len(set(runtime_payloads)) == 12, errors, "All twelve campaign runtime emblems must remain byte-distinct")
+    ensure(len(source_payloads) == 13 and len(set(source_payloads)) == 13, errors, "All thirteen campaign emblem sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 13 and len(set(runtime_payloads)) == 13, errors, "All thirteen campaign runtime emblems must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = campaign_rules_path.read_text(encoding="utf-8")
@@ -52519,7 +52526,7 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Campaign emblem focused report is missing live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all twelve campaign emblems")
+        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all thirteen campaign emblems")
         ensure('bool(terrain_payload["campaign_emblem_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when campaign emblems are absent")
         ensure('"campaign_emblem_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report campaign emblem package coverage")
         for _campaign_id, (_emblem_id, stem, _source_sha, _runtime_sha) in expected.items():
@@ -52600,6 +52607,14 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
             "railhead-charter-seizure": ("burning_charter", "5d2f7da4df22463f8ea8cf8f2828b85abd4ab538394369dc6fc71f8289a03fc1", "d7e4b0cf99a135b198a8ad92f96c802694a2f833b43d39d66c62fddd68a2e31e"),
             "mistcorsair-graftwake-raid": ("salted_ghost_rope", "54e2731bb79480beebedc3269256a23515e3c3666f92cf9198c4514c11d91599", "5634770abcd5dacb2c49d7987062ecd923e73962912a5935197f8b3332b07929"),
         },
+        "campaign_mireglass_counterpoint": {
+            "mudkeel-hive-foreclosure": ("siltglass_index", "211d58316aab9d76e0b7accfd1a7b0cc1a0a01b6e115a5d85d3e1ecfd29a4935", "54e9d6be256488be27eacda098383f1c2265814bc6ed41f2292e0a6240264cc5"),
+            "lenscaptain-greenline-survey": ("greenline_lens_table", "24b7db93c9edacc86fc5e975cc27e3c450c428ae0c5a4f3eb50b71ef22208b78", "cd20ee44f50d3a59e70d896da46fbb9b02b6466e18fb70dd10e928be588b6839"),
+            "votivejaw-reedflame-vigil": ("reedflame_votive_frame", "971c2866f5961ca5cb60faa0597f02391fe8e6258def1375bdcdf2f865c0c740", "5ebf9414fafd63acd5c1dec09a2b7833f8e631e2bf34b58a736319fbe76e4bfb"),
+            "glassmarshal-ossuary-battery": ("ossuary_prism_choir", "9db668d4d4f0d5018b98a136837f2302e0bb1c0d215ab63319d10e45245bbf9a", "95c544e4316b600c7e4d08e862adc5524f3afb7c19ee70175fc230c2532a4f1e"),
+            "rotlamp-glowcap-refrain": ("glowcap_echo_bell", "3cb334a2065d410dbe91e3f5b7cbc3f318015ae0513ff1b9dcc7c6a075dfddf3", "b9d8cb2658b1e680a96faed04ec9f25a0187a865838c30f094cf9cc57903808a"),
+            "daynote-kite-signal-accord": ("kite_signal_countermast", "a77996d54a1127a359f293dc66dcd90d70d349b41113fb3bbb89bb4860b4ba96", "8ba7701427f55bdefe0305ef610e7e28c6428be8e1968635f0e55fd6fb410bd3"),
+        },
     }
     campaigns_value = load_json(CONTENT_DIR / "campaigns.json").get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
@@ -52645,8 +52660,8 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
                 payload = runtime_path.read_bytes()
                 ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id}/{scenario_id} seal runtime bytes or alpha changed")
                 runtime_payloads.append(payload)
-    ensure(chapter_count == 48 and sealed_count == 48 and opening_count == 12 and later_count == 36, errors, "Campaign chapter-seal scope must remain exact for all 48 chapters")
-    ensure(len(source_payloads) == 48 and len(set(source_payloads)) == 48 and len(runtime_payloads) == 48 and len(set(runtime_payloads)) == 48, errors, "All campaign chapter seals must remain byte-distinct")
+    ensure(chapter_count == 54 and sealed_count == 54 and opening_count == 13 and later_count == 41, errors, "Campaign chapter-seal scope must remain exact for all 54 chapters")
+    ensure(len(source_payloads) == 54 and len(set(source_payloads)) == 54 and len(runtime_payloads) == 54 and len(set(runtime_payloads)) == 54, errors, "All campaign chapter seals must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = (ROOT / "scripts/core/CampaignRules.gd").read_text(encoding="utf-8")
@@ -52658,13 +52673,13 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
         ensure(token in rules_text, errors, f"Campaign rules are missing chapter-seal authority: {token}")
     for token in ("_campaign_chapter_seal_texture_cache", "_chapter_list.set_item_icon(index, seal_texture)", "func _load_campaign_chapter_seal_texture", '"seal_path": _chapter_list.get_item_icon(index).resource_path', '"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", ""))'):
         ensure(token in menu_text, errors, f"Campaign menu is missing live chapter-seal presentation: {token}")
-    ensure("_campaign_chapter_seal_texture_cache.size() >= 48" in menu_text, errors, "Campaign chapter-seal cache must cover all 48 authored identities")
+    ensure("_campaign_chapter_seal_texture_cache.size() >= 54" in menu_text, errors, "Campaign chapter-seal cache must cover all 54 authored identities")
     chapter_scene_start = scene_text.find('[node name="ChapterList" type="ItemList"')
     chapter_scene_end = scene_text.find("\n[node ", chapter_scene_start + 1)
     ensure("fixed_icon_size = Vector2i(24, 24)" in scene_text[chapter_scene_start:chapter_scene_end], errors, "Campaign chapter list must retain compact 24x24 seals")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 48 chapter seals")
+        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 54 chapter seals")
         ensure('bool(terrain_payload["campaign_chapter_seal_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when chapter seals are absent")
         ensure('"campaign_chapter_seal_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged chapter-seal coverage")
         for expected_scenarios in expected.values():
@@ -74851,7 +74866,7 @@ def validate_veil_coast_sounding_circuit(errors: list[str]) -> None:
     ensure(export_text.count("art/*/source/*") == 2, errors, "Both release presets must exclude coast-route generated source art")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 22" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
+        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 23" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
 
 
 def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -> None:
@@ -77028,7 +77043,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
             "unclaimed": "mapobj_tideglass_roost", "controlled": "resource_site_neutral_tideglass_roost_controlled", "unclaimed_region": [96, 0, 48, 48], "controlled_region": [144, 0, 48, 48],
         },
     }
-    ensure(len(units) == 111 and len(dwellings) == 27 and len(sites) == 196 and len(objects) == 388 and len(groups) == 159 and len(encounters) == 101, errors, "Elite-neutral batch must retain the expanded 111-unit, 27-dwelling, 196-site, 388-object, 159-army, 101-encounter roster")
+    ensure(len(units) == 111 and len(dwellings) == 27 and len(sites) == 202 and len(objects) == 388 and len(groups) == 159 and len(encounters) == 101, errors, "Elite-neutral batch must retain the expanded 111-unit, 27-dwelling, 202-site, 388-object, 159-army, 101-encounter roster")
     ensure(len(scenario.get("resource_nodes", [])) == 93 and len(scenario.get("encounters", [])) == 25, errors, "Elite-neutral batch must own the expanded 93-site, 25-encounter Ninefold board")
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = overworld_art.get("object_assets", {})
@@ -77084,6 +77099,77 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
     for packaging_path in (ROOT / "tests" / "packaging_linux_export_smoke.py", ROOT / "tests" / "packaging_windows_export_smoke.py"):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure('REQUIRED_ELITE_NEUTRAL_DWELLING_ATLAS_NAME = "elite_neutral_dwelling_atlas"' in packaging_text and 'elite_neutral_dwelling_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the elite-neutral dwelling atlas")
+
+
+def validate_mireglass_counterpoint_campaign(errors: list[str]) -> None:
+    batch_id = "content-mireglass-counterpoint-campaign-10184"
+    expected = {
+        "mudkeel-hive-foreclosure": ("site_siltglass_index", "mudkeel_siltglass_index", "mudkeel_hive_foreclosure", "mudkeel_siltglass_counterpoint", "mireglass_siltglass_index_countersealed", "mireglass_silt_testimony", [8, 5], 3),
+        "lenscaptain-greenline-survey": ("site_greenline_lens_table", "lenscaptain_greenline_lens_table", "lenscaptain_greenline_survey", "lenscaptain_greenline_counterpoint", "mireglass_greenline_lens_countersealed", "mireglass_greenline_testimony", [8, 5], 3),
+        "votivejaw-reedflame-vigil": ("site_reedflame_votive_frame", "votivejaw_reedflame_votive_frame", "votivejaw_reedflame_vigil", "votivejaw_reedflame_counterpoint", "mireglass_reedflame_frame_countersealed", "mireglass_reedflame_testimony", [8, 5], 3),
+        "glassmarshal-ossuary-battery": ("site_ossuary_prism_choir", "glassmarshal_ossuary_prism_choir", "glassmarshal_ossuary_battery", "glassmarshal_ossuary_counterpoint", "mireglass_ossuary_prism_countersealed", "mireglass_ossuary_testimony", [8, 5], 4),
+        "rotlamp-glowcap-refrain": ("site_glowcap_echo_bell", "rotlamp_glowcap_echo_bell", "rotlamp_glowcap_croft_watch", "rotlamp_glowcap_counterpoint", "mireglass_glowcap_bell_countersealed", "mireglass_glowcap_testimony", [10, 4], 4),
+        "daynote-kite-signal-accord": ("site_kite_signal_countermast", "daynote_kite_signal_countermast", "daynote_kite_signal_eyrie_watch", "daynote_kite_counterpoint", "mireglass_kite_countermast_countersealed", "mireglass_kite_testimony", [10, 4], 4),
+    }
+    report_script = ROOT / "tests/mireglass_counterpoint_campaign_report.gd"
+    report_scene = ROOT / "tests/mireglass_counterpoint_campaign_report.tscn"
+    atlas_path = ROOT / "art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png"
+    source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/manifest.json"
+    campaign_manifest_path = ROOT / "art/campaigns/source/generated/mireglass_counterpoint_manifest.json"
+    required_paths = (report_script, report_scene, atlas_path, source_manifest_path, campaign_manifest_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing Mireglass Counterpoint owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    campaign = items_index(load_json(CONTENT_DIR / "campaigns.json")).get("campaign_mireglass_counterpoint", {})
+    chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
+    ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == list(expected), errors, "Mireglass Counterpoint must retain its exact six-chapter alternating order")
+    ensure(str(campaign.get("starting_scenario_id", "")) == next(iter(expected)) and str(campaign.get("emblem_id", "")) == "campaign_emblem_mireglass_counterpoint", errors, "Mireglass Counterpoint lost its opening or emblem authority")
+
+    for index, (scenario_id, contract) in enumerate(expected.items()):
+        site_id, placement_id, guard_id, hook_id, claim_flag, testimony_flag, xy, battle_count = contract
+        scenario = scenarios.get(scenario_id, {})
+        availability = scenario.get("selection", {}).get("availability", {})
+        ensure(availability.get("campaign") is True and availability.get("skirmish") is True, errors, f"{scenario_id} must remain live in both campaign and skirmish")
+        nodes = [row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
+        ensure(len(nodes) == 1 and nodes[0].get("site_id") == site_id and nodes[0].get("guard_front_id") == guard_id and [nodes[0].get("x"), nodes[0].get("y")] == xy, errors, f"{scenario_id} lost its exact guarded counterpoint placement")
+        ensure(any(isinstance(row, dict) and row.get("placement_id") == guard_id for row in scenario.get("encounters", [])) and len(scenario.get("encounters", [])) == battle_count, errors, f"{scenario_id} lost its signature guard or production battle breadth")
+        victory = scenario.get("objectives", {}).get("victory", [])
+        hooks = scenario.get("script_hooks", [])
+        ensure(any(isinstance(row, dict) and row.get("type") == "flag_true" and row.get("flag") == claim_flag for row in victory), errors, f"{scenario_id} lost counterseal victory authority")
+        matching_hooks = [row for row in hooks if isinstance(row, dict) and row.get("id") == hook_id]
+        ensure(len(matching_hooks) == 1 and testimony_flag in json.dumps(matching_hooks[0]), errors, f"{scenario_id} lost its exact one-time counterpoint testimony")
+        site = sites.get(site_id, {})
+        ensure(site.get("content_batch_id") == batch_id and site.get("persistent_control") is True and site.get("claim_flags") == {claim_flag: True}, errors, f"{site_id} lost its persistent local claim contract")
+        if index > 0:
+            prior_scenario_id = list(expected)[index - 1]
+            prior_claim_flag = expected[prior_scenario_id][4]
+            chapter = chapters[index]
+            ensure(chapter.get("carryover_import", {}).get("from_scenario_id") == prior_scenario_id and chapter.get("unlock_requirements", [None, {}])[1].get("flag") == prior_claim_flag, errors, f"{scenario_id} lost exact prior-victory and counterseal progression")
+        if index < len(expected) - 1:
+            export = chapters[index].get("carryover_export", {})
+            ensure(export.get("resource_fraction") == 0.18 and export.get("resource_caps", {}).get("gold") == 450 and export.get("flag_ids") == [claim_flag, testimony_flag] and export.get("retain_hero_progression") is False and export.get("retain_spells") is False and export.get("retain_artifacts") is False, errors, f"{scenario_id} lost bounded resource-only carryover")
+
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (576, 48) and hashlib.sha256(atlas_payload).hexdigest() == "55625786f1bcf85c424e96ce03aa233b39e9a7c20222f1e2c5245fb74b1ebb6a" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Mireglass Counterpoint must retain its exact twelve-state alpha-safe atlas")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Mireglass Counterpoint runtime atlas import metadata is missing")
+    art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    site_sprites = art_manifest.get("resource_site_sprites", {})
+    for site_id, *_rest in expected.values():
+        mapping = site_sprites.get(site_id, {}) if isinstance(site_sprites, dict) else {}
+        ensure(str(mapping.get("asset_id", "")).endswith("_countersealed") and str(mapping.get("unclaimed_asset_id", "")).startswith("mapobj_"), errors, f"{site_id} lost both persistent visual states")
+
+    report_text = report_script.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene.read_text(encoding="utf-8"), errors, "mireglass_counterpoint_campaign_report.tscn", [("MireglassCounterpointCampaignReport", "Node")])
+    for token in ('const CASES := [', 'CAMPAIGN_ID := "campaign_mireglass_counterpoint"', 'BattleRulesScript.create_battle_payload', 'CampaignRulesScript.record_session_completion', 'ScenarioScriptRulesScript.process_hooks', 'SessionStateStoreScript.SAVE_VERSION', 'single_consolidated_smoke', 'print("%s %s" % [REPORT_ID'):
+        ensure(token in report_text, errors, f"Mireglass Counterpoint consolidated smoke is missing exact proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        for token in ('REQUIRED_MIREGLASS_COUNTERPOINT_ATLAS_NAME = "mireglass_counterpoint_state_atlas"', '"mireglass_counterpoint"', '"siltglass_index"', '"kite_signal_countermast"'):
+            ensure(token in packaging_text, errors, f"{packaging_path.name} is missing Mireglass Counterpoint package ownership: {token}")
 
 
 def main() -> int:
@@ -77299,6 +77385,7 @@ def main() -> int:
     validate_signature_encounter_landmarks(errors)
     validate_six_faction_dissident_fronts(errors)
     validate_six_faction_standalone_contracts(errors)
+    validate_mireglass_counterpoint_campaign(errors)
     validate_three_faction_outer_reach_contracts(errors)
     validate_mireclaw_sunvault_frontier_contracts(errors)
     validate_six_faction_ascendant_companies(errors)

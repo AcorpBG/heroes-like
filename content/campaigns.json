@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 12,
+  "player_facing_active_campaign_count": 13,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -1988,6 +1988,363 @@
           "journal_defeat": "Cela failed to free the sixth road from the ghost-rope claim.",
           "unlock_requirements": [{"type": "scenario_status", "scenario_id": "railhead-charter-seizure", "status": "victory"}, {"type": "scenario_flag_true", "scenario_id": "railhead-charter-seizure", "flag": "pactwright_waydesk_witnessed"}],
           "carryover_import": {"from_scenario_id": "railhead-charter-seizure", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"}
+        }
+      ]
+    },
+    {
+      "id": "campaign_mireglass_counterpoint",
+      "name": "Mireglass Counterpoint",
+      "description": "Six Mireclaw and Sunvault commanders alternate dark record and clear measure until neither voice can erase the other.",
+      "summary": "A six-chapter alternating-faction campaign about winning six guarded counterseals and carrying only modest stores and independently scoped testimony onward.",
+      "region": "Mudkeel, Greenline, Reedflame, Ossuary, Glowcap, and Kite-Signal Reaches",
+      "emblem_id": "campaign_emblem_mireglass_counterpoint",
+      "emblem_path": "res://art/campaigns/runtime/emblems/mireglass_counterpoint.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/mireglass_counterpoint_source.png",
+      "emblem_alt_text": "A dark woven reed spiral and a clear faceted prism curve balance across two hanging weights and one central brass counterseal.",
+      "emblem_source_sha256": "3d338809c8249ea2d5283bc02594803272b2bf9fa7c35e245054433fc4043b9e",
+      "emblem_runtime_sha256": "ec8d4d14b191bdbee341a2ea84db01ab54dd7ecf769f0d57f67d2ce9a5423fb2",
+      "arc_goal": "Win and counterseal six guarded records so mire-dark memory and prism-clear measure can travel as a counterpoint without exchanging commanders' personal power.",
+      "completion_title": "Six Voices, One Distance",
+      "completion_summary": "The final countermast carries all six voices at range while every testimony remains attributable to the commander and landscape that won it.",
+      "starting_scenario_id": "mudkeel-hive-foreclosure",
+      "scenarios": [
+        {
+          "scenario_id": "mudkeel-hive-foreclosure",
+          "seal_id": "campaign_chapter_seal_mudkeel_hive_foreclosure",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/siltglass_index.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/siltglass_index_source.png",
+          "seal_alt_text": "Two smoky siltglass tablets and a reed tally pointer sit inside a narrow brass counterseal.",
+          "seal_source_sha256": "211d58316aab9d76e0b7accfd1a7b0cc1a0a01b6e115a5d85d3e1ecfd29a4935",
+          "seal_runtime_sha256": "54e9d6be256488be27eacda098383f1c2265814bc6ed41f2292e0a6240264cc5",
+          "label": "Chapter I: Index the Silt",
+          "description": "Brakka breaks the hive foreclosure and records a mire account no iron clause can own.",
+          "chapter_index": 1,
+          "chapter_title": "Answer the Iron Tally",
+          "status_hint": "Break the exact local signature guard, then claim the guarded Siltglass Index before victory can resolve.",
+          "carryover_summary": "Only capped common stores and scoped testimony cross this boundary; hero progression, spells, artifacts, and units remain local.",
+          "briefing": "Clauseworks has made one foreclosure tally stand for every reed hive. Brakka must win the road, then set a second account beside it.",
+          "intel": "The Hive Foreclosure blocks the Siltglass Index at the far bank; its tablets cannot be reached around the guard.",
+          "stakes": "Without an independent mire account, every later measure begins from Clauseworks' price.",
+          "aftermath_victory": "Brakka balances the iron foreclosure against a living mire account. The bounded testimony travels to the next commander.",
+          "aftermath_defeat": "The Siltglass Index remains unbalanced and the counterpoint loses this voice.",
+          "journal_victory": "Brakka countersealed the Siltglass Index as testimony 1 of Mireglass Counterpoint.",
+          "journal_defeat": "Brakka failed to secure the Siltglass Index testimony.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.18,
+            "resource_caps": {
+              "gold": 450,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "mireglass_siltglass_index_countersealed",
+              "mireglass_silt_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "lenscaptain-greenline-survey",
+          "seal_id": "campaign_chapter_seal_lenscaptain_greenline_survey",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/greenline_lens_table.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/greenline_lens_table_source.png",
+          "seal_alt_text": "A horizontal crystal survey lens crosses a rooted meridian table inside a clear brass ring.",
+          "seal_source_sha256": "24b7db93c9edacc86fc5e975cc27e3c450c428ae0c5a4f3eb50b71ef22208b78",
+          "seal_runtime_sha256": "cd20ee44f50d3a59e70d896da46fbb9b02b6466e18fb70dd10e928be588b6839",
+          "label": "Chapter II: Measure the Greenline",
+          "description": "Dovan refuses both a root monopoly and a glass monopoly by preserving the greenline beside his measure.",
+          "chapter_index": 2,
+          "chapter_title": "Keep Two Meridians",
+          "status_hint": "Break the exact local signature guard, then claim the guarded Greenline Lens Table before victory can resolve.",
+          "carryover_summary": "Only capped common stores and scoped testimony cross this boundary; hero progression, spells, artifacts, and units remain local.",
+          "briefing": "The first mire testimony reaches a survey line roots have bent out of every chart. Dovan must measure it without cutting away what made it alive.",
+          "intel": "Rootgate's signature Survey stands immediately before the lens table and must fall to open the final tile.",
+          "stakes": "A perfect measure that destroys its subject is only a cleaner form of erasure.",
+          "aftermath_victory": "Dovan preserves the living greenline beside his exact crystal measure. The bounded testimony travels to the next commander.",
+          "aftermath_defeat": "The Greenline Lens Table remains unbalanced and the counterpoint loses this voice.",
+          "journal_victory": "Dovan countersealed the Greenline Lens Table as testimony 2 of Mireglass Counterpoint.",
+          "journal_defeat": "Dovan failed to secure the Greenline Lens Table testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "mudkeel-hive-foreclosure",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "mudkeel-hive-foreclosure",
+              "flag": "mireglass_siltglass_index_countersealed"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "mudkeel-hive-foreclosure",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.18,
+            "resource_caps": {
+              "gold": 450,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "mireglass_greenline_lens_countersealed",
+              "mireglass_greenline_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "votivejaw-reedflame-vigil",
+          "seal_id": "campaign_chapter_seal_votivejaw_reedflame_vigil",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/reedflame_votive_frame.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/reedflame_votive_frame_source.png",
+          "seal_alt_text": "A circular woven-reed frame holds one amber votive flame and three pale jaw charms.",
+          "seal_source_sha256": "971c2866f5961ca5cb60faa0597f02391fe8e6258def1375bdcdf2f865c0c740",
+          "seal_runtime_sha256": "5ebf9414fafd63acd5c1dec09a2b7833f8e631e2bf34b58a736319fbe76e4bfb",
+          "label": "Chapter III: Temper the Reedflame",
+          "description": "Nix opens Highwater's vigil and tempers its flame around Reedbarrow's older promise.",
+          "chapter_index": 3,
+          "chapter_title": "Let the Old Vow Burn",
+          "status_hint": "Break the exact local signature guard, then claim the guarded Reedflame Votive Frame before victory can resolve.",
+          "carryover_summary": "Only capped common stores and scoped testimony cross this boundary; hero progression, spells, artifacts, and units remain local.",
+          "briefing": "Highwater calls every old ferry vow kindling. Nix must open the vigil and prove a new flame can guard an older promise rather than consume it.",
+          "intel": "The Reedflame Vigil blocks the frame at the east bank while two screens hold the approaches.",
+          "stakes": "If every accord begins by burning its predecessor, no counterpoint survives one generation.",
+          "aftermath_victory": "Nix keeps the old ferry vow visible inside the newly tempered flame. The bounded testimony travels to the next commander.",
+          "aftermath_defeat": "The Reedflame Votive Frame remains unbalanced and the counterpoint loses this voice.",
+          "journal_victory": "Nix countersealed the Reedflame Votive Frame as testimony 3 of Mireglass Counterpoint.",
+          "journal_defeat": "Nix failed to secure the Reedflame Votive Frame testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "lenscaptain-greenline-survey",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "lenscaptain-greenline-survey",
+              "flag": "mireglass_greenline_lens_countersealed"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "lenscaptain-greenline-survey",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.18,
+            "resource_caps": {
+              "gold": 450,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "mireglass_reedflame_frame_countersealed",
+              "mireglass_reedflame_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "glassmarshal-ossuary-battery",
+          "seal_id": "campaign_chapter_seal_glassmarshal_ossuary_battery",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/ossuary_prism_choir.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/ossuary_prism_choir_source.png",
+          "seal_alt_text": "Three pale mineral arches suspend a dusk-blue prism above a black mirrored basin.",
+          "seal_source_sha256": "9db668d4d4f0d5018b98a136837f2302e0bb1c0d215ab63319d10e45245bbf9a",
+          "seal_runtime_sha256": "95c544e4316b600c7e4d08e862adc5524f3afb7c19ee70175fc230c2532a4f1e",
+          "label": "Chapter IV: Tune the Ossuary",
+          "description": "Ilyr turns Bellwake's battery and gives its drowned reflection a line inside the prism cadence.",
+          "chapter_index": 4,
+          "chapter_title": "Return the Drowned Voice",
+          "status_hint": "Break the exact local signature guard, then claim the guarded Ossuary Prism Choir before victory can resolve.",
+          "carryover_summary": "Only capped common stores and scoped testimony cross this boundary; hero progression, spells, artifacts, and units remain local.",
+          "briefing": "A drowned mirror can still answer if the battery stops firing through it. Ilyr must turn the guns and tune what remains rather than overwrite it.",
+          "intel": "Bellwake's Ossuary Battery blocks the choir while a second high guard protects the older prism yard.",
+          "stakes": "A cadence that admits only clear voices cannot carry the coast's dead or the mire's dark record.",
+          "aftermath_victory": "Ilyr tunes the drowned reflection without making it a Sunvault echo. The bounded testimony travels to the next commander.",
+          "aftermath_defeat": "The Ossuary Prism Choir remains unbalanced and the counterpoint loses this voice.",
+          "journal_victory": "Ilyr countersealed the Ossuary Prism Choir as testimony 4 of Mireglass Counterpoint.",
+          "journal_defeat": "Ilyr failed to secure the Ossuary Prism Choir testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "votivejaw-reedflame-vigil",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "votivejaw-reedflame-vigil",
+              "flag": "mireglass_reedflame_frame_countersealed"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "votivejaw-reedflame-vigil",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.18,
+            "resource_caps": {
+              "gold": 450,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "mireglass_ossuary_prism_countersealed",
+              "mireglass_ossuary_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "rotlamp-glowcap-refrain",
+          "seal_id": "campaign_chapter_seal_rotlamp_glowcap_refrain",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/glowcap_echo_bell.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/glowcap_echo_bell_source.png",
+          "seal_alt_text": "A luminous mushroom bell hangs over a dark resonance bowl between curled reedwood legs.",
+          "seal_source_sha256": "3cb334a2065d410dbe91e3f5b7cbc3f318015ae0513ff1b9dcc7c6a075dfddf3",
+          "seal_runtime_sha256": "b9d8cb2658b1e680a96faed04ec9f25a0187a865838c30f094cf9cc57903808a",
+          "label": "Chapter V: Sound the Glowcap",
+          "description": "Edda secures the croft watch and adds its low fungal resonance beneath the four inherited testimonies.",
+          "chapter_index": 5,
+          "chapter_title": "Hear the Low Refrain",
+          "status_hint": "Break the exact local signature guard, then claim the guarded Glowcap Echo Bell before victory can resolve.",
+          "carryover_summary": "Only capped common stores and scoped testimony cross this boundary; hero progression, spells, artifacts, and units remain local.",
+          "briefing": "The counterpoint has measures, vows, and drowned voices but no sustaining low note. Edda must win the Glowcap Croft and sound the bowl behind it.",
+          "intel": "The exact Croft Watch blocks the bell at the eastern edge; three spellward screens protect its route.",
+          "stakes": "Without a ground note, the bright cadence becomes another signal that cannot survive fog or distance.",
+          "aftermath_victory": "Edda sounds a low glowcap refrain beneath the inherited glass cadence. The bounded testimony travels to the next commander.",
+          "aftermath_defeat": "The Glowcap Echo Bell remains unbalanced and the counterpoint loses this voice.",
+          "journal_victory": "Edda countersealed the Glowcap Echo Bell as testimony 5 of Mireglass Counterpoint.",
+          "journal_defeat": "Edda failed to secure the Glowcap Echo Bell testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "glassmarshal-ossuary-battery",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "glassmarshal-ossuary-battery",
+              "flag": "mireglass_ossuary_prism_countersealed"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "glassmarshal-ossuary-battery",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.18,
+            "resource_caps": {
+              "gold": 450,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "mireglass_glowcap_bell_countersealed",
+              "mireglass_glowcap_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "daynote-kite-signal-accord",
+          "seal_id": "campaign_chapter_seal_daynote_kite_signal_accord",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/kite_signal_countermast.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/kite_signal_countermast_source.png",
+          "seal_alt_text": "A forked mast balances a clear diamond kite, a pale counter-vane, and two hanging weights.",
+          "seal_source_sha256": "a77996d54a1127a359f293dc66dcd90d70d349b41113fb3bbb89bb4860b4ba96",
+          "seal_runtime_sha256": "8ba7701427f55bdefe0305ef610e7e28c6428be8e1968635f0e55fd6fb410bd3",
+          "label": "Chapter VI: Balance the Countermast",
+          "description": "Essa clears the final eyrie and balances all six independently won voices into one long-range accord.",
+          "chapter_index": 6,
+          "chapter_title": "Signal the Counterpoint",
+          "status_hint": "Break the exact local signature guard, then claim the guarded Kite-Signal Countermast before victory can resolve.",
+          "carryover_summary": "Only capped common stores and scoped testimony cross this boundary; hero progression, spells, artifacts, and units remain local.",
+          "briefing": "The six voices remain separate until a mast can carry them without placing one above the rest. Essa must clear the eyrie and balance the final signal.",
+          "intel": "The Kite-Signal Eyrie Watch blocks the countermast directly; three eastern screens relay hostile marks.",
+          "stakes": "If the final signal flattens its sources, the campaign ends with a slogan rather than a counterpoint.",
+          "aftermath_victory": "Essa balances mire-dark and prism-clear testimony into one signal with neither side above the other. The bounded testimony travels to the next commander.",
+          "aftermath_defeat": "The Kite-Signal Countermast remains unbalanced and the counterpoint loses this voice.",
+          "journal_victory": "Essa countersealed the Kite-Signal Countermast as testimony 6 of Mireglass Counterpoint.",
+          "journal_defeat": "Essa failed to secure the Kite-Signal Countermast testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "rotlamp-glowcap-refrain",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "rotlamp-glowcap-refrain",
+              "flag": "mireglass_glowcap_bell_countersealed"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "rotlamp-glowcap-refrain",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          }
         }
       ]
     }
