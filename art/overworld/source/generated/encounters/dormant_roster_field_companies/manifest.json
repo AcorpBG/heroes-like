@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_high_three_quarter_dormant_roster_field_company_landmark",
+  "prompt_set_summary": "Four original faction field-company landmarks for the only authored units previously absent from every army group and encounter. Each source was requested as a self-contained transparent landmark with a strong non-color silhouette, no characters, no text, no logos, and no borrowed franchise design.",
+  "runtime_atlas_path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
+  "runtime_atlas_size": [192, 48],
+  "runtime_atlas_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683",
+  "items": [
+    {
+      "encounter_id": "encounter_lockglass_citation_field",
+      "asset_id": "encounter_dormant_roster_lockglass_citation_field",
+      "source_path": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/lockglass_citation_field_source.png",
+      "source_sha256": "27a8df3f93eb5c0e78fd1e98bd0bbddd08f51c7800a570db9e34ce21a0691504",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b9d27dc7-5a55-4aca-98ae-c9afe220577b.png",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "Asymmetrical iron lectern with a heated red-orange lockglass slab, three brass seal clamps, ember brazier, and charred charter posts."
+    },
+    {
+      "encounter_id": "encounter_pollenhook_whistle_line",
+      "asset_id": "encounter_dormant_roster_pollenhook_whistle_line",
+      "source_path": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/pollenhook_whistle_line_source.png",
+      "source_sha256": "e296268dcd3fa95eadfbe716ade31f1cb5e601c6dfe9ec28fc90d1c0349c8acd",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e6a20ecb-1a6e-4303-9acb-cb64af24c353.png",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "Bent living-wood arch with hooked seed pods, pale reed whistles, a braided root rail, and an amber pollen lantern."
+    },
+    {
+      "encounter_id": "encounter_tallyspring_proving_rack",
+      "asset_id": "encounter_dormant_roster_tallyspring_proving_rack",
+      "source_path": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/tallyspring_proving_rack_source.png",
+      "source_sha256": "2d4929bea7382d8bf84ccad51a27204e38b75c06b73f9d30e8adc9c854225ddf",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-9d67cfb4-dece-48cb-b8e3-e0537a943de4.png",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "Squat brass-and-black-iron calibration rack with a visible coiled spring, three angled tally discs, red gauge, and quench bucket."
+    },
+    {
+      "encounter_id": "encounter_gloamkeel_sounding_barricade",
+      "asset_id": "encounter_dormant_roster_gloamkeel_sounding_barricade",
+      "source_path": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/gloamkeel_sounding_barricade_source.png",
+      "source_sha256": "9ff17e975bfbf820da707fa53a20e01f9bcbccd46a129388f7ef751d29d19dab",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-46d627e9-3c66-4433-a41d-578d72965962.png",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Salt-dark ship-keel shield planted between two broken mooring posts with a pale bell, ghost-rope chain, and cold wake lantern."
+    }
+  ]
+}

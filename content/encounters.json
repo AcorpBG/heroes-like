@@ -2894,6 +2894,34 @@
       "enemy_commander": {"name": "Eulogist Mara Lastwake", "command": {"attack": 1, "defense": 2, "power": 3, "knowledge": 2}, "starting_spell_ids": ["spell_obituary_mark"], "battle_traits": ["ambusher", "linekeeper"]},
       "field_objectives": [{"id": "pale_saltwake_last_line", "type": "signal_beacon", "label": "Last Safe Line", "summary": "Three saltglass tablets keep the recital inside its false tide margin until the pale bearing is claimed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "commander", "urgency"]}],
       "rewards": {"gold": 370, "memory_salt": 1, "experience": 270}, "victory_flags": ["pale_saltwake_recital_passed"]
+    },
+    {
+      "id": "encounter_lockglass_citation_field", "name": "Lockglass Citation Field", "enemy_group_id": "army_lockglass_citation_field", "affiliation": "faction_embercourt", "terrain": "lava",
+      "battlefield_tags": ["open_lane", "fortified_line"], "max_rounds": 14,
+      "enemy_commander": {"name": "Seal-Marshal Enna Lockscar", "command": {"attack": 2, "defense": 2, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_lantern_phalanx"], "battle_traits": ["artillerist", "linekeeper"]},
+      "field_objectives": [{"id": "lockglass_citation_bench", "type": "cover_line", "label": "Lockglass Citation Bench", "summary": "A heated lockglass slab keeps the writ line sealed until its three brass clamps are forced open.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "commander", "urgency"]}],
+      "rewards": {"gold": 340, "embergrain": 1, "experience": 250}, "victory_flags": ["lockglass_citation_field_cleared"]
+    },
+    {
+      "id": "encounter_pollenhook_whistle_line", "name": "Pollenhook Whistle Line", "enemy_group_id": "army_pollenhook_whistle_line", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "chokepoint"], "max_rounds": 13,
+      "enemy_commander": {"name": "Hookwhistler Tessa Amberreed", "command": {"attack": 2, "defense": 1, "power": 2, "knowledge": 1}, "starting_spell_ids": ["spell_briar_bind"], "battle_traits": ["ambusher", "bogwise"]},
+      "field_objectives": [{"id": "pollenhook_snare_wind", "type": "hazard_zone", "label": "Pollenhook Snare Wind", "summary": "Hooked seed pods flood the marked lane with clinging pollen until the whistle arch is seized.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "cohesion", "urgency"]}],
+      "rewards": {"gold": 260, "verdant_grafts": 1, "experience": 210}, "victory_flags": ["pollenhook_whistle_line_cleared"]
+    },
+    {
+      "id": "encounter_tallyspring_proving_rack", "name": "Tallyspring Proving Rack", "enemy_group_id": "army_tallyspring_proving_rack", "affiliation": "faction_brasshollow", "terrain": "underground",
+      "battlefield_tags": ["battery_nest", "open_lane"], "max_rounds": 13,
+      "enemy_commander": {"name": "Tally-Proctor Orven Threeclick", "command": {"attack": 2, "defense": 2, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_pressure_clause"], "battle_traits": ["artillerist", "vanguard"]},
+      "field_objectives": [{"id": "tallyspring_ricochet_rack", "type": "lane_battery", "label": "Tallyspring Ricochet Rack", "summary": "Three calibrated discs keep skipping the proving lane until the wound spring and red gauge are disabled.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "momentum", "urgency"]}],
+      "rewards": {"gold": 280, "brass_scrip": 1, "experience": 220}, "victory_flags": ["tallyspring_proving_rack_cleared"]
+    },
+    {
+      "id": "encounter_gloamkeel_sounding_barricade", "name": "Gloamkeel Sounding Barricade", "enemy_group_id": "army_gloamkeel_sounding_barricade", "affiliation": "faction_veilmourn", "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "chokepoint"], "max_rounds": 14,
+      "enemy_commander": {"name": "Keel-Warden Mora Palechain", "command": {"attack": 1, "defense": 3, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_fogwake_step"], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "gloamkeel_sounding_line", "type": "obstruction_line", "label": "Gloamkeel Sounding Line", "summary": "A planted keel shield and pale bell hold the fogbound boarding line until the ghost-rope posts are broken.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 350, "memory_salt": 1, "experience": 260}, "victory_flags": ["gloamkeel_sounding_barricade_cleared"]
     }
   ]
 }

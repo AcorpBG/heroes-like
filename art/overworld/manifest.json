@@ -7471,6 +7471,34 @@
       "presentation_role": "canvas_awning_herb_rack_wayfarer_infirmary",
       "accessible_description": "A warm roadside lodge shelters a canvas treatment porch, herb racks, water basin, folded blankets, and a round four-leaf lantern."
     },
+    "encounter_dormant_roster_lockglass_citation_field": {
+      "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [192, 48],
+      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683", "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/lockglass_citation_field_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
+      "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_lockglass_citation_field", "assigned_faction_id": "faction_embercourt", "presentation_role": "heated_lockglass_citation_bench",
+      "accessible_description": "A thick glowing lockglass slab is held by three brass seal clamps above a compact ember brazier between two charred charter posts."
+    },
+    "encounter_dormant_roster_pollenhook_whistle_line": {
+      "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [192, 48],
+      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683", "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/pollenhook_whistle_line_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
+      "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_pollenhook_whistle_line", "assigned_faction_id": "faction_thornwake", "presentation_role": "hooked_seed_whistle_arch",
+      "accessible_description": "A bent living-wood arch holds three hooked seed pods, pale reed whistles, an amber pollen lantern, and a low braided root rail."
+    },
+    "encounter_dormant_roster_tallyspring_proving_rack": {
+      "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [192, 48],
+      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683", "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/tallyspring_proving_rack_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
+      "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_tallyspring_proving_rack", "assigned_faction_id": "faction_brasshollow", "presentation_role": "three_disc_tallyspring_calibration_rack",
+      "accessible_description": "A wound black spring drives three angled brass tally discs beside a vertical red gauge, riveted timber base, and small quench bucket."
+    },
+    "encounter_dormant_roster_gloamkeel_sounding_barricade": {
+      "path": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [192, 48],
+      "runtime_sha256": "1427677a89e0a49cdbd1feb2fcd2778c52e1e233b34c3628885227a7a38dd683", "source_generated": "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/gloamkeel_sounding_barricade_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/dormant_roster_field_companies/dormant_roster_field_companies_atlas.png",
+      "source_model": "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_gloamkeel_sounding_barricade", "assigned_faction_id": "faction_veilmourn", "presentation_role": "planted_keel_sounding_barricade",
+      "accessible_description": "A broad salt-dark keel shield stands between broken mooring posts beneath a pale bell, ghost-rope chain, and cold wake lantern."
+    },
     "mapobj_ore_crates": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ore_crates.png",
       "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ore_crates-trimmed.png",
@@ -8322,7 +8350,11 @@
     "encounter_horizon_court_rainwrit_tidewrit_assize": "encounter_horizon_court_rainwrit_tidewrit_assize",
     "encounter_crownroot_seedglass_trial": "encounter_horizon_specialist_seedglass_trial",
     "encounter_blackbell_quenchbell_proving": "encounter_horizon_specialist_quenchbell_proving",
-    "encounter_pale_saltwake_recital": "encounter_horizon_specialist_saltwake_recital"
+    "encounter_pale_saltwake_recital": "encounter_horizon_specialist_saltwake_recital",
+    "encounter_lockglass_citation_field": "encounter_dormant_roster_lockglass_citation_field",
+    "encounter_pollenhook_whistle_line": "encounter_dormant_roster_pollenhook_whistle_line",
+    "encounter_tallyspring_proving_rack": "encounter_dormant_roster_tallyspring_proving_rack",
+    "encounter_gloamkeel_sounding_barricade": "encounter_dormant_roster_gloamkeel_sounding_barricade"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",
