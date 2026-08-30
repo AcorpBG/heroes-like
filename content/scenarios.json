@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 72,
+  "player_facing_active_scenario_count": 73,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -15231,6 +15231,988 @@
       {"placement_id":"six_gate_mid_levy","encounter_id":"encounter_mossglass_moonhunt","x":11,"y":6,"difficulty":"medium","combat_seed":27432},
       {"placement_id":"six_gate_east_levy","encounter_id":"encounter_mossglass_moonhunt","x":15,"y":7,"difficulty":"medium","combat_seed":27433},
       {"placement_id":"six_gate_contract_host","encounter_id":"encounter_nightglass_dominion","x":17,"y":4,"difficulty":"high","combat_seed":27434}
+      ]
+    },
+    {
+      "id": "accordfall-fourteen-marks",
+      "name": "Accordfall Fourteen Marks",
+      "selection": {
+        "summary": "Mira crosses a broad fallen compact to claim three civic landmarks, settle seven old accord marks, and restore four damaged route works before an eastern host closes the road.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Accordfall Front (26x16)",
+        "player_summary": "Mira leads an Embercourt roadward company from Westwrit Hall with stores for every restoration.",
+        "enemy_summary": "A Mireclaw compact host occupies Eastmark Court and pressures the unsettled marks.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 26,
+        "height": 16
+      },
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_flintmere_column",
+      "hero_id": "hero_mira",
+      "starting_resources": {
+        "gold": 1750,
+        "wood": 12,
+        "ore": 10
+      },
+      "map": [
+        [
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "rough",
+          "dirt",
+          "rough",
+          "rough",
+          "rough",
+          "rough",
+          "snow",
+          "snow",
+          "snow",
+          "rough",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "dirt",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "snow",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "rough",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "snow",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass"
+        ],
+        [
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "rough",
+          "rough",
+          "dirt",
+          "rough",
+          "rough",
+          "snow",
+          "rough",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt"
+        ],
+        [
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "rough",
+          "dirt",
+          "rough",
+          "rough",
+          "rough",
+          "rough",
+          "snow",
+          "snow",
+          "snow",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "dirt",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "snow",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "rough",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "snow",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "dirt",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "snow",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "rough",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "snow",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "rough",
+          "rough",
+          "dirt",
+          "rough",
+          "rough",
+          "snow",
+          "rough",
+          "snow",
+          "snow",
+          "snow",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass"
+        ],
+        [
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "rough",
+          "dirt",
+          "rough",
+          "rough",
+          "rough",
+          "rough",
+          "snow",
+          "snow",
+          "snow",
+          "rough",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "dirt",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "snow",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "rough",
+          "rough",
+          "rough",
+          "dirt",
+          "rough",
+          "snow",
+          "snow",
+          "rough",
+          "snow",
+          "snow",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass"
+        ],
+        [
+          "grass",
+          "forest",
+          "grass",
+          "grass",
+          "grass",
+          "forest",
+          "grass",
+          "forest",
+          "forest",
+          "grass",
+          "forest",
+          "rough",
+          "rough",
+          "dirt",
+          "rough",
+          "rough",
+          "snow",
+          "rough",
+          "snow",
+          "snow",
+          "snow",
+          "grass",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 1,
+        "y": 8
+      },
+      "hero_starts": [
+        "hero_mira"
+      ],
+      "objectives": {
+        "victory_text": "The fourteen marks answer the restored accord, Eastmark Court is reclaimed, and the compact host is broken.",
+        "defeat_text": "The compact host closes Westwrit Hall before Mira can settle the fourteen marks.",
+        "victory": [
+          {
+            "id": "claim_accordfall_enemy_town",
+            "label": "Claim Eastmark Court",
+            "type": "town_owned_by_player",
+            "placement_id": "accordfall_enemy_town"
+          },
+          {
+            "id": "break_accordfall_host",
+            "label": "Break the eastern compact host",
+            "type": "encounter_resolved",
+            "placement_id": "accordfall_compact_host"
+          },
+          {
+            "id": "record_broken_treaty",
+            "label": "Record Broken Treaty",
+            "type": "flag_true",
+            "flag": "accordfall_broken_treaty_recorded"
+          },
+          {
+            "id": "release_sealed_causeway",
+            "label": "Release Causeway",
+            "type": "flag_true",
+            "flag": "accordfall_causeway_released"
+          },
+          {
+            "id": "align_mirror_anchor",
+            "label": "Align Mirror Anchor",
+            "type": "flag_true",
+            "flag": "accordfall_mirror_anchor_aligned"
+          },
+          {
+            "id": "raise_crownless_standard",
+            "label": "Raise Crownless Standard",
+            "type": "flag_true",
+            "flag": "accordfall_crownless_standard_raised"
+          },
+          {
+            "id": "ring_drowned_toll",
+            "label": "Ring Drowned Toll",
+            "type": "flag_true",
+            "flag": "accordfall_drowned_toll_rung"
+          },
+          {
+            "id": "accept_orchard_writ",
+            "label": "Accept Orchard Writ",
+            "type": "flag_true",
+            "flag": "accordfall_orchard_writ_accepted"
+          },
+          {
+            "id": "turn_brass_oath_wheel",
+            "label": "Turn Oath Wheel",
+            "type": "flag_true",
+            "flag": "accordfall_brass_oath_wheel_turned"
+          },
+          {
+            "id": "restore_signal_brazier",
+            "label": "Restore Signal Brazier",
+            "type": "flag_true",
+            "flag": "accordfall_signal_brazier_restored"
+          },
+          {
+            "id": "claim_repaired_ferry",
+            "label": "Claim Ferry Stage",
+            "type": "flag_true",
+            "flag": "accordfall_ferry_stage_claimed"
+          },
+          {
+            "id": "restart_quarry_head",
+            "label": "Restart Quarry Head",
+            "type": "flag_true",
+            "flag": "accordfall_quarry_head_restarted"
+          },
+          {
+            "id": "restore_rootgate_marker",
+            "label": "Restore Rootgate",
+            "type": "flag_true",
+            "flag": "accordfall_rootgate_restored"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_accordfall_hall",
+            "label": "Keep Westwrit Hall",
+            "type": "town_not_owned_by_player",
+            "placement_id": "accordfall_player_town"
+          },
+          {
+            "id": "mira_survives_accordfall",
+            "label": "Mira must survive the accord run",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_accordfall_pressure",
+            "label": "Keep Mireclaw pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_mireclaw",
+            "threshold": 15
+          },
+          {
+            "id": "settle_accordfall_in_time",
+            "label": "Settle the front before Day 22",
+            "type": "day_at_least",
+            "day": 22
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "accordfall_day_three_stores",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "accordfall_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 260,
+                "wood": 2,
+                "ore": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Westwrit Hall sends beams, braces, seal wax, and accord coin to Mira."
+            }
+          ]
+        },
+        {
+          "id": "accordfall_day_four_recruits",
+          "priority": 112,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "accordfall_player_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_recruits",
+              "placement_id": "accordfall_player_town",
+              "recruits": {
+                "unit_river_guard": 3,
+                "unit_ember_archer": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Westwrit Hall musters fresh escorts for the unsettled marks."
+            }
+          ]
+        },
+        {
+          "id": "accordfall_unaligned_pressure",
+          "priority": 96,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 6
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "align_mirror_anchor"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The dormant mirror anchor lets the compact host distort the middle survey line."
+            }
+          ]
+        },
+        {
+          "id": "accordfall_eastern_counterstroke",
+          "priority": 88,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 8
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "claim_accordfall_enemy_town"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "accordfall_counterstroke",
+                "encounter_id": "encounter_mossglass_moonhunt",
+                "x": 24,
+                "y": 13,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Eastmark Court sends moonhunters around the southern restoration line."
+            }
+          ]
+        },
+        {
+          "id": "accordfall_host_broken",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "accordfall_compact_host"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 300
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 180
+            },
+            {
+              "type": "set_flag",
+              "flag": "accordfall_compact_host_broken",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "The compact host breaks and abandons its claim on the fourteen marks."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "accordfall_player_town",
+          "town_id": "town_riverwatch",
+          "x": 1,
+          "y": 8,
+          "owner": "player"
+        },
+        {
+          "placement_id": "accordfall_enemy_town",
+          "town_id": "town_duskfen",
+          "x": 24,
+          "y": 8,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Eastmark Compact Host",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 170,
+            "wood": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_mossglass_moonhunt",
+            "encounter_nightglass_dominion"
+          ],
+          "spawn_points": [
+            {
+              "x": 24,
+              "y": 2
+            },
+            {
+              "x": 24,
+              "y": 13
+            }
+          ],
+          "siege_target_placement_id": "accordfall_player_town",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "accordfall_granary_exchange",
+          "site_id": "site_granary_lock_exchange",
+          "x": 3,
+          "y": 1
+        },
+        {
+          "placement_id": "accordfall_blackwater_shrine",
+          "site_id": "site_blackwater_shrine_marker",
+          "x": 8,
+          "y": 1
+        },
+        {
+          "placement_id": "accordfall_prism_standard",
+          "site_id": "site_prism_yard_standard",
+          "x": 12,
+          "y": 1
+        },
+        {
+          "placement_id": "accordfall_broken_treaty",
+          "site_id": "site_broken_treaty_stone",
+          "x": 16,
+          "y": 1
+        },
+        {
+          "placement_id": "accordfall_causeway_lever",
+          "site_id": "site_sealed_causeway_lever",
+          "x": 20,
+          "y": 1
+        },
+        {
+          "placement_id": "accordfall_mirror_anchor",
+          "site_id": "site_mirror_anchor_frame",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "placement_id": "accordfall_crownless_standard",
+          "site_id": "site_crownless_standard",
+          "x": 7,
+          "y": 4
+        },
+        {
+          "placement_id": "accordfall_drowned_bell",
+          "site_id": "site_drowned_toll_bell",
+          "x": 10,
+          "y": 4
+        },
+        {
+          "placement_id": "accordfall_orchard_writ",
+          "site_id": "site_orchard_writ_seal",
+          "x": 14,
+          "y": 4
+        },
+        {
+          "placement_id": "accordfall_oath_wheel",
+          "site_id": "site_brass_oath_wheel",
+          "x": 18,
+          "y": 4
+        },
+        {
+          "placement_id": "accordfall_signal_brazier",
+          "site_id": "site_burned_signal_brazier",
+          "x": 3,
+          "y": 12
+        },
+        {
+          "placement_id": "accordfall_ferry_stage",
+          "site_id": "site_repaired_ferry_stage_claimed",
+          "x": 7,
+          "y": 12
+        },
+        {
+          "placement_id": "accordfall_quarry_head",
+          "site_id": "site_claimed_quarry_head",
+          "x": 12,
+          "y": 11
+        },
+        {
+          "placement_id": "accordfall_rootgate",
+          "site_id": "site_withered_rootgate_marker",
+          "x": 17,
+          "y": 11
+        },
+        {
+          "placement_id": "accordfall_player_wood",
+          "site_id": "site_wood_wagon",
+          "x": 1,
+          "y": 14,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "accordfall_player_ore",
+          "site_id": "site_ore_crates",
+          "x": 5,
+          "y": 14,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "accordfall_player_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 10,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "accordfall_enemy_wood",
+          "site_id": "site_wood_wagon",
+          "x": 24,
+          "y": 14,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "accordfall_enemy_ore",
+          "site_id": "site_ore_crates",
+          "x": 21,
+          "y": 14,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "accordfall_enemy_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 23,
+          "y": 11,
+          "collected_by_faction_id": "faction_mireclaw"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "accordfall_waymark_compass",
+          "artifact_id": "artifact_waymark_compass",
+          "x": 6,
+          "y": 10
+        },
+        {
+          "placement_id": "accordfall_tollstone_ring",
+          "artifact_id": "artifact_tollstone_ring",
+          "x": 15,
+          "y": 9
+        },
+        {
+          "placement_id": "accordfall_bridgefire_standard",
+          "artifact_id": "artifact_bridgefire_standard",
+          "x": 22,
+          "y": 10
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "accordfall_west_levy",
+          "encounter_id": "encounter_hollow_mire",
+          "x": 5,
+          "y": 8,
+          "difficulty": "medium",
+          "combat_seed": 28441
+        },
+        {
+          "placement_id": "accordfall_forest_levy",
+          "encounter_id": "encounter_mossglass_moonhunt",
+          "x": 10,
+          "y": 9,
+          "difficulty": "medium",
+          "combat_seed": 28442
+        },
+        {
+          "placement_id": "accordfall_ridge_levy",
+          "encounter_id": "encounter_charter_guard",
+          "x": 15,
+          "y": 8,
+          "difficulty": "medium",
+          "combat_seed": 28443
+        },
+        {
+          "placement_id": "accordfall_east_levy",
+          "encounter_id": "encounter_mossglass_moonhunt",
+          "x": 20,
+          "y": 9,
+          "difficulty": "medium",
+          "combat_seed": 28444
+        },
+        {
+          "placement_id": "accordfall_compact_host",
+          "encounter_id": "encounter_nightglass_dominion",
+          "x": 23,
+          "y": 4,
+          "difficulty": "high",
+          "combat_seed": 28445
+        }
       ]
     }
   ]

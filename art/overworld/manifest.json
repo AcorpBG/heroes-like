@@ -6314,7 +6314,259 @@
     "resource_site_route_control_brass_toll_arch_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[96,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/brass_toll_arch_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_brass_toll_arch","presentation_role":"opened_route_lock_state","accessible_description":"Brass Toll Arch with its striped arm raised against the booth and amber lamps showing lawful passage."},
     "resource_site_route_control_reef_chain_boom_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[144,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/reef_chain_boom_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_reef_chain_boom","presentation_role":"opened_route_lock_state","accessible_description":"Reef Chain Boom with its heavy chain lifted above the route and teal capstan lights lit."},
     "resource_site_route_control_frost_toll_bar_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[192,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/frost_toll_bar_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_frost_toll_bar","presentation_role":"opened_route_lock_state","accessible_description":"Frost Toll Bar with its chain arched high between cyan pylons and the snowy pass fully clear."},
-    "resource_site_route_control_ash_sluice_lock_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[240,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/ash_sluice_lock_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_ash_sluice_lock","presentation_role":"opened_route_lock_state","accessible_description":"Ash Sluice Lock with both grates raised and blue route lamps marking a cooled open channel."}
+    "resource_site_route_control_ash_sluice_lock_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[240,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/ash_sluice_lock_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_ash_sluice_lock","presentation_role":"opened_route_lock_state","accessible_description":"Ash Sluice Lock with both grates raised and blue route lamps marking a cooled open channel."},
+    "resource_site_fourteen_marks_granary_lock_exchange_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/granary_lock_exchange_controlled_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_granary_lock_exchange",
+      "presentation_role": "controlled_landmark_state",
+      "accessible_description": "Warm windows, grain stores, and a raised civic pennant mark the secured Granary Lock Exchange."
+    },
+    "resource_site_fourteen_marks_blackwater_shrine_marker_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        48,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/blackwater_shrine_marker_controlled_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_blackwater_shrine_marker",
+      "presentation_role": "controlled_landmark_state",
+      "accessible_description": "Violet altar light and green marsh lanterns mark the secured Blackwater Shrine Marker."
+    },
+    "resource_site_fourteen_marks_prism_yard_standard_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        96,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/prism_yard_standard_controlled_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_prism_yard_standard",
+      "presentation_role": "controlled_landmark_state",
+      "accessible_description": "A cyan-gold prism flare and straight banners mark the secured Prism Yard Standard."
+    },
+    "resource_site_fourteen_marks_broken_treaty_stone_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        144,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/broken_treaty_stone_activated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_broken_treaty_stone",
+      "presentation_role": "activated_objective_state",
+      "accessible_description": "Gold fracture light and witness seals show the Broken Treaty Stone has been recorded."
+    },
+    "resource_site_fourteen_marks_sealed_causeway_lever_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/sealed_causeway_lever_activated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_sealed_causeway_lever",
+      "presentation_role": "activated_objective_state",
+      "accessible_description": "An engaged handle and green lock light show the Sealed Causeway Lever has released."
+    },
+    "resource_site_fourteen_marks_mirror_anchor_frame_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        240,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/mirror_anchor_frame_activated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_mirror_anchor_frame",
+      "presentation_role": "activated_objective_state",
+      "accessible_description": "A calm cyan reflection and lit calibration marks show the Mirror Anchor Frame aligned."
+    },
+    "resource_site_fourteen_marks_crownless_standard_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        288,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/crownless_standard_activated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_crownless_standard",
+      "presentation_role": "activated_objective_state",
+      "accessible_description": "A repaired raised banner and warm lanterns show the Crownless Standard has been claimed."
+    },
+    "resource_site_fourteen_marks_drowned_toll_bell_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        336,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/drowned_toll_bell_activated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_drowned_toll_bell",
+      "presentation_role": "activated_objective_state",
+      "accessible_description": "A restored rope, teal-gold light, and fresh ripples show the Drowned Toll Bell has rung."
+    },
+    "resource_site_fourteen_marks_orchard_writ_seal_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/orchard_writ_seal_activated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_orchard_writ_seal",
+      "presentation_role": "activated_objective_state",
+      "accessible_description": "A bright wax seal, open ribbon, and green leaves show the Orchard Writ has been accepted."
+    },
+    "resource_site_fourteen_marks_brass_oath_wheel_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        432,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/brass_oath_wheel_activated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_brass_oath_wheel",
+      "presentation_role": "activated_objective_state",
+      "accessible_description": "An engaged wheel, taut chains, and amber hub show the Brass Oath Wheel has been secured."
+    },
+    "resource_site_fourteen_marks_burned_signal_brazier_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        480,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/burned_signal_brazier_restored_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_burned_signal_brazier",
+      "presentation_role": "restored_state_variant",
+      "accessible_description": "A repaired bowl and strong signal flame show the Burned Signal Brazier has been restored."
+    },
+    "resource_site_fourteen_marks_repaired_ferry_stage_claimed_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        528,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/repaired_ferry_stage_claimed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_repaired_ferry_stage_claimed",
+      "presentation_role": "restored_state_variant",
+      "accessible_description": "Fresh planks, taut ropes, lit lamps, and a blue pennant show the ferry stage is claimed."
+    },
+    "resource_site_fourteen_marks_claimed_quarry_head_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        576,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/claimed_quarry_head_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_claimed_quarry_head",
+      "presentation_role": "restored_state_variant",
+      "accessible_description": "A working hoist, loaded basket, new braces, and lantern show the quarry head is claimed."
+    },
+    "resource_site_fourteen_marks_withered_rootgate_marker_state": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png",
+      "atlas_region": [
+        624,
+        0,
+        48,
+        48
+      ],
+      "atlas_size": [
+        672,
+        48
+      ],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/fourteen_marks_state_wave1/withered_rootgate_marker_restored_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_fourteen_marks_state_atlas",
+      "assigned_resource_site_id": "site_withered_rootgate_marker",
+      "presentation_role": "restored_state_variant",
+      "accessible_description": "Fresh leaves, teal sap-light, and living buds show the Withered Rootgate has been restored."
+    }
   },
   "resource_site_sprites": {
     "site_repaired_ferry_stage": {"asset_id":"resource_site_land_transit_repaired_ferry_stage_active","unclaimed_asset_id":"mapobj_repaired_ferry_stage","fit":"Operational ferry state paired with the original damaged stage."},
@@ -6702,7 +6954,63 @@
     "site_brass_toll_arch": {"asset_id":"resource_site_route_control_brass_toll_arch_opened","unclaimed_asset_id":"mapobj_brass_toll_arch","fit":"Opened route-control state paired with the original closed Brass Toll Arch."},
     "site_reef_chain_boom": {"asset_id":"resource_site_route_control_reef_chain_boom_opened","unclaimed_asset_id":"mapobj_reef_chain_boom","fit":"Opened route-control state paired with the original closed Reef Chain Boom."},
     "site_frost_toll_bar": {"asset_id":"resource_site_route_control_frost_toll_bar_opened","unclaimed_asset_id":"mapobj_frost_toll_bar","fit":"Opened route-control state paired with the original closed Frost Toll Bar."},
-    "site_ash_sluice_lock": {"asset_id":"resource_site_route_control_ash_sluice_lock_opened","unclaimed_asset_id":"mapobj_ash_sluice_lock","fit":"Opened route-control state paired with the original closed Ash Sluice Lock."}
+    "site_ash_sluice_lock": {"asset_id":"resource_site_route_control_ash_sluice_lock_opened","unclaimed_asset_id":"mapobj_ash_sluice_lock","fit":"Opened route-control state paired with the original closed Ash Sluice Lock."},
+    "site_granary_lock_exchange": {
+      "asset_id": "resource_site_fourteen_marks_granary_lock_exchange_state",
+      "unclaimed_asset_id": "mapobj_granary_lock_exchange"
+    },
+    "site_blackwater_shrine_marker": {
+      "asset_id": "resource_site_fourteen_marks_blackwater_shrine_marker_state",
+      "unclaimed_asset_id": "mapobj_blackwater_shrine_marker"
+    },
+    "site_prism_yard_standard": {
+      "asset_id": "resource_site_fourteen_marks_prism_yard_standard_state",
+      "unclaimed_asset_id": "mapobj_prism_yard_standard"
+    },
+    "site_broken_treaty_stone": {
+      "asset_id": "resource_site_fourteen_marks_broken_treaty_stone_state",
+      "unclaimed_asset_id": "mapobj_broken_treaty_stone"
+    },
+    "site_sealed_causeway_lever": {
+      "asset_id": "resource_site_fourteen_marks_sealed_causeway_lever_state",
+      "unclaimed_asset_id": "mapobj_sealed_causeway_lever"
+    },
+    "site_mirror_anchor_frame": {
+      "asset_id": "resource_site_fourteen_marks_mirror_anchor_frame_state",
+      "unclaimed_asset_id": "mapobj_mirror_anchor_frame"
+    },
+    "site_crownless_standard": {
+      "asset_id": "resource_site_fourteen_marks_crownless_standard_state",
+      "unclaimed_asset_id": "mapobj_crownless_standard"
+    },
+    "site_drowned_toll_bell": {
+      "asset_id": "resource_site_fourteen_marks_drowned_toll_bell_state",
+      "unclaimed_asset_id": "mapobj_drowned_toll_bell"
+    },
+    "site_orchard_writ_seal": {
+      "asset_id": "resource_site_fourteen_marks_orchard_writ_seal_state",
+      "unclaimed_asset_id": "mapobj_orchard_writ_seal"
+    },
+    "site_brass_oath_wheel": {
+      "asset_id": "resource_site_fourteen_marks_brass_oath_wheel_state",
+      "unclaimed_asset_id": "mapobj_brass_oath_wheel"
+    },
+    "site_burned_signal_brazier": {
+      "asset_id": "resource_site_fourteen_marks_burned_signal_brazier_state",
+      "unclaimed_asset_id": "mapobj_burned_signal_brazier"
+    },
+    "site_repaired_ferry_stage_claimed": {
+      "asset_id": "resource_site_fourteen_marks_repaired_ferry_stage_claimed_state",
+      "unclaimed_asset_id": "mapobj_repaired_ferry_stage_claimed"
+    },
+    "site_claimed_quarry_head": {
+      "asset_id": "resource_site_fourteen_marks_claimed_quarry_head_state",
+      "unclaimed_asset_id": "mapobj_claimed_quarry_head"
+    },
+    "site_withered_rootgate_marker": {
+      "asset_id": "resource_site_fourteen_marks_withered_rootgate_marker_state",
+      "unclaimed_asset_id": "mapobj_withered_rootgate_marker"
+    }
   },
   "artifact_default_sprite": {
     "asset_id": "adventurers_bundle",
