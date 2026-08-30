@@ -29064,15 +29064,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "visiting the service activates its live shoreline transit endpoint"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "coast_route_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -29101,25 +29101,25 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": 0,
+        "movement_cost_delta": -3,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "skiffyard reserves coast route service metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the activated shoreline transit is operational",
+        "public_summary": "Visiting this service activates its authored land-to-land shoreline transit contract.",
         "linked_endpoint_group_id": "veil_skiffyard_route"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "coast_route_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
         "contract_id": "endpoint_contract_veil_skiffyard",
         "endpoint_group_id": "veil_skiffyard_route",
-        "directionality": "coast_route",
+        "directionality": "two_way",
         "entry_offsets": [
           {
             "x": -1,
@@ -29142,8 +29142,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "skiffyard_route_service",
@@ -29156,7 +29156,7 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
       }
     },
     {
@@ -29256,15 +29256,15 @@
       "guard_expectation": {
         "tier": "light",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "visiting the service activates its live shoreline transit endpoint"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "coast_route_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -29293,25 +29293,25 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": 0,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "harbor pilot post reserves shore approach metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the activated shoreline transit is operational",
+        "public_summary": "Visiting this service activates its authored land-to-land shoreline transit contract.",
         "linked_endpoint_group_id": "harbor_pilot_post_route"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "coast_route_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
         "contract_id": "endpoint_contract_harbor_pilot_post",
         "endpoint_group_id": "harbor_pilot_post_route",
-        "directionality": "coast_route",
+        "directionality": "two_way",
         "entry_offsets": [
           {
             "x": -1,
@@ -29334,8 +29334,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "pilot_route_service",
@@ -29348,7 +29348,7 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
       }
     },
     {
@@ -29410,11 +29410,11 @@
         "linked_exit_offsets": [
           {
             "x": 0,
-            "y": 2
+            "y": 1
           },
           {
             "x": 0,
-            "y": -1
+            "y": -2
           }
         ]
       },
@@ -29439,15 +29439,15 @@
       "guard_expectation": {
         "tier": "unguarded",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "visiting the service activates its live shoreline transit endpoint"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "coast_route_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -29476,49 +29476,49 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": 0,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "bell buoy station reserves safe-channel metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the activated shoreline transit is operational",
+        "public_summary": "Visiting this service activates its authored land-to-land shoreline transit contract.",
         "linked_endpoint_group_id": "bell_buoy_station_route"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "coast_route_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
         "contract_id": "endpoint_contract_bell_buoy_station",
         "endpoint_group_id": "bell_buoy_station_route",
-        "directionality": "coast_route",
+        "directionality": "two_way",
         "entry_offsets": [
           {
             "x": 0,
-            "y": -1
+            "y": -2
           },
           {
             "x": 0,
-            "y": 2
+            "y": 1
           }
         ],
         "exit_offsets": [
           {
             "x": 0,
-            "y": 2
+            "y": 1
           },
           {
             "x": 0,
-            "y": -1
+            "y": -2
           }
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "safe_channel_marker",
@@ -29531,7 +29531,7 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
       }
     },
     {
@@ -29642,15 +29642,15 @@
       "guard_expectation": {
         "tier": "heavy",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "visiting the service activates its live shoreline transit endpoint"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "coast_route_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -29679,25 +29679,25 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": 0,
+        "movement_cost_delta": -3,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "wreck quay reserves land and water endpoint metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the activated shoreline transit is operational",
+        "public_summary": "Visiting this service activates its authored land-to-land shoreline transit contract.",
         "linked_endpoint_group_id": "wreck_quay_route"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "coast_route_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
         "contract_id": "endpoint_contract_wreck_quay",
         "endpoint_group_id": "wreck_quay_route",
-        "directionality": "coast_route",
+        "directionality": "two_way",
         "entry_offsets": [
           {
             "x": -1,
@@ -29720,8 +29720,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "salvage_route_service",
@@ -29734,7 +29734,7 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
       }
     },
     {
@@ -29795,11 +29795,11 @@
         "requires_clear_tile": true,
         "linked_exit_offsets": [
           {
-            "x": 2,
+            "x": 1,
             "y": 0
           },
           {
-            "x": -1,
+            "x": -2,
             "y": 0
           }
         ]
@@ -29825,15 +29825,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "visiting the service activates its live shoreline transit endpoint"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "coast_route_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -29862,49 +29862,49 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": 0,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "tide chain mooring reserves coast service metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the activated shoreline transit is operational",
+        "public_summary": "Visiting this service activates its authored land-to-land shoreline transit contract.",
         "linked_endpoint_group_id": "tide_chain_mooring_route"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "coast_route_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
         "contract_id": "endpoint_contract_tide_chain_mooring",
         "endpoint_group_id": "tide_chain_mooring_route",
-        "directionality": "coast_route",
+        "directionality": "two_way",
         "entry_offsets": [
           {
-            "x": -1,
+            "x": -2,
             "y": 0
           },
           {
-            "x": 2,
+            "x": 1,
             "y": 0
           }
         ],
         "exit_offsets": [
           {
-            "x": 2,
+            "x": 1,
             "y": 0
           },
           {
-            "x": -1,
+            "x": -2,
             "y": 0
           }
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "mooring_route_service",
@@ -29917,7 +29917,7 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
       }
     },
     {
@@ -29978,11 +29978,11 @@
         "requires_clear_tile": true,
         "linked_exit_offsets": [
           {
-            "x": 2,
+            "x": 1,
             "y": 0
           },
           {
-            "x": -1,
+            "x": -2,
             "y": 0
           }
         ]
@@ -30008,15 +30008,15 @@
       "guard_expectation": {
         "tier": "light",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "visiting the service activates its live shoreline transit endpoint"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "coast_route_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -30045,49 +30045,49 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": 0,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "marsh skiff shelf reserves mire-coast endpoint metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the activated shoreline transit is operational",
+        "public_summary": "Visiting this service activates its authored land-to-land shoreline transit contract.",
         "linked_endpoint_group_id": "marsh_skiff_shelf_route"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "coast_route_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
         "contract_id": "endpoint_contract_marsh_skiff_shelf",
         "endpoint_group_id": "marsh_skiff_shelf_route",
-        "directionality": "coast_route",
+        "directionality": "two_way",
         "entry_offsets": [
           {
-            "x": -1,
+            "x": -2,
             "y": 0
           },
           {
-            "x": 2,
+            "x": 1,
             "y": 0
           }
         ],
         "exit_offsets": [
           {
-            "x": 2,
+            "x": 1,
             "y": 0
           },
           {
-            "x": -1,
+            "x": -2,
             "y": 0
           }
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "mire_skiff_route_service",
@@ -30100,7 +30100,7 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
       }
     },
     {

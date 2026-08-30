@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 77,
+  "player_facing_active_scenario_count": 78,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -17047,6 +17047,481 @@
           "siege_target_placement_id": "commission_dawnmirror",
           "siege_active_raid_threshold": 2,
           "siege_capture_progress": 3
+        }
+      ]
+    },
+    {
+      "id": "veil-coast-sounding-circuit",
+      "name": "Veil-Coast Sounding Circuit",
+      "selection": {
+        "summary": "Sael Mirrorbell sounds six dormant shoreline services into one navigable circuit before a Sunvault survey line fixes the hidden coast in daylight.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Winding Sounding Reach (24x14)",
+        "player_summary": "Sael leads a compact mirror-navigation cadre from Fogchart Mooring through six separated shore lanes.",
+        "enemy_summary": "Dawnmirror Survey Closure",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 24,
+        "height": 14
+      },
+      "player_faction_id": "faction_veilmourn",
+      "player_army_id": "army_sael_spellwright_cadre",
+      "hero_id": "hero_veilmourn_sael_mirrorbell",
+      "starting_resources": {
+        "gold": 1100,
+        "wood": 3,
+        "ore": 3,
+        "memory_salt": 2
+      },
+      "map": [
+        ["water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water"],
+        ["water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","sand","sand","water"],
+        ["water","water","water","water","water","water","water","mire","sand","water","water","water","water","water","water","water","water","water","water","water","water","sand","sand","sand"],
+        ["mire","sand","sand","sand","water","water","water","sand","sand","water","water","water","mire","sand","water","water","water","water","mire","sand","sand","sand","sand","sand"],
+        ["water","sand","mire","sand","water","water","water","sand","water","water","water","mire","sand","sand","mire","water","water","mire","sand","sand","sand","sand","water","water"],
+        ["water","sand","water","water","water","water","water","sand","water","water","water","sand","sand","water","water","water","water","sand","sand","water","water","water","water","water"],
+        ["mire","sand","water","water","water","water","water","sand","sand","water","water","sand","sand","sand","water","water","water","sand","sand","water","sand","sand","sand","water"],
+        ["sand","sand","mire","water","water","water","water","sand","mire","water","water","water","water","sand","mire","water","water","water","sand","water","water","sand","sand","mire"],
+        ["water","mire","sand","water","water","water","water","water","water","water","water","water","sand","sand","sand","water","water","water","sand","water","water","sand","sand","water"],
+        ["water","water","water","water","water","water","water","water","water","water","water","water","mire","sand","sand","water","water","sand","sand","sand","water","sand","sand","sand"],
+        ["water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","mire","sand","water","water","sand","sand","mire"],
+        ["water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","sand","sand","water","sand","sand","sand","sand"],
+        ["water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","mire","water","water","mire","sand","water"],
+        ["water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water","water"]
+      ],
+      "start": {
+        "x": 1,
+        "y": 7
+      },
+      "hero_starts": [
+        "hero_veilmourn_sael_mirrorbell"
+      ],
+      "objectives": {
+        "victory_text": "All six shore services answer Sael's mirror bell; Dawnmirror's fixed survey closes and the hidden coast belongs to moving charts again.",
+        "defeat_text": "Sunvault fixes the winding reach in daylight before Sael can sound the complete coast circuit.",
+        "victory": [
+          {
+            "id": "claim_sounding_dawnmirror",
+            "label": "Claim Dawnmirror Observatory",
+            "type": "town_owned_by_player",
+            "placement_id": "sounding_dawnmirror"
+          },
+          {
+            "id": "clear_sounding_midchannel_battery",
+            "label": "Break the Midchannel Battery",
+            "type": "encounter_resolved",
+            "placement_id": "sounding_midchannel_battery"
+          },
+          {
+            "id": "clear_sounding_wreck_quay_watch",
+            "label": "Clear the Wreck Quay watch",
+            "type": "encounter_resolved",
+            "placement_id": "sounding_wreck_quay_watch"
+          },
+          {
+            "id": "clear_sounding_tide_chain_watch",
+            "label": "Clear the Tide Chain watch",
+            "type": "encounter_resolved",
+            "placement_id": "sounding_tide_chain_watch"
+          },
+          {
+            "id": "break_sounding_final_matrix",
+            "label": "Break the Dawnmirror Sounding Matrix",
+            "type": "encounter_resolved",
+            "placement_id": "sounding_final_matrix"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_sounding_fogchart",
+            "label": "Keep Fogchart Mooring under your banner",
+            "type": "town_not_owned_by_player",
+            "placement_id": "sounding_fogchart"
+          },
+          {
+            "id": "sael_survives_sounding_circuit",
+            "label": "Sael Mirrorbell must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_sounding_pressure",
+            "label": "Keep Sunvault pressure below 15",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_sunvault",
+            "threshold": 15
+          },
+          {
+            "id": "finish_sounding_before_daybreak",
+            "label": "Finish before Day 20",
+            "type": "day_at_least",
+            "day": 20
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "sounding_day_three_stores",
+          "priority": 122,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "sounding_fogchart"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 320,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Fogchart releases a chart chest and spare mooring timber for Sael's sounding circuit."
+            }
+          ]
+        },
+        {
+          "id": "sounding_day_four_relief",
+          "priority": 114,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "sounding_fogchart"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_recruits",
+              "placement_id": "sounding_fogchart",
+              "recruits": {
+                "unit_veilmourn_bellwake_oars": 3,
+                "unit_veilmourn_maskglass_corsairs": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "A black-sail relief skiff reaches Fogchart before Dawnmirror can close the first channel."
+            }
+          ]
+        },
+        {
+          "id": "sounding_unbroken_matrix_pressure",
+          "priority": 102,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "break_sounding_final_matrix"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "The unbroken sounding matrix fixes another hidden shore in hard noon light."
+            }
+          ]
+        },
+        {
+          "id": "sounding_day_ten_counterstroke",
+          "priority": 94,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 10
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "claim_sounding_dawnmirror"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "sounding_daybreak_counterstroke",
+                "encounter_id": "encounter_aurora_battery",
+                "x": 23,
+                "y": 11,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A Dawnmirror aurora battery descends on the last island to cut Sael's return sounding."
+            }
+          ]
+        },
+        {
+          "id": "sounding_dawnmirror_claimed",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "objective_met",
+              "objective_id": "claim_sounding_dawnmirror"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_building",
+              "placement_id": "sounding_dawnmirror",
+              "building_id": "building_wayfarers_hall"
+            },
+            {
+              "type": "award_experience",
+              "amount": 180
+            },
+            {
+              "type": "set_flag",
+              "flag": "veil_coast_sounding_circuit_open",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Sael turns Dawnmirror's fixed chart into a moving coast ledger and records all six sounding marks."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "sounding_fogchart",
+          "town_id": "town_veilmourn_fogchart_mooring",
+          "x": 0,
+          "y": 7,
+          "owner": "player"
+        },
+        {
+          "placement_id": "sounding_dawnmirror",
+          "town_id": "town_dawnmirror_observatory",
+          "x": 23,
+          "y": 2,
+          "owner": "enemy"
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "sounding_veil_skiffyard",
+          "site_id": "site_veil_skiffyard",
+          "x": 4,
+          "y": 2
+        },
+        {
+          "placement_id": "sounding_harbor_pilot_post",
+          "site_id": "site_harbor_pilot_post",
+          "x": 9,
+          "y": 5
+        },
+        {
+          "placement_id": "sounding_bell_buoy_station",
+          "site_id": "site_bell_buoy_station",
+          "x": 13,
+          "y": 5
+        },
+        {
+          "placement_id": "sounding_wreck_quay",
+          "site_id": "site_wreck_quay",
+          "x": 15,
+          "y": 8,
+          "guard_front_id": "sounding_wreck_quay_watch"
+        },
+        {
+          "placement_id": "sounding_tide_chain_mooring",
+          "site_id": "site_tide_chain_mooring",
+          "x": 19,
+          "y": 11,
+          "guard_front_id": "sounding_tide_chain_watch"
+        },
+        {
+          "placement_id": "sounding_marsh_skiff_shelf",
+          "site_id": "site_marsh_skiff_shelf",
+          "x": 19,
+          "y": 6
+        },
+        {
+          "placement_id": "sounding_western_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "sounding_western_ore",
+          "site_id": "site_ore_crates",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "placement_id": "sounding_first_waystone",
+          "site_id": "site_waystone_cache",
+          "x": 8,
+          "y": 2
+        },
+        {
+          "placement_id": "sounding_middle_wood",
+          "site_id": "site_wood_wagon",
+          "x": 14,
+          "y": 7
+        },
+        {
+          "placement_id": "sounding_middle_ore",
+          "site_id": "site_ore_crates",
+          "x": 23,
+          "y": 10
+        },
+        {
+          "placement_id": "sounding_final_waystone",
+          "site_id": "site_waystone_cache",
+          "x": 22,
+          "y": 12
+        },
+        {
+          "placement_id": "sounding_player_memory_salt_pan",
+          "site_id": "site_memory_salt_pan",
+          "x": 0,
+          "y": 6,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "sounding_player_rare_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 8,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "sounding_enemy_aetherglass_lens",
+          "site_id": "site_aetherglass_lens_house",
+          "x": 23,
+          "y": 7,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "sounding_enemy_rare_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 23,
+          "y": 9,
+          "collected_by_faction_id": "faction_sunvault"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "sounding_drowned_star_astrolabe",
+          "artifact_id": "artifact_drowned_star_astrolabe",
+          "x": 0,
+          "y": 3
+        },
+        {
+          "placement_id": "sounding_wakebell_ensign",
+          "artifact_id": "artifact_wakebell_mourning_ensign",
+          "x": 7,
+          "y": 7
+        },
+        {
+          "placement_id": "sounding_fogwake_deckboots",
+          "artifact_id": "artifact_fogwake_deckboots",
+          "x": 18,
+          "y": 8
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "sounding_midchannel_battery",
+          "encounter_id": "encounter_aurora_battery",
+          "x": 12,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 30601
+        },
+        {
+          "placement_id": "sounding_wreck_quay_watch",
+          "encounter_id": "encounter_drowned_bell_procession",
+          "x": 14,
+          "y": 9,
+          "difficulty": "medium",
+          "combat_seed": 30602,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "sounding_tide_chain_watch",
+          "encounter_id": "encounter_relay_pickets",
+          "x": 18,
+          "y": 11,
+          "difficulty": "high",
+          "combat_seed": 30603
+        },
+        {
+          "placement_id": "sounding_final_matrix",
+          "encounter_id": "encounter_daybreak_matrix",
+          "x": 21,
+          "y": 2,
+          "difficulty": "high",
+          "combat_seed": 30604
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_sunvault",
+          "label": "Dawnmirror Survey Closure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 170,
+            "memory_salt": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_aurora_battery",
+            "encounter_daybreak_matrix"
+          ],
+          "spawn_points": [
+            {
+              "x": 22,
+              "y": 1
+            },
+            {
+              "x": 23,
+              "y": 11
+            }
+          ],
+          "siege_target_placement_id": "sounding_fogchart",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 110,
+          "priority_target_placement_ids": [
+            "sounding_fogchart",
+            "sounding_wreck_quay",
+            "sounding_tide_chain_mooring"
+          ]
         }
       ]
     }
