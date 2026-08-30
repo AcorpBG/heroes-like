@@ -14434,6 +14434,32 @@ Non-goals:
 - no terrain id, map topology, water placement, movement cost, passability, road/causeway, fog, map generation, object/hero/town rendering, interaction, camera, session/save/schema, gameplay, AI, battle, balance, content, or Native-RMG change;
 - no shader, animation, packaged Overworld interaction, controller/AT-SPI/UIA/native-hardware certification, signing/publication, whole-game validation, or release-readiness claim.
 
+## Ten-Site Land Transit Network
+
+id: `content-ten-land-transit-network-10184`
+
+Status: completed.
+
+Implementation boundary:
+- activate the complete Batch 004 land-transit family: Repaired Ferry Stage, Rope Lift, Root-Pass Arch, Pressure-Rail Switch, Mirror-Stair Turn, Basalt Undergate, Ridge Wind Chute, Slipgate Mirror, Spillway Drop Marker, and Tide-Bore Marker;
+- support exact authored two-way and one-way endpoint contracts, one-movement-point traversal, persistent activation, safe endpoint rejection, route finding, movement, and save/load continuity through the existing generic Overworld rules;
+- retain repair/payment requirements for the ferry and rope lift, use ordinary one-time claim activation for the remaining sites, and place the three previously unshipped sites in Ninefold Confluence without colliding with existing footprints or transit endpoints;
+- add one distinctive activated-state art frame per transit in a single compact runtime atlas, while retaining each existing dormant frame before activation.
+
+Completion criteria:
+- all ten transits are placed in shipped scenarios and activate through their authored interaction path;
+- six two-way links traverse in either direction and four one-way links reject reverse travel without mutating session state;
+- active edges remain safe, pathfinding-visible, one movement point, and save/load stable, with activated art resolving for every site;
+- one consolidated ten-case gameplay/art/save smoke, repository validation, and bounded Linux/Windows package startup gates pass after the family is complete.
+
+Non-goals:
+- no ship/embarkation system, map topology rewrite, Native RMG generation/parity change, save-version bump, broad AI/economy/balance redesign, animation/audio/VFX, campaign expansion, certification, publication, whole-game validation, or release-readiness claim.
+
+Completion evidence:
+- all ten transits are live in shipped scenarios, including the broad-water Ferry Stage link and three new Ninefold placements; the formerly off-map Root Pass and Mirror Stair placements were moved onto safe authored endpoints;
+- the consolidated ten-case report passed six two-way and four one-way contracts with exact one-point traversal, reverse rejection, save/load continuity, activated art, and unsafe-exit fail closure;
+- repository validation, Python compilation, Godot import/editor parsing, and matching 249505616-byte Linux/Windows export-startup gates passed; source art remains excluded and the compact runtime atlas is 480x48.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
