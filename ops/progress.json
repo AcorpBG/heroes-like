@@ -15742,9 +15742,9 @@
       }
     }
   ],
-  "currentNotes": "Completed all six Batch 003 progression shrines across their existing scenarios with permanent and weekly hero effects, three exact guard links, six awakened-state assets, and one passing consolidated smoke.",
+  "currentNotes": "Completed all five Batch 003 scouting structures with shipped placements, persistent watch-radius control, five controlled-state assets, and one passing consolidated smoke.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-progression-shrines-10184",
+  "currentSlice": "content-five-scouting-structures-10184",
   "currentSliceId": "content-six-progression-shrines-10184",
   "currentSliceNotes": "The complete six-shrine Batch 003 family is live and validated as one gameplay/content/art batch: three one-time progression memories, three guarded weekly shrines, and one compact awakened-state atlas.",
   "currentSliceStatus": "completed",
@@ -106256,6 +106256,16 @@
       "startedAt": "2026-08-30T00:32:32Z",
       "notes": "Completed all six Batch 003 shrines with one-time permanent command/spell progression or guarded weekly strategic effects, exact existing scenario placements and screen guards, six original awakened states in one compact atlas, save-version-9 continuity, one passing combined six-case smoke, repository validation, and matching 249389184-byte Linux/Windows package boots.",
       "completedAt": "2026-08-30T00:55:00Z"
+    },
+    {
+      "id": "content-five-scouting-structures-10184",
+      "title": "content five scouting structures 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T01:20:05Z",
+      "startedAt": "2026-08-30T01:00:10Z",
+      "notes": "Completed all five Batch 003 scouting structures with two new Ninefold placements, exact persistent fog control, five original controlled-state landmarks in one compact atlas, save-version-9 continuity, one passing combined smoke, repository validation, and matching 249416796-byte Linux/Windows package boots.",
+      "completedAt": "2026-08-30T01:20:05Z"
     }
   ],
   "project": "heroes-like",
@@ -106265,8 +106275,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The six Batch 003 progression shrines are now live and validated. Sixteen scouting, sign, route-lock, and objective-event contracts remain metadata-only, and broader faction, encounter, campaign, presentation, balance, accessibility, packaging, and release gaps remain separate work under the active content goal.",
-  "remainingWork": "Select the next coherent multi-content family and continue the active content goal with one consolidated smoke after the family is implemented; preserve the remaining 610816-byte PCK headroom.",
+  "remainingGap": "The five Batch 003 scouting structures are now live and validated. Eleven sign, route-lock, and objective-event contracts remain metadata-only, and broader faction, encounter, campaign, presentation, balance, accessibility, packaging, and release gaps remain separate work under the active content goal.",
+  "remainingWork": "Select the next coherent multi-content family and continue the active content goal with one consolidated smoke after the family is implemented; preserve the remaining 583204-byte PCK headroom.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106800,7 +106810,7 @@
   ],
   "summary": "Completed all six Batch 003 repeatable field services and their distinctive visited-state landmarks as one live Ninefold Confluence content batch with one consolidated smoke and matching packaged verification.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T00:29:45Z",
+  "updatedAt": "2026-08-30T01:20:05Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

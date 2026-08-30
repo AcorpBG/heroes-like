@@ -1,0 +1,34 @@
+{
+  "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png",
+  "output_size": [240, 48],
+  "asset_size": [48, 48],
+  "prompts": [
+    {
+      "site_id": "site_hilltop_signal_nest",
+      "source": "hilltop_signal_nest_controlled_source.png",
+      "prompt": "Preserve the exact Hilltop Signal Nest sprite and isometric silhouette; add a blue-white signal flame, taut teal-gold pennant, and two small cyan signal runes; genuinely transparent background; no text or people. The first checkerboard-flattened result was rejected and regenerated from the original."
+    },
+    {
+      "site_id": "site_marsh_listener_post",
+      "source": "marsh_listener_post_controlled_source.png",
+      "prompt": "Preserve the exact Marsh Listener Post sprite and isometric silhouette; turn its three brass horns into a deliberate listening fan, add faint teal sound rings, and hang one fresh green-gold survey ribbon; transparent background; no text or people."
+    },
+    {
+      "site_id": "site_prism_survey_frame",
+      "source": "prism_survey_frame_controlled_source.png",
+      "prompt": "Preserve the exact Prism Survey Frame sprite and isometric silhouette; align its central prism, add a restrained cyan-gold survey ray and glints, and illuminate the floor meridian; transparent background; no text or people."
+    },
+    {
+      "site_id": "site_underway_echo_well",
+      "source": "underway_echo_well_controlled_source.png",
+      "prompt": "Preserve the exact Underway Echo Well sprite and isometric silhouette; add three cyan water echoes, a warm amber plumb light, and small teal receiver lights inside both horns; transparent background; no text or people."
+    },
+    {
+      "site_id": "site_coast_bell_watch",
+      "source": "coast_bell_watch_controlled_source.png",
+      "prompt": "Preserve the exact Coast Bell Watch sprite and isometric silhouette; show the bell just rung with pale-blue resonance arcs, a steady cyan watch lantern, and a fresh blue-gold harbor pennant; transparent background; no text or people."
+    }
+  ]
+}

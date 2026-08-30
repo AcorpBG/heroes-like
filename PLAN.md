@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-progression-shrines-10184`; the next coherent content family is not yet selected.
-- Current package boundary: both release exports measure 249389184 bytes, 610816 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-five-scouting-structures-10184`; the next coherent content family is not yet selected.
+- Current package boundary: both release exports measure 249416796 bytes, 583204 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Five Scouting Structures
+
+id: `content-five-scouting-structures-10184`
+
+Status: completed.
+
+Completion result:
+- all five Batch 003 scouting structures are live across four shipped scenarios: Hilltop Signal Nest and Underway Echo Well now join Ninefold Confluence, while Marsh Listener Post, Prism Survey Frame, and Coast Bell Watch retain their existing authored maps;
+- every site captures once through the persistent-control path, executes its exact three-, four-, or five-tile site-centered survey, remains a controlled fog source, rejects repeat capture without mutation, and round-trips exactly through save version 9;
+- each structure keeps its original uncontrolled landmark and switches to one of five distinct built-in-image-generation controlled states packed into one transparent 240x48 runtime atlas; source prompts and originals remain owned in the source-art tree and excluded from release packages;
+- the single consolidated five-case gameplay/runtime/visual smoke passes all captures, exact persistent watch rings, art regions, repeat rejections, and save round-trips; repository validation and matching-size Linux/Windows packaged boots pass with twelve required resource-site atlases and 249416796-byte PCKs, 583204 bytes below the unchanged ceiling.
+
+Current finding:
+- Hilltop Signal Nest, Marsh Listener Post, Prism Survey Frame, Underway Echo Well, and Coast Bell Watch are the complete Batch 003 scouting-information family and all five remain metadata-only despite owning original landmark art, persistent-control contracts, and authored reveal radii;
+- Coast Bell Watch, Marsh Listener Post, and Prism Survey Frame already have one production scenario placement each, while Hilltop Signal Nest and Underway Echo Well need shipped placements before the family is genuinely playable;
+- the existing resource-control and fog paths already support one-time capture, immediate site-centered reveal, persistent watch-radius visibility, save-version-9 continuity, and mutation-free repeat rejection, so the family can become live without another bespoke system.
+
+Implementation boundary:
+- activate all five site/object pairs with exact public scouting contracts, live save/pathing/rendering boundaries, and one production placement per site; use existing scenario space for the two currently unplaced structures without changing objectives;
+- preserve the distinct reveal radii and persistent-control behavior, expose clear capture/controlled copy, and reuse the existing site-centered and controlled-source fog paths rather than adding reward heuristics;
+- create five distinct original transparent controlled-state edits from the existing landmarks, pack them into one compact 240x48 runtime atlas, and switch each structure after capture;
+- preserve deterministic outcomes, save version 9, existing battle and objective rules, generated-source exclusion, accessibility descriptions, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- each structure exists in a shipped scenario, captures once, reveals exactly from its authored site/radius, remains a controlled fog source, rejects repeat capture without mutation, and round-trips exactly through save version 9;
+- all five resolve their original uncontrolled landmark before capture and their own controlled-state atlas region afterward;
+- one consolidated five-case gameplay/runtime/visual smoke covers the complete family after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new combat, spell, unit, faction, hero, town, building, encounter, objective, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes scouting structure, name, text, reward, landmark, or protected visual expression.
 
 ## Six Progression Shrines
 

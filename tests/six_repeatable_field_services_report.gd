@@ -25,7 +25,7 @@ func _ready() -> void:
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	var scenario := ContentService.get_scenario(SCENARIO_ID)
-	_expect((scenario.get("resource_nodes", []) as Array).size() == 86, "Ninefold must expose all 86 resource placements.")
+	_expect((scenario.get("resource_nodes", []) as Array).size() == 88, "Ninefold must expose all 88 resource placements.")
 	_expect((scenario.get("encounters", []) as Array).size() == 23, "Service placement must not add encounter clutter.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)

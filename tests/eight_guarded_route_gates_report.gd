@@ -30,7 +30,7 @@ func _ready() -> void:
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	var scenario := ContentService.get_scenario(SCENARIO_ID)
-	_expect((scenario.get("resource_nodes", []) as Array).size() == 86, "Ninefold Confluence resource placement count changed.")
+	_expect((scenario.get("resource_nodes", []) as Array).size() == 88, "Ninefold Confluence resource placement count changed.")
 	_expect((scenario.get("encounters", []) as Array).size() == 23, "Ninefold Confluence encounter placement count changed.")
 	var view = MapViewScript.new()
 	view.size = Vector2(1280, 720)
