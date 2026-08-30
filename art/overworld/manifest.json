@@ -7097,6 +7097,41 @@
       "assigned_faction_id": "neutral",
       "presentation_role": "sea_glass_skyray_resonator_watch",
       "accessible_description": "A crescent-winged tideglass skyray with hanging resonators marks the guarded coastal roost."
+    },
+    "resource_site_high_arcanum_lastroad_bell_spire": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [0,0,48,48], "atlas_size": [336,48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/lastroad_bell_spire_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/lastroad_bell_spire_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+      "assigned_resource_site_id": "site_lastroad_bell_spire", "presentation_role": "ivory_road_spire_bronze_bell_three_lamps", "accessible_description": "An ivory road spire bears a large bronze bell, three hanging lamps, red oath cords, and deep waymark grooves."
+    },
+    "resource_site_high_arcanum_siltheart_drum_cairn": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [48,0,48,48], "atlas_size": [336,48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/siltheart_drum_cairn_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/siltheart_drum_cairn_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+      "assigned_resource_site_id": "site_siltheart_drum_cairn", "presentation_role": "broad_hide_drum_bogstone_reed_pipes", "accessible_description": "A broad hide drum rests on a wet black bogstone cairn between hooked reed pipes and a sealed silt jar."
+    },
+    "resource_site_high_arcanum_aurora_facet_orrery": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [96,0,48,48], "atlas_size": [336,48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/aurora_facet_orrery_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/aurora_facet_orrery_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+      "assigned_resource_site_id": "site_aurora_facet_orrery", "presentation_role": "three_crystal_lenses_suspended_mirror_shard", "accessible_description": "Three asymmetric crystal lenses orbit a suspended mirror shard above an engraved white-gold observatory plinth."
+    },
+    "resource_site_high_arcanum_bloombark_covenant_tree": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [144,0,48,48], "atlas_size": [336,48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/bloombark_covenant_tree_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/bloombark_covenant_tree_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+      "assigned_resource_site_id": "site_bloombark_covenant_tree", "presentation_role": "living_stump_greenstone_copper_blossom_arch", "accessible_description": "A gnarled living stump embraces a carved greenstone tablet beneath one arch of broad copper-red blossoms."
+    },
+    "resource_site_high_arcanum_slagbound_clamp_forge": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [192,0,48,48], "atlas_size": [336,48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/slagbound_clamp_forge_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/slagbound_clamp_forge_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+      "assigned_resource_site_id": "site_slagbound_clamp_forge", "presentation_role": "brass_clamp_basalt_anvil_banked_furnace", "accessible_description": "A massive asymmetric brass clamp locks around a basalt anvil beside a compact banked coal furnace and gauge."
+    },
+    "resource_site_high_arcanum_mourning_tide_obelisk": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [240,0,48,48], "atlas_size": [336,48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/mourning_tide_obelisk_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/mourning_tide_obelisk_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+      "assigned_resource_site_id": "site_mourning_tide_obelisk", "presentation_role": "salt_obelisk_whalebone_arch_black_glass_bell", "accessible_description": "A narrow salt-dark memorial stone stands inside a crooked whale-bone arch with one black glass bell and flowing mist."
+    },
+    "resource_site_high_arcanum_sevencount_verdict_table": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [288,0,48,48], "atlas_size": [336,48],
+      "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/sevencount_verdict_table_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/sevencount_verdict_table_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
+      "assigned_resource_site_id": "site_sevencount_verdict_table", "presentation_role": "octagonal_counting_table_seven_pegs_plumb", "accessible_description": "A low octagonal blackstone table carries seven unequal ivory tally pegs, a suspended brass plumb, and a slate disk."
     }
   },
   "resource_site_sprites": {
@@ -7627,6 +7662,27 @@
       "asset_id": "resource_site_kite_signal_countermast_countersealed",
       "unclaimed_asset_id": "mapobj_kite_signal_countermast",
       "fit": "Original opposed kite vanes and weights remain legible beneath the final counterseal."
+    },
+    "site_lastroad_bell_spire": {
+      "asset_id": "resource_site_high_arcanum_lastroad_bell_spire", "unclaimed_asset_id": "resource_site_high_arcanum_lastroad_bell_spire", "fit": "Exact original Lastroad bell landmark remains visible before and after its one-time lesson."
+    },
+    "site_siltheart_drum_cairn": {
+      "asset_id": "resource_site_high_arcanum_siltheart_drum_cairn", "unclaimed_asset_id": "resource_site_high_arcanum_siltheart_drum_cairn", "fit": "Exact original Siltheart drum landmark remains visible before and after its one-time lesson."
+    },
+    "site_aurora_facet_orrery": {
+      "asset_id": "resource_site_high_arcanum_aurora_facet_orrery", "unclaimed_asset_id": "resource_site_high_arcanum_aurora_facet_orrery", "fit": "Exact original Aurora Facet landmark remains visible before and after its one-time lesson."
+    },
+    "site_bloombark_covenant_tree": {
+      "asset_id": "resource_site_high_arcanum_bloombark_covenant_tree", "unclaimed_asset_id": "resource_site_high_arcanum_bloombark_covenant_tree", "fit": "Exact original Bloombark landmark remains visible before and after its one-time lesson."
+    },
+    "site_slagbound_clamp_forge": {
+      "asset_id": "resource_site_high_arcanum_slagbound_clamp_forge", "unclaimed_asset_id": "resource_site_high_arcanum_slagbound_clamp_forge", "fit": "Exact original Slagbound forge landmark remains visible before and after its one-time lesson."
+    },
+    "site_mourning_tide_obelisk": {
+      "asset_id": "resource_site_high_arcanum_mourning_tide_obelisk", "unclaimed_asset_id": "resource_site_high_arcanum_mourning_tide_obelisk", "fit": "Exact original Mourning Tide landmark remains visible before and after its one-time lesson."
+    },
+    "site_sevencount_verdict_table": {
+      "asset_id": "resource_site_high_arcanum_sevencount_verdict_table", "unclaimed_asset_id": "resource_site_high_arcanum_sevencount_verdict_table", "fit": "Exact original Seven-Count landmark remains visible before and after its one-time lesson."
     }
   },
   "artifact_default_sprite": {

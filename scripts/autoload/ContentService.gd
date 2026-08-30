@@ -882,7 +882,8 @@ func _validate_resource_site(
 	if spell_id != "":
 		if not spell_index.has(spell_id):
 			push_warning("Resource site %s references missing learn_spell_id %s." % [site_id, spell_id])
-		elif String(spell_index.get(spell_id, {}).get("context", "")) != "overworld":
+		elif String(spell_index.get(spell_id, {}).get("context", "")) != "overworld" \
+				and String(site.get("runtime_boundary", {}).get("status", "")) != "high_arcanum_live":
 			push_warning("Resource site %s learn_spell_id %s must be an overworld spell." % [site_id, spell_id])
 
 	match family:

@@ -24,8 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-six-auxiliary-charter-halls-10184`, which integrates all six scenario-earned auxiliary specialists into the normal town build and muster economy through one original faction building each.
-- Current package boundary: matching Linux and Windows release exports measure 246024472 bytes, 3975528 bytes below the unchanged 250000000-byte ceiling. Select the next coherent substantial content batch before implementation and retain batched verification.
+- Latest completed implementation slice: `content-sevenfold-high-arcanum-10184`, which adds seven original one-time battle-spell landmarks to Third Hearths Confluence and replaces seven tier-five placeholder descriptions with exact battle-facing copy.
+- Current package boundary: matching Linux and Windows release exports measure 246069684 bytes, 3930316 bytes below the unchanged 250000000-byte ceiling. Select the next coherent substantial content batch before implementation and retain batched verification.
+
+## Sevenfold High Arcanum
+
+id: `content-sevenfold-high-arcanum-10184`
+
+Status: completed.
+
+Completion result:
+- Lastroad Bell Spire, Siltheart Drum Cairn, Aurora Facet Orrery, Bloombark Covenant Tree, Slagbound Clamp Forge, Mourning Tide Obelisk, and Seven-Count Verdict Table are live as optional one-time landmarks across Third Hearths Confluence;
+- every landmark grants its exact tier-five battle spell, 140 experience, permanent command lesson, unique claim flag, repeat-safe collected state, and save-version-9 continuity through an explicit High Arcanum battle-lesson boundary;
+- the seven selected spells now describe their exact damage, buff, control, duration, and wounded-target behavior while retaining established ids, costs, targeting, effects, and distinct existing spell icons;
+- seven distinct built-in-image-generation masters resolve through one reviewed 336x48 transparent runtime atlas with exact hash/prompt provenance and source originals excluded from release packages;
+- the one consolidated seven-case gameplay/battle/art/save smoke, repository validation, and sequential Linux/Windows packaged boots pass with matching 246069684-byte PCKs, 3930316 bytes below the unchanged ceiling.
+
+Current finding:
+- all seven spell schools have tier-five battle workings available through advanced town study, but the selected capstones retain generic descriptions and no adventure-map acquisition identity;
+- Third Hearths Confluence already provides the production-sized six-faction circuit needed for a cross-school progression route without adding another scenario record or changing its existing capture victory;
+- the existing one-time shrine path already supports exact spell learning, rewards, claim flags, persistent collected state, map-object art, and save-version-9 continuity.
+
+Implementation boundary:
+- add seven original one-time high-arcanum landmarks, one for each spell school, with distinct names, public summaries, exact tier-five spell rewards, modest faction-neutral progression payloads, and unique claim flags;
+- place all seven into Third Hearths Confluence as an optional cross-map spellwright circuit without changing its existing victory or defeat objectives;
+- create seven distinct transparent original landmarks with compact runtime art and exact generated-source provenance outside release packages;
+- replace the selected seven spells' placeholder descriptions with specific battle-facing copy while preserving their existing identifiers, tiers, costs, targeting, and effect authority;
+- preserve deterministic outcomes, save version 9, existing scenario objectives, Windows/Linux paths, accessibility descriptions, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- every landmark appears in the live scenario, grants exactly its own spell, progression reward, and claim flag once, rejects repeat claims without mutation, resolves exact original art, and round-trips through save version 9;
+- the selected spells retain their established battle resolution while presenting specific non-placeholder descriptions and distinct existing spell icons;
+- one consolidated seven-case gameplay/battle/art/save smoke runs only after the complete family, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new spell rules, battle algorithm, faction, unit, hero, town, building, encounter, mandatory scenario objective, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes shrine, spell, name, text, icon, map layout, or protected visual expression.
 
 ## Six Auxiliary Charter Halls
 

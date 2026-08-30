@@ -39625,7 +39625,12 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         spell_id = str(site.get("learn_spell_id", ""))
         if spell_id:
             ensure(spell_id in spells, errors, f"Resource site {site_id} references missing learn_spell_id {spell_id}")
-            ensure(str(spells.get(spell_id, {}).get("context", "")) == "overworld", errors, f"Resource site {site_id} learn_spell_id must be an overworld spell")
+            ensure(
+                str(spells.get(spell_id, {}).get("context", "")) == "overworld"
+                or str(site.get("runtime_boundary", {}).get("status", "")) == "high_arcanum_live",
+                errors,
+                f"Resource site {site_id} learn_spell_id must be an overworld spell or an explicit live High Arcanum battle lesson",
+            )
         if family == "mine":
             ensure(bool(site.get("persistent_control", False)), errors, f"Mine {site_id} must be persistent-control content")
             ensure(isinstance(site.get("control_income", {}), dict) and bool(site.get("control_income", {})), errors, f"Mine {site_id} must define control_income")
@@ -43520,6 +43525,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_systemic_encounter_landmark_atlas":
                 expected_canvas = (192, 48)
+            elif source_model == "built_in_image_gen_original_sevenfold_high_arcanum_atlas":
+                expected_canvas = (336, 48)
             elif source_model in {"built_in_image_gen_precise_object_edit_coast_route_operational_atlas", "built_in_image_gen_original_coast_route_operational_atlas"}:
                 expected_canvas = (288, 48)
             elif source_model in {"built_in_image_gen_original_elite_neutral_dwelling_atlas", "built_in_image_gen_precise_object_edit_elite_neutral_dwelling_atlas"}:
@@ -52247,7 +52254,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 87 and len(placements) == 1102 and len(placed_site_ids) == 201, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 87 and len(placements) == 1109 and len(placed_site_ids) == 208, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -52269,9 +52276,9 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 201, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(not unresolved and len(resolver_paths) == 208, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
     ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 170, errors, "Placed resource-site map-object resolver coverage changed")
-    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 31, errors, "Placed resource-site exact site-mapping coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 38, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
             if site_id == "site_fenhound_kennels":
@@ -75000,7 +75007,7 @@ def validate_veil_coast_sounding_circuit(errors: list[str]) -> None:
     ensure(export_text.count("art/*/source/*") == 2, errors, "Both release presets must exclude coast-route generated source art")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 23" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
+        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 24" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
 
 
 def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -> None:
@@ -77145,6 +77152,72 @@ def validate_army_stack_management_bar(errors: list[str]) -> None:
     ensure('path="res://tests/army_stack_management_bar_runtime_report.gd"' in report_scene_text, errors, "Army management focused scene must own its exact report script")
 
 
+def validate_sevenfold_high_arcanum(errors: list[str]) -> None:
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    spells = items_index(load_json(CONTENT_DIR / "spells.json"))
+    scenario = items_index(load_json(CONTENT_DIR / "scenarios.json")).get("third-hearths-confluence", {})
+    overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = overworld_art.get("object_assets", {})
+    site_sprites = overworld_art.get("resource_site_sprites", {})
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "sevenfold_high_arcanum_atlas.png"
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "sevenfold_high_arcanum_wave1"
+    source_manifest_path = source_dir / "manifest.json"
+    report_script = ROOT / "tests" / "sevenfold_high_arcanum_smoke.gd"
+    report_scene = ROOT / "tests" / "sevenfold_high_arcanum_smoke.tscn"
+    report_launcher = ROOT / "tests" / "sevenfold_high_arcanum_smoke.py"
+    expected = {
+        "site_lastroad_bell_spire": ("third_arcanum_lastroad", "spell_beacon_bell_lance_25", "high_arcanum_lastroad_bell_sounded", "attack", "resource_site_high_arcanum_lastroad_bell_spire", [0, 0, 48, 48], "lastroad_bell_spire_source.png", "dedfa6c7c99d01e38dc1724cf4dd19a0c42ef5510aade446d36ed48db8ed0682"),
+        "site_siltheart_drum_cairn": ("third_arcanum_siltheart", "spell_mire_silt_frenzy_20", "high_arcanum_siltheart_drum_struck", "defense", "resource_site_high_arcanum_siltheart_drum_cairn", [48, 0, 48, 48], "siltheart_drum_cairn_source.png", "e9e90da4f14e13c9f27d286074acb2145b9f61581f846358f0c68d62e5dbb071"),
+        "site_aurora_facet_orrery": ("third_arcanum_aurora", "spell_lens_mirror_facet_20", "high_arcanum_aurora_facets_aligned", "knowledge", "resource_site_high_arcanum_aurora_facet_orrery", [96, 0, 48, 48], "aurora_facet_orrery_source.png", "bab56b66fd63e43b43fbd37e6d58f0b15c5ccf4ef00a6e770252fb66219e9ad9"),
+        "site_bloombark_covenant_tree": ("third_arcanum_bloombark", "spell_root_bloom_bark_20", "high_arcanum_bloombark_covenant_bound", "defense", "resource_site_high_arcanum_bloombark_covenant_tree", [144, 0, 48, 48], "bloombark_covenant_tree_source.png", "b25f9c08aa9b0cd131d6c42b4f4980caafa91454479a8b8b4310a114366b9222"),
+        "site_slagbound_clamp_forge": ("third_arcanum_slagbound", "spell_furnace_slag_clamp_15", "high_arcanum_slagbound_clamp_set", "power", "resource_site_high_arcanum_slagbound_clamp_forge", [192, 0, 48, 48], "slagbound_clamp_forge_source.png", "6a9393c643e5583ef80db7898ba46c3ac3069f614aab5817e34fe6b517cd6dab"),
+        "site_mourning_tide_obelisk": ("third_arcanum_mourning", "spell_veil_mourning_fogbind_20", "high_arcanum_mourning_tide_rung", "knowledge", "resource_site_high_arcanum_mourning_tide_obelisk", [240, 0, 48, 48], "mourning_tide_obelisk_source.png", "7533196ecf4c307f93d1985bf1ffe00b97c8af65cb97179eb43d3d7c2fb48669"),
+        "site_sevencount_verdict_table": ("third_arcanum_sevencount", "spell_old_measure_tally_tally_20", "high_arcanum_sevencount_verdict_rendered", "power", "resource_site_high_arcanum_sevencount_verdict_table", [288, 0, 48, 48], "sevencount_verdict_table_source.png", "3d8c0d78b1eb232291d6d4e1ffcf250d084b08682bbca8b94d0bb0a792e875a8"),
+    }
+    ensure(len(sites) == 209 and len(scenario.get("resource_nodes", [])) == 17, errors, "Sevenfold High Arcanum must retain the 209-site catalog and 17-node Third Hearths board")
+    placement_by_id = {str(node.get("placement_id", "")): node for node in scenario.get("resource_nodes", []) if isinstance(node, dict)}
+    ensure(atlas_path.is_file() and png_size(atlas_path) == (336, 48), errors, "Sevenfold High Arcanum atlas must be an exact 336x48 strip")
+    if atlas_path.is_file():
+        ensure(hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "9d05adc692a4de4934d5d33e158fbf51699358dcebdf86f799de9616b3271d8f", errors, "Sevenfold High Arcanum atlas bytes changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Sevenfold High Arcanum atlas import sidecar is missing")
+    ensure(source_manifest_path.is_file(), errors, "Sevenfold High Arcanum source manifest is missing")
+    source_manifest = load_json(source_manifest_path) if source_manifest_path.is_file() else {}
+    source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
+    ensure(source_manifest.get("source_model") == "built_in_image_gen_original_sevenfold_high_arcanum_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas_sha256") == "9d05adc692a4de4934d5d33e158fbf51699358dcebdf86f799de9616b3271d8f" and set(source_rows) == set(expected), errors, "Sevenfold High Arcanum generated-source provenance changed")
+    for site_id, (placement_id, spell_id, flag, command_key, asset_id, region, source_name, source_sha) in expected.items():
+        site = sites.get(site_id, {})
+        spell = spells.get(spell_id, {})
+        placement = placement_by_id.get(placement_id, {})
+        asset = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
+        mapping = site_sprites.get(site_id, {}) if isinstance(site_sprites, dict) else {}
+        source_path = source_dir / source_name
+        source_row = source_rows.get(site_id, {})
+        ensure(str(site.get("family", "")) == "shrine" and str(site.get("content_batch_id", "")) == "content-sevenfold-high-arcanum-10184" and str(site.get("runtime_boundary", {}).get("status", "")) == "high_arcanum_live", errors, f"{site_id} lost its live High Arcanum contract")
+        ensure(site.get("claim_rewards") == {"experience": 140} and site.get("hero_command_bonus") == {command_key: 1} and site.get("claim_flags") == {flag: True} and str(site.get("learn_spell_id", "")) == spell_id, errors, f"{site_id} reward contract changed")
+        ensure(str(placement.get("site_id", "")) == site_id, errors, f"{site_id} lost its Third Hearths placement")
+        ensure(int(spell.get("tier", 0)) == 5 and str(spell.get("context", "")) == "battle" and "another tactical choice" not in str(spell.get("description", "")), errors, f"{spell_id} lost specific tier-five battle presentation")
+        ensure(mapping.get("asset_id") == asset_id and mapping.get("unclaimed_asset_id") == asset_id, errors, f"{site_id} art mapping changed")
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [336, 48] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 80, errors, f"{site_id} atlas ownership changed")
+        ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"{site_id} original 1254px source is missing")
+        if source_path.is_file():
+            source_payload = source_path.read_bytes()
+            ensure(hashlib.sha256(source_payload).hexdigest() == source_sha and len(source_payload) >= 26 and source_payload[25] == 6, errors, f"{site_id} source bytes or alpha changed")
+        ensure(Path(f"{source_path}.import").is_file(), errors, f"{site_id} source import sidecar is missing")
+        ensure(source_row.get("asset_id") == asset_id and source_row.get("source_sha256") == source_sha and source_row.get("atlas_region") == region and str(source_row.get("generation_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{site_id} source manifest row changed")
+    for path in (report_script, report_scene, report_launcher):
+        ensure(path.is_file(), errors, f"Missing Sevenfold High Arcanum consolidated smoke owner: {path.relative_to(ROOT)}")
+    if report_script.is_file():
+        report_text = report_script.read_text(encoding="utf-8")
+        for token in ("SEVENFOLD_HIGH_ARCANUM_SMOKE", "OverworldRules._collect_resource_node_result(", "SpellRules.resolve_battle_spell(", "save-version-9 round trip", "single_consolidated_smoke", "sevenfold_high_arcanum_strip.png"):
+            ensure(token in report_text, errors, f"Sevenfold High Arcanum smoke is missing live proof: {token}")
+    if report_launcher.is_file():
+        launcher_text = report_launcher.read_text(encoding="utf-8")
+        ensure('"case_count": 7' in launcher_text and '"battle_resolution_count": 7' in launcher_text and "subprocess.run(" in launcher_text, errors, "Sevenfold High Arcanum Python launcher changed")
+    for packaging_name in ("packaging_linux_export_smoke.py", "packaging_windows_export_smoke.py"):
+        packaging_text = (ROOT / "tests" / packaging_name).read_text(encoding="utf-8")
+        ensure('REQUIRED_SEVENFOLD_HIGH_ARCANUM_ATLAS_NAME = "sevenfold_high_arcanum_atlas"' in packaging_text and "sevenfold_high_arcanum_atlas.png.import" in packaging_text, errors, f"{packaging_name} must audit the Sevenfold High Arcanum atlas")
+
+
 def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
     units = items_index(load_json(CONTENT_DIR / "units.json"))
     dwellings = items_index(load_json(CONTENT_DIR / "neutral_dwellings.json"))
@@ -77177,7 +77250,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
             "unclaimed": "mapobj_tideglass_roost", "controlled": "resource_site_neutral_tideglass_roost_controlled", "unclaimed_region": [96, 0, 48, 48], "controlled_region": [144, 0, 48, 48],
         },
     }
-    ensure(len(units) == 111 and len(dwellings) == 27 and len(sites) == 202 and len(objects) == 388 and len(groups) == 159 and len(encounters) == 101, errors, "Elite-neutral batch must retain the expanded 111-unit, 27-dwelling, 202-site, 388-object, 159-army, 101-encounter roster")
+    ensure(len(units) == 111 and len(dwellings) == 27 and len(sites) == 209 and len(objects) == 388 and len(groups) == 159 and len(encounters) == 101, errors, "Elite-neutral batch must retain the expanded 111-unit, 27-dwelling, 209-site, 388-object, 159-army, 101-encounter roster")
     ensure(len(scenario.get("resource_nodes", [])) == 93 and len(scenario.get("encounters", [])) == 25, errors, "Elite-neutral batch must own the expanded 93-site, 25-encounter Ninefold board")
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = overworld_art.get("object_assets", {})
@@ -77851,6 +77924,7 @@ def main() -> int:
     validate_eight_neutral_dwelling_musters(errors)
     validate_sixteen_neutral_dwelling_musters(errors)
     validate_seven_final_neutral_dwelling_musters(errors)
+    validate_sevenfold_high_arcanum(errors)
     validate_two_elite_neutral_dwellings(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_systemic_encounter_landmarks(errors)
