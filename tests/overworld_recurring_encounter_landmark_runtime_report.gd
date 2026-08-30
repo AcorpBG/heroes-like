@@ -139,7 +139,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var commander_first := bool(commander.get("uses_commander_sprite", false)) \
 		and not bool(commander.get("uses_identity_encounter_sprite", true)) \
 		and String(commander.get("identity_encounter_asset_id", "")) == "encounter_recurring_beacon_wardens"
-	var faction: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_mire_raid"})
+	var faction: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_missing_mireclaw_fixture", "spawned_by_faction_id": "faction_mireclaw"})
 	var faction_fallback := String(faction.get("identity_encounter_asset_id", "")) == "" \
 		and bool(faction.get("uses_faction_encounter_sprite", false)) \
 		and String(faction.get("faction_encounter_asset_id", "")) == "encounter_faction_mireclaw"

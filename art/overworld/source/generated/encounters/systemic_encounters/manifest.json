@@ -1,0 +1,50 @@
+{
+  "schema": "systemic_encounter_landmark_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png",
+    "size": [192, 48],
+    "cell_size": [48, 48],
+    "region_count": 4,
+    "sha256": "d4c6cf3cabdb6070317a6b467265ff79a5b9f9e0432cb3ff67af56a1d360570f",
+    "package_policy": "single_imported_atlas_only"
+  },
+  "sources": [
+    {
+      "encounter_id": "encounter_town_assault",
+      "asset_id": "encounter_systemic_town_assault",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5a961084-bc4a-463a-87f8-a3e8d2174898.png",
+      "path": "res://art/overworld/source/generated/encounters/systemic_encounters/town_assault_source.png",
+      "sha256": "48b1c615c1b1c580dd9a7cc19e731818fd4111e4d67ef6809dc8cfefaf712975",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "An asymmetric shattered limestone gate, hanging gate leaf, ram nose, and captain pennant frame a clear assault breach."
+    },
+    {
+      "encounter_id": "encounter_resource_defense",
+      "asset_id": "encounter_systemic_resource_defense",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d71ad72d-418b-4524-b0c6-6d18da52e2ef.png",
+      "path": "res://art/overworld/source/generated/encounters/systemic_encounters/resource_defense_source.png",
+      "sha256": "5804dabcea14cc5f628d53e7b49adbaeb877bf43ec44b68713860c1a1043c6ff",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "A hooked timber perimeter protects a supply hoist, sealed crates, stakes, rope, pavise, and narrow entry gap."
+    },
+    {
+      "encounter_id": "encounter_mire_raid",
+      "asset_id": "encounter_systemic_mire_raid",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a6a4b4d9-2831-4baa-a498-36fc2368b304.png",
+      "path": "res://art/overworld/source/generated/encounters/systemic_encounters/mire_raid_source.png",
+      "sha256": "515a6a75f33ea5316e7db0a4da6dc5fe3ba3f090da886b5b6f880713a89ea7b9",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "A mobile peat raid sled carries a forked lash mast, claw-cut hide sail, sling stones, bog cudgels, and bloodwake drum."
+    },
+    {
+      "encounter_id": "encounter_blackbranch_reavers",
+      "asset_id": "encounter_systemic_blackbranch_reavers",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f11e42d6-f236-4132-ab6b-521d10db27b0.png",
+      "path": "res://art/overworld/source/generated/encounters/systemic_encounters/blackbranch_reavers_source.png",
+      "sha256": "01664ed60635827a4b0a7f4e5866ba759a824e500437a5e5fd91ab842414c309",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Two crossed char-black branches shelter a low reed ambush blind with hooked blades, sling rest, and stone pouch."
+    }
+  ]
+}

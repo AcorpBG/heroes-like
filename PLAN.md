@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-thornwake-rootbound-canticles-campaign-10184`, which brings Thornwake's six previously campaign-unrepresented heroes and all twenty-three battles from their production boards into one testimony-gated six-chapter arc.
-- Current package boundary: both release exports measure 249297256 bytes, 702744 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-systemic-encounter-landmarks-10184`, which gives the four system-owned or scripted encounter definitions exact original landmarks and closes live encounter-art coverage at 101 of 101.
+- Current package boundary: both release exports measure 249314436 bytes, 685564 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
 
 ## Eleven Roads And Objectives
 
@@ -14975,6 +14975,36 @@ Completion criteria:
 Non-goals:
 - no new faction, hero, town, unit, building, battle system, balance, strategic AI, save schema, native RMG, signing, publication, whole-game, or release-readiness change or claim;
 - no copied Heroes campaign, map, character, object, icon, heraldry, name, text, or protected visual expression.
+
+## Systemic Encounter Landmarks
+
+id: `content-systemic-encounter-landmarks-10184`
+
+Status: completed.
+
+Completion result:
+- Town Assault, Defended Field Site, Mireclaw Raid, and Blackbranch Reavers now resolve four exact, silhouette-distinct original landmarks from one transparent 192x48 runtime atlas, closing exact encounter-art ownership from 97 of 101 to 101 of 101 without changing encounter definitions, armies, objectives, raid selection, or random-map behavior;
+- generated originals, prompts, immutable atlas regions, accessible non-color descriptions, commander-first presentation order, fail-closed region handling, and source-art package exclusion are retained through the established data-driven art manifest;
+- the one consolidated four-case runtime/visual smoke passed exact map resolution, all four production battle payloads, objective-bearing and objective-free contracts, commander priority, save-version-9 round trip, and non-mutating authority; repository validation and sequential Linux/Windows packaged startup passed at 249314436 bytes, 685564 bytes below the unchanged ceiling.
+
+Current finding:
+- all sixty heroes, twenty towns, and one hundred eleven units own exact live art, and every production resource site is placed, but four of one hundred one encounter definitions still lack exact Overworld identity;
+- Mireclaw Raid is the random-map default encounter, appears in ten authored raid pools, and has roughly one hundred ninety live/test/tool references; Blackbranch Reavers appears in two raid pools, while Town Assault and Defended Field Site are the authoritative dynamic battle identities for town and resource-site defenses;
+- these four systemic fronts currently collapse to faction, unit, or generic hostile-camp fallbacks despite materially different battle roles, leaving exact encounter presentation at 97 of 101.
+
+Implementation boundary:
+- create four original, transparent, silhouette-distinct field landmarks derived from each encounter's exact terrain, army, objective, and dynamic gameplay role: breached town gate, defended field perimeter, Mireclaw raid trail, and Blackbranch ambush grove;
+- pack the four immutable 48x48 regions into one compact imported systemic-encounter atlas, register exact encounter ownership and non-color descriptions in the established commander-first identity resolver, and preserve all existing fallback order and encounter authority;
+- preserve encounter definitions, armies, battle generation, objectives, raid selection, random-map defaults, save version 9, performance, generated-source exclusion, Windows/Linux behavior, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all four systemic encounters resolve their own exact atlas regions in representative live dynamic or authored contexts while commander identity remains first and missing/invalid art fails closed;
+- one consolidated live runtime and visual smoke proves four distinct regions, actual battle-payload construction, unchanged session/save authority, accessible descriptions, and exact encounter coverage of 101 of 101;
+- repository validation and sequential Linux/Windows packaged startup pass with matching PCKs below the unchanged ceiling.
+
+Non-goals:
+- no encounter balance, army, objective, raid selection, random-map generation, battle system, AI, save schema, faction, hero, town, unit, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes camp, gate, ambush, faction object, icon, name, text, or protected visual expression.
 
 ## Progress Reconciliation
 
