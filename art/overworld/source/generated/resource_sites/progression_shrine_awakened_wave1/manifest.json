@@ -1,0 +1,39 @@
+{
+  "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png",
+  "output_size": [288, 48],
+  "asset_size": [48, 48],
+  "prompts": [
+    {
+      "site_id": "site_oath_ember_shrine",
+      "source": "oath_ember_shrine_awakened_source.png",
+      "prompt": "Preserve the exact Oath Ember Shrine sprite and isometric silhouette; show a claimed rite with a steady lower amber-white flame, warm carving afterglow, and fresh ember seal; transparent background; no text or people."
+    },
+    {
+      "site_id": "site_reedscript_vow_shrine",
+      "source": "reedscript_vow_shrine_awakened_source.png",
+      "prompt": "Preserve the exact Reedscript Vow Shrine sprite and isometric silhouette; add a newly tied teal-gold vow cord, calm marsh-gold candle, and fresh base-seal glow; transparent background; no readable writing or people."
+    },
+    {
+      "site_id": "site_prism_measure_shrine",
+      "source": "prism_measure_shrine_awakened_source.png",
+      "prompt": "Preserve the exact Prism Measure Shrine sprite and isometric silhouette; align its crystal facets and add restrained cyan-gold calibration glints with a softly lit star emblem; transparent background; no text or people."
+    },
+    {
+      "site_id": "site_root_accord_ring",
+      "source": "root_accord_ring_awakened_source.png",
+      "prompt": "Preserve the exact Root Accord Ring sprite and circular silhouette; show renewal with fresh shoots, a luminous center spiral, and four restrained pact lights; transparent background; no text or people."
+    },
+    {
+      "site_id": "site_furnace_oath_marker",
+      "source": "furnace_oath_marker_awakened_source.png",
+      "prompt": "Preserve the exact Furnace Oath Marker sprite and narrow isometric silhouette; show banked coals, a steady fork-rune glow, and a smith hammer on the lower step; transparent background; no text or people. Built-in generation returned a painted checkerboard, removed mechanically as connected background while preserving the generated marker."
+    },
+    {
+      "site_id": "site_tide_bell_shrine",
+      "source": "tide_bell_shrine_awakened_source.png",
+      "prompt": "Preserve the exact Tide Bell Shrine sprite and wooden-frame silhouette; show a freshly rung bell, sailor-knot rope, close pale mist echoes, and brightened tide-pool ripples; transparent background; no text or people."
+    }
+  ]
+}

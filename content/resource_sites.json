@@ -4641,20 +4641,31 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "shrine_progression_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "shrine_contract": {
         "shrine_kind": "progression_memory",
-        "planned_bonus": "command resolve lesson",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
         "cadence": "one_time",
-        "metadata_only": true
-      }
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      },
+      "action_label": "Kindle Oath Ember",
+      "summary": "The ember answers a commander who binds resolve to the old roadward oath.",
+      "claim_rewards": {
+        "experience": 90
+      },
+      "hero_command_bonus": {
+        "attack": 1
+      },
+      "learn_spell_id": "spell_beacon_waymark_road_15"
     },
     {
       "id": "site_reedscript_vow_shrine",
@@ -4663,20 +4674,32 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "shrine_progression_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "shrine_contract": {
         "shrine_kind": "route_vow",
-        "planned_bonus": "marked marsh path lesson",
+        "live_bonus": "A permanent knowledge lesson, Fenlight spell, and marsh-route survey.",
         "cadence": "one_time",
-        "metadata_only": true
-      }
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      },
+      "action_label": "Seal Reedscript Vow",
+      "summary": "A knotted vow teaches the patient routes hidden beneath mire and reed.",
+      "claim_rewards": {
+        "experience": 75
+      },
+      "hero_command_bonus": {
+        "knowledge": 1
+      },
+      "learn_spell_id": "spell_mire_flood_fenlight_12",
+      "vision_radius": 3
     },
     {
       "id": "site_prism_measure_shrine",
@@ -4685,20 +4708,32 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "shrine_progression_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "shrine_contract": {
         "shrine_kind": "survey_measure",
-        "planned_bonus": "range and sightline lesson",
+        "live_bonus": "A permanent power lesson, Starlens Survey spell, and long-range survey.",
         "cadence": "one_time",
-        "metadata_only": true
-      }
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      },
+      "action_label": "Align Prism Measure",
+      "summary": "The calibrated facets teach a commander to turn distance into magical leverage.",
+      "claim_rewards": {
+        "experience": 80
+      },
+      "hero_command_bonus": {
+        "power": 1
+      },
+      "learn_spell_id": "spell_lens_starlens_survey_12",
+      "vision_radius": 4
     },
     {
       "id": "site_root_accord_ring",
@@ -4707,19 +4742,30 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "shrine_progression_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "shrine_contract": {
         "shrine_kind": "accord_renewal",
-        "planned_bonus": "weekly renewal marker",
+        "live_bonus": "Weekly movement renewal, nearby town recovery relief, and field experience.",
         "cadence": "repeatable_weekly",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      },
+      "action_label": "Renew Root Accord",
+      "summary": "Living roots answer the renewed pact with vigor for road and settlement alike.",
+      "claim_rewards": {
+        "experience": 60
+      },
+      "shrine_effects": {
+        "movement_restore": 120,
+        "nearest_player_town_recovery_relief": 1
       },
       "repeatable": true,
       "visit_cooldown_days": 7
@@ -4731,19 +4777,29 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "shrine_progression_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "shrine_contract": {
         "shrine_kind": "work_oath",
-        "planned_bonus": "weekly equipment discipline marker",
+        "live_bonus": "Weekly road movement renewal and disciplined field experience.",
         "cadence": "repeatable_weekly",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      },
+      "action_label": "Strike Furnace Oath",
+      "summary": "A measured hammer rite restores the company rhythm for another hard march.",
+      "claim_rewards": {
+        "experience": 65
+      },
+      "shrine_effects": {
+        "movement_restore": 150
       },
       "repeatable": true,
       "visit_cooldown_days": 7
@@ -4755,20 +4811,31 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "shrine_progression_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "shrine_contract": {
         "shrine_kind": "bell_watch",
-        "planned_bonus": "weekly fog-lane warning marker",
+        "live_bonus": "Weekly enemy-pressure relief, coast survey, and watch experience.",
         "cadence": "repeatable_weekly",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
       },
+      "action_label": "Ring Tide Bell",
+      "summary": "The tide bell carries a warning across hostile lanes and clears the coast ahead.",
+      "claim_rewards": {
+        "experience": 55
+      },
+      "shrine_effects": {
+        "enemy_pressure_relief": 1
+      },
+      "vision_radius": 4,
       "repeatable": true,
       "visit_cooldown_days": 7
     },

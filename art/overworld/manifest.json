@@ -6173,9 +6173,45 @@
       "path": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/repeatable_service_visited_wave1/lens_calibration_cart_visited_source.png", "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
       "assigned_resource_site_id": "site_lens_calibration_cart", "presentation_role": "visited_service_state", "accessible_description": "A survey cart with its large prism steadily aligned and its smaller instruments folded and packed away."
+    },
+    "resource_site_progression_shrine_oath_ember_awakened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/oath_ember_shrine_awakened_source.png", "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+      "assigned_resource_site_id": "site_oath_ember_shrine", "presentation_role": "awakened_shrine_state", "accessible_description": "The Oath Ember Shrine after its rite, with a steady low flame, warm oath carvings, and a fresh ember seal."
+    },
+    "resource_site_progression_shrine_reedscript_vow_awakened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/reedscript_vow_shrine_awakened_source.png", "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+      "assigned_resource_site_id": "site_reedscript_vow_shrine", "presentation_role": "awakened_shrine_state", "accessible_description": "The Reedscript Vow Shrine with a newly sealed teal-gold cord, calm marsh candle, and illuminated base seal."
+    },
+    "resource_site_progression_shrine_prism_measure_awakened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/prism_measure_shrine_awakened_source.png", "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+      "assigned_resource_site_id": "site_prism_measure_shrine", "presentation_role": "awakened_shrine_state", "accessible_description": "The Prism Measure Shrine after calibration, with aligned facets, cyan-gold glints, and a softly lit survey emblem."
+    },
+    "resource_site_progression_shrine_root_accord_awakened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/root_accord_ring_awakened_source.png", "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+      "assigned_resource_site_id": "site_root_accord_ring", "presentation_role": "awakened_shrine_state", "accessible_description": "The Root Accord Ring renewed with fresh shoots, four warm pact lights, and a luminous spiral stone."
+    },
+    "resource_site_progression_shrine_furnace_oath_awakened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/furnace_oath_marker_awakened_source.png", "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+      "assigned_resource_site_id": "site_furnace_oath_marker", "presentation_role": "awakened_shrine_state", "accessible_description": "The Furnace Oath Marker with banked coals, steady fork-rune glow, and a smith hammer resting on the step."
+    },
+    "resource_site_progression_shrine_tide_bell_awakened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/tide_bell_shrine_awakened_source.png", "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
+      "assigned_resource_site_id": "site_tide_bell_shrine", "presentation_role": "awakened_shrine_state", "accessible_description": "The Tide Bell Shrine just rung, with a fresh sailor knot, pale mist echoes, and bright tide-pool ripples."
     }
   },
   "resource_site_sprites": {
+    "site_oath_ember_shrine": {"asset_id":"resource_site_progression_shrine_oath_ember_awakened","unclaimed_asset_id":"mapobj_oath_ember_shrine","fit":"Awakened ember rite paired with the ready oath shrine."},
+    "site_reedscript_vow_shrine": {"asset_id":"resource_site_progression_shrine_reedscript_vow_awakened","unclaimed_asset_id":"mapobj_reedscript_vow_shrine","fit":"Sealed-vow state paired with the ready reedscript shrine."},
+    "site_prism_measure_shrine": {"asset_id":"resource_site_progression_shrine_prism_measure_awakened","unclaimed_asset_id":"mapobj_prism_measure_shrine","fit":"Calibrated-measure state paired with the ready prism shrine."},
+    "site_root_accord_ring": {"asset_id":"resource_site_progression_shrine_root_accord_awakened","unclaimed_asset_id":"mapobj_root_accord_ring","fit":"Renewed weekly accord paired with the dormant root ring."},
+    "site_furnace_oath_marker": {"asset_id":"resource_site_progression_shrine_furnace_oath_awakened","unclaimed_asset_id":"mapobj_furnace_oath_marker","fit":"Struck weekly oath state paired with the banked furnace marker."},
+    "site_tide_bell_shrine": {"asset_id":"resource_site_progression_shrine_tide_bell_awakened","unclaimed_asset_id":"mapobj_tide_bell_shrine","fit":"Rung weekly warning state paired with the still tide bell."},
     "site_wayfarer_menders_tent": {"asset_id":"resource_site_repeatable_service_wayfarer_menders_tent_visited","unclaimed_asset_id":"mapobj_wayfarer_menders_tent","fit":"Used-treatment cooldown state paired with the stocked menders tent."},
     "site_courier_change_post": {"asset_id":"resource_site_repeatable_service_courier_change_post_visited","unclaimed_asset_id":"mapobj_courier_change_post","fit":"Resting post cooldown state paired with the ready courier mounts."},
     "site_contract_scribe_booth": {"asset_id":"resource_site_repeatable_service_contract_scribe_booth_visited","unclaimed_asset_id":"mapobj_contract_scribe_booth","fit":"Closed-ledger cooldown state paired with the open scribe service."},
