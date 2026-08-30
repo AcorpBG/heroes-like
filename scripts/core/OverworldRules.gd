@@ -1034,6 +1034,36 @@ static func _collect_resource_node_result(
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This site has no authored payload."}
+	if String(site.get("batch003_role", "")) == "sign_waypoint":
+		var sign_contract = site.get("sign_contract", {})
+		var hint_category := String(sign_contract.get("route_hint_category", "")) if sign_contract is Dictionary else ""
+		var sign_text := String(site.get("sign_text", "")).strip_edges()
+		if sign_text == "":
+			sign_text = "The route marks are too weathered to read."
+		var sign_facts := {
+			"sign_read": true,
+			"route_hint_category": hint_category,
+		}
+		var sign_result := {
+			"ok": true,
+			"message": "%s: %s" % [String(site.get("name", "Road sign")), sign_text],
+			"scenario_status": session.scenario_status,
+			"sign_waypoint": {
+				"site_id": String(site.get("id", "")),
+				"placement_id": String(node.get("placement_id", "")),
+				"route_hint_category": hint_category,
+				"text": sign_text,
+			},
+			"interaction_result": _interactable_result_payload(
+				"sign_waypoint",
+				node,
+				sign_facts,
+				{"contract_known": true, "blocks_changed": false, "body_tiles_changed": false}
+			),
+		}
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+		return sign_result
 	var guard_encounter := resource_site_blocking_guard(session, node, site)
 	if not guard_encounter.is_empty() and _resource_site_guard_blocks_node(guard_encounter, node):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)

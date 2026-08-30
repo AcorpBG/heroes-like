@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed all five Batch 003 scouting structures with shipped placements, persistent watch-radius control, five controlled-state assets, and one passing consolidated smoke.",
+  "currentNotes": "Completed the eleven-object Batch 003 roads-and-objectives family and Writbound Crossroads scenario with one consolidated family smoke, repository validation, and matching Linux/Windows package boots. The broader content/art goal remains active for selection of the next coherent family.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-five-scouting-structures-10184",
-  "currentSliceId": "content-six-progression-shrines-10184",
-  "currentSliceNotes": "The complete six-shrine Batch 003 family is live and validated as one gameplay/content/art batch: three one-time progression memories, three guarded weekly shrines, and one compact awakened-state atlas.",
+  "currentSlice": "content-eleven-roads-objectives-10184",
+  "currentSliceId": "content-eleven-roads-objectives-10184",
+  "currentSliceNotes": "The complete remaining Batch 003 roads-and-objectives family is active: five non-mutating signs, three route-opening locks, and three scenario-linked event markers with one shared verification pass after implementation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six progression shrines 10184",
-  "currentSliceUpdatedAt": "2026-08-30T00:55:00Z",
+  "currentSliceTitle": "content eleven roads objectives 10184",
+  "currentSliceUpdatedAt": "2026-08-30T01:54:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21193,19 +21193,20 @@
     "content/resource_sites.json",
     "content/map_objects.json",
     "content/scenarios.json",
-    "art/overworld/runtime/objects/resource_sites/neutral_dwelling_claimed_atlas.png",
-    "art/overworld/source/generated/resource_sites/neutral_dwelling_claimed_wave1/manifest.json",
+    "scripts/core/OverworldRules.gd",
+    "art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
+    "art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/manifest.json",
     "art/overworld/manifest.json",
-    "tests/eight_neutral_dwelling_musters_report.gd",
-    "tests/eight_neutral_dwelling_musters_report.tscn",
+    "tests/eleven_roads_objectives_report.gd",
+    "tests/eleven_roads_objectives_report.tscn",
     "tests/validate_repo.py",
     "tests/packaging_linux_export_smoke.py",
     "tests/packaging_windows_export_smoke.py",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-eight-neutral-dwelling-musters-20260829",
-  "latestFinding": "Eight authored neutral dwellings now resolve their exact guards, grant one-time initial recruits, produce recurring income and weekly town musters, expose public response orders, preserve save version 9, render distinct claimed-state art, and ship in matching 249166492-byte Linux and Windows PCKs with source originals excluded.",
+  "latestEvidenceId": "content-eleven-roads-objectives-20260830",
+  "latestFinding": "Five authored signs now read without mutation, three paid route locks open and persist their footprints, and three one-time event markers satisfy exact Writbound Crossroads objectives. Six distinct state assets ship in one compact atlas, save version 9 remains unchanged, and matching 249457112-byte Linux/Windows PCKs boot with source originals excluded.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106266,6 +106267,16 @@
       "startedAt": "2026-08-30T01:00:10Z",
       "notes": "Completed all five Batch 003 scouting structures with two new Ninefold placements, exact persistent fog control, five original controlled-state landmarks in one compact atlas, save-version-9 continuity, one passing combined smoke, repository validation, and matching 249416796-byte Linux/Windows package boots.",
       "completedAt": "2026-08-30T01:20:05Z"
+    },
+    {
+      "id": "content-eleven-roads-objectives-10184",
+      "title": "content eleven roads objectives 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T01:54:01Z",
+      "startedAt": "2026-08-30T01:23:23Z",
+      "notes": "Completed five non-mutating signs, three paid route-opening locks, three scenario-linked objective events, the Writbound Crossroads skirmish with full economy sources and three distinct authored battles, six original state-art assets in one compact atlas, one passing eleven-case smoke, repository validation, and matching 249457112-byte Linux/Windows packaged boots.",
+      "completedAt": "2026-08-30T01:54:01Z"
     }
   ],
   "project": "heroes-like",
@@ -106275,8 +106286,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The five Batch 003 scouting structures are now live and validated. Eleven sign, route-lock, and objective-event contracts remain metadata-only, and broader faction, encounter, campaign, presentation, balance, accessibility, packaging, and release gaps remain separate work under the active content goal.",
-  "remainingWork": "Select the next coherent multi-content family and continue the active content goal with one consolidated smoke after the family is implemented; preserve the remaining 583204-byte PCK headroom.",
+  "remainingGap": "The Batch 003 roads-and-objectives family is complete; broader faction, encounter, campaign, presentation, balance, accessibility, packaging, and release gaps remain separate work under the active content goal.",
+  "remainingWork": "Select and register the next coherent multi-content family, implement the family before its single consolidated smoke, and preserve the remaining 542888-byte PCK headroom through atlas packing and source-art exclusion.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106707,7 +106718,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_seven_final_neutral_dwelling_musters_completed",
+  "result": "content_eleven_roads_objectives_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106808,9 +106819,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed all six Batch 003 repeatable field services and their distinctive visited-state landmarks as one live Ninefold Confluence content batch with one consolidated smoke and matching packaged verification.",
+  "summary": "Completed all eleven Batch 003 roads-and-objectives sites, the production Writbound Crossroads skirmish, and six distinctive state-art assets as one coherent content family with one consolidated smoke and matching packaged verification.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T01:20:05Z",
+  "updatedAt": "2026-08-30T01:54:01Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

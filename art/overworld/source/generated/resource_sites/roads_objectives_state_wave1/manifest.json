@@ -1,0 +1,40 @@
+{
+  "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
+  "generation_mode": "built_in_image_gen",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
+  "output_size": [288, 48],
+  "asset_size": [48, 48],
+  "processing": "preserve generated alpha, alpha-trim, aspect-fit to 44x44, center on transparent 48x48 cells; the witness checkerboard-flattened result was cleaned as one connected near-white background before the same alpha-safe fit",
+  "prompts": [
+    {
+      "site_id": "site_toll_chain_court",
+      "source": "toll_chain_court_opened_source.png",
+      "prompt": "Preserve the exact Toll Chain Court identity and isometric silhouette; lower and coil the heavy chain beside the winch so the cobbled road is visibly clear; genuinely transparent background; no text, people, border, or guide lines."
+    },
+    {
+      "site_id": "site_root_lease_gate",
+      "source": "root_lease_gate_opened_source.png",
+      "prompt": "Preserve the exact Root Lease Gate identity and isometric silhouette; withdraw the woven gate into the arch posts, leave a clearly open passage, and add one renewed green-gold lease ribbon; genuinely transparent background; no text, people, border, or guide lines."
+    },
+    {
+      "site_id": "site_pressure_rail_stop",
+      "source": "pressure_rail_stop_opened_source.png",
+      "prompt": "Preserve the exact Pressure Rail Stop identity and isometric silhouette; show a safely high gauge, lifted stop hardware, continuous unobstructed rails, and one restrained brass indicator glow; genuinely transparent background; no text, people, border, or guide lines."
+    },
+    {
+      "site_id": "site_campaign_muster_seal",
+      "source": "campaign_muster_seal_activated_source.png",
+      "prompt": "Preserve the exact Campaign Muster Seal identity and isometric silhouette; raise the bronze seal with warm engraved-line glow, fully unfurl both banners, and add one fresh wax seal; genuinely transparent background; no text, people, border, or guide lines."
+    },
+    {
+      "site_id": "site_broken_accord_marker",
+      "source": "broken_accord_marker_activated_source.png",
+      "prompt": "Preserve the Broken Accord Marker and its cracked silhouette; bind the central break with a bronze record band, neatly re-tie the red cords, and replace hostile purple light with calm amber-white witness light; genuinely transparent background; no text, people, border, or guide lines."
+    },
+    {
+      "site_id": "site_scenario_witness_stone",
+      "source": "scenario_witness_stone_activated_source.png",
+      "prompt": "Preserve the exact Scenario Witness Stone identity and isometric silhouette; illuminate the eye and rays in pale gold-blue, use two lit witness candles, and add one blue oath ribbon; isolated object with genuine transparent alpha, no checkerboard, text, people, border, or guide lines. The built-in result still painted a checkerboard, removed mechanically as one connected near-white background while preserving the generated stone."
+    }
+  ]
+}
