@@ -1,6 +1,8 @@
 extends Node
 
 const SCENARIO_ID := "ninefold-confluence"
+const THIRD_HEARTHS_SCENARIO_ID := "third-hearths-confluence"
+const THIRD_HEARTHS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const TOWN_VISUAL_EXTENT_TILES := 1.36
 const TOWN_EXTENT_FRACTION := 0.68
@@ -21,6 +23,18 @@ const EXPECTED_TOWN_ASSETS := {
 	"town_thornwake_rootgate_nursery": "town_identity_thornwake_rootgate_nursery",
 	"town_brasshollow_clauseworks_depot": "town_identity_brasshollow_clauseworks_depot",
 	"town_veilmourn_fogchart_mooring": "town_identity_veilmourn_fogchart_mooring",
+	"town_cinderlock_bastion": "town_identity_cinderlock_bastion",
+	"town_dawnmirror_observatory": "town_identity_dawnmirror_observatory",
+	"town_briarwheel_enclave": "town_identity_briarwheel_enclave",
+	"town_cindercoil_foundry": "town_identity_cindercoil_foundry",
+	"town_gloamwake_anchorage": "town_identity_gloamwake_anchorage",
+}
+const THIRD_HEARTH_OBJECTIVES := {
+	"town_cinderlock_bastion": "hold_third_cinderlock",
+	"town_dawnmirror_observatory": "claim_third_dawnmirror",
+	"town_briarwheel_enclave": "claim_third_briarwheel",
+	"town_cindercoil_foundry": "claim_third_cindercoil",
+	"town_gloamwake_anchorage": "claim_third_gloamwake",
 }
 
 func _ready() -> void:
@@ -35,6 +49,10 @@ func _run() -> void:
 		if not bool(row.get("ok", false)):
 			_fail("Overworld faction town sprite row failed: %s" % row)
 			return
+	var third_hearths := _validate_third_hearth_content()
+	if not bool(third_hearths.get("ok", false)):
+		_fail("Five-faction third-hearth content failed: %s" % third_hearths)
+		return
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	print("OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT %s" % JSON.stringify({
@@ -44,6 +62,7 @@ func _run() -> void:
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback_asset_id": "frontier_town",
 		"rows": rows,
+		"third_hearths": third_hearths,
 		"save_version": SessionStateStore.SAVE_VERSION,
 	}))
 	get_tree().quit(0)
@@ -154,7 +173,7 @@ func _validate_profiles(shell: Node, profiles: Array) -> Dictionary:
 			return {"ok": false, "reason": "asset_identity", "profile": profile}
 		if not bool(profile.get("uses_identity_sprite", false)) or bool(profile.get("uses_faction_sprite", true)) or bool(profile.get("uses_default_sprite", true)):
 			return {"ok": false, "reason": "fallback_state", "profile": profile}
-		var expected_path := "res://art/overworld/runtime/objects/towns/identity/%s.png" % town_id
+		var expected_path := THIRD_HEARTHS_ATLAS_PATH if town_id in THIRD_HEARTH_OBJECTIVES else "res://art/overworld/runtime/objects/towns/identity/%s.png" % town_id
 		if String(profile.get("sprite_path", "")) != expected_path or not (load(expected_path) is Texture2D):
 			return {"ok": false, "reason": "texture_path", "profile": profile}
 		var scale_payload: Dictionary = map_view.call("validation_town_sprite_scale_payload", sprite_asset_id)
@@ -177,6 +196,58 @@ func _validate_profiles(shell: Node, profiles: Array) -> Dictionary:
 		"footprint_authority_exact": footprint_authority_exact,
 		"owner_pennant_exact": owner_pennant_exact,
 	}
+
+func _validate_third_hearth_content() -> Dictionary:
+	var session = ScenarioFactory.create_session(THIRD_HEARTHS_SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)
+	if session == null:
+		return {"ok": false, "failure": "scenario_session_missing"}
+	var scenario: Dictionary = ContentService.get_scenario(THIRD_HEARTHS_SCENARIO_ID)
+	if scenario.is_empty() or scenario.get("towns", []).size() != 6:
+		return {"ok": false, "failure": "scenario_contract", "town_count": scenario.get("towns", []).size()}
+	var atlas := load(THIRD_HEARTHS_ATLAS_PATH)
+	if not (atlas is Texture2D) or atlas.get_width() != 640 or atlas.get_height() != 128:
+		return {"ok": false, "failure": "atlas_contract"}
+	var rows: Array = []
+	var placement_by_town: Dictionary = {}
+	for placement_value in session.overworld.get("towns", []):
+		if placement_value is Dictionary:
+			placement_by_town[String(placement_value.get("town_id", ""))] = placement_value
+	for town_id_value in THIRD_HEARTH_OBJECTIVES:
+		var town_id := String(town_id_value)
+		var town: Dictionary = placement_by_town.get(town_id, {})
+		var template: Dictionary = ContentService.get_town(town_id)
+		if town.is_empty() or template.is_empty():
+			return {"ok": false, "failure": "town_missing", "town_id": town_id}
+		town["owner"] = "player"
+		session.flags["active_town_placement_id"] = String(town.get("placement_id", ""))
+		session.game_state = "town"
+		var build_catalog: Array = TownRules.get_build_catalog(session)
+		var muster_catalog: Array = TownRules.get_muster_catalog(session)
+		var objective_id := String(THIRD_HEARTH_OBJECTIVES[town_id])
+		var objective_met: bool = true if objective_id == "hold_third_cinderlock" else ScenarioRules.is_objective_met(session, objective_id, "victory")
+		var save_clone = SessionStateStore.new_session_data()
+		save_clone.from_dict(session.to_dict())
+		var saved_town := _town_by_id(save_clone.overworld.get("towns", []), town_id)
+		var save_exact: bool = String(saved_town.get("owner", "")) == "player" and String(save_clone.flags.get("active_town_placement_id", "")) == String(town.get("placement_id", ""))
+		var row_ok: bool = template.get("buildable_building_ids", []).size() >= 20 and build_catalog.size() >= 20 and muster_catalog.size() >= 7 and objective_met and save_exact
+		rows.append({
+			"ok": row_ok,
+			"town_id": town_id,
+			"faction_id": String(template.get("faction_id", "")),
+			"build_catalog_count": build_catalog.size(),
+			"muster_catalog_count": muster_catalog.size(),
+			"capture_objective_met": objective_met,
+			"save_capture_exact": save_exact,
+		})
+		if not row_ok:
+			return {"ok": false, "failure": "town_case", "row": rows[-1]}
+	return {"ok": rows.size() == 5, "scenario_id": THIRD_HEARTHS_SCENARIO_ID, "case_count": rows.size(), "rows": rows}
+
+func _town_by_id(towns: Array, town_id: String) -> Dictionary:
+	for town_value in towns:
+		if town_value is Dictionary and String(town_value.get("town_id", "")) == town_id:
+			return town_value
+	return {}
 
 func _town_scale_exact(payload: Dictionary) -> bool:
 	return not payload.is_empty() \
