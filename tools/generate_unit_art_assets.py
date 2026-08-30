@@ -28,6 +28,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_gaugefire_arbalists",
     "unit_brasshollow_pressure_lancers",
     "unit_brasshollow_quenchbell_mortars",
+    "unit_brasshollow_quenchspool_slingers",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
     "unit_citadel_pikeward",
@@ -121,6 +122,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_sunvault_solar_array_striders",
     "unit_sunvault_zenith_lensbearers",
     "unit_thornwake_barkmantle_rams",
+    "unit_thornwake_bramblekite_needlers",
     "unit_thornwake_canopy_rammers",
     "unit_thornwake_seedglass_cantors",
     "unit_thornwake_seedshield_wardens",
@@ -136,6 +138,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_veilmourn_mirrorkeel_reavers",
     "unit_veilmourn_mourning_lanterns",
     "unit_veilmourn_obituary_scribes",
+    "unit_veilmourn_saltbell_casters",
     "unit_veilmourn_saltwake_eulogists",
     "unit_veilmourn_wakechain_boarders",
     "unit_veilmourn_undertow_harpooners",
@@ -148,6 +151,9 @@ PACKAGE_OPTIMIZED_CURATED_IDS = {
     "unit_thornwake_seedshield_wardens",
     "unit_brasshollow_gaugefire_arbalists",
     "unit_veilmourn_wakechain_boarders",
+    "unit_thornwake_bramblekite_needlers",
+    "unit_brasshollow_quenchspool_slingers",
+    "unit_veilmourn_saltbell_casters",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {}
 

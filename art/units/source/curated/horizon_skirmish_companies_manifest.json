@@ -1,0 +1,28 @@
+{
+  "schema": "horizon_skirmish_companies_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "normalization": "transparent subject fit into established 512x512 curated source dimensions",
+  "sources": [
+    {
+      "id": "unit_thornwake_bramblekite_needlers",
+      "path": "res://art/units/source/curated/unit_thornwake_bramblekite_needlers.png",
+      "sha256": "3550f9978d09a49ff29382ef9fcb06db350bb394425475afba7944ebb42aecf8",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-189b94f3-a6e6-40e6-8f25-55a499629c2e.png",
+      "prompt_summary": "Pale-bark Thornwake skirmisher with a hollow-reed thorn caster, amber seed pods, and angular bramble-leaf kite mantle."
+    },
+    {
+      "id": "unit_brasshollow_quenchspool_slingers",
+      "path": "res://art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "sha256": "613765314d1a256a1503a0371da838f10f4ce8be62a0c0154cb3ff8cef34d05d",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d1910e4b-182a-43eb-8c39-ffb5a0388937.png",
+      "prompt_summary": "Brasshollow industrial skirmisher swinging a glowing ceramic-and-brass quenchspool from a hand-cranked cable reel."
+    },
+    {
+      "id": "unit_veilmourn_saltbell_casters",
+      "path": "res://art/units/source/curated/unit_veilmourn_saltbell_casters.png",
+      "sha256": "0e433b71732ac76abdd51c14262095bccd75f8ee303b6aad1d033ebb911f0c27",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d6aa658d-15b2-4255-8c52-ef2658458e28.png",
+      "prompt_summary": "Veilmourn fog-coast skirmisher casting an iron mourning bell from a long braided pale cord."
+    }
+  ]
+}

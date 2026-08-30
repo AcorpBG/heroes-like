@@ -15745,10 +15745,10 @@
   "currentNotes": "Six Horizon Citadels completed as one substantial content batch with one consolidated live smoke, repository validation, and matching Linux/Windows packaged boots.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-horizon-citadels-10184",
-  "currentSliceId": "content-three-horizon-reserve-companies-10184",
-  "currentSliceNotes": "Completed three original tier-three reserve companies with existing-dwelling growth and muster routes, three live Horizon battle stacks, paired one-time survivor rewards, 18 exact runtime art surfaces, save v9 continuity, one consolidated smoke, repository validation, and matching Linux/Windows 241390928-byte PCK gates with superseded overworld art excluded.",
+  "currentSliceId": "content-three-horizon-skirmish-companies-10184",
+  "currentSliceNotes": "Three original low-tier Horizon ranged companies now ship through existing dwelling, relief, counterstroke, survivor, battle-art, and save-v9 routes; consolidated smoke and repo validation pass; Linux/Windows PCKs match at 241674776 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content three horizon reserve companies 10184",
+  "currentSliceTitle": "content three horizon skirmish companies 10184",
   "currentSliceUpdatedAt": "2026-08-30T15:42:57Z",
   "deferredRiskRegister": [
     {
@@ -106588,6 +106588,16 @@
       "startedAt": "2026-08-30T18:09:03Z",
       "notes": "Completed three original tier-three reserve companies with existing-dwelling growth and muster routes, three live Horizon battle stacks, paired one-time survivor rewards, 18 exact runtime art surfaces, save v9 continuity, one consolidated smoke, repository validation, and matching Linux/Windows 241390928-byte PCK gates with superseded overworld art excluded.",
       "completedAt": "2026-08-30T18:26:22Z"
+    },
+    {
+      "id": "content-three-horizon-skirmish-companies-10184",
+      "title": "content three horizon skirmish companies 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T18:47:21Z",
+      "startedAt": "2026-08-30T18:29:19Z",
+      "notes": "Three original low-tier Horizon ranged companies now ship through existing dwelling, relief, counterstroke, survivor, battle-art, and save-v9 routes; consolidated smoke and repo validation pass; Linux/Windows PCKs match at 241674776 bytes.",
+      "completedAt": "2026-08-30T18:47:21Z"
     }
   ],
   "project": "heroes-like",
@@ -107132,7 +107142,7 @@
   ],
   "summary": "Implementing Six Horizon Citadels: one new live strategic town per faction with complete original scenic and overworld art and batched validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T18:26:22Z",
+  "updatedAt": "2026-08-30T18:47:21Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
