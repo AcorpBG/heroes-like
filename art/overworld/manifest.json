@@ -257,6 +257,84 @@
       "presentation_role": "spectral_rib_drydock_anchorage",
       "accessible_description": "A moonlit ghost-dock rises through colossal ship ribs beneath teal sails and a silver mourning bell."
     },
+    "town_identity_rainwrit_bastion": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "atlas_region": [0, 0, 128, 128],
+      "atlas_size": [768, 128],
+      "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_rainwrit_bastion_source.png",
+      "source_sha256": "875251e9e0413a3d52f1743267d7df4d57e62e74113deb8429c27c6cd2bb65c7",
+      "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+      "assigned_town_id": "town_rainwrit_bastion",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "rain_dark_bronze_floodgate_bastion",
+      "accessible_description": "A sandstone lock fortress spans three bronze floodgates beneath blue roofs and amber beacon fires."
+    },
+    "town_identity_hollowreed_sanctuary": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "atlas_region": [128, 0, 128, 128],
+      "atlas_size": [768, 128],
+      "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_hollowreed_sanctuary_source.png",
+      "source_sha256": "7f09c60a4b5c3722773d4db9933e25ecb6fde0db66b990de0ce562a560128b62",
+      "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+      "assigned_town_id": "town_hollowreed_sanctuary",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "fungus_lit_reedstone_oath_sanctuary",
+      "accessible_description": "Tiered reedstone huts and bridges climb toward a tall oval oath shrine among green and violet bog lamps."
+    },
+    "town_identity_meridian_choirhold": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "atlas_region": [256, 0, 128, 128],
+      "atlas_size": [768, 128],
+      "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_meridian_choirhold_source.png",
+      "source_sha256": "a5866a5f3d57f0a2a6a2543cbd7f050825b74bbb090451593991f91972258025",
+      "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+      "assigned_town_id": "town_meridian_choirhold",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "prism_vane_resonance_choirhold",
+      "accessible_description": "White terraces and gold prism vanes gather around a tall blue faceted resonance spire."
+    },
+    "town_identity_crownroot_refuge": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "atlas_region": [384, 0, 128, 128],
+      "atlas_size": [768, 128],
+      "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_crownroot_refuge_source.png",
+      "source_sha256": "85182c24876845e0ce043769415ee0492419edf736a064f694d82773990a7844",
+      "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+      "assigned_town_id": "town_crownroot_refuge",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "living_crownroot_recovery_refuge",
+      "accessible_description": "A vast living crownroot shelters orchard homes, woven bridges, and an amber-lit healing hollow."
+    },
+    "town_identity_blackbell_foundry": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "atlas_region": [512, 0, 128, 128],
+      "atlas_size": [768, 128],
+      "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_blackbell_foundry_source.png",
+      "source_sha256": "0c69935d902a61939cae19eba61df5b6de293e413cda4ad04c0645b347145448",
+      "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+      "assigned_town_id": "town_blackbell_foundry",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "basalt_quenchbell_pressure_foundry",
+      "accessible_description": "A black basalt foundry suspends an immense bronze bell above orange furnaces and blue quench channels."
+    },
+    "town_identity_pale_sounding_harbor": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+      "atlas_region": [640, 0, 128, 128],
+      "atlas_size": [768, 128],
+      "runtime_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+      "source_generated": "res://art/overworld/source/generated/towns/horizon_citadels/town_pale_sounding_harbor_source.png",
+      "source_sha256": "346c77dca00fae01f0f77bcc05fce74463666d5b6535e252879581626e6b6333",
+      "source_model": "built_in_image_gen_original_horizon_citadel_atlas",
+      "assigned_town_id": "town_pale_sounding_harbor",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "ivory_rib_echo_chart_harbor",
+      "accessible_description": "Ivory rib piers surround black-sailed slips and a tall aquamarine echo beacon."
+    },
     "hero_faction_embercourt": {
       "path": "res://art/overworld/runtime/heroes/factions/embercourt.png",
       "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
@@ -7833,7 +7911,13 @@
     "town_dawnmirror_observatory": "town_identity_dawnmirror_observatory",
     "town_briarwheel_enclave": "town_identity_briarwheel_enclave",
     "town_cindercoil_foundry": "town_identity_cindercoil_foundry",
-    "town_gloamwake_anchorage": "town_identity_gloamwake_anchorage"
+    "town_gloamwake_anchorage": "town_identity_gloamwake_anchorage",
+    "town_rainwrit_bastion": "town_identity_rainwrit_bastion",
+    "town_hollowreed_sanctuary": "town_identity_hollowreed_sanctuary",
+    "town_meridian_choirhold": "town_identity_meridian_choirhold",
+    "town_crownroot_refuge": "town_identity_crownroot_refuge",
+    "town_blackbell_foundry": "town_identity_blackbell_foundry",
+    "town_pale_sounding_harbor": "town_identity_pale_sounding_harbor"
   },
   "hero_faction_sprites": {
     "faction_embercourt": "hero_faction_embercourt",

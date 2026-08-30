@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "generator": "built_in_image_gen",
+  "use_case": "stylized-concept",
+  "asset_family": "horizon_citadels_overworld_town_identities",
+  "source_size": [1254, 1254],
+  "runtime_atlas": "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png",
+  "runtime_atlas_size": [768, 128],
+  "runtime_atlas_sha256": "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41",
+  "composition_contract": "single centered readable isometric town silhouette on transparent background, no text, logo, frame, watermark, characters, or baked terrain tile",
+  "items": [
+    {
+      "town_id": "town_rainwrit_bastion",
+      "source": "town_rainwrit_bastion_source.png",
+      "source_sha256": "875251e9e0413a3d52f1743267d7df4d57e62e74113deb8429c27c6cd2bb65c7",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7cb213aa-fccb-4a23-ba5c-c93953666e70.png",
+      "atlas_region": [0, 0, 128, 128],
+      "prompt_summary": "Compact Embercourt rain citadel silhouette with copper floodgate, basalt towers, warm charter lamps, and blue runoff."
+    },
+    {
+      "town_id": "town_hollowreed_sanctuary",
+      "source": "town_hollowreed_sanctuary_source.png",
+      "source_sha256": "7f09c60a4b5c3722773d4db9933e25ecb6fde0db66b990de0ce562a560128b62",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5041679d-1c84-428a-a01e-0e339954a09e.png",
+      "atlas_region": [128, 0, 128, 128],
+      "prompt_summary": "Compact Mireclaw reed sanctuary silhouette with stilt lodge, woven palisade, bone totems, and pale marsh lights."
+    },
+    {
+      "town_id": "town_meridian_choirhold",
+      "source": "town_meridian_choirhold_source.png",
+      "source_sha256": "a5866a5f3d57f0a2a6a2543cbd7f050825b74bbb090451593991f91972258025",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d53ba2c7-9819-4ee3-9b2d-56237bcef2b1.png",
+      "atlas_region": [256, 0, 128, 128],
+      "prompt_summary": "Compact Sunvault choirhold silhouette with crystal sun disc, tuning arches, pale stone terraces, and amber rays."
+    },
+    {
+      "town_id": "town_crownroot_refuge",
+      "source": "town_crownroot_refuge_source.png",
+      "source_sha256": "85182c24876845e0ce043769415ee0492419edf736a064f694d82773990a7844",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-dc539514-b9e4-4df6-a161-0d50bba2af50.png",
+      "atlas_region": [384, 0, 128, 128],
+      "prompt_summary": "Compact Thornwake crownroot refuge silhouette with colossal living trunk, root walls, leaf roofs, and seed lanterns."
+    },
+    {
+      "town_id": "town_blackbell_foundry",
+      "source": "town_blackbell_foundry_source.png",
+      "source_sha256": "0c69935d902a61939cae19eba61df5b6de293e413cda4ad04c0645b347145448",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d73d5ae8-8570-40dc-9820-ecaaa81735b2.png",
+      "atlas_region": [512, 0, 128, 128],
+      "prompt_summary": "Compact Brasshollow black-bell foundry silhouette with suspended iron bell, copper pipes, quench channel, and soot stacks."
+    },
+    {
+      "town_id": "town_pale_sounding_harbor",
+      "source": "town_pale_sounding_harbor_source.png",
+      "source_sha256": "346c77dca00fae01f0f77bcc05fce74463666d5b6535e252879581626e6b6333",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-74ee4c91-1875-424f-9007-50a603854ca1.png",
+      "atlas_region": [640, 0, 128, 128],
+      "prompt_summary": "Compact Veilmourn pale harbor silhouette with sounding tower, black sail, spectral chart lamps, and silver mist."
+    }
+  ]
+}
