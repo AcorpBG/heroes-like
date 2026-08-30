@@ -43526,6 +43526,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (144, 48)
             elif source_model == "built_in_image_gen_original_third_hearth_town_atlas":
                 expected_canvas = (640, 128)
+            elif source_model in {"built_in_image_gen_original_pactwright_waydesk_with_runtime_state_derivation", "built_in_image_gen_original_pactwright_waydesk_with_six_mark_runtime_state_derivation"}:
+                expected_canvas = (96, 48)
             elif source_model == "curated_original_character_unit_landmark_reuse":
                 expected_canvas = (96, 96)
             else:
@@ -49779,12 +49781,24 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
         "railhead-charter-seizure": ("hero_brasshollow_kuld_varn", "faction_brasshollow", "encounter_railhead_lockward_auditors", "army_railhead_lockward_auditors", "railhead_lockward_auditors", "embergrain", "charter_lockgate_railhead", "encounter_contract_railhead_lockward_auditors", "railhead_lockward_auditors", [192, 0, 48, 48], "5f3bfadacf3aad7d92bd0984925513883fd4ee64b9d69c086e2a724f8ede46cc"),
         "mistcorsair-graftwake-raid": ("hero_veilmourn_cela_mistcorsair", "faction_veilmourn", "encounter_mistcorsair_graftwake_cordon", "army_mistcorsair_graftwake_cordon", "mistcorsair_graftwake_cordon", "verdant_grafts", "graftwake_root_mooring", "encounter_contract_mistcorsair_graftwake_cordon", "mistcorsair_graftwake_cordon", [240, 0, 48, 48], "2c51fcfa072c64aefa137ff065af157a955c55c7d18ccc5d4e1888ecdd281d4c"),
     }
+    waydesk_contracts = {
+        "tollglass-relief-run": ("tollglass_pactwright_waydesk", "tollglass_drowned_tally", "tollglass_waydesk_drowned_tally_witness", "unbound_drowned_tally_testimony"),
+        "muckscript-reliquary-hunt": ("muckscript_pactwright_waydesk", "muckscript_prism_inquest", "muckscript_waydesk_peat_reliquary_witness", "unbound_peat_reliquary_testimony"),
+        "mirrorstep-gauge-race": ("mirrorstep_pactwright_waydesk", "mirrorstep_redline_calibrators", "mirrorstep_waydesk_redline_gauge_witness", "unbound_redline_gauge_testimony"),
+        "briarmarshal-fen-cordon": ("briarmarshal_pactwright_waydesk", "briarmarshal_drum_cordon", "briarmarshal_waydesk_rooted_drum_witness", "unbound_rooted_drum_testimony"),
+        "railhead-charter-seizure": ("railhead_pactwright_waydesk", "railhead_lockward_auditors", "railhead_waydesk_burning_charter_witness", "unbound_burning_charter_testimony"),
+        "mistcorsair-graftwake-raid": ("mistcorsair_pactwright_waydesk", "mistcorsair_graftwake_cordon", "mistcorsair_waydesk_salted_ghost_rope_witness", "unbound_salted_ghost_rope_testimony"),
+    }
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "standalone_contracts"
     atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "standalone_contracts" / "standalone_contracts_atlas.png"
     source_manifest_path = source_dir / "manifest.json"
     report_script_path = ROOT / "tests" / "six_faction_standalone_contracts_report.gd"
     report_scene_path = ROOT / "tests" / "six_faction_standalone_contracts_report.tscn"
-    required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path)
+    ledger_report_script_path = ROOT / "tests" / "unbound_road_ledger_campaign_report.gd"
+    ledger_report_scene_path = ROOT / "tests" / "unbound_road_ledger_campaign_report.tscn"
+    waydesk_source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "pactwright_waydesk_wave1" / "manifest.json"
+    waydesk_atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "pactwright_waydesk_state_atlas.png"
+    required_paths = (source_manifest_path, atlas_path, report_script_path, report_scene_path, ledger_report_script_path, ledger_report_scene_path, waydesk_source_manifest_path, waydesk_atlas_path)
     for path in required_paths:
         ensure(path.is_file(), errors, f"Missing standalone-contract owner: {path.relative_to(ROOT)}")
     if not all(path.is_file() for path in required_paths):
@@ -49797,6 +49811,7 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Standalone-contract atlas import metadata is missing")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
@@ -49813,8 +49828,14 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
         scenario = scenarios.get(scenario_id, {})
         selection = scenario.get("selection", {}) if isinstance(scenario, dict) else {}
         availability = selection.get("availability", {}) if isinstance(selection, dict) else {}
-        ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
-        ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id and len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 10 and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("encounters", [])) == 3 and len(scenario.get("script_hooks", [])) == 5, errors, f"{scenario_id} lost its complete authored contract")
+        ensure(availability == {"campaign": True, "skirmish": True}, errors, f"{scenario_id} must remain live in both the Unbound Road Ledger and skirmish")
+        ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id and len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 11 and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("encounters", [])) == 3 and len(scenario.get("script_hooks", [])) == 6 and len(scenario.get("objectives", {}).get("victory", [])) == 5, errors, f"{scenario_id} lost its complete authored ledger contract")
+        waydesk_placement_id, waydesk_guard_id, waydesk_hook_id, testimony_flag = waydesk_contracts[scenario_id]
+        waydesk_nodes = [row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == waydesk_placement_id]
+        waydesk_hooks = [row for row in scenario.get("script_hooks", []) if isinstance(row, dict) and row.get("id") == waydesk_hook_id]
+        victory_flags = [row.get("flag") for row in scenario.get("objectives", {}).get("victory", []) if isinstance(row, dict) and row.get("type") == "flag_true"]
+        ensure(len(waydesk_nodes) == 1 and waydesk_nodes[0].get("site_id") == "site_pactwright_waydesk" and waydesk_nodes[0].get("guard_front_id") == waydesk_guard_id and (waydesk_nodes[0].get("x"), waydesk_nodes[0].get("y")) == (8, 5), errors, f"{scenario_id} lost its exact guarded Pactwright Waydesk")
+        ensure(len(waydesk_hooks) == 1 and testimony_flag in json.dumps(waydesk_hooks[0]) and "pactwright_waydesk_witnessed" in victory_flags, errors, f"{scenario_id} lost its exact one-time testimony or victory witness")
         placements = [row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
         placement = placements[0] if len(placements) == 1 else {}
         ensure(placement.get("encounter_id") == encounter_id and placement.get("difficulty") == "medium" and placement.get("prefer_identity_landmark") is True, errors, f"{scenario_id} lost its exact boss placement")
@@ -49840,6 +49861,17 @@ def validate_six_faction_standalone_contracts(errors: list[str]) -> None:
     ensure_scene_nodes(report_scene_path.read_text(encoding="utf-8"), errors, "six_faction_standalone_contracts_report.tscn", [("SixFactionStandaloneContractsReport", "Node")])
     for token in ('const CASES := [', 'CASES.size()', 'ScenarioFactory.create_session(', 'validation_encounter_presentation_payload', 'BattleRulesScript.create_battle_payload', 'BattleAutoResolveRulesScript.resolve_active_battle', 'SessionStateStoreScript.SAVE_VERSION', 'STANDALONE_CONTRACT_CAPTURE_DIR', 'print("%s %s" % [REPORT_ID'):
         ensure(token in report_text, errors, f"Standalone-contract combined smoke is missing live proof: {token}")
+    waydesk_site = resource_sites.get("site_pactwright_waydesk", {})
+    waydesk_manifest = load_json(waydesk_source_manifest_path)
+    waydesk_source_path = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "pactwright_waydesk_wave1" / "pactwright_waydesk_source.png"
+    ensure(waydesk_site.get("claim_flags") == {"pactwright_waydesk_witnessed": True} and waydesk_site.get("persistent_control") is True, errors, "Pactwright Waydesk must retain its persistent local witness contract")
+    ensure(png_size(waydesk_atlas_path) == (96, 48) and hashlib.sha256(waydesk_atlas_path.read_bytes()).hexdigest() == "b1b7c9c8c87ab65c6b3c1f1487bc48b04b7bdf7ac5a363917707cefb82c7786d", errors, "Pactwright Waydesk two-state atlas bytes or dimensions changed")
+    ensure(waydesk_source_path.is_file() and png_size(waydesk_source_path) == (1254, 1254) and hashlib.sha256(waydesk_source_path.read_bytes()).hexdigest() == "416b9e58e10a7bc207e64cbe328fe8075c603cb654f663428e9bac12b22d6d32", errors, "Pactwright Waydesk generated source bytes or dimensions changed")
+    ensure(waydesk_manifest.get("generator_mode") == "built_in_image_gen" and waydesk_manifest.get("runtime_atlas_sha256") == "b1b7c9c8c87ab65c6b3c1f1487bc48b04b7bdf7ac5a363917707cefb82c7786d", errors, "Pactwright Waydesk source provenance changed")
+    ledger_report_text = ledger_report_script_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(ledger_report_scene_path.read_text(encoding="utf-8"), errors, "unbound_road_ledger_campaign_report.tscn", [("UnboundRoadLedgerCampaignReport", "Node")])
+    for token in ('const CASES := [', 'CAMPAIGN_ID := "campaign_unbound_road_ledger"', 'BattleRulesScript.create_battle_payload', 'CampaignRulesScript.record_session_completion', 'ScenarioScriptRulesScript.process_hooks', 'SessionStateStoreScript.SAVE_VERSION', 'single_consolidated_smoke', 'print("%s %s" % [REPORT_ID'):
+        ensure(token in ledger_report_text, errors, f"Unbound Road Ledger consolidated smoke is missing live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure('REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME = "standalone_contracts_atlas"' in packaging_text and 'standalone_contracts/standalone_contracts_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the standalone-contract atlas")
@@ -52117,7 +52149,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 87 and len(placements) == 1090 and len(placed_site_ids) == 194, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 87 and len(placements) == 1096 and len(placed_site_ids) == 195, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -52139,9 +52171,9 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 194, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(not unresolved and len(resolver_paths) == 195, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
     ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 170, errors, "Placed resource-site map-object resolver coverage changed")
-    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 24, errors, "Placed resource-site exact site-mapping coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 25, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
             if site_id == "site_fenhound_kennels":
@@ -52426,10 +52458,11 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         "campaign_last_bell_sounding": ("campaign_emblem_last_bell_sounding", "last_bell_sounding", "e4bc895f0d97dda7fe8a909d8d68c8e110785e8a2b5e2ce8ac6b7b2448c3585c", "79da9129df7d167952216388627334afca599f21cbb1f6e7d2fbdc89acfd10d2"),
         "campaign_sixfold_testament": ("campaign_emblem_sixfold_testament", "sixfold_testament", "77d25dbaad3584214313867ab04fe6cd94d831a9ff9bbadf799c28da75188f94", "fc6dafad1784c2020bbf0182897f92faea2b91038f939812e9f83c5a6bd0091e"),
         "campaign_horn_glass_accord": ("campaign_emblem_horn_glass_accord", "horn_glass_accord", "1a7f472617ea648db3eba251296617727c1135e35e8a1d016bddbc7d3ff084c3", "20b5186ee703641c6c30b27739a43341d222f734b57878e06bf2aa940828ee30"),
+        "campaign_unbound_road_ledger": ("campaign_emblem_unbound_road_ledger", "unbound_road_ledger", "7506686538be4e1534f38eef183a86af2c0002164cda065c6804e5ca97846605", "84927535b277bf0d54504316f712d707abe35dfc5f1d51cbfe245657ff0ce5e8"),
     }
     campaigns_value = load_json(campaign_path).get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
-    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the eleven live campaign arcs")
+    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the twelve live campaign arcs")
     source_payloads: list[bytes] = []
     runtime_payloads: list[bytes] = []
     for campaign_id, (emblem_id, stem, source_sha, runtime_sha) in expected.items():
@@ -52458,8 +52491,8 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(hashlib.sha256(payload).hexdigest() == runtime_sha, errors, f"Campaign {campaign_id} runtime-emblem bytes changed")
             ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} runtime emblem must retain real alpha")
             runtime_payloads.append(payload)
-    ensure(len(source_payloads) == 11 and len(set(source_payloads)) == 11, errors, "All eleven campaign emblem sources must remain byte-distinct")
-    ensure(len(runtime_payloads) == 11 and len(set(runtime_payloads)) == 11, errors, "All eleven campaign runtime emblems must remain byte-distinct")
+    ensure(len(source_payloads) == 12 and len(set(source_payloads)) == 12, errors, "All twelve campaign emblem sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 12 and len(set(runtime_payloads)) == 12, errors, "All twelve campaign runtime emblems must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = campaign_rules_path.read_text(encoding="utf-8")
@@ -52486,7 +52519,7 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Campaign emblem focused report is missing live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all eleven campaign emblems")
+        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all twelve campaign emblems")
         ensure('bool(terrain_payload["campaign_emblem_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when campaign emblems are absent")
         ensure('"campaign_emblem_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report campaign emblem package coverage")
         for _campaign_id, (_emblem_id, stem, _source_sha, _runtime_sha) in expected.items():
@@ -52559,6 +52592,14 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
             "vowless-saltpan-circuit": ("read_tideglass_wake", "93cdd02d3dd9469c0453e74b38fc41d8567cbf95aaa11e9ae0b7609ce50435e1", "cd5cb10a63192b82796d9f1eaadbb94788f9ff967d099ea7a2b80d1012f2f1fd"),
             "three-banner-field-commission": ("horn_glass_commission", "b8e2161c1f79bc63d195481d5eebb8aa5a86d4951851530e8d30b6f6b2e4d94f", "ab3ccd75cc552071d236cd6256cbe6c144435e33945ae9c5ba4fc14befd6170a"),
         },
+        "campaign_unbound_road_ledger": {
+            "tollglass-relief-run": ("drowned_tally", "411e846e83a374917435c52fefc8cd9370ee1133c4db2903eacbbeeeda7e3c3e", "89c637e56a6a641450f6e7bb14e35f523d243bcece519d419b813287792b9dfc"),
+            "muckscript-reliquary-hunt": ("peat_reliquary", "fb40ab5cad6f0bfc821af75825f54213132d84cbbf1893bee2ad2b6fd50e551d", "6d729c313b95259f86f3290b1a2aea2ae8909a44b59eecdd7cc150cb4c1500e6"),
+            "mirrorstep-gauge-race": ("redline_gauge", "0c5baa0c155ddcee9ac40043c73045b85025032b6d052c026d1f89e592c6d33f", "dd040b6aafe5267922a7d30ac08bd3de9d999fd57d9d2b3cb528f25e2aef52ae"),
+            "briarmarshal-fen-cordon": ("rooted_drum", "e05658227d2c866f422352a173f36a4ae1fd499d3fb050d41d02ff2ca7cb4351", "68b5b4df429e6ca33e42a75b4c0e24527dc97b8aab2a77e010e6316c21ad17c0"),
+            "railhead-charter-seizure": ("burning_charter", "5d2f7da4df22463f8ea8cf8f2828b85abd4ab538394369dc6fc71f8289a03fc1", "d7e4b0cf99a135b198a8ad92f96c802694a2f833b43d39d66c62fddd68a2e31e"),
+            "mistcorsair-graftwake-raid": ("salted_ghost_rope", "54e2731bb79480beebedc3269256a23515e3c3666f92cf9198c4514c11d91599", "5634770abcd5dacb2c49d7987062ecd923e73962912a5935197f8b3332b07929"),
+        },
     }
     campaigns_value = load_json(CONTENT_DIR / "campaigns.json").get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
@@ -52604,8 +52645,8 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
                 payload = runtime_path.read_bytes()
                 ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id}/{scenario_id} seal runtime bytes or alpha changed")
                 runtime_payloads.append(payload)
-    ensure(chapter_count == 42 and sealed_count == 42 and opening_count == 11 and later_count == 31, errors, "Campaign chapter-seal scope must remain exact for all 42 chapters")
-    ensure(len(source_payloads) == 42 and len(set(source_payloads)) == 42 and len(runtime_payloads) == 42 and len(set(runtime_payloads)) == 42, errors, "All campaign chapter seals must remain byte-distinct")
+    ensure(chapter_count == 48 and sealed_count == 48 and opening_count == 12 and later_count == 36, errors, "Campaign chapter-seal scope must remain exact for all 48 chapters")
+    ensure(len(source_payloads) == 48 and len(set(source_payloads)) == 48 and len(runtime_payloads) == 48 and len(set(runtime_payloads)) == 48, errors, "All campaign chapter seals must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = (ROOT / "scripts/core/CampaignRules.gd").read_text(encoding="utf-8")
@@ -52617,13 +52658,13 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
         ensure(token in rules_text, errors, f"Campaign rules are missing chapter-seal authority: {token}")
     for token in ("_campaign_chapter_seal_texture_cache", "_chapter_list.set_item_icon(index, seal_texture)", "func _load_campaign_chapter_seal_texture", '"seal_path": _chapter_list.get_item_icon(index).resource_path', '"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", ""))'):
         ensure(token in menu_text, errors, f"Campaign menu is missing live chapter-seal presentation: {token}")
-    ensure("_campaign_chapter_seal_texture_cache.size() >= 42" in menu_text, errors, "Campaign chapter-seal cache must cover all 42 authored identities")
+    ensure("_campaign_chapter_seal_texture_cache.size() >= 48" in menu_text, errors, "Campaign chapter-seal cache must cover all 48 authored identities")
     chapter_scene_start = scene_text.find('[node name="ChapterList" type="ItemList"')
     chapter_scene_end = scene_text.find("\n[node ", chapter_scene_start + 1)
     ensure("fixed_icon_size = Vector2i(24, 24)" in scene_text[chapter_scene_start:chapter_scene_end], errors, "Campaign chapter list must retain compact 24x24 seals")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 42 chapter seals")
+        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 48 chapter seals")
         ensure('bool(terrain_payload["campaign_chapter_seal_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when chapter seals are absent")
         ensure('"campaign_chapter_seal_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged chapter-seal coverage")
         for expected_scenarios in expected.values():
@@ -74810,7 +74851,7 @@ def validate_veil_coast_sounding_circuit(errors: list[str]) -> None:
     ensure(export_text.count("art/*/source/*") == 2, errors, "Both release presets must exclude coast-route generated source art")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
+        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 22" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
 
 
 def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -> None:
@@ -76987,7 +77028,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
             "unclaimed": "mapobj_tideglass_roost", "controlled": "resource_site_neutral_tideglass_roost_controlled", "unclaimed_region": [96, 0, 48, 48], "controlled_region": [144, 0, 48, 48],
         },
     }
-    ensure(len(units) == 111 and len(dwellings) == 27 and len(sites) == 195 and len(objects) == 388 and len(groups) == 159 and len(encounters) == 101, errors, "Elite-neutral batch must retain the expanded 111-unit, 27-dwelling, 195-site, 388-object, 159-army, 101-encounter roster")
+    ensure(len(units) == 111 and len(dwellings) == 27 and len(sites) == 196 and len(objects) == 388 and len(groups) == 159 and len(encounters) == 101, errors, "Elite-neutral batch must retain the expanded 111-unit, 27-dwelling, 196-site, 388-object, 159-army, 101-encounter roster")
     ensure(len(scenario.get("resource_nodes", [])) == 93 and len(scenario.get("encounters", [])) == 25, errors, "Elite-neutral batch must own the expanded 93-site, 25-encounter Ninefold board")
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = overworld_art.get("object_assets", {})

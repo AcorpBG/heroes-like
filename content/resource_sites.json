@@ -12263,6 +12263,51 @@
       },
       "content_batch_id": "content-two-elite-neutral-dwellings-10184",
       "batch005_role": "guarded_high_value_dwelling"
+    },
+    {
+      "id": "site_pactwright_waydesk",
+      "name": "Pactwright Waydesk",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "summary": "A neutral traveling desk where road claims become witnessed testimony only after the local frontier watch is broken.",
+      "claim_rewards": {
+        "experience": 140,
+        "gold": 90
+      },
+      "claim_flags": {
+        "pactwright_waydesk_witnessed": true
+      },
+      "vision_radius": 1,
+      "response_profile": {
+        "action_label": "Witness the Ledger",
+        "summary": "Pactwrights compare the recovered road evidence, set six independent seals, and dispatch a neutral copy toward the next frontier.",
+        "movement_cost": 3,
+        "resource_cost": {
+          "gold": 90
+        },
+        "watch_days": 4,
+        "quality_bonus": 2,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "frontier_shrine_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-unbound-road-ledger-campaign-10184",
+      "public_text": {
+        "public_summary": "Neutral witness desk for recovered road evidence.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

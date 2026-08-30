@@ -6849,6 +6849,31 @@
       "presentation_role": "controlled_muster_state",
       "accessible_description": "The Tideglass Roost is supplied with rolled harnesses, ration cases, blue guide lamps, and two ring-notched claim pennants."
     },
+    "mapobj_pactwright_waydesk": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [96, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/pactwright_waydesk_wave1/pactwright_waydesk_source.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+      "source_model": "built_in_image_gen_original_pactwright_waydesk_with_runtime_state_derivation",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_resource_site_id": "site_pactwright_waydesk",
+      "assigned_map_object_family": "frontier_shrine",
+      "presentation_role": "neutral_road_evidence_witness_station",
+      "accessible_description": "A six-legged darkwood field desk holds a blank ledger beneath a tall quill mast and brass plumb."
+    },
+    "resource_site_pactwright_waydesk_witnessed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [96, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/pactwright_waydesk_wave1/pactwright_waydesk_source.png",
+      "source_model": "built_in_image_gen_original_pactwright_waydesk_with_six_mark_runtime_state_derivation",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "assigned_resource_site_id": "site_pactwright_waydesk",
+      "presentation_role": "six_witness_marks_recorded_state",
+      "accessible_description": "Six small wax witness marks line the Pactwright Waydesk after the local road evidence is recorded."
+    },
     "encounter_elite_cinderwake_fold_watch": {
       "path": "res://art/units/overworld_icons/unit_neutral_cinderwake_aurochs.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_cinderwake_aurochs.png",
@@ -7361,6 +7386,11 @@
       "asset_id": "resource_site_neutral_tideglass_roost_controlled",
       "unclaimed_asset_id": "mapobj_tideglass_roost",
       "fit": "Exact original saltstone bell-roost paired with its supplied controlled muster state."
+    },
+    "site_pactwright_waydesk": {
+      "asset_id": "resource_site_pactwright_waydesk_witnessed",
+      "unclaimed_asset_id": "mapobj_pactwright_waydesk",
+      "fit": "Exact original portable Waydesk paired with its six-mark witnessed ledger state."
     }
   },
   "artifact_default_sprite": {
