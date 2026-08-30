@@ -215,6 +215,26 @@ REQUIRED_THIRD_HEARTHS_ATLAS_NAME = "third_hearths_atlas"
 REQUIRED_PACTWRIGHT_WAYDESK_ATLAS_NAME = "pactwright_waydesk_state_atlas"
 REQUIRED_MIREGLASS_COUNTERPOINT_ATLAS_NAME = "mireglass_counterpoint_state_atlas"
 REQUIRED_SEVENFOLD_HIGH_ARCANUM_ATLAS_NAME = "sevenfold_high_arcanum_atlas"
+REQUIRED_ELDER_WILDS_UNIT_IDS = (
+    "unit_neutral_brambleback_knucklebears",
+    "unit_neutral_mireglass_belltoads",
+    "unit_neutral_galehorn_striders",
+    "unit_neutral_sunscale_lanternmoths",
+    "unit_neutral_rimebell_skyrakers",
+    "unit_neutral_deepforge_vaultwyrms",
+)
+REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES = tuple(
+    entry
+    for unit_id in REQUIRED_ELDER_WILDS_UNIT_IDS
+    for entry in (
+        f"art/units/portraits/{unit_id}.png.import",
+        f"art/units/battle_icons/{unit_id}.png.import",
+        f"art/units/battle_standees/{unit_id}.png.import",
+        f"art/units/overworld_icons/{unit_id}.png.import",
+        f"art/animation/runtime/units/{unit_id}.png.import",
+        f"art/overworld/runtime/objects/encounters/elder_wilds/{unit_id}.png.import",
+    )
+)
 REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES = (
     "art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png.import",
     "art/overworld/runtime/objects/resource_sites/faction_landmarks_live/faction_landmarks_live_atlas.png.import",
@@ -561,6 +581,7 @@ def pck_terrain_payload_summary() -> dict:
     required_hero_specialty_atlas_texture_entries = imported_payload_paths_for(REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES)
     required_faction_set_atlas_texture_entries = imported_payload_paths_for(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES)
     required_town_scenic_backdrop_texture_entries = imported_payload_paths_for(REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES)
+    required_elder_wilds_unit_art_texture_entries = imported_payload_paths_for(REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES)
     summary = {
         "checked": False,
         "valid_directory": False,
@@ -669,6 +690,11 @@ def pck_terrain_payload_summary() -> dict:
         "town_scenic_backdrop_texture_entries": [],
         "town_scenic_backdrop_texture_names": [],
         "town_scenic_backdrop_entries_present": False,
+        "required_elder_wilds_unit_art_import_entries": list(REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES),
+        "required_elder_wilds_unit_art_texture_entries": sorted(required_elder_wilds_unit_art_texture_entries),
+        "elder_wilds_unit_art_import_entries": [],
+        "elder_wilds_unit_art_texture_entries": [],
+        "elder_wilds_unit_art_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -785,6 +811,10 @@ def pck_terrain_payload_summary() -> dict:
                     summary["town_scenic_backdrop_import_entries"].append(entry_path)
                 if entry_path in required_town_scenic_backdrop_texture_entries:
                     summary["town_scenic_backdrop_texture_entries"].append(entry_path)
+                if entry_path in REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES:
+                    summary["elder_wilds_unit_art_import_entries"].append(entry_path)
+                if entry_path in required_elder_wilds_unit_art_texture_entries:
+                    summary["elder_wilds_unit_art_texture_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
@@ -841,6 +871,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["hero_specialty_atlas_entries_present"] = len(required_hero_specialty_atlas_texture_entries) == 1 and set(summary["hero_specialty_atlas_import_entries"]) == set(REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["hero_specialty_atlas_texture_entries"]) == required_hero_specialty_atlas_texture_entries and set(summary["hero_specialty_atlas_texture_names"]) == {REQUIRED_HERO_SPECIALTY_ATLAS_NAME}
     summary["faction_set_atlas_entries_present"] = len(required_faction_set_atlas_texture_entries) == 1 and set(summary["faction_set_atlas_import_entries"]) == set(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["faction_set_atlas_texture_entries"]) == required_faction_set_atlas_texture_entries and set(summary["faction_set_atlas_texture_names"]) == {REQUIRED_FACTION_SET_ATLAS_NAME}
     summary["town_scenic_backdrop_entries_present"] = len(required_town_scenic_backdrop_texture_entries) == len(REQUIRED_TOWN_SCENIC_BACKDROP_NAMES) and set(summary["town_scenic_backdrop_import_entries"]) == set(REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES) and set(summary["town_scenic_backdrop_texture_entries"]) == required_town_scenic_backdrop_texture_entries and set(summary["town_scenic_backdrop_texture_names"]) == set(REQUIRED_TOWN_SCENIC_BACKDROP_NAMES)
+    summary["elder_wilds_unit_art_entries_present"] = len(required_elder_wilds_unit_art_texture_entries) == len(REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES) and set(summary["elder_wilds_unit_art_import_entries"]) == set(REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES) and set(summary["elder_wilds_unit_art_texture_entries"]) == required_elder_wilds_unit_art_texture_entries
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -911,6 +942,7 @@ def main() -> int:
         and bool(terrain_payload["hero_specialty_atlas_entries_present"])
         and bool(terrain_payload["faction_set_atlas_entries_present"])
         and bool(terrain_payload["town_scenic_backdrop_entries_present"])
+        and bool(terrain_payload["elder_wilds_unit_art_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -1039,6 +1071,9 @@ def main() -> int:
         "town_scenic_backdrop_pck_import_entry_count": len(terrain_payload["town_scenic_backdrop_import_entries"]),
         "town_scenic_backdrop_pck_texture_count": len(terrain_payload["town_scenic_backdrop_texture_entries"]),
         "town_scenic_backdrop_pck_entries_present": terrain_payload["town_scenic_backdrop_entries_present"],
+        "elder_wilds_unit_art_pck_import_entry_count": len(terrain_payload["elder_wilds_unit_art_import_entries"]),
+        "elder_wilds_unit_art_pck_texture_count": len(terrain_payload["elder_wilds_unit_art_texture_entries"]),
+        "elder_wilds_unit_art_entries_present": terrain_payload["elder_wilds_unit_art_entries_present"],
         "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],

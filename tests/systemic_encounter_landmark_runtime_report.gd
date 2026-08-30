@@ -112,7 +112,7 @@ func _run() -> void:
 	print("SYSTEMIC_ENCOUNTER_LANDMARK_RUNTIME_REPORT %s" % JSON.stringify({
 		"ok": true,
 		"encounter_count": EXPECTED.size(),
-		"exact_art_coverage": "101/101",
+		"exact_art_coverage": "107/107",
 		"atlas_path": ATLAS_PATH,
 		"atlas_size": [192, 48],
 		"viewport": [VIEWPORT_SIZE.x, VIEWPORT_SIZE.y],

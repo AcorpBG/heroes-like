@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Sevenfold High Arcanum batch with seven live one-time battle-spell landmarks, exact spell presentation, original compact art, save continuity, one consolidated smoke, repository validation, and matching Linux/Windows packages.",
+  "currentNotes": "Completed Six Elder Wilds as one substantial late-game neutral-content batch: six live tier-four-through-seven creatures, armies, named encounters, optional Ninefold placements, exact battle/overworld art, and save-version-9 continuity. One consolidated six-case smoke and repository validation passed; Linux and Windows packages boot at matching 249613476-byte PCKs with all 36 new art surfaces present and generated sources excluded.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-sevenfold-high-arcanum-10184",
-  "currentSliceId": "content-sevenfold-high-arcanum-10184",
-  "currentSliceNotes": "Completed seven original one-time spell landmarks in Third Hearths Confluence. All seven grant exact tier-five battle spells, 140 experience, command lessons, unique flags, exact atlas regions, repeat-safe claims, and save-version-9 continuity. The consolidated smoke and repository validation pass; Linux and Windows boot matching 246069684-byte PCKs with 3930316 bytes of headroom and source art excluded.",
+  "currentSlice": "content-six-elder-wilds-10184",
+  "currentSliceId": "content-six-elder-wilds-10184",
+  "currentSliceNotes": "Completed six original tier-four-through-seven creatures with exact armies and encounters, optional Ninefold Confluence placements, complete battle/overworld art, supported tactical runtime behavior, rewards, and save continuity. One combined smoke and repository gate passed; matching Linux/Windows 249613476-byte packages boot below the unchanged ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content sevenfold high arcanum 10184",
-  "currentSliceUpdatedAt": "2026-08-30T14:00:32Z",
+  "currentSliceTitle": "content six elder wilds 10184",
+  "currentSliceUpdatedAt": "2026-08-30T14:52:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106518,6 +106518,16 @@
       "startedAt": "2026-08-30T13:40:00Z",
       "notes": "Completed seven one-time battle-spell landmarks across Third Hearths Confluence with exact tier-five spell rewards, progression payloads, unique flags, repeat-safe collection, save version 9, specific capstone descriptions, and one reviewed 336x48 original atlas. One consolidated seven-case gameplay/battle/art/save smoke and repository validation pass; Linux and Windows packages boot at matching 246069684 bytes with 3930316 bytes of headroom and source art excluded.",
       "completedAt": "2026-08-30T14:00:32Z"
+    },
+    {
+      "id": "content-six-elder-wilds-10184",
+      "title": "content six elder wilds 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T14:52:03Z",
+      "startedAt": "2026-08-30T14:06:25Z",
+      "notes": "Completed six original high-tier neutral creatures with live Ninefold Confluence encounters, exact battle/overworld art, supported tactical abilities, rewards, and save continuity. The one consolidated batch smoke and repository validation pass; Linux and Windows packages boot at matching 249613476-byte PCKs with all 36 required art surfaces and source originals excluded.",
+      "completedAt": "2026-08-30T14:52:03Z"
     }
   ],
   "project": "heroes-like",
@@ -106527,8 +106537,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Seven tier-five battle spells now have exact optional adventure-map acquisition and presentation, but broader production content breadth, encounter variety, faction balance, campaign depth, and whole-game release readiness remain open.",
-  "remainingWork": "Audit and register the next substantial live gameplay-content family, prioritizing a real unit, encounter, faction, or scenario breadth gap and retaining one combined smoke at the batch boundary.",
+  "remainingGap": "The Six Elder Wilds late-game neutral family is complete; the broader production-alpha content breadth and release-readiness gaps remain outside this slice.",
+  "remainingWork": "Select the next substantial live content gap as a separate planned slice; retain batch-level verification instead of per-record smoke churn.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106959,7 +106969,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_sevenfold_high_arcanum_completed",
+  "result": "content_six_elder_wilds_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -107060,9 +107070,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed Sevenfold High Arcanum: seven original optional landmarks now teach distinct tier-five battle spells across Third Hearths Confluence with exact progression, art, save, battle-resolution, and Linux/Windows package evidence.",
+  "summary": "Completed Six Elder Wilds: six live high-tier neutral creatures and encounters for late-game exploration, with complete original art, one consolidated smoke, repository validation, and matching Linux/Windows packaged boots.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T14:00:32Z",
+  "updatedAt": "2026-08-30T14:52:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
