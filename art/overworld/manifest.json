@@ -6701,6 +6701,33 @@
       "assigned_resource_site_id": "site_rootwarden_stockade",
       "presentation_role": "reclaimed_guarded_reward_state",
       "accessible_description": "An open gate, removed hostile banner, controlled roots, fresh shoots, and ward lamps show the Rootwarden Stockade reclaimed."
+    },
+    "encounter_auxiliary_canopy_breachers": {
+      "path": "res://art/units/overworld_icons/unit_thornwake_canopy_rammers.png",
+      "source_generated": "res://art/units/source/curated/unit_thornwake_canopy_rammers.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_third_hearths_canopy_breachers",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "fork_crowned_canopy_breach_trial",
+      "accessible_description": "A fork-crowned living-wood ram marks the Thornwake auxiliary breach company."
+    },
+    "encounter_auxiliary_redline_lancers": {
+      "path": "res://art/units/overworld_icons/unit_brasshollow_pressure_lancers.png",
+      "source_generated": "res://art/units/source/curated/unit_brasshollow_pressure_lancers.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_third_hearths_redline_lancers",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "pressure_lance_redline_trial",
+      "accessible_description": "A piston-lance outrider with a hot pressure vessel marks the Brasshollow auxiliary trial company."
+    },
+    "encounter_auxiliary_wakeglass_pilots": {
+      "path": "res://art/units/overworld_icons/unit_veilmourn_wakeglass_navigators.png",
+      "source_generated": "res://art/units/source/curated/unit_veilmourn_wakeglass_navigators.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_third_hearths_wakeglass_pilots",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "wakeglass_navigation_trial",
+      "accessible_description": "A mourning-cloaked pilot beneath a suspended wakeglass compass marks the Veilmourn auxiliary trial company."
     }
   },
   "resource_site_sprites": {
@@ -7428,7 +7455,10 @@
     "encounter_icehook_trapper_lodge_watch": "encounter_grand_convergence_icehook_trapper_lodge_watch",
     "encounter_lantern_warren_watch": "encounter_grand_convergence_lantern_warren_watch",
     "encounter_debtrune_default_collectors": "encounter_grand_convergence_default_clause_collectors",
-    "encounter_nightchart_false_meridian": "encounter_grand_convergence_false_meridian_pilots"
+    "encounter_nightchart_false_meridian": "encounter_grand_convergence_false_meridian_pilots",
+    "encounter_third_hearths_canopy_breachers": "encounter_auxiliary_canopy_breachers",
+    "encounter_third_hearths_redline_lancers": "encounter_auxiliary_redline_lancers",
+    "encounter_third_hearths_wakeglass_pilots": "encounter_auxiliary_wakeglass_pilots"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

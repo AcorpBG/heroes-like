@@ -1400,6 +1400,63 @@
           "count": 2
         }
       ]
+    },
+    {
+      "id": "army_third_hearths_canopy_breachers",
+      "name": "Briarwheel Canopy Breachers",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {
+          "unit_id": "unit_thornwake_thornwhip_carriers",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_thornwake_sporeglass_menders",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_thornwake_canopy_rammers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_third_hearths_redline_lancers",
+      "name": "Cindercoil Redline Lancers",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {
+          "unit_id": "unit_brasshollow_rivet_hounds",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_brasshollow_pressure_lancers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_third_hearths_wakeglass_pilots",
+      "name": "Gloamwake Wakeglass Pilots",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_veilmourn_maskglass_corsairs",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_veilmourn_wakeglass_navigators",
+          "count": 3
+        }
+      ]
     }
   ]
 }

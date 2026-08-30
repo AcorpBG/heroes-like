@@ -2342,6 +2342,147 @@
         "memory_salt": 1,
         "experience": 220
       }
+    },
+    {
+      "id": "encounter_third_hearths_canopy_breachers",
+      "name": "Canopy Breach Compact",
+      "enemy_group_id": "army_third_hearths_canopy_breachers",
+      "affiliation": "faction_thornwake",
+      "terrain": "forest",
+      "battlefield_tags": [
+        "fortified_line",
+        "ambush_cover"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Bough-Marshal Orra Forkcrown",
+        "command": {
+          "attack": 1,
+          "defense": 2,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper",
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "third_hearths_briarwheel_breach_gate",
+          "type": "breach_point",
+          "label": "Briarwheel Breach Gate",
+          "summary": "The living gate keeps the Canopy Rammers root-set until its outer braces are claimed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 3,
+          "pressure_tags": [
+            "cohesion",
+            "momentum",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 220,
+        "verdant_grafts": 1,
+        "experience": 230
+      }
+    },
+    {
+      "id": "encounter_third_hearths_redline_lancers",
+      "name": "Redline Lance Audit",
+      "enemy_group_id": "army_third_hearths_redline_lancers",
+      "affiliation": "faction_brasshollow",
+      "terrain": "rough",
+      "battlefield_tags": [
+        "open_lane",
+        "battery_nest"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Gauge-Reeve Pell Hotspur",
+        "command": {
+          "attack": 2,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard",
+          "artillerist"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "third_hearths_cindercoil_pressure_rail",
+          "type": "lane_battery",
+          "label": "Cindercoil Pressure Rail",
+          "summary": "The rail primes each lancer's boiler until its control gauge is seized.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "momentum",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 220,
+        "brass_scrip": 1,
+        "experience": 230
+      }
+    },
+    {
+      "id": "encounter_third_hearths_wakeglass_pilots",
+      "name": "Wakeglass False Bearing",
+      "enemy_group_id": "army_third_hearths_wakeglass_pilots",
+      "affiliation": "faction_veilmourn",
+      "terrain": "coast",
+      "battlefield_tags": [
+        "fog_bank",
+        "open_lane"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Mourning-Pilot Vey Salttide",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 1,
+          "knowledge": 1
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "ambusher",
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "third_hearths_gloamwake_false_meridian",
+          "type": "signal_beacon",
+          "label": "Gloamwake False Meridian",
+          "summary": "A suspended wakeglass compass mischarts every clear route until its silver bearing ring is turned.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 3,
+          "pressure_tags": [
+            "initiative",
+            "cohesion",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 220,
+        "memory_salt": 1,
+        "experience": 230
+      }
     }
   ]
 }
