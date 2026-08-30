@@ -38506,8 +38506,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_granary_lock_exchange",
@@ -38520,8 +38520,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38531,19 +38531,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -38663,8 +38663,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_blackwater_shrine_marker",
@@ -38677,8 +38677,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38688,19 +38688,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -38805,8 +38805,8 @@
           "captured",
           "damaged"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_prism_yard_standard",
@@ -38819,8 +38819,8 @@
           "captured",
           "damaged"
         ],
-        "ownership_state_metadata_only": true,
-        "runtime_capture_adopted": false,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38830,19 +38830,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-        "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -38938,9 +38938,9 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
@@ -38948,8 +38948,8 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "objective approach and any guard marker must remain readable before visit",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "scenario_objective_contract": {
         "contract_id": "objective_contract_broken_treaty_stone",
@@ -38963,11 +38963,12 @@
         ],
         "requires_scenario_script": true,
         "guarded_objective_metadata": true,
-        "metadata_only": true,
+        "metadata_only": false,
         "broad_objective_runtime_migration": false,
-        "scenario_placement_migration": false,
-        "save_payload_required": false,
-        "public_text_panel_required": false
+        "scenario_placement_migration": true,
+        "save_payload_required": true,
+        "public_text_panel_required": false,
+        "live_objective_runtime": true
       },
       "public_text": {
         "display_name_key": "objective.broken_treaty_stone",
@@ -38976,19 +38977,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -39011,7 +39012,15 @@
         "placement_role": "treaty_marker",
         "objective_priority": "scenario_controlled"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "treaty_marker",
+        "event_expectation": "the witness seals preserve the terms hidden inside the shattered accord.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "record_broken_treaty",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_sealed_causeway_lever",
@@ -39078,7 +39087,7 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
         "requires_guard_clear": false,
         "supports_revisit": true,
@@ -39088,8 +39097,8 @@
       "guard_expectation": {
         "tier": "light",
         "visible_cue": "objective approach and any guard marker must remain readable before visit",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "scenario_objective_contract": {
         "contract_id": "objective_contract_sealed_causeway_lever",
@@ -39103,11 +39112,12 @@
         ],
         "requires_scenario_script": true,
         "guarded_objective_metadata": false,
-        "metadata_only": true,
+        "metadata_only": false,
         "broad_objective_runtime_migration": false,
-        "scenario_placement_migration": false,
-        "save_payload_required": false,
-        "public_text_panel_required": false
+        "scenario_placement_migration": true,
+        "save_payload_required": true,
+        "public_text_panel_required": false,
+        "live_objective_runtime": true
       },
       "public_text": {
         "display_name_key": "objective.sealed_causeway_lever",
@@ -39116,19 +39126,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -39151,7 +39161,15 @@
         "placement_role": "route_release",
         "objective_priority": "scenario_controlled"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "route_release",
+        "event_expectation": "the old lever engages and releases the sealed causeway works.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "release_sealed_causeway",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_mirror_anchor_frame",
@@ -39253,9 +39271,9 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
@@ -39263,8 +39281,8 @@
       "guard_expectation": {
         "tier": "heavy",
         "visible_cue": "objective approach and any guard marker must remain readable before visit",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "scenario_objective_contract": {
         "contract_id": "objective_contract_mirror_anchor_frame",
@@ -39278,11 +39296,12 @@
         ],
         "requires_scenario_script": true,
         "guarded_objective_metadata": true,
-        "metadata_only": true,
+        "metadata_only": false,
         "broad_objective_runtime_migration": false,
-        "scenario_placement_migration": false,
-        "save_payload_required": false,
-        "public_text_panel_required": false
+        "scenario_placement_migration": true,
+        "save_payload_required": true,
+        "public_text_panel_required": false,
+        "live_objective_runtime": true
       },
       "public_text": {
         "display_name_key": "objective.mirror_anchor_frame",
@@ -39291,19 +39310,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -39326,7 +39345,15 @@
         "placement_role": "anchor_alignment",
         "objective_priority": "scenario_controlled"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "anchor_alignment",
+        "event_expectation": "the anchor takes a steady reflection and fixes the accord survey line.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "align_mirror_anchor",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_crownless_standard",
@@ -39388,9 +39415,9 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
@@ -39398,8 +39425,8 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "objective approach and any guard marker must remain readable before visit",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "scenario_objective_contract": {
         "contract_id": "objective_contract_crownless_standard",
@@ -39413,11 +39440,12 @@
         ],
         "requires_scenario_script": true,
         "guarded_objective_metadata": true,
-        "metadata_only": true,
+        "metadata_only": false,
         "broad_objective_runtime_migration": false,
-        "scenario_placement_migration": false,
-        "save_payload_required": false,
-        "public_text_panel_required": false
+        "scenario_placement_migration": true,
+        "save_payload_required": true,
+        "public_text_panel_required": false,
+        "live_objective_runtime": true
       },
       "public_text": {
         "display_name_key": "objective.crownless_standard",
@@ -39426,19 +39454,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -39461,7 +39489,15 @@
         "placement_role": "banner_claim",
         "objective_priority": "scenario_controlled"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "banner_claim",
+        "event_expectation": "the repaired standard rises as a neutral rally mark for the accord.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "raise_crownless_standard",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_drowned_toll_bell",
@@ -39538,9 +39574,9 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
@@ -39548,8 +39584,8 @@
       "guard_expectation": {
         "tier": "ambush_uncertain",
         "visible_cue": "objective approach and any guard marker must remain readable before visit",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "scenario_objective_contract": {
         "contract_id": "objective_contract_drowned_toll_bell",
@@ -39563,11 +39599,12 @@
         ],
         "requires_scenario_script": true,
         "guarded_objective_metadata": true,
-        "metadata_only": true,
+        "metadata_only": false,
         "broad_objective_runtime_migration": false,
-        "scenario_placement_migration": false,
-        "save_payload_required": false,
-        "public_text_panel_required": false
+        "scenario_placement_migration": true,
+        "save_payload_required": true,
+        "public_text_panel_required": false,
+        "live_objective_runtime": true
       },
       "public_text": {
         "display_name_key": "objective.drowned_toll_bell",
@@ -39576,19 +39613,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -39611,7 +39648,15 @@
         "placement_role": "flood_toll",
         "objective_priority": "scenario_controlled"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "flood_toll",
+        "event_expectation": "the restored bell carries the lawful toll across the flooded road.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "ring_drowned_toll",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_orchard_writ_seal",
@@ -39668,7 +39713,7 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
         "requires_guard_clear": false,
         "supports_revisit": true,
@@ -39678,8 +39723,8 @@
       "guard_expectation": {
         "tier": "light",
         "visible_cue": "objective approach and any guard marker must remain readable before visit",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "scenario_objective_contract": {
         "contract_id": "objective_contract_orchard_writ_seal",
@@ -39693,11 +39738,12 @@
         ],
         "requires_scenario_script": true,
         "guarded_objective_metadata": false,
-        "metadata_only": true,
+        "metadata_only": false,
         "broad_objective_runtime_migration": false,
-        "scenario_placement_migration": false,
-        "save_payload_required": false,
-        "public_text_panel_required": false
+        "scenario_placement_migration": true,
+        "save_payload_required": true,
+        "public_text_panel_required": false,
+        "live_objective_runtime": true
       },
       "public_text": {
         "display_name_key": "objective.orchard_writ_seal",
@@ -39706,19 +39752,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -39741,7 +39787,15 @@
         "placement_role": "charter_writ",
         "objective_priority": "scenario_controlled"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "charter_writ",
+        "event_expectation": "the orchard writ is read, witnessed, and accepted into the new charter.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "accept_orchard_writ",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_brass_oath_wheel",
@@ -39818,9 +39872,9 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
@@ -39828,8 +39882,8 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "objective approach and any guard marker must remain readable before visit",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "scenario_objective_contract": {
         "contract_id": "objective_contract_brass_oath_wheel",
@@ -39843,11 +39897,12 @@
         ],
         "requires_scenario_script": true,
         "guarded_objective_metadata": true,
-        "metadata_only": true,
+        "metadata_only": false,
         "broad_objective_runtime_migration": false,
-        "scenario_placement_migration": false,
-        "save_payload_required": false,
-        "public_text_panel_required": false
+        "scenario_placement_migration": true,
+        "save_payload_required": true,
+        "public_text_panel_required": false,
+        "live_objective_runtime": true
       },
       "public_text": {
         "display_name_key": "objective.brass_oath_wheel",
@@ -39856,19 +39911,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -39891,7 +39946,15 @@
         "placement_role": "contract_wheel",
         "objective_priority": "scenario_controlled"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "contract_wheel",
+        "event_expectation": "the oath wheel locks the industrial clauses into the restored accord.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "turn_brass_oath_wheel",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_burned_signal_brazier",
@@ -39950,7 +40013,7 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "restored",
         "requires_ownership": false,
         "requires_guard_clear": false,
         "supports_revisit": true,
@@ -39968,8 +40031,8 @@
           "disabled",
           "repaired"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "state_variant_contract": {
         "contract_id": "state_variant_contract_burned_signal_brazier",
@@ -39978,10 +40041,10 @@
         "base_object_family": "faction_landmark",
         "variant_state": "damaged",
         "state_visual_rule": "broken brazier bowl and dark signal coals",
-        "metadata_only": true,
-        "runtime_state_adopted": false,
-        "renderer_swap_required": false,
-        "save_payload_required": false,
+        "metadata_only": false,
+        "runtime_state_adopted": true,
+        "renderer_swap_required": true,
+        "save_payload_required": true,
         "duplicates_base_runtime": false
       },
       "public_text": {
@@ -39991,19 +40054,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "state_variant_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
-        "state_variant_runtime_adopted": false,
+        "state_variant_runtime_adopted": true,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -40026,7 +40089,15 @@
         "placement_role": "damaged_state_variant",
         "state_target_object_id": "object_ember_signal_brazier"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "state_restoration",
+        "event_expectation": "the repaired bowl carries a clean signal flame over the accord road.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "restore_signal_brazier",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_repaired_ferry_stage_claimed",
@@ -40095,7 +40166,7 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "restored",
         "requires_ownership": false,
         "requires_guard_clear": false,
         "supports_revisit": true,
@@ -40113,8 +40184,8 @@
           "disabled",
           "repaired"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "state_variant_contract": {
         "contract_id": "state_variant_contract_repaired_ferry_stage_claimed",
@@ -40123,10 +40194,10 @@
         "base_object_family": "transit_object",
         "variant_state": "captured",
         "state_visual_rule": "raised claim lamps and tightened ferry chain",
-        "metadata_only": true,
-        "runtime_state_adopted": false,
-        "renderer_swap_required": false,
-        "save_payload_required": false,
+        "metadata_only": false,
+        "runtime_state_adopted": true,
+        "renderer_swap_required": true,
+        "save_payload_required": true,
         "duplicates_base_runtime": false
       },
       "public_text": {
@@ -40136,19 +40207,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "state_variant_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
-        "state_variant_runtime_adopted": false,
+        "state_variant_runtime_adopted": true,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -40171,7 +40242,15 @@
         "placement_role": "captured_state_variant",
         "state_target_object_id": "object_repaired_ferry_stage"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "state_restoration",
+        "event_expectation": "fresh planks, taut lines, and lit lamps return the ferry stage to service.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "claim_repaired_ferry",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_claimed_quarry_head",
@@ -40245,7 +40324,7 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "restored",
         "requires_ownership": false,
         "requires_guard_clear": false,
         "supports_revisit": true,
@@ -40263,8 +40342,8 @@
           "disabled",
           "repaired"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "state_variant_contract": {
         "contract_id": "state_variant_contract_claimed_quarry_head",
@@ -40273,10 +40352,10 @@
         "base_object_family": "mine",
         "variant_state": "claimed",
         "state_visual_rule": "fresh claim stakes and restarted hoist line",
-        "metadata_only": true,
-        "runtime_state_adopted": false,
-        "renderer_swap_required": false,
-        "save_payload_required": false,
+        "metadata_only": false,
+        "runtime_state_adopted": true,
+        "renderer_swap_required": true,
+        "save_payload_required": true,
         "duplicates_base_runtime": false
       },
       "public_text": {
@@ -40286,19 +40365,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "state_variant_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
-        "state_variant_runtime_adopted": false,
+        "state_variant_runtime_adopted": true,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -40321,7 +40400,15 @@
         "placement_role": "claimed_state_variant",
         "state_target_object_id": "object_ridge_quarry"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "state_restoration",
+        "event_expectation": "the reinforced hoist lifts its first load under a fresh accord claim.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "restart_quarry_head",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     },
     {
       "id": "object_withered_rootgate_marker",
@@ -40400,7 +40487,7 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "restored",
         "requires_ownership": false,
         "requires_guard_clear": false,
         "supports_revisit": true,
@@ -40418,8 +40505,8 @@
           "disabled",
           "repaired"
         ],
-        "state_metadata_only": true,
-        "runtime_capture_adopted": false
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "state_variant_contract": {
         "contract_id": "state_variant_contract_withered_rootgate_marker",
@@ -40428,10 +40515,10 @@
         "base_object_family": "transit_object",
         "variant_state": "damaged",
         "state_visual_rule": "wilted root arch and slack path thorns",
-        "metadata_only": true,
-        "runtime_state_adopted": false,
-        "renderer_swap_required": false,
-        "save_payload_required": false,
+        "metadata_only": false,
+        "runtime_state_adopted": true,
+        "renderer_swap_required": true,
+        "save_payload_required": true,
         "duplicates_base_runtime": false
       },
       "public_text": {
@@ -40441,19 +40528,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "objective_runtime_adopted": false,
+        "status": "state_variant_live",
+        "live_reward_grants": true,
+        "objective_runtime_adopted": true,
         "broad_objective_runtime_migration": false,
-        "state_variant_runtime_adopted": false,
+        "state_variant_runtime_adopted": true,
         "ownership_capture_runtime_adopted": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -40476,7 +40563,15 @@
         "placement_role": "damaged_state_variant",
         "state_target_object_id": "object_root_pass_arch"
       },
-      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184"
+      "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
+      "objective_event_contract": {
+        "objective_kind": "state_restoration",
+        "event_expectation": "living sap and fresh bindings return the withered rootgate to the road.",
+        "scenario_id": "accordfall-fourteen-marks",
+        "objective_id": "restore_rootgate_marker",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      }
     }
   ]
 }

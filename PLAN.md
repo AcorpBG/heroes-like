@@ -14486,6 +14486,32 @@ Completion evidence:
 - the consolidated eight-case report passed exact payments, complete blocking-footprint clearing, exact flags/objectives, opened-art switching, repeat rejection, save-version-9 round-trips, and two freely repeatable non-mutating waypoint reads;
 - six individually edited opened-state sources produce one inspected transparent 288x48 atlas; repository validation, Python compilation, and matching 249547160-byte Linux/Windows export-startup gates passed with all source art excluded from the PCK.
 
+## Fourteen-Marks Accordfall Front
+
+id: `content-fourteen-marks-accordfall-front-10184`
+
+Status: completed.
+
+Implementation boundary:
+- activate all fourteen remaining metadata-only Batch 007 records as one coherent world-state family: three capturable faction landmarks, seven scenario-objective sites, and four repairable or restorable state variants;
+- ship all fourteen together in one original skirmish front with two towns, representative encounters, reactive hooks, a viable common-resource runway, and explicit objectives for the seven objective marks and four restorations;
+- reuse the generic persistent-control and one-time resource-site interaction paths for exact rewards, repair costs, claim flags, objective satisfaction, repeat safety, daily income where authored, and save/load continuity;
+- add one distinctive controlled, activated, or restored art frame per site in one compact runtime atlas while retaining every existing neutral, dormant, or damaged frame.
+
+Completion criteria:
+- the three landmarks can be captured, retain their controller, provide their exact authored control income, switch art, and survive save/load;
+- all seven objective sites grant their exact authored reward and flag, satisfy the linked scenario objective, reject repeat activation without mutation, switch art, and survive save/load;
+- all four state variants charge their exact restoration cost, set their exact restored flag, reject repeat repair without mutation, switch art, and survive save/load;
+- one consolidated fourteen-case gameplay/art/save smoke, repository validation, and bounded Linux/Windows package startup gates pass after the whole family is complete.
+
+Non-goals:
+- no ship/embarkation system, Native RMG generation/parity change, save-version bump, broad AI/economy/balance redesign, animation/audio/VFX, campaign expansion, certification, publication, whole-game validation, or release-readiness claim.
+
+Completion evidence:
+- Accordfall ships as the seventy-third authored scenario with two towns, twenty resource placements, five encounter fronts, five reactive hooks, and exact victory objectives for all seven activated marks and four restored works;
+- three faction landmarks now retain control and daily income, seven objective sites grant exact one-time rewards and scenario flags, and four state variants charge exact repair costs; all fourteen switch to distinct authored controlled, activated, or restored art and survive save-version-9 round trips;
+- the single consolidated fourteen-case gameplay/art/save report passed, followed by repository validation and matching 249640816-byte Linux/Windows export-startup gates with the compact 672x48 atlas present and all source art excluded from the PCK.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
