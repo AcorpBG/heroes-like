@@ -237,7 +237,7 @@ REQUIRED_CAMPAIGN_EMBLEM_NAMES = (
     "reedfall_lantern", "stonewake_watchstone", "bogbound_oath_drum",
     "daybreak_shards", "ninefold_survey_compass", "frontier_claims_cairn",
     "briarwheel_covenant", "ashen_ledger", "last_bell_sounding",
-    "sixfold_testament",
+    "sixfold_testament", "horn_glass_accord",
 )
 REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/emblems/{emblem_name}.png.import"
@@ -259,6 +259,7 @@ REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES = (
     "three_harbors_sounding",
     "lantern_assize", "miremoon_cadence", "noonglass_meridian",
     "heartwood_root", "seventh_pressure", "last_false_meridian",
+    "bank_cinderwake", "read_tideglass_wake", "horn_glass_commission",
 )
 REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/chapter_seals/{seal_name}.png.import"

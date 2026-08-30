@@ -1,0 +1,44 @@
+{
+  "schema_id": "horn_glass_accord_campaign_art_v1",
+  "source_model": "built_in_image_gen_original_campaign_art",
+  "campaign_id": "campaign_horn_glass_accord",
+  "runtime_policy": "Generated 1254px RGBA sources are excluded from release packages; downsampled alpha-safe 128px runtime assets are shipped.",
+  "assets": [
+    {
+      "id": "campaign_emblem_horn_glass_accord",
+      "source_path": "res://art/campaigns/source/generated/emblems/horn_glass_accord_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/horn_glass_accord.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-858df417-703a-418a-aad5-92f347486eb4.png",
+      "source_sha256": "1a7f472617ea648db3eba251296617727c1135e35e8a1d016bddbc7d3ff084c3",
+      "runtime_sha256": "20b5186ee703641c6c30b27739a43341d222f734b57878e06bf2aa940828ee30",
+      "prompt_summary": "A basalt auroch horn and translucent tideglass wing interlock around a measured route star."
+    },
+    {
+      "id": "campaign_chapter_seal_bank_cinderwake",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/bank_cinderwake_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/bank_cinderwake.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a856424a-9133-415b-a6b7-b8090b0ea4d8.png",
+      "source_sha256": "3155c9b3cc2efd27601e24a3694f122c808f04955605e02dc498e6e186f82258",
+      "runtime_sha256": "33dbdd9ab168ad037df80f71fcf65e3072eb42a34dea8db77ec3a0c91feaeefe",
+      "prompt_summary": "A banked basalt horn rests above a vent-ring and compact Embercourt signal lantern."
+    },
+    {
+      "id": "campaign_chapter_seal_read_tideglass_wake",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/read_tideglass_wake_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/read_tideglass_wake.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-28e20617-506a-4508-8257-102b0e2c6cdd.png",
+      "source_sha256": "93cdd02d3dd9469c0453e74b38fc41d8567cbf95aaa11e9ae0b7609ce50435e1",
+      "runtime_sha256": "cd5cb10a63192b82796d9f1eaadbb94788f9ff967d099ea7a2b80d1012f2f1fd",
+      "prompt_summary": "A translucent tideglass wing sounds a black-silver bell above a mirrored saltpan."
+    },
+    {
+      "id": "campaign_chapter_seal_horn_glass_commission",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/horn_glass_commission_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/horn_glass_commission.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c4a3e6e6-5cca-4fb0-9fb8-3bd646395ddb.png",
+      "source_sha256": "b8e2161c1f79bc63d195481d5eebb8aa5a86d4951851530e8d30b6f6b2e4d94f",
+      "runtime_sha256": "ab3ccd75cc552071d236cd6256cbe6c144435e33945ae9c5ba4fc14befd6170a",
+      "prompt_summary": "Horn and glass wing meet beneath three field pennons around a calibrated prism plumb."
+    }
+  ]
+}

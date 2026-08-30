@@ -95,7 +95,7 @@ func _run() -> void:
 
 func _validate_content_and_art() -> void:
 	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 111, "Unit catalog must contain the complete 111-unit batch.")
-	_expect(ContentService.get_content_ids(ContentService.SCENARIOS_PATH).size() == 77, "Scenario catalog must contain the field commission as scenario 77.")
+	_expect(ContentService.get_content_ids(ContentService.SCENARIOS_PATH).size() == 87, "Scenario catalog must retain the complete 87-scenario roster.")
 	var auxiliary_factions := {}
 	for unit_id in ContentService.get_content_ids(ContentService.UNITS_PATH):
 		var candidate := ContentService.get_unit(unit_id)
@@ -138,7 +138,7 @@ func _validate_scenario_layout(session: SessionStateStoreScript.SessionData) -> 
 	var scenario := ContentService.get_scenario(SCENARIO_ID)
 	var map_size: Dictionary = scenario.get("map_size", {}) if scenario.get("map_size", {}) is Dictionary else {}
 	_expect(int(map_size.get("width", 0)) == 18 and int(map_size.get("height", 0)) == 12, "Field commission map size changed.")
-	_expect(scenario.get("selection", {}).get("availability", {}) == {"campaign": false, "skirmish": true}, "Field commission availability changed.")
+	_expect(scenario.get("selection", {}).get("availability", {}) == {"campaign": true, "skirmish": true}, "Field commission must remain playable in both campaign and skirmish.")
 	var occupied := {}
 	for bucket in ["towns", "resource_nodes", "artifact_nodes", "encounters"]:
 		for placement in session.overworld.get(bucket, []):
@@ -147,7 +147,7 @@ func _validate_scenario_layout(session: SessionStateStoreScript.SessionData) -> 
 			var key := "%d,%d" % [int(placement.get("x", -1)), int(placement.get("y", -1))]
 			_expect(not occupied.has(key), "Field commission placement collision at %s between %s and %s." % [key, occupied.get(key, ""), placement.get("placement_id", "")])
 			occupied[key] = String(placement.get("placement_id", ""))
-	_expect(session.overworld.get("encounters", []).size() == 3 and session.overworld.get("towns", []).size() == 2, "Field commission live placement breadth changed.")
+	_expect(session.overworld.get("encounters", []).size() == 5 and session.overworld.get("resource_nodes", []).size() == 8 and session.overworld.get("towns", []).size() == 2, "Field commission live placement breadth changed.")
 
 
 func _validate_encounter_and_recruit(session: SessionStateStoreScript.SessionData, case: Dictionary) -> void:

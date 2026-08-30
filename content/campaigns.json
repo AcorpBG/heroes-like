@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 10,
+  "player_facing_active_campaign_count": 11,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -1709,6 +1709,118 @@
             {"type": "scenario_flag_true", "scenario_id": "debtrune-default-convergence", "flag": "rust_choir_foundry_silenced"}
           ],
           "carryover_import": {"from_scenario_id": "debtrune-default-convergence", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"}
+        }
+      ]
+    },
+    {
+      "id": "campaign_horn_glass_accord",
+      "name": "Horn and Glass Accord",
+      "description": "Three commanders follow a furnace horn and a clear wingbeat from separate guarded roads into one measured field covenant.",
+      "summary": "A three-chapter cross-faction campaign about claiming two elite neutral dwellings, passing bounded testimony between commanders, and convening both companies without transferring personal power.",
+      "region": "Frostsignal Ladder, Saltpan Vigil, and the Three-Banner Commission Road",
+      "emblem_id": "campaign_emblem_horn_glass_accord",
+      "emblem_path": "res://art/campaigns/runtime/emblems/horn_glass_accord.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/horn_glass_accord_source.png",
+      "emblem_alt_text": "A broad black basalt horn interlocks with a translucent tideglass wing around a small measured route star.",
+      "emblem_source_sha256": "1a7f472617ea648db3eba251296617727c1135e35e8a1d016bddbc7d3ff084c3",
+      "emblem_runtime_sha256": "20b5186ee703641c6c30b27739a43341d222f734b57878e06bf2aa940828ee30",
+      "arc_goal": "Bank the Cinderwake Fold, read the Tideglass Roost, and bring both independent testimonies before Neral's measured three-banner commission.",
+      "completion_title": "Horn and Glass Answer",
+      "completion_summary": "The furnace horn and clear wingbeat remain independent companies, but their two testimonies now hold one accord across three faction roads.",
+      "starting_scenario_id": "beaconscribe-frostbeacon-circuit",
+      "scenarios": [
+        {
+          "scenario_id": "beaconscribe-frostbeacon-circuit",
+      "seal_id": "campaign_chapter_seal_beaconscribe_frostbeacon_circuit",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/bank_cinderwake.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/bank_cinderwake_source.png",
+          "seal_alt_text": "A banked basalt horn rests above a low vent-ring while a compact signal lantern hangs beneath it.",
+          "seal_source_sha256": "3155c9b3cc2efd27601e24a3694f122c808f04955605e02dc498e6e186f82258",
+          "seal_runtime_sha256": "33dbdd9ab168ad037df80f71fcf65e3072eb42a34dea8db77ec3a0c91feaeefe",
+          "label": "Chapter I: Bank the Cinderwake",
+          "description": "Jorun closes the Frostsignal Ladder and finds a lantern cadence the Cinderwake Fold will answer.",
+          "chapter_index": 1,
+          "chapter_title": "Take the Horn Testimony",
+          "status_hint": "Break the exact elite watch and claim the Fold before the ritual relay can close around it.",
+          "carryover_summary": "Exports capped common stores and the Fold testimony; Jorun keeps his own progression, spellbook, artifacts, and recruited company.",
+          "briefing": "The first accord sign is not written. It is a basalt horn sounded by furnace breath beneath the Frostsignal Ladder.",
+          "intel": "A Cinderwake watch holds the banked vent-ring while Duskfen uses the old ritual screens to keep Jorun from matching its cadence.",
+          "stakes": "Without a freely answered horn, the second commander receives stores but no proof that an elite neutral company can join without conquest.",
+          "aftermath_victory": "The Fold answers Jorun's beacon rhythm and a recorded horn cadence travels toward the saltline.",
+          "aftermath_defeat": "The vent-ring closes and the first testimony becomes another hostile signal beneath the frost.",
+          "journal_victory": "Jorun banked the Cinderwake Fold and carried its horn testimony beyond the Frostsignal Ladder.",
+          "journal_defeat": "Jorun failed to win the Cinderwake testimony.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.25,
+            "resource_caps": {"gold": 700, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["cinderwake_fold_claimed", "horn_glass_cinder_testimony"]
+          }
+        },
+        {
+          "scenario_id": "vowless-saltpan-circuit",
+      "seal_id": "campaign_chapter_seal_vowless_saltpan_circuit",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/read_tideglass_wake.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/read_tideglass_wake_source.png",
+          "seal_alt_text": "A translucent tideglass wing arches above a mirrored saltpan and a hanging black-silver sounding bell.",
+          "seal_source_sha256": "93cdd02d3dd9469c0453e74b38fc41d8567cbf95aaa11e9ae0b7609ce50435e1",
+          "seal_runtime_sha256": "cd5cb10a63192b82796d9f1eaadbb94788f9ff967d099ea7a2b80d1012f2f1fd",
+          "label": "Chapter II: Read the Tideglass Wake",
+          "description": "Nacre tests the horn testimony against the Saltpan Vigil and sounds a route the Tideglass Roost will follow.",
+          "chapter_index": 2,
+          "chapter_title": "Take the Wing Testimony",
+          "status_hint": "Carry only the prior stores and testimony; the Roost must answer Nacre's own bell on this board.",
+          "carryover_summary": "Imports bounded stores and prefixed horn evidence, then exports bounded stores and the local clear-wing testimony without either hero's personal power.",
+          "briefing": "The horn cadence reaches a salt mirror where every wingbeat makes two wakes. Nacre must sound the one that has a living route beneath it.",
+          "intel": "Riverwatch screens the saltline while an elite Tideglass watch circles the Roost's only stable reflection.",
+          "stakes": "A reflected but empty wingbeat would make the final commission an imitation rather than an accord.",
+          "aftermath_victory": "The clear wing answers Nacre's bell and its true wake carries the second testimony toward the commission road.",
+          "aftermath_defeat": "The salt mirror keeps both wakes and the accord loses its second independent witness.",
+          "journal_victory": "Nacre read the Tideglass Roost and sent its clear-wing testimony toward Neral.",
+          "journal_defeat": "Nacre followed the reflected wake and lost the Tideglass testimony.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "beaconscribe-frostbeacon-circuit", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "beaconscribe-frostbeacon-circuit", "flag": "cinderwake_fold_claimed"}
+          ],
+          "carryover_import": {"from_scenario_id": "beaconscribe-frostbeacon-circuit", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.25,
+            "resource_caps": {"gold": 700, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["tideglass_roost_claimed", "horn_glass_tide_testimony"]
+          }
+        },
+        {
+          "scenario_id": "three-banner-field-commission",
+      "seal_id": "campaign_chapter_seal_three_banner_field_commission",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/horn_glass_commission.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/horn_glass_commission_source.png",
+          "seal_alt_text": "A basalt horn and clear tideglass wing meet beneath three narrow field pennons around a calibrated prism plumb.",
+          "seal_source_sha256": "b8e2161c1f79bc63d195481d5eebb8aa5a86d4951851530e8d30b6f6b2e4d94f",
+          "seal_runtime_sha256": "ab3ccd75cc552071d236cd6256cbe6c144435e33945ae9c5ba4fc14befd6170a",
+          "label": "Chapter III: Convene Horn and Glass",
+          "description": "Neral commissions three specialist banners and proves both elite neutral companies can answer one measured field covenant.",
+          "chapter_index": 3,
+          "chapter_title": "Witness the Accord",
+          "status_hint": "Prior evidence arrives only as prefixed testimony; both guarded dwellings must be claimed again under Neral's local authority.",
+          "carryover_summary": "Imports capped stores and prefixed wing testimony, then resolves the accord without importing Jorun's or Nacre's progression, spells, artifacts, or units.",
+          "briefing": "Two testimonies are not yet an accord. Neral must bring horn, wing, and three independent banners onto one measured field before Gloamwake closes the road.",
+          "intel": "The elite watches guard separate approaches, while three specialist companies will accept commission only after their own lines are answered.",
+          "stakes": "If either neutral company is forced into the other's measure, the covenant becomes another faction claim and the accord fails.",
+          "aftermath_victory": "Horn and glass answer independently beneath three banners, and Neral records the first field covenant both companies chose to hold.",
+          "aftermath_defeat": "Gloamwake closes the road before horn and wing can stand inside one measured commission.",
+          "journal_victory": "Neral convened the Horn and Glass Accord before three commissioned banners.",
+          "journal_defeat": "Neral failed to bring both elite companies into one field covenant.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "vowless-saltpan-circuit", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "vowless-saltpan-circuit", "flag": "tideglass_roost_claimed"}
+          ],
+          "carryover_import": {"from_scenario_id": "vowless-saltpan-circuit", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"}
         }
       ]
     }
