@@ -14814,6 +14814,38 @@ Non-goals:
 - no new scenario geometry, unit, hero, town, spell, artifact, encounter, resource site, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes campaign, relic, faction story, emblem, seal, name, text, landmark, or protected visual expression.
 
+## Two Elite Neutral Dwellings
+
+id: `content-two-elite-neutral-dwellings-10184`
+
+Status: completed.
+
+Current finding:
+- all 50 live neutral creatures are tier 1-3, so late guarded sites currently scale by fielding larger piles of low-tier neutrals rather than introducing genuinely elite neutral threats;
+- the highest-impact bounded content batch is two original high-tier neutral creatures with distinct tactical roles, guarded recruitable dwellings, production encounters, and live map placement;
+- Ninefold Confluence is the representative large authored map for exercising both new encounter families, persistent site control, weekly recruitment, save/load, and strategic presentation in one consolidated smoke.
+
+Implementation boundary:
+- add the tier-5 Cinderwake Aurochs as durable volcanic chargers and the tier-6 Tideglass Skyrays as mobile ranged harriers, with original names, silhouettes, stats, costs, abilities, descriptions, and complete production art surfaces;
+- add Cinderwake Fold and Tideglass Roost as guarded neutral dwellings with exact blocking guards, claim rewards, persistent control, weekly recruitment, income, response profiles, and unclaimed/controlled landmark identities;
+- place both complete dwelling/guard/encounter families on Ninefold Confluence in biome-appropriate locations, preserving deterministic data-driven runtime behavior and save version 9;
+- ship original transparent unit source art and dwelling art through the existing derived-art, manifest, accessibility, integrity, source-exclusion, and Windows/Linux packaging paths.
+
+Completion criteria:
+- both new units construct in production battles and their authored ability effects execute through live combat rules;
+- both exact guards block approach, construct their authored encounters, and after victory allow claim, immediate recruitment, persistent controlled presentation, weekly muster, and income behavior;
+- all unit portraits, battle icons, standees, overworld icons, animation surfaces, and both dwelling states load as distinct alpha-safe original assets with non-color descriptions and exact source/runtime integrity;
+- one consolidated large-map gameplay/combat/site/save/visual smoke passes after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged 250000000-byte ceiling.
+
+Completion result:
+- shipped both elite neutral units and their two-stack dwelling families into Ninefold Confluence with exact guards, production encounters, persistent controlled states, weekly recruitment, income, and save-version-9 round trips;
+- shipped complete original unit presentation surfaces plus a four-state alpha-safe dwelling atlas, with source provenance retained outside exports and runtime assets registered through the production manifests;
+- the consolidated two-case gameplay smoke passed, repository validation passed, and matching Linux/Windows exports booted successfully with a 248900900-byte PCK below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no faction ladder, town, hero, spell, artifact, campaign, scenario geometry expansion, combat formula rewrite, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes creature, dwelling, name, icon, composition, text, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

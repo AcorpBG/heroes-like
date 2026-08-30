@@ -4658,7 +4658,9 @@
         {"placement_id": "ninefold_contract_scribe_booth", "site_id": "site_contract_scribe_booth", "x": 58, "y": 4},
         {"placement_id": "ninefold_reedboat_supply_stand", "site_id": "site_reedboat_supply_stand", "x": 39, "y": 5},
         {"placement_id": "ninefold_ash_cooler_kitchen", "site_id": "site_ash_cooler_kitchen", "x": 45, "y": 4},
-        {"placement_id": "ninefold_lens_calibration_cart", "site_id": "site_lens_calibration_cart", "x": 4, "y": 9}
+        {"placement_id": "ninefold_lens_calibration_cart", "site_id": "site_lens_calibration_cart", "x": 4, "y": 9},
+        {"placement_id": "dwelling_cinderwake_fold", "site_id": "site_cinderwake_fold", "x": 45, "y": 15, "guard_front_id": "ninefold_cinderwake_fold_watch"},
+        {"placement_id": "dwelling_tideglass_roost", "site_id": "site_tideglass_roost", "x": 38, "y": 22, "guard_front_id": "ninefold_tideglass_roost_watch"}
       ],
       "artifact_nodes": [{"placement_id": "confluence_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 23, "y": 5}, {"placement_id": "confluence_quarry_tally_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 45}, {"placement_id": "confluence_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 44, "y": 45}, {"placement_id": "confluence_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 60, "y": 45}],
       "encounters": [
@@ -4797,7 +4799,9 @@
         {"placement_id": "ninefold_fog_quay_ambush_watch", "encounter_id": "encounter_reedbarge_mooring_watch", "x": 61, "y": 61, "difficulty": "medium", "combat_seed": 26432, "prefer_identity_landmark": true},
         {"placement_id": "ninefold_mirror_toll_causeway_watch", "encounter_id": "encounter_kite_signal_eyrie_watch", "x": 12, "y": 56, "difficulty": "high", "combat_seed": 26433, "prefer_identity_landmark": true},
         {"placement_id": "ninefold_ashbarb_roadblock_watch", "encounter_id": "encounter_charcoal_burners_watch", "x": 27, "y": 61, "difficulty": "medium", "combat_seed": 26434, "prefer_identity_landmark": true},
-        {"placement_id": "ninefold_frostford_hold_watch", "encounter_id": "encounter_frostwharf_house_watch", "x": 5, "y": 61, "difficulty": "high", "combat_seed": 26435, "prefer_identity_landmark": true}
+        {"placement_id": "ninefold_frostford_hold_watch", "encounter_id": "encounter_frostwharf_house_watch", "x": 5, "y": 61, "difficulty": "high", "combat_seed": 26435, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_cinderwake_fold_watch", "encounter_id": "encounter_cinderwake_fold_watch", "x": 46, "y": 15, "difficulty": "high", "combat_seed": 26436, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_tideglass_roost_watch", "encounter_id": "encounter_tideglass_roost_watch", "x": 39, "y": 22, "difficulty": "high", "combat_seed": 26437, "prefer_identity_landmark": true}
       ]
     },
     {

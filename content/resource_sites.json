@@ -12067,6 +12067,196 @@
         "metadata_only": false,
         "live_objective_runtime": true
       }
+    },
+    {
+      "id": "site_cinderwake_fold",
+      "name": "Cinderwake Fold",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_cinderwake_fold",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 320,
+        "ore": 2
+      },
+      "control_income": {
+        "gold": 90,
+        "ore": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_cinderwake_aurochs": 1,
+        "unit_neutral_emberpack_lobbers": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_cinderwake_aurochs": 1,
+        "unit_neutral_emberpack_lobbers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_cinderwake_aurochs": 1,
+          "unit_neutral_emberpack_lobbers": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_cinderwake_aurochs": 1,
+          "unit_neutral_emberpack_lobbers": 1
+        },
+        "guard_army_group_id": "army_neutral_cinderwake_fold_watch",
+        "guard_encounter_id": "encounter_cinderwake_fold_watch"
+      },
+      "response_profile": {
+        "action_label": "Bank the Fold",
+        "summary": "A basalt vent-ring that offers one furnace-bred auroch after its watch is broken and its troughs are provisioned.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 420,
+          "ore": 2
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 3,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_cinderwake_fold",
+        "neutral_dwelling_family_id": "neutral_dwelling_cinderwake_fold",
+        "resource_site_id": "site_cinderwake_fold",
+        "roster_unit_ids": [
+          "unit_neutral_cinderwake_aurochs",
+          "unit_neutral_emberpack_lobbers"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "visible vent-ring watch blocks the fold before recruitment",
+        "guard_army_group_id": "army_neutral_cinderwake_fold_watch",
+        "guard_encounter_id": "encounter_cinderwake_fold_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed fold watch must fall before the approach and muster open"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_cinderwake_fold_watch",
+        "guard_encounter_id": "encounter_cinderwake_fold_watch",
+        "visible_cue": "banked vent-ring and auroch watch remain visible before the fold is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-two-elite-neutral-dwellings-10184",
+      "batch005_role": "guarded_high_value_dwelling"
+    },
+    {
+      "id": "site_tideglass_roost",
+      "name": "Tideglass Roost",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_tideglass_roost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 360,
+        "wood": 2
+      },
+      "control_income": {
+        "gold": 105,
+        "wood": 1
+      },
+      "claim_recruits": {
+        "unit_neutral_tideglass_skyrays": 1,
+        "unit_neutral_reefbolt_crews": 3
+      },
+      "weekly_recruits": {
+        "unit_neutral_tideglass_skyrays": 1,
+        "unit_neutral_reefbolt_crews": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_tideglass_skyrays": 1,
+          "unit_neutral_reefbolt_crews": 3
+        },
+        "weekly_recruits": {
+          "unit_neutral_tideglass_skyrays": 1,
+          "unit_neutral_reefbolt_crews": 1
+        },
+        "guard_army_group_id": "army_neutral_tideglass_roost_watch",
+        "guard_encounter_id": "encounter_tideglass_roost_watch"
+      },
+      "response_profile": {
+        "action_label": "Tune the Roost",
+        "summary": "A saltstone bell-roost that offers one tideglass skyray after its causeway is cleared and its resonators are tuned.",
+        "movement_cost": 6,
+        "resource_cost": {
+          "gold": 480,
+          "wood": 2
+        },
+        "watch_days": 5,
+        "quality_bonus": 4,
+        "readiness_bonus": 3,
+        "recovery_relief": 1
+      },
+      "dwelling_contract": {
+        "contract_id": "dwelling_contract_tideglass_roost",
+        "neutral_dwelling_family_id": "neutral_dwelling_tideglass_roost",
+        "resource_site_id": "site_tideglass_roost",
+        "roster_unit_ids": [
+          "unit_neutral_tideglass_skyrays",
+          "unit_neutral_reefbolt_crews"
+        ],
+        "recruit_policy": "weekly_muster",
+        "recurring_recruit_access": true,
+        "guarded_variant": true,
+        "metadata_only_guard_contract": false,
+        "requires_visible_guard_cue": true
+      },
+      "guard_expectation": {
+        "tier": "elite",
+        "visible_cue": "visible resonator watch blocks the sand causeway before recruitment",
+        "guard_army_group_id": "army_neutral_tideglass_roost_watch",
+        "guard_encounter_id": "encounter_tideglass_roost_watch",
+        "clear_required_for_recruitment": true,
+        "blocks_approach": true,
+        "event_expectation": "the exact placed roost watch must fall before the causeway and muster open"
+      },
+      "runtime_boundary": {
+        "status": "neutral_dwelling_live",
+        "neutral_dwelling_site_runtime_supported": true,
+        "guarded_variant_runtime_migration": true,
+        "recruitment_ui_overhaul": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "guarded": true,
+      "guard_profile": {
+        "tier": "elite",
+        "guard_army_group_id": "army_neutral_tideglass_roost_watch",
+        "guard_encounter_id": "encounter_tideglass_roost_watch",
+        "visible_cue": "saltstone bells and skyray watch remain visible before the roost is claimed",
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "content_batch_id": "content-two-elite-neutral-dwellings-10184",
+      "batch005_role": "guarded_high_value_dwelling"
     }
   ]
 }
