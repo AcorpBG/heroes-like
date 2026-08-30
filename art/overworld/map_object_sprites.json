@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 188,
-    "generated_batch_count": 14,
+    "new_generated_sprite_count": 192,
+    "generated_batch_count": 15,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -120,20 +120,28 @@
           181,
           188
         ]
+      },
+      {
+        "batch_index": 15,
+        "workspace_source_manifest": "res://art/overworld/source/generated/resource_sites/elder_wild_sanctuaries/manifest.json",
+        "object_index_range": [
+          189,
+          192
+        ]
       }
     ]
   },
   "coverage": {
-    "authored_map_object_count": 388,
+    "authored_map_object_count": 392,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 188,
-    "total_distinct_authored_map_object_count_after_pass": 388,
+    "new_distinct_non_decorative_asset_count": 192,
+    "total_distinct_authored_map_object_count_after_pass": 392,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
-      "neutral_dwelling": 34,
+      "neutral_dwelling": 39,
       "neutral_encounter": 6,
       "pickup": 9,
       "repeatable_service": 7,
@@ -327,6 +335,10 @@
     "mapobj_withered_rootgate_marker",
     "mapobj_cinderwake_fold",
     "mapobj_tideglass_roost",
+    "mapobj_galehorn_windfold",
+    "mapobj_sunscale_lantern_conservatory",
+    "mapobj_rimebell_whitewake_eyrie",
+    "mapobj_deepforge_seventh_vault",
     "mapobj_waystone_cache",
     "mapobj_wood_wagon",
     "mapobj_fenhound_kennels",
@@ -1596,6 +1608,34 @@
       "assignment_source": "new_distinct_map_object_sprite",
       "family": "neutral_dwelling",
       "source_batch": 13
+    },
+    "object_galehorn_windfold": {
+      "asset_id": "mapobj_galehorn_windfold",
+      "fit": "Distinct original horn-arch windfold sprite assigned to the elder neutral Galehorn Windfold dwelling.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 15
+    },
+    "object_sunscale_lantern_conservatory": {
+      "asset_id": "mapobj_sunscale_lantern_conservatory",
+      "fit": "Distinct original mineral-lantern conservatory sprite assigned to the elder neutral Sunscale dwelling.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 15
+    },
+    "object_rimebell_whitewake_eyrie": {
+      "asset_id": "mapobj_rimebell_whitewake_eyrie",
+      "fit": "Distinct original four-pronged ice eyrie sprite assigned to the elder neutral Rimebell dwelling.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 15
+    },
+    "object_deepforge_seventh_vault": {
+      "asset_id": "mapobj_deepforge_seventh_vault",
+      "fit": "Distinct original seven-plate vault sprite assigned to the elder neutral Deepforge dwelling.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 15
     },
     "object_waystone_cache": {
       "asset_id": "mapobj_waystone_cache",

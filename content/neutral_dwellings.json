@@ -676,6 +676,54 @@
         "encounter_tideglass_roost_watch"
       ],
       "content_status": "elite_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_galehorn_windfold",
+      "name": "Galehorn Windfold",
+      "summary": "Highland wind-tenders provision swift galehorn striders for commanders who break the old downhill watch and keep the fold sounded.",
+      "biome_ids": ["biome_highland_ridge", "biome_rough_badlands"],
+      "unit_ids": ["unit_neutral_galehorn_striders", "unit_neutral_ridgeflare_shots"],
+      "site_ids": ["site_galehorn_windfold"],
+      "map_object_ids": ["object_galehorn_windfold"],
+      "army_group_ids": ["army_neutral_galehorn_breakline_watch"],
+      "encounter_ids": ["encounter_galehorn_breakline_watch"],
+      "content_status": "elder_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_sunscale_lantern_conservatory",
+      "name": "Sunscale Lantern Conservatory",
+      "summary": "Desert lamp-keepers feed mineral-winged lanternmoths and suncrack crews for rulers who reopen the measured drift lane.",
+      "biome_ids": ["biome_rough_badlands", "biome_coast_archipelago"],
+      "unit_ids": ["unit_neutral_sunscale_lanternmoths", "unit_neutral_suncrack_throwers"],
+      "site_ids": ["site_sunscale_lantern_conservatory"],
+      "map_object_ids": ["object_sunscale_lantern_conservatory"],
+      "army_group_ids": ["army_neutral_sunscale_lantern_drift_watch"],
+      "encounter_ids": ["encounter_sunscale_lantern_drift_watch"],
+      "content_status": "elder_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_rimebell_whitewake_eyrie",
+      "name": "Rimebell Whitewake Eyrie",
+      "summary": "Whitewake bell-tenders shelter rimebell skyrakers and cold-road keepers for commanders who take the frozen signal intact.",
+      "biome_ids": ["biome_snow_frost_marches", "biome_highland_ridge"],
+      "unit_ids": ["unit_neutral_rimebell_skyrakers", "unit_neutral_whitepike_keepers"],
+      "site_ids": ["site_rimebell_whitewake_eyrie"],
+      "map_object_ids": ["object_rimebell_whitewake_eyrie"],
+      "army_group_ids": ["army_neutral_rimebell_whitewake_watch"],
+      "encounter_ids": ["encounter_rimebell_whitewake_watch"],
+      "content_status": "elder_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_deepforge_seventh_vault",
+      "name": "Deepforge Seventh Vault",
+      "summary": "Independent seal-keepers open armored pens for a vaultwyrm and basalt wardens only after the seventh pressure seal is won and provisioned.",
+      "biome_ids": ["biome_subterranean_underways", "biome_ash_lava_wastes"],
+      "unit_ids": ["unit_neutral_deepforge_vaultwyrms", "unit_neutral_basalt_wardens"],
+      "site_ids": ["site_deepforge_seventh_vault"],
+      "map_object_ids": ["object_deepforge_seventh_vault"],
+      "army_group_ids": ["army_neutral_deepforge_seventh_seal_watch"],
+      "encounter_ids": ["encounter_deepforge_seventh_seal_watch"],
+      "content_status": "elder_wild_neutral_dwelling_live"
     }
   ]
 }

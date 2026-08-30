@@ -1,0 +1,88 @@
+{
+  "schema_id": "elder_wild_sanctuary_art_wave1",
+  "content_slice_id": "content-four-elder-wild-recruitment-sanctuaries-10184",
+  "generation_mode": "built_in_image_gen_original_landmarks_precise_controlled_edits_and_background_extraction",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png",
+  "atlas_size": [384, 48],
+  "asset_policy": "original_generated_runtime_art_no_homm_asset_import",
+  "alpha_recovery": "Unclaimed generations arrived with genuine alpha. Controlled edits returned flattened checker previews, so each was passed through a targeted built-in background-extraction edit. The extracted controlled masters and shipped atlas have genuine alpha and transparent corners.",
+  "assets": [
+    {
+      "site_id": "site_galehorn_windfold",
+      "state": "unclaimed",
+      "source": "galehorn_windfold_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f4164510-e77c-44c1-80d5-06314c62a1ad.png",
+      "atlas_region": [0, 0, 48, 48],
+      "sha256": "567319b940ac662c0fe71609e671f4c2d01e37f695d4374137d9158580f7c137",
+      "prompt_summary": "A wind-carved basalt horn arch, circular stone fold, copper weather vanes, ropes, and an open highland approach."
+    },
+    {
+      "site_id": "site_galehorn_windfold",
+      "state": "controlled",
+      "source": "galehorn_windfold_controlled_source.png",
+      "generation_edit": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-24b24125-362d-4541-b419-bcdc7dac9b72.png",
+      "background_extraction": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-478e8b9b-c94e-480f-9aef-ba06e4a6a8b9.png",
+      "atlas_region": [48, 0, 48, 48],
+      "sha256": "cf3e82891d017567b3234e21d3c5113ccd9534852cb15763bf826009c69004df",
+      "prompt_summary": "The same windfold with tightened ropes, supplies, warm guide lamps, swept stone, and original ring-notched claim pennants."
+    },
+    {
+      "site_id": "site_sunscale_lantern_conservatory",
+      "state": "unclaimed",
+      "source": "sunscale_lantern_conservatory_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-38b3eb82-ba2b-43dc-9c7b-70d3941c415b.png",
+      "atlas_region": [96, 0, 48, 48],
+      "sha256": "afb8a9373f2a88c1208cef474126beedb9977f5f940dc80669d7cc5fcc45f6af",
+      "prompt_summary": "A brass-hooped sandstone conservatory with mineral-scale roof fins, amber lantern pods, and a dry feeding basin."
+    },
+    {
+      "site_id": "site_sunscale_lantern_conservatory",
+      "state": "controlled",
+      "source": "sunscale_lantern_conservatory_controlled_source.png",
+      "generation_edit": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-489cc4d4-647e-4ec1-8605-5c72f3cdcd0b.png",
+      "background_extraction": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-82301ce1-de13-4bfa-ad38-14ce1707ccac.png",
+      "atlas_region": [144, 0, 48, 48],
+      "sha256": "d3fcf7fb43e9400220090e24dd6411ca68e8dcd8886fc960ac924f7b69a9df8d",
+      "prompt_summary": "The same conservatory with mineral feed, covered stores, coiled harnesses, cool guide lamps, and an original ring-notched pennant."
+    },
+    {
+      "site_id": "site_rimebell_whitewake_eyrie",
+      "state": "unclaimed",
+      "source": "rimebell_whitewake_eyrie_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-75652900-3ab4-4334-a8de-c4183c09044e.png",
+      "atlas_region": [192, 0, 48, 48],
+      "sha256": "25bf095b46f476fc05b65db593caa26607ca3c3b107f2aec2895d22920eb1021",
+      "prompt_summary": "A four-pronged froststone eyrie with whitewake ice fins, a suspended silver bell, empty roost, and narrow ramp."
+    },
+    {
+      "site_id": "site_rimebell_whitewake_eyrie",
+      "state": "controlled",
+      "source": "rimebell_whitewake_eyrie_controlled_source.png",
+      "generation_edit": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-948d1127-a31d-483b-a8e0-84bede862caa.png",
+      "background_extraction": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b1815fed-43c7-4ac2-9b36-fe88e4c83f46.png",
+      "atlas_region": [240, 0, 48, 48],
+      "sha256": "2d3a25f9ea8b2028c5d3fc3a8c1cd19960975a2518939bcd6848a3a83d535cce",
+      "prompt_summary": "The same eyrie with raised bell, bundled sky harnesses, ration packs, cleared ramp, warm lantern, and ring-notched pennants."
+    },
+    {
+      "site_id": "site_deepforge_seventh_vault",
+      "state": "unclaimed",
+      "source": "deepforge_seventh_vault_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-905460fe-d33d-4ce6-bf03-4e32f7d49d39.png",
+      "atlas_region": [288, 0, 48, 48],
+      "sha256": "c03f1f46af7b21c06c71778ce7218700f58913e7581620fd6452e22f53e9b507",
+      "prompt_summary": "A squat blackstone vault mouth sealed by seven overlapping plates, pressure seams, buttresses, and an empty forecourt trough."
+    },
+    {
+      "site_id": "site_deepforge_seventh_vault",
+      "state": "controlled",
+      "source": "deepforge_seventh_vault_controlled_source.png",
+      "generation_edit": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6aab9307-ca56-4307-a793-ab732f99b176.png",
+      "background_extraction": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7eded17d-8d3e-4f1d-a17b-7bf4938d9887.png",
+      "atlas_region": [336, 0, 48, 48],
+      "sha256": "94dde6a296aadd029ca5499d81b556c1ed2938a463b11855da89ee6d6cd01b13",
+      "prompt_summary": "The same vault opened to a safe dark threshold with stable seams, armored harness rolls, stores, cool lamps, and ring-notched pennants."
+    }
+  ],
+  "runtime_sha256": "5f937e368aa962e513d2fdd72475a6c36fbdb835d8c1c9026558b246bf3a6212"
+}

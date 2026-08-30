@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-eight-foundation-map-object-identities-10184` is completed as one coherent pickup, mine, dwelling, scouting, and service overworld-art batch; the broad content goal continues beyond this slice.
-- Current package boundary: matching-size Linux and Windows release exports measure 243127720 bytes, 6872280 bytes below the unchanged 250000000-byte ceiling; all eight new runtime identities are present while generated masters and superseded overworld textures remain excluded symmetrically.
+- Current implementation slice: `content-four-elder-wild-recruitment-sanctuaries-10184` is completed as one coherent four-dwelling content/art batch; the broad content goal continues beyond this slice.
+- Current package boundary: matching-size Linux and Windows release exports measure 248502580 bytes, 1497420 bytes below the unchanged 250000000-byte ceiling; the compact elder-wild sanctuary atlas is present while generated masters and superseded overworld textures remain excluded symmetrically.
 
 ## Eight Foundation Map Object Identities
 
@@ -15629,6 +15629,39 @@ Completion result:
 Non-goals:
 - no new faction, hero, unit definition, town, building, spell, artifact, campaign, combat formula, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes unit, encounter, landmark, name, text, heraldry, or protected visual expression.
+
+## Four Elder-Wild Recruitment Sanctuaries
+
+id: `content-four-elder-wild-recruitment-sanctuaries-10184`
+
+Status: completed.
+
+Completion result:
+- Galehorn Windfold, Sunscale Lantern Conservatory, Rimebell Whitewake Eyrie, and Deepforge Seventh Vault are live as persistent guarded neutral dwellings on Ninefold Confluence, converting four existing tier-five-to-seven elder-wild encounters from fight-only content into claimable strategic recruitment sites;
+- the existing exact guards now block their linked sanctuaries without changing combat seeds, objectives, rewards, or victory flags, while each claimed site provides distinct initial recruits, control income, response costs, and weekly elite/support musters through save-version-9 authority;
+- eight original generated transparent landmark states provide four distinct unclaimed silhouettes and four visibly supplied controlled states in one inspected 384x48 runtime atlas with exact prompt, hash, alpha-extraction, and accessibility provenance;
+- one consolidated four-case smoke passed guard blocking, battle construction, claims, rewards, income, response actions, weekly recruitment, exact state art, all eight elder-unit ability consequences, repeat-claim safety, four visual captures, and exact save-version-9 round trips; repository validation passed;
+- sequential Linux and Windows release exports and packaged startups passed with matching 248502580-byte PCKs, all 26 resource-site atlases present, source art excluded, native libraries loaded, and 1497420 bytes below the unchanged ceiling.
+
+Current finding:
+- the neutral catalog has six tier-five-or-higher creatures with complete live combat and art, but only Cinderwake Aurochs and Tideglass Skyrays can be claimed and recruited through persistent elite dwellings;
+- Galehorn Striders, Sunscale Lanternmoths, Rimebell Skyrakers, and Deepforge Vaultwyrms already anchor distinct high-tier encounters on Ninefold Confluence, yet remain fight-only content after victory;
+- the existing guarded-dwelling, weekly-muster, persistent-control, exact-state-art, and save-version-9 contracts can make all four strategically useful without a new runtime subsystem or combat rule.
+
+Implementation boundary:
+- add Galehorn Windfold, Sunscale Lantern Conservatory, Rimebell Whitewake Eyrie, and Deepforge Seventh Vault as original neutral dwelling, resource-site, and map-object families with distinct support rosters, claim costs/rewards, control income, weekly recruits, response profiles, and AI value;
+- place each sanctuary beside its existing exact elder-wild guard on Ninefold Confluence, connect the guard front to the site, and preserve the current authored combat seed, encounter objective, reward, and victory flag;
+- generate four original transparent landmark designs in exact unclaimed and controlled states, pack all eight states into one compact immutable runtime atlas, retain prompt/hash/accessibility provenance outside packages, and register exact data-driven map ownership;
+- preserve all unit stats and abilities, existing scenario victory requirements, deterministic battle authority, save version 9, source-art exclusion, Windows/Linux parity, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all four existing elder-wild guards continue to construct valid high-tier battles and block their linked sanctuary until victory, after which the exact site can be claimed and grants its authored initial neutral roster once;
+- every sanctuary persists controlled ownership, income, weekly muster state, exact unclaimed/controlled art, and complete authority through a save-version-9 round trip;
+- one consolidated four-case gameplay/art/save smoke runs only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, unit definition, town, building, spell, artifact, encounter battle, campaign, combat formula, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes creature, dwelling, landmark, name, text, heraldry, or protected visual expression.
 
 ## Progress Reconciliation
 
