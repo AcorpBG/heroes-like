@@ -50682,7 +50682,7 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
         expected_encounter_count = 8 if scenario_id == "debtrune-default-convergence" else 7
         ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == 17 and len(scenario.get("artifact_nodes", [])) == 6 and len(scenario.get("encounters", [])) == expected_encounter_count and len(scenario.get("script_hooks", [])) == 8 and len(scenario.get("objectives", {}).get("victory", [])) == 7, errors, f"{scenario_id} lost its guarded-relic grand-convergence contract")
         availability = scenario.get("selection", {}).get("availability", {})
-        ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
+        ensure(availability == {"campaign": True, "skirmish": True}, errors, f"{scenario_id} must remain available in both Sixfold Testament and skirmish play")
         ensure(contract["landmark_site"] in {row.get("site_id") for row in scenario.get("resource_nodes", [])} and contract["primary_site"] in {row.get("site_id") for row in scenario.get("resource_nodes", [])}, errors, f"{scenario_id} lost its faction or primary landmark site")
         ensure([(row.get("unit_id"), row.get("count")) for row in group.get("stacks", [])] == contract["player_stacks"] and group.get("faction_id") == contract["faction"], errors, f"{scenario_id} five-stack player company changed")
         spell_ids = set(hero.get("starting_spell_ids", []))
@@ -52420,10 +52420,11 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         "campaign_briarwheel_covenant": ("campaign_emblem_briarwheel_covenant", "briarwheel_covenant", "115b2fe04e5d2b15ddd1944cce52330dfa4803aac14bd9746a79c14597984d8d", "6bec2de794e33220add9a8522a7d5c9e1723c493b049a7a305514b044bdf036d"),
         "campaign_ashen_ledger": ("campaign_emblem_ashen_ledger", "ashen_ledger", "6e749c4aae78e76d4bfd40cf5c666178eab10e30631b5bf50c948570e930ec36", "45f34db21f28ba9903300a31a7c98b8d5dcf68b703c1b9c9db8f78e446a4bac0"),
         "campaign_last_bell_sounding": ("campaign_emblem_last_bell_sounding", "last_bell_sounding", "e4bc895f0d97dda7fe8a909d8d68c8e110785e8a2b5e2ce8ac6b7b2448c3585c", "79da9129df7d167952216388627334afca599f21cbb1f6e7d2fbdc89acfd10d2"),
+        "campaign_sixfold_testament": ("campaign_emblem_sixfold_testament", "sixfold_testament", "77d25dbaad3584214313867ab04fe6cd94d831a9ff9bbadf799c28da75188f94", "fc6dafad1784c2020bbf0182897f92faea2b91038f939812e9f83c5a6bd0091e"),
     }
     campaigns_value = load_json(campaign_path).get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
-    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the nine live campaign arcs")
+    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the ten live campaign arcs")
     source_payloads: list[bytes] = []
     runtime_payloads: list[bytes] = []
     for campaign_id, (emblem_id, stem, source_sha, runtime_sha) in expected.items():
@@ -52452,8 +52453,8 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(hashlib.sha256(payload).hexdigest() == runtime_sha, errors, f"Campaign {campaign_id} runtime-emblem bytes changed")
             ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} runtime emblem must retain real alpha")
             runtime_payloads.append(payload)
-    ensure(len(source_payloads) == 9 and len(set(source_payloads)) == 9, errors, "All nine campaign emblem sources must remain byte-distinct")
-    ensure(len(runtime_payloads) == 9 and len(set(runtime_payloads)) == 9, errors, "All nine campaign runtime emblems must remain byte-distinct")
+    ensure(len(source_payloads) == 10 and len(set(source_payloads)) == 10, errors, "All ten campaign emblem sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 10 and len(set(runtime_payloads)) == 10, errors, "All ten campaign runtime emblems must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = campaign_rules_path.read_text(encoding="utf-8")
@@ -52480,7 +52481,7 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Campaign emblem focused report is missing live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all seven campaign emblems")
+        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all ten campaign emblems")
         ensure('bool(terrain_payload["campaign_emblem_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when campaign emblems are absent")
         ensure('"campaign_emblem_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report campaign emblem package coverage")
         for _campaign_id, (_emblem_id, stem, _source_sha, _runtime_sha) in expected.items():
@@ -52530,6 +52531,24 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
             "rootway-graftmarch": ("rootway_graftmarch", "2f0afe8518651397be590c49bbb46b9f05c89e04dcd089a323396a6c97d8a5ce", "1cac1bc35c241a0c5f4f0b702a1a0e82d96a0185b49ea24cbb5d83d7d45fbc7c"),
             "worldroot-crown-covenant": ("worldroot_crown_covenant", "efbbab6121c6d1b0599eb07607489f0ffd0a36f0936d7b8081af26904da305bf", "667c0aaaa5542f84fd558def0cd31e1fc0ca4e297996e3f231077a9f4b6fa265"),
         },
+        "campaign_ashen_ledger": {
+            "cindercoil-reclamation": ("cindercoil_reclamation", "7d272fcc2c464c8a2dac4775f2f474e8deea431eb4ac1fb80289ff6887afa76a", "5848418ea3805e925623d26999eab1a7b00a23a3789e8010bdb23f740135c269"),
+            "ashen-clausemarch": ("clausemarch", "b17e48f15a27c531cca71e349d95110735ac4e41426f636d8894adac49a40aed", "e110bebf4593506b84a00d02f08e598afc2574e79785e6c9ee5a18042ca03c4d"),
+            "furnace-reckoning": ("furnace_reckoning", "25fdc9c88951f158df402e615e672865e0c9ff7654a91dc90195a64cd756c17e", "bd3181e618363dde8150e5a1a0432ae2862b8c3b44211f6ee78b6a748bb7b628"),
+        },
+        "campaign_last_bell_sounding": {
+            "gloamwake-recall": ("gloamwake_recall", "ebb1d5546a5cdd23c9e9e7d8a80de87450ca5de176cd1efa4f815b582a0023b5", "854e653fac5b0d73691e7d4407da6b899e9b9450d17a353df379f9ae83213993"),
+            "false-channel-pursuit": ("false_channel_pursuit", "d40302a707c412936a743b288d3e558f5ea7bff428bd7124cf395dd522e00564", "cc49862ad31ea0b16a6855f7c304daa67d5648220393d6adae510d3d262472e2"),
+            "three-harbors-sounding": ("three_harbors_sounding", "d1d0a008fa54ec4e7039efea80dbad358982bba22fc124e7758c439a6658c7c0", "9dd977fbe6252eae81b0e0d58e022fa977af2034bb001a176e204fbb2a4d65b0"),
+        },
+        "campaign_sixfold_testament": {
+            "rainledger-cinder-convergence": ("lantern_assize", "68edcd1044ba26e00aa58ca27d6e0a18e5003398f9bc49fc8733fe64c6573c01", "4a23d727d7d06c02d3dd6ff33f7654a0bd8f81aa2bc3fa33b9bbde8c7a7a924b"),
+            "fenwake-bogbell-convergence": ("miremoon_cadence", "0862c55fac2f3587952c923ad29e31d4ade8331c1fc8a554cee2d1b91b26aec6", "ae1a8cdb5f687d839a19a15a781d7286b5c1855dbb884ee76119a06552147646"),
+            "halometer-icehook-convergence": ("noonglass_meridian", "2fedd63c6ff359024e2b9ec510db3fef66be5c285687281ea26031db648641b6", "47df4e2e1665329cdfd932526433de665ab9ebef527f0a544ccaa0406ab3f765"),
+            "graftsibyl-lantern-convergence": ("heartwood_root", "71ed7ca27ced2c580b3a059fb1f94e93dd28f16d33eb446b67852ff5779b7e29", "e8a72a9a8cf218f95d88bc5e67b588dedb243d2f83585a7ebe1b67a85c97a009"),
+            "debtrune-default-convergence": ("seventh_pressure", "8ab5feeb6f6c51a527f67c03166d7c706e5c6d3c24db2b67be4ee3d6ad1e903d", "8b77d0981e1077b137ae42292029263ea27db891089b61de7d5736f82571e1b6"),
+            "nightchart-meridian-convergence": ("last_false_meridian", "75cbd5fd31e975a72a30976648866c12e251161247854f2f7dfbddc8246a670e", "d3769bb50a541aed6b5ccb7625857a8c429d8bbc0d1d00baea159fec9ab92247"),
+        },
     }
     campaigns_value = load_json(CONTENT_DIR / "campaigns.json").get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
@@ -52575,8 +52594,8 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
                 payload = runtime_path.read_bytes()
                 ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id}/{scenario_id} seal runtime bytes or alpha changed")
                 runtime_payloads.append(payload)
-    ensure(chapter_count == 27 and sealed_count == 27 and opening_count == 7 and later_count == 20, errors, "Campaign chapter-seal scope must remain exact for all 27 chapters")
-    ensure(len(source_payloads) == 27 and len(set(source_payloads)) == 27 and len(runtime_payloads) == 27 and len(set(runtime_payloads)) == 27, errors, "All campaign chapter seals must remain byte-distinct")
+    ensure(chapter_count == 39 and sealed_count == 39 and opening_count == 10 and later_count == 29, errors, "Campaign chapter-seal scope must remain exact for all 39 chapters")
+    ensure(len(source_payloads) == 39 and len(set(source_payloads)) == 39 and len(runtime_payloads) == 39 and len(set(runtime_payloads)) == 39, errors, "All campaign chapter seals must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = (ROOT / "scripts/core/CampaignRules.gd").read_text(encoding="utf-8")
@@ -52588,13 +52607,13 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
         ensure(token in rules_text, errors, f"Campaign rules are missing chapter-seal authority: {token}")
     for token in ("_campaign_chapter_seal_texture_cache", "_chapter_list.set_item_icon(index, seal_texture)", "func _load_campaign_chapter_seal_texture", '"seal_path": _chapter_list.get_item_icon(index).resource_path', '"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", ""))'):
         ensure(token in menu_text, errors, f"Campaign menu is missing live chapter-seal presentation: {token}")
-    ensure("_campaign_chapter_seal_texture_cache.size() >= 27" in menu_text, errors, "Campaign chapter-seal cache must cover all 27 authored identities")
+    ensure("_campaign_chapter_seal_texture_cache.size() >= 39" in menu_text, errors, "Campaign chapter-seal cache must cover all 39 authored identities")
     chapter_scene_start = scene_text.find('[node name="ChapterList" type="ItemList"')
     chapter_scene_end = scene_text.find("\n[node ", chapter_scene_start + 1)
     ensure("fixed_icon_size = Vector2i(24, 24)" in scene_text[chapter_scene_start:chapter_scene_end], errors, "Campaign chapter list must retain compact 24x24 seals")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 27 chapter seals")
+        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 39 chapter seals")
         ensure('bool(terrain_payload["campaign_chapter_seal_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when chapter seals are absent")
         ensure('"campaign_chapter_seal_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged chapter-seal coverage")
         for expected_scenarios in expected.values():

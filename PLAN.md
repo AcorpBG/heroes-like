@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-eleven-roads-objectives-10184`, which activated the remaining five signs, three route locks, and three objective-event markers from Batch 003 as one coherent roads-and-objectives family with one consolidated smoke.
-- Current package boundary: both release exports measure 249457112 bytes, 542888 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-sixfold-testament-campaign-10184`, which joins six substantial guarded-relic scenarios into one cross-faction campaign with exact evidence-gated progression and seven original campaign-art identities.
+- Current package boundary: both release exports measure 247986800 bytes, 2013200 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
 
 ## Eleven Roads And Objectives
 
@@ -14779,6 +14779,40 @@ Validation evidence:
 Non-goals:
 - no new faction, unit, hero, town, spell, artifact, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes campaign, map, faction story, emblem, seal, name, text, landmark, or protected visual expression.
+
+## The Sixfold Testament Campaign
+
+id: `content-sixfold-testament-campaign-10184`
+
+Status: completed.
+
+Completion result:
+- The Sixfold Testament is live as a six-chapter campaign across Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn, increasing authored campaign coverage from 33 to 39 scenarios while retaining skirmish availability;
+- each chapter unlock requires the exact prior victory and live guarded-site claim flag, imports only capped common stores and testimony, and leaves hero growth, spells, and legendary relics with their owning commander;
+- one original emblem and six original chapter seals load through the campaign browser as seven byte-distinct alpha-safe identities with accessible descriptions and retained generated-source provenance;
+- the single consolidated campaign smoke passed all six 14x9 maps, 43 production battle payloads, six guard/claim/relic paths, exact cross-faction progression, save version 9 round-trips, six inspected map captures, and the campaign-art strip;
+- repository validation and matching Linux/Windows packaged boots pass with all 10 emblems and 39 seals included, generated source art excluded, and identical 247986800-byte PCKs below the unchanged ceiling.
+
+Current finding:
+- all 109 units, 99 encounters, 193 resource sites, 20 towns, 112 spells, and ordinary artifact identities now have live ownership or explicit system-only roles, so adding disconnected catalog records is not the highest-impact content move;
+- only 33 of 87 authored scenarios belong to campaign flow, while six substantial 14x9 faction scenarios already form a complete guarded-relic sequence around one legendary artifact and one single-use hero per faction;
+- integrating those six live roads as one original campaign expands meaningful campaign coverage, gives six underused heroes a connected role, and turns existing relic encounters into a replayable progression arc without duplicating rewards or inventing unused runtime definitions.
+
+Implementation boundary:
+- add the six-chapter cross-faction `The Sixfold Testament` campaign, progressing through Rainledger Cinder Census, Fenwake Bogbell Cadence, Halometer Icehook Meridian, Graft-Sibyl Lantern Root, Debt-Rune Default March, and Nightchart False Meridian;
+- author exact scenario-status and relic-road flag unlocks, faction-changing chapter summaries, briefings, intelligence, stakes, aftermath, journals, and bounded resource-only carryover while keeping hero progression, spells, and artifacts attached to their owning commanders;
+- create one original campaign emblem and six original chapter seals whose silhouettes express each faction relic road, retain non-color descriptions and source/runtime hashes, exclude generated source art from packages, and wire every runtime image into the live campaign browser;
+- preserve the six existing scenario maps, encounters, guarded rewards, save version 9, deterministic content ids, accessibility, performance, and Windows/Linux packaging below 250000000 bytes.
+
+Completion criteria:
+- all six existing scenarios launch from the new campaign, preserve their exact live faction/hero/army/relic-road contracts, and unlock sequentially only after the authored victory plus guarded-road evidence;
+- cross-faction progression imports bounded resources and prior flags without moving hero growth, spells, or artifacts onto the next faction commander, while all six original relic rewards remain obtainable through their existing live guarded sites;
+- one emblem and six seals load as seven byte-distinct alpha-safe original assets with accessible descriptions and exact integrity/provenance records;
+- one consolidated six-chapter gameplay/progression/relic/visual/save smoke passes after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new scenario geometry, unit, hero, town, spell, artifact, encounter, resource site, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, relic, faction story, emblem, seal, name, text, landmark, or protected visual expression.
 
 ## Progress Reconciliation
 
