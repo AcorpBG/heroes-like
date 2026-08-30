@@ -7591,6 +7591,48 @@
       "assigned_encounter_id": "encounter_gloamkeel_sounding_barricade", "assigned_faction_id": "faction_veilmourn", "presentation_role": "planted_keel_sounding_barricade",
       "accessible_description": "A broad salt-dark keel shield stands between broken mooring posts beneath a pale bell, ghost-rope chain, and cold wake lantern."
     },
+    "encounter_rival_commander_rotlamp_spoor_court": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b", "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/rotlamp_spoor_court_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_rotlamp_spoor_court", "assigned_faction_id": "faction_mireclaw", "assigned_commander_hero_id": "hero_mireclaw_edda_rotlamp", "presentation_role": "three_lantern_spoor_court_standard",
+      "accessible_description": "A crooked reed-and-iron standard hangs three differently shaped rot-glass lanterns above a shallow ember-spore brazier."
+    },
+    "encounter_rival_commander_daynote_refraction_bench": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b", "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/daynote_refraction_bench_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_daynote_refraction_bench", "assigned_faction_id": "faction_sunvault", "assigned_commander_hero_id": "hero_sunvault_essa_daynote", "presentation_role": "three_tine_refraction_lyre_standard",
+      "accessible_description": "A narrow white-gold prism lyre rises through three tall tuning tines above a faceted blue crystal foot."
+    },
+    "encounter_rival_commander_thorncart_pilgrim_cordon": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b", "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/thorncart_pilgrim_cordon_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_thorncart_pilgrim_cordon", "assigned_faction_id": "faction_thornwake", "assigned_commander_hero_id": "hero_thornwake_halen_thorncart", "presentation_role": "rooted_thorncart_wheel_standard",
+      "accessible_description": "A living cartwheel is rooted upright beneath a hooked pilgrim lantern and two long, uneven woven branch pennants."
+    },
+    "encounter_rival_commander_pitmarshal_red_chain_assize": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b", "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/pitmarshal_red_chain_assize_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_pitmarshal_red_chain_assize", "assigned_faction_id": "faction_brasshollow", "assigned_commander_hero_id": "hero_brasshollow_selka_pitmarshal", "presentation_role": "red_gauge_chain_assize_standard",
+      "accessible_description": "A broad riveted iron post centers one oversized red gauge above three hanging chain lengths and a stamped anvil foot."
+    },
+    "encounter_rival_commander_mistcorsair_foghook_boarding": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b", "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/mistcorsair_foghook_boarding_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_mistcorsair_foghook_boarding", "assigned_faction_id": "faction_veilmourn", "assigned_commander_hero_id": "hero_veilmourn_cela_mistcorsair", "presentation_role": "hooked_fog_mast_boarding_standard",
+      "accessible_description": "A sharply hooked dark mast carries a split black sail, pale bell, descending tideglass beads, and anchor-like boarding hook."
+    },
+    "encounter_rival_commander_tollbrand_sluice_levy": {
+      "path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "runtime_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b", "source_generated": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/tollbrand_sluice_levy_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
+      "source_model": "built_in_image_gen_original_grand_convergence_rival_standard_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_tollbrand_sluice_levy", "assigned_faction_id": "faction_embercourt", "assigned_commander_hero_id": "hero_embercourt_helva_tollbrand", "presentation_role": "twin_lock_sluice_levy_standard",
+      "accessible_description": "A copper sluice frame holds two lantern locks, a blank pale ceramic toll tablet, and a narrow forked red pennant."
+    },
     "mapobj_ore_crates": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ore_crates.png",
       "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ore_crates-trimmed.png",
@@ -8718,7 +8760,13 @@
     "encounter_noonshard_prism_aviary_watch": "encounter_sovereign_wild_noonshard_prism_aviary_watch",
     "encounter_rootvault_heartwood_watch": "encounter_sovereign_wild_rootvault_heartwood_hollow_watch",
     "encounter_quenchbell_pressure_den_watch": "encounter_sovereign_wild_quenchbell_pressure_den_watch",
-    "encounter_saltwake_belldeep_watch": "encounter_sovereign_wild_saltwake_belldeep_watch"
+    "encounter_saltwake_belldeep_watch": "encounter_sovereign_wild_saltwake_belldeep_watch",
+    "encounter_rotlamp_spoor_court": "encounter_rival_commander_rotlamp_spoor_court",
+    "encounter_daynote_refraction_bench": "encounter_rival_commander_daynote_refraction_bench",
+    "encounter_thorncart_pilgrim_cordon": "encounter_rival_commander_thorncart_pilgrim_cordon",
+    "encounter_pitmarshal_red_chain_assize": "encounter_rival_commander_pitmarshal_red_chain_assize",
+    "encounter_mistcorsair_foghook_boarding": "encounter_rival_commander_mistcorsair_foghook_boarding",
+    "encounter_tollbrand_sluice_levy": "encounter_rival_commander_tollbrand_sluice_levy"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

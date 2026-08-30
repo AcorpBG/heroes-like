@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_high_three_quarter_grand_convergence_rival_standard",
+  "prompt_set_summary": "Six original transparent rival-command standards for fixed roster heroes on the grand-convergence maps. Each source was requested separately as one centered high-three-quarter battlefield landmark with a strong 48px non-color silhouette, faction-specific materials, no characters, no text, no logos, no scene, and no borrowed franchise design.",
+  "runtime_atlas_path": "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b",
+  "runtime_derivation": "Alpha-trim each generated source, Lanczos-fit inside 42x42, apply a bounded micro-sharpen, center on a transparent 48x48 frame, and append the six frames horizontally in manifest order.",
+  "items": [
+    {
+      "encounter_id": "encounter_rotlamp_spoor_court",
+      "asset_id": "encounter_rival_commander_rotlamp_spoor_court",
+      "hero_id": "hero_mireclaw_edda_rotlamp",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/rotlamp_spoor_court_source.png",
+      "source_sha256": "49072f908575f6144a5e8467e0b6b4e1472bcbe0f67ea5786f88d0c682d9ca7f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-91bd47c5-a2e5-4449-9984-dcfc228c1435.png",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "Crooked blackened reed-and-iron standard carrying three rot-glass lantern bulbs above an ember-spore brazier."
+    },
+    {
+      "encounter_id": "encounter_daynote_refraction_bench",
+      "asset_id": "encounter_rival_commander_daynote_refraction_bench",
+      "hero_id": "hero_sunvault_essa_daynote",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/daynote_refraction_bench_source.png",
+      "source_sha256": "30ab4310f199e73f1aed7f503882ea04c0d7cb72be457cf35b1d41b0ab29b1e5",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ed495cbb-73bf-4aea-a664-81a715f2d8a2.png",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "White-gold prism lyre standard with three tuning tines, layered crystal facets, and a small resonant sun disc."
+    },
+    {
+      "encounter_id": "encounter_thorncart_pilgrim_cordon",
+      "asset_id": "encounter_rival_commander_thorncart_pilgrim_cordon",
+      "hero_id": "hero_thornwake_halen_thorncart",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/thorncart_pilgrim_cordon_source.png",
+      "source_sha256": "7011cbff977f3eb54946c852facdeb2d4fee77e76043734e343f6646343bf0cb",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-cbfacd71-de96-43c8-9d2d-a0e30cc2962e.png",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "Living thorncart wheel raised on braided roots with a hooked pilgrim lantern and two uneven woven branch pennants."
+    },
+    {
+      "encounter_id": "encounter_pitmarshal_red_chain_assize",
+      "asset_id": "encounter_rival_commander_pitmarshal_red_chain_assize",
+      "hero_id": "hero_brasshollow_selka_pitmarshal",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/pitmarshal_red_chain_assize_source.png",
+      "source_sha256": "d428c13563d034f8c055441fb132a1c2a2bac8b1d8ba8f11aa03682e713c2003",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7fceaf2b-8625-4f27-a047-c48b36f78f3c.png",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Squat iron pressure standard built around one oversized red gauge, short linked chains, an anvil foot, and horned cap."
+    },
+    {
+      "encounter_id": "encounter_mistcorsair_foghook_boarding",
+      "asset_id": "encounter_rival_commander_mistcorsair_foghook_boarding",
+      "hero_id": "hero_veilmourn_cela_mistcorsair",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/mistcorsair_foghook_boarding_source.png",
+      "source_sha256": "c399013f6311171848b06f08c0ed7c6eef23c2a8709ff6dce3012030dd12dadd",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7119d5d6-a14f-43ef-8124-8a4bb8e588f4.png",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "Sharply hooked mast with a split black sail, pale sounding bell, tideglass beads, and anchor-like boarding hook."
+    },
+    {
+      "encounter_id": "encounter_tollbrand_sluice_levy",
+      "asset_id": "encounter_rival_commander_tollbrand_sluice_levy",
+      "hero_id": "hero_embercourt_helva_tollbrand",
+      "source_path": "res://art/overworld/source/generated/encounters/grand_convergence_rival_commanders/tollbrand_sluice_levy_source.png",
+      "source_sha256": "cd687ed685d79d00a137ab031628900881e9a900c0a41844d1fdec22a8dc9dec",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-224ce939-3f68-41ca-83c5-8e5ab2b4c9ed.png",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "Copper sluice-gate road standard with two lantern locks, a blank ceramic toll tablet, and narrow forked pennant."
+    }
+  ]
+}
