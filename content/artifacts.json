@@ -604,6 +604,47 @@
       }
     },
     {
+      "id": "artifact_source_horizon_citadel_commissions",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "town",
+      "reward_context": "horizon_citadel_relic_commission",
+      "eligible_object_families": ["faction_landmark", "repeatable_service"],
+      "eligible_site_families": ["faction_landmark", "repeatable_service"],
+      "required_object_tags": ["town_support"],
+      "required_reward_categories": ["town_support"],
+      "guard_tiers": ["unguarded", "standard", "heavy"],
+      "rarity_bands": ["rare"],
+      "artifact_ids": [
+        "artifact_rainwrit_beacon_seal",
+        "artifact_hollowreed_moonfang_drum",
+        "artifact_meridian_choir_prism",
+        "artifact_crownroot_oathseed_censer",
+        "artifact_blackbell_verdict_gauge",
+        "artifact_pale_sounding_memory_bell"
+      ],
+      "faction_constraints": [
+        "faction_embercourt", "faction_mireclaw", "faction_sunvault",
+        "faction_thornwake", "faction_brasshollow", "faction_veilmourn"
+      ],
+      "artifact_ids_by_faction": {
+        "faction_embercourt": ["artifact_rainwrit_beacon_seal"],
+        "faction_mireclaw": ["artifact_hollowreed_moonfang_drum"],
+        "faction_sunvault": ["artifact_meridian_choir_prism"],
+        "faction_thornwake": ["artifact_crownroot_oathseed_censer"],
+        "faction_brasshollow": ["artifact_blackbell_verdict_gauge"],
+        "faction_veilmourn": ["artifact_pale_sounding_memory_bell"]
+      },
+      "set_constraints": {"allowed_set_ids": [], "piece_limit_per_table": 0},
+      "runtime_policy": {
+        "metadata_only": false,
+        "live_drop_execution": true,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": true
+      }
+    },
+    {
       "id": "artifact_source_battle_salvage_heavy",
       "schema": "artifact_source_reward_v1",
       "source_tag": "battle_salvage",
@@ -3653,6 +3694,102 @@
           "memory_salt": 1
         }
       }
+    },
+    {
+      "id": "artifact_rainwrit_beacon_seal", "name": "Rainwrit Beacon Seal", "slot": "trinket", "artifact_class": "faction", "rarity": "rare", "family": "horizon_citadel_commissions",
+      "roles": ["defense", "movement", "economy"], "accord_affinity": "beacon", "faction_affinity": ["faction_embercourt"], "source_tags": ["town"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Steadies the command line under foul weather."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Keeps the charter road open through rain."},
+        {"bonus_type": "resource_income", "scope": "equipped", "resource_ids": ["embergrain"], "cadence": "daily", "public_summary": "Provides 1 Embergrain each day."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Rainwrit's sealed beacon holds a defensive road line and funds its grain levy.", "icon_id": "artifact_icon_rainwrit_beacon_seal", "icon_path": "res://art/artifacts/runtime/rainwrit_beacon_seal.png", "effect_tags": ["defense", "movement", "embergrain", "embercourt"], "comparison_priority": ["battle_defense", "overworld_movement", "daily_income", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["frontline_survival", "route_tempo", "rare_resource_income"], "preferred_hero_roles": ["defender", "governor"], "preferred_faction_ids": ["faction_embercourt"], "combo_tags": ["beacon", "rainwrit", "charter"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A rain-polished charter tablet bound to a hooded beacon and crossed sluice keys. The inner flame burns only for a road acknowledged by lawful relief bells.",
+      "bonuses": {"battle_defense": 1, "overworld_movement": 1, "daily_income": {"embergrain": 1}}
+    },
+    {
+      "id": "artifact_hollowreed_moonfang_drum", "name": "Hollowreed Moonfang Drum", "slot": "banner", "artifact_class": "faction", "rarity": "rare", "family": "horizon_citadel_commissions",
+      "roles": ["combat", "morale", "economy"], "accord_affinity": "mire", "faction_affinity": ["faction_mireclaw"], "source_tags": ["town"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Drives a stronger opening assault."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Calls the pack on the first beat."},
+        {"bonus_type": "resource_income", "scope": "equipped", "resource_ids": ["peatwax"], "cadence": "daily", "public_summary": "Provides 1 Peatwax each day."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Hollowreed's antler drum accelerates the first hunt and gathers patient Peatwax.", "icon_id": "artifact_icon_hollowreed_moonfang_drum", "icon_path": "res://art/artifacts/runtime/hollowreed_moonfang_drum.png", "effect_tags": ["attack", "initiative", "peatwax", "mireclaw"], "comparison_priority": ["battle_attack", "battle_initiative", "daily_income", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["assault_pressure", "initiative_tempo", "rare_resource_income"], "preferred_hero_roles": ["might", "raider"], "preferred_faction_ids": ["faction_mireclaw"], "combo_tags": ["mire", "moonfang", "drum"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A wet-hide drum stretched beneath a crescent antler and strung with peatwax beads. Its opening beat crosses hollow reeds before any horn can answer.",
+      "bonuses": {"battle_attack": 1, "battle_initiative": 1, "daily_income": {"peatwax": 1}}
+    },
+    {
+      "id": "artifact_meridian_choir_prism", "name": "Meridian Choir Prism", "slot": "trinket", "artifact_class": "faction", "rarity": "rare", "family": "horizon_citadel_commissions",
+      "roles": ["magic", "combat", "economy"], "accord_affinity": "lens", "faction_affinity": ["faction_sunvault"], "source_tags": ["town"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_spell_resistance_pct", "public_summary": "Refracts hostile spell pressure."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Calibrates the first command interval."},
+        {"bonus_type": "resource_income", "scope": "equipped", "resource_ids": ["aetherglass"], "cadence": "daily", "public_summary": "Provides 1 Aetherglass each day."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Choirhold's singing prism measures initiative and turns hostile magic from the line.", "icon_id": "artifact_icon_meridian_choir_prism", "icon_path": "res://art/artifacts/runtime/meridian_choir_prism.png", "effect_tags": ["resistance", "initiative", "aetherglass", "sunvault"], "comparison_priority": ["battle_spell_resistance_pct", "battle_initiative", "daily_income", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["spell_resistance", "initiative_tempo", "rare_resource_income"], "preferred_hero_roles": ["mage", "defender"], "preferred_faction_ids": ["faction_sunvault"], "combo_tags": ["lens", "meridian", "choir"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A cut prism suspends a miniature noon disk between three tuning forks. Each clean note rejects one false magical angle before it reaches the formation.",
+      "bonuses": {"battle_spell_resistance_pct": 8, "battle_initiative": 1, "daily_income": {"aetherglass": 1}}
+    },
+    {
+      "id": "artifact_crownroot_oathseed_censer", "name": "Crownroot Oathseed Censer", "slot": "armor", "artifact_class": "faction", "rarity": "rare", "family": "horizon_citadel_commissions",
+      "roles": ["defense", "movement", "economy"], "accord_affinity": "root", "faction_affinity": ["faction_thornwake"], "source_tags": ["town"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Roots the formation around a living oath."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Opens a sheltered root road."},
+        {"bonus_type": "resource_income", "scope": "equipped", "resource_ids": ["verdant_grafts"], "cadence": "daily", "public_summary": "Provides 1 Verdant Graft each day."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Crownroot's living censer shelters the line, opens root roads, and produces graft stock.", "icon_id": "artifact_icon_crownroot_oathseed_censer", "icon_path": "res://art/artifacts/runtime/crownroot_oathseed_censer.png", "effect_tags": ["defense", "movement", "verdant_grafts", "thornwake"], "comparison_priority": ["battle_defense", "overworld_movement", "daily_income", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["frontline_survival", "route_tempo", "rare_resource_income"], "preferred_hero_roles": ["defender", "scout"], "preferred_faction_ids": ["faction_thornwake"], "combo_tags": ["root", "oathseed", "censer"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A living heartwood vessel curls around an oathseed crown. Warm pollen escapes its sporeglass vents whenever the bearer chooses a sheltered road.",
+      "bonuses": {"battle_defense": 1, "overworld_movement": 1, "daily_income": {"verdant_grafts": 1}}
+    },
+    {
+      "id": "artifact_blackbell_verdict_gauge", "name": "Blackbell Verdict Gauge", "slot": "trinket", "artifact_class": "faction", "rarity": "rare", "family": "horizon_citadel_commissions",
+      "roles": ["combat", "defense", "economy"], "accord_affinity": "furnace", "faction_affinity": ["faction_brasshollow"], "source_tags": ["town"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Raises sanctioned battle pressure."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Keeps the line inside safe tolerances."},
+        {"bonus_type": "resource_income", "scope": "equipped", "resource_ids": ["brass_scrip"], "cadence": "daily", "public_summary": "Provides 1 Brass Scrip each day."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Blackbell's verdict gauge balances sanctioned attack, defense, and scrip pressure.", "icon_id": "artifact_icon_blackbell_verdict_gauge", "icon_path": "res://art/artifacts/runtime/blackbell_verdict_gauge.png", "effect_tags": ["attack", "defense", "brass_scrip", "brasshollow"], "comparison_priority": ["battle_attack", "battle_defense", "daily_income", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["battle_pressure", "frontline_survival", "rare_resource_income"], "preferred_hero_roles": ["might", "governor"], "preferred_faction_ids": ["faction_brasshollow"], "combo_tags": ["furnace", "blackbell", "verdict"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A soot-black bell hood feeds a furnace-glass chamber and redline dial. Its needle records exactly how much pressure a signed verdict can survive.",
+      "bonuses": {"battle_attack": 1, "battle_defense": 1, "daily_income": {"brass_scrip": 1}}
+    },
+    {
+      "id": "artifact_pale_sounding_memory_bell", "name": "Pale Sounding Memory Bell", "slot": "trinket", "artifact_class": "faction", "rarity": "rare", "family": "horizon_citadel_commissions",
+      "roles": ["scouting", "combat", "economy"], "accord_affinity": "veil", "faction_affinity": ["faction_veilmourn"], "source_tags": ["town"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Sounds the depth of unseen routes."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Marks the last safe command beat."},
+        {"bonus_type": "resource_income", "scope": "equipped", "resource_ids": ["memory_salt"], "cadence": "daily", "public_summary": "Provides 1 Memory Salt each day."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "Pale Harbor's tideglass bell reads hidden routes, command timing, and recovered memory salt.", "icon_id": "artifact_icon_pale_sounding_memory_bell", "icon_path": "res://art/artifacts/runtime/pale_sounding_memory_bell.png", "effect_tags": ["scouting", "initiative", "memory_salt", "veilmourn"], "comparison_priority": ["scouting_radius", "battle_initiative", "daily_income", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["fog_route_scouting", "initiative_tempo", "rare_resource_income"], "preferred_hero_roles": ["scout", "raider"], "preferred_faction_ids": ["faction_veilmourn"], "combo_tags": ["veil", "sounding", "memory"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A salt-frosted ship bell shelters a suspended tideglass drop. Sounding knots tighten as the trapped ghostlight remembers hazards beyond the fog.",
+      "bonuses": {"scouting_radius": 1, "battle_initiative": 1, "daily_income": {"memory_salt": 1}}
     }
   ]
 }

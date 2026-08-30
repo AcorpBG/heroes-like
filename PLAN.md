@@ -15235,6 +15235,37 @@ Non-goals:
 - no new faction, hero, town, unit, building, encounter, combat rule, balance, strategic-AI algorithm, save schema, Native RMG, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes campaign, map, character, faction device, seal, name, text, or protected visual expression.
 
+## Six Horizon Relic Commissions
+
+id: `content-six-horizon-relic-commissions-10184`
+
+Status: completed.
+
+Current finding:
+- the six horizon citadels are complete playable towns, but their new strategic identities currently stop at architecture, economy, spell study, recruitment emphasis, and garrison composition;
+- the live Town artifact-commission path is production-ready but serves only Embercourt and Brasshollow, leaving four factions without a commission and all six horizon towns without a distinct relic payoff;
+- one six-relic batch can deepen every faction's Town development and equipment choices through supported artifact bonuses, one-time costs, auto-equip, AI valuation, and save-version-9 provenance without adding another map or engine subsystem.
+
+Implementation boundary:
+- add one original faction relic for each horizon citadel, with a distinct transparent icon, accessible description, exact faction affinity, and supported live command/economy bonuses;
+- extend the existing Town landmark service system with a dedicated six-faction reward table and attach one live one-time commission contract to an existing faction-correct late build-tree landmark used by the corresponding horizon citadel;
+- keep commissions player-owned, build-gated, faction-filtered, resource-priced, duplicate-safe, auto-equipped when possible, and persistent through save version 9;
+- retain editable generated sources outside release packages, tracked runtime imports, Windows/Linux parity, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all six horizon towns expose only their exact faction commission after its building is complete, spend the authored cost once, grant and auto-equip the exact new relic, apply the exact bonuses, reject repeats without mutation, and preserve complete town/hero provenance through save/load;
+- one consolidated six-case Town/gameplay/art/save smoke passes after the full batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling;
+- the six runtime icons remain visually distinct, transparent, readable at 128x128, source-traceable, and present in both packages while generated masters remain excluded.
+
+Completion result:
+- shipped six original faction relics and a dedicated live Town reward table, with exact horizon-town allowlists on six late build-tree services and legacy Embercourt/Brasshollow services excluded from the overlapping new towns;
+- the single consolidated six-case smoke passed exact build gating, costs, generated-art hashes and alpha, grant/auto-equip, live bonuses, claim provenance, repeat safety, save-version-9 roundtrip, and cross-town isolation;
+- repository validation passed, and matching Linux/Windows release PCKs passed export/runtime checks at 249221372 bytes, leaving 778628 bytes below the unchanged ceiling with generated sources excluded.
+
+Non-goals:
+- no new artifact engine, faction, hero, town, unit, building definition, encounter, scenario, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes artifact, icon, name, text, faction device, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

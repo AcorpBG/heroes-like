@@ -12500,7 +12500,7 @@ def validate_content(errors: list[str]) -> None:
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
     ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact pickup, guarded-site, shrine, dwelling, town, and battle-salvage source tables must enable live drop execution")
-    ensure(int(artifact_source_report.get("live_table_count", 0)) == 7, errors, "Exactly seven artifact source/reward tables must execute live, including the faction guarded-relic table")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 8, errors, "Exactly eight artifact source/reward tables must execute live, including the guarded-relic and horizon-citadel commission tables")
     ensure(artifact_source_report.get("live_source_tags", []) == ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"], errors, "Only pickup, guarded-site, shrine, dwelling, town, and battle-salvage artifact rewards may execute live in this slice")
 
     pickup_table_id = "artifact_source_pickup_caches_common"
@@ -32313,7 +32313,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         import_path = Path(f"{asset_path}.import")
         import_text = import_path.read_text(encoding="utf-8") if import_path.is_file() else ""
         ensure(import_path.is_file(), errors, f"Town scenic backdrop must retain tracked import settings for {faction_id}")
-        ensure("compress/mode=1" in import_text and "compress/lossy_quality=0.66" in import_text, errors, f"Town scenic fallback backdrop must use bounded lossy runtime compression for {faction_id}")
+        ensure("compress/mode=1" in import_text and "compress/lossy_quality=0.58" in import_text, errors, f"Town scenic fallback backdrop must use bounded lossy runtime compression for {faction_id}")
 
     exact_town_backdrops = {
         "town_riverwatch": "art/towns/runtime/backdrops/complete_identities/town_riverwatch.png",
@@ -32352,7 +32352,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         town = town_by_id.get(town_id, {})
         asset_path = ROOT / relative_path
         source_family = "third_hearths_backdrops" if "/third_hearths/" in relative_path else "horizon_citadels" if "/horizon_citadels/" in relative_path else "complete_town_backdrops"
-        expected_quality = "0.82" if source_family == "third_hearths_backdrops" else "0.52" if source_family == "horizon_citadels" else "0.68"
+        expected_quality = "0.62" if source_family == "third_hearths_backdrops" else "0.52" if source_family == "horizon_citadels" else "0.58"
         source_path = ROOT / "art" / "towns" / "source" / "generated" / source_family / f"{town_id}_source.png"
         import_path = Path(f"{asset_path}.import")
         import_text = import_path.read_text(encoding="utf-8") if import_path.is_file() else ""
@@ -45904,6 +45904,12 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         "artifact_worldroot_covenant_heartwood": "res://art/artifacts/runtime/worldroot_covenant_heartwood.png",
         "artifact_seventh_clause_pressure_key": "res://art/artifacts/runtime/seventh_clause_pressure_key.png",
         "artifact_last_bell_tideglass": "res://art/artifacts/runtime/last_bell_tideglass.png",
+        "artifact_rainwrit_beacon_seal": "res://art/artifacts/runtime/rainwrit_beacon_seal.png",
+        "artifact_hollowreed_moonfang_drum": "res://art/artifacts/runtime/hollowreed_moonfang_drum.png",
+        "artifact_meridian_choir_prism": "res://art/artifacts/runtime/meridian_choir_prism.png",
+        "artifact_crownroot_oathseed_censer": "res://art/artifacts/runtime/crownroot_oathseed_censer.png",
+        "artifact_blackbell_verdict_gauge": "res://art/artifacts/runtime/blackbell_verdict_gauge.png",
+        "artifact_pale_sounding_memory_bell": "res://art/artifacts/runtime/pale_sounding_memory_bell.png",
     }
     artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
     ensure(set(artifacts) == set(expected_icons), errors, "Artifact icon adoption must cover every production artifact")
@@ -50878,7 +50884,7 @@ def validate_six_faction_guarded_relic_roads(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     table = tables.get(table_id, {})
     artifact_ids = {row["artifact"] for row in expected.values()}
-    ensure(len(artifacts) == 39 and set(table.get("artifact_ids", [])) == artifact_ids, errors, "Faction guarded-relic table must own exactly the six new artifacts inside the 39-artifact catalog")
+    ensure(len(artifacts) == 45 and set(table.get("artifact_ids", [])) == artifact_ids, errors, "Faction guarded-relic table must retain its six artifacts inside the 45-artifact catalog")
     ensure(table.get("guard_tiers") == ["heavy", "elite"] and table.get("rarity_bands") == ["epic"] and table.get("required_reward_categories") == ["artifact"], errors, "Faction guarded-relic table must remain scoped to heavy and elite artifact sites")
     ensure(table.get("artifact_ids_by_faction") == {row["faction"]: [row["artifact"]] for row in expected.values()}, errors, "Faction guarded-relic table must select exactly one deterministic relic per faction")
     policy = table.get("runtime_policy", {})
@@ -53402,8 +53408,8 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         if isinstance(node, dict)
     }
     reward_only_artifact_ids = set(artifacts) - pickup_artifact_ids
-    ensure(len(artifacts) == 39, errors, "Artifact icon adoption must cover all 39 production artifacts")
-    ensure(len(pickup_artifact_ids) == 33 and len(reward_only_artifact_ids) == 6, errors, "Artifact field scope must retain 33 placed pickups and six guarded-site reward-only relics")
+    ensure(len(artifacts) == 45, errors, "Artifact icon adoption must cover all 45 production artifacts")
+    ensure(len(pickup_artifact_ids) == 33 and len(reward_only_artifact_ids) == 12, errors, "Artifact field scope must retain 33 placed pickups and twelve guarded-site or town-service reward-only relics")
     icon_ids: list[str] = []
     icon_paths: list[str] = []
     field_asset_ids: list[str] = []
@@ -77479,6 +77485,54 @@ def validate_six_horizon_citadels(errors: list[str]) -> None:
         smoke_text = smoke_paths[0].read_text(encoding="utf-8")
         for token in ("SIX_HORIZON_CITADELS_SMOKE", "ScenarioFactory.create_session", "TownRules.build_active_town", "TownRules.recruit_active_town", "restored.from_dict(before_save)", "horizon_citadels_contact_sheet.png", '"single_consolidated_smoke": true'):
             ensure(token in smoke_text, errors, f"Horizon Citadels consolidated smoke is missing live proof: {token}")
+
+    artifacts_payload = load_json(CONTENT_DIR / "artifacts.json")
+    artifacts = items_index(artifacts_payload)
+    tables = {str(row.get("id", "")): row for row in artifacts_payload.get("source_reward_tables", []) if isinstance(row, dict)}
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    relic_manifest_path = ROOT / "art" / "artifacts" / "source" / "generated" / "horizon_relic_commissions" / "manifest.json"
+    relic_smoke_script = ROOT / "tests" / "six_horizon_relic_commissions_smoke.gd"
+    relic_smoke_scene = ROOT / "tests" / "six_horizon_relic_commissions_smoke.tscn"
+    relic_expected = {
+        "town_rainwrit_bastion": ("faction_embercourt", "building_embercourt_charter_flame", "artifact_rainwrit_beacon_seal", {"gold": 1800, "wood": 2, "embergrain": 2}, {"battle_defense": 1, "overworld_movement": 1, "daily_income": {"embergrain": 1}}),
+        "town_hollowreed_sanctuary": ("faction_mireclaw", "building_mireclaw_oathmire_court", "artifact_hollowreed_moonfang_drum", {"gold": 1800, "wood": 2, "peatwax": 2}, {"battle_attack": 1, "battle_initiative": 1, "daily_income": {"peatwax": 1}}),
+        "town_meridian_choirhold": ("faction_sunvault", "building_sunvault_zenith_court", "artifact_meridian_choir_prism", {"gold": 1800, "ore": 2, "aetherglass": 2}, {"battle_spell_resistance_pct": 8, "battle_initiative": 1, "daily_income": {"aetherglass": 1}}),
+        "town_crownroot_refuge": ("faction_thornwake", "building_thornwake_rootlaw_moot", "artifact_crownroot_oathseed_censer", {"gold": 1800, "wood": 2, "verdant_grafts": 2}, {"battle_defense": 1, "overworld_movement": 1, "daily_income": {"verdant_grafts": 1}}),
+        "town_blackbell_foundry": ("faction_brasshollow", "building_brasshollow_brassbound_directorate", "artifact_blackbell_verdict_gauge", {"gold": 1800, "ore": 2, "brass_scrip": 2}, {"battle_attack": 1, "battle_defense": 1, "daily_income": {"brass_scrip": 1}}),
+        "town_pale_sounding_harbor": ("faction_veilmourn", "building_veilmourn_drowned_admiralty", "artifact_pale_sounding_memory_bell", {"gold": 1800, "wood": 1, "ore": 1, "memory_salt": 2}, {"scouting_radius": 1, "battle_initiative": 1, "daily_income": {"memory_salt": 1}}),
+    }
+    ensure(relic_manifest_path.is_file() and relic_smoke_script.is_file() and relic_smoke_scene.is_file(), errors, "Horizon relic commission generated provenance or consolidated smoke owner is missing")
+    relic_manifest = load_json(relic_manifest_path) if relic_manifest_path.is_file() else {}
+    relic_rows = {str(row.get("artifact_id", "")): row for row in relic_manifest.get("items", []) if isinstance(row, dict)}
+    relic_ids = {contract[2] for contract in relic_expected.values()}
+    table = tables.get("artifact_source_horizon_citadel_commissions", {})
+    ensure(relic_manifest.get("generator_mode") == "built_in_image_gen" and relic_manifest.get("runtime_icon_size") == [128, 128] and set(relic_rows) == relic_ids, errors, "Horizon relic commission manifest must own six generated 128px relic icons")
+    ensure(set(table.get("artifact_ids", [])) == relic_ids and table.get("artifact_ids_by_faction") == {contract[0]: [contract[2]] for contract in relic_expected.values()} and table.get("source_tag") == "town", errors, "Horizon relic commission table must select one exact reward per faction")
+    for town_id, (faction_id, building_id, artifact_id, service_cost, bonuses) in relic_expected.items():
+        town = towns.get(town_id, {})
+        building = buildings.get(building_id, {})
+        contract = building.get("artifact_reward_contract", {}) if isinstance(building.get("artifact_reward_contract"), dict) else {}
+        artifact = artifacts.get(artifact_id, {})
+        row = relic_rows.get(artifact_id, {})
+        source_path = res_path_to_disk(str(row.get("source_path", "")))
+        runtime_path = res_path_to_disk(str(row.get("runtime_path", "")))
+        source_bytes = source_path.read_bytes() if source_path.is_file() else b""
+        runtime_bytes = runtime_path.read_bytes() if runtime_path.is_file() else b""
+        ensure(building_id in town.get("buildable_building_ids", []) and building.get("family") == "repeatable_service", errors, f"{town_id} must build its exact horizon relic commission service")
+        ensure(contract.get("artifact_reward_table_id") == "artifact_source_horizon_citadel_commissions" and contract.get("allowed_town_ids") == [town_id] and contract.get("service_cost") == service_cost and contract.get("one_time_reward") is True, errors, f"{building_id} horizon relic commission contract changed")
+        ensure(artifact.get("faction_affinity") == [faction_id] and artifact.get("source_tags") == ["town"] and artifact.get("bonuses") == bonuses and artifact.get("rarity") == "rare", errors, f"{artifact_id} faction ownership or live bonuses changed")
+        ensure(source_path.is_file() and png_size(source_path) == (1254, 1254) and len(source_bytes) >= 26 and source_bytes[25] == 6 and hashlib.sha256(source_bytes).hexdigest() == row.get("source_sha256"), errors, f"{artifact_id} transparent generated source changed")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (128, 128) and hashlib.sha256(runtime_bytes).hexdigest() == row.get("runtime_sha256") and Path(f"{runtime_path}.import").is_file(), errors, f"{artifact_id} runtime icon or Godot import changed")
+    if relic_smoke_script.is_file():
+        relic_smoke_text = relic_smoke_script.read_text(encoding="utf-8")
+        for token in ("SIX_HORIZON_RELIC_COMMISSIONS_SMOKE", "TownRules.manage_artifact_at_active_town", "ArtifactRules.aggregate_bonuses", "restored.from_dict(session.to_dict())", '"single_consolidated_smoke":true'):
+            ensure(token in relic_smoke_text, errors, f"Horizon relic commission smoke is missing live proof: {token}")
+    town_rules_text = (ROOT / "scripts" / "core" / "TownRules.gd").read_text(encoding="utf-8")
+    ensure('contract.get("allowed_town_ids", [])' in town_rules_text and 'contract.get("excluded_town_ids", [])' in town_rules_text, errors, "Town artifact services must enforce exact allowed and excluded Town scopes")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        for artifact_id in relic_ids:
+            ensure(artifact_id.removeprefix("artifact_") in packaging_text, errors, f"{packaging_path.name} must audit packaged {artifact_id} icon art")
 
 
 def validate_mireglass_counterpoint_campaign(errors: list[str]) -> None:

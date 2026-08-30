@@ -1959,6 +1959,9 @@
         ],
         "reward_tier": "standard",
         "one_time_reward": true,
+        "excluded_town_ids": [
+          "town_blackbell_foundry"
+        ],
         "service_cost": {
           "gold": 1400,
           "ore": 2
@@ -2537,6 +2540,13 @@
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_brasshollow",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_blackbell_verdict_gauge", "building_id": "building_brasshollow_brassbound_directorate", "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
+        "allowed_town_ids": ["town_blackbell_foundry"], "service_cost": {"gold": 1800, "ore": 2, "brass_scrip": 2}, "metadata_only": false
+      },
+      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
       "requires": [
         "building_brasshollow_titan_charter_hall",
         "building_brasshollow_redline_assembly_yard"
@@ -2741,6 +2751,13 @@
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_thornwake",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_crownroot_oathseed_censer", "building_id": "building_thornwake_rootlaw_moot", "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
+        "allowed_town_ids": ["town_crownroot_refuge"], "service_cost": {"gold": 1800, "wood": 2, "verdant_grafts": 2}, "metadata_only": false
+      },
+      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
       "requires": [
         "building_thornwake_bastion_seed_conclave",
         "building_thornwake_mycorrhizal_store"
@@ -2858,6 +2875,13 @@
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_veilmourn",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_pale_sounding_memory_bell", "building_id": "building_veilmourn_drowned_admiralty", "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
+        "allowed_town_ids": ["town_pale_sounding_harbor"], "service_cost": {"gold": 1800, "wood": 1, "ore": 1, "memory_salt": 2}, "metadata_only": false
+      },
+      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
       "requires": [
         "building_veilmourn_memory_anchor",
         "building_veilmourn_tideglass_chapel"
@@ -2888,6 +2912,9 @@
         ],
         "reward_tier": "standard",
         "one_time_reward": true,
+        "excluded_town_ids": [
+          "town_rainwrit_bastion"
+        ],
         "service_cost": {
           "gold": 1200,
           "wood": 1
@@ -2983,6 +3010,13 @@
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_embercourt",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_rainwrit_beacon_seal", "building_id": "building_embercourt_charter_flame", "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
+        "allowed_town_ids": ["town_rainwrit_bastion"], "service_cost": {"gold": 1800, "wood": 2, "embergrain": 2}, "metadata_only": false
+      },
+      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
       "requires": [
         "building_embercourt_charter_bastion",
         "building_embercourt_relief_quay"
@@ -3084,6 +3118,13 @@
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_mireclaw",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_hollowreed_moonfang_drum", "building_id": "building_mireclaw_oathmire_court", "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
+        "allowed_town_ids": ["town_hollowreed_sanctuary"], "service_cost": {"gold": 1800, "wood": 2, "peatwax": 2}, "metadata_only": false
+      },
+      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
       "requires": [
         "building_mireclaw_nightglass_dominion",
         "building_mireclaw_boneboom_palisade"
@@ -3184,6 +3225,13 @@
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_sunvault",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_meridian_choir_prism", "building_id": "building_sunvault_zenith_court", "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_horizon_citadel_commissions", "reward_categories": ["town_support", "artifact"], "reward_tier": "standard", "one_time_reward": true,
+        "allowed_town_ids": ["town_meridian_choirhold"], "service_cost": {"gold": 1800, "ore": 2, "aetherglass": 2}, "metadata_only": false
+      },
+      "runtime_boundary": {"status": "horizon_relic_commission_live", "artifact_reward_execution": true, "save_payload_required": false, "ai_valuation_behavior": true, "rare_resource_activation": true},
       "requires": [
         "building_sunvault_daybreak_matrix",
         "building_sunvault_halo_battery_yard"
