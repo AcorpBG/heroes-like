@@ -41,6 +41,7 @@ func _run() -> void:
 	_validate_death_state()
 	await _validate_spell_cast_state()
 	await _validate_spell_specific_cue_identity_fail_closed()
+	await _validate_spell_school_batch_vfx_identities()
 	await _validate_resonant_chorus_vfx_identity()
 	await _validate_reduced_flash_spell_state()
 	await _validate_status_cleanse_state()
@@ -88,9 +89,9 @@ func _validate_core_vfx_asset_manifest() -> void:
 	var summary: Dictionary = view.validation_vfx_asset_summary()
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
-	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 22)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 22)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 22)
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 36)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 36)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 36)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
 	var core_cue_paths := {
 		"vfx_placeholder_projectile_path": "res://art/battle/vfx/core_projectile_path.png",
@@ -129,6 +130,20 @@ func _validate_core_vfx_asset_manifest() -> void:
 		"res://art/battle/vfx/spell_prism_bastion.png",
 		"res://art/battle/vfx/spell_resonant_chorus.png",
 		"res://art/battle/vfx/spell_command_ward.png",
+		"res://art/battle/vfx/spell_bulwark_litany.png",
+		"res://art/battle/vfx/spell_quickmarch_hymn.png",
+		"res://art/battle/vfx/spell_bloodwake_drum.png",
+		"res://art/battle/vfx/spell_relay_drum.png",
+		"res://art/battle/vfx/spell_lens_aurora_chorus_10.png",
+		"res://art/battle/vfx/spell_lens_mirror_facet_20.png",
+		"res://art/battle/vfx/spell_root_bloom_bark_20.png",
+		"res://art/battle/vfx/spell_root_bark_bark_08.png",
+		"res://art/battle/vfx/spell_stone_veil.png",
+		"res://art/battle/vfx/spell_pressure_clause.png",
+		"res://art/battle/vfx/spell_obituary_mark.png",
+		"res://art/battle/vfx/spell_fogwake_step.png",
+		"res://art/battle/vfx/spell_old_measure_tally_tally_20.png",
+		"res://art/battle/vfx/spell_old_measure_count_boundary_30.png",
 		"res://art/battle/vfx/state_idle_shadow.png",
 		"res://art/battle/vfx/state_active_ring.png",
 		"res://art/battle/vfx/state_stack_fade.png",
@@ -208,6 +223,20 @@ func _validate_spell_vfx_asset_surface() -> void:
 		"vfx_spell_prism_bastion": "res://art/battle/vfx/spell_prism_bastion.png",
 		"vfx_spell_resonant_chorus": "res://art/battle/vfx/spell_resonant_chorus.png",
 		"vfx_spell_command_ward": "res://art/battle/vfx/spell_command_ward.png",
+		"vfx_spell_bulwark_litany": "res://art/battle/vfx/spell_bulwark_litany.png",
+		"vfx_spell_quickmarch_hymn": "res://art/battle/vfx/spell_quickmarch_hymn.png",
+		"vfx_spell_bloodwake_drum": "res://art/battle/vfx/spell_bloodwake_drum.png",
+		"vfx_spell_relay_drum": "res://art/battle/vfx/spell_relay_drum.png",
+		"vfx_spell_lens_aurora_chorus_10": "res://art/battle/vfx/spell_lens_aurora_chorus_10.png",
+		"vfx_spell_lens_mirror_facet_20": "res://art/battle/vfx/spell_lens_mirror_facet_20.png",
+		"vfx_spell_root_bloom_bark_20": "res://art/battle/vfx/spell_root_bloom_bark_20.png",
+		"vfx_spell_root_bark_bark_08": "res://art/battle/vfx/spell_root_bark_bark_08.png",
+		"vfx_spell_stone_veil": "res://art/battle/vfx/spell_stone_veil.png",
+		"vfx_spell_pressure_clause": "res://art/battle/vfx/spell_pressure_clause.png",
+		"vfx_spell_obituary_mark": "res://art/battle/vfx/spell_obituary_mark.png",
+		"vfx_spell_fogwake_step": "res://art/battle/vfx/spell_fogwake_step.png",
+		"vfx_spell_old_measure_tally_tally_20": "res://art/battle/vfx/spell_old_measure_tally_tally_20.png",
+		"vfx_spell_old_measure_count_boundary_30": "res://art/battle/vfx/spell_old_measure_count_boundary_30.png",
 	}
 	var cue_ids: Array = cue_paths.keys()
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
@@ -715,6 +744,20 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 		"spell_graft_mend": "vfx_spell_graft_mend",
 		"spell_prism_bastion": "vfx_spell_prism_bastion",
 		"spell_resonant_chorus": "vfx_spell_resonant_chorus",
+		"spell_bulwark_litany": "vfx_spell_bulwark_litany",
+		"spell_quickmarch_hymn": "vfx_spell_quickmarch_hymn",
+		"spell_bloodwake_drum": "vfx_spell_bloodwake_drum",
+		"spell_relay_drum": "vfx_spell_relay_drum",
+		"spell_lens_aurora_chorus_10": "vfx_spell_lens_aurora_chorus_10",
+		"spell_lens_mirror_facet_20": "vfx_spell_lens_mirror_facet_20",
+		"spell_root_bloom_bark_20": "vfx_spell_root_bloom_bark_20",
+		"spell_root_bark_bark_08": "vfx_spell_root_bark_bark_08",
+		"spell_stone_veil": "vfx_spell_stone_veil",
+		"spell_pressure_clause": "vfx_spell_pressure_clause",
+		"spell_obituary_mark": "vfx_spell_obituary_mark",
+		"spell_fogwake_step": "vfx_spell_fogwake_step",
+		"spell_old_measure_tally_tally_20": "vfx_spell_old_measure_tally_tally_20",
+		"spell_old_measure_count_boundary_30": "vfx_spell_old_measure_count_boundary_30",
 	}
 	var explicit_audio := {
 		"spell_cinder_burst": "audio_spell_cinder_burst",
@@ -726,9 +769,12 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 		"spell_resonant_chorus": "audio_spell_resonant_chorus",
 	}
 	var battle_spell_ids: Array[String] = []
-	var explicit_count := 0
-	var shared_effect_count := 0
-	var generic_only_count := 0
+	var explicit_vfx_count := 0
+	var shared_effect_vfx_count := 0
+	var generic_only_vfx_count := 0
+	var explicit_audio_count := 0
+	var shared_effect_audio_count := 0
+	var generic_only_audio_count := 0
 	var raw_spells: Dictionary = ContentService.load_json(ContentService.SPELLS_PATH)
 	var spell_rows: Array = raw_spells.get("items", []) if raw_spells.get("items", []) is Array else []
 	for spell_value in spell_rows:
@@ -751,56 +797,136 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 		var actual_vfx := String(view.call("_spell_specific_vfx_cue_id", spell_id, resolution_type))
 		var actual_audio := String(view.call("_spell_specific_audio_cue_id", spell_id, resolution_type))
 		if explicit_vfx.has(spell_id):
-			explicit_count += 1
+			explicit_vfx_count += 1
 			_expect_equal("explicit spell vfx identity %s" % spell_id, actual_vfx, String(explicit_vfx.get(spell_id, "")))
+		elif resolution_type == "effect":
+			shared_effect_vfx_count += 1
+			_expect_equal("shared effect vfx identity %s" % spell_id, actual_vfx, "vfx_spell_command_ward")
+		else:
+			generic_only_vfx_count += 1
+			_expect_equal("generic-only spell vfx identity %s" % spell_id, actual_vfx, "")
+		if explicit_audio.has(spell_id):
+			explicit_audio_count += 1
 			_expect_equal("explicit spell audio identity %s" % spell_id, actual_audio, String(explicit_audio.get(spell_id, "")))
 		elif resolution_type == "effect":
-			shared_effect_count += 1
-			_expect_equal("shared effect vfx identity %s" % spell_id, actual_vfx, "vfx_spell_command_ward")
+			shared_effect_audio_count += 1
 			_expect_equal("shared effect audio identity %s" % spell_id, actual_audio, "audio_spell_command_ward")
 		else:
-			generic_only_count += 1
-			_expect_equal("generic-only spell vfx identity %s" % spell_id, actual_vfx, "")
+			generic_only_audio_count += 1
 			_expect_equal("generic-only spell audio identity %s" % spell_id, actual_audio, "")
 	_expect_int("battle spell identity catalog count", battle_spell_ids.size(), 90)
-	_expect_int("battle spell explicit identity count", explicit_count, 7)
-	_expect_int("battle spell shared effect identity count", shared_effect_count, 55)
-	_expect_int("battle spell generic-only identity count", generic_only_count, 28)
+	_expect_int("battle spell explicit vfx identity count", explicit_vfx_count, 21)
+	_expect_int("battle spell shared effect vfx identity count", shared_effect_vfx_count, 44)
+	_expect_int("battle spell generic-only vfx identity count", generic_only_vfx_count, 25)
+	_expect_int("battle spell explicit audio identity count", explicit_audio_count, 7)
+	_expect_int("battle spell shared effect audio identity count", shared_effect_audio_count, 55)
+	_expect_int("battle spell generic-only audio identity count", generic_only_audio_count, 28)
 	for resolution_type in ["damage", "recover_effect", "cleanse_effect"]:
 		_expect_equal("unknown spell vfx fail closed %s" % resolution_type, String(view.call("_spell_specific_vfx_cue_id", "spell_missing_identity", resolution_type)), "")
 		_expect_equal("unknown spell audio fail closed %s" % resolution_type, String(view.call("_spell_specific_audio_cue_id", "spell_missing_identity", resolution_type)), "")
 	view.free()
 
-	var pressure_session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
-	pressure_session.battle["turn_order"] = ["player_0", "player_0"]
-	pressure_session.battle["player_commander_state"] = _spellcaster_state(["spell_pressure_clause"])
-	_set_stack_field(pressure_session.battle, "enemy_0", "total_health", 999)
-	var pressure_result := BattleRulesScript.cast_player_spell(pressure_session, "spell_pressure_clause")
-	_expect_ok("pressure clause generic identity public cast", pressure_result)
-	var pressure_event := _event_record_for(pressure_session.battle, "player_0", "battle_unit_cast")
-	_expect_equal("pressure clause public cast event spell id", String(pressure_event.get("spell_id", "")), "spell_pressure_clause")
-	var pressure_authority: Dictionary = pressure_session.to_dict()
-	var pressure_summary := await _board_summary_for_session_after_audio(pressure_session)
-	_expect_equal("pressure clause presentation preserves session authority", JSON.stringify(pressure_session.to_dict()), JSON.stringify(pressure_authority))
-	var pressure_cues: Dictionary = pressure_summary.get("cue_playback", {}) if pressure_summary.get("cue_playback", {}) is Dictionary else {}
-	var pressure_cue := _cue_record_for(pressure_cues, "player_0")
-	var pressure_vfx_ids: Array = pressure_cue.get("selected_vfx_cue_ids", []) if pressure_cue.get("selected_vfx_cue_ids", []) is Array else []
-	var pressure_audio_ids: Array = pressure_cue.get("selected_audio_cue_ids", []) if pressure_cue.get("selected_audio_cue_ids", []) is Array else []
-	_expect_array_contains("pressure clause generic cast vfx", pressure_vfx_ids, "vfx_placeholder_cast_anchor")
-	_expect_array_contains("pressure clause generic cast audio", pressure_audio_ids, "audio_placeholder_cast")
-	if pressure_vfx_ids.has("vfx_spell_cinder_burst") or pressure_audio_ids.has("audio_spell_cinder_burst"):
-		_error("Pressure Clause retained Cinder Burst presentation identity: %s." % pressure_cue)
-	var pressure_vfx_playback: Dictionary = pressure_summary.get("vfx_playback", {}) if pressure_summary.get("vfx_playback", {}) is Dictionary else {}
-	var generic_cast_entry := _vfx_entry_for_cue(pressure_vfx_playback, "vfx_placeholder_cast_anchor")
-	_expect_equal("pressure clause generic cast imported asset", String(generic_cast_entry.get("asset_path", "")), "res://art/battle/vfx/core_cast_anchor.png")
+	var generic_session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	generic_session.battle["turn_order"] = ["player_0", "player_0"]
+	generic_session.battle["player_commander_state"] = _spellcaster_state(["spell_mire_silt_rot_04"])
+	_set_stack_field(generic_session.battle, "enemy_0", "total_health", 999)
+	var generic_result := BattleRulesScript.cast_player_spell(generic_session, "spell_mire_silt_rot_04")
+	_expect_ok("unregistered damage spell generic identity public cast", generic_result)
+	var generic_event := _event_record_for(generic_session.battle, "player_0", "battle_unit_cast")
+	_expect_equal("unregistered damage spell event id", String(generic_event.get("spell_id", "")), "spell_mire_silt_rot_04")
+	var generic_authority: Dictionary = generic_session.to_dict()
+	var generic_summary := await _board_summary_for_session_after_audio(generic_session)
+	_expect_equal("unregistered damage presentation preserves authority", JSON.stringify(generic_session.to_dict()), JSON.stringify(generic_authority))
+	var generic_cues: Dictionary = generic_summary.get("cue_playback", {}) if generic_summary.get("cue_playback", {}) is Dictionary else {}
+	var generic_cue := _cue_record_for(generic_cues, "player_0")
+	var generic_vfx_ids: Array = generic_cue.get("selected_vfx_cue_ids", []) if generic_cue.get("selected_vfx_cue_ids", []) is Array else []
+	var generic_audio_ids: Array = generic_cue.get("selected_audio_cue_ids", []) if generic_cue.get("selected_audio_cue_ids", []) is Array else []
+	_expect_array_contains("unregistered damage generic cast vfx", generic_vfx_ids, "vfx_placeholder_cast_anchor")
+	_expect_array_contains("unregistered damage generic cast audio", generic_audio_ids, "audio_placeholder_cast")
+	var generic_vfx_playback: Dictionary = generic_summary.get("vfx_playback", {}) if generic_summary.get("vfx_playback", {}) is Dictionary else {}
+	var generic_cast_entry := _vfx_entry_for_cue(generic_vfx_playback, "vfx_placeholder_cast_anchor")
+	_expect_equal("unregistered damage generic cast imported asset", String(generic_cast_entry.get("asset_path", "")), "res://art/battle/vfx/core_cast_anchor.png")
 	_report["cases"]["spell_specific_cue_identity_fail_closed"] = {
 		"battle_spell_count": battle_spell_ids.size(),
-		"explicit_count": explicit_count,
-		"shared_effect_count": shared_effect_count,
-		"generic_only_count": generic_only_count,
-		"pressure_clause_result": pressure_result,
-		"pressure_clause_cue": pressure_cue,
-		"pressure_clause_vfx": generic_cast_entry,
+		"explicit_vfx_count": explicit_vfx_count,
+		"shared_effect_vfx_count": shared_effect_vfx_count,
+		"generic_only_vfx_count": generic_only_vfx_count,
+		"explicit_audio_count": explicit_audio_count,
+		"shared_effect_audio_count": shared_effect_audio_count,
+		"generic_only_audio_count": generic_only_audio_count,
+		"generic_spell_result": generic_result,
+		"generic_spell_cue": generic_cue,
+		"generic_spell_vfx": generic_cast_entry,
+	}
+
+func _validate_spell_school_batch_vfx_identities() -> void:
+	var selected := {
+		"spell_bulwark_litany": "vfx_spell_bulwark_litany",
+		"spell_quickmarch_hymn": "vfx_spell_quickmarch_hymn",
+		"spell_bloodwake_drum": "vfx_spell_bloodwake_drum",
+		"spell_relay_drum": "vfx_spell_relay_drum",
+		"spell_lens_aurora_chorus_10": "vfx_spell_lens_aurora_chorus_10",
+		"spell_lens_mirror_facet_20": "vfx_spell_lens_mirror_facet_20",
+		"spell_root_bloom_bark_20": "vfx_spell_root_bloom_bark_20",
+		"spell_root_bark_bark_08": "vfx_spell_root_bark_bark_08",
+		"spell_stone_veil": "vfx_spell_stone_veil",
+		"spell_pressure_clause": "vfx_spell_pressure_clause",
+		"spell_obituary_mark": "vfx_spell_obituary_mark",
+		"spell_fogwake_step": "vfx_spell_fogwake_step",
+		"spell_old_measure_tally_tally_20": "vfx_spell_old_measure_tally_tally_20",
+		"spell_old_measure_count_boundary_30": "vfx_spell_old_measure_count_boundary_30",
+	}
+	var original_reduce_motion := SettingsService.reduced_motion_enabled()
+	var original_reduce_flashes := SettingsService.reduced_flashes_enabled()
+	var rows := {}
+	for spell_id_value in selected.keys():
+		var spell_id := String(spell_id_value)
+		var expected_cue_id := String(selected.get(spell_id, ""))
+		var normal_session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+		normal_session.battle["turn_order"] = ["player_0", "player_0"]
+		normal_session.battle["player_commander_state"] = _spellcaster_state([spell_id])
+		_set_stack_field(normal_session.battle, "enemy_0", "total_health", 9999)
+		var initial_authority := normal_session.to_dict()
+		var reduced_session := SessionStateStoreScript.SessionData.new()
+		reduced_session.from_dict(initial_authority)
+		SettingsService.settings["accessibility"]["reduce_motion"] = false
+		SettingsService.settings["accessibility"]["reduce_flashes"] = false
+		var normal_result := BattleRulesScript.cast_player_spell(normal_session, spell_id)
+		_expect_ok("school batch normal cast %s" % spell_id, normal_result)
+		var normal_authority := normal_session.to_dict()
+		var normal_summary := await _board_summary_for_session_after_started_playback(normal_session)
+		_expect_equal("school batch presentation authority %s" % spell_id, JSON.stringify(normal_session.to_dict()), JSON.stringify(normal_authority))
+		var normal_cues: Dictionary = normal_summary.get("cue_playback", {}) if normal_summary.get("cue_playback", {}) is Dictionary else {}
+		var normal_cue := _cue_record_for(normal_cues, "player_0")
+		_expect_array_contains("school batch exact vfx cue %s" % spell_id, normal_cue.get("selected_vfx_cue_ids", []), expected_cue_id)
+		var normal_vfx: Dictionary = normal_summary.get("vfx_playback", {}) if normal_summary.get("vfx_playback", {}) is Dictionary else {}
+		var normal_entry := _vfx_entry_for_cue(normal_vfx, expected_cue_id)
+		_expect_equal("school batch imported vfx %s" % spell_id, str(bool(normal_entry.get("asset_loaded", false))), "true")
+		_expect_equal("school batch vfx kind %s" % spell_id, String(normal_entry.get("kind", "")), spell_id)
+		SettingsService.settings["accessibility"]["reduce_motion"] = true
+		SettingsService.settings["accessibility"]["reduce_flashes"] = true
+		var reduced_result := BattleRulesScript.cast_player_spell(reduced_session, spell_id)
+		_expect_ok("school batch reduced cast %s" % spell_id, reduced_result)
+		_expect_equal("school batch reduced result parity %s" % spell_id, JSON.stringify(reduced_result), JSON.stringify(normal_result))
+		_expect_equal("school batch reduced authority parity %s" % spell_id, JSON.stringify(reduced_session.to_dict()), JSON.stringify(normal_authority))
+		var reduced_summary := await _board_summary_for_session_after_started_playback(reduced_session)
+		var reduced_cues: Dictionary = reduced_summary.get("cue_playback", {}) if reduced_summary.get("cue_playback", {}) is Dictionary else {}
+		var reduced_cue := _cue_record_for(reduced_cues, "player_0")
+		if reduced_cue.get("selected_vfx_cue_ids", []).has(expected_cue_id):
+			_error("Reduced presentation retained school-batch strong VFX %s: %s." % [spell_id, reduced_cue])
+		rows[spell_id] = {
+			"cue_id": expected_cue_id,
+			"asset_path": String(normal_entry.get("asset_path", "")),
+			"normal_result": normal_result,
+			"reduced_result": reduced_result,
+			"reduced_selected_vfx": reduced_cue.get("selected_vfx_cue_ids", []),
+		}
+	SettingsService.settings["accessibility"]["reduce_motion"] = original_reduce_motion
+	SettingsService.settings["accessibility"]["reduce_flashes"] = original_reduce_flashes
+	_expect_int("school batch exact cast count", rows.size(), 14)
+	_report["cases"]["spell_school_batch_vfx_identities"] = {
+		"cast_count": rows.size(),
+		"spells": rows,
 	}
 
 func _validate_resonant_chorus_vfx_identity() -> void:
@@ -1178,8 +1304,8 @@ func _validate_imported_vfx_live_viewports() -> void:
 func _validate_spell_vfx_live_viewports() -> void:
 	var original_window_size := get_window().size
 	var cue_by_viewport := {
-		"1280x720": "vfx_spell_resonant_chorus",
-		"1920x1080": "vfx_spell_prism_bastion",
+		"1280x720": "vfx_spell_lens_aurora_chorus_10",
+		"1920x1080": "vfx_spell_bloodwake_drum",
 	}
 	var results := {}
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
@@ -1187,7 +1313,7 @@ func _validate_spell_vfx_live_viewports() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		_expect_equal("spell vfx requested viewport", str(get_window().size), str(viewport_size))
-		var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
+		var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 5, 3)
 		var view := BattleBoardViewScript.new()
 		view.position = Vector2.ZERO
 		view.size = Vector2(viewport_size)
@@ -1291,6 +1417,11 @@ func _validate_state_path_vfx_live_viewports() -> void:
 
 func _install_validation_vfx_cues(view: Control, cue_ids: Array) -> void:
 	var now := int(Time.get_ticks_msec())
+	var battle: Dictionary = view.get("_battle") if view.get("_battle") is Dictionary else {}
+	var source_stack: Dictionary = BattleRulesScript._get_stack_by_id(battle, "player_0")
+	var target_stack: Dictionary = BattleRulesScript._get_stack_by_id(battle, "enemy_0")
+	var source_hex: Dictionary = source_stack.get("hex", {}) if source_stack.get("hex", {}) is Dictionary else {}
+	var target_hex: Dictionary = target_stack.get("hex", {}) if target_stack.get("hex", {}) is Dictionary else {}
 	view.set("_stack_animation_playback_until_msec", {"player_0": now + 5000})
 	view.set("_stack_animation_cue_playback_records", {
 		"player_0": {
@@ -1302,10 +1433,10 @@ func _install_validation_vfx_cues(view: Control, cue_ids: Array) -> void:
 			"selected_audio_cue_ids": [],
 			"source_battle_id": "player_0",
 			"target_battle_id": "enemy_0",
-			"from_q": 3,
-			"from_r": 3,
-			"to_q": 7,
-			"to_r": 3,
+			"from_q": int(source_hex.get("q", -1)),
+			"from_r": int(source_hex.get("r", -1)),
+			"to_q": int(target_hex.get("q", -1)),
+			"to_r": int(target_hex.get("r", -1)),
 			"started_at_msec": now - 120,
 			"max_duration_ms": 760,
 			"sequence_delay_msec": 0,
