@@ -7,7 +7,7 @@ const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
 const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
 const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
-const ARTIFACT_REWARD_GUARD_TIERS := ["unguarded", "light", "standard", "heavy", "elite", "ambush"]
+const ARTIFACT_REWARD_GUARD_TIERS := ["unguarded", "light", "standard", "heavy", "elite", "sovereign", "apex", "ambush"]
 const ARTIFACT_ROLES := [
 	"economy",
 	"movement",

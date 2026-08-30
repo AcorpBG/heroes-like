@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_sovereign_wild_trophy",
+  "prompt_set_summary": "Six original creature-trophy cutouts in the Aurelion Reach inventory language: a fired antler crownring, a peatglass crown-tooth, a crystalline facet pinion, a living heartgrain mantle, a three-gauge ironback plate, and a whalebone resonance bell. Each source was requested individually as one centered hand-painted strategy-game object with transparent padding, a strong 128px silhouette, controlled faction materials, no scene, no text, no characters, no logos, and no borrowed franchise design.",
+  "runtime_derivation": "Trim transparent bounds, fit inside 112x112 without upscaling, center on a transparent 128x128 canvas, and strip ancillary metadata.",
+  "runtime_icon_size": [128, 128],
+  "items": [
+    {
+      "artifact_id": "artifact_ashcrown_crownring",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/ashcrown_crownring_source.png",
+      "source_sha256": "e3692efba57b7ad4a6f485d5fca4691a7a3cf040d5e41f37da0d6ee9c5e9446e",
+      "runtime_path": "res://art/artifacts/runtime/ashcrown_crownring.png",
+      "runtime_sha256": "40da659e202ff8022bd047314e484cb2bc4021e6f29162a8f68dfb11e116d0c0",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-effe285a-b6b3-45b1-86be-7ab65a7e8668.png",
+      "prompt_summary": "Fired ivory ceramic antlers closing into a clinker-red crown ring with charcoal bindings and muted brass braces.",
+      "accessible_description": "A wide scorched ring rises into paired branching ceramic antlers above ember-bright clinker seams."
+    },
+    {
+      "artifact_id": "artifact_miremoon_crown_tooth",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/miremoon_crown_tooth_source.png",
+      "source_sha256": "f4b41f8da2b7dddf61a8ad129a5c4d346e4a0c16f81bb62f9b932e1745ce6e4f",
+      "runtime_path": "res://art/artifacts/runtime/miremoon_crown_tooth.png",
+      "runtime_sha256": "e0692c1a0503c9f5bf38020ce70e77aa756d94856e136f64bef738faa7438c00",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-16ea2430-9f3e-4857-924b-2ecbd01f17cb.png",
+      "prompt_summary": "Broad black fang suspended inside a crescent peatglass-root frame with wet cords and two moon beads.",
+      "accessible_description": "A single broad dark fang hangs inside a hooked crescent of wet roots, peatglass, and two round moon beads."
+    },
+    {
+      "artifact_id": "artifact_noonshard_facet_pinion",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/noonshard_facet_pinion_source.png",
+      "source_sha256": "77de3b8e1c9b9a269e8b823288c1947fc9ffb84ab9e59a9c85098b309e261e6c",
+      "runtime_path": "res://art/artifacts/runtime/noonshard_facet_pinion.png",
+      "runtime_sha256": "cddc8036478b81d1a9d2342b04e0dd980439133453cbf3c5af8a6fbd6872d3a3",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-befb4696-364e-4c13-88e1-4b2db34fe8e3.png",
+      "prompt_summary": "Five translucent feather-prism facets locked around a compact white-gold noon disk.",
+      "accessible_description": "Five long crystalline feather facets radiate asymmetrically from a bright circular sun setting."
+    },
+    {
+      "artifact_id": "artifact_rootvault_heartgrain_mantle",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/rootvault_heartgrain_mantle_source.png",
+      "source_sha256": "06dcebd1267806d53b7e3407677d1f60f7613e0778c604d0a538824e9996dccc",
+      "runtime_path": "res://art/artifacts/runtime/rootvault_heartgrain_mantle.png",
+      "runtime_sha256": "95e4385be4d0b8efc06abaae213b985bcade3509628f920c1fade42a2ffea8fd",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c621c1d9-78ee-4f9e-8b37-f09540d581ca.png",
+      "prompt_summary": "Broad shoulder mantle of overlapping heartwood plates, green living seams, and paired root clasps.",
+      "accessible_description": "A broad layered bark mantle shows circular heartwood grain, glowing seams, and two pale root-clasp hooks."
+    },
+    {
+      "artifact_id": "artifact_quenchbell_red_gauge_plate",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/quenchbell_red_gauge_plate_source.png",
+      "source_sha256": "776ad3db51a707c76c0e7dec28df725a59b70246e24823f0a4631afb00dd0937",
+      "runtime_path": "res://art/artifacts/runtime/quenchbell_red_gauge_plate.png",
+      "runtime_sha256": "cbf5a5977956ed2872766a544fda2ed9876f5a9596784618442f708de74187c7",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-417f9aed-2905-45cc-9659-7c20ba2b06c7.png",
+      "prompt_summary": "Curved black carapace plate with a bellhorn relief, three red gauges, brass braces, and one coolant tube.",
+      "accessible_description": "A heavy curved black plate carries three unequal round gauges beside a raised horn and thick riveted brass bands."
+    },
+    {
+      "artifact_id": "artifact_saltwake_resonance_bell",
+      "source_path": "res://art/artifacts/source/generated/sovereign_wild_trophies/saltwake_resonance_bell_source.png",
+      "source_sha256": "9f9a4bf33cc6144c44da88b4889908d3a7b75cbaed4da7cb29ef790eec60c13a",
+      "runtime_path": "res://art/artifacts/runtime/saltwake_resonance_bell.png",
+      "runtime_sha256": "125256b86c320df28e6158954df1e859ade63e19173b2fb88d534ea13a8a7a45",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-698dee96-ecb5-4728-be49-fcd02fd1238c.png",
+      "prompt_summary": "Pale whalebone bell beneath a bone crossbar, five saltglass chimes, dark tideglass clapper, and knotted cord.",
+      "accessible_description": "A pierced whalebone bell hangs below a bone bar, flanked by five long saltglass chimes and a dark drop-shaped clapper."
+    }
+  ]
+}

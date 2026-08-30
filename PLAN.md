@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-six-sovereign-wild-habitats-10184` is completed as one coherent six-biome late-game neutral unit, encounter, dwelling, and art batch; the broad content goal continues beyond this slice and the next content batch has not yet been selected.
-- Current package boundary: matching-size Linux and Windows release exports measure 249335236 bytes, 664764 bytes below the unchanged 250000000-byte ceiling; the compact sovereign-wild habitat atlas and all thirty new unit runtime surfaces are present while generated masters remain excluded symmetrically.
+- Current implementation slice: `content-six-sovereign-wild-trophies-10184` is completed as one coherent six-faction artifact-payoff batch attached to the live sovereign-wild habitat victories; the broad content goal continues beyond this slice and no later slice is selected here.
+- Current package boundary: matching-size Linux and Windows release exports measure 249426820 bytes, 573180 bytes below the unchanged 250000000-byte ceiling; all eighteen reward-only artifact icons are present while generated masters remain excluded symmetrically.
 
 ## Eight Foundation Map Object Identities
 
@@ -15695,6 +15695,37 @@ Completion criteria:
 Non-goals:
 - no new faction, hero, town, building, spell, artifact, campaign, combat engine, strategic-AI algorithm, save schema, native RMG rule, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes creature, dwelling, encounter, landmark, name, text, heraldry, or protected visual expression.
+
+## Six Sovereign-Wild Trophies
+
+id: `content-six-sovereign-wild-trophies-10184`
+
+Status: completed.
+
+Completion result:
+- the six guarded sovereign-wild habitat claims now grant their exact faction trophy once, auto-equip it through the production artifact path, apply exact live bonuses, retain reward provenance, reject repeat mutation, and round-trip through save version 9;
+- six original transparent masters produce six reviewed, distinct 128px runtime icons with prompt, hash, derivation, and accessibility provenance retained outside release packages;
+- the single consolidated six-case gameplay/art/save smoke passes 6/6, repository validation passes, and sequential Linux and Windows exports boot with matching 249426820-byte PCKs, all eighteen reward-only artifact icons present, generated sources excluded, and 573180 bytes below the unchanged ceiling.
+
+Current finding:
+- the six sovereign-wild creatures and guarded habitats are now live, but each victory currently ends with resources and recruitment while the artifact system has no creature-derived trophy family;
+- all six production factions already have complete equipment, automatic equip, AI valuation, save-version-9, and exact icon presentation paths, so a faction-matched trophy can deepen the live habitat payoff without another subsystem or disconnected map;
+- package headroom is only 664764 bytes, making six compact 128px icons and data-driven reward contracts materially safer than another full unit-art wave while still adding visible, playable content.
+
+Implementation boundary:
+- add Ashcrown Crownring, Miremoon Crown-Tooth, Noonshard Facet Pinion, Rootvault Heartgrain Mantle, Quenchbell Red-Gauge Plate, and Saltwake Resonance Bell as six original rare faction trophies using only supported movement, scouting, attack, defense, initiative, and spell-resistance bonuses;
+- add one live faction-filtered sovereign-dwelling reward table and attach it to the six existing habitats so the exact trophy is granted and auto-equipped only after the guarded claim, once per site, with explicit provenance and save-version-9 continuity;
+- generate six original transparent icon masters, derive six exact 128px runtime icons, retain prompt/hash/accessibility provenance outside packages, and preserve the existing habitat, recruitment, income, response, battle, map, AI, and save behavior;
+- keep Linux/Windows packaging symmetric and below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six live habitat claims grant the exact faction trophy after guard clearance, apply its exact equipped bonus, preserve resource and recruit consequences, reject repeat artifact mutation, and survive save-version-9 round trips;
+- all six icons are visually distinct, transparent, readable at 128px, exact-mapped through ArtifactRules and existing gear/pickup presentation, and source-traceable without generated masters entering release packages;
+- one consolidated six-case gameplay/art/save smoke runs after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new artifact slot, set mechanic, unit, hero, town, building, spell, encounter, scenario, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes artifact, creature trophy, icon, name, text, heraldry, or protected visual expression.
 
 ## Progress Reconciliation
 

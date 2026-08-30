@@ -1108,7 +1108,7 @@ SUPPORTED_ARTIFACT_SOURCE_TAGS = {
     "market",
     "objective",
 }
-SUPPORTED_ARTIFACT_REWARD_GUARD_TIERS = {"unguarded", "light", "standard", "heavy", "elite", "ambush"}
+SUPPORTED_ARTIFACT_REWARD_GUARD_TIERS = {"unguarded", "light", "standard", "heavy", "elite", "sovereign", "apex", "ambush"}
 SUPPORTED_ARTIFACT_BONUS_TYPES = {
     "stat",
     "resource_income",
@@ -10086,17 +10086,18 @@ def source_record_guard_tier(record: dict) -> str:
             tier = str(container.get("tier", container.get("risk_tier", ""))).strip()
             if tier:
                 return tier
-    contract = record.get("guarded_reward_contract", {})
-    if isinstance(contract, dict):
-        tier = str(contract.get("reward_tier", "")).strip()
-        if tier:
-            return tier
+    for contract_key in ("artifact_reward_contract", "guarded_reward_contract"):
+        contract = record.get(contract_key, {})
+        if isinstance(contract, dict):
+            tier = str(contract.get("reward_tier", "")).strip()
+            if tier:
+                return tier
     return "unguarded"
 
 
 def source_record_reward_categories(record: dict) -> set[str]:
     categories: set[str] = set()
-    for container_key in ("guarded_reward_contract", "reward_preview"):
+    for container_key in ("artifact_reward_contract", "guarded_reward_contract", "reward_preview"):
         container = record.get(container_key, {})
         if isinstance(container, dict):
             categories.update(string_list(container.get("reward_categories", [])))
@@ -12503,7 +12504,7 @@ def validate_content(errors: list[str]) -> None:
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
     ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact pickup, guarded-site, shrine, dwelling, town, and battle-salvage source tables must enable live drop execution")
-    ensure(int(artifact_source_report.get("live_table_count", 0)) == 8, errors, "Exactly eight artifact source/reward tables must execute live, including the guarded-relic and horizon-citadel commission tables")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 9, errors, "Exactly nine artifact source/reward tables must execute live, including the sovereign-wild trophy table")
     ensure(artifact_source_report.get("live_source_tags", []) == ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"], errors, "Only pickup, guarded-site, shrine, dwelling, town, and battle-salvage artifact rewards may execute live in this slice")
 
     pickup_table_id = "artifact_source_pickup_caches_common"
@@ -45924,6 +45925,12 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         "artifact_crownroot_oathseed_censer": "res://art/artifacts/runtime/crownroot_oathseed_censer.png",
         "artifact_blackbell_verdict_gauge": "res://art/artifacts/runtime/blackbell_verdict_gauge.png",
         "artifact_pale_sounding_memory_bell": "res://art/artifacts/runtime/pale_sounding_memory_bell.png",
+        "artifact_ashcrown_crownring": "res://art/artifacts/runtime/ashcrown_crownring.png",
+        "artifact_miremoon_crown_tooth": "res://art/artifacts/runtime/miremoon_crown_tooth.png",
+        "artifact_noonshard_facet_pinion": "res://art/artifacts/runtime/noonshard_facet_pinion.png",
+        "artifact_rootvault_heartgrain_mantle": "res://art/artifacts/runtime/rootvault_heartgrain_mantle.png",
+        "artifact_quenchbell_red_gauge_plate": "res://art/artifacts/runtime/quenchbell_red_gauge_plate.png",
+        "artifact_saltwake_resonance_bell": "res://art/artifacts/runtime/saltwake_resonance_bell.png",
     }
     artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
     ensure(set(artifacts) == set(expected_icons), errors, "Artifact icon adoption must cover every production artifact")
@@ -50901,7 +50908,7 @@ def validate_six_faction_guarded_relic_roads(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     table = tables.get(table_id, {})
     artifact_ids = {row["artifact"] for row in expected.values()}
-    ensure(len(artifacts) == 45 and set(table.get("artifact_ids", [])) == artifact_ids, errors, "Faction guarded-relic table must retain its six artifacts inside the 45-artifact catalog")
+    ensure(len(artifacts) == 51 and set(table.get("artifact_ids", [])) == artifact_ids, errors, "Faction guarded-relic table must retain its six artifacts inside the 51-artifact catalog")
     ensure(table.get("guard_tiers") == ["heavy", "elite"] and table.get("rarity_bands") == ["epic"] and table.get("required_reward_categories") == ["artifact"], errors, "Faction guarded-relic table must remain scoped to heavy and elite artifact sites")
     ensure(table.get("artifact_ids_by_faction") == {row["faction"]: [row["artifact"]] for row in expected.values()}, errors, "Faction guarded-relic table must select exactly one deterministic relic per faction")
     policy = table.get("runtime_policy", {})
@@ -53425,8 +53432,8 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         if isinstance(node, dict)
     }
     reward_only_artifact_ids = set(artifacts) - pickup_artifact_ids
-    ensure(len(artifacts) == 45, errors, "Artifact icon adoption must cover all 45 production artifacts")
-    ensure(len(pickup_artifact_ids) == 33 and len(reward_only_artifact_ids) == 12, errors, "Artifact field scope must retain 33 placed pickups and twelve guarded-site or town-service reward-only relics")
+    ensure(len(artifacts) == 51, errors, "Artifact icon adoption must cover all 51 production artifacts")
+    ensure(len(pickup_artifact_ids) == 33 and len(reward_only_artifact_ids) == 18, errors, "Artifact field scope must retain 33 placed pickups and eighteen guarded-site, dwelling, or town-service reward-only relics")
     icon_ids: list[str] = []
     icon_paths: list[str] = []
     field_asset_ids: list[str] = []
@@ -77968,16 +77975,51 @@ def validate_six_sovereign_wild_habitats(errors: list[str]) -> None:
         source_path = res_path_to_disk(str(provenance.get("source_path", "")))
         ensure(png_size(curated_path) == (512,512) and hashlib.sha256(curated_path.read_bytes()).hexdigest() == provenance.get("curated_sha256") and png_size(source_path) == (1254,1254) and hashlib.sha256(source_path.read_bytes()).hexdigest() == provenance.get("source_sha256"), errors, f"{unit_id} source provenance or curated master changed")
 
+    artifacts_payload = load_json(CONTENT_DIR / "artifacts.json")
+    artifacts = items_index(artifacts_payload)
+    trophy_table = next((row for row in artifacts_payload.get("source_reward_tables", []) if isinstance(row, dict) and row.get("id") == "artifact_source_sovereign_wild_trophies"), {})
+    trophy_manifest_path = ROOT / "art" / "artifacts" / "source" / "generated" / "sovereign_wild_trophies" / "manifest.json"
+    ensure(trophy_manifest_path.is_file(), errors, "Sovereign-wild trophy generation provenance is missing")
+    trophy_manifest = load_json(trophy_manifest_path) if trophy_manifest_path.is_file() else {}
+    trophy_rows = {str(row.get("artifact_id", "")): row for row in trophy_manifest.get("items", []) if isinstance(row, dict)}
+    trophy_expected = {
+        "faction_embercourt": ("site_ashcrown_cinderfold", "artifact_ashcrown_crownring", {"battle_attack":1,"battle_defense":1}),
+        "faction_mireclaw": ("site_miremoon_crownmere", "artifact_miremoon_crown_tooth", {"battle_initiative":1,"scouting_radius":1}),
+        "faction_sunvault": ("site_noonshard_prism_aviary", "artifact_noonshard_facet_pinion", {"battle_spell_resistance_pct":10,"battle_initiative":1}),
+        "faction_thornwake": ("site_rootvault_heartwood_hollow", "artifact_rootvault_heartgrain_mantle", {"battle_defense":2,"overworld_movement":1}),
+        "faction_brasshollow": ("site_quenchbell_pressure_den", "artifact_quenchbell_red_gauge_plate", {"battle_attack":1,"battle_defense":2}),
+        "faction_veilmourn": ("site_saltwake_belldeep", "artifact_saltwake_resonance_bell", {"scouting_radius":2,"overworld_movement":1}),
+    }
+    trophy_ids = {row[1] for row in trophy_expected.values()}
+    ensure(trophy_manifest.get("generator_mode") == "built_in_image_gen" and trophy_manifest.get("runtime_icon_size") == [128,128] and set(trophy_rows) == trophy_ids, errors, "Sovereign-wild trophy manifest must own exactly six generated runtime icons")
+    ensure(trophy_table.get("source_tag") == "dwelling" and trophy_table.get("guard_tiers") == ["sovereign", "apex"] and set(trophy_table.get("artifact_ids", [])) == trophy_ids and trophy_table.get("artifact_ids_by_faction") == {faction_id:[row[1]] for faction_id,row in trophy_expected.items()}, errors, "Sovereign-wild trophy reward table lost exact faction selection")
+    for faction_id, (site_id, artifact_id, bonuses) in trophy_expected.items():
+        artifact = artifacts.get(artifact_id, {})
+        site = sites.get(site_id, {})
+        contract = site.get("artifact_reward_contract", {}) if isinstance(site.get("artifact_reward_contract"), dict) else {}
+        row = trophy_rows.get(artifact_id, {})
+        source_path = res_path_to_disk(str(row.get("source_path", "")))
+        runtime_path = res_path_to_disk(str(row.get("runtime_path", "")))
+        source_bytes = source_path.read_bytes() if source_path.is_file() else b""
+        runtime_bytes = runtime_path.read_bytes() if runtime_path.is_file() else b""
+        ensure(artifact.get("family") == "sovereign_wild_trophies" and artifact.get("faction_affinity") == [faction_id] and artifact.get("source_tags") == ["dwelling"] and artifact.get("bonuses") == bonuses and artifact.get("rarity") == "rare", errors, f"{artifact_id} identity or supported bonuses changed")
+        ensure(contract.get("source_tag") == "dwelling" and contract.get("artifact_reward_table_id") == "artifact_source_sovereign_wild_trophies" and contract.get("reward_categories") == ["recruit", "artifact"] and site.get("runtime_boundary", {}).get("artifact_reward_execution") is True, errors, f"{site_id} live trophy reward contract changed")
+        ensure(source_path.is_file() and len(source_bytes) >= 26 and source_bytes[25] == 6 and hashlib.sha256(source_bytes).hexdigest() == row.get("source_sha256"), errors, f"{artifact_id} transparent generated source or provenance changed")
+        ensure(runtime_path.is_file() and png_size(runtime_path) == (128,128) and hashlib.sha256(runtime_bytes).hexdigest() == row.get("runtime_sha256") and Path(f"{runtime_path}.import").is_file(), errors, f"{artifact_id} runtime icon or Godot import changed")
+        ensure(len(str(row.get("accessible_description", ""))) >= 64 and str(row.get("generation_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{artifact_id} accessibility or image-generation provenance changed")
+
     smoke_text = smoke_script_path.read_text(encoding="utf-8")
-    for token in ("SIX_SOVEREIGN_WILD_HABITATS_SMOKE", "AbilityRuntimeReportScript", "BattleRules.create_battle_payload", "validation_encounter_presentation_payload", "await super._validate_case"):
+    for token in ("SIX_SOVEREIGN_WILD_HABITATS_SMOKE", "AbilityRuntimeReportScript", "BattleRules.create_battle_payload", "validation_encounter_presentation_payload", "await super._validate_case", "artifact_source_sovereign_wild_trophies", "ArtifactRules.aggregate_bonuses", "artifact_save_round_trip_exact"):
         ensure(token in smoke_text, errors, f"Sovereign-wild consolidated smoke is missing proof token: {token}")
     ensure("res://tests/six_sovereign_wild_habitats_smoke.gd" in smoke_scene_path.read_text(encoding="utf-8"), errors, "Sovereign-wild smoke scene lost its exact script")
     if smoke_report_path.is_file():
         smoke = load_json(smoke_report_path)
-        ensure(smoke.get("ok") is True and smoke.get("case_count") == 6 and smoke.get("save_version") == 9 and len(smoke.get("rows", [])) == 6 and all(row.get("save_round_trip_exact") and row.get("exact_identity_art") and len(row.get("ability_results", {})) == 2 for row in smoke.get("rows", [])), errors, "Sovereign-wild consolidated smoke report is not fully green")
+        ensure(smoke.get("ok") is True and smoke.get("case_count") == 6 and smoke.get("save_version") == 9 and len(smoke.get("rows", [])) == 6 and all(row.get("save_round_trip_exact") and row.get("exact_identity_art") and len(row.get("ability_results", {})) == 2 and row.get("artifact_auto_equipped") and row.get("artifact_bonus_exact") and row.get("artifact_provenance_exact") and row.get("artifact_save_round_trip_exact") for row in smoke.get("rows", [])), errors, "Sovereign-wild consolidated habitat/trophy smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_SOVEREIGN_WILDS_UNIT_IDS" in packaging_text and "sovereign_wild_habitats_atlas.png.import" in packaging_text and "== 27" in packaging_text, errors, f"{packaging_path.name} must audit sovereign-wild unit surfaces and habitat atlas")
+        for artifact_id in trophy_ids:
+            ensure(artifact_id.removeprefix("artifact_") in packaging_text, errors, f"{packaging_path.name} must audit packaged {artifact_id} icon art")
 
 
 def validate_six_horizon_citadels(errors: list[str]) -> None:
