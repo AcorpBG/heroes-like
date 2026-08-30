@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Six Horizon Citadels completed as one substantial content batch with one consolidated live smoke, repository validation, and matching Linux/Windows packaged boots.",
+  "currentNotes": "Eight original foundation map-object identities completed as one batch with one consolidated live smoke, repository validation, and matching-size Linux/Windows packaged boots.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-six-horizon-citadels-10184",
-  "currentSliceId": "content-four-faction-roster-parity-companies-10184",
-  "currentSliceNotes": "Four original companies now bring all six factions to twelve units through existing dwelling, relief, TownRules, authored battle, art, and save-v9 routes; consolidated smoke and repo validation pass; Linux/Windows PCKs match at 242012184 bytes.",
+  "currentSlice": "content-eight-foundation-map-object-identities-10184",
+  "currentSliceId": "content-eight-foundation-map-object-identities-10184",
+  "currentSliceNotes": "All 188 non-decorative authored objects now resolve exact distinct art; the eight-object smoke and repository gate pass, and Linux/Windows PCKs both measure 243127720 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content four faction roster parity companies 10184",
-  "currentSliceUpdatedAt": "2026-08-30T15:42:57Z",
+  "currentSliceTitle": "content eight foundation map object identities 10184",
+  "currentSliceUpdatedAt": "2026-08-30T19:37:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106608,6 +106608,16 @@
       "startedAt": "2026-08-30T18:50:29Z",
       "notes": "Four original companies now bring all six factions to twelve units through existing dwelling, relief, TownRules, authored battle, art, and save-v9 routes; consolidated smoke and repo validation pass; Linux/Windows PCKs match at 242012184 bytes.",
       "completedAt": "2026-08-30T19:06:47Z"
+    },
+    {
+      "id": "content-eight-foundation-map-object-identities-10184",
+      "title": "content eight foundation map object identities 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T19:37:38Z",
+      "startedAt": "2026-08-30T19:20:00Z",
+      "notes": "Eight original pickup, mine, dwelling, scouting, and service identities now complete exact 188-object non-decorative art coverage; one consolidated smoke and repo validation pass; Linux/Windows PCKs match in size at 243127720 bytes.",
+      "completedAt": "2026-08-30T19:37:38Z"
     }
   ],
   "project": "heroes-like",
@@ -106617,8 +106627,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No next production-content family is selected. The package now has only 20832 bytes of headroom, so another asset-heavy family requires deliberate package reclamation first.",
-  "remainingWork": "Select and register the next coherent multi-content family; reclaim package headroom before adding another large runtime-art batch; continue using one consolidated smoke after the full family plus final repository and package gates.",
+  "remainingGap": "No next production-content family is selected; the current release package has 6872280 bytes of headroom under the unchanged ceiling.",
+  "remainingWork": "Select and register the next coherent multi-content family, then continue using one consolidated smoke after the complete batch plus final repository and package gates.",
   "reportOnlyEvidence": [
     {
       "entries": [

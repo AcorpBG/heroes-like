@@ -7386,6 +7386,102 @@
       "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png", "atlas_region": [288,0,48,48], "atlas_size": [336,48],
       "source_trimmed": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/sevencount_verdict_table_source.png", "source_generated": "res://art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/sevencount_verdict_table_source.png", "source_model": "built_in_image_gen_original_sevenfold_high_arcanum_atlas",
       "assigned_resource_site_id": "site_sevencount_verdict_table", "presentation_role": "octagonal_counting_table_seven_pegs_plumb", "accessible_description": "A low octagonal blackstone table carries seven unequal ivory tally pegs, a suspended brass plumb, and a slate disk."
+    },
+    "mapobj_waystone_cache": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_waystone_cache.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_waystone_cache-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/waystone_cache_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_waystone_cache",
+      "assigned_map_object_family": "pickup",
+      "presentation_role": "spiral_waystone_satchel_scroll_reward_cache",
+      "accessible_description": "A low split waystone carries a deep spiral route mark above a leather satchel, two scroll tubes, moss, and three amber pebbles."
+    },
+    "mapobj_wood_wagon": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wood_wagon.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wood_wagon-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/wood_wagon_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wood_wagon",
+      "assigned_map_object_family": "pickup",
+      "presentation_role": "rope_bound_split_log_wagon",
+      "accessible_description": "A low two-wheel timber wagon carries rope-bound split logs, a side-wedged hatchet, and a rolled green-grey tarp."
+    },
+    "mapobj_fenhound_kennels": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_fenhound_kennels.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_fenhound_kennels-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/fenhound_kennels_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_fenhound_kennels",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "moss_roof_antler_post_two_bay_kennels",
+      "accessible_description": "A moss-roofed two-bay kennel has two dark arched pens, curved antler-like posts, hanging leather leads, and a shallow trough."
+    },
+    "mapobj_brightwood_sawmill": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brightwood_sawmill.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_brightwood_sawmill-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/brightwood_sawmill_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_brightwood_sawmill",
+      "assigned_map_object_family": "mine",
+      "presentation_role": "open_brightwood_mill_saw_wheel_plank_stacks",
+      "accessible_description": "A broad open timber mill frames a large brass-rimmed saw wheel, log carriage, pale plank stacks, lifting boom, and rear waterwheel."
+    },
+    "mapobj_ridge_quarry": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ridge_quarry.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ridge_quarry-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/ridge_quarry_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ridge_quarry",
+      "assigned_map_object_family": "mine",
+      "presentation_role": "stepped_quarry_lifting_tripod_ore_rail",
+      "accessible_description": "A stepped stone cut rises around squared blocks, a lifting tripod, ladders, a short ore rail, and an exposed blue-grey mineral seam."
+    },
+    "mapobj_watchtower_beacon": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_watchtower_beacon.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_watchtower_beacon-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/watchtower_beacon_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_watchtower_beacon",
+      "assigned_map_object_family": "scouting_structure",
+      "presentation_role": "stair_wrapped_watchtower_forked_signal_beacon",
+      "accessible_description": "A narrow stone watch post climbs through external zig-zag stairs to a roofed lookout and glowing brazier between forked signal shutters."
+    },
+    "mapobj_wayfarer_infirmary": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfarer_infirmary.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_wayfarer_infirmary-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/wayfarer_infirmary_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wayfarer_infirmary",
+      "assigned_map_object_family": "repeatable_service",
+      "presentation_role": "canvas_awning_herb_rack_wayfarer_infirmary",
+      "accessible_description": "A warm roadside lodge shelters a canvas treatment porch, herb racks, water basin, folded blankets, and a round four-leaf lantern."
+    },
+    "mapobj_ore_crates": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ore_crates.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_ore_crates-trimmed.png",
+      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/ore_crates_source.png",
+      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ore_crates",
+      "assigned_map_object_family": "pickup",
+      "presentation_role": "iron_bound_ore_crates_assay_sack_pick",
+      "accessible_description": "Two squat iron-bound timber crates sit beside an assay sack and short pick; one crate is open and filled with rough blue-grey ore."
     }
   },
   "resource_site_sprites": {
@@ -7628,16 +7724,16 @@
       "fit": "Exact original triple-obsidian forge arch for the persistent Obsidian Scar neutral dwelling identity."
     },
     "site_waystone_cache": {
-      "asset_id": "ruined_obelisk",
-      "fit": "Waystone Cache is the closest current landmark-ish pickup for the ruined obelisk asset."
+      "asset_id": "mapobj_waystone_cache",
+      "fit": "Exact original spiral-waystone, satchel, scroll, and amber-pebble reward-cache identity."
     },
     "site_wood_wagon": {
-      "asset_id": "lumber_wagon",
-      "fit": "Direct wood wagon pickup match."
+      "asset_id": "mapobj_wood_wagon",
+      "fit": "Exact original rope-bound split-log wagon identity."
     },
     "site_ore_crates": {
-      "asset_id": "ore_crates",
-      "fit": "Direct ore crates pickup match."
+      "asset_id": "mapobj_ore_crates",
+      "fit": "Exact original iron-bound assay-crate and mining-pick identity."
     },
     "site_free_company_yard": {
       "asset_id": "resource_site_neutral_roadward_lodge_claimed",
@@ -7655,8 +7751,8 @@
     },
     "site_fenhound_kennels": {
       "asset_id": "resource_site_neutral_fenhound_kennels_claimed",
-      "unclaimed_asset_id": "kennel",
-      "fit": "Exact original three-bay mossglass kennel for the controlled Fenhound Kennels neutral dwelling identity."
+      "unclaimed_asset_id": "mapobj_fenhound_kennels",
+      "fit": "Exact original antler-post moss-roof kennel before control, paired with the established open three-bay controlled state."
     },
     "site_cliffhawk_roost": {
       "asset_id": "resource_site_neutral_cliffhawk_roost_claimed",
@@ -7743,8 +7839,8 @@
       "fit": "Exact original flooded crown hall for the controlled Drowned Crown Hall neutral dwelling identity."
     },
     "site_wayfarer_infirmary": {
-      "asset_id": "alchemists_hut",
-      "fit": "Best-effort repeatable service hut match."
+      "asset_id": "mapobj_wayfarer_infirmary",
+      "fit": "Exact original canvas-awning, herb-rack, basin, and lantern roadside infirmary identity."
     },
     "site_scout_shrine": {
       "asset_id": "shrine",
@@ -7767,16 +7863,16 @@
       "fit": "Distinct original Embercourt brazier, mirror, bell, and pennant outpost for the persistent signal-post identity."
     },
     "site_watchtower_beacon": {
-      "asset_id": "watchtower",
-      "fit": "Direct watchtower/scouting structure match."
+      "asset_id": "mapobj_watchtower_beacon",
+      "fit": "Exact original stair-wrapped watch post with forked shutters and signal brazier."
     },
     "site_brightwood_sawmill": {
-      "asset_id": "sawmill",
-      "fit": "Direct sawmill/mine economy match."
+      "asset_id": "mapobj_brightwood_sawmill",
+      "fit": "Exact original open brightwood mill with saw wheel, log carriage, plank stacks, and waterwheel."
     },
     "site_ridge_quarry": {
-      "asset_id": "stone_quarry",
-      "fit": "Direct quarry/mine economy match."
+      "asset_id": "mapobj_ridge_quarry",
+      "fit": "Exact original stepped quarry with lifting tripod, ore rail, ladders, and exposed mineral seam."
     },
     "site_charter_bar_gate": {"asset_id":"resource_site_route_control_charter_bar_gate_opened","unclaimed_asset_id":"mapobj_charter_bar_gate","fit":"Opened route-control state paired with the original closed Charter Bar Gate."},
     "site_thorn_seal_gate": {"asset_id":"resource_site_route_control_thorn_seal_gate_opened","unclaimed_asset_id":"mapobj_thorn_seal_gate","fit":"Opened route-control state paired with the original closed Thorn Seal Gate."},

@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 180,
-    "generated_batch_count": 13,
+    "new_generated_sprite_count": 188,
+    "generated_batch_count": 14,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -112,14 +112,22 @@
           179,
           180
         ]
+      },
+      {
+        "batch_index": 14,
+        "workspace_source_manifest": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/manifest.json",
+        "object_index_range": [
+          181,
+          188
+        ]
       }
     ]
   },
   "coverage": {
     "authored_map_object_count": 388,
     "foundation_decorative_or_blocker_distinct_count": 200,
-    "preexisting_unique_non_decorative_count": 8,
-    "new_distinct_non_decorative_asset_count": 180,
+    "preexisting_unique_non_decorative_count": 0,
+    "new_distinct_non_decorative_asset_count": 188,
     "total_distinct_authored_map_object_count_after_pass": 388,
     "by_family": {
       "faction_landmark": 9,
@@ -318,7 +326,15 @@
     "mapobj_claimed_quarry_head",
     "mapobj_withered_rootgate_marker",
     "mapobj_cinderwake_fold",
-    "mapobj_tideglass_roost"
+    "mapobj_tideglass_roost",
+    "mapobj_waystone_cache",
+    "mapobj_wood_wagon",
+    "mapobj_fenhound_kennels",
+    "mapobj_brightwood_sawmill",
+    "mapobj_ridge_quarry",
+    "mapobj_watchtower_beacon",
+    "mapobj_wayfarer_infirmary",
+    "mapobj_ore_crates"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1580,6 +1596,62 @@
       "assignment_source": "new_distinct_map_object_sprite",
       "family": "neutral_dwelling",
       "source_batch": 13
+    },
+    "object_waystone_cache": {
+      "asset_id": "mapobj_waystone_cache",
+      "fit": "Distinct original spiral-waystone reward cache assigned to the authored Waystone Cache pickup.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "pickup",
+      "source_batch": 14
+    },
+    "object_wood_wagon": {
+      "asset_id": "mapobj_wood_wagon",
+      "fit": "Distinct original rope-bound timber wagon assigned to the authored Wood Wagon pickup.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "pickup",
+      "source_batch": 14
+    },
+    "object_fenhound_kennels": {
+      "asset_id": "mapobj_fenhound_kennels",
+      "fit": "Distinct original antler-post kennel lodge assigned to the authored Fenhound Kennels dwelling.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 14
+    },
+    "object_brightwood_sawmill": {
+      "asset_id": "mapobj_brightwood_sawmill",
+      "fit": "Distinct original open brightwood mill assigned to the authored Brightwood Sawmill mine.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "mine",
+      "source_batch": 14
+    },
+    "object_ridge_quarry": {
+      "asset_id": "mapobj_ridge_quarry",
+      "fit": "Distinct original stepped lifting quarry assigned to the authored Ridge Quarry mine.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "mine",
+      "source_batch": 14
+    },
+    "object_watchtower_beacon": {
+      "asset_id": "mapobj_watchtower_beacon",
+      "fit": "Distinct original stair-wrapped signal tower assigned to the authored Watchtower Beacon scouting structure.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "scouting_structure",
+      "source_batch": 14
+    },
+    "object_wayfarer_infirmary": {
+      "asset_id": "mapobj_wayfarer_infirmary",
+      "fit": "Distinct original canvas-awning roadside lodge assigned to the authored Wayfarer Infirmary service.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "repeatable_service",
+      "source_batch": 14
+    },
+    "object_ore_crates": {
+      "asset_id": "mapobj_ore_crates",
+      "fit": "Distinct original iron-bound assay crates assigned to the authored Ore Crates pickup.",
+      "assignment_source": "foundation_identity_completion",
+      "family": "pickup",
+      "source_batch": 14
     }
   }
 }
