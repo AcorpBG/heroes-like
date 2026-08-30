@@ -1,0 +1,49 @@
+{
+  "schema": "horizon_specialist_companies_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "normalization": "transparent subject fit into established curated source dimensions",
+  "sources": [
+    {
+      "id": "unit_thornwake_seedglass_cantors",
+      "path": "res://art/units/source/curated/unit_thornwake_seedglass_cantors.png",
+      "sha256": "8681a55c2a69ea56fc3c5210e13fa594aec2ce15e9fdb4378e0503c1448e4cce",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8667643a-0525-40d8-aed4-aa44670835f5.png",
+      "prompt_summary": "Pale-barked Thornwake ranged support cantor with amber seedglass chimes and a living resonance bow."
+    },
+    {
+      "id": "unit_brasshollow_quenchbell_mortars",
+      "path": "res://art/units/source/curated/unit_brasshollow_quenchbell_mortars.png",
+      "sha256": "d13d6b5da5bd7284e51360a70bc2611e5effcb1ab2d0048af06fded673408bdb",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8e72b59e-c708-4205-9318-ca0106f707bd.png",
+      "prompt_summary": "Compact Brasshollow mobile mortar automaton with a black quench-bell barrel and red pressure chamber."
+    },
+    {
+      "id": "unit_veilmourn_saltwake_eulogists",
+      "path": "res://art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+      "sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-26687b9d-19d9-4e92-8372-96a554dccd57.png",
+      "prompt_summary": "Masked Veilmourn battlefield chronicler carrying three saltglass tablets and layered mourning sails."
+    },
+    {
+      "id": "building_thornwake_seedglass_cantory",
+      "path": "res://art/towns/source/buildings/curated/building_thornwake_seedglass_cantory.png",
+      "sha256": "bfe79166b6f683e2dc3ad7fa454816a1d62f5d570811ec94d59302a2548f5ead",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-23b117f9-2302-4b3b-85de-35ffc3ffb14f.png",
+      "prompt_summary": "Crownroot living-root cantory with seedglass chimes and a resonance-bow training frame."
+    },
+    {
+      "id": "building_brasshollow_quenchbell_mortar_bay",
+      "path": "res://art/towns/source/buildings/curated/building_brasshollow_quenchbell_mortar_bay.png",
+      "sha256": "fe0f69ac21e4c6db7384987dfa97dd374b29283e544a69809e81dca55441e560",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a19e016c-bff5-4b03-abdf-e002077a0fa5.png",
+      "prompt_summary": "Blackbell basalt-and-brass assembly bay built around a suspended quench bell and proof rail."
+    },
+    {
+      "id": "building_veilmourn_saltwake_eulogy_house",
+      "path": "res://art/towns/source/buildings/curated/building_veilmourn_saltwake_eulogy_house.png",
+      "sha256": "87cde663f883e3211d60dcd3b6539fe868ac758dbab0459f6753f8f76e45aa61",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-79407b19-e805-42fc-9464-e6aa51c09a84.png",
+      "prompt_summary": "Pale Sounding pier house with mourning sails, rib arches, saltglass tablets, and mirror-tide basin."
+    }
+  ]
+}

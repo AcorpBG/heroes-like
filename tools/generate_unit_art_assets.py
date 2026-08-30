@@ -26,6 +26,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_foundry_saint",
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_pressure_lancers",
+    "unit_brasshollow_quenchbell_mortars",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
     "unit_citadel_pikeward",
@@ -120,6 +121,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_sunvault_zenith_lensbearers",
     "unit_thornwake_barkmantle_rams",
     "unit_thornwake_canopy_rammers",
+    "unit_thornwake_seedglass_cantors",
     "unit_thornwake_graft_matriarchs",
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
@@ -132,8 +134,14 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_veilmourn_mirrorkeel_reavers",
     "unit_veilmourn_mourning_lanterns",
     "unit_veilmourn_obituary_scribes",
+    "unit_veilmourn_saltwake_eulogists",
     "unit_veilmourn_undertow_harpooners",
     "unit_veilmourn_wakeglass_navigators",
+}
+PACKAGE_OPTIMIZED_CURATED_IDS = {
+    "unit_thornwake_seedglass_cantors",
+    "unit_brasshollow_quenchbell_mortars",
+    "unit_veilmourn_saltwake_eulogists",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {}
 
@@ -280,6 +288,10 @@ def main() -> int:
             else:
                 draw_curated_battle_troop_animation_sheet(unit, palette, curated_source, animation_path)
 
+        if unit_id in PACKAGE_OPTIMIZED_CURATED_IDS:
+            for runtime_path in (portrait_path, battle_path, standee_path, overworld_path, animation_path):
+                optimize_runtime_palette(runtime_path)
+
         art_record = {
             "id": unit_id,
             "unit_id": unit_id,
@@ -321,6 +333,14 @@ def main() -> int:
 
 def to_res_path(path: Path) -> str:
     return "res://" + path.relative_to(ROOT).as_posix()
+
+
+def optimize_runtime_palette(path: Path) -> None:
+    """Keep new curated runtime surfaces compact without changing their canvas or alpha."""
+    with Image.open(path) as source:
+        rgba = source.convert("RGBA")
+        optimized = rgba.quantize(colors=32, method=Image.Quantize.FASTOCTREE).convert("RGBA")
+        optimized.save(path, optimize=True)
 
 
 def curated_character_source_path(unit_id: str) -> Path | None:

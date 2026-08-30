@@ -3384,6 +3384,48 @@
       },
       "readiness_bonus": 2,
       "pressure_bonus": 1
+    },
+    {
+      "id": "building_thornwake_seedglass_cantory",
+      "name": "Seedglass Cantory",
+      "category": "dwelling",
+      "description": "Pale root arches and tuned seedglass chimes train Crownroot Cantors for mending volleys and held-line refrains.",
+      "cost": {"gold": 1000, "wood": 2},
+      "content_status": "horizon_specialist_company_live",
+      "faction_id": "faction_thornwake",
+      "requires": ["building_thornwake_sporeglass_hothouse", "building_thornwake_pollen_litany"],
+      "unlock_unit_id": "unit_thornwake_seedglass_cantors",
+      "growth_bonus": {"unit_thornwake_seedglass_cantors": 2},
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_quenchbell_mortar_bay",
+      "name": "Quenchbell Mortar Bay",
+      "category": "dwelling",
+      "description": "Blackbell's suspended quench bell calibrates compact mortar engines for bounded pressure salvos.",
+      "cost": {"gold": 2000, "ore": 1},
+      "content_status": "horizon_specialist_company_live",
+      "faction_id": "faction_brasshollow",
+      "requires": ["building_brasshollow_boiler_cathedral", "building_brasshollow_pressure_rail"],
+      "unlock_unit_id": "unit_brasshollow_quenchbell_mortars",
+      "growth_bonus": {"unit_brasshollow_quenchbell_mortars": 2},
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_saltwake_eulogy_house",
+      "name": "Saltwake Eulogy House",
+      "category": "dwelling",
+      "description": "Saltglass tablets and a mirror-tide basin commission Eulogists to record the harbor's last safe lines.",
+      "cost": {"gold": 1800, "wood": 1, "ore": 1},
+      "content_status": "horizon_specialist_company_live",
+      "faction_id": "faction_veilmourn",
+      "requires": ["building_veilmourn_obituary_vault", "building_veilmourn_wake_oratory"],
+      "unlock_unit_id": "unit_veilmourn_saltwake_eulogists",
+      "growth_bonus": {"unit_veilmourn_saltwake_eulogists": 2},
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
     }
   ]
 }
