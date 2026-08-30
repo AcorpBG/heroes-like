@@ -4661,7 +4661,11 @@
         {"placement_id": "ninefold_ash_cooler_kitchen", "site_id": "site_ash_cooler_kitchen", "x": 45, "y": 4},
         {"placement_id": "ninefold_lens_calibration_cart", "site_id": "site_lens_calibration_cart", "x": 4, "y": 9},
         {"placement_id": "dwelling_cinderwake_fold", "site_id": "site_cinderwake_fold", "x": 45, "y": 15, "guard_front_id": "ninefold_cinderwake_fold_watch"},
-        {"placement_id": "dwelling_tideglass_roost", "site_id": "site_tideglass_roost", "x": 38, "y": 22, "guard_front_id": "ninefold_tideglass_roost_watch"}
+        {"placement_id": "dwelling_tideglass_roost", "site_id": "site_tideglass_roost", "x": 38, "y": 22, "guard_front_id": "ninefold_tideglass_roost_watch"},
+        {"placement_id": "dwelling_galehorn_windfold", "site_id": "site_galehorn_windfold", "x": 12, "y": 34, "guard_front_id": "ninefold_galehorn_breakline_watch"},
+        {"placement_id": "dwelling_sunscale_lantern_conservatory", "site_id": "site_sunscale_lantern_conservatory", "x": 39, "y": 36, "guard_front_id": "ninefold_sunscale_lantern_drift_watch"},
+        {"placement_id": "dwelling_rimebell_whitewake_eyrie", "site_id": "site_rimebell_whitewake_eyrie", "x": 4, "y": 43, "guard_front_id": "ninefold_rimebell_whitewake_watch"},
+        {"placement_id": "dwelling_deepforge_seventh_vault", "site_id": "site_deepforge_seventh_vault", "x": 57, "y": 41, "guard_front_id": "ninefold_deepforge_seventh_seal_watch"}
       ],
       "artifact_nodes": [{"placement_id": "confluence_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 23, "y": 5}, {"placement_id": "confluence_quarry_tally_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 45}, {"placement_id": "confluence_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 44, "y": 45}, {"placement_id": "confluence_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 60, "y": 45}],
       "encounters": [
@@ -4805,10 +4809,10 @@
         {"placement_id": "ninefold_tideglass_roost_watch", "encounter_id": "encounter_tideglass_roost_watch", "x": 39, "y": 22, "difficulty": "high", "combat_seed": 26437, "prefer_identity_landmark": true},
         {"placement_id": "ninefold_brambleback_crown_watch", "encounter_id": "encounter_brambleback_crown_watch", "x": 19, "y": 10, "difficulty": "high", "combat_seed": 26501},
         {"placement_id": "ninefold_mireglass_bellbasin_watch", "encounter_id": "encounter_mireglass_bellbasin_watch", "x": 33, "y": 17, "difficulty": "high", "combat_seed": 26502},
-        {"placement_id": "ninefold_galehorn_breakline_watch", "encounter_id": "encounter_galehorn_breakline_watch", "x": 13, "y": 34, "difficulty": "high", "combat_seed": 26503},
-        {"placement_id": "ninefold_sunscale_lantern_drift_watch", "encounter_id": "encounter_sunscale_lantern_drift_watch", "x": 40, "y": 36, "difficulty": "high", "combat_seed": 26504},
-        {"placement_id": "ninefold_rimebell_whitewake_watch", "encounter_id": "encounter_rimebell_whitewake_watch", "x": 5, "y": 43, "difficulty": "high", "combat_seed": 26505},
-        {"placement_id": "ninefold_deepforge_seventh_seal_watch", "encounter_id": "encounter_deepforge_seventh_seal_watch", "x": 58, "y": 41, "difficulty": "high", "combat_seed": 26506}
+        {"placement_id": "ninefold_galehorn_breakline_watch", "encounter_id": "encounter_galehorn_breakline_watch", "x": 13, "y": 34, "difficulty": "high", "combat_seed": 26503, "prefer_identity_landmark": true, "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "site_galehorn_windfold", "target_placement_id": "dwelling_galehorn_windfold", "blocks_approach": true, "clear_required_for_target": true}},
+        {"placement_id": "ninefold_sunscale_lantern_drift_watch", "encounter_id": "encounter_sunscale_lantern_drift_watch", "x": 40, "y": 36, "difficulty": "high", "combat_seed": 26504, "prefer_identity_landmark": true, "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "site_sunscale_lantern_conservatory", "target_placement_id": "dwelling_sunscale_lantern_conservatory", "blocks_approach": true, "clear_required_for_target": true}},
+        {"placement_id": "ninefold_rimebell_whitewake_watch", "encounter_id": "encounter_rimebell_whitewake_watch", "x": 5, "y": 43, "difficulty": "high", "combat_seed": 26505, "prefer_identity_landmark": true, "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "site_rimebell_whitewake_eyrie", "target_placement_id": "dwelling_rimebell_whitewake_eyrie", "blocks_approach": true, "clear_required_for_target": true}},
+        {"placement_id": "ninefold_deepforge_seventh_seal_watch", "encounter_id": "encounter_deepforge_seventh_seal_watch", "x": 58, "y": 41, "difficulty": "high", "combat_seed": 26506, "prefer_identity_landmark": true, "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "site_deepforge_seventh_vault", "target_placement_id": "dwelling_deepforge_seventh_vault", "blocks_approach": true, "clear_required_for_target": true}}
       ]
     },
     {

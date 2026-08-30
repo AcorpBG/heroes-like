@@ -39,14 +39,14 @@ func _static_manifest_summary() -> Dictionary:
 			decorative_count += 1
 		else:
 			non_decorative_count += 1
-	if decorative_count != 200 or non_decorative_count != 186:
+	if decorative_count != 200 or non_decorative_count != 192:
 		_fail("Unexpected authored map object split: decorative=%d non_decorative=%d." % [decorative_count, non_decorative_count])
 		return {}
-	if distinct_asset_ids.size() != 178 or mappings.size() != 178:
-		_fail("Map object sprite manifest must map 178 gap objects to 178 distinct assets, found distinct=%d mapped=%d." % [distinct_asset_ids.size(), mappings.size()])
+	if distinct_asset_ids.size() != 192 or mappings.size() != 192:
+		_fail("Map object sprite manifest must map 192 authored non-decoration objects to distinct assets, found distinct=%d mapped=%d." % [distinct_asset_ids.size(), mappings.size()])
 		return {}
-	if int(coverage.get("total_distinct_authored_map_object_count_after_pass", 0)) != 386:
-		_fail("Map object sprite coverage does not prove all 386 authored map objects after the pass: %s" % JSON.stringify(coverage))
+	if int(coverage.get("total_distinct_authored_map_object_count_after_pass", 0)) != 392:
+		_fail("Map object sprite coverage does not prove all 392 authored map objects after the pass: %s" % JSON.stringify(coverage))
 		return {}
 	for object_id_value in mappings.keys():
 		var object_id := String(object_id_value)
