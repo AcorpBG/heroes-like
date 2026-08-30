@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "generator": "built_in_image_gen",
+  "use_case": "stylized-concept",
+  "asset_family": "third_hearths_town_screen_backdrops",
+  "runtime_size": [1600, 900],
+  "composition_contract": "scenery-first 16:9 town interior with calm central and lower-middle control space, no text, logo, frame, watermark, or baked UI",
+  "items": [
+    {
+      "town_id": "town_cinderlock_bastion",
+      "source": "town_cinderlock_bastion_source.png",
+      "source_sha256": "8e0ff25e86df012b732ea60c41372716704518ff930d9cb30912cf8d6aec4939",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0fa1b061-ba8b-4748-9359-b7f29a562880.png",
+      "runtime": "res://art/towns/runtime/backdrops/third_hearths/town_cinderlock_bastion.png",
+      "runtime_sha256": "a434edb7698bacd0bcc8fdbd1a339934034aa5058722172b5c1c5332a9119a27",
+      "prompt_summary": "Basalt Embercourt river citadel with working sluices, ember beacons, chain bridges, and cool river haze."
+    },
+    {
+      "town_id": "town_dawnmirror_observatory",
+      "source": "town_dawnmirror_observatory_source.png",
+      "source_sha256": "2f4c6451817e203e4dd340140008e97a18cbd6db51bacbb66e11e75281b96ab3",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-60f45946-35c2-4b56-8dfc-e71ed796e3a9.png",
+      "runtime": "res://art/towns/runtime/backdrops/third_hearths/town_dawnmirror_observatory.png",
+      "runtime_sha256": "68d08e760b9f31606fdda788b0f9b9348f050ae0b9f99e6acd05a3cd5becbecf",
+      "prompt_summary": "Sunvault cloud observatory with mirrored astrolabes, prism domes, lens bridges, and refracted dawn light."
+    },
+    {
+      "town_id": "town_briarwheel_enclave",
+      "source": "town_briarwheel_enclave_source.png",
+      "source_sha256": "e49c449cd8ddb133d93c3b18bd0fbe72adfa8c0675ea2135196e5a51fa757dd7",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-eb4fd787-2264-4fd8-bfc7-22027262f03e.png",
+      "runtime": "res://art/towns/runtime/backdrops/third_hearths/town_briarwheel_enclave.png",
+      "runtime_sha256": "8d30c21a02b9c65a12a410b39ff4a030944ed62b0f672df06d21498ee110371c",
+      "prompt_summary": "Thornwake living-root enclave around a monumental seedwheel, woven bridges, garden terraces, and mushroom lanterns."
+    },
+    {
+      "town_id": "town_cindercoil_foundry",
+      "source": "town_cindercoil_foundry_source.png",
+      "source_sha256": "e7b4a8b750e99073592b2c3473d9b70fbe203496201389bdc37deb59f706a676",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c14973e0-5c19-4515-93fe-0d3ec7721a35.png",
+      "runtime": "res://art/towns/runtime/backdrops/third_hearths/town_cindercoil_foundry.png",
+      "runtime_sha256": "fe26715de4b0526a83058b876c38a02b0994d2ab30503bc20e421f76c9090d11",
+      "prompt_summary": "Brasshollow coil foundry with rail cranes, gear lifts, copper roofs, molten channels, and controlled smoke."
+    },
+    {
+      "town_id": "town_gloamwake_anchorage",
+      "source": "town_gloamwake_anchorage_source.png",
+      "source_sha256": "3d4b13b37a7139e0abbf6cc0f2e055d6d5bbab11c7cd64e0c3060fd2b7f8c41c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-08375983-3deb-440e-972c-031707fa0810.png",
+      "runtime": "res://art/towns/runtime/backdrops/third_hearths/town_gloamwake_anchorage.png",
+      "runtime_sha256": "0acc0b6f5fe93dca5fd6d80392fdfbad11f563e15e666f04836c4a4126d5ad0f",
+      "prompt_summary": "Veilmourn blue-hour mist harbor with bell towers, black sails, mirror water, cliff archives, and memorial lanterns."
+    }
+  ]
+}

@@ -14564,6 +14564,31 @@ Completion evidence:
 Non-goals:
 - no new town engine, new faction, ship/embarkation system, Native RMG generation/parity change, save-version bump, broad economy or combat rebalance, campaign expansion, certification, publication, whole-game validation, or release-readiness claim.
 
+## Third Hearths Town-Screen Identities
+
+id: `content-third-hearths-town-screen-identities-10184`
+
+Status: completed.
+
+Implementation boundary:
+- give Cinderlock Bastion, Dawnmirror Observatory, Briarwheel Enclave, Cindercoil Foundry, and Gloamwake Anchorage one original 1600x900 scenic town-screen backdrop each, composed for the existing scenery-first Town shell and its compact edge controls;
+- resolve scenic art by exact town id before the current faction fallback so each new settlement reads as a place rather than another copy of its faction capital, without changing town rules, actions, save authority, or old-town presentation;
+- recover bounded release-package headroom by applying tracked lossy runtime import settings to town scenic backdrops while retaining the editable PNG sources and visually checking both supported viewports.
+
+Completion criteria:
+- all five new towns select distinct exact-id backdrops and every other town retains the correct faction fallback;
+- inspected 1280x720 and 1920x1080 live Town captures preserve readable scenery, negative space, cover-crop composition, existing edge controls, and no text baked into the art;
+- one consolidated five-town runtime/capture smoke, repository validation, and bounded Linux/Windows package startup gates pass after the whole family is implemented, with meaningful package-ceiling headroom restored.
+
+Completion evidence:
+- shipped five distinct original 1600x900 scenic backdrops for Cinderlock Bastion, Dawnmirror Observatory, Briarwheel Enclave, Cindercoil Foundry, and Gloamwake Anchorage, selected by exact town id before the unchanged six-faction fallback;
+- one consolidated live Town-shell smoke passed all five towns at both 1280x720 and 1920x1080, retained exact save-version-9 session authority, verified the six representative fallback towns, and produced ten captures that were visually inspected for composition and control readability;
+- tracked lossy imports for all eleven town backdrops reduced the matching Linux/Windows PCK from 249844748 to 241603288 bytes, restoring 8396712 bytes of ceiling headroom while editable generated sources remain excluded;
+- repository validation, Linux export/boot, and Windows export/Wine boot passed with all eleven runtime backdrop textures and import metadata present.
+
+Non-goals:
+- no town mechanics, build/muster roster, economy, AI, interaction, save/schema, UI layout, input, accessibility semantic, animation, audio content, campaign, scenario, overworld, battle, Native RMG, certification, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

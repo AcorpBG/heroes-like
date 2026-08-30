@@ -281,6 +281,24 @@ REQUIRED_FACTION_SET_ATLAS_NAME = "faction_set_insignia_atlas"
 REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES = (
     "art/artifacts/runtime/faction_set_insignia_atlas.png.import",
 )
+REQUIRED_TOWN_SCENIC_BACKDROP_NAMES = (
+    "town_embercourt", "town_mireclaw", "town_sunvault", "town_thornwake", "town_brasshollow", "town_veilmourn",
+    "town_cinderlock_bastion", "town_dawnmirror_observatory", "town_briarwheel_enclave",
+    "town_cindercoil_foundry", "town_gloamwake_anchorage",
+)
+REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES = (
+    "art/towns/runtime/backdrops/town_embercourt.png.import",
+    "art/towns/runtime/backdrops/town_mireclaw.png.import",
+    "art/towns/runtime/backdrops/town_sunvault.png.import",
+    "art/towns/runtime/backdrops/town_thornwake.png.import",
+    "art/towns/runtime/backdrops/town_brasshollow.png.import",
+    "art/towns/runtime/backdrops/town_veilmourn.png.import",
+    "art/towns/runtime/backdrops/third_hearths/town_cinderlock_bastion.png.import",
+    "art/towns/runtime/backdrops/third_hearths/town_dawnmirror_observatory.png.import",
+    "art/towns/runtime/backdrops/third_hearths/town_briarwheel_enclave.png.import",
+    "art/towns/runtime/backdrops/third_hearths/town_cindercoil_foundry.png.import",
+    "art/towns/runtime/backdrops/third_hearths/town_gloamwake_anchorage.png.import",
+)
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
     "Parse Error",
@@ -527,6 +545,7 @@ def pck_terrain_payload_summary() -> dict:
     required_battle_status_effect_badge_texture_entries = imported_payload_paths_for(REQUIRED_BATTLE_STATUS_EFFECT_BADGE_PCK_IMPORT_ENTRIES)
     required_hero_specialty_atlas_texture_entries = imported_payload_paths_for(REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES)
     required_faction_set_atlas_texture_entries = imported_payload_paths_for(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES)
+    required_town_scenic_backdrop_texture_entries = imported_payload_paths_for(REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES)
     summary = {
         "checked": False,
         "valid_directory": False,
@@ -629,6 +648,12 @@ def pck_terrain_payload_summary() -> dict:
         "faction_set_atlas_texture_entries": [],
         "faction_set_atlas_texture_names": [],
         "faction_set_atlas_entries_present": False,
+        "required_town_scenic_backdrop_import_entries": list(REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES),
+        "required_town_scenic_backdrop_texture_entries": sorted(required_town_scenic_backdrop_texture_entries),
+        "town_scenic_backdrop_import_entries": [],
+        "town_scenic_backdrop_texture_entries": [],
+        "town_scenic_backdrop_texture_names": [],
+        "town_scenic_backdrop_entries_present": False,
         "repository_source_art_metadata_count": len(source_art_metadata_paths),
         "repository_source_art_imported_payload_count": len(source_art_imported_payload_paths),
         "source_art_metadata_entries": [],
@@ -741,6 +766,10 @@ def pck_terrain_payload_summary() -> dict:
                     summary["faction_set_atlas_import_entries"].append(entry_path)
                 if entry_path in required_faction_set_atlas_texture_entries:
                     summary["faction_set_atlas_texture_entries"].append(entry_path)
+                if entry_path in REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES:
+                    summary["town_scenic_backdrop_import_entries"].append(entry_path)
+                if entry_path in required_town_scenic_backdrop_texture_entries:
+                    summary["town_scenic_backdrop_texture_entries"].append(entry_path)
                 if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
                     imported_name = Path(entry_path).name.split(".png-", 1)[0]
                     if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
@@ -765,6 +794,8 @@ def pck_terrain_payload_summary() -> dict:
                         summary["hero_specialty_atlas_texture_names"].append(imported_name)
                     if imported_name == REQUIRED_FACTION_SET_ATLAS_NAME:
                         summary["faction_set_atlas_texture_names"].append(imported_name)
+                    if imported_name in REQUIRED_TOWN_SCENIC_BACKDROP_NAMES:
+                        summary["town_scenic_backdrop_texture_names"].append(imported_name)
                     if imported_name in {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME, REQUIRED_MIRE_SUN_CONTRACT_ATLAS_NAME, REQUIRED_ASCENDANT_COMPANY_ATLAS_NAME, REQUIRED_WAYWATCH_TRIAL_ATLAS_NAME, REQUIRED_SPELLWRIGHT_EXPEDITION_ATLAS_NAME, REQUIRED_RITUAL_RELAY_CIRCUIT_ATLAS_NAME, REQUIRED_GRAND_CONVERGENCE_MARCH_ATLAS_NAME}:
                         summary["recurring_encounter_atlas_texture_names"].append(imported_name)
                     if imported_name in {REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME, REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME, REQUIRED_MAJOR_VAULT_UNSEALED_ATLAS_NAME, REQUIRED_CREATURE_BANK_OPENED_ATLAS_NAME, REQUIRED_MINOR_GUARDED_CACHE_OPENED_ATLAS_NAME, REQUIRED_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_REMAINING_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_FINAL_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_GUARDED_ROUTE_OPENED_ATLAS_NAME, REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME, REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME, REQUIRED_SCOUTING_STRUCTURE_CONTROLLED_ATLAS_NAME, REQUIRED_ROADS_OBJECTIVES_STATE_ATLAS_NAME, REQUIRED_LAND_TRANSIT_ACTIVE_ATLAS_NAME, REQUIRED_ROUTE_CONTROL_OPENED_ATLAS_NAME, REQUIRED_FOURTEEN_MARKS_STATE_ATLAS_NAME, REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME, REQUIRED_THIRD_HEARTHS_ATLAS_NAME}:
@@ -794,6 +825,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["battle_status_effect_badge_entries_present"] = len(required_battle_status_effect_badge_texture_entries) == len(REQUIRED_BATTLE_STATUS_EFFECT_BADGE_NAMES) and set(summary["battle_status_effect_badge_import_entries"]) == set(REQUIRED_BATTLE_STATUS_EFFECT_BADGE_PCK_IMPORT_ENTRIES) and set(summary["battle_status_effect_badge_texture_entries"]) == required_battle_status_effect_badge_texture_entries
     summary["hero_specialty_atlas_entries_present"] = len(required_hero_specialty_atlas_texture_entries) == 1 and set(summary["hero_specialty_atlas_import_entries"]) == set(REQUIRED_HERO_SPECIALTY_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["hero_specialty_atlas_texture_entries"]) == required_hero_specialty_atlas_texture_entries and set(summary["hero_specialty_atlas_texture_names"]) == {REQUIRED_HERO_SPECIALTY_ATLAS_NAME}
     summary["faction_set_atlas_entries_present"] = len(required_faction_set_atlas_texture_entries) == 1 and set(summary["faction_set_atlas_import_entries"]) == set(REQUIRED_FACTION_SET_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["faction_set_atlas_texture_entries"]) == required_faction_set_atlas_texture_entries and set(summary["faction_set_atlas_texture_names"]) == {REQUIRED_FACTION_SET_ATLAS_NAME}
+    summary["town_scenic_backdrop_entries_present"] = len(required_town_scenic_backdrop_texture_entries) == len(REQUIRED_TOWN_SCENIC_BACKDROP_NAMES) and set(summary["town_scenic_backdrop_import_entries"]) == set(REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES) and set(summary["town_scenic_backdrop_texture_entries"]) == required_town_scenic_backdrop_texture_entries and set(summary["town_scenic_backdrop_texture_names"]) == set(REQUIRED_TOWN_SCENIC_BACKDROP_NAMES)
     summary["source_art_excluded"] = (
         len(source_art_metadata_paths) > 0
         and len(source_art_imported_payload_paths) > 0
@@ -864,6 +896,7 @@ def main() -> int:
         and bool(terrain_payload["battle_status_effect_badge_entries_present"])
         and bool(terrain_payload["hero_specialty_atlas_entries_present"])
         and bool(terrain_payload["faction_set_atlas_entries_present"])
+        and bool(terrain_payload["town_scenic_backdrop_entries_present"])
         and bool(terrain_payload["source_art_excluded"])
     )
 
@@ -1044,6 +1077,9 @@ def main() -> int:
         "faction_set_atlas_pck_import_entry_count": len(terrain_payload["faction_set_atlas_import_entries"]),
         "faction_set_atlas_pck_texture_count": len(terrain_payload["faction_set_atlas_texture_entries"]),
         "faction_set_atlas_pck_entries_present": terrain_payload["faction_set_atlas_entries_present"],
+        "town_scenic_backdrop_pck_import_entry_count": len(terrain_payload["town_scenic_backdrop_import_entries"]),
+        "town_scenic_backdrop_pck_texture_count": len(terrain_payload["town_scenic_backdrop_texture_entries"]),
+        "town_scenic_backdrop_pck_entries_present": terrain_payload["town_scenic_backdrop_entries_present"],
         "source_art_pck_metadata_entry_count": len(terrain_payload["source_art_metadata_entries"]),
         "source_art_pck_imported_payload_count": len(terrain_payload["source_art_imported_payload_entries"]),
         "source_art_pck_imported_payload_bytes": terrain_payload["source_art_imported_payload_bytes"],

@@ -151,6 +151,9 @@ var _town_vfx_textures: Dictionary = {}
 var _town_vfx_texture_missing: Dictionary = {}
 var _town_action_last_draw: Dictionary = {}
 var _scenic_ambient_light_phase := 0.0
+var _resolved_scenic_backdrop_path := ""
+var _resolved_scenic_backdrop_scope := ""
+var _resolved_scenic_backdrop_texture: Texture2D
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -187,6 +190,7 @@ func set_town_state(session) -> void:
 		if not _town.is_empty():
 			_town_template = ContentService.get_town(String(_town.get("town_id", "")))
 			_faction = ContentService.get_faction(String(_town_template.get("faction_id", "")))
+			_resolve_scenic_backdrop()
 			_stationed = HeroCommandRulesScript.stationed_heroes(session, _town)
 			_build_actions = TownRulesScript.get_build_actions(session)
 			_recruit_actions = TownRulesScript.get_recruit_actions(session)
@@ -221,6 +225,7 @@ func set_precomputed_town_state(session, state: Dictionary) -> void:
 	_threat = _duplicate_dictionary(state.get("threat", {}))
 	_occupation = _duplicate_dictionary(state.get("occupation", {}))
 	_front = _duplicate_dictionary(state.get("front", {}))
+	_resolve_scenic_backdrop()
 	_sync_processing_state()
 	queue_redraw()
 
@@ -240,6 +245,9 @@ func _clear_town_state(session) -> void:
 	_threat = {}
 	_occupation = {}
 	_front = {}
+	_resolved_scenic_backdrop_path = ""
+	_resolved_scenic_backdrop_scope = ""
+	_resolved_scenic_backdrop_texture = null
 
 func _duplicate_dictionary(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
@@ -1134,8 +1142,26 @@ func _on_settings_changed(_settings: Dictionary) -> void:
 	_sync_processing_state()
 
 func _scenic_backdrop_texture() -> Texture2D:
-	var value: Variant = FACTION_BACKDROP_TEXTURES.get(_town_faction_id(), null)
-	return value as Texture2D if value is Texture2D else null
+	return _resolved_scenic_backdrop_texture
+
+func _resolve_scenic_backdrop() -> void:
+	_resolved_scenic_backdrop_path = ""
+	_resolved_scenic_backdrop_scope = ""
+	_resolved_scenic_backdrop_texture = null
+	var town_path := String(_town_template.get("scenic_backdrop_path", "")).strip_edges()
+	if town_path != "" and ResourceLoader.exists(town_path, "Texture2D"):
+		var town_resource: Resource = load(town_path)
+		if town_resource is Texture2D:
+			_resolved_scenic_backdrop_path = town_path
+			_resolved_scenic_backdrop_scope = "exact_town"
+			_resolved_scenic_backdrop_texture = town_resource as Texture2D
+			return
+	var faction_id := _town_faction_id()
+	var faction_texture: Variant = FACTION_BACKDROP_TEXTURES.get(faction_id, null)
+	if faction_texture is Texture2D:
+		_resolved_scenic_backdrop_path = String(FACTION_BACKDROP_PATHS.get(faction_id, ""))
+		_resolved_scenic_backdrop_scope = "faction_fallback"
+		_resolved_scenic_backdrop_texture = faction_texture as Texture2D
 
 func _town_faction_id() -> String:
 	var faction_id := String(_town_template.get("faction_id", ""))
@@ -1148,7 +1174,9 @@ func _cover_source_rect(texture_size: Vector2, destination_size: Vector2) -> Rec
 		return Rect2()
 	var cover_scale := maxf(destination_size.x / texture_size.x, destination_size.y / texture_size.y)
 	var source_size := destination_size / cover_scale
-	return Rect2((texture_size - source_size) * 0.5, source_size)
+	source_size = Vector2(minf(source_size.x, texture_size.x), minf(source_size.y, texture_size.y))
+	var source_position := Vector2(maxf(0.0, (texture_size.x - source_size.x) * 0.5), maxf(0.0, (texture_size.y - source_size.y) * 0.5))
+	return Rect2(source_position, source_size)
 
 func validation_scenic_backdrop_summary() -> Dictionary:
 	var faction_id := _town_faction_id()
@@ -1157,8 +1185,10 @@ func validation_scenic_backdrop_summary() -> Dictionary:
 	var texture_size := texture.get_size() if texture != null else Vector2.ZERO
 	var source_rect := _cover_source_rect(texture_size, scene_rect.size) if texture != null else Rect2()
 	return {
+		"town_id": String(_town_template.get("id", _town.get("town_id", ""))),
 		"faction_id": faction_id,
-		"mapped_path": String(FACTION_BACKDROP_PATHS.get(faction_id, "")),
+		"mapped_path": _resolved_scenic_backdrop_path,
+		"selection_scope": _resolved_scenic_backdrop_scope,
 		"texture_loaded": texture != null,
 		"texture_size": texture_size,
 		"destination_rect": scene_rect,
