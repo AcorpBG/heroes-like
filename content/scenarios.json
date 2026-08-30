@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 76,
+  "player_facing_active_scenario_count": 77,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -16628,6 +16628,423 @@
             }
           ],
           "siege_target_placement_id": "auxiliary_cinderlock",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3
+        }
+      ]
+    },
+    {
+      "id": "three-banner-field-commission",
+      "name": "Three-Banner Field Commission",
+      "selection": {
+        "summary": "Lead Neral across a measured frontier, defeat three independent banner companies, commission their surviving specialists, and claim Gloamwake before its mourning fleet closes the eastern road.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Commission Road (18x12)",
+        "player_summary": "Neral's Halo Reserve begins at Dawnmirror with three formation slots held open for commissioned auxiliaries.",
+        "enemy_summary": "Embercourt, Mireclaw, and Sunvault trial companies hold separate survey lines while Veilmourn pressure gathers at Gloamwake.",
+        "availability": {
+          "campaign": false,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 18,
+        "height": 12
+      },
+      "player_faction_id": "faction_sunvault",
+      "player_army_id": "army_halo_reserve",
+      "hero_id": "hero_neral",
+      "starting_resources": {
+        "gold": 1600,
+        "wood": 8,
+        "ore": 8,
+        "aetherglass": 1
+      },
+      "map": [
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"],
+        ["sand", "sand", "sand", "sand", "sand", "grass", "grass", "grass", "grass", "dirt", "dirt", "dirt", "dirt", "mire", "mire", "mire", "mire", "mire"]
+      ],
+      "start": {
+        "x": 2,
+        "y": 6
+      },
+      "hero_starts": [
+        "hero_neral"
+      ],
+      "objectives": {
+        "victory_text": "The three banner companies accept Neral's field commission and Gloamwake's claim on the eastern road is broken.",
+        "defeat_text": "Gloamwake closes the commission road before Neral can bind the three specialist companies into one field reserve.",
+        "victory": [
+          {
+            "id": "commission_beaconline_writguard",
+            "label": "Commission the Beaconline Writguard",
+            "type": "encounter_resolved",
+            "placement_id": "commission_beaconline_writguard"
+          },
+          {
+            "id": "commission_fenbell_chainstalkers",
+            "label": "Commission the Fenbell Chainstalkers",
+            "type": "encounter_resolved",
+            "placement_id": "commission_fenbell_chainstalkers"
+          },
+          {
+            "id": "commission_zenith_lensbearers",
+            "label": "Commission the Zenith Lensbearers",
+            "type": "encounter_resolved",
+            "placement_id": "commission_zenith_lensbearers"
+          },
+          {
+            "id": "claim_commission_gloamwake",
+            "label": "Claim Gloamwake Anchorage",
+            "type": "town_owned_by_player",
+            "placement_id": "commission_gloamwake"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_commission_dawnmirror",
+            "label": "Keep Dawnmirror Observatory under your banner",
+            "type": "town_not_owned_by_player",
+            "placement_id": "commission_dawnmirror"
+          },
+          {
+            "id": "neral_survives_field_commission",
+            "label": "Neral must survive the commission road",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_commission_veilmourn",
+            "label": "Do not let Veilmourn pressure reach 14",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_veilmourn",
+            "threshold": 14
+          },
+          {
+            "id": "finish_field_commission_in_time",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "commission_beaconline_survivors_join",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "commission_beaconline_writguard"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_army_units",
+              "units": {
+                "unit_embercourt_beaconline_writguard": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Two Beaconline Writguard lower their lantern pennons and accept Neral's measured field commission."
+            }
+          ]
+        },
+        {
+          "id": "commission_fenbell_survivors_join",
+          "priority": 118,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "commission_fenbell_chainstalkers"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_army_units",
+              "units": {
+                "unit_mireclaw_fenbell_chainstalkers": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Two Fenbell Chainstalkers coil their hooks, silence their bells, and take the commission road."
+            }
+          ]
+        },
+        {
+          "id": "commission_zenith_survivors_join",
+          "priority": 116,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "commission_zenith_lensbearers"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_army_units",
+              "units": {
+                "unit_sunvault_zenith_lensbearers": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Two Zenith Lensbearers fold their survey vanes and align their apertures with Neral's reserve."
+            }
+          ]
+        },
+        {
+          "id": "commission_day_three_stores",
+          "priority": 104,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "commission_dawnmirror"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 300,
+                "wood": 1,
+                "ore": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Dawnmirror releases its calibrated reserve chest for the three-banner commission."
+            }
+          ]
+        },
+        {
+          "id": "commission_day_four_relief",
+          "priority": 98,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 4
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "commission_dawnmirror"
+            }
+          ],
+          "effects": [
+            {
+              "type": "town_add_recruits",
+              "placement_id": "commission_dawnmirror",
+              "recruits": {
+                "unit_sunvault_shard_wardens": 2,
+                "unit_sunvault_prism_adepts": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "A compact Halo relief detail reaches Dawnmirror while Neral measures the three trial lines."
+            }
+          ]
+        },
+        {
+          "id": "commission_unbroken_road_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 7
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "claim_commission_gloamwake"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "Gloamwake's mourning bells carry farther while the three-banner commission remains unfinished."
+            }
+          ]
+        },
+        {
+          "id": "commission_gloamwake_counterstroke",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 10
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "claim_commission_gloamwake"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "commission_gloamwake_counterstroke_host",
+                "encounter_id": "encounter_bellwake_privateers",
+                "x": 15,
+                "y": 2,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_veilmourn",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A Bellwake privateer counterstroke leaves Gloamwake to cut the unfinished commission road."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "commission_dawnmirror",
+          "town_id": "town_dawnmirror_observatory",
+          "x": 1,
+          "y": 6,
+          "owner": "player"
+        },
+        {
+          "placement_id": "commission_gloamwake",
+          "town_id": "town_gloamwake_anchorage",
+          "x": 16,
+          "y": 6,
+          "owner": "enemy"
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "commission_player_wood",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 3
+        },
+        {
+          "placement_id": "commission_player_ore",
+          "site_id": "site_ore_crates",
+          "x": 2,
+          "y": 9
+        },
+        {
+          "placement_id": "commission_beacon_cache",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 6,
+          "y": 1
+        },
+        {
+          "placement_id": "commission_fenbell_cache",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 9,
+          "y": 9
+        },
+        {
+          "placement_id": "commission_zenith_cache",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 13,
+          "y": 3
+        },
+        {
+          "placement_id": "commission_gloamwake_exchange",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 16,
+          "y": 9,
+          "collected_by_faction_id": "faction_veilmourn"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "commission_prismward_mantle",
+          "artifact_id": "artifact_prismward_mantle",
+          "x": 7,
+          "y": 10
+        },
+        {
+          "placement_id": "commission_black_sail_compass",
+          "artifact_id": "artifact_black_sail_compass",
+          "x": 11,
+          "y": 1
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "commission_beaconline_writguard",
+          "encounter_id": "encounter_three_banner_beaconline_writguard",
+          "x": 5,
+          "y": 2,
+          "difficulty": "medium",
+          "combat_seed": 30701
+        },
+        {
+          "placement_id": "commission_fenbell_chainstalkers",
+          "encounter_id": "encounter_three_banner_fenbell_chainstalkers",
+          "x": 9,
+          "y": 6,
+          "difficulty": "medium",
+          "combat_seed": 30702
+        },
+        {
+          "placement_id": "commission_zenith_lensbearers",
+          "encounter_id": "encounter_three_banner_zenith_lensbearers",
+          "x": 13,
+          "y": 9,
+          "difficulty": "medium",
+          "combat_seed": 30703
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_veilmourn",
+          "label": "Gloamwake Mourning Claim",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 170,
+            "ore": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_bellwake_privateers",
+            "encounter_nightglass_dominion"
+          ],
+          "spawn_points": [
+            {
+              "x": 17,
+              "y": 1
+            },
+            {
+              "x": 17,
+              "y": 10
+            }
+          ],
+          "siege_target_placement_id": "commission_dawnmirror",
           "siege_active_raid_threshold": 2,
           "siege_capture_progress": 3
         }
