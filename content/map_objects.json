@@ -36372,10 +36372,10 @@
         "guard_encounter_id": "encounter_roadward_lodge_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -36386,8 +36386,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_roadward_lodge_watch",
         "guard_encounter_id": "encounter_roadward_lodge_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -36396,7 +36396,7 @@
         "guard_encounter_id": "encounter_roadward_lodge_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -36410,23 +36410,24 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+      "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "guarded_reward_site_runtime_supported": true,
+      "status": "resource_and_route_rewards_live",
+      "live_reward_grants": true,
+      "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -36581,10 +36582,10 @@
         "guard_encounter_id": "encounter_harbor_pilot_house_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -36595,8 +36596,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_harbor_pilot_house_watch",
         "guard_encounter_id": "encounter_harbor_pilot_house_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -36605,7 +36606,7 @@
         "guard_encounter_id": "encounter_harbor_pilot_house_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -36618,23 +36619,26 @@
           "gold",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "artifact_reward_execution": true,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -36789,10 +36793,10 @@
         "guard_encounter_id": "encounter_dustjack_yard_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -36803,8 +36807,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_dustjack_yard_watch",
         "guard_encounter_id": "encounter_dustjack_yard_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "standard",
@@ -36813,7 +36817,7 @@
         "guard_encounter_id": "encounter_dustjack_yard_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -36826,23 +36830,24 @@
           "gold",
           "ore"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -36987,10 +36992,10 @@
         "guard_encounter_id": "encounter_greenbranch_copse_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37001,8 +37006,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_greenbranch_copse_watch",
         "guard_encounter_id": "encounter_greenbranch_copse_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -37011,7 +37016,7 @@
         "guard_encounter_id": "encounter_greenbranch_copse_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -37024,23 +37029,24 @@
           "gold",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -37181,9 +37187,10 @@
         "cooldown_days": 0,
         "refresh_rule": "route_state"
       },
-      "guarded_reward_contract": {
-        "contract_id": "guarded_reward_contract_fog_quay_ambush",
-        "resource_site_id": "site_fog_quay_ambush",
+    "guarded_reward_contract": {
+      "contract_id": "guarded_reward_contract_fog_quay_ambush",
+      "resource_site_id": "site_fog_quay_ambush",
+      "artifact_reward_table_id": "artifact_source_guarded_sites_standard",
         "reward_site_role": "guarded_route_reward_hybrid",
         "reward_categories": [
           "route",
@@ -37195,10 +37202,10 @@
         "guard_encounter_id": "encounter_reedbarge_mooring_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37209,8 +37216,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_reedbarge_mooring_watch",
         "guard_encounter_id": "encounter_reedbarge_mooring_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "standard",
@@ -37219,7 +37226,7 @@
         "guard_encounter_id": "encounter_reedbarge_mooring_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -37232,23 +37239,26 @@
           "gold",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "artifact_reward_execution": true,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -37388,10 +37398,10 @@
         "guard_encounter_id": "encounter_kite_signal_eyrie_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37402,8 +37412,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_kite_signal_eyrie_watch",
         "guard_encounter_id": "encounter_kite_signal_eyrie_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -37412,7 +37422,7 @@
         "guard_encounter_id": "encounter_kite_signal_eyrie_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -37425,23 +37435,24 @@
           "gold",
           "ore"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -37581,10 +37592,10 @@
         "guard_encounter_id": "encounter_charcoal_burners_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37595,8 +37606,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_charcoal_burners_watch",
         "guard_encounter_id": "encounter_charcoal_burners_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "standard",
@@ -37605,7 +37616,7 @@
         "guard_encounter_id": "encounter_charcoal_burners_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -37619,23 +37630,24 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -37790,10 +37802,10 @@
         "guard_encounter_id": "encounter_frostwharf_house_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-        "one_time_reward": false,
-        "route_hybrid": true,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+      "one_time_reward": true,
+      "route_hybrid": true,
+      "metadata_only_guard_contract": false,
+      "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37804,8 +37816,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_frostwharf_house_watch",
         "guard_encounter_id": "encounter_frostwharf_house_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -37814,7 +37826,7 @@
         "guard_encounter_id": "encounter_frostwharf_house_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "exact guard clearance unlocks one-time reward claim and opens the route body"
       },
       "reward_preview": {
         "reward_categories": [
@@ -37828,23 +37840,24 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
