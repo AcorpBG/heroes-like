@@ -14614,6 +14614,33 @@ Completion evidence:
 Non-goals:
 - no new town definition, faction, hero, unit, building, economy, muster, AI, interaction, save/schema, UI layout, input, animation, audio, campaign, scenario, overworld, battle, Native RMG, certification, publication, whole-game validation, or release-readiness claim.
 
+## Three-Hearth Auxiliary Charter
+
+id: `content-three-hearth-auxiliary-charter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one original scenario-earned tier-five auxiliary to Thornwake, Brasshollow, and Veilmourn, using only the existing live combat ability contracts;
+- give every auxiliary a distinct transparent character master and generate its portrait, battle icon, battle standee, overworld icon, and battle animation sheet through the existing curated unit-art pipeline;
+- ship three faction-correct army groups and encounters in one original compact skirmish where resolving each trial adds that exact surviving auxiliary stack to the active hero army;
+- preserve save-version-9 authority, cross-platform content paths, bounded package size, and existing unit/town recruitment rules.
+
+Completion criteria:
+- all three units resolve exact data, curated art, runtime surfaces, supported combat abilities, and encounter use;
+- the Three-Hearth Auxiliary Charter scenario loads with collision-free placements, each trial constructs a valid battle, and its one-time hook recruits the exact new stack without repeat mutation;
+- all three recruited stacks survive a save-version-9 round trip and remain visible through the live army and battle presentation;
+- one consolidated three-case gameplay/battle-art/reward/save smoke, repository validation, and bounded Linux/Windows package startup gates pass after the whole batch is implemented.
+
+Completion evidence:
+- shipped Canopy Rammers, Pressure Lancers, and Wakeglass Navigators as three original scenario-earned tier-five auxiliaries, each with a distinct 512x512 curated master, generated portrait, battle icon, grounded standee, overworld icon, battle animation sheet, faction army group, and authored encounter;
+- shipped the collision-free 16x10 Three-Hearth Auxiliary Charter skirmish with three battle trials, exact one-time two-unit survivor rewards, day-four town relief, a day-ten Duskfen counterstroke, six resource placements, two artifacts, and a final hostile-town claim;
+- one consolidated live smoke passed all three encounter battles, exact abilities and art hashes, one-time recruitment, six recruited units, save-version-9 round trip, and live BattleBoard icon, standee, and animation loading;
+- repository validation passed at 106 units, 154 army groups, 96 encounters, and 76 active scenarios; Linux and Windows export/startup gates both passed with source art excluded and a 246159200-byte PCK below the 250000000-byte ceiling.
+
+Non-goals:
+- no new combat ability engine, faction, town production roster, save-version bump, broad combat rebalance, campaign expansion, Native RMG change, certification, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

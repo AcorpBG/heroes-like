@@ -4485,6 +4485,160 @@
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {},
       "status_immunity_ids": []
+    },
+    {
+      "id": "unit_thornwake_canopy_rammers",
+      "name": "Canopy Rammers",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 5,
+      "hp": 36,
+      "attack": 11,
+      "defense": 12,
+      "min_damage": 8,
+      "max_damage": 11,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 440,
+        "wood": 3
+      },
+      "content_status": "scenario_auxiliary",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Canopy Breach",
+          "description": "Forked living horns drive across a half-open lane without surrendering the Rammer's full impact.",
+          "distance_one_multiplier": 1.0
+        },
+        {
+          "id": "brace",
+          "name": "Root-Set Counter",
+          "description": "Once planted, a Canopy Rammer answers a charge with a short binding shock that steals the attacker's next step.",
+          "retaliation_multiplier": 1.1,
+          "defending_cohesion_bonus": 1,
+          "status_id": "status_staggered",
+          "status_label": "Canopy-Staggered",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -1
+          }
+        }
+      ],
+      "spell_resistance_pct": 8,
+      "control_resistance_pct": 5,
+      "spell_school_resistance_pct": {
+        "root": 12
+      },
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_brasshollow_pressure_lancers",
+      "name": "Pressure Lancers",
+      "faction_id": "faction_brasshollow",
+      "role": "melee",
+      "tier": 5,
+      "hp": 29,
+      "attack": 11,
+      "defense": 9,
+      "min_damage": 7,
+      "max_damage": 12,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 540,
+        "ore": 3
+      },
+      "content_status": "scenario_auxiliary",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Piston Lance",
+          "description": "The driving piston keeps its point dangerous across a partially closed lane.",
+          "distance_one_multiplier": 1.05
+        },
+        {
+          "id": "harry",
+          "name": "Exhaust Trail",
+          "description": "The redline pass leaves one veteran line choking in hot grit and pressure smoke.",
+          "status_id": "status_harried",
+          "status_label": "Exhaust-Choked",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 4
+        }
+      ],
+      "spell_resistance_pct": 5,
+      "control_resistance_pct": 5,
+      "spell_school_resistance_pct": {
+        "furnace": 10
+      },
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_veilmourn_wakeglass_navigators",
+      "name": "Wakeglass Navigators",
+      "faction_id": "faction_veilmourn",
+      "role": "melee",
+      "tier": 5,
+      "hp": 26,
+      "attack": 10,
+      "defense": 9,
+      "min_damage": 6,
+      "max_damage": 9,
+      "speed": 4,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 390,
+        "memory_salt": 1
+      },
+      "content_status": "scenario_auxiliary",
+      "abilities": [
+        {
+          "id": "fog_screen",
+          "name": "Wakeglass Bearing",
+          "description": "Inside a fog bank, the suspended compass finds a cold route through incoming fire.",
+          "required_battlefield_tags": [
+            "fog_bank"
+          ],
+          "incoming_damage_multiplier": 0.93
+        },
+        {
+          "id": "harry",
+          "name": "False Bearing",
+          "description": "Once per battle, a refracted meridian sends a veteran line one beat off course.",
+          "status_id": "status_harried",
+          "status_label": "Mischarted",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 3
+        }
+      ],
+      "spell_resistance_pct": 10,
+      "control_resistance_pct": 5,
+      "spell_school_resistance_pct": {
+        "veil": 15
+      },
+      "status_immunity_ids": []
     }
   ]
 }

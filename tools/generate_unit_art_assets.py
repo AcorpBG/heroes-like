@@ -25,6 +25,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_debt_engine_exactors",
     "unit_brasshollow_foundry_saint",
     "unit_brasshollow_furnace_pavis_teams",
+    "unit_brasshollow_pressure_lancers",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
     "unit_citadel_pikeward",
@@ -107,6 +108,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_sunvault_shard_wardens",
     "unit_sunvault_solar_array_striders",
     "unit_thornwake_barkmantle_rams",
+    "unit_thornwake_canopy_rammers",
     "unit_thornwake_graft_matriarchs",
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
@@ -120,6 +122,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_veilmourn_mourning_lanterns",
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_undertow_harpooners",
+    "unit_veilmourn_wakeglass_navigators",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {}
 
