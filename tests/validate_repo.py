@@ -6227,7 +6227,7 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
         role = str(obj.get("batch004_role", ""))
         site_id = str(obj.get("resource_site_id", ""))
         site = resource_sites.get(site_id, {}) if site_id else {}
-        selected_live_rope_lift = object_id == "object_rope_lift" and site_id == "site_rope_lift"
+        live_land_transit = role in {"two_way_transit", "one_way_transit"}
         footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
         width = int(footprint.get("width", 0))
         height = int(footprint.get("height", 0))
@@ -6280,20 +6280,20 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
         if directionality:
             increment_count(section["directionality_counts"], directionality)
         endpoint_metadata_only = endpoint_contract and site_endpoint_contract and bool(endpoint_contract.get("metadata_only", False)) and not bool(endpoint_contract.get("runtime_route_effect_adopted", True))
-        endpoint_selected_runtime = selected_live_rope_lift and endpoint_contract and site_endpoint_contract and not bool(endpoint_contract.get("metadata_only", True)) and bool(endpoint_contract.get("runtime_route_effect_adopted", False)) and not bool(site_endpoint_contract.get("metadata_only", True)) and bool(site_endpoint_contract.get("runtime_route_effect_adopted", False))
-        if endpoint_metadata_only or endpoint_selected_runtime:
+        endpoint_live_runtime = live_land_transit and endpoint_contract and site_endpoint_contract and not bool(endpoint_contract.get("metadata_only", True)) and bool(endpoint_contract.get("runtime_route_effect_adopted", False)) and not bool(site_endpoint_contract.get("metadata_only", True)) and bool(site_endpoint_contract.get("runtime_route_effect_adopted", False))
+        if endpoint_metadata_only or endpoint_live_runtime:
             section["linked_endpoint_contract_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 objects and sites must author metadata-only linked_endpoint_contract except the selected live Rope Lift")
+            add_error(f"{object_id}: Batch 004 endpoint contract must match its metadata-only or live-land-transit boundary")
 
         route_effect = obj.get("route_effect", {}) if isinstance(obj.get("route_effect", {}), dict) else {}
         route_boundary = obj.get("route_effect_boundary", {}) if isinstance(obj.get("route_effect_boundary", {}), dict) else {}
         route_metadata_only = route_effect and str(route_boundary.get("status", "")) == "metadata_only" and not bool(route_boundary.get("runtime_behavior_adopted", True))
-        route_selected_runtime = selected_live_rope_lift and route_effect and str(route_boundary.get("status", "")) == "selected_land_transit_runtime" and bool(route_boundary.get("runtime_behavior_adopted", False))
-        if route_metadata_only or route_selected_runtime:
+        route_live_runtime = live_land_transit and route_effect and str(route_boundary.get("status", "")) == "land_transit_live" and bool(route_boundary.get("runtime_behavior_adopted", False))
+        if route_metadata_only or route_live_runtime:
             section["route_effect_metadata_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 route_effect must remain metadata-only except the selected live Rope Lift")
+            add_error(f"{object_id}: Batch 004 route effect must match its metadata-only or live-land-transit boundary")
         if role == "route_lock":
             lock_contract = obj.get("route_lock_contract", {}) if isinstance(obj.get("route_lock_contract", {}), dict) else {}
             site_lock_contract = site.get("route_lock_contract", {}) if isinstance(site.get("route_lock_contract", {}), dict) else {}
@@ -6309,18 +6309,18 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
             else:
                 add_error(f"{object_id}: coast route objects must author coast_applicability without live ship movement adoption")
 
-        selected_runtime_boundary_exact = selected_live_rope_lift and all(
+        live_runtime_boundary_exact = live_land_transit and all(
             isinstance(value.get("runtime_boundary", {}), dict)
-            and value.get("runtime_boundary", {}).get("status") == "selected_land_transit_runtime"
+            and value.get("runtime_boundary", {}).get("status") == "land_transit_live"
             and value.get("runtime_boundary", {}).get("pathing_runtime_adopted") is True
             and value.get("runtime_boundary", {}).get("route_effect_runtime_adopted") is True
             and value.get("runtime_boundary", {}).get("ship_movement_runtime_adopted") is False
             for value in (obj, site)
         )
-        if (metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site)) or selected_runtime_boundary_exact:
+        if (metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site)) or live_runtime_boundary_exact:
             section["metadata_only_boundary_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 runtime boundary must remain metadata-only except the selected live Rope Lift")
+            add_error(f"{object_id}: Batch 004 runtime boundary must match its metadata-only or live-land-transit role")
         if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 004 must not activate rare resources in live site or route-effect fields")
         else:
@@ -43274,6 +43274,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (240, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas":
                 expected_canvas = (288, 48)
+            elif source_model == "built_in_image_gen_precise_object_edit_land_transit_active_atlas":
+                expected_canvas = (480, 48)
             elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_standalone_contract_landmark_atlas":
@@ -50857,7 +50859,7 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
     art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     assets = art.get("object_assets", {})
     mappings = art.get("resource_site_sprites", {})
-    ensure(len(scenario.get("resource_nodes", [])) == 88 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold must expose the 88-site service and scouting board without encounter inflation")
+    ensure(len(scenario.get("resource_nodes", [])) == 91 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold must expose the 91-site content board without encounter inflation")
     source_payloads = []
     for site_id, (object_id, placement_id, xy, cost, rewards, effects, visited_id, region) in expected.items():
         site = sites.get(site_id, {})
@@ -51164,7 +51166,7 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
     ensure(source_manifest.get("generation_mode") == "precise-object-edit" and source_manifest.get("source_model") == "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas", errors, "Guarded-route source provenance changed")
     ensure(source_manifest.get("runtime_atlas", {}).get("size") == [384,48] and source_manifest.get("runtime_atlas", {}).get("sha256") == atlas_sha, errors, "Guarded-route source atlas ownership changed")
     ensure(set(source_rows) == set(expected), errors, "Guarded-route source manifest must own exactly eight selected sites")
-    ensure(len(scenario.get("resource_nodes", [])) == 88 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold Confluence must retain the complete 88-site, 23-encounter content board")
+    ensure(len(scenario.get("resource_nodes", [])) == 91 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold Confluence must retain the complete 91-site, 23-encounter content board")
     source_payloads: list[bytes] = []
     for site_id, (object_id, placement_id, site_xy, guard_id, encounter_id, guard_xy, difficulty, seed, unclaimed_id, claimed_id, stem, source_sha, region) in expected.items():
         site = sites.get(site_id, {})
@@ -51841,7 +51843,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 71 and len(placements) == 887 and len(placed_site_ids) == 169, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 71 and len(placements) == 890 and len(placed_site_ids) == 172, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -51863,8 +51865,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 169, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 148, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(not unresolved and len(resolver_paths) == 172, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 151, errors, "Placed resource-site map-object resolver coverage changed")
     ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 21, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
@@ -74090,91 +74092,103 @@ def validate_strategic_ai_medium_long_run_adoption(errors: list[str]) -> None:
     )
 
 
-def validate_overworld_rope_lift_live_transit(errors: list[str]) -> None:
+def validate_overworld_ten_land_transit_network(errors: list[str]) -> None:
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
-    site = resource_sites.get("site_rope_lift", {})
-    map_object = map_objects.get("object_rope_lift", {})
-    scenario = scenarios.get("ninefold-confluence", {})
-    ensure(bool(site), errors, "Rope Lift live transit requires site_rope_lift")
-    ensure(bool(map_object), errors, "Rope Lift live transit requires object_rope_lift")
-    ensure(bool(scenario), errors, "Rope Lift live transit requires ninefold-confluence")
-    if isinstance(site, dict):
-        transit = site.get("transit_profile", {})
-        runtime = site.get("runtime_boundary", {})
-        route_boundary = site.get("route_effect_boundary", {})
-        contract = site.get("linked_endpoint_contract", {})
-        response = site.get("response_profile", {})
-        ensure(transit == {
-            "mode": "lift", "route_role": "vertical_shortcut", "requires_repair": True,
-            "paired_link_required": True, "metadata_only": False,
-            "runtime_route_effect_adopted": True, "one_way": False,
-        }, errors, "site_rope_lift transit profile must remain the exact selected live land shortcut")
-        ensure(isinstance(runtime, dict) and runtime.get("status") == "selected_land_transit_runtime" and runtime.get("pathing_runtime_adopted") is True and runtime.get("route_effect_runtime_adopted") is True and runtime.get("ship_movement_runtime_adopted") is False, errors, "site_rope_lift runtime boundary must adopt only selected land pathing")
-        ensure(route_boundary == {"status": "selected_land_transit_runtime", "runtime_behavior_adopted": True, "public_output_safe": True}, errors, "site_rope_lift route-effect boundary must be exact")
-        ensure(isinstance(response, dict) and response.get("action_label") == "Reeve Rope Lift" and response.get("movement_cost") == 3 and response.get("resource_cost") == {"gold": 130, "ore": 1} and response.get("watch_days") == 4, errors, "Rope Lift must retain its exact existing response authority")
-        ensure(isinstance(contract, dict) and contract.get("endpoint_group_id") == "ninefold_ridge_rope_lift" and contract.get("directionality") == "two_way" and contract.get("entry_offsets") == [{"x": 0, "y": -1}, {"x": 0, "y": 2}] and contract.get("exit_offsets") == contract.get("entry_offsets") and contract.get("requires_exit_safety") is True and contract.get("metadata_only") is False and contract.get("runtime_route_effect_adopted") is True, errors, "Rope Lift site endpoint contract must remain exact")
-    if isinstance(map_object, dict):
-        runtime = map_object.get("runtime_boundary", {})
-        route_boundary = map_object.get("route_effect_boundary", {})
-        contract = map_object.get("linked_endpoint_contract", {})
-        route_effect = map_object.get("route_effect", {})
-        ensure(isinstance(runtime, dict) and runtime.get("status") == "selected_land_transit_runtime" and runtime.get("pathing_runtime_adopted") is True and runtime.get("route_effect_runtime_adopted") is True and runtime.get("ship_movement_runtime_adopted") is False, errors, "object_rope_lift runtime boundary must adopt only selected land pathing")
-        ensure(route_boundary == {"status": "selected_land_transit_runtime", "runtime_behavior_adopted": True, "public_output_safe": True}, errors, "object_rope_lift route-effect boundary must be exact")
-        ensure(isinstance(route_effect, dict) and route_effect.get("effect_type") == "linked_endpoint" and route_effect.get("movement_cost_delta") == -2 and route_effect.get("linked_endpoint_group_id") == "ninefold_ridge_rope_lift" and route_effect.get("blocked_state_ids") == ["damaged", "closed"], errors, "object_rope_lift linked route effect must remain exact")
-        ensure(isinstance(contract, dict) and contract.get("endpoint_group_id") == "ninefold_ridge_rope_lift" and contract.get("entry_offsets") == [{"x": 0, "y": -1}, {"x": 0, "y": 2}] and contract.get("exit_offsets") == contract.get("entry_offsets") and contract.get("metadata_only") is False and contract.get("runtime_route_effect_adopted") is True, errors, "Rope Lift object endpoint contract must remain exact")
-    if isinstance(scenario, dict):
-        rope_rows = [row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == "rope_lift"]
-        ensure(rope_rows == [{"placement_id": "rope_lift", "site_id": "site_rope_lift", "x": 9, "y": 52}], errors, "Ninefold must retain one exact Rope Lift placement")
+    art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    source_manifest_path = ROOT / "art/overworld/source/generated/resource_sites/land_transit_active_wave1/manifest.json"
+    atlas_path = ROOT / "art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png"
+    report_path = ROOT / "tests/ten_land_transit_network_report.gd"
+    scene_path = ROOT / "tests/ten_land_transit_network_report.tscn"
+    cases = [
+        ("site_repaired_ferry_stage", "object_repaired_ferry_stage", "ninefold-confluence", "repaired_ferry_stage", 49, 20, "two_way", [{"x": -1, "y": 0}, {"x": 7, "y": 0}], [{"x": -1, "y": 0}, {"x": 7, "y": 0}], -7, True),
+        ("site_rope_lift", "object_rope_lift", "ninefold-confluence", "rope_lift", 9, 52, "two_way", [{"x": 0, "y": -1}, {"x": 0, "y": 2}], [{"x": 0, "y": -1}, {"x": 0, "y": 2}], -2, True),
+        ("site_root_pass_arch", "object_root_pass_arch", "seedseer-drowned-orchard", "seedseer_dormant_b", 5, 1, "two_way", [{"x": -1, "y": 1}, {"x": 2, "y": 1}], [{"x": 2, "y": 1}, {"x": -1, "y": 1}], -2, False),
+        ("site_pressure_rail_switch", "object_pressure_rail_switch", "quench-gorefen-audit", "quench_dormant_b", 2, 5, "two_way", [{"x": -1, "y": 0}, {"x": 3, "y": 0}], [{"x": 3, "y": 0}, {"x": -1, "y": 0}], -3, False),
+        ("site_mirror_stair_turn", "object_mirror_stair_turn", "choirward-foundry-eclipse", "choirward_dormant_b", 6, 1, "two_way", [{"x": 1, "y": -1}, {"x": 1, "y": 2}], [{"x": 1, "y": 2}, {"x": 1, "y": -1}], -2, False),
+        ("site_basalt_undergate", "object_basalt_undergate", "ninefold-confluence", "ninefold_basalt_undergate", 58, 45, "two_way", [{"x": 1, "y": -1}, {"x": 1, "y": 3}], [{"x": 1, "y": 3}, {"x": 1, "y": -1}], -3, False),
+        ("site_ridge_wind_chute", "object_ridge_wind_chute", "ninefold-confluence", "ninefold_ridge_wind_chute", 7, 56, "one_way", [{"x": 0, "y": -1}, {"x": 0, "y": 2}], [{"x": 0, "y": 2}, {"x": 0, "y": -1}], -2, False),
+        ("site_slipgate_mirror", "object_slipgate_mirror", "ninefold-confluence", "ninefold_slipgate_mirror", 11, 44, "one_way", [{"x": -1, "y": 0}, {"x": 1, "y": 0}], [{"x": 1, "y": 0}, {"x": -1, "y": 0}], -1, False),
+        ("site_spillway_drop_marker", "object_spillway_drop_marker", "fenhook-daybreak-hunt", "fenhook_dormant_c", 3, 2, "one_way", [{"x": -1, "y": 0}, {"x": 2, "y": 0}], [{"x": 2, "y": 0}, {"x": -1, "y": 0}], -2, False),
+        ("site_tide_bore_marker", "object_tide_bore_marker", "fenhook-daybreak-hunt", "fenhook_dormant_b", 2, 5, "one_way", [{"x": -1, "y": 0}, {"x": 2, "y": 0}], [{"x": 2, "y": 0}, {"x": -1, "y": 0}], -2, False),
+    ]
+    object_assets = art_manifest.get("object_assets", {})
+    site_sprites = art_manifest.get("resource_site_sprites", {})
+    ensure(source_manifest_path.exists(), errors, "Ten-site land-transit source manifest is missing")
+    ensure(atlas_path.exists(), errors, "Ten-site land-transit runtime atlas is missing")
+    ensure(report_path.exists(), errors, "Ten-site land-transit consolidated report is missing")
+    ensure(scene_path.exists(), errors, "Ten-site land-transit consolidated scene is missing")
+    if atlas_path.exists():
+        atlas_payload = atlas_path.read_bytes()
+        ensure(png_size(atlas_path) == (480, 48) and hashlib.sha256(atlas_payload).hexdigest() == "a50690ec924dd2059899801c2803f1296650b79792cba4b260bec4e53e086d8d" and len(atlas_payload) >= 26 and atlas_payload[25] == 6, errors, "Land-transit active atlas bytes, alpha, or compact dimensions changed")
+    if source_manifest_path.exists():
+        source_manifest = load_json(source_manifest_path)
+        ensure(source_manifest.get("generation_mode") == "built_in_image_gen_precise_object_edit" and source_manifest.get("runtime_atlas", {}).get("size") == [480, 48] and len(source_manifest.get("assets", [])) == 10, errors, "Land-transit source provenance or atlas contract changed")
 
-    ferry_site = resource_sites.get("site_repaired_ferry_stage", {})
-    ferry_object = map_objects.get("object_repaired_ferry_stage", {})
-    for label, value in (("site", ferry_site), ("object", ferry_object)):
-        ensure(isinstance(value, dict), errors, f"Repaired ferry {label} must remain authored")
-        if isinstance(value, dict):
-            ensure(value.get("runtime_boundary", {}).get("pathing_runtime_adopted") is False and value.get("route_effect_boundary", {}).get("runtime_behavior_adopted") is False and value.get("linked_endpoint_contract", {}).get("runtime_route_effect_adopted") is False, errors, f"Repaired ferry {label} must remain outside the Rope Lift runtime slice")
+    for index, (site_id, object_id, scenario_id, placement_id, x, y, directionality, entry_offsets, exit_offsets, movement_delta, requires_repair) in enumerate(cases):
+        site = resource_sites.get(site_id, {})
+        map_object = map_objects.get(object_id, {})
+        ensure(bool(site), errors, f"{site_id} live land transit is missing")
+        ensure(bool(map_object), errors, f"{object_id} live land transit is missing")
+        if not isinstance(site, dict) or not isinstance(map_object, dict):
+            continue
+        for label, value in (("site", site), ("object", map_object)):
+            runtime = value.get("runtime_boundary", {})
+            route_boundary = value.get("route_effect_boundary", {})
+            contract = value.get("linked_endpoint_contract", {})
+            ensure(isinstance(runtime, dict) and runtime.get("status") == "land_transit_live" and runtime.get("pathing_runtime_adopted") is True and runtime.get("route_effect_runtime_adopted") is True and runtime.get("renderer_sprite_required") is True and runtime.get("ship_movement_runtime_adopted") is False, errors, f"{site_id} {label} live runtime boundary changed")
+            ensure(route_boundary == {"status": "land_transit_live", "runtime_behavior_adopted": True, "public_output_safe": True}, errors, f"{site_id} {label} route boundary changed")
+            ensure(isinstance(contract, dict) and contract.get("directionality") == directionality and contract.get("entry_offsets") == entry_offsets and contract.get("exit_offsets") == exit_offsets and contract.get("requires_exit_safety") is True and contract.get("metadata_only") is False and contract.get("runtime_route_effect_adopted") is True, errors, f"{site_id} {label} endpoint contract changed")
+        transit = site.get("transit_profile", {})
+        ensure(isinstance(transit, dict) and transit.get("requires_repair") is requires_repair and transit.get("paired_link_required") is (directionality == "two_way") and transit.get("one_way") is (directionality == "one_way") and transit.get("metadata_only") is False and transit.get("runtime_route_effect_adopted") is True, errors, f"{site_id} transit profile changed")
+        route_effect = map_object.get("route_effect", {})
+        ensure(isinstance(route_effect, dict) and route_effect.get("effect_type") == "linked_endpoint" and route_effect.get("movement_cost_delta") == movement_delta and route_effect.get("requires_visit") is True and route_effect.get("toll_resources") == {}, errors, f"{object_id} live route effect changed")
+        scenario = scenarios.get(scenario_id, {})
+        matching_rows = [row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id]
+        ensure(matching_rows == [{"placement_id": placement_id, "site_id": site_id, "x": x, "y": y}], errors, f"{site_id} shipped placement changed")
+        asset_id = f"resource_site_land_transit_{site_id.removeprefix('site_')}_active"
+        asset = object_assets.get(asset_id, {})
+        sprite = site_sprites.get(site_id, {})
+        ensure(isinstance(asset, dict) and asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png" and asset.get("atlas_region") == [index * 48, 0, 48, 48] and asset.get("atlas_size") == [480, 48] and asset.get("presentation_role") == "active_land_transit_state", errors, f"{site_id} active atlas entry changed")
+        ensure(isinstance(sprite, dict) and sprite.get("asset_id") == asset_id and sprite.get("unclaimed_asset_id") == f"mapobj_{object_id.removeprefix('object_')}", errors, f"{site_id} dormant/active sprite switch changed")
 
     rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     shell_text = (ROOT / "scenes/overworld/OverworldShell.gd").read_text(encoding="utf-8")
-    report_path = ROOT / "tests/overworld_rope_lift_live_transit_report.gd"
-    scene_path = ROOT / "tests/overworld_rope_lift_live_transit_report.tscn"
-    ensure(report_path.exists(), errors, "Rope Lift live transit focused report script is missing")
-    ensure(scene_path.exists(), errors, "Rope Lift live transit focused report scene is missing")
     for token in (
-        "static func active_linked_transit_edges", "runtime_route_effect_adopted", "_resource_site_response_state",
-        "String(route_effect.get(\"effect_type\", \"\")) != \"linked_endpoint\"", "entry_offsets != exit_offsets",
-        "paired_link_required", "requires_exit_safety", "requires_visit", "requires_owner", "toll_resources",
-        "blocked_state_ids", "entry_offsets != approach.get(\"linked_exit_offsets\", [])",
-        "movement_cost != 1", "tile_is_blocked(session, endpoint.x, endpoint.y)",
-        "tile_has_route_interaction(session, endpoint.x, endpoint.y)", "static func linked_transit_neighbors_from_edges",
-        "static func active_linked_transit_step", "static func active_linked_transit_signature",
-        "var linked_transit_step := active_linked_transit_step(session, previous, tile) if not adjacent_step else {}",
+        "static func active_linked_transit_edges", "directionality not in [\"two_way\", \"one_way\"]",
+        "bool(transit_profile.get(\"one_way\", false)) != (directionality == \"one_way\")",
+        "var directed_offsets :=", "\"two_way\": directionality == \"two_way\"",
+        "bool(edge.get(\"two_way\", false)) and tile == to_tile",
+        "static func linked_transit_neighbors_from_edges", "static func active_linked_transit_step",
+        "static func active_linked_transit_signature", "movement_cost != 1",
+        "tile_is_blocked(session, endpoint.x, endpoint.y)", "tile_has_route_interaction(session, endpoint.x, endpoint.y)",
     ):
-        ensure(token in rules_text, errors, f"Rope Lift live transit rules are missing token: {token}")
-    ensure('"site_rope_lift"' not in rules_text and '"object_rope_lift"' not in rules_text, errors, "Linked transit production rules must remain content-generic")
+        ensure(token in rules_text, errors, f"Ten-site land-transit rules are missing token: {token}")
+    for _, object_id, *_ in cases:
+        ensure(f'"{object_id}"' not in rules_text, errors, f"Land-transit production rules must not hardcode {object_id}")
     for token in (
         "OverworldRules.active_linked_transit_signature(_session)",
         "var linked_transit_edges := OverworldRules.active_linked_transit_edges(_session)",
         "OverworldRules.linked_transit_neighbors_from_edges(linked_transit_edges, current)",
     ):
-        ensure(token in shell_text, errors, f"Overworld live route integration is missing token: {token}")
+        ensure(token in shell_text, errors, f"Overworld land-transit route integration is missing token: {token}")
     ensure(shell_text.count("var linked_transit_edges := OverworldRules.active_linked_transit_edges(_session)") == 1, errors, "Overworld BFS must materialize active linked edges exactly once per path build")
     if report_path.exists():
         report_text = report_path.read_text(encoding="utf-8")
         for token in (
-            "OVERWORLD_ROPE_LIFT_LIVE_TRANSIT_REPORT", "claim_alone_closed", "response_cost_exact",
-            "two_way_cost_one", "save_roundtrip", "unsafe_exit_closed", "expired_closed",
-            "failed_response_closed", "exhausted_response_closed", "OverworldRules.perform_context_action(session, \"site_response\")",
-            "OverworldRules.try_move_along_route(session, [NORTH_ENDPOINT, SOUTH_ENDPOINT], 10)",
-            "OverworldRules.try_move_along_route(session, [SOUTH_ENDPOINT, NORTH_ENDPOINT], 10)",
-            "shell.call(\"_build_path\", NORTH_ENDPOINT, SOUTH_ENDPOINT)", "for width in [1280, 1920]",
-            "expiry_cache_invalidated", "rope_lift_expired",
+            "TEN_LAND_TRANSIT_NETWORK_REPORT", "case_count", "two_way_case_count", "one_way_case_count",
+            "edge_absent_before_claim", "forward_move_cost_one", "reverse_move_rejected_exact",
+            "save_roundtrip_exact", "active_art_resolves", "unsafe_exit_fail_closed",
+            "OverworldRules.active_linked_transit_edges(session)",
+            "OverworldRules.try_move_along_route(session", "OverworldRules.perform_context_action(session, \"site_response\")",
         ):
-            ensure(token in report_text, errors, f"Rope Lift focused report is missing token: {token}")
-        ensure("response_until_day" in report_text and "rope_lift_exit_blocker" in report_text, errors, "Rope Lift focused report must prove expiry and unsafe-exit fail closure")
+            ensure(token in report_text, errors, f"Ten-site land-transit consolidated report is missing token: {token}")
     if scene_path.exists():
-        ensure("res://tests/overworld_rope_lift_live_transit_report.gd" in scene_path.read_text(encoding="utf-8"), errors, "Rope Lift focused scene must load its report script")
+        ensure("res://tests/ten_land_transit_network_report.gd" in scene_path.read_text(encoding="utf-8"), errors, "Ten-site land-transit scene must load its consolidated report")
+    for packaging_path in (ROOT / "tests/packaging_linux_export_smoke.py", ROOT / "tests/packaging_windows_export_smoke.py"):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_LAND_TRANSIT_ACTIVE_ATLAS_NAME = "land_transit_active_atlas"' in packaging_text and "land_transit_active_atlas.png.import" in packaging_text, errors, f"{packaging_path.name} must audit the land-transit active atlas")
 
 
 def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -> None:
@@ -76507,7 +76521,7 @@ def main() -> int:
     validate_ai_adventure_spell_execution(errors)
     validate_ai_scouting_spell_execution(errors)
     validate_overworld_object_route_effect_authoring(errors)
-    validate_overworld_rope_lift_live_transit(errors)
+    validate_overworld_ten_land_transit_network(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
     validate_overworld_terrain_ambient_life(errors)

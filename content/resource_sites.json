@@ -2738,8 +2738,8 @@
         "route_role": "shortcut",
         "requires_repair": true,
         "paired_link_required": true,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false,
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true,
         "one_way": false
       },
       "response_profile": {
@@ -2757,18 +2757,18 @@
       "normalized_content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
       "batch004_role": "two_way_transit",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -2781,7 +2781,7 @@
             "y": 0
           },
           {
-            "x": 2,
+            "x": 7,
             "y": 0
           }
         ],
@@ -2791,14 +2791,14 @@
             "y": 0
           },
           {
-            "x": 2,
+            "x": 7,
             "y": 0
           }
         ],
         "requires_exit_safety": true,
         "approach_role": "coast_crossing",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "ferry_stage_crossing",
@@ -2847,17 +2847,17 @@
       "normalized_content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
       "batch004_role": "two_way_transit",
       "runtime_boundary": {
-        "status": "selected_land_transit_runtime",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
       "route_effect_boundary": {
-        "status": "selected_land_transit_runtime",
+        "status": "land_transit_live",
         "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
@@ -4460,9 +4460,15 @@
       },
       "action_label": "Use Menders Tent",
       "summary": "Road surgeons dress the company and dispatch supplies to the nearest recovering town.",
-      "service_cost": {"gold": 120},
-      "claim_rewards": {"experience": 80},
-      "service_effects": {"nearest_player_town_recovery_relief": 2},
+      "service_cost": {
+        "gold": 120
+      },
+      "claim_rewards": {
+        "experience": 80
+      },
+      "service_effects": {
+        "nearest_player_town_recovery_relief": 2
+      },
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4493,9 +4499,15 @@
       },
       "action_label": "Change Mounts",
       "summary": "Couriers exchange tack, mounts, and road notes for a renewed march.",
-      "service_cost": {"gold": 100},
-      "claim_rewards": {"experience": 40},
-      "service_effects": {"movement_restore": 260},
+      "service_cost": {
+        "gold": 100
+      },
+      "claim_rewards": {
+        "experience": 40
+      },
+      "service_effects": {
+        "movement_restore": 260
+      },
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4526,9 +4538,15 @@
       },
       "action_label": "Review Contracts",
       "summary": "A frontier scribe closes loopholes and eases the most urgent hostile obligation.",
-      "service_cost": {"gold": 80},
-      "claim_rewards": {"experience": 60},
-      "service_effects": {"enemy_pressure_relief": 1},
+      "service_cost": {
+        "gold": 80
+      },
+      "claim_rewards": {
+        "experience": 60
+      },
+      "service_effects": {
+        "enemy_pressure_relief": 1
+      },
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4560,9 +4578,16 @@
       },
       "action_label": "Take Reedboat Supplies",
       "summary": "Reed pilots issue channel gear, sound the nearby water, and lash prepared wood aboard.",
-      "service_cost": {"gold": 110, "wood": 1},
-      "claim_rewards": {"wood": 2},
-      "service_effects": {"movement_restore": 160},
+      "service_cost": {
+        "gold": 110,
+        "wood": 1
+      },
+      "claim_rewards": {
+        "wood": 2
+      },
+      "service_effects": {
+        "movement_restore": 160
+      },
       "vision_radius": 2,
       "repeatable": true,
       "visit_cooldown_days": 7
@@ -4595,9 +4620,17 @@
       },
       "action_label": "Rest at Ash Cooler",
       "summary": "A cooled field meal steadies the march while relief stores travel to the nearest town.",
-      "service_cost": {"gold": 100, "ore": 1},
-      "claim_rewards": {"experience": 65},
-      "service_effects": {"movement_restore": 100, "nearest_player_town_recovery_relief": 1},
+      "service_cost": {
+        "gold": 100,
+        "ore": 1
+      },
+      "claim_rewards": {
+        "experience": 65
+      },
+      "service_effects": {
+        "movement_restore": 100,
+        "nearest_player_town_recovery_relief": 1
+      },
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4628,8 +4661,12 @@
       },
       "action_label": "Calibrate Survey Lens",
       "summary": "Surveyors align the field prism and chart a broad ring beyond the road.",
-      "service_cost": {"gold": 130},
-      "claim_rewards": {"experience": 50},
+      "service_cost": {
+        "gold": 130
+      },
+      "claim_rewards": {
+        "experience": 50
+      },
       "vision_radius": 5,
       "repeatable": true,
       "visit_cooldown_days": 7
@@ -5153,9 +5190,13 @@
       },
       "action_label": "Pay Toll Chain",
       "summary": "A chartered chain court opens the kingroad after collecting its stamped passage fee.",
-      "service_cost": {"gold": 220},
+      "service_cost": {
+        "gold": 220
+      },
       "opens_route_on_claim": true,
-      "claim_flags": {"toll_chain_court_opened": true}
+      "claim_flags": {
+        "toll_chain_court_opened": true
+      }
     },
     {
       "id": "site_root_lease_gate",
@@ -5191,9 +5232,14 @@
       },
       "action_label": "Honor Root Lease",
       "summary": "Living lease-roots withdraw when travelers renew the old root compact.",
-      "service_cost": {"gold": 100, "wood": 2},
+      "service_cost": {
+        "gold": 100,
+        "wood": 2
+      },
       "opens_route_on_claim": true,
-      "claim_flags": {"root_lease_gate_opened": true}
+      "claim_flags": {
+        "root_lease_gate_opened": true
+      }
     },
     {
       "id": "site_pressure_rail_stop",
@@ -5229,9 +5275,14 @@
       },
       "action_label": "Repair Pressure Rail",
       "summary": "Fresh ore and coin restore the counterweight that lifts the rail stop clear.",
-      "service_cost": {"gold": 140, "ore": 2},
+      "service_cost": {
+        "gold": 140,
+        "ore": 2
+      },
       "opens_route_on_claim": true,
-      "claim_flags": {"pressure_rail_stop_opened": true}
+      "claim_flags": {
+        "pressure_rail_stop_opened": true
+      }
     },
     {
       "id": "site_campaign_muster_seal",
@@ -5258,9 +5309,15 @@
       },
       "action_label": "Raise Muster Seal",
       "summary": "A wax-and-bronze campaign seal calls nearby roadward volunteers to the banner.",
-      "claim_rewards": {"experience": 160},
-      "claim_recruits": {"unit_river_guard": 4},
-      "claim_flags": {"writbound_campaign_muster_raised": true}
+      "claim_rewards": {
+        "experience": 160
+      },
+      "claim_recruits": {
+        "unit_river_guard": 4
+      },
+      "claim_flags": {
+        "writbound_campaign_muster_raised": true
+      }
     },
     {
       "id": "site_broken_accord_marker",
@@ -5287,8 +5344,13 @@
       },
       "action_label": "Record Broken Accord",
       "summary": "A split treaty stone still carries the names and forfeited bonds of both signatories.",
-      "claim_rewards": {"gold": 300, "experience": 180},
-      "claim_flags": {"writbound_broken_accord_recorded": true}
+      "claim_rewards": {
+        "gold": 300,
+        "experience": 180
+      },
+      "claim_flags": {
+        "writbound_broken_accord_recorded": true
+      }
     },
     {
       "id": "site_scenario_witness_stone",
@@ -5315,10 +5377,14 @@
       },
       "action_label": "Swear Route Witness",
       "summary": "A pale witness stone binds the surveyed road to a commander's spoken testimony.",
-      "claim_rewards": {"experience": 140},
+      "claim_rewards": {
+        "experience": 140
+      },
       "vision_radius": 4,
       "learn_spell_id": "spell_lens_glass_survey_24",
-      "claim_flags": {"writbound_route_witness_sworn": true}
+      "claim_flags": {
+        "writbound_route_witness_sworn": true
+      }
     },
     {
       "id": "site_root_pass_arch",
@@ -5328,12 +5394,12 @@
       "batch004_role": "two_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5343,12 +5409,12 @@
         "requires_repair": false,
         "paired_link_required": true,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5377,8 +5443,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -5389,12 +5455,12 @@
       "batch004_role": "two_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5404,12 +5470,12 @@
         "requires_repair": false,
         "paired_link_required": true,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5438,8 +5504,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -5450,12 +5516,12 @@
       "batch004_role": "two_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5465,12 +5531,12 @@
         "requires_repair": false,
         "paired_link_required": true,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5499,8 +5565,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -5511,12 +5577,12 @@
       "batch004_role": "two_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5526,12 +5592,12 @@
         "requires_repair": false,
         "paired_link_required": true,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5560,8 +5626,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -5572,12 +5638,12 @@
       "batch004_role": "one_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5587,12 +5653,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": true,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5621,8 +5687,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "high_to_low",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -5633,12 +5699,12 @@
       "batch004_role": "one_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5648,12 +5714,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": true,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5682,8 +5748,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -5694,12 +5760,12 @@
       "batch004_role": "one_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5709,12 +5775,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": true,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5743,8 +5809,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -5755,12 +5821,12 @@
       "batch004_role": "one_way_transit",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5770,12 +5836,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": true,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5804,8 +5870,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "one_way_tide_route",
@@ -9486,9 +9552,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_bridge_bastion",
@@ -9504,10 +9570,10 @@
         "guard_encounter_id": "encounter_roadward_lodge_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -9522,24 +9588,24 @@
           "ore",
           "wood"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -9567,9 +9633,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_chainboom_fort",
@@ -9585,10 +9651,10 @@
         "guard_encounter_id": "encounter_harbor_pilot_house_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -9602,26 +9668,26 @@
           "gold",
           "wood"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "artifact_reward_execution": true,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "artifact_reward_execution": true,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "artifact_reward_execution": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -9652,9 +9718,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_railblock_camp",
@@ -9670,10 +9736,10 @@
         "guard_encounter_id": "encounter_dustjack_yard_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -9687,24 +9753,24 @@
           "gold",
           "ore"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -9735,9 +9801,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_rootgate_den",
@@ -9753,10 +9819,10 @@
         "guard_encounter_id": "encounter_greenbranch_copse_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -9770,24 +9836,24 @@
           "gold",
           "wood"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -9814,9 +9880,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_fog_quay_ambush",
@@ -9833,10 +9899,10 @@
         "guard_encounter_id": "encounter_reedbarge_mooring_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -9850,26 +9916,26 @@
           "gold",
           "wood"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "artifact_reward_execution": true,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "artifact_reward_execution": true,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "artifact_reward_execution": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -9898,9 +9964,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_mirror_toll_causeway",
@@ -9916,10 +9982,10 @@
         "guard_encounter_id": "encounter_kite_signal_eyrie_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -9933,24 +9999,24 @@
           "gold",
           "ore"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -9982,9 +10048,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_ashbarb_roadblock",
@@ -10000,10 +10066,10 @@
         "guard_encounter_id": "encounter_charcoal_burners_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -10018,24 +10084,24 @@
           "ore",
           "wood"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -10067,9 +10133,9 @@
         ],
         "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
         "clear_required_for_reward": true,
-      "blocks_approach": true,
-      "metadata_only": false,
-      "runtime_guard_resolution_adopted": true
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guarded_reward_contract": {
         "contract_id": "guarded_reward_contract_frostford_hold",
@@ -10085,10 +10151,10 @@
         "guard_encounter_id": "encounter_frostwharf_house_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "reward_preview": {
@@ -10103,24 +10169,24 @@
           "ore",
           "wood"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "guarded_reward_site_runtime_supported": true,
-      "broad_reward_runtime_migration": false,
-      "guard_resolution_runtime_adopted": true,
-      "neutral_encounter_migration": false,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
-      "pathing_runtime_adopted": true,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": false,
-      "market_changes": false,
-      "scenario_placement_migration": true
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "market_changes": false,
+        "scenario_placement_migration": true
       },
       "content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -11157,12 +11223,66 @@
       },
       "control_income_cadence": "weekly",
       "resource_outputs": [
-        {"resource_id": "aetherglass", "cadence": "weekly", "amount": 4, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 1, "cap_per_week": 4},
-        {"resource_id": "embergrain", "cadence": "weekly", "amount": 4, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 1, "cap_per_week": 4},
-        {"resource_id": "peatwax", "cadence": "weekly", "amount": 4, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 1, "cap_per_week": 4},
-        {"resource_id": "verdant_grafts", "cadence": "weekly", "amount": 4, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 1, "cap_per_week": 4},
-        {"resource_id": "brass_scrip", "cadence": "weekly", "amount": 4, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 1, "cap_per_week": 4},
-        {"resource_id": "memory_salt", "cadence": "weekly", "amount": 4, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 1, "cap_per_week": 4}
+        {
+          "resource_id": "aetherglass",
+          "cadence": "weekly",
+          "amount": 4,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 1,
+          "cap_per_week": 4
+        },
+        {
+          "resource_id": "embergrain",
+          "cadence": "weekly",
+          "amount": 4,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 1,
+          "cap_per_week": 4
+        },
+        {
+          "resource_id": "peatwax",
+          "cadence": "weekly",
+          "amount": 4,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 1,
+          "cap_per_week": 4
+        },
+        {
+          "resource_id": "verdant_grafts",
+          "cadence": "weekly",
+          "amount": 4,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 1,
+          "cap_per_week": 4
+        },
+        {
+          "resource_id": "brass_scrip",
+          "cadence": "weekly",
+          "amount": 4,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 1,
+          "cap_per_week": 4
+        },
+        {
+          "resource_id": "memory_salt",
+          "cadence": "weekly",
+          "amount": 4,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 1,
+          "cap_per_week": 4
+        }
       ],
       "capture_profile": {
         "capture_model": "capturable",
@@ -11171,11 +11291,17 @@
         "damaged_state_policy": "temporary_output_pause",
         "retake_recovery_days": 2,
         "defense_investment_ids": [],
-        "route_dependency_tags": ["authored_economy", "rare_exchange"]
+        "route_dependency_tags": [
+          "authored_economy",
+          "rare_exchange"
+        ]
       },
       "guard_profile": {
         "threat": "standard",
-        "encounter_palette_tags": ["authored_economy", "rare_exchange"],
+        "encounter_palette_tags": [
+          "authored_economy",
+          "rare_exchange"
+        ],
         "reward_tone": "mixed rare stockpile control"
       },
       "content_batch_id": "economy-authored-rare-source-breadth-10184"
@@ -11204,13 +11330,76 @@
         "memory_salt": 1
       },
       "resource_outputs": [
-        {"resource_id": "ore", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "aetherglass", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "embergrain", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "peatwax", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "verdant_grafts", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "brass_scrip", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "memory_salt", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0}
+        {
+          "resource_id": "ore",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "aetherglass",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "embergrain",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "peatwax",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "verdant_grafts",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "brass_scrip",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "memory_salt",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
       ],
       "capture_profile": {
         "capture_model": "capturable",
@@ -11219,11 +11408,17 @@
         "damaged_state_policy": "temporary_output_pause",
         "retake_recovery_days": 2,
         "defense_investment_ids": [],
-        "route_dependency_tags": ["orevein_contract", "resource_front"]
+        "route_dependency_tags": [
+          "orevein_contract",
+          "resource_front"
+        ]
       },
       "guard_profile": {
         "threat": "standard",
-        "encounter_palette_tags": ["orevein_contract", "resource_front"],
+        "encounter_palette_tags": [
+          "orevein_contract",
+          "resource_front"
+        ],
         "reward_tone": "mixed assay stockpile control"
       },
       "content_batch_id": "brasshollow-orevein-player-skirmish-10184"
@@ -11250,12 +11445,66 @@
         "brass_scrip": 1
       },
       "resource_outputs": [
-        {"resource_id": "ore", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "aetherglass", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "embergrain", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "peatwax", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "verdant_grafts", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "brass_scrip", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0}
+        {
+          "resource_id": "ore",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "aetherglass",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "embergrain",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "peatwax",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "verdant_grafts",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "brass_scrip",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
       ],
       "capture_profile": {
         "capture_model": "capturable",
@@ -11264,11 +11513,17 @@
         "damaged_state_policy": "temporary_output_pause",
         "retake_recovery_days": 2,
         "defense_investment_ids": [],
-        "route_dependency_tags": ["bellwake_wreck_claim", "salvage_front"]
+        "route_dependency_tags": [
+          "bellwake_wreck_claim",
+          "salvage_front"
+        ]
       },
       "guard_profile": {
         "threat": "standard",
-        "encounter_palette_tags": ["bellwake_wreck_claim", "salvage_front"],
+        "encounter_palette_tags": [
+          "bellwake_wreck_claim",
+          "salvage_front"
+        ],
         "reward_tone": "mixed wreck-cargo salvage control"
       },
       "content_batch_id": "veilmourn-bellwake-wreck-player-skirmish-10184"
@@ -11297,12 +11552,66 @@
         "memory_salt": 1
       },
       "resource_outputs": [
-        {"resource_id": "aetherglass", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "embergrain", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "peatwax", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "verdant_grafts", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "brass_scrip", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0},
-        {"resource_id": "memory_salt", "cadence": "daily", "amount": 1, "requires_owner": true, "starts_after_claim": true, "route_link_id": "", "weekly_day": 0, "cap_per_week": 0}
+        {
+          "resource_id": "aetherglass",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "embergrain",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "peatwax",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "verdant_grafts",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "brass_scrip",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        },
+        {
+          "resource_id": "memory_salt",
+          "cadence": "daily",
+          "amount": 1,
+          "requires_owner": true,
+          "starts_after_claim": true,
+          "route_link_id": "",
+          "weekly_day": 0,
+          "cap_per_week": 0
+        }
       ],
       "capture_profile": {
         "capture_model": "capturable",
@@ -11311,11 +11620,16 @@
         "damaged_state_policy": "temporary_output_pause",
         "retake_recovery_days": 2,
         "defense_investment_ids": [],
-        "route_dependency_tags": ["generated_town_economy"]
+        "route_dependency_tags": [
+          "generated_town_economy"
+        ]
       },
       "guard_profile": {
         "threat": "standard",
-        "encounter_palette_tags": ["generated_town_economy", "resource_front"],
+        "encounter_palette_tags": [
+          "generated_town_economy",
+          "resource_front"
+        ],
         "reward_tone": "generated town required-source control"
       },
       "content_batch_id": "native-rmg-generated-town-economy-support-10184"

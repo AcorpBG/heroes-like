@@ -3770,7 +3770,7 @@
             "y": 0
           },
           {
-            "x": 2,
+            "x": 7,
             "y": 0
           }
         ]
@@ -3798,13 +3798,15 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": -2,
+        "movement_cost_delta": -7,
         "toll_resources": {},
         "blocked_state_ids": [
           "damaged",
           "closed"
         ],
-        "linked_endpoint_group_id": "ninefold_mire_ferry_stage"
+        "linked_endpoint_group_id": "ninefold_mire_ferry_stage",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract."
       },
       "animation_cues": [
         "object_ferry_idle_placeholder",
@@ -3827,21 +3829,21 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "paired route approaches are readable before visit",
-        "event_expectation": "existing transit metadata normalized for Batch 004"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -3854,7 +3856,7 @@
             "y": 0
           },
           {
-            "x": 2,
+            "x": 7,
             "y": 0
           }
         ],
@@ -3864,14 +3866,14 @@
             "y": 0
           },
           {
-            "x": 2,
+            "x": 7,
             "y": 0
           }
         ],
         "requires_exit_safety": true,
         "approach_role": "coast_crossing",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "ferry_stage_crossing",
@@ -3979,7 +3981,9 @@
           "damaged",
           "closed"
         ],
-        "linked_endpoint_group_id": "ninefold_ridge_rope_lift"
+        "linked_endpoint_group_id": "ninefold_ridge_rope_lift",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract."
       },
       "animation_cues": [
         "object_rope_lift_idle_placeholder",
@@ -4002,20 +4006,20 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "paired route approaches are readable before visit",
-        "event_expectation": "existing transit metadata normalized for Batch 004"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "selected_land_transit_runtime",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
       "route_effect_boundary": {
-        "status": "selected_land_transit_runtime",
+        "status": "land_transit_live",
         "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
@@ -4389,8 +4393,8 @@
           "captured",
           "damaged"
         ],
-      "state_metadata_only": false,
-      "runtime_capture_adopted": true
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_ember_signal_brazier",
@@ -4403,8 +4407,8 @@
           "captured",
           "damaged"
         ],
-      "ownership_state_metadata_only": false,
-      "runtime_capture_adopted": true,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -4414,19 +4418,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-      "status": "live",
-      "live_reward_grants": true,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-      "ownership_capture_runtime_adopted": true,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-      "scenario_placement_migration": true,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -4526,8 +4530,8 @@
           "captured",
           "damaged"
         ],
-      "state_metadata_only": false,
-      "runtime_capture_adopted": true
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_bog_drum_totem",
@@ -4540,8 +4544,8 @@
           "captured",
           "damaged"
         ],
-      "ownership_state_metadata_only": false,
-      "runtime_capture_adopted": true,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -4551,19 +4555,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-      "status": "live",
-      "live_reward_grants": true,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-      "ownership_capture_runtime_adopted": true,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-      "scenario_placement_migration": true,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -4663,8 +4667,8 @@
           "captured",
           "damaged"
         ],
-      "state_metadata_only": false,
-      "runtime_capture_adopted": true
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_prism_relay_lens",
@@ -4677,8 +4681,8 @@
           "captured",
           "damaged"
         ],
-      "ownership_state_metadata_only": false,
-      "runtime_capture_adopted": true,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -4688,19 +4692,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-      "status": "live",
-      "live_reward_grants": true,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-      "ownership_capture_runtime_adopted": true,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-      "scenario_placement_migration": true,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -25801,7 +25805,9 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {"gold": 220},
+        "toll_resources": {
+          "gold": 220
+        },
         "blocked_state_ids": [
           "gate_closed",
           "toll_unpaid"
@@ -25945,7 +25951,10 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {"gold": 100, "wood": 2},
+        "toll_resources": {
+          "gold": 100,
+          "wood": 2
+        },
         "blocked_state_ids": [
           "lease_unread",
           "root_gate_closed"
@@ -26089,7 +26098,10 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {"gold": 140, "ore": 2},
+        "toll_resources": {
+          "gold": 140,
+          "ore": 2
+        },
         "blocked_state_ids": [
           "rail_stop_locked",
           "pressure_low"
@@ -26514,15 +26526,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -26550,19 +26562,19 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": -1,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "root arch awaits scenario authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "walking_green_root_pass"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -26591,8 +26603,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -26686,15 +26698,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -26722,19 +26734,19 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": -1,
+        "movement_cost_delta": -3,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "rail switch awaits pressure crews",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "underway_pressure_rail_switch"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -26763,8 +26775,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -26863,15 +26875,15 @@
       "guard_expectation": {
         "tier": "heavy",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -26899,19 +26911,19 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": -1,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "mirror stair awaits scenario authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "ninefold_mirror_stair_turn"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -26940,8 +26952,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -27050,15 +27062,15 @@
       "guard_expectation": {
         "tier": "heavy",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -27086,19 +27098,19 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": -1,
+        "movement_cost_delta": -3,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "basalt undergate awaits scenario authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "basalt_undergate_pair"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -27127,8 +27139,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -27217,15 +27229,15 @@
       "guard_expectation": {
         "tier": "light",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -27259,13 +27271,13 @@
           "closed",
           "unmapped"
         ],
-        "public_reason": "wind chute marks a one-way descent contract",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "ridge_wind_chute_drop"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -27294,8 +27306,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "high_to_low",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -27379,15 +27391,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -27421,13 +27433,13 @@
           "closed",
           "unmapped"
         ],
-        "public_reason": "slipgate mirror awaits scenario authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "slipgate_mirror_exit"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -27456,8 +27468,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -27546,15 +27558,15 @@
       "guard_expectation": {
         "tier": "light",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -27582,19 +27594,19 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": -1,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "spillway marker records a one-way downstream contract",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "floodplain_spillway_drop"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -27623,8 +27635,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -27715,15 +27727,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "claiming the site activates its live land-transit endpoint contract"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "land_transit_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -27752,19 +27764,19 @@
         "effect_type": "linked_endpoint",
         "requires_visit": true,
         "requires_owner": false,
-        "movement_cost_delta": -1,
+        "movement_cost_delta": -2,
         "toll_resources": {},
         "blocked_state_ids": [
           "closed",
           "unmapped"
         ],
-        "public_reason": "tide bore marker reserves a coast one-way contract",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch.",
+        "public_reason": "the claimed land transit is active",
+        "public_summary": "Claiming this site activates its authored land-transit endpoint contract.",
         "linked_endpoint_group_id": "veil_tide_bore_marker"
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "land_transit_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -27793,8 +27805,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "one_way_tide_route",
@@ -36425,10 +36437,10 @@
         "guard_encounter_id": "encounter_roadward_lodge_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -36463,14 +36475,14 @@
           "ore",
           "wood"
         ],
-      "artifact_spell_recruit_route_rewards_are_metadata_only": false,
-      "route_reward_execution": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
+        "route_reward_execution": true,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-      "status": "resource_and_route_rewards_live",
-      "live_reward_grants": true,
-      "guarded_reward_site_runtime_supported": true,
+        "status": "resource_and_route_rewards_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
@@ -36635,10 +36647,10 @@
         "guard_encounter_id": "encounter_harbor_pilot_house_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -36846,10 +36858,10 @@
         "guard_encounter_id": "encounter_dustjack_yard_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37045,10 +37057,10 @@
         "guard_encounter_id": "encounter_greenbranch_copse_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37240,10 +37252,10 @@
         "cooldown_days": 0,
         "refresh_rule": "route_state"
       },
-    "guarded_reward_contract": {
-      "contract_id": "guarded_reward_contract_fog_quay_ambush",
-      "resource_site_id": "site_fog_quay_ambush",
-      "artifact_reward_table_id": "artifact_source_guarded_sites_standard",
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_fog_quay_ambush",
+        "resource_site_id": "site_fog_quay_ambush",
+        "artifact_reward_table_id": "artifact_source_guarded_sites_standard",
         "reward_site_role": "guarded_route_reward_hybrid",
         "reward_categories": [
           "route",
@@ -37255,10 +37267,10 @@
         "guard_encounter_id": "encounter_reedbarge_mooring_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37451,10 +37463,10 @@
         "guard_encounter_id": "encounter_kite_signal_eyrie_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37645,10 +37657,10 @@
         "guard_encounter_id": "encounter_charcoal_burners_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -37855,10 +37867,10 @@
         "guard_encounter_id": "encounter_frostwharf_house_watch",
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
-      "one_time_reward": true,
-      "route_hybrid": true,
-      "metadata_only_guard_contract": false,
-      "runtime_guard_resolution_adopted": true,
+        "one_time_reward": true,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -38019,8 +38031,8 @@
           "captured",
           "damaged"
         ],
-      "state_metadata_only": false,
-      "runtime_capture_adopted": true
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_thornwake_graft_arch",
@@ -38033,8 +38045,8 @@
           "captured",
           "damaged"
         ],
-      "ownership_state_metadata_only": false,
-      "runtime_capture_adopted": true,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38044,19 +38056,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-      "status": "live",
-      "live_reward_grants": true,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-      "ownership_capture_runtime_adopted": true,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-      "scenario_placement_migration": true,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -38171,8 +38183,8 @@
           "captured",
           "damaged"
         ],
-      "state_metadata_only": false,
-      "runtime_capture_adopted": true
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_brasshollow_gauge_shrine",
@@ -38185,8 +38197,8 @@
           "captured",
           "damaged"
         ],
-      "ownership_state_metadata_only": false,
-      "runtime_capture_adopted": true,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38196,19 +38208,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-      "status": "live",
-      "live_reward_grants": true,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-      "ownership_capture_runtime_adopted": true,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-      "scenario_placement_migration": true,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [
@@ -38318,8 +38330,8 @@
           "captured",
           "damaged"
         ],
-      "state_metadata_only": false,
-      "runtime_capture_adopted": true
+        "state_metadata_only": false,
+        "runtime_capture_adopted": true
       },
       "faction_landmark_contract": {
         "contract_id": "landmark_contract_veilmourn_bell_mast",
@@ -38332,8 +38344,8 @@
           "captured",
           "damaged"
         ],
-      "ownership_state_metadata_only": false,
-      "runtime_capture_adopted": true,
+        "ownership_state_metadata_only": false,
+        "runtime_capture_adopted": true,
         "public_text_boundary": "compact hover/selection keys only; no map text panel implementation"
       },
       "public_text": {
@@ -38343,19 +38355,19 @@
         "large_text_panel_required": false
       },
       "runtime_boundary": {
-      "status": "live",
-      "live_reward_grants": true,
+        "status": "live",
+        "live_reward_grants": true,
         "objective_runtime_adopted": false,
         "broad_objective_runtime_migration": false,
         "state_variant_runtime_adopted": false,
-      "ownership_capture_runtime_adopted": true,
-      "save_payload_required": true,
-      "renderer_sprite_required": true,
+        "ownership_capture_runtime_adopted": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
-      "route_effect_runtime_adopted": true,
-      "rare_resource_activation": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-      "scenario_placement_migration": true,
+        "scenario_placement_migration": true,
         "public_text_panel_required": false
       },
       "animation_cues": [

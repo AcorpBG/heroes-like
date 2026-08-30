@@ -6258,9 +6258,69 @@
       "path": "res://art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/scenario_witness_stone_activated_source.png", "source_model": "built_in_image_gen_precise_object_edit_roads_objectives_state_atlas",
       "assigned_resource_site_id": "site_scenario_witness_stone", "presentation_role": "activated_objective_state", "accessible_description": "The sworn Witness Stone with its carved eye shining pale gold-blue above two lit candles and a small blue oath ribbon."
+    },
+    "resource_site_land_transit_repaired_ferry_stage_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_repaired_ferry_stage", "presentation_role": "active_land_transit_state", "accessible_description": "A repaired ferry stage with a clear deck, taut guide ropes, lit route lanterns, safety ring, and raised pennant."
+    },
+    "resource_site_land_transit_rope_lift_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/rope_lift_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_rope_lift", "presentation_role": "active_land_transit_state", "accessible_description": "A braced working rope lift with taut lines, a secure platform, lit landing lamps, and route pennant."
+    },
+    "resource_site_land_transit_root_pass_arch_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/root_pass_arch_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_root_pass_arch", "presentation_role": "active_land_transit_state", "accessible_description": "A living root arch with an open luminous passage, fresh leaves, clear path stones, and green-gold waylight."
+    },
+    "resource_site_land_transit_pressure_rail_switch_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/pressure_rail_switch_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_pressure_rail_switch", "presentation_role": "active_land_transit_state", "accessible_description": "An aligned rail switch with a raised lever, charged blue-brass pipes, clear track, and lit route gauge."
+    },
+    "resource_site_land_transit_mirror_stair_turn_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/mirror_stair_turn_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_mirror_stair_turn", "presentation_role": "active_land_transit_state", "accessible_description": "A curved mirror stair with illuminated glass steps, bright rail beacons, and restrained blue-white route shimmer."
+    },
+    "resource_site_land_transit_basalt_undergate_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/basalt_undergate_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_basalt_undergate", "presentation_role": "active_land_transit_state", "accessible_description": "An open basalt undergate with a deep lit passage, warm floor lamps, and paired violet guide crystals."
+    },
+    "resource_site_land_transit_ridge_wind_chute_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/ridge_wind_chute_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_ridge_wind_chute", "presentation_role": "active_land_transit_state", "accessible_description": "A taut ridge wind chute catching a strong directed white-blue current beside a lit departure lantern."
+    },
+    "resource_site_land_transit_slipgate_mirror_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [336, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/slipgate_mirror_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_slipgate_mirror", "presentation_role": "active_land_transit_state", "accessible_description": "A standing slipgate mirror charged with a directional blue-gold vortex and bright outward transit stream."
+    },
+    "resource_site_land_transit_spillway_drop_marker_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [384, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/spillway_drop_marker_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_spillway_drop_marker", "presentation_role": "active_land_transit_state", "accessible_description": "An open blue-lit spillway control with a forceful one-way rush through its bounded channel."
+    },
+    "resource_site_land_transit_tide_bore_marker_active": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png", "atlas_region": [432, 0, 48, 48], "atlas_size": [480, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/tide_bore_marker_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+      "assigned_resource_site_id": "site_tide_bore_marker", "presentation_role": "active_land_transit_state", "accessible_description": "A carved current marker surrounded by a forceful directional turquoise tide and lit rope posts."
     }
   },
   "resource_site_sprites": {
+    "site_repaired_ferry_stage": {"asset_id":"resource_site_land_transit_repaired_ferry_stage_active","unclaimed_asset_id":"mapobj_repaired_ferry_stage","fit":"Operational ferry state paired with the original damaged stage."},
+    "site_rope_lift": {"asset_id":"resource_site_land_transit_rope_lift_active","unclaimed_asset_id":"mapobj_rope_lift","fit":"Operational lift state paired with the original dormant winch."},
+    "site_root_pass_arch": {"asset_id":"resource_site_land_transit_root_pass_arch_active","unclaimed_asset_id":"mapobj_root_pass_arch","fit":"Open luminous root pass paired with the original dormant arch."},
+    "site_pressure_rail_switch": {"asset_id":"resource_site_land_transit_pressure_rail_switch_active","unclaimed_asset_id":"mapobj_pressure_rail_switch","fit":"Pressurized aligned rail state paired with the original idle switch."},
+    "site_mirror_stair_turn": {"asset_id":"resource_site_land_transit_mirror_stair_turn_active","unclaimed_asset_id":"mapobj_mirror_stair_turn","fit":"Illuminated route state paired with the original quiet mirror stair."},
+    "site_basalt_undergate": {"asset_id":"resource_site_land_transit_basalt_undergate_active","unclaimed_asset_id":"mapobj_basalt_undergate","fit":"Open lit undergate paired with the original sealed basalt passage."},
+    "site_ridge_wind_chute": {"asset_id":"resource_site_land_transit_ridge_wind_chute_active","unclaimed_asset_id":"mapobj_ridge_wind_chute","fit":"Flowing departure state paired with the original slack wind chute."},
+    "site_slipgate_mirror": {"asset_id":"resource_site_land_transit_slipgate_mirror_active","unclaimed_asset_id":"mapobj_slipgate_mirror","fit":"Charged one-way portal paired with the original dormant mirror."},
+    "site_spillway_drop_marker": {"asset_id":"resource_site_land_transit_spillway_drop_marker_active","unclaimed_asset_id":"mapobj_spillway_drop_marker","fit":"Flowing one-way spillway paired with the original closed marker."},
+    "site_tide_bore_marker": {"asset_id":"resource_site_land_transit_tide_bore_marker_active","unclaimed_asset_id":"mapobj_tide_bore_marker","fit":"Active directional tide state paired with the original quiet bore marker."},
     "site_toll_chain_court": {"asset_id":"resource_site_roads_objectives_toll_chain_opened","unclaimed_asset_id":"mapobj_toll_chain_court","fit":"Lowered-chain state paired with the original closed Toll Chain Court."},
     "site_root_lease_gate": {"asset_id":"resource_site_roads_objectives_root_lease_opened","unclaimed_asset_id":"mapobj_root_lease_gate","fit":"Withdrawn-root state paired with the original closed Root Lease Gate."},
     "site_pressure_rail_stop": {"asset_id":"resource_site_roads_objectives_pressure_rail_opened","unclaimed_asset_id":"mapobj_pressure_rail_stop","fit":"Repaired clear-rail state paired with the original locked Pressure Rail Stop."},

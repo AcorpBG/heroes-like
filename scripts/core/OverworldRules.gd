@@ -529,7 +529,6 @@ static func active_linked_transit_edges(session: SessionStateStoreScript.Session
 		var site_contract: Dictionary = site.get("linked_endpoint_contract", {}) if site.get("linked_endpoint_contract", {}) is Dictionary else {}
 		if (
 			not bool(transit_profile.get("runtime_route_effect_adopted", false))
-			or not bool(transit_profile.get("paired_link_required", false))
 			or not bool(site_runtime.get("pathing_runtime_adopted", false))
 			or not bool(site_runtime.get("route_effect_runtime_adopted", false))
 			or not bool(site_route_boundary.get("runtime_behavior_adopted", false))
@@ -554,12 +553,15 @@ static func active_linked_transit_edges(session: SessionStateStoreScript.Session
 		):
 			continue
 		var endpoint_group_id := String(site_contract.get("endpoint_group_id", ""))
+		var directionality := String(site_contract.get("directionality", ""))
 		if (
 			endpoint_group_id == ""
 			or endpoint_group_id != String(object_contract.get("endpoint_group_id", ""))
 			or endpoint_group_id != String(route_effect.get("linked_endpoint_group_id", ""))
-			or String(site_contract.get("directionality", "")) != "two_way"
-			or String(object_contract.get("directionality", "")) != "two_way"
+			or directionality not in ["two_way", "one_way"]
+			or directionality != String(object_contract.get("directionality", ""))
+			or bool(transit_profile.get("one_way", false)) != (directionality == "one_way")
+			or bool(transit_profile.get("paired_link_required", false)) != (directionality == "two_way")
 			or not bool(site_contract.get("requires_exit_safety", false))
 			or not bool(object_contract.get("requires_exit_safety", false))
 		):
@@ -581,15 +583,22 @@ static func active_linked_transit_edges(session: SessionStateStoreScript.Session
 		if (
 			not (entry_offsets is Array)
 			or entry_offsets.size() != 2
-			or entry_offsets != exit_offsets
 			or entry_offsets != object_entry_offsets
-			or entry_offsets != object_exit_offsets
-			or entry_offsets != approach.get("linked_exit_offsets", [])
+			or not (exit_offsets is Array)
+			or exit_offsets.size() != 2
+			or exit_offsets != object_exit_offsets
+			or exit_offsets != approach.get("linked_exit_offsets", [])
+		):
+			continue
+		if directionality == "two_way" and not (
+			exit_offsets.has(entry_offsets[0])
+			and exit_offsets.has(entry_offsets[1])
 		):
 			continue
 		var placement := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
 		var endpoint_tiles := []
-		for offset_value in entry_offsets:
+		var directed_offsets := [entry_offsets[0], entry_offsets[1]] if directionality == "two_way" else [entry_offsets[0], exit_offsets[0]]
+		for offset_value in directed_offsets:
 			if not (offset_value is Dictionary):
 				endpoint_tiles.clear()
 				break
@@ -627,7 +636,8 @@ static func active_linked_transit_edges(session: SessionStateStoreScript.Session
 			"from_tile": from_tile,
 			"to_tile": to_tile,
 			"movement_cost": movement_cost,
-			"two_way": true,
+			"directionality": directionality,
+			"two_way": directionality == "two_way",
 		})
 	return edges
 
@@ -637,13 +647,13 @@ static func linked_transit_neighbors_from_edges(edges: Array, tile: Vector2i) ->
 		if not (edge_value is Dictionary):
 			continue
 		var edge: Dictionary = edge_value
-		if int(edge.get("movement_cost", 0)) != 1 or not bool(edge.get("two_way", false)):
+		if int(edge.get("movement_cost", 0)) != 1:
 			continue
 		var from_tile: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
 		var to_tile: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
 		if tile == from_tile and not neighbors.has(to_tile):
 			neighbors.append(to_tile)
-		elif tile == to_tile and not neighbors.has(from_tile):
+		elif bool(edge.get("two_way", false)) and tile == to_tile and not neighbors.has(from_tile):
 			neighbors.append(from_tile)
 	return neighbors
 
@@ -658,7 +668,7 @@ static func active_linked_transit_step(
 		var edge: Dictionary = edge_value
 		var edge_from: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
 		var edge_to: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
-		if (from_tile == edge_from and to_tile == edge_to) or (from_tile == edge_to and to_tile == edge_from):
+		if (from_tile == edge_from and to_tile == edge_to) or (bool(edge.get("two_way", false)) and from_tile == edge_to and to_tile == edge_from):
 			return edge.duplicate(true)
 	return {}
 
@@ -670,8 +680,9 @@ static func active_linked_transit_signature(session: SessionStateStoreScript.Ses
 		var edge: Dictionary = edge_value
 		var from_tile: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
 		var to_tile: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
-		rows.append("%s:%d,%d>%d,%d:%d" % [
+		rows.append("%s:%s:%d,%d>%d,%d:%d" % [
 			String(edge.get("placement_id", "")),
+			String(edge.get("directionality", "")),
 			from_tile.x,
 			from_tile.y,
 			to_tile.x,
