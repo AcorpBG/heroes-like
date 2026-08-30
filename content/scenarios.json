@@ -4647,7 +4647,13 @@
         {"placement_id": "ninefold_fog_quay_ambush", "site_id": "site_fog_quay_ambush", "x": 59, "y": 61, "guard_front_id": "ninefold_fog_quay_ambush_watch"},
         {"placement_id": "ninefold_mirror_toll_causeway", "site_id": "site_mirror_toll_causeway", "x": 10, "y": 56, "guard_front_id": "ninefold_mirror_toll_causeway_watch"},
         {"placement_id": "ninefold_ashbarb_roadblock", "site_id": "site_ashbarb_roadblock", "x": 25, "y": 61, "guard_front_id": "ninefold_ashbarb_roadblock_watch"},
-        {"placement_id": "ninefold_frostford_hold", "site_id": "site_frostford_hold", "x": 3, "y": 61, "guard_front_id": "ninefold_frostford_hold_watch"}
+        {"placement_id": "ninefold_frostford_hold", "site_id": "site_frostford_hold", "x": 3, "y": 61, "guard_front_id": "ninefold_frostford_hold_watch"},
+        {"placement_id": "ninefold_wayfarer_menders_tent", "site_id": "site_wayfarer_menders_tent", "x": 24, "y": 4},
+        {"placement_id": "ninefold_courier_change_post", "site_id": "site_courier_change_post", "x": 35, "y": 2},
+        {"placement_id": "ninefold_contract_scribe_booth", "site_id": "site_contract_scribe_booth", "x": 58, "y": 4},
+        {"placement_id": "ninefold_reedboat_supply_stand", "site_id": "site_reedboat_supply_stand", "x": 39, "y": 5},
+        {"placement_id": "ninefold_ash_cooler_kitchen", "site_id": "site_ash_cooler_kitchen", "x": 45, "y": 4},
+        {"placement_id": "ninefold_lens_calibration_cart", "site_id": "site_lens_calibration_cart", "x": 4, "y": 9}
       ],
       "artifact_nodes": [{"placement_id": "confluence_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 23, "y": 5}, {"placement_id": "confluence_quarry_tally_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 45}, {"placement_id": "confluence_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 44, "y": 45}, {"placement_id": "confluence_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 60, "y": 45}],
       "encounters": [

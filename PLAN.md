@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `content-eight-guarded-route-gates-10184`.
-- Current package boundary: both release exports measure 249329716 bytes, 670284 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-six-repeatable-field-services-10184`; the next coherent content family is not yet selected.
+- Current package boundary: both release exports measure 249363240 bytes, 636760 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Six Repeatable Field Services
+
+id: `content-six-repeatable-field-services-10184`
+
+Status: completed.
+
+Completion result:
+- all six Batch 003 repeatable field services are live on Ninefold Confluence with exact paid seven-day visits, experience/resource rewards, movement restoration, nearest-town recovery relief, hostile-pressure relief, and scouting effects through one data-driven runtime boundary;
+- every service retains its original ready landmark before use and switches to its own original visited/cooldown state in one compact 288x48 atlas afterward, while save version 9 preserves both cooldown states exactly;
+- the one consolidated six-case gameplay/runtime/visual smoke passes across first use, mutation-free early rejection, day-seven reuse, both save round-trips, exact art regions, and one visual state-strip capture;
+- repository validation and matching Linux/Windows packaged boots pass with ten required resource-site atlases and identical 249363240-byte PCKs below the unchanged ceiling.
+
+Current finding:
+- Wayfarer Menders Tent, Courier Change Post, Contract Scribe Booth, Reedboat Supply Stand, Ash Cooler Kitchen, and Lens Calibration Cart are the complete repeatable-service family in Batch 003 and all six remain metadata-only;
+- all six already own distinct original ready-state landmarks and the shared resource interaction path already enforces paid seven-day cooldown visits and save-version-9 persistence, but four services have no authored scenario placement and none has a live cost/effect contract or visited-state art;
+- this family can add meaningful exploration decisions through data-driven experience, movement readiness, town-recovery relief, common-resource resupply, pressure relief, and scouting effects without changing battle formulas or the save schema.
+
+Implementation boundary:
+- activate all six service site/object pairs with exact service costs, authored seven-day cooldowns, public action/summary text, live save/pathing/rendering boundaries, and biome-appropriate Ninefold Confluence placements;
+- add one bounded data-driven repeatable-service effect executor for movement restoration, nearest-player-town recovery relief, and hostile-pressure relief while retaining the existing resource, experience, and fog-reveal reward paths;
+- create six distinct original transparent visited-service landmark edits from the existing ready identities, pack them into one compact 288x48 atlas, and switch after the first successful service visit;
+- preserve deterministic outcomes, save version 9, existing victory requirements, generated-source exclusion, accessibility descriptions, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- each service charges its exact cost, executes its exact resource and strategic effect, rejects early reuse without mutation, becomes usable exactly seven days later, executes a second visit once, and round-trips through save version 9 after both cooldown states;
+- all six resolve their existing ready landmark before use and their own transparent visited-state region afterward while remaining present and interactable on the map;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete family after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no battle formula, unit, faction, hero, town, building, transit teleport, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes service building, name, text, reward, landmark, or protected visual expression.
 
 ## Eight Guarded Route Gates
 
