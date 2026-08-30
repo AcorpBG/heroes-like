@@ -24,8 +24,39 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-four-faction-roster-parity-companies-10184` is completed as one coherent Embercourt, Thornwake, Brasshollow, and Veilmourn unit/recruitment/reinforcement/battle batch; the broad content goal continues beyond this slice.
-- Current package boundary: matching Linux and Windows release exports measure 242012184 bytes, 7987816 bytes below the unchanged 250000000-byte ceiling; source masters and superseded overworld textures remain excluded symmetrically while active runtime art remains packaged.
+- Current implementation slice: `content-eight-foundation-map-object-identities-10184` is completed as one coherent pickup, mine, dwelling, scouting, and service overworld-art batch; the broad content goal continues beyond this slice.
+- Current package boundary: matching-size Linux and Windows release exports measure 243127720 bytes, 6872280 bytes below the unchanged 250000000-byte ceiling; all eight new runtime identities are present while generated masters and superseded overworld textures remain excluded symmetrically.
+
+## Eight Foundation Map Object Identities
+
+id: `content-eight-foundation-map-object-identities-10184`
+
+Status: completed.
+
+Completion result:
+- Waystone Cache, Wood Wagon, Fenhound Kennels, Brightwood Sawmill, Ridge Quarry, Watchtower Beacon, Wayfarer Infirmary, and Ore Crates now have original generated transparent isometric identities with footprint-appropriate 512px normalization and distinct non-color silhouettes;
+- all eight object ids and their live resource-site selectors resolve the exact new assets, while Fenhound Kennels preserves its separate claimed-state art; the map-object manifest now covers all 188 authored non-decorative objects without procedural fallback;
+- the inspected eight-object runtime contact sheet, exact source/runtime hashes, dimensions, accessible descriptions, generation prompts, and identity-preserving alpha-extraction provenance are retained outside release packages;
+- one consolidated Godot smoke passes 8/8 texture, mapping, footprint, fallback, claimed-state, repeat, and session-authority checks; repository validation passes;
+- Linux and Windows release gates pass with matching-size 243127720-byte PCKs, all eight runtime entries present, source masters excluded, native libraries loaded, and 6872280 bytes below the unchanged ceiling.
+
+Current finding:
+- 180 of the 188 authored non-decorative map objects already resolve to exact distinct generated sprites, but Waystone Cache, Wood Wagon, Fenhound Kennels, Brightwood Sawmill, Ridge Quarry, Watchtower Beacon, Wayfarer Infirmary, and Ore Crates still fall through to the procedural marker;
+- these eight objects are not dormant catalog rows: they are used by live pickup, mine, neutral-dwelling, scouting-structure, repeatable-service, scenario, save, and native-RMG package paths;
+- the existing exact `mapobj_*` resolver contract can adopt distinct sprites without changing object ids, gameplay rules, placements, or save schema.
+
+Implementation boundary:
+- generate eight original transparent isometric map-object identities with readable silhouettes for reward cache, timber wagon, creature kennel, sawmill, quarry, beacon, infirmary, and ore-crate roles;
+- adopt the curated 512px sources into the existing runtime object path and manifest with exact object-family assignment, accessible non-color descriptions, and built-in-image-generation provenance;
+- preserve all current interactions, resource yields, dwelling/service/scouting rules, deterministic RMG behavior, save version 9, Windows/Linux paths, source-art exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- every authored non-decorative map object resolves to an exact distinct runtime sprite, and all eight new textures load through the live overworld resolver rather than the procedural fallback;
+- one consolidated smoke covers the complete eight-object batch across representative live map/render and interaction families after adoption, followed once by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling;
+- a complete visual contact sheet is inspected at runtime scale and the source manifest records the final prompt set, hashes, dimensions, object ownership, and accessible silhouette descriptions.
+
+Non-goals:
+- no new object gameplay, resource balance, dwelling roster, scenario, RMG generation rule, save schema, UI redesign, copied Heroes asset, or whole-game release-readiness claim.
 
 ## Four-Faction Roster Parity Companies
 

@@ -1289,14 +1289,14 @@ OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "ember_signal_post",
 }
 OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
-    "site_wood_wagon": "lumber_wagon",
-    "site_ore_crates": "ore_crates",
-    "site_waystone_cache": "ruined_obelisk",
+    "site_wood_wagon": "mapobj_wood_wagon",
+    "site_ore_crates": "mapobj_ore_crates",
+    "site_waystone_cache": "mapobj_waystone_cache",
     "site_fenhound_kennels": "resource_site_neutral_fenhound_kennels_claimed",
     "site_cliffhawk_roost": "resource_site_neutral_cliffhawk_roost_claimed",
-    "site_watchtower_beacon": "watchtower",
-    "site_brightwood_sawmill": "sawmill",
-    "site_ridge_quarry": "stone_quarry",
+    "site_watchtower_beacon": "mapobj_watchtower_beacon",
+    "site_brightwood_sawmill": "mapobj_brightwood_sawmill",
+    "site_ridge_quarry": "mapobj_ridge_quarry",
     "site_roadside_sanctum": "shrine",
     "site_ember_signal_post": "ember_signal_post",
     "site_frontier_rare_exchange": "mapobj_market_caravanserai",
@@ -43690,16 +43690,17 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(isinstance(source, dict), errors, "Map object sprite manifest must record source provenance")
         if isinstance(source, dict):
             ensure("no_homm3" in str(source.get("asset_policy", "")).lower(), errors, "Map object sprite manifest must record the no-HoMM3-art import policy")
-            ensure(int(source.get("new_generated_sprite_count", 0)) == 180, errors, "Map object sprite manifest must record 180 newly generated distinct sprites")
+            ensure(int(source.get("new_generated_sprite_count", 0)) == 188, errors, "Map object sprite manifest must record all 188 newly generated distinct non-decoration sprites")
             generated_batches = source.get("generated_batches", [])
-            ensure(isinstance(generated_batches, list) and len(generated_batches) == 13, errors, "Map object sprite manifest must record 13 generated source atlases")
+            ensure(isinstance(generated_batches, list) and len(generated_batches) == 14, errors, "Map object sprite manifest must record 14 generated source batches")
             if isinstance(generated_batches, list):
                 for batch in generated_batches:
                     ensure(isinstance(batch, dict), errors, "Map object generated batch provenance must be a dictionary")
                     if not isinstance(batch, dict):
                         continue
-                    source_atlas_path = res_path_to_disk(str(batch.get("workspace_source_atlas", "")))
-                    ensure(source_atlas_path.exists(), errors, f"Map object source atlas is missing: {batch.get('workspace_source_atlas')}")
+                    source_owner = str(batch.get("workspace_source_atlas", batch.get("workspace_source_manifest", "")))
+                    source_owner_path = res_path_to_disk(source_owner)
+                    ensure(bool(source_owner) and source_owner_path.exists(), errors, f"Map object source batch owner is missing: {source_owner}")
         distinct_asset_ids = map_object_manifest.get("distinct_asset_ids", [])
         mappings = map_object_manifest.get("object_sprite_mappings", {})
         coverage = map_object_manifest.get("coverage", {})
@@ -43711,19 +43712,19 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         }
         non_decorative_object_ids = set(map_objects.keys()) - decorative_object_ids
         ensure(len(non_decorative_object_ids) == 188, errors, f"Expected 188 authored non-decoration map objects, found {len(non_decorative_object_ids)}")
-        ensure(isinstance(distinct_asset_ids, list) and len(distinct_asset_ids) == 180, errors, "Map object sprite manifest must define 180 newly generated distinct asset ids")
+        ensure(isinstance(distinct_asset_ids, list) and len(distinct_asset_ids) == 188, errors, "Map object sprite manifest must define 188 newly generated distinct asset ids")
         if isinstance(distinct_asset_ids, list):
-            ensure(len(set(map(str, distinct_asset_ids))) == 180, errors, "Map object sprite distinct_asset_ids must not reuse asset ids")
+            ensure(len(set(map(str, distinct_asset_ids))) == 188, errors, "Map object sprite distinct_asset_ids must not reuse asset ids")
         ensure(isinstance(coverage, dict), errors, "Map object sprite manifest must record coverage")
         if isinstance(coverage, dict):
             ensure(int(coverage.get("authored_map_object_count", 0)) == 388, errors, "Map object sprite coverage must count all 388 authored map objects")
             ensure(int(coverage.get("foundation_decorative_or_blocker_distinct_count", 0)) == 200, errors, "Map object sprite coverage must preserve the 200 decorative/blocker distinct assignments")
-            ensure(int(coverage.get("preexisting_unique_non_decorative_count", 0)) == 8, errors, "Map object sprite coverage must count 8 preexisting unique non-decoration assignments")
-            ensure(int(coverage.get("new_distinct_non_decorative_asset_count", 0)) == 180, errors, "Map object sprite coverage must count 180 new non-decoration assignments")
+            ensure(int(coverage.get("preexisting_unique_non_decorative_count", -1)) == 0, errors, "Map object sprite coverage must not retain the eight former generic foundation assignments")
+            ensure(int(coverage.get("new_distinct_non_decorative_asset_count", 0)) == 188, errors, "Map object sprite coverage must count 188 exact non-decoration assignments")
             ensure(int(coverage.get("total_distinct_authored_map_object_count_after_pass", 0)) == 388, errors, "Map object sprite coverage must prove all authored map objects have distinct assignments after the pass")
         ensure(isinstance(mappings, dict), errors, "Map object sprite manifest must define object_sprite_mappings")
         if isinstance(mappings, dict):
-            ensure(len(mappings) == 180, errors, "Map object sprite manifest must map the 180 non-decoration gap objects")
+            ensure(len(mappings) == 188 and set(map(str, mappings)) == non_decorative_object_ids, errors, "Map object sprite manifest must map all 188 authored non-decoration objects")
             mapped_asset_ids: list[str] = []
             for object_id, entry in mappings.items():
                 ensure(str(object_id) in non_decorative_object_ids, errors, f"Map object sprite mapping references unexpected object {object_id}")
@@ -43734,7 +43735,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 mapped_asset_ids.append(asset_id)
                 ensure(asset_id in object_assets, errors, f"Map object sprite mapping {object_id} references missing object asset {asset_id}")
                 ensure(str(entry.get("fit", "")) != "", errors, f"Map object sprite mapping {object_id} must record its semantic-fit note")
-            ensure(len(mapped_asset_ids) == 180 and len(set(mapped_asset_ids)) == 180, errors, "Map object sprite mappings must assign one unique asset id per gap object")
+            ensure(len(mapped_asset_ids) == 188 and len(set(mapped_asset_ids)) == 188, errors, "Map object sprite mappings must assign one unique asset id per authored non-decoration object")
             if isinstance(distinct_asset_ids, list):
                 ensure(set(mapped_asset_ids) == set(map(str, distinct_asset_ids)), errors, "Map object sprite mappings must match the manifest distinct_asset_ids set")
         if isinstance(distinct_asset_ids, list):
@@ -43744,13 +43745,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 if isinstance(entry, dict):
                     runtime_path = res_path_to_disk(str(entry.get("path", "")))
                     source_trimmed_path = res_path_to_disk(str(entry.get("source_trimmed", "")))
-                    source_atlas_path = res_path_to_disk(str(entry.get("source_generated_atlas", "")))
+                    source_owner_path = res_path_to_disk(str(entry.get("source_generated_atlas", entry.get("source_generated", ""))))
                     ensure(str(entry.get("asset_policy", "")) == "original_generated_runtime_sprite_no_homm3_art_import", errors, f"Map object distinct asset {asset_id} must record generated no-HoMM3 policy")
                     ensure(bool(entry.get("distinct_sprite_assignment", False)), errors, f"Map object distinct asset {asset_id} must be marked as a distinct sprite assignment")
                     ensure(str(entry.get("assigned_map_object_id", "")) in non_decorative_object_ids, errors, f"Map object distinct asset {asset_id} must record its assigned map object id")
                     ensure(runtime_path.with_name(runtime_path.name + ".import").exists(), errors, f"Map object distinct runtime asset is missing Godot import sidecar: {runtime_path.relative_to(ROOT)}.import")
                     ensure(source_trimmed_path.exists(), errors, f"Map object distinct asset {asset_id} is missing trimmed source {entry.get('source_trimmed')}")
-                    ensure(source_atlas_path.exists(), errors, f"Map object distinct asset {asset_id} is missing generated source atlas {entry.get('source_generated_atlas')}")
+                    ensure(source_owner_path.exists(), errors, f"Map object distinct asset {asset_id} is missing its generated source owner")
 
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     for site_id, expected_asset_id in OVERWORLD_ART_REQUIRED_SITE_MAPPINGS.items():
@@ -51577,7 +51578,7 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
 def validate_eight_neutral_dwelling_musters(errors: list[str]) -> None:
     expected = {
         "site_free_company_yard": ("object_roadward_lodge", "tollreaver-roadward-lodge", "tollreaver_watch_dwelling", "tollreaver_roadward_lodge_watch", "encounter_roadward_lodge_watch", "mapobj_roadward_lodge", "resource_site_neutral_roadward_lodge_claimed", "roadward_lodge_claimed", "53178f2c1b78544d04c2572cb3ba7a1fc266252663935e64764b41f980fe415a", [0,0,48,48], {"gold":80}, {"gold":40}, {"unit_neutral_roadwardens":2,"unit_neutral_hearthbow_carriers":1}, {"unit_neutral_roadwardens":1}),
-        "site_fenhound_kennels": ("object_fenhound_kennels", "cinderquill-fenhound-lexicon", "cinderquill_watch_dwelling", "cinderquill_fenhound_kennel_watch", "encounter_fenhound_kennel_watch", "kennel", "resource_site_neutral_fenhound_kennels_claimed", "fenhound_kennels_claimed", "d8c65127f6b36cb17639273339f80f29de703b69155d86a36efc4c9f671eed62", [48,0,48,48], {"gold":70}, {"gold":35}, {"unit_neutral_fenhound_runners":2,"unit_neutral_mossglass_sentinels":1}, {"unit_neutral_fenhound_runners":1}),
+        "site_fenhound_kennels": ("object_fenhound_kennels", "cinderquill-fenhound-lexicon", "cinderquill_watch_dwelling", "cinderquill_fenhound_kennel_watch", "encounter_fenhound_kennel_watch", "mapobj_fenhound_kennels", "resource_site_neutral_fenhound_kennels_claimed", "fenhound_kennels_claimed", "d8c65127f6b36cb17639273339f80f29de703b69155d86a36efc4c9f671eed62", [48,0,48,48], {"gold":70}, {"gold":35}, {"unit_neutral_fenhound_runners":2,"unit_neutral_mossglass_sentinels":1}, {"unit_neutral_fenhound_runners":1}),
         "site_cliffhawk_roost": ("object_cliffhawk_roost", "facetlane-cliffhawk-roost", "facetlane_watch_dwelling", "facetlane_cliffhawk_roost_watch", "encounter_cliffhawk_roost_watch", "mapobj_cliffhawk_roost", "resource_site_neutral_cliffhawk_roost_claimed", "cliffhawk_roost_claimed", "5916bd8da0d0f827e95a44c64489370490c376367bbd2206a23657ba49158761", [96,0,48,48], {"gold":75}, {"gold":30}, {"unit_neutral_cliffhawk_wardens":2,"unit_neutral_windglass_slingers":1}, {"unit_neutral_cliffhawk_wardens":1}),
         "site_reedbarge_mooring": ("object_reedbarge_mooring", "reedscript-reedbarge-circuit", "reedscript_watch_dwelling", "reedscript_reedbarge_mooring_watch", "encounter_reedbarge_mooring_watch", "mapobj_reedbarge_mooring", "resource_site_neutral_reedbarge_mooring_claimed", "reedbarge_mooring_claimed", "73541a8d1c660dfb65b4b203ef98ddd69cf5d3638f12d181c23c1cae282d539a", [144,0,48,48], {"gold":90}, {"gold":35}, {"unit_neutral_reedbarge_poles":2,"unit_neutral_lanternet_throwers":1}, {"unit_neutral_reedbarge_poles":1}),
         "site_glowcap_croft": ("object_glowcap_croft", "rotlamp-glowcap-refrain", "rotlamp_watch_dwelling", "rotlamp_glowcap_croft_watch", "encounter_glowcap_croft_watch", "mapobj_glowcap_croft", "resource_site_neutral_glowcap_croft_claimed", "glowcap_croft_claimed", "6f8b8d3bfc9281fe24af20d239035ced6fec3927b1c4cb119e438ffec61bc274", [192,0,48,48], {"gold":105}, {"gold":40}, {"unit_neutral_glowcap_bulwarks":2,"unit_neutral_sporelamp_tossers":1}, {"unit_neutral_glowcap_bulwarks":1}),
@@ -52128,7 +52129,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     }
     live_claimed_state_sites = {
         "site_free_company_yard": "mapobj_roadward_lodge",
-        "site_fenhound_kennels": "kennel",
+        "site_fenhound_kennels": "mapobj_fenhound_kennels",
         "site_cliffhawk_roost": "mapobj_cliffhawk_roost",
         "site_reedbarge_mooring": "mapobj_reedbarge_mooring",
         "site_glowcap_croft": "mapobj_glowcap_croft",
@@ -52309,16 +52310,16 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             continue
         unresolved.add(site_id)
     ensure(not unresolved and len(resolver_paths) == 208, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 170, errors, "Placed resource-site map-object resolver coverage changed")
-    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 38, errors, "Placed resource-site exact site-mapping coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 178, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 30, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
             if site_id == "site_fenhound_kennels":
                 ensure(
-                    resolver_paths.get(site_id) == "site_mapping"
-                    and site_sprites.get(site_id, {}).get("unclaimed_asset_id") == "kennel",
+                    resolver_paths.get(site_id) == "map_object"
+                    and site_sprites.get(site_id, {}).get("unclaimed_asset_id") == "mapobj_fenhound_kennels",
                     errors,
-                    "site_fenhound_kennels must retain its generic kennel before changing control",
+                    "site_fenhound_kennels must retain its exact new kennel identity before changing control",
                 )
             else:
                 ensure(site_id in first_map_object_by_site and resolver_paths.get(site_id) == "map_object", errors, f"{site_id} must retain its exact unclaimed map-object resolver path")
@@ -78429,6 +78430,63 @@ def validate_four_faction_roster_parity_companies(errors: list[str]) -> None:
         ensure(token in smoke_text, errors, f"Four-faction roster-parity smoke is missing consolidated live proof: {token}")
 
 
+def validate_eight_foundation_map_object_identities(errors: list[str]) -> None:
+    expected = {
+        "object_waystone_cache": ("site_waystone_cache", "mapobj_waystone_cache", "pickup", (1290,1219), "8e2ba64e030cdb68f4076b69337ed4b90a5e34f148d0f1d138741d619142f9f2", "8cf5170f5396cad0dce81b2fdca6f723beabf36f94ec38a283f896aa4ee579ff"),
+        "object_wood_wagon": ("site_wood_wagon", "mapobj_wood_wagon", "pickup", (1362,1155), "13f71adbce0169e08f78c2919f79c7351aa7363b7300058e30eee82cdf3c70d5", "31077d01051882a81c833b3a7ddd08f6b572e09e1d7344a396e8e44b0652eadf"),
+        "object_fenhound_kennels": ("site_fenhound_kennels", "mapobj_fenhound_kennels", "neutral_dwelling", (1536,1024), "26dc18f3f5c33fa03412d1200584ba92441a3039377aef8f692e61f1a231dc3c", "32d0a3c87ecf4db569fd7a79413942a4021a216187b28c333731b6b152122dd1"),
+        "object_brightwood_sawmill": ("site_brightwood_sawmill", "mapobj_brightwood_sawmill", "mine", (1536,1024), "c28f1460d18d495833b0b4591320ff8420d94ad6d524c9436732e10b09295194", "2febcd15c791b211b20f280b22fe439d28054fa32f2671f93eb7d9f14565a9f8"),
+        "object_ridge_quarry": ("site_ridge_quarry", "mapobj_ridge_quarry", "mine", (1312,1199), "9af25d96c30a6bf2bfc7667a12921759f514240fed0e8e2fd2742496405a91cb", "feb84a0398e076a509e33ebded656cd591e6ca99d521fb2084220a7659733514"),
+        "object_watchtower_beacon": ("site_watchtower_beacon", "mapobj_watchtower_beacon", "scouting_structure", (887,1774), "67a910b7b86c1545fdc7e2abd441aa0db02a71adf9a786e6922c6b6e85a6ee2c", "78318d7ec635a4947923dd66a7b959523eb18f8a66a9ab49920290b52ce3ed90"),
+        "object_wayfarer_infirmary": ("site_wayfarer_infirmary", "mapobj_wayfarer_infirmary", "repeatable_service", (1672,941), "1212d118961bd55cc8396bcf5edebe52308759cc5a0f9768f4dff9d5e3cdb646", "0d07bdbd3bb1adaa8825a8bf20dfb9b3b5b86d619c4533c25c36bbabfe99e841"),
+        "object_ore_crates": ("site_ore_crates", "mapobj_ore_crates", "pickup", (1312,1199), "0521a8cdb4f8a52ec94478f1d5649e1c6a40194f2fc99c584ed29c5cb15d0a39", "41aec130a93340027b76083e8931bd16a11a36e159e11f10e977d4fc9d16c08f"),
+    }
+    map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    sprite_manifest = load_json(ROOT / "art" / "overworld" / "map_object_sprites.json")
+    art_manifest = load_json(ROOT / "art" / "overworld" / "manifest.json")
+    source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "map_objects" / "foundation_identities_wave1" / "manifest.json"
+    source_manifest = load_json(source_manifest_path)
+    mappings = sprite_manifest.get("object_sprite_mappings", {})
+    asset_ids = sprite_manifest.get("distinct_asset_ids", [])
+    object_assets = art_manifest.get("object_assets", {})
+    site_sprites = art_manifest.get("resource_site_sprites", {})
+    nondecorative_ids = {object_id for object_id, row in map_objects.items() if row.get("family") not in {"blocker", "decoration"}}
+    ensure(len(nondecorative_ids) == 188 and set(mappings) == nondecorative_ids and len(asset_ids) == 188 and len(set(asset_ids)) == 188, errors, "All 188 authored non-decorative map objects must retain one exact distinct sprite mapping")
+    ensure(sprite_manifest.get("source", {}).get("new_generated_sprite_count") == 188 and sprite_manifest.get("source", {}).get("generated_batch_count") == 14, errors, "Foundation identity completion must retain the exact 188-object, 14-batch mapping provenance")
+    coverage = sprite_manifest.get("coverage", {})
+    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 188 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 388, errors, "Foundation identity coverage totals changed")
+    ensure(source_manifest.get("schema") == "foundation_map_object_identities_source_manifest_v1" and source_manifest.get("content_slice_id") == "content-eight-foundation-map-object-identities-10184" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("background_extraction_mode") == "built_in_image_gen_background_extraction" and len(str(source_manifest.get("prompt_set_summary", ""))) >= 500, errors, "Foundation object source provenance changed")
+    source_rows = {str(row.get("object_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
+    ensure(set(source_rows) == set(expected), errors, "Foundation object source manifest must own exactly the eight completed identities")
+    contact = source_manifest.get("runtime_contact_sheet", {})
+    contact_path = res_path_to_disk(str(contact.get("path", "")))
+    ensure(contact_path.is_file() and png_size(contact_path) == (1296,804) and hashlib.sha256(contact_path.read_bytes()).hexdigest() == "2167c682ac03c5245243cc80e88e618b3d99c6205940ddb131beda97dccb3f4b", errors, "Foundation object runtime contact sheet changed")
+    runtime_payloads: list[bytes] = []
+    for object_id, (site_id, asset_id, family, source_size, source_sha, runtime_sha) in expected.items():
+        mapping = mappings.get(object_id, {})
+        asset = object_assets.get(asset_id, {})
+        source_row = source_rows.get(object_id, {})
+        source_path = res_path_to_disk(str(source_row.get("source", "")))
+        runtime_path = res_path_to_disk(str(asset.get("path", "")))
+        trimmed_path = res_path_to_disk(str(asset.get("source_trimmed", "")))
+        ensure(mapping.get("asset_id") == asset_id and mapping.get("family") == family and mapping.get("source_batch") == 14 and mapping.get("assignment_source") == "foundation_identity_completion", errors, f"{object_id} exact sprite mapping changed")
+        ensure(asset.get("assigned_map_object_id") == object_id and asset.get("assigned_map_object_family") == family and asset.get("source_model") == "built_in_image_gen_original_foundation_map_object_with_transparent_extraction" and asset.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import" and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{asset_id} ownership, provenance, or accessible silhouette changed")
+        ensure(source_path.is_file() and png_size(source_path) == source_size and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6, errors, f"{object_id} transparent generated source changed")
+        ensure(runtime_path.is_file() and trimmed_path.is_file() and png_size(runtime_path) == (512,512) and runtime_path.read_bytes() == trimmed_path.read_bytes() and hashlib.sha256(runtime_path.read_bytes()).hexdigest() == runtime_sha and runtime_path.read_bytes()[25] == 6, errors, f"{asset_id} normalized transparent runtime surface changed")
+        ensure(source_row.get("source_size") == list(source_size) and source_row.get("source_sha256") == source_sha and source_row.get("runtime_sha256") == runtime_sha and len(str(source_row.get("prompt_subject", ""))) >= 80, errors, f"{object_id} source row changed")
+        runtime_payloads.append(runtime_path.read_bytes())
+        site_entry = site_sprites.get(site_id, {})
+        if object_id == "object_fenhound_kennels":
+            ensure(site_entry.get("unclaimed_asset_id") == asset_id and site_entry.get("asset_id") == "resource_site_neutral_fenhound_kennels_claimed", errors, "Fenhound Kennels must pair its new base identity with the established claimed state")
+        else:
+            ensure(site_entry.get("asset_id") == asset_id, errors, f"{site_id} must resolve its new exact live identity")
+    ensure(len(runtime_payloads) == 8 and len(set(runtime_payloads)) == 8, errors, "All eight foundation map-object runtime sprites must remain visually distinct")
+    smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    smoke_text = smoke_path.read_text(encoding="utf-8") if smoke_path.is_file() else ""
+    for token in ("OVERWORLD_FOUNDATION_OBJECT_IDENTITIES_ONLY", "FOUNDATION_OBJECT_IDENTITY_CASES", "mapped_non_decorative_count", "_object_texture_for_asset", "_resource_asset_id", 'texture.get_size() == Vector2(512, 512)', 'not bool(art.get("fallback_procedural_marker", true))', "session.to_dict() != authority_before"):
+        ensure(token in smoke_text, errors, f"Foundation object consolidated live smoke is missing proof token: {token}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -78676,6 +78734,7 @@ def main() -> int:
     validate_three_horizon_reserve_companies(errors)
     validate_three_horizon_skirmish_companies(errors)
     validate_four_faction_roster_parity_companies(errors)
+    validate_eight_foundation_map_object_identities(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_systemic_encounter_landmarks(errors)
     validate_recurring_resource_site_landmarks(errors)

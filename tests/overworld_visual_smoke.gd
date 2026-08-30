@@ -1,6 +1,16 @@
 extends Node
 
 const RESOURCE_SITE_LANDMARK_ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/recurring_resource_site_landmarks_atlas.png"
+const FOUNDATION_OBJECT_IDENTITY_CASES := [
+	{"object_id":"object_waystone_cache", "site_id":"site_waystone_cache", "asset_id":"mapobj_waystone_cache", "family":"pickup", "tile":Vector2i(0,0), "footprint":{"width":1,"height":1}},
+	{"object_id":"object_wood_wagon", "site_id":"site_wood_wagon", "asset_id":"mapobj_wood_wagon", "family":"pickup", "tile":Vector2i(2,0), "footprint":{"width":1,"height":1}},
+	{"object_id":"object_fenhound_kennels", "site_id":"site_fenhound_kennels", "asset_id":"mapobj_fenhound_kennels", "family":"neutral_dwelling", "tile":Vector2i(4,0), "footprint":{"width":2,"height":1}, "claimed_asset_id":"resource_site_neutral_fenhound_kennels_claimed"},
+	{"object_id":"object_brightwood_sawmill", "site_id":"site_brightwood_sawmill", "asset_id":"mapobj_brightwood_sawmill", "family":"mine", "tile":Vector2i(6,0), "footprint":{"width":3,"height":2}},
+	{"object_id":"object_ridge_quarry", "site_id":"site_ridge_quarry", "asset_id":"mapobj_ridge_quarry", "family":"mine", "tile":Vector2i(0,3), "footprint":{"width":2,"height":2}},
+	{"object_id":"object_watchtower_beacon", "site_id":"site_watchtower_beacon", "asset_id":"mapobj_watchtower_beacon", "family":"scouting_structure", "tile":Vector2i(2,3), "footprint":{"width":1,"height":2}},
+	{"object_id":"object_wayfarer_infirmary", "site_id":"site_wayfarer_infirmary", "asset_id":"mapobj_wayfarer_infirmary", "family":"repeatable_service", "tile":Vector2i(4,3), "footprint":{"width":2,"height":1}},
+	{"object_id":"object_ore_crates", "site_id":"site_ore_crates", "asset_id":"mapobj_ore_crates", "family":"pickup", "tile":Vector2i(6,3), "footprint":{"width":1,"height":1}},
+]
 const RESOURCE_SITE_LANDMARK_CASES := [
 	{"site_id": "site_prism_watch_relay", "asset_id": "resource_site_recurring_prism_watch_relay", "tile": Vector2i(1, 0), "region": Rect2(0, 0, 48, 48)},
 	{"site_id": "site_lens_house", "asset_id": "resource_site_recurring_lens_house_barracks", "tile": Vector2i(3, 0), "region": Rect2(48, 0, 48, 48)},
@@ -48,9 +58,10 @@ func _run() -> void:
 	var sidebar_ornament_only := OS.get_environment("OVERWORLD_SIDEBAR_ORNAMENT_ONLY") == "1"
 	var terrain_ambient_only := OS.get_environment("OVERWORLD_TERRAIN_AMBIENT_ONLY") == "1"
 	var resource_site_landmarks_only := OS.get_environment("OVERWORLD_RESOURCE_SITE_LANDMARKS_ONLY") == "1"
+	var foundation_object_identities_only := OS.get_environment("OVERWORLD_FOUNDATION_OBJECT_IDENTITIES_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only or hero_card_only or object_scale_contract_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only or terrain_ambient_only or resource_site_landmarks_only:
+	elif objective_brief_only or hero_card_only or object_scale_contract_only or route_visual_capture_only or road_surface_capture_only or sidebar_ornament_only or terrain_ambient_only or resource_site_landmarks_only or foundation_object_identities_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -59,6 +70,8 @@ func _run() -> void:
 	)
 	if resource_site_landmarks_only:
 		_configure_resource_site_landmark_fixture(session)
+	elif foundation_object_identities_only:
+		_configure_foundation_object_identity_fixture(session)
 	SessionState.set_active_session(session)
 
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
@@ -84,6 +97,15 @@ func _run() -> void:
 		if not bool(resource_site_result.get("ok", false)):
 			return
 		print("OVERWORLD_RESOURCE_SITE_LANDMARK_REPORT %s" % JSON.stringify(resource_site_result))
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
+		return
+	if foundation_object_identities_only:
+		var foundation_result := _assert_foundation_object_identity_contract(shell, map_node, session)
+		if not bool(foundation_result.get("ok", false)):
+			return
+		print("OVERWORLD_FOUNDATION_OBJECT_IDENTITIES_SMOKE %s" % JSON.stringify(foundation_result))
 		shell.queue_free()
 		await get_tree().process_frame
 		get_tree().quit(0)
@@ -248,6 +270,114 @@ func _run() -> void:
 	if main_loop != null:
 		main_loop.quit(0)
 	return
+
+func _configure_foundation_object_identity_fixture(session) -> void:
+	var resource_nodes: Array = []
+	for case_value in FOUNDATION_OBJECT_IDENTITY_CASES:
+		var case: Dictionary = case_value
+		var tile: Vector2i = case.get("tile", Vector2i(-1, -1))
+		resource_nodes.append({
+			"placement_id": "foundation_object_identity_fixture:%s" % String(case.get("object_id", "")),
+			"site_id": String(case.get("site_id", "")),
+			"object_id": String(case.get("object_id", "")),
+			"x": tile.x,
+			"y": tile.y,
+			"collected": false,
+			"collected_by_faction_id": "",
+		})
+	session.overworld["resource_nodes"] = resource_nodes
+	session.overworld["towns"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["encounters"] = []
+	session.overworld["resolved_encounters"] = []
+	session.overworld["map_objects"] = []
+	var map_size := OverworldRules.derive_map_size(session)
+	var visible_tiles: Array = []
+	var explored_tiles: Array = []
+	for y in range(map_size.y):
+		var visible_row: Array = []
+		var explored_row: Array = []
+		for _x in range(map_size.x):
+			visible_row.append(true)
+			explored_row.append(true)
+		visible_tiles.append(visible_row)
+		explored_tiles.append(explored_row)
+	session.overworld["fog"] = {
+		"visible_tiles": visible_tiles,
+		"explored_tiles": explored_tiles,
+		"visible_count": map_size.x * map_size.y,
+		"explored_count": map_size.x * map_size.y,
+		"total_tiles": map_size.x * map_size.y,
+	}
+
+func _assert_foundation_object_identity_contract(shell: Node, map_node: Node, session) -> Dictionary:
+	var authority_before: Dictionary = session.to_dict()
+	var manifest: Dictionary = map_node.get("_overworld_art_manifest")
+	var object_assets: Dictionary = manifest.get("object_assets", {}) if manifest.get("object_assets", {}) is Dictionary else {}
+	var object_mappings: Dictionary = map_node.get("_map_object_asset_ids")
+	var site_assets: Dictionary = map_node.get("_resource_site_asset_ids")
+	var unclaimed_site_assets: Dictionary = map_node.get("_resource_site_unclaimed_asset_ids")
+	if object_mappings.size() != 188:
+		push_error("Foundation object identities: expected all 188 non-decorative object mappings, found %s." % object_mappings.size())
+		get_tree().quit(1)
+		return {"ok":false, "failure":"mapping_coverage", "count":object_mappings.size()}
+	var rows: Array = []
+	for case_value in FOUNDATION_OBJECT_IDENTITY_CASES:
+		var case: Dictionary = case_value
+		var object_id := String(case.get("object_id", ""))
+		var site_id := String(case.get("site_id", ""))
+		var asset_id := String(case.get("asset_id", ""))
+		var family := String(case.get("family", ""))
+		var tile: Vector2i = case.get("tile", Vector2i(-1, -1))
+		var entry: Dictionary = object_assets.get(asset_id, {}) if object_assets.get(asset_id, {}) is Dictionary else {}
+		var texture = map_node.call("_object_texture_for_asset", asset_id)
+		var resolved_asset_id := String(map_node.call("_resource_asset_id", {
+			"site_id":site_id,
+			"object_id":object_id,
+			"collected":false,
+			"collected_by_faction_id":"",
+		}))
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var repeated: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var art: Dictionary = presentation.get("art_presentation", {}) if presentation.get("art_presentation", {}) is Dictionary else {}
+		var mapping_exact := String(object_mappings.get(object_id, "")) == asset_id
+		var site_exact := String(unclaimed_site_assets.get(site_id, "")) == asset_id if case.has("claimed_asset_id") else String(site_assets.get(site_id, "")) == asset_id
+		var claimed_exact := true
+		if case.has("claimed_asset_id"):
+			claimed_exact = String(site_assets.get(site_id, "")) == String(case.get("claimed_asset_id", "")) \
+				and String(map_node.call("_resource_asset_id", {
+					"site_id":site_id,
+					"object_id":object_id,
+					"collected":true,
+					"collected_by_faction_id":"player",
+				})) == String(case.get("claimed_asset_id", ""))
+		var exact: bool = mapping_exact \
+			and site_exact \
+			and claimed_exact \
+			and resolved_asset_id == asset_id \
+			and String(entry.get("assigned_map_object_id", "")) == object_id \
+			and String(entry.get("assigned_map_object_family", "")) == family \
+			and String(entry.get("source_model", "")) == "built_in_image_gen_original_foundation_map_object_with_transparent_extraction" \
+			and String(entry.get("accessible_description", "")).strip_edges().length() >= 72 \
+			and texture is Texture2D \
+			and texture.get_size() == Vector2(512, 512) \
+			and bool(presentation.get("has_resource", false)) \
+			and bool(presentation.get("draws_discoverable_object", false)) \
+			and bool(art.get("uses_asset_sprite", false)) \
+			and not bool(art.get("fallback_procedural_marker", true)) \
+			and art.get("sprite_asset_ids", []) == [asset_id] \
+			and art.get("sprite_footprints", []) == [case.get("footprint", {})] \
+			and repeated == presentation
+		rows.append({"object_id":object_id, "site_id":site_id, "asset_id":asset_id, "exact":exact})
+		if not exact:
+			push_error("Foundation object identities: live resolver/render contract failed. case=%s presentation=%s entry=%s resolved=%s" % [case, presentation, entry, resolved_asset_id])
+			get_tree().quit(1)
+			return {"ok":false, "failure":"live_identity", "case":case}
+	if session.to_dict() != authority_before:
+		push_error("Foundation object identities: visual resolution mutated session authority.")
+		get_tree().quit(1)
+		return {"ok":false, "failure":"session_mutation"}
+	return {"ok":true, "mapped_non_decorative_count":object_mappings.size(), "objects":rows, "session_unchanged":true}
 
 func _configure_resource_site_landmark_fixture(session) -> void:
 	var resource_nodes: Array = []
