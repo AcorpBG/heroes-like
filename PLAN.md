@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-mireglass-counterpoint-campaign-10184`, which joins six underused Mireclaw and Sunvault commanders through six exact guarded counterseals, resource-only progression, and nineteen original runtime art states.
-- Current package boundary: both release exports measure 249219604 bytes, 780396 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-thornwake-rootbound-canticles-campaign-10184`, which brings Thornwake's six previously campaign-unrepresented heroes and all twenty-three battles from their production boards into one testimony-gated six-chapter arc.
+- Current package boundary: both release exports measure 249297256 bytes, 702744 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
 
 ## Eleven Roads And Objectives
 
@@ -14943,6 +14943,38 @@ Completion criteria:
 Non-goals:
 - no new faction, unit, hero, town, spell, artifact, encounter definition, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes campaign, map, faction story, emblem, seal, landmark, name, text, or protected visual expression.
+
+## Rootbound Canticles Campaign
+
+id: `content-thornwake-rootbound-canticles-campaign-10184`
+
+Status: completed.
+
+Completion result:
+- The Rootbound Canticles is live as the fourteenth player-facing campaign: Halen Thorncart, Veyra Seedseer, Merek Greenbarrow, Osmund Pollenglass, Elian Loamchant, and Ralka Mossvein now lead six sequential chapters while every board remains available in skirmish;
+- each chapter converts its existing exact signature encounter proof into one one-time Rootbound testimony, and the following chapter requires both the prior victory and that scoped testimony; only fifteen percent of common stores up to 400 gold, 2 wood, and 2 ore crosses commanders, with no hero progression, spell, artifact, unit, or rare-resource transfer;
+- one original transparent six-root campaign emblem and six encounter-derived, braided-ring chapter seals provide seven distinct accessible live identities without adding a redundant object family; generated sources and exact provenance remain outside release packages;
+- the single consolidated live smoke passes six scenarios, twenty-three production battle payloads, six testimonies, sequential progression, resource-only carryover, save-version-9 round trips, and six visual captures; repository validation and matching Linux/Windows packaged boots pass at 249297256 bytes, 702744 bytes below the unchanged ceiling.
+
+Current finding:
+- Thornwake has ten production heroes but only four currently appear in campaigns; its six unrepresented heroes already lead six distinct, fully authored skirmish boards with twenty-three live encounters in total;
+- those six boards span outer-reach, ascendant, waywatch, spellwright, and ritual-relay contracts, giving the faction enough mechanical and visual breadth for a coherent campaign without manufacturing redundant maps or another collectible-site family;
+- the current Linux and Windows release PCKs match at 249219604 bytes, leaving 780396 bytes under the unchanged 250000000-byte ceiling.
+
+Implementation boundary:
+- promote Thorncart Furnace Break, Seedseer Drowned Orchard, Greenbarrow Cinder Writ, Pollenglass Greenbranch Copse, Loamchant Orchard Binding, and Mossvein Switchback Circuit into one sequential six-chapter Thornwake campaign while preserving skirmish availability and each board's existing combat, economy, objective, and map contract;
+- add one exact, one-time chapter testimony hook to each board, gated by its existing signature encounter proof, and use the testimony plus prior victory to authorize the next chapter;
+- carry only modest capped common resources between the six different commanders; do not transfer hero progression, spells, artifacts, units, or faction rares;
+- create one original campaign emblem and six encounter-derived chapter seals with accessible descriptions and generated-source provenance, while preserving save version 9, deterministic behavior, source-art package exclusion, Windows/Linux parity, and the package ceiling.
+
+Completion criteria:
+- all six Thornwake heroes and boards are playable through the campaign and remain playable in skirmish, with exact sequential unlock, one-time testimony, bounded resource carryover, journal/briefing/aftermath copy, and unchanged local scenario contracts;
+- one consolidated live six-chapter smoke creates every authored battle payload, resolves every testimony, proves campaign progression and save round-trip behavior, and captures all six production maps after the complete batch is implemented;
+- repository validation and sequential Linux/Windows packaged startup pass with matching PCKs below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, unit, building, battle system, balance, strategic AI, save schema, native RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes campaign, map, character, object, icon, heraldry, name, text, or protected visual expression.
 
 ## Progress Reconciliation
 

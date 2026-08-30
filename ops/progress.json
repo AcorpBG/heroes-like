@@ -15745,10 +15745,10 @@
   "currentNotes": "Completed the Veil-Coast Sounding Circuit content batch with six live coast-route services, six operational landmarks, one 24x14 Veilmourn skirmish, four battle fronts, complete town economy sources, and consolidated gameplay, repository, Linux, and Windows package evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceId": "content-mireglass-counterpoint-campaign-10184",
-  "currentSliceNotes": "Shipped six alternating Mireclaw/Sunvault campaign chapters, six exact guarded persistent sites, one emblem, six seals, and twelve site states. The single consolidated smoke passed 6 chapters/21 battles/6 claims/save v9; repository validation and Linux/Windows package boots passed at 249219604 bytes (780396 bytes headroom).",
+  "currentSliceId": "content-thornwake-rootbound-canticles-campaign-10184",
+  "currentSliceNotes": "Completed The Rootbound Canticles: six previously campaign-unrepresented Thornwake heroes, six production boards, 23 battle payloads, six one-time testimonies, sequential unlocks, bounded resource-only carryover, seven distinct campaign art identities, save v9 round trips, one consolidated live/visual smoke, repository validation, and matching 249297256-byte Linux/Windows packaged boots (702744 bytes below ceiling).",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content mireglass counterpoint campaign 10184",
+  "currentSliceTitle": "content thornwake rootbound canticles campaign 10184",
   "currentSliceUpdatedAt": "2026-08-30T08:38:28Z",
   "deferredRiskRegister": [
     {
@@ -106443,6 +106443,16 @@
       "startedAt": "2026-08-30T10:35:06Z",
       "notes": "Shipped six alternating Mireclaw/Sunvault campaign chapters, six exact guarded persistent sites, one emblem, six seals, and twelve site states. The single consolidated smoke passed 6 chapters/21 battles/6 claims/save v9; repository validation and Linux/Windows package boots passed at 249219604 bytes (780396 bytes headroom).",
       "completedAt": "2026-08-30T11:00:37Z"
+    },
+    {
+      "id": "content-thornwake-rootbound-canticles-campaign-10184",
+      "title": "content thornwake rootbound canticles campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T11:16:18Z",
+      "startedAt": "2026-08-30T11:04:34Z",
+      "notes": "Completed The Rootbound Canticles: six previously campaign-unrepresented Thornwake heroes, six production boards, 23 battle payloads, six one-time testimonies, sequential unlocks, bounded resource-only carryover, seven distinct campaign art identities, save v9 round trips, one consolidated live/visual smoke, repository validation, and matching 249297256-byte Linux/Windows packaged boots (702744 bytes below ceiling).",
+      "completedAt": "2026-08-30T11:16:18Z"
     }
   ],
   "project": "heroes-like",
@@ -106987,7 +106997,7 @@
   ],
   "summary": "Completed the Veil-Coast Sounding Circuit: six formerly dormant shoreline services now provide live one-cost two-way land transit with distinct operational art inside a new 24x14 Veilmourn skirmish, validated as one batch and through Linux and Windows packages.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T11:00:37Z",
+  "updatedAt": "2026-08-30T11:16:18Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/rootbound_canticles_campaign_report.gd" type="Script" id="1"]
+
+[node name="RootboundCanticlesCampaignReport" type="Node"]
+script = ExtResource("1")
