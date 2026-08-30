@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-four-elder-wild-recruitment-sanctuaries-10184` is completed as one coherent four-dwelling content/art batch; the broad content goal continues beyond this slice.
-- Current package boundary: matching-size Linux and Windows release exports measure 248502580 bytes, 1497420 bytes below the unchanged 250000000-byte ceiling; the compact elder-wild sanctuary atlas is present while generated masters and superseded overworld textures remain excluded symmetrically.
+- Current implementation slice: `content-six-sovereign-wild-habitats-10184` is completed as one coherent six-biome late-game neutral unit, encounter, dwelling, and art batch; the broad content goal continues beyond this slice and the next content batch has not yet been selected.
+- Current package boundary: matching-size Linux and Windows release exports measure 249335236 bytes, 664764 bytes below the unchanged 250000000-byte ceiling; the compact sovereign-wild habitat atlas and all thirty new unit runtime surfaces are present while generated masters remain excluded symmetrically.
 
 ## Eight Foundation Map Object Identities
 
@@ -15662,6 +15662,39 @@ Completion criteria:
 Non-goals:
 - no new faction, hero, unit definition, town, building, spell, artifact, encounter battle, campaign, combat formula, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes creature, dwelling, landmark, name, text, heraldry, or protected visual expression.
+
+## Six Sovereign-Wild Habitats
+
+id: `content-six-sovereign-wild-habitats-10184`
+
+Status: completed.
+
+Completion result:
+- Ashcrown Kilnelk, Miremoon Crownmaws, Noonshard Prism Kites, Rootvault Barkhulks, Quenchbell Ironbacks, and Saltwake Bellwhales are live as six original tier-six/seven neutral creatures with distinct supported combat profiles, exact army groups, tactical encounters, and field objectives;
+- Ashcrown Cinderfold, Miremoon Crownmere, Noonshard Prism Aviary, Rootvault Heartwood Hollow, Quenchbell Pressure Den, and Saltwake Belldeep are persistent guarded recruitment habitats on the six faction grand-convergence maps, with battle-gated claims, initial recruits, weekly musters, income, response orders, controlled-state art, and save-version-9 continuity;
+- six original creature masters and twelve original habitat-state masters produce thirty exact unit runtime surfaces, six encounter landmarks, and one compact twelve-frame habitat atlas with prompt, hash, and accessibility provenance retained outside release packages;
+- one consolidated six-case gameplay/art/save smoke passes all six exact identities, twelve ability consequences, guarded claims, income, response orders, weekly recruitment, controlled visual states, repeat-claim immutability, and six save round trips; repository validation passes;
+- Linux and Windows release gates pass with matching-size 249335236-byte PCKs, all new runtime art present, generated masters excluded, native libraries loaded, and 664764 bytes below the unchanged ceiling.
+
+Current finding:
+- all six production factions now have twelve-unit ladders, ten commandable heroes, fully illustrated towns, and complete exact object/encounter art coverage, so another faction definition or presentation-only wave is lower impact than new strategic opposition;
+- the 58-unit neutral catalog is severely bottom-heavy: thirty-eight tier-two creatures but only eight tier-five-or-higher creatures, leaving late-game neutral battles and recruitment much less varied than the faction endgame;
+- the six 14x9 grand-convergence skirmishes already provide one mature player-facing map per faction, complete rare-resource economies, and a clear unused central habitat/guard pair, allowing one sovereign wild per biome to enter actual play without another disconnected scenario wave.
+
+Implementation boundary:
+- add Ashcrown Kilnelk, Miremoon Crownmaws, Noonshard Prism Kites, Rootvault Barkhulks, Quenchbell Ironbacks, and Saltwake Bellwhales as six original tier-six/seven neutral creatures using supported live combat abilities and distinct resistance, mobility, durability, and ranged-control profiles;
+- add one persistent guarded habitat, exact neutral army, tactical encounter, claim roster, weekly muster, income, response order, and distinct unclaimed/controlled state per creature, then place one optional central habitat front into each faction's grand-convergence skirmish;
+- generate six original transparent creature masters and six original habitat designs, derive complete runtime unit surfaces plus compact encounter/habitat atlases, and retain prompt/hash/accessibility provenance outside release packages;
+- preserve existing faction/unit balance, scenario victory requirements, deterministic combat seeds, save version 9, native RMG behavior, source-art exclusion, Windows/Linux parity, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all six sovereign wilds construct valid production battles on their matching live maps, execute both authored abilities, block their linked habitats until victory, and grant exact one-time and weekly recruitment through persistent controlled ownership;
+- all creature portraits, battle icons, grounded standees, animation sheets, overworld icons, encounter landmarks, and habitat state assets load from exact data-driven mappings with readable non-color identity descriptions;
+- one consolidated six-case gameplay/art/save smoke runs after the complete batch and covers battle resolution, rewards, claims, income, response actions, weekly recruitment, exact visual states, and save-version-9 round trips, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, building, spell, artifact, campaign, combat engine, strategic-AI algorithm, save schema, native RMG rule, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes creature, dwelling, encounter, landmark, name, text, heraldry, or protected visual expression.
 
 ## Progress Reconciliation
 

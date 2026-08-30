@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 192,
-    "generated_batch_count": 15,
+    "new_generated_sprite_count": 198,
+    "generated_batch_count": 16,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -128,20 +128,28 @@
           189,
           192
         ]
+      },
+      {
+        "batch_index": 16,
+        "workspace_source_manifest": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/manifest.json",
+        "object_index_range": [
+          193,
+          198
+        ]
       }
     ]
   },
   "coverage": {
-    "authored_map_object_count": 392,
+    "authored_map_object_count": 398,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 192,
-    "total_distinct_authored_map_object_count_after_pass": 392,
+    "new_distinct_non_decorative_asset_count": 198,
+    "total_distinct_authored_map_object_count_after_pass": 398,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
-      "neutral_dwelling": 39,
+      "neutral_dwelling": 45,
       "neutral_encounter": 6,
       "pickup": 9,
       "repeatable_service": 7,
@@ -346,7 +354,13 @@
     "mapobj_ridge_quarry",
     "mapobj_watchtower_beacon",
     "mapobj_wayfarer_infirmary",
-    "mapobj_ore_crates"
+    "mapobj_ore_crates",
+    "mapobj_ashcrown_cinderfold",
+    "mapobj_miremoon_crownmere",
+    "mapobj_noonshard_prism_aviary",
+    "mapobj_rootvault_heartwood_hollow",
+    "mapobj_quenchbell_pressure_den",
+    "mapobj_saltwake_belldeep"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1692,6 +1706,48 @@
       "assignment_source": "foundation_identity_completion",
       "family": "pickup",
       "source_batch": 14
+    },
+    "object_ashcrown_cinderfold": {
+      "asset_id": "mapobj_ashcrown_cinderfold",
+      "fit": "Distinct original ceramic antler arch and clinker trough assigned to the authored sovereign-wild habitat.",
+      "assignment_source": "sovereign_wild_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 16
+    },
+    "object_miremoon_crownmere": {
+      "asset_id": "mapobj_miremoon_crownmere",
+      "fit": "Distinct original crescent peatglass pool and moon-crowned roots assigned to the authored sovereign-wild habitat.",
+      "assignment_source": "sovereign_wild_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 16
+    },
+    "object_noonshard_prism_aviary": {
+      "asset_id": "mapobj_noonshard_prism_aviary",
+      "fit": "Distinct original three prism vanes and whiteglass nesting dais assigned to the authored sovereign-wild habitat.",
+      "assignment_source": "sovereign_wild_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 16
+    },
+    "object_rootvault_heartwood_hollow": {
+      "asset_id": "mapobj_rootvault_heartwood_hollow",
+      "fit": "Distinct original concentric root arches and sealed heartwood door assigned to the authored sovereign-wild habitat.",
+      "assignment_source": "sovereign_wild_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 16
+    },
+    "object_quenchbell_pressure_den": {
+      "asset_id": "mapobj_quenchbell_pressure_den",
+      "fit": "Distinct original basalt pressure den and bellhorn gate assigned to the authored sovereign-wild habitat.",
+      "assignment_source": "sovereign_wild_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 16
+    },
+    "object_saltwake_belldeep": {
+      "asset_id": "mapobj_saltwake_belldeep",
+      "fit": "Distinct original whalerib saltglass quay and six chimes assigned to the authored sovereign-wild habitat.",
+      "assignment_source": "sovereign_wild_habitat_completion",
+      "family": "neutral_dwelling",
+      "source_batch": 16
     }
   }
 }

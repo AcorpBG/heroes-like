@@ -1,0 +1,63 @@
+{
+  "schema_id": "generated_unit_source_provenance_v1",
+  "generator_mode": "built_in_imagegen",
+  "generated_at": "2026-08-30T18:00:00Z",
+  "content_slice_id": "content-six-sovereign-wild-habitats-10184",
+  "curation": "Six transparent original masters were visually reviewed at full size and together at overworld-icon scale before deterministic 512x512 curation.",
+  "items": [
+    {
+      "unit_id": "unit_neutral_ashcrown_kilnelk",
+      "source_path": "res://art/units/source/generated/sovereign_wilds_wave1/ashcrown_kilnelk_generated.png",
+      "source_sha256": "39b299c7b74ce7e238d87fa15f9590b029084a0780ef4e4f8cf76c52d5ecf106",
+      "curated_path": "res://art/units/source/curated/unit_neutral_ashcrown_kilnelk.png",
+      "curated_sha256": "dcecf2fb244a0c83093bf013ed6b25d7242a10fe56542107daa290827d327d9a",
+      "original_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4314f876-91b5-440e-9803-625f947f9144.png",
+      "prompt_summary": "A sovereign basalt elk with ceramic antlers, kiln-orange seams, furnace hooves, and a proud readable silhouette."
+    },
+    {
+      "unit_id": "unit_neutral_miremoon_crownmaws",
+      "source_path": "res://art/units/source/generated/sovereign_wilds_wave1/miremoon_crownmaws_generated.png",
+      "source_sha256": "5d3e1b057871c51a5bdff0e91e66ed53025f9cbb1e0823a504458a9951f4f190",
+      "curated_path": "res://art/units/source/curated/unit_neutral_miremoon_crownmaws.png",
+      "curated_sha256": "849a56acc13a425fe83245da9a8b10a3f8c3bfb7ee3d00e855ff091fda3bc9ab",
+      "original_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-69e23cc7-f2c4-4c50-8d10-704e4dbb2882.png",
+      "prompt_summary": "A six-limbed peat-glass marsh predator with crescent jaw crown, moss hide, and blue moon-pool markings."
+    },
+    {
+      "unit_id": "unit_neutral_noonshard_prism_kites",
+      "source_path": "res://art/units/source/generated/sovereign_wilds_wave1/noonshard_prism_kites_generated.png",
+      "source_sha256": "3306a227d4f7b3110392ffdda4cf2c0eab9f4956fcb1bf68542b70ba1ad2ef06",
+      "curated_path": "res://art/units/source/curated/unit_neutral_noonshard_prism_kites.png",
+      "curated_sha256": "d81eef59889e0b304c0413e15a2bb678ac50fd922c6c0529d1cb6c20d6feec39",
+      "original_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3fd7450a-4608-4635-bfa0-73c279269f6f.png",
+      "prompt_summary": "A four-winged living sky-kite with translucent crystal planes, gold prism spars, and a faceted whiteglass body."
+    },
+    {
+      "unit_id": "unit_neutral_rootvault_barkhulks",
+      "source_path": "res://art/units/source/generated/sovereign_wilds_wave1/rootvault_barkhulks_generated.png",
+      "source_sha256": "bd3a1cb8da809743afa1388b847f362b3988aba5a74465045653fc55d9dffdaf",
+      "curated_path": "res://art/units/source/curated/unit_neutral_rootvault_barkhulks.png",
+      "curated_sha256": "be80278f987ac873272bced9de40cec12423516c63b7c5eb4e125593740b7167",
+      "original_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7b401e9a-d554-4370-946c-86342a3b7407.png",
+      "prompt_summary": "An immense heartwood sovereign with a concentric growth-ring torso, braided-root fists, moss, and amber sap knots."
+    },
+    {
+      "unit_id": "unit_neutral_quenchbell_ironbacks",
+      "source_path": "res://art/units/source/generated/sovereign_wilds_wave1/quenchbell_ironbacks_generated.png",
+      "source_sha256": "151c51ad905771bec31dd2dba47c0b803f787b076732b84e5f8d7832d48d56d2",
+      "curated_path": "res://art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
+      "curated_sha256": "1f3e29b5de84bb6057c68d87756abe80a945f466fe79a8a61ca93e860c751b27",
+      "original_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-6c0d32ce-298d-4e54-a87a-790fa4d951ae.png",
+      "prompt_summary": "A squat six-legged ironback with layered brass armor, bell-horn skull, red pressure gauges, and coolant seams."
+    },
+    {
+      "unit_id": "unit_neutral_saltwake_bellwhales",
+      "source_path": "res://art/units/source/generated/sovereign_wilds_wave1/saltwake_bellwhales_generated.png",
+      "source_sha256": "963acada1f174622225856c15a2bc9a6a755a0626c6b563a27b3213c4d814aa8",
+      "curated_path": "res://art/units/source/curated/unit_neutral_saltwake_bellwhales.png",
+      "curated_sha256": "43b41662c2ac7b27c4fe4d095449da4da7754203dbac39642384023286a60725",
+      "original_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fde36647-de48-41d6-93b2-d6825fcd150c.png",
+      "prompt_summary": "A floating navy bellwhale with pale teal fog fins, salt-glass ventral plates, bronze mourning bells, and a solemn eye."
+    }
+  ]
+}

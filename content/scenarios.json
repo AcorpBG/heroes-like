@@ -10889,6 +10889,13 @@
           "x": 2,
           "y": 6,
           "guard_front_id": "rainledger_lantern_crown_guard"
+        },
+        {
+          "placement_id": "rainledger_ashcrown_cinderfold",
+          "site_id": "site_ashcrown_cinderfold",
+          "x": 5,
+          "y": 3,
+          "guard_front_id": "rainledger_ashcrown_cinderfold_watch"
         }
       ],
       "artifact_nodes": [
@@ -11062,6 +11069,23 @@
           "difficulty": "medium",
           "combat_seed": 26401,
           "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "rainledger_ashcrown_cinderfold_watch",
+          "encounter_id": "encounter_ashcrown_cinderfold_watch",
+          "x": 6,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 26601,
+          "prefer_identity_landmark": true,
+          "guard_link": {
+            "guard_role": "guards_resource_node",
+            "target_kind": "resource_node",
+            "target_id": "site_ashcrown_cinderfold",
+            "target_placement_id": "rainledger_ashcrown_cinderfold",
+            "blocks_approach": true,
+            "clear_required_for_target": true
+          }
         }
       ]
     },
@@ -11711,6 +11735,13 @@
           "x": 2,
           "y": 6,
           "guard_front_id": "fenwake_hive_of_reeds_guard"
+        },
+        {
+          "placement_id": "fenwake_miremoon_crownmere",
+          "site_id": "site_miremoon_crownmere",
+          "x": 5,
+          "y": 3,
+          "guard_front_id": "fenwake_miremoon_crownmere_watch"
         }
       ],
       "artifact_nodes": [
@@ -11884,6 +11915,23 @@
           "difficulty": "medium",
           "combat_seed": 26402,
           "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "fenwake_miremoon_crownmere_watch",
+          "encounter_id": "encounter_miremoon_crownmere_watch",
+          "x": 6,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 26602,
+          "prefer_identity_landmark": true,
+          "guard_link": {
+            "guard_role": "guards_resource_node",
+            "target_kind": "resource_node",
+            "target_id": "site_miremoon_crownmere",
+            "target_placement_id": "fenwake_miremoon_crownmere",
+            "blocks_approach": true,
+            "clear_required_for_target": true
+          }
         }
       ]
     },
@@ -12533,6 +12581,13 @@
           "x": 2,
           "y": 6,
           "guard_front_id": "halometer_glassbound_eyrie_guard"
+        },
+        {
+          "placement_id": "halometer_noonshard_prism_aviary",
+          "site_id": "site_noonshard_prism_aviary",
+          "x": 5,
+          "y": 3,
+          "guard_front_id": "halometer_noonshard_prism_aviary_watch"
         }
       ],
       "artifact_nodes": [
@@ -12706,6 +12761,23 @@
           "difficulty": "high",
           "combat_seed": 26403,
           "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "halometer_noonshard_prism_aviary_watch",
+          "encounter_id": "encounter_noonshard_prism_aviary_watch",
+          "x": 6,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 26603,
+          "prefer_identity_landmark": true,
+          "guard_link": {
+            "guard_role": "guards_resource_node",
+            "target_kind": "resource_node",
+            "target_id": "site_noonshard_prism_aviary",
+            "target_placement_id": "halometer_noonshard_prism_aviary",
+            "blocks_approach": true,
+            "clear_required_for_target": true
+          }
         }
       ]
     },
@@ -13355,6 +13427,13 @@
           "x": 2,
           "y": 6,
           "guard_front_id": "graftsibyl_rootwarden_stockade_guard"
+        },
+        {
+          "placement_id": "graftsibyl_rootvault_heartwood_hollow",
+          "site_id": "site_rootvault_heartwood_hollow",
+          "x": 5,
+          "y": 3,
+          "guard_front_id": "graftsibyl_rootvault_heartwood_watch"
         }
       ],
       "artifact_nodes": [
@@ -13528,6 +13607,23 @@
           "difficulty": "high",
           "combat_seed": 26404,
           "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "graftsibyl_rootvault_heartwood_watch",
+          "encounter_id": "encounter_rootvault_heartwood_watch",
+          "x": 6,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 26604,
+          "prefer_identity_landmark": true,
+          "guard_link": {
+            "guard_role": "guards_resource_node",
+            "target_kind": "resource_node",
+            "target_id": "site_rootvault_heartwood_hollow",
+            "target_placement_id": "graftsibyl_rootvault_heartwood_hollow",
+            "blocks_approach": true,
+            "clear_required_for_target": true
+          }
         }
       ]
     },
@@ -14177,6 +14273,13 @@
           "x": 2,
           "y": 6,
           "guard_front_id": "debtrune_rust_choir_foundry_guard"
+        },
+        {
+          "placement_id": "debtrune_quenchbell_pressure_den",
+          "site_id": "site_quenchbell_pressure_den",
+          "x": 5,
+          "y": 3,
+          "guard_front_id": "debtrune_quenchbell_pressure_den_watch"
         }
       ],
       "artifact_nodes": [
@@ -14359,6 +14462,23 @@
           "difficulty": "medium",
           "combat_seed": 26413,
           "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "debtrune_quenchbell_pressure_den_watch",
+          "encounter_id": "encounter_quenchbell_pressure_den_watch",
+          "x": 6,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 26605,
+          "prefer_identity_landmark": true,
+          "guard_link": {
+            "guard_role": "guards_resource_node",
+            "target_kind": "resource_node",
+            "target_id": "site_quenchbell_pressure_den",
+            "target_placement_id": "debtrune_quenchbell_pressure_den",
+            "blocks_approach": true,
+            "clear_required_for_target": true
+          }
         }
       ]
     },
@@ -15007,6 +15127,13 @@
           "x": 2,
           "y": 6,
           "guard_front_id": "nightchart_salt_wight_convoy_guard"
+        },
+        {
+          "placement_id": "nightchart_saltwake_belldeep",
+          "site_id": "site_saltwake_belldeep",
+          "x": 5,
+          "y": 3,
+          "guard_front_id": "nightchart_saltwake_belldeep_watch"
         }
       ],
       "artifact_nodes": [
@@ -15180,6 +15307,23 @@
           "difficulty": "medium",
           "combat_seed": 26406,
           "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "nightchart_saltwake_belldeep_watch",
+          "encounter_id": "encounter_saltwake_belldeep_watch",
+          "x": 6,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 26606,
+          "prefer_identity_landmark": true,
+          "guard_link": {
+            "guard_role": "guards_resource_node",
+            "target_kind": "resource_node",
+            "target_id": "site_saltwake_belldeep",
+            "target_placement_id": "nightchart_saltwake_belldeep",
+            "blocks_approach": true,
+            "clear_required_for_target": true
+          }
         }
       ]
     },

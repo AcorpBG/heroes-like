@@ -7602,6 +7602,222 @@
       "assigned_map_object_family": "pickup",
       "presentation_role": "iron_bound_ore_crates_assay_sack_pick",
       "accessible_description": "Two squat iron-bound timber crates sit beside an assay sack and short pick; one crate is open and filled with rough blue-grey ore."
+    },
+    "mapobj_ashcrown_cinderfold": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_unclaimed.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_ashcrown_cinderfold",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "ceramic antler arch and clinker trough",
+      "accessible_description": "A branching ceramic-antler arch shelters a clinker-stone trough between two banked kiln vents and ash-black paving."
+    },
+    "resource_site_neutral_ashcrown_cinderfold_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_controlled.png",
+      "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+      "assigned_resource_site_id": "site_ashcrown_cinderfold",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled Ashcrown Cinderfold stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+    },
+    "encounter_sovereign_wild_ashcrown_cinderfold_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_ashcrown_kilnelk.png",
+      "runtime_sha256": "deceacc3e8a6d976fde61d21b244aa09d06a3964cdac072e01ee12d64faa4b9b",
+      "source_generated": "res://art/units/source/curated/unit_neutral_ashcrown_kilnelk.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_ashcrown_cinderfold_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "ashcrown_cinderfold_sovereign_watch",
+      "accessible_description": "The exact ashcrown kilnelk creature silhouette marks this sovereign-wild guard front."
+    },
+    "mapobj_miremoon_crownmere": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/miremoon_crownmere_unclaimed.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_miremoon_crownmere",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "crescent peatglass pool and moon-crowned roots",
+      "accessible_description": "A crescent peat-glass pool rests between four moon-crowned root posts, blue mineral glints, moss, and reed beds."
+    },
+    "resource_site_neutral_miremoon_crownmere_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [144, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/miremoon_crownmere_controlled.png",
+      "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+      "assigned_resource_site_id": "site_miremoon_crownmere",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled Miremoon Crownmere stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+    },
+    "encounter_sovereign_wild_miremoon_crownmere_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_miremoon_crownmaws.png",
+      "runtime_sha256": "eb263e6c486779fc3d955df1b7d32534d2faaf2e6c6c8e035badbde1904a0c31",
+      "source_generated": "res://art/units/source/curated/unit_neutral_miremoon_crownmaws.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_miremoon_crownmere_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "miremoon_crownmere_sovereign_watch",
+      "accessible_description": "The exact miremoon crownmaws creature silhouette marks this sovereign-wild guard front."
+    },
+    "mapobj_noonshard_prism_aviary": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [192, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_unclaimed.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_noonshard_prism_aviary",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "three prism vanes and whiteglass nesting dais",
+      "accessible_description": "Three tall icebound prism vanes hold narrow perches around a raised white-glass nesting dais and gold bracework."
+    },
+    "resource_site_neutral_noonshard_prism_aviary_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [240, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_controlled.png",
+      "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+      "assigned_resource_site_id": "site_noonshard_prism_aviary",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled Noonshard Prism Aviary stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+    },
+    "encounter_sovereign_wild_noonshard_prism_aviary_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_noonshard_prism_kites.png",
+      "runtime_sha256": "beb4a5c890489e0ab82b04f23c02c404699f9fa491ea957e430ce4f9b0e5cffb",
+      "source_generated": "res://art/units/source/curated/unit_neutral_noonshard_prism_kites.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_noonshard_prism_aviary_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "noonshard_prism_aviary_sovereign_watch",
+      "accessible_description": "The exact noonshard prism kites creature silhouette marks this sovereign-wild guard front."
+    },
+    "mapobj_rootvault_heartwood_hollow": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [288, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_unclaimed.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_rootvault_heartwood_hollow",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "concentric root arches and sealed heartwood door",
+      "accessible_description": "Three concentric living-root arches surround a sealed round heartwood door, amber sap knots, moss, and stone steps."
+    },
+    "resource_site_neutral_rootvault_heartwood_hollow_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [336, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_controlled.png",
+      "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+      "assigned_resource_site_id": "site_rootvault_heartwood_hollow",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled Rootvault Heartwood Hollow stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+    },
+    "encounter_sovereign_wild_rootvault_heartwood_hollow_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_rootvault_barkhulks.png",
+      "runtime_sha256": "a5cfb575dcea2c2ab243984d14b917d2daa4673696021239b0eec7ed18fa5d74",
+      "source_generated": "res://art/units/source/curated/unit_neutral_rootvault_barkhulks.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_rootvault_heartwood_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "rootvault_heartwood_hollow_sovereign_watch",
+      "accessible_description": "The exact rootvault barkhulks creature silhouette marks this sovereign-wild guard front."
+    },
+    "mapobj_quenchbell_pressure_den": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [384, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_unclaimed.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_quenchbell_pressure_den",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "basalt pressure den and bellhorn gate",
+      "accessible_description": "A squat basalt pressure den carries a broad brass bell-horn gate, three red gauges, vents, and coolant troughs."
+    },
+    "resource_site_neutral_quenchbell_pressure_den_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [432, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_controlled.png",
+      "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+      "assigned_resource_site_id": "site_quenchbell_pressure_den",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled Quenchbell Pressure Den stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+    },
+    "encounter_sovereign_wild_quenchbell_pressure_den_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_quenchbell_ironbacks.png",
+      "runtime_sha256": "ef613683a0f0cdd546d73e71b22bc7cfdba179f85056ec2078d587daeadc1883",
+      "source_generated": "res://art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_quenchbell_pressure_den_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "quenchbell_pressure_den_sovereign_watch",
+      "accessible_description": "The exact quenchbell ironbacks creature silhouette marks this sovereign-wild guard front."
+    },
+    "mapobj_saltwake_belldeep": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [480, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_unclaimed.png",
+      "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_saltwake_belldeep",
+      "assigned_map_object_family": "neutral_dwelling",
+      "presentation_role": "whalerib saltglass quay and six chimes",
+      "accessible_description": "A half-submerged pale quay lies beneath whale-rib and salt-glass arches, six bronze chimes, fog basins, and dark teal water."
+    },
+    "resource_site_neutral_saltwake_belldeep_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [528, 0, 48, 48],
+      "atlas_size": [576, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_controlled.png",
+      "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+      "assigned_resource_site_id": "site_saltwake_belldeep",
+      "presentation_role": "controlled_muster_state",
+      "accessible_description": "The controlled Saltwake Belldeep stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+    },
+    "encounter_sovereign_wild_saltwake_belldeep_watch": {
+      "path": "res://art/units/overworld_icons/unit_neutral_saltwake_bellwhales.png",
+      "runtime_sha256": "7e2e0cb0e5de57a2d06440d34e22ca0782907290c681832ab8a27b616f262670",
+      "source_generated": "res://art/units/source/curated/unit_neutral_saltwake_bellwhales.png",
+      "source_model": "built_in_imagegen_curated_original_character_unit_landmark_reuse",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_saltwake_belldeep_watch",
+      "assigned_faction_id": "neutral",
+      "presentation_role": "saltwake_belldeep_sovereign_watch",
+      "accessible_description": "The exact saltwake bellwhales creature silhouette marks this sovereign-wild guard front."
     }
   },
   "resource_site_sprites": {
@@ -8173,6 +8389,36 @@
     },
     "site_sevencount_verdict_table": {
       "asset_id": "resource_site_high_arcanum_sevencount_verdict_table", "unclaimed_asset_id": "resource_site_high_arcanum_sevencount_verdict_table", "fit": "Exact original Seven-Count landmark remains visible before and after its one-time lesson."
+    },
+    "site_ashcrown_cinderfold": {
+      "asset_id": "resource_site_neutral_ashcrown_cinderfold_controlled",
+      "unclaimed_asset_id": "mapobj_ashcrown_cinderfold",
+      "fit": "Exact original ceramic antler arch and clinker trough paired with its supplied controlled muster state."
+    },
+    "site_miremoon_crownmere": {
+      "asset_id": "resource_site_neutral_miremoon_crownmere_controlled",
+      "unclaimed_asset_id": "mapobj_miremoon_crownmere",
+      "fit": "Exact original crescent peatglass pool and moon-crowned roots paired with its supplied controlled muster state."
+    },
+    "site_noonshard_prism_aviary": {
+      "asset_id": "resource_site_neutral_noonshard_prism_aviary_controlled",
+      "unclaimed_asset_id": "mapobj_noonshard_prism_aviary",
+      "fit": "Exact original three prism vanes and whiteglass nesting dais paired with its supplied controlled muster state."
+    },
+    "site_rootvault_heartwood_hollow": {
+      "asset_id": "resource_site_neutral_rootvault_heartwood_hollow_controlled",
+      "unclaimed_asset_id": "mapobj_rootvault_heartwood_hollow",
+      "fit": "Exact original concentric root arches and sealed heartwood door paired with its supplied controlled muster state."
+    },
+    "site_quenchbell_pressure_den": {
+      "asset_id": "resource_site_neutral_quenchbell_pressure_den_controlled",
+      "unclaimed_asset_id": "mapobj_quenchbell_pressure_den",
+      "fit": "Exact original basalt pressure den and bellhorn gate paired with its supplied controlled muster state."
+    },
+    "site_saltwake_belldeep": {
+      "asset_id": "resource_site_neutral_saltwake_belldeep_controlled",
+      "unclaimed_asset_id": "mapobj_saltwake_belldeep",
+      "fit": "Exact original whalerib saltglass quay and six chimes paired with its supplied controlled muster state."
     }
   },
   "artifact_default_sprite": {
@@ -8466,7 +8712,13 @@
     "encounter_lockglass_citation_field": "encounter_dormant_roster_lockglass_citation_field",
     "encounter_pollenhook_whistle_line": "encounter_dormant_roster_pollenhook_whistle_line",
     "encounter_tallyspring_proving_rack": "encounter_dormant_roster_tallyspring_proving_rack",
-    "encounter_gloamkeel_sounding_barricade": "encounter_dormant_roster_gloamkeel_sounding_barricade"
+    "encounter_gloamkeel_sounding_barricade": "encounter_dormant_roster_gloamkeel_sounding_barricade",
+    "encounter_ashcrown_cinderfold_watch": "encounter_sovereign_wild_ashcrown_cinderfold_watch",
+    "encounter_miremoon_crownmere_watch": "encounter_sovereign_wild_miremoon_crownmere_watch",
+    "encounter_noonshard_prism_aviary_watch": "encounter_sovereign_wild_noonshard_prism_aviary_watch",
+    "encounter_rootvault_heartwood_watch": "encounter_sovereign_wild_rootvault_heartwood_hollow_watch",
+    "encounter_quenchbell_pressure_den_watch": "encounter_sovereign_wild_quenchbell_pressure_den_watch",
+    "encounter_saltwake_belldeep_watch": "encounter_sovereign_wild_saltwake_belldeep_watch"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

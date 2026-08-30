@@ -220,6 +220,7 @@ REQUIRED_REMAINING_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME = "remaining_neutral_dwel
 REQUIRED_FINAL_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME = "final_neutral_dwelling_claimed_atlas"
 REQUIRED_ELITE_NEUTRAL_DWELLING_ATLAS_NAME = "elite_neutral_dwelling_atlas"
 REQUIRED_ELDER_WILD_SANCTUARIES_ATLAS_NAME = "elder_wild_sanctuaries_atlas"
+REQUIRED_SOVEREIGN_WILD_HABITATS_ATLAS_NAME = "sovereign_wild_habitats_atlas"
 REQUIRED_GUARDED_ROUTE_OPENED_ATLAS_NAME = "guarded_route_opened_atlas"
 REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME = "repeatable_service_visited_atlas"
 REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME = "progression_shrine_awakened_atlas"
@@ -244,6 +245,14 @@ REQUIRED_ELDER_WILDS_UNIT_IDS = (
     "unit_neutral_rimebell_skyrakers",
     "unit_neutral_deepforge_vaultwyrms",
 )
+REQUIRED_SOVEREIGN_WILDS_UNIT_IDS = (
+    "unit_neutral_ashcrown_kilnelk",
+    "unit_neutral_miremoon_crownmaws",
+    "unit_neutral_noonshard_prism_kites",
+    "unit_neutral_rootvault_barkhulks",
+    "unit_neutral_quenchbell_ironbacks",
+    "unit_neutral_saltwake_bellwhales",
+)
 REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES = tuple(
     entry
     for unit_id in REQUIRED_ELDER_WILDS_UNIT_IDS
@@ -254,6 +263,16 @@ REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES = tuple(
         f"art/units/overworld_icons/{unit_id}.png.import",
         f"art/animation/runtime/units/{unit_id}.png.import",
         f"art/overworld/runtime/objects/encounters/elder_wilds/{unit_id}.png.import",
+    )
+) + tuple(
+    entry
+    for unit_id in REQUIRED_SOVEREIGN_WILDS_UNIT_IDS
+    for entry in (
+        f"art/units/portraits/{unit_id}.png.import",
+        f"art/units/battle_icons/{unit_id}.png.import",
+        f"art/units/battle_standees/{unit_id}.png.import",
+        f"art/units/overworld_icons/{unit_id}.png.import",
+        f"art/animation/runtime/units/{unit_id}.png.import",
     )
 )
 REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES = (
@@ -267,6 +286,7 @@ REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES = (
     "art/overworld/runtime/objects/resource_sites/final_neutral_dwelling_claimed_atlas.png.import",
     "art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png.import",
     "art/overworld/runtime/objects/resource_sites/elder_wild_sanctuaries/elder_wild_sanctuaries_atlas.png.import",
+    "art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png.import",
     "art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png.import",
     "art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png.import",
     "art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png.import",
@@ -920,7 +940,7 @@ def pck_terrain_payload_summary() -> dict:
                         summary["town_scenic_backdrop_texture_names"].append(imported_name)
                     if imported_name in {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME, REQUIRED_MIRE_SUN_CONTRACT_ATLAS_NAME, REQUIRED_ASCENDANT_COMPANY_ATLAS_NAME, REQUIRED_WAYWATCH_TRIAL_ATLAS_NAME, REQUIRED_SPELLWRIGHT_EXPEDITION_ATLAS_NAME, REQUIRED_RITUAL_RELAY_CIRCUIT_ATLAS_NAME, REQUIRED_GRAND_CONVERGENCE_MARCH_ATLAS_NAME, REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME, REQUIRED_HORIZON_COMPACT_ATLAS_NAME, REQUIRED_HORIZON_COURTS_ATLAS_NAME, REQUIRED_DORMANT_ROSTER_FIELD_COMPANIES_ATLAS_NAME}:
                         summary["recurring_encounter_atlas_texture_names"].append(imported_name)
-                    if imported_name in {REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME, REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME, REQUIRED_MAJOR_VAULT_UNSEALED_ATLAS_NAME, REQUIRED_CREATURE_BANK_OPENED_ATLAS_NAME, REQUIRED_MINOR_GUARDED_CACHE_OPENED_ATLAS_NAME, REQUIRED_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_REMAINING_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_FINAL_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_ELITE_NEUTRAL_DWELLING_ATLAS_NAME, REQUIRED_ELDER_WILD_SANCTUARIES_ATLAS_NAME, REQUIRED_GUARDED_ROUTE_OPENED_ATLAS_NAME, REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME, REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME, REQUIRED_SCOUTING_STRUCTURE_CONTROLLED_ATLAS_NAME, REQUIRED_ROADS_OBJECTIVES_STATE_ATLAS_NAME, REQUIRED_LAND_TRANSIT_ACTIVE_ATLAS_NAME, REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME, REQUIRED_ROUTE_CONTROL_OPENED_ATLAS_NAME, REQUIRED_FOURTEEN_MARKS_STATE_ATLAS_NAME, REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME, REQUIRED_FRONTIER_MARKER_ATLAS_NAME, REQUIRED_THIRD_HEARTHS_ATLAS_NAME, REQUIRED_HORIZON_CITADELS_ATLAS_NAME, REQUIRED_PACTWRIGHT_WAYDESK_ATLAS_NAME, REQUIRED_MIREGLASS_COUNTERPOINT_ATLAS_NAME, REQUIRED_SEVENFOLD_HIGH_ARCANUM_ATLAS_NAME}:
+                    if imported_name in {REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME, REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME, REQUIRED_MAJOR_VAULT_UNSEALED_ATLAS_NAME, REQUIRED_CREATURE_BANK_OPENED_ATLAS_NAME, REQUIRED_MINOR_GUARDED_CACHE_OPENED_ATLAS_NAME, REQUIRED_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_REMAINING_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_FINAL_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_ELITE_NEUTRAL_DWELLING_ATLAS_NAME, REQUIRED_ELDER_WILD_SANCTUARIES_ATLAS_NAME, REQUIRED_SOVEREIGN_WILD_HABITATS_ATLAS_NAME, REQUIRED_GUARDED_ROUTE_OPENED_ATLAS_NAME, REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME, REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME, REQUIRED_SCOUTING_STRUCTURE_CONTROLLED_ATLAS_NAME, REQUIRED_ROADS_OBJECTIVES_STATE_ATLAS_NAME, REQUIRED_LAND_TRANSIT_ACTIVE_ATLAS_NAME, REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME, REQUIRED_ROUTE_CONTROL_OPENED_ATLAS_NAME, REQUIRED_FOURTEEN_MARKS_STATE_ATLAS_NAME, REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME, REQUIRED_FRONTIER_MARKER_ATLAS_NAME, REQUIRED_THIRD_HEARTHS_ATLAS_NAME, REQUIRED_HORIZON_CITADELS_ATLAS_NAME, REQUIRED_PACTWRIGHT_WAYDESK_ATLAS_NAME, REQUIRED_MIREGLASS_COUNTERPOINT_ATLAS_NAME, REQUIRED_SEVENFOLD_HIGH_ARCANUM_ATLAS_NAME}:
                         summary["recurring_resource_site_atlas_texture_names"].append(imported_name)
             summary["valid_directory"] = handle.tell() == file_size
     except (OSError, struct.error, UnicodeError):
@@ -940,7 +960,7 @@ def pck_terrain_payload_summary() -> dict:
     summary["faction_encounter_entries_present"] = len(required_faction_encounter_texture_entries) == len(REQUIRED_FACTION_ENCOUNTER_NAMES) and set(summary["faction_encounter_import_entries"]) == set(REQUIRED_FACTION_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["faction_encounter_texture_entries"]) == required_faction_encounter_texture_entries
     summary["signature_encounter_entries_present"] = len(required_signature_encounter_texture_entries) == len(REQUIRED_SIGNATURE_ENCOUNTER_NAMES) and set(summary["signature_encounter_import_entries"]) == set(REQUIRED_SIGNATURE_ENCOUNTER_PCK_IMPORT_ENTRIES) and set(summary["signature_encounter_texture_entries"]) == required_signature_encounter_texture_entries
     summary["recurring_encounter_atlas_entries_present"] = len(required_recurring_encounter_atlas_texture_entries) == 14 and set(summary["recurring_encounter_atlas_import_entries"]) == set(REQUIRED_RECURRING_ENCOUNTER_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_encounter_atlas_texture_entries"]) == required_recurring_encounter_atlas_texture_entries and set(summary["recurring_encounter_atlas_texture_names"]) == {REQUIRED_RECURRING_ENCOUNTER_ATLAS_NAME, REQUIRED_DISSIDENT_ENCOUNTER_ATLAS_NAME, REQUIRED_STANDALONE_CONTRACT_ATLAS_NAME, REQUIRED_OUTER_REACH_CONTRACT_ATLAS_NAME, REQUIRED_MIRE_SUN_CONTRACT_ATLAS_NAME, REQUIRED_ASCENDANT_COMPANY_ATLAS_NAME, REQUIRED_WAYWATCH_TRIAL_ATLAS_NAME, REQUIRED_SPELLWRIGHT_EXPEDITION_ATLAS_NAME, REQUIRED_RITUAL_RELAY_CIRCUIT_ATLAS_NAME, REQUIRED_GRAND_CONVERGENCE_MARCH_ATLAS_NAME, REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME, REQUIRED_HORIZON_COMPACT_ATLAS_NAME, REQUIRED_HORIZON_COURTS_ATLAS_NAME, REQUIRED_DORMANT_ROSTER_FIELD_COMPANIES_ATLAS_NAME}
-    summary["recurring_resource_site_atlas_entries_present"] = len(required_recurring_resource_site_atlas_texture_entries) == 26 and set(summary["recurring_resource_site_atlas_import_entries"]) == set(REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_resource_site_atlas_texture_entries"]) == required_recurring_resource_site_atlas_texture_entries and set(summary["recurring_resource_site_atlas_texture_names"]) == {REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME, REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME, REQUIRED_MAJOR_VAULT_UNSEALED_ATLAS_NAME, REQUIRED_CREATURE_BANK_OPENED_ATLAS_NAME, REQUIRED_MINOR_GUARDED_CACHE_OPENED_ATLAS_NAME, REQUIRED_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_REMAINING_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_FINAL_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_ELITE_NEUTRAL_DWELLING_ATLAS_NAME, REQUIRED_ELDER_WILD_SANCTUARIES_ATLAS_NAME, REQUIRED_GUARDED_ROUTE_OPENED_ATLAS_NAME, REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME, REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME, REQUIRED_SCOUTING_STRUCTURE_CONTROLLED_ATLAS_NAME, REQUIRED_ROADS_OBJECTIVES_STATE_ATLAS_NAME, REQUIRED_LAND_TRANSIT_ACTIVE_ATLAS_NAME, REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME, REQUIRED_ROUTE_CONTROL_OPENED_ATLAS_NAME, REQUIRED_FOURTEEN_MARKS_STATE_ATLAS_NAME, REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME, REQUIRED_FRONTIER_MARKER_ATLAS_NAME, REQUIRED_THIRD_HEARTHS_ATLAS_NAME, REQUIRED_HORIZON_CITADELS_ATLAS_NAME, REQUIRED_PACTWRIGHT_WAYDESK_ATLAS_NAME, REQUIRED_MIREGLASS_COUNTERPOINT_ATLAS_NAME, REQUIRED_SEVENFOLD_HIGH_ARCANUM_ATLAS_NAME}
+    summary["recurring_resource_site_atlas_entries_present"] = len(required_recurring_resource_site_atlas_texture_entries) == 27 and set(summary["recurring_resource_site_atlas_import_entries"]) == set(REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES) and set(summary["recurring_resource_site_atlas_texture_entries"]) == required_recurring_resource_site_atlas_texture_entries and set(summary["recurring_resource_site_atlas_texture_names"]) == {REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_NAME, REQUIRED_LIVE_FACTION_LANDMARK_ATLAS_NAME, REQUIRED_MAJOR_VAULT_UNSEALED_ATLAS_NAME, REQUIRED_CREATURE_BANK_OPENED_ATLAS_NAME, REQUIRED_MINOR_GUARDED_CACHE_OPENED_ATLAS_NAME, REQUIRED_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_REMAINING_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_FINAL_NEUTRAL_DWELLING_CLAIMED_ATLAS_NAME, REQUIRED_ELITE_NEUTRAL_DWELLING_ATLAS_NAME, REQUIRED_ELDER_WILD_SANCTUARIES_ATLAS_NAME, REQUIRED_SOVEREIGN_WILD_HABITATS_ATLAS_NAME, REQUIRED_GUARDED_ROUTE_OPENED_ATLAS_NAME, REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME, REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME, REQUIRED_SCOUTING_STRUCTURE_CONTROLLED_ATLAS_NAME, REQUIRED_ROADS_OBJECTIVES_STATE_ATLAS_NAME, REQUIRED_LAND_TRANSIT_ACTIVE_ATLAS_NAME, REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME, REQUIRED_ROUTE_CONTROL_OPENED_ATLAS_NAME, REQUIRED_FOURTEEN_MARKS_STATE_ATLAS_NAME, REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME, REQUIRED_FRONTIER_MARKER_ATLAS_NAME, REQUIRED_THIRD_HEARTHS_ATLAS_NAME, REQUIRED_HORIZON_CITADELS_ATLAS_NAME, REQUIRED_PACTWRIGHT_WAYDESK_ATLAS_NAME, REQUIRED_MIREGLASS_COUNTERPOINT_ATLAS_NAME, REQUIRED_SEVENFOLD_HIGH_ARCANUM_ATLAS_NAME}
     summary["campaign_emblem_entries_present"] = len(required_campaign_emblem_texture_entries) == len(REQUIRED_CAMPAIGN_EMBLEM_NAMES) and set(summary["campaign_emblem_import_entries"]) == set(REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES) and set(summary["campaign_emblem_texture_entries"]) == required_campaign_emblem_texture_entries
     summary["campaign_chapter_seal_entries_present"] = len(required_campaign_chapter_seal_texture_entries) == len(REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES) and set(summary["campaign_chapter_seal_import_entries"]) == set(REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES) and set(summary["campaign_chapter_seal_texture_entries"]) == required_campaign_chapter_seal_texture_entries
     summary["field_objective_landmark_entries_present"] = len(required_field_objective_landmark_texture_entries) == len(REQUIRED_FIELD_OBJECTIVE_LANDMARK_NAMES) and set(summary["field_objective_landmark_import_entries"]) == set(REQUIRED_FIELD_OBJECTIVE_LANDMARK_PCK_IMPORT_ENTRIES) and set(summary["field_objective_landmark_texture_entries"]) == required_field_objective_landmark_texture_entries
