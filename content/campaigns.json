@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 7,
+  "player_facing_active_campaign_count": 9,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -1174,6 +1174,318 @@
           ],
           "carryover_import": {
             "from_scenario_id": "rootway-graftmarch",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_ashen_ledger",
+      "name": "Ashen Ledger",
+      "description": "Daxis Chain-Captain rekindles Cindercoil, carries a moving contract road through the meridian, and binds all three Brasshollow hearths into one living industrial ledger.",
+      "summary": "A three-chapter Brasshollow campaign about reclaiming production, carrying one commander's record, and joining three industrial towns through a mobile contract economy.",
+      "region": "Cindercoil Line, Clauseworks Road, and the Three-Hearth Crown",
+      "emblem_id": "campaign_emblem_ashen_ledger",
+      "emblem_path": "res://art/campaigns/runtime/emblems/ashen_ledger.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/ashen_ledger_source.png",
+      "emblem_alt_text": "A black iron ledger is clasped by a glowing copper chain before a furnace heart and three contract tabs.",
+      "emblem_source_sha256": "6e749c4aae78e76d4bfd40cf5c666178eab10e30631b5bf50c948570e930ec36",
+      "emblem_runtime_sha256": "45f34db21f28ba9903300a31a7c98b8d5dcf68b703c1b9c9db8f78e446a4bac0",
+      "arc_goal": "Rekindle Cindercoil, reopen the moving contract road, and bind Orevein, Clauseworks, and Cindercoil beneath one Ashen Ledger.",
+      "completion_title": "Three Hearths Accounted",
+      "completion_summary": "Daxis records three functioning hearths in one mobile ledger without surrendering the towns to rival tolls.",
+      "starting_scenario_id": "cindercoil-reclamation",
+      "scenarios": [
+        {
+          "scenario_id": "cindercoil-reclamation",
+          "seal_id": "campaign_chapter_seal_cindercoil_reclamation",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/cindercoil_reclamation.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/cindercoil_reclamation_source.png",
+          "seal_alt_text": "A black iron foundry gate opens around a bright coil as its copper foreclosure chain breaks.",
+          "seal_source_sha256": "7d272fcc2c464c8a2dac4775f2f474e8deea431eb4ac1fb80289ff6887afa76a",
+          "seal_runtime_sha256": "5848418ea3805e925623d26999eab1a7b00a23a3789e8010bdb23f740135c269",
+          "label": "Chapter I: Cindercoil Reclamation",
+          "description": "Break the peat foreclosure and return Cindercoil Foundry to production.",
+          "chapter_index": 1,
+          "chapter_title": "Rekindle Cindercoil",
+          "status_hint": "Daxis begins with an intact contract train and Orevein's assay economy.",
+          "carryover_summary": "Exports Daxis's progression, relics, spells, stores, and rekindled-furnace record.",
+          "briefing": "Cindercoil's last furnace has gone dark beneath a peat foreclosure. Daxis must restore production without abandoning Orevein.",
+          "intel": "Mireclaw levies hold both approaches and feed wet fuel into the coil house.",
+          "stakes": "Without Cindercoil, Brasshollow has contracts but no heat to honor them.",
+          "aftermath_victory": "Cindercoil burns again and the Ashen Ledger opens its first account.",
+          "aftermath_defeat": "The furnace drowns and Orevein's contract road fails.",
+          "journal_victory": "Cindercoil burns again and the Ashen Ledger opens its first account.",
+          "journal_defeat": "The furnace drowns and Orevein's contract road fails.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.45,
+            "resource_caps": {
+              "gold": 1700,
+              "wood": 5,
+              "ore": 5,
+              "brass_scrip": 4
+            },
+            "flag_ids": [
+              "cindercoil_furnace_rekindled"
+            ]
+          }
+        },
+        {
+          "scenario_id": "ashen-clausemarch",
+          "seal_id": "campaign_chapter_seal_ashen_clausemarch",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/clausemarch.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/clausemarch_source.png",
+          "seal_alt_text": "A riveted contract wagon carries a closed iron ledger and two gauge lanterns along a linked brass road.",
+          "seal_source_sha256": "b17e48f15a27c531cca71e349d95110735ac4e41426f636d8894adac49a40aed",
+          "seal_runtime_sha256": "e110bebf4593506b84a00d02f08e598afc2574e79785e6c9ee5a18042ca03c4d",
+          "label": "Chapter II: The Ashen Clausemarch",
+          "description": "Move the rekindled foundry train through Sunvault's seizure corridor and reopen Clauseworks.",
+          "chapter_index": 2,
+          "chapter_title": "Carry the Moving Ledger",
+          "status_hint": "Daxis continues with his command record and a mobile foundry train.",
+          "carryover_summary": "Imports Cindercoil's record and exports the cleared clause road with Daxis's continuing company.",
+          "briefing": "The Ashen Ledger cannot remain a stationary book. Daxis must carry it through the false certainty of the meridian line.",
+          "intel": "Relay screens can close behind the train even after its vanguard reaches Clauseworks.",
+          "stakes": "If the mobile foundry is fixed under glass, Cindercoil becomes an isolated victory.",
+          "aftermath_victory": "The clause road moves again and the ledger reaches the final accounting.",
+          "aftermath_defeat": "The meridian freezes the march and severs the three hearths.",
+          "journal_victory": "The clause road moves again and the ledger reaches the final accounting.",
+          "journal_defeat": "The meridian freezes the march and severs the three hearths.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "cindercoil-reclamation",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "cindercoil-reclamation",
+              "flag": "cindercoil_furnace_rekindled"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "cindercoil-reclamation",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.45,
+            "resource_caps": {
+              "gold": 1700,
+              "wood": 5,
+              "ore": 5,
+              "brass_scrip": 4
+            },
+            "flag_ids": [
+              "ashen_clausemarch_recorded"
+            ]
+          }
+        },
+        {
+          "scenario_id": "furnace-reckoning",
+          "seal_id": "campaign_chapter_seal_furnace_reckoning",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/furnace_reckoning.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/furnace_reckoning_source.png",
+          "seal_alt_text": "Three black anvils surround a brilliant furnace heart inside a circular copper oath-chain.",
+          "seal_source_sha256": "25fdc9c88951f158df402e615e672865e0c9ff7654a91dc90195a64cd756c17e",
+          "seal_runtime_sha256": "bd3181e618363dde8150e5a1a0432ae2862b8c3b44211f6ee78b6a748bb7b628",
+          "label": "Chapter III: Furnace Reckoning",
+          "description": "Recover Clauseworks and answer the drowned counterledger with one three-town industrial covenant.",
+          "chapter_index": 3,
+          "chapter_title": "Bind the Three Hearths",
+          "status_hint": "Daxis enters with the complete Ashen Ledger and two developing industrial anchors.",
+          "carryover_summary": "Imports the complete Ashen Ledger and resolves the Brasshollow campaign arc.",
+          "briefing": "Rival claims have reached Clauseworks from water and mire. Daxis must make all three hearths answer the same accounting.",
+          "intel": "The counterledger attacks from two directions and can turn every delayed claim into pressure.",
+          "stakes": "One lost hearth divides Brasshollow's production into rival toll lots.",
+          "aftermath_victory": "Three anvils answer one furnace heart and the Ashen Ledger closes in balance.",
+          "aftermath_defeat": "The ledger is divided and the industrial covenant fails.",
+          "journal_victory": "Three anvils answer one furnace heart and the Ashen Ledger closes in balance.",
+          "journal_defeat": "The ledger is divided and the industrial covenant fails.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "ashen-clausemarch",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "ashen-clausemarch",
+              "flag": "ashen_clausemarch_recorded"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "ashen-clausemarch",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_last_bell_sounding",
+      "name": "Last Bell Sounding",
+      "description": "Sael Mirrorbell calls Gloamwake out of silence, hunts a false channel through the mirrorwake, and makes all three Veilmourn harbors answer one final bell.",
+      "summary": "A three-chapter Veilmourn campaign about reclaimed harbors, deceptive navigation, same-hero memory, and a three-town coastal covenant.",
+      "region": "Gloamwake Reach, Mirrorwake Channel, and the Last-Bell Coast",
+      "emblem_id": "campaign_emblem_last_bell_sounding",
+      "emblem_path": "res://art/campaigns/runtime/emblems/last_bell_sounding.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/last_bell_sounding_source.png",
+      "emblem_alt_text": "A silver-black harbor bell hangs over a dark tide mirror with three pale wake ripples and a mist ribbon.",
+      "emblem_source_sha256": "e4bc895f0d97dda7fe8a909d8d68c8e110785e8a2b5e2ce8ac6b7b2448c3585c",
+      "emblem_runtime_sha256": "79da9129df7d167952216388627334afca599f21cbb1f6e7d2fbdc89acfd10d2",
+      "arc_goal": "Recall Gloamwake's bell, erase the false channel, and join Bellwake, Fogchart, and Gloamwake in one three-harbor sounding.",
+      "completion_title": "Three Harbors Answer",
+      "completion_summary": "Sael's Last Bell crosses every harbor mirror and leaves a navigable record through the Veilmourn coast.",
+      "starting_scenario_id": "gloamwake-recall",
+      "scenarios": [
+        {
+          "scenario_id": "gloamwake-recall",
+          "seal_id": "campaign_chapter_seal_gloamwake_recall",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/gloamwake_recall.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/gloamwake_recall_source.png",
+          "seal_alt_text": "A drowned silver harbor bell rises on two ropes above a relit anchorage lamp.",
+          "seal_source_sha256": "ebb1d5546a5cdd23c9e9e7d8a80de87450ca5de176cd1efa4f815b582a0023b5",
+          "seal_runtime_sha256": "854e653fac5b0d73691e7d4407da6b899e9b9450d17a353df379f9ae83213993",
+          "label": "Chapter I: Gloamwake Recall",
+          "description": "Break the lock writ and return Gloamwake Anchorage to Veilmourn hands.",
+          "chapter_index": 1,
+          "chapter_title": "Recall the Drowned Bell",
+          "status_hint": "Sael begins with a mirror-navigation cadre and Bellwake's tide stores.",
+          "carryover_summary": "Exports Sael's progression, relics, spells, stores, and recalled-bell record.",
+          "briefing": "Gloamwake has been made silent by decree. Sael must recover its bell without losing Bellwake's living harbor.",
+          "intel": "Lock wardens hold two approaches and treat every unsounded tide as consent.",
+          "stakes": "Without Gloamwake's echo, the old channel vanishes from memory.",
+          "aftermath_victory": "The drowned bell sounds and Gloamwake remembers its harbor.",
+          "aftermath_defeat": "The lock writ seals the anchorage beyond recall.",
+          "journal_victory": "The drowned bell sounds and Gloamwake remembers its harbor.",
+          "journal_defeat": "The lock writ seals the anchorage beyond recall.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.45,
+            "resource_caps": {
+              "gold": 1700,
+              "wood": 5,
+              "ore": 5,
+              "memory_salt": 4
+            },
+            "flag_ids": [
+              "gloamwake_bell_recalled"
+            ]
+          }
+        },
+        {
+          "scenario_id": "false-channel-pursuit",
+          "seal_id": "campaign_chapter_seal_false_channel_pursuit",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/false_channel_pursuit.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/false_channel_pursuit_source.png",
+          "seal_alt_text": "A sharp silver wake splits a dark tide mirror while three different buoys mark the true route.",
+          "seal_source_sha256": "d40302a707c412936a743b288d3e558f5ea7bff428bd7124cf395dd522e00564",
+          "seal_runtime_sha256": "cc49862ad31ea0b16a6855f7c304daa67d5648220393d6adae510d3d262472e2",
+          "label": "Chapter II: False Channel Pursuit",
+          "description": "Pursue the false meridian, recover Fogchart, and preserve the recalled echo.",
+          "chapter_index": 2,
+          "chapter_title": "Sound the True Channel",
+          "status_hint": "Sael continues with the recalled bell and a growing memory-salt reserve.",
+          "carryover_summary": "Imports Gloamwake's sounding and exports the true-channel record with Sael's continuing cadre.",
+          "briefing": "A bright false channel now points every pilot toward prepared fire. Sael must navigate by memory, not glare.",
+          "intel": "The mirror screens can close the wake behind her and isolate Gloamwake again.",
+          "stakes": "If Fogchart reads the false meridian, all three harbors inherit a fatal route.",
+          "aftermath_victory": "The false channel breaks and Sael records the true mirrorwake.",
+          "aftermath_defeat": "The bright lie replaces the coast's remembered bearing.",
+          "journal_victory": "The false channel breaks and Sael records the true mirrorwake.",
+          "journal_defeat": "The bright lie replaces the coast's remembered bearing.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "gloamwake-recall",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "gloamwake-recall",
+              "flag": "gloamwake_bell_recalled"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "gloamwake-recall",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.45,
+            "resource_caps": {
+              "gold": 1700,
+              "wood": 5,
+              "ore": 5,
+              "memory_salt": 4
+            },
+            "flag_ids": [
+              "true_channel_sounded"
+            ]
+          }
+        },
+        {
+          "scenario_id": "three-harbors-sounding",
+          "seal_id": "campaign_chapter_seal_three_harbors_sounding",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/three_harbors_sounding.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/three_harbors_sounding_source.png",
+          "seal_alt_text": "Three silver-black harbor bells hang above linked moonlit pools joined by a sweeping mist ribbon.",
+          "seal_source_sha256": "d1d0a008fa54ec4e7039efea80dbad358982bba22fc124e7758c439a6658c7c0",
+          "seal_runtime_sha256": "9dd977fbe6252eae81b0e0d58e022fa977af2034bb001a176e204fbb2a4d65b0",
+          "label": "Chapter III: Three Harbors Sounding",
+          "description": "Recover Fogchart and make Gloamwake, Bellwake, and Fogchart answer one another.",
+          "chapter_index": 3,
+          "chapter_title": "Ring the Last Bell",
+          "status_hint": "Sael enters with the complete sounding record and two developing harbor anchors.",
+          "carryover_summary": "Imports the complete sounding record and resolves the Veilmourn campaign arc.",
+          "briefing": "Foreclosure chains have reached Fogchart while lock wardens close the rear water. Sael must ring all three harbors as one coast.",
+          "intel": "Two enemy ledgers can turn delayed echoes into separate claims against each harbor.",
+          "stakes": "A silent harbor divides the coast and leaves the Last Bell unanswered.",
+          "aftermath_victory": "Three harbors answer across one tide mirror and the Last Bell becomes a living route.",
+          "aftermath_defeat": "The bells fall silent in separate claims.",
+          "journal_victory": "Three harbors answer across one tide mirror and the Last Bell becomes a living route.",
+          "journal_defeat": "The bells fall silent in separate claims.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "false-channel-pursuit",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "false-channel-pursuit",
+              "flag": "true_channel_sounded"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "false-channel-pursuit",
             "resources": true,
             "hero_progression": true,
             "spells": true,
