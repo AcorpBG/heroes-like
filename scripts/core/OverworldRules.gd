@@ -1099,7 +1099,15 @@ static func _collect_resource_node_result(
 		previous_controller,
 		"player"
 	)
-	var service_effects := _apply_repeatable_service_effects(session, node, site)
+	var strategic_effects := _apply_resource_site_strategic_effects(session, node, site)
+	var command_effects := _apply_shrine_command_bonus(session, site)
+	var service_effects := strategic_effects if String(site.get("batch003_role", "")) == "repeatable_service" else {}
+	var shrine_effects := strategic_effects.duplicate(true) if String(site.get("batch003_role", "")) == "shrine_progression" else {}
+	if not command_effects.is_empty():
+		var shrine_messages: Array = shrine_effects.get("messages", [])
+		shrine_messages.append_array(command_effects.get("messages", []))
+		shrine_effects["messages"] = shrine_messages
+		shrine_effects["hero_command_bonus"] = command_effects.get("hero_command_bonus", {}).duplicate(true)
 	_rules_profile_add_ms("resource_disruption_ms", disruption_started_usec)
 	var messages := [_resource_site_claim_message(site, previous_controller)]
 	var cost_summary := _describe_resource_delta(visit_cost)
@@ -1128,7 +1136,11 @@ static func _collect_resource_node_result(
 		messages.append(disruption_message)
 	for service_message in service_effects.get("messages", []):
 		messages.append(String(service_message))
+	for shrine_message in shrine_effects.get("messages", []):
+		messages.append(String(shrine_message))
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
+	if String(site.get("batch003_role", "")) == "shrine_progression":
+		HeroCommandRulesScript.commit_active_hero(session)
 	var artifact_reward := _grant_resource_site_artifact_reward(session, node, site)
 	if bool(artifact_reward.get("applied", false)):
 		messages.append(String(artifact_reward.get("message", "")))
@@ -1150,6 +1162,8 @@ static func _collect_resource_node_result(
 		mutation_facts["route_opened"] = true
 	if not service_effects.is_empty():
 		mutation_facts["service_effects"] = service_effects.duplicate(true)
+	if not shrine_effects.is_empty():
+		mutation_facts["shrine_effects"] = shrine_effects.duplicate(true)
 	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, mutation_facts)
 	if site_vision_radius > 0:
 		result["site_vision_radius"] = site_vision_radius
@@ -1160,6 +1174,8 @@ static func _collect_resource_node_result(
 		result["route_opened"] = true
 	if not service_effects.is_empty():
 		result["service_effects"] = service_effects.duplicate(true)
+	if not shrine_effects.is_empty():
+		result["shrine_effects"] = shrine_effects.duplicate(true)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
 	result["interaction_result"] = _interactable_result_payload("resource_site", node, mutation_facts, topology_facts)
@@ -1181,14 +1197,16 @@ static func _collect_resource_node_result(
 	_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 	return recapped
 
-static func _apply_repeatable_service_effects(
+static func _apply_resource_site_strategic_effects(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary
 ) -> Dictionary:
-	if session == null or not _resource_site_is_repeatable(site):
+	if session == null:
 		return {}
 	var authored = site.get("service_effects", {})
+	if String(site.get("batch003_role", "")) == "shrine_progression":
+		authored = site.get("shrine_effects", {})
 	if not (authored is Dictionary) or authored.is_empty():
 		return {}
 	var result := {
@@ -1250,6 +1268,41 @@ static func _apply_repeatable_service_effects(
 			var faction_label := String(ContentService.get_faction(faction_id).get("name", faction_id))
 			result["messages"].append("Reviewed obligations reduce %s pressure by %d." % [faction_label, relieved])
 	return result
+
+static func _apply_shrine_command_bonus(
+	session: SessionStateStoreScript.SessionData,
+	site: Dictionary
+) -> Dictionary:
+	if session == null or String(site.get("batch003_role", "")) != "shrine_progression":
+		return {}
+	var authored = site.get("hero_command_bonus", {})
+	if not (authored is Dictionary) or authored.is_empty():
+		return {}
+	var hero = session.overworld.get("hero", {})
+	if not (hero is Dictionary) or hero.is_empty():
+		return {}
+	var command = hero.get("command", {})
+	if not (command is Dictionary):
+		command = {}
+	var applied := {}
+	for key in ["attack", "defense", "power", "knowledge"]:
+		var amount: int = clampi(int(authored.get(key, 0)), 0, 3)
+		if amount <= 0:
+			continue
+		command[key] = maxi(0, int(command.get(key, 0))) + amount
+		applied[key] = amount
+	if applied.is_empty():
+		return {}
+	hero["command"] = command
+	session.overworld["hero"] = hero
+	HeroCommandRulesScript.commit_active_hero(session)
+	var labels := []
+	for key in applied.keys():
+		labels.append("+%d %s" % [int(applied[key]), String(key).capitalize()])
+	return {
+		"hero_command_bonus": applied,
+		"messages": ["The shrine grants %s permanently." % ", ".join(labels)],
+	}
 
 static func _open_resource_site_route_body(node: Dictionary, site: Dictionary) -> bool:
 	if not bool(site.get("opens_route_on_claim", false)):

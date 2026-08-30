@@ -24,8 +24,41 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-six-repeatable-field-services-10184`; the next coherent content family is not yet selected.
-- Current package boundary: both release exports measure 249363240 bytes, 636760 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-six-progression-shrines-10184`; the next coherent content family is not yet selected.
+- Current package boundary: both release exports measure 249389184 bytes, 610816 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Six Progression Shrines
+
+id: `content-six-progression-shrines-10184`
+
+Status: completed.
+
+Completion result:
+- all six Batch 003 progression shrines are live across their existing authored scenarios: Oath Ember, Reedscript Vow, and Prism Measure grant one-time permanent attack/knowledge/power growth with exact experience, field-spell, and scouting payloads, while Root Accord, Furnace Oath, and Tide Bell grant guarded weekly movement/recovery/pressure support;
+- the three weekly shrines now bind to exact existing screen encounters, block use until those guards resolve, retain seven-day cooldowns, and preserve their renewed state through save version 9 without adding encounter identities or changing objectives;
+- every shrine retains its original ready landmark and switches to one of six distinct built-in-image-generation awakened states packed into one transparent 288x48 runtime atlas; source prompts and originals remain owned in the source-art tree and excluded from release packages;
+- the consolidated six-case gameplay/runtime/visual smoke passes first claim, exact command/spell/experience/effect deltas, three production guard-battle constructions, mutation-free immediate rejection, all weekly revisits, exact art regions, and save round-trips;
+- repository validation and matching Linux/Windows packaged boots pass with eleven required resource-site atlases and identical 249389184-byte PCKs, 610816 bytes below the unchanged ceiling.
+
+Current finding:
+- Oath Ember Shrine, Reedscript Vow Shrine, Prism Measure Shrine, Root Accord Ring, Furnace Oath Marker, and Tide Bell Shrine are the complete Batch 003 shrine-progression family and all six remain metadata-only despite already owning original landmarks and one authored scenario placement each;
+- the first three are one-time progression memories suited to permanent commander growth and spell knowledge, while the latter three already author weekly cadence and guard-clear expectations but currently grant nothing;
+- activating the complete family across six existing scenarios adds faction-flavored commander development and recurring route decisions without new encounter identities, battle-formula changes, or a save-version bump.
+
+Implementation boundary:
+- activate all six site/object pairs with exact public shrine contracts, save/pathing/rendering boundaries, and their existing scenario placements; link the three weekly shrines to an existing authored scenario screen so their authored guard-clear requirement is real;
+- add one bounded data-driven shrine executor for permanent active-hero command bonuses and reuse the existing experience, spell-learning, fog-reveal, movement, town-recovery, and hostile-pressure paths for the remaining effects;
+- create six distinct original transparent awakened/visited shrine edits from the existing ready identities, pack them into one compact 288x48 atlas, and switch after successful use;
+- preserve deterministic outcomes, save version 9, existing objectives, generated-source exclusion, accessibility descriptions, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- the three one-time shrines apply their exact permanent commander bonus, experience/spell/scouting payload once and reject repeat use without mutation; the three guarded weekly shrines block until their exact screen clears, apply their exact recurring payload, reject early reuse, become usable seven days later, and execute once more;
+- every shrine resolves its original ready landmark before use and its own awakened/visited atlas region afterward, with exact save-version-9 round-trips after each relevant state;
+- one consolidated six-case gameplay/runtime/visual smoke covers the complete family after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new spell, encounter, unit, faction, hero, town, building, battle formula, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes shrine, name, text, bonus, map placement, landmark, or protected visual expression.
 
 ## Six Repeatable Field Services
 

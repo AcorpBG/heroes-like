@@ -5807,6 +5807,7 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
         "linked_resource_site_count": 0,
         "metadata_only_boundary_count": 0,
         "live_repeatable_service_count": 0,
+        "live_shrine_progression_count": 0,
         "route_lock_metadata_count": 0,
         "no_live_reward_activation_count": 0,
         "errors": [],
@@ -5957,17 +5958,29 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             and owner.get("runtime_boundary", {}).get("rare_resource_activation") is False
             for owner in (obj, site)
         )
+        live_shrine_progression = role == "shrine_progression" and all(
+            str(owner.get("runtime_boundary", {}).get("status", "")) == "shrine_progression_live"
+            and owner.get("runtime_boundary", {}).get("live_reward_grants") is True
+            and owner.get("runtime_boundary", {}).get("save_payload_required") is True
+            and owner.get("runtime_boundary", {}).get("renderer_sprite_required") is True
+            and owner.get("runtime_boundary", {}).get("pathing_runtime_adopted") is True
+            and owner.get("runtime_boundary", {}).get("scenario_placement_migration") is True
+            and owner.get("runtime_boundary", {}).get("rare_resource_activation") is False
+            for owner in (obj, site)
+        )
         if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
             section["metadata_only_boundary_count"] += 1
         elif live_repeatable_service:
             section["live_repeatable_service_count"] += 1
+        elif live_shrine_progression:
+            section["live_shrine_progression_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 003 object and site must keep an explicit metadata-only or adopted repeatable-service runtime boundary")
+            add_error(f"{object_id}: Batch 003 object and site must keep an explicit metadata-only, adopted service, or adopted shrine runtime boundary")
 
         live_ids = live_resource_ids(site)
         if live_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 003 must not activate rare resources in live site fields")
-        if any(field in site for field in ("rewards", "claim_rewards", "control_income", "resource_outputs")) and not live_repeatable_service:
+        if any(field in site for field in ("rewards", "claim_rewards", "control_income", "resource_outputs")) and not (live_repeatable_service or live_shrine_progression):
             add_error(f"{object_id}: Batch 003 service/shrine/sign/event sites must not add live reward or income fields")
         else:
             section["no_live_reward_activation_count"] += 1
@@ -6014,8 +6027,8 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             add_error("Batch 003 objects must all link resource-site records")
         if section["shape_contract_ready_count"] != len(batch_objects):
             add_error("Batch 003 objects must all pass footprint/body/approach contract checks")
-        if section["metadata_only_boundary_count"] != len(batch_objects) - expected_role_counts["repeatable_service"] or section["live_repeatable_service_count"] != expected_role_counts["repeatable_service"]:
-            add_error("Batch 003 must retain 22 metadata-only contracts and exactly six adopted repeatable-service contracts")
+        if section["metadata_only_boundary_count"] != len(batch_objects) - expected_role_counts["repeatable_service"] - expected_role_counts["shrine_progression"] or section["live_repeatable_service_count"] != expected_role_counts["repeatable_service"] or section["live_shrine_progression_count"] != expected_role_counts["shrine_progression"]:
+            add_error("Batch 003 must retain 16 metadata-only contracts, six adopted repeatable-service contracts, and six adopted shrine-progression contracts")
         if section["no_live_reward_activation_count"] != len(batch_objects):
             add_error("Batch 003 must not add live reward, income, or production fields")
         if section["route_lock_metadata_count"] != expected_role_counts["route_lock"]:
@@ -43197,6 +43210,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (384, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas":
                 expected_canvas = (288, 48)
+            elif source_model == "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas":
+                expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_standalone_contract_landmark_atlas":
@@ -50805,7 +50820,7 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
             source_payloads.append(payload)
     ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six repeatable-service visited sources must remain distinct")
     rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
-    for token in ('var service_effects := _apply_repeatable_service_effects(session, node, site)', '"movement_restored"', '"town_recovery_relieved"', '"enemy_pressure_relieved"'):
+    for token in ('var strategic_effects := _apply_resource_site_strategic_effects(session, node, site)', '"movement_restored"', '"town_recovery_relieved"', '"enemy_pressure_relieved"'):
         ensure(token in rules_text, errors, f"Repeatable-service runtime is missing live behavior: {token}")
     if report_scene.is_file():
         ensure_scene_nodes(report_scene.read_text(encoding="utf-8"), errors, "six_repeatable_field_services_report.tscn", [("SixRepeatableFieldServicesReport", "Node")])
@@ -50816,6 +50831,79 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure('REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME = "repeatable_service_visited_atlas"' in packaging_text and 'repeatable_service_visited_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the repeatable-service visited atlas")
+
+
+def validate_six_progression_shrines(errors: list[str]) -> None:
+    expected = {
+        "site_oath_ember_shrine": ("object_oath_ember_shrine", "tollbrand-blackwake-levy", "tollbrand_dormant_b", (2,5), "", "", {"experience":90}, {"attack":1}, {}, "spell_beacon_waymark_road_15", 0, False, "resource_site_progression_shrine_oath_ember_awakened", [0,0,48,48], "3c2e7f41824fe2b1ae6e7aaf6a591d6805b3371d732a09bd7057655af945d5f5"),
+        "site_reedscript_vow_shrine": ("object_reedscript_vow_shrine", "votivejaw-reedflame-vigil", "votivejaw_dormant_a", (1,0), "", "", {"experience":75}, {"knowledge":1}, {}, "spell_mire_flood_fenlight_12", 3, False, "resource_site_progression_shrine_reedscript_vow_awakened", [48,0,48,48], "015d469fa066887eb738dd5b8ce7e45beeb74320991b5eb10787407f58eaa1aa"),
+        "site_prism_measure_shrine": ("object_prism_measure_shrine", "glassmarshal-ossuary-battery", "glassmarshal_dormant_b", (2,5), "", "", {"experience":80}, {"power":1}, {}, "spell_lens_starlens_survey_12", 4, False, "resource_site_progression_shrine_prism_measure_awakened", [96,0,48,48], "030a1f7eb05f9e5d22201f08c85b8fd92ede49083f0e9922e34efec9d3c18f31"),
+        "site_root_accord_ring": ("object_root_accord_ring", "seedseer-drowned-orchard", "seedseer_dormant_a", (1,0), "seedseer_screen_a", "encounter_drowned_bell_procession", {"experience":60}, {}, {"movement_restore":120,"nearest_player_town_recovery_relief":1}, "", 0, True, "resource_site_progression_shrine_root_accord_awakened", [144,0,48,48], "330f8996962d69f274249160624597998e71e1392299e707853ee12ad838c2b3"),
+        "site_furnace_oath_marker": ("object_furnace_oath_marker", "pitmarshal-peat-chain-seizure", "pitmarshal_dormant_b", (2,5), "pitmarshal_screen_a", "encounter_mossglass_moonhunt", {"experience":65}, {}, {"movement_restore":150}, "", 0, True, "resource_site_progression_shrine_furnace_oath_awakened", [192,0,48,48], "805c658ac30b4e000afea5ebba4ad8e2ec6b26b9499dceea5acda74900a61239"),
+        "site_tide_bell_shrine": ("object_tide_bell_shrine", "keelwarden-lockfire-run", "keelwarden_dormant_b", (2,5), "keelwarden_screen_a", "encounter_lockflame_turncoats", {"experience":55}, {}, {"enemy_pressure_relief":1}, "", 4, True, "resource_site_progression_shrine_tide_bell_awakened", [240,0,48,48], "7c3539d7de4c0edfccc8091042014b4f2a1f70f77400c11b5b8ed6b994cc28d5"),
+    }
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "progression_shrine_awakened_atlas.png"
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "progression_shrine_awakened_wave1"
+    report_script = ROOT / "tests" / "six_progression_shrines_report.gd"
+    report_scene = ROOT / "tests" / "six_progression_shrines_report.tscn"
+    for path in (atlas_path, source_dir / "manifest.json", report_script, report_scene):
+        ensure(path.is_file(), errors, f"Missing progression-shrine owner: {path.relative_to(ROOT)}")
+    if not atlas_path.is_file():
+        return
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_payload).hexdigest() == "7512f942364aa4e288cace45518c1a30a38d1da9200a366c20371e5a6ba181d3" and len(atlas_payload) >= 26 and atlas_payload[25] == 6, errors, "Progression-shrine awakened atlas bytes, alpha, or dimensions changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Progression-shrine awakened atlas import metadata is missing")
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    art = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    assets = art.get("object_assets", {})
+    mappings = art.get("resource_site_sprites", {})
+    source_manifest = load_json(source_dir / "manifest.json")
+    prompt_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("prompts", []) if isinstance(row, dict)}
+    ensure(source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("source_model") == "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas" and source_manifest.get("output_size") == [288,48], errors, "Progression-shrine source provenance changed")
+    ensure(set(prompt_rows) == set(expected), errors, "Progression-shrine prompt set must own exactly six sites")
+    source_payloads = []
+    for site_id, (object_id, scenario_id, placement_id, xy, guard_id, encounter_id, rewards, bonus, effects, spell_id, vision, repeatable, awakened_id, region, source_sha) in expected.items():
+        site = sites.get(site_id, {})
+        obj = objects.get(object_id, {})
+        for owner in (site, obj):
+            boundary = owner.get("runtime_boundary", {})
+            contract = owner.get("shrine_contract", {})
+            ensure(boundary.get("status") == "shrine_progression_live" and boundary.get("live_reward_grants") is True and boundary.get("save_payload_required") is True and boundary.get("renderer_sprite_required") is True and boundary.get("pathing_runtime_adopted") is True and boundary.get("scenario_placement_migration") is True and boundary.get("rare_resource_activation") is False, errors, f"{site_id} live shrine boundary changed")
+            ensure(contract.get("metadata_only") is False and contract.get("runtime_shrine_execution_adopted") is True and len(str(contract.get("live_bonus", ""))) >= 48, errors, f"{site_id} runtime shrine contract changed")
+        ensure(site.get("claim_rewards") == rewards and site.get("hero_command_bonus", {}) == bonus and site.get("shrine_effects", {}) == effects and str(site.get("learn_spell_id", "")) == spell_id and int(site.get("vision_radius", 0)) == vision, errors, f"{site_id} progression payload changed")
+        ensure(bool(site.get("repeatable", False)) is repeatable and int(site.get("visit_cooldown_days", 0)) == (7 if repeatable else 0), errors, f"{site_id} cadence payload changed")
+        scenario = scenarios.get(scenario_id, {})
+        node = next((row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id), {})
+        ensure(node.get("site_id") == site_id and (int(node.get("x", -1)), int(node.get("y", -1))) == xy and str(node.get("guard_front_id", "")) == guard_id, errors, f"{site_id} exact scenario placement changed")
+        if guard_id:
+            guard = next((row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == guard_id), {})
+            ensure(guard.get("encounter_id") == encounter_id, errors, f"{site_id} exact authored guard changed")
+        mapping = mappings.get(site_id, {})
+        entry = assets.get(awakened_id, {})
+        ensure(mapping.get("asset_id") == awakened_id and mapping.get("unclaimed_asset_id") == "mapobj_" + site_id.removeprefix("site_"), errors, f"{site_id} ready/awakened mapping changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288,48] and entry.get("presentation_role") == "awakened_shrine_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} awakened atlas entry changed")
+        source_path = ROOT / str(entry.get("source_generated", "")).removeprefix("res://")
+        ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated awakened source or import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] == 6, errors, f"{site_id} generated awakened source bytes or alpha changed")
+            source_payloads.append(payload)
+        ensure(str(prompt_rows.get(site_id, {}).get("source", "")) == source_path.name and len(str(prompt_rows.get(site_id, {}).get("prompt", ""))) >= 100, errors, f"{site_id} generation prompt ownership changed")
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six progression-shrine generated sources must remain byte-distinct")
+    rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for token in ('_apply_shrine_command_bonus(session, site)', 'site.get("shrine_effects", {})', 'result["shrine_effects"]', 'HeroCommandRulesScript.commit_active_hero(session)'):
+        ensure(token in rules_text, errors, f"Progression-shrine runtime is missing live behavior: {token}")
+    if report_scene.is_file():
+        ensure_scene_nodes(report_scene.read_text(encoding="utf-8"), errors, "six_progression_shrines_report.tscn", [("SixProgressionShrinesReport", "Node")])
+    if report_script.is_file():
+        report_text = report_script.read_text(encoding="utf-8")
+        for token in ('const REPORT_ID := "SIX_PROGRESSION_SHRINES_REPORT"', 'OverworldRules.resource_site_blocking_guard(', 'BattleRulesScript.create_battle_payload(', 'OverworldRules._collect_resource_node_result(', 'SessionStateStoreScript.SAVE_VERSION', 'progression_shrine_state_strip.png'):
+            ensure(token in report_text, errors, f"Six-shrine combined smoke is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME = "progression_shrine_awakened_atlas"' in packaging_text and 'progression_shrine_awakened_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the progression-shrine awakened atlas")
 
 
 def validate_eight_guarded_route_gates(errors: list[str]) -> None:
@@ -65285,18 +65373,18 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         reedscript_object = proxy_map_objects.get("object_reedscript_vow_shrine", {})
         reedscript_site = proxy_resource_sites.get("site_reedscript_vow_shrine", {})
         ensure(
-            str(reedscript_object.get("runtime_boundary", {}).get("status", "")) == "metadata_only"
-            and not bool(reedscript_object.get("runtime_boundary", {}).get("live_reward_grants", True))
-            and not bool(reedscript_object.get("runtime_boundary", {}).get("pathing_runtime_adopted", True))
+            str(reedscript_object.get("runtime_boundary", {}).get("status", "")) == "shrine_progression_live"
+            and bool(reedscript_object.get("runtime_boundary", {}).get("live_reward_grants", False))
+            and bool(reedscript_object.get("runtime_boundary", {}).get("pathing_runtime_adopted", False))
             and not bool(reedscript_object.get("runtime_boundary", {}).get("route_effect_runtime_adopted", True))
-            and bool(reedscript_object.get("shrine_contract", {}).get("metadata_only", False))
-            and str(reedscript_site.get("runtime_boundary", {}).get("status", "")) == "metadata_only"
-            and not bool(reedscript_site.get("runtime_boundary", {}).get("live_reward_grants", True))
-            and not bool(reedscript_site.get("runtime_boundary", {}).get("pathing_runtime_adopted", True))
+            and not bool(reedscript_object.get("shrine_contract", {}).get("metadata_only", True))
+            and str(reedscript_site.get("runtime_boundary", {}).get("status", "")) == "shrine_progression_live"
+            and bool(reedscript_site.get("runtime_boundary", {}).get("live_reward_grants", False))
+            and bool(reedscript_site.get("runtime_boundary", {}).get("pathing_runtime_adopted", False))
             and not bool(reedscript_site.get("runtime_boundary", {}).get("route_effect_runtime_adopted", True))
-            and bool(reedscript_site.get("shrine_contract", {}).get("metadata_only", False)),
+            and not bool(reedscript_site.get("shrine_contract", {}).get("metadata_only", True)),
             errors,
-            "Reedscript Vow Shrine object/site must remain an explicitly metadata-only non-live contract",
+            "Reedscript Vow Shrine must remain a live game shrine while its H3M School of War projection stays explicitly metadata-only",
         )
         type16_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 16]
         ensure(len(type16_entries) == 2, errors, "H3M Creature Bank catalog must retain only the legacy subtype-0 metadata row and selected subtype-4 live row")
@@ -76230,6 +76318,7 @@ def main() -> int:
     validate_three_creature_bank_forts(errors)
     validate_seven_minor_guarded_caches(errors)
     validate_six_repeatable_field_services(errors)
+    validate_six_progression_shrines(errors)
     validate_eight_guarded_route_gates(errors)
     validate_eight_neutral_dwelling_musters(errors)
     validate_sixteen_neutral_dwelling_musters(errors)
