@@ -31,6 +31,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_quenchspool_slingers",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
+    "unit_brasshollow_tallyspring_throwers",
     "unit_citadel_pikeward",
     "unit_ember_archer",
     "unit_embercourt_ash_oath_bailiffs",
@@ -40,6 +41,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_embercourt_charter_colossus",
     "unit_embercourt_fordhook_cadets",
     "unit_embercourt_lantern_sappers",
+    "unit_embercourt_lockglass_writcasters",
     "unit_embercourt_sluicefire_lindworms",
     "unit_gorefen_ripper",
     "unit_mire_slinger",
@@ -124,6 +126,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_thornwake_barkmantle_rams",
     "unit_thornwake_bramblekite_needlers",
     "unit_thornwake_canopy_rammers",
+    "unit_thornwake_pollenhook_whistlers",
     "unit_thornwake_seedglass_cantors",
     "unit_thornwake_seedshield_wardens",
     "unit_thornwake_graft_matriarchs",
@@ -134,6 +137,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_thornwake_worldroot_bastion",
     "unit_veilmourn_bellwake_oars",
     "unit_veilmourn_fogbound_leviathan",
+    "unit_veilmourn_gloamkeel_bulwarks",
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mirrorkeel_reavers",
     "unit_veilmourn_mourning_lanterns",
@@ -154,6 +158,10 @@ PACKAGE_OPTIMIZED_CURATED_IDS = {
     "unit_thornwake_bramblekite_needlers",
     "unit_brasshollow_quenchspool_slingers",
     "unit_veilmourn_saltbell_casters",
+    "unit_embercourt_lockglass_writcasters",
+    "unit_thornwake_pollenhook_whistlers",
+    "unit_brasshollow_tallyspring_throwers",
+    "unit_veilmourn_gloamkeel_bulwarks",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {}
 

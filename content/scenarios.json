@@ -3917,12 +3917,13 @@
               "placement_id": "graftroot_bridgehead",
               "recruits": {
                 "unit_thornwake_seedcutters": 3,
-                "unit_thornwake_thornwhip_carriers": 2
+                "unit_thornwake_thornwhip_carriers": 2,
+                "unit_thornwake_pollenhook_whistlers": 4
               }
             },
             {
               "type": "message",
-              "text": "A seed train reaches Graftroot with fresh cutters, thornwhip crews, and a wagon of living roadstock."
+              "text": "A seed train reaches Graftroot with fresh cutters, thornwhip crews, Pollenhook Whistlers, and a wagon of living roadstock."
             }
           ]
         },
@@ -4228,8 +4229,8 @@
           ],
           "effects": [
             {"type": "add_resources", "resources": {"gold": 250, "ore": 1}},
-            {"type": "town_add_recruits", "placement_id": "orevein_gantry", "recruits": {"unit_brasshollow_scrip_haulers": 3, "unit_brasshollow_rivet_hounds": 2}},
-            {"type": "message", "text": "A stamped clause train reaches Orevein with replacement haulers, rivet hounds, and a sealed ore allotment."}
+            {"type": "town_add_recruits", "placement_id": "orevein_gantry", "recruits": {"unit_brasshollow_scrip_haulers": 3, "unit_brasshollow_rivet_hounds": 2, "unit_brasshollow_tallyspring_throwers": 4}},
+            {"type": "message", "text": "A stamped clause train reaches Orevein with replacement haulers, rivet hounds, Tallyspring Throwers, and a sealed ore allotment."}
           ]
         },
         {
@@ -4390,8 +4391,8 @@
           "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "bellwake_harbor"}],
           "effects": [
             {"type": "add_resources", "resources": {"gold": 250, "wood": 1}},
-            {"type": "town_add_recruits", "placement_id": "bellwake_harbor", "recruits": {"unit_veilmourn_bellwake_oars": 3, "unit_veilmourn_mourning_lanterns": 2}},
-            {"type": "message", "text": "Bellwake tolls the salvage muster and sends replacement oars, mourning lanterns, and a sealed pay chest into Ivara's fog lane."}
+            {"type": "town_add_recruits", "placement_id": "bellwake_harbor", "recruits": {"unit_veilmourn_bellwake_oars": 3, "unit_veilmourn_mourning_lanterns": 2, "unit_veilmourn_gloamkeel_bulwarks": 1}},
+            {"type": "message", "text": "Bellwake tolls the salvage muster and sends replacement oars, mourning lanterns, a Gloamkeel Bulwark, and a sealed pay chest into Ivara's fog lane."}
           ]
         },
         {
@@ -21902,7 +21903,7 @@
       },
       "script_hooks": [
         {"id":"horizon_compact_day_three_stores","priority":120,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"horizon_rainwrit_town"}],"effects":[{"type":"add_resources","resources":{"gold":360,"wood":2,"ore":2}},{"type":"message","text":"Rainwrit releases its sealed survey chest before the five rival ledgers close."}]},
-        {"id":"horizon_compact_day_four_relief","priority":116,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"horizon_rainwrit_town"}],"effects":[{"type":"town_add_recruits","placement_id":"horizon_rainwrit_town","recruits":{"unit_embercourt_bargebow_crews":3,"unit_embercourt_ash_oath_bailiffs":2}},{"type":"message","text":"A bargebow relief detail reaches Rainwrit along the reopened sluice road."}]},
+        {"id":"horizon_compact_day_four_relief","priority":116,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"horizon_rainwrit_town"}],"effects":[{"type":"town_add_recruits","placement_id":"horizon_rainwrit_town","recruits":{"unit_embercourt_bargebow_crews":3,"unit_embercourt_ash_oath_bailiffs":2,"unit_embercourt_lockglass_writcasters":1}},{"type":"message","text":"A bargebow relief detail and its Lockglass Writcasters reach Rainwrit along the reopened sluice road."}]},
         {"id":"horizon_compact_unbroken_pressure","priority":108,"conditions":[{"type":"day_at_least","day":7},{"type":"objective_not_met","objective_id":"convene_horizon_compact"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_mireclaw","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_sunvault","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_thornwake","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_brasshollow","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_veilmourn","amount":1},{"type":"message","text":"Five unjoined citadels harden their separate roads against the compact."}]},
         {"id":"horizon_compact_pale_counterstroke","priority":102,"conditions":[{"type":"day_at_least","day":11},{"type":"objective_not_met","objective_id":"claim_horizon_pale"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"horizon_pale_counterstroke","encounter_id":"encounter_bellwake_privateers","x":22,"y":13,"difficulty":"scripted","spawned_by_faction_id":"faction_veilmourn","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Pale Sounding launches a Bellwake counterstroke along the outer rough road."}]},
         {"id":"horizon_compact_all_writs_convened","priority":96,"conditions":[{"type":"flag_true","flag":"horizon_rainwrit_gate_broken"},{"type":"flag_true","flag":"horizon_hollowreed_palisade_broken"},{"type":"flag_true","flag":"horizon_meridian_array_broken"},{"type":"flag_true","flag":"horizon_crownroot_ring_broken"},{"type":"flag_true","flag":"horizon_blackbell_gantry_broken"},{"type":"flag_true","flag":"horizon_pale_mooring_broken"}],"effects":[{"type":"award_experience","amount":420},{"type":"set_flag","flag":"horizon_compact_convened","value":true},{"type":"message","text":"Six broken court seals align into one Horizon Compact under Rainledger witness."}]}

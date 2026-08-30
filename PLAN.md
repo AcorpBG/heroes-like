@@ -24,8 +24,44 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-three-horizon-skirmish-companies-10184` is completed as one coherent Thornwake, Brasshollow, and Veilmourn low-tier unit/recruitment/reinforcement/battle batch; the broad content goal continues beyond this slice.
-- Current package boundary: matching Linux and Windows release exports measure 241674776 bytes, 8325224 bytes below the unchanged 250000000-byte ceiling; source masters and superseded overworld textures remain excluded symmetrically while active runtime art remains packaged.
+- Current implementation slice: `content-four-faction-roster-parity-companies-10184` is completed as one coherent Embercourt, Thornwake, Brasshollow, and Veilmourn unit/recruitment/reinforcement/battle batch; the broad content goal continues beyond this slice.
+- Current package boundary: matching Linux and Windows release exports measure 242012184 bytes, 7987816 bytes below the unchanged 250000000-byte ceiling; source masters and superseded overworld textures remain excluded symmetrically while active runtime art remains packaged.
+
+## Four-Faction Roster Parity Companies
+
+id: `content-four-faction-roster-parity-companies-10184`
+
+Status: completed.
+
+Completion result:
+- Lockglass Writcasters, Pollenhook Whistlers, Tallyspring Throwers, and Gloamkeel Bulwarks are live as original tier-four ranged, tier-one ranged, tier-one ranged, and tier-four melee companies, bringing every production faction to exactly twelve units;
+- the companies use supported stagger-aware volley, bounded rooting harry, stamped ricochet volley, and brace/fog-screen contracts that fill the identified tactical gaps without new core battle mechanics;
+- Rainwrit Bastion, Graftroot Caravan, Orevein Gantry, and Bellwake Harbor provide exact relief counts of 1, 4, 4, and 1 plus live dwelling growth, four-percent discounts, TownRules recruitment, and deployment into existing authored battles;
+- four built-in-image-generation masters provide complete portrait, battle-icon, standee, animation, and overworld surfaces with exact prompt/hash provenance; inspected runtime standees retain distinct ranged-scribe, light-scout, industrial-caster, and shield-anchor silhouettes;
+- one consolidated four-scenario smoke passes six-faction twelve-unit parity, exact relief, dwelling authority, muster, player-side battle deployment, exact art loading, victory, and save-version-9 continuity; repository validation passes;
+- Linux and Windows release exports both pass with matching 242012184-byte PCKs, source art absent, active runtime art present, native libraries loaded, and 7987816 bytes below the unchanged ceiling.
+
+Current finding:
+- Mireclaw and Sunvault each own twelve live faction units, while Embercourt, Thornwake, Brasshollow, and Veilmourn each own eleven, leaving four otherwise production-facing rosters one company short of exact breadth parity;
+- Embercourt has only three ranged lines and no tier-four ranged company, Thornwake and Brasshollow each rely on one tier-one company, and Veilmourn has no tier-four melee line, so these exact gaps affect opening variety or the mid-tier formation transition rather than merely increasing totals;
+- Rainwrit Bastion, Graftroot Caravan, Orevein Gantry, and Bellwake Harbor already expose the correct tier dwellings and authored day-three/day-four relief hooks, allowing all four companies to enter live player recruitment and battles without duplicate towns, buildings, encounters, or scenarios;
+- matching release packages retain 8325224 bytes of headroom under the unchanged ceiling, enough for four compact optimized unit surface sets while keeping generated source masters outside the packages.
+
+Implementation boundary:
+- add Lockglass Writcasters, Pollenhook Whistlers, Tallyspring Throwers, and Gloamkeel Bulwarks as original Embercourt tier-four ranged, Thornwake tier-one ranged, Brasshollow tier-one ranged, and Veilmourn tier-four melee companies using supported faction-appropriate battle mechanics;
+- add each company to the growth and recruitment-discount authority of its existing tier dwelling, preserving the dwelling's original unlock, prerequisites, and other unit routes;
+- add exact bounded recruits to the existing Rainwrit, Graftroot, Orevein, and Bellwake relief hooks so each company reaches a live player town and can be mustered into an existing authored battle;
+- generate four original transparent masters, derive the established portrait, battle-icon, standee, animation, and overworld surfaces, and retain exact prompt/hash provenance outside release packages;
+- preserve deterministic battle authority, save version 9, scenario objectives and enemy groups, data-driven content, accessibility-readable silhouettes, Windows/Linux paths, source-art exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all four companies reach exact twelve-unit faction rosters, expose supported statistics and abilities, and load their exact art on the live battle board;
+- all four player towns receive the authored relief count, expose weekly growth and four-percent discount through the correct dwelling, recruit the company through live TownRules authority, and preserve the result through save version 9;
+- one consolidated four-scenario gameplay/town/battle/art/save smoke runs only after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, building, scenario, encounter, campaign, spell, artifact, battle algorithm, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes unit, name, statistic line, ability, visual design, or protected expression.
 
 ## Three Horizon Skirmish Companies
 

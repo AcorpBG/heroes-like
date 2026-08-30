@@ -972,7 +972,7 @@
       "id": "building_embercourt_oath_pikehall",
       "name": "Oath Pikehall",
       "category": "dwelling",
-      "description": "Ash-sealed court halls field bailiffs who enforce compact battle lines.",
+      "description": "Ash-sealed court halls field Bailiffs for the compact line and Lockglass Writcasters for its protected firing lanes.",
       "cost": {
         "gold": 1930,
         "wood": 1,
@@ -985,10 +985,12 @@
       ],
       "unlock_unit_id": "unit_embercourt_ash_oath_bailiffs",
       "growth_bonus": {
-        "unit_embercourt_ash_oath_bailiffs": 4
+        "unit_embercourt_ash_oath_bailiffs": 4,
+        "unit_embercourt_lockglass_writcasters": 1
       },
       "recruitment_discount_percent": {
-        "unit_embercourt_ash_oath_bailiffs": 6
+        "unit_embercourt_ash_oath_bailiffs": 6,
+        "unit_embercourt_lockglass_writcasters": 4
       },
       "readiness_bonus": 2
     },
@@ -1457,7 +1459,7 @@
       "id": "building_thornwake_seed_vault",
       "name": "Seed Vault",
       "category": "economy",
-      "description": "A traveling vault of seed law that arms the first Seedcutters.",
+      "description": "A traveling vault of seed law arms the first Seedcutters and issues pollenhook reeds to its Whistlers.",
       "cost": {
         "gold": 970
       },
@@ -1467,10 +1469,12 @@
       ],
       "unlock_unit_id": "unit_thornwake_seedcutters",
       "growth_bonus": {
-        "unit_thornwake_seedcutters": 7
+        "unit_thornwake_seedcutters": 7,
+        "unit_thornwake_pollenhook_whistlers": 1
       },
       "recruitment_discount_percent": {
-        "unit_thornwake_seedcutters": 6
+        "unit_thornwake_seedcutters": 6,
+        "unit_thornwake_pollenhook_whistlers": 4
       },
       "income": {
         "gold": 150,
@@ -1754,7 +1758,7 @@
       "id": "building_brasshollow_ore_tithe_office",
       "name": "Ore Tithe Office",
       "category": "economy",
-      "description": "Audited ore tithe halls arm Scrip Haulers for contract service.",
+      "description": "Audited ore tithe halls arm Scrip Haulers and issue stamped spring casters to Tallyspring Throwers.",
       "cost": {
         "gold": 970
       },
@@ -1764,10 +1768,12 @@
       ],
       "unlock_unit_id": "unit_brasshollow_scrip_haulers",
       "growth_bonus": {
-        "unit_brasshollow_scrip_haulers": 7
+        "unit_brasshollow_scrip_haulers": 7,
+        "unit_brasshollow_tallyspring_throwers": 1
       },
       "recruitment_discount_percent": {
-        "unit_brasshollow_scrip_haulers": 6
+        "unit_brasshollow_scrip_haulers": 6,
+        "unit_brasshollow_tallyspring_throwers": 4
       },
       "income": {
         "gold": 150,
@@ -2150,7 +2156,7 @@
       "id": "building_veilmourn_harpoon_gantry",
       "name": "Harpoon Gantry",
       "category": "dwelling",
-      "description": "High gantries field Undertow Harpooners for formation breaks.",
+      "description": "High gantries field Undertow Harpooners for formation breaks and Gloamkeel Bulwarks to anchor the return boarding line.",
       "cost": {
         "gold": 1930,
         "wood": 1,
@@ -2163,10 +2169,12 @@
       ],
       "unlock_unit_id": "unit_veilmourn_undertow_harpooners",
       "growth_bonus": {
-        "unit_veilmourn_undertow_harpooners": 4
+        "unit_veilmourn_undertow_harpooners": 4,
+        "unit_veilmourn_gloamkeel_bulwarks": 1
       },
       "recruitment_discount_percent": {
-        "unit_veilmourn_undertow_harpooners": 6
+        "unit_veilmourn_undertow_harpooners": 6,
+        "unit_veilmourn_gloamkeel_bulwarks": 4
       },
       "readiness_bonus": 2
     },

@@ -2540,6 +2540,86 @@
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_saltbell_casters.png",
       "curated_source_sha256": "0e433b71732ac76abdd51c14262095bccd75f8ee303b6aad1d033ebb911f0c27"
+    },
+    {
+      "id": "unit_embercourt_lockglass_writcasters",
+      "unit_id": "unit_embercourt_lockglass_writcasters",
+      "name": "Lockglass Writcasters",
+      "faction_id": "faction_embercourt",
+      "tier": 4,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_embercourt_lockglass_writcasters.png",
+      "battle_icon": "res://art/units/battle_icons/unit_embercourt_lockglass_writcasters.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_lockglass_writcasters.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_lockglass_writcasters.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_embercourt_lockglass_writcasters.png",
+      "curated_source_sha256": "c6593a01dc5039800abde5d5a3d291ffb88321def1943a05a14652283815b87d"
+    },
+    {
+      "id": "unit_thornwake_pollenhook_whistlers",
+      "unit_id": "unit_thornwake_pollenhook_whistlers",
+      "name": "Pollenhook Whistlers",
+      "faction_id": "faction_thornwake",
+      "tier": 1,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_thornwake_pollenhook_whistlers.png",
+      "battle_icon": "res://art/units/battle_icons/unit_thornwake_pollenhook_whistlers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_pollenhook_whistlers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_pollenhook_whistlers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_thornwake_pollenhook_whistlers.png",
+      "curated_source_sha256": "aee551c6e0435b80c3bd877f29503ce868d69196a7c881fc0bd23121d036faf4"
+    },
+    {
+      "id": "unit_brasshollow_tallyspring_throwers",
+      "unit_id": "unit_brasshollow_tallyspring_throwers",
+      "name": "Tallyspring Throwers",
+      "faction_id": "faction_brasshollow",
+      "tier": 1,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_brasshollow_tallyspring_throwers.png",
+      "battle_icon": "res://art/units/battle_icons/unit_brasshollow_tallyspring_throwers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_tallyspring_throwers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_tallyspring_throwers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_brasshollow_tallyspring_throwers.png",
+      "curated_source_sha256": "4f7df2297cf1f5f0e38ecf50f77c5abf148789af2b035706d7b6288d6257adcd"
+    },
+    {
+      "id": "unit_veilmourn_gloamkeel_bulwarks",
+      "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+      "name": "Gloamkeel Bulwarks",
+      "faction_id": "faction_veilmourn",
+      "tier": 4,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_veilmourn_gloamkeel_bulwarks.png",
+      "battle_icon": "res://art/units/battle_icons/unit_veilmourn_gloamkeel_bulwarks.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_gloamkeel_bulwarks.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_gloamkeel_bulwarks.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_veilmourn_gloamkeel_bulwarks.png",
+      "curated_source_sha256": "28200cc4bc83bbaec5230cd8554fa5f94129f7d4f3cb1b07ce574ce6f1f8a6ea"
     }
   ]
 }
