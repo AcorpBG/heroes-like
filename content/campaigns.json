@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 13,
+  "player_facing_active_campaign_count": 14,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -2339,6 +2339,358 @@
           ],
           "carryover_import": {
             "from_scenario_id": "rotlamp-glowcap-refrain",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_rootbound_canticles",
+      "name": "The Rootbound Canticles",
+      "description": "Six Thornwake commanders bind iron, salt, cinder, coppice, orchard, and mountain testimony into one living road-song without erasing who carried each verse.",
+      "summary": "A six-chapter Thornwake campaign that brings every remaining faction hero into campaign play through their own production battlefield and signature encounter.",
+      "region": "Furnace Rail, Drowned Orchard, Cinder Writ, Greenbranch, Orchard Levy, and Switchback Reaches",
+      "emblem_id": "campaign_emblem_rootbound_canticles",
+      "emblem_path": "res://art/campaigns/runtime/emblems/rootbound_canticles.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/rootbound_canticles_source.png",
+      "emblem_alt_text": "Six unequal living roots braid into an open ring around a luminous seed, carrying a rail rivet, seed bell, graft coal, copse whistle, orchard stone, and switchback cairn.",
+      "emblem_source_sha256": "927261107f1d351e17d69abf37f7cd900b87f153c92ae8b5d4680fba53cd80da",
+      "emblem_runtime_sha256": "ac32c1a3110f28b302a29fcf21431362402c6b30f75357f2467a5f5cd5037a1f",
+      "arc_goal": "Win six exact frontier testimonies and stack them as one traversable covenant while every commander's personal strength remains local to the road that earned it.",
+      "completion_title": "Six Roots, One Climb",
+      "completion_summary": "The six testimonies remain distinct, but their shared cadence now carries Thornwake from scorched rail to the highest switchback.",
+      "starting_scenario_id": "thorncart-furnace-break",
+      "scenarios": [
+        {
+          "scenario_id": "thorncart-furnace-break",
+          "seal_id": "campaign_chapter_seal_thorncart_furnace_break",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/ironroot_rail.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/ironroot_rail_source.png",
+          "seal_alt_text": "A blackened furnace rail and rivet are held in a narrow braided-root ring.",
+          "seal_source_sha256": "04468fe3d321efc8552023ff28031171faebfd0de6d2223dd4f75aaa3e488a6a",
+          "seal_runtime_sha256": "0876f8f366bb6ee607ae1970e70f4900ae7f2611488aaffe56f5988a695fa462",
+          "label": "Chapter I: Bend the Ironroot",
+          "description": "Halen cools Clauseworks' rail furnace and bends its broken line into the first traversable verse.",
+          "chapter_index": 1,
+          "chapter_title": "Give Iron a Living Turn",
+          "status_hint": "Break the Furnace Railbreak to record the Ironroot testimony before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior scoped testimony cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "A road-song cannot begin by pretending the iron line never existed. Halen must break its furnace claim, cool the rail, and teach it a living turn.",
+          "intel": "Two foreclosure screens protect the Furnace Railbreak while Clauseworks Depot sustains pressure from the east.",
+          "stakes": "If Thornwake can only destroy the roads it inherits, the canticle will end at its first border.",
+          "aftermath_victory": "Halen bends the cooled rail into an ironroot verse that another commander can follow.",
+          "aftermath_defeat": "The furnace keeps the first road rigid and the canticle finds no opening measure.",
+          "journal_victory": "Halen recorded the Ironroot testimony as verse 1 of the Rootbound Canticles.",
+          "journal_defeat": "Halen failed to record the Ironroot testimony.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {
+              "gold": 400,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "rootbound_ironroot_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "seedseer-drowned-orchard",
+          "seal_id": "campaign_chapter_seal_seedseer_drowned_orchard",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/saltseed_bell.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/saltseed_bell_source.png",
+          "seal_alt_text": "A pale cracked seed bell hangs inside a salt-dark root arch and braided ring.",
+          "seal_source_sha256": "722dee2739b32284bf148a50f1d203fa2374a271e9adc8ef42f4605a288994b4",
+          "seal_runtime_sha256": "e618455ff52a14640c5b1c45781dcca460f858d60fa1f80daa51a41a38e68322",
+          "label": "Chapter II: Hear the Saltseed",
+          "description": "Veyra stills the drowned bell without discarding the salt-mark that proves what the orchard survived.",
+          "chapter_index": 2,
+          "chapter_title": "Let the Drowned Seed Answer",
+          "status_hint": "Break the Drowned Orchard to record the Saltseed testimony before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior scoped testimony cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "The Ironroot verse reaches an orchard whose buried bell keeps salting every new seed. Veyra must still it without hiding the wound beneath fresh leaves.",
+          "intel": "Two drowned processions screen the signature seed bell while Fogchart Mooring presses the southern road.",
+          "stakes": "A covenant that records only recovery teaches its heirs to repeat every forgotten flood.",
+          "aftermath_victory": "Veyra preserves one salt-marked seed note beside Halen's cooled iron.",
+          "aftermath_defeat": "The drowned bell drowns the second verse before a living orchard can answer.",
+          "journal_victory": "Veyra recorded the Saltseed testimony as verse 2 of the Rootbound Canticles.",
+          "journal_defeat": "Veyra failed to record the Saltseed testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "thorncart-furnace-break",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "thorncart-furnace-break",
+              "flag": "rootbound_ironroot_testimony"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "thorncart-furnace-break",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {
+              "gold": 400,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "rootbound_saltseed_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "greenbarrow-cinder-writ",
+          "seal_id": "campaign_chapter_seal_greenbarrow_cinder_writ",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/cinder_graft.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/cinder_graft_source.png",
+          "seal_alt_text": "Living root arms cradle a split brazier and one banked coal inside a braided green ring.",
+          "seal_source_sha256": "5904a2ee11ada90bbb52d6cb6ef76720a66e1efb69947b410891bf6f6143094c",
+          "seal_runtime_sha256": "2b465d182d672ad83a10b0c1b087b60045d4c522554be47c94edf48874b19894",
+          "label": "Chapter III: Bank the Cinder Graft",
+          "description": "Merek breaks the cinder writ and grafts one disciplined coal into a root that can outlive its charter.",
+          "chapter_index": 3,
+          "chapter_title": "Keep Heat Without the Writ",
+          "status_hint": "Break the Cinder Writ to record the Cinder Graft testimony before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior scoped testimony cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Highwater claims every useful flame must carry its ownership mark. Merek must break the cinder writ and prove heat can be tended without being possessed.",
+          "intel": "The Cinder Writ commands the eastern brazier behind two turncoat screens and an older orchard levy watch.",
+          "stakes": "If every shared fire remains somebody's charter, the road-song will fracture at the first winter camp.",
+          "aftermath_victory": "Merek banks a living coal inside the third verse without carrying Highwater's writ onward.",
+          "aftermath_defeat": "The cinder writ stamps out the third verse and keeps the road's warmth under seal.",
+          "journal_victory": "Merek recorded the Cinder Graft testimony as verse 3 of the Rootbound Canticles.",
+          "journal_defeat": "Merek failed to record the Cinder Graft testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "seedseer-drowned-orchard",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "seedseer-drowned-orchard",
+              "flag": "rootbound_saltseed_testimony"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "seedseer-drowned-orchard",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {
+              "gold": 400,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "rootbound_cinder_graft_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "pollenglass-greenbranch-copse",
+          "seal_id": "campaign_chapter_seal_pollenglass_greenbranch_copse",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/copse_whistle.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/copse_whistle_source.png",
+          "seal_alt_text": "A leaf-roofed coppice platform stands between two tall hollow whistles inside a braided-root ring.",
+          "seal_source_sha256": "41deea2f65cd58fe4c6f418d598cc068f53ef0646af0e2d6548a28918f846458",
+          "seal_runtime_sha256": "dce424c9957a05f3d6f04155ea8df9541cf88a45d1651a39d77fe04a4f693e30",
+          "label": "Chapter IV: Sound the Copse",
+          "description": "Osmund clears the Greenbranch watch and lets the intact coppice sound its own fourth verse.",
+          "chapter_index": 4,
+          "chapter_title": "Listen Before Cutting",
+          "status_hint": "Clear the Greenbranch Copse Watch to record the Copse Whistle testimony before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior scoped testimony cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Three hard-won materials have entered the canticle, but none yet speaks with the voice of an undamaged place. Osmund must clear the watch without flattening its living instrument.",
+          "intel": "The Greenbranch Copse Watch holds the raised platform while two foreclosure screens close the western approaches.",
+          "stakes": "If every new verse requires a ruin first, Thornwake will learn to mistake damage for authorship.",
+          "aftermath_victory": "Osmund sounds the fourth verse through branches left standing and roots left named.",
+          "aftermath_defeat": "The watch keeps the coppice silent and the canticle learns nothing from a place still whole.",
+          "journal_victory": "Osmund recorded the Copse Whistle testimony as verse 4 of the Rootbound Canticles.",
+          "journal_defeat": "Osmund failed to record the Copse Whistle testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "greenbarrow-cinder-writ",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "greenbarrow-cinder-writ",
+              "flag": "rootbound_cinder_graft_testimony"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "greenbarrow-cinder-writ",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {
+              "gold": 400,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "rootbound_copse_whistle_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "loamchant-orchard-binding",
+          "seal_id": "campaign_chapter_seal_loamchant_orchard_binding",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/orchard_measure.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/orchard_measure_source.png",
+          "seal_alt_text": "An orchard arch shelters a notched millstone measure, harvest baskets, and pole racks inside a braided-root ring.",
+          "seal_source_sha256": "5d297da65fcb5d562d419d0376205172d974fe62fa908609feb1883bf23e8453",
+          "seal_runtime_sha256": "5e7bbb8491717e1b8a151facb302cadb583e260e9d2027a8a5faa251971820e0",
+          "label": "Chapter V: Set the Orchard Measure",
+          "description": "Elian secures the levy watch and measures obligation against what the living orchard can actually renew.",
+          "chapter_index": 5,
+          "chapter_title": "Bind Levy to Renewal",
+          "status_hint": "Secure the Orchard Levy Watch to record the Orchard Measure testimony before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior scoped testimony cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "A living covenant must answer the difficult question the quiet copse avoided: what may a road take and still return? Elian must bind the levy to the orchard's own measure.",
+          "intel": "Three foreclosure screens feed pressure into the Orchard Levy Watch while the eastern road remains unsecured.",
+          "stakes": "Without a renewable measure, shared stores become a slower name for stripping the land bare.",
+          "aftermath_victory": "Elian sets the fifth verse between the levy stone and the orchard's next season.",
+          "aftermath_defeat": "The levy takes without measure and the fifth verse leaves no seed for its return.",
+          "journal_victory": "Elian recorded the Orchard Measure testimony as verse 5 of the Rootbound Canticles.",
+          "journal_defeat": "Elian failed to record the Orchard Measure testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "pollenglass-greenbranch-copse",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "pollenglass-greenbranch-copse",
+              "flag": "rootbound_copse_whistle_testimony"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "pollenglass-greenbranch-copse",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {
+              "gold": 400,
+              "wood": 2,
+              "ore": 2,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "rootbound_orchard_measure_testimony"
+            ]
+          }
+        },
+        {
+          "scenario_id": "mossvein-switchback-circuit",
+          "seal_id": "campaign_chapter_seal_mossvein_switchback_circuit",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/switchback_cairn.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/switchback_cairn_source.png",
+          "seal_alt_text": "A three-level switchback hostel climbs toward a cairn signal post inside the final braided-root ring.",
+          "seal_source_sha256": "7885d1a9b305752b7073a8b366d0fda1dde0e63d3a9672dd0bf362cbba8b3afd",
+          "seal_runtime_sha256": "1aa8e8b02e8aa4eb9b5295130e20a931bb18719813cb89a74437490c99cfcf6a",
+          "label": "Chapter VI: Stack the Switchback",
+          "description": "Ralka secures the relay circuit and stacks six separate stones into one climb no single verse can dominate.",
+          "chapter_index": 6,
+          "chapter_title": "Make One Climb of Six Stones",
+          "status_hint": "Secure the Switchback Hostel Watch to record the Switchback Cairn testimony and complete the Rootbound Canticles.",
+          "carryover_summary": "Only capped common stores and the prior scoped testimony cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Five testimonies arrive as separate stones, each useful and each incomplete. Ralka must secure the switchback circuit and stack them into a climb that preserves every edge.",
+          "intel": "Four relay screens and two distinct watches control the long ascent; the Moss Oath cache records the final circuit proof.",
+          "stakes": "A cairn made from one stone is a monument, not a road. The final verse must make difference traversable.",
+          "aftermath_victory": "Ralka stacks six separately won testimonies into one climb and leaves every stone visible.",
+          "aftermath_defeat": "The switchback breaks the inherited verses apart before they can become a common road.",
+          "journal_victory": "Ralka recorded the Switchback Cairn testimony as verse 6 of the Rootbound Canticles.",
+          "journal_defeat": "Ralka failed to record the Switchback Cairn testimony.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "loamchant-orchard-binding",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "loamchant-orchard-binding",
+              "flag": "rootbound_orchard_measure_testimony"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "loamchant-orchard-binding",
             "resources": true,
             "hero_progression": false,
             "spells": false,

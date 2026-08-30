@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "campaign_id": "campaign_rootbound_canticles",
+  "generation_mode": "built_in_image_gen_emblem_and_encounter_derived_chapter_seals",
+  "raw_generated_emblem_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f950ec32-f70d-4ae7-84a3-a400c676a754.png",
+  "emblem": {
+    "id": "campaign_emblem_rootbound_canticles",
+    "source_path": "res://art/campaigns/source/generated/emblems/rootbound_canticles_source.png",
+    "runtime_path": "res://art/campaigns/runtime/emblems/rootbound_canticles.png",
+    "source_sha256": "927261107f1d351e17d69abf37f7cd900b87f153c92ae8b5d4680fba53cd80da",
+    "runtime_sha256": "ac32c1a3110f28b302a29fcf21431362402c6b30f75357f2467a5f5cd5037a1f",
+    "prompt": "Six unequal living root strands braid into one open campaign ring around a luminous seed, carrying one rail rivet, seed bell, graft coal, copse whistle, orchard measure, and switchback cairn; hand-painted original fantasy strategy heraldry on genuine transparency; no text, shield, banner, franchise reference, or watermark."
+  },
+  "chapter_seals": [
+    {
+      "id": "campaign_chapter_seal_thorncart_furnace_break",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/ironroot_rail_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/ironroot_rail.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/outer_reach_contracts/furnace_railblock_source.png",
+      "source_sha256": "04468fe3d321efc8552023ff28031171faebfd0de6d2223dd4f75aaa3e488a6a",
+      "runtime_sha256": "0876f8f366bb6ee607ae1970e70f4900ae7f2611488aaffe56f5988a695fa462"
+    },
+    {
+      "id": "campaign_chapter_seal_seedseer_drowned_orchard",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/saltseed_bell_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/saltseed_bell.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/outer_reach_contracts/drowned_seed_bell_source.png",
+      "source_sha256": "722dee2739b32284bf148a50f1d203fa2374a271e9adc8ef42f4605a288994b4",
+      "runtime_sha256": "e618455ff52a14640c5b1c45781dcca460f858d60fa1f80daa51a41a38e68322"
+    },
+    {
+      "id": "campaign_chapter_seal_greenbarrow_cinder_writ",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/cinder_graft_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/cinder_graft.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/ascendant_companies/cinderwrit_graft_brazier_source.png",
+      "source_sha256": "5904a2ee11ada90bbb52d6cb6ef76720a66e1efb69947b410891bf6f6143094c",
+      "runtime_sha256": "2b465d182d672ad83a10b0c1b087b60045d4c522554be47c94edf48874b19894"
+    },
+    {
+      "id": "campaign_chapter_seal_pollenglass_greenbranch_copse",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/copse_whistle_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/copse_whistle.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/waywatch_trials/greenbranch_copse_watch_source.png",
+      "source_sha256": "41deea2f65cd58fe4c6f418d598cc068f53ef0646af0e2d6548a28918f846458",
+      "runtime_sha256": "dce424c9957a05f3d6f04155ea8df9541cf88a45d1651a39d77fe04a4f693e30"
+    },
+    {
+      "id": "campaign_chapter_seal_loamchant_orchard_binding",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/orchard_measure_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/orchard_measure.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/spellwright_expeditions/orchard_levy_watch_source.png",
+      "source_sha256": "5d297da65fcb5d562d419d0376205172d974fe62fa908609feb1883bf23e8453",
+      "runtime_sha256": "5e7bbb8491717e1b8a151facb302cadb583e260e9d2027a8a5faa251971820e0"
+    },
+    {
+      "id": "campaign_chapter_seal_mossvein_switchback_circuit",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/switchback_cairn_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/switchback_cairn.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/switchback_hostel_watch_source.png",
+      "source_sha256": "7885d1a9b305752b7073a8b366d0fda1dde0e63d3a9672dd0bf362cbba8b3afd",
+      "runtime_sha256": "1aa8e8b02e8aa4eb9b5295130e20a931bb18719813cb89a74437490c99cfcf6a"
+    }
+  ]
+}
