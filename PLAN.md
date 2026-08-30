@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-veilmourn-wakebound-atlas-campaign-10184`, which brings all four previously campaign-unrepresented Veilmourn heroes and their production boards into one exact route-proof campaign.
-- Current package boundary: both release exports measure 249460176 bytes, 539824 bytes below the unchanged 250000000-byte ceiling. Runtime campaign art remains compact while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-final-nine-hero-faction-campaigns-10184`, which closes campaign representation across all sixty production heroes through three exact faction arcs and nine existing production boards.
+- Current package boundary: both release exports measure 249624412 bytes, 375588 bytes below the unchanged 250000000-byte ceiling. All nineteen campaign emblems and seventy-eight chapter seals ship while generated source originals and development reports remain excluded on both platforms.
 
 ## Eleven Roads And Objectives
 
@@ -15071,6 +15071,39 @@ Completion criteria:
 Non-goals:
 - no new faction, hero, town, unit, building, encounter, battle rule, balance, strategic AI, save schema, native RMG, signing, publication, whole-game, or release-readiness change or claim;
 - no copied Heroes campaign, map, character, object, heraldry, icon, name, text, or protected visual expression.
+
+## Final Nine Hero Faction Campaigns
+
+id: `content-final-nine-hero-faction-campaigns-10184`
+
+Status: completed.
+
+Completion result:
+- The Coalwater Ordinance, The Siltbound Writ, and The Broken Meridian are live as the seventeenth through nineteenth player-facing campaigns, bringing Helva Tollbrand, Saren Lockmaster, Orra Cinderquill, Tarn Fenhook, Orrik Tollreaver, Pell Reedscript, Thalen Choirward, Renn Facetlane, and Calis Sunvein into campaign play while retaining all nine boards as skirmishes;
+- each three-chapter faction arc enforces exact prior-victory plus signature-proof progression and transfers only fifteen percent of common stores within 400 gold, 2 wood, and 2 ore caps, with no hero progression, army, spell, artifact, or rare-resource transfer;
+- three original transparent 128x128 campaign emblems and nine encounter-derived 64x64 seals ship with distinct faction material language, non-color descriptions, exact built-in-generation provenance, menu ownership, and source-art exclusion;
+- the one consolidated Python-launched live smoke passes all nine chapters, thirty-three production battle payloads, nine proof hooks, three progression chains, resource-only carryover, save-version-9 round trips, twelve byte-distinct art identities, and nine directly reviewed board captures;
+- repository validation and sequential Linux/Windows packaged boots pass with all nineteen emblems and seventy-eight seals at matching 249624412-byte PCKs, 375588 bytes below the unchanged ceiling.
+
+Current finding:
+- fifty-one of sixty production heroes are represented in campaign play; the only remaining gaps are three Embercourt, three Mireclaw, and three Sunvault commanders;
+- all nine missing heroes already lead production-ready skirmish boards with exact faction identity, objectives, encounter fronts, signature victory hooks, save-version-9 behavior, and original map/hero/encounter art;
+- promoting those boards as three compact faction campaigns closes the final hero-availability gap without manufacturing redundant maps, encounter definitions, units, or combat rules.
+
+Implementation boundary:
+- ship The Coalwater Ordinance for Helva Tollbrand, Saren Lockmaster, and Orra Cinderquill; The Siltbound Writ for Tarn Fenhook, Orrik Tollreaver, and Pell Reedscript; and The Broken Meridian for Thalen Choirward, Renn Facetlane, and Calis Sunvein;
+- preserve each board in skirmish, use exact prior-victory plus signature-proof unlocks inside each faction arc, and transfer only modest capped common resources between its different commanders;
+- create three original campaign emblems and nine encounter-derived chapter seals with transparent compact runtime art, non-color descriptions, generated-source provenance, menu discoverability, and Linux/Windows package ownership;
+- preserve every existing board, battle, objective, balance, AI, save version, deterministic rule, source-art exclusion, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all sixty production heroes are campaign-represented, with the nine selected boards live in both campaign and skirmish and all three new arcs enforcing exact sequential proof gates;
+- one consolidated live nine-chapter smoke constructs every authored battle payload, proves all signature hooks, bounded resource-only carryover, save round trips, campaign art ownership, and representative visual captures after the complete batch is implemented;
+- repository validation and sequential Linux/Windows packaged startup pass with matching PCKs below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, unit, building, encounter, combat rule, balance, strategic-AI algorithm, save schema, Native RMG, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, character, faction device, seal, name, text, or protected visual expression.
 
 ## Progress Reconciliation
 
