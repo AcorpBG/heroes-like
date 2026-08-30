@@ -12308,6 +12308,258 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_siltglass_index",
+      "name": "Siltglass Index",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "summary": "Two reed-bound siltglass tablets hold the foreclosure tally until Brakka gives the mire an independent counterseal.",
+      "claim_rewards": {
+        "experience": 160,
+        "gold": 80
+      },
+      "claim_flags": {
+        "mireglass_siltglass_index_countersealed": true
+      },
+      "vision_radius": 1,
+      "response_profile": {
+        "action_label": "Counterseal the Index",
+        "summary": "Two reed-bound siltglass tablets hold the foreclosure tally until Brakka gives the mire an independent counterseal.",
+        "movement_cost": 3,
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "counterpoint_shrine_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+      "public_text": {
+        "public_summary": "Two reed-bound siltglass tablets hold the foreclosure tally until Brakka gives the mire an independent counterseal.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_greenline_lens_table",
+      "name": "Greenline Lens Table",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "summary": "A root-touched crystal lens accepts a second meridian only after Dovan clears the survey line.",
+      "claim_rewards": {
+        "experience": 160,
+        "gold": 80
+      },
+      "claim_flags": {
+        "mireglass_greenline_lens_countersealed": true
+      },
+      "vision_radius": 1,
+      "response_profile": {
+        "action_label": "Set the Counter-Meridian",
+        "summary": "A root-touched crystal lens accepts a second meridian only after Dovan clears the survey line.",
+        "movement_cost": 3,
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "counterpoint_shrine_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+      "public_text": {
+        "public_summary": "A root-touched crystal lens accepts a second meridian only after Dovan clears the survey line.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_reedflame_votive_frame",
+      "name": "Reedflame Votive Frame",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "summary": "A woven reed wheel holds an ember vow that Nix can temper without consuming its older ferry promise.",
+      "claim_rewards": {
+        "experience": 160,
+        "gold": 80
+      },
+      "claim_flags": {
+        "mireglass_reedflame_frame_countersealed": true
+      },
+      "vision_radius": 1,
+      "response_profile": {
+        "action_label": "Temper the Votive Frame",
+        "summary": "A woven reed wheel holds an ember vow that Nix can temper without consuming its older ferry promise.",
+        "movement_cost": 3,
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "counterpoint_shrine_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+      "public_text": {
+        "public_summary": "A woven reed wheel holds an ember vow that Nix can temper without consuming its older ferry promise.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_ossuary_prism_choir",
+      "name": "Ossuary Prism Choir",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "summary": "Three pale arches sound a drowned reflection through one suspended prism after Ilyr turns the battery.",
+      "claim_rewards": {
+        "experience": 160,
+        "gold": 80
+      },
+      "claim_flags": {
+        "mireglass_ossuary_prism_countersealed": true
+      },
+      "vision_radius": 1,
+      "response_profile": {
+        "action_label": "Tune the Prism Choir",
+        "summary": "Three pale arches sound a drowned reflection through one suspended prism after Ilyr turns the battery.",
+        "movement_cost": 3,
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "counterpoint_shrine_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+      "public_text": {
+        "public_summary": "Three pale arches sound a drowned reflection through one suspended prism after Ilyr turns the battery.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_glowcap_echo_bell",
+      "name": "Glowcap Echo Bell",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "summary": "A luminous fungal bell answers a peat-dark bowl once Edda secures the croft watch.",
+      "claim_rewards": {
+        "experience": 160,
+        "gold": 80
+      },
+      "claim_flags": {
+        "mireglass_glowcap_bell_countersealed": true
+      },
+      "vision_radius": 1,
+      "response_profile": {
+        "action_label": "Sound the Glowcap Refrain",
+        "summary": "A luminous fungal bell answers a peat-dark bowl once Edda secures the croft watch.",
+        "movement_cost": 3,
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "counterpoint_shrine_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+      "public_text": {
+        "public_summary": "A luminous fungal bell answers a peat-dark bowl once Edda secures the croft watch.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
+    },
+    {
+      "id": "site_kite_signal_countermast",
+      "name": "Kite-Signal Countermast",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "summary": "Two opposed kite vanes and hanging weights carry the complete counterpoint after Essa clears the eyrie watch.",
+      "claim_rewards": {
+        "experience": 160,
+        "gold": 80
+      },
+      "claim_flags": {
+        "mireglass_kite_countermast_countersealed": true
+      },
+      "vision_radius": 1,
+      "response_profile": {
+        "action_label": "Balance the Countermast",
+        "summary": "Two opposed kite vanes and hanging weights carry the complete counterpoint after Essa clears the eyrie watch.",
+        "movement_cost": 3,
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      },
+      "runtime_boundary": {
+        "status": "counterpoint_shrine_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true,
+        "guard_resolution_runtime_adopted": true
+      },
+      "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+      "public_text": {
+        "public_summary": "Two opposed kite vanes and hanging weights carry the complete counterpoint after Essa clears the eyrie watch.",
+        "no_internal_debug_score_fields": true,
+        "large_text_panel_required": false
+      }
     }
   ]
 }

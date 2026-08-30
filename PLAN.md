@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-sixfold-testament-campaign-10184`, which joins six substantial guarded-relic scenarios into one cross-faction campaign with exact evidence-gated progression and seven original campaign-art identities.
-- Current package boundary: both release exports measure 247986800 bytes, 2013200 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-mireglass-counterpoint-campaign-10184`, which joins six underused Mireclaw and Sunvault commanders through six exact guarded counterseals, resource-only progression, and nineteen original runtime art states.
+- Current package boundary: both release exports measure 249219604 bytes, 780396 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
 
 ## Eleven Roads And Objectives
 
@@ -14910,6 +14910,39 @@ Completion result:
 Non-goals:
 - no new faction, unit, hero, town, spell, artifact, encounter definition, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes campaign, map, faction story, ledger, shrine, emblem, seal, name, text, landmark, or protected visual expression.
+
+## Mireglass Counterpoint Campaign
+
+id: `content-mireglass-counterpoint-campaign-10184`
+
+Status: completed.
+
+Completion result:
+- shipped the six-chapter alternating Mireclaw/Sunvault `Mireglass Counterpoint` campaign for Brakka, Dovan, Nix, Ilyr, Edda, and Essa while retaining all six boards as skirmishes and preserving their 21 existing production battle fronts;
+- added six collision-safe frontier shrines behind their exact signature guards, each with a persistent two-state landmark, bounded claim reward, local counterseal objective, scoped testimony hook, and save-version-9 authority;
+- shipped one original campaign emblem, six chapter seals, and twelve byte-addressable landmark states with non-color descriptions, exact source/runtime provenance, and generated-source package exclusion;
+- the single consolidated smoke passed all six chapters, 21 battles, six guard/claim paths, exact resource-only carryover, six save round trips, six rendered boards, seven campaign identities, and twelve landmark states; repository validation and matching Linux/Windows package boots passed at 249219604 bytes.
+
+Current finding:
+- Mireclaw, Sunvault, and Thornwake have the weakest campaign-hero breadth, with only four of ten commanders from each faction represented in campaign chapters;
+- six compact Mireclaw and Sunvault contracts already provide production battle fronts, developed towns, resources, and signature opposition for Brakka Mudkeel, Dovan Lenscaptain, Nix Votivejaw, Ilyr Glassmarshal, Edda Rotlamp, and Essa Daynote, but all six end as isolated skirmishes;
+- the highest-impact package-safe batch is to give those six underused commanders one guarded local counterpoint objective each and connect them through an alternating-faction campaign, using a compact shared art atlas and one verification boundary.
+
+Implementation boundary:
+- add six original persistent counterpoint sites, each placed collision-safely behind its scenario's exact existing signature guard, with a one-time bounded reward, local claim flag, accessible two-state landmark identity, and explicit victory-objective authority;
+- add one one-time testimony hook to each scenario, retain full skirmish availability, and enable the six boards as an alternating Mireclaw/Sunvault campaign for Brakka, Dovan, Nix, Ilyr, Edda, and Essa without changing their existing encounters or strategic pacing;
+- add the six-chapter `Mireglass Counterpoint` campaign with exact victory-plus-local-counterseal unlocks and capped common-resource carryover, never transferring hero progression, spells, artifacts, or units across faction changes;
+- create one original campaign emblem and six original chapter seals plus twelve compact site states, with non-color descriptions, exact source/runtime integrity, generated-source package exclusion, save version 9, and matching Windows/Linux packages below 250000000 bytes.
+
+Completion criteria:
+- all six chapters launch in campaign mode and skirmish, construct their 21 existing production battle payloads, keep the exact signature guard blocking the new site, require the local counterseal for victory, and fire testimony exactly once;
+- chapters unlock sequentially only after the prior victory and scoped counterseal, import only capped common resources and prefixed testimony flags, and retain each commander's original progression, spellbook, artifacts, and army;
+- all twelve site states, the emblem, and six seals resolve as original alpha-safe runtime identities with accessible descriptions, exact provenance, and no generated source art in release packages;
+- one consolidated six-chapter gameplay/progression/guard/site/visual/save smoke passes after the full batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit, hero, town, spell, artifact, encounter definition, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, faction story, emblem, seal, landmark, name, text, or protected visual expression.
 
 ## Progress Reconciliation
 

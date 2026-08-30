@@ -1,0 +1,58 @@
+{
+  "schema_id": "mireglass_counterpoint_resource_site_art_v1",
+  "content_batch_id": "content-mireglass-counterpoint-campaign-10184",
+  "generation_mode": "built_in_image_gen",
+  "derivation": "Each transparent generated master is trimmed and reduced to a 48x48 base cell. The adjacent persistent-control cell preserves that silhouette and adds one small two-tone diamond counterseal. The twelve cells are packed in chapter order into one 576x48 indexed-color atlas.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/mireglass_counterpoint_state_atlas.png",
+  "runtime_atlas_sha256": "55625786f1bcf85c424e96ce03aa233b39e9a7c20222f1e2c5245fb74b1ebb6a",
+  "assets": [
+    {
+      "resource_site_id": "site_siltglass_index",
+      "source_path": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/siltglass_index_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2f36fef2-eee3-4f5a-ba5c-ad0a58bef49b.png",
+      "source_sha256": "7cf868f5ce51c48e6b9411edb3b8e50c1df042585ec14f2be342942c53a3ece3",
+      "prompt_summary": "Two smoky mudglass tablets bound by hooked marsh reeds around a brass tally pointer.",
+      "atlas_regions": {"unclaimed": [0, 0, 48, 48], "countersealed": [48, 0, 48, 48]}
+    },
+    {
+      "resource_site_id": "site_greenline_lens_table",
+      "source_path": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/greenline_lens_table_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-cc404c0c-9342-4500-a3a6-e25377a1d560.png",
+      "source_sha256": "69b542f31158a59f49af64492606eb0b5fe3e6ee0185167c8fa29740fca88e3d",
+      "prompt_summary": "A horizontal pale crystal survey lens over a low rooted brass meridian table.",
+      "atlas_regions": {"unclaimed": [96, 0, 48, 48], "countersealed": [144, 0, 48, 48]}
+    },
+    {
+      "resource_site_id": "site_reedflame_votive_frame",
+      "source_path": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/reedflame_votive_frame_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c649c160-28b9-4194-977d-9bc2d7e4b9bd.png",
+      "source_sha256": "f10cf99fe0ad59b9fb053f278c58f72b44fef322ab31ce5f3336d866f96b9687",
+      "prompt_summary": "A woven reed wheel and timber fork holding one amber votive flame and three pale jaw charms.",
+      "atlas_regions": {"unclaimed": [192, 0, 48, 48], "countersealed": [240, 0, 48, 48]}
+    },
+    {
+      "resource_site_id": "site_ossuary_prism_choir",
+      "source_path": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/ossuary_prism_choir_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4a3f9656-43d4-4b25-b903-408de976d953.png",
+      "source_sha256": "8b59c89a5af50c0335f7c55c12a9a496ee5d6ca1f578f96a38a3f278c1d47b52",
+      "prompt_summary": "Three pale mineral arches suspending a dusk-blue prism above a black mirrored resonance basin.",
+      "atlas_regions": {"unclaimed": [288, 0, 48, 48], "countersealed": [336, 0, 48, 48]}
+    },
+    {
+      "resource_site_id": "site_glowcap_echo_bell",
+      "source_path": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/glowcap_echo_bell_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-548b84a9-a13f-463e-9c5b-7c5328105b5c.png",
+      "source_sha256": "1b6a9702ec699c8c7fe86d82f8bdb3e1abc429eb3839451d2dc864ca3ca0859a",
+      "prompt_summary": "A luminous mushroom bell over a peat-dark resonance bowl between curled reedwood legs.",
+      "atlas_regions": {"unclaimed": [384, 0, 48, 48], "countersealed": [432, 0, 48, 48]}
+    },
+    {
+      "resource_site_id": "site_kite_signal_countermast",
+      "source_path": "res://art/overworld/source/generated/resource_sites/mireglass_counterpoint_wave1/kite_signal_countermast_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a722135e-f187-413a-b4fa-f464cd5299e6.png",
+      "source_sha256": "fa6fc0db43d2b7318f7af9306cc7bc1d381c2b3712fd3a91bd1e75efc930c458",
+      "prompt_summary": "A forked brass mast balancing a clear diamond kite vane, pale counter-vane, and two weights.",
+      "atlas_regions": {"unclaimed": [480, 0, 48, 48], "countersealed": [528, 0, 48, 48]}
+    }
+  ]
+}
