@@ -1099,6 +1099,7 @@ static func _collect_resource_node_result(
 		previous_controller,
 		"player"
 	)
+	var service_effects := _apply_repeatable_service_effects(session, node, site)
 	_rules_profile_add_ms("resource_disruption_ms", disruption_started_usec)
 	var messages := [_resource_site_claim_message(site, previous_controller)]
 	var cost_summary := _describe_resource_delta(visit_cost)
@@ -1125,6 +1126,8 @@ static func _collect_resource_node_result(
 		messages.append("Surveyed %d new map tile%s." % [site_reveal_tiles, "" if site_reveal_tiles == 1 else "s"])
 	if disruption_message != "":
 		messages.append(disruption_message)
+	for service_message in service_effects.get("messages", []):
+		messages.append(String(service_message))
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
 	var artifact_reward := _grant_resource_site_artifact_reward(session, node, site)
 	if bool(artifact_reward.get("applied", false)):
@@ -1145,6 +1148,8 @@ static func _collect_resource_node_result(
 		mutation_facts["flags"] = Array(claim_flags.keys(), TYPE_STRING, "", null)
 	if route_opened:
 		mutation_facts["route_opened"] = true
+	if not service_effects.is_empty():
+		mutation_facts["service_effects"] = service_effects.duplicate(true)
 	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, mutation_facts)
 	if site_vision_radius > 0:
 		result["site_vision_radius"] = site_vision_radius
@@ -1153,6 +1158,8 @@ static func _collect_resource_node_result(
 		result["site_claim_flags"] = claim_flags.duplicate(true)
 	if route_opened:
 		result["route_opened"] = true
+	if not service_effects.is_empty():
+		result["service_effects"] = service_effects.duplicate(true)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
 	result["interaction_result"] = _interactable_result_payload("resource_site", node, mutation_facts, topology_facts)
@@ -1173,6 +1180,76 @@ static func _collect_resource_node_result(
 	)
 	_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 	return recapped
+
+static func _apply_repeatable_service_effects(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	if session == null or not _resource_site_is_repeatable(site):
+		return {}
+	var authored = site.get("service_effects", {})
+	if not (authored is Dictionary) or authored.is_empty():
+		return {}
+	var result := {
+		"movement_restored": 0,
+		"town_recovery_relieved": 0,
+		"town_placement_id": "",
+		"enemy_pressure_relieved": 0,
+		"enemy_faction_id": "",
+		"messages": [],
+	}
+	var movement_restore: int = maxi(0, int(authored.get("movement_restore", 0)))
+	if movement_restore > 0:
+		var movement = session.overworld.get("movement", {})
+		if not (movement is Dictionary):
+			movement = {}
+		var hero := HeroCommandRulesScript.active_hero(session)
+		var movement_max: int = maxi(0, int(movement.get("max", _movement_max_from_hero(hero, session))))
+		var movement_before := clampi(int(movement.get("current", 0)), 0, movement_max)
+		var movement_after := mini(movement_max, movement_before + movement_restore)
+		movement["current"] = movement_after
+		movement["max"] = movement_max
+		session.overworld["movement"] = movement
+		HeroCommandRulesScript.commit_active_hero(session)
+		result["movement_restored"] = movement_after - movement_before
+		if movement_after > movement_before:
+			result["messages"].append("Fresh field support restores %d movement." % (movement_after - movement_before))
+	var recovery_relief: int = maxi(0, int(authored.get("nearest_player_town_recovery_relief", 0)))
+	if recovery_relief > 0:
+		var nearest := _nearest_town_for_controller(session, "player", int(node.get("x", 0)), int(node.get("y", 0)))
+		var town = nearest.get("town", {})
+		if town is Dictionary and not town.is_empty():
+			var placement_id := String(town.get("placement_id", ""))
+			var pressure_before := int(town_recovery_state(session, town).get("pressure", 0))
+			var recovery_message := relieve_town_recovery_pressure(session, placement_id, recovery_relief, String(site.get("name", "field service")))
+			result["town_placement_id"] = placement_id
+			result["town_recovery_relieved"] = mini(pressure_before, recovery_relief)
+			if recovery_message != "":
+				result["messages"].append(recovery_message)
+	var pressure_relief: int = maxi(0, int(authored.get("enemy_pressure_relief", 0)))
+	if pressure_relief > 0:
+		var best_index := -1
+		var best_pressure := 0
+		var states = session.overworld.get("enemy_states", [])
+		if states is Array:
+			for index in range(states.size()):
+				var state = states[index]
+				if state is Dictionary and int(state.get("pressure", 0)) > best_pressure:
+					best_index = index
+					best_pressure = int(state.get("pressure", 0))
+		if best_index >= 0:
+			var state = states[best_index]
+			var relieved := mini(best_pressure, pressure_relief)
+			state["pressure"] = best_pressure - relieved
+			states[best_index] = state
+			session.overworld["enemy_states"] = states
+			result["enemy_pressure_relieved"] = relieved
+			result["enemy_faction_id"] = String(state.get("faction_id", ""))
+			var faction_id := String(state.get("faction_id", ""))
+			var faction_label := String(ContentService.get_faction(faction_id).get("name", faction_id))
+			result["messages"].append("Reviewed obligations reduce %s pressure by %d." % [faction_label, relieved])
+	return result
 
 static func _open_resource_site_route_body(node: Dictionary, site: Dictionary) -> bool:
 	if not bool(site.get("opens_route_on_claim", false)):

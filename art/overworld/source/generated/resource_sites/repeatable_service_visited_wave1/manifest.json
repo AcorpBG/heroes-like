@@ -1,0 +1,16 @@
+{
+  "source_model": "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas",
+  "purpose": "Original visited and weekly-cooldown states for six repeatable field services.",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png",
+  "atlas_size": [288, 48],
+  "slot_size": [48, 48],
+  "ordered_sites": [
+    "site_wayfarer_menders_tent",
+    "site_courier_change_post",
+    "site_contract_scribe_booth",
+    "site_reedboat_supply_stand",
+    "site_ash_cooler_kitchen",
+    "site_lens_calibration_cart"
+  ],
+  "prompt_set": "Precise edits preserve each ready-state object's isometric identity, silhouette, palette, and transparent framing while changing props and lighting to communicate a recently used service awaiting weekly refresh; no people or text were added."
+}

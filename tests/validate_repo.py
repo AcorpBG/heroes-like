@@ -5806,6 +5806,7 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
         "shape_contract_ready_count": 0,
         "linked_resource_site_count": 0,
         "metadata_only_boundary_count": 0,
+        "live_repeatable_service_count": 0,
         "route_lock_metadata_count": 0,
         "no_live_reward_activation_count": 0,
         "errors": [],
@@ -5946,15 +5947,27 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             add_error(f"{object_id}: Batch 003 objects must author editor_placement")
         if str(interaction.get("cadence", "")) not in {"one_time", "repeatable_daily", "repeatable_weekly", "cooldown_days", "persistent_control", "conditional", "scenario_scripted"}:
             add_error(f"{object_id}: Batch 003 interaction cadence is missing or unsupported")
+        live_repeatable_service = role == "repeatable_service" and all(
+            str(owner.get("runtime_boundary", {}).get("status", "")) == "repeatable_service_live"
+            and owner.get("runtime_boundary", {}).get("live_reward_grants") is True
+            and owner.get("runtime_boundary", {}).get("save_payload_required") is True
+            and owner.get("runtime_boundary", {}).get("renderer_sprite_required") is True
+            and owner.get("runtime_boundary", {}).get("pathing_runtime_adopted") is True
+            and owner.get("runtime_boundary", {}).get("scenario_placement_migration") is True
+            and owner.get("runtime_boundary", {}).get("rare_resource_activation") is False
+            for owner in (obj, site)
+        )
         if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
             section["metadata_only_boundary_count"] += 1
+        elif live_repeatable_service:
+            section["live_repeatable_service_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 003 object and site must keep explicit metadata-only runtime boundaries")
+            add_error(f"{object_id}: Batch 003 object and site must keep an explicit metadata-only or adopted repeatable-service runtime boundary")
 
         live_ids = live_resource_ids(site)
         if live_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 003 must not activate rare resources in live site fields")
-        if any(field in site for field in ("rewards", "claim_rewards", "control_income", "resource_outputs")):
+        if any(field in site for field in ("rewards", "claim_rewards", "control_income", "resource_outputs")) and not live_repeatable_service:
             add_error(f"{object_id}: Batch 003 service/shrine/sign/event sites must not add live reward or income fields")
         else:
             section["no_live_reward_activation_count"] += 1
@@ -6001,8 +6014,8 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             add_error("Batch 003 objects must all link resource-site records")
         if section["shape_contract_ready_count"] != len(batch_objects):
             add_error("Batch 003 objects must all pass footprint/body/approach contract checks")
-        if section["metadata_only_boundary_count"] != len(batch_objects):
-            add_error("Batch 003 objects and sites must all remain metadata-only runtime contracts")
+        if section["metadata_only_boundary_count"] != len(batch_objects) - expected_role_counts["repeatable_service"] or section["live_repeatable_service_count"] != expected_role_counts["repeatable_service"]:
+            add_error("Batch 003 must retain 22 metadata-only contracts and exactly six adopted repeatable-service contracts")
         if section["no_live_reward_activation_count"] != len(batch_objects):
             add_error("Batch 003 must not add live reward, income, or production fields")
         if section["route_lock_metadata_count"] != expected_role_counts["route_lock"]:
@@ -43182,6 +43195,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (336, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas":
                 expected_canvas = (384, 48)
+            elif source_model == "built_in_image_gen_precise_object_edit_repeatable_service_visited_atlas":
+                expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_standalone_contract_landmark_atlas":
@@ -50741,6 +50756,68 @@ def validate_seven_minor_guarded_caches(errors: list[str]) -> None:
         ensure('REQUIRED_MINOR_GUARDED_CACHE_OPENED_ATLAS_NAME = "minor_guarded_cache_opened_atlas"' in packaging_text and 'minor_guarded_cache_opened_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the minor guarded-cache opened atlas")
 
 
+def validate_six_repeatable_field_services(errors: list[str]) -> None:
+    expected = {
+        "site_wayfarer_menders_tent": ("object_wayfarer_menders_tent", "ninefold_wayfarer_menders_tent", (24,4), {"gold":120}, {"experience":80}, {"nearest_player_town_recovery_relief":2}, "resource_site_repeatable_service_wayfarer_menders_tent_visited", [0,0,48,48]),
+        "site_courier_change_post": ("object_courier_change_post", "ninefold_courier_change_post", (35,2), {"gold":100}, {"experience":40}, {"movement_restore":260}, "resource_site_repeatable_service_courier_change_post_visited", [48,0,48,48]),
+        "site_contract_scribe_booth": ("object_contract_scribe_booth", "ninefold_contract_scribe_booth", (58,4), {"gold":80}, {"experience":60}, {"enemy_pressure_relief":1}, "resource_site_repeatable_service_contract_scribe_booth_visited", [96,0,48,48]),
+        "site_reedboat_supply_stand": ("object_reedboat_supply_stand", "ninefold_reedboat_supply_stand", (39,5), {"gold":110,"wood":1}, {"wood":2}, {"movement_restore":160}, "resource_site_repeatable_service_reedboat_supply_stand_visited", [144,0,48,48]),
+        "site_ash_cooler_kitchen": ("object_ash_cooler_kitchen", "ninefold_ash_cooler_kitchen", (45,4), {"gold":100,"ore":1}, {"experience":65}, {"movement_restore":100,"nearest_player_town_recovery_relief":1}, "resource_site_repeatable_service_ash_cooler_kitchen_visited", [192,0,48,48]),
+        "site_lens_calibration_cart": ("object_lens_calibration_cart", "ninefold_lens_calibration_cart", (4,9), {"gold":130}, {"experience":50}, {}, "resource_site_repeatable_service_lens_calibration_cart_visited", [240,0,48,48]),
+    }
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "repeatable_service_visited_atlas.png"
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "repeatable_service_visited_wave1"
+    report_script = ROOT / "tests" / "six_repeatable_field_services_report.gd"
+    report_scene = ROOT / "tests" / "six_repeatable_field_services_report.tscn"
+    for path in (atlas_path, source_dir / "manifest.json", report_script, report_scene):
+        ensure(path.is_file(), errors, f"Missing repeatable-service owner: {path.relative_to(ROOT)}")
+    if not atlas_path.is_file():
+        return
+    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == "3d1bcea2fd80284b09778e4c9be61a754ca2d3c988d8ea290fea31a7011f5341", errors, "Repeatable-service visited atlas bytes or dimensions changed")
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    scenario = items_index(load_json(CONTENT_DIR / "scenarios.json")).get("ninefold-confluence", {})
+    art = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    assets = art.get("object_assets", {})
+    mappings = art.get("resource_site_sprites", {})
+    ensure(len(scenario.get("resource_nodes", [])) == 86 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold must expose the 86-site service board without encounter inflation")
+    source_payloads = []
+    for site_id, (object_id, placement_id, xy, cost, rewards, effects, visited_id, region) in expected.items():
+        site = sites.get(site_id, {})
+        obj = objects.get(object_id, {})
+        for owner in (site, obj):
+            boundary = owner.get("runtime_boundary", {})
+            contract = owner.get("service_contract", {})
+            ensure(boundary.get("status") == "repeatable_service_live" and boundary.get("live_reward_grants") is True and boundary.get("save_payload_required") is True and boundary.get("renderer_sprite_required") is True and boundary.get("pathing_runtime_adopted") is True and boundary.get("scenario_placement_migration") is True, errors, f"{site_id} live service boundary changed")
+            ensure(contract.get("service_cost") == cost and contract.get("metadata_only") is False and contract.get("runtime_service_execution_adopted") is True, errors, f"{site_id} runtime service contract changed")
+        ensure(site.get("service_cost") == cost and site.get("claim_rewards") == rewards and site.get("service_effects", {}) == effects and site.get("repeatable") is True and site.get("visit_cooldown_days") == 7, errors, f"{site_id} weekly effect payload changed")
+        node = next((row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id), {})
+        ensure(node == {"placement_id":placement_id,"site_id":site_id,"x":xy[0],"y":xy[1]}, errors, f"{site_id} Ninefold placement changed")
+        mapping = mappings.get(site_id, {})
+        entry = assets.get(visited_id, {})
+        ensure(mapping.get("asset_id") == visited_id and mapping.get("unclaimed_asset_id") == "mapobj_" + site_id.removeprefix("site_"), errors, f"{site_id} ready/visited mapping changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/repeatable_service_visited_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [288,48] and entry.get("presentation_role") == "visited_service_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} visited atlas entry changed")
+        source_path = ROOT / str(entry.get("source_generated", "")).removeprefix("res://")
+        ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated visited source or import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(len(payload) >= 26 and payload[25] == 6, errors, f"{site_id} generated visited source lost alpha")
+            source_payloads.append(payload)
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6, errors, "All six repeatable-service visited sources must remain distinct")
+    rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for token in ('var service_effects := _apply_repeatable_service_effects(session, node, site)', '"movement_restored"', '"town_recovery_relieved"', '"enemy_pressure_relieved"'):
+        ensure(token in rules_text, errors, f"Repeatable-service runtime is missing live behavior: {token}")
+    if report_scene.is_file():
+        ensure_scene_nodes(report_scene.read_text(encoding="utf-8"), errors, "six_repeatable_field_services_report.tscn", [("SixRepeatableFieldServicesReport", "Node")])
+    if report_script.is_file():
+        report_text = report_script.read_text(encoding="utf-8")
+        for token in ('const REPORT_ID := "SIX_REPEATABLE_FIELD_SERVICES_REPORT"', 'OverworldRules._collect_resource_node_result(', 'SessionStateStoreScript.SAVE_VERSION', 'repeatable_service_state_strip.png'):
+            ensure(token in report_text, errors, f"Six-service combined smoke is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_REPEATABLE_SERVICE_VISITED_ATLAS_NAME = "repeatable_service_visited_atlas"' in packaging_text and 'repeatable_service_visited_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the repeatable-service visited atlas")
+
+
 def validate_eight_guarded_route_gates(errors: list[str]) -> None:
     expected = {
         "site_bridge_bastion": ("object_bridge_bastion", "ninefold_bridge_bastion", (18, 61), "ninefold_bridge_bastion_watch", "encounter_roadward_lodge_watch", (20, 61), "high", 26428, "mapobj_bridge_bastion", "resource_site_guarded_route_bridge_bastion_opened", "bridge_bastion_opened", "ccfce539488a679f432683df49379e051ce931aa7a262a0e5bac30d92d2e2d02", [0,0,48,48]),
@@ -50777,7 +50854,7 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
     ensure(source_manifest.get("generation_mode") == "precise-object-edit" and source_manifest.get("source_model") == "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas", errors, "Guarded-route source provenance changed")
     ensure(source_manifest.get("runtime_atlas", {}).get("size") == [384,48] and source_manifest.get("runtime_atlas", {}).get("sha256") == atlas_sha, errors, "Guarded-route source atlas ownership changed")
     ensure(set(source_rows) == set(expected), errors, "Guarded-route source manifest must own exactly eight selected sites")
-    ensure(len(scenario.get("resource_nodes", [])) == 80 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold Confluence must retain the complete 80-site, 23-encounter content board")
+    ensure(len(scenario.get("resource_nodes", [])) == 86 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold Confluence must retain the complete 86-site, 23-encounter content board")
     source_payloads: list[bytes] = []
     for site_id, (object_id, placement_id, site_xy, guard_id, encounter_id, guard_xy, difficulty, seed, unclaimed_id, claimed_id, stem, source_sha, region) in expected.items():
         site = sites.get(site_id, {})
@@ -51454,7 +51531,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 70 and len(placements) == 862 and len(placed_site_ids) == 155, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 70 and len(placements) == 868 and len(placed_site_ids) == 159, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -51476,8 +51553,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 155, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 134, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(not unresolved and len(resolver_paths) == 159, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 138, errors, "Placed resource-site map-object resolver coverage changed")
     ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 21, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
@@ -76152,6 +76229,7 @@ def main() -> int:
     validate_six_major_vault_unsealing(errors)
     validate_three_creature_bank_forts(errors)
     validate_seven_minor_guarded_caches(errors)
+    validate_six_repeatable_field_services(errors)
     validate_eight_guarded_route_gates(errors)
     validate_eight_neutral_dwelling_musters(errors)
     validate_sixteen_neutral_dwelling_musters(errors)

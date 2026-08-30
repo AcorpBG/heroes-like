@@ -4440,22 +4440,29 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "repeatable_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "service_contract": {
         "service_kind": "recovery_support",
-        "planned_effect": "retinue recovery relief",
-        "planned_service_cost": {
+        "live_effect": "Relieve two recovery pressure at the nearest player town and grant field treatment experience.",
+        "service_cost": {
           "gold": 120
         },
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_service_execution_adopted": true
       },
+      "action_label": "Use Menders Tent",
+      "summary": "Road surgeons dress the company and dispatch supplies to the nearest recovering town.",
+      "service_cost": {"gold": 120},
+      "claim_rewards": {"experience": 80},
+      "service_effects": {"nearest_player_town_recovery_relief": 2},
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4466,22 +4473,29 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "repeatable_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "service_contract": {
         "service_kind": "movement_readiness",
-        "planned_effect": "fresh mounts and route notes",
-        "planned_service_cost": {
+        "live_effect": "Restore 260 overworld movement with fresh mounts and route notes.",
+        "service_cost": {
           "gold": 100
         },
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_service_execution_adopted": true
       },
+      "action_label": "Change Mounts",
+      "summary": "Couriers exchange tack, mounts, and road notes for a renewed march.",
+      "service_cost": {"gold": 100},
+      "claim_rewards": {"experience": 40},
+      "service_effects": {"movement_restore": 260},
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4492,22 +4506,29 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "repeatable_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "service_contract": {
         "service_kind": "contract_review",
-        "planned_effect": "route obligation reminder",
-        "planned_service_cost": {
+        "live_effect": "Reduce the strongest hostile faction pressure by one through contract review.",
+        "service_cost": {
           "gold": 80
         },
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_service_execution_adopted": true
       },
+      "action_label": "Review Contracts",
+      "summary": "A frontier scribe closes loopholes and eases the most urgent hostile obligation.",
+      "service_cost": {"gold": 80},
+      "claim_rewards": {"experience": 60},
+      "service_effects": {"enemy_pressure_relief": 1},
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4518,23 +4539,31 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "repeatable_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "service_contract": {
         "service_kind": "marsh_resupply",
-        "planned_effect": "safe reed-channel supplies",
-        "planned_service_cost": {
+        "live_effect": "Restore 160 movement, survey nearby channels, and exchange one wood for two prepared lengths.",
+        "service_cost": {
           "gold": 110,
           "wood": 1
         },
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_service_execution_adopted": true
       },
+      "action_label": "Take Reedboat Supplies",
+      "summary": "Reed pilots issue channel gear, sound the nearby water, and lash prepared wood aboard.",
+      "service_cost": {"gold": 110, "wood": 1},
+      "claim_rewards": {"wood": 2},
+      "service_effects": {"movement_restore": 160},
+      "vision_radius": 2,
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4545,23 +4574,30 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "repeatable_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "service_contract": {
         "service_kind": "heat_recovery",
-        "planned_effect": "heat-route readiness relief",
-        "planned_service_cost": {
+        "live_effect": "Restore 100 movement, relieve one recovery pressure at the nearest player town, and grant camp experience.",
+        "service_cost": {
           "gold": 100,
           "ore": 1
         },
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_service_execution_adopted": true
       },
+      "action_label": "Rest at Ash Cooler",
+      "summary": "A cooled field meal steadies the march while relief stores travel to the nearest town.",
+      "service_cost": {"gold": 100, "ore": 1},
+      "claim_rewards": {"experience": 65},
+      "service_effects": {"movement_restore": 100, "nearest_player_town_recovery_relief": 1},
       "repeatable": true,
       "visit_cooldown_days": 7
     },
@@ -4572,22 +4608,29 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "repeatable_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "service_contract": {
         "service_kind": "survey_alignment",
-        "planned_effect": "temporary scouting clarity contract",
-        "planned_service_cost": {
+        "live_effect": "Reveal a five-tile survey radius and grant calibration experience.",
+        "service_cost": {
           "gold": 130
         },
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_service_execution_adopted": true
       },
+      "action_label": "Calibrate Survey Lens",
+      "summary": "Surveyors align the field prism and chart a broad ring beyond the road.",
+      "service_cost": {"gold": 130},
+      "claim_rewards": {"experience": 50},
+      "vision_radius": 5,
       "repeatable": true,
       "visit_cooldown_days": 7
     },
