@@ -1746,6 +1746,60 @@
         {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 8},
         {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 4}
       ]
+    },
+    {
+      "id": "army_neutral_ashcrown_cinderfold_watch",
+      "name": "Ashcrown Cinderfold Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_ashcrown_kilnelk", "count": 2},
+        {"unit_id": "unit_neutral_cinderpot_hurlers", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_miremoon_crownmere_watch",
+      "name": "Miremoon Crownmere Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_miremoon_crownmaws", "count": 2},
+        {"unit_id": "unit_neutral_peatflare_jarriers", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_noonshard_prism_aviary_watch",
+      "name": "Noonshard Prism Aviary Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_noonshard_prism_kites", "count": 2},
+        {"unit_id": "unit_neutral_snowglass_markers", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_rootvault_heartwood_watch",
+      "name": "Rootvault Heartwood Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_rootvault_barkhulks", "count": 1},
+        {"unit_id": "unit_neutral_thornbow_scouts", "count": 7}
+      ]
+    },
+    {
+      "id": "army_neutral_quenchbell_pressure_den_watch",
+      "name": "Quenchbell Pressure Den Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_quenchbell_ironbacks", "count": 1},
+        {"unit_id": "unit_neutral_tunnelmark_bolters", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_saltwake_belldeep_watch",
+      "name": "Saltwake Belldeep Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_saltwake_bellwhales", "count": 1},
+        {"unit_id": "unit_neutral_lanternskate_throwers", "count": 7}
+      ]
     }
   ]
 }

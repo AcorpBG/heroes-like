@@ -724,6 +724,78 @@
       "army_group_ids": ["army_neutral_deepforge_seventh_seal_watch"],
       "encounter_ids": ["encounter_deepforge_seventh_seal_watch"],
       "content_status": "elder_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_ashcrown_cinderfold",
+      "name": "Ashcrown Cinderfold",
+      "summary": "Free clinker-tenders provision swift kilnelk for commanders who break the heated crown ring and keep its ash troughs supplied.",
+      "biome_ids": ["biome_ash_lava_wastes", "biome_grasslands"],
+      "unit_ids": ["unit_neutral_ashcrown_kilnelk", "unit_neutral_cinderpot_hurlers"],
+      "site_ids": ["site_ashcrown_cinderfold"],
+      "map_object_ids": ["object_ashcrown_cinderfold"],
+      "army_group_ids": ["army_neutral_ashcrown_cinderfold_watch"],
+      "encounter_ids": ["encounter_ashcrown_cinderfold_watch"],
+      "content_status": "sovereign_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_miremoon_crownmere",
+      "name": "Miremoon Crownmere",
+      "summary": "Moon-peat keepers open the crownmere to rulers who still its rooted watch and maintain the submerged feeding posts.",
+      "biome_ids": ["biome_mire_fen", "biome_grasslands"],
+      "unit_ids": ["unit_neutral_miremoon_crownmaws", "unit_neutral_peatflare_jarriers"],
+      "site_ids": ["site_miremoon_crownmere"],
+      "map_object_ids": ["object_miremoon_crownmere"],
+      "army_group_ids": ["army_neutral_miremoon_crownmere_watch"],
+      "encounter_ids": ["encounter_miremoon_crownmere_watch"],
+      "content_status": "sovereign_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_noonshard_prism_aviary",
+      "name": "Noonshard Prism Aviary",
+      "summary": "Whiteglass markers guide prism kites to commanders who take the focused lane and keep the icebound sight vanes aligned.",
+      "biome_ids": ["biome_snow_frost_marches", "biome_highland_ridge"],
+      "unit_ids": ["unit_neutral_noonshard_prism_kites", "unit_neutral_snowglass_markers"],
+      "site_ids": ["site_noonshard_prism_aviary"],
+      "map_object_ids": ["object_noonshard_prism_aviary"],
+      "army_group_ids": ["army_neutral_noonshard_prism_aviary_watch"],
+      "encounter_ids": ["encounter_noonshard_prism_aviary_watch"],
+      "content_status": "sovereign_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_rootvault_heartwood_hollow",
+      "name": "Rootvault Heartwood Hollow",
+      "summary": "Hollow-witnesses release ancient barkhulks only after the living witness line is broken and its deep grain stores renewed.",
+      "biome_ids": ["biome_deep_forest", "biome_grasslands"],
+      "unit_ids": ["unit_neutral_rootvault_barkhulks", "unit_neutral_thornbow_scouts"],
+      "site_ids": ["site_rootvault_heartwood_hollow"],
+      "map_object_ids": ["object_rootvault_heartwood_hollow"],
+      "army_group_ids": ["army_neutral_rootvault_heartwood_watch"],
+      "encounter_ids": ["encounter_rootvault_heartwood_watch"],
+      "content_status": "sovereign_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_quenchbell_pressure_den",
+      "name": "Quenchbell Pressure Den",
+      "summary": "Independent gauge-tenders stable ironbacks for commanders who seize the red-mark gate and keep its coolant troughs balanced.",
+      "biome_ids": ["biome_ash_lava_wastes", "biome_subterranean_underways"],
+      "unit_ids": ["unit_neutral_quenchbell_ironbacks", "unit_neutral_tunnelmark_bolters"],
+      "site_ids": ["site_quenchbell_pressure_den"],
+      "map_object_ids": ["object_quenchbell_pressure_den"],
+      "army_group_ids": ["army_neutral_quenchbell_pressure_den_watch"],
+      "encounter_ids": ["encounter_quenchbell_pressure_den_watch"],
+      "content_status": "sovereign_wild_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_saltwake_belldeep",
+      "name": "Saltwake Belldeep",
+      "summary": "Deep-sounders call bellwhales to commanders who claim the submerged chime chain and maintain its pale feeding quay.",
+      "biome_ids": ["biome_coast_archipelago", "biome_snow_frost_marches"],
+      "unit_ids": ["unit_neutral_saltwake_bellwhales", "unit_neutral_lanternskate_throwers"],
+      "site_ids": ["site_saltwake_belldeep"],
+      "map_object_ids": ["object_saltwake_belldeep"],
+      "army_group_ids": ["army_neutral_saltwake_belldeep_watch"],
+      "encounter_ids": ["encounter_saltwake_belldeep_watch"],
+      "content_status": "sovereign_wild_neutral_dwelling_live"
     }
   ]
 }

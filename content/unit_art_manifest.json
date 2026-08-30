@@ -2620,6 +2620,126 @@
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_gloamkeel_bulwarks.png",
       "curated_source_sha256": "28200cc4bc83bbaec5230cd8554fa5f94129f7d4f3cb1b07ce574ce6f1f8a6ea"
+    },
+    {
+      "id": "unit_neutral_ashcrown_kilnelk",
+      "unit_id": "unit_neutral_ashcrown_kilnelk",
+      "name": "Ashcrown Kilnelk",
+      "faction_id": "neutral",
+      "tier": 6,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_ashcrown_kilnelk.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_ashcrown_kilnelk.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_ashcrown_kilnelk.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_ashcrown_kilnelk.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_ashcrown_kilnelk.png",
+      "curated_source_sha256": "dcecf2fb244a0c83093bf013ed6b25d7242a10fe56542107daa290827d327d9a"
+    },
+    {
+      "id": "unit_neutral_miremoon_crownmaws",
+      "unit_id": "unit_neutral_miremoon_crownmaws",
+      "name": "Miremoon Crownmaws",
+      "faction_id": "neutral",
+      "tier": 6,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_miremoon_crownmaws.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_miremoon_crownmaws.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_miremoon_crownmaws.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_miremoon_crownmaws.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_miremoon_crownmaws.png",
+      "curated_source_sha256": "849a56acc13a425fe83245da9a8b10a3f8c3bfb7ee3d00e855ff091fda3bc9ab"
+    },
+    {
+      "id": "unit_neutral_noonshard_prism_kites",
+      "unit_id": "unit_neutral_noonshard_prism_kites",
+      "name": "Noonshard Prism Kites",
+      "faction_id": "neutral",
+      "tier": 6,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_neutral_noonshard_prism_kites.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_noonshard_prism_kites.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_noonshard_prism_kites.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_noonshard_prism_kites.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_noonshard_prism_kites.png",
+      "curated_source_sha256": "d81eef59889e0b304c0413e15a2bb678ac50fd922c6c0529d1cb6c20d6feec39"
+    },
+    {
+      "id": "unit_neutral_rootvault_barkhulks",
+      "unit_id": "unit_neutral_rootvault_barkhulks",
+      "name": "Rootvault Barkhulks",
+      "faction_id": "neutral",
+      "tier": 7,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_rootvault_barkhulks.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_rootvault_barkhulks.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_rootvault_barkhulks.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_rootvault_barkhulks.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_rootvault_barkhulks.png",
+      "curated_source_sha256": "be80278f987ac873272bced9de40cec12423516c63b7c5eb4e125593740b7167"
+    },
+    {
+      "id": "unit_neutral_quenchbell_ironbacks",
+      "unit_id": "unit_neutral_quenchbell_ironbacks",
+      "name": "Quenchbell Ironbacks",
+      "faction_id": "neutral",
+      "tier": 7,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_quenchbell_ironbacks.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_quenchbell_ironbacks.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_quenchbell_ironbacks.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_quenchbell_ironbacks.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
+      "curated_source_sha256": "1f3e29b5de84bb6057c68d87756abe80a945f466fe79a8a61ca93e860c751b27"
+    },
+    {
+      "id": "unit_neutral_saltwake_bellwhales",
+      "unit_id": "unit_neutral_saltwake_bellwhales",
+      "name": "Saltwake Bellwhales",
+      "faction_id": "neutral",
+      "tier": 7,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_neutral_saltwake_bellwhales.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_saltwake_bellwhales.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_saltwake_bellwhales.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_saltwake_bellwhales.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_saltwake_bellwhales.png",
+      "curated_source_sha256": "43b41662c2ac7b27c4fe4d095449da4da7754203dbac39642384023286a60725"
     }
   ]
 }

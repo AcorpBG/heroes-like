@@ -2922,6 +2922,84 @@
       "enemy_commander": {"name": "Keel-Warden Mora Palechain", "command": {"attack": 1, "defense": 3, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_fogwake_step"], "battle_traits": ["linekeeper", "bogwise"]},
       "field_objectives": [{"id": "gloamkeel_sounding_line", "type": "obstruction_line", "label": "Gloamkeel Sounding Line", "summary": "A planted keel shield and pale bell hold the fogbound boarding line until the ghost-rope posts are broken.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["cohesion", "commander", "urgency"]}],
       "rewards": {"gold": 350, "memory_salt": 1, "experience": 260}, "victory_flags": ["gloamkeel_sounding_barricade_cleared"]
+    },
+    {
+      "id": "encounter_ashcrown_cinderfold_watch",
+      "name": "Ashcrown Cinderfold Watch",
+      "enemy_group_id": "army_neutral_ashcrown_cinderfold_watch",
+      "affiliation": "neutral",
+      "terrain": "lava",
+      "battlefield_tags": ["open_lane", "wall_pressure"],
+      "max_rounds": 15,
+      "enemy_commander": {"name": "Clinker-Tender Ressa Emberrack", "command": {"attack": 3, "defense": 2, "power": 1, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["vanguard", "ambusher"]},
+      "field_objectives": [{"id": "ashcrown_cinderfold_ring", "type": "breach_point", "label": "Cinderfold Crown Ring", "summary": "The kilnelk herd keeps its ceramic antlers inside the heated fold until the clinker ring is forced open.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["momentum", "initiative", "urgency"]}],
+      "rewards": {"gold": 720, "embergrain": 2, "experience": 540},
+      "victory_flags": ["sovereign_wild_ashcrown_broken"]
+    },
+    {
+      "id": "encounter_miremoon_crownmere_watch",
+      "name": "Miremoon Crownmere Watch",
+      "enemy_group_id": "army_neutral_miremoon_crownmere_watch",
+      "affiliation": "neutral",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "chokepoint"],
+      "max_rounds": 15,
+      "enemy_commander": {"name": "Mere-Keeper Olla Reedcrown", "command": {"attack": 2, "defense": 3, "power": 1, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["bogwise", "linekeeper"]},
+      "field_objectives": [{"id": "miremoon_crownmere_pool", "type": "hazard_zone", "label": "Moon-Peat Crownmere", "summary": "The crownmaws hold four submerged root posts around the moonlit mere until its safe footing is claimed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 740, "peatwax": 2, "experience": 560},
+      "victory_flags": ["sovereign_wild_miremoon_broken"]
+    },
+    {
+      "id": "encounter_noonshard_prism_aviary_watch",
+      "name": "Noonshard Prism Aviary Watch",
+      "enemy_group_id": "army_neutral_noonshard_prism_aviary_watch",
+      "affiliation": "neutral",
+      "terrain": "snow",
+      "battlefield_tags": ["elevated_fire", "open_lane"],
+      "max_rounds": 15,
+      "enemy_commander": {"name": "Noon-Marker Pela Whiteglass", "command": {"attack": 3, "defense": 1, "power": 2, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["artillerist", "ambusher"]},
+      "field_objectives": [{"id": "noonshard_aviary_focus", "type": "lane_battery", "label": "Prism-Fan Focus", "summary": "Three icebound sight vanes focus the flock's noon rays until the center firing lane is seized.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 760, "aetherglass": 2, "experience": 570},
+      "victory_flags": ["sovereign_wild_noonshard_broken"]
+    },
+    {
+      "id": "encounter_rootvault_heartwood_watch",
+      "name": "Rootvault Heartwood Watch",
+      "enemy_group_id": "army_neutral_rootvault_heartwood_watch",
+      "affiliation": "neutral",
+      "terrain": "forest",
+      "battlefield_tags": ["fortified_line", "chokepoint"],
+      "max_rounds": 16,
+      "enemy_commander": {"name": "Hollow-Witness Dena Deepgrain", "command": {"attack": 2, "defense": 4, "power": 1, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "rootvault_heartwood_line", "type": "obstruction_line", "label": "Heartwood Witness Line", "summary": "Concentric living arches keep the old rootvault sealed until the witness line is broken from both sides.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 1020, "verdant_grafts": 2, "experience": 720},
+      "victory_flags": ["sovereign_wild_rootvault_broken"]
+    },
+    {
+      "id": "encounter_quenchbell_pressure_den_watch",
+      "name": "Quenchbell Pressure Den Watch",
+      "enemy_group_id": "army_neutral_quenchbell_pressure_den_watch",
+      "affiliation": "neutral",
+      "terrain": "lava",
+      "battlefield_tags": ["fortress_lane", "wall_pressure"],
+      "max_rounds": 16,
+      "enemy_commander": {"name": "Red-Gauge Tender Varo Chainmark", "command": {"attack": 4, "defense": 3, "power": 0, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["vanguard", "linekeeper"]},
+      "field_objectives": [{"id": "quenchbell_pressure_gate", "type": "ritual_pylon", "label": "Red-Gauge Pressure Gate", "summary": "The ironbacks' bellhorns remain pressure-locked while three red gauges hold the den's central gate.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["momentum", "cohesion", "urgency"]}],
+      "rewards": {"gold": 1060, "brass_scrip": 2, "experience": 740},
+      "victory_flags": ["sovereign_wild_quenchbell_broken"]
+    },
+    {
+      "id": "encounter_saltwake_belldeep_watch",
+      "name": "Saltwake Belldeep Watch",
+      "enemy_group_id": "army_neutral_saltwake_belldeep_watch",
+      "affiliation": "neutral",
+      "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "open_lane"],
+      "max_rounds": 16,
+      "enemy_commander": {"name": "Deep-Sounder Mora Palewake", "command": {"attack": 3, "defense": 2, "power": 2, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["ambusher", "artillerist"]},
+      "field_objectives": [{"id": "saltwake_belldeep_sounding", "type": "signal_beacon", "label": "Belldeep Sounding Chain", "summary": "Six submerged chimes keep the bellwhales inside a false fog bearing until the sounding chain is claimed.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 1040, "memory_salt": 2, "experience": 730},
+      "victory_flags": ["sovereign_wild_saltwake_broken"]
     }
   ]
 }
