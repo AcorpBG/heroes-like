@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 78,
+  "player_facing_active_scenario_count": 81,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -17523,6 +17523,271 @@
             "sounding_tide_chain_mooring"
           ]
         }
+      ]
+    },
+    {
+      "id": "briarwheel-reclamation",
+      "name": "Briarwheel Reclamation",
+      "selection": {
+        "summary": "Lead Ardren Briar-Marshal from Graftroot Caravan, break Brasshollow's contract chain, rehang the Old Measure Marker, and reclaim Briarwheel Enclave.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Briarwheel March (14x8)",
+        "player_summary": "Ardren begins with his veteran Briar Cordon and a mobile Graftroot economy.",
+        "enemy_summary": "Brasshollow exactors occupy Briarwheel and reinforce through a measured contract road.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 14, "height": 8},
+      "player_faction_id": "faction_thornwake",
+      "player_army_id": "army_ardren_briar_cordon",
+      "hero_id": "hero_thornwake_ardren_briarmarshal",
+      "starting_resources": {"gold": 950, "wood": 4, "ore": 3, "verdant_grafts": 2},
+      "map": [
+        ["forest","grass","grass","forest","rough","grass","grass","forest","grass","rough","grass","forest","grass","forest"],
+        ["grass","grass","forest","grass","grass","rough","grass","grass","forest","grass","grass","rough","grass","grass"],
+        ["forest","grass","grass","grass","forest","grass","rough","grass","grass","forest","grass","grass","rough","forest"],
+        ["grass","grass","rough","grass","grass","grass","grass","forest","grass","grass","rough","grass","grass","grass"],
+        ["forest","grass","grass","forest","grass","rough","grass","grass","grass","forest","grass","grass","forest","grass"],
+        ["grass","rough","grass","grass","forest","grass","grass","rough","grass","grass","forest","grass","grass","forest"],
+        ["forest","grass","forest","grass","grass","grass","rough","grass","forest","grass","grass","rough","grass","grass"],
+        ["grass","grass","rough","forest","grass","grass","forest","grass","grass","rough","grass","forest","grass","forest"]
+      ],
+      "start": {"x": 1, "y": 4},
+      "hero_starts": ["hero_thornwake_ardren_briarmarshal"],
+      "objectives": {
+        "victory_text": "Reclaim Briarwheel, restore the Old Measure, and break both contract fronts.",
+        "defeat_text": "The contract chain closes around Graftroot and partitions Briarwheel's living soil.",
+        "victory": [
+          {"id": "reclaim_briarwheel", "label": "Reclaim Briarwheel Enclave", "type": "town_owned_by_player", "placement_id": "reclamation_briarwheel"},
+          {"id": "rehang_old_measure", "label": "Rehang the Old Measure Marker", "type": "flag_true", "flag": "old_measure_marker_rehung"},
+          {"id": "break_archive_chain", "label": "Break the Archive Chain", "type": "encounter_resolved", "placement_id": "reclamation_archive_chain"},
+          {"id": "break_exactor_screen", "label": "Break the Exactor Screen", "type": "encounter_resolved", "placement_id": "reclamation_exactor_screen"}
+        ],
+        "defeat": [
+          {"id": "hold_graftroot", "label": "Keep Graftroot Caravan", "type": "town_not_owned_by_player", "placement_id": "reclamation_graftroot"},
+          {"id": "ardren_survives_reclamation", "label": "Ardren must survive", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_reclamation_pressure", "label": "Keep Brasshollow pressure below 12", "type": "enemy_pressure_at_least", "faction_id": "faction_brasshollow", "threshold": 12},
+          {"id": "finish_reclamation_in_time", "label": "Reclaim the measure before Day 15", "type": "day_at_least", "day": 15}
+        ]
+      },
+      "script_hooks": [
+        {"id": "reclamation_graft_train", "priority": 120, "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "reclamation_graftroot"}], "effects": [{"type": "add_resources", "resources": {"gold": 260, "wood": 1}}, {"type": "town_add_recruits", "placement_id": "reclamation_graftroot", "recruits": {"unit_thornwake_seedcutters": 4, "unit_thornwake_thornwhip_carriers": 2}}, {"type": "message", "text": "Graftroot rolls a fresh briar file and living roadstock into Ardren's line."}]},
+        {"id": "reclamation_covenant_root", "priority": 110, "conditions": [{"type": "objective_met", "objective_id": "reclaim_briarwheel"}, {"type": "objective_met", "objective_id": "rehang_old_measure"}], "effects": [{"type": "town_add_building", "placement_id": "reclamation_briarwheel", "building_id": "building_wayfarers_hall"}, {"type": "set_flag", "flag": "briarwheel_reclaimed", "value": true}, {"type": "message", "text": "The restored measure takes root beneath Briarwheel's gate."}]},
+        {"id": "reclamation_counter_contract", "priority": 96, "conditions": [{"type": "day_at_least", "day": 5}, {"type": "town_owned_by_player", "placement_id": "reclamation_graftroot"}], "effects": [{"type": "spawn_encounter", "placement": {"placement_id": "reclamation_counter_contract", "encounter_id": "encounter_charter_guard", "x": 13, "y": 7, "difficulty": "scripted", "spawned_by_faction_id": "faction_brasshollow", "days_active": 0, "arrived": false, "goal_distance": 9999}}, {"type": "message", "text": "A fresh charter guard enters from the southern contract road."}]},
+        {"id": "reclamation_unbroken_measure", "priority": 90, "conditions": [{"type": "day_at_least", "day": 6}, {"type": "objective_not_met", "objective_id": "rehang_old_measure"}], "effects": [{"type": "add_enemy_pressure", "faction_id": "faction_brasshollow", "amount": 2}, {"type": "message", "text": "Unmeasured ground lets the exactors tighten every boundary chain."}]},
+        {"id": "reclamation_archive_salvage", "priority": 84, "conditions": [{"type": "encounter_resolved", "placement_id": "reclamation_archive_chain"}], "effects": [{"type": "add_resources", "resources": {"verdant_grafts": 2}}, {"type": "award_experience", "amount": 140}, {"type": "set_flag", "flag": "reclamation_archive_broken", "value": true}, {"type": "message", "text": "Ardren grafts the seized measure rods into Briarwheel's returning road."}]}
+      ],
+      "towns": [
+        {"placement_id": "reclamation_graftroot", "town_id": "town_thornwake_graftroot_caravan", "x": 1, "y": 4, "owner": "player", "recovery": {"pressure": 1, "source": "rolling rootstock"}},
+        {"placement_id": "reclamation_briarwheel", "town_id": "town_briarwheel_enclave", "x": 12, "y": 3, "owner": "enemy"}
+      ],
+      "enemy_factions": [{
+        "faction_id": "faction_brasshollow", "label": "Briarwheel Contract Chain", "pressure_per_day": 2, "pressure_per_enemy_town": 1, "raid_threshold": 6, "max_active_raids": 2, "raid_pillage_delay": 1,
+        "raid_pillage": {"gold": 170, "wood": 1}, "raid_encounter_ids": ["encounter_charter_guard", "encounter_orevein_exactors"],
+        "spawn_points": [{"x": 13, "y": 1}, {"x": 13, "y": 6}], "siege_target_placement_id": "reclamation_graftroot", "siege_active_raid_threshold": 2, "siege_capture_progress": 3,
+        "priority_target_bonus": 110, "priority_target_placement_ids": ["reclamation_graftroot", "reclamation_old_measure", "reclamation_graft_nursery"]
+      }],
+      "resource_nodes": [
+        {"placement_id": "reclamation_wood", "site_id": "site_wood_wagon", "x": 2, "y": 1},
+        {"placement_id": "reclamation_ore", "site_id": "site_ore_crates", "x": 2, "y": 7},
+        {"placement_id": "reclamation_graft_nursery", "site_id": "site_verdant_graft_nursery", "x": 1, "y": 2},
+        {"placement_id": "reclamation_player_exchange", "site_id": "site_frontier_rare_exchange", "x": 2, "y": 4},
+        {"placement_id": "reclamation_old_measure", "site_id": "site_old_measure_marker", "x": 7, "y": 4},
+        {"placement_id": "reclamation_scout", "site_id": "site_scout_shrine", "x": 5, "y": 0},
+        {"placement_id": "reclamation_enemy_wood", "site_id": "site_wood_wagon", "x": 12, "y": 0, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "reclamation_enemy_ore", "site_id": "site_ore_crates", "x": 13, "y": 7, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "reclamation_enemy_scrip", "site_id": "site_brass_scrip_mint", "x": 13, "y": 2, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "reclamation_enemy_exchange", "site_id": "site_frontier_rare_exchange", "x": 11, "y": 3, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "reclamation_graft_arch", "site_id": "site_thornwake_graft_arch", "x": 4, "y": 5}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "reclamation_living_knot", "artifact_id": "artifact_living_bridge_knot", "x": 4, "y": 1},
+        {"placement_id": "reclamation_graftbark", "artifact_id": "artifact_graftbark_cuirass", "x": 8, "y": 6},
+        {"placement_id": "reclamation_tally_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 10, "y": 1}
+      ],
+      "encounters": [
+        {"placement_id": "reclamation_charter_gate", "encounter_id": "encounter_charter_guard", "x": 4, "y": 3, "difficulty": "medium", "combat_seed": 31101},
+        {"placement_id": "reclamation_archive_chain", "encounter_id": "encounter_archive_wardens", "x": 6, "y": 2, "difficulty": "medium", "combat_seed": 31102},
+        {"placement_id": "reclamation_exactor_screen", "encounter_id": "encounter_orevein_exactors", "x": 9, "y": 4, "difficulty": "medium", "combat_seed": 31103},
+        {"placement_id": "reclamation_bastion_chain", "encounter_id": "encounter_charter_bastion_reserve", "x": 11, "y": 5, "difficulty": "high", "combat_seed": 31104}
+      ]
+    },
+    {
+      "id": "rootway-graftmarch",
+      "name": "Rootway Graftmarch",
+      "selection": {
+        "summary": "Carry Ardren's reclaimed measure from Briarwheel through a Sunvault closure line and wake the buried Rootway.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Rootway Graftmarch (16x10)",
+        "player_summary": "Ardren advances from Briarwheel with campaign growth and a larger living supply line.",
+        "enemy_summary": "Sunvault relay pickets and an aurora battery close the central root road from Dawnmirror.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 16, "height": 10},
+      "player_faction_id": "faction_thornwake", "player_army_id": "army_ardren_briar_cordon", "hero_id": "hero_thornwake_ardren_briarmarshal",
+      "starting_resources": {"gold": 1050, "wood": 4, "ore": 4, "verdant_grafts": 3},
+      "map": [
+        ["forest","grass","rough","grass","forest","grass","grass","forest","rough","grass","forest","grass","grass","rough","grass","forest"],
+        ["grass","grass","forest","grass","grass","rough","forest","grass","grass","forest","grass","grass","rough","grass","forest","grass"],
+        ["forest","grass","grass","forest","grass","grass","rough","grass","forest","grass","grass","rough","grass","forest","grass","grass"],
+        ["grass","rough","grass","grass","forest","grass","grass","forest","grass","rough","grass","grass","forest","grass","grass","forest"],
+        ["forest","grass","forest","grass","grass","rough","grass","grass","forest","grass","grass","forest","rough","grass","forest","grass"],
+        ["grass","grass","rough","grass","forest","grass","grass","rough","grass","forest","grass","grass","forest","grass","grass","rough"],
+        ["forest","grass","grass","forest","grass","grass","forest","grass","rough","grass","forest","grass","grass","rough","grass","forest"],
+        ["grass","rough","forest","grass","grass","forest","grass","grass","forest","grass","grass","rough","forest","grass","grass","grass"],
+        ["forest","grass","grass","rough","forest","grass","grass","forest","grass","grass","rough","grass","grass","forest","grass","forest"],
+        ["grass","grass","forest","grass","grass","rough","forest","grass","grass","forest","grass","grass","forest","grass","rough","grass"]
+      ],
+      "start": {"x": 1, "y": 5}, "hero_starts": ["hero_thornwake_ardren_briarmarshal"],
+      "objectives": {
+        "victory_text": "Wake the Rootway, claim Dawnmirror, and break the relay closure fronts.",
+        "defeat_text": "Sunvault fixes the living road in glass and isolates Briarwheel from Rootgate.",
+        "victory": [
+          {"id": "claim_dawnmirror", "label": "Claim Dawnmirror Observatory", "type": "town_owned_by_player", "placement_id": "graftmarch_dawnmirror"},
+          {"id": "wake_rootway_marker", "label": "Wake the Rootway Marker", "type": "flag_true", "flag": "rootway_marker_awakened"},
+          {"id": "break_relay_closure", "label": "Break the Relay Closure", "type": "encounter_resolved", "placement_id": "graftmarch_relay_closure"},
+          {"id": "break_aurora_battery", "label": "Break the Aurora Battery", "type": "encounter_resolved", "placement_id": "graftmarch_aurora_battery"}
+        ],
+        "defeat": [
+          {"id": "hold_briarwheel_march", "label": "Keep Briarwheel Enclave", "type": "town_not_owned_by_player", "placement_id": "graftmarch_briarwheel"},
+          {"id": "ardren_survives_graftmarch", "label": "Ardren must survive", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_graftmarch_pressure", "label": "Keep Sunvault pressure below 13", "type": "enemy_pressure_at_least", "faction_id": "faction_sunvault", "threshold": 13},
+          {"id": "wake_rootway_in_time", "label": "Wake the Rootway before Day 17", "type": "day_at_least", "day": 17}
+        ]
+      },
+      "script_hooks": [
+        {"id": "graftmarch_briar_muster", "priority": 120, "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "graftmarch_briarwheel"}], "effects": [{"type": "add_resources", "resources": {"gold": 300, "wood": 1, "ore": 1}}, {"type": "town_add_recruits", "placement_id": "graftmarch_briarwheel", "recruits": {"unit_thornwake_seedcutters": 4, "unit_thornwake_sporeglass_menders": 2}}, {"type": "message", "text": "Briarwheel sends menders and measured rootstock into the graftmarch."}]},
+        {"id": "graftmarch_rootway_open", "priority": 110, "conditions": [{"type": "objective_met", "objective_id": "wake_rootway_marker"}, {"type": "objective_met", "objective_id": "claim_dawnmirror"}], "effects": [{"type": "town_add_building", "placement_id": "graftmarch_dawnmirror", "building_id": "building_wayfarers_hall"}, {"type": "set_flag", "flag": "rootway_graftmarch_open", "value": true}, {"type": "message", "text": "The awakened Rootway lifts Ardren's road beneath the captured observatory."}]},
+        {"id": "graftmarch_daylight_counterline", "priority": 96, "conditions": [{"type": "day_at_least", "day": 6}, {"type": "town_owned_by_player", "placement_id": "graftmarch_briarwheel"}], "effects": [{"type": "spawn_encounter", "placement": {"placement_id": "graftmarch_counterline", "encounter_id": "encounter_relay_pickets", "x": 15, "y": 9, "difficulty": "scripted", "spawned_by_faction_id": "faction_sunvault", "days_active": 0, "arrived": false, "goal_distance": 9999}}, {"type": "message", "text": "A daylight counterline forms on the southern ridge."}]},
+        {"id": "graftmarch_unwoken_pressure", "priority": 90, "conditions": [{"type": "day_at_least", "day": 7}, {"type": "objective_not_met", "objective_id": "wake_rootway_marker"}], "effects": [{"type": "add_enemy_pressure", "faction_id": "faction_sunvault", "amount": 2}, {"type": "message", "text": "Every unwoken root gives the survey closure another fixed line."}]},
+        {"id": "graftmarch_battery_salvage", "priority": 84, "conditions": [{"type": "encounter_resolved", "placement_id": "graftmarch_aurora_battery"}], "effects": [{"type": "add_resources", "resources": {"verdant_grafts": 2}}, {"type": "award_experience", "amount": 170}, {"type": "set_flag", "flag": "graftmarch_battery_rooted", "value": true}, {"type": "message", "text": "The cordon roots the shattered lens frame into a night-road beacon."}]}
+      ],
+      "towns": [
+        {"placement_id": "graftmarch_briarwheel", "town_id": "town_briarwheel_enclave", "x": 1, "y": 5, "owner": "player", "recovery": {"pressure": 1, "source": "measured root road"}},
+        {"placement_id": "graftmarch_dawnmirror", "town_id": "town_dawnmirror_observatory", "x": 14, "y": 4, "owner": "enemy"}
+      ],
+      "enemy_factions": [{
+        "faction_id": "faction_sunvault", "label": "Dawnmirror Rootway Closure", "pressure_per_day": 2, "pressure_per_enemy_town": 1, "raid_threshold": 6, "max_active_raids": 3, "raid_pillage_delay": 1,
+        "raid_pillage": {"gold": 180, "verdant_grafts": 1}, "raid_encounter_ids": ["encounter_relay_pickets", "encounter_aurora_battery"],
+        "spawn_points": [{"x": 15, "y": 1}, {"x": 15, "y": 8}], "siege_target_placement_id": "graftmarch_briarwheel", "siege_active_raid_threshold": 2, "siege_capture_progress": 3,
+        "priority_target_bonus": 115, "priority_target_placement_ids": ["graftmarch_briarwheel", "graftmarch_rootway_marker", "graftmarch_graft_nursery"]
+      }],
+      "resource_nodes": [
+        {"placement_id": "graftmarch_wood", "site_id": "site_wood_wagon", "x": 2, "y": 1},
+        {"placement_id": "graftmarch_ore", "site_id": "site_ore_crates", "x": 2, "y": 9},
+        {"placement_id": "graftmarch_graft_nursery", "site_id": "site_verdant_graft_nursery", "x": 1, "y": 3},
+        {"placement_id": "graftmarch_player_exchange", "site_id": "site_frontier_rare_exchange", "x": 2, "y": 5},
+        {"placement_id": "graftmarch_rootway_marker", "site_id": "site_rootway_marker", "x": 8, "y": 5},
+        {"placement_id": "graftmarch_rootwatch", "site_id": "site_rootwatch_hollow", "x": 5, "y": 7},
+        {"placement_id": "graftmarch_enemy_wood", "site_id": "site_wood_wagon", "x": 14, "y": 1, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "graftmarch_enemy_ore", "site_id": "site_ore_crates", "x": 15, "y": 9, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "graftmarch_enemy_aetherglass", "site_id": "site_aetherglass_lens_house", "x": 15, "y": 3, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "graftmarch_enemy_exchange", "site_id": "site_frontier_rare_exchange", "x": 13, "y": 4, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "graftmarch_graft_arch", "site_id": "site_thornwake_graft_arch", "x": 6, "y": 3}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "graftmarch_seed_compass", "artifact_id": "artifact_rootpath_seed_compass", "x": 4, "y": 2},
+        {"placement_id": "graftmarch_prism", "artifact_id": "artifact_prismward_mantle", "x": 10, "y": 8},
+        {"placement_id": "graftmarch_living_knot", "artifact_id": "artifact_living_bridge_knot", "x": 12, "y": 1}
+      ],
+      "encounters": [
+        {"placement_id": "graftmarch_relay_vanguard", "encounter_id": "encounter_relay_pickets", "x": 4, "y": 4, "difficulty": "medium", "combat_seed": 31201},
+        {"placement_id": "graftmarch_relay_closure", "encounter_id": "encounter_daybreak_matrix", "x": 7, "y": 2, "difficulty": "medium", "combat_seed": 31202},
+        {"placement_id": "graftmarch_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 10, "y": 5, "difficulty": "high", "combat_seed": 31203},
+        {"placement_id": "graftmarch_observatory_guard", "encounter_id": "encounter_relay_pickets", "x": 13, "y": 6, "difficulty": "high", "combat_seed": 31204}
+      ]
+    },
+    {
+      "id": "worldroot-crown-covenant",
+      "name": "Worldroot Crown Covenant",
+      "selection": {
+        "summary": "Defend Rootgate and Briarwheel, recover Graftroot from a twin closure front, chart the Fogline Marker, and bind the living crown.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Worldroot Crown (20x12)",
+        "player_summary": "Ardren commands two allied Thornwake holds and carries the full covenant campaign state.",
+        "enemy_summary": "Brasshollow and Sunvault drive independent raid clocks from the occupied Graftroot road.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 20, "height": 12},
+      "player_faction_id": "faction_thornwake", "player_army_id": "army_ardren_briar_cordon", "hero_id": "hero_thornwake_ardren_briarmarshal",
+      "starting_resources": {"gold": 1250, "wood": 5, "ore": 5, "verdant_grafts": 4},
+      "map": [
+        ["forest","grass","rough","grass","forest","grass","grass","forest","rough","grass","forest","grass","grass","rough","grass","forest","grass","grass","rough","forest"],
+        ["grass","grass","forest","grass","grass","rough","forest","grass","grass","forest","grass","grass","rough","grass","forest","grass","rough","grass","forest","grass"],
+        ["forest","grass","grass","forest","grass","grass","rough","grass","forest","grass","grass","rough","grass","forest","grass","grass","forest","grass","grass","rough"],
+        ["grass","rough","grass","grass","forest","grass","grass","forest","grass","rough","grass","grass","forest","grass","grass","forest","grass","rough","grass","grass"],
+        ["forest","grass","forest","grass","grass","rough","grass","grass","forest","grass","grass","forest","rough","grass","forest","grass","grass","forest","grass","rough"],
+        ["grass","grass","rough","grass","forest","grass","grass","rough","grass","forest","grass","grass","forest","grass","grass","rough","forest","grass","grass","forest"],
+        ["forest","grass","grass","forest","grass","grass","forest","grass","rough","grass","forest","grass","grass","rough","grass","forest","grass","grass","forest","grass"],
+        ["grass","rough","forest","grass","grass","forest","grass","grass","forest","grass","grass","rough","forest","grass","grass","grass","rough","forest","grass","grass"],
+        ["forest","grass","grass","rough","forest","grass","grass","forest","grass","grass","rough","grass","grass","forest","grass","forest","grass","grass","rough","forest"],
+        ["grass","grass","forest","grass","grass","rough","forest","grass","grass","forest","grass","grass","forest","grass","rough","grass","forest","grass","grass","rough"],
+        ["forest","rough","grass","forest","grass","grass","rough","grass","forest","grass","grass","forest","grass","grass","forest","rough","grass","forest","grass","grass"],
+        ["grass","grass","forest","grass","rough","forest","grass","grass","rough","forest","grass","grass","forest","grass","grass","forest","grass","rough","grass","forest"]
+      ],
+      "start": {"x": 1, "y": 6}, "hero_starts": ["hero_thornwake_ardren_briarmarshal"],
+      "objectives": {
+        "victory_text": "Chart the Fogline, recover Graftroot, and break both closure crowns while Rootgate and Briarwheel stand.",
+        "defeat_text": "Either allied root falls and the Worldroot Crown is partitioned between contract and lens.",
+        "victory": [
+          {"id": "recover_graftroot_crown", "label": "Recover Graftroot Caravan", "type": "town_owned_by_player", "placement_id": "covenant_graftroot"},
+          {"id": "chart_covenant_fogline", "label": "Chart the Fogline Marker", "type": "flag_true", "flag": "fogline_marker_charted"},
+          {"id": "break_contract_crown", "label": "Break the Contract Crown", "type": "encounter_resolved", "placement_id": "covenant_contract_crown"},
+          {"id": "break_daylight_crown", "label": "Break the Daylight Crown", "type": "encounter_resolved", "placement_id": "covenant_daylight_crown"},
+          {"id": "hold_briarwheel_crown", "label": "Hold Briarwheel Enclave", "type": "town_owned_by_player", "placement_id": "covenant_briarwheel"}
+        ],
+        "defeat": [
+          {"id": "hold_rootgate_crown", "label": "Keep Rootgate Nursery", "type": "town_not_owned_by_player", "placement_id": "covenant_rootgate"},
+          {"id": "hold_briarwheel_against_loss", "label": "Keep Briarwheel Enclave", "type": "town_not_owned_by_player", "placement_id": "covenant_briarwheel"},
+          {"id": "ardren_survives_covenant", "label": "Ardren must survive", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_contract_pressure_crown", "label": "Keep Brasshollow pressure below 14", "type": "enemy_pressure_at_least", "faction_id": "faction_brasshollow", "threshold": 14},
+          {"id": "contain_daylight_pressure_crown", "label": "Keep Sunvault pressure below 14", "type": "enemy_pressure_at_least", "faction_id": "faction_sunvault", "threshold": 14},
+          {"id": "bind_covenant_in_time", "label": "Bind the covenant before Day 20", "type": "day_at_least", "day": 20}
+        ]
+      },
+      "script_hooks": [
+        {"id": "covenant_two_root_muster", "priority": 120, "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "covenant_rootgate"}, {"type": "town_owned_by_player", "placement_id": "covenant_briarwheel"}], "effects": [{"type": "add_resources", "resources": {"gold": 360, "wood": 2, "ore": 1}}, {"type": "town_add_recruits", "placement_id": "covenant_rootgate", "recruits": {"unit_thornwake_seedcutters": 5, "unit_thornwake_thornwhip_carriers": 3, "unit_thornwake_sporeglass_menders": 2}}, {"type": "message", "text": "Rootgate and Briarwheel answer together with one measured muster."}]},
+        {"id": "covenant_living_crown_bound", "priority": 112, "conditions": [{"type": "objective_met", "objective_id": "recover_graftroot_crown"}, {"type": "objective_met", "objective_id": "chart_covenant_fogline"}], "effects": [{"type": "town_add_building", "placement_id": "covenant_graftroot", "building_id": "building_wayfarers_hall"}, {"type": "set_flag", "flag": "worldroot_covenant_bound", "value": true}, {"type": "message", "text": "Three seed lights answer beneath the charted Worldroot Crown."}]},
+        {"id": "covenant_contract_counterstroke", "priority": 98, "conditions": [{"type": "day_at_least", "day": 7}, {"type": "town_owned_by_player", "placement_id": "covenant_rootgate"}], "effects": [{"type": "spawn_encounter", "placement": {"placement_id": "covenant_contract_counterstroke", "encounter_id": "encounter_charter_guard", "x": 19, "y": 11, "difficulty": "scripted", "spawned_by_faction_id": "faction_brasshollow", "days_active": 0, "arrived": false, "goal_distance": 9999}}, {"type": "message", "text": "A contract counterstroke enters beneath the southern crown root."}]},
+        {"id": "covenant_daylight_counterstroke", "priority": 96, "conditions": [{"type": "day_at_least", "day": 8}, {"type": "town_owned_by_player", "placement_id": "covenant_briarwheel"}], "effects": [{"type": "spawn_encounter", "placement": {"placement_id": "covenant_daylight_counterstroke", "encounter_id": "encounter_relay_pickets", "x": 19, "y": 0, "difficulty": "scripted", "spawned_by_faction_id": "faction_sunvault", "days_active": 0, "arrived": false, "goal_distance": 9999}}, {"type": "message", "text": "A daylight counterstroke descends from the northern crown branch."}]},
+        {"id": "covenant_uncharted_fog", "priority": 90, "conditions": [{"type": "day_at_least", "day": 9}, {"type": "objective_not_met", "objective_id": "chart_covenant_fogline"}], "effects": [{"type": "add_enemy_pressure", "faction_id": "faction_brasshollow", "amount": 1}, {"type": "add_enemy_pressure", "faction_id": "faction_sunvault", "amount": 1}, {"type": "message", "text": "The uncharted fogline lets both closure fronts shorten their approach."}]},
+        {"id": "covenant_crown_salvage", "priority": 84, "conditions": [{"type": "encounter_resolved", "placement_id": "covenant_daylight_crown"}], "effects": [{"type": "add_resources", "resources": {"verdant_grafts": 3}}, {"type": "award_experience", "amount": 220}, {"type": "set_flag", "flag": "covenant_daylight_rooted", "value": true}, {"type": "message", "text": "Ardren roots the broken lens crown into the covenant's eastern watch."}]}
+      ],
+      "towns": [
+        {"placement_id": "covenant_rootgate", "town_id": "town_thornwake_rootgate_nursery", "x": 1, "y": 6, "owner": "player", "recovery": {"pressure": 1, "source": "rootway relief"}},
+        {"placement_id": "covenant_briarwheel", "town_id": "town_briarwheel_enclave", "x": 4, "y": 10, "owner": "player"},
+        {"placement_id": "covenant_graftroot", "town_id": "town_thornwake_graftroot_caravan", "x": 18, "y": 5, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {"faction_id": "faction_brasshollow", "label": "Worldroot Contract Crown", "pressure_per_day": 2, "pressure_per_enemy_town": 1, "raid_threshold": 7, "max_active_raids": 2, "raid_pillage_delay": 1, "raid_pillage": {"gold": 190, "wood": 1}, "raid_encounter_ids": ["encounter_charter_guard", "encounter_charter_bastion_reserve"], "spawn_points": [{"x": 19, "y": 9}, {"x": 18, "y": 11}], "siege_target_placement_id": "covenant_rootgate", "siege_active_raid_threshold": 2, "siege_capture_progress": 3, "priority_target_bonus": 120, "priority_target_placement_ids": ["covenant_rootgate", "covenant_fogline_marker", "covenant_graft_nursery"]},
+        {"faction_id": "faction_sunvault", "label": "Worldroot Daylight Crown", "pressure_per_day": 2, "pressure_per_enemy_town": 1, "raid_threshold": 7, "max_active_raids": 2, "raid_pillage_delay": 1, "raid_pillage": {"gold": 190, "verdant_grafts": 1}, "raid_encounter_ids": ["encounter_relay_pickets", "encounter_aurora_battery"], "spawn_points": [{"x": 19, "y": 1}, {"x": 17, "y": 0}], "siege_target_placement_id": "covenant_briarwheel", "siege_active_raid_threshold": 2, "siege_capture_progress": 3, "priority_target_bonus": 120, "priority_target_placement_ids": ["covenant_briarwheel", "covenant_fogline_marker", "covenant_rootwatch"]}
+      ],
+      "resource_nodes": [
+        {"placement_id": "covenant_wood", "site_id": "site_wood_wagon", "x": 2, "y": 2},
+        {"placement_id": "covenant_ore", "site_id": "site_ore_crates", "x": 3, "y": 11},
+        {"placement_id": "covenant_graft_nursery", "site_id": "site_verdant_graft_nursery", "x": 1, "y": 4},
+        {"placement_id": "covenant_player_exchange", "site_id": "site_frontier_rare_exchange", "x": 2, "y": 6},
+        {"placement_id": "covenant_fogline_marker", "site_id": "site_fogline_marker", "x": 10, "y": 6},
+        {"placement_id": "covenant_rootwatch", "site_id": "site_rootwatch_hollow", "x": 7, "y": 9},
+        {"placement_id": "covenant_graft_arch", "site_id": "site_thornwake_graft_arch", "x": 8, "y": 3},
+        {"placement_id": "covenant_enemy_wood", "site_id": "site_wood_wagon", "x": 18, "y": 2, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "covenant_enemy_ore", "site_id": "site_ore_crates", "x": 19, "y": 10, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "covenant_enemy_scrip", "site_id": "site_brass_scrip_mint", "x": 17, "y": 7, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "covenant_enemy_aetherglass", "site_id": "site_aetherglass_lens_house", "x": 17, "y": 3, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "covenant_enemy_exchange", "site_id": "site_frontier_rare_exchange", "x": 17, "y": 5, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "covenant_worldroot_scout", "site_id": "site_scout_shrine", "x": 12, "y": 1}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "covenant_seed_compass", "artifact_id": "artifact_rootpath_seed_compass", "x": 5, "y": 2},
+        {"placement_id": "covenant_graftbark", "artifact_id": "artifact_graftbark_cuirass", "x": 9, "y": 10},
+        {"placement_id": "covenant_living_knot", "artifact_id": "artifact_living_bridge_knot", "x": 14, "y": 6}
+      ],
+      "encounters": [
+        {"placement_id": "covenant_contract_vanguard", "encounter_id": "encounter_orevein_exactors", "x": 5, "y": 5, "difficulty": "medium", "combat_seed": 31301},
+        {"placement_id": "covenant_daylight_vanguard", "encounter_id": "encounter_relay_pickets", "x": 7, "y": 2, "difficulty": "medium", "combat_seed": 31302},
+        {"placement_id": "covenant_contract_crown", "encounter_id": "encounter_charter_bastion_reserve", "x": 11, "y": 8, "difficulty": "high", "combat_seed": 31303},
+        {"placement_id": "covenant_daylight_crown", "encounter_id": "encounter_daybreak_matrix", "x": 13, "y": 3, "difficulty": "high", "combat_seed": 31304},
+        {"placement_id": "covenant_archive_closure", "encounter_id": "encounter_archive_wardens", "x": 15, "y": 9, "difficulty": "high", "combat_seed": 31305},
+        {"placement_id": "covenant_aurora_closure", "encounter_id": "encounter_aurora_battery", "x": 16, "y": 2, "difficulty": "high", "combat_seed": 31306}
       ]
     }
   ]

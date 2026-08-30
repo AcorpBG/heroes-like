@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 6,
+  "player_facing_active_campaign_count": 7,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -1052,6 +1052,132 @@
             "hero_progression": false,
             "spells": false,
             "artifacts": false,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_briarwheel_covenant",
+      "name": "Briarwheel Covenant",
+      "description": "Ardren Briar-Marshal reclaims Briarwheel Enclave, wakes the forgotten Rootway, and binds three scattered Thornwake holds into one living covenant.",
+      "summary": "A three-chapter Thornwake campaign about recovering measured ground, carrying one commander's growth forward, and joining every Thornwake town through a living road.",
+      "region": "Graftroot Verge, Briarwheel March, and the Worldroot Crown",
+      "emblem_id": "campaign_emblem_briarwheel_covenant",
+      "emblem_path": "res://art/campaigns/runtime/emblems/briarwheel_covenant.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/briarwheel_covenant_source.png",
+      "emblem_alt_text": "A living briar wheel carries three bright seed lanterns beneath branching crown roots.",
+      "emblem_source_sha256": "115b2fe04e5d2b15ddd1944cce52330dfa4803aac14bd9746a79c14597984d8d",
+      "emblem_runtime_sha256": "6bec2de794e33220add9a8522a7d5c9e1723c493b049a7a305514b044bdf036d",
+      "arc_goal": "Recover Briarwheel, wake the Rootway, and bind Graftroot, Rootgate, and Briarwheel into a covenant that no rival survey can divide.",
+      "completion_title": "The Living Crown",
+      "completion_summary": "Ardren binds all three Thornwake holds into one road covenant while preserving the old measures, awakened root paths, and fogline charts that keep it alive.",
+      "starting_scenario_id": "briarwheel-reclamation",
+      "scenarios": [
+        {
+          "scenario_id": "briarwheel-reclamation",
+          "seal_id": "campaign_chapter_seal_briarwheel_reclamation",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/briarwheel_reclamation.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/briarwheel_reclamation_source.png",
+          "seal_alt_text": "A living briar wheel breaks a brass chain above cracked boundary stones and one seed light.",
+          "seal_source_sha256": "20caa2caebe55ac2176ee659dd67ff30093f2787fde19aab3a079a5664a6d2b8",
+          "seal_runtime_sha256": "5541203204158edfc49a08c793ffb7a9759840c87e5d1becde6156d2d0010fec",
+          "label": "Chapter I: Briarwheel Reclamation",
+          "description": "Break the contract chain around Briarwheel, rehang the Old Measure Marker, and return the enclave to Thornwake hands.",
+          "chapter_index": 1,
+          "chapter_title": "Rehang the Measure",
+          "status_hint": "Ardren begins at Graftroot with an intact Briar Cordon and no imported campaign state.",
+          "carryover_summary": "Exports Ardren's progression, spells, artifacts, bounded stores, and the reclaimed-measure record into the Rootway march.",
+          "briefing": "Brasshollow has priced Briarwheel out of its own soil and hung contract chains from every old measure. Ardren must cut the toll line without uprooting the road beneath it.",
+          "intel": "Archive wardens hold the central survey arch while exactors screen the enclave. The Old Measure Marker still remembers the boundary if its chains can be rehung.",
+          "stakes": "Briarwheel becomes the covenant's western root only if both enclave and measure survive the reclamation.",
+          "aftermath_victory": "The brass chain snaps, Briarwheel opens its living gate, and Ardren carries the restored measure east toward the buried Rootway.",
+          "aftermath_defeat": "The measure remains priced and Briarwheel's roots are cut into separate contract lots.",
+          "journal_victory": "Ardren reclaimed Briarwheel and rehung the Old Measure Marker.",
+          "journal_defeat": "Ardren failed to restore the western measure.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.4,
+            "resource_caps": {"gold": 1400, "wood": 4, "ore": 4, "verdant_grafts": 3},
+            "flag_ids": ["briarwheel_reclaimed", "old_measure_marker_rehung"]
+          }
+        },
+        {
+          "scenario_id": "rootway-graftmarch",
+          "seal_id": "campaign_chapter_seal_rootway_graftmarch",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/rootway_graftmarch.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/rootway_graftmarch_source.png",
+          "seal_alt_text": "A walking living-root bridge carries graft shoots and a lit seed lantern across broken ground.",
+          "seal_source_sha256": "2f0afe8518651397be590c49bbb46b9f05c89e04dcd089a323396a6c97d8a5ce",
+          "seal_runtime_sha256": "1cac1bc35c241a0c5f4f0b702a1a0e82d96a0185b49ea24cbb5d83d7d45fbc7c",
+          "label": "Chapter II: Rootway Graftmarch",
+          "description": "Carry Briarwheel's restored measure through Sunvault's closure line and wake the buried Rootway before daylight fixes it shut.",
+          "chapter_index": 2,
+          "chapter_title": "Wake the Rootway",
+          "status_hint": "Ardren continues with bounded stores and his own surviving command growth.",
+          "carryover_summary": "Imports Ardren's campaign state and exports it with the awakened Rootway record toward the Worldroot Crown.",
+          "briefing": "The restored measure points beneath a daylight survey that never accounted for living roads. Ardren must move the whole cordon as one graftmarch.",
+          "intel": "Relay pickets and an aurora battery bracket the Rootway Marker. Sunvault can close the route by pressure even if its forward town falls.",
+          "stakes": "Without the Rootway, Briarwheel and Rootgate remain two isolated defenses instead of one campaign road.",
+          "aftermath_victory": "The old roots rise beneath Ardren's column and carry the restored measure into the Worldroot basin.",
+          "aftermath_defeat": "Sunvault fixes the route in glass and leaves Briarwheel beyond Rootgate's reach.",
+          "journal_victory": "Ardren woke the Rootway and carried the covenant east.",
+          "journal_defeat": "Ardren failed to open the living march.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "briarwheel-reclamation", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "briarwheel-reclamation", "flag": "old_measure_marker_rehung"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "briarwheel-reclamation",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.4,
+            "resource_caps": {"gold": 1600, "wood": 5, "ore": 5, "verdant_grafts": 4},
+            "flag_ids": ["rootway_graftmarch_open", "rootway_marker_awakened"]
+          }
+        },
+        {
+          "scenario_id": "worldroot-crown-covenant",
+          "seal_id": "campaign_chapter_seal_worldroot_crown_covenant",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/worldroot_crown_covenant.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/worldroot_crown_covenant_source.png",
+          "seal_alt_text": "Three crown roots surround a bright heartwood seed where measured roads converge.",
+          "seal_source_sha256": "efbbab6121c6d1b0599eb07607489f0ffd0a36f0936d7b8081af26904da305bf",
+          "seal_runtime_sha256": "667c0aaaa5542f84fd558def0cd31e1fc0ca4e297996e3f231077a9f4b6fa265",
+          "label": "Chapter III: Worldroot Crown Covenant",
+          "description": "Chart the last fogline, break the twin closure fronts, and bind all three Thornwake holds beneath the Worldroot Crown.",
+          "chapter_index": 3,
+          "chapter_title": "Bind the Living Crown",
+          "status_hint": "Ardren enters the largest board with his campaign command intact and two allied holds to defend.",
+          "carryover_summary": "Imports the full same-hero campaign state and resolves the covenant without exporting beyond this authored arc.",
+          "briefing": "Brass contracts and Sunvault lenses have met beneath the Worldroot Crown. Ardren must defend Rootgate, recover Graftroot, and chart the fogline that joins them to Briarwheel.",
+          "intel": "Two enemy towns drive separate raid clocks. The Fogline Marker lies between their closure fronts and is the only surviving chart through the crown roots.",
+          "stakes": "All three Thornwake holds stand or fall as one road; losing either allied root breaks the covenant before it is sworn.",
+          "aftermath_victory": "The fogline is charted, the rival fronts collapse, and three seed lights answer beneath one living crown.",
+          "aftermath_defeat": "The crown roots are partitioned and the awakened road withers between isolated holds.",
+          "journal_victory": "Ardren bound Graftroot, Rootgate, and Briarwheel into the living covenant.",
+          "journal_defeat": "Ardren failed to hold the three roots together.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "rootway-graftmarch", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "rootway-graftmarch", "flag": "rootway_marker_awakened"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "rootway-graftmarch",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
             "flags_prefix": "carryover_"
           }
         }

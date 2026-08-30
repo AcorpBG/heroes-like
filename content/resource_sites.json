@@ -2430,6 +2430,9 @@
       "claim_rewards": {
         "experience": 120
       },
+      "claim_flags": {
+        "old_measure_marker_rehung": true
+      },
       "learn_spell_id": "spell_survey_chain",
       "response_profile": {
         "action_label": "Rehang Markers",
@@ -2453,6 +2456,9 @@
       "claim_rewards": {
         "experience": 110
       },
+      "claim_flags": {
+        "rootway_marker_awakened": true
+      },
       "learn_spell_id": "spell_rootway_tangle",
       "response_profile": {
         "action_label": "Wake Rootway",
@@ -2474,6 +2480,9 @@
       "persistent_control": true,
       "claim_rewards": {
         "experience": 110
+      },
+      "claim_flags": {
+        "fogline_marker_charted": true
       },
       "learn_spell_id": "spell_fogline_drift",
       "response_profile": {

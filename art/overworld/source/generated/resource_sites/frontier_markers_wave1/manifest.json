@@ -1,0 +1,30 @@
+{
+  "schema_id": "frontier_marker_landmarks_wave1_v1",
+  "source_model": "built_in_image_gen_original_overworld_landmark",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
+  "runtime_cell_size": {"width": 48, "height": 48},
+  "assets": [
+    {
+      "site_id": "site_fogline_marker",
+      "source_path": "res://art/overworld/source/generated/resource_sites/frontier_markers_wave1/fogline_marker_source.png",
+      "source_sha256": "38f7894e9fbd850df013b9b1be05ee6dbb443556a945eb6183b56643f0485ee2",
+      "atlas_region": {"x": 0, "y": 0, "width": 48, "height": 48},
+      "prompt_summary": "Blackwood fogline post with twin fogglass vanes, chart tube, guide cords, and a small pilot lantern."
+    },
+    {
+      "site_id": "site_old_measure_marker",
+      "source_path": "res://art/overworld/source/generated/resource_sites/frontier_markers_wave1/old_measure_marker_source.png",
+      "source_sha256": "497b399f676176f30887177dcd0b0eb9240912ff88cab5b6c93d4df4b43f66e3",
+      "atlas_region": {"x": 48, "y": 0, "width": 48, "height": 48},
+      "prompt_summary": "Weathered measuring arch with brass plumb, unequal survey arms, boundary chain, and sliding gauge."
+    },
+    {
+      "site_id": "site_rootway_marker",
+      "source_path": "res://art/overworld/source/generated/resource_sites/frontier_markers_wave1/rootway_marker_source.png",
+      "source_sha256": "c3375bd89961b187774c857790d705115fa9dfb8f2c4830e5c0a5a8fd5272f01",
+      "atlas_region": {"x": 96, "y": 0, "width": 48, "height": 48},
+      "prompt_summary": "Living root gate with three unequal seed lanterns, knotted relief cords, and road-pointing exposed roots."
+    }
+  ],
+  "runtime_sha256": "9d91059330970b946d04e4103583e17dd45c036ec4b814735e4a922a0beb4406"
+}

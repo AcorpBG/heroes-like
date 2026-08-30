@@ -15745,10 +15745,10 @@
   "currentNotes": "Completed the Veil-Coast Sounding Circuit content batch with six live coast-route services, six operational landmarks, one 24x14 Veilmourn skirmish, four battle fronts, complete town economy sources, and consolidated gameplay, repository, Linux, and Windows package evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceId": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceNotes": "Implemented one 24x14 Veilmourn skirmish with six live two-way coast services, four real battle fronts, two full-economy towns, sixteen resource sites, three artifacts, and six original operational landmark states. Consolidated scenario report passed activation, guarded battle construction, exact one-cost two-way travel, multi-day end-to-end traversal, save v9, art, and unsafe-exit checks. Full repository validation passed. Linux and Windows release export smokes passed with native libraries/runtime startup, source exclusion, and a 247546944-byte PCK under the 250000000-byte ceiling.",
+  "currentSliceId": "content-briarwheel-covenant-campaign-10184",
+  "currentSliceNotes": "Completed the original three-chapter Thornwake campaign on 14x8, 16x10, and 20x12 maps with same-hero progression, all three Thornwake towns, 14 battle fronts, the first live placements and exact art for Old Measure, Rootway, and Fogline Markers, one campaign emblem, and three chapter seals. The single consolidated gameplay/progression/visual/save smoke passed all three chapters and 14 battle payloads at save version 9. Full repository validation passed. Linux and Windows release export/startup gates passed with native libraries, source exclusion, 7 packaged emblems, 27 seals, and an identical 247648148-byte PCK under the 250000000-byte ceiling. No whole-game release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content veil coast sounding circuit 10184",
+  "currentSliceTitle": "content briarwheel covenant campaign 10184",
   "currentSliceUpdatedAt": "2026-08-30T07:05:03Z",
   "deferredRiskRegister": [
     {
@@ -106373,6 +106373,16 @@
       "startedAt": "2026-08-30T06:26:55Z",
       "notes": "Implemented one 24x14 Veilmourn skirmish with six live two-way coast services, four real battle fronts, two full-economy towns, sixteen resource sites, three artifacts, and six original operational landmark states. Consolidated scenario report passed activation, guarded battle construction, exact one-cost two-way travel, multi-day end-to-end traversal, save v9, art, and unsafe-exit checks. Full repository validation passed. Linux and Windows release export smokes passed with native libraries/runtime startup, source exclusion, and a 247546944-byte PCK under the 250000000-byte ceiling.",
       "completedAt": "2026-08-30T07:05:03Z"
+    },
+    {
+      "id": "content-briarwheel-covenant-campaign-10184",
+      "title": "content briarwheel covenant campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T07:40:22Z",
+      "startedAt": "2026-08-30T07:10:18Z",
+      "notes": "Completed the original three-chapter Thornwake campaign on 14x8, 16x10, and 20x12 maps with same-hero progression, all three Thornwake towns, 14 battle fronts, the first live placements and exact art for Old Measure, Rootway, and Fogline Markers, one campaign emblem, and three chapter seals. The single consolidated gameplay/progression/visual/save smoke passed all three chapters and 14 battle payloads at save version 9. Full repository validation passed. Linux and Windows release export/startup gates passed with native libraries, source exclusion, 7 packaged emblems, 27 seals, and an identical 247648148-byte PCK under the 250000000-byte ceiling. No whole-game release-readiness claim.",
+      "completedAt": "2026-08-30T07:40:22Z"
     }
   ],
   "project": "heroes-like",
@@ -106917,7 +106927,7 @@
   ],
   "summary": "Completed the Veil-Coast Sounding Circuit: six formerly dormant shoreline services now provide live one-cost two-way land transit with distinct operational art inside a new 24x14 Veilmourn skirmish, validated as one batch and through Linux and Windows packages.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T07:05:03Z",
+  "updatedAt": "2026-08-30T07:40:22Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -14706,6 +14706,43 @@ Validation evidence:
 - `python3 tests/validate_repo.py` passed;
 - Linux and Windows release export smokes passed with native libraries loaded, source art excluded, and an identical 247546944-byte PCK below the unchanged 250000000-byte ceiling.
 
+## Briarwheel Covenant Campaign
+
+id: `content-briarwheel-covenant-campaign-10184`
+
+Status: completed.
+
+Completion result:
+- the original three-chapter Thornwake campaign now ships 14x8, 16x10, and 20x12 maps with Ardren Briar-Marshal carrying his command progression, learned route spells, artifacts, bounded stores, and exact campaign evidence between chapters;
+- all three Thornwake towns now anchor the arc, while Old Measure Marker, Rootway Marker, and Fogline Marker each have their first playable placement, exact one-time flag/spell/experience behavior, persistent route response, and a distinct original 48px atlas identity;
+- one original campaign emblem and three original chapter seals are wired into the live campaign browser with alpha-safe runtime art, accessible descriptions, retained source provenance, and release-source exclusion.
+
+Current finding:
+- Thornwake, Brasshollow, and Veilmourn have live faction scenarios but no dedicated three-chapter campaign; Thornwake has the fewest authored scenario leads, and Briarwheel Enclave appears in only one shipped map;
+- Fogline Marker, Old Measure Marker, and Rootway Marker are the only three player-facing authored resource sites with no shipped placement: each already owns a distinct learnable spell, one-time experience, persistent control, and a public response order, but none reaches live play or exact art;
+- a single Thornwake campaign can introduce a coherent carryover arc, use all three existing Thornwake towns, and activate the complete unplaced frontier-marker family without new combat formulas, save schema, or disconnected definitions.
+
+Implementation boundary:
+- add the three-chapter `Briarwheel Covenant` campaign led by Ardren Briar-Marshal, with escalating 14x8, 16x10, and 20x12 maps that move from reclaiming Briarwheel Enclave through a Rootway graft march to a multi-front Worldroot covenant finale;
+- author real town development, resource routes, battle fronts, objectives, pressure, relief, counterstroke, campaign carryover, unlock, briefing, aftermath, and journal contracts for all three chapters;
+- place Fogline Marker, Old Measure Marker, and Rootway Marker once each, preserve their existing spell/reward/response behavior, and give each a distinct original transparent overworld landmark;
+- create one original campaign emblem and three original chapter seals, retain accessible descriptions and high-resolution source provenance, exclude generated sources from releases, preserve save version 9, and keep Linux/Windows packages below 250000000 bytes.
+
+Completion criteria:
+- all three scenarios launch through campaign mode, retain Ardren's exact live company, construct their production battles, expose complete player/enemy development resources, satisfy authored objectives, and advance only through exact victory/unlock authority with carryover between chapters;
+- each frontier marker is reachable, grants its exact experience and spell once, retains persistent response behavior, resolves exact non-color-dependent art, and round-trips through save version 9;
+- the campaign emblem and three chapter seals load in the live campaign browser with distinct alpha-safe art and accessible descriptions;
+- one consolidated three-chapter gameplay/progression/visual/save smoke passes after the full batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new unit, hero, town, spell, artifact, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, faction story, marker, emblem, seal, name, text, landmark, or protected visual expression.
+
+Validation evidence:
+- the single consolidated three-chapter report passed all 3 scenario contracts, 14 production battle payloads, exact marker art/claim/response behavior, repeated-claim rejection, same-hero sequential unlock/carryover, inspected full-map captures, and save version 9 round-trips;
+- `python3 tests/validate_repo.py` passed after reconciling the expanded 81-scenario, 173-town-placement, 335-battle-placement, and 192-placed-site baselines;
+- Linux and Windows release export smokes passed with native libraries loaded, all 7 emblems and 27 seals packaged, source art excluded, and an identical 247648148-byte PCK below the unchanged 250000000-byte ceiling.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
