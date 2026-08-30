@@ -761,6 +761,51 @@
         "ai_valuation_behavior": false,
         "rare_resource_activation": true
       }
+    },
+    {
+      "id": "artifact_source_sovereign_wild_trophies",
+      "schema": "artifact_source_reward_v1",
+      "source_tag": "dwelling",
+      "reward_context": "sovereign_wild_habitat_claim",
+      "eligible_object_families": ["neutral_dwelling"],
+      "eligible_site_families": ["neutral_dwelling"],
+      "required_object_tags": [],
+      "required_reward_categories": ["recruit", "artifact"],
+      "guard_tiers": ["sovereign", "apex"],
+      "rarity_bands": ["rare"],
+      "artifact_ids": [
+        "artifact_ashcrown_crownring",
+        "artifact_miremoon_crown_tooth",
+        "artifact_noonshard_facet_pinion",
+        "artifact_rootvault_heartgrain_mantle",
+        "artifact_quenchbell_red_gauge_plate",
+        "artifact_saltwake_resonance_bell"
+      ],
+      "artifact_ids_by_faction": {
+        "faction_embercourt": ["artifact_ashcrown_crownring"],
+        "faction_mireclaw": ["artifact_miremoon_crown_tooth"],
+        "faction_sunvault": ["artifact_noonshard_facet_pinion"],
+        "faction_thornwake": ["artifact_rootvault_heartgrain_mantle"],
+        "faction_brasshollow": ["artifact_quenchbell_red_gauge_plate"],
+        "faction_veilmourn": ["artifact_saltwake_resonance_bell"]
+      },
+      "faction_constraints": [
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault",
+        "faction_thornwake",
+        "faction_brasshollow",
+        "faction_veilmourn"
+      ],
+      "set_constraints": {"allowed_set_ids": [], "piece_limit_per_table": 0},
+      "runtime_policy": {
+        "metadata_only": false,
+        "live_drop_execution": true,
+        "save_version_bump": false,
+        "equipment_runtime_effects": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      }
     }
   ],
   "items": [
@@ -3790,6 +3835,96 @@
       "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
       "description": "A salt-frosted ship bell shelters a suspended tideglass drop. Sounding knots tighten as the trapped ghostlight remembers hazards beyond the fog.",
       "bonuses": {"scouting_radius": 1, "battle_initiative": 1, "daily_income": {"memory_salt": 1}}
+    },
+    {
+      "id": "artifact_ashcrown_crownring", "name": "Ashcrown Crownring", "slot": "banner", "artifact_class": "faction", "rarity": "rare", "family": "sovereign_wild_trophies",
+      "roles": ["combat", "defense"], "accord_affinity": "beacon", "faction_affinity": ["faction_embercourt"], "source_tags": ["dwelling"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Carries the kilnelk's furnace charge into the opening line."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Locks the command standard inside a ceramic antler guard."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "A fired antler circlet that hardens Embercourt's advance and holding line.", "icon_id": "artifact_icon_ashcrown_crownring", "icon_path": "res://art/artifacts/runtime/ashcrown_crownring.png", "effect_tags": ["attack", "defense", "ashcrown", "embercourt"], "comparison_priority": ["battle_attack", "battle_defense", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["battle_pressure", "frontline_survival"], "preferred_hero_roles": ["might", "defender"], "preferred_faction_ids": ["faction_embercourt"], "combo_tags": ["beacon", "kiln", "ashcrown"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "Two branching ceramic antlers close into a scorched crown ring. A clinker-red glow travels around it whenever a formation commits to the charge.",
+      "bonuses": {"battle_attack": 1, "battle_defense": 1}
+    },
+    {
+      "id": "artifact_miremoon_crown_tooth", "name": "Miremoon Crown-Tooth", "slot": "trinket", "artifact_class": "faction", "rarity": "rare", "family": "sovereign_wild_trophies",
+      "roles": ["combat", "scouting"], "accord_affinity": "mire", "faction_affinity": ["faction_mireclaw"], "source_tags": ["dwelling"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Times the hunt to the first ripple beneath the mire."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Reads submerged trails through reflected moonlight."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "A moon-peat fang that sharpens Mireclaw timing and reads drowned trails.", "icon_id": "artifact_icon_miremoon_crown_tooth", "icon_path": "res://art/artifacts/runtime/miremoon_crown_tooth.png", "effect_tags": ["initiative", "scouting", "miremoon", "mireclaw"], "comparison_priority": ["battle_initiative", "scouting_radius", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["initiative_tempo", "fog_route_scouting"], "preferred_hero_roles": ["raider", "scout"], "preferred_faction_ids": ["faction_mireclaw"], "combo_tags": ["mire", "moon", "crownmaws"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A broad black fang hangs inside a crescent of peatglass roots. Its wet surface reflects paths that do not disturb the reeds.",
+      "bonuses": {"battle_initiative": 1, "scouting_radius": 1}
+    },
+    {
+      "id": "artifact_noonshard_facet_pinion", "name": "Noonshard Facet Pinion", "slot": "trinket", "artifact_class": "faction", "rarity": "rare", "family": "sovereign_wild_trophies",
+      "roles": ["magic", "combat", "resistance"], "accord_affinity": "lens", "faction_affinity": ["faction_sunvault"], "source_tags": ["dwelling"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_spell_resistance_pct", "public_summary": "Splits hostile magic across five harmless facets."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_initiative", "public_summary": "Fixes the command beat against a bright noon line."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "A prism-kite pinion that refracts hostile magic and fixes Sunvault's first command beat.", "icon_id": "artifact_icon_noonshard_facet_pinion", "icon_path": "res://art/artifacts/runtime/noonshard_facet_pinion.png", "effect_tags": ["resistance", "initiative", "noonshard", "sunvault"], "comparison_priority": ["battle_spell_resistance_pct", "battle_initiative", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["spell_resistance", "initiative_tempo"], "preferred_hero_roles": ["mage", "defender"], "preferred_faction_ids": ["faction_sunvault"], "combo_tags": ["lens", "prism", "pinion"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "Five translucent feather facets lock around a tiny white-gold sun. Each facet catches a different hostile angle before it reaches the bearer.",
+      "bonuses": {"battle_spell_resistance_pct": 10, "battle_initiative": 1}
+    },
+    {
+      "id": "artifact_rootvault_heartgrain_mantle", "name": "Rootvault Heartgrain Mantle", "slot": "armor", "artifact_class": "faction", "rarity": "rare", "family": "sovereign_wild_trophies",
+      "roles": ["defense", "movement"], "accord_affinity": "root", "faction_affinity": ["faction_thornwake"], "source_tags": ["dwelling"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Layers the formation behind interlocked heartgrain plates."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Follows buried root roads without breaking stride."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "A living bark mantle that shelters Thornwake's line and follows deep root roads.", "icon_id": "artifact_icon_rootvault_heartgrain_mantle", "icon_path": "res://art/artifacts/runtime/rootvault_heartgrain_mantle.png", "effect_tags": ["defense", "movement", "rootvault", "thornwake"], "comparison_priority": ["battle_defense", "overworld_movement", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["frontline_survival", "route_tempo"], "preferred_hero_roles": ["defender", "scout"], "preferred_faction_ids": ["faction_thornwake"], "combo_tags": ["root", "heartgrain", "barkhulk"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "Concentric heartwood plates overlap like a barkhulk's shoulders, joined by living green seams that bend toward the nearest buried road.",
+      "bonuses": {"battle_defense": 2, "overworld_movement": 1}
+    },
+    {
+      "id": "artifact_quenchbell_red_gauge_plate", "name": "Quenchbell Red-Gauge Plate", "slot": "armor", "artifact_class": "faction", "rarity": "rare", "family": "sovereign_wild_trophies",
+      "roles": ["combat", "defense"], "accord_affinity": "furnace", "faction_affinity": ["faction_brasshollow"], "source_tags": ["dwelling"],
+      "equip_constraints": {"slot_limit": 1, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_attack", "public_summary": "Releases stored pressure into a sanctioned advance."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "battle_defense", "public_summary": "Keeps the line beneath the plate's marked safe limit."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "An ironback plate that converts measured pressure into Brasshollow attack and protection.", "icon_id": "artifact_icon_quenchbell_red_gauge_plate", "icon_path": "res://art/artifacts/runtime/quenchbell_red_gauge_plate.png", "effect_tags": ["attack", "defense", "quenchbell", "brasshollow"], "comparison_priority": ["battle_attack", "battle_defense", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["battle_pressure", "frontline_survival"], "preferred_hero_roles": ["might", "defender"], "preferred_faction_ids": ["faction_brasshollow"], "combo_tags": ["furnace", "pressure", "ironback"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A curved basalt-and-brass shoulder plate carries three red gauges and a bellhorn relief. Its needles settle only when the line bears weight together.",
+      "bonuses": {"battle_attack": 1, "battle_defense": 2}
+    },
+    {
+      "id": "artifact_saltwake_resonance_bell", "name": "Saltwake Resonance Bell", "slot": "trinket", "artifact_class": "faction", "rarity": "rare", "family": "sovereign_wild_trophies",
+      "roles": ["scouting", "movement"], "accord_affinity": "veil", "faction_affinity": ["faction_veilmourn"], "source_tags": ["dwelling"],
+      "equip_constraints": {"slot_limit": 2, "unique_per_hero": true, "allowed_faction_ids": [], "required_tags": []},
+      "bonus_metadata": [
+        {"bonus_type": "stat", "scope": "equipped", "stat": "scouting_radius", "public_summary": "Sounds hidden bearings beyond the visible shore."},
+        {"bonus_type": "stat", "scope": "equipped", "stat": "overworld_movement", "public_summary": "Carries the march along the safest returning echo."}
+      ],
+      "risk": {"cursed": false, "tradeoff": false, "warning_tags": []},
+      "ui": {"summary": "A whalebone chime that reveals distant bearings and guides Veilmourn along returning echoes.", "icon_id": "artifact_icon_saltwake_resonance_bell", "icon_path": "res://art/artifacts/runtime/saltwake_resonance_bell.png", "effect_tags": ["scouting", "movement", "saltwake", "veilmourn"], "comparison_priority": ["scouting_radius", "overworld_movement", "faction_affinity"]},
+      "ai_hints": {"value_drivers": ["fog_route_scouting", "route_tempo"], "preferred_hero_roles": ["scout", "raider"], "preferred_faction_ids": ["faction_veilmourn"], "combo_tags": ["veil", "resonance", "bellwhale"]},
+      "validation_tags": {"schema": "artifact_taxonomy_v1", "save_behavior": "content_reference_only", "set_id": "", "mutual_exclusions": [], "stack_rule": "unique_per_hero"},
+      "description": "A pale whalebone bell hangs inside five saltglass chimes. Its lowest note returns from safe passages no eye can yet see.",
+      "bonuses": {"scouting_radius": 2, "overworld_movement": 1}
     }
   ]
 }

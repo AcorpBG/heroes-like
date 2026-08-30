@@ -75,6 +75,8 @@ REQUIRED_GUARDED_RELIC_ICON_NAMES = (
     "worldroot_covenant_heartwood", "seventh_clause_pressure_key", "last_bell_tideglass",
     "rainwrit_beacon_seal", "hollowreed_moonfang_drum", "meridian_choir_prism",
     "crownroot_oathseed_censer", "blackbell_verdict_gauge", "pale_sounding_memory_bell",
+    "ashcrown_crownring", "miremoon_crown_tooth", "noonshard_facet_pinion",
+    "rootvault_heartgrain_mantle", "quenchbell_red_gauge_plate", "saltwake_resonance_bell",
 )
 REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES = tuple(
     f"art/artifacts/runtime/{artifact_name}.png.import"
