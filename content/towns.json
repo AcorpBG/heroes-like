@@ -1932,6 +1932,680 @@
         },
         "rare_resource_id": "memory_salt"
       }
+    },
+    {
+      "id": "town_cinderlock_bastion",
+      "name": "Cinderlock Bastion",
+      "faction_id": "faction_embercourt",
+      "identity_summary": "A canal-lock citadel that turns charter tolls and beacon discipline into fast, well-supplied road columns.",
+      "strategic_role": "route_fortress",
+      "strategic_summary": "Cinderlock controls the ember canal and gives Embercourt a hard western hinge for levy, artillery, and relief traffic.",
+      "logistics_plan": {
+        "support_radius": 7,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "Without nearby support yards and signal posts, the lock fort loses the reserve tempo that makes its canal line formidable."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 108,
+          "ore": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {
+            "gold": 24
+          },
+          "support": {
+            "gold": 20
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 5,
+        "growth_bonus": {
+          "unit_embercourt_fordhook_cadets": 2,
+          "unit_embercourt_bargebow_crews": 1
+        },
+        "cost_discount_percent": {
+          "unit_embercourt_fordhook_cadets": 6,
+          "unit_embercourt_bargebow_crews": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_muster_yard",
+        "building_watch_barracks"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_stone_store",
+        "building_bowyer_lodge",
+        "building_beacon_range",
+        "building_river_granary_exchange",
+        "building_signal_citadel",
+        "building_citadel_pikehall",
+        "building_charter_bastion",
+        "building_embercourt_granary_lock_exchange",
+        "building_embercourt_tollstone_weir",
+        "building_embercourt_bargebow_slip",
+        "building_embercourt_oath_pikehall",
+        "building_embercourt_beacon_court",
+        "building_embercourt_drake_sluice",
+        "building_embercourt_charter_bastion",
+        "building_embercourt_lockhouse_tally",
+        "building_embercourt_beacon_writs",
+        "building_embercourt_lantern_court",
+        "building_embercourt_relief_quay",
+        "building_embercourt_charter_flame",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_trailglyph",
+            "spell_bulwark_litany"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_quickmarch_hymn",
+            "spell_lantern_phalanx",
+            "spell_survey_chain"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_ember_archer",
+          "count": 3
+        },
+        {
+          "unit_id": "unit_embercourt_bargebow_crews",
+          "count": 1
+        }
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 3,
+          "ore": 3,
+          "embergrain": 0,
+          "aetherglass": 0,
+          "peatwax": 0,
+          "verdant_grafts": 0,
+          "brass_scrip": 0,
+          "memory_salt": 0
+        },
+        "daily_income": {
+          "gold": 1500,
+          "wood": 1,
+          "ore": 1,
+          "embergrain": 1,
+          "aetherglass": 1,
+          "peatwax": 1,
+          "verdant_grafts": 1,
+          "brass_scrip": 1,
+          "memory_salt": 1
+        },
+        "rare_resource_id": "embergrain"
+      },
+      "content_status": "third_hearth_five_faction_front"
+    },
+    {
+      "id": "town_dawnmirror_observatory",
+      "name": "Dawnmirror Observatory",
+      "faction_id": "faction_sunvault",
+      "identity_summary": "A sunrise observatory whose great mirror funds harmonic wards, prism cadres, and calibrated aurora artillery.",
+      "strategic_role": "celestial_battery",
+      "strategic_summary": "Dawnmirror gives Sunvault a long-view bastion that couples magical study to disciplined ranged defense.",
+      "logistics_plan": {
+        "support_radius": 7,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "The observatory depends on lens relays and pilgrim roads; isolated, its delicate calibration cannot support the outer batteries."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 94,
+          "aetherglass": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "magic": {
+            "gold": 28
+          },
+          "support": {
+            "gold": 18
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 5,
+        "growth_bonus": {
+          "unit_sunvault_prism_adepts": 1,
+          "unit_sunvault_solar_array_striders": 1,
+          "unit_sunvault_aurora_ballistae": 1
+        },
+        "cost_discount_percent": {
+          "unit_sunvault_prism_adepts": 5,
+          "unit_sunvault_solar_array_striders": 4,
+          "unit_sunvault_aurora_ballistae": 3
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_shard_yard",
+        "building_prism_range",
+        "building_lantern_archive"
+      ],
+      "buildable_building_ids": [
+        "building_sunvault_lens_tithe",
+        "building_market_square",
+        "building_sunvault_relay_scribes",
+        "building_wayfarers_hall",
+        "building_mirror_forge",
+        "building_lens_gallery",
+        "building_duel_circle",
+        "building_resonant_exchange",
+        "building_harmonic_cloister",
+        "building_aurora_spire",
+        "building_starseer_annex",
+        "building_sunvault_shard_yard",
+        "building_sunvault_lens_gallery",
+        "building_sunvault_mirror_forge",
+        "building_sunvault_harmonic_cloister",
+        "building_sunvault_zenith_observatory",
+        "building_sunvault_aurora_spire",
+        "building_sunvault_daybreak_matrix",
+        "building_sunvault_prism_oratory",
+        "building_sunvault_halo_battery_yard",
+        "building_sunvault_zenith_court"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_prism_bastion",
+            "spell_stone_veil"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_resonant_chorus",
+            "spell_sunlance_arc",
+            "spell_bulwark_litany",
+            "spell_survey_chain"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 3
+        },
+        {
+          "unit_id": "unit_sunvault_aurora_ballistae",
+          "count": 1
+        }
+      ],
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "aetherglass": 0,
+          "embergrain": 0,
+          "peatwax": 0,
+          "verdant_grafts": 0,
+          "brass_scrip": 0,
+          "memory_salt": 0
+        },
+        "daily_income": {
+          "gold": 1500,
+          "wood": 1,
+          "ore": 1,
+          "aetherglass": 1,
+          "embergrain": 1,
+          "peatwax": 1,
+          "verdant_grafts": 1,
+          "brass_scrip": 1,
+          "memory_salt": 1
+        },
+        "rare_resource_id": "aetherglass"
+      },
+      "content_status": "third_hearth_five_faction_front"
+    },
+    {
+      "id": "town_briarwheel_enclave",
+      "name": "Briarwheel Enclave",
+      "faction_id": "faction_thornwake",
+      "identity_summary": "A migrating ring of living roots that grows thorn companies, sporeglass medicine, and road-ready garden stores.",
+      "strategic_role": "mobile_grove",
+      "strategic_summary": "Briarwheel lets Thornwake move a durable nursery front along threatened roads without surrendering deep-grove support.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "The root wheel needs orchard, shrine, and outpost anchors; sever those links and its living road becomes a stranded thicket."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 76,
+          "wood": 1,
+          "verdant_grafts": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {
+            "gold": 18
+          },
+          "support": {
+            "gold": 26
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_thornwake_thornwhip_carriers": 1,
+          "unit_thornwake_sporeglass_menders": 1,
+          "unit_thornwake_barkmantle_rams": 1
+        },
+        "cost_discount_percent": {
+          "unit_thornwake_thornwhip_carriers": 5,
+          "unit_thornwake_sporeglass_menders": 5,
+          "unit_thornwake_barkmantle_rams": 3
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_thornwake_seed_vault",
+        "building_thornwake_sporeglass_hothouse"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_thornwake_rootroad_markers",
+        "building_thornwake_loam_ledger",
+        "building_thornwake_pollen_litany",
+        "building_thornwake_bramblewall_coppice",
+        "building_thornwake_old_grove_accord",
+        "building_thornwake_rootweave_tithe",
+        "building_thornwake_bramble_marshal_moot",
+        "building_thornwake_spore_oath_chantry",
+        "building_thornwake_thornwarden_husk_yard",
+        "building_thornwake_verdant_concord_seat",
+        "building_thornwake_root_cairn_watch",
+        "building_thornwake_sap_chandler_grove",
+        "building_thornwake_bastion_seed_conclave",
+        "building_thornwake_mycorrhizal_store",
+        "building_thornwake_rootlaw_moot",
+        "building_thornwake_bramble_toll",
+        "building_thornwake_barkmantle_run",
+        "building_thornwake_pilgrim_orchard",
+        "building_thornwake_graftworks",
+        "building_thornwake_worldroot_gate"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_briar_bind",
+            "spell_graft_mend",
+            "spell_rootway_tangle"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_trailglyph",
+            "spell_stone_veil",
+            "spell_survey_chain"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_thornwake_thornwhip_carriers",
+          "count": 3
+        },
+        {
+          "unit_id": "unit_thornwake_barkmantle_rams",
+          "count": 1
+        }
+      ],
+      "content_status": "third_hearth_five_faction_front",
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "verdant_grafts": 0,
+          "aetherglass": 0,
+          "embergrain": 0,
+          "peatwax": 0,
+          "brass_scrip": 0,
+          "memory_salt": 0
+        },
+        "daily_income": {
+          "gold": 1350,
+          "wood": 1,
+          "ore": 1,
+          "verdant_grafts": 1,
+          "aetherglass": 1,
+          "embergrain": 1,
+          "peatwax": 1,
+          "brass_scrip": 1,
+          "memory_salt": 1
+        },
+        "rare_resource_id": "verdant_grafts"
+      }
+    },
+    {
+      "id": "town_cindercoil_foundry",
+      "name": "Cindercoil Foundry",
+      "faction_id": "faction_brasshollow",
+      "identity_summary": "A pressure-coil foundry that exchanges ore and furnace heat for armored crews, boiler guns, and relentless production.",
+      "strategic_role": "industrial_fortress",
+      "strategic_summary": "Cindercoil gives Brasshollow a fortified manufacturing heart able to replace heavy losses along the contract road.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "The foundry consumes ore, ledgers, and cooling water at scale; losing its linked depots turns the coil into a brittle furnace."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 90,
+          "ore": 1,
+          "brass_scrip": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {
+            "gold": 30
+          },
+          "support": {
+            "gold": 16
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 5,
+        "growth_bonus": {
+          "unit_brasshollow_furnace_pavis_teams": 1,
+          "unit_brasshollow_boiler_rivetcasters": 1
+        },
+        "cost_discount_percent": {
+          "unit_brasshollow_furnace_pavis_teams": 5,
+          "unit_brasshollow_boiler_rivetcasters": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_brasshollow_ore_tithe_office",
+        "building_brasshollow_rivet_kennels"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_brasshollow_scalehouse",
+        "building_brasshollow_clause_court",
+        "building_brasshollow_heatwright_vestry",
+        "building_brasshollow_gauge_arsenal",
+        "building_brasshollow_debtworks_vault",
+        "building_brasshollow_ledger_mint",
+        "building_brasshollow_foreman_clausehouse",
+        "building_brasshollow_caliper_sanctum",
+        "building_brasshollow_redline_assembly_yard",
+        "building_brasshollow_brassbound_directorate",
+        "building_brasshollow_quenchwright_bay",
+        "building_brasshollow_rail_tax_office",
+        "building_brasshollow_warrant_engine_house",
+        "building_brasshollow_pavis_foundry",
+        "building_brasshollow_boiler_cathedral",
+        "building_brasshollow_pressure_rail",
+        "building_brasshollow_crucible_dock",
+        "building_brasshollow_titan_charter_hall"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_heat_rite",
+            "spell_pressure_clause"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_bulwark_litany",
+            "spell_survey_chain"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_brasshollow_furnace_pavis_teams",
+          "count": 3
+        },
+        {
+          "unit_id": "unit_brasshollow_boiler_rivetcasters",
+          "count": 1
+        }
+      ],
+      "content_status": "third_hearth_five_faction_front",
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 4,
+          "ore": 4,
+          "brass_scrip": 0,
+          "aetherglass": 0,
+          "embergrain": 0,
+          "peatwax": 0,
+          "verdant_grafts": 0,
+          "memory_salt": 0
+        },
+        "daily_income": {
+          "gold": 1500,
+          "wood": 1,
+          "ore": 1,
+          "brass_scrip": 1,
+          "aetherglass": 1,
+          "embergrain": 1,
+          "peatwax": 1,
+          "verdant_grafts": 1,
+          "memory_salt": 1
+        },
+        "rare_resource_id": "brass_scrip"
+      }
+    },
+    {
+      "id": "town_gloamwake_anchorage",
+      "name": "Gloamwake Anchorage",
+      "faction_id": "faction_veilmourn",
+      "identity_summary": "A ribbed ghost-dock whose bell rites, salvage contracts, and fogglass slips muster hard-hitting wake companies.",
+      "strategic_role": "spectral_drydock",
+      "strategic_summary": "Gloamwake gives Veilmourn a defensible inland anchorage for refitting corsairs and sounding deeper fog routes.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "The anchorage needs salvage posts, shrines, and pilot marks; stripped of them, its great rib-dock becomes an empty memorial."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 82,
+          "wood": 1,
+          "memory_salt": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "magic": {
+            "gold": 22
+          },
+          "support": {
+            "gold": 24
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_veilmourn_mourning_lanterns": 1,
+          "unit_veilmourn_maskglass_corsairs": 1,
+          "unit_veilmourn_undertow_harpooners": 1
+        },
+        "cost_discount_percent": {
+          "unit_veilmourn_mourning_lanterns": 5,
+          "unit_veilmourn_maskglass_corsairs": 4,
+          "unit_veilmourn_undertow_harpooners": 3
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_veilmourn_bell_harbor",
+        "building_veilmourn_ransom_exchange"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_veilmourn_fog_signal_buoys",
+        "building_veilmourn_salvage_ledger",
+        "building_veilmourn_wake_oratory",
+        "building_veilmourn_black_sail_loft",
+        "building_veilmourn_memory_anchor",
+        "building_veilmourn_salt_counting_house",
+        "building_veilmourn_mourner_pilot_guild",
+        "building_veilmourn_tideglass_chapel",
+        "building_veilmourn_drowned_map_room",
+        "building_veilmourn_memory_rite_court",
+        "building_veilmourn_bell_chain_watch",
+        "building_veilmourn_saltwake_factor",
+        "building_veilmourn_drowned_admiralty",
+        "building_veilmourn_mirror_drydock",
+        "building_veilmourn_harpoon_gantry",
+        "building_veilmourn_obituary_vault",
+        "building_veilmourn_mistgate_slip",
+        "building_veilmourn_leviathan_sounding"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_fogwake_step",
+            "spell_obituary_mark",
+            "spell_fogline_drift"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_trailglyph",
+            "spell_coal_rain",
+            "spell_survey_chain"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 3
+        },
+        {
+          "unit_id": "unit_veilmourn_undertow_harpooners",
+          "count": 1
+        }
+      ],
+      "content_status": "third_hearth_five_faction_front",
+      "development_balance": {
+        "profile_id": "authored_town_30_turn_full_development_v1",
+        "target_complete_turns": 30,
+        "one_build_per_turn": true,
+        "starting_resources": {
+          "gold": 3000,
+          "wood": 1,
+          "ore": 1,
+          "memory_salt": 0,
+          "aetherglass": 0,
+          "embergrain": 0,
+          "peatwax": 0,
+          "verdant_grafts": 0,
+          "brass_scrip": 0
+        },
+        "daily_income": {
+          "gold": 1400,
+          "wood": 1,
+          "ore": 1,
+          "memory_salt": 1,
+          "aetherglass": 1,
+          "embergrain": 1,
+          "peatwax": 1,
+          "verdant_grafts": 1,
+          "brass_scrip": 1
+        },
+        "rare_resource_id": "memory_salt"
+      }
     }
   ]
 }

@@ -14538,6 +14538,32 @@ Completion evidence:
 Non-goals:
 - no new reward engine, ship/embarkation system, Native RMG generation/parity change, save-version bump, broad AI/economy/balance redesign, campaign expansion, certification, publication, whole-game validation, or release-readiness claim.
 
+## Five-Faction Third Hearths
+
+id: `content-five-faction-third-hearths-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one original third town for Embercourt, Sunvault, Thornwake, Brasshollow, and Veilmourn, closing the current two-town breadth gap without adding another Mireclaw town;
+- give every town a distinct strategic identity, economy modifier, recruitment emphasis, garrison, logistics plan, build roster, and spell library through the existing production town systems;
+- ship all five towns together in one original large skirmish scenario whose ownership and objectives make each town enterable, capturable, buildable, recruitable, and save/load persistent;
+- generate five distinct original town landmarks and pack them into one compact runtime atlas with exact per-town identity mapping.
+
+Completion criteria:
+- all five towns resolve through faction-correct build and muster menus, exact map art, capture ownership, AI recognition, and save-version-9 continuity;
+- the new scenario places all five towns on collision-free approaches with a viable player start, enemy pressure, and capture objectives that exercise the new content;
+- one consolidated five-town gameplay/art/save smoke, repository validation, and bounded Linux/Windows package startup gates pass after the full family is implemented.
+
+Completion evidence:
+- shipped Cinderlock Bastion, Dawnmirror Observatory, Briarwheel Enclave, Cindercoil Foundry, and Gloamwake Anchorage as full production towns, giving every non-Mireclaw faction a third town;
+- shipped the 32x20 Third Hearths Confluence skirmish with all five new towns plus Duskfen, ten resource sites, three artifacts, three encounters, five hooks, and town-capture objectives;
+- one consolidated runtime smoke passed all 20 town identities at both supported viewports and exercised each new town's build/muster catalogs, capture objective, and save-version-9 ownership/active-town continuity;
+- repository validation and matching Linux/Windows 249844748-byte package startup gates passed with generated source art excluded and 155252 bytes of package-ceiling headroom.
+
+Non-goals:
+- no new town engine, new faction, ship/embarkation system, Native RMG generation/parity change, save-version bump, broad economy or combat rebalance, campaign expansion, certification, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

@@ -202,6 +202,61 @@
       "source_model": "built_in_image_gen_original_landmark",
       "assigned_town_id": "town_veilmourn_fogchart_mooring"
     },
+    "town_identity_cinderlock_bastion": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "atlas_region": [0, 0, 128, 128],
+      "atlas_size": [640, 128],
+      "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_cinderlock_bastion_source.png",
+      "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+      "assigned_town_id": "town_cinderlock_bastion",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "ember_canal_lock_fort",
+      "accessible_description": "A compact red-roofed stone lock fort spans an ember canal beneath copper beacons."
+    },
+    "town_identity_dawnmirror_observatory": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "atlas_region": [128, 0, 128, 128],
+      "atlas_size": [640, 128],
+      "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_dawnmirror_observatory_source.png",
+      "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+      "assigned_town_id": "town_dawnmirror_observatory",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "great_sunrise_mirror_observatory",
+      "accessible_description": "An ivory observatory gathers around a broad gold-rimmed dawn mirror and twin blue prism towers."
+    },
+    "town_identity_briarwheel_enclave": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "atlas_region": [256, 0, 128, 128],
+      "atlas_size": [640, 128],
+      "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_briarwheel_enclave_source.png",
+      "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+      "assigned_town_id": "town_briarwheel_enclave",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "living_root_wheel_enclave",
+      "accessible_description": "A vast circular root wheel holds mossy homes, amber seed lanterns, and antlered branch towers."
+    },
+    "town_identity_cindercoil_foundry": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "atlas_region": [384, 0, 128, 128],
+      "atlas_size": [640, 128],
+      "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_cindercoil_foundry_source.png",
+      "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+      "assigned_town_id": "town_cindercoil_foundry",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "pressure_coil_foundry_fortress",
+      "accessible_description": "A black-brick foundry fortress wraps furnaces and gantries around one immense glowing copper coil."
+    },
+    "town_identity_gloamwake_anchorage": {
+      "path": "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png",
+      "atlas_region": [512, 0, 128, 128],
+      "atlas_size": [640, 128],
+      "source_generated": "res://art/overworld/source/generated/towns/third_hearths/town_gloamwake_anchorage_source.png",
+      "source_model": "built_in_image_gen_original_third_hearth_town_atlas",
+      "assigned_town_id": "town_gloamwake_anchorage",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "spectral_rib_drydock_anchorage",
+      "accessible_description": "A moonlit ghost-dock rises through colossal ship ribs beneath teal sails and a silver mourning bell."
+    },
     "hero_faction_embercourt": {
       "path": "res://art/overworld/runtime/heroes/factions/embercourt.png",
       "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
@@ -7195,7 +7250,12 @@
     "town_veilmourn_bellwake_harbor": "town_identity_veilmourn_bellwake_harbor",
     "town_thornwake_rootgate_nursery": "town_identity_thornwake_rootgate_nursery",
     "town_brasshollow_clauseworks_depot": "town_identity_brasshollow_clauseworks_depot",
-    "town_veilmourn_fogchart_mooring": "town_identity_veilmourn_fogchart_mooring"
+    "town_veilmourn_fogchart_mooring": "town_identity_veilmourn_fogchart_mooring",
+    "town_cinderlock_bastion": "town_identity_cinderlock_bastion",
+    "town_dawnmirror_observatory": "town_identity_dawnmirror_observatory",
+    "town_briarwheel_enclave": "town_identity_briarwheel_enclave",
+    "town_cindercoil_foundry": "town_identity_cindercoil_foundry",
+    "town_gloamwake_anchorage": "town_identity_gloamwake_anchorage"
   },
   "hero_faction_sprites": {
     "faction_embercourt": "hero_faction_embercourt",

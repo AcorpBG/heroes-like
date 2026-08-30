@@ -106316,6 +106316,16 @@
       "startedAt": "2026-08-30T03:29:57Z",
       "notes": "Shipped Eightfold Reliquary March as scenario 74 with eight exact guarded claims, six promoted specialty payoff sets, eight distinct generated claimed-state frames in one 384x48 atlas, and exact save-version-9 behavior. One consolidated eight-case smoke, repository validation, and matching 249694792-byte Linux/Windows package boots passed; source art is excluded and no whole-game release claim is made.",
       "completedAt": "2026-08-30T04:06:40Z"
+    },
+    {
+      "id": "content-five-faction-third-hearths-10184",
+      "title": "content five faction third hearths 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T04:37:22Z",
+      "startedAt": "2026-08-30T04:21:00Z",
+      "notes": "Shipped one third production town for each non-Mireclaw faction, all five together in the 32x20 Third Hearths Confluence scenario, and five original landmarks in one compact runtime atlas. One consolidated five-town gameplay/art/save smoke, repository validation, and matching 249844748-byte Linux/Windows package startups passed; generated sources are excluded and no whole-game release claim is made.",
+      "completedAt": "2026-08-30T04:37:22Z"
     }
   ],
   "project": "heroes-like",
@@ -106325,8 +106335,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Eightfold Reliquary slice is complete; the broader release-bound content goal still needs another substantial family selected before more implementation begins.",
-  "remainingWork": "Select the next coherent content family and keep its runtime assets within the remaining 305208-byte PCK headroom, or first retire/package-compress existing payloads if the next family needs more space.",
+  "remainingGap": "The Five-Faction Third Hearths slice is complete. The broader content and unique-art goal remains open, but the release package now has only 155252 bytes of ceiling headroom before another generated-art batch.",
+  "remainingWork": "Select the next substantial live content family and budget or reduce shipped runtime art before adding it; keep validation consolidated at the batch boundary instead of running repeated small smokes.",
   "reportOnlyEvidence": [
     {
       "entries": [
