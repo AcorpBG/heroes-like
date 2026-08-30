@@ -1503,7 +1503,7 @@
       "id": "building_thornwake_sporeglass_hothouse",
       "name": "Sporeglass Hothouse",
       "category": "magic",
-      "description": "Warm seedglass houses raise menders for recovery work. It opens tier 3 town spell study.",
+      "description": "Warm seedglass houses raise Menders and train Seedshield Wardens for recovery and line-holding work. It opens tier 3 town spell study.",
       "cost": {
         "gold": 1610,
         "wood": 1
@@ -1515,10 +1515,12 @@
       ],
       "unlock_unit_id": "unit_thornwake_sporeglass_menders",
       "growth_bonus": {
-        "unit_thornwake_sporeglass_menders": 5
+        "unit_thornwake_sporeglass_menders": 5,
+        "unit_thornwake_seedshield_wardens": 1
       },
       "recruitment_discount_percent": {
-        "unit_thornwake_sporeglass_menders": 6
+        "unit_thornwake_sporeglass_menders": 6,
+        "unit_thornwake_seedshield_wardens": 4
       },
       "readiness_bonus": 6,
       "spell_tier": 3
@@ -1794,7 +1796,7 @@
       "id": "building_brasshollow_pavis_foundry",
       "name": "Pavis Foundry",
       "category": "support",
-      "description": "Foundries stamp furnace pavises for shield teams.",
+      "description": "Foundries stamp furnace pavises and calibrate Gaugefire Arbalists for the reserve line.",
       "cost": {
         "gold": 1610,
         "wood": 1
@@ -1806,10 +1808,12 @@
       ],
       "unlock_unit_id": "unit_brasshollow_furnace_pavis_teams",
       "growth_bonus": {
-        "unit_brasshollow_furnace_pavis_teams": 5
+        "unit_brasshollow_furnace_pavis_teams": 5,
+        "unit_brasshollow_gaugefire_arbalists": 1
       },
       "recruitment_discount_percent": {
-        "unit_brasshollow_furnace_pavis_teams": 6
+        "unit_brasshollow_furnace_pavis_teams": 6,
+        "unit_brasshollow_gaugefire_arbalists": 4
       },
       "readiness_bonus": 6,
       "pressure_bonus": 1
@@ -2114,7 +2118,7 @@
       "id": "building_veilmourn_mirror_drydock",
       "name": "Mirror Drydock",
       "category": "support",
-      "description": "Mirror slips train corsairs to board from impossible angles.",
+      "description": "Mirror slips train Corsairs and Wakechain Boarders to enter the line from impossible angles.",
       "cost": {
         "gold": 1610,
         "wood": 1
@@ -2126,10 +2130,12 @@
       ],
       "unlock_unit_id": "unit_veilmourn_maskglass_corsairs",
       "growth_bonus": {
-        "unit_veilmourn_maskglass_corsairs": 5
+        "unit_veilmourn_maskglass_corsairs": 5,
+        "unit_veilmourn_wakechain_boarders": 1
       },
       "recruitment_discount_percent": {
-        "unit_veilmourn_maskglass_corsairs": 6
+        "unit_veilmourn_maskglass_corsairs": 6,
+        "unit_veilmourn_wakechain_boarders": 4
       },
       "readiness_bonus": 6,
       "pressure_bonus": 1

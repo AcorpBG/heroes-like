@@ -1,0 +1,28 @@
+{
+  "schema": "horizon_reserve_companies_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "normalization": "transparent subject fit into established 512x512 curated source dimensions",
+  "sources": [
+    {
+      "id": "unit_thornwake_seedshield_wardens",
+      "path": "res://art/units/source/curated/unit_thornwake_seedshield_wardens.png",
+      "sha256": "6b06cd03bab0045ad1c3e467b369bdb2d183ab56e848c77f351a6c3faf6480f3",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-470f60a7-2460-437e-8d6f-50ae1bb06ee2.png",
+      "prompt_summary": "Thornwake living-forest guardian with layered bark armor, hooked seed-spear, and translucent amber seedglass shield."
+    },
+    {
+      "id": "unit_brasshollow_gaugefire_arbalists",
+      "path": "res://art/units/source/curated/unit_brasshollow_gaugefire_arbalists.png",
+      "sha256": "cd0581b664a61a385cecb956af6d1284f12c46bfe142ffe82e8e5cacd4c2a6c6",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ebc8d631-e4d1-43a8-a254-1effc44e8d47.png",
+      "prompt_summary": "Brasshollow industrial arbalist with riveted basalt armor, compact crank arbalest, furnace mechanism, and red pressure gauge."
+    },
+    {
+      "id": "unit_veilmourn_wakechain_boarders",
+      "path": "res://art/units/source/curated/unit_veilmourn_wakechain_boarders.png",
+      "sha256": "a816f24a217b3d9eb35f7230b8f2bac76f674d4c0db4d3b08c609914688b9d06",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c7d363cd-b4cd-455e-9301-e5c90ea6ed99.png",
+      "prompt_summary": "Veilmourn fog-harbor boarder with salt-stained coat, hooked wakechain, crescent blade, and hooded mourning lantern."
+    }
+  ]
+}

@@ -24,8 +24,45 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-three-horizon-specialist-companies-10184` is completed as one coherent Thornwake, Brasshollow, and Veilmourn unit/building/battle batch.
-- Current package boundary: matching Linux and Windows release exports measure 249875744 bytes, 124256 bytes below the unchanged 250000000-byte ceiling; generated-source art, reports, Grastl source sheets, and Grastl experiments are excluded from both packages.
+- Current implementation slice: `content-three-horizon-reserve-companies-10184` is completed as one coherent Thornwake, Brasshollow, and Veilmourn early-company unit/recruitment/battle batch.
+- Current package boundary: matching Linux and Windows release exports measure 241390928 bytes, 8609072 bytes below the unchanged 250000000-byte ceiling; six superseded overworld textures with no live exact references are excluded symmetrically while their active replacements remain packaged.
+
+## Three Horizon Reserve Companies
+
+id: `content-three-horizon-reserve-companies-10184`
+
+Status: completed.
+
+Completion result:
+- Seedshield Wardens, Gaugefire Arbalists, and Wakechain Boarders are live as three original tier-three companies with distinct supported brace/shielding, volley/harry, and hookline/fog-screen tactical contracts;
+- the companies join the existing Sporeglass Hothouse, Pavis Foundry, and Mirror Drydock recruitment routes, each providing live weekly growth, muster authority, and a four-percent recruitment discount without another building record;
+- all three existing Horizon counterstroke armies now field their exact reserve company, and victory recruits two reserve survivors alongside two existing specialist survivors exactly once through the established hooks;
+- three built-in-image-generation masters provide complete portrait, battle-icon, standee, animation, and overworld surfaces with exact prompt/hash provenance; the inspected runtime standees retain distinct silhouettes at battle scale;
+- one consolidated three-case smoke passes live town recruitment, battle construction and resolution, paired survivor rewards, exact art loading, repeat protection, and save-version-9 continuity; repository validation passes;
+- Linux and Windows release exports both pass with matching 241390928-byte PCKs, all active terrain/fog/detail replacements present, all six superseded textures absent, and 8609072 bytes below the unchanged ceiling.
+
+Current finding:
+- Thornwake, Brasshollow, and Veilmourn each own only nine live faction units while the other production factions own eleven or twelve, leaving their early-company tactical and roster breadth visibly narrower;
+- the three Horizon specialist scenarios already carry exact day-four battles, one-time survivor hooks, and player towns whose established tier-three dwellings can provide repeatable growth and recruitment without adding duplicate scenario, encounter, building, or town records;
+- the current packages have only 124256 bytes of headroom, while four superseded legacy terrain textures plus superseded fog and detail-atlas textures remain packaged despite having no live exact references and newer active replacements.
+
+Implementation boundary:
+- add Seedshield Wardens, Gaugefire Arbalists, and Wakechain Boarders as original tier-three Thornwake, Brasshollow, and Veilmourn units with distinct supported tactical contracts and full runtime art surfaces;
+- add each reserve company to the growth and muster authority of its faction's existing tier-three Horizon dwelling, preserving construction prerequisites and town ownership boundaries;
+- place each company into its existing Horizon counterstroke army and add two one-time survivors to that battle's existing reward hook, preserving the specialist company and exact repeat protection;
+- generate three original transparent unit masters, derive the established portrait, battle icon, standee, animation, and overworld surfaces, and retain exact prompt/hash provenance outside release packages;
+- exclude only the six exact superseded overworld runtime textures from both release presets and make both package gates reject their return, while preserving every active replacement;
+- preserve deterministic battle authority, save version 9, existing scenario objectives, Windows/Linux paths, accessibility descriptions, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all three units construct in live production battles with exact statistics, supported abilities, and exact art; each existing counterstroke includes its reserve company and recruits two reserve survivors exactly once alongside the existing specialist survivors;
+- each Horizon player town exposes its reserve company through the correct built tier-three dwelling, weekly growth, live muster authority, recruitment, and save-version-9 round trip without cross-faction leakage;
+- one consolidated three-faction gameplay/battle/town/art/save smoke runs only after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling;
+- the six superseded overworld textures are absent from both packages while all active replacement terrain, fog, and detail surfaces remain present.
+
+Non-goals:
+- no new faction, hero, town, building, scenario, encounter, campaign, spell, artifact, battle algorithm, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes unit, name, statistic line, ability, visual design, or protected expression.
 
 ## Three Horizon Specialist Companies
 

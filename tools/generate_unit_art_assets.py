@@ -25,6 +25,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_debt_engine_exactors",
     "unit_brasshollow_foundry_saint",
     "unit_brasshollow_furnace_pavis_teams",
+    "unit_brasshollow_gaugefire_arbalists",
     "unit_brasshollow_pressure_lancers",
     "unit_brasshollow_quenchbell_mortars",
     "unit_brasshollow_rivet_hounds",
@@ -122,6 +123,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_thornwake_barkmantle_rams",
     "unit_thornwake_canopy_rammers",
     "unit_thornwake_seedglass_cantors",
+    "unit_thornwake_seedshield_wardens",
     "unit_thornwake_graft_matriarchs",
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
@@ -135,6 +137,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_veilmourn_mourning_lanterns",
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_saltwake_eulogists",
+    "unit_veilmourn_wakechain_boarders",
     "unit_veilmourn_undertow_harpooners",
     "unit_veilmourn_wakeglass_navigators",
 }
@@ -142,6 +145,9 @@ PACKAGE_OPTIMIZED_CURATED_IDS = {
     "unit_thornwake_seedglass_cantors",
     "unit_brasshollow_quenchbell_mortars",
     "unit_veilmourn_saltwake_eulogists",
+    "unit_thornwake_seedshield_wardens",
+    "unit_brasshollow_gaugefire_arbalists",
+    "unit_veilmourn_wakechain_boarders",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {}
 
