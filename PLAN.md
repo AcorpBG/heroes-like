@@ -15598,6 +15598,38 @@ Completion result:
 - one consolidated thirty-five-case Battle report publicly cast all twenty-five resolution-family identity additions and separately proved the final eleven preserve six damage, two recovery, and three cleanse outcomes with identical authority under reduced-motion/reduced-flash settings; Bell Lance, Sluice Poultice, and Index Correction captures passed visual review at 1280x720, 1600x900, and 1920x1080;
 - repository validation and sequential Linux/Windows exports passed; both 248396264-byte PCKs contained matching 4434-entry resource sets plus all eleven new import/texture pairs, remained 1603736 bytes below the unchanged ceiling, booted successfully, and excluded all generated source masters.
 
+## Four Dormant-Roster Field Companies
+
+id: `content-four-dormant-roster-field-companies-10184`
+
+Status: completed.
+
+Current finding:
+- four fully authored and illustrated faction units remain absent from every army group and encounter: Embercourt Lockglass Writcasters, Thornwake Pollenhook Whistlers, Brasshollow Tallyspring Throwers, and Veilmourn Gloamkeel Bulwarks;
+- each unit already owns live battle rules and complete unit-art surfaces, so the missing value is playable placement rather than another definition or presentation-only pass;
+- four existing compact skirmishes can absorb one faction-correct optional field company apiece without a new subsystem, map, unit, or save schema.
+
+Implementation boundary:
+- add four original faction field companies and encounters built around the dormant units, with supporting existing stacks, distinct commanders, tactical field objectives, rare-resource rewards, deterministic seeds, and victory flags;
+- place one exact company on each of Cinderquill Fenhound Lexicon, Pollenglass Greenbranch Copse, Gauge-Savant Milestone Calibration, and Obituary-Ink Frostwharf House so every selected unit enters normal skirmish and battle flow;
+- generate four original transparent encounter landmarks, pack them into one compact 192x48 runtime atlas, register exact accessible ownership, and retain source provenance outside release packages;
+- preserve all unit rules and balance, save version 9, existing scenario victory contracts, deterministic combat, Windows/Linux parity, generated-source exclusion, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all four formerly dormant units appear in valid live battle payloads on their selected scenarios, resolve authored objectives and rewards through Battle rules, set exact victory flags, and preserve encounter authority through save/load;
+- all four encounters resolve visually distinct exact atlas regions with non-color descriptions and fail closed on invalid identity data;
+- one consolidated four-case gameplay/art/save smoke runs only after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- four faction-correct three-stack field companies and four authored encounters now put Lockglass Writcasters, Pollenhook Whistlers, Tallyspring Throwers, and Gloamkeel Bulwarks into live battle payloads, closing the only four zero-army/zero-encounter gaps in the 130-unit catalog;
+- Horizon Compact, Crownroot Quenchline Verdict, Blackbell Saltwake Foreclosure, and Pale Sounding Tidewrit Reckoning each gained one optional deterministic exact-art front with a distinct tactical objective, rare-resource reward, and victory flag; catalog breadth is now 125 encounters, 183 army groups, 400 placements, and 118 placed identities;
+- four original built-in-generated transparent landmark masters produce one 192x48 exact-identity runtime atlas; the single consolidated four-case visual/gameplay/save smoke passed all battles, rewards, flags, atlas regions, collision checks, four 1280x720 captures, and save-version-9 round trips;
+- repository validation passed, and sequential Linux/Windows release exports and packaged boots passed at matching 248424528-byte PCKs, leaving 1575472 bytes below the unchanged ceiling with all source masters excluded.
+
+Non-goals:
+- no new faction, hero, unit definition, town, building, spell, artifact, campaign, combat formula, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes unit, encounter, landmark, name, text, heraldry, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

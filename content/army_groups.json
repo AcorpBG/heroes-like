@@ -1714,6 +1714,38 @@
         {"unit_id": "unit_veilmourn_saltbell_casters", "count": 7},
         {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 3}
       ]
+    },
+    {
+      "id": "army_lockglass_citation_field", "name": "Lockglass Citation Field", "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_lockglass_writcasters", "count": 2},
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 5},
+        {"unit_id": "unit_embercourt_fordhook_cadets", "count": 9}
+      ]
+    },
+    {
+      "id": "army_pollenhook_whistle_line", "name": "Pollenhook Whistle Line", "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_pollenhook_whistlers", "count": 12},
+        {"unit_id": "unit_thornwake_seedcutters", "count": 6},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 2}
+      ]
+    },
+    {
+      "id": "army_tallyspring_proving_rack", "name": "Tallyspring Proving Rack", "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_tallyspring_throwers", "count": 12},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 6},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 3}
+      ]
+    },
+    {
+      "id": "army_gloamkeel_sounding_barricade", "name": "Gloamkeel Sounding Barricade", "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_gloamkeel_bulwarks", "count": 2},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 8},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 4}
+      ]
     }
   ]
 }
