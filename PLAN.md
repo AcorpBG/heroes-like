@@ -15536,6 +15536,37 @@ Non-goals:
 - no new spell definition, faction, hero, town, unit, encounter, scenario, combat formula, spell balance, AI rule, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes spell effect, icon, name, animation, text, faction device, or protected visual expression.
 
+## Fourteen Generic-Only Battle Spell VFX Identities
+
+id: `content-fourteen-generic-battle-spell-vfx-identities-10184`
+
+Status: completed.
+
+Current finding:
+- the first school-spanning batch raised exact Battle spell VFX ownership from seven to twenty-one spells, but twenty-five damage, recovery, and cleanse spells still resolve only the generic cast/impact visuals and therefore communicate less identity than the forty-four uncovered effect-family spells that at least retain Command Ward;
+- the generic-only group is the highest-impact remaining art gap because it includes low-tier, frequently available actions whose damage, recovery, or cleansing result is mechanically distinct while their live presentation is still interchangeable;
+- fourteen selected spells can use the existing manifest-owned imported-VFX, accessibility-suppression, deterministic Battle, and package boundaries without changing spell mechanics or adding another presentation subsystem.
+
+Implementation boundary:
+- add fourteen original transparent spell-impact assets, two per battle school: Lantern Oath and Writ Lance; Lowtide Rot and Leech Poultice; Array Ray and Crown Prism; Canopy Graft and Canopy Thorn; Coal Clause and Rivet Clause; Lantern Mark and Moon Mark; Compass Correction and Marker Tally;
+- register exact spell-to-cue ownership through the existing Battle VFX manifest so each selected public cast resolves its own imported identity while all eleven remaining unregistered generic-only spells continue to fail closed to the established generic cast/impact presentation;
+- retain high-resolution generated masters and exact prompt/hash/non-color-description provenance outside release packages, normalize compact 384x384 runtime RGBA assets, and preserve reduced-motion/reduced-flash compact feedback;
+- preserve all authored spell rules, values, availability, AI choices, save version 9, deterministic battle outcomes, Windows/Linux behavior, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all fourteen selected spells cast through public Battle rules, select exact visually and byte-distinct imported cues, retain correct damage/recovery/cleanse authority, and preserve identical results under reduced presentation settings;
+- one consolidated gameplay/accessibility/visual smoke runs after the complete batch, proves the exact-identity count rises to thirty-five while generic-only VFX falls to eleven, retains an unregistered generic fallback control, and captures representative damage, recovery, and cleanse effects at supported viewport sizes;
+- repository validation and sequential Linux/Windows packaged startup pass after the batch, with matching packaged resource sets below the unchanged ceiling, all fourteen runtime imports/textures present, and generated masters excluded.
+
+Non-goals:
+- no new spell definition, faction, hero, town, unit, encounter, scenario, combat formula, spell balance, AI rule, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes spell effect, icon, name, animation, text, faction device, or protected visual expression.
+
+Completion result:
+- fourteen original transparent and byte-distinct spell VFX identities now ship through the data-driven Battle manifest, raising exact spell presentation from twenty-one to thirty-five spells and reducing generic-only damage/recovery/cleanse presentation from twenty-five to eleven spells while retaining the intentional unregistered fallback control;
+- one consolidated thirty-five-case Battle report publicly cast the complete batch and proved nine damage, two recovery, and three cleanse outcomes retain identical authority under reduced-motion/reduced-flash settings; representative Writ Lance, Leech Poultice, and Crown Prism captures passed visual review at 1280x720, 1600x900, and 1920x1080;
+- repository validation and sequential Linux/Windows exports passed; both 247022896-byte PCKs contained matching 4412-entry resource sets plus all fourteen new import/texture pairs, remained 2977104 bytes below the unchanged ceiling, booted successfully, and excluded all generated source masters.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
