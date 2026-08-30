@@ -24,8 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-five-scouting-structures-10184`; the next coherent content family is not yet selected.
-- Current package boundary: both release exports measure 249416796 bytes, 583204 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-eleven-roads-objectives-10184`, which activated the remaining five signs, three route locks, and three objective-event markers from Batch 003 as one coherent roads-and-objectives family with one consolidated smoke.
+- Current package boundary: both release exports measure 249457112 bytes, 542888 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Eleven Roads And Objectives
+
+id: `content-eleven-roads-objectives-10184`
+
+Status: completed.
+
+Completion result:
+- all eleven Batch 003 roads-and-objectives sites are live in the new 16x10 Writbound Crossroads skirmish: five freely repeatable signs, three paid route locks, and three scenario-linked objective events;
+- the signs return their exact authored route guidance without mutating the session, the locks charge exact common-resource costs and persist opened route bodies, and the objective markers grant one-time rewards and satisfy exact flag objectives through save version 9;
+- both factions have authored wood, ore, and all-rare-resource sources, while three distinct existing Mireclaw battle identities provide the scenario's authored opposition without adding an encounter definition;
+- six distinct generated opened/activated states ship in one transparent 288x48 runtime atlas, with source prompts and originals retained outside release packages;
+- the single consolidated eleven-case gameplay/runtime/visual smoke, repository validation, and sequential Linux/Windows packaged boots pass with matching 249457112-byte PCKs, 542888 bytes below the unchanged ceiling.
+
+Current finding:
+- Mile Writ Sign, Reed Knot Waypost, Switchback Cairn, Ash Road Marker, and Underway Chalk Index own distinct original landmarks and authored hint categories but remain metadata-only and have no non-mutating read interaction;
+- Toll Chain Court, Root Lease Gate, and Pressure Rail Stop own route-lock identities but do not yet charge their passage or repair cost, open their blocking footprint, switch visual state, or persist that opened state;
+- Campaign Muster Seal, Broken Accord Marker, and Scenario Witness Stone remain placeholder objective-event contracts with no live flag/reward behavior, objective linkage, post-use art, or shipped placements.
+
+Implementation boundary:
+- activate all eleven site/object pairs in one integrated roads-and-objectives content slice, preserving the five signs as freely repeatable non-mutating information and implementing the six stateful objects through the existing resource-site save, reward, flag, and route-opening paths;
+- give every site a shipped placement in a coherent production scenario context, bind the three event markers to explicit scenario objectives, and make the three locks meaningfully gate traversal without adding a new battle identity;
+- create distinct original opened or activated visual states for the three locks and three event markers, packed into one compact 288x48 runtime atlas; preserve the five existing sign landmarks as their stable readable state;
+- preserve deterministic outcomes, save version 9, generated-source exclusion, accessibility descriptions, Windows/Linux parity, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all five signs can be read repeatedly without collecting the node or mutating the session and return their exact authored route guidance;
+- all three locks enforce their exact costs, open their route bodies once, persist and render their opened state, and reject repeat activation without mutation;
+- all three event markers set their exact scenario flags, grant their exact one-time payloads, satisfy explicitly linked objectives, persist and render their activated state, and reject repeat activation without mutation;
+- one consolidated eleven-case gameplay/runtime/visual smoke covers the family after implementation, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new combat, spell, unit, faction, hero, town, building, encounter identity, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes sign, gate, objective, name, text, reward, map placement, landmark, or protected visual expression.
 
 ## Five Scouting Structures
 

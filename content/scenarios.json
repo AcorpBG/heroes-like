@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 70,
+  "player_facing_active_scenario_count": 71,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -15044,6 +15044,97 @@
           "combat_seed": 26406,
           "prefer_identity_landmark": true
         }
+      ]
+    },
+    {
+      "id": "writbound-crossroads",
+      "name": "Writbound Crossroads",
+      "selection": {
+        "summary": "Mira surveys a disputed road compact where signs preserve the safe route, three old locks bar passage, and rival witnesses contest the final charter.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Writbound Reach (16x10)",
+        "player_summary": "Mira leads an Embercourt roadward column from Lantern Writ Hall.",
+        "enemy_summary": "A Mireclaw toll host holds the east road and its broken accord.",
+        "availability": {"campaign": false, "skirmish": true}
+      },
+      "map_size": {"width": 16, "height": 10},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_flintmere_column",
+      "hero_id": "hero_mira",
+      "starting_resources": {"gold": 1200, "wood": 5, "ore": 5},
+      "map": [
+        ["grass","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass"],
+        ["grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough"],
+        ["forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass"],
+        ["grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest"],
+        ["rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass"],
+        ["grass","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","grass","rough"],
+        ["grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough"],
+        ["forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass"],
+        ["grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest"],
+        ["rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass","rough","grass","forest","grass"]
+      ],
+      "start": {"x": 1, "y": 5},
+      "hero_starts": ["hero_mira"],
+      "objectives": {
+        "victory_text": "The five road signs agree, every lock stands open, and Mira seals the Writbound charter before living witnesses.",
+        "defeat_text": "The toll host closes the crossroads before the roadward compact can be witnessed.",
+        "victory": [
+          {"id":"claim_writbound_enemy_town","label":"Claim Reedchain Court","type":"town_owned_by_player","placement_id":"writbound_enemy_town"},
+          {"id":"break_writbound_toll_host","label":"Break the eastern toll host","type":"encounter_resolved","placement_id":"writbound_toll_host"},
+          {"id":"raise_campaign_muster","label":"Raise the campaign muster seal","type":"flag_true","flag":"writbound_campaign_muster_raised"},
+          {"id":"record_broken_accord","label":"Record the broken accord","type":"flag_true","flag":"writbound_broken_accord_recorded"},
+          {"id":"swear_route_witness","label":"Swear the route witness","type":"flag_true","flag":"writbound_route_witness_sworn"}
+        ],
+        "defeat": [
+          {"id":"hold_writbound_hall","label":"Keep Lantern Writ Hall","type":"town_not_owned_by_player","placement_id":"writbound_player_town"},
+          {"id":"mira_survives_writbound","label":"Mira must survive the survey","type":"session_flag_equals","flag":"campaign","value":"defeat"},
+          {"id":"contain_writbound_pressure","label":"Keep Mireclaw pressure below 13","type":"enemy_pressure_at_least","faction_id":"faction_mireclaw","threshold":13},
+          {"id":"seal_writbound_in_time","label":"Seal the compact before Day 16","type":"day_at_least","day":16}
+        ]
+      },
+      "script_hooks": [
+        {"id":"writbound_day_three_muster","priority":120,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"writbound_player_town"}],"effects":[{"type":"add_resources","resources":{"gold":280,"wood":1}},{"type":"town_add_recruits","placement_id":"writbound_player_town","recruits":{"unit_river_guard":3,"unit_ember_archer":2}},{"type":"message","text":"Lantern Writ Hall sends fresh roadward escorts into the disputed lanes."}]},
+        {"id":"writbound_town_claimed","priority":110,"conditions":[{"type":"objective_met","objective_id":"claim_writbound_enemy_town"}],"effects":[{"type":"town_add_building","placement_id":"writbound_enemy_town","building_id":"building_wayfarers_hall"},{"type":"set_flag","flag":"writbound_enemy_town_claimed","value":true},{"type":"message","text":"Mira posts Embercourt law at Reedchain Court."}]},
+        {"id":"writbound_counterstroke","priority":96,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"writbound_player_town"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"writbound_counterstroke","encounter_id":"encounter_mire_raid","x":15,"y":9,"difficulty":"scripted","spawned_by_faction_id":"faction_mireclaw","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Reedchain Court sends mud-runners around the southern marker road."}]},
+        {"id":"writbound_unwitnessed_pressure","priority":88,"conditions":[{"type":"day_at_least","day":6},{"type":"objective_not_met","objective_id":"swear_route_witness"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_mireclaw","amount":2},{"type":"message","text":"Without a sworn witness, the toll host keeps contesting every opened road."}]},
+        {"id":"writbound_toll_host_broken","priority":84,"conditions":[{"type":"encounter_resolved","placement_id":"writbound_toll_host"}],"effects":[{"type":"add_resources","resources":{"gold":220}},{"type":"award_experience","amount":140},{"type":"set_flag","flag":"writbound_toll_host_broken","value":true},{"type":"message","text":"The eastern toll host breaks and leaves the charter road open to Mira's witnesses."}]}
+      ],
+      "towns": [
+        {"placement_id":"writbound_player_town","town_id":"town_riverwatch","x":1,"y":5,"owner":"player"},
+        {"placement_id":"writbound_enemy_town","town_id":"town_duskfen","x":14,"y":5,"owner":"enemy"}
+      ],
+      "enemy_factions": [
+        {"faction_id":"faction_mireclaw","label":"Reedchain Toll Host","pressure_per_day":2,"pressure_per_enemy_town":1,"raid_threshold":5,"max_active_raids":2,"raid_pillage_delay":1,"raid_pillage":{"gold":160,"wood":1},"raid_encounter_ids":["encounter_mire_raid","encounter_nightglass_dominion"],"spawn_points":[{"x":14,"y":1},{"x":14,"y":8}],"siege_target_placement_id":"writbound_player_town","siege_active_raid_threshold":2,"siege_capture_progress":2}
+      ],
+      "resource_nodes": [
+        {"placement_id":"writbound_mile_writ","site_id":"site_mile_writ_sign","x":2,"y":1},
+        {"placement_id":"writbound_reed_knot","site_id":"site_reed_knot_waypost","x":4,"y":1},
+        {"placement_id":"writbound_switchback_cairn","site_id":"site_switchback_cairn","x":6,"y":1},
+        {"placement_id":"writbound_ash_marker","site_id":"site_ash_road_marker","x":8,"y":1},
+        {"placement_id":"writbound_chalk_index","site_id":"site_underway_chalk_index","x":10,"y":1},
+        {"placement_id":"writbound_toll_chain","site_id":"site_toll_chain_court","x":3,"y":4},
+        {"placement_id":"writbound_root_lease","site_id":"site_root_lease_gate","x":7,"y":4},
+        {"placement_id":"writbound_pressure_rail","site_id":"site_pressure_rail_stop","x":11,"y":4},
+        {"placement_id":"writbound_campaign_muster","site_id":"site_campaign_muster_seal","x":5,"y":8},
+        {"placement_id":"writbound_broken_accord","site_id":"site_broken_accord_marker","x":8,"y":8},
+        {"placement_id":"writbound_witness_stone","site_id":"site_scenario_witness_stone","x":11,"y":8},
+        {"placement_id":"writbound_player_wood","site_id":"site_wood_wagon","x":1,"y":3,"collected_by_faction_id":"faction_embercourt"},
+        {"placement_id":"writbound_player_ore","site_id":"site_ore_crates","x":2,"y":5,"collected_by_faction_id":"faction_embercourt"},
+        {"placement_id":"writbound_player_rare_exchange","site_id":"site_frontier_rare_exchange","x":2,"y":7,"collected_by_faction_id":"faction_embercourt"},
+        {"placement_id":"writbound_enemy_wood","site_id":"site_wood_wagon","x":14,"y":3,"collected_by_faction_id":"faction_mireclaw"},
+        {"placement_id":"writbound_enemy_ore","site_id":"site_ore_crates","x":13,"y":5,"collected_by_faction_id":"faction_mireclaw"},
+        {"placement_id":"writbound_enemy_rare_exchange","site_id":"site_frontier_rare_exchange","x":14,"y":7,"collected_by_faction_id":"faction_mireclaw"}
+      ],
+      "artifact_nodes": [
+        {"placement_id":"writbound_waymark_compass","artifact_id":"artifact_waymark_compass","x":3,"y":7},
+        {"placement_id":"writbound_milepost_lantern","artifact_id":"artifact_milepost_lantern","x":7,"y":7},
+        {"placement_id":"writbound_tollstone_ring","artifact_id":"artifact_tollstone_ring","x":12,"y":7}
+      ],
+      "encounters": [
+        {"placement_id":"writbound_western_levy","encounter_id":"encounter_hollow_mire","x":5,"y":5,"difficulty":"medium","combat_seed":26421},
+        {"placement_id":"writbound_eastern_levy","encounter_id":"encounter_mossglass_moonhunt","x":9,"y":5,"difficulty":"medium","combat_seed":26422},
+        {"placement_id":"writbound_toll_host","encounter_id":"encounter_nightglass_dominion","x":13,"y":7,"difficulty":"medium","combat_seed":26423}
       ]
     }
   ]

@@ -25241,14 +25241,14 @@
       "guard_expectation": {
         "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live repeatable route guidance with no collection or state mutation"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -25272,7 +25272,8 @@
         "sign_kind": "road_writ",
         "route_hint_category": "distance_and_toll_law",
         "player_text_key": "sign.mile_writ",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       }
     },
     {
@@ -25341,14 +25342,14 @@
       "guard_expectation": {
         "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live repeatable route guidance with no collection or state mutation"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -25372,7 +25373,8 @@
         "sign_kind": "reed_knot",
         "route_hint_category": "safe_channel_marker",
         "player_text_key": "sign.reed_knot",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       }
     },
     {
@@ -25441,14 +25443,14 @@
       "guard_expectation": {
         "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live repeatable route guidance with no collection or state mutation"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -25472,7 +25474,8 @@
         "sign_kind": "stone_cairn",
         "route_hint_category": "ridge_switchback_marker",
         "player_text_key": "sign.switchback_cairn",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       }
     },
     {
@@ -25541,14 +25544,14 @@
       "guard_expectation": {
         "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live repeatable route guidance with no collection or state mutation"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -25572,7 +25575,8 @@
         "sign_kind": "ash_route_marker",
         "route_hint_category": "heat_safe_lane",
         "player_text_key": "sign.ash_road_marker",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       }
     },
     {
@@ -25641,14 +25645,14 @@
       "guard_expectation": {
         "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live repeatable route guidance with no collection or state mutation"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -25672,7 +25676,8 @@
         "sign_kind": "chalk_index",
         "route_hint_category": "underway_junction_marker",
         "player_text_key": "sign.underway_chalk_index",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       }
     },
     {
@@ -25751,25 +25756,25 @@
       "interaction": {
         "cadence": "conditional",
         "remains_after_visit": true,
-        "state_after_visit": "unchanged",
+        "state_after_visit": "opened",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "route_state"
       },
       "guard_expectation": {
-        "tier": "standard",
+        "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid activation opens the blocking route body"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false
       },
       "animation_cues": [
@@ -25796,17 +25801,17 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {"gold": 220},
         "blocked_state_ids": [
           "gate_closed",
           "toll_unpaid"
         ],
-        "public_reason": "road court chain awaits scenario authorization",
-        "public_summary": "Route state metadata is authored for scenario use; no runtime route change is active in this batch."
+        "public_reason": "the road court chain remains closed until its stamped toll is paid",
+        "public_summary": "Paying the toll opens the chain court body and records the route state."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_opening_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "route_lock_contract": {
@@ -25815,7 +25820,8 @@
           "gate_closed",
           "toll_unpaid"
         ],
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -25894,25 +25900,25 @@
       "interaction": {
         "cadence": "conditional",
         "remains_after_visit": true,
-        "state_after_visit": "unchanged",
+        "state_after_visit": "opened",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "route_state"
       },
       "guard_expectation": {
-        "tier": "standard",
+        "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid activation opens the blocking route body"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false
       },
       "animation_cues": [
@@ -25939,17 +25945,17 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {"gold": 100, "wood": 2},
         "blocked_state_ids": [
           "lease_unread",
           "root_gate_closed"
         ],
-        "public_reason": "living lease gate awaits scenario authorization",
-        "public_summary": "Route state metadata is authored for scenario use; no runtime route change is active in this batch."
+        "public_reason": "the living gate holds until the old root lease is renewed",
+        "public_summary": "Honoring the root lease withdraws the blocking roots and records the route state."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_opening_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "route_lock_contract": {
@@ -25958,7 +25964,8 @@
           "lease_unread",
           "root_gate_closed"
         ],
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -26037,25 +26044,25 @@
       "interaction": {
         "cadence": "conditional",
         "remains_after_visit": true,
-        "state_after_visit": "unchanged",
+        "state_after_visit": "opened",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "route_state"
       },
       "guard_expectation": {
-        "tier": "standard",
+        "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid activation opens the blocking route body"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false
       },
       "animation_cues": [
@@ -26082,17 +26089,17 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {"gold": 140, "ore": 2},
         "blocked_state_ids": [
           "rail_stop_locked",
           "pressure_low"
         ],
-        "public_reason": "rail stop awaits scenario authorization",
-        "public_summary": "Route state metadata is authored for scenario use; no runtime route change is active in this batch."
+        "public_reason": "the counterbalanced rail remains locked until repaired",
+        "public_summary": "Repairing the pressure rail lifts its blocking stop and records the route state."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_opening_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "route_lock_contract": {
@@ -26101,7 +26108,8 @@
           "rail_stop_locked",
           "pressure_low"
         ],
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -26159,24 +26167,24 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
       },
       "guard_expectation": {
-        "tier": "standard",
+        "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live one-time activation sets the linked scenario objective flag"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -26199,9 +26207,11 @@
       },
       "objective_event_contract": {
         "objective_kind": "muster_objective",
-        "event_expectation": "scenario script may reference this marker later",
-        "metadata_only": true,
-        "live_objective_runtime": false
+        "event_expectation": "raises the Writbound muster flag and satisfies its live scenario objective",
+        "scenario_id": "writbound-crossroads",
+        "objective_id": "raise_campaign_muster",
+        "metadata_only": false,
+        "live_objective_runtime": true
       }
     },
     {
@@ -26259,24 +26269,24 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
       },
       "guard_expectation": {
-        "tier": "heavy",
+        "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live one-time activation sets the linked scenario objective flag"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -26299,9 +26309,11 @@
       },
       "objective_event_contract": {
         "objective_kind": "accord_event",
-        "event_expectation": "scenario script may reference this marker later",
-        "metadata_only": true,
-        "live_objective_runtime": false
+        "event_expectation": "records the shattered compact and satisfies its live scenario objective",
+        "scenario_id": "writbound-crossroads",
+        "objective_id": "record_broken_accord",
+        "metadata_only": false,
+        "live_objective_runtime": true
       }
     },
     {
@@ -26359,24 +26371,24 @@
       "interaction": {
         "cadence": "scenario_scripted",
         "remains_after_visit": true,
-        "state_after_visit": "scenario_state",
+        "state_after_visit": "activated",
         "requires_ownership": false,
-        "requires_guard_clear": true,
+        "requires_guard_clear": false,
         "supports_revisit": true,
         "cooldown_days": 0,
         "refresh_rule": "scenario"
       },
       "guard_expectation": {
-        "tier": "standard",
+        "tier": "unguarded",
         "visible_cue": "site approach is readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live one-time activation sets the linked scenario objective flag"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -26399,9 +26411,11 @@
       },
       "objective_event_contract": {
         "objective_kind": "witness_marker",
-        "event_expectation": "scenario script may reference this marker later",
-        "metadata_only": true,
-        "live_objective_runtime": false
+        "event_expectation": "swears the route witness and satisfies its live scenario objective",
+        "scenario_id": "writbound-crossroads",
+        "objective_id": "swear_route_witness",
+        "metadata_only": false,
+        "live_objective_runtime": true
       }
     },
     {

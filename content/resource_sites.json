@@ -4986,11 +4986,11 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "sign_waypoint",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -4998,10 +4998,14 @@
         "sign_kind": "road_writ",
         "route_hint_category": "distance_and_toll_law",
         "player_text_key": "sign.mile_writ",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       },
+      "action_label": "Read Mile Writ",
+      "summary": "A stamped road law records the lawful distance and toll ahead.",
+      "sign_text": "Four road-miles east, the kingroad narrows at the old toll court; caravans should carry stamped coin or take the north ridge bypass.",
       "repeatable": true,
-      "visit_cooldown_days": 1
+      "visit_cooldown_days": 0
     },
     {
       "id": "site_reed_knot_waypost",
@@ -5010,11 +5014,11 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "sign_waypoint",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -5022,10 +5026,14 @@
         "sign_kind": "reed_knot",
         "route_hint_category": "safe_channel_marker",
         "player_text_key": "sign.reed_knot",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       },
+      "action_label": "Read Reed Knot",
+      "summary": "Knotted reeds preserve a ferryman's safe-channel warning.",
+      "sign_text": "Follow the double-knotted reeds until the water darkens, then turn toward the leaning willow; the bright shallows hide sucking mud.",
       "repeatable": true,
-      "visit_cooldown_days": 1
+      "visit_cooldown_days": 0
     },
     {
       "id": "site_switchback_cairn",
@@ -5034,11 +5042,11 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "sign_waypoint",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -5046,10 +5054,14 @@
         "sign_kind": "stone_cairn",
         "route_hint_category": "ridge_switchback_marker",
         "player_text_key": "sign.switchback_cairn",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       },
+      "action_label": "Read Switchback Cairn",
+      "summary": "A stacked-stone cairn marks the ridge's survivable ascent.",
+      "sign_text": "Climb west for three bends, cross beneath the split crag, and never cut the last switchback where loose shale falls into the ravine.",
       "repeatable": true,
-      "visit_cooldown_days": 1
+      "visit_cooldown_days": 0
     },
     {
       "id": "site_ash_road_marker",
@@ -5058,11 +5070,11 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "sign_waypoint",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -5070,10 +5082,14 @@
         "sign_kind": "ash_route_marker",
         "route_hint_category": "heat_safe_lane",
         "player_text_key": "sign.ash_road_marker",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       },
+      "action_label": "Read Ash Marker",
+      "summary": "A fired-clay marker points through the badland's cooler lanes.",
+      "sign_text": "Keep the black-glazed face on your left until dusk; the pale ash road crosses a heat vent and will blister iron-shod feet.",
       "repeatable": true,
-      "visit_cooldown_days": 1
+      "visit_cooldown_days": 0
     },
     {
       "id": "site_underway_chalk_index",
@@ -5082,11 +5098,11 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "sign_waypoint",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
@@ -5094,10 +5110,14 @@
         "sign_kind": "chalk_index",
         "route_hint_category": "underway_junction_marker",
         "player_text_key": "sign.underway_chalk_index",
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
       },
+      "action_label": "Read Chalk Index",
+      "summary": "Miner's chalk indexes the buried junctions by sound and draft.",
+      "sign_text": "Two taps mark the ore gallery, three the surface stair; at the fork with no echo, take the tunnel carrying the cold upward draft.",
       "repeatable": true,
-      "visit_cooldown_days": 1
+      "visit_cooldown_days": 0
     },
     {
       "id": "site_toll_chain_court",
@@ -5106,12 +5126,12 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "route_lock",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false
       },
       "route_lock_contract": {
@@ -5120,15 +5140,22 @@
           "gate_closed",
           "toll_unpaid"
         ],
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "transit_profile": {
         "mode": "scenario_gate",
         "route_role": "route_lock",
         "requires_repair": false,
         "paired_link_required": false,
-        "metadata_only": true
-      }
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Pay Toll Chain",
+      "summary": "A chartered chain court opens the kingroad after collecting its stamped passage fee.",
+      "service_cost": {"gold": 220},
+      "opens_route_on_claim": true,
+      "claim_flags": {"toll_chain_court_opened": true}
     },
     {
       "id": "site_root_lease_gate",
@@ -5137,12 +5164,12 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "route_lock",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false
       },
       "route_lock_contract": {
@@ -5151,15 +5178,22 @@
           "lease_unread",
           "root_gate_closed"
         ],
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "transit_profile": {
         "mode": "scenario_gate",
         "route_role": "route_lock",
         "requires_repair": false,
         "paired_link_required": false,
-        "metadata_only": true
-      }
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Honor Root Lease",
+      "summary": "Living lease-roots withdraw when travelers renew the old root compact.",
+      "service_cost": {"gold": 100, "wood": 2},
+      "opens_route_on_claim": true,
+      "claim_flags": {"root_lease_gate_opened": true}
     },
     {
       "id": "site_pressure_rail_stop",
@@ -5168,12 +5202,12 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "route_lock",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false
       },
       "route_lock_contract": {
@@ -5182,15 +5216,22 @@
           "rail_stop_locked",
           "pressure_low"
         ],
-        "metadata_only": true
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "transit_profile": {
         "mode": "scenario_gate",
         "route_role": "route_lock",
         "requires_repair": true,
         "paired_link_required": false,
-        "metadata_only": true
-      }
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Repair Pressure Rail",
+      "summary": "Fresh ore and coin restore the counterweight that lifts the rail stop clear.",
+      "service_cost": {"gold": 140, "ore": 2},
+      "opens_route_on_claim": true,
+      "claim_flags": {"pressure_rail_stop_opened": true}
     },
     {
       "id": "site_campaign_muster_seal",
@@ -5199,20 +5240,27 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "objective_event",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
       "objective_event_contract": {
         "objective_kind": "muster_objective",
-        "event_expectation": "scenario script may reference this marker later",
-        "metadata_only": true,
-        "live_objective_runtime": false
-      }
+        "event_expectation": "raises the Writbound muster flag and satisfies its live scenario objective",
+        "scenario_id": "writbound-crossroads",
+        "objective_id": "raise_campaign_muster",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "action_label": "Raise Muster Seal",
+      "summary": "A wax-and-bronze campaign seal calls nearby roadward volunteers to the banner.",
+      "claim_rewards": {"experience": 160},
+      "claim_recruits": {"unit_river_guard": 4},
+      "claim_flags": {"writbound_campaign_muster_raised": true}
     },
     {
       "id": "site_broken_accord_marker",
@@ -5221,20 +5269,26 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "objective_event",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
       "objective_event_contract": {
         "objective_kind": "accord_event",
-        "event_expectation": "scenario script may reference this marker later",
-        "metadata_only": true,
-        "live_objective_runtime": false
-      }
+        "event_expectation": "records the shattered compact and satisfies its live scenario objective",
+        "scenario_id": "writbound-crossroads",
+        "objective_id": "record_broken_accord",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "action_label": "Record Broken Accord",
+      "summary": "A split treaty stone still carries the names and forfeited bonds of both signatories.",
+      "claim_rewards": {"gold": 300, "experience": 180},
+      "claim_flags": {"writbound_broken_accord_recorded": true}
     },
     {
       "id": "site_scenario_witness_stone",
@@ -5243,20 +5297,28 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "objective_event",
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "status": "objective_event_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false
       },
       "objective_event_contract": {
         "objective_kind": "witness_marker",
-        "event_expectation": "scenario script may reference this marker later",
-        "metadata_only": true,
-        "live_objective_runtime": false
-      }
+        "event_expectation": "swears the route witness and satisfies its live scenario objective",
+        "scenario_id": "writbound-crossroads",
+        "objective_id": "swear_route_witness",
+        "metadata_only": false,
+        "live_objective_runtime": true
+      },
+      "action_label": "Swear Route Witness",
+      "summary": "A pale witness stone binds the surveyed road to a commander's spoken testimony.",
+      "claim_rewards": {"experience": 140},
+      "vision_radius": 4,
+      "learn_spell_id": "spell_lens_glass_survey_24",
+      "claim_flags": {"writbound_route_witness_sworn": true}
     },
     {
       "id": "site_root_pass_arch",
