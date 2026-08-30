@@ -7684,6 +7684,9 @@
         "ore": 2,
         "experience": 160
       },
+      "claim_flags": {
+        "barrow_vault_opened": true
+      },
       "batch006_role": "minor_guarded_reward",
       "guard_profile": {
         "tier": "standard",
@@ -7731,7 +7734,7 @@
           "ore"
         ],
         "artifact_reward_execution": true,
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
@@ -7742,13 +7745,13 @@
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "normalized_content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -8308,6 +8311,9 @@
         "ore": 2,
         "experience": 220
       },
+      "claim_flags": {
+        "drowned_reliquary_recovered": true
+      },
       "batch006_role": "major_guarded_reward",
       "guard_profile": {
         "tier": "heavy",
@@ -8356,7 +8362,7 @@
           "wood"
         ],
         "artifact_reward_execution": true,
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
@@ -8367,13 +8373,13 @@
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "normalized_content_batch_id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184"
     },
@@ -8887,6 +8893,16 @@
         "ore": 2,
         "experience": 270
       },
+      "persistent_control": true,
+      "learn_spell_id": "spell_survey_chain",
+      "town_support": {
+        "readiness_bonus": 3,
+        "recovery_relief": 2,
+        "growth_bonus_percent": 5
+      },
+      "claim_flags": {
+        "lantern_crown_nave_consecrated": true
+      },
       "batch006_role": "major_guarded_reward",
       "guard_profile": {
         "tier": "heavy",
@@ -8936,18 +8952,18 @@
           "ore",
           "wood"
         ],
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": false,
         "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "resource_and_artifact_rewards_live",
+        "status": "spell_artifact_and_town_support_live",
         "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
+        "save_payload_required": true,
         "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
@@ -9051,6 +9067,13 @@
         "wood": 4,
         "experience": 230
       },
+      "claim_recruits": {
+        "unit_neutral_bogbell_mauls": 3,
+        "unit_neutral_peatflare_jarriers": 1
+      },
+      "claim_flags": {
+        "hive_of_reeds_reclaimed": true
+      },
       "batch006_role": "creature_bank_like",
       "guard_profile": {
         "tier": "heavy",
@@ -9099,18 +9122,18 @@
           "gold",
           "wood"
         ],
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": false,
         "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "resource_and_artifact_rewards_live",
+        "status": "recruit_resource_and_artifact_live",
         "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
+        "save_payload_required": true,
         "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
@@ -9130,6 +9153,14 @@
         "gold": 860,
         "ore": 3,
         "experience": 310
+      },
+      "claim_recruits": {
+        "unit_neutral_cliffhawk_wardens": 2,
+        "unit_neutral_windglass_slingers": 1
+      },
+      "vision_radius": 6,
+      "claim_flags": {
+        "glassbound_eyrie_secured": true
       },
       "batch006_role": "creature_bank_like",
       "guard_profile": {
@@ -9179,18 +9210,18 @@
           "gold",
           "ore"
         ],
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": false,
         "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "resource_and_artifact_rewards_live",
+        "status": "recruit_artifact_and_scouting_live",
         "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
+        "save_payload_required": true,
         "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
@@ -9210,6 +9241,13 @@
         "gold": 980,
         "ore": 5,
         "experience": 340
+      },
+      "claim_recruits": {
+        "unit_neutral_kilnward_mallets": 3,
+        "unit_neutral_cinderpot_hurlers": 1
+      },
+      "claim_flags": {
+        "rust_choir_foundry_silenced": true
       },
       "batch006_role": "creature_bank_like",
       "guard_profile": {
@@ -9259,18 +9297,18 @@
           "gold",
           "ore"
         ],
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": false,
         "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "resource_and_artifact_rewards_live",
+        "status": "recruit_resource_and_artifact_live",
         "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
+        "save_payload_required": true,
         "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
@@ -9291,6 +9329,10 @@
         "wood": 3,
         "ore": 2,
         "experience": 250
+      },
+      "opens_route_on_claim": true,
+      "claim_flags": {
+        "salt_wight_convoy_cleared": true
       },
       "batch006_role": "creature_bank_like",
       "guard_profile": {
@@ -9323,7 +9365,7 @@
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
         "one_time_reward": true,
-        "route_hybrid": false,
+        "route_hybrid": true,
         "metadata_only_guard_contract": false,
         "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false,
@@ -9341,21 +9383,21 @@
           "ore",
           "wood"
         ],
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": false,
         "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "resource_and_artifact_rewards_live",
+        "status": "resource_artifact_and_route_live",
         "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
+        "save_payload_required": true,
         "renderer_sprite_required": true,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": true,
         "market_changes": false,
         "scenario_placement_migration": true,
@@ -9454,6 +9496,13 @@
         "wood": 5,
         "experience": 330
       },
+      "claim_recruits": {
+        "unit_neutral_hedgehook_watch": 3,
+        "unit_neutral_thornbow_scouts": 2
+      },
+      "claim_flags": {
+        "rootwarden_stockade_reclaimed": true
+      },
       "batch006_role": "creature_bank_like",
       "guard_profile": {
         "tier": "elite",
@@ -9502,18 +9551,18 @@
           "gold",
           "wood"
         ],
-        "spell_recruit_route_rewards_are_metadata_only": true,
+        "spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": false,
         "artifact_reward_execution": true
       },
       "runtime_boundary": {
-        "status": "resource_and_artifact_rewards_live",
+        "status": "recruit_artifact_and_objective_live",
         "live_reward_grants": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
         "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
+        "save_payload_required": true,
         "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "route_effect_runtime_adopted": false,
