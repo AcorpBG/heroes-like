@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_horizon_citadel_relic",
+  "prompt_set_summary": "Six original faction relic cutouts for the horizon citadels: a rainwrit beacon seal, an antler moonfang drum, a meridian choir prism, a living oathseed censer, a blackbell pressure gauge, and a pale sounding memory bell. Each source was requested as one centered painterly strategy-game object with transparent padding, a strong small-icon silhouette, no scene, no text, no characters, no logos, and no borrowed franchise design.",
+  "runtime_icon_size": [128, 128],
+  "items": [
+    {
+      "artifact_id": "artifact_rainwrit_beacon_seal",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/rainwrit_beacon_seal_source.png",
+      "source_sha256": "9e57e396db43ba4445770c2060f18034d5251346e8d979677b50549b98079b2e",
+      "runtime_path": "res://art/artifacts/runtime/rainwrit_beacon_seal.png",
+      "runtime_sha256": "a24ad69542e9ea5a97baf937a3b980dd09ba9b33d80b536f71afe42179b214fd",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-70c3e9a4-eb7b-4ad2-9d1d-30124c07d10b.png",
+      "prompt_summary": "Rain-polished charter tablet, hooded beacon, and crossed sluice keys."
+    },
+    {
+      "artifact_id": "artifact_hollowreed_moonfang_drum",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/hollowreed_moonfang_drum_source.png",
+      "source_sha256": "d3e001d6e8456882e62460f8956f0fa897ce3cf1760cb5b51ad1e23a03ae50d0",
+      "runtime_path": "res://art/artifacts/runtime/hollowreed_moonfang_drum.png",
+      "runtime_sha256": "99a9ccbb01d1e426678242e8cb7b7cc609fbe9fd34eabfe70b8f73e1f412ca80",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fa53f6ae-c5d5-4c57-a944-4b66afe0a4be.png",
+      "prompt_summary": "Wet-hide hand drum with a crescent antler, reed rope, and peatwax beads."
+    },
+    {
+      "artifact_id": "artifact_meridian_choir_prism",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/meridian_choir_prism_source.png",
+      "source_sha256": "328fd09f68d9cf3be82a85d87f6cc83a02811d9e088dda0d2cb89c725bf7e4ca",
+      "runtime_path": "res://art/artifacts/runtime/meridian_choir_prism.png",
+      "runtime_sha256": "f7ca39e6425eaf86aa0ccdb0ddcabc3659428733ae0b1b3aab5c35a2ae0c3ccb",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b9c86bb0-f483-4781-8493-38fcd26e5ba8.png",
+      "prompt_summary": "Faceted crystal orrery with three singing forks and a suspended sun disk."
+    },
+    {
+      "artifact_id": "artifact_crownroot_oathseed_censer",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/crownroot_oathseed_censer_source.png",
+      "source_sha256": "fba2b9b9cb591e42542297eede36196b7f8ef9d2ff978d7f83748c552893f77e",
+      "runtime_path": "res://art/artifacts/runtime/crownroot_oathseed_censer.png",
+      "runtime_sha256": "7084fce708e47eec9511912e0f60f0c721d11afde4e8bb8cffab55ffd06fe424",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fed93544-2a8d-434a-a104-d04ddf0cf8fa.png",
+      "prompt_summary": "Living heartwood seed censer wrapped in sheltering roots and sporeglass vents."
+    },
+    {
+      "artifact_id": "artifact_blackbell_verdict_gauge",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/blackbell_verdict_gauge_source.png",
+      "source_sha256": "66bfac3d17c8d9dcf5809589f4312534d588210b542980f2ae5a08294515d280",
+      "runtime_path": "res://art/artifacts/runtime/blackbell_verdict_gauge.png",
+      "runtime_sha256": "867d56cd3540557be6f6648d6d7ae93996c712c3dc7a9ab1c298af1f112c7a28",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-9913539c-4b1d-4a39-8881-bb517c2384d0.png",
+      "prompt_summary": "Blackened bell hood, redline pressure gauge, and furnace-glass chamber."
+    },
+    {
+      "artifact_id": "artifact_pale_sounding_memory_bell",
+      "source_path": "res://art/artifacts/source/generated/horizon_relic_commissions/pale_sounding_memory_bell_source.png",
+      "source_sha256": "aaff3e55ed4210feee531167c574a418c385c26c380ddce7255e3665b8f19fa5",
+      "runtime_path": "res://art/artifacts/runtime/pale_sounding_memory_bell.png",
+      "runtime_sha256": "b4436cc3def1c393e6cf8e54569a1037c16fb510665aae35fa4faa12b0cb68a9",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a0376b03-7ae8-418b-9e64-c1d210156146.png",
+      "prompt_summary": "Salt-frosted ship bell with a suspended tideglass drop and sounding knots."
+    }
+  ]
+}

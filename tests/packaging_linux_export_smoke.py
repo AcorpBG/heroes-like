@@ -64,6 +64,8 @@ REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
 REQUIRED_GUARDED_RELIC_ICON_NAMES = (
     "lockfire_assize_seal", "miremoon_hunt_drum", "noonglass_orrery",
     "worldroot_covenant_heartwood", "seventh_clause_pressure_key", "last_bell_tideglass",
+    "rainwrit_beacon_seal", "hollowreed_moonfang_drum", "meridian_choir_prism",
+    "crownroot_oathseed_censer", "blackbell_verdict_gauge", "pale_sounding_memory_bell",
 )
 REQUIRED_GUARDED_RELIC_ICON_PCK_IMPORT_ENTRIES = tuple(
     f"art/artifacts/runtime/{artifact_name}.png.import"
