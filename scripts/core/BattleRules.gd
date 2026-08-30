@@ -12577,6 +12577,12 @@ static func _enemy_commander_state(encounter: Dictionary) -> Dictionary:
 	var commander = encounter.get("enemy_commander", {})
 	if not (commander is Dictionary) or commander.is_empty():
 		return {}
+	var roster_hero_id := String(commander.get("roster_hero_id", "")).strip_edges()
+	if roster_hero_id != "":
+		var hero_template := ContentService.get_hero(roster_hero_id)
+		var faction_id := String(commander.get("faction_id", hero_template.get("faction_id", ""))).strip_edges()
+		if not hero_template.is_empty() and faction_id == String(hero_template.get("faction_id", "")):
+			return EnemyAdventureRulesScript.build_roster_commander_state(roster_hero_id, faction_id)
 	var command = _normalize_command(commander.get("command", {}))
 	return SpellRulesScript.ensure_hero_spellbook(
 		{
@@ -12602,6 +12608,16 @@ static func _normalize_enemy_hero_state(
 			existing_state = seeded
 		else:
 			return template
+	var roster_hero_id := String(existing_state.get("roster_hero_id", "")).strip_edges()
+	if roster_hero_id != "":
+		var hero_template := ContentService.get_hero(roster_hero_id)
+		var faction_id := String(existing_state.get("faction_id", hero_template.get("faction_id", ""))).strip_edges()
+		if not hero_template.is_empty() and faction_id == String(hero_template.get("faction_id", "")):
+			existing_state = EnemyAdventureRulesScript.build_roster_commander_state(
+				roster_hero_id,
+				faction_id,
+				existing_state
+			)
 	var normalized = existing_state.duplicate(true)
 	var seeded_spellbook = seeded.get("spellbook", {})
 	if not (seeded_spellbook is Dictionary):

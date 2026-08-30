@@ -3000,6 +3000,84 @@
       "field_objectives": [{"id": "saltwake_belldeep_sounding", "type": "signal_beacon", "label": "Belldeep Sounding Chain", "summary": "Six submerged chimes keep the bellwhales inside a false fog bearing until the sounding chain is claimed.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["ranged", "initiative", "urgency"]}],
       "rewards": {"gold": 1040, "memory_salt": 2, "experience": 730},
       "victory_flags": ["sovereign_wild_saltwake_broken"]
+    },
+    {
+      "id": "encounter_rotlamp_spoor_court",
+      "name": "Rotlamp Spoor-Court",
+      "enemy_group_id": "army_rainledger_march_e",
+      "affiliation": "faction_mireclaw",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "battery_nest"],
+      "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_mireclaw_edda_rotlamp", "faction_id": "faction_mireclaw", "name": "Edda Rotlamp", "command": {"attack": 0, "defense": 1, "power": 2, "knowledge": 1}, "starting_spell_ids": ["spell_coal_rain", "spell_stone_veil", "spell_bloodwake_drum"], "battle_traits": ["bogwise", "artillerist"]},
+      "field_objectives": [{"id": "rotlamp_spore_lanterns", "type": "hazard_zone", "label": "Spoor-Lantern Court", "summary": "Edda's three rotlamps seed the flooded firing lane with ember spores until the court stakes are overturned.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "commander", "urgency"]}],
+      "rewards": {"gold": 240, "embergrain": 1, "experience": 220},
+      "victory_flags": ["rival_commander_rotlamp_broken"]
+    },
+    {
+      "id": "encounter_daynote_refraction_bench",
+      "name": "Daynote Refraction Bench",
+      "enemy_group_id": "army_fenwake_march_e",
+      "affiliation": "faction_sunvault",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "open_lane"],
+      "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_sunvault_essa_daynote", "faction_id": "faction_sunvault", "name": "Essa Daynote", "command": {"attack": 0, "defense": 0, "power": 3, "knowledge": 1}, "starting_spell_ids": ["spell_resonant_chorus", "spell_prism_bastion", "spell_sunlance_arc"], "battle_traits": ["artillerist", "linekeeper"]},
+      "field_objectives": [{"id": "daynote_chord_prism", "type": "ritual_pylon", "label": "Chord-Prism Bench", "summary": "Essa's tuning prisms keep the bench in a repeating noon chord until both outer resonators are claimed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "cohesion", "urgency"]}],
+      "rewards": {"gold": 250, "peatwax": 1, "experience": 225},
+      "victory_flags": ["rival_commander_daynote_broken"]
+    },
+    {
+      "id": "encounter_thorncart_pilgrim_cordon",
+      "name": "Thorncart Pilgrim Cordon",
+      "enemy_group_id": "army_halometer_march_e",
+      "affiliation": "faction_thornwake",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "chokepoint"],
+      "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_thornwake_halen_thorncart", "faction_id": "faction_thornwake", "name": "Halen Thorncart", "command": {"attack": 1, "defense": 0, "power": 0, "knowledge": 2}, "starting_spell_ids": ["spell_graft_mend", "spell_quickmarch_hymn"], "battle_traits": ["vanguard", "ambusher"]},
+      "field_objectives": [{"id": "thorncart_witness_rail", "type": "obstruction_line", "label": "Pilgrim Witness Rail", "summary": "Halen's living thorncart seals the forest crossing until the braided witness rail is broken from both flanks.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "commander", "urgency"]}],
+      "rewards": {"gold": 250, "aetherglass": 1, "experience": 225},
+      "victory_flags": ["rival_commander_thorncart_broken"]
+    },
+    {
+      "id": "encounter_pitmarshal_red_chain_assize",
+      "name": "Pitmarshal Red-Chain Assize",
+      "enemy_group_id": "army_graftsibyl_march_e",
+      "affiliation": "faction_brasshollow",
+      "terrain": "rough",
+      "battlefield_tags": ["fortress_lane", "wall_pressure"],
+      "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_brasshollow_selka_pitmarshal", "faction_id": "faction_brasshollow", "name": "Selka Pitmarshal", "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0}, "starting_spell_ids": ["spell_stone_veil", "spell_bulwark_litany", "spell_pressure_clause"], "battle_traits": ["linekeeper", "packhunter"]},
+      "field_objectives": [{"id": "pitmarshal_chain_gate", "type": "breach_point", "label": "Red-Chain Gate", "summary": "Selka's stamped chain gate fixes the assize line in place until its central pressure pin is driven out.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["momentum", "cohesion", "urgency"]}],
+      "rewards": {"gold": 260, "verdant_grafts": 1, "experience": 230},
+      "victory_flags": ["rival_commander_pitmarshal_broken"]
+    },
+    {
+      "id": "encounter_mistcorsair_foghook_boarding",
+      "name": "Mist-Corsair Foghook Boarding",
+      "enemy_group_id": "army_debtrune_march_e",
+      "affiliation": "faction_veilmourn",
+      "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "open_lane"],
+      "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_veilmourn_cela_mistcorsair", "faction_id": "faction_veilmourn", "name": "Cela Mist-Corsair", "command": {"attack": 1, "defense": 0, "power": 0, "knowledge": 3}, "starting_spell_ids": ["spell_fogwake_step", "spell_obituary_mark"], "battle_traits": ["ambusher", "vanguard"]},
+      "field_objectives": [{"id": "mistcorsair_false_bearing", "type": "signal_beacon", "label": "Foghook False Bearing", "summary": "Cela's hooked bell-mast draws the levy toward a false channel until the drowned bearing is sounded true.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "ranged", "urgency"]}],
+      "rewards": {"gold": 260, "brass_scrip": 1, "experience": 230},
+      "victory_flags": ["rival_commander_mistcorsair_broken"]
+    },
+    {
+      "id": "encounter_tollbrand_sluice_levy",
+      "name": "Tollbrand Sluice Levy",
+      "enemy_group_id": "army_nightchart_march_e",
+      "affiliation": "faction_embercourt",
+      "terrain": "grass",
+      "battlefield_tags": ["fortified_line", "reserve_wave"],
+      "max_rounds": 13,
+      "enemy_commander": {"roster_hero_id": "hero_embercourt_helva_tollbrand", "faction_id": "faction_embercourt", "name": "Helva Tollbrand", "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 2}, "starting_spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx"], "battle_traits": ["vanguard", "linekeeper"]},
+      "field_objectives": [{"id": "tollbrand_levy_wagon", "type": "supply_post", "label": "Sluice-Levy Wagon", "summary": "Helva's sealed toll wagon keeps the road levy supplied until both lantern locks are taken from the line.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 250, "memory_salt": 1, "experience": 225},
+      "victory_flags": ["rival_commander_tollbrand_broken"]
     }
   ]
 }

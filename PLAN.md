@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-six-sovereign-wild-trophies-10184` is completed as one coherent six-faction artifact-payoff batch attached to the live sovereign-wild habitat victories; the broad content goal continues beyond this slice and no later slice is selected here.
-- Current package boundary: matching-size Linux and Windows release exports measure 249426820 bytes, 573180 bytes below the unchanged 250000000-byte ceiling; all eighteen reward-only artifact icons are present while generated masters remain excluded symmetrically.
+- Current implementation slice: `content-six-grand-convergence-rival-commanders-10184` is completed as one coherent six-faction named-rival battle batch replacing repeated anonymous fronts on the live grand-convergence maps; the broad content goal continues beyond this slice.
+- Current package boundary: matching-size Linux and Windows release exports measure 249461160 bytes, 538840 bytes below the unchanged 250000000-byte ceiling; the new rival-standard atlas is present while generated masters remain excluded symmetrically.
 
 ## Eight Foundation Map Object Identities
 
@@ -15726,6 +15726,38 @@ Completion criteria:
 Non-goals:
 - no new artifact slot, set mechanic, unit, hero, town, building, spell, encounter, scenario, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes artifact, creature trophy, icon, name, text, heraldry, or protected visual expression.
+
+## Six Grand-Convergence Rival Commanders
+
+id: `content-six-grand-convergence-rival-commanders-10184`
+
+Status: completed.
+
+Completion result:
+- Edda Rotlamp, Essa Daynote, Halen Thorncart, Selka Pitmarshal, Cela Mist-Corsair, and Helva Tollbrand now command six exact faction armies on the fifth front of their opposing 14x9 grand-convergence maps, replacing repeated anonymous templates while retaining placement ids, coordinates, combat seeds, and victory-objective routing;
+- fixed roster-backed commanders now hydrate canonical hero identity, spellbook, specialties, traits, portraits, and scenario-progression command state through the shared enemy-commander runtime path; encounter-authored spell subsets remain battle-valid while full roster spellbooks survive live construction;
+- six original transparent generated rival standards form one inspected 288x48 exact-identity atlas with distinct non-color silhouettes, accessible descriptions, complete prompt/hash provenance, and source masters excluded from release packages;
+- one consolidated six-case live smoke passes exact art, named commander state, battle construction and victory, rewards, victory flags, original objectives, and save-version-9 round trips; repository validation passes;
+- Linux and Windows release exports both pass startup/native/package checks at 249461160 bytes, include all fifteen recurring encounter atlases, exclude source/development artifacts, and remain 538840 bytes below the unchanged ceiling.
+
+Current finding:
+- all sixty production heroes lead at least one authored scenario, but none of the 131 fixed encounter definitions identifies a roster hero as its opposing commander, leaving authored battles dependent on anonymous commander templates even though strategic-AI raids already support real roster identities;
+- each of the six 14x9 grand-convergence maps repeats one faction front five times, so replacing the fifth repeated front with a named opposing hero duel adds battle identity and tactical variety without increasing map density or changing victory routing;
+- only 573180 bytes remain under the release PCK ceiling, favoring reuse of complete live hero portrait/overworld art plus one compact six-frame rival-standard atlas over another full unit-surface wave.
+
+Implementation boundary:
+- add six original named rival encounters and exact faction armies led by Edda Rotlamp, Essa Daynote, Halen Thorncart, Selka Pitmarshal, Cela Mist-Corsair, and Helva Tollbrand, using their authored command, spellbook, specialties, traits, portrait, and overworld identity through one reusable fixed-commander runtime path;
+- replace only the fifth repeated march on each matching grand-convergence map, preserving placement ids, coordinates, combat seeds, objective routing, deterministic battle authority, and existing scenario availability while adding distinct tactical objectives, rewards, and victory flags;
+- generate six original transparent rival standards, derive one compact 288x48 exact-identity atlas, retain prompt/hash/accessibility provenance outside packages, and keep Linux/Windows exports symmetric below the unchanged 250000000-byte ceiling.
+
+Completion criteria:
+- all six upgraded fronts construct their exact faction armies and named roster commanders with authored spellbooks, specialties, battle traits, hero portrait ids, and fixed overworld encounter identities;
+- each duel resolves through the existing battle/outcome path, grants its exact reward and victory flag, keeps the scenario objective resolvable, and survives an exact save-version-9 round trip;
+- one consolidated six-case gameplay/art/save smoke runs after the complete batch, followed by repository validation and sequential Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new hero definition, unit, town, building, spell, artifact, campaign, map, combat formula, strategic-AI planning rule, save-version bump, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes commander, portrait, standard, encounter, name, text, heraldry, or protected visual expression.
 
 ## Progress Reconciliation
 

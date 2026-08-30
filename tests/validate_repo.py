@@ -43541,6 +43541,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (240, 48)
             elif source_model == "built_in_image_gen_original_dormant_roster_field_company_landmark_atlas":
                 expected_canvas = (192, 48)
+            elif source_model == "built_in_image_gen_original_grand_convergence_rival_standard_atlas":
+                expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_sevenfold_high_arcanum_atlas":
                 expected_canvas = (336, 48)
             elif source_model in {"built_in_image_gen_precise_object_edit_coast_route_operational_atlas", "built_in_image_gen_original_coast_route_operational_atlas"}:
@@ -49568,8 +49570,8 @@ def validate_faction_encounter_landmarks(errors: list[str]) -> None:
     groups = {str(row.get("id", "")): row for row in groups_value if isinstance(row, dict)} if isinstance(groups_value, list) else {}
     owned_encounters = [row for row in encounters if str(groups.get(str(row.get("enemy_group_id", "")), {}).get("faction_id", "")) in expected]
     neutral_encounters = [row for row in encounters if row not in owned_encounters]
-    ensure(len(encounters) == 131, errors, "Faction encounter landmark adoption must retain all 131 authored encounters")
-    ensure(len(owned_encounters) == 92 and len(neutral_encounters) == 39, errors, "Faction encounter landmark adoption must resolve exactly 92 faction and 39 neutral authored encounters")
+    ensure(len(encounters) == 137, errors, "Faction encounter landmark adoption must retain all 137 authored encounters")
+    ensure(len(owned_encounters) == 98 and len(neutral_encounters) == 39, errors, "Faction encounter landmark adoption must resolve exactly 98 faction and 39 neutral authored encounters")
     ensure({str(groups.get(str(row.get("enemy_group_id", "")), {}).get("faction_id", "")) for row in owned_encounters} == set(expected), errors, "Authored faction encounters must exercise all six landmark identities")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -49774,9 +49776,9 @@ def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
     encounters = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "encounters.json").get("items", []) if isinstance(row, dict)}
     groups = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "army_groups.json").get("items", []) if isinstance(row, dict)}
     scenarios = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "scenarios.json").get("items", []) if isinstance(row, dict)}
-    ensure(len(encounters) == 131 and len(groups) == 189 and len(scenarios) == 93, errors, "Expanded contract roster must retain 125 encounters, 183 army groups, and 93 scenarios")
+    ensure(len(encounters) == 137 and len(groups) == 195 and len(scenarios) == 93, errors, "Expanded contract roster must retain 137 encounters, 195 army groups, and 93 scenarios")
     all_placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(all_placements) == 406 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 124, errors, "Authored battle fronts must retain the expanded 400-placement, 118-identity playable breadth")
+    ensure(len(all_placements) == 406 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 130, errors, "Authored battle fronts must retain the expanded 406-placement, 130-identity playable breadth")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -50068,7 +50070,7 @@ def validate_mireclaw_sunvault_frontier_contracts(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189, errors, "Expanded production content must retain the complete 93-scenario, 125-encounter, 183-army roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195, errors, "Expanded production content must retain the complete 93-scenario, 137-encounter, 195-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50159,7 +50161,7 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189, errors, "Ascendant-company batch must retain the complete 93-scenario, 125-encounter, 183-army roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195, errors, "Ascendant-company batch must retain the complete 93-scenario, 137-encounter, 195-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50173,12 +50175,12 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
     ensure(len(ascendant_unit_ids) == 18, errors, "Ascendant-company roster must own exactly eighteen production units")
     unit_group_counts = {unit_id: sum(1 for group in groups.values() if any(str(stack.get("unit_id", "")) == unit_id for stack in group.get("stacks", []) if isinstance(stack, dict))) for unit_id in ascendant_unit_ids}
     expected_unit_group_counts = {
-        "unit_embercourt_beacon_lectors": 4, "unit_embercourt_sluicefire_lindworms": 4, "unit_embercourt_charter_colossus": 4,
-        "unit_mireclaw_sporewake_chanters": 4, "unit_mireclaw_gorefen_rippers": 4, "unit_mireclaw_drowned_antler_sovereign": 4,
-        "unit_sunvault_solar_array_striders": 3, "unit_sunvault_aurora_ballistae": 4, "unit_sunvault_daybreak_colossus": 4,
-        "unit_thornwake_stagknot_runners": 3, "unit_thornwake_graft_matriarchs": 4, "unit_thornwake_worldroot_bastion": 4,
-        "unit_brasshollow_debt_engine_exactors": 5, "unit_brasshollow_crucible_crawlers": 4, "unit_brasshollow_foundry_saint": 4,
-        "unit_veilmourn_obituary_scribes": 5, "unit_veilmourn_mirrorkeel_reavers": 4, "unit_veilmourn_fogbound_leviathan": 4,
+        "unit_embercourt_beacon_lectors": 5, "unit_embercourt_sluicefire_lindworms": 4, "unit_embercourt_charter_colossus": 4,
+        "unit_mireclaw_sporewake_chanters": 5, "unit_mireclaw_gorefen_rippers": 4, "unit_mireclaw_drowned_antler_sovereign": 4,
+        "unit_sunvault_solar_array_striders": 4, "unit_sunvault_aurora_ballistae": 4, "unit_sunvault_daybreak_colossus": 4,
+        "unit_thornwake_stagknot_runners": 4, "unit_thornwake_graft_matriarchs": 4, "unit_thornwake_worldroot_bastion": 4,
+        "unit_brasshollow_debt_engine_exactors": 6, "unit_brasshollow_crucible_crawlers": 4, "unit_brasshollow_foundry_saint": 4,
+        "unit_veilmourn_obituary_scribes": 6, "unit_veilmourn_mirrorkeel_reavers": 4, "unit_veilmourn_fogbound_leviathan": 4,
     }
     ensure(
         unit_group_counts == expected_unit_group_counts,
@@ -50307,7 +50309,7 @@ def validate_six_faction_waywatch_trials(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189, errors, "Waywatch-trial batch must retain the complete 93-scenario, 125-encounter, 183-army roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195, errors, "Waywatch-trial batch must retain the complete 93-scenario, 137-encounter, 195-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50463,7 +50465,7 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189, errors, "Spellwright-expedition batch must retain the 93-scenario, 125-encounter, 183-army roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195, errors, "Spellwright-expedition batch must retain the 93-scenario, 137-encounter, 195-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50618,7 +50620,7 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189, errors, "Ritual-relay batch must retain the 93-scenario, 125-encounter, 183-army roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195, errors, "Ritual-relay batch must retain the 93-scenario, 137-encounter, 195-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50769,9 +50771,9 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
     scenario_payload = load_json(CONTENT_DIR / "scenarios.json")
     scenarios = items_index(scenario_payload)
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 93, errors, "Grand-convergence batch must retain the 93-scenario, 125-encounter, 183-army roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 93, errors, "Grand-convergence batch must retain the 93-scenario, 137-encounter, 195-army roster")
     placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(placements) == 406 and len({str(row.get("encounter_id", "")) for row in placements}) == 124, errors, "Grand-convergence compatibility must retain 400 authored battle placements across 118 identities")
+    ensure(len(placements) == 406 and len({str(row.get("encounter_id", "")) for row in placements}) == 130, errors, "Grand-convergence compatibility must retain 406 authored battle placements across 130 identities")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -51804,7 +51806,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         "encounter_bridgeward_levies": ("encounter_recurring_bridgeward_levies", "bridgeward_levies", "recurring", "faction_embercourt", "fortified_bridge_toll_barricade", "807bd33e0d81985ab4ec898366a8dd564eab2e573fa67add574b22b197eefbcd", [48, 0, 48, 48], 5, 4),
         "encounter_aurora_battery": ("encounter_recurring_aurora_battery", "aurora_battery", "recurring", "faction_sunvault", "triple_prism_aurora_battery", "671cb5c4f2df72350a902e754df10706fa380e41c03562c9748d76eb430dbe5e", [96, 0, 48, 48], 8, 7),
         "encounter_bone_ferry_watch": ("encounter_recurring_bone_ferry_watch", "bone_ferry_watch", "recurring", "faction_mireclaw", "bone_prowed_ferry_ambush_watch", "39c6065bb5cea3a79fd2f64c35fb6aa099dec3b03e5b5e79458d53434a5a5cd6", [144, 0, 48, 48], 3, 3),
-        "encounter_charter_guard": ("encounter_recurring_charter_guard", "charter_guard", "recurring", "faction_embercourt", "sealed_charter_command_pavilion", "ffb67b13f925476e45982ae5193051ac5ad227640997995167debef4847ad612", [192, 0, 48, 48], 19, 1),
+        "encounter_charter_guard": ("encounter_recurring_charter_guard", "charter_guard", "recurring", "faction_embercourt", "sealed_charter_command_pavilion", "ffb67b13f925476e45982ae5193051ac5ad227640997995167debef4847ad612", [192, 0, 48, 48], 18, 1),
         "encounter_mirror_lancers": ("encounter_recurring_mirror_lancers", "mirror_lancers", "recurring", "faction_sunvault", "crossed_mirror_lance_dueling_marker", "0ff3851b0830e013409bd1b861f48f53b7906ffe8579e2dd28899e05a1df296b", [240, 0, 48, 48], 5, 3),
         "encounter_drum_circle": ("encounter_recurring_drum_circle", "drum_circle", "recurring_wave2", "faction_mireclaw", "nightglass_drum_ritual_pylon", "54fa28da2f99ce48a34fba17ae2462ec8efca305fe8f8330c31fb0ba6bdfbaef", [288, 0, 48, 48], 2, 2),
         "encounter_gate_marshals": ("encounter_recurring_gate_marshals", "gate_marshals", "recurring_wave2", "faction_mireclaw", "chained_bog_gate_marshal_post", "05ce01b9ac069d3eea2e4fb9e78cf2352b94976f6904f7be1bf03c93ad1749a1", [336, 0, 48, 48], 3, 3),
@@ -51818,7 +51820,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         "encounter_road_chaplains": ("encounter_recurring_road_chaplains", "road_chaplains", "recurring_wave3", "faction_embercourt", "portable_road_chaplain_shrine_wagon", "8a643b0aecec5bac5bcd163f2fcf7e2dd41aef19bdde22cec4ecf12b63b0e0ed", [720, 0, 48, 48], 3, 1),
         "encounter_mill_levies": ("encounter_recurring_mill_levies", "mill_levies", "recurring_wave3", "faction_embercourt", "granary_mill_levy_barricade", "3ada694f23cd8bb8598c0effe3ae3a32d78e4757ad88418ebb02df536a89649a", [768, 0, 48, 48], 1, 1),
         "encounter_reedbarrow_chain": ("encounter_recurring_reedbarrow_chain", "reedbarrow_chain", "recurring_wave3", "faction_mireclaw", "ferry_chain_levee_choke", "b0813c1c5e1ee8eb33820967cc691e0970119015bf6cc90377e9cc83e3151829", [816, 0, 48, 48], 1, 1),
-        "encounter_nightglass_dominion": ("encounter_recurring_nightglass_dominion", "nightglass_dominion", "recurring_wave3", "faction_mireclaw", "nightglass_dominion_command_crown", "e3341aa0d5f698d6ffc7a44bee49cdd3989dc3928115e47859e1e1135a74f429", [864, 0, 48, 48], 9, 3),
+        "encounter_nightglass_dominion": ("encounter_recurring_nightglass_dominion", "nightglass_dominion", "recurring_wave3", "faction_mireclaw", "nightglass_dominion_command_crown", "e3341aa0d5f698d6ffc7a44bee49cdd3989dc3928115e47859e1e1135a74f429", [864, 0, 48, 48], 8, 3),
         "encounter_mirror_causeway": ("encounter_recurring_mirror_causeway", "mirror_causeway", "recurring_wave3", "faction_mireclaw", "broken_mirror_causeway_harrow", "4b9373b9281eeb809de920d6019522cdc3b788a388dd62b40a6683a147eba278", [912, 0, 48, 48], 1, 1),
         "encounter_halo_reserve": ("encounter_recurring_halo_reserve", "halo_reserve", "recurring_wave3", "faction_sunvault", "concentric_prism_halo_reserve_rack", "b26091b1af256ed6141e8502878663f3c4a99ebbe59a0bd3ca39b411306e2c5f", [960, 0, 48, 48], 1, 1),
         "encounter_daybreak_matrix": ("encounter_recurring_daybreak_matrix", "daybreak_matrix", "recurring_wave3", "faction_sunvault", "four_node_daybreak_battery_matrix", "d7a55eb048d355e995195ccf75d0c142756a50055c9302731fd8d4ac432143ad", [1008, 0, 48, 48], 5, 3),
@@ -51968,7 +51970,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         group = groups.get(str(definition.get("enemy_group_id", "")), {}) if isinstance(definition, dict) else {}
         ensure(str(group.get("faction_id", "")) == faction_id, errors, f"Recurring encounter {encounter_id} authored faction changed")
         ensure(placement_counts[encounter_id] == placements and high_counts[encounter_id] == high, errors, f"Recurring encounter {encounter_id} playable placement coverage changed")
-    ensure(sum(placement_counts.values()) == 112 and sum(high_counts.values()) == 51, errors, "Recurring encounter landmarks must retain 112 authored placements including 51 high-difficulty placements")
+    ensure(sum(placement_counts.values()) == 110 and sum(high_counts.values()) == 51, errors, "Recurring encounter landmarks must retain 110 authored placements including 51 high-difficulty placements")
     all_placement_ids = [
         str(placement.get("encounter_id", ""))
         for scenario in scenario_rows
@@ -51978,9 +51980,9 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     ] if isinstance(scenario_rows, list) else []
     placed_identity_ids = set(all_placement_ids)
     unplaced_definition_ids = set(encounters) - placed_identity_ids
-    ensure(len(all_placement_ids) == 406 and len(placed_identity_ids) == 124, errors, "Authored scenarios must retain exactly 400 placements across 118 distinct encounter identities")
+    ensure(len(all_placement_ids) == 406 and len(placed_identity_ids) == 130, errors, "Authored scenarios must retain exactly 406 placements across 130 distinct encounter identities")
     ensure(placed_identity_ids.issubset(set(identity_sprites)), errors, "Every encounter identity placed in an authored scenario must own exact live Overworld art")
-    ensure(len(encounters) == 131 and len(unplaced_definition_ids) == 7 and set(identity_sprites) == set(encounters), errors, "Exact encounter art must cover all 125 authored, system-owned, and scripted encounter definitions")
+    ensure(len(encounters) == 137 and len(unplaced_definition_ids) == 7 and set(identity_sprites) == set(encounters), errors, "Exact encounter art must cover all 137 authored, system-owned, and scripted encounter definitions")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
@@ -52051,7 +52053,7 @@ def validate_systemic_encounter_landmarks(errors: list[str]) -> None:
     encounters = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "encounters.json").get("items", []) if isinstance(row, dict)}
     groups = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "army_groups.json").get("items", []) if isinstance(row, dict)}
     scenarios = [row for row in load_json(CONTENT_DIR / "scenarios.json").get("items", []) if isinstance(row, dict)]
-    ensure(len(encounters) == 131 and set(identity_sprites) == set(encounters), errors, "Every one of the 125 encounter definitions must now own exact live Overworld art")
+    ensure(len(encounters) == 137 and set(identity_sprites) == set(encounters), errors, "Every one of the 137 encounter definitions must now own exact live Overworld art")
 
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("sources", []) if isinstance(row, dict)}
@@ -52096,7 +52098,7 @@ def validate_systemic_encounter_landmarks(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Systemic encounter consolidated runtime owner is missing exact proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME = "systemic_encounter_landmarks_atlas"' in packaging_text and 'systemic/systemic_encounter_landmarks_atlas.png.import' in packaging_text and 'len(required_recurring_encounter_atlas_texture_entries) == 14' in packaging_text, errors, f"{packaging_path.name} must audit the compact systemic, Horizon Compact, Horizon court, and dormant-roster encounter atlases")
+        ensure('REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME = "systemic_encounter_landmarks_atlas"' in packaging_text and 'systemic/systemic_encounter_landmarks_atlas.png.import' in packaging_text and 'len(required_recurring_encounter_atlas_texture_entries) == 15' in packaging_text, errors, f"{packaging_path.name} must audit the compact systemic, Horizon Compact, Horizon court, dormant-roster, and rival-commander encounter atlases")
 
 
 def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
@@ -52891,13 +52893,13 @@ def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
 
     expected = {
         "cover_line": ("cover_line_briar_bulwark", "wide_low_screen", "5e4fa6d09fa68cfc9b8e366a902ed0fe451484c65837e74bb00c2949b4507484", "0388e12ed1999b20b26ebd36aab4639c587a2eabf1acfe87fb824b1599a5303a", 24),
-        "obstruction_line": ("obstruction_line_crossed_stakes", "crossed_blockade", "732641d6c1601d8b05163e200a10d41a43020f7d54abe1e0065d498f7eac45ab", "10ab7b65b83e9decc00cfefe68935c718b6a98191c3648f05b8b6f0cd6641b26", 11),
+        "obstruction_line": ("obstruction_line_crossed_stakes", "crossed_blockade", "732641d6c1601d8b05163e200a10d41a43020f7d54abe1e0065d498f7eac45ab", "10ab7b65b83e9decc00cfefe68935c718b6a98191c3648f05b8b6f0cd6641b26", 12),
         "lane_battery": ("lane_battery_splitrail", "wide_tripod_battery", "18ea6d6a5e4c10d7199af20ec0e8905057e1f41fce43a5a2beaf5232a21a6bd0", "f07dc42f4465ec1b1f1e6842a87b6627f3f9f29d6b34ef40ef2f67c93711087e", 16),
-        "hazard_zone": ("hazard_zone_mireglass_basin", "triangular_hazard_basin", "5c185a4ab871c5282cc6d2f6ca72287c9b14e32255ba6a8998c6db15ecde21bc", "c0728d03eae332c0e22e2faf550ac4cf33fbe0c4fb14617e7b46257d04a749e0", 16),
-        "breach_point": ("breach_point_broken_gate", "open_gate_jaws", "03c05efb753e2798d69acc6fe7a8adea8d2a9f67f9247b235ec3a60f3152d9b8", "6d54f8bafd3de39f0c5388f8de020f61938cdcf548a9f658f5c9342f4a601dea", 8),
-        "ritual_pylon": ("ritual_pylon_resonance_stone", "forked_pylon_ring", "4d9cd897c8de2db226eedfc7ffea89d201bd7084362f120c4541abb873cdb3fc", "fd34c158e482c75df9e9ea4f3c55c3550581d0cb6db1cdfbde9dfea2aec2ab5f", 9),
-        "signal_beacon": ("signal_beacon_tripod_lantern", "tall_tripod_signal", "1378c2af521c2289facddfcafd80637a3cf4af151a80d0272e76e5561b18ff61", "1a60f989e3e2d6be729ec39aacbffc9afe46ba024576d4bdcc8f76f76c68f30d", 19),
-        "supply_post": ("supply_post_frontier_stores", "stepped_stores_cluster", "a135172d1706ae24fba228f8ff60c3fcca2b90e12c9fe84934192072f91b9afe", "13baf08cd4f966fe0f8afc36f5e7bc2b22e3f04c3fd31d814927b83d8548ed72", 18),
+        "hazard_zone": ("hazard_zone_mireglass_basin", "triangular_hazard_basin", "5c185a4ab871c5282cc6d2f6ca72287c9b14e32255ba6a8998c6db15ecde21bc", "c0728d03eae332c0e22e2faf550ac4cf33fbe0c4fb14617e7b46257d04a749e0", 17),
+        "breach_point": ("breach_point_broken_gate", "open_gate_jaws", "03c05efb753e2798d69acc6fe7a8adea8d2a9f67f9247b235ec3a60f3152d9b8", "6d54f8bafd3de39f0c5388f8de020f61938cdcf548a9f658f5c9342f4a601dea", 9),
+        "ritual_pylon": ("ritual_pylon_resonance_stone", "forked_pylon_ring", "4d9cd897c8de2db226eedfc7ffea89d201bd7084362f120c4541abb873cdb3fc", "fd34c158e482c75df9e9ea4f3c55c3550581d0cb6db1cdfbde9dfea2aec2ab5f", 10),
+        "signal_beacon": ("signal_beacon_tripod_lantern", "tall_tripod_signal", "1378c2af521c2289facddfcafd80637a3cf4af151a80d0272e76e5561b18ff61", "1a60f989e3e2d6be729ec39aacbffc9afe46ba024576d4bdcc8f76f76c68f30d", 20),
+        "supply_post": ("supply_post_frontier_stores", "stepped_stores_cluster", "a135172d1706ae24fba228f8ff60c3fcca2b90e12c9fe84934192072f91b9afe", "13baf08cd4f966fe0f8afc36f5e7bc2b22e3f04c3fd31d814927b83d8548ed72", 19),
     }
     manifest = load_json(manifest_path)
     ensure(manifest.get("schema_id") == "battle_field_objective_art_manifest_v1", errors, "Battle field-objective art manifest must retain its production schema")
@@ -52950,7 +52952,7 @@ def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
                 if objective_type in type_counts:
                     type_counts[objective_type] += 1
                 authored_objective_count += 1
-    ensure(len(encounters) == 131 and authored_objective_count == 121, errors, "Battle field-objective adoption must retain all 131 encounters and 121 authored objectives")
+    ensure(len(encounters) == 137 and authored_objective_count == 127, errors, "Battle field-objective adoption must retain all 137 encounters and 127 authored objectives")
     ensure(type_counts == {key: row[4] for key, row in expected.items()}, errors, "Battle field-objective authored type coverage changed")
 
     board_text = board_path.read_text(encoding="utf-8")
@@ -77637,7 +77639,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
             "unclaimed": "mapobj_tideglass_roost", "controlled": "resource_site_neutral_tideglass_roost_controlled", "unclaimed_region": [96, 0, 48, 48], "controlled_region": [144, 0, 48, 48],
         },
     }
-    ensure(len(units) == 136 and len(dwellings) == 37 and len(sites) == 219 and len(objects) == 398 and len(groups) == 189 and len(encounters) == 131, errors, "Elite-neutral batch must retain the expanded 130-unit, 31-dwelling, 213-site, 392-object, 183-army, 125-encounter roster")
+    ensure(len(units) == 136 and len(dwellings) == 37 and len(sites) == 219 and len(objects) == 398 and len(groups) == 195 and len(encounters) == 137, errors, "Elite-neutral batch must retain the expanded 136-unit, 37-dwelling, 219-site, 398-object, 195-army, 137-encounter roster")
     ensure(len(scenario.get("resource_nodes", [])) == 97 and len(scenario.get("encounters", [])) == 31, errors, "Elite-neutral batch must retain the expanded 97-site, 31-encounter Ninefold board")
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = overworld_art.get("object_assets", {})
@@ -77830,7 +77832,7 @@ def validate_six_elder_wilds(errors: list[str]) -> None:
         "unit_neutral_rimebell_skyrakers": (6, "melee", ["fog_screen", "reach"], "army_neutral_rimebell_whitewake_watch", [{"unit_id":"unit_neutral_rimebell_skyrakers","count":2},{"unit_id":"unit_neutral_snowglass_markers","count":6}], "encounter_rimebell_whitewake_watch", "ninefold_rimebell_whitewake_watch", (5,43), 26505, "rimebell_whitewake_signal", "signal_beacon", "encounter_elder_wild_rimebell_whitewake_watch", "2edacbcdfc061271525708c7806e43a4f7eb31b2bfaba99f5af74c349a73aab1", "2ded46c9e9d6c4baf39c74a7811a26cb1c4096e61ec679923dcc60077a84844a"),
         "unit_neutral_deepforge_vaultwyrms": (7, "melee", ["brace", "shielding"], "army_neutral_deepforge_seventh_seal_watch", [{"unit_id":"unit_neutral_deepforge_vaultwyrms","count":1},{"unit_id":"unit_neutral_basalt_wardens","count":4},{"unit_id":"unit_neutral_tunnelmark_bolters","count":4}], "encounter_deepforge_seventh_seal_watch", "ninefold_deepforge_seventh_seal_watch", (58,41), 26506, "deepforge_seventh_seal_pylon", "ritual_pylon", "encounter_elder_wild_deepforge_seventh_seal_watch", "38103e46f973fca22390447f0fc7225e8440da08bfd59724f030a1c1ad66a69a", "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc"),
     }
-    ensure(len(units) == 136 and len(groups) == 189 and len(encounters) == 131, errors, "Elder Wilds must retain the 130-unit, 183-army, 125-encounter production catalog")
+    ensure(len(units) == 136 and len(groups) == 195 and len(encounters) == 137, errors, "Elder Wilds must retain the 136-unit, 195-army, 137-encounter production catalog")
     ensure(len(scenario.get("encounters", [])) == 31, errors, "Elder Wilds must retain all 31 Ninefold encounter placements")
     ensure(source_manifest_path.is_file(), errors, "Elder Wilds generated-source provenance manifest is missing")
     source_manifest = load_json(source_manifest_path) if source_manifest_path.is_file() else {}
@@ -77926,7 +77928,7 @@ def validate_six_sovereign_wild_habitats(errors: list[str]) -> None:
     encounter_sprites = art.get("encounter_identity_sprites", {})
     unit_art = {str(row.get("unit_id", "")): row for row in load_json(CONTENT_DIR / "unit_art_manifest.json").get("items", []) if isinstance(row, dict)}
     unit_animation = {str(row.get("unit_id", "")): row for row in load_json(CONTENT_DIR / "unit_animation_manifest.json").get("items", []) if isinstance(row, dict)}
-    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects)) == (136,189,131,37,219,398), errors, "Sovereign-wild batch catalog totals changed")
+    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects)) == (136,195,137,37,219,398), errors, "Sovereign-wild batch catalog totals changed")
     atlas_payload = atlas_path.read_bytes()
     atlas_sha = "f6259ada356954a727e2b7a9859164ea7b74a0d019fc14e4f0454493962b3a32"
     ensure(png_size(atlas_path) == (576,48) and hashlib.sha256(atlas_payload).hexdigest() == atlas_sha and len(atlas_payload) >= 26 and atlas_payload[25] in {4,6}, errors, "Sovereign-wild habitat atlas bytes, size, or alpha changed")
@@ -78532,7 +78534,7 @@ def validate_horizon_compact_six_citadels(errors: list[str]) -> None:
         "encounter_horizon_blackbell_verdict_gantry": ("army_horizon_blackbell_verdict_gantry", "faction_brasshollow", "unit_brasshollow_pressure_lancers", "horizon_blackbell_judgment_rail", "breach_point", "brass_scrip", "horizon_blackbell_gantry_broken", [192, 0, 48, 48], "94729743cc8b12390fb33bf7c37143018471fb37ad592e27e2ccabf163b2d60a"),
         "encounter_horizon_pale_sounding_ghost_mooring": ("army_horizon_pale_sounding_ghost_mooring", "faction_veilmourn", "unit_veilmourn_wakeglass_navigators", "horizon_pale_sounding_bell", "signal_beacon", "memory_salt", "horizon_pale_mooring_broken", [240, 0, 48, 48], "8b1211ddcfb5fb2057ebff2623794c1a5a3cf0a81d73f43a1f3e7d34af6979f8"),
     }
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 93, errors, "Horizon Compact must own the expanded 93-scenario, 125-encounter, 183-army roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 93, errors, "Horizon Compact must own the expanded 93-scenario, 137-encounter, 195-army roster")
     ensure(scenario.get("map_size") == {"width": 24, "height": 16} and scenario.get("selection", {}).get("availability") == {"campaign": False, "skirmish": True}, errors, "Horizon Compact must remain a playable 24x16 skirmish")
     ensure(scenario.get("player_faction_id") == "faction_embercourt" and scenario.get("hero_id") == "hero_embercourt_belis_rainledger" and scenario.get("player_army_id") == "army_belis_grand_convergence_company", errors, "Horizon Compact player identity changed")
     ensure(len(scenario.get("towns", [])) == 6 and len(scenario.get("encounters", [])) == 7 and len(scenario.get("resource_nodes", [])) == 15 and len(scenario.get("artifact_nodes", [])) == 3 and len(scenario.get("enemy_factions", [])) == 5, errors, "Horizon Compact live board breadth changed")
@@ -78604,7 +78606,7 @@ def validate_five_horizon_court_skirmishes(errors: list[str]) -> None:
         "blackbell-saltwake-foreclosure": ("faction_brasshollow", "hero_brasshollow_harro_debtrune", "army_harro_grand_convergence_company", "town_blackbell_foundry", "town_pale_sounding_harbor", "blackbell_court_front_2", "encounter_horizon_court_pale_saltwake_board", "army_horizon_court_pale_saltwake_board", "faction_veilmourn", "horizon_pale_saltwake", "signal_beacon", "memory_salt", "horizon_pale_saltwake_broken", [144,0,48,48], "pale_saltwake_board_source.png", "e270fa7add4e1463ecdd8527af7c209251f223ef98e758528859662ccf26b0bb", 33211),
         "pale-sounding-tidewrit-reckoning": ("faction_veilmourn", "hero_veilmourn_orso_nightchart", "army_orso_grand_convergence_company", "town_pale_sounding_harbor", "town_rainwrit_bastion", "pale_court_front_2", "encounter_horizon_court_rainwrit_tidewrit_assize", "army_horizon_court_rainwrit_tidewrit_assize", "faction_embercourt", "horizon_rainwrit_tidewrit", "cover_line", "embergrain", "horizon_rainwrit_tidewrit_broken", [192,0,48,48], "rainwrit_tidewrit_assize_source.png", "da6d247e48b3a4380cfce53b82521f3135e80ee1b3bb422e0350a973e659268a", 33214),
     }
-    ensure(len(scenarios) == 93 and len(encounters) == 131 and len(groups) == 189 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 93, errors, "Horizon courts must own the 93-scenario, 125-encounter, 183-army production roster")
+    ensure(len(scenarios) == 93 and len(encounters) == 137 and len(groups) == 195 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 93, errors, "Horizon courts must own the 93-scenario, 137-encounter, 195-army production roster")
     ensure(list(scenarios)[-5:] == list(expected), errors, "The five Horizon court skirmishes must remain the newest coherent scenario batch")
     source_manifest = load_json(source_manifest_path) if source_manifest_path.is_file() else {}
     source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
@@ -78656,7 +78658,7 @@ def validate_five_horizon_court_skirmishes(errors: list[str]) -> None:
         ensure(token in smoke_text, errors, f"Five-Horizon-court smoke is missing consolidated live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_HORIZON_COURTS_ATLAS_NAME = "horizon_courts_atlas"' in packaging_text and "horizon_courts/horizon_courts_atlas.png.import" in packaging_text and "len(required_recurring_encounter_atlas_texture_entries) == 14" in packaging_text, errors, f"{packaging_path.name} must audit the Horizon court atlas")
+        ensure('REQUIRED_HORIZON_COURTS_ATLAS_NAME = "horizon_courts_atlas"' in packaging_text and "horizon_courts/horizon_courts_atlas.png.import" in packaging_text and "len(required_recurring_encounter_atlas_texture_entries) == 15" in packaging_text, errors, f"{packaging_path.name} must audit the Horizon court and rival-commander atlases")
 
 
 def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
@@ -78698,7 +78700,7 @@ def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     identity_sprites = overworld_art.get("encounter_identity_sprites", {})
     object_assets = overworld_art.get("object_assets", {})
-    ensure(len(units) == 136 and len(buildings) == 142 and len(groups) == 189 and len(encounters) == 131 and len(scenarios) == 93, errors, "Horizon specialist companies must retain the 130-unit, 142-building, 183-army, 125-encounter, 93-scenario production catalog")
+    ensure(len(units) == 136 and len(buildings) == 142 and len(groups) == 195 and len(encounters) == 137 and len(scenarios) == 93, errors, "Horizon specialist companies must retain the 136-unit, 142-building, 195-army, 137-encounter, 93-scenario production catalog")
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
         building_id = row["building_id"]
@@ -78787,7 +78789,7 @@ def validate_three_horizon_reserve_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) == 136 and len(buildings) == 142 and len(groups) == 189 and len(scenarios) == 93, errors, "Horizon reserve companies must retain the 130-unit, 142-building, 183-army, 93-scenario production catalog")
+    ensure(len(units) == 136 and len(buildings) == 142 and len(groups) == 195 and len(scenarios) == 93, errors, "Horizon reserve companies must retain the 136-unit, 142-building, 195-army, 93-scenario production catalog")
     source_payloads: list[bytes] = []
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
@@ -78871,7 +78873,7 @@ def validate_three_horizon_skirmish_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) == 136 and len(buildings) == 142 and len(groups) == 189 and len(scenarios) == 93, errors, "Horizon skirmish companies must retain the 130-unit, 142-building, 183-army, 93-scenario production catalog")
+    ensure(len(units) == 136 and len(buildings) == 142 and len(groups) == 195 and len(scenarios) == 93, errors, "Horizon skirmish companies must retain the 136-unit, 142-building, 195-army, 93-scenario production catalog")
     source_payloads: list[bytes] = []
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
@@ -78950,7 +78952,7 @@ def validate_four_faction_roster_parity_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
     animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
-    ensure(len(units) == 136 and len(buildings) == 142 and len(scenarios) == 93, errors, "Roster-parity companies must retain the 130-unit, 142-building, 93-scenario production catalog")
+    ensure(len(units) == 136 and len(buildings) == 142 and len(scenarios) == 93, errors, "Roster-parity companies must retain the 136-unit, 142-building, 93-scenario production catalog")
     for faction_id in ("faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake", "faction_brasshollow", "faction_veilmourn"):
         faction_units = [unit for unit in units.values() if unit.get("faction_id") == faction_id]
         ensure(len(faction_units) == 12, errors, f"{faction_id} must retain exact twelve-unit production roster parity")
@@ -79103,7 +79105,7 @@ def validate_four_dormant_roster_field_companies(errors: list[str]) -> None:
     identities = art.get("encounter_identity_sprites", {})
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
-    ensure(len(encounters) == 131 and len(groups) == 189 and len(scenarios) == 93 and len(units) == 136, errors, "Dormant-roster companies must retain the expanded 125-encounter, 183-army, 93-scenario, 130-unit catalog")
+    ensure(len(encounters) == 137 and len(groups) == 195 and len(scenarios) == 93 and len(units) == 136, errors, "Dormant-roster companies must retain the expanded 137-encounter, 195-army, 93-scenario, 136-unit catalog")
     ensure(png_size(atlas_path) == (192, 48) and hashlib.sha256(atlas_path.read_bytes()).hexdigest() == atlas_sha and atlas_path.read_bytes()[25] in {4, 6}, errors, "Dormant-roster field-company atlas bytes, size, or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Dormant-roster field-company atlas import is missing")
     ensure(source_manifest.get("generator_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas_size") == [192, 48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and set(source_rows) == set(expected), errors, "Dormant-roster generated-source manifest changed")
@@ -79143,6 +79145,96 @@ def validate_four_dormant_roster_field_companies(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("dormant_roster_field_companies_atlas" in packaging_text and "dormant_roster_field_companies/dormant_roster_field_companies_atlas.png.import" in packaging_text, errors, f"{packaging_path.name} must audit the dormant-roster atlas")
+
+
+def validate_six_grand_convergence_rival_commanders(errors: list[str]) -> None:
+    atlas_res = "res://art/overworld/runtime/objects/encounters/grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png"
+    atlas_path = res_path_to_disk(atlas_res)
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "grand_convergence_rival_commanders"
+    source_manifest_path = source_dir / "manifest.json"
+    smoke_path = ROOT / "tests" / "six_grand_convergence_rival_commanders_smoke.gd"
+    scene_path = ROOT / "tests" / "six_grand_convergence_rival_commanders_smoke.tscn"
+    report_path = ROOT / ".artifacts" / "six_grand_convergence_rival_commanders_smoke" / "report.json"
+    required = (atlas_path, source_manifest_path, smoke_path, scene_path)
+    for path in required:
+        ensure(path.is_file(), errors, f"Missing grand-convergence rival-commander production owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required):
+        return
+
+    expected = {
+        "encounter_rotlamp_spoor_court": {"scenario":"rainledger-cinder-convergence","placement":"rainledger_march_e","objective":"clear_rainledger_march_e","army":"army_rainledger_march_e","hero":"hero_mireclaw_edda_rotlamp","faction":"faction_mireclaw","field":"rotlamp_spore_lanterns","type":"hazard_zone","reward":"embergrain","gold":240,"flag":"rival_commander_rotlamp_broken","seed":26305,"asset":"encounter_rival_commander_rotlamp_spoor_court","source":"rotlamp_spoor_court_source.png","sha":"49072f908575f6144a5e8467e0b6b4e1472bcbe0f67ea5786f88d0c682d9ca7f","region":[0,0,48,48],"stacks":[("unit_mireclaw_sporewake_chanters",5),("unit_mireclaw_reedsnare_kin",3)]},
+        "encounter_daynote_refraction_bench": {"scenario":"fenwake-bogbell-convergence","placement":"fenwake_march_e","objective":"clear_fenwake_march_e","army":"army_fenwake_march_e","hero":"hero_sunvault_essa_daynote","faction":"faction_sunvault","field":"daynote_chord_prism","type":"ritual_pylon","reward":"peatwax","gold":250,"flag":"rival_commander_daynote_broken","seed":26315,"asset":"encounter_rival_commander_daynote_refraction_bench","source":"daynote_refraction_bench_source.png","sha":"30ab4310f199e73f1aed7f503882ea04c0d7cb72be457cf35b1d41b0ab29b1e5","region":[48,0,48,48],"stacks":[("unit_sunvault_solar_array_striders",5),("unit_sunvault_shard_wardens",3)]},
+        "encounter_thorncart_pilgrim_cordon": {"scenario":"halometer-icehook-convergence","placement":"halometer_march_e","objective":"clear_halometer_march_e","army":"army_halometer_march_e","hero":"hero_thornwake_halen_thorncart","faction":"faction_thornwake","field":"thorncart_witness_rail","type":"obstruction_line","reward":"aetherglass","gold":250,"flag":"rival_commander_thorncart_broken","seed":26325,"asset":"encounter_rival_commander_thorncart_pilgrim_cordon","source":"thorncart_pilgrim_cordon_source.png","sha":"7011cbff977f3eb54946c852facdeb2d4fee77e76043734e343f6646343bf0cb","region":[96,0,48,48],"stacks":[("unit_thornwake_stagknot_runners",5),("unit_thornwake_seedcutters",3)]},
+        "encounter_pitmarshal_red_chain_assize": {"scenario":"graftsibyl-lantern-convergence","placement":"graftsibyl_march_e","objective":"clear_graftsibyl_march_e","army":"army_graftsibyl_march_e","hero":"hero_brasshollow_selka_pitmarshal","faction":"faction_brasshollow","field":"pitmarshal_chain_gate","type":"breach_point","reward":"verdant_grafts","gold":260,"flag":"rival_commander_pitmarshal_broken","seed":26335,"asset":"encounter_rival_commander_pitmarshal_red_chain_assize","source":"pitmarshal_red_chain_assize_source.png","sha":"d428c13563d034f8c055441fb132a1c2a2bac8b1d8ba8f11aa03682e713c2003","region":[144,0,48,48],"stacks":[("unit_brasshollow_debt_engine_exactors",5),("unit_brasshollow_scrip_haulers",3)]},
+        "encounter_mistcorsair_foghook_boarding": {"scenario":"debtrune-default-convergence","placement":"debtrune_march_e","objective":"clear_debtrune_march_e","army":"army_debtrune_march_e","hero":"hero_veilmourn_cela_mistcorsair","faction":"faction_veilmourn","field":"mistcorsair_false_bearing","type":"signal_beacon","reward":"brass_scrip","gold":260,"flag":"rival_commander_mistcorsair_broken","seed":26345,"asset":"encounter_rival_commander_mistcorsair_foghook_boarding","source":"mistcorsair_foghook_boarding_source.png","sha":"c399013f6311171848b06f08c0ed7c6eef23c2a8709ff6dce3012030dd12dadd","region":[192,0,48,48],"stacks":[("unit_veilmourn_obituary_scribes",5),("unit_veilmourn_bellwake_oars",3)]},
+        "encounter_tollbrand_sluice_levy": {"scenario":"nightchart-meridian-convergence","placement":"nightchart_march_e","objective":"clear_nightchart_march_e","army":"army_nightchart_march_e","hero":"hero_embercourt_helva_tollbrand","faction":"faction_embercourt","field":"tollbrand_levy_wagon","type":"supply_post","reward":"memory_salt","gold":250,"flag":"rival_commander_tollbrand_broken","seed":26355,"asset":"encounter_rival_commander_tollbrand_sluice_levy","source":"tollbrand_sluice_levy_source.png","sha":"cd687ed685d79d00a137ab031628900881e9a900c0a41844d1fdec22a8dc9dec","region":[240,0,48,48],"stacks":[("unit_embercourt_beacon_lectors",5),("unit_embercourt_fordhook_cadets",3)]},
+    }
+    groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
+    encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
+    spells = items_index(load_json(CONTENT_DIR / "spells.json"))
+    hero_art = items_index(load_json(CONTENT_DIR / "hero_art_manifest.json"))
+    art = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    assets = art.get("object_assets", {})
+    identities = art.get("encounter_identity_sprites", {})
+    ensure((len(groups), len(encounters), len(scenarios), len(heroes)) == (195,137,93,60), errors, "Grand-convergence rival-commander catalog totals changed")
+    atlas_sha = "442415856610c845d2f8512d236581ebd22cb184ec846bf0d87d57ed4578dc3b"
+    atlas_bytes = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(atlas_bytes).hexdigest() == atlas_sha and len(atlas_bytes) >= 26 and atlas_bytes[25] in {4,6}, errors, "Grand-convergence rival-command atlas bytes, size, or alpha changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Grand-convergence rival-command atlas Godot import metadata is missing")
+    source_manifest = load_json(source_manifest_path)
+    source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
+    ensure(source_manifest.get("generator_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas_path") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and set(source_rows) == set(expected), errors, "Grand-convergence rival-commander image-generation provenance changed")
+
+    source_payloads: list[bytes] = []
+    descriptions: set[str] = set()
+    for encounter_id, contract in expected.items():
+        encounter = encounters.get(encounter_id, {})
+        group = groups.get(contract["army"], {})
+        hero = heroes.get(contract["hero"], {})
+        commander = encounter.get("enemy_commander", {})
+        field = next((row for row in encounter.get("field_objectives", []) if isinstance(row, dict) and row.get("id") == contract["field"]), {})
+        stacks = [(str(row.get("unit_id", "")), int(row.get("count", 0))) for row in group.get("stacks", []) if isinstance(row, dict)]
+        ensure(group.get("faction_id") == contract["faction"] and stacks == contract["stacks"], errors, f"{contract['army']} lost its exact faction army")
+        ensure(encounter.get("enemy_group_id") == contract["army"] and encounter.get("affiliation") == contract["faction"] and field.get("type") == contract["type"], errors, f"{encounter_id} battle identity or field objective changed")
+        ensure(encounter.get("rewards", {}).get("gold") == contract["gold"] and encounter.get("rewards", {}).get(contract["reward"]) == 1 and encounter.get("victory_flags") == [contract["flag"]], errors, f"{encounter_id} reward or victory contract changed")
+        commander_spells = commander.get("starting_spell_ids", [])
+        ensure(commander.get("roster_hero_id") == contract["hero"] and commander.get("faction_id") == contract["faction"] and commander.get("name") == hero.get("name") and commander.get("command") == hero.get("command") and commander.get("battle_traits") == hero.get("battle_traits"), errors, f"{encounter_id} is no longer backed by its canonical roster hero")
+        ensure(bool(commander_spells) and all(spell_id in hero.get("starting_spell_ids", []) and spells.get(spell_id, {}).get("context") == "battle" for spell_id in commander_spells), errors, f"{encounter_id} encounter spell subset must remain canonical and battle-valid")
+        scenario = scenarios.get(contract["scenario"], {})
+        placement = next((row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == contract["placement"]), {})
+        objective = next((row for row in scenario.get("objectives", {}).get("victory", []) if isinstance(row, dict) and row.get("id") == contract["objective"]), {})
+        ensure(placement.get("encounter_id") == encounter_id and placement.get("combat_seed") == contract["seed"] and placement.get("spawned_by_faction_id") == contract["faction"] and placement.get("enemy_commander_state") == {"roster_hero_id":contract["hero"],"faction_id":contract["faction"]} and placement.get("prefer_identity_landmark") is True and "enemy_army" not in placement, errors, f"{encounter_id} lost its exact named-rival scenario placement")
+        ensure(objective.get("type") == "encounter_resolved" and objective.get("placement_id") == contract["placement"], errors, f"{contract['objective']} no longer resolves the replaced eastern front")
+        asset = assets.get(contract["asset"], {}) if isinstance(assets, dict) else {}
+        ensure(identities.get(encounter_id) == contract["asset"] and asset.get("path") == atlas_res and asset.get("atlas_region") == contract["region"] and asset.get("atlas_size") == [288,48] and asset.get("runtime_sha256") == atlas_sha, errors, f"{encounter_id} exact atlas ownership changed")
+        ensure(asset.get("assigned_encounter_id") == encounter_id and asset.get("assigned_faction_id") == contract["faction"] and asset.get("assigned_commander_hero_id") == contract["hero"] and asset.get("source_model") == "built_in_image_gen_original_grand_convergence_rival_standard_atlas" and len(str(asset.get("accessible_description", "")).strip()) >= 70, errors, f"{encounter_id} art provenance or non-color description changed")
+        descriptions.add(str(asset.get("accessible_description", "")))
+        source_row = source_rows.get(encounter_id, {})
+        source_path = source_dir / contract["source"]
+        source_bytes = source_path.read_bytes() if source_path.is_file() else b""
+        source_size = png_size(source_path) if source_path.is_file() else None
+        ensure(source_path.is_file() and source_size is not None and min(source_size) >= 1024 and len(source_bytes) >= 26 and source_bytes[25] in {4,6} and hashlib.sha256(source_bytes).hexdigest() == contract["sha"], errors, f"{encounter_id} generated transparent source changed")
+        ensure(source_row.get("hero_id") == contract["hero"] and source_row.get("source_sha256") == contract["sha"] and source_row.get("atlas_region") == contract["region"] and str(source_row.get("generation_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{encounter_id} source provenance row changed")
+        source_payloads.append(source_bytes)
+        portrait = res_path_to_disk(str(hero_art.get(contract["hero"], {}).get("portrait", "")))
+        ensure(portrait.is_file() and Path(f"{portrait}.import").is_file(), errors, f"{contract['hero']} runtime portrait is missing")
+    ensure(len(source_payloads) == 6 and len(set(source_payloads)) == 6 and len(descriptions) == 6, errors, "The six rival standards and accessible silhouettes must remain distinct")
+
+    battle_text = (ROOT / "scripts" / "core" / "BattleRules.gd").read_text(encoding="utf-8")
+    for token in ("roster_hero_id", "EnemyAdventureRulesScript.build_roster_commander_state", "_normalize_enemy_hero_state"):
+        ensure(token in battle_text, errors, f"BattleRules lost named fixed-commander hydration token: {token}")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    for token in ("SIX_GRAND_CONVERGENCE_RIVAL_COMMANDERS_SMOKE", "const CASES := [", "BattleRulesScript.create_battle_payload", "BattleRulesScript.resolve_if_battle_ready", "validation_encounter_presentation_payload", "named_commander_exact", "save_round_trip_exact", "RIVAL_COMMANDER_CAPTURE_DIR"):
+        ensure(token in smoke_text, errors, f"Rival-commander consolidated smoke is missing live proof: {token}")
+    ensure_scene_nodes(scene_path.read_text(encoding="utf-8"), errors, "six_grand_convergence_rival_commanders_smoke.tscn", [("SixGrandConvergenceRivalCommandersSmoke", "Node")])
+    if report_path.is_file():
+        report = load_json(report_path)
+        ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("named_roster_commander_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6 and all(row.get("named_commander_exact") and row.get("objective_met") and row.get("reward_exact") and row.get("exact_art") and row.get("save_round_trip_exact") for row in report.get("rows", [])), errors, "Grand-convergence rival-commander consolidated smoke report is not fully green")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("REQUIRED_GRAND_CONVERGENCE_RIVAL_COMMANDERS_ATLAS_NAME" in packaging_text and "grand_convergence_rival_commanders/grand_convergence_rival_commanders_atlas.png.import" in packaging_text and "== 15" in packaging_text, errors, f"{packaging_path.name} must audit the rival-commander atlas")
 
 
 def main() -> int:
@@ -79391,6 +79483,7 @@ def main() -> int:
     validate_horizon_compact_six_citadels(errors)
     validate_five_horizon_court_skirmishes(errors)
     validate_four_dormant_roster_field_companies(errors)
+    validate_six_grand_convergence_rival_commanders(errors)
     validate_three_horizon_specialist_companies(errors)
     validate_three_horizon_reserve_companies(errors)
     validate_three_horizon_skirmish_companies(errors)
