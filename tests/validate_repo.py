@@ -676,6 +676,7 @@ BATTLE_VFX_MANIFEST_PATH = CONTENT_DIR / "battle_vfx_manifest.json"
 BATTLE_VFX_ROOT = ROOT / "art" / "battle" / "vfx"
 BATTLE_SPELL_VFX_SCHOOL_BATCH_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "spell_vfx_school_batch" / "manifest.json"
 BATTLE_GENERIC_SPELL_VFX_BATCH_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "generic_spell_vfx_batch" / "manifest.json"
+BATTLE_FINAL_GENERIC_SPELL_VFX_BATCH_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "final_generic_spell_vfx_batch" / "manifest.json"
 BATTLE_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_battle_sfx_assets.py"
 BATTLE_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "battle"
 BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-asset-layer-report.md"
@@ -62510,6 +62511,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_spell_veil_moon_mark_28": ("spell_veil_moon_mark_28.png", "spell_target"),
         "vfx_spell_old_measure_compass_correction_22": ("spell_old_measure_compass_correction_22.png", "spell_target"),
         "vfx_spell_old_measure_marker_tally_08": ("spell_old_measure_marker_tally_08.png", "spell_target"),
+        "vfx_spell_beacon_bell_lance_25": ("spell_beacon_bell_lance_25.png", "spell_projectile"),
+        "vfx_spell_mire_silt_rot_04": ("spell_mire_silt_rot_04.png", "spell_target"),
+        "vfx_spell_mire_sluice_poultice_14": ("spell_mire_sluice_poultice_14.png", "spell_target"),
+        "vfx_spell_mire_flood_rot_28": ("spell_mire_flood_rot_28.png", "spell_target"),
+        "vfx_spell_lens_mirror_prism_04": ("spell_lens_mirror_prism_04.png", "spell_target"),
+        "vfx_spell_lens_halo_ray_18": ("spell_lens_halo_ray_18.png", "spell_projectile"),
+        "vfx_spell_lens_starlens_prism_28": ("spell_lens_starlens_prism_28.png", "spell_target"),
+        "vfx_spell_root_loam_thorn_10": ("spell_root_loam_thorn_10.png", "spell_projectile"),
+        "vfx_spell_root_graft_graft_18": ("spell_root_graft_graft_18.png", "spell_target"),
+        "vfx_spell_veil_mourning_mark_04": ("spell_veil_mourning_mark_04.png", "spell_target"),
+        "vfx_spell_old_measure_index_correction_10": ("spell_old_measure_index_correction_10.png", "spell_target"),
         "vfx_placeholder_idle_shadow": ("state_idle_shadow.png", "state_center"),
         "vfx_placeholder_active_ring": ("state_active_ring.png", "state_center"),
         "vfx_placeholder_stack_fade": ("state_stack_fade.png", "state_center"),
@@ -62553,6 +62565,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "spell_veil_moon_mark_28": "vfx_spell_veil_moon_mark_28",
         "spell_old_measure_compass_correction_22": "vfx_spell_old_measure_compass_correction_22",
         "spell_old_measure_marker_tally_08": "vfx_spell_old_measure_marker_tally_08",
+        "spell_beacon_bell_lance_25": "vfx_spell_beacon_bell_lance_25",
+        "spell_mire_silt_rot_04": "vfx_spell_mire_silt_rot_04",
+        "spell_mire_sluice_poultice_14": "vfx_spell_mire_sluice_poultice_14",
+        "spell_mire_flood_rot_28": "vfx_spell_mire_flood_rot_28",
+        "spell_lens_mirror_prism_04": "vfx_spell_lens_mirror_prism_04",
+        "spell_lens_halo_ray_18": "vfx_spell_lens_halo_ray_18",
+        "spell_lens_starlens_prism_28": "vfx_spell_lens_starlens_prism_28",
+        "spell_root_loam_thorn_10": "vfx_spell_root_loam_thorn_10",
+        "spell_root_graft_graft_18": "vfx_spell_root_graft_graft_18",
+        "spell_veil_mourning_mark_04": "vfx_spell_veil_mourning_mark_04",
+        "spell_old_measure_index_correction_10": "vfx_spell_old_measure_index_correction_10",
     }
     if BATTLE_VFX_MANIFEST_PATH.exists():
         battle_vfx_manifest = json.loads(BATTLE_VFX_MANIFEST_PATH.read_text(encoding="utf-8"))
@@ -62561,8 +62584,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(isinstance(battle_vfx_cues, dict), errors, "battle_vfx_manifest.json cues must be an object")
         spell_vfx_cues = battle_vfx_manifest.get("spell_cues", {})
         ensure(isinstance(spell_vfx_cues, dict), errors, "battle_vfx_manifest.json spell_cues must be an object")
-        ensure(spell_vfx_cues == expected_spell_vfx_cues, errors, "battle_vfx_manifest.json must map exactly thirty-five Battle spells to exact VFX cues")
-        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, thirty-six spell, and six state/path Battle cues")
+        ensure(spell_vfx_cues == expected_spell_vfx_cues, errors, "battle_vfx_manifest.json must map exactly forty-six Battle spells to exact VFX cues")
+        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, forty-seven spell, and six state/path Battle cues")
         observed_vfx_paths = set()
         observed_vfx_hashes = set()
         for cue_id, (filename, render_mode) in required_battle_vfx_cues.items():
@@ -62573,7 +62596,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
             ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
             observed_vfx_paths.add(expected_path)
-        ensure(len(observed_vfx_paths) == 50, errors, "battle VFX asset layer must use exactly eight core, thirty-six spell, and six distinct state/path textures")
+        ensure(len(observed_vfx_paths) == 61, errors, "battle VFX asset layer must use exactly eight core, forty-seven spell, and six distinct state/path textures")
         for texture_path in sorted(observed_vfx_paths):
             disk_path = ROOT / texture_path.removeprefix("res://")
             ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
@@ -62584,7 +62607,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 observed_vfx_hashes.add(hashlib.sha256(disk_path.read_bytes()).hexdigest())
                 import_path = Path(str(disk_path) + ".import")
                 ensure(import_path.exists(), errors, f"battle VFX texture import metadata is missing: {texture_path}")
-        ensure(len(observed_vfx_hashes) == 50, errors, "all 50 Battle VFX textures must remain byte-distinct")
+        ensure(len(observed_vfx_hashes) == 61, errors, "all 61 Battle VFX textures must remain byte-distinct")
         for spell_id, cue_id in expected_spell_vfx_cues.items():
             cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
             ensure(cue.get("spell_id") == spell_id, errors, f"battle spell VFX cue {cue_id} must retain exact owner {spell_id}")
@@ -62701,6 +62724,63 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(generic_source_spell_ids == set(selected_generic_batch_effect_types), errors, "generic-only Battle spell VFX source manifest must cover the exact selected spell ids")
         ensure(len(generic_source_hashes) == 14, errors, "generic-only Battle spell VFX generated sources must remain byte-distinct")
         ensure(len(generic_runtime_hashes) == 14, errors, "generic-only Battle spell VFX runtime assets must remain byte-distinct")
+
+    selected_final_generic_batch_effect_types = {
+        "spell_beacon_bell_lance_25": "damage_enemy",
+        "spell_mire_silt_rot_04": "damage_enemy",
+        "spell_mire_sluice_poultice_14": "recover_ally",
+        "spell_mire_flood_rot_28": "damage_enemy",
+        "spell_lens_mirror_prism_04": "cleanse_ally",
+        "spell_lens_halo_ray_18": "damage_enemy",
+        "spell_lens_starlens_prism_28": "cleanse_ally",
+        "spell_root_loam_thorn_10": "damage_enemy",
+        "spell_root_graft_graft_18": "recover_ally",
+        "spell_veil_mourning_mark_04": "damage_enemy",
+        "spell_old_measure_index_correction_10": "cleanse_ally",
+    }
+    ensure(BATTLE_FINAL_GENERIC_SPELL_VFX_BATCH_SOURCE_MANIFEST_PATH.exists(), errors, "final generic Battle spell VFX source manifest is missing")
+    if BATTLE_FINAL_GENERIC_SPELL_VFX_BATCH_SOURCE_MANIFEST_PATH.exists():
+        final_generic_source_manifest = json.loads(BATTLE_FINAL_GENERIC_SPELL_VFX_BATCH_SOURCE_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(final_generic_source_manifest.get("schema") == "battle_final_generic_spell_vfx_batch_source_manifest_v1", errors, "final generic Battle spell VFX source manifest has the wrong schema")
+        ensure(final_generic_source_manifest.get("generation_mode") == "built_in_image_gen", errors, "final generic Battle spell VFX source manifest must retain built-in generation provenance")
+        ensure(final_generic_source_manifest.get("content_slice_id") == "content-eleven-final-generic-battle-spell-vfx-identities-10184", errors, "final generic Battle spell VFX source manifest must retain slice ownership")
+        ensure(bool(str(final_generic_source_manifest.get("shared_final_prompt", "")).strip()), errors, "final generic Battle spell VFX source manifest needs the shared final prompt")
+        final_generic_source_items = final_generic_source_manifest.get("items", [])
+        ensure(isinstance(final_generic_source_items, list) and len(final_generic_source_items) == 11, errors, "final generic Battle spell VFX source manifest must contain exactly eleven items")
+        final_generic_source_spell_ids = set()
+        final_generic_source_hashes = set()
+        final_generic_runtime_hashes = set()
+        for item in final_generic_source_items if isinstance(final_generic_source_items, list) else []:
+            ensure(isinstance(item, dict), errors, "final generic Battle spell VFX source manifest items must be objects")
+            if not isinstance(item, dict):
+                continue
+            spell_id = str(item.get("spell_id", ""))
+            final_generic_source_spell_ids.add(spell_id)
+            ensure(item.get("cue_id") == expected_spell_vfx_cues.get(spell_id), errors, f"final generic Battle spell VFX source item {spell_id} has the wrong cue")
+            ensure(item.get("effect_type") == selected_final_generic_batch_effect_types.get(spell_id), errors, f"final generic Battle spell VFX source item {spell_id} has the wrong effect type")
+            ensure(bool(str(item.get("prompt_subject", "")).strip()), errors, f"final generic Battle spell VFX source item {spell_id} needs a prompt subject")
+            ensure(bool(str(item.get("accessible_description", "")).strip()), errors, f"final generic Battle spell VFX source item {spell_id} needs accessible description")
+            source_path = ROOT / str(item.get("source_path", "")).removeprefix("res://")
+            runtime_path = ROOT / str(item.get("runtime_path", "")).removeprefix("res://")
+            ensure(source_path.exists(), errors, f"final generic Battle spell VFX source is missing for {spell_id}")
+            ensure(runtime_path.exists(), errors, f"final generic Battle spell VFX runtime asset is missing for {spell_id}")
+            if source_path.exists():
+                source_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+                final_generic_source_hashes.add(source_hash)
+                ensure(source_hash == item.get("source_sha256"), errors, f"final generic Battle spell VFX source hash drifted for {spell_id}")
+                ensure(png_size(source_path) == (1254, 1254), errors, f"final generic Battle spell VFX source must remain 1254x1254 for {spell_id}")
+                source_header = source_path.read_bytes()[:26]
+                ensure(len(source_header) >= 26 and source_header[25] in {4, 6}, errors, f"final generic Battle spell VFX source must retain alpha for {spell_id}")
+            if runtime_path.exists():
+                runtime_hash = hashlib.sha256(runtime_path.read_bytes()).hexdigest()
+                final_generic_runtime_hashes.add(runtime_hash)
+                ensure(runtime_hash == item.get("runtime_sha256"), errors, f"final generic Battle spell VFX runtime hash drifted for {spell_id}")
+                ensure(png_size(runtime_path) == (384, 384), errors, f"final generic Battle spell VFX runtime asset must remain 384x384 for {spell_id}")
+                runtime_header = runtime_path.read_bytes()[:26]
+                ensure(len(runtime_header) >= 26 and runtime_header[25] in {4, 6}, errors, f"final generic Battle spell VFX runtime asset must retain alpha for {spell_id}")
+        ensure(final_generic_source_spell_ids == set(selected_final_generic_batch_effect_types), errors, "final generic Battle spell VFX source manifest must cover the exact selected spell ids")
+        ensure(len(final_generic_source_hashes) == 11, errors, "final generic Battle spell VFX generated sources must remain byte-distinct")
+        ensure(len(final_generic_runtime_hashes) == 11, errors, "final generic Battle spell VFX runtime assets must remain byte-distinct")
 
     ensure(BATTLE_SFX_MANIFEST_PATH.exists(), errors, "battle_sfx_manifest.json is missing")
     ensure(BATTLE_SFX_GENERATOR_PATH.exists(), errors, "generate_battle_sfx_assets.py is missing")
@@ -63425,10 +63505,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "battle spell generic-only audio identity count",
         "unknown spell vfx fail closed",
         "unknown spell audio fail closed",
-        "unregistered damage spell generic identity public cast",
-        "unregistered damage presentation preserves authority",
-        "unregistered damage generic cast vfx",
-        "unregistered damage generic cast audio",
+        '"unknown_mapping_results": unknown_mapping_results',
         '"battle_spell_count": battle_spell_ids.size()',
         '"explicit_vfx_count": explicit_vfx_count',
         '"shared_effect_vfx_count": shared_effect_vfx_count',
@@ -63447,6 +63524,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "generic batch exact vfx cue",
         "generic batch reduced result parity",
         "generic batch reduced authority parity",
+        "final generic batch exact cast count",
+        "final generic batch damage cast count",
+        "final generic batch recovery cast count",
+        "final generic batch cleanse cast count",
         "move path ghost imported asset",
         "death fade imported asset",
         "retreat path imported asset",
@@ -63647,7 +63728,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             "`vfx_spell_cinder_burst`",
             "`audio_spell_cinder_burst`",
             "presentation-battle-spell-vfx-asset-adoption-10184",
-            "all thirty-five exact spell mappings and the shared Command Ward asset load as distinct live draw entries",
+            "all forty-six exact spell mappings and the shared Command Ward asset load as distinct live draw entries",
             "No final sound design.",
             "No particles, shaders, or broad non-spell VFX migration.",
             "No combat balance tuning.",

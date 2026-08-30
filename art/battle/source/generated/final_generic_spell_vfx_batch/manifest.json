@@ -1,0 +1,142 @@
+{
+  "schema": "battle_final_generic_spell_vfx_batch_source_manifest_v1",
+  "content_slice_id": "content-eleven-final-generic-battle-spell-vfx-identities-10184",
+  "generation_mode": "built_in_image_gen",
+  "asset_policy": "original_generated_transparent_battle_vfx_no_homm_art_import",
+  "shared_final_prompt": "Transparent 2D battle spell VFX sprite for a production fantasy strategy game; hand-painted, crisp material edges, strong non-color silhouette, centered on a square canvas with generous transparent padding and readable at 96 pixels; magical effect only; genuinely transparent clean alpha; no character, ground plane, background scene, text, letters, numerals, readable runes, logos, border, checkerboard, watermark, copied game imagery, or opaque full-canvas haze.",
+  "runtime_derivation": "Trim transparent source bounds, proportionally fit within 336x336, center on a 384x384 transparent canvas, and preserve RGBA alpha.",
+  "items": [
+    {
+      "spell_id": "spell_beacon_bell_lance_25",
+      "cue_id": "vfx_spell_beacon_bell_lance_25",
+      "effect_type": "damage_enemy",
+      "prompt_subject": "A long ivory-white spear of compressed sound driving horizontally through the open mouth of a heavy split bronze bell, with three angular concentric shock rings and bright brass fragments.",
+      "accessible_description": "A split bronze bell fires an ivory sound spear through angular shock rings.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0ee1a184-f6c0-4ed4-9df2-50a8388fe67c.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_beacon_bell_lance_25_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_beacon_bell_lance_25.png",
+      "source_sha256": "dff9796f4bc9fe4e3b1b902c180183d95ff813e7befdbfa2e6ca5eca99dcbb3f",
+      "runtime_sha256": "42956bc069cf779acd382a0ef64fc62c616c1a9d39bce06da5c2f3cceb1f4d31"
+    },
+    {
+      "spell_id": "spell_mire_silt_rot_04",
+      "cue_id": "vfx_spell_mire_silt_rot_04",
+      "effect_type": "damage_enemy",
+      "prompt_subject": "A compact cracked basin of wet gray-brown silt collapsing inward around black reed roots, sour pale-green decay blisters, and two heavy tar droplets.",
+      "accessible_description": "A cracked silt basin collapses around black reeds and decay blisters.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ca8d7062-3f8d-46b4-b497-2344bf90ade6.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_mire_silt_rot_04_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_mire_silt_rot_04.png",
+      "source_sha256": "c203ae547b493040b6d9fdbb61e013875376e92718941833749649ab97b8f358",
+      "runtime_sha256": "d61326a012ba1ab547ac412276140207470e0aaa4982d37c7d22e206992542f9"
+    },
+    {
+      "spell_id": "spell_mire_sluice_poultice_14",
+      "cue_id": "vfx_spell_mire_sluice_poultice_14",
+      "effect_type": "recover_ally",
+      "prompt_subject": "A woven reed medicinal packet opening beneath a tiny wooden sluice gate, with a clean turquoise ribbon of water washing through amber herbs into a protective horseshoe.",
+      "accessible_description": "A reed poultice opens beneath clean water and amber herbs.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2698103a-142e-4973-a8b4-2b414b77e492.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_mire_sluice_poultice_14_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_mire_sluice_poultice_14.png",
+      "source_sha256": "66e3f7b3a23229744de23de67d098bbfce617426a934a4ee3ad6f7e1540da419",
+      "runtime_sha256": "2a9bd5aec3e1461c6d9c345e182df6a10ea1f82ab10eb9f2e18b41fcd8e5725f"
+    },
+    {
+      "spell_id": "spell_mire_flood_rot_28",
+      "cue_id": "vfx_spell_mire_flood_rot_28",
+      "effect_type": "damage_enemy",
+      "prompt_subject": "A swollen broken ring of dark floodwater bursting outward, carrying rotten reed stumps, pale fungal foam, and one hollow mud bubble at its center.",
+      "accessible_description": "A dark flood ring bursts through rotten reeds and fungal foam.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8d1106a2-fb41-4833-afa9-b62a811c9a16.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_mire_flood_rot_28_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_mire_flood_rot_28.png",
+      "source_sha256": "921782938aa18cacad822992c016e52aaad3f13f9f06a20aa11e8c988b8188d1",
+      "runtime_sha256": "01317827e32431bf2bd2e7251b52534db95026f30468a169d1a5c4fac19f5f65"
+    },
+    {
+      "spell_id": "spell_lens_mirror_prism_04",
+      "cue_id": "vfx_spell_lens_mirror_prism_04",
+      "effect_type": "cleanse_ally",
+      "prompt_subject": "One tall triangular silver mirror prism inside a broken glass crescent, pulling three soot-black status wisps into its face and releasing clear white droplets from the opposite edge.",
+      "accessible_description": "A silver mirror prism draws in black wisps and releases clear droplets.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-edba284d-447a-49a2-bdfd-9c1a27f791de.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_lens_mirror_prism_04_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_lens_mirror_prism_04.png",
+      "source_sha256": "8a26219f48226f2f13f522f588f7d214189f4939a8352c0ff7b6de92944149c9",
+      "runtime_sha256": "13a8a66e1bed1ae82d3273aefb99c548beac4ad2de1f231824c14076802bf11a"
+    },
+    {
+      "spell_id": "spell_lens_halo_ray_18",
+      "cue_id": "vfx_spell_lens_halo_ray_18",
+      "effect_type": "damage_enemy",
+      "prompt_subject": "A narrow white-blue beam traveling horizontally through a segmented brass halo and a small triangular crystal lens, creating a hard spearhead flare and three severed light bands.",
+      "accessible_description": "A narrow ray passes through a segmented brass halo and crystal lens.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5ab81394-d17f-4367-a9a6-8525f2ba6e44.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_lens_halo_ray_18_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_lens_halo_ray_18.png",
+      "source_sha256": "7bca5ccb658c59c699adf772b4afa69b9e745825c11aa73cc16a889e5ebda2e8",
+      "runtime_sha256": "59b2b81afa5b3ac04c70023db6936d2d1f641752247a53cb8867a8311f7b62cf"
+    },
+    {
+      "spell_id": "spell_lens_starlens_prism_28",
+      "cue_id": "vfx_spell_lens_starlens_prism_28",
+      "effect_type": "cleanse_ally",
+      "prompt_subject": "A compact eight-point faceted crystal starlens held by three fine silver arms, refracting three jagged black status fragments outward into separate pearl-white light beads.",
+      "accessible_description": "A faceted starlens refracts black fragments into pearl-white beads.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-9b78f78e-9735-4b43-819e-655867869fa3.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_lens_starlens_prism_28_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_lens_starlens_prism_28.png",
+      "source_sha256": "7dc0e64a5ddb27a60f67d74aa0d8617395f2f2a420bada86f87e7449525fec07",
+      "runtime_sha256": "439ff8024402ec9ea3643b7f0cc09710c43a745fcb37f45c7fc36691a76b0eac"
+    },
+    {
+      "spell_id": "spell_root_loam_thorn_10",
+      "cue_id": "vfx_spell_root_loam_thorn_10",
+      "effect_type": "damage_enemy",
+      "prompt_subject": "A massive tapered thorn of dark root-wood traveling horizontally, its base wrapped in a compact clod of red-brown loam with torn roots, pebbles, and pale seed husks streaming behind.",
+      "accessible_description": "A root-wood thorn spear drags loam, torn roots, and stones behind it.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e5f4b21c-7b64-4478-95e9-f8ca255a950c.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_root_loam_thorn_10_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_root_loam_thorn_10.png",
+      "source_sha256": "e8321b0a6883eb05ee3f2a1fe458a854c4beeac31aa25aff2b7b72c278282126",
+      "runtime_sha256": "e8d3ebfca3b76cd544b3fe7329790dd86c54d74d84c325631d89360ab840f81d"
+    },
+    {
+      "spell_id": "spell_root_graft_graft_18",
+      "cue_id": "vfx_spell_root_graft_graft_18",
+      "effect_type": "recover_ally",
+      "prompt_subject": "Three thick moss-dark bark plates clamped around one bright living graft union, with golden sap bridging the seam while two fresh buds unfold above.",
+      "accessible_description": "Three bark plates clamp a glowing graft union beneath fresh buds.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2604f96c-b421-479b-9a24-d5cbd49dab32.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_root_graft_graft_18_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_root_graft_graft_18.png",
+      "source_sha256": "6f262f2a22dcb530feff78d569d53fb7cd129a21c96261058974fa12d2cf9a75",
+      "runtime_sha256": "d8919acbe75cd467df21da2a2229c2924ec6446eb24e3c515e56c37ed44231ac"
+    },
+    {
+      "spell_id": "spell_veil_mourning_mark_04",
+      "cue_id": "vfx_spell_veil_mourning_mark_04",
+      "effect_type": "damage_enemy",
+      "prompt_subject": "A heavy cracked black wax funeral seal without writing, pressed by a pearl crescent into a ring of dark seawater, with one long silver tear and three thin mist ribbons rising.",
+      "accessible_description": "A blank black seal sits beneath a pearl crescent and one silver tear.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3886d36a-7961-431d-a9b1-352fbcf35755.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_veil_mourning_mark_04_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_veil_mourning_mark_04.png",
+      "source_sha256": "4d3f373fb38d1378f992f867ddaae1c39a89467e31e216ec5dae96b13a025816",
+      "runtime_sha256": "b1201df2570b2fabf5d0c914f56be520a9654af673101d529c025c0634ddaf45"
+    },
+    {
+      "spell_id": "spell_old_measure_index_correction_10",
+      "cue_id": "vfx_spell_old_measure_index_correction_10",
+      "effect_type": "cleanse_ally",
+      "prompt_subject": "A precise brass survey index arm snapping three misaligned blank stone marker blocks into one straight ascending line while sweeping black chalk dust aside into clean white motes.",
+      "accessible_description": "A brass survey arm aligns blank stone markers and sweeps dark chalk away.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7b3bb2ae-cb42-4cf7-bb19-271fa21d21c0.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_old_measure_index_correction_10_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_old_measure_index_correction_10.png",
+      "source_sha256": "ea48543083f87851fb8b892893692abcdc6b29844221f893356d9f46ac9292c4",
+      "runtime_sha256": "ef8a3123e3879b71e473bf4485866bea80f11375af6d1f97a4efda89299c0aa3"
+    }
+  ]
+}
