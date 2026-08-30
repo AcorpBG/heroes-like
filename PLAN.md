@@ -24,8 +24,42 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: `content-seven-final-neutral-dwelling-musters-10184`.
-- Package boundary after the slice: both release exports measure 249287020 bytes, 712980 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+- Completed implementation slice: `content-eight-guarded-route-gates-10184`.
+- Current package boundary: both release exports measure 249329716 bytes, 670284 bytes below the unchanged 250000000-byte ceiling. Runtime art remains atlas-packed while generated source originals and development reports remain excluded on both platforms.
+
+## Eight Guarded Route Gates
+
+id: `content-eight-guarded-route-gates-10184`
+
+Status: completed.
+
+Completion result:
+- Bridge Bastion, Chainboom Fort, Railblock Camp, Rootgate Den, Fog Quay Ambush, Mirror Toll Causeway, Ashbarb Roadblock, and Frostford Hold are live together on Ninefold Confluence with exact adjacent watches, production battle construction, one-time resources, objective/scouting/recruit/artifact/spell rewards, and deterministic route-body opening;
+- every gate retains its original closed landmark before claim and switches to its own transparent opened-state region in one compact 384x48 atlas afterward; opened pathing and art round-trip exactly through save version 9 and repeat claims remain mutation-free;
+- Batch 006 now has zero metadata-only guarded-route site/object pairs, while the broader metadata-only service, transit, objective, and state-variant families remain separate work;
+- repository validation and the consolidated eight-case gameplay smoke pass, and matching Linux/Windows packaged boots pass with nine required resource-site atlases, generated source art excluded, and 249329716-byte PCKs below the unchanged ceiling.
+
+Current finding:
+- Bridge Bastion, Chainboom Fort, Railblock Camp, Rootgate Den, Fog Quay Ambush, Mirror Toll Causeway, Ashbarb Roadblock, and Frostford Hold are the exact eight remaining metadata-only sites and map objects in Batch 006;
+- all eight already own original closed landmarks, authored resource rewards, blocking-visitable footprints, route-control identities, and exact production neutral-watch encounters, but none currently reaches a scenario, reward execution, renderer state, or pathing transition;
+- the existing resource claim path can preserve save version 9 while switching an authored route gate from blocking to passable after its exact guard clears and its one-time reward is claimed.
+
+Implementation boundary:
+- place all eight route gates and their exact watch encounters on biome-appropriate, non-overlapping lanes of Ninefold Confluence with explicit guard-front ownership;
+- activate one-time resource rewards plus objective, scouting, recruit, artifact, spell, or reinforcement effects already supported by the live reward runtime;
+- add one data-gated route-opening transition that removes the captured gate body from blocked-tile authority while preserving its visit, reward, guard, and save state;
+- create eight distinct original transparent opened-route landmarks from the existing closed identities, pack them into one compact 384x48 runtime atlas, and switch only after successful claim;
+- preserve deterministic combat/rewards, save version 9, current victory requirements, generated-source exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all eight gates block their body and reward before exact guard clearance, construct the production guard battle, grant exact resource and special rewards once, open their body tiles for movement after claim, reject repeat claims without mutation, and round-trip exactly through save version 9;
+- each gate renders its exact existing closed landmark before claim and its own readable opened-state atlas region afterward with genuine transparency and strict fallback behavior;
+- Batch 006 has zero metadata-only site/object pairs;
+- one consolidated eight-case gameplay/runtime/visual smoke covers the complete batch after implementation, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no linked-endpoint teleport, ship movement, new unit definition, faction, hero, town, building, battle formula, strategic-AI algorithm, RMG behavior, save schema, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes gate, fort, map, reward, name, text, landmark, or protected visual expression.
 
 ## Seven Final Neutral Dwelling Musters
 

@@ -6103,9 +6103,57 @@
       "assigned_affiliation": "faction_veilmourn",
       "presentation_role": "false_meridian_pilots",
       "accessible_description": "A tilted meridian ring circles a narrow bell beacon above a dark skiff prow, blue-white lenses, and a misaligned compass needle."
+    },
+    "resource_site_guarded_route_bridge_bastion_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/bridge_bastion_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_bridge_bastion", "presentation_role": "opened_claimed_state", "accessible_description": "Bridge Bastion with its portcullis raised, deck clear, and two warm route lamps lit."
+    },
+    "resource_site_guarded_route_chainboom_fort_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/chainboom_fort_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_chainboom_fort", "presentation_role": "opened_claimed_state", "accessible_description": "Chainboom Fort with both chains raised to their winches and the harbor lane open."
+    },
+    "resource_site_guarded_route_railblock_camp_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/railblock_camp_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_railblock_camp", "presentation_role": "opened_claimed_state", "accessible_description": "Railblock Camp with carts moved aside and an uninterrupted lit track through the tents."
+    },
+    "resource_site_guarded_route_rootgate_den_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/rootgate_den_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_rootgate_den", "presentation_role": "opened_claimed_state", "accessible_description": "Rootgate Den opened around a broad earthen tunnel with a teal guide light beyond."
+    },
+    "resource_site_guarded_route_fog_quay_ambush_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/fog_quay_ambush_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_fog_quay_ambush", "presentation_role": "opened_claimed_state", "accessible_description": "Fog Quay cleared of ambush crates and rope traps, with guide lanterns along the open pier."
+    },
+    "resource_site_guarded_route_mirror_toll_causeway_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/mirror_toll_causeway_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_mirror_toll_causeway", "presentation_role": "opened_claimed_state", "accessible_description": "Mirror Toll Causeway with barriers folded aside and a continuous silver-blue lane."
+    },
+    "resource_site_guarded_route_ashbarb_roadblock_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [288, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/ashbarb_roadblock_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_ashbarb_roadblock", "presentation_role": "opened_claimed_state", "accessible_description": "Ashbarb spikes dismantled to both verges around a broad open stone road."
+    },
+    "resource_site_guarded_route_frostford_hold_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png", "atlas_region": [336, 0, 48, 48], "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/guarded_route_opened_wave1/frostford_hold_opened_source.png", "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+      "assigned_resource_site_id": "site_frostford_hold", "presentation_role": "opened_claimed_state", "accessible_description": "Frostford Hold with portcullis raised, bridge clear, and blue-white welcome lamps lit."
     }
   },
   "resource_site_sprites": {
+    "site_bridge_bastion": {"asset_id":"resource_site_guarded_route_bridge_bastion_opened","unclaimed_asset_id":"mapobj_bridge_bastion","fit":"Raised-gate state paired with the original closed Bridge Bastion."},
+    "site_chainboom_fort": {"asset_id":"resource_site_guarded_route_chainboom_fort_opened","unclaimed_asset_id":"mapobj_chainboom_fort","fit":"Raised-chain state paired with the original closed Chainboom Fort."},
+    "site_railblock_camp": {"asset_id":"resource_site_guarded_route_railblock_camp_opened","unclaimed_asset_id":"mapobj_railblock_camp","fit":"Clear-track state paired with the original blocked Railblock Camp."},
+    "site_rootgate_den": {"asset_id":"resource_site_guarded_route_rootgate_den_opened","unclaimed_asset_id":"mapobj_rootgate_den","fit":"Open-tunnel state paired with the original thorn-closed Rootgate Den."},
+    "site_fog_quay_ambush": {"asset_id":"resource_site_guarded_route_fog_quay_ambush_opened","unclaimed_asset_id":"mapobj_fog_quay_ambush","fit":"Cleared-pier state paired with the original trapped Fog Quay Ambush."},
+    "site_mirror_toll_causeway": {"asset_id":"resource_site_guarded_route_mirror_toll_causeway_opened","unclaimed_asset_id":"mapobj_mirror_toll_causeway","fit":"Open mirror lane paired with the original closed Mirror Toll Causeway."},
+    "site_ashbarb_roadblock": {"asset_id":"resource_site_guarded_route_ashbarb_roadblock_opened","unclaimed_asset_id":"mapobj_ashbarb_roadblock","fit":"Dismantled-barrier state paired with the original Ashbarb Roadblock."},
+    "site_frostford_hold": {"asset_id":"resource_site_guarded_route_frostford_hold_opened","unclaimed_asset_id":"mapobj_frostford_hold","fit":"Raised-portcullis state paired with the original closed Frostford Hold."},
     "site_toll_ruin": {"asset_id":"resource_site_minor_cache_toll_ruin_opened","unclaimed_asset_id":"mapobj_toll_ruin","fit":"Opened claimed state paired with the original closed Toll Ruin landmark."},
     "site_wreck_locker": {"asset_id":"resource_site_minor_cache_wreck_locker_opened","unclaimed_asset_id":"mapobj_wreck_locker","fit":"Opened claimed state paired with the original closed Wreck Locker landmark."},
     "site_amber_reliquary": {"asset_id":"resource_site_minor_cache_amber_reliquary_opened","unclaimed_asset_id":"mapobj_amber_reliquary","fit":"Opened claimed state paired with the original closed Amber Reliquary landmark."},

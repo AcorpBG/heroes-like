@@ -1075,6 +1075,7 @@ static func _collect_resource_node_result(
 	node["collected"] = true
 	node["collected_by_faction_id"] = "player"
 	node["collected_day"] = session.day
+	var route_opened := _open_resource_site_route_body(node, site)
 	node = _clear_resource_site_response(node)
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["resource_nodes"] = nodes
@@ -1106,6 +1107,8 @@ static func _collect_resource_node_result(
 	var reward_summary := _describe_resource_delta(rewards)
 	if reward_summary != "":
 		messages.append("Stores %s." % reward_summary)
+	if route_opened:
+		messages.append("The route is open.")
 	var recruits_spells_xp_started_usec := _rules_profile_timer()
 	var recruit_message := _grant_site_claim_recruits(session, _resource_site_claim_recruits(site))
 	if recruit_message != "":
@@ -1140,12 +1143,16 @@ static func _collect_resource_node_result(
 		mutation_facts["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 	if not claim_flags.is_empty():
 		mutation_facts["flags"] = Array(claim_flags.keys(), TYPE_STRING, "", null)
+	if route_opened:
+		mutation_facts["route_opened"] = true
 	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, mutation_facts)
 	if site_vision_radius > 0:
 		result["site_vision_radius"] = site_vision_radius
 		result["site_reveal_tiles"] = site_reveal_tiles
 	if not claim_flags.is_empty():
 		result["site_claim_flags"] = claim_flags.duplicate(true)
+	if route_opened:
+		result["route_opened"] = true
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
 	result["interaction_result"] = _interactable_result_payload("resource_site", node, mutation_facts, topology_facts)
@@ -1166,6 +1173,15 @@ static func _collect_resource_node_result(
 	)
 	_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 	return recapped
+
+static func _open_resource_site_route_body(node: Dictionary, site: Dictionary) -> bool:
+	if not bool(site.get("opens_route_on_claim", false)):
+		return false
+	node["blocking_body"] = false
+	node["package_block_tiles"] = []
+	node["route_state_id"] = "opened"
+	node["state_id"] = "opened"
+	return true
 
 static func collect_active_artifact(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state_for_runtime(session)

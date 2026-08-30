@@ -4639,7 +4639,15 @@
         {"placement_id": "ninefold_confluence_ninefold_prismhearth_relay_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 22, "y": 34, "guard_front_id": "ninefold_prism_matrix"},
         {"placement_id": "ninefold_confluence_ninefold_graftroot_caravan_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 15, "y": 52, "guard_front_id": "ninefold_graftroot_wardens"},
         {"placement_id": "ninefold_confluence_ninefold_orevein_gantry_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 36, "y": 52, "guard_front_id": "ninefold_orevein_exactors"},
-        {"placement_id": "ninefold_confluence_ninefold_bellwake_harbor_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 46, "y": 51, "guard_front_id": "ninefold_bellwake_privateers", "collected_by_faction_id": "faction_veilmourn"}
+        {"placement_id": "ninefold_confluence_ninefold_bellwake_harbor_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 46, "y": 51, "guard_front_id": "ninefold_bellwake_privateers", "collected_by_faction_id": "faction_veilmourn"},
+        {"placement_id": "ninefold_bridge_bastion", "site_id": "site_bridge_bastion", "x": 18, "y": 61, "guard_front_id": "ninefold_bridge_bastion_watch"},
+        {"placement_id": "ninefold_chainboom_fort", "site_id": "site_chainboom_fort", "x": 52, "y": 61, "guard_front_id": "ninefold_chainboom_fort_watch"},
+        {"placement_id": "ninefold_railblock_camp", "site_id": "site_railblock_camp", "x": 10, "y": 61, "guard_front_id": "ninefold_railblock_camp_watch"},
+        {"placement_id": "ninefold_rootgate_den", "site_id": "site_rootgate_den", "x": 24, "y": 56, "guard_front_id": "ninefold_rootgate_den_watch"},
+        {"placement_id": "ninefold_fog_quay_ambush", "site_id": "site_fog_quay_ambush", "x": 59, "y": 61, "guard_front_id": "ninefold_fog_quay_ambush_watch"},
+        {"placement_id": "ninefold_mirror_toll_causeway", "site_id": "site_mirror_toll_causeway", "x": 10, "y": 56, "guard_front_id": "ninefold_mirror_toll_causeway_watch"},
+        {"placement_id": "ninefold_ashbarb_roadblock", "site_id": "site_ashbarb_roadblock", "x": 25, "y": 61, "guard_front_id": "ninefold_ashbarb_roadblock_watch"},
+        {"placement_id": "ninefold_frostford_hold", "site_id": "site_frostford_hold", "x": 3, "y": 61, "guard_front_id": "ninefold_frostford_hold_watch"}
       ],
       "artifact_nodes": [{"placement_id": "confluence_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 23, "y": 5}, {"placement_id": "confluence_quarry_tally_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 45}, {"placement_id": "confluence_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 44, "y": 45}, {"placement_id": "confluence_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 60, "y": 45}],
       "encounters": [
@@ -4770,7 +4778,15 @@
         {"placement_id": "ninefold_storm_rook_eyrie_watch", "encounter_id": "encounter_cliffhawk_roost_watch", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 26424, "prefer_identity_landmark": true},
         {"placement_id": "ninefold_mirror_bound_barracks_watch", "encounter_id": "encounter_crystal_sump_watch", "x": 57, "y": 18, "difficulty": "high", "combat_seed": 26425, "prefer_identity_landmark": true},
         {"placement_id": "ninefold_furnace_oath_yard_watch", "encounter_id": "encounter_cinder_kiln_watch", "x": 47, "y": 30, "difficulty": "high", "combat_seed": 26426, "prefer_identity_landmark": true},
-        {"placement_id": "ninefold_drowned_crown_hall_watch", "encounter_id": "encounter_tidepool_skiffyard_watch", "x": 54, "y": 34, "difficulty": "high", "combat_seed": 26427, "prefer_identity_landmark": true}
+        {"placement_id": "ninefold_drowned_crown_hall_watch", "encounter_id": "encounter_tidepool_skiffyard_watch", "x": 54, "y": 34, "difficulty": "high", "combat_seed": 26427, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_bridge_bastion_watch", "encounter_id": "encounter_roadward_lodge_watch", "x": 20, "y": 61, "difficulty": "high", "combat_seed": 26428, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_chainboom_fort_watch", "encounter_id": "encounter_harbor_pilot_house_watch", "x": 54, "y": 61, "difficulty": "high", "combat_seed": 26429, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_railblock_camp_watch", "encounter_id": "encounter_dustjack_yard_watch", "x": 12, "y": 61, "difficulty": "medium", "combat_seed": 26430, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_rootgate_den_watch", "encounter_id": "encounter_greenbranch_copse_watch", "x": 25, "y": 56, "difficulty": "high", "combat_seed": 26431, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_fog_quay_ambush_watch", "encounter_id": "encounter_reedbarge_mooring_watch", "x": 61, "y": 61, "difficulty": "medium", "combat_seed": 26432, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_mirror_toll_causeway_watch", "encounter_id": "encounter_kite_signal_eyrie_watch", "x": 12, "y": 56, "difficulty": "high", "combat_seed": 26433, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_ashbarb_roadblock_watch", "encounter_id": "encounter_charcoal_burners_watch", "x": 27, "y": 61, "difficulty": "medium", "combat_seed": 26434, "prefer_identity_landmark": true},
+        {"placement_id": "ninefold_frostford_hold_watch", "encounter_id": "encounter_frostwharf_house_watch", "x": 5, "y": 61, "difficulty": "high", "combat_seed": 26435, "prefer_identity_landmark": true}
       ]
     },
     {

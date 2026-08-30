@@ -1,0 +1,29 @@
+{
+  "id": "guarded_route_opened_wave1",
+  "generation_mode": "precise-object-edit",
+  "source_model": "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas",
+  "intent": "Opened-route variants for the eight original guarded route landmarks; preserve each exact closed identity while making the cleared travel lane readable on the overworld.",
+  "shared_prompt_constraints": [
+    "Preserve exact base architecture, perspective, proportions, palette, and painterly strategy-map rendering.",
+    "Change only the blocking gate, chain, barricade, or ambush dressing needed to show a safely traversable route.",
+    "No people, creatures, words, labels, UI, background, border, copied franchise elements, or protected visual expression.",
+    "Retain genuine transparent alpha outside the object and generous transparent margins."
+  ],
+  "alpha_recovery": "Seven precise edits returned a baked pale checkerboard. Only the border-connected near-neutral field was removed with a 12 percent flood-fill tolerance; Fog Quay Ambush arrived with genuine alpha. All eight final sources and the runtime atlas retain transparent corners.",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/resource_sites/guarded_route_opened_atlas.png",
+    "size": [384, 48],
+    "cell_size": [48, 48],
+    "sha256": "1d9d69a536b9b451a365aacfe2cdfadad7b4d3935155a935be8cac1f47a90abb"
+  },
+  "assets": [
+    {"site_id":"site_bridge_bastion","source":"bridge_bastion_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f49f0e0b-b840-4f02-9b62-e730380b2b7c.png","region":[0,0,48,48],"sha256":"ccfce539488a679f432683df49379e051ce931aa7a262a0e5bac30d92d2e2d02","edit":"Raised central gate, unobstructed bridge deck, and warm tower route lamps."},
+    {"site_id":"site_chainboom_fort","source":"chainboom_fort_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a766e330-1a00-48ff-a252-4cc4cdccc621.png","region":[48,0,48,48],"sha256":"3a5e758905927220f9c221dce1400f742a517595baa0da0ae283929ebd82b993","edit":"Harbor chain raised to both winches, clear water lane, and amber signal lamps."},
+    {"site_id":"site_railblock_camp","source":"railblock_camp_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5636ae26-6cc8-4cb1-aeb0-75426cda4bd7.png","region":[96,0,48,48],"sha256":"bd095ac5b972c35dc5320abeb58a1a47550bacd4aef8d1ac10136c3bd229c3cb","edit":"Mine carts moved aside, front gate open, and uninterrupted lit rails."},
+    {"site_id":"site_rootgate_den","source":"rootgate_den_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e7d1e4d7-1333-425a-ba03-ee54a03bb690.png","region":[144,0,48,48],"sha256":"ad8b1ff9b764e59624e63ae8cbfafd3c9f35f17300c6a6902ff5aab6142bbc9c","edit":"Thorn gate pulled aside around a broad walkable tunnel and teal guide glow."},
+    {"site_id":"site_fog_quay_ambush","source":"fog_quay_ambush_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-05c3edf7-17b9-4733-86fa-ae1af5a60f19.png","region":[192,0,48,48],"sha256":"dbf67b98c2d88ad9f0411d7082d8e7bf4ebc9397ad76fdf8c508be92192c84ee","edit":"Pier traps and crates cleared, skiff secured, and guide lanterns brightened."},
+    {"site_id":"site_mirror_toll_causeway","source":"mirror_toll_causeway_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d9046e2e-bb36-4f9c-8da2-a71ff58281df.png","region":[240,0,48,48],"sha256":"b54f843f09a5330ee2b1f86aaf0e727cda578403f11eb6dfa6f2d15b39f3bb81","edit":"Toll barriers folded away with a continuous silver-blue mirrored lane."},
+    {"site_id":"site_ashbarb_roadblock","source":"ashbarb_roadblock_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-900a6dec-30b2-4fb5-8982-8e0bc12846b5.png","region":[288,0,48,48],"sha256":"a5d81ab28742ab40caf91a931cb8a0444d2d4d552e6ade16588d33fbc4612789","edit":"Spiked barricade dismantled to both verges around a broad safe ash road."},
+    {"site_id":"site_frostford_hold","source":"frostford_hold_opened_source.png","generated_original":"/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ade93606-8817-4823-8d28-888267f99286.png","region":[336,0,48,48],"sha256":"a51c27d531530aaec4b2181652c45ce1bcbcb3767619fca38b905be2aa596bdd","edit":"Portcullis raised over a cleared bridge with restrained blue-white welcome lamps."}
+  ]
+}
