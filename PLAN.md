@@ -24,8 +24,44 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-three-horizon-reserve-companies-10184` is completed as one coherent Thornwake, Brasshollow, and Veilmourn early-company unit/recruitment/battle batch.
-- Current package boundary: matching Linux and Windows release exports measure 241390928 bytes, 8609072 bytes below the unchanged 250000000-byte ceiling; six superseded overworld textures with no live exact references are excluded symmetrically while their active replacements remain packaged.
+- Current implementation slice: `content-three-horizon-skirmish-companies-10184` is completed as one coherent Thornwake, Brasshollow, and Veilmourn low-tier unit/recruitment/reinforcement/battle batch; the broad content goal continues beyond this slice.
+- Current package boundary: matching Linux and Windows release exports measure 241674776 bytes, 8325224 bytes below the unchanged 250000000-byte ceiling; source masters and superseded overworld textures remain excluded symmetrically while active runtime art remains packaged.
+
+## Three Horizon Skirmish Companies
+
+id: `content-three-horizon-skirmish-companies-10184`
+
+Status: completed.
+
+Completion result:
+- Bramblekite Needlers, Quenchspool Slingers, and Saltbell Casters are live as three original low-tier ranged companies using supported persistent pin, stagger-aware redline volley, and bounded false-echo contracts;
+- their existing early dwellings provide exact weekly growth and four-percent recruitment discounts, and the Crownroot, Blackbell, and Pale Sounding day-three relief hooks provide 3, 3, and 4 immediate recruits respectively;
+- the three existing day-four counterstroke armies field exact stacks of 5, 5, and 7, while victory recruits two new-company survivors alongside both earlier company lines exactly once;
+- three built-in-image-generation masters provide complete portrait, battle-icon, standee, animation, and overworld surfaces with exact prompt/hash provenance; the inspected battle standees retain distinct faction silhouettes at runtime scale;
+- one consolidated three-scenario smoke passes live relief, town muster, battle construction and art loading, victory, nine exact company survivor grants, repeat protection, and save-version-9 continuity; repository validation passes;
+- Linux and Windows release exports both pass with matching 241674776-byte PCKs, source art absent, required runtime art present, native libraries loaded, and 8325224 bytes below the unchanged ceiling.
+
+Current finding:
+- Thornwake, Brasshollow, and Veilmourn each own ten live faction units while Embercourt owns eleven and Mireclaw and Sunvault own twelve, leaving the three Horizon factions with the narrowest production rosters;
+- Thornwake and Brasshollow have no ranged company below tier three, while Veilmourn still has only one tier-one company, so early battles and muster choices repeat sooner than the other factions' opening rosters;
+- Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor already own tier-one/tier-two dwellings, day-three relief hooks, and day-four company battles that can expose new skirmishers through live play without adding another building, town, encounter, or scenario record;
+- matching release packages retain 8609072 bytes of headroom under the unchanged ceiling, enough for three compact curated unit surface sets while preserving all current package exclusions.
+
+Implementation boundary:
+- add Bramblekite Needlers, Quenchspool Slingers, and Saltbell Casters as original low-tier Thornwake, Brasshollow, and Veilmourn ranged skirmish companies with distinct persistent pin, redline volley, and bounded false-echo tactical contracts built from supported ranged mechanics;
+- add each company to its faction's existing early dwelling with bounded weekly growth and recruitment discount, preserving the building's original unlock and construction route;
+- add each company to its Horizon scenario's day-three relief payload, day-four counterstroke army, and existing one-time survivor hook so the new content enters both player and enemy live battle flow;
+- generate three original transparent unit masters, derive the established portrait, battle-icon, standee, animation, and overworld surfaces, and retain prompt/hash provenance outside release packages;
+- preserve deterministic battle authority, save version 9, existing objectives and encounter identities, Windows/Linux paths, accessibility descriptions, source-art exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all three companies resolve through live production battle construction with exact statistics, supported abilities, and exact art; day-three relief grants the authored company and the day-four victory recruits its survivors exactly once;
+- all three player towns expose the company through the correct early dwelling, weekly growth, recruitment discount, live muster authority, and save-version-9 continuity without cross-faction leakage;
+- one consolidated three-faction gameplay/battle/town/art/save smoke runs only after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, building, scenario, encounter, campaign, spell, artifact, battle algorithm, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes unit, name, statistic line, ability, visual design, or protected expression.
 
 ## Three Horizon Reserve Companies
 

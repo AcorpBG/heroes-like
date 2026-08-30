@@ -5470,6 +5470,117 @@
       "control_resistance_pct": 8,
       "spell_school_resistance_pct": {"veil": 12},
       "status_immunity_ids": []
+    },
+    {
+      "id": "unit_thornwake_bramblekite_needlers",
+      "name": "Bramblekite Needlers",
+      "faction_id": "faction_thornwake",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 11,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {"gold": 105, "wood": 1},
+      "content_status": "horizon_skirmish_company_live",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Bramblekite Pin",
+          "description": "A seed-thorn cast from the folded kite mantle tangles the struck line for one exchange.",
+          "status_id": "status_harried",
+          "status_label": "Bramble-Pinned",
+          "duration_rounds": 1,
+          "momentum_gain": 1,
+          "modifiers": {"defense": -1},
+          "ai_target_priority_bonus": 0.2
+        }
+      ],
+      "spell_resistance_pct": 5,
+      "control_resistance_pct": 5,
+      "spell_school_resistance_pct": {"root": 8},
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_brasshollow_quenchspool_slingers",
+      "name": "Quenchspool Slingers",
+      "faction_id": "faction_brasshollow",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 12,
+      "attack": 6,
+      "defense": 5,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "growth": 5,
+      "cost": {"gold": 115, "ore": 1},
+      "content_status": "horizon_skirmish_company_live",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Quenchspool Redline",
+          "description": "A redline cable cast lands with furnace force against a line already staggered by the opening exchange.",
+          "damage_multiplier": 1.08,
+          "min_distance": 1,
+          "status_ids": ["status_staggered"],
+          "status_damage_multiplier": 1.04
+        }
+      ],
+      "spell_resistance_pct": 4,
+      "control_resistance_pct": 5,
+      "spell_school_resistance_pct": {"furnace": 8},
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_veilmourn_saltbell_casters",
+      "name": "Saltbell Casters",
+      "faction_id": "faction_veilmourn",
+      "role": "ranged",
+      "tier": 1,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "growth": 8,
+      "cost": {"gold": 60},
+      "content_status": "horizon_skirmish_company_live",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Saltbell False Echo",
+          "description": "A cast mourning bell finds an isolated line through the fog and leaves its survivors listening to the wrong shore.",
+          "status_id": "status_fogbound",
+          "status_label": "Saltbell-Fogbound",
+          "duration_rounds": 1,
+          "uses_per_battle": 1,
+          "target_min_tier": 1,
+          "momentum_gain": 0,
+          "modifiers": {"defense": -1},
+          "ai_target_priority_bonus": 0.5
+        }
+      ],
+      "spell_resistance_pct": 5,
+      "control_resistance_pct": 5,
+      "spell_school_resistance_pct": {"veil": 8},
+      "status_immunity_ids": []
     }
   ]
 }
