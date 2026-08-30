@@ -88,7 +88,7 @@ func _ready() -> void:
 
 func _run() -> void:
 	ContentService.clear_cache()
-	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 126, "Specialist batch must remain present in the expanded 126-unit catalog.")
+	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 130, "Specialist batch must remain present in the expanded 130-unit catalog.")
 	for case_value in CASES:
 		await _run_case(case_value)
 	if _errors.is_empty():

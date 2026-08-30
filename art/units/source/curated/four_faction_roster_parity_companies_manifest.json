@@ -1,0 +1,35 @@
+{
+  "schema": "four_faction_roster_parity_companies_source_manifest_v1",
+  "generation_mode": "built_in_image_gen",
+  "normalization": "transparent subject fit into established 512x512 curated source dimensions",
+  "sources": [
+    {
+      "id": "unit_embercourt_lockglass_writcasters",
+      "path": "res://art/units/source/curated/unit_embercourt_lockglass_writcasters.png",
+      "sha256": "c6593a01dc5039800abde5d5a3d291ffb88321def1943a05a14652283815b87d",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e7bc89a4-3caf-4bcb-8a9d-0984c4dab5b4.png",
+      "prompt_summary": "Embercourt civic war-scribe in oxblood and ivory firing heated glass writ-seals from a brass-and-dark-wood lever launcher."
+    },
+    {
+      "id": "unit_thornwake_pollenhook_whistlers",
+      "path": "res://art/units/source/curated/unit_thornwake_pollenhook_whistlers.png",
+      "sha256": "aee551c6e0435b80c3bd877f29503ce868d69196a7c881fc0bd23121d036faf4",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-68e7b3d5-862a-4fb4-98ab-62550ae53de2.png",
+      "prompt_summary": "Pale-bark Thornwake scout blowing seed-thorn darts through a curved living-reed whistle tube with ochre pollen pods."
+    },
+    {
+      "id": "unit_brasshollow_tallyspring_throwers",
+      "path": "res://art/units/source/curated/unit_brasshollow_tallyspring_throwers.png",
+      "sha256": "4f7df2297cf1f5f0e38ecf50f77c5abf148789af2b035706d7b6288d6257adcd",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8889ac91-e11d-463a-bb60-1412c2dc8bbe.png",
+      "prompt_summary": "Brasshollow foundry laborer launching stamped tally-discs from a compact hand-cranked spring caster with a visible coil."
+    },
+    {
+      "id": "unit_veilmourn_gloamkeel_bulwarks",
+      "path": "res://art/units/source/curated/unit_veilmourn_gloamkeel_bulwarks.png",
+      "sha256": "28200cc4bc83bbaec5230cd8554fa5f94129f7d4f3cb1b07ce574ce6f1f8a6ea",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f192f779-6522-4d6c-84c4-3cbcc46fc356.png",
+      "prompt_summary": "Veilmourn harbor guardian with a salt-marked ship-keel shield, mourning bell, black scale coat, and short salvage hook."
+    }
+  ]
+}
