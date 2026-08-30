@@ -14460,6 +14460,32 @@ Completion evidence:
 - the consolidated ten-case report passed six two-way and four one-way contracts with exact one-point traversal, reverse rejection, save/load continuity, activated art, and unsafe-exit fail closure;
 - repository validation, Python compilation, Godot import/editor parsing, and matching 249505616-byte Linux/Windows export-startup gates passed; source art remains excluded and the compact runtime atlas is 480x48.
 
+## Six-Gate Charter Road Front
+
+id: `content-six-gate-charter-road-front-10184`
+
+Status: completed.
+
+Implementation boundary:
+- activate the remaining Batch 004 land route-control family: Charter Bar Gate, Thorn Seal Gate, Brass Toll Arch, Reef Chain Boom, Frost Toll Bar, Ash Sluice Lock, Mileward Route Post, and Road Oath Stone;
+- ship all eight objects together in one original skirmish front whose economy, route layout, towns, encounters, and objectives make the six paid openings and two non-mutating guidance posts playable content rather than catalog-only metadata;
+- use the existing generic route-lock and sign contracts for exact payment, persistent route-body clearing, repeat safety, save/load continuity, and authored waypoint guidance;
+- add one distinctive opened-state art frame per gate in a single compact runtime atlas while retaining each existing closed frame.
+
+Completion criteria:
+- all six gates and two waypoints are live and placed in the new shipped scenario with collision-free approaches and a viable player resource runway;
+- every gate charges its exact authored cost, clears its full blocking footprint, sets its exact route flag, switches art, rejects repeat payment without mutation, and survives save/load;
+- both waypoints return their authored route text freely and repeatedly without changing session authority;
+- one consolidated eight-case gameplay/art/save smoke, repository validation, and bounded Linux/Windows package startup gates pass after the whole family is complete.
+
+Non-goals:
+- no ship/embarkation system (the Reef Chain Boom is a land-approach route lock in this scenario), Native RMG generation/parity change, save-version bump, broad AI/economy/balance redesign, animation/audio/VFX, campaign expansion, certification, publication, whole-game validation, or release-readiness claim.
+
+Completion evidence:
+- Six-Gate Charter Road ships as the seventy-second authored scenario with two towns, four authored encounters, five reactive hooks, a full six-gate resource runway, six route objectives, and both guidance posts;
+- the consolidated eight-case report passed exact payments, complete blocking-footprint clearing, exact flags/objectives, opened-art switching, repeat rejection, save-version-9 round-trips, and two freely repeatable non-mutating waypoint reads;
+- six individually edited opened-state sources produce one inspected transparent 288x48 atlas; repository validation, Python compilation, and matching 249547160-byte Linux/Windows export-startup gates passed with all source art excluded from the PCK.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

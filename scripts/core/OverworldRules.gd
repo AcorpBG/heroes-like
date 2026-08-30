@@ -1045,7 +1045,10 @@ static func _collect_resource_node_result(
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This site has no authored payload."}
-	if String(site.get("batch003_role", "")) == "sign_waypoint":
+	if (
+		String(site.get("batch003_role", "")) == "sign_waypoint"
+		or String(site.get("batch004_role", "")) == "route_waypoint"
+	):
 		var sign_contract = site.get("sign_contract", {})
 		var hint_category := String(sign_contract.get("route_hint_category", "")) if sign_contract is Dictionary else ""
 		var sign_text := String(site.get("sign_text", "")).strip_edges()

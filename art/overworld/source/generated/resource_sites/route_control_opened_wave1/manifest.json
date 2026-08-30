@@ -1,0 +1,22 @@
+{
+  "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+  "source_date_utc": "2026-08-30",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+  "runtime_layout": "six 48x48 cells in site order, 288x48 total",
+  "prompt_set": [
+    "Preserve each exact closed gate identity, isometric camera, pixel-painted fantasy strategy style, palette, silhouette, and ground contact.",
+    "Change only the mechanism state so the authored road opening is unmistakably clear: raised charter arm, withdrawn living seal, raised brass toll arm, lifted reef chain, raised frost chain, or lifted ash sluice grates.",
+    "Use restrained object-specific route lights and no people, text, border, guide lines, or added scenery.",
+    "Keep generous transparent framing around every isolated landmark."
+  ],
+  "alpha_recovery": "Five edits returned a baked pale checkerboard. Only the border-connected near-neutral presentation field was removed with a 12 percent flood-fill tolerance. The Brass Toll Arch arrived with genuine alpha. Every accepted source and the atlas has transparent corners.",
+  "processing": "alpha cleanup where required, trim, aspect fit within 44x44, and center on a transparent 48x48 cell",
+  "items": [
+    {"site_id":"site_charter_bar_gate","source":"charter_bar_gate_opened_source.png","atlas_region":[0,0,48,48],"state":"opened"},
+    {"site_id":"site_thorn_seal_gate","source":"thorn_seal_gate_opened_source.png","atlas_region":[48,0,48,48],"state":"opened"},
+    {"site_id":"site_brass_toll_arch","source":"brass_toll_arch_opened_source.png","atlas_region":[96,0,48,48],"state":"opened"},
+    {"site_id":"site_reef_chain_boom","source":"reef_chain_boom_opened_source.png","atlas_region":[144,0,48,48],"state":"opened"},
+    {"site_id":"site_frost_toll_bar","source":"frost_toll_bar_opened_source.png","atlas_region":[192,0,48,48],"state":"opened"},
+    {"site_id":"site_ash_sluice_lock","source":"ash_sluice_lock_opened_source.png","atlas_region":[240,0,48,48],"state":"opened"}
+  ]
+}
