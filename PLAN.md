@@ -14846,6 +14846,38 @@ Non-goals:
 - no faction ladder, town, hero, spell, artifact, campaign, scenario geometry expansion, combat formula rewrite, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes creature, dwelling, name, icon, composition, text, or protected visual expression.
 
+## Horn and Glass Accord Campaign
+
+id: `content-horn-glass-accord-campaign-10184`
+
+Status: completed.
+
+Current finding:
+- the two elite neutral dwelling families are production-live but currently appear together only on the 64x64 Ninefold breadth board, so their tactical and recruiting identities do not yet support a paced player-facing arc;
+- Beaconscribe Frostbeacon Circuit, Vowless Saltpan Circuit, and Three-Banner Field Commission already form a natural Embercourt-to-Veilmourn-to-Sunvault progression, but none currently participates in campaign flow;
+- the highest-impact bounded follow-up is to place one elite dwelling in each compact chapter, bring both together in the final commission, and wire the three maps into one original resource-only carryover campaign with distinct browser art.
+
+Implementation boundary:
+- add exact persistent claim flags to Cinderwake Fold and Tideglass Roost, then place their guarded site/encounter pairs on the two compact circuit maps and both pairs on Three-Banner Field Commission without weakening guard blocking or reusing Ninefold placement state;
+- extend each scenario with explicit elite-dwelling claim objectives, reactive story hooks, campaign availability, and collision-safe approaches while preserving skirmish availability and existing objectives;
+- add the three-chapter `Horn and Glass Accord` campaign with Jorun Beaconscribe, Nacre Vowless, and Neral carrying only bounded common stores and prior claim testimony across faction changes, never another commander's progression, spells, artifacts, or units;
+- create one original campaign emblem and three original chapter seals, wire all four into the live campaign browser with non-color descriptions and exact source/runtime provenance, exclude generated sources from packages, preserve save version 9, and stay below the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all three scenarios launch through campaign mode, construct their existing fronts plus exact elite guards, require the new dwelling claims for victory, and retain full skirmish play;
+- the first two chapters unlock only after their exact prior victory and local elite claim, while the finale requires both locally claimed dwellings and imports only capped resources plus prefixed testimony;
+- the campaign emblem and three seals resolve as four byte-distinct alpha-safe original images with accessible descriptions and no source art inside release packages;
+- one consolidated three-chapter gameplay/progression/dwelling/visual/save smoke passes after the full batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped one original three-chapter campaign across the Beaconscribe, Vowless, and Three-Banner boards with four exact guarded elite-dwelling placements, local claim objectives, one-time testimony hooks, and resource-only cross-faction carryover;
+- added one original 128x128 campaign emblem and three original 64x64 chapter seals backed by distinct 1254x1254 generated sources, exact provenance, accessible alt text, live browser ownership, and source-art package exclusion;
+- the consolidated live report passed all three chapters, four dwelling contracts, 18 production battle payloads, campaign progression, save-version-9 round trips, and four art identities; repository validation and Linux/Windows package boots passed at 248970432 bytes with 11 emblems and 42 seals packaged.
+
+Non-goals:
+- no new faction, unit, hero, town, spell, artifact, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, faction story, emblem, seal, name, text, creature, dwelling, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

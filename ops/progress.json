@@ -15745,10 +15745,10 @@
   "currentNotes": "Completed the Veil-Coast Sounding Circuit content batch with six live coast-route services, six operational landmarks, one 24x14 Veilmourn skirmish, four battle fronts, complete town economy sources, and consolidated gameplay, repository, Linux, and Windows package evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceId": "content-two-elite-neutral-dwellings-10184",
-  "currentSliceNotes": "Shipped two original elite neutral units and two-stack guarded dwellings on Ninefold Confluence; consolidated gameplay/combat/site/save smoke, repository validation, and Linux/Windows packaged boot passed with matching 248900900-byte PCK.",
+  "currentSliceId": "content-horn-glass-accord-campaign-10184",
+  "currentSliceNotes": "Shipped three-chapter Horn and Glass Accord with four guarded elite-dwelling placements, resource-only carryover, original emblem and three seals; consolidated live report passed 3 chapters/4 dwellings/18 battle payloads/save v9, repo validation passed, and Linux/Windows package boots passed at 248970432 bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content two elite neutral dwellings 10184",
+  "currentSliceTitle": "content horn glass accord campaign 10184",
   "currentSliceUpdatedAt": "2026-08-30T08:38:28Z",
   "deferredRiskRegister": [
     {
@@ -106413,6 +106413,16 @@
       "startedAt": "2026-08-30T08:45:23Z",
       "notes": "Shipped two original elite neutral units and two-stack guarded dwellings on Ninefold Confluence; consolidated gameplay/combat/site/save smoke, repository validation, and Linux/Windows packaged boot passed with matching 248900900-byte PCK.",
       "completedAt": "2026-08-30T09:23:19Z"
+    },
+    {
+      "id": "content-horn-glass-accord-campaign-10184",
+      "title": "content horn glass accord campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T09:48:08Z",
+      "startedAt": "2026-08-30T09:28:32Z",
+      "notes": "Shipped three-chapter Horn and Glass Accord with four guarded elite-dwelling placements, resource-only carryover, original emblem and three seals; consolidated live report passed 3 chapters/4 dwellings/18 battle payloads/save v9, repo validation passed, and Linux/Windows package boots passed at 248970432 bytes.",
+      "completedAt": "2026-08-30T09:48:08Z"
     }
   ],
   "project": "heroes-like",
@@ -106957,7 +106967,7 @@
   ],
   "summary": "Completed the Veil-Coast Sounding Circuit: six formerly dormant shoreline services now provide live one-cost two-way land transit with distinct operational art inside a new 24x14 Veilmourn skirmish, validated as one batch and through Linux and Windows packages.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T09:23:19Z",
+  "updatedAt": "2026-08-30T09:48:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

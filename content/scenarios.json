@@ -5837,13 +5837,13 @@
       "id": "beaconscribe-frostbeacon-circuit",
       "name": "Beaconscribe Frostbeacon Circuit",
       "selection": {
-        "summary": "Jorun traces a contested ritual relay across thirteen leagues to secure the Frostbeacon Bothy Watch.",
+        "summary": "Jorun traces a contested ritual relay, banks the Cinderwake Fold, and carries its horn testimony beyond the Frostbeacon watch.",
         "recommended_difficulty": "normal",
         "map_size_label": "Frostsignal Ladder (13x8)",
         "player_summary": "Jorun commands Jorun's Beacon-Ladder Cadre from Highwater Keep.",
-        "enemy_summary": "Duskfen Bastion contests the relay circuit around the neutral Frostbeacon Bothy Watch.",
+        "enemy_summary": "Duskfen Bastion contests the relay circuit while an elite Cinderwake watch blocks the first accord site.",
         "availability": {
-          "campaign": false,
+          "campaign": true,
           "skirmish": true
         }
       },
@@ -6028,6 +6028,12 @@
             "label": "Clear the southeastern ritual relay",
             "type": "encounter_resolved",
             "placement_id": "beaconscribe_relay_d"
+          },
+          {
+            "id": "claim_beaconscribe_cinderwake_fold",
+            "label": "Bank the Cinderwake Fold",
+            "type": "flag_true",
+            "flag": "cinderwake_fold_claimed"
           }
         ],
         "defeat": [
@@ -6260,6 +6266,31 @@
               "text": "Jorun secures the Frostbeacon Bothy Watch and closes its relay seal."
             }
           ]
+        },
+        {
+          "id": "beaconscribe_cinderwake_testimony",
+          "priority": 82,
+          "conditions": [
+            {
+              "type": "flag_true",
+              "flag": "cinderwake_fold_claimed"
+            }
+          ],
+          "effects": [
+            {
+              "type": "award_experience",
+              "amount": 190
+            },
+            {
+              "type": "set_flag",
+              "flag": "horn_glass_cinder_testimony",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "The banked Fold answers Jorun's lantern rhythm; its basalt horn becomes the accord's first testimony."
+            }
+          ]
         }
       ],
       "towns": [
@@ -6404,6 +6435,13 @@
           "site_id": "site_beacon_path_scroll",
           "x": 4,
           "y": 7
+        },
+        {
+          "placement_id": "beaconscribe_cinderwake_fold",
+          "site_id": "site_cinderwake_fold",
+          "x": 4,
+          "y": 5,
+          "guard_front_id": "beaconscribe_cinderwake_fold_watch"
         }
       ],
       "artifact_nodes": [
@@ -6538,6 +6576,15 @@
           "y": 5,
           "difficulty": "medium",
           "combat_seed": 26205,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "beaconscribe_cinderwake_fold_watch",
+          "encounter_id": "encounter_cinderwake_fold_watch",
+          "x": 5,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 26438,
           "prefer_identity_landmark": true
         }
       ]
@@ -9405,13 +9452,13 @@
       "id": "vowless-saltpan-circuit",
       "name": "Vowless Saltpan Circuit",
       "selection": {
-        "summary": "Nacre traces a contested ritual relay across thirteen leagues to secure the Saltpan Camp Watch.",
+        "summary": "Nacre traces a contested ritual relay, reads the Tideglass Roost, and carries its reflected wake into the Horn and Glass Accord.",
         "recommended_difficulty": "normal",
         "map_size_label": "Saltpan Vigil (13x8)",
         "player_summary": "Nacre commands Nacre's Salt-Vigil Cadre from Bellwake Harbor.",
-        "enemy_summary": "Riverwatch Hold contests the relay circuit around the neutral Saltpan Camp Watch.",
+        "enemy_summary": "Riverwatch Hold contests the saltline while an elite Tideglass watch guards the accord's second testimony.",
         "availability": {
-          "campaign": false,
+          "campaign": true,
           "skirmish": true
         }
       },
@@ -9596,6 +9643,12 @@
             "label": "Clear the southeastern ritual relay",
             "type": "encounter_resolved",
             "placement_id": "vowless_relay_d"
+          },
+          {
+            "id": "claim_vowless_tideglass_roost",
+            "label": "Read the Tideglass Roost",
+            "type": "flag_true",
+            "flag": "tideglass_roost_claimed"
           }
         ],
         "defeat": [
@@ -9828,6 +9881,31 @@
               "text": "Nacre secures the Saltpan Camp Watch and closes its relay seal."
             }
           ]
+        },
+        {
+          "id": "vowless_tideglass_testimony",
+          "priority": 82,
+          "conditions": [
+            {
+              "type": "flag_true",
+              "flag": "tideglass_roost_claimed"
+            }
+          ],
+          "effects": [
+            {
+              "type": "award_experience",
+              "amount": 210
+            },
+            {
+              "type": "set_flag",
+              "flag": "horn_glass_tide_testimony",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "The Roost answers Nacre's sounding bell; one clear wingbeat becomes the accord's second testimony."
+            }
+          ]
         }
       ],
       "towns": [
@@ -9966,6 +10044,13 @@
           "site_id": "site_icehook_trapper_lodge",
           "x": 4,
           "y": 7
+        },
+        {
+          "placement_id": "vowless_tideglass_roost",
+          "site_id": "site_tideglass_roost",
+          "x": 4,
+          "y": 5,
+          "guard_front_id": "vowless_tideglass_roost_watch"
         }
       ],
       "artifact_nodes": [
@@ -10109,6 +10194,15 @@
           "y": 7,
           "difficulty": "medium",
           "combat_seed": 26412,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "vowless_tideglass_roost_watch",
+          "encounter_id": "encounter_tideglass_roost_watch",
+          "x": 5,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 26439,
           "prefer_identity_landmark": true
         }
       ]
@@ -16641,13 +16735,13 @@
       "id": "three-banner-field-commission",
       "name": "Three-Banner Field Commission",
       "selection": {
-        "summary": "Lead Neral across a measured frontier, defeat three independent banner companies, commission their surviving specialists, and claim Gloamwake before its mourning fleet closes the eastern road.",
+        "summary": "Lead Neral across a measured frontier, commission three specialist banners, and convene the Cinderwake and Tideglass testimonies before Gloamwake closes the road.",
         "recommended_difficulty": "normal",
         "map_size_label": "Commission Road (18x12)",
         "player_summary": "Neral's Halo Reserve begins at Dawnmirror with three formation slots held open for commissioned auxiliaries.",
-        "enemy_summary": "Embercourt, Mireclaw, and Sunvault trial companies hold separate survey lines while Veilmourn pressure gathers at Gloamwake.",
+        "enemy_summary": "Three trial companies and two elite neutral watches divide the field while Veilmourn pressure gathers at Gloamwake.",
         "availability": {
-          "campaign": false,
+          "campaign": true,
           "skirmish": true
         }
       },
@@ -16686,7 +16780,7 @@
         "hero_neral"
       ],
       "objectives": {
-        "victory_text": "The three banner companies accept Neral's field commission and Gloamwake's claim on the eastern road is broken.",
+        "victory_text": "The three banner companies accept Neral's field commission, horn and glass answer one accord, and Gloamwake's eastern claim is broken.",
         "defeat_text": "Gloamwake closes the commission road before Neral can bind the three specialist companies into one field reserve.",
         "victory": [
           {
@@ -16712,6 +16806,18 @@
             "label": "Claim Gloamwake Anchorage",
             "type": "town_owned_by_player",
             "placement_id": "commission_gloamwake"
+          },
+          {
+            "id": "claim_commission_cinderwake_fold",
+            "label": "Convene the Cinderwake Fold",
+            "type": "flag_true",
+            "flag": "cinderwake_fold_claimed"
+          },
+          {
+            "id": "claim_commission_tideglass_roost",
+            "label": "Convene the Tideglass Roost",
+            "type": "flag_true",
+            "flag": "tideglass_roost_claimed"
           }
         ],
         "defeat": [
@@ -16924,6 +17030,35 @@
               "text": "A Bellwake privateer counterstroke leaves Gloamwake to cut the unfinished commission road."
             }
           ]
+        },
+        {
+          "id": "commission_horn_glass_accord",
+          "priority": 82,
+          "conditions": [
+            {
+              "type": "flag_true",
+              "flag": "cinderwake_fold_claimed"
+            },
+            {
+              "type": "flag_true",
+              "flag": "tideglass_roost_claimed"
+            }
+          ],
+          "effects": [
+            {
+              "type": "award_experience",
+              "amount": 300
+            },
+            {
+              "type": "set_flag",
+              "flag": "horn_glass_accord_convened",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Neral balances the basalt horn against the clear wingbeat; three banners witness the Horn and Glass Accord."
+            }
+          ]
         }
       ],
       "towns": [
@@ -16979,6 +17114,20 @@
           "x": 16,
           "y": 9,
           "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "commission_cinderwake_fold",
+          "site_id": "site_cinderwake_fold",
+          "x": 7,
+          "y": 4,
+          "guard_front_id": "commission_cinderwake_fold_watch"
+        },
+        {
+          "placement_id": "commission_tideglass_roost",
+          "site_id": "site_tideglass_roost",
+          "x": 11,
+          "y": 7,
+          "guard_front_id": "commission_tideglass_roost_watch"
         }
       ],
       "artifact_nodes": [
@@ -17019,6 +17168,24 @@
           "y": 9,
           "difficulty": "medium",
           "combat_seed": 30703
+        },
+        {
+          "placement_id": "commission_cinderwake_fold_watch",
+          "encounter_id": "encounter_cinderwake_fold_watch",
+          "x": 8,
+          "y": 4,
+          "difficulty": "high",
+          "combat_seed": 30704,
+          "prefer_identity_landmark": true
+        },
+        {
+          "placement_id": "commission_tideglass_roost_watch",
+          "encounter_id": "encounter_tideglass_roost_watch",
+          "x": 12,
+          "y": 7,
+          "difficulty": "high",
+          "combat_seed": 30705,
+          "prefer_identity_landmark": true
         }
       ],
       "enemy_factions": [

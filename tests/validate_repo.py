@@ -49708,7 +49708,7 @@ def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
     scenarios = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "scenarios.json").get("items", []) if isinstance(row, dict)}
     ensure(len(encounters) == 101 and len(groups) == 159 and len(scenarios) == 87, errors, "Expanded contract roster must retain 101 encounters, 159 army groups, and 87 scenarios")
     all_placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(all_placements) == 365 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 97, errors, "Authored battle fronts must retain the expanded 365-placement, 97-identity playable breadth")
+    ensure(len(all_placements) == 369 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 97, errors, "Authored battle fronts must retain the expanded 369-placement, 97-identity playable breadth")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -50524,13 +50524,15 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
     for scenario_id, contract in expected.items():
         scenario = scenarios.get(scenario_id, {})
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
-        ensure(availability == {"campaign": False, "skirmish": True}, errors, f"{scenario_id} must remain skirmish-only")
+        expected_availability = {"campaign": scenario_id in {"beaconscribe-frostbeacon-circuit", "vowless-saltpan-circuit"}, "skirmish": True}
+        ensure(availability == expected_availability, errors, f"{scenario_id} selection availability changed")
         ensure(scenario.get("hero_id") == contract["hero"] and scenario.get("player_faction_id") == contract["faction"] and scenario.get("player_army_id") == contract["player_group"], errors, f"{scenario_id} lost its ritual leader, faction, or cadre")
         ensure(scenario.get("map_size") == {"width": 13, "height": 8} and len(scenario.get("map", [])) == 8 and all(len(row) == 13 for row in scenario.get("map", [])), errors, f"{scenario_id} lost its exact 13x8 map")
-        expected_resource_count = 15 if scenario_id in {"sunvein-crystal-sump-circuit", "beaconscribe-frostbeacon-circuit", "mossvein-switchback-circuit"} else 14
-        expected_hook_count = 8 if scenario_id == "mossvein-switchback-circuit" else 7
-        expected_encounter_count = 6 if scenario_id in {"mossvein-switchback-circuit", "vowless-saltpan-circuit"} else 5
-        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == expected_resource_count and len(scenario.get("artifact_nodes", [])) == 5 and len(scenario.get("encounters", [])) == expected_encounter_count and len(scenario.get("script_hooks", [])) == expected_hook_count and len(scenario.get("objectives", {}).get("victory", [])) == 6, errors, f"{scenario_id} lost its complete ritual-relay contract")
+        expected_resource_count = {"beaconscribe-frostbeacon-circuit": 16, "vowless-saltpan-circuit": 15}.get(scenario_id, 15 if scenario_id in {"sunvein-crystal-sump-circuit", "mossvein-switchback-circuit"} else 14)
+        expected_hook_count = 8 if scenario_id in {"beaconscribe-frostbeacon-circuit", "mossvein-switchback-circuit", "vowless-saltpan-circuit"} else 7
+        expected_encounter_count = 7 if scenario_id == "vowless-saltpan-circuit" else (6 if scenario_id in {"beaconscribe-frostbeacon-circuit", "mossvein-switchback-circuit"} else 5)
+        expected_victory_count = 7 if scenario_id in {"beaconscribe-frostbeacon-circuit", "vowless-saltpan-circuit"} else 6
+        ensure(len(scenario.get("towns", [])) == 2 and len(scenario.get("resource_nodes", [])) == expected_resource_count and len(scenario.get("artifact_nodes", [])) == 5 and len(scenario.get("encounters", [])) == expected_encounter_count and len(scenario.get("script_hooks", [])) == expected_hook_count and len(scenario.get("objectives", {}).get("victory", [])) == expected_victory_count, errors, f"{scenario_id} lost its complete ritual-relay contract")
         site_ids = {str(row.get("site_id", "")) for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
         artifact_ids = {str(row.get("artifact_id", "")) for row in scenario.get("artifact_nodes", []) if isinstance(row, dict)}
         ensure(contract["landmark_site"] in site_ids and contract["boss_site"] in site_ids and len(site_ids) >= 12, errors, f"{scenario_id} lost its faction landmark, neutral dwelling, or site breadth")
@@ -50660,7 +50662,7 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
     scenarios = items_index(scenario_payload)
     ensure(len(scenarios) == 87 and len(encounters) == 101 and len(groups) == 159 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 87, errors, "Grand-convergence batch must retain the 87-scenario, 101-encounter, 159-army roster")
     placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(placements) == 365 and len({str(row.get("encounter_id", "")) for row in placements}) == 97, errors, "Grand-convergence compatibility must retain 365 authored battle placements across 97 identities")
+    ensure(len(placements) == 369 and len({str(row.get("encounter_id", "")) for row in placements}) == 97, errors, "Grand-convergence compatibility must retain 369 authored battle placements across 97 identities")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -51867,7 +51869,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     ] if isinstance(scenario_rows, list) else []
     placed_identity_ids = set(all_placement_ids)
     unplaced_definition_ids = set(encounters) - placed_identity_ids
-    ensure(len(all_placement_ids) == 365 and len(placed_identity_ids) == 97, errors, "Authored scenarios must retain exactly 365 placements across 97 distinct encounter identities")
+    ensure(len(all_placement_ids) == 369 and len(placed_identity_ids) == 97, errors, "Authored scenarios must retain exactly 369 placements across 97 distinct encounter identities")
     ensure(placed_identity_ids.issubset(set(identity_sprites)), errors, "Every encounter identity placed in an authored scenario must own exact live Overworld art")
     ensure(len(encounters) == 101 and len(unplaced_definition_ids) == 4 and not (set(identity_sprites) & unplaced_definition_ids), errors, "Exact encounter art must cover the 97 live placed definitions without creating unused mappings for the 4 system-owned or scripted-only definitions")
 
@@ -52115,7 +52117,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 87 and len(placements) == 1086 and len(placed_site_ids) == 194, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 87 and len(placements) == 1090 and len(placed_site_ids) == 194, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -52423,10 +52425,11 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         "campaign_ashen_ledger": ("campaign_emblem_ashen_ledger", "ashen_ledger", "6e749c4aae78e76d4bfd40cf5c666178eab10e30631b5bf50c948570e930ec36", "45f34db21f28ba9903300a31a7c98b8d5dcf68b703c1b9c9db8f78e446a4bac0"),
         "campaign_last_bell_sounding": ("campaign_emblem_last_bell_sounding", "last_bell_sounding", "e4bc895f0d97dda7fe8a909d8d68c8e110785e8a2b5e2ce8ac6b7b2448c3585c", "79da9129df7d167952216388627334afca599f21cbb1f6e7d2fbdc89acfd10d2"),
         "campaign_sixfold_testament": ("campaign_emblem_sixfold_testament", "sixfold_testament", "77d25dbaad3584214313867ab04fe6cd94d831a9ff9bbadf799c28da75188f94", "fc6dafad1784c2020bbf0182897f92faea2b91038f939812e9f83c5a6bd0091e"),
+        "campaign_horn_glass_accord": ("campaign_emblem_horn_glass_accord", "horn_glass_accord", "1a7f472617ea648db3eba251296617727c1135e35e8a1d016bddbc7d3ff084c3", "20b5186ee703641c6c30b27739a43341d222f734b57878e06bf2aa940828ee30"),
     }
     campaigns_value = load_json(campaign_path).get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
-    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the ten live campaign arcs")
+    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the eleven live campaign arcs")
     source_payloads: list[bytes] = []
     runtime_payloads: list[bytes] = []
     for campaign_id, (emblem_id, stem, source_sha, runtime_sha) in expected.items():
@@ -52455,8 +52458,8 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(hashlib.sha256(payload).hexdigest() == runtime_sha, errors, f"Campaign {campaign_id} runtime-emblem bytes changed")
             ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} runtime emblem must retain real alpha")
             runtime_payloads.append(payload)
-    ensure(len(source_payloads) == 10 and len(set(source_payloads)) == 10, errors, "All ten campaign emblem sources must remain byte-distinct")
-    ensure(len(runtime_payloads) == 10 and len(set(runtime_payloads)) == 10, errors, "All ten campaign runtime emblems must remain byte-distinct")
+    ensure(len(source_payloads) == 11 and len(set(source_payloads)) == 11, errors, "All eleven campaign emblem sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 11 and len(set(runtime_payloads)) == 11, errors, "All eleven campaign runtime emblems must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = campaign_rules_path.read_text(encoding="utf-8")
@@ -52483,7 +52486,7 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Campaign emblem focused report is missing live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all ten campaign emblems")
+        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all eleven campaign emblems")
         ensure('bool(terrain_payload["campaign_emblem_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when campaign emblems are absent")
         ensure('"campaign_emblem_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report campaign emblem package coverage")
         for _campaign_id, (_emblem_id, stem, _source_sha, _runtime_sha) in expected.items():
@@ -52551,6 +52554,11 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
             "debtrune-default-convergence": ("seventh_pressure", "8ab5feeb6f6c51a527f67c03166d7c706e5c6d3c24db2b67be4ee3d6ad1e903d", "8b77d0981e1077b137ae42292029263ea27db891089b61de7d5736f82571e1b6"),
             "nightchart-meridian-convergence": ("last_false_meridian", "75cbd5fd31e975a72a30976648866c12e251161247854f2f7dfbddc8246a670e", "d3769bb50a541aed6b5ccb7625857a8c429d8bbc0d1d00baea159fec9ab92247"),
         },
+        "campaign_horn_glass_accord": {
+            "beaconscribe-frostbeacon-circuit": ("bank_cinderwake", "3155c9b3cc2efd27601e24a3694f122c808f04955605e02dc498e6e186f82258", "33dbdd9ab168ad037df80f71fcf65e3072eb42a34dea8db77ec3a0c91feaeefe"),
+            "vowless-saltpan-circuit": ("read_tideglass_wake", "93cdd02d3dd9469c0453e74b38fc41d8567cbf95aaa11e9ae0b7609ce50435e1", "cd5cb10a63192b82796d9f1eaadbb94788f9ff967d099ea7a2b80d1012f2f1fd"),
+            "three-banner-field-commission": ("horn_glass_commission", "b8e2161c1f79bc63d195481d5eebb8aa5a86d4951851530e8d30b6f6b2e4d94f", "ab3ccd75cc552071d236cd6256cbe6c144435e33945ae9c5ba4fc14befd6170a"),
+        },
     }
     campaigns_value = load_json(CONTENT_DIR / "campaigns.json").get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
@@ -52596,8 +52604,8 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
                 payload = runtime_path.read_bytes()
                 ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id}/{scenario_id} seal runtime bytes or alpha changed")
                 runtime_payloads.append(payload)
-    ensure(chapter_count == 39 and sealed_count == 39 and opening_count == 10 and later_count == 29, errors, "Campaign chapter-seal scope must remain exact for all 39 chapters")
-    ensure(len(source_payloads) == 39 and len(set(source_payloads)) == 39 and len(runtime_payloads) == 39 and len(set(runtime_payloads)) == 39, errors, "All campaign chapter seals must remain byte-distinct")
+    ensure(chapter_count == 42 and sealed_count == 42 and opening_count == 11 and later_count == 31, errors, "Campaign chapter-seal scope must remain exact for all 42 chapters")
+    ensure(len(source_payloads) == 42 and len(set(source_payloads)) == 42 and len(runtime_payloads) == 42 and len(set(runtime_payloads)) == 42, errors, "All campaign chapter seals must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = (ROOT / "scripts/core/CampaignRules.gd").read_text(encoding="utf-8")
@@ -52609,13 +52617,13 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
         ensure(token in rules_text, errors, f"Campaign rules are missing chapter-seal authority: {token}")
     for token in ("_campaign_chapter_seal_texture_cache", "_chapter_list.set_item_icon(index, seal_texture)", "func _load_campaign_chapter_seal_texture", '"seal_path": _chapter_list.get_item_icon(index).resource_path', '"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", ""))'):
         ensure(token in menu_text, errors, f"Campaign menu is missing live chapter-seal presentation: {token}")
-    ensure("_campaign_chapter_seal_texture_cache.size() >= 39" in menu_text, errors, "Campaign chapter-seal cache must cover all 39 authored identities")
+    ensure("_campaign_chapter_seal_texture_cache.size() >= 42" in menu_text, errors, "Campaign chapter-seal cache must cover all 42 authored identities")
     chapter_scene_start = scene_text.find('[node name="ChapterList" type="ItemList"')
     chapter_scene_end = scene_text.find("\n[node ", chapter_scene_start + 1)
     ensure("fixed_icon_size = Vector2i(24, 24)" in scene_text[chapter_scene_start:chapter_scene_end], errors, "Campaign chapter list must retain compact 24x24 seals")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 39 chapter seals")
+        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 42 chapter seals")
         ensure('bool(terrain_payload["campaign_chapter_seal_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when chapter seals are absent")
         ensure('"campaign_chapter_seal_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged chapter-seal coverage")
         for expected_scenarios in expected.values():
