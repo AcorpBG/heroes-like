@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "generated_at": "2026-08-30",
+  "generator_mode": "codex_builtin_image_generation",
+  "use_case": "stylized-concept",
+  "common_prompt": "Original 16:9 production town-screen scenic backdrop for Aurelion Reach; richly painted high-detail fantasy strategy environment; scenery-first composition with side and upper architectural mass plus calm central and lower-middle overlay space; grounded materials; wholly original visual language; no close foreground characters, readable text, letters, numbers, signage, logos, interface, borders, watermark, or copied franchise designs.",
+  "source_dimensions": [1672, 941],
+  "runtime_dimensions": [1600, 900],
+  "runtime_derivation": "ImageMagick Lanczos cover resize, centered extent, metadata stripped",
+  "items": [
+    {
+      "town_id": "town_riverwatch",
+      "prompt_focus": "Disciplined slate-and-oak river fortress with waterwheels, chain booms, signal towers, levy courts, and a broad defended crossing in late-afternoon amber light.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b78ee94d-44ed-4067-a271-8d535e2cef33.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_riverwatch_source.png",
+      "source_sha256": "c49746122b2d7f9415528f8d2e6d0f1b32ca30a8bdb922f6096c92b9c2159c89",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_riverwatch.png",
+      "runtime_sha256": "397803af70ecca8de193fe9b3ebdcc9d96282aa73a16356e533bfcf0dc57057b"
+    },
+    {
+      "town_id": "town_duskfen",
+      "prompt_focus": "Hidden blackwater mustering fortress with reedstone walls, elevated stockades, drum towers, rope bridges, and misty channels at violet twilight.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-3a104a96-77ab-478b-83d5-46b0c38baaf4.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_duskfen_source.png",
+      "source_sha256": "b5d4682a1b8f3fb2bf5300589be0e5d39a8957add086eaa3490d70345343b5ed",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_duskfen.png",
+      "runtime_sha256": "1df6ebab11fac8c966d7d17386fba43163ec4fe828790ca40865abfbfaf939c9"
+    },
+    {
+      "town_id": "town_blackfen_gate",
+      "prompt_focus": "Paired black reedstone missile bastions spanning a flooded causeway with winch gate, hooked palisades, and cold rain-dark defenses.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-34e7e1b2-6698-41e0-856a-699c1fb95995.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_blackfen_gate_source.png",
+      "source_sha256": "1711bbdeea35430534514d64c3857ef3f66e3120268e6821195fb1fa4bedc727",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_blackfen_gate.png",
+      "runtime_sha256": "3ff91a056ce4e58465902b9c0cd7997a61b46f1253973a467e371a6d419dc024"
+    },
+    {
+      "town_id": "town_highwater_keep",
+      "prompt_focus": "Prosperous terraced river-basin capital with monumental citadel, grain mills, aqueduct sluices, levy yards, and harvest-gold fields.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b8282374-5883-4995-a384-d01f306e8c7e.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_highwater_keep_source.png",
+      "source_sha256": "4e02ee7ab2c3af092670afe606a8ee05bc3b59692e919f3c54cd2503c6eb452e",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_highwater_keep.png",
+      "runtime_sha256": "85f6e842abd006e593eb31a48e845cd9140807841faab801e2bf6f636658d004"
+    },
+    {
+      "town_id": "town_murkward_ford",
+      "prompt_focus": "Rough toll-ford stockade on drowned pilings with chained log booms, fish racks, cutter sheds, slinger towers, and muddy marsh crossings.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e33a28c5-3974-44f8-ab88-ca83bb54ed62.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_murkward_ford_source.png",
+      "source_sha256": "f7ed27ece206f2731736aa7f976ff5df70cc1e3e0e054f45e0b54f9e4023b5ab",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_murkward_ford.png",
+      "runtime_sha256": "4b1d8ca90096419bb876fcf8c1db6bebe32348ec475508a56584fcead98884ff"
+    },
+    {
+      "town_id": "town_reedbarrow_ferry",
+      "prompt_focus": "Communal reed-delta ferry port with long boathouses, rolling log booms, piling drums, raft yards, and a barrow behind the dawn-lit channel.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fe265e78-d9bb-44cf-a4de-752256d55002.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_reedbarrow_ferry_source.png",
+      "source_sha256": "21daa2206d9cb0e16db1385cdebcb741b70e1ef663efeff98300c5f914c0908d",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_reedbarrow_ferry.png",
+      "runtime_sha256": "e251a88a1082211200d9c0a6fb920331e7bffde5dc989437cec858bdcdf23896"
+    },
+    {
+      "town_id": "town_nightglass_redoubt",
+      "prompt_focus": "Monumental black reedstone capital shrine with concentric drum-fire courts, reserve vaults, submerged causeways, and a cold reflective basin.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b3b9b0d4-5260-42cb-a7a3-bfd2eb4f9c20.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_nightglass_redoubt_source.png",
+      "source_sha256": "ccdda5c0271e217fabfc6c84bb2eb6b6e54254949aed2a7cd602220018b1f175",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_nightglass_redoubt.png",
+      "runtime_sha256": "9d162343aae13c7ee1412fec477d3b8b7d3df37015389fe165fe5cf81e4cd384"
+    },
+    {
+      "town_id": "town_prismhearth",
+      "prompt_focus": "Buried crystalline relay capital in a vast geode chamber with shard yards, terraced cloisters, harmonic bridges, mirror towers, and a faceted relay heart.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d5ee0889-e013-457d-91e7-e2909915ca35.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_prismhearth_source.png",
+      "source_sha256": "dc9213e472b9e197445b464b599b34935da536ca1063e8cc653823c9ef88743d",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_prismhearth.png",
+      "runtime_sha256": "82002cf4e2aedce165f46bba5835f361410f4a3daa7742d48f81cb4948f99d19"
+    },
+    {
+      "town_id": "town_halo_spire",
+      "prompt_focus": "High-altitude relay crown above clouds with concentric galleries, open duel courts, prism batteries, sky bridges, and radiant focusing rings.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-350fdfb8-5b5a-4ecd-91b9-c41cfa9216c8.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_halo_spire_source.png",
+      "source_sha256": "5bf73fbdcc052a0f6c08072239d8ef16255a9aaf888e859eb67736699c3b10a8",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_halo_spire.png",
+      "runtime_sha256": "9f3810312e971caedfb12cf9f8187cba5b06e758e7001f394f5f4dbb9d12a605"
+    },
+    {
+      "town_id": "town_thornwake_graftroot_caravan",
+      "prompt_focus": "Migratory orchard-fort of enormous living root-wagons, rolling seed vaults, flowering graft halls, bramble arches, and wheel-roots nested in a spring valley.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b2dcf74f-2bf6-417f-ba00-1ebad3c23f01.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_thornwake_graftroot_caravan_source.png",
+      "source_sha256": "c252a671225c5151bccf166f683d9236dcaa37fcd307af626ea9aa03381276aa",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_thornwake_graftroot_caravan.png",
+      "runtime_sha256": "d0a0711836c2da5206609650b0850bb94580dd041bef911b0b702dcd4c606275"
+    },
+    {
+      "town_id": "town_brasshollow_orevein_gantry",
+      "prompt_focus": "Mountain quarry town with colossal ore lifts, lattice gantries, pressure rails, furnace chapels, assay bridges, cranes, and stacked smelter terraces.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ec8e105d-f364-4e43-a7d4-c8e4228d1ef8.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_brasshollow_orevein_gantry_source.png",
+      "source_sha256": "c07c1190390789a82aa3192f08f78af6d6238dc60945db7cf52a260046c2e8b4",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_brasshollow_orevein_gantry.png",
+      "runtime_sha256": "48a3de4a805fc89e7e599aeefd61958e98ab45d6217182285d1d29a3bdf02d2e"
+    },
+    {
+      "town_id": "town_veilmourn_bellwake_harbor",
+      "prompt_focus": "Moonlit sea-cliff harbor with tiered bell docks, mirror-lined slips, obituary vaults, black-sail moorings, crescent seawalls, and silver fog.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-dacbd9a7-5784-4ac4-9b75-7aaf506e86cf.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_veilmourn_bellwake_harbor_source.png",
+      "source_sha256": "3d7d3587f736fd41d2a500fde38495b43a9045b78be920b5a1783bba6ae735f2",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_veilmourn_bellwake_harbor.png",
+      "runtime_sha256": "b169f75c42bc0e2c2683373bed34ef7bf7a4979883ff2f5bfaef67e6b0dd1c41"
+    },
+    {
+      "town_id": "town_thornwake_rootgate_nursery",
+      "prompt_focus": "Border nursery around a gigantic living toll arch with seedling terraces, recovery gardens, woven palisades, sap channels, and root-road workshops.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ab253a78-f8fe-4431-86db-6195ed333caf.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_thornwake_rootgate_nursery_source.png",
+      "source_sha256": "fb861cfe8e7d810ea596f91d8055e2d173e3ae6ac3f01b99420704caa0471c06",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_thornwake_rootgate_nursery.png",
+      "runtime_sha256": "f8dc7d82e7bb871ecda1335abf1a717d3747a6ff879789a9d456d5495fd54524"
+    },
+    {
+      "town_id": "town_brasshollow_clauseworks_depot",
+      "prompt_focus": "Fortified ridge railhead with riveted warehouses, armored sheds, furnace workshops, switching cranes, pressure pipes, and a circular turntable.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-76fafc88-1395-4490-b61f-593718d93836.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_brasshollow_clauseworks_depot_source.png",
+      "source_sha256": "b4be8c8a2377b3dc68cfaa760c65b0644a615fb4b43737ad3a2dd52d0fa1ad72",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_brasshollow_clauseworks_depot.png",
+      "runtime_sha256": "41fc8269404236b0911017593bc40ed547e423aa670a3f835bd7bbe3902a0fd5"
+    },
+    {
+      "town_id": "town_veilmourn_fogchart_mooring",
+      "prompt_focus": "Hidden predawn harbor inside a flooded cavern with compact bell piers, mourner lanterns, black-sail slips, rope lifts, mirror buoys, and a concealed sea gate.",
+      "generation_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-0a2b0aae-03dc-4abb-9e35-102e31a84055.png",
+      "source_path": "art/towns/source/generated/complete_town_backdrops/town_veilmourn_fogchart_mooring_source.png",
+      "source_sha256": "5ad0ff00e9b85db8d75b5c940fe75de8710a2ea8448f89078518c038ed94d81c",
+      "runtime_path": "art/towns/runtime/backdrops/complete_identities/town_veilmourn_fogchart_mooring.png",
+      "runtime_sha256": "320215e849f15226670aa84c0fbd30d6c3f2fcd02bfcac4edf4c31bb3bc1e1b0"
+    }
+  ]
+}

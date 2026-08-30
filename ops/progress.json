@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed five exact Third Hearths town-screen identities as one art/runtime batch with one consolidated ten-case smoke and paired platform package gates.",
+  "currentNotes": "Completed exact scenic identity across all twenty production towns as one fifteen-asset batch with one consolidated forty-case smoke and matching dual-platform package gates.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-third-hearths-town-screen-identities-10184",
-  "currentSliceId": "content-third-hearths-town-screen-identities-10184",
-  "currentSliceNotes": "Shipped five exact-id 1600x900 scenic Town backdrops, exact-town-first selection with six-faction fallback, tracked compressed imports, one combined save-version-9 runtime/capture smoke, and matching Linux/Windows package boots.",
+  "currentSlice": "content-complete-town-screen-identity-set-10184",
+  "currentSliceId": "content-complete-town-screen-identity-set-10184",
+  "currentSliceNotes": "Shipped fifteen original 1600x900 exact-id Town backdrops so all twenty production towns own distinct scenery, with tracked compressed imports, one consolidated forty-case live/capture smoke, and matching Linux/Windows package boots.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content third hearths town screen identities 10184",
-  "currentSliceUpdatedAt": "2026-08-30T05:01:39Z",
+  "currentSliceTitle": "content complete town screen identity set 10184",
+  "currentSliceUpdatedAt": "2026-08-30T05:33:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21191,19 +21191,18 @@
   },
   "latestEvidenceArtifacts": [
     "content/towns.json",
-    "scenes/town/TownStageView.gd",
-    "art/towns/runtime/backdrops/third_hearths",
-    "art/towns/source/generated/third_hearths_backdrops/manifest.json",
-    "tests/third_hearths_town_backdrop_runtime_report.gd",
-    "tests/third_hearths_town_backdrop_runtime_report.tscn",
+    "art/towns/runtime/backdrops/complete_identities",
+    "art/towns/source/generated/complete_town_backdrops/manifest.json",
+    "tests/complete_town_backdrop_runtime_report.gd",
+    "tests/complete_town_backdrop_runtime_report.tscn",
     "tests/validate_repo.py",
     "tests/packaging_linux_export_smoke.py",
     "tests/packaging_windows_export_smoke.py",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-third-hearths-town-screen-identities-20260830",
-  "latestFinding": "Five Third Hearths towns now select distinct exact-id 1600x900 scenery before the six-faction fallback. One consolidated ten-case live smoke passed both supported viewports with exact save-version-9 authority; matching 241603288-byte Linux and Windows PCKs boot with all eleven town backdrops present, source originals excluded, and 8396712 bytes of ceiling headroom.",
+  "latestEvidenceId": "content-complete-town-screen-identity-set-20260830",
+  "latestFinding": "All twenty production towns now select distinct exact-id 1600x900 scenery while six detached faction fallbacks remain valid. One consolidated forty-case live smoke passed both supported viewports with exact save-version-9 authority; matching 244499456-byte Linux and Windows PCKs boot with all twenty exact and six fallback textures present, source originals excluded, and 5500544 bytes of ceiling headroom.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106334,6 +106333,16 @@
       "startedAt": "2026-08-30T04:41:43Z",
       "notes": "Shipped five exact-id 1600x900 scenic Town backdrops with exact-town-first runtime selection and six-faction fallback. One consolidated ten-case live smoke passed at 1280x720 and 1920x1080 with exact save-version-9 authority; captures were visually inspected. Tracked lossy imports reduced the matching Linux/Windows PCK to 241603288 bytes, restoring 8396712 bytes of ceiling headroom; repository and both package boot gates passed with source art excluded.",
       "completedAt": "2026-08-30T05:01:39Z"
+    },
+    {
+      "id": "content-complete-town-screen-identity-set-10184",
+      "title": "content complete town screen identity set 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T05:33:47Z",
+      "startedAt": "2026-08-30T05:07:18Z",
+      "notes": "Shipped fifteen original exact-id 1600x900 backdrops, bringing all twenty production towns to distinct scenic identity while retaining six detached faction fallbacks. One consolidated forty-case live smoke passed at 1280x720 and 1920x1080 with exact save-version-9 authority and inspected captures; repository validation and matching 244499456-byte Linux/Windows package boots passed with all twenty exact plus six fallback textures present, generated sources excluded, and 5500544 bytes of ceiling headroom.",
+      "completedAt": "2026-08-30T05:33:47Z"
     }
   ],
   "project": "heroes-like",
@@ -106343,8 +106352,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "This exact five-town scenery slice is complete; broader production content breadth, distinctive art coverage, and whole-game release readiness remain open.",
-  "remainingWork": "Select and register the next coherent multi-content family, implement the full batch, then retain the one-combined-smoke plus final repository and dual-platform package verification cadence.",
+  "remainingGap": "Exact scenic identity is complete across all twenty production towns; broader production content breadth, encounter variety, faction balance, campaign depth, and whole-game release readiness remain open.",
+  "remainingWork": "Audit and register the next substantial live gameplay-content family, prioritizing a real faction, encounter, or scenario breadth gap and retaining one combined smoke at the batch boundary.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106775,7 +106784,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_third_hearths_town_screen_identities_completed",
+  "result": "content_complete_town_screen_identity_set_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106876,9 +106885,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed five exact Third Hearths town-screen identities, exact-town-first runtime selection, and package-headroom recovery as one coherent art/content family with one consolidated smoke and matching packaged verification.",
+  "summary": "Completed exact scenic identity across all twenty production towns by shipping the remaining fifteen original backdrops as one coherent art/runtime family with one consolidated smoke and matching packaged verification.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T05:01:39Z",
+  "updatedAt": "2026-08-30T05:33:47Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

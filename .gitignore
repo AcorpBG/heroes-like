@@ -6,6 +6,7 @@ tests/__pycache__/
 *.import
 !art/towns/runtime/backdrops/*.png.import
 !art/towns/runtime/backdrops/third_hearths/*.png.import
+!art/towns/runtime/backdrops/complete_identities/*.png.import
 bin/*.so
 bin/*.dll.a
 tmp/
