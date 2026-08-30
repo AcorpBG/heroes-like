@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "campaign_id": "campaign_fivefold_assay",
+  "generation_mode": "built_in_image_gen_emblem_and_encounter_derived_chapter_seals",
+  "raw_generated_emblem_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5585ac6e-1b35-4dc0-b7d7-7702fc033445.png",
+  "emblem": {
+    "id": "campaign_emblem_fivefold_assay",
+    "source_path": "res://art/campaigns/source/generated/emblems/fivefold_assay_source.png",
+    "runtime_path": "res://art/campaigns/runtime/emblems/fivefold_assay.png",
+    "source_sha256": "d45726f22c136730e350acf20303320578e2397547225aa2de3b4bcf1994da0c",
+    "runtime_sha256": "a62f6353408d061191b744e5c00117ca9d5895ff5ee48eafa04f39499fdd3afc",
+    "prompt": "An open soot-dark assay wheel carries five unequal brass proof instruments around a hollow center: chain weight, quenching tong, crucible flame, caliper point, and ash balance pan; original painterly fantasy strategy emblem on genuine transparency; no text, shield, crown, franchise reference, or watermark."
+  },
+  "chapter_seals": [
+    {
+      "id": "campaign_chapter_seal_pitmarshal_peat_chain_seizure",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1495d780-6914-4989-af6e-c4d26d30b897.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/peat_chain_tally_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/peat_chain_tally.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/outer_reach_contracts/peat_chain_tally_pit_source.png",
+      "source_sha256": "835fb22f4cfa064e321ec0b170fc84ec30537c58e63f78aa3ffad9ed106ae269",
+      "runtime_sha256": "51c866aff7f449fcd300b0ca3e28db8377901b7b95eebb9b8afb0856ae92ece6"
+    },
+    {
+      "id": "campaign_chapter_seal_quench_gorefen_audit",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-53cb73a4-51fe-4516-b041-9b24af771d8b.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/gorefen_quenchmark_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/gorefen_quenchmark.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/ascendant_companies/gorefen_debt_totem_source.png",
+      "source_sha256": "a3fb0612e7292ad606f424448904364821098c7a8a81bc25cb0a63ff9747d633",
+      "runtime_sha256": "13a07ce0691b76a0f5711f61561d52cb5fe2f88ff0b6787b4f55e4a4fa6ee635"
+    },
+    {
+      "id": "campaign_chapter_seal_heatpriest_obsidian_scar",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-66b56635-37bc-475a-8486-05e487e92051.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/obsidian_heatproof_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/obsidian_heatproof.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/waywatch_trials/obsidian_scar_watch_source.png",
+      "source_sha256": "0a045363413510625254b82152ecf80b112e235379d127bd1cb3d37ad628cd34",
+      "runtime_sha256": "955cc947bff9cc831bad1f259497f31f6be7c7e007c48daea749e57cc57266e7"
+    },
+    {
+      "id": "campaign_chapter_seal_gaugesavant_milestone_calibration",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b472fbf7-fa8e-4437-bbcc-c0aadda64240.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/milestone_caliper_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/milestone_caliper.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/spellwright_expeditions/milestone_arsenal_watch_source.png",
+      "source_sha256": "c03b5925ae9f273f1bd7d5c83302d16ff125370f26816c298da65acec6294fc1",
+      "runtime_sha256": "43f0538ef69ba6c68b57cb4bdb668d957575b7c6371cd52ae5cd39a4fb07462d"
+    },
+    {
+      "id": "campaign_chapter_seal_ashmeter_dustjack_circuit",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e191ed51-5dde-45cd-9f24-23034c656c68.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/dustjack_balance_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/dustjack_balance.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/ritual_relay_circuits/dustjack_yard_watch_source.png",
+      "source_sha256": "9396e6e2a76ea9cd3c7e902330a20252f737dae5bc19804e0496d2e3d2785d5b",
+      "runtime_sha256": "3c520f39f603e6af347cdfe604b92aaf783ce10738d53fcfec042e1e56e8b9ae"
+    }
+  ]
+}
