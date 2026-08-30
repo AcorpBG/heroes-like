@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Latest completed implementation slice: `content-sevenfold-high-arcanum-10184`, which adds seven original one-time battle-spell landmarks to Third Hearths Confluence and replaces seven tier-five placeholder descriptions with exact battle-facing copy.
-- Current package boundary: matching Linux and Windows release exports measure 246069684 bytes, 3930316 bytes below the unchanged 250000000-byte ceiling. Select the next coherent substantial content batch before implementation and retain batched verification.
+- Current implementation slice: `content-six-elder-wilds-10184` is complete, expanding the nearly empty high-tier neutral roster into six distinct live late-game encounters with original battle and overworld identities.
+- Current package boundary: matching Linux and Windows release exports measure 249613476 bytes, 386524 bytes below the unchanged 250000000-byte ceiling.
+
+## Six Elder Wilds
+
+id: `content-six-elder-wilds-10184`
+
+Status: completed.
+
+Completion result:
+- Brambleback Knucklebears, Mireglass Belltoads, Galehorn Striders, Sunscale Lanternmoths, Rimebell Skyrakers, and Deepforge Vaultwyrms are live as six tier-four-through-seven neutral creatures with distinct statistics, supported tactical ability pairs, army groups, commanders, rewards, and field objectives;
+- all six appear as optional exact-seed Ninefold Confluence encounters, resolve through production battle construction, retain their identities through save version 9, and use exact 512x512 overworld art instead of the generic hostile-camp fallback;
+- six original generated masters now provide the complete portrait, battle icon, standee, animation, unit overworld icon, and encounter overworld identity surfaces with exact prompt/hash provenance and generated sources excluded from packages;
+- one consolidated six-case gameplay/battle/art/save smoke and repository validation pass; sequential Linux and Windows packages boot with matching 249613476-byte PCKs, all 36 required art surfaces, source originals excluded, and 386524 bytes below the unchanged ceiling.
+
+Current finding:
+- the production catalog contains fifty-two neutral units, but only Cinderwake Aurochs and Tideglass Skyrays rise above tier three; the result is a broad low/mid watch roster with almost no late-game neutral creature variety;
+- the 64x64 Ninefold Confluence already spans snow, rough, forest/grass, mire, sand, lava, coast, and underground regions and can host a coherent optional elder-wild circuit without another scenario record or mandatory objective;
+- existing data-driven unit, army-group, encounter, field-objective, unit-art, animation, unit-icon fallback, battle construction, scenario placement, reward, and save-version-9 paths can adopt six new neutral creatures without a new runtime subsystem.
+
+Implementation boundary:
+- add six original tier-four-through-seven neutral creatures with distinct silhouettes, roles, statistics, resistance profiles, and supported authored ability combinations;
+- add six persistent neutral army groups and six named late-game encounters with terrain-specific commanders, field objectives, rewards, exact combat seeds, and optional placements across Ninefold Confluence;
+- generate six transparent original creature masters with the built-in image generator, derive the complete portrait, battle icon, battle standee, animation sheet, and overworld-icon surfaces, and use those exact identities on the live map;
+- preserve existing objectives, deterministic battle authority, save version 9, Windows/Linux paths, accessibility descriptions, performance, generated-source exclusion, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all six creatures resolve through live production battle construction with their exact stats, abilities, art, animations, armies, encounter objectives, rewards, and Ninefold placements;
+- the live overworld uses each creature's exact original icon rather than the generic hostile-camp fallback, and all six identities remain present after save-version-9 round-trip;
+- one consolidated six-case scenario/battle/art/save smoke runs only after the complete family, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, building, dwelling/muster route, mandatory scenario objective, battle algorithm, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes creature, name, stat line, ability, encounter, map placement, visual design, or protected expression.
 
 ## Sevenfold High Arcanum
 

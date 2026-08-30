@@ -2718,6 +2718,84 @@
         "wood": 2,
         "experience": 360
       }
+    },
+    {
+      "id": "encounter_brambleback_crown_watch",
+      "name": "Brambleback Crown Watch",
+      "enemy_group_id": "army_neutral_brambleback_crown_watch",
+      "affiliation": "neutral",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "wall_pressure"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Crown-Listener Hesta Thornmere", "command": {"attack": 2, "defense": 3, "power": 0, "knowledge": 0}, "starting_spell_ids": [], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "brambleback_crown_rootline", "type": "cover_line", "label": "Crown-Root Line", "summary": "Old crown roots keep the knucklebears braced until the interlocked thorn line is broken.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 520, "wood": 3, "experience": 420},
+      "victory_flags": ["elder_wild_brambleback_broken"]
+    },
+    {
+      "id": "encounter_mireglass_bellbasin_watch",
+      "name": "Mireglass Bellbasin Watch",
+      "enemy_group_id": "army_neutral_mireglass_bellbasin_watch",
+      "affiliation": "neutral",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fog_bank"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Basin-Keeper Ulla Reedtone", "command": {"attack": 2, "defense": 2, "power": 1, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["ambusher", "bogwise"]},
+      "field_objectives": [{"id": "mireglass_bellbasin_throat_pool", "type": "hazard_zone", "label": "Resonant Throat Pool", "summary": "The basin water multiplies every bell-croak until its center is seized and stilled.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "cohesion", "urgency"]}],
+      "rewards": {"gold": 560, "peatwax": 2, "experience": 440},
+      "victory_flags": ["elder_wild_mireglass_broken"]
+    },
+    {
+      "id": "encounter_galehorn_breakline_watch",
+      "name": "Galehorn Breakline Watch",
+      "enemy_group_id": "army_neutral_galehorn_breakline_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": ["open_lane", "wall_pressure"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Horn-Reader Vos Highcut", "command": {"attack": 3, "defense": 1, "power": 0, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["vanguard", "ambusher"]},
+      "field_objectives": [{"id": "galehorn_breakline_notch", "type": "breach_point", "label": "Wind-Cut Notch", "summary": "The striders own the downhill break until the narrow wind-cut notch is forced.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 1, "pressure_tags": ["momentum", "initiative", "urgency"]}],
+      "rewards": {"gold": 620, "ore": 2, "experience": 480},
+      "victory_flags": ["elder_wild_galehorn_broken"]
+    },
+    {
+      "id": "encounter_sunscale_lantern_drift_watch",
+      "name": "Sunscale Lantern Drift Watch",
+      "enemy_group_id": "army_neutral_sunscale_lantern_drift_watch",
+      "affiliation": "neutral",
+      "terrain": "sand",
+      "battlefield_tags": ["open_lane", "elevated_fire"],
+      "max_rounds": 14,
+      "enemy_commander": {"name": "Drift-Marker Serai Goldwing", "command": {"attack": 2, "defense": 1, "power": 2, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["artillerist", "ambusher"]},
+      "field_objectives": [{"id": "sunscale_lantern_drift_lane", "type": "lane_battery", "label": "Lantern Drift Lane", "summary": "A line of mineral scales measures every exposed approach until the drift's anchor is captured.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 680, "aetherglass": 2, "experience": 500},
+      "victory_flags": ["elder_wild_sunscale_broken"]
+    },
+    {
+      "id": "encounter_rimebell_whitewake_watch",
+      "name": "Rimebell Whitewake Watch",
+      "enemy_group_id": "army_neutral_rimebell_whitewake_watch",
+      "affiliation": "neutral",
+      "terrain": "snow",
+      "battlefield_tags": ["fog_bank", "open_lane"],
+      "max_rounds": 15,
+      "enemy_commander": {"name": "Whitewake Tender Orsa Coldchime", "command": {"attack": 3, "defense": 2, "power": 1, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["ambusher", "linekeeper"]},
+      "field_objectives": [{"id": "rimebell_whitewake_signal", "type": "signal_beacon", "label": "Whitewake Chime", "summary": "The chime keeps the four-winged hunters inside a folding rime bank until its bearing is taken.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "commander", "urgency"]}],
+      "rewards": {"gold": 760, "memory_salt": 2, "experience": 560},
+      "victory_flags": ["elder_wild_rimebell_broken"]
+    },
+    {
+      "id": "encounter_deepforge_seventh_seal_watch",
+      "name": "Deepforge Seventh Seal Watch",
+      "enemy_group_id": "army_neutral_deepforge_seventh_seal_watch",
+      "affiliation": "neutral",
+      "terrain": "underground",
+      "battlefield_tags": ["fortress_lane", "wall_pressure"],
+      "max_rounds": 16,
+      "enemy_commander": {"name": "Seal-Warden Bram Ossuary", "command": {"attack": 3, "defense": 4, "power": 0, "knowledge": 1}, "starting_spell_ids": [], "battle_traits": ["linekeeper", "vanguard"]},
+      "field_objectives": [{"id": "deepforge_seventh_seal_pylon", "type": "ritual_pylon", "label": "Seventh Vault Seal", "summary": "The final seal keeps the vaultwyrm's blackstone plates interlocked until the pylon ring is controlled.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 980, "ore": 4, "brass_scrip": 2, "experience": 700},
+      "victory_flags": ["elder_wild_deepforge_broken"]
     }
   ]
 }

@@ -1544,6 +1544,61 @@
           "count": 4
         }
       ]
+    },
+    {
+      "id": "army_neutral_brambleback_crown_watch",
+      "name": "Brambleback Crown Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_brambleback_knucklebears", "count": 3},
+        {"unit_id": "unit_neutral_thornbow_scouts", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_mireglass_bellbasin_watch",
+      "name": "Mireglass Bellbasin Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_mireglass_belltoads", "count": 3},
+        {"unit_id": "unit_neutral_mossglass_sentinels", "count": 5}
+      ]
+    },
+    {
+      "id": "army_neutral_galehorn_breakline_watch",
+      "name": "Galehorn Breakline Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_galehorn_striders", "count": 2},
+        {"unit_id": "unit_neutral_cliffhawk_wardens", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_sunscale_lantern_drift_watch",
+      "name": "Sunscale Lantern Drift Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_sunscale_lanternmoths", "count": 2},
+        {"unit_id": "unit_neutral_suncrack_throwers", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_rimebell_whitewake_watch",
+      "name": "Rimebell Whitewake Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_rimebell_skyrakers", "count": 2},
+        {"unit_id": "unit_neutral_snowglass_markers", "count": 6}
+      ]
+    },
+    {
+      "id": "army_neutral_deepforge_seventh_seal_watch",
+      "name": "Deepforge Seventh Seal Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_deepforge_vaultwyrms", "count": 1},
+        {"unit_id": "unit_neutral_basalt_wardens", "count": 4},
+        {"unit_id": "unit_neutral_tunnelmark_bolters", "count": 4}
+      ]
     }
   ]
 }

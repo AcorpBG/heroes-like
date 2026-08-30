@@ -2240,6 +2240,126 @@
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_tideglass_skyrays.png",
       "curated_source_sha256": "22a21c70b22ea35331c7b46e75bf4efbd2ceb996999780b21e6846906a2be9cb"
+    },
+    {
+      "id": "unit_neutral_brambleback_knucklebears",
+      "unit_id": "unit_neutral_brambleback_knucklebears",
+      "name": "Brambleback Knucklebears",
+      "faction_id": "neutral",
+      "tier": 4,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_brambleback_knucklebears.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_brambleback_knucklebears.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_brambleback_knucklebears.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_brambleback_knucklebears.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_brambleback_knucklebears.png",
+      "curated_source_sha256": "65e799e768c11ad91b12fa5a95d17d6a436f7c42d29b6a581bd7d16b5fc9cff4"
+    },
+    {
+      "id": "unit_neutral_mireglass_belltoads",
+      "unit_id": "unit_neutral_mireglass_belltoads",
+      "name": "Mireglass Belltoads",
+      "faction_id": "neutral",
+      "tier": 4,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_neutral_mireglass_belltoads.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_mireglass_belltoads.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_mireglass_belltoads.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_mireglass_belltoads.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_mireglass_belltoads.png",
+      "curated_source_sha256": "dcac2aea21aa7d0508ec54611356b62576ba6132430a6b3cb0202c832736339e"
+    },
+    {
+      "id": "unit_neutral_galehorn_striders",
+      "unit_id": "unit_neutral_galehorn_striders",
+      "name": "Galehorn Striders",
+      "faction_id": "neutral",
+      "tier": 5,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_galehorn_striders.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_galehorn_striders.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_galehorn_striders.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_galehorn_striders.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_galehorn_striders.png",
+      "curated_source_sha256": "4dce95d5932a559d80e1352ef005860ece228d7407f59657b39832035381c061"
+    },
+    {
+      "id": "unit_neutral_sunscale_lanternmoths",
+      "unit_id": "unit_neutral_sunscale_lanternmoths",
+      "name": "Sunscale Lanternmoths",
+      "faction_id": "neutral",
+      "tier": 5,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_neutral_sunscale_lanternmoths.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_sunscale_lanternmoths.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_sunscale_lanternmoths.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_sunscale_lanternmoths.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_sunscale_lanternmoths.png",
+      "curated_source_sha256": "617a1e3c2b1552d6d61fd543f6a2fa45393ab392418037ca72e4bcadb3e1949f"
+    },
+    {
+      "id": "unit_neutral_rimebell_skyrakers",
+      "unit_id": "unit_neutral_rimebell_skyrakers",
+      "name": "Rimebell Skyrakers",
+      "faction_id": "neutral",
+      "tier": 6,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_rimebell_skyrakers.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_rimebell_skyrakers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_rimebell_skyrakers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_rimebell_skyrakers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+      "curated_source_sha256": "2ded46c9e9d6c4baf39c74a7811a26cb1c4096e61ec679923dcc60077a84844a"
+    },
+    {
+      "id": "unit_neutral_deepforge_vaultwyrms",
+      "unit_id": "unit_neutral_deepforge_vaultwyrms",
+      "name": "Deepforge Vaultwyrms",
+      "faction_id": "neutral",
+      "tier": 7,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_neutral_deepforge_vaultwyrms.png",
+      "battle_icon": "res://art/units/battle_icons/unit_neutral_deepforge_vaultwyrms.png",
+      "battle_standee": "res://art/units/battle_standees/unit_neutral_deepforge_vaultwyrms.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_deepforge_vaultwyrms.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+      "curated_source_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc"
     }
   ]
 }
