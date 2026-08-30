@@ -3245,6 +3245,64 @@
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_sunvault_zenith_lensbearers.png",
       "curated_source_sha256": "42c57b8a2ec5449e24d370934bd4f79c01e122bd12de9c678d0e4c93100e81ac"
+    },
+    {
+      "id": "unit_neutral_cinderwake_aurochs",
+      "unit_id": "unit_neutral_cinderwake_aurochs",
+      "name": "Cinderwake Aurochs",
+      "faction_id": "neutral",
+      "tier": 5,
+      "role": "melee",
+      "motif": "melee",
+      "sprite_sheet": "res://art/animation/runtime/units/unit_neutral_cinderwake_aurochs.png",
+      "states": [
+        "idle_hold",
+        "ready_active",
+        "move_path_step",
+        "melee_windup_release",
+        "ranged_aim_release",
+        "hit_stagger",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
+        "defend_brace",
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
+      ],
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_cinderwake_aurochs.png",
+      "curated_source_sha256": "3b8525b7f40345295e4a74de88f8f46a51490adbeb70ab93fc66412d545aff0e"
+    },
+    {
+      "id": "unit_neutral_tideglass_skyrays",
+      "unit_id": "unit_neutral_tideglass_skyrays",
+      "name": "Tideglass Skyrays",
+      "faction_id": "neutral",
+      "tier": 6,
+      "role": "ranged",
+      "motif": "ranged",
+      "sprite_sheet": "res://art/animation/runtime/units/unit_neutral_tideglass_skyrays.png",
+      "states": [
+        "idle_hold",
+        "ready_active",
+        "move_path_step",
+        "melee_windup_release",
+        "ranged_aim_release",
+        "hit_stagger",
+        "death_rout_remove",
+        "cast_support_anchor",
+        "status_applied",
+        "status_expired",
+        "defend_brace",
+        "retaliation_release",
+        "retreat_withdraw_column",
+        "surrender_stand_down"
+      ],
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_tideglass_skyrays.png",
+      "curated_source_sha256": "22a21c70b22ea35331c7b46e75bf4efbd2ceb996999780b21e6846906a2be9cb"
     }
   ]
 }

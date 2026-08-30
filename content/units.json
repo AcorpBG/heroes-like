@@ -4812,6 +4812,110 @@
         "lens": 15
       },
       "status_immunity_ids": []
+    },
+    {
+      "id": "unit_neutral_cinderwake_aurochs",
+      "name": "Cinderwake Aurochs",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 5,
+      "hp": 52,
+      "attack": 11,
+      "defense": 12,
+      "min_damage": 10,
+      "max_damage": 15,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 760,
+        "ore": 2
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Horn-Crown Drive",
+          "description": "The auroch's shovel-wide crown keeps its furnace-backed drive dangerous across a partially closed lane.",
+          "distance_one_multiplier": 1.08
+        },
+        {
+          "id": "shielding",
+          "name": "Basalt Emberhide",
+          "description": "Layered volcanic plates blunt missiles and keep the herd's formation from buckling while the banked vents recover.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.78
+        }
+      ],
+      "spell_resistance_pct": 10,
+      "control_resistance_pct": 15,
+      "spell_school_resistance_pct": {
+        "furnace": 15
+      },
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_neutral_tideglass_skyrays",
+      "name": "Tideglass Skyrays",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 6,
+      "hp": 46,
+      "attack": 13,
+      "defense": 10,
+      "min_damage": 12,
+      "max_damage": 18,
+      "speed": 7,
+      "initiative": 9,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 1,
+      "cost": {
+        "gold": 950,
+        "wood": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Tideglass Wake",
+          "description": "Once per battle, resonator bells fold a cold mist wake across one veteran line and make its footing uncertain.",
+          "status_id": "status_fogbound",
+          "status_label": "Tideglass-Fogbound",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 4,
+          "ai_target_priority_bonus": 0.2
+        },
+        {
+          "id": "volley",
+          "name": "Glasswing Broadside",
+          "description": "The skyrays align their crescent membranes into a long broadside that strikes hardest across an open lane or into fogbound ranks.",
+          "damage_multiplier": 1.15,
+          "min_distance": 2,
+          "status_ids": [
+            "status_fogbound"
+          ],
+          "status_damage_multiplier": 1.08,
+          "ally_defending_multiplier": 1.05
+        }
+      ],
+      "spell_resistance_pct": 15,
+      "control_resistance_pct": 10,
+      "spell_school_resistance_pct": {
+        "veil": 15
+      },
+      "status_immunity_ids": []
     }
   ]
 }

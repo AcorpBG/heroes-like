@@ -6,8 +6,8 @@
     "prompt_summary": "One distinct original generated overworld sprite asset for each authored non-decoration map object that previously lacked a unique sprite assignment after the decorative/blocker foundation pass.",
     "source_model": "built_in_image_gen_chroma_key_split",
     "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
-    "new_generated_sprite_count": 178,
-    "generated_batch_count": 12,
+    "new_generated_sprite_count": 180,
+    "generated_batch_count": 13,
     "generated_batches": [
       {
         "batch_index": 1,
@@ -104,20 +104,28 @@
           177,
           178
         ]
+      },
+      {
+        "batch_index": 13,
+        "workspace_source_atlas": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+        "object_index_range": [
+          179,
+          180
+        ]
       }
     ]
   },
   "coverage": {
-    "authored_map_object_count": 386,
+    "authored_map_object_count": 388,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 8,
-    "new_distinct_non_decorative_asset_count": 178,
-    "total_distinct_authored_map_object_count_after_pass": 386,
+    "new_distinct_non_decorative_asset_count": 180,
+    "total_distinct_authored_map_object_count_after_pass": 388,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
-      "neutral_dwelling": 32,
+      "neutral_dwelling": 34,
       "neutral_encounter": 6,
       "pickup": 9,
       "repeatable_service": 7,
@@ -308,7 +316,9 @@
     "mapobj_burned_signal_brazier",
     "mapobj_repaired_ferry_stage_claimed",
     "mapobj_claimed_quarry_head",
-    "mapobj_withered_rootgate_marker"
+    "mapobj_withered_rootgate_marker",
+    "mapobj_cinderwake_fold",
+    "mapobj_tideglass_roost"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1556,6 +1566,20 @@
       "assignment_source": "new_distinct_map_object_sprite",
       "family": "scenario_objective",
       "source_batch": 12
+    },
+    "object_cinderwake_fold": {
+      "asset_id": "mapobj_cinderwake_fold",
+      "fit": "Distinct original horn-arch fold sprite assigned to the elite neutral Cinderwake Fold dwelling.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 13
+    },
+    "object_tideglass_roost": {
+      "asset_id": "mapobj_tideglass_roost",
+      "fit": "Distinct original saltstone bell-roost sprite assigned to the elite neutral Tideglass Roost dwelling.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "neutral_dwelling",
+      "source_batch": 13
     }
   }
 }

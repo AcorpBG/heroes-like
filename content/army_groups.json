@@ -1514,6 +1514,36 @@
           "count": 3
         }
       ]
+    },
+    {
+      "id": "army_neutral_cinderwake_fold_watch",
+      "name": "Cinderwake Fold Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_cinderwake_aurochs",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_neutral_emberpack_lobbers",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_tideglass_roost_watch",
+      "name": "Tideglass Roost Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_tideglass_skyrays",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_neutral_reefbolt_crews",
+          "count": 4
+        }
+      ]
     }
   ]
 }

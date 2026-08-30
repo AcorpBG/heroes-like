@@ -9,7 +9,7 @@ Slice: `overworld-object-content-batch-007-landmarks-objectives-state-variants-1
 Batch 007 adds and normalizes faction landmarks, scenario objective object families, and damaged/captured/claimed state-variant metadata in `content/map_objects.json` and `content/resource_sites.json`.
 
 - 20 Batch 007 map objects and 20 linked resource-site metadata records.
-- Repository totals after the batch: 386 map objects and 185 resource sites.
+- Repository totals after the batch: 388 map objects and 185 resource sites.
 - Category coverage: 9 faction landmarks, 7 scenario objective object families, and 4 state variants.
 - The three existing faction landmark objects are normalized into the Batch 007 contract.
 - All six factions have landmark coverage, and all nine biomes have at least two Batch 007 definitions.

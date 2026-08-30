@@ -1,0 +1,49 @@
+{
+  "schema_id": "elite_neutral_dwelling_art_wave1",
+  "content_slice_id": "content-two-elite-neutral-dwellings-10184",
+  "generation_mode": "built_in_image_gen_original_landmarks_and_precise_controlled_edits",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/elite_neutral_dwelling_atlas.png",
+  "atlas_size": [192, 48],
+  "asset_policy": "original_generated_runtime_art_no_homm_asset_import",
+  "alpha_recovery": "The two unclaimed generations arrived with genuine alpha. Controlled edits returned pale checker backdrops; after one targeted built-in background-extraction attempt, non-neutral controlled-edit details were composited over the corresponding transparent unclaimed bases before reduction. The shipped atlas has genuine alpha and transparent corners without pale matte residue.",
+  "assets": [
+    {
+      "site_id": "site_cinderwake_fold",
+      "state": "unclaimed",
+      "source": "cinderwake_fold_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-4d6ea67f-3ce5-406a-80ae-963e7d655de1.png",
+      "atlas_region": [0, 0, 48, 48],
+      "sha256": "22e2688fa30d41cf101bda8023459ad3ab2c3a5735536d6c4d4d9f68ef95f978",
+      "prompt_summary": "A compact basalt fold with three banked vents, mineral troughs, and one immense horn-shaped entry arch."
+    },
+    {
+      "site_id": "site_cinderwake_fold",
+      "state": "controlled",
+      "source": "cinderwake_fold_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-564ff40b-9aad-4736-b428-1e1794588335.png",
+      "background_extraction_attempt": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-b11d4550-9517-4a3e-8e5d-4eb059219c4f.png",
+      "atlas_region": [48, 0, 48, 48],
+      "sha256": "d4d77f2b518db23d9dc1f6213d29e3ccd171074683573145230146320186914b",
+      "prompt_summary": "The same fold with stocked troughs, open approach, copper lamps, and original ring-and-notch claim pennants."
+    },
+    {
+      "site_id": "site_tideglass_roost",
+      "state": "unclaimed",
+      "source": "tideglass_roost_unclaimed_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-fe492cac-0c04-4e24-84b5-fae0bd68a794.png",
+      "atlas_region": [96, 0, 48, 48],
+      "sha256": "46544e4bba46d6755101fe125fd5b4f538bd1f5a5f72d504b09f88b409a2e9d4",
+      "prompt_summary": "A saltstone tidal aerie with translucent membranes, hanging resonators, a shallow pool, and empty harness racks."
+    },
+    {
+      "site_id": "site_tideglass_roost",
+      "state": "controlled",
+      "source": "tideglass_roost_controlled_source.png",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-021cba4e-44e9-44f6-a9a2-d7643717990e.png",
+      "atlas_region": [144, 0, 48, 48],
+      "sha256": "67b8d88ce80fea63984b86b7d48ab2524ca6f04b85920aa06196199a88156e79",
+      "prompt_summary": "The same roost with stocked harness racks, ration cases, blue guide lamps, and original ring-and-notch claim pennants."
+    }
+  ],
+  "runtime_sha256": "838595274ed4a326727afe2733a6d8823aefe3a532281c41756686bfd3bb48d7"
+}

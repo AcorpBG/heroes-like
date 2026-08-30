@@ -624,6 +624,58 @@
         "encounter_basalt_gatehouse_watch"
       ],
       "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_cinderwake_fold",
+      "name": "Cinderwake Fold",
+      "summary": "Independent vent-ring keepers who raise basalt-plated aurochs for commanders able to clear and provision their furnace-hot range.",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ],
+      "unit_ids": [
+        "unit_neutral_cinderwake_aurochs",
+        "unit_neutral_emberpack_lobbers"
+      ],
+      "site_ids": [
+        "site_cinderwake_fold"
+      ],
+      "map_object_ids": [
+        "object_cinderwake_fold"
+      ],
+      "army_group_ids": [
+        "army_neutral_cinderwake_fold_watch"
+      ],
+      "encounter_ids": [
+        "encounter_cinderwake_fold_watch"
+      ],
+      "content_status": "elite_neutral_dwelling_live"
+    },
+    {
+      "id": "neutral_dwelling_tideglass_roost",
+      "name": "Tideglass Roost",
+      "summary": "Saltstone bell-tenders who guide free-ranging skyrays to commanders that reopen and supply their tidal causeway.",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_rough_badlands"
+      ],
+      "unit_ids": [
+        "unit_neutral_tideglass_skyrays",
+        "unit_neutral_reefbolt_crews"
+      ],
+      "site_ids": [
+        "site_tideglass_roost"
+      ],
+      "map_object_ids": [
+        "object_tideglass_roost"
+      ],
+      "army_group_ids": [
+        "army_neutral_tideglass_roost_watch"
+      ],
+      "encounter_ids": [
+        "encounter_tideglass_roost_watch"
+      ],
+      "content_status": "elite_neutral_dwelling_live"
     }
   ]
 }

@@ -2624,6 +2624,100 @@
         "aetherglass": 1,
         "experience": 230
       }
+    },
+    {
+      "id": "encounter_cinderwake_fold_watch",
+      "name": "Cinderwake Fold Watch",
+      "enemy_group_id": "army_neutral_cinderwake_fold_watch",
+      "affiliation": "neutral",
+      "terrain": "lava",
+      "battlefield_tags": [
+        "fortress_lane",
+        "wall_pressure"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Fold-Keeper Orun Blackhorn",
+        "command": {
+          "attack": 2,
+          "defense": 2,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard",
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "cinderwake_fold_vent_ring",
+          "type": "hazard_zone",
+          "label": "Banked Vent Ring",
+          "summary": "The fold's banked vents keep the aurochs' first charge hot until the stone ring is seized.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "momentum",
+            "cohesion",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 360,
+        "ore": 2,
+        "experience": 320
+      }
+    },
+    {
+      "id": "encounter_tideglass_roost_watch",
+      "name": "Tideglass Roost Watch",
+      "enemy_group_id": "army_neutral_tideglass_roost_watch",
+      "affiliation": "neutral",
+      "terrain": "sand",
+      "battlefield_tags": [
+        "open_lane",
+        "fog_bank"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Bell-Tender Sevrin Lowtide",
+        "command": {
+          "attack": 2,
+          "defense": 1,
+          "power": 1,
+          "knowledge": 1
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "artillerist",
+          "ambusher"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "tideglass_roost_resonator_lane",
+          "type": "lane_battery",
+          "label": "Resonator Causeway",
+          "summary": "The suspended bells measure every open approach until their saltstone causeway is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "cohesion",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 420,
+        "wood": 2,
+        "experience": 360
+      }
     }
   ]
 }
