@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-systemic-encounter-landmarks-10184`, which gives the four system-owned or scripted encounter definitions exact original landmarks and closes live encounter-art coverage at 101 of 101.
-- Current package boundary: both release exports measure 249314436 bytes, 685564 bytes below the unchanged 250000000-byte ceiling. Runtime art remains compact while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-brasshollow-fivefold-assay-campaign-10184`, which brings all five previously campaign-unrepresented Brasshollow heroes and their production boards into one exact proof-gated campaign.
+- Current package boundary: both release exports measure 249390152 bytes, 609848 bytes below the unchanged 250000000-byte ceiling. Runtime campaign art remains compact while generated source originals and development reports remain excluded on both platforms.
 
 ## Eleven Roads And Objectives
 
@@ -15005,6 +15005,39 @@ Completion criteria:
 Non-goals:
 - no encounter balance, army, objective, raid selection, random-map generation, battle system, AI, save schema, faction, hero, town, unit, signing, publication, whole-game, or release-readiness change or claim;
 - no copied Heroes camp, gate, ambush, faction object, icon, name, text, or protected visual expression.
+
+## Brasshollow Fivefold Assay Campaign
+
+id: `content-brasshollow-fivefold-assay-campaign-10184`
+
+Status: completed.
+
+Completion result:
+- The Fivefold Assay is the fifteenth player-facing campaign and connects Selka Pitmarshal, Vellum Quench, Odrik Heatpriest, Lina Gauge-Savant, and Pava Ashmeter across five existing production boards while preserving each board's skirmish availability;
+- each chapter requires the prior victory and exact signature proof, carries only fifteen percent of common stores within 400 gold, 2 wood, and 2 ore caps, and transfers no hero progression, spells, artifacts, units, or faction rares;
+- one original transparent 128x128 campaign emblem and five distinct 64x64 encounter-derived seals ship with non-color descriptions, exact generated-source provenance, menu ownership, and package inclusion;
+- the single consolidated smoke passes all five chapter unlocks, nineteen live battle payloads, five one-shot signature hooks, bounded carryover, save-version-9 round trips, six exact art identities, and five representative board captures;
+- repository validation and sequential Linux/Windows packaged boots pass with matching 249390152-byte PCKs, 609848 bytes below the unchanged ceiling.
+
+Current finding:
+- Brasshollow has the weakest campaign representation at five of ten heroes despite all five unused commanders already owning production-ready skirmish boards, exact portraits, town/economy identity, and signature encounter proofs;
+- Selka Pitmarshal, Vellum Quench, Odrik Heatpriest, Lina Gauge-Savant, and Pava Ashmeter currently remain isolated skirmish starts, while Thornwake has all ten heroes in campaign play and the next-lowest Veilmourn has six;
+- their Peat-Chain Levy, Gorefen Debt Totem, Obsidian Scar Watch, Milestone Arsenal Watch, and Dustjack Yard Watch victories already expose exact persistent flags suitable for a source-backed sequential campaign instead of adding artificial completion gates.
+
+Implementation boundary:
+- connect the five existing production boards into one sequential Brasshollow campaign whose chapters treat burden, debt, heat, distance, and residue as five independently won assay proofs;
+- require the prior board's victory and exact signature flag for each unlock, carry only modest capped common stores between different commanders, and retain no hero progression, spells, artifacts, units, or faction rares;
+- create one original Fivefold Assay emblem and five distinct encounter-derived chapter seals with transparent runtime assets, accessible descriptions, generated-source provenance, menu discoverability, and Linux/Windows package inclusion;
+- preserve every board's skirmish availability, encounters, objectives, balance, AI, save version 9, deterministic behavior, source-art package exclusion, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all five previously campaign-unrepresented Brasshollow heroes and their boards are playable through exact sequential unlocks while remaining available in skirmish;
+- one consolidated live five-chapter smoke creates every authored battle payload, proves signature-gated progression, bounded resource-only carryover, save round trips, menu art ownership, and representative visual captures after the complete batch is implemented;
+- repository validation and sequential Linux/Windows packaged startup pass with matching PCKs below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, unit, building, encounter, battle rule, balance, strategic AI, save schema, native RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes campaign, map, character, object, heraldry, icon, name, text, or protected visual expression.
 
 ## Progress Reconciliation
 

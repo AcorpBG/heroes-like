@@ -15745,10 +15745,10 @@
   "currentNotes": "Completed the Veil-Coast Sounding Circuit content batch with six live coast-route services, six operational landmarks, one 24x14 Veilmourn skirmish, four battle fronts, complete town economy sources, and consolidated gameplay, repository, Linux, and Windows package evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceId": "content-systemic-encounter-landmarks-10184",
-  "currentSliceNotes": "Completed one substantial four-identity content batch: Town Assault, Defended Field Site, Mireclaw Raid, and Blackbranch Reavers now own exact original generated landmarks in one 192x48 atlas, closing encounter art at 101/101. One consolidated live smoke passed four map identities, four battle payloads, exact objective/no-objective contracts, commander priority, fail-closed atlas handling, save v9 round trip, and non-mutating authority. Visual capture was inspected. Repository validation passed; Linux and Windows packaged startup passed at matching 249314436-byte PCKs, 685564 bytes below the ceiling, with source art excluded.",
+  "currentSliceId": "content-brasshollow-fivefold-assay-campaign-10184",
+  "currentSliceNotes": "Completed The Fivefold Assay as the fifteenth player-facing campaign: five previously campaign-unrepresented Brasshollow heroes and existing production boards now unlock through exact prior-victory/signature-proof gates; capped common-resource-only carryover excludes progression, spells, artifacts, units, and rares; one original emblem plus five distinct encounter-derived seals ship with provenance and accessibility copy. One consolidated live smoke passed 5 chapters, 19 battle payloads, 5 one-shot proof hooks, save v9 round trips, 6 exact art identities, and 5 visual captures. Repository validation and sequential Linux/Windows package boots passed at matching 249390152-byte PCKs, 609848 bytes below the 250000000-byte ceiling.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content systemic encounter landmarks 10184",
+  "currentSliceTitle": "content brasshollow fivefold assay campaign 10184",
   "currentSliceUpdatedAt": "2026-08-30T08:38:28Z",
   "deferredRiskRegister": [
     {
@@ -106463,6 +106463,16 @@
       "startedAt": "2026-08-30T11:20:37Z",
       "notes": "Completed one substantial four-identity content batch: Town Assault, Defended Field Site, Mireclaw Raid, and Blackbranch Reavers now own exact original generated landmarks in one 192x48 atlas, closing encounter art at 101/101. One consolidated live smoke passed four map identities, four battle payloads, exact objective/no-objective contracts, commander priority, fail-closed atlas handling, save v9 round trip, and non-mutating authority. Visual capture was inspected. Repository validation passed; Linux and Windows packaged startup passed at matching 249314436-byte PCKs, 685564 bytes below the ceiling, with source art excluded.",
       "completedAt": "2026-08-30T11:37:59Z"
+    },
+    {
+      "id": "content-brasshollow-fivefold-assay-campaign-10184",
+      "title": "content brasshollow fivefold assay campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T12:01:39Z",
+      "startedAt": "2026-08-30T11:42:31Z",
+      "notes": "Completed The Fivefold Assay as the fifteenth player-facing campaign: five previously campaign-unrepresented Brasshollow heroes and existing production boards now unlock through exact prior-victory/signature-proof gates; capped common-resource-only carryover excludes progression, spells, artifacts, units, and rares; one original emblem plus five distinct encounter-derived seals ship with provenance and accessibility copy. One consolidated live smoke passed 5 chapters, 19 battle payloads, 5 one-shot proof hooks, save v9 round trips, 6 exact art identities, and 5 visual captures. Repository validation and sequential Linux/Windows package boots passed at matching 249390152-byte PCKs, 609848 bytes below the 250000000-byte ceiling.",
+      "completedAt": "2026-08-30T12:01:39Z"
     }
   ],
   "project": "heroes-like",
@@ -107007,7 +107017,7 @@
   ],
   "summary": "Completed the Veil-Coast Sounding Circuit: six formerly dormant shoreline services now provide live one-cost two-way land transit with distinct operational art inside a new 24x14 Veilmourn skirmish, validated as one batch and through Linux and Windows packages.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T11:37:59Z",
+  "updatedAt": "2026-08-30T12:01:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

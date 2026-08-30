@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 14,
+  "player_facing_active_campaign_count": 15,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -2697,6 +2697,188 @@
             "artifacts": false,
             "flags_prefix": "carryover_"
           }
+        }
+      ]
+    },
+    {
+      "id": "campaign_fivefold_assay",
+      "name": "The Fivefold Assay",
+      "description": "Five Brasshollow commanders test burden, debt, heat, distance, and residue on their own production fronts, then bind the proofs without allowing one ledger to erase the others.",
+      "summary": "A five-chapter Brasshollow campaign that brings every remaining faction hero into campaign play through exact signature victories and independently measured proofs.",
+      "region": "Peat-Chain Tally, Gorefen Audit, Obsidian Scar, Milestone Arsenal, and Dustjack Circuit",
+      "emblem_id": "campaign_emblem_fivefold_assay",
+      "emblem_path": "res://art/campaigns/runtime/emblems/fivefold_assay.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/fivefold_assay_source.png",
+      "emblem_alt_text": "An open black-iron assay wheel carries five unequal brass instruments: chain weight, quenching tong, crucible, caliper, and ash pan.",
+      "emblem_source_sha256": "d45726f22c136730e350acf20303320578e2397547225aa2de3b4bcf1994da0c",
+      "emblem_runtime_sha256": "a62f6353408d061191b744e5c00117ca9d5895ff5ee48eafa04f39499fdd3afc",
+      "arc_goal": "Win five exact frontier assays and join their results as a public measure while every commander's skill, army, and rare stock remain local to the board that proved them.",
+      "completion_title": "Five Proofs, No Master Ledger",
+      "completion_summary": "The five assays remain independently readable, but together they establish a Brasshollow measure no single creditor, furnace, road, or yard can monopolize.",
+      "starting_scenario_id": "pitmarshal-peat-chain-seizure",
+      "scenarios": [
+        {
+          "scenario_id": "pitmarshal-peat-chain-seizure",
+          "seal_id": "campaign_chapter_seal_pitmarshal_peat_chain_seizure",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/peat_chain_tally.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/peat_chain_tally_source.png",
+          "seal_alt_text": "A wet black chain loops over a toothed brass counterweight and peat-dark tally cradle, ending in one broken link.",
+          "seal_source_sha256": "835fb22f4cfa064e321ec0b170fc84ec30537c58e63f78aa3ffad9ed106ae269",
+          "seal_runtime_sha256": "51c866aff7f449fcd300b0ca3e28db8377901b7b95eebb9b8afb0856ae92ece6",
+          "label": "Chapter I: Weigh the Peat Chain",
+          "description": "Selka breaks the Peat-Chain Levy and records what a burden weighs before anyone writes its price.",
+          "chapter_index": 1,
+          "chapter_title": "Measure Burden Before Debt",
+          "status_hint": "Break the Peat-Chain Levy to secure the first assay proof before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior signature proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Every Brasshollow account begins by naming a burden. Selka must break the peat-chain tally pit and prove weight can be measured before a creditor decides what it means.",
+          "intel": "Two Moonhunt screens protect the levy while Nightglass Redoubt anchors the eastern claim and a Crystal Sump watch complicates the middle road.",
+          "stakes": "If burden and debt remain the same word, every later assay will inherit a rigged scale.",
+          "aftermath_victory": "Selka leaves one broken chain beside an exact counterweight: the first proof records burden without ownership.",
+          "aftermath_defeat": "The levy keeps its chain taut and the Fivefold Assay fails before a fair weight can be named.",
+          "journal_victory": "Selka secured the Peat-Chain Tally as proof 1 of the Fivefold Assay.",
+          "journal_defeat": "Selka failed to secure the first assay proof.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {"gold": 400, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["pitmarshal_peat_chain_tally_pit_broken"]
+          }
+        },
+        {
+          "scenario_id": "quench-gorefen-audit",
+          "seal_id": "campaign_chapter_seal_quench_gorefen_audit",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/gorefen_quenchmark.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/gorefen_quenchmark_source.png",
+          "seal_alt_text": "Long brass tongs split a peat-and-bone debt marker above a narrow cooling trough and one pale steam plume.",
+          "seal_source_sha256": "a3fb0612e7292ad606f424448904364821098c7a8a81bc25cb0a63ff9747d633",
+          "seal_runtime_sha256": "13a07ce0691b76a0f5711f61561d52cb5fe2f88ff0b6787b4f55e4a4fa6ee635",
+          "label": "Chapter II: Quench the False Debt",
+          "description": "Vellum breaks the Gorefen Debt Totem and cools obligation until its real shape can be inspected.",
+          "chapter_index": 2,
+          "chapter_title": "Cool the Creditor's Mark",
+          "status_hint": "Break the Gorefen Debt Totem to secure the second assay proof before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior signature proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "The first proof names weight, but Gorefen has already stamped that weight as debt. Vellum must split the totem and quench the creditor's mark without pretending the burden vanished.",
+          "intel": "Two Moonhunt screens cover the audit totem while Reedbarrow Ferry controls the final approach.",
+          "stakes": "A measure that cannot separate real obligation from an imposed mark is only a cleaner instrument of foreclosure.",
+          "aftermath_victory": "Vellum cools the split marker and records the second proof: debt must survive inspection before it can command payment.",
+          "aftermath_defeat": "The Gorefen mark survives intact and the second assay remains whatever its creditor declares.",
+          "journal_victory": "Vellum secured the Gorefen Quenchmark as proof 2 of the Fivefold Assay.",
+          "journal_defeat": "Vellum failed to secure the second assay proof.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "pitmarshal-peat-chain-seizure", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "pitmarshal-peat-chain-seizure", "flag": "pitmarshal_peat_chain_tally_pit_broken"}
+          ],
+          "carryover_import": {"from_scenario_id": "pitmarshal-peat-chain-seizure", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {"gold": 400, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["quench_gorefen_debt_totem_broken"]
+          }
+        },
+        {
+          "scenario_id": "heatpriest-obsidian-scar",
+          "seal_id": "campaign_chapter_seal_heatpriest_obsidian_scar",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/obsidian_heatproof.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/obsidian_heatproof_source.png",
+          "seal_alt_text": "Three cracked black-glass uprights surround a suspended brass assay cup and one contained furnace flame.",
+          "seal_source_sha256": "0a045363413510625254b82152ecf80b112e235379d127bd1cb3d37ad628cd34",
+          "seal_runtime_sha256": "955cc947bff9cc831bad1f259497f31f6be7c7e007c48daea749e57cc57266e7",
+          "label": "Chapter III: Temper the Obsidian Proof",
+          "description": "Odrik clears the Obsidian Scar Watch and tests what remains true after heat, fracture, and cooling.",
+          "chapter_index": 3,
+          "chapter_title": "Keep Truth Through Heat",
+          "status_hint": "Clear the Obsidian Scar Watch to secure the third assay proof before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior signature proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "A cooled mark can still be brittle. Odrik must clear the Obsidian Scar and test the first two proofs against heat fierce enough to reveal every hidden fracture.",
+          "intel": "Two drowned processions screen the volcanic watch while Bellwake Harbor feeds pressure from the coast road.",
+          "stakes": "If the measure changes whenever the furnace grows hot, it cannot govern the decisions that matter most.",
+          "aftermath_victory": "Odrik records a cracked but stable heatproof: the third assay preserves what remained true under fire.",
+          "aftermath_defeat": "The obsidian watch keeps the furnace uncontrolled and the inherited proofs shatter under heat.",
+          "journal_victory": "Odrik secured the Obsidian Heatproof as proof 3 of the Fivefold Assay.",
+          "journal_defeat": "Odrik failed to secure the third assay proof.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "quench-gorefen-audit", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "quench-gorefen-audit", "flag": "quench_gorefen_debt_totem_broken"}
+          ],
+          "carryover_import": {"from_scenario_id": "quench-gorefen-audit", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {"gold": 400, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["heatpriest_obsidian_scar_watch_cleared"]
+          }
+        },
+        {
+          "scenario_id": "gaugesavant-milestone-calibration",
+          "seal_id": "campaign_chapter_seal_gaugesavant_milestone_calibration",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/milestone_caliper.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/milestone_caliper_source.png",
+          "seal_alt_text": "A broad brass caliper and needle gauge measure an iron road milestone carrying three sealed field tools.",
+          "seal_source_sha256": "c03b5925ae9f273f1bd7d5c83302d16ff125370f26816c298da65acec6294fc1",
+          "seal_runtime_sha256": "43f0538ef69ba6c68b57cb4bdb668d957575b7c6371cd52ae5cd39a4fb07462d",
+          "label": "Chapter IV: Set the Milestone Caliper",
+          "description": "Lina secures the Milestone Arsenal Watch and proves the shared measure can travel without drifting.",
+          "chapter_index": 4,
+          "chapter_title": "Carry Measure Across Distance",
+          "status_hint": "Secure the Milestone Arsenal Watch to record the fourth assay proof before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior signature proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Three proofs agree at the bench, but a public measure must survive the road. Lina must calibrate the Milestone Arsenal and prove distance cannot quietly alter the result.",
+          "intel": "Three privateer screens divide the expedition line while Fogchart Mooring guards the far end of the calibration road.",
+          "stakes": "A measure that drifts between towns gives every distant office permission to invent its own advantage.",
+          "aftermath_victory": "Lina fixes the fourth proof to a road milestone whose reading remains exact at either end of the route.",
+          "aftermath_defeat": "The milestone stays under hostile calibration and the shared measure changes with every road segment.",
+          "journal_victory": "Lina secured the Milestone Caliper as proof 4 of the Fivefold Assay.",
+          "journal_defeat": "Lina failed to secure the fourth assay proof.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "heatpriest-obsidian-scar", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "heatpriest-obsidian-scar", "flag": "heatpriest_obsidian_scar_watch_cleared"}
+          ],
+          "carryover_import": {"from_scenario_id": "heatpriest-obsidian-scar", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {"gold": 400, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["gaugesavant_milestone_arsenal_watch_secured"]
+          }
+        },
+        {
+          "scenario_id": "ashmeter-dustjack-circuit",
+          "seal_id": "campaign_chapter_seal_ashmeter_dustjack_circuit",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/dustjack_balance.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/dustjack_balance_source.png",
+          "seal_alt_text": "A three-legged brass yard jack balances a shallow ash pan between two opposed hanging counterweights and a straight dust vane.",
+          "seal_source_sha256": "9396e6e2a76ea9cd3c7e902330a20252f737dae5bc19804e0496d2e3d2785d5b",
+          "seal_runtime_sha256": "3c520f39f603e6af347cdfe604b92aaf783ce10738d53fcfec042e1e56e8b9ae",
+          "label": "Chapter V: Balance the Dustjack",
+          "description": "Pava closes the Dustjack circuit and weighs what remains after every burden, mark, furnace, and road has done its work.",
+          "chapter_index": 5,
+          "chapter_title": "Account for What Remains",
+          "status_hint": "Secure the Dustjack Yard Watch to record the fifth proof and complete the Fivefold Assay.",
+          "carryover_summary": "Only capped common stores and the prior signature proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Four exact proofs still omit the residue every process leaves behind. Pava must close the Dustjack circuit and weigh ash, loss, and unused capacity without hiding any of them off-ledger.",
+          "intel": "Four privateer relays defend the yard watch while Fogchart Mooring presses the outer circuit.",
+          "stakes": "A perfect account that discards its residue simply moves the cost somewhere nobody is permitted to measure.",
+          "aftermath_victory": "Pava balances the final ash pan and leaves five unequal proofs visible around one open assay wheel.",
+          "aftermath_defeat": "The circuit remains open and the Fivefold Assay loses every cost its earlier instruments failed to retain.",
+          "journal_victory": "Pava secured the Dustjack Balance as proof 5 and completed the Fivefold Assay.",
+          "journal_defeat": "Pava failed to complete the Fivefold Assay.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "gaugesavant-milestone-calibration", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "gaugesavant-milestone-calibration", "flag": "gaugesavant_milestone_arsenal_watch_secured"}
+          ],
+          "carryover_import": {"from_scenario_id": "gaugesavant-milestone-calibration", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"}
         }
       ]
     }

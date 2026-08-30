@@ -2006,7 +2006,7 @@ func _load_campaign_chapter_seal_texture(seal_path: String) -> Texture2D:
 		return null
 	if _campaign_chapter_seal_texture_cache.has(normalized_path):
 		return _campaign_chapter_seal_texture_cache[normalized_path] as Texture2D
-	if _campaign_chapter_seal_texture_cache.size() >= 60:
+	if _campaign_chapter_seal_texture_cache.size() >= 65:
 		return null
 	var texture: Texture2D = null
 	if ResourceLoader.exists(normalized_path, "Texture2D"):
