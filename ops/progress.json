@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the fourteen-site Batch 007 Accordfall family with three capturable landmarks, seven one-time objectives, four repairable state variants, fourteen distinct state assets, one consolidated smoke, repository validation, and matching Linux/Windows package boots. The broader content/art goal remains active for the next coherent family.",
+  "currentNotes": "Completed the eightfold guarded-reliquary family as one gameplay and art batch with one consolidated smoke and paired platform package gates.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-fourteen-marks-accordfall-front-10184",
-  "currentSliceId": "content-fourteen-marks-accordfall-front-10184",
-  "currentSliceNotes": "Shipped all fourteen remaining Batch 007 landmarks, objectives, and state variants in Accordfall with one compact state atlas and one consolidated family smoke; repository validation and Linux/Windows package boots pass at 249640816 bytes.",
+  "currentSlice": "content-eightfold-guarded-reliquary-march-10184",
+  "currentSliceId": "content-eightfold-guarded-reliquary-march-10184",
+  "currentSliceNotes": "Shipped scenario 74 with eight exact guarded claims, six activated specialty payoff sets, eight generated post-claim frames, one combined save-version-9 smoke, repository validation, and matching Linux/Windows package boots.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content fourteen marks accordfall front 10184",
-  "currentSliceUpdatedAt": "2026-08-30T03:24:47Z",
+  "currentSliceTitle": "content eightfold guarded reliquary march 10184",
+  "currentSliceUpdatedAt": "2026-08-30T04:06:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21193,20 +21193,19 @@
     "content/resource_sites.json",
     "content/map_objects.json",
     "content/scenarios.json",
-    "scripts/core/OverworldRules.gd",
-    "art/overworld/runtime/objects/resource_sites/roads_objectives_state_atlas.png",
-    "art/overworld/source/generated/resource_sites/roads_objectives_state_wave1/manifest.json",
+    "art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+    "art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/manifest.json",
     "art/overworld/manifest.json",
-    "tests/eleven_roads_objectives_report.gd",
-    "tests/eleven_roads_objectives_report.tscn",
+    "tests/eightfold_guarded_reliquary_march_report.gd",
+    "tests/eightfold_guarded_reliquary_march_report.tscn",
     "tests/validate_repo.py",
     "tests/packaging_linux_export_smoke.py",
     "tests/packaging_windows_export_smoke.py",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-eleven-roads-objectives-20260830",
-  "latestFinding": "Five authored signs now read without mutation, three paid route locks open and persist their footprints, and three one-time event markers satisfy exact Writbound Crossroads objectives. Six distinct state assets ship in one compact atlas, save version 9 remains unchanged, and matching 249457112-byte Linux/Windows PCKs boot with source originals excluded.",
+  "latestEvidenceId": "content-eightfold-guarded-reliquary-march-20260830",
+  "latestFinding": "Eight exact guarded claims now block, resolve, reward once, switch to distinct post-claim art, and survive save version 9. Four recruit bundles, Survey Chain plus town support, six-radius scouting, and the Salt-Wight route execute live in scenario 74; matching 249694792-byte Linux and Windows PCKs boot with all 17 resource-site atlases present and source originals excluded.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106307,6 +106306,16 @@
       "startedAt": "2026-08-30T02:55:07Z",
       "notes": "Shipped Accordfall as scenario 73 with three capturable faction landmarks, seven one-time scenario objectives, four repairable state variants, fourteen distinct state frames in one 672x48 atlas, and exact save-version-9 behavior. The single fourteen-case smoke, repository validation, and matching Linux/Windows 249640816-byte package startups passed; source art is excluded and no whole-game release claim is made.",
       "completedAt": "2026-08-30T03:24:47Z"
+    },
+    {
+      "id": "content-eightfold-guarded-reliquary-march-10184",
+      "title": "content eightfold guarded reliquary march 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T04:06:40Z",
+      "startedAt": "2026-08-30T03:29:57Z",
+      "notes": "Shipped Eightfold Reliquary March as scenario 74 with eight exact guarded claims, six promoted specialty payoff sets, eight distinct generated claimed-state frames in one 384x48 atlas, and exact save-version-9 behavior. One consolidated eight-case smoke, repository validation, and matching 249694792-byte Linux/Windows package boots passed; source art is excluded and no whole-game release claim is made.",
+      "completedAt": "2026-08-30T04:06:40Z"
     }
   ],
   "project": "heroes-like",
@@ -106316,8 +106325,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The fourteen-site Accordfall world-state family is complete; broader faction, encounter, campaign, presentation, balance, accessibility, packaging, and release gaps remain separate work under the active content goal.",
-  "remainingWork": "Select and register the next coherent multi-content family, implement it before its single consolidated smoke, and preserve the remaining 359184-byte PCK headroom through atlas packing and source-art exclusion.",
+  "remainingGap": "The Eightfold Reliquary slice is complete; the broader release-bound content goal still needs another substantial family selected before more implementation begins.",
+  "remainingWork": "Select the next coherent content family and keep its runtime assets within the remaining 305208-byte PCK headroom, or first retire/package-compress existing payloads if the next family needs more space.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106748,8 +106757,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_eleven_roads_objectives_completed",
-  "status": "in_progress",
+  "result": "content_eightfold_guarded_reliquary_march_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -106849,9 +106858,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed all fourteen remaining Batch 007 world-state sites, the production Accordfall skirmish, and fourteen distinctive state-art assets as one coherent content family with one consolidated smoke and matching packaged verification.",
+  "summary": "Completed eight guarded reliquaries, six dormant specialty payoff sets, one production 30x18 skirmish, and eight distinctive claimed-state assets as one coherent content family with one consolidated smoke and matching packaged verification.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T03:24:47Z",
+  "updatedAt": "2026-08-30T04:06:40Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

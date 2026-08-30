@@ -14512,6 +14512,32 @@ Completion evidence:
 - three faction landmarks now retain control and daily income, seven objective sites grant exact one-time rewards and scenario flags, and four state variants charge exact repair costs; all fourteen switch to distinct authored controlled, activated, or restored art and survive save-version-9 round trips;
 - the single consolidated fourteen-case gameplay/art/save report passed, followed by repository validation and matching 249640816-byte Linux/Windows export-startup gates with the compact 672x48 atlas present and all source art excluded from the PCK.
 
+## Eightfold Guarded Reliquary March
+
+id: `content-eightfold-guarded-reliquary-march-10184`
+
+Status: completed.
+
+Implementation boundary:
+- complete the eight guarded-reward sites that still lack claimed-state art: Barrow Vault, Drowned Reliquary, Lantern Crown Nave, Hive of Reeds, Glassbound Eyrie, Rust Choir Foundry, Salt-Wight Convoy, and Rootwarden Stockade;
+- activate the dormant defining payoffs on Lantern Crown Nave, Hive of Reeds, Glassbound Eyrie, Rust Choir Foundry, Salt-Wight Convoy, and Rootwarden Stockade through existing spell, town-support, recruit, scouting, route-opening, and claim-flag runtime paths;
+- ship all eight sites and their exact authored neutral guards in one original large skirmish front with two towns, a viable development runway, reactive pressure, and one claim objective per guarded landmark;
+- add one distinctive opened, consecrated, broken, silenced, cleared, or reclaimed frame per site in one compact runtime atlas while preserving the eight original guarded silhouettes.
+
+Completion criteria:
+- every guarded landmark blocks reward collection until its linked encounter is resolved, then grants its exact resources, artifact, new defining payoff, and claim flag once without repeat mutation;
+- Salt-Wight Convoy clears its authored blocking body, Glassbound Eyrie reveals fog, the four recruit sites add their exact neutral auxiliaries, and Lantern Crown Nave teaches its authored spell and contributes town support;
+- all eight sites switch to exact post-claim art and preserve complete authority through save-version-9 round trips;
+- one consolidated eight-case gameplay/art/save smoke, repository validation, and bounded Linux/Windows package startup gates pass after the whole family is complete.
+
+Completion evidence:
+- Eightfold Reliquary March ships as the seventy-fourth authored scenario on a 30x18 map with two towns, seventeen resource placements, four field artifacts, ten encounter fronts, six reactive hooks, and ten victory objectives;
+- all eight exact guards block their linked sites until resolved; all eight grant one-time resource, artifact, and claim-flag rewards, while four rescue exact neutral auxiliaries, Lantern Crown Nave teaches Survey Chain and supports Clauseworks, Glassbound Eyrie reveals six tiles of radius, and Salt-Wight Convoy opens its route body;
+- eight distinct generated claimed-state sources pack into one 384x48 runtime atlas, switch at runtime, and preserve exact save-version-9 authority; the consolidated eight-case smoke, repository validation, Linux boot, and Windows/Wine boot passed with matching 249694792-byte PCKs and source art excluded.
+
+Non-goals:
+- no new reward engine, ship/embarkation system, Native RMG generation/parity change, save-version bump, broad AI/economy/balance redesign, campaign expansion, certification, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

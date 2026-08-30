@@ -6566,6 +6566,86 @@
       "assigned_resource_site_id": "site_withered_rootgate_marker",
       "presentation_role": "restored_state_variant",
       "accessible_description": "Fresh leaves, teal sap-light, and living buds show the Withered Rootgate has been restored."
+    },
+    "resource_site_eightfold_barrow_vault_opened": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [0, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/barrow_vault_opened_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_barrow_vault",
+      "presentation_role": "opened_guarded_reward_state",
+      "accessible_description": "An open stone door, broken seal, empty coffer, and survey lantern show the Barrow Vault has been claimed."
+    },
+    "resource_site_eightfold_drowned_reliquary_recovered": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [48, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/drowned_reliquary_recovered_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_drowned_reliquary",
+      "presentation_role": "recovered_guarded_reward_state",
+      "accessible_description": "An open bronze gate, emptied reliquary, calm water, and recovery lamps show the Drowned Reliquary is secured."
+    },
+    "resource_site_eightfold_lantern_crown_nave_consecrated": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [96, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/lantern_crown_nave_consecrated_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_lantern_crown_nave",
+      "presentation_role": "consecrated_guarded_reward_state",
+      "accessible_description": "Open doors, aligned lamps, a bright crown lantern, and teal floor seal show the Lantern Crown Nave is consecrated."
+    },
+    "resource_site_eightfold_hive_of_reeds_reclaimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [144, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/hive_of_reeds_reclaimed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_hive_of_reeds",
+      "presentation_role": "reclaimed_guarded_reward_state",
+      "accessible_description": "Breached reed towers, fading smoke, a cleared stair, and salvage lamps show the Hive of Reeds has been reclaimed."
+    },
+    "resource_site_eightfold_glassbound_eyrie_secured": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [192, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/glassbound_eyrie_secured_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_glassbound_eyrie",
+      "presentation_role": "secured_guarded_reward_state",
+      "accessible_description": "Calm cyan crystals, repaired access, amber lamps, and survey pennants show the Glassbound Eyrie is secured."
+    },
+    "resource_site_eightfold_rust_choir_foundry_silenced": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [240, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/rust_choir_foundry_silenced_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_rust_choir_foundry",
+      "presentation_role": "silenced_guarded_reward_state",
+      "accessible_description": "A cooled furnace, open vents, slack chains, and teal inspection lamps show the Rust Choir Foundry is silenced."
+    },
+    "resource_site_eightfold_salt_wight_convoy_cleared": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [288, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/salt_wight_convoy_cleared_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_salt_wight_convoy",
+      "presentation_role": "cleared_guarded_route_state",
+      "accessible_description": "Open wagon covers, orderly salvage, warm lamps, and a clear center lane show the Salt-Wight Convoy route is open."
+    },
+    "resource_site_eightfold_rootwarden_stockade_reclaimed": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
+      "atlas_region": [336, 0, 48, 48],
+      "atlas_size": [384, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/rootwarden_stockade_reclaimed_source.png",
+      "source_model": "built_in_image_gen_precise_object_edit_eightfold_guarded_reliquary_atlas",
+      "assigned_resource_site_id": "site_rootwarden_stockade",
+      "presentation_role": "reclaimed_guarded_reward_state",
+      "accessible_description": "An open gate, removed hostile banner, controlled roots, fresh shoots, and ward lamps show the Rootwarden Stockade reclaimed."
     }
   },
   "resource_site_sprites": {
@@ -7010,6 +7090,38 @@
     "site_withered_rootgate_marker": {
       "asset_id": "resource_site_fourteen_marks_withered_rootgate_marker_state",
       "unclaimed_asset_id": "mapobj_withered_rootgate_marker"
+    },
+    "site_barrow_vault": {
+      "asset_id": "resource_site_eightfold_barrow_vault_opened",
+      "unclaimed_asset_id": "mapobj_barrow_vault"
+    },
+    "site_drowned_reliquary": {
+      "asset_id": "resource_site_eightfold_drowned_reliquary_recovered",
+      "unclaimed_asset_id": "mapobj_drowned_reliquary"
+    },
+    "site_lantern_crown_nave": {
+      "asset_id": "resource_site_eightfold_lantern_crown_nave_consecrated",
+      "unclaimed_asset_id": "mapobj_lantern_crown_nave"
+    },
+    "site_hive_of_reeds": {
+      "asset_id": "resource_site_eightfold_hive_of_reeds_reclaimed",
+      "unclaimed_asset_id": "mapobj_hive_of_reeds"
+    },
+    "site_glassbound_eyrie": {
+      "asset_id": "resource_site_eightfold_glassbound_eyrie_secured",
+      "unclaimed_asset_id": "mapobj_glassbound_eyrie"
+    },
+    "site_rust_choir_foundry": {
+      "asset_id": "resource_site_eightfold_rust_choir_foundry_silenced",
+      "unclaimed_asset_id": "mapobj_rust_choir_foundry"
+    },
+    "site_salt_wight_convoy": {
+      "asset_id": "resource_site_eightfold_salt_wight_convoy_cleared",
+      "unclaimed_asset_id": "mapobj_salt_wight_convoy"
+    },
+    "site_rootwarden_stockade": {
+      "asset_id": "resource_site_eightfold_rootwarden_stockade_reclaimed",
+      "unclaimed_asset_id": "mapobj_rootwarden_stockade"
     }
   },
   "artifact_default_sprite": {

@@ -31670,8 +31670,8 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -31682,8 +31682,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_bramble_hedge_watch",
         "guard_encounter_id": "encounter_bramble_hedge_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "standard",
@@ -31692,7 +31692,7 @@
         "guard_encounter_id": "encounter_bramble_hedge_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "the placed Bramble Hedge guard must be cleared before the Barrow Vault reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [
@@ -31704,23 +31704,24 @@
           "gold",
           "ore"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -31864,7 +31865,7 @@
         "guard_encounter_id": "encounter_roadward_lodge_watch",
         "clear_required_for_reward": true,
         "blocks_approach": true,
-        "event_expectation": "guarded reward remains metadata until placed with an existing encounter contract"
+        "event_expectation": "the placed Tidepool Skiffyard guard must be cleared before the Drowned Reliquary reward can resolve"
       },
       "reward_preview": {
         "reward_categories": [
@@ -33096,8 +33097,8 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -33108,8 +33109,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_tidepool_skiffyard_watch",
         "guard_encounter_id": "encounter_tidepool_skiffyard_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -33131,23 +33132,24 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_and_artifact_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -34516,8 +34518,8 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -34528,8 +34530,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_lantern_warren_watch",
         "guard_encounter_id": "encounter_lantern_warren_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -34552,23 +34554,24 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "spell_artifact_and_town_support_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -34929,8 +34932,8 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -34941,8 +34944,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_bogbell_croft_watch",
         "guard_encounter_id": "encounter_bogbell_croft_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -34964,23 +34967,24 @@
           "gold",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "recruit_resource_and_artifact_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -35141,8 +35145,8 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -35153,8 +35157,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_cliffhawk_roost_watch",
         "guard_encounter_id": "encounter_cliffhawk_roost_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "elite",
@@ -35176,23 +35180,24 @@
           "gold",
           "ore"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "recruit_artifact_and_scouting_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -35369,8 +35374,8 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -35381,8 +35386,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_cinder_kiln_watch",
         "guard_encounter_id": "encounter_cinder_kiln_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "elite",
@@ -35404,23 +35409,24 @@
           "gold",
           "ore"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "recruit_resource_and_artifact_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -35576,9 +35582,9 @@
         "clear_required_for_reward": true,
         "visible_guard_cue_required": true,
         "one_time_reward": true,
-        "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "route_hybrid": true,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -35589,8 +35595,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_saltpan_camp_watch",
         "guard_encounter_id": "encounter_saltpan_camp_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "heavy",
@@ -35613,23 +35619,24 @@
           "ore",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "resource_artifact_and_route_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
@@ -36019,8 +36026,8 @@
         "visible_guard_cue_required": true,
         "one_time_reward": true,
         "route_hybrid": false,
-        "metadata_only_guard_contract": true,
-        "runtime_guard_resolution_adopted": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
         "broad_reward_runtime_migration": false
       },
       "guard_link": {
@@ -36031,8 +36038,8 @@
         "clear_required_for_target": true,
         "guard_army_group_id": "army_neutral_bramble_hedge_watch",
         "guard_encounter_id": "encounter_bramble_hedge_watch",
-        "metadata_only": true,
-        "runtime_guard_resolution_adopted": false
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
       },
       "guard_expectation": {
         "tier": "elite",
@@ -36054,23 +36061,24 @@
           "gold",
           "wood"
         ],
-        "artifact_spell_recruit_route_rewards_are_metadata_only": true,
+        "artifact_spell_recruit_route_rewards_are_metadata_only": false,
         "no_rare_resource_activation": true
       },
       "runtime_boundary": {
-        "status": "metadata_only",
-        "live_reward_grants": false,
+        "status": "recruit_artifact_and_objective_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
         "guarded_reward_site_runtime_supported": true,
         "broad_reward_runtime_migration": false,
-        "guard_resolution_runtime_adopted": false,
+        "guard_resolution_runtime_adopted": true,
         "neutral_encounter_migration": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false,
+        "rare_resource_activation": true,
         "market_changes": false,
-        "scenario_placement_migration": false
+        "scenario_placement_migration": true
       },
       "animation_cues": [
         "object_batch006_guarded_reward_idle_placeholder",
