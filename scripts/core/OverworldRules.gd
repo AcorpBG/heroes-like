@@ -1146,7 +1146,7 @@ static func _collect_resource_node_result(
 	var strategic_effects := _apply_resource_site_strategic_effects(session, node, site)
 	var command_effects := _apply_shrine_command_bonus(session, site)
 	var service_effects := strategic_effects if String(site.get("batch003_role", "")) == "repeatable_service" else {}
-	var shrine_effects := strategic_effects.duplicate(true) if String(site.get("batch003_role", "")) == "shrine_progression" else {}
+	var shrine_effects := strategic_effects.duplicate(true) if _resource_site_grants_command_lesson(site) else {}
 	if not command_effects.is_empty():
 		var shrine_messages: Array = shrine_effects.get("messages", [])
 		shrine_messages.append_array(command_effects.get("messages", []))
@@ -1183,7 +1183,7 @@ static func _collect_resource_node_result(
 	for shrine_message in shrine_effects.get("messages", []):
 		messages.append(String(shrine_message))
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
-	if String(site.get("batch003_role", "")) == "shrine_progression":
+	if _resource_site_grants_command_lesson(site):
 		HeroCommandRulesScript.commit_active_hero(session)
 	var artifact_reward := _grant_resource_site_artifact_reward(session, node, site)
 	if bool(artifact_reward.get("applied", false)):
@@ -1317,7 +1317,7 @@ static func _apply_shrine_command_bonus(
 	session: SessionStateStoreScript.SessionData,
 	site: Dictionary
 ) -> Dictionary:
-	if session == null or String(site.get("batch003_role", "")) != "shrine_progression":
+	if session == null or not _resource_site_grants_command_lesson(site):
 		return {}
 	var authored = site.get("hero_command_bonus", {})
 	if not (authored is Dictionary) or authored.is_empty():
@@ -1347,6 +1347,10 @@ static func _apply_shrine_command_bonus(
 		"hero_command_bonus": applied,
 		"messages": ["The shrine grants %s permanently." % ", ".join(labels)],
 	}
+
+static func _resource_site_grants_command_lesson(site: Dictionary) -> bool:
+	return String(site.get("batch003_role", "")) == "shrine_progression" \
+		or String(site.get("runtime_boundary", {}).get("status", "")) == "high_arcanum_live"
 
 static func _open_resource_site_route_body(node: Dictionary, site: Dictionary) -> bool:
 	if not bool(site.get("opens_route_on_claim", false)):

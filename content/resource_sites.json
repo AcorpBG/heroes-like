@@ -12560,6 +12560,167 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_lastroad_bell_spire",
+      "name": "Lastroad Bell Spire",
+      "family": "shrine",
+      "action_label": "Sound the Lastroad Bell",
+      "summary": "A roadward bell answers a commander who can carry its final clear note into battle.",
+      "claim_rewards": {"experience": 140},
+      "hero_command_bonus": {"attack": 1},
+      "learn_spell_id": "spell_beacon_bell_lance_25",
+      "claim_flags": {"high_arcanum_lastroad_bell_sounded": true},
+      "runtime_boundary": {
+        "status": "high_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-sevenfold-high-arcanum-10184",
+      "public_text": {"public_summary": "An ivory road spire bears a bronze signal bell, three lamps, and deeply cut oath grooves.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+    },
+    {
+      "id": "site_siltheart_drum_cairn",
+      "name": "Siltheart Drum Cairn",
+      "family": "shrine",
+      "action_label": "Strike the Siltheart Drum",
+      "summary": "The hide drum wakes a disciplined mire-fury without surrendering the company to it.",
+      "claim_rewards": {"experience": 140},
+      "hero_command_bonus": {"defense": 1},
+      "learn_spell_id": "spell_mire_silt_frenzy_20",
+      "claim_flags": {"high_arcanum_siltheart_drum_struck": true},
+      "runtime_boundary": {
+        "status": "high_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-sevenfold-high-arcanum-10184",
+      "public_text": {"public_summary": "A broad ritual drum rests on wet bogstone beside reed pipes and a sealed silt jar.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+    },
+    {
+      "id": "site_aurora_facet_orrery",
+      "name": "Aurora Facet Orrery",
+      "family": "shrine",
+      "action_label": "Align the Aurora Facets",
+      "summary": "Three wandering lenses settle around a mirror shard and reveal the defensive angle between blows.",
+      "claim_rewards": {"experience": 140},
+      "hero_command_bonus": {"knowledge": 1},
+      "learn_spell_id": "spell_lens_mirror_facet_20",
+      "claim_flags": {"high_arcanum_aurora_facets_aligned": true},
+      "runtime_boundary": {
+        "status": "high_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-sevenfold-high-arcanum-10184",
+      "public_text": {"public_summary": "Three asymmetric crystal lenses circle a suspended mirror shard above a white-gold plinth.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+    },
+    {
+      "id": "site_bloombark_covenant_tree",
+      "name": "Bloombark Covenant Tree",
+      "family": "shrine",
+      "action_label": "Bind the Bloombark Covenant",
+      "summary": "Living roots close around an old greenstone promise and teach bark to bloom beneath a weapon's edge.",
+      "claim_rewards": {"experience": 140},
+      "hero_command_bonus": {"defense": 1},
+      "learn_spell_id": "spell_root_bloom_bark_20",
+      "claim_flags": {"high_arcanum_bloombark_covenant_bound": true},
+      "runtime_boundary": {
+        "status": "high_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-sevenfold-high-arcanum-10184",
+      "public_text": {"public_summary": "A gnarled living stump embraces a greenstone tablet beneath one arch of copper-red blossoms.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+    },
+    {
+      "id": "site_slagbound_clamp_forge",
+      "name": "Slagbound Clamp Forge",
+      "family": "shrine",
+      "action_label": "Set the Slagbound Clamp",
+      "summary": "A severe brass clamp closes on heated basalt and fixes the rhythm of an enemy line in place.",
+      "claim_rewards": {"experience": 140},
+      "hero_command_bonus": {"power": 1},
+      "learn_spell_id": "spell_furnace_slag_clamp_15",
+      "claim_flags": {"high_arcanum_slagbound_clamp_set": true},
+      "runtime_boundary": {
+        "status": "high_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-sevenfold-high-arcanum-10184",
+      "public_text": {"public_summary": "A massive asymmetric brass clamp locks around a basalt anvil beside a banked coal furnace.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+    },
+    {
+      "id": "site_mourning_tide_obelisk",
+      "name": "Mourning Tide Obelisk",
+      "family": "shrine",
+      "action_label": "Ring the Mourning Tide",
+      "summary": "The black glass bell draws a narrow funeral fog that binds hostile feet without obscuring friendly purpose.",
+      "claim_rewards": {"experience": 140},
+      "hero_command_bonus": {"knowledge": 1},
+      "learn_spell_id": "spell_veil_mourning_fogbind_20",
+      "claim_flags": {"high_arcanum_mourning_tide_rung": true},
+      "runtime_boundary": {
+        "status": "high_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-sevenfold-high-arcanum-10184",
+      "public_text": {"public_summary": "A salt-dark memorial stone stands inside a whale-bone arch hung with one black glass bell.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
+    },
+    {
+      "id": "site_sevencount_verdict_table",
+      "name": "Seven-Count Verdict Table",
+      "family": "shrine",
+      "action_label": "Render the Seven-Count Verdict",
+      "summary": "Seven unequal tallies and one plumb weight resolve a battlefield debt into a final measured sentence.",
+      "claim_rewards": {"experience": 140},
+      "hero_command_bonus": {"power": 1},
+      "learn_spell_id": "spell_old_measure_tally_tally_20",
+      "claim_flags": {"high_arcanum_sevencount_verdict_rendered": true},
+      "runtime_boundary": {
+        "status": "high_arcanum_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "content_batch_id": "content-sevenfold-high-arcanum-10184",
+      "public_text": {"public_summary": "A low octagonal counting table carries seven unequal ivory pegs, a brass plumb, and a slate disk.", "no_internal_debug_score_fields": true, "large_text_panel_required": false}
     }
   ]
 }

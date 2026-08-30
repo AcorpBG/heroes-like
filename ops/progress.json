@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the six-faction auxiliary charter-hall batch with repeatable build, growth, muster, AI, art, save, development-balance, and matching Linux/Windows package evidence.",
+  "currentNotes": "Completed the Sevenfold High Arcanum batch with seven live one-time battle-spell landmarks, exact spell presentation, original compact art, save continuity, one consolidated smoke, repository validation, and matching Linux/Windows packages.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceId": "content-six-auxiliary-charter-halls-10184",
-  "currentSliceNotes": "Completed the six-faction auxiliary charter-hall batch: six existing scenario-earned specialists now have faction-specific build, weekly-growth, live muster, AI valuation, exact art, and save-version-9 routes in designated host towns. Added six distinct generated/curated originals and runtime icons with provenance. One consolidated six-faction popup/gameplay/art/save smoke and full repository validation pass; Linux and Windows export/startup pass with matching 246024472-byte PCKs, 3975528 bytes below the unchanged ceiling and source art excluded.",
+  "currentSlice": "content-sevenfold-high-arcanum-10184",
+  "currentSliceId": "content-sevenfold-high-arcanum-10184",
+  "currentSliceNotes": "Completed seven original one-time spell landmarks in Third Hearths Confluence. All seven grant exact tier-five battle spells, 140 experience, command lessons, unique flags, exact atlas regions, repeat-safe claims, and save-version-9 continuity. The consolidated smoke and repository validation pass; Linux and Windows boot matching 246069684-byte PCKs with 3930316 bytes of headroom and source art excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six auxiliary charter halls 10184",
-  "currentSliceUpdatedAt": "2026-08-30T13:31:57Z",
+  "currentSliceTitle": "content sevenfold high arcanum 10184",
+  "currentSliceUpdatedAt": "2026-08-30T14:00:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21190,19 +21190,24 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "content/towns.json",
-    "art/towns/runtime/backdrops/complete_identities",
-    "art/towns/source/generated/complete_town_backdrops/manifest.json",
-    "tests/complete_town_backdrop_runtime_report.gd",
-    "tests/complete_town_backdrop_runtime_report.tscn",
+    "content/resource_sites.json",
+    "content/scenarios.json",
+    "content/spells.json",
+    "scripts/autoload/ContentService.gd",
+    "scripts/core/OverworldRules.gd",
+    "art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
+    "art/overworld/source/generated/resource_sites/sevenfold_high_arcanum_wave1/manifest.json",
+    "tests/sevenfold_high_arcanum_smoke.py",
+    "tests/sevenfold_high_arcanum_smoke.gd",
+    "tests/sevenfold_high_arcanum_smoke.tscn",
     "tests/validate_repo.py",
     "tests/packaging_linux_export_smoke.py",
     "tests/packaging_windows_export_smoke.py",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-complete-town-screen-identity-set-20260830",
-  "latestFinding": "All twenty production towns now select distinct exact-id 1600x900 scenery while six detached faction fallbacks remain valid. One consolidated forty-case live smoke passed both supported viewports with exact save-version-9 authority; matching 244499456-byte Linux and Windows PCKs boot with all twenty exact and six fallback textures present, source originals excluded, and 5500544 bytes of ceiling headroom.",
+  "latestEvidenceId": "content-sevenfold-high-arcanum-20260830",
+  "latestFinding": "Seven original High Arcanum landmarks now teach seven distinct tier-five battle spells through live one-time Third Hearths interactions with exact rewards, flags, save continuity, specific spell descriptions, and one compact original atlas. The consolidated seven-case smoke, repository gate, and matching 246069684-byte Linux/Windows package boots pass with 3930316 bytes of headroom.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106503,6 +106508,16 @@
       "startedAt": "2026-08-30T13:01:04Z",
       "notes": "Completed the six-faction auxiliary charter-hall batch: six existing scenario-earned specialists now have faction-specific build, weekly-growth, live muster, AI valuation, exact art, and save-version-9 routes in designated host towns. Added six distinct generated/curated originals and runtime icons with provenance. One consolidated six-faction popup/gameplay/art/save smoke and full repository validation pass; Linux and Windows export/startup pass with matching 246024472-byte PCKs, 3975528 bytes below the unchanged ceiling and source art excluded.",
       "completedAt": "2026-08-30T13:31:57Z"
+    },
+    {
+      "id": "content-sevenfold-high-arcanum-10184",
+      "title": "content sevenfold high arcanum 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T14:00:32Z",
+      "startedAt": "2026-08-30T13:40:00Z",
+      "notes": "Completed seven one-time battle-spell landmarks across Third Hearths Confluence with exact tier-five spell rewards, progression payloads, unique flags, repeat-safe collection, save version 9, specific capstone descriptions, and one reviewed 336x48 original atlas. One consolidated seven-case gameplay/battle/art/save smoke and repository validation pass; Linux and Windows packages boot at matching 246069684 bytes with 3930316 bytes of headroom and source art excluded.",
+      "completedAt": "2026-08-30T14:00:32Z"
     }
   ],
   "project": "heroes-like",
@@ -106512,8 +106527,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Exact scenic identity is complete across all twenty production towns; broader production content breadth, encounter variety, faction balance, campaign depth, and whole-game release readiness remain open.",
-  "remainingWork": "Audit and register the next substantial live gameplay-content family, prioritizing a real faction, encounter, or scenario breadth gap and retaining one combined smoke at the batch boundary.",
+  "remainingGap": "Seven tier-five battle spells now have exact optional adventure-map acquisition and presentation, but broader production content breadth, encounter variety, faction balance, campaign depth, and whole-game release readiness remain open.",
+  "remainingWork": "Audit and register the next substantial live gameplay-content family, prioritizing a real unit, encounter, faction, or scenario breadth gap and retaining one combined smoke at the batch boundary.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106944,7 +106959,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_complete_town_screen_identity_set_completed",
+  "result": "content_sevenfold_high_arcanum_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -107045,9 +107060,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed the Veil-Coast Sounding Circuit: six formerly dormant shoreline services now provide live one-cost two-way land transit with distinct operational art inside a new 24x14 Veilmourn skirmish, validated as one batch and through Linux and Windows packages.",
+  "summary": "Completed Sevenfold High Arcanum: seven original optional landmarks now teach distinct tier-five battle spells across Third Hearths Confluence with exact progression, art, save, battle-resolution, and Linux/Windows package evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T13:31:57Z",
+  "updatedAt": "2026-08-30T14:00:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

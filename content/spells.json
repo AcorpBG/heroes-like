@@ -839,7 +839,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "enemy_selected",
-      "description": "A Beacon working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Drive a resonant lance into one enemy stack, dealing heavy damage and staggering its initiative and cohesion for three rounds; wounded targets suffer an additional finishing strike.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 77,
@@ -1079,7 +1079,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "ally_active",
-      "description": "A Mire working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Wake one allied stack's disciplined mire-fury for three rounds, sharply increasing attack while reinforcing defense and cohesion.",
       "effect": {
         "type": "attack_buff",
         "amount": 5,
@@ -1432,7 +1432,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "ally_active",
-      "description": "A Lens working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Turn a prismatic facet around one allied stack for three rounds, greatly increasing defense while reflecting a smaller measure of force into its attacks.",
       "effect": {
         "type": "defense_buff",
         "amount": 5,
@@ -1771,7 +1771,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "ally_active",
-      "description": "A Root working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Grow flowering armor around one allied stack for three rounds, greatly increasing defense while lending rooted weight to its attacks.",
       "effect": {
         "type": "defense_buff",
         "amount": 5,
@@ -2023,7 +2023,7 @@
       "context": "battle",
       "mana_cost": 13,
       "target_mode": "enemy_selected",
-      "description": "A Furnace working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Close an incandescent slag clamp around one enemy stack, reducing its initiative and cohesion for three rounds.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -2412,7 +2412,7 @@
       "context": "battle",
       "mana_cost": 13,
       "target_mode": "enemy_selected",
-      "description": "A Veil working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Bind one enemy stack in a mourning sea-fog for three rounds, harrying its initiative and cohesion.",
       "effect": {
         "type": "control_enemy",
         "status_effect": {
@@ -2770,7 +2770,7 @@
       "context": "battle",
       "mana_cost": 12,
       "target_mode": "enemy_selected",
-      "description": "An Old Measure working that gives the commander another tactical choice without changing the army roster.",
+      "description": "Render a measured verdict against one enemy stack, dealing heavy damage and reducing defense and initiative for three rounds; wounded targets pay an additional tally.",
       "effect": {
         "type": "damage_enemy",
         "base_damage": 74,
