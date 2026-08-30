@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 15,
+  "player_facing_active_campaign_count": 16,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -2879,6 +2879,153 @@
             {"type": "scenario_flag_true", "scenario_id": "gaugesavant-milestone-calibration", "flag": "gaugesavant_milestone_arsenal_watch_secured"}
           ],
           "carryover_import": {"from_scenario_id": "gaugesavant-milestone-calibration", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"}
+        }
+      ]
+    },
+    {
+      "id": "campaign_wakebound_atlas",
+      "name": "The Wakebound Atlas",
+      "description": "Four Veilmourn commanders prove passages through lockfire, living root, drowned fog, and frost, then bind the routes into an atlas that records every danger instead of pretending the coast is tame.",
+      "summary": "A four-chapter Veilmourn campaign that brings every remaining faction hero into campaign play through exact signature victories and independently charted passages.",
+      "region": "Highwater Lockfire, Rootgate Vigil, Worldroot Wake, and Frostwharf House",
+      "emblem_id": "campaign_emblem_wakebound_atlas",
+      "emblem_path": "res://art/campaigns/runtime/emblems/wakebound_atlas.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/wakebound_atlas_source.png",
+      "emblem_alt_text": "An open soot-black sailcloth chart carries a quenched chain buoy, root-bound ghost mast, split living-root seal, and frost-rimmed wharf key around a hollow silver compass socket.",
+      "emblem_source_sha256": "962970745a4616b25a0d449bb33b3faf3d2c556e77f0a351f95dd5663c94a79e",
+      "emblem_runtime_sha256": "a99d541911b1f396e912fa43178627a37a13418acbd7766c97eebb66a1bc61f4",
+      "arc_goal": "Win four exact route proofs and preserve their hazards in one public atlas while every commander's skill, army, rare stores, and personal memory remain local to the passage that proved them.",
+      "completion_title": "Four Passages, None Erased",
+      "completion_summary": "The Wakebound Atlas opens four lawful roads without redrawing fire, root, fog, or frost as harmless water; every route remains useful because every warning remains visible.",
+      "starting_scenario_id": "keelwarden-lockfire-run",
+      "scenarios": [
+        {
+          "scenario_id": "keelwarden-lockfire-run",
+          "seal_id": "campaign_chapter_seal_keelwarden_lockfire_run",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/lockfire_cold_channel.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/lockfire_cold_channel_source.png",
+          "seal_alt_text": "A black-iron lock buoy loses one burning chain link beneath a cold blue wake while a small tide bell hangs clear of the break.",
+          "seal_source_sha256": "83cae48fd3b7c5d4dfb8cde93c3ca45b982f387beeb8b09e3401c405406e1512",
+          "seal_runtime_sha256": "71904fd8b9df469aa426b2f0c9a50d42b75517706c5cfa50d16ef87c43d5d5e7",
+          "label": "Chapter I: Quench the Lockfire Line",
+          "description": "Jessa sinks Highwater's burning chain buoy and records the first cold channel beneath its broken boom.",
+          "chapter_index": 1,
+          "chapter_title": "Leave Fire Outside the Channel",
+          "status_hint": "Break the Lockfire Boom to record the first Wakebound passage before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior signature route proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "A chart begins where passage is denied. Jessa must cut Highwater's burning lock-chain, cool the buoy, and mark a channel that remains navigable after the flames return.",
+          "intel": "Two Lockflame screens hold the boom while Highwater Keep controls the eastern bank and a Storm Bell Wreck guards the secondary channel.",
+          "stakes": "If the atlas records only calm water, its first captain will mistake an ambush for an omission.",
+          "aftermath_victory": "Jessa leaves the broken hot link outside a cold blue line: the first passage records both opening and danger.",
+          "aftermath_defeat": "The lockfire chain keeps the channel closed and the Wakebound Atlas begins with an invented road.",
+          "journal_victory": "Jessa recorded the Lockfire Cold Channel as passage 1 of the Wakebound Atlas.",
+          "journal_defeat": "Jessa failed to record the first Wakebound passage.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {"gold": 400, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["keelwarden_lockfire_chain_buoy_broken"]
+          }
+        },
+        {
+          "scenario_id": "wakeoracle-rootwake-vigil",
+          "seal_id": "campaign_chapter_seal_wakeoracle_rootwake_vigil",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/rootwake_ghost_mast.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/rootwake_ghost_mast_source.png",
+          "seal_alt_text": "A narrow pale ghost mast wrapped in two black living roots leaves a forked silver wake beneath one dim memory lantern.",
+          "seal_source_sha256": "b66246a7bb6ce951ae9486498cdb20dd098f400056a3935ad8f56d2532673220",
+          "seal_runtime_sha256": "95fb3959dd335cbfb417edb3314bf180ad9a21f2d8ecb0850d9b380c107b8b04",
+          "label": "Chapter II: Read the Rootwake",
+          "description": "Morwen releases the sleepless ghost mast and charts the lawful fork hidden inside its living-root wake.",
+          "chapter_index": 2,
+          "chapter_title": "Follow the Wake That Remembers",
+          "status_hint": "Break the Rootwake Vigil to record the second Wakebound passage before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior signature route proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "A cold channel can still drift into a wake that remembers every hull it caught. Morwen must release Rootgate's ghost mast and chart the fork without silencing its warning.",
+          "intel": "Two Graftbound screens defend the mast while Rootgate Nursery anchors pressure beyond the fog road.",
+          "stakes": "A route stripped of memory becomes a trap repeated by every captain who trusts the clean line.",
+          "aftermath_victory": "Morwen maps the forked silver wake and keeps the black roots visible beside it as the second passage.",
+          "aftermath_defeat": "The ghost mast remains sleepless and the inherited channel ends in an unrecorded root snare.",
+          "journal_victory": "Morwen recorded the Rootwake Ghost Mast as passage 2 of the Wakebound Atlas.",
+          "journal_defeat": "Morwen failed to record the second Wakebound passage.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "keelwarden-lockfire-run", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "keelwarden-lockfire-run", "flag": "keelwarden_lockfire_chain_buoy_broken"}
+          ],
+          "carryover_import": {"from_scenario_id": "keelwarden-lockfire-run", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {"gold": 400, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["wakeoracle_rootwake_ghost_mast_broken"]
+          }
+        },
+        {
+          "scenario_id": "oriflag-worldroot-wake",
+          "seal_id": "campaign_chapter_seal_oriflag_worldroot_wake",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/worldroot_wake_passage.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/worldroot_wake_passage_source.png",
+          "seal_alt_text": "A thick living-root road seal splits into two unequal jaws around a black-silver navigation spike and narrow teal wake.",
+          "seal_source_sha256": "4ca072bfbf73d6a636ead737aa2b7ab458b2413e16c409bca2daf3b5c616f2d0",
+          "seal_runtime_sha256": "c28dc69415c1bcc7a3c7355dca03bcd7754b5a193049e0dfd44fb9679079a2c0",
+          "label": "Chapter III: Split the Worldroot Seal",
+          "description": "Damar breaks the living road seal and pins the opened coast passage to an exact navigation spike.",
+          "chapter_index": 3,
+          "chapter_title": "Open the Coast Without Uprooting It",
+          "status_hint": "Break the Worldroot Wake Seal to record the third Wakebound passage before completing the board.",
+          "carryover_summary": "Only capped common stores and the prior signature route proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Two passages now survive fire and memory, but the hidden coast road is closed by a living seal. Damar must split the obstruction without redrawing the root itself as empty terrain.",
+          "intel": "Two Graftbound screens cover the seal while Graftroot Caravan holds the far end of the ascendant road.",
+          "stakes": "An atlas that opens a road by erasing what lived there is only conquest rendered at a smaller scale.",
+          "aftermath_victory": "Damar fixes the split seal around a narrow teal wake: the third passage records an opening without deleting its cost.",
+          "aftermath_defeat": "The Worldroot seal remains closed and the atlas cannot distinguish navigation from removal.",
+          "journal_victory": "Damar recorded the Worldroot Wake Passage as passage 3 of the Wakebound Atlas.",
+          "journal_defeat": "Damar failed to record the third Wakebound passage.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "wakeoracle-rootwake-vigil", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "wakeoracle-rootwake-vigil", "flag": "wakeoracle_rootwake_ghost_mast_broken"}
+          ],
+          "carryover_import": {"from_scenario_id": "wakeoracle-rootwake-vigil", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.15,
+            "resource_caps": {"gold": 400, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["oriflag_worldroot_wake_seal_broken"]
+          }
+        },
+        {
+          "scenario_id": "obituaryink-frostwharf-house",
+          "seal_id": "campaign_chapter_seal_obituaryink_frostwharf_house",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/frostwharf_register.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/frostwharf_register_source.png",
+          "seal_alt_text": "A frost-rimmed wharf key crosses a small black obituary ledger beside a bent mooring hook and pale salt-glass bead.",
+          "seal_source_sha256": "31aa3db6435c9afa83bd778c8e22e03f50ca53781c74c5feb162eb654c293bd4",
+          "seal_runtime_sha256": "22d058f285c8d82a6218a89eb2bb396b9073b40815e7eb0ea1072eb22cc635b6",
+          "label": "Chapter IV: Close the Frostwharf Register",
+          "description": "Thir clears the frozen watch, keys every earlier route to its warning, and closes the atlas without sealing it shut.",
+          "chapter_index": 4,
+          "chapter_title": "Record Every Arrival and Loss",
+          "status_hint": "Clear the Frostwharf House Watch to record the fourth passage and complete the Wakebound Atlas.",
+          "carryover_summary": "Only capped common stores and the prior signature route proof cross each boundary; hero progression, spells, artifacts, units, and rares remain local.",
+          "briefing": "Three open passages remain separate until someone records who arrived, who did not, and what each road demanded. Thir must clear Frostwharf House and close the register without locking later captains out of amendment.",
+          "intel": "Two Lockflame screens defend the watch while Riverwatch controls the inland claim beyond the frozen wharf.",
+          "stakes": "A finished atlas that cannot record loss will send the next fleet into every danger its makers survived.",
+          "aftermath_victory": "Thir keys four passages to four preserved warnings and leaves the register clasp open for the next honest correction.",
+          "aftermath_defeat": "Frostwharf stays closed and the three inherited routes remain journeys without accountable arrivals.",
+          "journal_victory": "Thir recorded the Frostwharf Register as passage 4 and completed the Wakebound Atlas.",
+          "journal_defeat": "Thir failed to complete the Wakebound Atlas.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "oriflag-worldroot-wake", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "oriflag-worldroot-wake", "flag": "oriflag_worldroot_wake_seal_broken"}
+          ],
+          "carryover_import": {"from_scenario_id": "oriflag-worldroot-wake", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"}
         }
       ]
     }

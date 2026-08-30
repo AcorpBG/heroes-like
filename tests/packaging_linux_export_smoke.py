@@ -245,6 +245,7 @@ REQUIRED_CAMPAIGN_EMBLEM_NAMES = (
     "briarwheel_covenant", "ashen_ledger", "last_bell_sounding",
     "sixfold_testament", "horn_glass_accord", "unbound_road_ledger",
     "mireglass_counterpoint", "rootbound_canticles", "fivefold_assay",
+    "wakebound_atlas",
 )
 REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/emblems/{emblem_name}.png.import"
@@ -274,7 +275,8 @@ REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES = (
     "ironroot_rail", "saltseed_bell", "cinder_graft", "copse_whistle",
     "orchard_measure", "switchback_cairn", "peat_chain_tally",
     "gorefen_quenchmark", "obsidian_heatproof", "milestone_caliper",
-    "dustjack_balance",
+    "dustjack_balance", "lockfire_cold_channel", "rootwake_ghost_mast",
+    "worldroot_wake_passage", "frostwharf_register",
 )
 REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/chapter_seals/{seal_name}.png.import"

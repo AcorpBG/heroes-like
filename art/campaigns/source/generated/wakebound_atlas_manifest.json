@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "campaign_id": "campaign_wakebound_atlas",
+  "generation_mode": "built_in_image_gen_emblem_and_encounter_derived_chapter_seals",
+  "raw_generated_emblem_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-15dd43df-f475-44fb-af56-5c8d76a7d678.png",
+  "emblem": {
+    "id": "campaign_emblem_wakebound_atlas",
+    "source_path": "res://art/campaigns/source/generated/emblems/wakebound_atlas_source.png",
+    "runtime_path": "res://art/campaigns/runtime/emblems/wakebound_atlas.png",
+    "source_sha256": "962970745a4616b25a0d449bb33b3faf3d2c556e77f0a351f95dd5663c94a79e",
+    "runtime_sha256": "a99d541911b1f396e912fa43178627a37a13418acbd7766c97eebb66a1bc61f4",
+    "prompt": "An open soot-black sailcloth atlas carries a broken lock-chain buoy, root-entangled ghost mast, split living-root seal, and frost-rimmed wharf key around a hollow silver compass socket; original painterly fantasy strategy emblem on genuine transparency; no text, shield, crown, franchise reference, or watermark."
+  },
+  "chapter_seals": [
+    {
+      "id": "campaign_chapter_seal_keelwarden_lockfire_run",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ad8e9026-c41a-4cf5-b20f-2b17d77a6d75.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/lockfire_cold_channel_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/lockfire_cold_channel.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/outer_reach_contracts/lockfire_chain_buoy_source.png",
+      "source_sha256": "83cae48fd3b7c5d4dfb8cde93c3ca45b982f387beeb8b09e3401c405406e1512",
+      "runtime_sha256": "71904fd8b9df469aa426b2f0c9a50d42b75517706c5cfa50d16ef87c43d5d5e7"
+    },
+    {
+      "id": "campaign_chapter_seal_wakeoracle_rootwake_vigil",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1f224f34-cd41-470a-86c7-ca9fbfb7dd5b.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/rootwake_ghost_mast_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/rootwake_ghost_mast.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/outer_reach_contracts/rootwake_ghost_mast_source.png",
+      "source_sha256": "b66246a7bb6ce951ae9486498cdb20dd098f400056a3935ad8f56d2532673220",
+      "runtime_sha256": "95fb3959dd335cbfb417edb3314bf180ad9a21f2d8ecb0850d9b380c107b8b04"
+    },
+    {
+      "id": "campaign_chapter_seal_oriflag_worldroot_wake",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-16b0b9f6-5e7a-4e49-bb0b-a477c6529d77.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/worldroot_wake_passage_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/worldroot_wake_passage.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/ascendant_companies/worldroot_wake_seal_source.png",
+      "source_sha256": "4ca072bfbf73d6a636ead737aa2b7ab458b2413e16c409bca2daf3b5c616f2d0",
+      "runtime_sha256": "c28dc69415c1bcc7a3c7355dca03bcd7754b5a193049e0dfd44fb9679079a2c0"
+    },
+    {
+      "id": "campaign_chapter_seal_obituaryink_frostwharf_house",
+      "raw_generated_path": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-7ba14fd3-4ae7-40e4-a963-2ec7fb3917e4.png",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/frostwharf_register_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/frostwharf_register.png",
+      "derived_from": "res://art/overworld/source/generated/encounters/waywatch_trials/frostwharf_house_watch_source.png",
+      "source_sha256": "31aa3db6435c9afa83bd778c8e22e03f50ca53781c74c5feb162eb654c293bd4",
+      "runtime_sha256": "22d058f285c8d82a6218a89eb2bb396b9073b40815e7eb0ea1072eb22cc635b6"
+    }
+  ]
+}

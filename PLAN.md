@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-brasshollow-fivefold-assay-campaign-10184`, which brings all five previously campaign-unrepresented Brasshollow heroes and their production boards into one exact proof-gated campaign.
-- Current package boundary: both release exports measure 249390152 bytes, 609848 bytes below the unchanged 250000000-byte ceiling. Runtime campaign art remains compact while generated source originals and development reports remain excluded on both platforms.
+- Most recently completed implementation slice: `content-veilmourn-wakebound-atlas-campaign-10184`, which brings all four previously campaign-unrepresented Veilmourn heroes and their production boards into one exact route-proof campaign.
+- Current package boundary: both release exports measure 249460176 bytes, 539824 bytes below the unchanged 250000000-byte ceiling. Runtime campaign art remains compact while generated source originals and development reports remain excluded on both platforms.
 
 ## Eleven Roads And Objectives
 
@@ -15033,6 +15033,39 @@ Implementation boundary:
 Completion criteria:
 - all five previously campaign-unrepresented Brasshollow heroes and their boards are playable through exact sequential unlocks while remaining available in skirmish;
 - one consolidated live five-chapter smoke creates every authored battle payload, proves signature-gated progression, bounded resource-only carryover, save round trips, menu art ownership, and representative visual captures after the complete batch is implemented;
+- repository validation and sequential Linux/Windows packaged startup pass with matching PCKs below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, unit, building, encounter, battle rule, balance, strategic AI, save schema, native RMG, signing, publication, whole-game, or release-readiness change or claim;
+- no copied Heroes campaign, map, character, object, heraldry, icon, name, text, or protected visual expression.
+
+## Veilmourn Wakebound Atlas Campaign
+
+id: `content-veilmourn-wakebound-atlas-campaign-10184`
+
+Status: completed.
+
+Completion result:
+- The Wakebound Atlas is the sixteenth player-facing campaign and connects Jessa Keelwarden, Morwen Wakeoracle, Damar Oriflag, and Thir Obituary-Ink across four existing production boards while preserving each board's skirmish availability;
+- every chapter requires the prior victory and exact prior route-opening proof, carries only fifteen percent of common stores within 400 gold, 2 wood, and 2 ore caps, and transfers no hero progression, spells, artifacts, units, or faction rares;
+- one original transparent 128x128 atlas emblem and four distinct 64x64 encounter-derived seals ship with non-color descriptions, exact generated-source provenance, menu ownership, and package inclusion;
+- the single consolidated smoke passes all four chapter unlocks, thirteen live battle payloads, four route proofs, bounded carryover, save-version-9 round trips, five exact art identities, and four representative board captures;
+- repository validation and sequential Linux/Windows packaged boots pass with matching 249460176-byte PCKs, 539824 bytes below the unchanged ceiling.
+
+Current finding:
+- Veilmourn has the weakest remaining campaign representation at six of ten heroes, while Embercourt, Mireclaw, and Sunvault each have seven and Brasshollow and Thornwake now have all ten;
+- Jessa Keelwarden, Morwen Wakeoracle, Damar Oriflag, and Thir Obituary-Ink each own a production-ready 11x6 skirmish board, exact hero and encounter art, complete objectives, and a signature route-opening outcome, but none can currently enter campaign play;
+- their Lockfire Chain Buoy, Rootwake Ghost Mast, Worldroot Wake Seal, and Frostwharf House Watch outcomes already expose exact persistent flags suitable for one source-backed chartmaking arc.
+
+Implementation boundary:
+- connect the four existing production boards into The Wakebound Atlas, a sequential Veilmourn campaign about proving and recording four independent passages through fire, root, fog, and frost;
+- require the prior board's victory and exact signature route flag for each unlock, carry only modest capped common stores between different commanders, and retain no hero progression, spells, artifacts, units, or faction rares;
+- create one original Wakebound Atlas emblem and four distinct encounter-derived chapter seals with transparent runtime assets, non-color descriptions, generated-source provenance, menu discoverability, and Linux/Windows package inclusion;
+- preserve every board's skirmish availability, encounters, objectives, balance, AI, save version 9, deterministic behavior, source-art package exclusion, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all four previously campaign-unrepresented Veilmourn heroes and their boards are playable through exact sequential unlocks while remaining available in skirmish;
+- one consolidated live four-chapter smoke creates all thirteen authored battle payloads, proves signature-gated progression, bounded resource-only carryover, save round trips, menu art ownership, and representative visual captures after the complete batch is implemented;
 - repository validation and sequential Linux/Windows packaged startup pass with matching PCKs below the unchanged ceiling.
 
 Non-goals:
