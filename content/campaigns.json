@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 9,
+  "player_facing_active_campaign_count": 10,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -1492,6 +1492,223 @@
             "artifacts": true,
             "flags_prefix": "carryover_"
           }
+        }
+      ]
+    },
+    {
+      "id": "campaign_sixfold_testament",
+      "name": "The Sixfold Testament",
+      "description": "Six commanders follow six guarded relic roads, each leaving one sworn witness for the next faction until the false meridian can be broken.",
+      "summary": "A six-chapter cross-faction campaign about guarded legendary relics, bounded shared stores, and evidence passed between commanders without transferring their personal power.",
+      "region": "The Six Relic Roads",
+      "emblem_id": "campaign_emblem_sixfold_testament",
+      "emblem_path": "res://art/campaigns/runtime/emblems/sixfold_testament.png",
+      "emblem_source_path": "res://art/campaigns/source/generated/emblems/sixfold_testament_source.png",
+      "emblem_alt_text": "Six different roads and landscape fragments converge around a small oath flame inside a weathered circular frame.",
+      "emblem_source_sha256": "77d25dbaad3584214313867ab04fe6cd94d831a9ff9bbadf799c28da75188f94",
+      "emblem_runtime_sha256": "fc6dafad1784c2020bbf0182897f92faea2b91038f939812e9f83c5a6bd0091e",
+      "arc_goal": "Secure all six guarded faction relics, pass an unbroken chain of sworn evidence between their keepers, and use the final testimony to erase the false meridian.",
+      "completion_title": "Six Roads Bear Witness",
+      "completion_summary": "Every relic remains with its rightful commander, but their six testimonies now agree on one true road beyond the false meridian.",
+      "starting_scenario_id": "rainledger-cinder-convergence",
+      "scenarios": [
+        {
+          "scenario_id": "rainledger-cinder-convergence",
+          "seal_id": "campaign_chapter_seal_rainledger_cinder_convergence",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/lantern_assize.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/lantern_assize_source.png",
+          "seal_alt_text": "A sealed assize lantern burns between two small river-gate leaves above a straight road.",
+          "seal_source_sha256": "68edcd1044ba26e00aa58ca27d6e0a18e5003398f9bc49fc8733fe64c6573c01",
+          "seal_runtime_sha256": "4a23d727d7d06c02d3dd6ff33f7654a0bd8f81aa2bc3fa33b9bbde8c7a7a924b",
+          "label": "Chapter I: Rainledger Cinder Census",
+          "description": "Belis Rainledger must close the convergence and recover the Lockfire Assize Seal from the Lantern Crown Nave.",
+          "chapter_index": 1,
+          "chapter_title": "Seal the First Testimony",
+          "status_hint": "Begin the six-road chain by securing the Embercourt relic witness.",
+          "carryover_summary": "Exports only bounded common stores and the consecrated-nave testimony; Belis keeps all personal growth, spells, and relics.",
+          "briefing": "A forged census has made every crossing answer to a different ledger. Belis must retake the convergence and open the guarded Lantern Crown Nave.",
+          "intel": "The nave guard controls the only testimony whose ember cannot be rewritten by a later claimant.",
+          "stakes": "Without the Lockfire seal, the next commander receives supplies but no proof that the first road was lawfully opened.",
+          "aftermath_victory": "The nave is consecrated, the Lockfire seal remains with Belis, and a sworn copy travels into the mire.",
+          "aftermath_defeat": "The cinder census fragments into rival writs and the six-road chain ends before it begins.",
+          "journal_victory": "Belis closed the census and sealed the first testimony at Lantern Crown Nave.",
+          "journal_defeat": "Belis could not bind the Rainledger roads into one lawful account.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.2,
+            "resource_caps": {"gold": 600, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["lantern_crown_nave_consecrated"]
+          }
+        },
+        {
+          "scenario_id": "fenwake-bogbell-convergence",
+          "seal_id": "campaign_chapter_seal_fenwake_bogbell_convergence",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/miremoon_cadence.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/miremoon_cadence_source.png",
+          "seal_alt_text": "A crescent-jawed mire drum hangs over three reed ripples and a hooked hunt road.",
+          "seal_source_sha256": "0862c55fac2f3587952c923ad29e31d4ade8331c1fc8a554cee2d1b91b26aec6",
+          "seal_runtime_sha256": "ae1a8cdb5f687d839a19a15a781d7286b5c1855dbb884ee76119a06552147646",
+          "label": "Chapter II: Fenwake Bogbell Cadence",
+          "description": "Zhorra Fenwake follows the first sworn copy into the reeds and reclaims the Miremoon Hunt Drum.",
+          "chapter_index": 2,
+          "chapter_title": "Answer the Miremoon Beat",
+          "status_hint": "Use the Rainledger testimony to distinguish the true hunt road from a decoy wake.",
+          "carryover_summary": "Imports bounded common stores and prior evidence, then exports the reclaimed-hive testimony without transferring either hero's relics.",
+          "briefing": "The mire repeats every footfall as a false pursuit. Zhorra must close the Bogbell fronts and reclaim the guarded Hive of Reeds.",
+          "intel": "The Miremoon Drum answers only the cadence recorded by a lawfully opened road.",
+          "stakes": "A false beat will send the next witness toward a reflected horizon instead of the true meridian.",
+          "aftermath_victory": "The hive is reclaimed, the Miremoon beat is fixed, and Zhorra sends its cadence toward the noon glass.",
+          "aftermath_defeat": "The reeds swallow both cadence and testimony, leaving the next road without a bearing.",
+          "journal_victory": "Zhorra reclaimed the Hive of Reeds and made the second testimony audible.",
+          "journal_defeat": "Zhorra lost the true beat among the Fenwake decoys.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "rainledger-cinder-convergence", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "rainledger-cinder-convergence", "flag": "lantern_crown_nave_consecrated"}
+          ],
+          "carryover_import": {"from_scenario_id": "rainledger-cinder-convergence", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.2,
+            "resource_caps": {"gold": 600, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["hive_of_reeds_reclaimed"]
+          }
+        },
+        {
+          "scenario_id": "halometer-icehook-convergence",
+          "seal_id": "campaign_chapter_seal_halometer_icehook_convergence",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/noonglass_meridian.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/noonglass_meridian_source.png",
+          "seal_alt_text": "An open ring of noon-glass discs surrounds a forked sight arm aligned to one sharp horizon.",
+          "seal_source_sha256": "2fedd63c6ff359024e2b9ec510db3fef66be5c285687281ea26031db648641b6",
+          "seal_runtime_sha256": "47df4e2e1665329cdfd932526433de665ab9ebef527f0a544ccaa0406ab3f765",
+          "label": "Chapter III: Halometer Icehook Meridian",
+          "description": "Mirro Halometer calibrates the mire cadence against the Glassbound Eyrie and claims the Noonglass Orrery.",
+          "chapter_index": 3,
+          "chapter_title": "Fix the Noon Horizon",
+          "status_hint": "Turn the first two testimonies into one measurable meridian.",
+          "carryover_summary": "Imports common expedition stores and the mire testimony, then exports only the secured-eyrie record.",
+          "briefing": "Every lens over Icehook reports a different noon. Mirro must clear the convergence and take the guarded Glassbound Eyrie.",
+          "intel": "The Noonglass Orrery rejects false horizons but cannot decide which living road should carry its result.",
+          "stakes": "If the third testimony remains uncalibrated, the root road will grow toward a beautiful but empty sky.",
+          "aftermath_victory": "The eyrie is secured and one hard meridian is sent beneath the forest canopy.",
+          "aftermath_defeat": "Icehook's reflected noons multiply until no later witness can distinguish direction from glare.",
+          "journal_victory": "Mirro fixed the third testimony in Noonglass and passed its bearing to the roots.",
+          "journal_defeat": "Mirro could not bring the Icehook horizons into agreement.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "fenwake-bogbell-convergence", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "fenwake-bogbell-convergence", "flag": "hive_of_reeds_reclaimed"}
+          ],
+          "carryover_import": {"from_scenario_id": "fenwake-bogbell-convergence", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.2,
+            "resource_caps": {"gold": 600, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["glassbound_eyrie_secured"]
+          }
+        },
+        {
+          "scenario_id": "graftsibyl-lantern-convergence",
+          "seal_id": "campaign_chapter_seal_graftsibyl_lantern_convergence",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/heartwood_root.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/heartwood_root_source.png",
+          "seal_alt_text": "A heart-shaped piece of old wood opens three seed sockets into a branching living road.",
+          "seal_source_sha256": "71ed7ca27ced2c580b3a059fb1f94e93dd28f16d33eb446b67852ff5779b7e29",
+          "seal_runtime_sha256": "e8a72a9a8cf218f95d88bc5e67b588dedb243d2f83585a7ebe1b67a85c97a009",
+          "label": "Chapter IV: Graft-Sibyl Lantern Root",
+          "description": "Nara Graft-Sibyl gives the fixed meridian a living road and recovers the Worldroot Covenant Heartwood.",
+          "chapter_index": 4,
+          "chapter_title": "Grow the Witness Road",
+          "status_hint": "Root the measured bearing in ground that can survive the foundry march.",
+          "carryover_summary": "Imports bounded stores and the secured-eyrie record, then exports the reclaimed-stockade testimony alone.",
+          "briefing": "A direction on glass is not yet a road. Nara must clear Lantern Root and reclaim the guarded Rootwarden Stockade.",
+          "intel": "The Covenant Heartwood remembers chosen paths, but pressure engines are already testing every young branch.",
+          "stakes": "Without a living route, the next testimony reaches the foundry as a brittle diagram that can be redrafted.",
+          "aftermath_victory": "The stockade is reclaimed and the fourth testimony travels as living heartwood beneath the survey stakes.",
+          "aftermath_defeat": "The measured road dies at the forest edge, separating the first three witnesses from the last two.",
+          "journal_victory": "Nara rooted the fixed meridian and carried the fourth testimony in living wood.",
+          "journal_defeat": "Nara could not keep the Lantern Root road alive.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "halometer-icehook-convergence", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "halometer-icehook-convergence", "flag": "glassbound_eyrie_secured"}
+          ],
+          "carryover_import": {"from_scenario_id": "halometer-icehook-convergence", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.2,
+            "resource_caps": {"gold": 600, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["rootwarden_stockade_reclaimed"]
+          }
+        },
+        {
+          "scenario_id": "debtrune-default-convergence",
+          "seal_id": "campaign_chapter_seal_debtrune_default_convergence",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/seventh_pressure.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/seventh_pressure_source.png",
+          "seal_alt_text": "A seven-toothed pressure key turns inside a riveted gauge with one safely marked interval.",
+          "seal_source_sha256": "8ab5feeb6f6c51a527f67c03166d7c706e5c6d3c24db2b67be4ee3d6ad1e903d",
+          "seal_runtime_sha256": "8b77d0981e1077b137ae42292029263ea27db891089b61de7d5736f82571e1b6",
+          "label": "Chapter V: Debt-Rune Default March",
+          "description": "Harro Debt-Rune carries the living testimony through the foundry and claims the Seventh-Clause Pressure Key.",
+          "chapter_index": 5,
+          "chapter_title": "Hold the Seventh Pressure",
+          "status_hint": "Keep the witness road inside safe tolerances while the foundry defaults around it.",
+          "carryover_summary": "Imports bounded common stores and the rooted testimony, then exports the silenced-foundry record without personal equipment.",
+          "briefing": "Six pressure clauses can be forged or waived. Harro must silence the Rust Choir Foundry and turn the uncopiable seventh key.",
+          "intel": "The foundry can reproduce the shape of any prior testimony, but not the exact pressure under which all four agreed.",
+          "stakes": "If the seventh interval fails, the final coast receives six convincing counterfeits and no way to test them.",
+          "aftermath_victory": "The foundry is silent, the pressure key is Harro's, and its one true interval is sent to Nightchart.",
+          "aftermath_defeat": "The Rust Choir stamps a market of false testimonies and drowns the true road in authorized copies.",
+          "journal_victory": "Harro held the seventh pressure and made the fifth testimony impossible to counterfeit.",
+          "journal_defeat": "Harro lost the true interval inside the Default March.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "graftsibyl-lantern-convergence", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "graftsibyl-lantern-convergence", "flag": "rootwarden_stockade_reclaimed"}
+          ],
+          "carryover_import": {"from_scenario_id": "graftsibyl-lantern-convergence", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"},
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.2,
+            "resource_caps": {"gold": 600, "wood": 2, "ore": 2, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["rust_choir_foundry_silenced"]
+          }
+        },
+        {
+          "scenario_id": "nightchart-meridian-convergence",
+          "seal_id": "campaign_chapter_seal_nightchart_meridian_convergence",
+          "seal_path": "res://art/campaigns/runtime/chapter_seals/last_false_meridian.png",
+          "seal_source_path": "res://art/campaigns/source/generated/chapter_seals/last_false_meridian_source.png",
+          "seal_alt_text": "A dark tideglass bell marks the final safe moment above a bright false line and a quieter true wake.",
+          "seal_source_sha256": "75cbd5fd31e975a72a30976648866c12e251161247854f2f7dfbddc8246a670e",
+          "seal_runtime_sha256": "d3769bb50a541aed6b5ccb7625857a8c429d8bbc0d1d00baea159fec9ab92247",
+          "label": "Chapter VI: Nightchart False Meridian",
+          "description": "Orso Nightchart tests every prior witness against the Salt Wight Convoy and recovers the Last-Bell Tideglass.",
+          "chapter_index": 6,
+          "chapter_title": "Erase the False Meridian",
+          "status_hint": "Complete the sixfold testimony and leave each legendary relic with its rightful keeper.",
+          "carryover_summary": "Imports the bounded expedition stores and final foundry testimony; no prior hero growth, spell, or relic crosses into Orso's command.",
+          "briefing": "The coast offers two perfect meridians. Orso must clear the Salt Wight Convoy and use all five testimonies to identify the one that has no road beneath it.",
+          "intel": "The Last-Bell Tideglass marks the final safe moment to turn away from a convincing false route.",
+          "stakes": "Choose wrongly and every earlier victory becomes evidence for a road that ends beneath the tide.",
+          "aftermath_victory": "The convoy is cleared, the false meridian is erased, and six separate relic keepers bear one unbroken testimony.",
+          "aftermath_defeat": "Nightchart follows the bright lie, carrying five true witnesses into a false conclusion.",
+          "journal_victory": "Orso rang the Last Bell against all five witnesses and erased the false meridian.",
+          "journal_defeat": "Orso could not distinguish the final true wake from its mirror.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "debtrune-default-convergence", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "debtrune-default-convergence", "flag": "rust_choir_foundry_silenced"}
+          ],
+          "carryover_import": {"from_scenario_id": "debtrune-default-convergence", "resources": true, "hero_progression": false, "spells": false, "artifacts": false, "flags_prefix": "carryover_"}
         }
       ]
     }

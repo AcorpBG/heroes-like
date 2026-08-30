@@ -1,0 +1,17 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "generated_at": "2026-08-30T09:00:00Z",
+  "batch": "The Sixfold Testament campaign identity",
+  "prompt_summary": "One transparent emblem showing six original biome roads converging on an oath flame, plus six transparent relic-road seals: a lantern assize, miremoon drum, noonglass orrery, covenant heartwood, seven-toothed pressure key, and false-meridian tideglass. No text, logos, borrowed characters, or copied protected elements.",
+  "license_role": "Original project-owned generated source; no copied names, marks, characters, maps, or protected visual expression.",
+  "runtime_policy": "Generated 1254px RGBA sources are excluded from release packages; downsampled alpha-safe runtime assets are shipped.",
+  "assets": [
+    {"id": "sixfold_testament", "role": "campaign_emblem", "source": "emblems/sixfold_testament_source.png", "runtime": "../../runtime/emblems/sixfold_testament.png", "source_size": [1254, 1254], "runtime_size": [128, 128]},
+    {"id": "lantern_assize", "role": "chapter_seal", "source": "chapter_seals/lantern_assize_source.png", "runtime": "../../runtime/chapter_seals/lantern_assize.png", "source_size": [1254, 1254], "runtime_size": [64, 64]},
+    {"id": "miremoon_cadence", "role": "chapter_seal", "source": "chapter_seals/miremoon_cadence_source.png", "runtime": "../../runtime/chapter_seals/miremoon_cadence.png", "source_size": [1254, 1254], "runtime_size": [64, 64]},
+    {"id": "noonglass_meridian", "role": "chapter_seal", "source": "chapter_seals/noonglass_meridian_source.png", "runtime": "../../runtime/chapter_seals/noonglass_meridian.png", "source_size": [1254, 1254], "runtime_size": [64, 64]},
+    {"id": "heartwood_root", "role": "chapter_seal", "source": "chapter_seals/heartwood_root_source.png", "runtime": "../../runtime/chapter_seals/heartwood_root.png", "source_size": [1254, 1254], "runtime_size": [64, 64]},
+    {"id": "seventh_pressure", "role": "chapter_seal", "source": "chapter_seals/seventh_pressure_source.png", "runtime": "../../runtime/chapter_seals/seventh_pressure.png", "source_size": [1254, 1254], "runtime_size": [64, 64]},
+    {"id": "last_false_meridian", "role": "chapter_seal", "source": "chapter_seals/last_false_meridian_source.png", "runtime": "../../runtime/chapter_seals/last_false_meridian.png", "source_size": [1254, 1254], "runtime_size": [64, 64]}
+  ]
+}

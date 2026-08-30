@@ -15745,11 +15745,11 @@
   "currentNotes": "Completed the Veil-Coast Sounding Circuit content batch with six live coast-route services, six operational landmarks, one 24x14 Veilmourn skirmish, four battle fronts, complete town economy sources, and consolidated gameplay, repository, Linux, and Windows package evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceId": "content-ashen-ledger-last-bell-campaigns-10184",
-  "currentSliceNotes": "Completed Ashen Ledger and Last Bell Sounding: two original three-chapter campaigns, six 14x8/16x10/20x12 scenarios, 28 battle fronts, all three Brasshollow and Veilmourn towns in faction arcs, two emblems and six seals. One consolidated six-scenario gameplay/progression/art/save-v9 smoke passed; repository validation passed at 87 scenarios and 9 campaigns; Linux and Windows release startup passed with identical 247876860-byte PCKs, source art excluded, 2123140 bytes under ceiling. No whole-game release-readiness claim.",
+  "currentSliceId": "content-sixfold-testament-campaign-10184",
+  "currentSliceNotes": "Implemented The Sixfold Testament as six exact victory-plus-guarded-claim chapters across all factions; bounded common-resource and flag carryover preserves commander progression, spells, and relic ownership; seven original campaign assets are live; consolidated smoke passed 6 maps, 43 battle payloads, 6 guarded relic claims, save v9 and inspected captures; repository validation and matching Linux/Windows 247986800-byte packages passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content ashen ledger last bell campaigns 10184",
-  "currentSliceUpdatedAt": "2026-08-30T07:05:03Z",
+  "currentSliceTitle": "content sixfold testament campaign 10184",
+  "currentSliceUpdatedAt": "2026-08-30T08:38:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106393,6 +106393,16 @@
       "startedAt": "2026-08-30T07:44:50Z",
       "notes": "Completed Ashen Ledger and Last Bell Sounding: two original three-chapter campaigns, six 14x8/16x10/20x12 scenarios, 28 battle fronts, all three Brasshollow and Veilmourn towns in faction arcs, two emblems and six seals. One consolidated six-scenario gameplay/progression/art/save-v9 smoke passed; repository validation passed at 87 scenarios and 9 campaigns; Linux and Windows release startup passed with identical 247876860-byte PCKs, source art excluded, 2123140 bytes under ceiling. No whole-game release-readiness claim.",
       "completedAt": "2026-08-30T08:10:58Z"
+    },
+    {
+      "id": "content-sixfold-testament-campaign-10184",
+      "title": "content sixfold testament campaign 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T08:38:28Z",
+      "startedAt": "2026-08-30T08:15:37Z",
+      "notes": "Implemented The Sixfold Testament as six exact victory-plus-guarded-claim chapters across all factions; bounded common-resource and flag carryover preserves commander progression, spells, and relic ownership; seven original campaign assets are live; consolidated smoke passed 6 maps, 43 battle payloads, 6 guarded relic claims, save v9 and inspected captures; repository validation and matching Linux/Windows 247986800-byte packages passed.",
+      "completedAt": "2026-08-30T08:38:28Z"
     }
   ],
   "project": "heroes-like",
@@ -106937,7 +106947,7 @@
   ],
   "summary": "Completed the Veil-Coast Sounding Circuit: six formerly dormant shoreline services now provide live one-cost two-way land transit with distinct operational art inside a new 24x14 Veilmourn skirmish, validated as one batch and through Linux and Windows packages.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T08:10:58Z",
+  "updatedAt": "2026-08-30T08:38:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
