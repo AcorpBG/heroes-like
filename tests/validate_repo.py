@@ -6228,6 +6228,9 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
         site_id = str(obj.get("resource_site_id", ""))
         site = resource_sites.get(site_id, {}) if site_id else {}
         live_land_transit = role in {"two_way_transit", "one_way_transit"}
+        live_route_lock = role == "route_lock"
+        live_route_waypoint = role == "route_waypoint"
+        live_route_runtime = live_land_transit or live_route_lock
         footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
         width = int(footprint.get("width", 0))
         height = int(footprint.get("height", 0))
@@ -6280,24 +6283,26 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
         if directionality:
             increment_count(section["directionality_counts"], directionality)
         endpoint_metadata_only = endpoint_contract and site_endpoint_contract and bool(endpoint_contract.get("metadata_only", False)) and not bool(endpoint_contract.get("runtime_route_effect_adopted", True))
-        endpoint_live_runtime = live_land_transit and endpoint_contract and site_endpoint_contract and not bool(endpoint_contract.get("metadata_only", True)) and bool(endpoint_contract.get("runtime_route_effect_adopted", False)) and not bool(site_endpoint_contract.get("metadata_only", True)) and bool(site_endpoint_contract.get("runtime_route_effect_adopted", False))
+        endpoint_live_runtime = live_route_runtime and endpoint_contract and site_endpoint_contract and not bool(endpoint_contract.get("metadata_only", True)) and bool(endpoint_contract.get("runtime_route_effect_adopted", False)) and not bool(site_endpoint_contract.get("metadata_only", True)) and bool(site_endpoint_contract.get("runtime_route_effect_adopted", False))
         if endpoint_metadata_only or endpoint_live_runtime:
             section["linked_endpoint_contract_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 endpoint contract must match its metadata-only or live-land-transit boundary")
+            add_error(f"{object_id}: Batch 004 endpoint contract must match its metadata-only or live route boundary")
 
         route_effect = obj.get("route_effect", {}) if isinstance(obj.get("route_effect", {}), dict) else {}
         route_boundary = obj.get("route_effect_boundary", {}) if isinstance(obj.get("route_effect_boundary", {}), dict) else {}
         route_metadata_only = route_effect and str(route_boundary.get("status", "")) == "metadata_only" and not bool(route_boundary.get("runtime_behavior_adopted", True))
-        route_live_runtime = live_land_transit and route_effect and str(route_boundary.get("status", "")) == "land_transit_live" and bool(route_boundary.get("runtime_behavior_adopted", False))
+        route_live_runtime = live_route_runtime and route_effect and str(route_boundary.get("status", "")) == ("route_lock_live" if live_route_lock else "land_transit_live") and bool(route_boundary.get("runtime_behavior_adopted", False))
         if route_metadata_only or route_live_runtime:
             section["route_effect_metadata_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 route effect must match its metadata-only or live-land-transit boundary")
+            add_error(f"{object_id}: Batch 004 route effect must match its metadata-only or live route boundary")
         if role == "route_lock":
             lock_contract = obj.get("route_lock_contract", {}) if isinstance(obj.get("route_lock_contract", {}), dict) else {}
             site_lock_contract = site.get("route_lock_contract", {}) if isinstance(site.get("route_lock_contract", {}), dict) else {}
-            if lock_contract and site_lock_contract and bool(lock_contract.get("metadata_only", False)) and not bool(lock_contract.get("runtime_route_effect_adopted", True)):
+            lock_metadata_only = lock_contract and site_lock_contract and bool(lock_contract.get("metadata_only", False)) and not bool(lock_contract.get("runtime_route_effect_adopted", True))
+            lock_live_runtime = lock_contract and site_lock_contract and not bool(lock_contract.get("metadata_only", True)) and bool(lock_contract.get("runtime_route_effect_adopted", False)) and not bool(site_lock_contract.get("metadata_only", True)) and bool(site_lock_contract.get("runtime_route_effect_adopted", False))
+            if lock_metadata_only or lock_live_runtime:
                 section["route_lock_contract_count"] += 1
             else:
                 add_error(f"{object_id}: route locks must author route_lock_contract on object and site")
@@ -6317,10 +6322,30 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
             and value.get("runtime_boundary", {}).get("ship_movement_runtime_adopted") is False
             for value in (obj, site)
         )
-        if (metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site)) or live_runtime_boundary_exact:
+        live_route_lock_boundary_exact = live_route_lock and all(
+            isinstance(value.get("runtime_boundary", {}), dict)
+            and value.get("runtime_boundary", {}).get("status") == "route_lock_live"
+            and value.get("runtime_boundary", {}).get("save_payload_required") is True
+            and value.get("runtime_boundary", {}).get("renderer_sprite_required") is True
+            and value.get("runtime_boundary", {}).get("pathing_runtime_adopted") is True
+            and value.get("runtime_boundary", {}).get("route_effect_runtime_adopted") is True
+            and value.get("runtime_boundary", {}).get("ship_movement_runtime_adopted") is False
+            for value in (obj, site)
+        )
+        live_waypoint_boundary_exact = live_route_waypoint and all(
+            isinstance(value.get("runtime_boundary", {}), dict)
+            and value.get("runtime_boundary", {}).get("status") == "sign_waypoint_live"
+            and value.get("runtime_boundary", {}).get("save_payload_required") is False
+            and value.get("runtime_boundary", {}).get("renderer_sprite_required") is True
+            and value.get("runtime_boundary", {}).get("pathing_runtime_adopted") is True
+            and value.get("runtime_boundary", {}).get("route_effect_runtime_adopted") is False
+            and value.get("runtime_boundary", {}).get("ship_movement_runtime_adopted") is False
+            for value in (obj, site)
+        )
+        if (metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site)) or live_runtime_boundary_exact or live_route_lock_boundary_exact or live_waypoint_boundary_exact:
             section["metadata_only_boundary_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 runtime boundary must match its metadata-only or live-land-transit role")
+            add_error(f"{object_id}: Batch 004 runtime boundary must match its metadata-only or live role")
         if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 004 must not activate rare resources in live site or route-effect fields")
         else:
@@ -43276,6 +43301,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_land_transit_active_atlas":
                 expected_canvas = (480, 48)
+            elif source_model == "built_in_image_gen_precise_object_edit_route_control_opened_atlas":
+                expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_standalone_contract_landmark_atlas":
@@ -47510,7 +47537,7 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ensure(len(identity_bytes) == 15 and len(set(identity_bytes)) == 15, errors, "All 15 Overworld town identity PNG payloads must be distinct")
     scenarios = load_json(ROOT / "content/scenarios.json").get("items", [])
     live_town_placements = [town for scenario in scenarios if isinstance(scenario, dict) for town in scenario.get("towns", []) if isinstance(town, dict)] if isinstance(scenarios, list) else []
-    ensure(len(live_town_placements) == 148, errors, "All 148 live authored scenario town placements must remain covered by the town identity slice")
+    ensure(len(live_town_placements) == 150, errors, "All 150 live authored scenario town placements must remain covered by the town identity slice")
     ensure({str(town.get("town_id", "")) for town in live_town_placements} == set(town_order), errors, "Every live authored scenario town id must resolve through the exact 15-town identity mapping")
     ensure(png_size(FACTION_TOWN_SPRITE_ATLAS_PATH) == (1536, 1024), errors, "Faction town source atlas must remain the exact 3x2 1536x1024 source")
     ensure(Path(f"{FACTION_TOWN_SPRITE_ATLAS_PATH}.import").is_file(), errors, "Faction town source atlas import metadata is missing")
@@ -48161,7 +48188,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
             ensure(f'"{hero_id}"' in packaging_text, errors, f"{packaging_path.name} is missing packaged final-roster hero identity {hero_id}")
     scenarios = load_json(CONTENT_DIR / "scenarios.json").get("items", [])
     scenario_starts = {str(scenario.get("id", "")): str(scenario.get("hero_id", "")) for scenario in scenarios if isinstance(scenario, dict)} if isinstance(scenarios, list) else {}
-    ensure(len(scenario_starts) == 71, errors, "Scenario-lead identity adoption must retain all 71 authored scenario starts")
+    ensure(len(scenario_starts) == 72, errors, "Scenario-lead identity adoption must retain all 72 authored scenario starts")
     ensure(set(scenario_starts.values()) == set(scenario_lead_hero_ids), errors, "Every authored scenario lead must resolve through the exact 60-hero identity set")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -49456,9 +49483,9 @@ def validate_six_faction_dissident_fronts(errors: list[str]) -> None:
     encounters = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "encounters.json").get("items", []) if isinstance(row, dict)}
     groups = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "army_groups.json").get("items", []) if isinstance(row, dict)}
     scenarios = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "scenarios.json").get("items", []) if isinstance(row, dict)}
-    ensure(len(encounters) == 93 and len(groups) == 151 and len(scenarios) == 71, errors, "Expanded contract roster must retain 93 encounters, 151 army groups, and 71 scenarios")
+    ensure(len(encounters) == 93 and len(groups) == 151 and len(scenarios) == 72, errors, "Expanded contract roster must retain 93 encounters, 151 army groups, and 72 scenarios")
     all_placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(all_placements) == 289 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 89, errors, "Authored battle fronts must retain the expanded 289-placement, 89-identity playable breadth")
+    ensure(len(all_placements) == 293 and len({str(row.get("encounter_id", "")) for row in all_placements}) == 89, errors, "Authored battle fronts must retain the expanded 293-placement, 89-identity playable breadth")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -49718,7 +49745,7 @@ def validate_mireclaw_sunvault_frontier_contracts(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
-    ensure(len(scenarios) == 71 and len(encounters) == 93 and len(groups) == 151, errors, "Expanded production content must retain the complete 71-scenario, 93-encounter, 151-army roster")
+    ensure(len(scenarios) == 72 and len(encounters) == 93 and len(groups) == 151, errors, "Expanded production content must retain the complete 72-scenario, 93-encounter, 151-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -49809,7 +49836,7 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
-    ensure(len(scenarios) == 71 and len(encounters) == 93 and len(groups) == 151, errors, "Ascendant-company batch must retain the complete 71-scenario, 93-encounter, 151-army roster")
+    ensure(len(scenarios) == 72 and len(encounters) == 93 and len(groups) == 151, errors, "Ascendant-company batch must retain the complete 72-scenario, 93-encounter, 151-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -49955,7 +49982,7 @@ def validate_six_faction_waywatch_trials(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
-    ensure(len(scenarios) == 71 and len(encounters) == 93 and len(groups) == 151, errors, "Waywatch-trial batch must retain the complete 71-scenario, 93-encounter, 151-army roster")
+    ensure(len(scenarios) == 72 and len(encounters) == 93 and len(groups) == 151, errors, "Waywatch-trial batch must retain the complete 72-scenario, 93-encounter, 151-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50109,7 +50136,7 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
-    ensure(len(scenarios) == 71 and len(encounters) == 93 and len(groups) == 151, errors, "Spellwright-expedition batch must retain the 71-scenario, 93-encounter, 151-army roster")
+    ensure(len(scenarios) == 72 and len(encounters) == 93 and len(groups) == 151, errors, "Spellwright-expedition batch must retain the 72-scenario, 93-encounter, 151-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50259,7 +50286,7 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
     encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
     groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
-    ensure(len(scenarios) == 71 and len(encounters) == 93 and len(groups) == 151, errors, "Ritual-relay batch must retain the 71-scenario, 93-encounter, 151-army roster")
+    ensure(len(scenarios) == 72 and len(encounters) == 93 and len(groups) == 151, errors, "Ritual-relay batch must retain the 72-scenario, 93-encounter, 151-army roster")
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
     identity_sprites = art_manifest.get("encounter_identity_sprites", {})
@@ -50408,9 +50435,9 @@ def validate_six_faction_grand_convergence_marches(errors: list[str]) -> None:
     heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
     scenario_payload = load_json(CONTENT_DIR / "scenarios.json")
     scenarios = items_index(scenario_payload)
-    ensure(len(scenarios) == 71 and len(encounters) == 93 and len(groups) == 151 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 71, errors, "Grand-convergence batch must retain the 71-scenario, 93-encounter, 151-army roster")
+    ensure(len(scenarios) == 72 and len(encounters) == 93 and len(groups) == 151 and int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 72, errors, "Grand-convergence batch must retain the 72-scenario, 93-encounter, 151-army roster")
     placements = [placement for scenario in scenarios.values() for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
-    ensure(len(placements) == 289 and len({str(row.get("encounter_id", "")) for row in placements}) == 89, errors, "Grand-convergence batch must retain 289 authored battle placements across 89 identities")
+    ensure(len(placements) == 293 and len({str(row.get("encounter_id", "")) for row in placements}) == 89, errors, "Grand-convergence batch must retain 293 authored battle placements across 89 identities")
 
     art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = art_manifest.get("object_assets", {})
@@ -51428,14 +51455,14 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         "encounter_charter_bastion_reserve": ("encounter_recurring_charter_bastion_reserve", "charter_bastion_reserve", "recurring_wave2", "faction_embercourt", "charter_bastion_reserve_fortification", "09558e6e821ef86a48acc2c825ba05de83e89aae3b64f5f68078e97e9701e769", [384, 0, 48, 48], 3, 1),
         "encounter_ford_reavers": ("encounter_recurring_ford_reavers", "ford_reavers", "recurring_wave2", "faction_mireclaw", "hooked_ford_reaver_skiff_mooring", "35896d3512a5dadb4e58466b2f4d0531f8a3d747e245d774b5a18efb57504af0", [432, 0, 48, 48], 2, 0),
         "encounter_glasswing_sortie": ("encounter_recurring_glasswing_sortie", "glasswing_sortie", "recurring_wave2", "faction_sunvault", "glasswing_sortie_launch_rack", "8d0520ba4c9ea9d0980dcc167374dfe887c58ee707679ece593805114b13c877", [480, 0, 48, 48], 2, 0),
-        "encounter_hollow_mire": ("encounter_recurring_hollow_mire", "hollow_mire", "recurring_wave2", "faction_mireclaw", "sunken_hollow_mire_ambush_basin", "a2eb31e479ff7500d6a4b38bbd380ea0d7eea7a23b6c4c5ffde05a74e9adc233", [528, 0, 48, 48], 4, 0),
+        "encounter_hollow_mire": ("encounter_recurring_hollow_mire", "hollow_mire", "recurring_wave2", "faction_mireclaw", "sunken_hollow_mire_ambush_basin", "a2eb31e479ff7500d6a4b38bbd380ea0d7eea7a23b6c4c5ffde05a74e9adc233", [528, 0, 48, 48], 5, 0),
         "encounter_silt_hunters": ("encounter_recurring_silt_hunters", "silt_hunters", "recurring_wave2", "faction_mireclaw", "silt_hunter_trap_field", "c23c5c7f441e02f7532c5d493f4a062af1e923a5c6b6d9f2d28b0fbc3a110b2e", [576, 0, 48, 48], 2, 0),
         "encounter_tidepool_skiffyard_watch": ("encounter_recurring_tidepool_skiffyard_watch", "tidepool_skiffyard_watch", "recurring_wave3", "", "tidepool_skiff_rack_supply_watch", "536760be529153cd59c4875a3afcbd86516bc3bf52c0a86a5d747265f30226fb", [624, 0, 48, 48], 3, 2),
         "encounter_survey_guard": ("encounter_recurring_survey_guard", "survey_guard", "recurring_wave3", "faction_embercourt", "charter_survey_tripod_guard_post", "81cccad4237c96bbede8ef3e59c8cec62139972f98c17c0ade684568979132c4", [672, 0, 48, 48], 1, 1),
         "encounter_road_chaplains": ("encounter_recurring_road_chaplains", "road_chaplains", "recurring_wave3", "faction_embercourt", "portable_road_chaplain_shrine_wagon", "8a643b0aecec5bac5bcd163f2fcf7e2dd41aef19bdde22cec4ecf12b63b0e0ed", [720, 0, 48, 48], 1, 1),
         "encounter_mill_levies": ("encounter_recurring_mill_levies", "mill_levies", "recurring_wave3", "faction_embercourt", "granary_mill_levy_barricade", "3ada694f23cd8bb8598c0effe3ae3a32d78e4757ad88418ebb02df536a89649a", [768, 0, 48, 48], 1, 1),
         "encounter_reedbarrow_chain": ("encounter_recurring_reedbarrow_chain", "reedbarrow_chain", "recurring_wave3", "faction_mireclaw", "ferry_chain_levee_choke", "b0813c1c5e1ee8eb33820967cc691e0970119015bf6cc90377e9cc83e3151829", [816, 0, 48, 48], 1, 1),
-        "encounter_nightglass_dominion": ("encounter_recurring_nightglass_dominion", "nightglass_dominion", "recurring_wave3", "faction_mireclaw", "nightglass_dominion_command_crown", "e3341aa0d5f698d6ffc7a44bee49cdd3989dc3928115e47859e1e1135a74f429", [864, 0, 48, 48], 7, 1),
+        "encounter_nightglass_dominion": ("encounter_recurring_nightglass_dominion", "nightglass_dominion", "recurring_wave3", "faction_mireclaw", "nightglass_dominion_command_crown", "e3341aa0d5f698d6ffc7a44bee49cdd3989dc3928115e47859e1e1135a74f429", [864, 0, 48, 48], 8, 2),
         "encounter_mirror_causeway": ("encounter_recurring_mirror_causeway", "mirror_causeway", "recurring_wave3", "faction_mireclaw", "broken_mirror_causeway_harrow", "4b9373b9281eeb809de920d6019522cdc3b788a388dd62b40a6683a147eba278", [912, 0, 48, 48], 1, 1),
         "encounter_halo_reserve": ("encounter_recurring_halo_reserve", "halo_reserve", "recurring_wave3", "faction_sunvault", "concentric_prism_halo_reserve_rack", "b26091b1af256ed6141e8502878663f3c4a99ebbe59a0bd3ca39b411306e2c5f", [960, 0, 48, 48], 1, 1),
         "encounter_daybreak_matrix": ("encounter_recurring_daybreak_matrix", "daybreak_matrix", "recurring_wave3", "faction_sunvault", "four_node_daybreak_battery_matrix", "d7a55eb048d355e995195ccf75d0c142756a50055c9302731fd8d4ac432143ad", [1008, 0, 48, 48], 1, 1),
@@ -51585,7 +51612,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         group = groups.get(str(definition.get("enemy_group_id", "")), {}) if isinstance(definition, dict) else {}
         ensure(str(group.get("faction_id", "")) == faction_id, errors, f"Recurring encounter {encounter_id} authored faction changed")
         ensure(placement_counts[encounter_id] == placements and high_counts[encounter_id] == high, errors, f"Recurring encounter {encounter_id} playable placement coverage changed")
-    ensure(sum(placement_counts.values()) == 82 and sum(high_counts.values()) == 35, errors, "Recurring encounter landmarks must retain 82 authored placements including 35 high-difficulty placements")
+    ensure(sum(placement_counts.values()) == 84 and sum(high_counts.values()) == 36, errors, "Recurring encounter landmarks must retain 84 authored placements including 36 high-difficulty placements")
     all_placement_ids = [
         str(placement.get("encounter_id", ""))
         for scenario in scenario_rows
@@ -51595,7 +51622,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     ] if isinstance(scenario_rows, list) else []
     placed_identity_ids = set(all_placement_ids)
     unplaced_definition_ids = set(encounters) - placed_identity_ids
-    ensure(len(all_placement_ids) == 289 and len(placed_identity_ids) == 89, errors, "Authored scenarios must retain exactly 289 placements across 89 distinct encounter identities")
+    ensure(len(all_placement_ids) == 293 and len(placed_identity_ids) == 89, errors, "Authored scenarios must retain exactly 293 placements across 89 distinct encounter identities")
     ensure(placed_identity_ids.issubset(set(identity_sprites)), errors, "Every encounter identity placed in an authored scenario must own exact live Overworld art")
     ensure(len(encounters) == 93 and len(unplaced_definition_ids) == 4 and not (set(identity_sprites) & unplaced_definition_ids), errors, "Exact encounter art must cover the 89 live placed definitions without creating unused mappings for the 4 system-owned or scripted-only definitions")
 
@@ -51843,7 +51870,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 71 and len(placements) == 890 and len(placed_site_ids) == 172, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 72 and len(placements) == 904 and len(placed_site_ids) == 180, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -51865,8 +51892,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 172, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 151, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(not unresolved and len(resolver_paths) == 180, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 159, errors, "Placed resource-site map-object resolver coverage changed")
     ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 21, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
@@ -74092,6 +74119,84 @@ def validate_strategic_ai_medium_long_run_adoption(errors: list[str]) -> None:
     )
 
 
+def validate_six_gate_charter_road(errors: list[str]) -> None:
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    scenario = scenarios.get("six-gate-charter-road", {})
+    source_dir = ROOT / "art/overworld/source/generated/resource_sites/route_control_opened_wave1"
+    atlas_path = ROOT / "art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png"
+    report_path = ROOT / "tests/six_gate_charter_road_report.gd"
+    scene_path = ROOT / "tests/six_gate_charter_road_report.tscn"
+    gates = [
+        ("site_charter_bar_gate", "object_charter_bar_gate", "six_gate_charter_bar", {"gold":180}, "charter_bar_gate_opened", [0,0,48,48], "d6b7eb17b43dde7d53f79ce93f3bb445180d4c06134d3d30ddf983796326f164"),
+        ("site_thorn_seal_gate", "object_thorn_seal_gate", "six_gate_thorn_seal", {"gold":90,"wood":3}, "thorn_seal_gate_opened", [48,0,48,48], "894dcd610ad005b86624ef7c33c4a76438eeeb33c88552ced258b47029b0ea7a"),
+        ("site_brass_toll_arch", "object_brass_toll_arch", "six_gate_brass_toll", {"gold":260}, "brass_toll_arch_opened", [96,0,48,48], "d5ac25d0083cc01ef0eda13141d346dfbcf69862de59f77793433006b835bd57"),
+        ("site_reef_chain_boom", "object_reef_chain_boom", "six_gate_reef_chain", {"gold":120,"wood":2}, "reef_chain_boom_opened", [144,0,48,48], "888196697a1f9833fb6c1274febe36194951119f04979609ed12141b5a912e1c"),
+        ("site_frost_toll_bar", "object_frost_toll_bar", "six_gate_frost_bar", {"gold":150,"ore":2}, "frost_toll_bar_opened", [192,0,48,48], "c33eefd11adad485785c9b81ad50a68e3cbab70fe6cf9990027f7e7513d874d3"),
+        ("site_ash_sluice_lock", "object_ash_sluice_lock", "six_gate_ash_sluice", {"gold":130,"ore":3}, "ash_sluice_lock_opened", [240,0,48,48], "b1a4ee7db7f9dd9c88024c45e2aa0533a3a9f1c358bc7fccb8ce41eb69153cb0"),
+    ]
+    waypoints = [
+        ("site_mileward_route_post", "object_mileward_route_post", "six_gate_mileward_post", "charter_gate_sequence"),
+        ("site_road_oath_stone", "object_road_oath_stone", "six_gate_road_oath", "winter_reef_return"),
+    ]
+    ensure(bool(scenario), errors, "Six-Gate Charter Road scenario is missing")
+    placements = {str(row.get("placement_id", "")): row for row in scenario.get("resource_nodes", []) if isinstance(row, dict)} if isinstance(scenario, dict) else {}
+    if isinstance(scenario, dict):
+        ensure(scenario.get("map_size") == {"width":20,"height":12} and len(scenario.get("map", [])) == 12 and all(len(row) == 20 for row in scenario.get("map", [])), errors, "Six-Gate Charter Road map dimensions changed")
+        ensure(len(scenario.get("resource_nodes", [])) == 14 and len(scenario.get("towns", [])) == 2 and len(scenario.get("encounters", [])) == 4 and len(scenario.get("objectives", {}).get("victory", [])) == 8, errors, "Six-Gate Charter Road breadth changed")
+        ensure(scenario.get("starting_resources") == {"gold":1350,"wood":7,"ore":7}, errors, "Six-Gate Charter Road six-gate resource runway changed")
+    object_assets = art_manifest.get("object_assets", {})
+    site_sprites = art_manifest.get("resource_site_sprites", {})
+    ensure(atlas_path.exists(), errors, "Six-gate opened-state atlas is missing")
+    if atlas_path.exists():
+        payload = atlas_path.read_bytes()
+        ensure(png_size(atlas_path) == (288,48) and hashlib.sha256(payload).hexdigest() == "073e1e55c6f3bbff714755a250dcb0764426e45a263e72799a5f72660c1b7059" and len(payload) >= 26 and payload[25] == 6, errors, "Six-gate opened-state atlas bytes, alpha, or dimensions changed")
+    source_manifest_path = source_dir / "manifest.json"
+    ensure(source_manifest_path.exists(), errors, "Six-gate source provenance manifest is missing")
+    if source_manifest_path.exists():
+        provenance = load_json(source_manifest_path)
+        ensure(provenance.get("source_model") == "built_in_image_gen_precise_object_edit_route_control_opened_atlas" and len(provenance.get("items", [])) == 6, errors, "Six-gate source provenance changed")
+    for index, (site_id, object_id, placement_id, cost, flag, region, source_hash) in enumerate(gates):
+        site = resource_sites.get(site_id, {})
+        obj = map_objects.get(object_id, {})
+        ensure(placements.get(placement_id, {}).get("site_id") == site_id, errors, f"{site_id} shipped placement changed")
+        for label, value in (("site",site),("object",obj)):
+            runtime = value.get("runtime_boundary", {}) if isinstance(value, dict) else {}
+            endpoint = value.get("linked_endpoint_contract", {}) if isinstance(value, dict) else {}
+            lock = value.get("route_lock_contract", {}) if isinstance(value, dict) else {}
+            ensure(runtime.get("status") == "route_lock_live" and runtime.get("save_payload_required") is True and runtime.get("renderer_sprite_required") is True and runtime.get("pathing_runtime_adopted") is True and runtime.get("route_effect_runtime_adopted") is True and runtime.get("ship_movement_runtime_adopted") is False, errors, f"{site_id} {label} live route-lock boundary changed")
+            ensure(endpoint.get("metadata_only") is False and endpoint.get("runtime_route_effect_adopted") is True and lock.get("metadata_only") is False and lock.get("runtime_route_effect_adopted") is True, errors, f"{site_id} {label} live route contract changed")
+        ensure(site.get("service_cost") == cost and site.get("opens_route_on_claim") is True and site.get("claim_flags") == {flag:True}, errors, f"{site_id} payment or route flag changed")
+        ensure(obj.get("route_effect", {}).get("toll_resources") == cost and obj.get("route_effect_boundary") == {"status":"route_lock_live","runtime_behavior_adopted":True,"public_output_safe":True}, errors, f"{object_id} live route effect changed")
+        asset_id = f"resource_site_route_control_{site_id.removeprefix('site_')}_opened"
+        asset = object_assets.get(asset_id, {})
+        sprite = site_sprites.get(site_id, {})
+        ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png" and asset.get("atlas_region") == region and asset.get("atlas_size") == [288,48] and asset.get("presentation_role") == "opened_route_lock_state" and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{site_id} opened-state art entry changed")
+        ensure(sprite.get("asset_id") == asset_id and sprite.get("unclaimed_asset_id") == f"mapobj_{object_id.removeprefix('object_')}", errors, f"{site_id} closed/opened sprite switch changed")
+        source_path = source_dir / f"{site_id.removeprefix('site_')}_opened_source.png"
+        ensure(source_path.exists() and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_hash, errors, f"{site_id} curated opened source changed")
+    for site_id, object_id, placement_id, hint in waypoints:
+        site = resource_sites.get(site_id, {})
+        obj = map_objects.get(object_id, {})
+        ensure(placements.get(placement_id, {}).get("site_id") == site_id, errors, f"{site_id} shipped waypoint placement changed")
+        for label, value in (("site",site),("object",obj)):
+            runtime = value.get("runtime_boundary", {}) if isinstance(value, dict) else {}
+            ensure(runtime.get("status") == "sign_waypoint_live" and runtime.get("save_payload_required") is False and runtime.get("renderer_sprite_required") is True and runtime.get("pathing_runtime_adopted") is True and runtime.get("route_effect_runtime_adopted") is False, errors, f"{site_id} {label} live waypoint boundary changed")
+        ensure(site.get("family") == "transit_object" and site.get("repeatable") is True and site.get("visit_cooldown_days") == 0 and site.get("sign_contract", {}).get("route_hint_category") == hint and site.get("sign_contract", {}).get("runtime_sign_reading_adopted") is True and len(str(site.get("sign_text", ""))) >= 100, errors, f"{site_id} authored waypoint guidance changed")
+    ensure(report_path.exists() and scene_path.exists(), errors, "Six-gate consolidated report or scene is missing")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in ("SIX_GATE_CHARTER_ROAD_REPORT", "OverworldRules._collect_resource_node_result(", "ScenarioRulesScript.is_objective_met(", "save_round_trip_exact", "route_control_opened_strip.png"):
+            ensure(token in report_text, errors, f"Six-gate consolidated report is missing token: {token}")
+    if scene_path.exists():
+        ensure("res://tests/six_gate_charter_road_report.gd" in scene_path.read_text(encoding="utf-8"), errors, "Six-gate report scene must load its report script")
+    for packaging_path in (ROOT / "tests/packaging_linux_export_smoke.py", ROOT / "tests/packaging_windows_export_smoke.py"):
+        text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_ROUTE_CONTROL_OPENED_ATLAS_NAME = "route_control_opened_atlas"' in text and "route_control_opened_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the six-gate atlas")
+
+
 def validate_overworld_ten_land_transit_network(errors: list[str]) -> None:
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
@@ -74680,9 +74785,9 @@ def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
     campaign_payload = load_json(campaign_path)
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 71, errors, "Rootgate Toll compatibility must cover the current exact seventy-one-scenario active roster")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 72, errors, "Rootgate Toll compatibility must cover the current exact seventy-two-scenario active roster")
     scenario_rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
-    ensure(len(scenario_rows) == 71 and str(scenario_rows[18].get("id", "")) == "rootgate-toll", errors, "Rootgate Toll must remain the exact nineteenth active authored scenario")
+    ensure(len(scenario_rows) == 72 and str(scenario_rows[18].get("id", "")) == "rootgate-toll", errors, "Rootgate Toll must remain the exact nineteenth active authored scenario")
     scenario = scenarios.get("rootgate-toll", {})
     ensure(bool(scenario), errors, "Rootgate Toll scenario is missing")
     ensure(str(scenario.get("player_faction_id", "")) == "faction_thornwake", errors, "Rootgate Toll must remain a Thornwake scenario")
@@ -74817,8 +74922,8 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
     scenario_rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 71, errors, "Fogchart Mooring must cover the exact seventy-one-scenario active roster")
-    ensure(len(scenario_rows) == 71 and str(scenario_rows[19].get("id", "")) == "fogchart-mooring", errors, "Fogchart Mooring must remain the exact twentieth active authored scenario")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 72, errors, "Fogchart Mooring must cover the exact seventy-two-scenario active roster")
+    ensure(len(scenario_rows) == 72 and str(scenario_rows[19].get("id", "")) == "fogchart-mooring", errors, "Fogchart Mooring must remain the exact twentieth active authored scenario")
     scenario = scenarios.get("fogchart-mooring", {})
     ensure(bool(scenario), errors, "Fogchart Mooring scenario is missing")
     ensure(str(scenario.get("player_faction_id", "")) == "faction_veilmourn", errors, "Fogchart Mooring must remain a Veilmourn scenario")
@@ -74970,8 +75075,8 @@ def validate_brasshollow_clauseworks_counterclaim_chapter(errors: list[str]) -> 
     rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 71, errors, "Clauseworks Counterclaim must cover the exact seventy-one-scenario active roster")
-    ensure(len(rows) == 71 and str(rows[20].get("id", "")) == "clauseworks-counterclaim", errors, "Clauseworks Counterclaim must remain the exact twenty-first active authored scenario")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 72, errors, "Clauseworks Counterclaim must cover the exact seventy-two-scenario active roster")
+    ensure(len(rows) == 72 and str(rows[20].get("id", "")) == "clauseworks-counterclaim", errors, "Clauseworks Counterclaim must remain the exact twenty-first active authored scenario")
     scenario = scenarios.get("clauseworks-counterclaim", {})
     ensure(str(scenario.get("player_faction_id", "")) == "faction_brasshollow", errors, "Clauseworks Counterclaim must be Brasshollow-owned")
     ensure(str(scenario.get("hero_id", "")) == "hero_brasshollow_oren_bellfounder", errors, "Clauseworks Counterclaim must activate Oren Bellfounder")
@@ -75094,8 +75199,8 @@ def validate_mireclaw_nightglass_ledger_reversal_chapter(errors: list[str]) -> N
     rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 71, errors, "Nightglass Ledger Reversal compatibility must cover the exact seventy-one-scenario active roster")
-    ensure(len(rows) == 71 and str(rows[21].get("id", "")) == "nightglass-ledger-reversal", errors, "Nightglass Ledger Reversal must remain the exact twenty-second scenario")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 72, errors, "Nightglass Ledger Reversal compatibility must cover the exact seventy-two-scenario active roster")
+    ensure(len(rows) == 72 and str(rows[21].get("id", "")) == "nightglass-ledger-reversal", errors, "Nightglass Ledger Reversal must remain the exact twenty-second scenario")
     scenario = scenarios.get("nightglass-ledger-reversal", {})
     ensure(str(scenario.get("player_faction_id", "")) == "faction_mireclaw", errors, "Nightglass Ledger Reversal must be Mireclaw-owned")
     ensure(str(scenario.get("hero_id", "")) == "hero_mireclaw_kessa_chainboom", errors, "Nightglass Ledger Reversal must activate Kessa Chainboom")
@@ -75168,8 +75273,8 @@ def validate_sunvault_halo_reserve_refraction_claim_chapter(errors: list[str]) -
     rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 71, errors, "Halo Reserve Refraction Claim must establish the exact seventy-one-scenario active roster")
-    ensure(len(rows) == 71 and str(rows[22].get("id", "")) == "halo-reserve-refraction-claim", errors, "Halo Reserve Refraction Claim must be the exact twenty-third scenario")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 72, errors, "Halo Reserve Refraction Claim must establish the exact seventy-two-scenario active roster")
+    ensure(len(rows) == 72 and str(rows[22].get("id", "")) == "halo-reserve-refraction-claim", errors, "Halo Reserve Refraction Claim must be the exact twenty-third scenario")
     scenario = scenarios.get("halo-reserve-refraction-claim", {})
     ensure(str(scenario.get("player_faction_id", "")) == "faction_sunvault", errors, "Halo Reserve Refraction Claim must be Sunvault-owned")
     ensure(str(scenario.get("hero_id", "")) == "hero_neral", errors, "Halo Reserve Refraction Claim must activate Neral Glasswind")
@@ -75242,8 +75347,8 @@ def validate_embercourt_charter_bastion_counterseal_chapter(errors: list[str]) -
     rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 71, errors, "Charter Bastion Counterseal must establish the exact seventy-one-scenario active roster")
-    ensure(len(rows) == 71 and str(rows[23].get("id", "")) == "charter-bastion-counterseal", errors, "Charter Bastion Counterseal must be the exact twenty-fourth scenario")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 72, errors, "Charter Bastion Counterseal must establish the exact seventy-two-scenario active roster")
+    ensure(len(rows) == 72 and str(rows[23].get("id", "")) == "charter-bastion-counterseal", errors, "Charter Bastion Counterseal must be the exact twenty-fourth scenario")
     scenario = scenarios.get("charter-bastion-counterseal", {})
     ensure(str(scenario.get("player_faction_id", "")) == "faction_embercourt", errors, "Charter Bastion Counterseal must be Embercourt-owned")
     ensure(str(scenario.get("hero_id", "")) == "hero_seren", errors, "Charter Bastion Counterseal must activate Seren Valechant")
@@ -76521,6 +76626,7 @@ def main() -> int:
     validate_ai_adventure_spell_execution(errors)
     validate_ai_scouting_spell_execution(errors)
     validate_overworld_object_route_effect_authoring(errors)
+    validate_six_gate_charter_road(errors)
     validate_overworld_ten_land_transit_network(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)

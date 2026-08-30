@@ -5895,12 +5895,12 @@
       "batch004_role": "route_lock",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5910,12 +5910,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -5944,8 +5944,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "scenario_gate",
@@ -5954,8 +5954,17 @@
           "writ_missing"
         ],
         "unlock_requirement": "scenario_charter_or_writ",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Open Charter Bar",
+      "summary": "Present stamped coin to lift the old charter bar and open the west writ-road.",
+      "service_cost": {
+        "gold": 180
+      },
+      "opens_route_on_claim": true,
+      "claim_flags": {
+        "charter_bar_gate_opened": true
       }
     },
     {
@@ -5966,12 +5975,12 @@
       "batch004_role": "route_lock",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -5981,12 +5990,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -6015,8 +6024,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "scenario_gate",
@@ -6025,8 +6034,18 @@
           "oath_unmet"
         ],
         "unlock_requirement": "scenario_oath_or_event",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Renew Thorn Seal",
+      "summary": "Renew the root compact so the living seal withdraws from the forest road.",
+      "service_cost": {
+        "gold": 90,
+        "wood": 3
+      },
+      "opens_route_on_claim": true,
+      "claim_flags": {
+        "thorn_seal_gate_opened": true
       }
     },
     {
@@ -6037,12 +6056,12 @@
       "batch004_role": "route_lock",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -6052,12 +6071,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -6086,8 +6105,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "toll_gate",
@@ -6096,8 +6115,17 @@
           "permit_absent"
         ],
         "unlock_requirement": "scenario_permit_or_payment",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Pay Brass Toll",
+      "summary": "Settle the arch levy so the geared toll arm rises clear of the contract road.",
+      "service_cost": {
+        "gold": 260
+      },
+      "opens_route_on_claim": true,
+      "claim_flags": {
+        "brass_toll_arch_opened": true
       }
     },
     {
@@ -6108,12 +6136,12 @@
       "batch004_role": "route_lock",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -6123,12 +6151,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -6157,8 +6185,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "coast_chain_gate",
@@ -6167,8 +6195,8 @@
           "harbor_clearance_missing"
         ],
         "unlock_requirement": "scenario_harbor_clearance",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "coast_route_lock",
@@ -6181,7 +6209,17 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
+      },
+      "action_label": "Raise Reef Chain",
+      "summary": "Pay the landward capstan crew to lift the reef chain above the causeway.",
+      "service_cost": {
+        "gold": 120,
+        "wood": 2
+      },
+      "opens_route_on_claim": true,
+      "claim_flags": {
+        "reef_chain_boom_opened": true
       }
     },
     {
@@ -6192,12 +6230,12 @@
       "batch004_role": "route_lock",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -6207,12 +6245,12 @@
         "requires_repair": false,
         "paired_link_required": false,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -6241,8 +6279,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "scenario_gate",
@@ -6251,8 +6289,18 @@
           "winter_pass_unmarked"
         ],
         "unlock_requirement": "scenario_winter_pass",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Open Frost Bar",
+      "summary": "Reinforce the winter winch and raise the frost chain above the marked pass.",
+      "service_cost": {
+        "gold": 150,
+        "ore": 2
+      },
+      "opens_route_on_claim": true,
+      "claim_flags": {
+        "frost_toll_bar_opened": true
       }
     },
     {
@@ -6263,12 +6311,12 @@
       "batch004_role": "route_lock",
       "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -6278,12 +6326,12 @@
         "requires_repair": true,
         "paired_link_required": false,
         "one_way": false,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -6312,8 +6360,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "repair_unlock",
@@ -6322,8 +6370,18 @@
           "heat_lane_closed"
         ],
         "unlock_requirement": "scenario_repair_or_event",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
+      },
+      "action_label": "Repair Ash Sluice",
+      "summary": "Repair the counterweights and lift both sluice grates from the blackstone lane.",
+      "service_cost": {
+        "gold": 130,
+        "ore": 3
+      },
+      "opens_route_on_claim": true,
+      "claim_flags": {
+        "ash_sluice_lock_opened": true
       }
     },
     {
@@ -6776,13 +6834,12 @@
       "family": "transit_object",
       "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
       "batch004_role": "route_waypoint",
-      "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
@@ -6829,7 +6886,19 @@
         "approach_role": "land_to_land",
         "metadata_only": true,
         "runtime_route_effect_adopted": false
-      }
+      },
+      "sign_contract": {
+        "sign_kind": "route_marker",
+        "route_hint_category": "charter_gate_sequence",
+        "player_text_key": "sign.mileward_route_post",
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
+      },
+      "action_label": "Read Mileward Post",
+      "summary": "A brass mileward post records the paid road sequence through the charter front.",
+      "sign_text": "The west road opens by stamped charter first, then turns through the thorn compact; the brass toll stands beyond the second marker, while the ash sluice guards the southern return.",
+      "repeatable": true,
+      "visit_cooldown_days": 0
     },
     {
       "id": "site_road_oath_stone",
@@ -6837,13 +6906,12 @@
       "family": "transit_object",
       "content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
       "batch004_role": "route_waypoint",
-      "persistent_control": true,
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
@@ -6890,7 +6958,19 @@
         "approach_role": "land_to_land",
         "metadata_only": true,
         "runtime_route_effect_adopted": false
-      }
+      },
+      "sign_contract": {
+        "sign_kind": "route_marker",
+        "route_hint_category": "winter_reef_return",
+        "player_text_key": "sign.road_oath_stone",
+        "metadata_only": false,
+        "runtime_sign_reading_adopted": true
+      },
+      "action_label": "Read Road Oath",
+      "summary": "A carved oath stone preserves the safe order of the winter and reef passages.",
+      "sign_text": "Travelers bound east should raise the reef chain before climbing to the frost bar; the repaired ash sluice is the sure return road when the northern contract lane is contested.",
+      "repeatable": true,
+      "visit_cooldown_days": 0
     },
     {
       "id": "site_salt_skirmisher_pier",

@@ -27914,15 +27914,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid route opening"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -27951,17 +27951,19 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {
+          "gold": 180
+        },
         "blocked_state_ids": [
           "charter_bar_closed",
           "writ_missing"
         ],
-        "public_reason": "charter bar awaits route authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "present stamped coin to lift the old charter bar and open the west writ-road.",
+        "public_summary": "Live payment clears the complete authored route body, persists the opened state, and changes the gate art."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -27990,8 +27992,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "scenario_gate",
@@ -28000,8 +28002,8 @@
           "writ_missing"
         ],
         "unlock_requirement": "scenario_charter_or_writ",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -28101,15 +28103,15 @@
       "guard_expectation": {
         "tier": "heavy",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid route opening"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -28138,17 +28140,20 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {
+          "gold": 90,
+          "wood": 3
+        },
         "blocked_state_ids": [
           "thorn_seal_closed",
           "oath_unmet"
         ],
-        "public_reason": "thorn seal awaits scenario authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "renew the root compact so the living seal withdraws from the forest road.",
+        "public_summary": "Live payment clears the complete authored route body, persists the opened state, and changes the gate art."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -28177,8 +28182,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "scenario_gate",
@@ -28187,8 +28192,8 @@
           "oath_unmet"
         ],
         "unlock_requirement": "scenario_oath_or_event",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -28288,15 +28293,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid route opening"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -28326,18 +28331,18 @@
         "requires_owner": false,
         "movement_cost_delta": 0,
         "toll_resources": {
-          "gold": 0
+          "gold": 260
         },
         "blocked_state_ids": [
           "toll_arch_closed",
           "permit_absent"
         ],
-        "public_reason": "brass toll arch records a common-resource toll contract",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "settle the arch levy so the geared toll arm rises clear of the contract road.",
+        "public_summary": "Live payment clears the complete authored route body, persists the opened state, and changes the gate art."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -28366,8 +28371,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "toll_gate",
@@ -28376,8 +28381,8 @@
           "permit_absent"
         ],
         "unlock_requirement": "scenario_permit_or_payment",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -28474,15 +28479,15 @@
       "guard_expectation": {
         "tier": "heavy",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid route opening"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -28512,17 +28517,20 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {
+          "gold": 120,
+          "wood": 2
+        },
         "blocked_state_ids": [
           "reef_chain_drawn",
           "harbor_clearance_missing"
         ],
-        "public_reason": "reef chain awaits harbor clearance",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "pay the landward capstan crew to lift the reef chain above the causeway.",
+        "public_summary": "Live payment clears the complete authored route body, persists the opened state, and changes the gate art."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -28551,8 +28559,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "coast_chain_gate",
@@ -28561,8 +28569,8 @@
           "harbor_clearance_missing"
         ],
         "unlock_requirement": "scenario_harbor_clearance",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "coast_applicability": {
         "coast_role": "coast_route_lock",
@@ -28575,7 +28583,7 @@
           "river_mouth"
         ],
         "full_ship_movement_system_adopted": false,
-        "metadata_only": true
+        "metadata_only": false
       }
     },
     {
@@ -28665,15 +28673,15 @@
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid route opening"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -28702,17 +28710,20 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {
+          "gold": 150,
+          "ore": 2
+        },
         "blocked_state_ids": [
           "frost_bar_closed",
           "winter_pass_unmarked"
         ],
-        "public_reason": "frost toll bar awaits winter pass authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "reinforce the winter winch and raise the frost chain above the marked pass.",
+        "public_summary": "Live payment clears the complete authored route body, persists the opened state, and changes the gate art."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -28741,8 +28752,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "scenario_gate",
@@ -28751,8 +28762,8 @@
           "winter_pass_unmarked"
         ],
         "unlock_requirement": "scenario_winter_pass",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -28852,15 +28863,15 @@
       "guard_expectation": {
         "tier": "heavy",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live paid route opening"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "route_lock_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
@@ -28889,17 +28900,20 @@
         "requires_visit": true,
         "requires_owner": false,
         "movement_cost_delta": 0,
-        "toll_resources": {},
+        "toll_resources": {
+          "gold": 130,
+          "ore": 3
+        },
         "blocked_state_ids": [
           "ash_sluice_jammed",
           "heat_lane_closed"
         ],
-        "public_reason": "ash sluice awaits repair authorization",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "repair the countergear and lift both sluice grates from the blackstone lane",
+        "public_summary": "Live payment clears the complete authored route body, persists the opened state, and changes the gate art."
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "route_lock_live",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -28928,8 +28942,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "land_to_land",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       },
       "route_lock_contract": {
         "lock_kind": "repair_unlock",
@@ -28938,8 +28952,8 @@
           "heat_lane_closed"
         ],
         "unlock_requirement": "scenario_repair_or_event",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
@@ -30171,14 +30185,14 @@
       "guard_expectation": {
         "tier": "unguarded",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live authored waypoint guidance"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
@@ -30213,8 +30227,8 @@
           "closed",
           "unmapped"
         ],
-        "public_reason": "mileward post records route-marker metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "a brass mileward post records the paid road sequence through the charter front.",
+        "public_summary": "Authored waypoint guidance is readable at runtime; no movement discount or teleport effect is adopted."
       },
       "route_effect_boundary": {
         "status": "metadata_only",
@@ -30338,14 +30352,14 @@
       "guard_expectation": {
         "tier": "light",
         "visible_cue": "route approach and control point are readable before visit",
-        "event_expectation": "metadata contract only"
+        "event_expectation": "live authored waypoint guidance"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "sign_waypoint_live",
         "live_reward_grants": false,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
@@ -30380,8 +30394,8 @@
           "closed",
           "unmapped"
         ],
-        "public_reason": "road oath stone records route-marker metadata",
-        "public_summary": "Route metadata is authored for scenario/editor adoption; no runtime route change is active in this batch."
+        "public_reason": "a carved oath stone preserves the safe order of the winter and reef passages.",
+        "public_summary": "Authored waypoint guidance is readable at runtime; no movement discount or teleport effect is adopted."
       },
       "route_effect_boundary": {
         "status": "metadata_only",
