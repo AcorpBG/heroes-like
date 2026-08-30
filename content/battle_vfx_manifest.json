@@ -1,5 +1,28 @@
 {
   "schema_id": "battle_vfx_manifest_v1",
+  "spell_cues": {
+    "spell_cinder_burst": "vfx_spell_cinder_burst",
+    "spell_coal_rain": "vfx_spell_coal_rain",
+    "spell_sunlance_arc": "vfx_spell_sunlance_arc",
+    "spell_briar_bind": "vfx_spell_briar_bind",
+    "spell_graft_mend": "vfx_spell_graft_mend",
+    "spell_prism_bastion": "vfx_spell_prism_bastion",
+    "spell_resonant_chorus": "vfx_spell_resonant_chorus",
+    "spell_bulwark_litany": "vfx_spell_bulwark_litany",
+    "spell_quickmarch_hymn": "vfx_spell_quickmarch_hymn",
+    "spell_bloodwake_drum": "vfx_spell_bloodwake_drum",
+    "spell_relay_drum": "vfx_spell_relay_drum",
+    "spell_lens_aurora_chorus_10": "vfx_spell_lens_aurora_chorus_10",
+    "spell_lens_mirror_facet_20": "vfx_spell_lens_mirror_facet_20",
+    "spell_root_bloom_bark_20": "vfx_spell_root_bloom_bark_20",
+    "spell_root_bark_bark_08": "vfx_spell_root_bark_bark_08",
+    "spell_stone_veil": "vfx_spell_stone_veil",
+    "spell_pressure_clause": "vfx_spell_pressure_clause",
+    "spell_obituary_mark": "vfx_spell_obituary_mark",
+    "spell_fogwake_step": "vfx_spell_fogwake_step",
+    "spell_old_measure_tally_tally_20": "vfx_spell_old_measure_tally_tally_20",
+    "spell_old_measure_count_boundary_30": "vfx_spell_old_measure_count_boundary_30"
+  },
   "cues": {
     "vfx_placeholder_projectile_path": {
       "texture_path": "res://art/battle/vfx/core_projectile_path.png",
@@ -50,42 +73,49 @@
       "base_rotation_degrees": 45.0
     },
     "vfx_spell_cinder_burst": {
+      "spell_id": "spell_cinder_burst",
       "texture_path": "res://art/battle/vfx/spell_cinder_burst.png",
       "render_mode": "spell_target",
       "scale": 1.78,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_coal_rain": {
+      "spell_id": "spell_coal_rain",
       "texture_path": "res://art/battle/vfx/spell_coal_rain.png",
       "render_mode": "spell_target",
       "scale": 1.82,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_sunlance_arc": {
+      "spell_id": "spell_sunlance_arc",
       "texture_path": "res://art/battle/vfx/spell_sunlance_arc.png",
       "render_mode": "spell_projectile",
       "scale": 1.74,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_briar_bind": {
+      "spell_id": "spell_briar_bind",
       "texture_path": "res://art/battle/vfx/spell_briar_bind.png",
       "render_mode": "spell_target",
       "scale": 1.62,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_graft_mend": {
+      "spell_id": "spell_graft_mend",
       "texture_path": "res://art/battle/vfx/spell_graft_mend.png",
       "render_mode": "spell_target",
       "scale": 1.56,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_prism_bastion": {
+      "spell_id": "spell_prism_bastion",
       "texture_path": "res://art/battle/vfx/spell_prism_bastion.png",
       "render_mode": "spell_target",
       "scale": 1.60,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_resonant_chorus": {
+      "spell_id": "spell_resonant_chorus",
       "texture_path": "res://art/battle/vfx/spell_resonant_chorus.png",
       "render_mode": "spell_target",
       "scale": 1.58,
@@ -95,6 +125,132 @@
       "texture_path": "res://art/battle/vfx/spell_command_ward.png",
       "render_mode": "spell_target",
       "scale": 1.58,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_bulwark_litany": {
+      "spell_id": "spell_bulwark_litany",
+      "texture_path": "res://art/battle/vfx/spell_bulwark_litany.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_bulwark_litany_source.png",
+      "alt_text": "Three interlocking bronze shield ribs rise inside a low amber oath ring.",
+      "render_mode": "spell_target",
+      "scale": 2.16,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_quickmarch_hymn": {
+      "spell_id": "spell_quickmarch_hymn",
+      "texture_path": "res://art/battle/vfx/spell_quickmarch_hymn.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_quickmarch_hymn_source.png",
+      "alt_text": "Three brass pennant horns race above a bright bootstep and streaming amber cloth.",
+      "render_mode": "spell_target",
+      "scale": 2.08,
+      "base_rotation_degrees": -12.0
+    },
+    "vfx_spell_bloodwake_drum": {
+      "spell_id": "spell_bloodwake_drum",
+      "texture_path": "res://art/battle/vfx/spell_bloodwake_drum.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_bloodwake_drum_source.png",
+      "alt_text": "A hide war drum stands inside a crescent surge of dark red bog water and reeds.",
+      "render_mode": "spell_target",
+      "scale": 2.20,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_relay_drum": {
+      "spell_id": "spell_relay_drum",
+      "texture_path": "res://art/battle/vfx/spell_relay_drum.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_relay_drum_source.png",
+      "alt_text": "Three reed-frame signal drums relay teal and amber ripples around a triangle.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_aurora_chorus_10": {
+      "spell_id": "spell_lens_aurora_chorus_10",
+      "texture_path": "res://art/battle/vfx/spell_lens_aurora_chorus_10.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_lens_aurora_chorus_10_source.png",
+      "alt_text": "Five glass tuning vanes fan from a faceted star and carry separate aurora ribbons.",
+      "render_mode": "spell_target",
+      "scale": 2.18,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_mirror_facet_20": {
+      "spell_id": "spell_lens_mirror_facet_20",
+      "texture_path": "res://art/battle/vfx/spell_lens_mirror_facet_20.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_lens_mirror_facet_20_source.png",
+      "alt_text": "A tilted silver mirror splits one amber ray into a blue crystalline half-shell.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_root_bloom_bark_20": {
+      "spell_id": "spell_root_bloom_bark_20",
+      "texture_path": "res://art/battle/vfx/spell_root_bloom_bark_20.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_root_bloom_bark_20_source.png",
+      "alt_text": "Six mossy bark plates bloom around green sap and small ivory flowers.",
+      "render_mode": "spell_target",
+      "scale": 2.16,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_root_bark_bark_08": {
+      "spell_id": "spell_root_bark_bark_08",
+      "texture_path": "res://art/battle/vfx/spell_root_bark_bark_08.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_root_bark_bark_08_source.png",
+      "alt_text": "Overlapping dark bark strips form an empty mantle fastened by two living vine knots.",
+      "render_mode": "spell_target",
+      "scale": 2.08,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_stone_veil": {
+      "spell_id": "spell_stone_veil",
+      "texture_path": "res://art/battle/vfx/spell_stone_veil.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_stone_veil_source.png",
+      "alt_text": "Five chained basalt slabs rise in an arc with narrow molten seams.",
+      "render_mode": "spell_target",
+      "scale": 2.16,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_pressure_clause": {
+      "spell_id": "spell_pressure_clause",
+      "texture_path": "res://art/battle/vfx/spell_pressure_clause.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_pressure_clause_source.png",
+      "alt_text": "Opposing brass piston jaws crush a red-hot riveted core through steam and ember shards.",
+      "render_mode": "spell_target",
+      "scale": 2.20,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_obituary_mark": {
+      "spell_id": "spell_obituary_mark",
+      "texture_path": "res://art/battle/vfx/spell_obituary_mark.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_obituary_mark_source.png",
+      "alt_text": "Four black salt-flecked ink strokes close around a cold lantern flame.",
+      "render_mode": "spell_target",
+      "scale": 2.10,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_fogwake_step": {
+      "spell_id": "spell_fogwake_step",
+      "texture_path": "res://art/battle/vfx/spell_fogwake_step.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_fogwake_step_source.png",
+      "alt_text": "Salt-wet boot impressions climb a pale crescent wake toward a hooded lantern.",
+      "render_mode": "spell_target",
+      "scale": 2.08,
+      "base_rotation_degrees": -10.0
+    },
+    "vfx_spell_old_measure_tally_tally_20": {
+      "spell_id": "spell_old_measure_tally_tally_20",
+      "texture_path": "res://art/battle/vfx/spell_old_measure_tally_tally_20.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_old_measure_tally_tally_20_source.png",
+      "alt_text": "A hinged brass survey caliper snaps shut across plain notched ebony rods.",
+      "render_mode": "spell_target",
+      "scale": 2.16,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_old_measure_count_boundary_30": {
+      "spell_id": "spell_old_measure_count_boundary_30",
+      "texture_path": "res://art/battle/vfx/spell_old_measure_count_boundary_30.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_old_measure_count_boundary_30_source.png",
+      "alt_text": "Six survey stakes and plumb weights lock a brass chain into an irregular boundary.",
+      "render_mode": "spell_target",
+      "scale": 2.16,
       "base_rotation_degrees": 0.0
     },
     "vfx_placeholder_idle_shadow": {

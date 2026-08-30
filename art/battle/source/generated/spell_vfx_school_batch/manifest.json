@@ -1,0 +1,164 @@
+{
+  "schema": "battle_spell_vfx_school_batch_source_manifest_v1",
+  "content_slice_id": "content-fourteen-spell-school-battle-vfx-identities-10184",
+  "generation_mode": "built_in_image_gen",
+  "asset_policy": "original_generated_transparent_battle_vfx_no_homm_art_import",
+  "shared_final_prompt": "Transparent 2D battle spell VFX sprite for a production fantasy strategy game; hand-painted, crisp non-color silhouette, centered on a square canvas with transparent padding and readable at 96 pixels; magical effect only; genuinely transparent clean alpha; no text, letters, numerals, readable runes, logos, border, ground plane, checkerboard, watermark, characters, buildings, copied game imagery, or opaque full-canvas haze.",
+  "runtime_derivation": "Trim transparent source bounds, proportionally fit within 336x336, center on a 384x384 transparent canvas, and preserve RGBA alpha.",
+  "items": [
+    {
+      "spell_id": "spell_bulwark_litany",
+      "cue_id": "vfx_spell_bulwark_litany",
+      "prompt_subject": "Three interlocking upright bronze shield ribs and a low amber oath ring with square parchment motes.",
+      "accessible_description": "Three interlocking bronze shield ribs rise inside a low amber oath ring.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d0a6edd5-843d-426f-b9f5-d8eee7e86a8a.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_bulwark_litany_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_bulwark_litany.png",
+      "source_sha256": "9de6522a2301d53a81ab77077fe34bb364f57b7b7296761bb37d72f9c69f9b23",
+      "runtime_sha256": "ed071054d2f61626414e2135b52288348912ac21e68d860cea84bd3b41a8085f"
+    },
+    {
+      "spell_id": "spell_quickmarch_hymn",
+      "cue_id": "vfx_spell_quickmarch_hymn",
+      "prompt_subject": "Three forward-leaning brass pennant horns crossing a bright bootstep pulse with amber wind ribbons.",
+      "accessible_description": "Three brass pennant horns race above a bright bootstep and streaming amber cloth.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-65a3724c-b5bd-4f18-945f-e8f75bd29729.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_quickmarch_hymn_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_quickmarch_hymn.png",
+      "source_sha256": "22872be77cf10f45d1a120170f3c7a543a9cd6ad6e7353657101115e64cf989a",
+      "runtime_sha256": "2f031c8ddbee6a233c282b000c249ec2df39a8fa45aebd131842ed63c8d09031"
+    },
+    {
+      "spell_id": "spell_bloodwake_drum",
+      "cue_id": "vfx_spell_bloodwake_drum",
+      "prompt_subject": "A squat hide war drum struck by a crescent surge of dark red bog water and outward reed-rhythm pulses.",
+      "accessible_description": "A hide war drum stands inside a crescent surge of dark red bog water and reeds.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-e7562f92-992f-424b-9f36-8ec79e18bae0.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_bloodwake_drum_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_bloodwake_drum.png",
+      "source_sha256": "eafc8132cf529b3cf56f848784ba4860266958debabe7290c7680113c5bbebd3",
+      "runtime_sha256": "bc50b7ea6ef694325431ca12a8d231e4a10aa944c226dbf0b19816dd5e399bbe"
+    },
+    {
+      "spell_id": "spell_relay_drum",
+      "cue_id": "vfx_spell_relay_drum",
+      "prompt_subject": "Three suspended reed-frame signal drums connected by alternating teal and amber sound arcs and droplets.",
+      "accessible_description": "Three reed-frame signal drums relay teal and amber ripples around a triangle.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a9d460c0-c7c3-4450-87eb-764bee03914e.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_relay_drum_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_relay_drum.png",
+      "source_sha256": "09aad03aaf4670ee1b50c56fc0b793ca90daca7ad5fa32a8174d00dad794cf81",
+      "runtime_sha256": "e86d5803cd5274b6688d2adf9d614a55f29312ae8af99a2d2e00bc8f55524865"
+    },
+    {
+      "spell_id": "spell_lens_aurora_chorus_10",
+      "cue_id": "vfx_spell_lens_aurora_chorus_10",
+      "prompt_subject": "Five upright translucent glass tuning vanes fanning around a faceted star prism with separate aurora ribbons.",
+      "accessible_description": "Five glass tuning vanes fan from a faceted star and carry separate aurora ribbons.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-871f3af1-c0ca-4ca5-9d30-258f580da42b.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_lens_aurora_chorus_10_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_lens_aurora_chorus_10.png",
+      "source_sha256": "1b946fbff5c9b7ccb4f49c5bd60a65ef020fc4bd742ac9134ce583e4abc00f0a",
+      "runtime_sha256": "bca7b3eedc2f898e2cc09b83a2da91a5fb85a5e45224f6e12dd2e7ddbe013feb"
+    },
+    {
+      "spell_id": "spell_lens_mirror_facet_20",
+      "cue_id": "vfx_spell_lens_mirror_facet_20",
+      "prompt_subject": "A tilted hexagonal silver-glass mirror splitting an amber ray into six cool shards that form a half-shell.",
+      "accessible_description": "A tilted silver mirror splits one amber ray into a blue crystalline half-shell.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ea6ed44c-d70e-4e80-b2b5-73515b4719d0.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_lens_mirror_facet_20_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_lens_mirror_facet_20.png",
+      "source_sha256": "0cbd434f95f88902a2998e31ca59cbb62746c90fca2fb3638f78eadc054e2246",
+      "runtime_sha256": "df1f0c36c9fc59ce1bfe2b3d37343500cbeced7bb52dbeb54c64320f33599c73"
+    },
+    {
+      "spell_id": "spell_root_bloom_bark_20",
+      "cue_id": "vfx_spell_root_bloom_bark_20",
+      "prompt_subject": "Six thick living bark plates blooming outward with ivory flowers and green sap light beneath.",
+      "accessible_description": "Six mossy bark plates bloom around green sap and small ivory flowers.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f555addd-3de5-45b9-8ed9-d4796fe4a281.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_root_bloom_bark_20_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_root_bloom_bark_20.png",
+      "source_sha256": "495482084cb613253acbf8de3e4f3b814603fbcc9fbad9ce88a51ee0d0aeb5a7",
+      "runtime_sha256": "e7f2099fa3243f1a2cb4a378b40b4f85ee36cf1d349d5822937d2224ef825039"
+    },
+    {
+      "spell_id": "spell_root_bark_bark_08",
+      "cue_id": "vfx_spell_root_bark_bark_08",
+      "prompt_subject": "Overlapping curved strips of dark bark wrapping upward as an empty mantle with two living vine knots.",
+      "accessible_description": "Overlapping dark bark strips form an empty mantle fastened by two living vine knots.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8117be60-6972-40ff-9938-38c58b1f703a.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_root_bark_bark_08_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_root_bark_bark_08.png",
+      "source_sha256": "031b5133fcb87e8c9b191405167f7117c76e17d0a400f7602709c883c1b03522",
+      "runtime_sha256": "30bc702b8d6446afde3fd36a413ce250ff918b65877954b80d01f328baa56bba"
+    },
+    {
+      "spell_id": "spell_stone_veil",
+      "cue_id": "vfx_spell_stone_veil",
+      "prompt_subject": "Five soot-dark basalt slabs rising in a staggered arc with molten seams and orbiting iron filings.",
+      "accessible_description": "Five chained basalt slabs rise in an arc with narrow molten seams.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-f1cfc6a6-501b-4008-958f-87cd2071c20b.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_stone_veil_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_stone_veil.png",
+      "source_sha256": "28d075f1f40b35df888073f62df062336a02858f38020ee87982be7b00e23eec",
+      "runtime_sha256": "0187ee19f5a7626a9da7bab4723d79fd74211bdc6404d6acf1c36067f9d5d7a9"
+    },
+    {
+      "spell_id": "spell_pressure_clause",
+      "cue_id": "vfx_spell_pressure_clause",
+      "prompt_subject": "Opposing brass piston jaws compressing a red-hot riveted iron core through sharp steam jets and ember fractures.",
+      "accessible_description": "Opposing brass piston jaws crush a red-hot riveted core through steam and ember shards.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-363a43c6-0aed-4da2-a78e-28198519774c.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_pressure_clause_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_pressure_clause.png",
+      "source_sha256": "56f079a8e9f07d8a68323e401cf1d1ae6499a4caa3ad9ed176def77ea946bf7e",
+      "runtime_sha256": "d2f5e82be59d93f795c54753fc72ae11ef8ca6cc6c44f61d07947352e277f107"
+    },
+    {
+      "spell_id": "spell_obituary_mark",
+      "cue_id": "vfx_spell_obituary_mark",
+      "prompt_subject": "Four sweeping black ink strokes closing into an uneven diamond around a cold lantern flame with salt-white droplets.",
+      "accessible_description": "Four black salt-flecked ink strokes close around a cold lantern flame.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d953cc80-183f-4f65-8797-d857d4e0a931.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_obituary_mark_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_obituary_mark.png",
+      "source_sha256": "f908fc0386f069ef8a557b6b7809b315143e3aea0dc07987624bd868ad1c52c9",
+      "runtime_sha256": "37ca59d20d5719a0965635c3ea3e386dd73c05f129957ebe20f6bfdc0e832f54"
+    },
+    {
+      "spell_id": "spell_fogwake_step",
+      "cue_id": "vfx_spell_fogwake_step",
+      "prompt_subject": "Salt-wet boot impressions appearing across a crescent coastal mist wake toward a small hooded lantern streak.",
+      "accessible_description": "Salt-wet boot impressions climb a pale crescent wake toward a hooded lantern.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-53b23f3f-363c-4a6a-b623-d1d5373135db.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_fogwake_step_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_fogwake_step.png",
+      "source_sha256": "4ae717e51564307e4d9e47ecf251fc994b3e6c8a863656bf567776e8f5088caa",
+      "runtime_sha256": "8376c4fe129862baa88feb33901f6ea0302970270fac83f3d79977b35382b578"
+    },
+    {
+      "spell_id": "spell_old_measure_tally_tally_20",
+      "cue_id": "vfx_spell_old_measure_tally_tally_20",
+      "prompt_subject": "A massive hinged brass survey caliper snapping shut across plain notched ebony counting rods.",
+      "accessible_description": "A hinged brass survey caliper snaps shut across plain notched ebony rods.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-41f3e7e8-d5d7-4aab-93ec-4aedc30894ab.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_old_measure_tally_tally_20_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_old_measure_tally_tally_20.png",
+      "source_sha256": "cbd5241c9e465ea2d4fcc8e5ee29e13c4da6b37fa8a982e80dcd9bcc590048b7",
+      "runtime_sha256": "5d0f7ac0127f26367be7d0fd4bb4a7c15fc2e32f387b0c51a9327079ccae62f9"
+    },
+    {
+      "spell_id": "spell_old_measure_count_boundary_30",
+      "cue_id": "vfx_spell_old_measure_count_boundary_30",
+      "prompt_subject": "Six iron survey stakes joined by taut brass measuring chain with ivory plumb weights locking each corner.",
+      "accessible_description": "Six survey stakes and plumb weights lock a brass chain into an irregular boundary.",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-73e4b0f5-6d57-411a-8885-50360cdecde2.png",
+      "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_old_measure_count_boundary_30_source.png",
+      "runtime_path": "res://art/battle/vfx/spell_old_measure_count_boundary_30.png",
+      "source_sha256": "7ba142ad7f791044daa8593f97fb5a269126b5b48159daa05291cc2557a28986",
+      "runtime_sha256": "d49e45e2fdbfcf818b9521e9a5d2856f8fc00c4b42ca0d5cb75e673127d04a2f"
+    }
+  ]
+}

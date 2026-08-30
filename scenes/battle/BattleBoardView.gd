@@ -2454,21 +2454,14 @@ func _prepend_unique_string(value: String, items: Array) -> Array:
 	return result
 
 func _spell_specific_vfx_cue_id(spell_id: String, resolution_type: String) -> String:
-	match spell_id.strip_edges():
-		"spell_cinder_burst":
-			return "vfx_spell_cinder_burst"
-		"spell_coal_rain":
-			return "vfx_spell_coal_rain"
-		"spell_sunlance_arc":
-			return "vfx_spell_sunlance_arc"
-		"spell_briar_bind":
-			return "vfx_spell_briar_bind"
-		"spell_graft_mend":
-			return "vfx_spell_graft_mend"
-		"spell_prism_bastion":
-			return "vfx_spell_prism_bastion"
-		"spell_resonant_chorus":
-			return "vfx_spell_resonant_chorus"
+	_load_battle_vfx_manifest()
+	var normalized_spell_id := spell_id.strip_edges()
+	var spell_cues: Dictionary = _battle_vfx_manifest.get("spell_cues", {}) if _battle_vfx_manifest.get("spell_cues", {}) is Dictionary else {}
+	var cue_id := String(spell_cues.get(normalized_spell_id, "")).strip_edges()
+	if cue_id != "":
+		var cue := _battle_vfx_manifest_cue(cue_id)
+		if String(cue.get("spell_id", "")).strip_edges() == normalized_spell_id:
+			return cue_id
 	var family := resolution_type.strip_edges()
 	match family:
 		"effect":
@@ -3370,6 +3363,20 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 	return entries
 
 func _vfx_kind_for_cue_id(cue_id: String) -> String:
+	var spell_cue := _battle_vfx_manifest_cue(cue_id)
+	var spell_id := String(spell_cue.get("spell_id", "")).strip_edges()
+	if spell_id != "":
+		return spell_id
+	if cue_id in [
+		"vfx_spell_cinder_burst",
+		"vfx_spell_coal_rain",
+		"vfx_spell_sunlance_arc",
+		"vfx_spell_briar_bind",
+		"vfx_spell_graft_mend",
+		"vfx_spell_prism_bastion",
+		"vfx_spell_resonant_chorus",
+	]:
+		return cue_id.trim_prefix("vfx_")
 	match cue_id:
 		"vfx_placeholder_idle_shadow":
 			return "idle_shadow"
@@ -3397,20 +3404,6 @@ func _vfx_kind_for_cue_id(cue_id: String) -> String:
 			return "surrender_marker"
 		"vfx_placeholder_battle_path_ghost", "vfx_placeholder_withdraw_path":
 			return "path_ghost"
-		"vfx_spell_cinder_burst":
-			return "spell_cinder_burst"
-		"vfx_spell_coal_rain":
-			return "spell_coal_rain"
-		"vfx_spell_sunlance_arc":
-			return "spell_sunlance_arc"
-		"vfx_spell_briar_bind":
-			return "spell_briar_bind"
-		"vfx_spell_graft_mend":
-			return "spell_graft_mend"
-		"vfx_spell_prism_bastion":
-			return "spell_prism_bastion"
-		"vfx_spell_resonant_chorus":
-			return "spell_resonant_chorus"
 		"vfx_spell_command_ward":
 			return "spell_command_ward"
 	return ""

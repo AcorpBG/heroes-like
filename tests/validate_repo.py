@@ -674,6 +674,7 @@ BATTLE_EVENT_ANIMATION_STATE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_event_
 BATTLE_SFX_MANIFEST_PATH = CONTENT_DIR / "battle_sfx_manifest.json"
 BATTLE_VFX_MANIFEST_PATH = CONTENT_DIR / "battle_vfx_manifest.json"
 BATTLE_VFX_ROOT = ROOT / "art" / "battle" / "vfx"
+BATTLE_SPELL_VFX_SCHOOL_BATCH_SOURCE_MANIFEST_PATH = ROOT / "art" / "battle" / "source" / "generated" / "spell_vfx_school_batch" / "manifest.json"
 BATTLE_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_battle_sfx_assets.py"
 BATTLE_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "battle"
 BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-asset-layer-report.md"
@@ -62480,6 +62481,20 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_spell_prism_bastion": ("spell_prism_bastion.png", "spell_target"),
         "vfx_spell_resonant_chorus": ("spell_resonant_chorus.png", "spell_target"),
         "vfx_spell_command_ward": ("spell_command_ward.png", "spell_target"),
+        "vfx_spell_bulwark_litany": ("spell_bulwark_litany.png", "spell_target"),
+        "vfx_spell_quickmarch_hymn": ("spell_quickmarch_hymn.png", "spell_target"),
+        "vfx_spell_bloodwake_drum": ("spell_bloodwake_drum.png", "spell_target"),
+        "vfx_spell_relay_drum": ("spell_relay_drum.png", "spell_target"),
+        "vfx_spell_lens_aurora_chorus_10": ("spell_lens_aurora_chorus_10.png", "spell_target"),
+        "vfx_spell_lens_mirror_facet_20": ("spell_lens_mirror_facet_20.png", "spell_target"),
+        "vfx_spell_root_bloom_bark_20": ("spell_root_bloom_bark_20.png", "spell_target"),
+        "vfx_spell_root_bark_bark_08": ("spell_root_bark_bark_08.png", "spell_target"),
+        "vfx_spell_stone_veil": ("spell_stone_veil.png", "spell_target"),
+        "vfx_spell_pressure_clause": ("spell_pressure_clause.png", "spell_target"),
+        "vfx_spell_obituary_mark": ("spell_obituary_mark.png", "spell_target"),
+        "vfx_spell_fogwake_step": ("spell_fogwake_step.png", "spell_target"),
+        "vfx_spell_old_measure_tally_tally_20": ("spell_old_measure_tally_tally_20.png", "spell_target"),
+        "vfx_spell_old_measure_count_boundary_30": ("spell_old_measure_count_boundary_30.png", "spell_target"),
         "vfx_placeholder_idle_shadow": ("state_idle_shadow.png", "state_center"),
         "vfx_placeholder_active_ring": ("state_active_ring.png", "state_center"),
         "vfx_placeholder_stack_fade": ("state_stack_fade.png", "state_center"),
@@ -62487,12 +62502,38 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_placeholder_battle_path_ghost": ("path_move_ghost.png", "path_follow"),
         "vfx_placeholder_withdraw_path": ("path_withdraw_ghost.png", "path_follow"),
     }
+    expected_spell_vfx_cues = {
+        "spell_cinder_burst": "vfx_spell_cinder_burst",
+        "spell_coal_rain": "vfx_spell_coal_rain",
+        "spell_sunlance_arc": "vfx_spell_sunlance_arc",
+        "spell_briar_bind": "vfx_spell_briar_bind",
+        "spell_graft_mend": "vfx_spell_graft_mend",
+        "spell_prism_bastion": "vfx_spell_prism_bastion",
+        "spell_resonant_chorus": "vfx_spell_resonant_chorus",
+        "spell_bulwark_litany": "vfx_spell_bulwark_litany",
+        "spell_quickmarch_hymn": "vfx_spell_quickmarch_hymn",
+        "spell_bloodwake_drum": "vfx_spell_bloodwake_drum",
+        "spell_relay_drum": "vfx_spell_relay_drum",
+        "spell_lens_aurora_chorus_10": "vfx_spell_lens_aurora_chorus_10",
+        "spell_lens_mirror_facet_20": "vfx_spell_lens_mirror_facet_20",
+        "spell_root_bloom_bark_20": "vfx_spell_root_bloom_bark_20",
+        "spell_root_bark_bark_08": "vfx_spell_root_bark_bark_08",
+        "spell_stone_veil": "vfx_spell_stone_veil",
+        "spell_pressure_clause": "vfx_spell_pressure_clause",
+        "spell_obituary_mark": "vfx_spell_obituary_mark",
+        "spell_fogwake_step": "vfx_spell_fogwake_step",
+        "spell_old_measure_tally_tally_20": "vfx_spell_old_measure_tally_tally_20",
+        "spell_old_measure_count_boundary_30": "vfx_spell_old_measure_count_boundary_30",
+    }
     if BATTLE_VFX_MANIFEST_PATH.exists():
         battle_vfx_manifest = json.loads(BATTLE_VFX_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(battle_vfx_manifest.get("schema_id") == "battle_vfx_manifest_v1", errors, "battle_vfx_manifest.json has the wrong schema")
         battle_vfx_cues = battle_vfx_manifest.get("cues", {})
         ensure(isinstance(battle_vfx_cues, dict), errors, "battle_vfx_manifest.json cues must be an object")
-        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, eight spell, and six state/path Battle cues")
+        spell_vfx_cues = battle_vfx_manifest.get("spell_cues", {})
+        ensure(isinstance(spell_vfx_cues, dict), errors, "battle_vfx_manifest.json spell_cues must be an object")
+        ensure(spell_vfx_cues == expected_spell_vfx_cues, errors, "battle_vfx_manifest.json must map exactly twenty-one Battle spells to exact VFX cues")
+        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, twenty-two spell, and six state/path Battle cues")
         observed_vfx_paths = set()
         observed_vfx_hashes = set()
         for cue_id, (filename, render_mode) in required_battle_vfx_cues.items():
@@ -62503,7 +62544,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
             ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
             observed_vfx_paths.add(expected_path)
-        ensure(len(observed_vfx_paths) == 22, errors, "battle VFX asset layer must use exactly eight core, eight spell, and six distinct state/path textures")
+        ensure(len(observed_vfx_paths) == 36, errors, "battle VFX asset layer must use exactly eight core, twenty-two spell, and six distinct state/path textures")
         for texture_path in sorted(observed_vfx_paths):
             disk_path = ROOT / texture_path.removeprefix("res://")
             ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
@@ -62514,7 +62555,66 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 observed_vfx_hashes.add(hashlib.sha256(disk_path.read_bytes()).hexdigest())
                 import_path = Path(str(disk_path) + ".import")
                 ensure(import_path.exists(), errors, f"battle VFX texture import metadata is missing: {texture_path}")
-        ensure(len(observed_vfx_hashes) == 22, errors, "all 22 Battle VFX textures must remain byte-distinct")
+        ensure(len(observed_vfx_hashes) == 36, errors, "all 36 Battle VFX textures must remain byte-distinct")
+        for spell_id, cue_id in expected_spell_vfx_cues.items():
+            cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
+            ensure(cue.get("spell_id") == spell_id, errors, f"battle spell VFX cue {cue_id} must retain exact owner {spell_id}")
+
+    selected_school_batch_spell_ids = {
+        "spell_bulwark_litany",
+        "spell_quickmarch_hymn",
+        "spell_bloodwake_drum",
+        "spell_relay_drum",
+        "spell_lens_aurora_chorus_10",
+        "spell_lens_mirror_facet_20",
+        "spell_root_bloom_bark_20",
+        "spell_root_bark_bark_08",
+        "spell_stone_veil",
+        "spell_pressure_clause",
+        "spell_obituary_mark",
+        "spell_fogwake_step",
+        "spell_old_measure_tally_tally_20",
+        "spell_old_measure_count_boundary_30",
+    }
+    ensure(BATTLE_SPELL_VFX_SCHOOL_BATCH_SOURCE_MANIFEST_PATH.exists(), errors, "fourteen-spell Battle VFX source manifest is missing")
+    if BATTLE_SPELL_VFX_SCHOOL_BATCH_SOURCE_MANIFEST_PATH.exists():
+        source_manifest = json.loads(BATTLE_SPELL_VFX_SCHOOL_BATCH_SOURCE_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(source_manifest.get("schema") == "battle_spell_vfx_school_batch_source_manifest_v1", errors, "fourteen-spell Battle VFX source manifest has the wrong schema")
+        ensure(source_manifest.get("generation_mode") == "built_in_image_gen", errors, "fourteen-spell Battle VFX source manifest must retain built-in generation provenance")
+        ensure(bool(str(source_manifest.get("shared_final_prompt", "")).strip()), errors, "fourteen-spell Battle VFX source manifest needs the shared final prompt")
+        source_items = source_manifest.get("items", [])
+        ensure(isinstance(source_items, list) and len(source_items) == 14, errors, "fourteen-spell Battle VFX source manifest must contain exactly fourteen items")
+        observed_source_spell_ids = set()
+        observed_source_hashes = set()
+        observed_runtime_hashes = set()
+        for item in source_items if isinstance(source_items, list) else []:
+            ensure(isinstance(item, dict), errors, "fourteen-spell Battle VFX source manifest items must be objects")
+            if not isinstance(item, dict):
+                continue
+            spell_id = str(item.get("spell_id", ""))
+            observed_source_spell_ids.add(spell_id)
+            ensure(item.get("cue_id") == expected_spell_vfx_cues.get(spell_id), errors, f"fourteen-spell Battle VFX source item {spell_id} has the wrong cue")
+            ensure(bool(str(item.get("prompt_subject", "")).strip()), errors, f"fourteen-spell Battle VFX source item {spell_id} needs a prompt subject")
+            ensure(bool(str(item.get("accessible_description", "")).strip()), errors, f"fourteen-spell Battle VFX source item {spell_id} needs accessible description")
+            source_path = ROOT / str(item.get("source_path", "")).removeprefix("res://")
+            runtime_path = ROOT / str(item.get("runtime_path", "")).removeprefix("res://")
+            ensure(source_path.exists(), errors, f"fourteen-spell Battle VFX source is missing for {spell_id}")
+            ensure(runtime_path.exists(), errors, f"fourteen-spell Battle VFX runtime asset is missing for {spell_id}")
+            if source_path.exists():
+                source_hash = hashlib.sha256(source_path.read_bytes()).hexdigest()
+                observed_source_hashes.add(source_hash)
+                ensure(source_hash == item.get("source_sha256"), errors, f"fourteen-spell Battle VFX source hash drifted for {spell_id}")
+                ensure(png_size(source_path) == (1254, 1254), errors, f"fourteen-spell Battle VFX source must remain 1254x1254 for {spell_id}")
+            if runtime_path.exists():
+                runtime_hash = hashlib.sha256(runtime_path.read_bytes()).hexdigest()
+                observed_runtime_hashes.add(runtime_hash)
+                ensure(runtime_hash == item.get("runtime_sha256"), errors, f"fourteen-spell Battle VFX runtime hash drifted for {spell_id}")
+                ensure(png_size(runtime_path) == (384, 384), errors, f"fourteen-spell Battle VFX runtime asset must remain 384x384 for {spell_id}")
+                header = runtime_path.read_bytes()[:26]
+                ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"fourteen-spell Battle VFX runtime asset must retain alpha for {spell_id}")
+        ensure(observed_source_spell_ids == selected_school_batch_spell_ids, errors, "fourteen-spell Battle VFX source manifest must cover the exact selected spell ids")
+        ensure(len(observed_source_hashes) == 14, errors, "fourteen-spell Battle VFX generated sources must remain byte-distinct")
+        ensure(len(observed_runtime_hashes) == 14, errors, "fourteen-spell Battle VFX runtime assets must remain byte-distinct")
 
     ensure(BATTLE_SFX_MANIFEST_PATH.exists(), errors, "battle_sfx_manifest.json is missing")
     ensure(BATTLE_SFX_GENERATOR_PATH.exists(), errors, "generate_battle_sfx_assets.py is missing")
@@ -62942,13 +63042,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in token_scale_control_block, errors, f"Battle Board stack-token scale proof must stay independent and read-only: {forbidden_token}")
     ensure(battle_controller_text.count("_validate_stack_token_scale(board, session)") == 1, errors, "Battle Board focused owner must invoke the stack-token scale proof exactly once")
     for required_mapping in (
-        '"spell_prism_bastion":\n\t\t\treturn "vfx_spell_prism_bastion"',
-        '"spell_resonant_chorus":\n\t\t\treturn "vfx_spell_resonant_chorus"',
+        '_battle_vfx_manifest.get("spell_cues", {})',
+        'String(cue.get("spell_id", "")).strip_edges() == normalized_spell_id',
+        'return cue_id',
         '"spell_prism_bastion":\n\t\t\treturn "audio_spell_prism_bastion"',
         '"spell_resonant_chorus":\n\t\t\treturn "audio_spell_resonant_chorus"',
-        '"vfx_spell_resonant_chorus":\n\t\t\treturn "spell_resonant_chorus"',
+        'return spell_id',
     ):
-        ensure(required_mapping in battle_board_text, errors, f"BattleBoardView.gd is missing exact Resonant Chorus/Prism identity mapping {required_mapping}")
+        ensure(required_mapping in battle_board_text, errors, f"BattleBoardView.gd is missing data-driven spell VFX or exact audio identity token {required_mapping}")
     ensure(
         '"spell_prism_bastion", "spell_resonant_chorus":\n\t\t\treturn "vfx_spell_prism_bastion"' not in battle_board_text,
         errors,
@@ -63229,20 +63330,28 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "spell-specific imported asset",
         "_validate_spell_specific_cue_identity_fail_closed",
         "battle spell identity catalog count",
-        "battle spell explicit identity count",
-        "battle spell shared effect identity count",
-        "battle spell generic-only identity count",
+        "battle spell explicit vfx identity count",
+        "battle spell shared effect vfx identity count",
+        "battle spell generic-only vfx identity count",
+        "battle spell explicit audio identity count",
+        "battle spell shared effect audio identity count",
+        "battle spell generic-only audio identity count",
         "unknown spell vfx fail closed",
         "unknown spell audio fail closed",
-        "pressure clause generic identity public cast",
-        "pressure clause presentation preserves session authority",
-        "pressure clause generic cast vfx",
-        "pressure clause generic cast audio",
-        "Pressure Clause retained Cinder Burst presentation identity",
+        "unregistered damage spell generic identity public cast",
+        "unregistered damage presentation preserves authority",
+        "unregistered damage generic cast vfx",
+        "unregistered damage generic cast audio",
         '"battle_spell_count": battle_spell_ids.size()',
-        '"explicit_count": explicit_count',
-        '"shared_effect_count": shared_effect_count',
-        '"generic_only_count": generic_only_count',
+        '"explicit_vfx_count": explicit_vfx_count',
+        '"shared_effect_vfx_count": shared_effect_vfx_count',
+        '"generic_only_vfx_count": generic_only_vfx_count',
+        "_validate_spell_school_batch_vfx_identities",
+        "school batch exact cast count",
+        "school batch exact vfx cue",
+        "school batch imported vfx",
+        "school batch reduced result parity",
+        "school batch reduced authority parity",
         "move path ghost imported asset",
         "death fade imported asset",
         "retreat path imported asset",
@@ -63443,7 +63552,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             "`vfx_spell_cinder_burst`",
             "`audio_spell_cinder_burst`",
             "presentation-battle-spell-vfx-asset-adoption-10184",
-            "all seven spell VFX mappings load as distinct live draw entries",
+            "all twenty-one exact spell mappings and the shared Command Ward asset load as distinct live draw entries",
             "No final sound design.",
             "No particles, shaders, or broad non-spell VFX migration.",
             "No combat balance tuning.",

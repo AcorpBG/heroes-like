@@ -15505,6 +15505,37 @@ Non-goals:
 - no new faction, hero, unit, town, spell, artifact, building, combat rule, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes map, encounter, army, landmark, name, text, heraldry, or protected visual expression.
 
+## Fourteen Spell-School Battle VFX Identities
+
+id: `content-fourteen-spell-school-battle-vfx-identities-10184`
+
+Status: completed.
+
+Current finding:
+- all 142 buildings, 130 units, 60 heroes, 26 towns, 121 encounters, and 112 spell icons already own exact live art, so another identity pass on those complete surfaces would not address the largest remaining presentation gap;
+- ninety spells are usable in Battle, but only seven spell ids own an exact visual cue, fifty-five effect-family spells share Command Ward, and twenty-eight damage/recovery/cleanse spells fall back to generic cast/impact visuals;
+- the highest-use uncovered battle spells and the newer school catalogs therefore read as mechanically different but visually interchangeable during repeated play.
+
+Implementation boundary:
+- add fourteen original transparent spell-impact assets, two for each battle school: Bulwark Litany and Quickmarch Hymn; Bloodwake Drum and Relay Drum; Aurora Chorus and Mirror Facet; Bloom Bark and Bark Mantle; Stone Veil and Pressure Clause; Obituary Mark and Fogwake Step; Tally Verdict and Count Boundary;
+- replace the hard-coded seven-spell presentation switch with an exact data-driven spell-to-cue table in the existing Battle VFX manifest, while preserving generic fallbacks for every unregistered or invalid identity;
+- retain high-resolution generated masters and exact prompt/hash/alt-text provenance outside release packages, normalize compact 384x384 runtime RGBA assets, and keep reduced-motion/reduced-flash suppression and session authority unchanged;
+- preserve all spell rules, values, AI choices, save version 9, deterministic battle results, Windows/Linux behavior, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all fourteen selected spells cast through public Battle rules, select their exact imported visual identity, remain visually and byte distinct, and preserve identical authoritative outcomes under normal and reduced presentation settings;
+- one consolidated faction-spanning gameplay/visual smoke runs after the full batch and proves exact cue ownership, runtime alpha/imports, fail-closed fallback, and representative 1280x720 captures without per-asset smoke churn;
+- repository validation and sequential Linux/Windows packaged startup pass once after the complete batch, with matching packaged resource sets below the unchanged ceiling and generated masters excluded.
+
+Completion result:
+- fourteen original, transparent, byte-distinct 384x384 runtime VFX now give two high-use spells in each Battle school exact manifest-owned identities; public normal and reduced-presentation casts preserved identical authoritative outcomes across one consolidated 34-case report;
+- representative Aurora Chorus and Bloodwake Drum captures passed visual review at 1280x720 and 1920x1080, while reduced motion/flash retained compact cast feedback and suppressed the strong imported VFX;
+- repository validation passed, then Linux and Windows release exports and packaged boots passed sequentially at 245116384 bytes each, 4883616 bytes below the ceiling; both packages contain the same 4384 resource paths and all fourteen runtime imports/textures, with only Godot's expected platform-specific `project.binary` metadata differing, and neither package contains generated source masters.
+
+Non-goals:
+- no new spell definition, faction, hero, town, unit, encounter, scenario, combat formula, spell balance, AI rule, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes spell effect, icon, name, animation, text, faction device, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
