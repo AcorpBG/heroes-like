@@ -3,6 +3,7 @@ extends Node
 const SCENARIO_ID := "ninefold-confluence"
 const THIRD_HEARTHS_SCENARIO_ID := "third-hearths-confluence"
 const THIRD_HEARTHS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png"
+const HORIZON_CITADELS_ATLAS_PATH := "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const TOWN_VISUAL_EXTENT_TILES := 1.36
 const TOWN_EXTENT_FRACTION := 0.68
@@ -28,6 +29,12 @@ const EXPECTED_TOWN_ASSETS := {
 	"town_briarwheel_enclave": "town_identity_briarwheel_enclave",
 	"town_cindercoil_foundry": "town_identity_cindercoil_foundry",
 	"town_gloamwake_anchorage": "town_identity_gloamwake_anchorage",
+	"town_rainwrit_bastion": "town_identity_rainwrit_bastion",
+	"town_hollowreed_sanctuary": "town_identity_hollowreed_sanctuary",
+	"town_meridian_choirhold": "town_identity_meridian_choirhold",
+	"town_crownroot_refuge": "town_identity_crownroot_refuge",
+	"town_blackbell_foundry": "town_identity_blackbell_foundry",
+	"town_pale_sounding_harbor": "town_identity_pale_sounding_harbor",
 }
 const THIRD_HEARTH_OBJECTIVES := {
 	"town_cinderlock_bastion": "hold_third_cinderlock",
@@ -53,6 +60,10 @@ func _run() -> void:
 	if not bool(third_hearths.get("ok", false)):
 		_fail("Five-faction third-hearth content failed: %s" % third_hearths)
 		return
+	var horizon_citadels := _validate_horizon_citadels_content()
+	if not bool(horizon_citadels.get("ok", false)):
+		_fail("Six Horizon Citadels content failed: %s" % horizon_citadels)
+		return
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	print("OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT %s" % JSON.stringify({
@@ -63,6 +74,7 @@ func _run() -> void:
 		"fallback_asset_id": "frontier_town",
 		"rows": rows,
 		"third_hearths": third_hearths,
+		"horizon_citadels": horizon_citadels,
 		"save_version": SessionStateStore.SAVE_VERSION,
 	}))
 	get_tree().quit(0)
@@ -248,6 +260,36 @@ func _town_by_id(towns: Array, town_id: String) -> Dictionary:
 		if town_value is Dictionary and String(town_value.get("town_id", "")) == town_id:
 			return town_value
 	return {}
+
+func _validate_horizon_citadels_content() -> Dictionary:
+	var atlas := load(HORIZON_CITADELS_ATLAS_PATH)
+	var scenario: Dictionary = ContentService.get_scenario(SCENARIO_ID)
+	var exact_town_ids := [
+		"town_rainwrit_bastion", "town_hollowreed_sanctuary", "town_meridian_choirhold",
+		"town_crownroot_refuge", "town_blackbell_foundry", "town_pale_sounding_harbor",
+	]
+	var placed_ids: Array = []
+	for placement_value in scenario.get("towns", []):
+		if placement_value is Dictionary:
+			placed_ids.append(String(placement_value.get("town_id", "")))
+	var rows: Array = []
+	for town_id in exact_town_ids:
+		var template: Dictionary = ContentService.get_town(town_id)
+		rows.append({
+			"town_id": town_id,
+			"exact": not template.is_empty()
+				and town_id in placed_ids
+				and String(template.get("content_status", "")) == "horizon_citadels_live"
+				and EXPECTED_TOWN_ASSETS.has(town_id),
+		})
+	return {
+		"ok": atlas is Texture2D and atlas.get_width() == 768 and atlas.get_height() == 128
+			and scenario.get("towns", []).size() == 12
+			and rows.all(func(row): return bool(row.get("exact", false))),
+		"scenario_id": SCENARIO_ID,
+		"case_count": rows.size(),
+		"rows": rows,
+	}
 
 func _town_scale_exact(payload: Dictionary) -> bool:
 	return not payload.is_empty() \

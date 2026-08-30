@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-six-elder-wilds-10184` is complete, expanding the nearly empty high-tier neutral roster into six distinct live late-game encounters with original battle and overworld identities.
-- Current package boundary: matching Linux and Windows release exports measure 249613476 bytes, 386524 bytes below the unchanged 250000000-byte ceiling.
+- Current implementation slice: none selected; choose the next coherent multi-content family before implementation.
+- Current package boundary: matching Linux and Windows release exports measure 249979168 bytes, 20832 bytes below the unchanged 250000000-byte ceiling. The next asset-heavy slice must reclaim package headroom before adding another large art family.
+
+## Six Horizon Citadels
+
+id: `content-six-horizon-citadels-10184`
+
+Status: completed.
+
+Completion result:
+- Rainwrit Bastion, Hollowreed Sanctuary, Meridian Choirhold, Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor are live as six original faction towns, expanding the production catalog from twenty to twenty-six exact town identities;
+- all six are placed across Ninefold Confluence with one player town, five AI-visible rival towns, five new capture objectives, one new hold objective, distinct strategic/economy/recruitment/logistics profiles, working entry/build/muster routes, and save-version-9 continuity;
+- twelve original generated masters provide six scenery-first 1600x900 town backdrops and six transparent overworld identities packed into one 768x128 atlas, with prompt/hash provenance retained and generated sources excluded from packages;
+- the single consolidated six-town live smoke passes 6/6 exact scenic identities, 6/6 exact overworld identities, 6/6 build orders, 6/6 recruit orders, five initial enemy towns, and exact save round-trip continuity; repository validation passes and Linux/Windows packages boot from matching 249979168-byte PCKs below the unchanged ceiling.
+
+Current finding:
+- the production catalog has sixty heroes and eighty-seven scenarios but only twenty towns; five factions own three authored towns apiece while Mireclaw owns five, so long-form maps repeat the same settlement identities much sooner than their heroes, encounters, or strategic routes;
+- every existing town now owns a live exact scenic backdrop and overworld identity, and the 64x64 Ninefold Confluence has enough separated regional space for a second six-faction town ring without creating another scenario record;
+- the existing data-driven town, construction, recruitment, AI ownership, exact town-art, map placement, entry routing, and save-version-9 paths can adopt six new towns without a runtime subsystem or schema change.
+
+Implementation boundary:
+- add Rainwrit Bastion, Hollowreed Sanctuary, Meridian Choirhold, Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor as six original faction towns with distinct economy, recruitment, logistics, garrison, spell-library, and strategic-role profiles built from established faction systems;
+- place all six into separated regions of Ninefold Confluence, keep Rainwrit under the player's banner, make the five rival towns explicit capture objectives, and preserve the existing town and encounter objectives;
+- generate six original scenery-first 16:9 town masters plus six transparent overworld identities with the built-in image generator, derive exact 1600x900 backdrops and established town-map surfaces, and record prompt/hash provenance outside release packages;
+- preserve existing faction units and buildings, deterministic authority, save version 9, accessibility summaries, Windows/Linux paths, generated-source exclusion, and the 250000000-byte package ceiling.
+
+Completion criteria:
+- all six towns resolve from the live scenario with exact faction ownership, distinct strategic and economy data, exact backdrop and overworld art, working town entry, build and muster paths, AI-visible enemy ownership, and save-version-9 continuity;
+- Ninefold retains its prior objectives and adds the five rival Horizon Citadels as explicit capture requirements without coordinate collisions or fallback art;
+- one consolidated six-town scenario/gameplay/art/save smoke runs only after the complete family, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit, hero, building, spell, artifact, encounter, campaign, RMG behavior, battle rule, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes town, name, layout, architecture, map placement, backdrop, icon, or protected visual expression.
 
 ## Six Elder Wilds
 

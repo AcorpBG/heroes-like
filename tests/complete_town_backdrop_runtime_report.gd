@@ -24,6 +24,12 @@ const TOWN_CASES := {
 	"town_briarwheel_enclave": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_briarwheel_enclave.png"},
 	"town_cindercoil_foundry": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_cindercoil_foundry.png"},
 	"town_gloamwake_anchorage": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_gloamwake_anchorage.png"},
+	"town_rainwrit_bastion": {"scenario_id": "ninefold-confluence", "path": "res://art/towns/runtime/backdrops/horizon_citadels/town_rainwrit_bastion.png"},
+	"town_hollowreed_sanctuary": {"scenario_id": "ninefold-confluence", "path": "res://art/towns/runtime/backdrops/horizon_citadels/town_hollowreed_sanctuary.png"},
+	"town_meridian_choirhold": {"scenario_id": "ninefold-confluence", "path": "res://art/towns/runtime/backdrops/horizon_citadels/town_meridian_choirhold.png"},
+	"town_crownroot_refuge": {"scenario_id": "ninefold-confluence", "path": "res://art/towns/runtime/backdrops/horizon_citadels/town_crownroot_refuge.png"},
+	"town_blackbell_foundry": {"scenario_id": "ninefold-confluence", "path": "res://art/towns/runtime/backdrops/horizon_citadels/town_blackbell_foundry.png"},
+	"town_pale_sounding_harbor": {"scenario_id": "ninefold-confluence", "path": "res://art/towns/runtime/backdrops/horizon_citadels/town_pale_sounding_harbor.png"},
 }
 const FACTION_FALLBACK_CASES := {
 	"town_riverwatch": "faction_embercourt",
@@ -101,7 +107,7 @@ func _catalog_contract() -> Dictionary:
 		rows.append({"town_id": town_id, "path": expected_path, "bytes": bytes.size(), "sha256": digest, "exact": exact})
 		hashes.append(digest)
 	return {
-		"ok": rows.size() == 20 and _unique(hashes).size() == 20 and rows.all(func(row): return bool(row.get("exact", false))),
+		"ok": rows.size() == 26 and _unique(hashes).size() == 26 and rows.all(func(row): return bool(row.get("exact", false))),
 		"town_count": rows.size(),
 		"unique_art_count": _unique(hashes).size(),
 		"rows": rows,

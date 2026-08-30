@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "generator": "built_in_image_gen",
+  "use_case": "stylized-concept",
+  "asset_family": "horizon_citadels_town_screen_backdrops",
+  "runtime_size": [1600, 900],
+  "source_size": [1672, 941],
+  "composition_contract": "scenery-first 16:9 faction town interior with calm central and lower-middle control space, no text, logo, frame, watermark, or baked UI",
+  "items": [
+    {
+      "town_id": "town_rainwrit_bastion",
+      "source": "town_rainwrit_bastion_source.png",
+      "source_sha256": "b743b5c5a0f35ef118410e949d70f41f66d07c34ce1c27b22ec330650ee7cc2e",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-1e3a74a1-f0f2-45e9-832a-f81197e6c374.png",
+      "runtime": "res://art/towns/runtime/backdrops/horizon_citadels/town_rainwrit_bastion.png",
+      "runtime_sha256": "4e5481c46ad2d0b8cc26149baa2a8823b86d2c6868dab3333aca92e844453577",
+      "prompt_summary": "Embercourt rain citadel with stepped sluice walls, copper floodgates, charter lanterns, and wet basalt terraces."
+    },
+    {
+      "town_id": "town_hollowreed_sanctuary",
+      "source": "town_hollowreed_sanctuary_source.png",
+      "source_sha256": "e97478cebda03f5ad30672fad7c58d1a1ba844e20c1188621670ce3c7623066c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-59b3df89-c8b4-4d34-982d-9d8de9d9c7a9.png",
+      "runtime": "res://art/towns/runtime/backdrops/horizon_citadels/town_hollowreed_sanctuary.png",
+      "runtime_sha256": "328290eaf7eca07dd9b069b03c415234aa4da64673ace7244ac121b81e06ec80",
+      "prompt_summary": "Mireclaw reed sanctuary with stilt halls, moonlit oath pools, woven bridges, bone charms, and pale marsh lamps."
+    },
+    {
+      "town_id": "town_meridian_choirhold",
+      "source": "town_meridian_choirhold_source.png",
+      "source_sha256": "a579495592f99fbb16ee0e7a0e879e1b68cfb087c4160e54e7824ccb02128dcb",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-253513b9-d98c-40b2-9f10-94d5b872774a.png",
+      "runtime": "res://art/towns/runtime/backdrops/horizon_citadels/town_meridian_choirhold.png",
+      "runtime_sha256": "8a8dc6399b8b0dd4e604df4c14cc2b51a85e0393a7da3ad79219477680c7f948",
+      "prompt_summary": "Sunvault meridian choir fortress with tuning arches, crystal sun discs, resonant bridges, and amber desert light."
+    },
+    {
+      "town_id": "town_crownroot_refuge",
+      "source": "town_crownroot_refuge_source.png",
+      "source_sha256": "55003c1e11b4aaf88865caea5773fddcb83740218a054c0aeecbf0155aaeb04a",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-ad04db70-87f0-4822-b213-6a136274c0c6.png",
+      "runtime": "res://art/towns/runtime/backdrops/horizon_citadels/town_crownroot_refuge.png",
+      "runtime_sha256": "94b1241a8691e2455521be6395b85b3b70be1b22b908891257f11b057fdb58eb",
+      "prompt_summary": "Thornwake crownroot refuge grown around an ancient canopy, with living ramparts, recovery gardens, and seed lanterns."
+    },
+    {
+      "town_id": "town_blackbell_foundry",
+      "source": "town_blackbell_foundry_source.png",
+      "source_sha256": "dd79ad384a9c2532025c3ec8b85bd5fdb3444ae519f92164818069a78aee1b9c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-8e846954-8ede-41a2-a593-460ce116d4a4.png",
+      "runtime": "res://art/towns/runtime/backdrops/horizon_citadels/town_blackbell_foundry.png",
+      "runtime_sha256": "aad43ffb8dc470d88bc9a76bf1d926baeb8b7a661d62bdef85595e273e103157",
+      "prompt_summary": "Brasshollow black-bell foundry with quench canals, suspended casting bell, pressure gantries, and ember-lit masonry."
+    },
+    {
+      "town_id": "town_pale_sounding_harbor",
+      "source": "town_pale_sounding_harbor_source.png",
+      "source_sha256": "6ff0eb3cd254c6fd694469281eb04925ff8bbd6b09a9d8ee37f54df01930cace",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-57c64a29-a554-4e69-8840-b8ce7186a0c4.png",
+      "runtime": "res://art/towns/runtime/backdrops/horizon_citadels/town_pale_sounding_harbor.png",
+      "runtime_sha256": "d9109bc712b1d88b4c521756fb0d6986c6ca0699ca0a170c35ac6f706b36d517",
+      "prompt_summary": "Veilmourn pale harbor with sounding towers, spectral chart lamps, black-sailed piers, and silver mist over still water."
+    }
+  ]
+}

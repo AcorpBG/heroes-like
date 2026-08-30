@@ -32313,7 +32313,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         import_path = Path(f"{asset_path}.import")
         import_text = import_path.read_text(encoding="utf-8") if import_path.is_file() else ""
         ensure(import_path.is_file(), errors, f"Town scenic backdrop must retain tracked import settings for {faction_id}")
-        ensure("compress/mode=1" in import_text and "compress/lossy_quality=0.82" in import_text, errors, f"Town scenic backdrop must use bounded lossy runtime compression for {faction_id}")
+        ensure("compress/mode=1" in import_text and "compress/lossy_quality=0.66" in import_text, errors, f"Town scenic fallback backdrop must use bounded lossy runtime compression for {faction_id}")
 
     exact_town_backdrops = {
         "town_riverwatch": "art/towns/runtime/backdrops/complete_identities/town_riverwatch.png",
@@ -32336,6 +32336,12 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "town_briarwheel_enclave": "art/towns/runtime/backdrops/third_hearths/town_briarwheel_enclave.png",
         "town_cindercoil_foundry": "art/towns/runtime/backdrops/third_hearths/town_cindercoil_foundry.png",
         "town_gloamwake_anchorage": "art/towns/runtime/backdrops/third_hearths/town_gloamwake_anchorage.png",
+        "town_rainwrit_bastion": "art/towns/runtime/backdrops/horizon_citadels/town_rainwrit_bastion.png",
+        "town_hollowreed_sanctuary": "art/towns/runtime/backdrops/horizon_citadels/town_hollowreed_sanctuary.png",
+        "town_meridian_choirhold": "art/towns/runtime/backdrops/horizon_citadels/town_meridian_choirhold.png",
+        "town_crownroot_refuge": "art/towns/runtime/backdrops/horizon_citadels/town_crownroot_refuge.png",
+        "town_blackbell_foundry": "art/towns/runtime/backdrops/horizon_citadels/town_blackbell_foundry.png",
+        "town_pale_sounding_harbor": "art/towns/runtime/backdrops/horizon_citadels/town_pale_sounding_harbor.png",
     }
     town_items = load_json(CONTENT_DIR / "towns.json").get("items", [])
     town_by_id = {str(item.get("id", "")): item for item in town_items if isinstance(item, dict)} if isinstance(town_items, list) else {}
@@ -32345,8 +32351,8 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         resource_path = f"res://{relative_path}"
         town = town_by_id.get(town_id, {})
         asset_path = ROOT / relative_path
-        source_family = "third_hearths_backdrops" if "/third_hearths/" in relative_path else "complete_town_backdrops"
-        expected_quality = "0.82" if source_family == "third_hearths_backdrops" else "0.68"
+        source_family = "third_hearths_backdrops" if "/third_hearths/" in relative_path else "horizon_citadels" if "/horizon_citadels/" in relative_path else "complete_town_backdrops"
+        expected_quality = "0.82" if source_family == "third_hearths_backdrops" else "0.52" if source_family == "horizon_citadels" else "0.68"
         source_path = ROOT / "art" / "towns" / "source" / "generated" / source_family / f"{town_id}_source.png"
         import_path = Path(f"{asset_path}.import")
         import_text = import_path.read_text(encoding="utf-8") if import_path.is_file() else ""
@@ -32359,8 +32365,8 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
             exact_runtime_bytes.append(asset_path.read_bytes())
         if source_path.is_file():
             exact_source_bytes.append(source_path.read_bytes())
-    ensure(len(exact_runtime_bytes) == 20 and len(set(exact_runtime_bytes)) == 20, errors, "All twenty production runtime scenic backdrops must be distinct")
-    ensure(len(exact_source_bytes) == 20 and len(set(exact_source_bytes)) == 20, errors, "All twenty production generated scenic sources must be distinct")
+    ensure(len(exact_runtime_bytes) == 26 and len(set(exact_runtime_bytes)) == 26, errors, "All twenty-six production runtime scenic backdrops must be distinct")
+    ensure(len(exact_source_bytes) == 26 and len(set(exact_source_bytes)) == 26, errors, "All twenty-six production generated scenic sources must be distinct")
     ensure(
         {town_id for town_id, town in town_by_id.items() if str(town.get("scenic_backdrop_path", "")) != ""} == set(exact_town_backdrops),
         errors,
@@ -32593,7 +32599,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         'print("COMPLETE_TOWN_BACKDROP_RUNTIME_REPORT %s"',
     ):
         ensure(required_token in exact_backdrop_report_text, errors, f"Complete Town backdrop report is missing consolidated live proof: {required_token}")
-    ensure(exact_backdrop_report_text.count('"town_') >= 26 and exact_backdrop_report_text.count('"faction_') >= 12, errors, "Complete Town backdrop report must cover all twenty exact towns and all six detached faction fallbacks")
+    ensure(exact_backdrop_report_text.count('"town_') >= 32 and exact_backdrop_report_text.count('"faction_') >= 12, errors, "Complete Town backdrop report must cover all twenty-six exact towns and all six detached faction fallbacks")
     ensure('path="res://tests/complete_town_backdrop_runtime_report.gd"' in exact_backdrop_scene_text, errors, "Complete Town backdrop report scene must own the focused runtime script")
     for required_token in (
         "func _assert_town_scenic_action_count_label_contract(live_board: Node, session) -> bool:",
@@ -43535,6 +43541,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (144, 48)
             elif source_model == "built_in_image_gen_original_third_hearth_town_atlas":
                 expected_canvas = (640, 128)
+            elif source_model == "built_in_image_gen_original_horizon_citadel_atlas":
+                expected_canvas = (768, 128)
             elif source_model in {"built_in_image_gen_original_pactwright_waydesk_with_runtime_state_derivation", "built_in_image_gen_original_pactwright_waydesk_with_six_mark_runtime_state_derivation"}:
                 expected_canvas = (96, 48)
             elif source_model == "built_in_image_gen_original_mireglass_counterpoint_with_runtime_state_derivation":
@@ -47714,6 +47722,9 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
         "town_cinderlock_bastion", "town_dawnmirror_observatory",
         "town_briarwheel_enclave", "town_cindercoil_foundry",
         "town_gloamwake_anchorage",
+        "town_rainwrit_bastion", "town_hollowreed_sanctuary",
+        "town_meridian_choirhold", "town_crownroot_refuge",
+        "town_blackbell_foundry", "town_pale_sounding_harbor",
     )
     expected_identity_assets = {town_id: f"town_identity_{town_id.removeprefix('town_')}" for town_id in town_order}
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
@@ -47740,7 +47751,7 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
             if disk_path.is_file():
                 sprite_bytes.append(disk_path.read_bytes())
     ensure(len(sprite_bytes) == 6 and len(set(sprite_bytes)) == 6, errors, "All six Overworld faction town PNG payloads must be distinct")
-    ensure(isinstance(identity_sprites, dict) and list(identity_sprites.keys()) == list(town_order), errors, "Overworld town identity mapping must preserve the exact 20-town content order")
+    ensure(isinstance(identity_sprites, dict) and list(identity_sprites.keys()) == list(town_order), errors, "Overworld town identity mapping must preserve the exact 26-town content order")
     identity_bytes: list[bytes] = []
     if isinstance(identity_sprites, dict) and isinstance(object_assets, dict):
         for town_id in town_order:
@@ -47756,16 +47767,20 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
                 "town_cinderlock_bastion", "town_dawnmirror_observatory", "town_briarwheel_enclave",
                 "town_cindercoil_foundry", "town_gloamwake_anchorage",
             }
-            expected_runtime = "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png" if third_hearth else f"res://art/overworld/runtime/objects/towns/identity/{town_id}.png"
-            expected_source = f"res://art/overworld/source/generated/towns/third_hearths/{town_id}_source.png" if third_hearth else f"res://art/overworld/source/generated/towns/identity/{town_id}_source.png"
+            horizon_citadel = town_id in {
+                "town_rainwrit_bastion", "town_hollowreed_sanctuary", "town_meridian_choirhold",
+                "town_crownroot_refuge", "town_blackbell_foundry", "town_pale_sounding_harbor",
+            }
+            expected_runtime = "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png" if horizon_citadel else "res://art/overworld/runtime/objects/towns/identity_atlases/third_hearths_atlas.png" if third_hearth else f"res://art/overworld/runtime/objects/towns/identity/{town_id}.png"
+            expected_source = f"res://art/overworld/source/generated/towns/horizon_citadels/{town_id}_source.png" if horizon_citadel else f"res://art/overworld/source/generated/towns/third_hearths/{town_id}_source.png" if third_hearth else f"res://art/overworld/source/generated/towns/identity/{town_id}_source.png"
             ensure(runtime_path == expected_runtime, errors, f"Overworld town identity asset {asset_id} must own its exact runtime path")
             ensure(source_path == expected_source, errors, f"Overworld town identity asset {asset_id} must retain generated-source provenance")
-            expected_model = "built_in_image_gen_original_third_hearth_town_atlas" if third_hearth else "built_in_image_gen_original_landmark"
+            expected_model = "built_in_image_gen_original_horizon_citadel_atlas" if horizon_citadel else "built_in_image_gen_original_third_hearth_town_atlas" if third_hearth else "built_in_image_gen_original_landmark"
             ensure(str(entry.get("source_model", "")) == expected_model, errors, f"Overworld town identity asset {asset_id} must name its original generation source")
             ensure(str(entry.get("assigned_town_id", "")) == town_id, errors, f"Overworld town identity asset {asset_id} must retain exact town assignment")
             runtime_disk = res_path_to_disk(runtime_path)
             source_disk = res_path_to_disk(source_path)
-            expected_size = (640, 128) if third_hearth else (512, 512)
+            expected_size = (768, 128) if horizon_citadel else (640, 128) if third_hearth else (512, 512)
             ensure(runtime_disk.is_file() and png_size(runtime_disk) == expected_size, errors, f"Overworld town identity asset {asset_id} has the wrong runtime PNG size")
             ensure(Path(f"{runtime_disk}.import").is_file(), errors, f"Overworld town identity asset {asset_id} is missing Godot import metadata")
             ensure(source_disk.is_file(), errors, f"Overworld town identity asset {asset_id} is missing its high-resolution source")
@@ -47773,14 +47788,18 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
                 expected_index = town_order.index(town_id) - 15
                 ensure(entry.get("atlas_region") == [expected_index * 128, 0, 128, 128] and entry.get("atlas_size") == [640, 128], errors, f"Overworld town identity asset {asset_id} has the wrong atlas crop")
                 ensure(min(png_size(source_disk)) >= 1024 and Path(f"{source_disk}.import").is_file(), errors, f"Overworld town identity asset {asset_id} must retain imported high-resolution source art")
-            identity_disk = source_disk if third_hearth else runtime_disk
+            if horizon_citadel:
+                expected_index = town_order.index(town_id) - 20
+                ensure(entry.get("atlas_region") == [expected_index * 128, 0, 128, 128] and entry.get("atlas_size") == [768, 128], errors, f"Overworld town identity asset {asset_id} has the wrong Horizon Citadels atlas crop")
+                ensure(min(png_size(source_disk)) >= 1024 and Path(f"{source_disk}.import").is_file(), errors, f"Overworld town identity asset {asset_id} must retain imported high-resolution source art")
+            identity_disk = source_disk if third_hearth or horizon_citadel else runtime_disk
             if identity_disk.is_file():
                 identity_bytes.append(identity_disk.read_bytes())
-    ensure(len(identity_bytes) == 20 and len(set(identity_bytes)) == 20, errors, "All 20 Overworld town identity source payloads must be distinct")
+    ensure(len(identity_bytes) == 26 and len(set(identity_bytes)) == 26, errors, "All 26 Overworld town identity source payloads must be distinct")
     scenarios = load_json(ROOT / "content/scenarios.json").get("items", [])
     live_town_placements = [town for scenario in scenarios if isinstance(scenario, dict) for town in scenario.get("towns", []) if isinstance(town, dict)] if isinstance(scenarios, list) else []
-    ensure(len(live_town_placements) == 187, errors, "All 187 live authored scenario town placements must remain covered by the town identity slice")
-    ensure({str(town.get("town_id", "")) for town in live_town_placements} == set(town_order), errors, "Every live authored scenario town id must resolve through the exact 20-town identity mapping")
+    ensure(len(live_town_placements) == 193, errors, "All 193 live authored scenario town placements must remain covered by the town identity slice")
+    ensure({str(town.get("town_id", "")) for town in live_town_placements} == set(town_order), errors, "Every live authored scenario town id must resolve through the exact 26-town identity mapping")
     ensure(png_size(FACTION_TOWN_SPRITE_ATLAS_PATH) == (1536, 1024), errors, "Faction town source atlas must remain the exact 3x2 1536x1024 source")
     ensure(Path(f"{FACTION_TOWN_SPRITE_ATLAS_PATH}.import").is_file(), errors, "Faction town source atlas import metadata is missing")
     town_default = manifest.get("town_default_sprite", {})
@@ -74840,7 +74859,8 @@ def validate_eightfold_guarded_reliquary_march(errors: list[str]) -> None:
         text = packaging_path.read_text(encoding="utf-8")
         ensure('REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME = "eightfold_guarded_reliquary_atlas"' in text and "eightfold_guarded_reliquary_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Eightfold Reliquary atlas")
         ensure('REQUIRED_THIRD_HEARTHS_ATLAS_NAME = "third_hearths_atlas"' in text and "third_hearths_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Five-Faction Third Hearths atlas")
-        ensure("REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES" in text and "town_scenic_backdrop_entries_present" in text and text.count("art/towns/runtime/backdrops/third_hearths/") == 5 and text.count("art/towns/runtime/backdrops/complete_identities/") == 15, errors, f"{packaging_path.name} must audit all twenty exact Town backdrops plus six faction fallbacks")
+        ensure('REQUIRED_HORIZON_CITADELS_ATLAS_NAME = "horizon_citadels_atlas"' in text and "horizon_citadels_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Six Horizon Citadels atlas")
+        ensure("REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES" in text and "town_scenic_backdrop_entries_present" in text and text.count("art/towns/runtime/backdrops/third_hearths/") == 5 and text.count("art/towns/runtime/backdrops/complete_identities/") == 15 and text.count("art/towns/runtime/backdrops/horizon_citadels/") == 6, errors, f"{packaging_path.name} must audit all twenty-six exact Town backdrops plus six faction fallbacks")
 
 
 def validate_overworld_ten_land_transit_network(errors: list[str]) -> None:
@@ -75019,7 +75039,7 @@ def validate_veil_coast_sounding_circuit(errors: list[str]) -> None:
     ensure(export_text.count("art/*/source/*") == 2, errors, "Both release presets must exclude coast-route generated source art")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 24" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
+        ensure('REQUIRED_COAST_ROUTE_OPERATIONAL_ATLAS_NAME = "coast_route_operational_atlas"' in packaging_text and "coast_route_operational_atlas.png.import" in packaging_text and "== 25" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
 
 
 def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -> None:
@@ -77399,6 +77419,68 @@ def validate_six_elder_wilds(errors: list[str]) -> None:
         ensure("REQUIRED_ELDER_WILDS_UNIT_ART_PCK_IMPORT_ENTRIES" in packaging_text and "elder_wilds_unit_art_entries_present" in packaging_text, errors, f"{packaging_path.name} must audit all Elder Wilds runtime art surfaces")
 
 
+def validate_six_horizon_citadels(errors: list[str]) -> None:
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    factions = items_index(load_json(CONTENT_DIR / "factions.json"))
+    scenario = items_index(load_json(CONTENT_DIR / "scenarios.json")).get("ninefold-confluence", {})
+    overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = overworld_art.get("object_assets", {})
+    identity_sprites = overworld_art.get("town_identity_sprites", {})
+    scenic_manifest_path = ROOT / "art" / "towns" / "source" / "generated" / "horizon_citadels" / "manifest.json"
+    identity_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "towns" / "horizon_citadels" / "manifest.json"
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "towns" / "identity_atlases" / "horizon_citadels_atlas.png"
+    expected = {
+        "town_rainwrit_bastion": ("faction_embercourt", "ninefold_rainwrit_bastion", (11, 8), "player", "floodgate_levy_court", "hold_rainwrit_bastion", 0),
+        "town_hollowreed_sanctuary": ("faction_mireclaw", "ninefold_hollowreed_sanctuary", (34, 59), "enemy", "oathmire_sanctuary", "claim_hollowreed_sanctuary", 1),
+        "town_meridian_choirhold": ("faction_sunvault", "ninefold_meridian_choirhold", (37, 31), "enemy", "resonant_horizon_hold", "claim_meridian_choirhold", 2),
+        "town_crownroot_refuge": ("faction_thornwake", "ninefold_crownroot_refuge", (27, 49), "enemy", "living_recovery_refuge", "claim_crownroot_refuge", 3),
+        "town_blackbell_foundry": ("faction_brasshollow", "ninefold_blackbell_foundry", (46, 38), "enemy", "quenchbell_fortress", "claim_blackbell_foundry", 4),
+        "town_pale_sounding_harbor": ("faction_veilmourn", "ninefold_pale_sounding_harbor", (55, 49), "enemy", "echo_chart_harbor", "claim_pale_sounding_harbor", 5),
+    }
+    ensure(len(towns) == 26, errors, "Horizon Citadels must retain the expanded 26-town production catalog")
+    ensure({faction_id: len(faction.get("town_ids", [])) for faction_id, faction in factions.items()} == {
+        "faction_embercourt": 4, "faction_mireclaw": 6, "faction_sunvault": 4,
+        "faction_thornwake": 4, "faction_brasshollow": 4, "faction_veilmourn": 4,
+    }, errors, "Horizon Citadels must retain exact expanded faction town breadth")
+    ensure(len(scenario.get("towns", [])) == 12 and len(scenario.get("objectives", {}).get("victory", [])) == 11 and len(scenario.get("objectives", {}).get("defeat", [])) == 5, errors, "Ninefold must retain its twelve-town, eleven-victory, five-defeat Horizon Citadels scope")
+    placements = {str(row.get("placement_id", "")): row for row in scenario.get("towns", []) if isinstance(row, dict)}
+    objectives = {str(row.get("id", "")) for kind in ("victory", "defeat") for row in scenario.get("objectives", {}).get(kind, []) if isinstance(row, dict)}
+    ensure(scenic_manifest_path.is_file() and identity_manifest_path.is_file(), errors, "Horizon Citadels generated-source provenance manifests are missing")
+    scenic_manifest = load_json(scenic_manifest_path) if scenic_manifest_path.is_file() else {}
+    identity_manifest = load_json(identity_manifest_path) if identity_manifest_path.is_file() else {}
+    scenic_rows = {str(row.get("town_id", "")): row for row in scenic_manifest.get("items", []) if isinstance(row, dict)}
+    identity_rows = {str(row.get("town_id", "")): row for row in identity_manifest.get("items", []) if isinstance(row, dict)}
+    ensure(scenic_manifest.get("generator") == "built_in_image_gen" and scenic_manifest.get("runtime_size") == [1600, 900] and set(scenic_rows) == set(expected), errors, "Horizon Citadels scenic source provenance changed")
+    ensure(identity_manifest.get("generator") == "built_in_image_gen" and identity_manifest.get("runtime_atlas_size") == [768, 128] and set(identity_rows) == set(expected), errors, "Horizon Citadels overworld source provenance changed")
+    atlas_sha = hashlib.sha256(atlas_path.read_bytes()).hexdigest() if atlas_path.is_file() else ""
+    ensure(atlas_path.is_file() and png_size(atlas_path) == (768, 128) and atlas_sha == "1cbe15df04fe1f7d442f0180cce43c89d6d030b819c22cd7ad5124748c67ca41" and Path(f"{atlas_path}.import").is_file(), errors, "Horizon Citadels runtime atlas bytes, dimensions, or import changed")
+    for town_id, (faction_id, placement_id, xy, owner, role, objective_id, index) in expected.items():
+        town = towns.get(town_id, {})
+        placement = placements.get(placement_id, {})
+        scenic_path = res_path_to_disk(str(town.get("scenic_backdrop_path", "")))
+        scenic_source = ROOT / "art" / "towns" / "source" / "generated" / "horizon_citadels" / f"{town_id}_source.png"
+        identity_source = ROOT / "art" / "overworld" / "source" / "generated" / "towns" / "horizon_citadels" / f"{town_id}_source.png"
+        asset_id = f"town_identity_{town_id.removeprefix('town_')}"
+        asset = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
+        ensure(town.get("faction_id") == faction_id and town.get("strategic_role") == role and town.get("content_status") == "horizon_citadels_live" and len(town.get("buildable_building_ids", [])) >= 20 and len(town.get("garrison", [])) == 3, errors, f"{town_id} live production identity changed")
+        ensure(placement.get("town_id") == town_id and (placement.get("x"), placement.get("y")) == xy and placement.get("owner") == owner and objective_id in objectives, errors, f"{town_id} Ninefold placement, owner, or objective changed")
+        ensure(scenic_path.is_file() and png_size(scenic_path) == (1600, 900) and scenic_source.is_file() and png_size(scenic_source) == (1672, 941), errors, f"{town_id} scenic runtime or generated source is missing")
+        ensure(identity_source.is_file() and png_size(identity_source) == (1254, 1254) and Path(f"{identity_source}.import").is_file(), errors, f"{town_id} overworld generated source or import is missing")
+        ensure(identity_sprites.get(town_id) == asset_id and asset.get("path") == "res://art/overworld/runtime/objects/towns/identity_atlases/horizon_citadels_atlas.png" and asset.get("atlas_region") == [index * 128, 0, 128, 128] and asset.get("atlas_size") == [768, 128] and asset.get("assigned_town_id") == town_id and asset.get("assigned_faction_id") == faction_id and len(str(asset.get("accessible_description", ""))) >= 56, errors, f"{town_id} exact overworld identity mapping changed")
+        ensure(str(scenic_rows.get(town_id, {}).get("generation_original", "")).startswith("/root/.codex/generated_images/") and str(identity_rows.get(town_id, {}).get("generation_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{town_id} generation provenance changed")
+    smoke_paths = (
+        ROOT / "tests" / "six_horizon_citadels_smoke.gd",
+        ROOT / "tests" / "six_horizon_citadels_smoke.tscn",
+        ROOT / "tests" / "six_horizon_citadels_smoke.py",
+    )
+    for path in smoke_paths:
+        ensure(path.is_file(), errors, f"Missing Horizon Citadels consolidated smoke owner: {path.relative_to(ROOT)}")
+    if smoke_paths[0].is_file():
+        smoke_text = smoke_paths[0].read_text(encoding="utf-8")
+        for token in ("SIX_HORIZON_CITADELS_SMOKE", "ScenarioFactory.create_session", "TownRules.build_active_town", "TownRules.recruit_active_town", "restored.from_dict(before_save)", "horizon_citadels_contact_sheet.png", '"single_consolidated_smoke": true'):
+            ensure(token in smoke_text, errors, f"Horizon Citadels consolidated smoke is missing live proof: {token}")
+
+
 def validate_mireglass_counterpoint_campaign(errors: list[str]) -> None:
     batch_id = "content-mireglass-counterpoint-campaign-10184"
     expected = {
@@ -78018,6 +78100,7 @@ def main() -> int:
     validate_sevenfold_high_arcanum(errors)
     validate_two_elite_neutral_dwellings(errors)
     validate_six_elder_wilds(errors)
+    validate_six_horizon_citadels(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_systemic_encounter_landmarks(errors)
     validate_recurring_resource_site_landmarks(errors)
