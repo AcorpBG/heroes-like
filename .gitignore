@@ -4,6 +4,8 @@ tests/__pycache__/
 .godot/
 *.uid
 *.import
+!art/towns/runtime/backdrops/*.png.import
+!art/towns/runtime/backdrops/third_hearths/*.png.import
 bin/*.so
 bin/*.dll.a
 tmp/

@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the eightfold guarded-reliquary family as one gameplay and art batch with one consolidated smoke and paired platform package gates.",
+  "currentNotes": "Completed five exact Third Hearths town-screen identities as one art/runtime batch with one consolidated ten-case smoke and paired platform package gates.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-eightfold-guarded-reliquary-march-10184",
-  "currentSliceId": "content-eightfold-guarded-reliquary-march-10184",
-  "currentSliceNotes": "Shipped scenario 74 with eight exact guarded claims, six activated specialty payoff sets, eight generated post-claim frames, one combined save-version-9 smoke, repository validation, and matching Linux/Windows package boots.",
+  "currentSlice": "content-third-hearths-town-screen-identities-10184",
+  "currentSliceId": "content-third-hearths-town-screen-identities-10184",
+  "currentSliceNotes": "Shipped five exact-id 1600x900 scenic Town backdrops, exact-town-first selection with six-faction fallback, tracked compressed imports, one combined save-version-9 runtime/capture smoke, and matching Linux/Windows package boots.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content eightfold guarded reliquary march 10184",
-  "currentSliceUpdatedAt": "2026-08-30T04:06:40Z",
+  "currentSliceTitle": "content third hearths town screen identities 10184",
+  "currentSliceUpdatedAt": "2026-08-30T05:01:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21190,22 +21190,20 @@
     "remainingWork": "Implement real runtime package/session adoption from the owned H3M final payload: parse/convert the H3M payload into MapDocument and ScenarioDocument records, validate save/load and generated-session startup, and keep native map JSON/full .amap output blocked until that converter is source-backed and tested without reintroducing the archived proxy."
   },
   "latestEvidenceArtifacts": [
-    "content/resource_sites.json",
-    "content/map_objects.json",
-    "content/scenarios.json",
-    "art/overworld/runtime/objects/resource_sites/eightfold_guarded_reliquary_atlas.png",
-    "art/overworld/source/generated/resource_sites/eightfold_guarded_reliquary_wave1/manifest.json",
-    "art/overworld/manifest.json",
-    "tests/eightfold_guarded_reliquary_march_report.gd",
-    "tests/eightfold_guarded_reliquary_march_report.tscn",
+    "content/towns.json",
+    "scenes/town/TownStageView.gd",
+    "art/towns/runtime/backdrops/third_hearths",
+    "art/towns/source/generated/third_hearths_backdrops/manifest.json",
+    "tests/third_hearths_town_backdrop_runtime_report.gd",
+    "tests/third_hearths_town_backdrop_runtime_report.tscn",
     "tests/validate_repo.py",
     "tests/packaging_linux_export_smoke.py",
     "tests/packaging_windows_export_smoke.py",
     "PLAN.md",
     "ops/progress.json"
   ],
-  "latestEvidenceId": "content-eightfold-guarded-reliquary-march-20260830",
-  "latestFinding": "Eight exact guarded claims now block, resolve, reward once, switch to distinct post-claim art, and survive save version 9. Four recruit bundles, Survey Chain plus town support, six-radius scouting, and the Salt-Wight route execute live in scenario 74; matching 249694792-byte Linux and Windows PCKs boot with all 17 resource-site atlases present and source originals excluded.",
+  "latestEvidenceId": "content-third-hearths-town-screen-identities-20260830",
+  "latestFinding": "Five Third Hearths towns now select distinct exact-id 1600x900 scenery before the six-faction fallback. One consolidated ten-case live smoke passed both supported viewports with exact save-version-9 authority; matching 241603288-byte Linux and Windows PCKs boot with all eleven town backdrops present, source originals excluded, and 8396712 bytes of ceiling headroom.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -106326,6 +106324,16 @@
       "startedAt": "2026-08-30T04:21:00Z",
       "notes": "Shipped one third production town for each non-Mireclaw faction, all five together in the 32x20 Third Hearths Confluence scenario, and five original landmarks in one compact runtime atlas. One consolidated five-town gameplay/art/save smoke, repository validation, and matching 249844748-byte Linux/Windows package startups passed; generated sources are excluded and no whole-game release claim is made.",
       "completedAt": "2026-08-30T04:37:22Z"
+    },
+    {
+      "id": "content-third-hearths-town-screen-identities-10184",
+      "title": "content third hearths town screen identities 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T05:01:39Z",
+      "startedAt": "2026-08-30T04:41:43Z",
+      "notes": "Shipped five exact-id 1600x900 scenic Town backdrops with exact-town-first runtime selection and six-faction fallback. One consolidated ten-case live smoke passed at 1280x720 and 1920x1080 with exact save-version-9 authority; captures were visually inspected. Tracked lossy imports reduced the matching Linux/Windows PCK to 241603288 bytes, restoring 8396712 bytes of ceiling headroom; repository and both package boot gates passed with source art excluded.",
+      "completedAt": "2026-08-30T05:01:39Z"
     }
   ],
   "project": "heroes-like",
@@ -106335,8 +106343,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Five-Faction Third Hearths slice is complete. The broader content and unique-art goal remains open, but the release package now has only 155252 bytes of ceiling headroom before another generated-art batch.",
-  "remainingWork": "Select the next substantial live content family and budget or reduce shipped runtime art before adding it; keep validation consolidated at the batch boundary instead of running repeated small smokes.",
+  "remainingGap": "This exact five-town scenery slice is complete; broader production content breadth, distinctive art coverage, and whole-game release readiness remain open.",
+  "remainingWork": "Select and register the next coherent multi-content family, implement the full batch, then retain the one-combined-smoke plus final repository and dual-platform package verification cadence.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -106767,7 +106775,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_eightfold_guarded_reliquary_march_completed",
+  "result": "content_third_hearths_town_screen_identities_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -106868,9 +106876,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed eight guarded reliquaries, six dormant specialty payoff sets, one production 30x18 skirmish, and eight distinctive claimed-state assets as one coherent content family with one consolidated smoke and matching packaged verification.",
+  "summary": "Completed five exact Third Hearths town-screen identities, exact-town-first runtime selection, and package-headroom recovery as one coherent art/content family with one consolidated smoke and matching packaged verification.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T04:06:40Z",
+  "updatedAt": "2026-08-30T05:01:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
