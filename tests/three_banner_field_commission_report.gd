@@ -95,7 +95,7 @@ func _run() -> void:
 
 func _validate_content_and_art() -> void:
 	_expect(ContentService.get_content_ids(ContentService.UNITS_PATH).size() == 117, "Unit catalog must contain the complete 117-unit batch.")
-	_expect(ContentService.get_content_ids(ContentService.SCENARIOS_PATH).size() == 87, "Scenario catalog must retain the complete 87-scenario roster.")
+	_expect(ContentService.get_content_ids(ContentService.SCENARIOS_PATH).size() == 88, "Scenario catalog must retain the complete 88-scenario roster.")
 	var auxiliary_factions := {}
 	for unit_id in ContentService.get_content_ids(ContentService.UNITS_PATH):
 		var candidate := ContentService.get_unit(unit_id)

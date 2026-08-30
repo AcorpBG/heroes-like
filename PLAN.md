@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: none selected; choose the next coherent multi-content family before implementation.
-- Current package boundary: matching Linux and Windows release exports measure 249979168 bytes, 20832 bytes below the unchanged 250000000-byte ceiling. The next asset-heavy slice must reclaim package headroom before adding another large art family.
+- Current implementation slice: `content-six-horizon-compact-skirmish-10184` is completed as one coherent six-faction playable-content and compact-art batch.
+- Current package boundary: matching Linux and Windows release exports measure 249284232 bytes, 715768 bytes below the unchanged 250000000-byte ceiling. New runtime art must stay compact and generated masters must remain excluded.
 
 ## Six Horizon Citadels
 
@@ -15265,6 +15265,37 @@ Completion result:
 Non-goals:
 - no new artifact engine, faction, hero, town, unit, building definition, encounter, scenario, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes artifact, icon, name, text, faction device, or protected visual expression.
+
+## Six Horizon Compact Skirmish
+
+id: `content-six-horizon-compact-skirmish-10184`
+
+Status: completed.
+
+Current finding:
+- all six Horizon Citadels and their relic commissions are live, but their only shared board is the 64x64 Ninefold Confluence, where five citadels begin as enemy holdings and none owns a signature battle front tied to its new identity;
+- all sixty production heroes are already represented in campaign flow, so another campaign would add less net-new play than a focused six-faction skirmish built around the new towns;
+- the existing scenario, encounter, army, town-capture, artifact-commission, exact encounter-art, save-version-9, and strategic-AI boundaries can support one new board without a schema or subsystem change.
+
+Implementation boundary:
+- add one original medium skirmish centered on Rainwrit Bastion, Hollowreed Sanctuary, Meridian Choirhold, Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor, with one player citadel, five rival citadels, complete common/rare development routes, pressure, relief, counterstroke, and capture objectives;
+- add six original signature encounter fronts and faction-correct army groups whose battle roles, terrain, and rewards express the six citadel identities and whose placements materially shape the route between towns;
+- generate six transparent, silhouette-distinct encounter landmarks, pack them into one compact immutable runtime atlas, register exact accessible ownership, and retain high-resolution source provenance outside release packages;
+- preserve save version 9, data-driven ownership, deterministic combat seeds, existing faction/town/unit balance, strategic-AI contracts, source-art exclusion, Windows/Linux parity, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- the new board launches through the normal skirmish flow, remains collision-safe and completable, constructs all six signature battles, exposes all six town identities and economies, and can progress through the authored objectives and pressure hooks;
+- all six signature encounters resolve exact original atlas regions with non-color descriptions, create valid battle payloads, preserve authoritative session state through save/load, and fail closed if an atlas region is invalid;
+- one consolidated full-board gameplay/visual/save smoke passes after the complete content batch, followed by repository validation and sequential Linux/Windows package startup below the unchanged ceiling.
+
+Completion result:
+- shipped the 24x16 `Horizon Compact: Six Citadels` skirmish with Rainwrit under Belis Rainledger, five hostile citadels, fifteen authored resource sites, three relics, five independent enemy economies, timed relief/pressure/counterstroke hooks, and twelve victory objectives;
+- shipped six faction-correct three-stack signature encounters with deterministic seeds, distinct commanders, field objectives, rare-resource rewards, and victory flags, backed by six original generated landmark masters packed into one 288x48 exact-identity atlas with accessible non-color descriptions;
+- the single consolidated full-board smoke passed six battle-victory finalizations, six exact atlas regions, five live town captures, all twelve victory objectives, one-time hook behavior, and exact save-version-9 roundtrip; repository validation and sequential Linux/Windows export/runtime gates passed at matching 249284232-byte PCKs, 715768 bytes below the unchanged ceiling with source masters excluded.
+
+Non-goals:
+- no new faction, hero, unit, town, spell, artifact, combat rule, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, encounter, army, landmark, name, text, heraldry, or protected visual expression.
 
 ## Progress Reconciliation
 

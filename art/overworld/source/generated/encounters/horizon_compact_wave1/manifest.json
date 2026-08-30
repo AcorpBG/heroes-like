@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_high_three_quarter_horizon_compact_landmark",
+  "prompt_set_summary": "Six original faction encounter landmarks for the Horizon Compact skirmish: a rainwrit charter floodgate, hollowreed moonfang palisade, meridian choir array, crownroot oathseed ring, blackbell verdict gantry, and pale sounding ghost mooring. Each source was requested as one self-contained fortified field landmark with genuine transparency, a strong non-color silhouette, no characters, no text, no logos, and no borrowed franchise design.",
+  "runtime_atlas_path": "res://art/overworld/runtime/objects/encounters/horizon_compact/horizon_compact_atlas.png",
+  "runtime_atlas_size": [288, 48],
+  "runtime_atlas_sha256": "58c14c56f362855e88f218bdd85f0b6f8af9c775528561d0341d7ab356f999a8",
+  "items": [
+    {
+      "encounter_id": "encounter_horizon_rainwrit_charter_gate",
+      "asset_id": "encounter_horizon_rainwrit_charter_gate",
+      "source_path": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/rainwrit_charter_gate_source.png",
+      "source_sha256": "5c6339b03e06fddd699c5568cf4b62e32e515bb632ba41220df493296d7e7603",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5635d0a9-adff-4cd9-b722-f85bf1065629.png",
+      "atlas_region": [0, 0, 48, 48],
+      "prompt_summary": "Fortified rain-polished sluice gate with hooded beacon, crossed charter keys, and raised causeway."
+    },
+    {
+      "encounter_id": "encounter_horizon_hollowreed_moonfang_palisade",
+      "asset_id": "encounter_horizon_hollowreed_moonfang_palisade",
+      "source_path": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/hollowreed_moonfang_palisade_source.png",
+      "source_sha256": "b3f419c83cea7780e6fdbf0e80004fcec096e1a34b8f3067ce8bbdb22fac1079",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-83acece7-8621-4ba5-915f-7df4cc77882d.png",
+      "atlas_region": [48, 0, 48, 48],
+      "prompt_summary": "Hooked reed palisade around a crescent antler drum, chain snares, and half-submerged oath bell."
+    },
+    {
+      "encounter_id": "encounter_horizon_meridian_choir_array",
+      "asset_id": "encounter_horizon_meridian_choir_array",
+      "source_path": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/meridian_choir_array_source.png",
+      "source_sha256": "77e114625d45f26e3c9af69d612cce10b70821633a6ea6a684a2bf6f8ceeca1c",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-d61ad54f-def0-4202-9e27-e707ca4c15ca.png",
+      "atlas_region": [96, 0, 48, 48],
+      "prompt_summary": "Three golden tuning forks around a faceted sun prism, mirrored barricade, and aligned sighting vane."
+    },
+    {
+      "encounter_id": "encounter_horizon_crownroot_oathseed_ring",
+      "asset_id": "encounter_horizon_crownroot_oathseed_ring",
+      "source_path": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/crownroot_oathseed_ring_source.png",
+      "source_sha256": "dd6a853f9452104539dc6581582d8dc173b1e9e9ce34ecd1021a9194d13c448f",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-14147160-f500-426c-8b49-05315546a14c.png",
+      "atlas_region": [144, 0, 48, 48],
+      "prompt_summary": "Braided living-root arch around a crowned seed censer, sporeglass vents, and sheltering thorn wall."
+    },
+    {
+      "encounter_id": "encounter_horizon_blackbell_verdict_gantry",
+      "asset_id": "encounter_horizon_blackbell_verdict_gantry",
+      "source_path": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/blackbell_verdict_gantry_source.png",
+      "source_sha256": "94729743cc8b12390fb33bf7c37143018471fb37ad592e27e2ccabf163b2d60a",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-166be39b-b630-4fbf-a6b6-4ef155836e48.png",
+      "atlas_region": [192, 0, 48, 48],
+      "prompt_summary": "Black iron bell, redline pressure gauge, riveted blast screens, and brass judgment rail."
+    },
+    {
+      "encounter_id": "encounter_horizon_pale_sounding_ghost_mooring",
+      "asset_id": "encounter_horizon_pale_sounding_ghost_mooring",
+      "source_path": "res://art/overworld/source/generated/encounters/horizon_compact_wave1/pale_sounding_ghost_mooring_source.png",
+      "source_sha256": "8b1211ddcfb5fb2057ebff2623794c1a5a3cf0a81d73f43a1f3e7d34af6979f8",
+      "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-bf565c7a-d3a5-4cf4-ae18-2ba262bf4ed5.png",
+      "atlas_region": [240, 0, 48, 48],
+      "prompt_summary": "Salt-frosted ship bell and tideglass memory drop among pale posts, ghost ropes, and drowned quay barricades."
+    }
+  ]
+}

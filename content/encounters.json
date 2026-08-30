@@ -2796,6 +2796,48 @@
       "field_objectives": [{"id": "deepforge_seventh_seal_pylon", "type": "ritual_pylon", "label": "Seventh Vault Seal", "summary": "The final seal keeps the vaultwyrm's blackstone plates interlocked until the pylon ring is controlled.", "starting_side": "enemy", "capture_threshold": 3, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
       "rewards": {"gold": 980, "ore": 4, "brass_scrip": 2, "experience": 700},
       "victory_flags": ["elder_wild_deepforge_broken"]
+    },
+    {
+      "id": "encounter_horizon_rainwrit_charter_gate", "name": "Rainwrit Charter Gate", "enemy_group_id": "army_horizon_rainwrit_charter_gate", "affiliation": "faction_embercourt", "terrain": "road",
+      "battlefield_tags": ["fortified_line", "open_lane"], "max_rounds": 14,
+      "enemy_commander": {"name": "Assize-Reeve Mara Floodkey", "command": {"attack": 2, "defense": 3, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_lantern_phalanx"], "battle_traits": ["linekeeper", "vanguard"]},
+      "field_objectives": [{"id": "horizon_rainwrit_sluice_line", "type": "cover_line", "label": "Charter Sluice Line", "summary": "The raised floodgate keeps the assize line supplied until both charter keys are taken across the causeway.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 420, "embergrain": 1, "experience": 320}, "victory_flags": ["horizon_rainwrit_gate_broken"]
+    },
+    {
+      "id": "encounter_horizon_hollowreed_moonfang_palisade", "name": "Hollowreed Moonfang Palisade", "enemy_group_id": "army_horizon_hollowreed_moonfang_palisade", "affiliation": "faction_mireclaw", "terrain": "mire",
+      "battlefield_tags": ["ambush_cover", "bog_channels"], "max_rounds": 14,
+      "enemy_commander": {"name": "Moonhook Vessa Reedscar", "command": {"attack": 3, "defense": 1, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_bloodwake_drum"], "battle_traits": ["ambusher", "bogwise"]},
+      "field_objectives": [{"id": "horizon_hollowreed_snare_pool", "type": "hazard_zone", "label": "Moonfang Snare Pool", "summary": "The antler drum marks every safe reed step until its half-drowned bell and chain ring are seized.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "momentum", "urgency"]}],
+      "rewards": {"gold": 420, "peatwax": 1, "experience": 320}, "victory_flags": ["horizon_hollowreed_palisade_broken"]
+    },
+    {
+      "id": "encounter_horizon_meridian_choir_array", "name": "Meridian Choir Array", "enemy_group_id": "army_horizon_meridian_choir_array", "affiliation": "faction_sunvault", "terrain": "sand",
+      "battlefield_tags": ["battery_nest", "open_lane"], "max_rounds": 14,
+      "enemy_commander": {"name": "Choir-Marshal Ilyne Truefacet", "command": {"attack": 2, "defense": 2, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_resonant_chorus"], "battle_traits": ["artillerist", "linekeeper"]},
+      "field_objectives": [{"id": "horizon_meridian_sighting_ring", "type": "lane_battery", "label": "Three-Fork Sighting Ring", "summary": "Three tuned forks keep the prism battery aligned until the mirrored ring is turned off the open lane.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 440, "aetherglass": 1, "experience": 330}, "victory_flags": ["horizon_meridian_array_broken"]
+    },
+    {
+      "id": "encounter_horizon_crownroot_oathseed_ring", "name": "Crownroot Oathseed Ring", "enemy_group_id": "army_horizon_crownroot_oathseed_ring", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["fortified_line", "chokepoint"], "max_rounds": 15,
+      "enemy_commander": {"name": "Root-Juror Nella Warmseed", "command": {"attack": 1, "defense": 4, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_graft_mend"], "battle_traits": ["linekeeper", "bogwise"]},
+      "field_objectives": [{"id": "horizon_crownroot_shelter_arch", "type": "obstruction_line", "label": "Oathseed Shelter Arch", "summary": "Braided roots shelter the ring's formation until the sporeglass vents and crowned seed are reached.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 440, "verdant_grafts": 1, "experience": 340}, "victory_flags": ["horizon_crownroot_ring_broken"]
+    },
+    {
+      "id": "encounter_horizon_blackbell_verdict_gantry", "name": "Blackbell Verdict Gantry", "enemy_group_id": "army_horizon_blackbell_verdict_gantry", "affiliation": "faction_brasshollow", "terrain": "lava",
+      "battlefield_tags": ["fortress_lane", "wall_pressure"], "max_rounds": 15,
+      "enemy_commander": {"name": "Gauge-Judge Corven Redmark", "command": {"attack": 3, "defense": 3, "power": 0, "knowledge": 1}, "starting_spell_ids": ["spell_pressure_clause"], "battle_traits": ["vanguard", "linekeeper"]},
+      "field_objectives": [{"id": "horizon_blackbell_judgment_rail", "type": "breach_point", "label": "Redline Judgment Rail", "summary": "The blast screens hold while the black bell stays inside its marked pressure interval; force the brass rail before it sounds.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["momentum", "cohesion", "urgency"]}],
+      "rewards": {"gold": 460, "brass_scrip": 1, "experience": 350}, "victory_flags": ["horizon_blackbell_gantry_broken"]
+    },
+    {
+      "id": "encounter_horizon_pale_sounding_ghost_mooring", "name": "Pale Sounding Ghost Mooring", "enemy_group_id": "army_horizon_pale_sounding_ghost_mooring", "affiliation": "faction_veilmourn", "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "chokepoint"], "max_rounds": 15,
+      "enemy_commander": {"name": "Last-Pilot Sera Palechime", "command": {"attack": 2, "defense": 2, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_obituary_mark"], "battle_traits": ["ambusher", "linekeeper"]},
+      "field_objectives": [{"id": "horizon_pale_sounding_bell", "type": "signal_beacon", "label": "Last-Safe Sounding Bell", "summary": "The tideglass bell keeps the ghost ropes taut until its pale quay bearing is claimed before the final chime.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "commander", "urgency"]}],
+      "rewards": {"gold": 460, "memory_salt": 1, "experience": 350}, "victory_flags": ["horizon_pale_mooring_broken"]
     }
   ]
 }

@@ -15745,10 +15745,10 @@
   "currentNotes": "Six Horizon Citadels completed as one substantial content batch with one consolidated live smoke, repository validation, and matching Linux/Windows packaged boots.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-horizon-citadels-10184",
-  "currentSliceId": "content-six-horizon-relic-commissions-10184",
-  "currentSliceNotes": "Shipped six original horizon-citadel relic commissions with live one-time Town services, exact faction/town scoping, generated 128px art, bonuses, provenance, repeat safety, and save-v9 persistence. One consolidated six-case smoke and repository validation passed; Linux/Windows exports both passed with matching 249221372-byte PCKs, 778628 bytes below the ceiling.",
+  "currentSliceId": "content-six-horizon-compact-skirmish-10184",
+  "currentSliceNotes": "Shipped the 24x16 six-citadel skirmish, six faction-correct signature battles, and one original compact exact-art atlas. One consolidated full-board smoke passed six battle victories, six exact identity regions, five captures, twelve objectives, timed hooks, and save-v9 roundtrip; repo validation and Linux/Windows package runtime gates passed at matching 249284232-byte PCKs with 715768 bytes headroom and source masters excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six horizon relic commissions 10184",
+  "currentSliceTitle": "content six horizon compact skirmish 10184",
   "currentSliceUpdatedAt": "2026-08-30T15:42:57Z",
   "deferredRiskRegister": [
     {
@@ -106548,6 +106548,16 @@
       "startedAt": "2026-08-30T15:57:01Z",
       "notes": "Shipped six original horizon-citadel relic commissions with live one-time Town services, exact faction/town scoping, generated 128px art, bonuses, provenance, repeat safety, and save-v9 persistence. One consolidated six-case smoke and repository validation passed; Linux/Windows exports both passed with matching 249221372-byte PCKs, 778628 bytes below the ceiling.",
       "completedAt": "2026-08-30T16:19:39Z"
+    },
+    {
+      "id": "content-six-horizon-compact-skirmish-10184",
+      "title": "content six horizon compact skirmish 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T16:51:12Z",
+      "startedAt": "2026-08-30T16:24:43Z",
+      "notes": "Shipped the 24x16 six-citadel skirmish, six faction-correct signature battles, and one original compact exact-art atlas. One consolidated full-board smoke passed six battle victories, six exact identity regions, five captures, twelve objectives, timed hooks, and save-v9 roundtrip; repo validation and Linux/Windows package runtime gates passed at matching 249284232-byte PCKs with 715768 bytes headroom and source masters excluded.",
+      "completedAt": "2026-08-30T16:51:12Z"
     }
   ],
   "project": "heroes-like",
@@ -107092,7 +107102,7 @@
   ],
   "summary": "Implementing Six Horizon Citadels: one new live strategic town per faction with complete original scenic and overworld art and batched validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T16:19:39Z",
+  "updatedAt": "2026-08-30T16:51:12Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
