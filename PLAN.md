@@ -24,8 +24,40 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Most recently completed implementation slice: `content-final-nine-hero-faction-campaigns-10184`, which closes campaign representation across all sixty production heroes through three exact faction arcs and nine existing production boards.
-- Current package boundary: both release exports measure 249624412 bytes, 375588 bytes below the unchanged 250000000-byte ceiling. All nineteen campaign emblems and seventy-eight chapter seals ship while generated source originals and development reports remain excluded on both platforms.
+- Latest completed implementation slice: `content-six-auxiliary-charter-halls-10184`, which integrates all six scenario-earned auxiliary specialists into the normal town build and muster economy through one original faction building each.
+- Current package boundary: matching Linux and Windows release exports measure 246024472 bytes, 3975528 bytes below the unchanged 250000000-byte ceiling. Select the next coherent substantial content batch before implementation and retain batched verification.
+
+## Six Auxiliary Charter Halls
+
+id: `content-six-auxiliary-charter-halls-10184`
+
+Status: completed.
+
+Completion result:
+- Beaconline Charter House, Fenbell Hunt Lodge, Zenith Relay Hall, Canopy Breach Grove, Redline Charter Bay, and Wakeglass Chart House now provide repeatable build, weekly growth, and muster routes for the six existing scenario-earned auxiliary specialists in their designated host towns;
+- all six buildings own distinct generated and curated original art, 256x256 runtime icons, exact prompt/hash provenance, faction-specific prerequisites and costs, positive strategic-AI valuation, live popup presentation, and save-version-9 continuity;
+- host-town development budgets absorb the new common construction costs while all six towns still finish full development in 28-30 turns and preserve high-tier pacing floors;
+- one consolidated six-faction gameplay/UI/art/save smoke, repository validation, and sequential Linux/Windows packaged startups pass with matching 246024472-byte PCKs, 3975528 bytes below the unchanged ceiling and source originals excluded.
+
+Current finding:
+- Canopy Rammers, Pressure Lancers, Wakeglass Navigators, Beaconline Writguard, Fenbell Chainstalkers, and Zenith Lensbearers are complete original units with live combat behavior and art, but each remains obtainable only through one authored scenario reward;
+- every production faction owns a designated auxiliary host town, yet those towns do not offer a repeatable build-and-muster route for their auxiliary specialist;
+- the existing data-driven building, town construction, weekly growth, muster, art-manifest, UI, AI, and save-version-9 paths can adopt one additional faction building apiece without a new runtime subsystem.
+
+Implementation boundary:
+- add one original auxiliary charter building to each faction's designated auxiliary host town, with a faction-correct prerequisite, cost, auxiliary unit unlock, weekly growth, readiness or economy payoff, and AI-visible category/value data;
+- generate six distinct transparent original building masters with the built-in image generator, derive the established 256x256 runtime icons, retain exact provenance outside release packages, and expose non-color identity descriptions through the existing building copy;
+- reclaim safe package headroom by applying bounded lossy imports only to large scenic textures that remain visually acceptable at both supported viewports, without increasing the 250000000-byte ceiling;
+- preserve all existing unit balance, scenario rewards, town layouts, save version 9, Windows/Linux paths, accessibility behavior, and release framing.
+
+Completion criteria:
+- each designated auxiliary host town can build exactly its own charter hall after the authored prerequisites, gains the correct auxiliary weekly growth, and can recruit that specialist through the live muster UI and TownRules authority;
+- AI building enumeration can see and value all six buildings, exact art resolves in the build popup, and built/unbuilt town authority round-trips through save version 9 without cross-faction leakage;
+- one consolidated six-faction gameplay/UI/art/save smoke runs after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new unit, combat ability, faction, hero, town, scenario, campaign chapter, save-version bump, broad balance pass, Native RMG change, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes building, name, text, icon, town layout, or protected visual expression.
 
 ## Eleven Roads And Objectives
 

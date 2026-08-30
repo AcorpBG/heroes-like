@@ -15742,14 +15742,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Veil-Coast Sounding Circuit content batch with six live coast-route services, six operational landmarks, one 24x14 Veilmourn skirmish, four battle fronts, complete town economy sources, and consolidated gameplay, repository, Linux, and Windows package evidence.",
+  "currentNotes": "Completed the six-faction auxiliary charter-hall batch with repeatable build, growth, muster, AI, art, save, development-balance, and matching Linux/Windows package evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-veil-coast-sounding-circuit-10184",
-  "currentSliceId": "content-final-nine-hero-faction-campaigns-10184",
-  "currentSliceNotes": "Shipped three complete faction campaigns in one substantial batch: The Coalwater Ordinance, The Siltbound Writ, and The Broken Meridian bring the final nine campaign-unrepresented production heroes and boards into exact proof-gated play while preserving skirmish availability. Added 3 original emblems and 9 encounter-derived seals with accessible descriptions and generated-source provenance. The one consolidated Python-launched runtime smoke passed 3 campaigns, 9 chapters, 33 battle payloads, 9 proof hooks, bounded resource-only carryover, save-version-9 round trips, 12 art identities, and 9 reviewed captures; repository validation and matching Linux/Windows packaged boots passed at 249624412 bytes with 375588 bytes of ceiling headroom.",
+  "currentSliceId": "content-six-auxiliary-charter-halls-10184",
+  "currentSliceNotes": "Completed the six-faction auxiliary charter-hall batch: six existing scenario-earned specialists now have faction-specific build, weekly-growth, live muster, AI valuation, exact art, and save-version-9 routes in designated host towns. Added six distinct generated/curated originals and runtime icons with provenance. One consolidated six-faction popup/gameplay/art/save smoke and full repository validation pass; Linux and Windows export/startup pass with matching 246024472-byte PCKs, 3975528 bytes below the unchanged ceiling and source art excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content final nine hero faction campaigns 10184",
-  "currentSliceUpdatedAt": "2026-08-30T08:38:28Z",
+  "currentSliceTitle": "content six auxiliary charter halls 10184",
+  "currentSliceUpdatedAt": "2026-08-30T13:31:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -106493,6 +106493,16 @@
       "startedAt": "2026-08-30T12:21:36Z",
       "notes": "Shipped three complete faction campaigns in one substantial batch: The Coalwater Ordinance, The Siltbound Writ, and The Broken Meridian bring the final nine campaign-unrepresented production heroes and boards into exact proof-gated play while preserving skirmish availability. Added 3 original emblems and 9 encounter-derived seals with accessible descriptions and generated-source provenance. The one consolidated Python-launched runtime smoke passed 3 campaigns, 9 chapters, 33 battle payloads, 9 proof hooks, bounded resource-only carryover, save-version-9 round trips, 12 art identities, and 9 reviewed captures; repository validation and matching Linux/Windows packaged boots passed at 249624412 bytes with 375588 bytes of ceiling headroom.",
       "completedAt": "2026-08-30T12:53:36Z"
+    },
+    {
+      "id": "content-six-auxiliary-charter-halls-10184",
+      "title": "content six auxiliary charter halls 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T13:31:57Z",
+      "startedAt": "2026-08-30T13:01:04Z",
+      "notes": "Completed the six-faction auxiliary charter-hall batch: six existing scenario-earned specialists now have faction-specific build, weekly-growth, live muster, AI valuation, exact art, and save-version-9 routes in designated host towns. Added six distinct generated/curated originals and runtime icons with provenance. One consolidated six-faction popup/gameplay/art/save smoke and full repository validation pass; Linux and Windows export/startup pass with matching 246024472-byte PCKs, 3975528 bytes below the unchanged ceiling and source art excluded.",
+      "completedAt": "2026-08-30T13:31:57Z"
     }
   ],
   "project": "heroes-like",
@@ -107037,7 +107047,7 @@
   ],
   "summary": "Completed the Veil-Coast Sounding Circuit: six formerly dormant shoreline services now provide live one-cost two-way land transit with distinct operational art inside a new 24x14 Veilmourn skirmish, validated as one batch and through Linux and Windows packages.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T12:53:36Z",
+  "updatedAt": "2026-08-30T13:31:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

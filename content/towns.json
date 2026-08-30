@@ -184,7 +184,8 @@
         "building_mireclaw_silt_watch",
         "building_mireclaw_bog_oracle_nest",
         "building_mireclaw_boneboom_palisade",
-        "building_mireclaw_oathmire_court"
+        "building_mireclaw_oathmire_court",
+        "building_mireclaw_fenbell_hunt_lodge"
       ],
       "spell_library": [
         {
@@ -214,9 +215,9 @@
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
-          "gold": 3000,
-          "wood": 4,
-          "ore": 4,
+          "gold": 5350,
+          "wood": 7,
+          "ore": 5,
           "peatwax": 0,
           "aetherglass": 0,
           "embergrain": 0,
@@ -2019,6 +2020,7 @@
         "building_embercourt_lantern_court",
         "building_embercourt_relief_quay",
         "building_embercourt_charter_flame",
+        "building_embercourt_beaconline_charter_house",
         "building_lantern_archive",
         "building_starseer_annex"
       ],
@@ -2058,9 +2060,9 @@
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
-          "gold": 3000,
-          "wood": 3,
-          "ore": 3,
+          "gold": 5450,
+          "wood": 5,
+          "ore": 5,
           "embergrain": 0,
           "aetherglass": 0,
           "peatwax": 0,
@@ -2156,7 +2158,8 @@
         "building_sunvault_daybreak_matrix",
         "building_sunvault_prism_oratory",
         "building_sunvault_halo_battery_yard",
-        "building_sunvault_zenith_court"
+        "building_sunvault_zenith_court",
+        "building_sunvault_zenith_relay_hall"
       ],
       "spell_library": [
         {
@@ -2195,9 +2198,9 @@
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
-          "gold": 3000,
-          "wood": 4,
-          "ore": 4,
+          "gold": 5550,
+          "wood": 5,
+          "ore": 7,
           "aetherglass": 0,
           "embergrain": 0,
           "peatwax": 0,
@@ -2293,6 +2296,7 @@
         "building_thornwake_bramble_toll",
         "building_thornwake_barkmantle_run",
         "building_thornwake_pilgrim_orchard",
+        "building_thornwake_canopy_breach_grove",
         "building_thornwake_graftworks",
         "building_thornwake_worldroot_gate"
       ],
@@ -2334,9 +2338,9 @@
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
-          "gold": 3000,
-          "wood": 4,
-          "ore": 4,
+          "gold": 5400,
+          "wood": 7,
+          "ore": 5,
           "verdant_grafts": 0,
           "aetherglass": 0,
           "embergrain": 0,
@@ -2427,6 +2431,7 @@
         "building_brasshollow_pavis_foundry",
         "building_brasshollow_boiler_cathedral",
         "building_brasshollow_pressure_rail",
+        "building_brasshollow_redline_charter_bay",
         "building_brasshollow_crucible_dock",
         "building_brasshollow_titan_charter_hall"
       ],
@@ -2467,9 +2472,9 @@
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
-          "gold": 3000,
-          "wood": 4,
-          "ore": 4,
+          "gold": 5700,
+          "wood": 5,
+          "ore": 7,
           "brass_scrip": 0,
           "aetherglass": 0,
           "embergrain": 0,
@@ -2562,6 +2567,7 @@
         "building_veilmourn_mirror_drydock",
         "building_veilmourn_harpoon_gantry",
         "building_veilmourn_obituary_vault",
+        "building_veilmourn_wakeglass_chart_house",
         "building_veilmourn_mistgate_slip",
         "building_veilmourn_leviathan_sounding"
       ],
@@ -2603,9 +2609,9 @@
         "target_complete_turns": 30,
         "one_build_per_turn": true,
         "starting_resources": {
-          "gold": 3000,
-          "wood": 1,
-          "ore": 1,
+          "gold": 5450,
+          "wood": 3,
+          "ore": 3,
           "memory_salt": 0,
           "aetherglass": 0,
           "embergrain": 0,
