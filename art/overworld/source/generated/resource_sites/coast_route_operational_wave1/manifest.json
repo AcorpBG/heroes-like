@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "generation_mode": "built_in_image_gen_precise_object_edit",
+  "source_model": "existing_original_coast_route_landmark_operational_state",
+  "intent": "Distinct operational-state variants for the complete six-site coast-route family, preserving each dormant shoreline identity while making deployed land-to-land transit readable at overworld scale.",
+  "shared_prompt_constraints": [
+    "Preserve the original isometric strategy-map perspective, recognizable structure, footprint, and faction visual language.",
+    "Use physical non-color-only activation cues such as deployed ramps, launched skiffs, tensioned chains, raised route signals, ringing bells, or cleared boarding lanes.",
+    "No people, creatures, words, labels, UI, border, watermark, copied franchise elements, or protected visual expression.",
+    "Use a genuinely transparent background with generous clear margins around the isolated landmark."
+  ],
+  "alpha_recovery": "Harbor Pilot Post and Marsh Skiff Shelf used built-in background-extraction follow-ups after their initial edits returned baked checkerboards. Wreck Quay was regenerated as an original transparent operational landmark after two edit attempts failed alpha validation. All six selected final sources and the atlas have genuine alpha and transparent corners.",
+  "processing": "trim, aspect fit within 44x44, and center on a transparent 48x48 cell",
+  "runtime_atlas": {
+    "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png",
+    "size": [288, 48],
+    "cell_size": [48, 48],
+    "sha256": "69bdff9a706d4faa52cd8b71a992a9d56b9548dab8cfeb99f5020d4d7e93d24b"
+  },
+  "assets": [
+    {
+      "site_id": "site_veil_skiffyard",
+      "asset_id": "resource_site_coast_route_veil_skiffyard_operational",
+      "source": "veil_skiffyard_operational_source.png",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-a700c6c8-c8b7-4eed-8cf2-c94a1cba83d0.png",
+      "region": [0, 0, 48, 48],
+      "sha256": "9191ff0d764c695c567ab7b41379c0c088742db51ea3403bde79a2c939309721",
+      "prompt": "Preserve the Veil Skiffyard; lower one skiff, deploy its launch ramp, tension the sail, and raise compact route pennants."
+    },
+    {
+      "site_id": "site_harbor_pilot_post",
+      "asset_id": "resource_site_coast_route_harbor_pilot_post_operational",
+      "source": "harbor_pilot_post_operational_source.png",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-c3ed0f09-2cc5-436d-bcfe-f97b85edcbc0.png",
+      "region": [48, 0, 48, 48],
+      "sha256": "65d35a7e5b16dec118c378200a224becd181fb81223a90f1fbdb6891117adb84",
+      "prompt": "Preserve the Harbor Pilot Post; unfurl the route chart, raise the pilot flag, deploy the gangway, and light the tower lantern."
+    },
+    {
+      "site_id": "site_bell_buoy_station",
+      "asset_id": "resource_site_coast_route_bell_buoy_station_operational",
+      "source": "bell_buoy_station_operational_source.png",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-89b44143-9530-4491-9f7b-49869cff5130.png",
+      "region": [96, 0, 48, 48],
+      "sha256": "5d0b6d7835bc93a77d525809a8e76665f90b04f563f26a43fe3d6c83bf4c9b25",
+      "prompt": "Preserve the Bell Buoy Station; pull the bell outward, tension its rope and channel chain, raise two vanes, and open the lantern."
+    },
+    {
+      "site_id": "site_wreck_quay",
+      "asset_id": "resource_site_coast_route_wreck_quay_operational",
+      "source": "wreck_quay_operational_source.png",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-2ce9906f-d7fe-4a3a-9b7d-eea6b35c38ef.png",
+      "region": [144, 0, 48, 48],
+      "sha256": "a4d42c12ff9649688c4ce7d7a86072897ec10a038f5ef3f7858ee331016aa865",
+      "prompt": "Create an original wreck-built operational quay with a broad clear boarding lane, pulled-aside spars, taut guide ropes, and a compact route pennant."
+    },
+    {
+      "site_id": "site_tide_chain_mooring",
+      "asset_id": "resource_site_coast_route_tide_chain_mooring_operational",
+      "source": "tide_chain_mooring_operational_source.png",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-df9e3a61-2b70-45c3-a113-4647617852c4.png",
+      "region": [192, 0, 48, 48],
+      "sha256": "06d8d92fe216fbac1b928c34f54e505a799c17c600218be08d48fae2eebe5b4a",
+      "prompt": "Preserve the Tide Chain Mooring; align the capstans, tension the guided chain span, raise route hooks, and open the plank crossing."
+    },
+    {
+      "site_id": "site_marsh_skiff_shelf",
+      "asset_id": "resource_site_coast_route_marsh_skiff_shelf_operational",
+      "source": "marsh_skiff_shelf_operational_source.png",
+      "generated_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-81a2b025-535e-4c87-a9ed-6a27885bee38.png",
+      "region": [240, 0, 48, 48],
+      "sha256": "bae097ddd26b8468a0af6cb673de36cbab9142dfc2bad90299a291237d7e69de",
+      "prompt": "Preserve the Marsh Skiff Shelf; deploy its launch ramp, slide the skiff toward water, set working poles upright, and raise a route pennant."
+    }
+  ]
+}

@@ -6364,6 +6364,36 @@
       "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/tide_bore_marker_active_source.png", "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
       "assigned_resource_site_id": "site_tide_bore_marker", "presentation_role": "active_land_transit_state", "accessible_description": "A carved current marker surrounded by a forceful directional turquoise tide and lit rope posts."
     },
+    "resource_site_coast_route_veil_skiffyard_operational": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/veil_skiffyard_operational_source.png", "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+      "assigned_resource_site_id": "site_veil_skiffyard", "presentation_role": "operational_coast_route_state", "accessible_description": "An operational timber skiffyard with a boat lowered into its channel, open launch ramp, taut sails, and raised route pennants."
+    },
+    "resource_site_coast_route_harbor_pilot_post_operational": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/harbor_pilot_post_operational_source.png", "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+      "assigned_resource_site_id": "site_harbor_pilot_post", "presentation_role": "operational_coast_route_state", "accessible_description": "An operational stone pilot post with an unfurled route chart, raised signal flag, extended gangway, and lit watch lantern."
+    },
+    "resource_site_coast_route_bell_buoy_station_operational": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/bell_buoy_station_operational_source.png", "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+      "assigned_resource_site_id": "site_bell_buoy_station", "presentation_role": "operational_coast_route_state", "accessible_description": "An operational channel bell pulled outward on a taut rope beneath raised vanes, an open lantern, and a tensioned guide chain."
+    },
+    "resource_site_coast_route_wreck_quay_operational": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/wreck_quay_operational_source.png", "source_model": "built_in_image_gen_original_coast_route_operational_atlas",
+      "assigned_resource_site_id": "site_wreck_quay", "presentation_role": "operational_coast_route_state", "accessible_description": "A wreck-built quay with a broad straight boarding lane, pulled-aside spars, taut guide ropes, lit posts, and a raised route pennant."
+    },
+    "resource_site_coast_route_tide_chain_mooring_operational": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/tide_chain_mooring_operational_source.png", "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+      "assigned_resource_site_id": "site_tide_chain_mooring", "presentation_role": "operational_coast_route_state", "accessible_description": "An operational paired mooring with aligned capstans, a taut guided chain span, upright route hooks, and an open plank crossing."
+    },
+    "resource_site_coast_route_marsh_skiff_shelf_operational": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/coast_route_operational_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/coast_route_operational_wave1/marsh_skiff_shelf_operational_source.png", "source_model": "built_in_image_gen_precise_object_edit_coast_route_operational_atlas",
+      "assigned_resource_site_id": "site_marsh_skiff_shelf", "presentation_role": "operational_coast_route_state", "accessible_description": "An operational reed skiff shelf with its boat on a deployed launch ramp, working poles upright, lashings open, and a route pennant raised."
+    },
     "resource_site_route_control_charter_bar_gate_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[0,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/charter_bar_gate_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_charter_bar_gate","presentation_role":"opened_route_lock_state","accessible_description":"Charter Bar Gate with its sealed barrier raised beside the left pillar and both charter medallions glowing warm gold."},
     "resource_site_route_control_thorn_seal_gate_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[48,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/thorn_seal_gate_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_thorn_seal_gate","presentation_role":"opened_route_lock_state","accessible_description":"Thorn Seal Gate with its living barrier withdrawn into the arch and a broad green-gold passage standing open."},
     "resource_site_route_control_brass_toll_arch_opened": {"path":"res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png","atlas_region":[96,0,48,48],"atlas_size":[288,48],"source_generated":"res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/brass_toll_arch_opened_source.png","source_model":"built_in_image_gen_precise_object_edit_route_control_opened_atlas","assigned_resource_site_id":"site_brass_toll_arch","presentation_role":"opened_route_lock_state","accessible_description":"Brass Toll Arch with its striped arm raised against the booth and amber lamps showing lawful passage."},
@@ -6768,6 +6798,12 @@
     "site_slipgate_mirror": {"asset_id":"resource_site_land_transit_slipgate_mirror_active","unclaimed_asset_id":"mapobj_slipgate_mirror","fit":"Charged one-way portal paired with the original dormant mirror."},
     "site_spillway_drop_marker": {"asset_id":"resource_site_land_transit_spillway_drop_marker_active","unclaimed_asset_id":"mapobj_spillway_drop_marker","fit":"Flowing one-way spillway paired with the original closed marker."},
     "site_tide_bore_marker": {"asset_id":"resource_site_land_transit_tide_bore_marker_active","unclaimed_asset_id":"mapobj_tide_bore_marker","fit":"Active directional tide state paired with the original quiet bore marker."},
+    "site_veil_skiffyard": {"asset_id":"resource_site_coast_route_veil_skiffyard_operational","unclaimed_asset_id":"mapobj_veil_skiffyard","fit":"Launched operational skiffyard paired with the original dormant boat racks."},
+    "site_harbor_pilot_post": {"asset_id":"resource_site_coast_route_harbor_pilot_post_operational","unclaimed_asset_id":"mapobj_harbor_pilot_post","fit":"Deployed chart and gangway state paired with the original quiet pilot post."},
+    "site_bell_buoy_station": {"asset_id":"resource_site_coast_route_bell_buoy_station_operational","unclaimed_asset_id":"mapobj_bell_buoy_station","fit":"Ringing safe-channel state paired with the original still bell station."},
+    "site_wreck_quay": {"asset_id":"resource_site_coast_route_wreck_quay_operational","unclaimed_asset_id":"mapobj_wreck_quay","fit":"Cleared operational boarding lane paired with the original obstructed wreck quay."},
+    "site_tide_chain_mooring": {"asset_id":"resource_site_coast_route_tide_chain_mooring_operational","unclaimed_asset_id":"mapobj_tide_chain_mooring","fit":"Tensioned guided crossing paired with the original slack mooring chain."},
+    "site_marsh_skiff_shelf": {"asset_id":"resource_site_coast_route_marsh_skiff_shelf_operational","unclaimed_asset_id":"mapobj_marsh_skiff_shelf","fit":"Launch-ready marsh skiff paired with the original stored boat shelf."},
     "site_toll_chain_court": {"asset_id":"resource_site_roads_objectives_toll_chain_opened","unclaimed_asset_id":"mapobj_toll_chain_court","fit":"Lowered-chain state paired with the original closed Toll Chain Court."},
     "site_root_lease_gate": {"asset_id":"resource_site_roads_objectives_root_lease_opened","unclaimed_asset_id":"mapobj_root_lease_gate","fit":"Withdrawn-root state paired with the original closed Root Lease Gate."},
     "site_pressure_rail_stop": {"asset_id":"resource_site_roads_objectives_pressure_rail_opened","unclaimed_asset_id":"mapobj_pressure_rail_stop","fit":"Repaired clear-rail state paired with the original locked Pressure Rail Stop."},

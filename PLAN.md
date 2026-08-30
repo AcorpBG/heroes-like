@@ -14673,6 +14673,39 @@ Completion evidence:
 Non-goals:
 - no new combat engine contract, faction, hero, town, production muster, save-version bump, broad balance pass, campaign arc, Native RMG change, certification, publication, whole-game validation, or release-readiness claim.
 
+## Veil-Coast Sounding Circuit
+
+id: `content-veil-coast-sounding-circuit-10184`
+
+Status: completed.
+
+Delivered:
+- promoted Veil Skiffyard, Harbor Pilot Post, Bell Buoy Station, Wreck Quay, Tide Chain Mooring, and Marsh Skiff Shelf from metadata-only definitions into live guarded/unguarded two-way shoreline services without adopting ship movement;
+- added the 24x14 Veil-Coast Sounding Circuit skirmish with Sael Mirrorbell, two developing towns, all six sequential crossings, four battle fronts, sixteen resource services, three artifacts, relief/pressure/counterstroke hooks, and five victory objectives;
+- added six distinct transparent operational landmarks in one 288x48 atlas while preserving the original dormant art before first visit and retaining high-resolution generated provenance outside packages;
+- corrected the Bell Buoy, Tide Chain, and Marsh Skiff endpoint offsets so their approach squares remain outside their blocking footprints instead of weakening collision safety.
+
+Implementation boundary:
+- promote all six coast-route site/object pairs to live two-way shoreline transit through the existing data-driven linked-endpoint authority, retaining explicit `ship_movement_runtime_adopted: false` and land-to-land approach semantics;
+- add one original Veilmourn-led skirmish whose route topology uses all six services as real shortcuts between separated shore lanes, with two towns, guarded fronts, resource pressure, artifacts, relief, counterstroke pacing, and objectives that require the coast circuit to be opened;
+- create six distinct transparent operational-state landmark edits from the existing original dormant identities, pack them into one compact runtime atlas, and switch each service only after its successful first visit;
+- preserve save version 9, deterministic one-cost transit, exit-safety fail-closed behavior, accessibility descriptions, reduced-motion endpoint presentation, generated-source package exclusion, and the 250000000-byte Linux/Windows package ceiling.
+
+Completion criteria:
+- all six services are absent from route authority before visit, activate exactly once through normal live interaction, expose one safe two-way cost-one edge afterward, support real forward and reverse hero movement, and round-trip exact active state through save version 9;
+- the Veil-Coast Sounding Circuit scenario loads collision-free, constructs its authored battles, preserves its resource, relief, pressure, counterstroke, and victory contracts, and requires live coast-route traversal rather than decorative placements;
+- every service renders its original dormant identity before activation and its own non-color-only operational landmark afterward, with genuine alpha, strict fallback behavior, and no generated high-resolution source in release packages;
+- one consolidated six-case gameplay/runtime/visual/save smoke passes after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no free-roaming ship, embark/disembark system, water-tile movement, naval battle, new unit, hero, town, spell, artifact, save-version bump, broad strategic-AI algorithm, Native RMG change, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes dock, shipyard, lighthouse, buoy, route, name, text, landmark, or protected visual expression.
+
+Validation evidence:
+- the consolidated six-service live scenario report passed activation, guarded battle construction, forward/reverse cost-one travel, multi-day end-to-end route completion, save-version-9 round-trip, operational art resolution, and unsafe-exit fail-closed checks;
+- `python3 tests/validate_repo.py` passed;
+- Linux and Windows release export smokes passed with native libraries loaded, source art excluded, and an identical 247546944-byte PCK below the unchanged 250000000-byte ceiling.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
