@@ -2420,6 +2420,66 @@
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
       "curated_source_sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6"
+    },
+    {
+      "id": "unit_thornwake_seedshield_wardens",
+      "unit_id": "unit_thornwake_seedshield_wardens",
+      "name": "Seedshield Wardens",
+      "faction_id": "faction_thornwake",
+      "tier": 3,
+      "role": "melee",
+      "motif": "shield",
+      "portrait": "res://art/units/portraits/unit_thornwake_seedshield_wardens.png",
+      "battle_icon": "res://art/units/battle_icons/unit_thornwake_seedshield_wardens.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_seedshield_wardens.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_seedshield_wardens.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_thornwake_seedshield_wardens.png",
+      "curated_source_sha256": "6b06cd03bab0045ad1c3e467b369bdb2d183ab56e848c77f351a6c3faf6480f3"
+    },
+    {
+      "id": "unit_brasshollow_gaugefire_arbalists",
+      "unit_id": "unit_brasshollow_gaugefire_arbalists",
+      "name": "Gaugefire Arbalists",
+      "faction_id": "faction_brasshollow",
+      "tier": 3,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_brasshollow_gaugefire_arbalists.png",
+      "battle_icon": "res://art/units/battle_icons/unit_brasshollow_gaugefire_arbalists.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_gaugefire_arbalists.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_gaugefire_arbalists.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_brasshollow_gaugefire_arbalists.png",
+      "curated_source_sha256": "cd0581b664a61a385cecb956af6d1284f12c46bfe142ffe82e8e5cacd4c2a6c6"
+    },
+    {
+      "id": "unit_veilmourn_wakechain_boarders",
+      "unit_id": "unit_veilmourn_wakechain_boarders",
+      "name": "Wakechain Boarders",
+      "faction_id": "faction_veilmourn",
+      "tier": 3,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_veilmourn_wakechain_boarders.png",
+      "battle_icon": "res://art/units/battle_icons/unit_veilmourn_wakechain_boarders.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_wakechain_boarders.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_wakechain_boarders.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_veilmourn_wakechain_boarders.png",
+      "curated_source_sha256": "a816f24a217b3d9eb35f7230b8f2bac76f674d4c0db4d3b08c609914688b9d06"
     }
   ]
 }

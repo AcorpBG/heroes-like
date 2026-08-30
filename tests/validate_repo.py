@@ -59240,19 +59240,22 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "unit_thornwake_seedglass_cantors",
         "unit_brasshollow_quenchbell_mortars",
         "unit_veilmourn_saltwake_eulogists",
+        "unit_thornwake_seedshield_wardens",
+        "unit_brasshollow_gaugefire_arbalists",
+        "unit_veilmourn_wakechain_boarders",
     ]
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) not in latest_curated_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved one hundred twenty units, including the Horizon specialists, may use the curated character-source branch",
+        "Exactly the approved one hundred twenty-three units, including the Horizon reserve companies, may use the curated character-source branch",
     )
-    ensure(len(curated_art_records) == 120 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 120 live units must retain curated production art while the latest neutral and auxiliary batches remain covered")
+    ensure(len(curated_art_records) == 123 and sorted(str(record.get("unit_id", "")) for record in curated_art_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 123 live units must retain curated production art while the latest neutral and auxiliary batches remain covered")
     ensure(
         sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) not in latest_curated_unit_ids) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, hedgehook_watch_unit_id, thornbow_scouts_unit_id, basalt_wardens_unit_id, tunnelmark_bolters_unit_id, fenhound_runners_unit_id, mossglass_sentinels_unit_id, cliffhawk_wardens_unit_id, windglass_slingers_unit_id, greenbranch_cudgels_unit_id, sapwhistle_callers_unit_id, bogbell_mauls_unit_id, peatflare_jarriers_unit_id, cinderpot_hurlers_unit_id, kilnward_mallets_unit_id, kitehook_runners_unit_id, ridgeflare_shots_unit_id, ashdart_stalkers_unit_id, scarshield_veterans_unit_id, reedbarge_poles_unit_id, lanternet_throwers_unit_id, charcoal_mauls_unit_id, emberpack_lobbers_unit_id, roadwardens_unit_id, hearthbow_carriers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved one hundred twenty units, including the Horizon specialists, may use the curated character-source animation branch",
+        "Exactly the approved one hundred twenty-three units, including the Horizon reserve companies, may use the curated character-source animation branch",
     )
-    ensure(len(curated_animation_records) == 120 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 120 live units must retain curated production animation while the latest neutral and auxiliary batches remain covered")
+    ensure(len(curated_animation_records) == 123 and sorted(str(record.get("unit_id", "")) for record in curated_animation_records if str(record.get("unit_id", "")) in latest_curated_unit_ids) == sorted(latest_curated_unit_ids), errors, "All 123 live units must retain curated production animation while the latest neutral and auxiliary batches remain covered")
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(fordhook_unit_id, {}), "animation"),
@@ -59433,6 +59436,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_brasshollow_debt_engine_exactors",
     "unit_brasshollow_foundry_saint",
     "unit_brasshollow_furnace_pavis_teams",
+    "unit_brasshollow_gaugefire_arbalists",
     "unit_brasshollow_pressure_lancers",
     "unit_brasshollow_quenchbell_mortars",
     "unit_brasshollow_rivet_hounds",
@@ -59530,6 +59534,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_thornwake_barkmantle_rams",
     "unit_thornwake_canopy_rammers",
     "unit_thornwake_seedglass_cantors",
+    "unit_thornwake_seedshield_wardens",
     "unit_thornwake_graft_matriarchs",
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
@@ -59543,10 +59548,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_mourning_lanterns",
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_saltwake_eulogists",
+    "unit_veilmourn_wakechain_boarders",
     "unit_veilmourn_undertow_harpooners",
     "unit_veilmourn_wakeglass_navigators",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the one hundred twenty approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the one hundred twenty-three approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -77301,7 +77307,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
             "unclaimed": "mapobj_tideglass_roost", "controlled": "resource_site_neutral_tideglass_roost_controlled", "unclaimed_region": [96, 0, 48, 48], "controlled_region": [144, 0, 48, 48],
         },
     }
-    ensure(len(units) == 120 and len(dwellings) == 27 and len(sites) == 209 and len(objects) == 388 and len(groups) == 179 and len(encounters) == 121, errors, "Elite-neutral batch must retain the expanded 120-unit, 27-dwelling, 209-site, 388-object, 179-army, 121-encounter roster")
+    ensure(len(units) == 123 and len(dwellings) == 27 and len(sites) == 209 and len(objects) == 388 and len(groups) == 179 and len(encounters) == 121, errors, "Elite-neutral batch must retain the expanded 123-unit, 27-dwelling, 209-site, 388-object, 179-army, 121-encounter roster")
     ensure(len(scenario.get("resource_nodes", [])) == 93 and len(scenario.get("encounters", [])) == 31, errors, "Elite-neutral batch must own the expanded 93-site, 31-encounter Ninefold board")
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     object_assets = overworld_art.get("object_assets", {})
@@ -77379,7 +77385,7 @@ def validate_six_elder_wilds(errors: list[str]) -> None:
         "unit_neutral_rimebell_skyrakers": (6, "melee", ["fog_screen", "reach"], "army_neutral_rimebell_whitewake_watch", [{"unit_id":"unit_neutral_rimebell_skyrakers","count":2},{"unit_id":"unit_neutral_snowglass_markers","count":6}], "encounter_rimebell_whitewake_watch", "ninefold_rimebell_whitewake_watch", (5,43), 26505, "rimebell_whitewake_signal", "signal_beacon", "encounter_elder_wild_rimebell_whitewake_watch", "2edacbcdfc061271525708c7806e43a4f7eb31b2bfaba99f5af74c349a73aab1", "2ded46c9e9d6c4baf39c74a7811a26cb1c4096e61ec679923dcc60077a84844a"),
         "unit_neutral_deepforge_vaultwyrms": (7, "melee", ["brace", "shielding"], "army_neutral_deepforge_seventh_seal_watch", [{"unit_id":"unit_neutral_deepforge_vaultwyrms","count":1},{"unit_id":"unit_neutral_basalt_wardens","count":4},{"unit_id":"unit_neutral_tunnelmark_bolters","count":4}], "encounter_deepforge_seventh_seal_watch", "ninefold_deepforge_seventh_seal_watch", (58,41), 26506, "deepforge_seventh_seal_pylon", "ritual_pylon", "encounter_elder_wild_deepforge_seventh_seal_watch", "38103e46f973fca22390447f0fc7225e8440da08bfd59724f030a1c1ad66a69a", "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc"),
     }
-    ensure(len(units) == 120 and len(groups) == 179 and len(encounters) == 121, errors, "Elder Wilds must retain the 120-unit, 179-army, 121-encounter production catalog")
+    ensure(len(units) == 123 and len(groups) == 179 and len(encounters) == 121, errors, "Elder Wilds must retain the 123-unit, 179-army, 121-encounter production catalog")
     ensure(len(scenario.get("encounters", [])) == 31, errors, "Elder Wilds must retain all 31 Ninefold encounter placements")
     ensure(source_manifest_path.is_file(), errors, "Elder Wilds generated-source provenance manifest is missing")
     source_manifest = load_json(source_manifest_path) if source_manifest_path.is_file() else {}
@@ -78113,7 +78119,7 @@ def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
     overworld_art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     identity_sprites = overworld_art.get("encounter_identity_sprites", {})
     object_assets = overworld_art.get("object_assets", {})
-    ensure(len(units) == 120 and len(buildings) == 142 and len(groups) == 179 and len(encounters) == 121 and len(scenarios) == 93, errors, "Horizon specialist companies must retain the 120-unit, 142-building, 179-army, 121-encounter, 93-scenario production catalog")
+    ensure(len(units) == 123 and len(buildings) == 142 and len(groups) == 179 and len(encounters) == 121 and len(scenarios) == 93, errors, "Horizon specialist companies must retain the 123-unit, 142-building, 179-army, 121-encounter, 93-scenario production catalog")
     for unit_id, row in expected.items():
         unit = units.get(unit_id, {})
         building_id = row["building_id"]
@@ -78169,6 +78175,87 @@ def validate_three_horizon_specialist_companies(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure('"art/overworld/runtime/terrain_tiles/generated/grastl/source_sheets/"' in packaging_text and '"art/overworld/runtime/terrain_tiles/generated/grastl/experiments/"' in packaging_text and 'not terrain_payload["forbidden_development_entries"]' in packaging_text, errors, f"{packaging_path.name} must reject packaged Grastl generation workfiles")
+
+
+def validate_three_horizon_reserve_companies(errors: list[str]) -> None:
+    expected = {
+        "unit_thornwake_seedshield_wardens": {
+            "faction_id": "faction_thornwake", "role": "melee", "ability_ids": ["brace", "shielding"],
+            "building_id": "building_thornwake_sporeglass_hothouse", "town_id": "town_crownroot_refuge",
+            "scenario_id": "crownroot-quenchline-verdict", "army_id": "army_crownroot_seedglass_trial",
+            "hook_id": "crownroot_seedglass_survivors", "specialist_unit_id": "unit_thornwake_seedglass_cantors",
+            "source_sha": "6b06cd03bab0045ad1c3e467b369bdb2d183ab56e848c77f351a6c3faf6480f3",
+        },
+        "unit_brasshollow_gaugefire_arbalists": {
+            "faction_id": "faction_brasshollow", "role": "ranged", "ability_ids": ["volley", "harry"],
+            "building_id": "building_brasshollow_pavis_foundry", "town_id": "town_blackbell_foundry",
+            "scenario_id": "blackbell-saltwake-foreclosure", "army_id": "army_blackbell_quenchbell_proving",
+            "hook_id": "blackbell_quenchbell_survivors", "specialist_unit_id": "unit_brasshollow_quenchbell_mortars",
+            "source_sha": "cd0581b664a61a385cecb956af6d1284f12c46bfe142ffe82e8e5cacd4c2a6c6",
+        },
+        "unit_veilmourn_wakechain_boarders": {
+            "faction_id": "faction_veilmourn", "role": "melee", "ability_ids": ["hookline", "fog_screen"],
+            "building_id": "building_veilmourn_mirror_drydock", "town_id": "town_pale_sounding_harbor",
+            "scenario_id": "pale-sounding-tidewrit-reckoning", "army_id": "army_pale_saltwake_recital",
+            "hook_id": "pale_saltwake_survivors", "specialist_unit_id": "unit_veilmourn_saltwake_eulogists",
+            "source_sha": "a816f24a217b3d9eb35f7230b8f2bac76f674d4c0db4d3b08c609914688b9d06",
+        },
+    }
+    units = items_index(load_json(CONTENT_DIR / "units.json"))
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    unit_art = items_index(load_json(CONTENT_DIR / "unit_art_manifest.json"))
+    animations = items_index(load_json(CONTENT_DIR / "unit_animation_manifest.json"))
+    ensure(len(units) == 123 and len(buildings) == 142 and len(groups) == 179 and len(scenarios) == 93, errors, "Horizon reserve companies must retain the 123-unit, 142-building, 179-army, 93-scenario production catalog")
+    source_payloads: list[bytes] = []
+    for unit_id, row in expected.items():
+        unit = units.get(unit_id, {})
+        building = buildings.get(row["building_id"], {})
+        town = towns.get(row["town_id"], {})
+        group = groups.get(row["army_id"], {})
+        scenario = scenarios.get(row["scenario_id"], {})
+        ability_ids = [str(value.get("id", "")) for value in unit.get("abilities", []) if isinstance(value, dict)]
+        ensure(unit.get("faction_id") == row["faction_id"] and unit.get("role") == row["role"] and unit.get("tier") == 3 and unit.get("growth") == 4 and unit.get("content_status") == "horizon_reserve_company_live" and ability_ids == row["ability_ids"], errors, f"{unit_id} reserve gameplay identity changed")
+        ensure(building.get("growth_bonus", {}).get(unit_id) == 1 and building.get("recruitment_discount_percent", {}).get(unit_id) == 4, errors, f"{row['building_id']} reserve growth or muster authority changed")
+        ensure(row["building_id"] in town.get("starting_building_ids", []) or row["building_id"] in town.get("buildable_building_ids", []), errors, f"{row['town_id']} lost its reserve dwelling route")
+        stacks = group.get("stacks", [])
+        ensure(group.get("faction_id") == row["faction_id"] and len(stacks) == 3 and any(stack.get("unit_id") == unit_id and stack.get("count") == 4 for stack in stacks if isinstance(stack, dict)) and any(stack.get("unit_id") == row["specialist_unit_id"] and stack.get("count") == 3 for stack in stacks if isinstance(stack, dict)), errors, f"{row['army_id']} paired reserve and specialist company changed")
+        hooks = {str(hook.get("id", "")): hook for hook in scenario.get("script_hooks", []) if isinstance(hook, dict)}
+        survivor_payloads = [effect.get("units", {}) for effect in hooks.get(row["hook_id"], {}).get("effects", []) if isinstance(effect, dict) and effect.get("type") == "add_army_units"]
+        ensure(any(payload.get(unit_id) == 2 and payload.get(row["specialist_unit_id"]) == 2 for payload in survivor_payloads), errors, f"{row['scenario_id']} lost its paired one-time survivor payload")
+        source_path = ROOT / "art" / "units" / "source" / "curated" / f"{unit_id}.png"
+        surface_paths = [
+            ROOT / "art" / "units" / "portraits" / f"{unit_id}.png",
+            ROOT / "art" / "units" / "battle_icons" / f"{unit_id}.png",
+            ROOT / "art" / "units" / "battle_standees" / f"{unit_id}.png",
+            ROOT / "art" / "units" / "overworld_icons" / f"{unit_id}.png",
+            ROOT / "art" / "animation" / "runtime" / "units" / f"{unit_id}.png",
+        ]
+        ensure(source_path.is_file() and png_size(source_path) == (512, 512) and hashlib.sha256(source_path.read_bytes()).hexdigest() == row["source_sha"], errors, f"{unit_id} curated source changed")
+        ensure([png_size(path) for path in surface_paths] == [(384, 512), (160, 160), (192, 224), (96, 96), (256, 896)], errors, f"{unit_id} runtime art surfaces changed")
+        ensure(unit_art.get(unit_id, {}).get("curated_source_sha256") == row["source_sha"] and animations.get(unit_id, {}).get("curated_source_sha256") == row["source_sha"], errors, f"{unit_id} generated runtime provenance changed")
+        if source_path.is_file():
+            source_payloads.append(source_path.read_bytes())
+    ensure(len(source_payloads) == 3 and len(set(source_payloads)) == 3, errors, "All three Horizon reserve company masters must remain visually distinct")
+    source_manifest = load_json(ROOT / "art" / "units" / "source" / "curated" / "horizon_reserve_companies_manifest.json")
+    manifest_rows = {str(row.get("id", "")): row for row in source_manifest.get("sources", []) if isinstance(row, dict)}
+    ensure(source_manifest.get("schema") == "horizon_reserve_companies_source_manifest_v1" and source_manifest.get("generation_mode") == "built_in_image_gen" and set(manifest_rows) == set(expected), errors, "Horizon reserve source provenance manifest changed")
+    for unit_id, row in expected.items():
+        ensure(manifest_rows.get(unit_id, {}).get("sha256") == row["source_sha"] and str(manifest_rows.get(unit_id, {}).get("generated_original", "")).startswith("/root/.codex/generated_images/"), errors, f"{unit_id} source provenance row changed")
+    smoke_path = ROOT / "tests" / "three_horizon_reserve_companies_smoke.gd"
+    smoke_scene_path = ROOT / "tests" / "three_horizon_reserve_companies_smoke.tscn"
+    ensure(smoke_path.is_file() and smoke_scene_path.is_file(), errors, "Horizon reserve consolidated smoke owner is missing")
+    smoke_text = smoke_path.read_text(encoding="utf-8") if smoke_path.is_file() else ""
+    for token in ('"company_count": CASES.size()', '"live_battle_count": CASES.size()', '"town_recruit_count": CASES.size()', '"single_consolidated_smoke": true', "TownRules.build_active_town", "TownRules.recruit_active_town", "BattleRulesScript.create_battle_payload", "BattleRulesScript.resolve_if_battle_ready", "ScenarioScriptRulesScript.process_hooks", "restored.from_dict(authority_after)"):
+        ensure(token in smoke_text, errors, f"Horizon reserve smoke is missing consolidated live proof: {token}")
+    export_text = (ROOT / "export_presets.cfg").read_text(encoding="utf-8")
+    for token in ("art/overworld/runtime/terrain/*", "art/overworld/runtime/fog/unexplored_cartographic_veil.png", "art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas.png"):
+        ensure(export_text.count(token) == 2, errors, f"Both release presets must exclude superseded overworld art: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure("FORBIDDEN_SUPERSEDED_OVERWORLD_PCK_PREFIXES" in packaging_text and 'not terrain_payload["forbidden_superseded_overworld_entries"]' in packaging_text and '"superseded_overworld_art_pck_excluded"' in packaging_text, errors, f"{packaging_path.name} must reject superseded overworld art")
 
 
 def main() -> int:
@@ -78415,6 +78502,7 @@ def main() -> int:
     validate_horizon_compact_six_citadels(errors)
     validate_five_horizon_court_skirmishes(errors)
     validate_three_horizon_specialist_companies(errors)
+    validate_three_horizon_reserve_companies(errors)
     validate_recurring_encounter_landmarks(errors)
     validate_systemic_encounter_landmarks(errors)
     validate_recurring_resource_site_landmarks(errors)

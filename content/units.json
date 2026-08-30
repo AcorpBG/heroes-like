@@ -5336,6 +5336,140 @@
       "control_resistance_pct": 10,
       "spell_school_resistance_pct": {"veil": 20},
       "status_immunity_ids": []
+    },
+    {
+      "id": "unit_thornwake_seedshield_wardens",
+      "name": "Seedshield Wardens",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 3,
+      "hp": 19,
+      "attack": 6,
+      "defense": 8,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {"gold": 190, "wood": 1},
+      "content_status": "horizon_reserve_company_live",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Seedshield Set",
+          "description": "The wardens root their seed-spears behind amber shields, holding cohesion and answering a charge with a measured counterstroke.",
+          "retaliation_multiplier": 1.08,
+          "defending_cohesion_bonus": 1,
+          "status_id": "status_rooted",
+          "status_label": "Seedshield-Set",
+          "duration_rounds": 1,
+          "modifiers": {"initiative": -1}
+        },
+        {
+          "id": "shielding",
+          "name": "Amber Seedglass",
+          "description": "Overlapping seedglass faces turn the hardest missile edge while the living shield line remains formed.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.9,
+          "engaged_damage_multiplier": 1.03
+        }
+      ],
+      "spell_resistance_pct": 8,
+      "control_resistance_pct": 8,
+      "spell_school_resistance_pct": {"root": 12},
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_brasshollow_gaugefire_arbalists",
+      "name": "Gaugefire Arbalists",
+      "faction_id": "faction_brasshollow",
+      "role": "ranged",
+      "tier": 3,
+      "hp": 16,
+      "attack": 8,
+      "defense": 5,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 4,
+      "cost": {"gold": 200, "ore": 1},
+      "content_status": "horizon_reserve_company_live",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Gaugefire Interval",
+          "description": "A level pressure needle lets the crew hold one clean interval and drive a harder bolt down a measured lane.",
+          "damage_multiplier": 1.06,
+          "min_distance": 2,
+          "ally_defending_multiplier": 1.02
+        },
+        {
+          "id": "harry",
+          "name": "Redline Bolt",
+          "description": "Once per battle, the arbalist crosses the red mark to stagger a veteran line before venting the crank housing.",
+          "status_id": "status_overheated",
+          "status_label": "Gauge-Struck",
+          "duration_rounds": 1,
+          "uses_per_battle": 1,
+          "target_min_tier": 3,
+          "momentum_gain": 0,
+          "modifiers": {"initiative": -1},
+          "ai_target_priority_bonus": 0.25
+        }
+      ],
+      "spell_resistance_pct": 5,
+      "control_resistance_pct": 6,
+      "spell_school_resistance_pct": {"furnace": 12},
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_veilmourn_wakechain_boarders",
+      "name": "Wakechain Boarders",
+      "faction_id": "faction_veilmourn",
+      "role": "melee",
+      "tier": 3,
+      "hp": 18,
+      "attack": 7,
+      "defense": 6,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {"gold": 185, "wood": 1},
+      "content_status": "horizon_reserve_company_live",
+      "abilities": [
+        {
+          "id": "hookline",
+          "name": "Wakechain Cast",
+          "description": "Once per battle, a hooked wakechain crosses a broken lane, pulls the surviving target into contact, and pins it for the round.",
+          "distance_one_multiplier": 0.0,
+          "uses_per_battle": 1,
+          "available_from_round": 2,
+          "status_id": "status_rooted",
+          "status_label": "Wake-Pinned",
+          "duration_rounds": 1
+        },
+        {
+          "id": "fog_screen",
+          "name": "Pale Boarding Wake",
+          "description": "Inside a natural fog bank, pale coats and hooded lanterns scatter the boarding line through incoming force.",
+          "required_battlefield_tags": ["fog_bank"],
+          "incoming_damage_multiplier": 0.95
+        }
+      ],
+      "spell_resistance_pct": 8,
+      "control_resistance_pct": 8,
+      "spell_school_resistance_pct": {"veil": 12},
+      "status_immunity_ids": []
     }
   ]
 }
