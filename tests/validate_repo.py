@@ -50130,7 +50130,7 @@ def validate_six_faction_ascendant_companies(errors: list[str]) -> None:
         hero_id, faction_id, player_group_id, player_units, enemy_faction_id, encounter_id, boss_group_id, placement_id, enemy_units, rare_id, objective_id, objective_type, asset_id, stem, region, source_sha = contract
         scenario = scenarios.get(scenario_id, {})
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
-        expected_availability = {"campaign": scenario_id in {"greenbarrow-cinder-writ", "quench-gorefen-audit", "oriflag-worldroot-wake"}, "skirmish": True}
+        expected_availability = {"campaign": scenario_id in {"tollbrand-blackwake-levy", "fenhook-daybreak-hunt", "choirward-foundry-eclipse", "greenbarrow-cinder-writ", "quench-gorefen-audit", "oriflag-worldroot-wake"}, "skirmish": True}
         ensure(availability == expected_availability, errors, f"{scenario_id} lost its exact campaign/skirmish availability")
         ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id and scenario.get("player_army_id") == player_group_id, errors, f"{scenario_id} lost its selected hero, faction, or ascendant company")
         expected_encounter_count = 4 if scenario_id == "greenbarrow-cinder-writ" else 3
@@ -50261,7 +50261,7 @@ def validate_six_faction_waywatch_trials(errors: list[str]) -> None:
     for scenario_id, contract in expected.items():
         scenario = scenarios.get(scenario_id, {})
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
-        expected_availability = {"campaign": scenario_id in {"pollenglass-greenbranch-copse", "heatpriest-obsidian-scar", "obituaryink-frostwharf-house"}, "skirmish": True}
+        expected_availability = {"campaign": scenario_id in {"lockmaster-cinder-kiln", "tollreaver-roadward-lodge", "facetlane-cliffhawk-roost", "pollenglass-greenbranch-copse", "heatpriest-obsidian-scar", "obituaryink-frostwharf-house"}, "skirmish": True}
         ensure(availability == expected_availability, errors, f"{scenario_id} lost its exact campaign/skirmish availability")
         ensure(scenario.get("hero_id") == contract["hero"] and scenario.get("player_faction_id") == contract["faction"] and scenario.get("player_army_id") == contract["player_group"], errors, f"{scenario_id} lost its hero, faction, or player company")
         expected_resource_count = 12 if scenario_id in {"pollenglass-greenbranch-copse", "lockmaster-cinder-kiln"} else 11 if scenario_id in {"heatpriest-obsidian-scar", "tollreaver-roadward-lodge"} else 10
@@ -50416,7 +50416,7 @@ def validate_six_faction_spellwright_expeditions(errors: list[str]) -> None:
     for scenario_id, contract in expected.items():
         scenario = scenarios.get(scenario_id, {})
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
-        expected_availability = {"campaign": scenario_id in {"rotlamp-glowcap-refrain", "daynote-kite-signal-accord", "loamchant-orchard-binding", "gaugesavant-milestone-calibration"}, "skirmish": True}
+        expected_availability = {"campaign": scenario_id in {"cinderquill-fenhound-lexicon", "rotlamp-glowcap-refrain", "daynote-kite-signal-accord", "loamchant-orchard-binding", "gaugesavant-milestone-calibration"}, "skirmish": True}
         ensure(availability == expected_availability, errors, f"{scenario_id} lost its exact campaign/skirmish availability")
         ensure(scenario.get("hero_id") == contract["hero"] and scenario.get("player_faction_id") == contract["faction"] and scenario.get("player_army_id") == contract["player_group"], errors, f"{scenario_id} lost its spellwright hero, faction, or cadre")
         ensure(scenario.get("map_size") == {"width": 12, "height": 7} and len(scenario.get("map", [])) == 7 and all(len(row) == 12 for row in scenario.get("map", [])), errors, f"{scenario_id} lost its exact 12x7 map")
@@ -50571,7 +50571,7 @@ def validate_six_faction_ritual_relay_circuits(errors: list[str]) -> None:
     for scenario_id, contract in expected.items():
         scenario = scenarios.get(scenario_id, {})
         availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario, dict) else {}
-        expected_availability = {"campaign": scenario_id in {"beaconscribe-frostbeacon-circuit", "mossvein-switchback-circuit", "vowless-saltpan-circuit", "ashmeter-dustjack-circuit"}, "skirmish": True}
+        expected_availability = {"campaign": scenario_id in {"beaconscribe-frostbeacon-circuit", "reedscript-reedbarge-circuit", "sunvein-crystal-sump-circuit", "mossvein-switchback-circuit", "vowless-saltpan-circuit", "ashmeter-dustjack-circuit"}, "skirmish": True}
         ensure(availability == expected_availability, errors, f"{scenario_id} selection availability changed")
         ensure(scenario.get("hero_id") == contract["hero"] and scenario.get("player_faction_id") == contract["faction"] and scenario.get("player_army_id") == contract["player_group"], errors, f"{scenario_id} lost its ritual leader, faction, or cadre")
         ensure(scenario.get("map_size") == {"width": 13, "height": 8} and len(scenario.get("map", [])) == 8 and all(len(row) == 13 for row in scenario.get("map", [])), errors, f"{scenario_id} lost its exact 13x8 map")
@@ -52555,10 +52555,13 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         "campaign_rootbound_canticles": ("campaign_emblem_rootbound_canticles", "rootbound_canticles", "927261107f1d351e17d69abf37f7cd900b87f153c92ae8b5d4680fba53cd80da", "ac32c1a3110f28b302a29fcf21431362402c6b30f75357f2467a5f5cd5037a1f"),
         "campaign_fivefold_assay": ("campaign_emblem_fivefold_assay", "fivefold_assay", "d45726f22c136730e350acf20303320578e2397547225aa2de3b4bcf1994da0c", "a62f6353408d061191b744e5c00117ca9d5895ff5ee48eafa04f39499fdd3afc"),
         "campaign_wakebound_atlas": ("campaign_emblem_wakebound_atlas", "wakebound_atlas", "962970745a4616b25a0d449bb33b3faf3d2c556e77f0a351f95dd5663c94a79e", "a99d541911b1f396e912fa43178627a37a13418acbd7766c97eebb66a1bc61f4"),
+        "campaign_coalwater_ordinance": ("campaign_emblem_coalwater_ordinance", "coalwater_ordinance", "9c1ee75709426ceda8017fcfdd9f78f0fee32e473d1b0c6eb647565c6e387663", "578193deb74feb4403c273033072ca21a9cfd30d28e8c77aa340534e04c6287d"),
+        "campaign_siltbound_writ": ("campaign_emblem_siltbound_writ", "siltbound_writ", "824115d833b39aa33bfa3c39578e403565256b3a36c6b51f8087d76a2fd03044", "f92e9d6dcbeade2115e584de4dfa29df7da4da2ae711ab742ec5ef21d7668843"),
+        "campaign_broken_meridian": ("campaign_emblem_broken_meridian", "broken_meridian", "70723c9e252f08156d9c9bf477d1b8c368f41997f55e43c105a8d1563108bec1", "cafc23931f0c9e3b964fb9d1932cd6e83b38bda950a52267d92bb6151484a8a8"),
     }
     campaigns_value = load_json(campaign_path).get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
-    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the sixteen live campaign arcs")
+    ensure(set(campaigns) == set(expected), errors, "Campaign arc emblem coverage must retain exactly the nineteen live campaign arcs")
     source_payloads: list[bytes] = []
     runtime_payloads: list[bytes] = []
     for campaign_id, (emblem_id, stem, source_sha, runtime_sha) in expected.items():
@@ -52587,8 +52590,8 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
             ensure(hashlib.sha256(payload).hexdigest() == runtime_sha, errors, f"Campaign {campaign_id} runtime-emblem bytes changed")
             ensure(len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id} runtime emblem must retain real alpha")
             runtime_payloads.append(payload)
-    ensure(len(source_payloads) == 16 and len(set(source_payloads)) == 16, errors, "All sixteen campaign emblem sources must remain byte-distinct")
-    ensure(len(runtime_payloads) == 16 and len(set(runtime_payloads)) == 16, errors, "All sixteen campaign runtime emblems must remain byte-distinct")
+    ensure(len(source_payloads) == 19 and len(set(source_payloads)) == 19, errors, "All nineteen campaign emblem sources must remain byte-distinct")
+    ensure(len(runtime_payloads) == 19 and len(set(runtime_payloads)) == 19, errors, "All nineteen campaign runtime emblems must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = campaign_rules_path.read_text(encoding="utf-8")
@@ -52615,7 +52618,7 @@ def validate_campaign_arc_emblems(errors: list[str]) -> None:
         ensure(token in report_text, errors, f"Campaign emblem focused report is missing live proof: {token}")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all sixteen campaign emblems")
+        ensure("REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_EMBLEM_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all nineteen campaign emblems")
         ensure('bool(terrain_payload["campaign_emblem_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when campaign emblems are absent")
         ensure('"campaign_emblem_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report campaign emblem package coverage")
         for _campaign_id, (_emblem_id, stem, _source_sha, _runtime_sha) in expected.items():
@@ -52725,6 +52728,21 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
             "oriflag-worldroot-wake": ("worldroot_wake_passage", "4ca072bfbf73d6a636ead737aa2b7ab458b2413e16c409bca2daf3b5c616f2d0", "c28dc69415c1bcc7a3c7355dca03bcd7754b5a193049e0dfd44fb9679079a2c0"),
             "obituaryink-frostwharf-house": ("frostwharf_register", "31aa3db6435c9afa83bd778c8e22e03f50ca53781c74c5feb162eb654c293bd4", "22d058f285c8d82a6218a89eb2bb396b9073b40815e7eb0ea1072eb22cc635b6"),
         },
+        "campaign_coalwater_ordinance": {
+            "tollbrand-blackwake-levy": ("blackwake_mooring_proof", "4f645f939df60d78e07a4e2a0a1a35f823a7d7c93ecaf16e2ec37479b3e73b80", "0dbcefcc6d4d0cf4acf06d2f446dd49461efc6ac9d29bd7666ecb49d4bfe5eb1"),
+            "lockmaster-cinder-kiln": ("cinder_kiln_warrant", "32548bc04149af11861815798bd5209ca33094d320e8649119185e61b2282263", "45bba90037e56e42845f59ae9318666f599435d60ae98afe2303daf1f3ed7db0"),
+            "cinderquill-fenhound-lexicon": ("fenhound_lexicon_proof", "74f7449997ce104223daa78f92050e6672582ba0a9dc24bdb15c93042acd91a5", "28ebb14d6ecb15b5a8c62937a48a368c8ca68ac27dd27d3e8d3d5b77638d8c4b"),
+        },
+        "campaign_siltbound_writ": {
+            "fenhook-daybreak-hunt": ("daybreak_reed_prism", "649ad6bb9d3e51df92a80ffefe19818ebef8b086b8ad777388e1e1dbd41d6291", "4d78a6ac4868df2fc9d31a218887ab5cd0fb0a7e2a5612bb8cb0087094fdc76c"),
+            "tollreaver-roadward-lodge": ("roadward_lodge_toll", "57a1a584c97e606d515ad9d8d76131e0fbd5b550889789906e4944b619fe8a64", "a6413f80baff8a2f45866a6cad127943e606447673f13631771d23fb24b61a08"),
+            "reedscript-reedbarge-circuit": ("reedbarge_relay_proof", "a92c0472d2e6e4bddfedea3b386c503bc8d735fdbd6c6fbf500e82a2fb017d84", "41a6a28c2ced9e406a9448b0f979a99137bf70d173799070f74c5cae4148e241"),
+        },
+        "campaign_broken_meridian": {
+            "choirward-foundry-eclipse": ("foundry_eclipse_gauge", "92b101645e2a1ee9945b0a6289f095f6ed8823f14982bebba1834252bd8fb5f6", "257133bad9e146b75cd62d0080007da6756d371611e6f8f66ff0d80d2b1a524c"),
+            "facetlane-cliffhawk-roost": ("cliffhawk_sightline", "0d9627d20d2141d9f22e0cd98c4357455379b8de8ae08fd7f7f4885cf8d0fa60", "e375cdd145fdf3d9e160dde7d2b2eeeacbd5e27892d6191dbc53a4cf7c358b0f"),
+            "sunvein-crystal-sump-circuit": ("crystal_sump_relay", "778952ba608f6ff02d31a9ca5ed7746b44499e9425ae4e93c23899a58676a2ff", "7e50844b59d8a4562d26c92d40ea1cf030b989eab72b6fa2bef896f6db1357fc"),
+        },
     }
     campaigns_value = load_json(CONTENT_DIR / "campaigns.json").get("items", [])
     campaigns = {str(row.get("id", "")): row for row in campaigns_value if isinstance(row, dict)} if isinstance(campaigns_value, list) else {}
@@ -52770,8 +52788,8 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
                 payload = runtime_path.read_bytes()
                 ensure(hashlib.sha256(payload).hexdigest() == runtime_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"Campaign {campaign_id}/{scenario_id} seal runtime bytes or alpha changed")
                 runtime_payloads.append(payload)
-    ensure(chapter_count == 69 and sealed_count == 69 and opening_count == 16 and later_count == 53, errors, "Campaign chapter-seal scope must remain exact for all 69 chapters")
-    ensure(len(source_payloads) == 69 and len(set(source_payloads)) == 69 and len(runtime_payloads) == 69 and len(set(runtime_payloads)) == 69, errors, "All campaign chapter seals must remain byte-distinct")
+    ensure(chapter_count == 78 and sealed_count == 78 and opening_count == 19 and later_count == 59, errors, "Campaign chapter-seal scope must remain exact for all 78 chapters")
+    ensure(len(source_payloads) == 78 and len(set(source_payloads)) == 78 and len(runtime_payloads) == 78 and len(set(runtime_payloads)) == 78, errors, "All campaign chapter seals must remain byte-distinct")
 
     content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     rules_text = (ROOT / "scripts/core/CampaignRules.gd").read_text(encoding="utf-8")
@@ -52783,13 +52801,13 @@ def validate_campaign_chapter_seals(errors: list[str]) -> None:
         ensure(token in rules_text, errors, f"Campaign rules are missing chapter-seal authority: {token}")
     for token in ("_campaign_chapter_seal_texture_cache", "_chapter_list.set_item_icon(index, seal_texture)", "func _load_campaign_chapter_seal_texture", '"seal_path": _chapter_list.get_item_icon(index).resource_path', '"seal_alt_text": String(_campaign_chapter_entries[index].get("seal_alt_text", ""))'):
         ensure(token in menu_text, errors, f"Campaign menu is missing live chapter-seal presentation: {token}")
-    ensure("_campaign_chapter_seal_texture_cache.size() >= 69" in menu_text, errors, "Campaign chapter-seal cache must cover all 69 authored identities")
+    ensure("_campaign_chapter_seal_texture_cache.size() >= 78" in menu_text, errors, "Campaign chapter-seal cache must cover all 78 authored identities")
     chapter_scene_start = scene_text.find('[node name="ChapterList" type="ItemList"')
     chapter_scene_end = scene_text.find("\n[node ", chapter_scene_start + 1)
     ensure("fixed_icon_size = Vector2i(24, 24)" in scene_text[chapter_scene_start:chapter_scene_end], errors, "Campaign chapter list must retain compact 24x24 seals")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
-        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 69 chapter seals")
+        ensure("REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES" in packaging_text and "REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES" in packaging_text, errors, f"{packaging_path.name} must audit all 78 chapter seals")
         ensure('bool(terrain_payload["campaign_chapter_seal_entries_present"])' in packaging_text, errors, f"{packaging_path.name} must fail when chapter seals are absent")
         ensure('"campaign_chapter_seal_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged chapter-seal coverage")
         for expected_scenarios in expected.values():
@@ -77305,7 +77323,7 @@ def validate_rootbound_canticles_campaign(errors: list[str]) -> None:
     chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
     ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == list(expected), errors, "Rootbound Canticles must retain its exact six-hero order")
     ensure(campaign.get("starting_scenario_id") == next(iter(expected)) and campaign.get("emblem_id") == "campaign_emblem_rootbound_canticles", errors, "Rootbound Canticles lost its opening or emblem authority")
-    ensure(int(load_json(CONTENT_DIR / "campaigns.json").get("player_facing_active_campaign_count", 0)) == 16, errors, "Rootbound Canticles must remain represented after the sixteenth player-facing campaign is added")
+    ensure(int(load_json(CONTENT_DIR / "campaigns.json").get("player_facing_active_campaign_count", 0)) == 19, errors, "Rootbound Canticles must remain represented after the nineteenth player-facing campaign is added")
     hero_ids: set[str] = set()
     battle_total = 0
     for index, (scenario_id, contract) in enumerate(expected.items()):
@@ -77364,7 +77382,7 @@ def validate_fivefold_assay_campaign(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     campaign = items_index(campaign_payload).get("campaign_fivefold_assay", {})
     chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
-    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 16, errors, "The Fivefold Assay must remain represented after the sixteenth player-facing campaign is added")
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 19, errors, "The Fivefold Assay must remain represented after the nineteenth player-facing campaign is added")
     ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == list(expected), errors, "The Fivefold Assay must retain its exact five-hero order")
     ensure(campaign.get("starting_scenario_id") == next(iter(expected)) and campaign.get("emblem_id") == "campaign_emblem_fivefold_assay", errors, "The Fivefold Assay lost its opening or emblem authority")
     ensure(all(bool(str(campaign.get(key, "")).strip()) for key in ("name", "summary", "description", "arc_goal", "completion_title", "completion_summary")), errors, "The Fivefold Assay must retain complete player-facing narrative copy")
@@ -77436,7 +77454,7 @@ def validate_wakebound_atlas_campaign(errors: list[str]) -> None:
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     campaign = items_index(campaign_payload).get("campaign_wakebound_atlas", {})
     chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
-    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 16, errors, "The Wakebound Atlas must be the sixteenth player-facing campaign")
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 19, errors, "The Wakebound Atlas must remain represented after the nineteenth player-facing campaign is added")
     ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == list(expected), errors, "The Wakebound Atlas must retain its exact four-hero order")
     ensure(campaign.get("starting_scenario_id") == next(iter(expected)) and campaign.get("emblem_id") == "campaign_emblem_wakebound_atlas", errors, "The Wakebound Atlas lost its opening or emblem authority")
     ensure(all(bool(str(campaign.get(key, "")).strip()) for key in ("name", "summary", "description", "arc_goal", "completion_title", "completion_summary")), errors, "The Wakebound Atlas must retain complete player-facing narrative copy")
@@ -77486,6 +77504,108 @@ def validate_wakebound_atlas_campaign(errors: list[str]) -> None:
         packaging_text = packaging_path.read_text(encoding="utf-8")
         for token in ('"wakebound_atlas"', '"lockfire_cold_channel"', '"rootwake_ghost_mast"', '"worldroot_wake_passage"', '"frostwharf_register"'):
             ensure(token in packaging_text, errors, f"{packaging_path.name} is missing Wakebound campaign ownership: {token}")
+
+
+def validate_final_nine_faction_campaigns(errors: list[str]) -> None:
+    expected = {
+        "campaign_coalwater_ordinance": [
+            ("tollbrand-blackwake-levy", "hero_embercourt_helva_tollbrand", "faction_embercourt", "tollbrand_blackwake_levy", "tollbrand_blackwake_obituary_mooring_broken", "tollbrand_boss_broken", (11, 6), 10, 3, 5, 4),
+            ("lockmaster-cinder-kiln", "hero_embercourt_saren_lockmaster", "faction_embercourt", "lockmaster_cinder_kiln_watch", "lockmaster_cinder_kiln_watch_cleared", "lockmaster_watch_cleared", (11, 6), 12, 4, 5, 4),
+            ("cinderquill-fenhound-lexicon", "hero_embercourt_orra_cinderquill", "faction_embercourt", "cinderquill_fenhound_kennel_watch", "cinderquill_fenhound_kennel_watch_secured", "cinderquill_watch_secured", (12, 7), 12, 4, 6, 5),
+        ],
+        "campaign_siltbound_writ": [
+            ("fenhook-daybreak-hunt", "hero_tarn", "faction_mireclaw", "fenhook_daybreak_hunt", "fenhook_daybreak_reed_prism_broken", "fenhook_boss_broken", (11, 6), 10, 3, 5, 4),
+            ("tollreaver-roadward-lodge", "hero_orrik", "faction_mireclaw", "tollreaver_roadward_lodge_watch", "tollreaver_roadward_lodge_watch_cleared", "tollreaver_watch_cleared", (11, 6), 11, 3, 5, 4),
+            ("reedscript-reedbarge-circuit", "hero_mireclaw_pell_reedscript", "faction_mireclaw", "reedscript_reedbarge_mooring_watch", "reedscript_reedbarge_mooring_watch_secured", "reedscript_watch_secured", (13, 8), 14, 5, 7, 6),
+        ],
+        "campaign_broken_meridian": [
+            ("choirward-foundry-eclipse", "hero_thalen", "faction_sunvault", "choirward_foundry_eclipse", "choirward_foundry_eclipse_gauge_broken", "choirward_boss_broken", (11, 6), 10, 3, 5, 4),
+            ("facetlane-cliffhawk-roost", "hero_sunvault_renn_facetlane", "faction_sunvault", "facetlane_cliffhawk_roost_watch", "facetlane_cliffhawk_roost_watch_cleared", "facetlane_watch_cleared", (11, 6), 10, 3, 5, 4),
+            ("sunvein-crystal-sump-circuit", "hero_sunvault_calis_sunvein", "faction_sunvault", "sunvein_crystal_sump_watch", "sunvein_crystal_sump_watch_secured", "sunvein_watch_secured", (13, 8), 15, 5, 7, 6),
+        ],
+    }
+    launcher_path = ROOT / "tests/final_nine_faction_campaigns_smoke.py"
+    runtime_path = ROOT / "tests/final_nine_faction_campaigns_smoke.gd"
+    scene_path = ROOT / "tests/final_nine_faction_campaigns_smoke.tscn"
+    manifest_path = ROOT / "art/campaigns/source/generated/final_nine_faction_campaigns_manifest.json"
+    required_paths = (launcher_path, runtime_path, scene_path, manifest_path)
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing final-nine faction campaign owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    campaign_payload = load_json(CONTENT_DIR / "campaigns.json")
+    campaigns = items_index(campaign_payload)
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
+    ensure(int(campaign_payload.get("player_facing_active_campaign_count", 0)) == 19 and len(campaigns) == 19, errors, "The final-nine batch must bring player-facing campaign count to nineteen")
+    selected_hero_ids: set[str] = set()
+    selected_scenario_ids: set[str] = set()
+    battle_total = 0
+    for campaign_id, contracts in expected.items():
+        campaign = campaigns.get(campaign_id, {})
+        chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
+        scenario_order = [contract[0] for contract in contracts]
+        ensure([str(row.get("scenario_id", "")) for row in chapters if isinstance(row, dict)] == scenario_order, errors, f"{campaign_id} lost its exact three-hero order")
+        ensure(campaign.get("starting_scenario_id") == scenario_order[0] and all(bool(str(campaign.get(key, "")).strip()) for key in ("name", "summary", "description", "arc_goal", "completion_title", "completion_summary", "emblem_alt_text")), errors, f"{campaign_id} lost its opening or complete player-facing copy")
+        for index, contract in enumerate(contracts):
+            scenario_id, hero_id, faction_id, guard_id, proof_flag, hook_id, size, node_count, battle_count, hook_count, objective_count = contract
+            selected_hero_ids.add(hero_id)
+            selected_scenario_ids.add(scenario_id)
+            scenario = scenarios.get(scenario_id, {})
+            battle_total += len(scenario.get("encounters", []))
+            ensure(scenario.get("hero_id") == hero_id and scenario.get("player_faction_id") == faction_id, errors, f"{scenario_id} lost its exact faction hero")
+            ensure(scenario.get("selection", {}).get("availability", {}) == {"campaign": True, "skirmish": True}, errors, f"{scenario_id} must remain live in both campaign and skirmish")
+            ensure(scenario.get("map_size", {}) == {"width": size[0], "height": size[1]}, errors, f"{scenario_id} lost its authored map dimensions")
+            ensure(len(scenario.get("resource_nodes", [])) == node_count and len(scenario.get("encounters", [])) == battle_count and len(scenario.get("script_hooks", [])) == hook_count and len(scenario.get("objectives", {}).get("victory", [])) == objective_count, errors, f"{scenario_id} lost its exact production board contract")
+            ensure(any(isinstance(row, dict) and row.get("placement_id") == guard_id for row in scenario.get("encounters", [])), errors, f"{scenario_id} lost its exact signature guard")
+            hooks = [row for row in scenario.get("script_hooks", []) if isinstance(row, dict) and row.get("id") == hook_id]
+            ensure(len(hooks) == 1 and hooks[0].get("conditions") == [{"type": "encounter_resolved", "placement_id": guard_id}] and proof_flag in json.dumps(hooks[0]), errors, f"{scenario_id} lost its exact proof hook")
+            chapter = chapters[index] if index < len(chapters) and isinstance(chapters[index], dict) else {}
+            for text_key in ("label", "description", "chapter_title", "status_hint", "carryover_summary", "briefing", "intel", "stakes", "aftermath_victory", "aftermath_defeat", "journal_victory", "journal_defeat", "seal_alt_text"):
+                ensure(bool(str(chapter.get(text_key, "")).strip()), errors, f"{campaign_id}/{scenario_id} is missing narrative field {text_key}")
+            if index == 0:
+                ensure(chapter.get("starts_unlocked") is True and "unlock_requirements" not in chapter and "carryover_import" not in chapter, errors, f"{campaign_id} opening chapter must remain independently playable")
+            else:
+                prior_id = contracts[index - 1][0]
+                prior_flag = contracts[index - 1][4]
+                requirements = chapter.get("unlock_requirements", [])
+                imported = chapter.get("carryover_import", {})
+                ensure(len(requirements) == 2 and requirements[0] == {"type": "scenario_status", "scenario_id": prior_id, "status": "victory"} and requirements[1] == {"type": "scenario_flag_true", "scenario_id": prior_id, "flag": prior_flag}, errors, f"{campaign_id}/{scenario_id} lost exact prior-victory plus proof gating")
+                ensure(imported == {"from_scenario_id": prior_id, "resources": True, "hero_progression": False, "spells": False, "artifacts": False, "flags_prefix": "carryover_"}, errors, f"{campaign_id}/{scenario_id} lost resource-only import ownership")
+            if index < len(contracts) - 1:
+                export = chapter.get("carryover_export", {})
+                caps = export.get("resource_caps", {})
+                ensure(export.get("resource_fraction") == 0.15 and caps.get("gold") == 400 and caps.get("wood") == 2 and caps.get("ore") == 2 and all(caps.get(key) == 0 for key in ("aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt")) and export.get("flag_ids") == [proof_flag] and export.get("retain_hero_progression") is False and export.get("retain_spells") is False and export.get("retain_artifacts") is False, errors, f"{campaign_id}/{scenario_id} lost bounded common-resource carryover")
+            else:
+                ensure("carryover_export" not in chapter, errors, f"{campaign_id} final chapter must not export into an unauthored continuation")
+    ensure(len(selected_hero_ids) == 9 and len(selected_scenario_ids) == 9 and battle_total == 33, errors, "The final-nine campaigns must retain nine distinct heroes, nine boards, and thirty-three authored battles")
+
+    campaign_hero_ids = {
+        str(scenario.get("hero_id", ""))
+        for scenario in scenarios.values()
+        if isinstance(scenario, dict) and scenario.get("selection", {}).get("availability", {}).get("campaign") is True
+    }
+    ensure(set(heroes) == campaign_hero_ids and len(campaign_hero_ids) == 60, errors, "All sixty production heroes must now have campaign representation")
+
+    manifest = load_json(manifest_path)
+    ensure(manifest.get("campaign_ids") == list(expected) and manifest.get("generation_mode") == "built_in_image_gen_original_faction_emblems_and_encounter_derived_chapter_seals", errors, "Final-nine art provenance changed")
+    emblems = manifest.get("emblems", [])
+    seals = manifest.get("chapter_seals", [])
+    ensure(len(emblems) == 3 and len(seals) == 9 and len({row.get("id") for row in emblems if isinstance(row, dict)}) == 3 and len({row.get("derived_from") for row in seals if isinstance(row, dict)}) == 9, errors, "Final-nine art manifest must retain three emblems and nine exact encounter derivations")
+    ensure(all(str(row.get("raw_generated_path", "")).startswith("/root/.codex/generated_images/") and bool(str(row.get("prompt", "")).strip()) for row in [*emblems, *seals] if isinstance(row, dict)), errors, "Final-nine generated-source paths or prompts are incomplete")
+
+    launcher_text = launcher_path.read_text(encoding="utf-8")
+    runtime_text = runtime_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_path.read_text(encoding="utf-8"), errors, "final_nine_faction_campaigns_smoke.tscn", [("FinalNineFactionCampaignsSmoke", "Node")])
+    for token in ('subprocess.run(', '"campaign_count": 3', '"scenario_count": 9', '"battle_payload_count": 33', '"proof_count": 9', '"art_identity_count": 12'):
+        ensure(token in launcher_text, errors, f"Final-nine Python smoke launcher is missing exact ownership: {token}")
+    for token in ('const ARCS := [', 'BattleRulesScript.create_battle_payload', 'CampaignRulesScript.record_session_completion', 'ScenarioScriptRulesScript.process_hooks', 'SessionStateStoreScript.SAVE_VERSION', 'single_consolidated_smoke', 'await RenderingServer.frame_post_draw', 'print("%s %s" % [REPORT_ID'):
+        ensure(token in runtime_text, errors, f"Final-nine live runtime harness is missing exact proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        for token in ('"coalwater_ordinance"', '"siltbound_writ"', '"broken_meridian"', '"blackwake_mooring_proof"', '"cinder_kiln_warrant"', '"fenhound_lexicon_proof"', '"daybreak_reed_prism"', '"roadward_lodge_toll"', '"reedbarge_relay_proof"', '"foundry_eclipse_gauge"', '"cliffhawk_sightline"', '"crystal_sump_relay"'):
+            ensure(token in packaging_text, errors, f"{packaging_path.name} is missing final-nine campaign asset ownership: {token}")
 
 
 def main() -> int:
@@ -77705,6 +77825,7 @@ def main() -> int:
     validate_rootbound_canticles_campaign(errors)
     validate_fivefold_assay_campaign(errors)
     validate_wakebound_atlas_campaign(errors)
+    validate_final_nine_faction_campaigns(errors)
     validate_three_faction_outer_reach_contracts(errors)
     validate_mireclaw_sunvault_frontier_contracts(errors)
     validate_six_faction_ascendant_companies(errors)
