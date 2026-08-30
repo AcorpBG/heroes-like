@@ -258,8 +258,8 @@ TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 TOWN_STAGE_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownStageView.gd"
 TOWN_VFX_MANIFEST_PATH = CONTENT_DIR / "town_vfx_manifest.json"
-THIRD_HEARTHS_TOWN_BACKDROP_REPORT_SCRIPT_PATH = ROOT / "tests" / "third_hearths_town_backdrop_runtime_report.gd"
-THIRD_HEARTHS_TOWN_BACKDROP_REPORT_SCENE_PATH = ROOT / "tests" / "third_hearths_town_backdrop_runtime_report.tscn"
+COMPLETE_TOWN_BACKDROP_REPORT_SCRIPT_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.gd"
+COMPLETE_TOWN_BACKDROP_REPORT_SCENE_PATH = ROOT / "tests" / "complete_town_backdrop_runtime_report.tscn"
 TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "build_complete_vfx_source.png"
 TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "build_complete.png"
 TOWN_BUILDING_COMPLETE_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_complete_vfx_asset_runtime_report.gd"
@@ -32173,8 +32173,8 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         TOWN_RULES_PATH,
         OVERWORLD_RULES_PATH,
         town_visual_smoke_path,
-        THIRD_HEARTHS_TOWN_BACKDROP_REPORT_SCRIPT_PATH,
-        THIRD_HEARTHS_TOWN_BACKDROP_REPORT_SCENE_PATH,
+        COMPLETE_TOWN_BACKDROP_REPORT_SCRIPT_PATH,
+        COMPLETE_TOWN_BACKDROP_REPORT_SCENE_PATH,
         town_exit_profile_path,
         active_play_focus_path,
     )
@@ -32304,6 +32304,21 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         ensure("compress/mode=1" in import_text and "compress/lossy_quality=0.82" in import_text, errors, f"Town scenic backdrop must use bounded lossy runtime compression for {faction_id}")
 
     exact_town_backdrops = {
+        "town_riverwatch": "art/towns/runtime/backdrops/complete_identities/town_riverwatch.png",
+        "town_duskfen": "art/towns/runtime/backdrops/complete_identities/town_duskfen.png",
+        "town_blackfen_gate": "art/towns/runtime/backdrops/complete_identities/town_blackfen_gate.png",
+        "town_highwater_keep": "art/towns/runtime/backdrops/complete_identities/town_highwater_keep.png",
+        "town_murkward_ford": "art/towns/runtime/backdrops/complete_identities/town_murkward_ford.png",
+        "town_reedbarrow_ferry": "art/towns/runtime/backdrops/complete_identities/town_reedbarrow_ferry.png",
+        "town_nightglass_redoubt": "art/towns/runtime/backdrops/complete_identities/town_nightglass_redoubt.png",
+        "town_prismhearth": "art/towns/runtime/backdrops/complete_identities/town_prismhearth.png",
+        "town_halo_spire": "art/towns/runtime/backdrops/complete_identities/town_halo_spire.png",
+        "town_thornwake_graftroot_caravan": "art/towns/runtime/backdrops/complete_identities/town_thornwake_graftroot_caravan.png",
+        "town_brasshollow_orevein_gantry": "art/towns/runtime/backdrops/complete_identities/town_brasshollow_orevein_gantry.png",
+        "town_veilmourn_bellwake_harbor": "art/towns/runtime/backdrops/complete_identities/town_veilmourn_bellwake_harbor.png",
+        "town_thornwake_rootgate_nursery": "art/towns/runtime/backdrops/complete_identities/town_thornwake_rootgate_nursery.png",
+        "town_brasshollow_clauseworks_depot": "art/towns/runtime/backdrops/complete_identities/town_brasshollow_clauseworks_depot.png",
+        "town_veilmourn_fogchart_mooring": "art/towns/runtime/backdrops/complete_identities/town_veilmourn_fogchart_mooring.png",
         "town_cinderlock_bastion": "art/towns/runtime/backdrops/third_hearths/town_cinderlock_bastion.png",
         "town_dawnmirror_observatory": "art/towns/runtime/backdrops/third_hearths/town_dawnmirror_observatory.png",
         "town_briarwheel_enclave": "art/towns/runtime/backdrops/third_hearths/town_briarwheel_enclave.png",
@@ -32318,25 +32333,35 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         resource_path = f"res://{relative_path}"
         town = town_by_id.get(town_id, {})
         asset_path = ROOT / relative_path
-        source_path = ROOT / "art" / "towns" / "source" / "generated" / "third_hearths_backdrops" / f"{town_id}_source.png"
+        source_family = "third_hearths_backdrops" if "/third_hearths/" in relative_path else "complete_town_backdrops"
+        expected_quality = "0.82" if source_family == "third_hearths_backdrops" else "0.68"
+        source_path = ROOT / "art" / "towns" / "source" / "generated" / source_family / f"{town_id}_source.png"
         import_path = Path(f"{asset_path}.import")
         import_text = import_path.read_text(encoding="utf-8") if import_path.is_file() else ""
-        ensure(str(town.get("scenic_backdrop_path", "")) == resource_path, errors, f"Third Hearths town {town_id} must own its exact scenic backdrop path")
-        ensure(asset_path.is_file() and png_size(asset_path) == (1600, 900), errors, f"Third Hearths town {town_id} must ship an exact 1600x900 runtime backdrop")
-        ensure(source_path.is_file() and min(png_size(source_path)) >= 900, errors, f"Third Hearths town {town_id} must retain its high-resolution generated source")
-        ensure(import_path.is_file(), errors, f"Third Hearths town {town_id} must retain tracked import settings")
-        ensure("compress/mode=1" in import_text and "compress/lossy_quality=0.82" in import_text, errors, f"Third Hearths town {town_id} must use bounded lossy runtime compression")
+        ensure(str(town.get("scenic_backdrop_path", "")) == resource_path, errors, f"Production town {town_id} must own its exact scenic backdrop path")
+        ensure(asset_path.is_file() and png_size(asset_path) == (1600, 900), errors, f"Production town {town_id} must ship an exact 1600x900 runtime backdrop")
+        ensure(source_path.is_file() and png_size(source_path) == (1672, 941), errors, f"Production town {town_id} must retain its high-resolution generated source")
+        ensure(import_path.is_file(), errors, f"Production town {town_id} must retain tracked import settings")
+        ensure("compress/mode=1" in import_text and f"compress/lossy_quality={expected_quality}" in import_text, errors, f"Production town {town_id} must use its bounded lossy runtime compression")
         if asset_path.is_file():
             exact_runtime_bytes.append(asset_path.read_bytes())
         if source_path.is_file():
             exact_source_bytes.append(source_path.read_bytes())
-    ensure(len(exact_runtime_bytes) == 5 and len(set(exact_runtime_bytes)) == 5, errors, "All five Third Hearths runtime scenic backdrops must be distinct")
-    ensure(len(exact_source_bytes) == 5 and len(set(exact_source_bytes)) == 5, errors, "All five Third Hearths generated scenic sources must be distinct")
+    ensure(len(exact_runtime_bytes) == 20 and len(set(exact_runtime_bytes)) == 20, errors, "All twenty production runtime scenic backdrops must be distinct")
+    ensure(len(exact_source_bytes) == 20 and len(set(exact_source_bytes)) == 20, errors, "All twenty production generated scenic sources must be distinct")
     ensure(
         {town_id for town_id, town in town_by_id.items() if str(town.get("scenic_backdrop_path", "")) != ""} == set(exact_town_backdrops),
         errors,
-        "Exact-id Town scenic selection must remain limited to the five Third Hearths towns in this slice",
+        "Every production Town must own exactly one exact-id scenic backdrop",
     )
+    complete_manifest_path = ROOT / "art" / "towns" / "source" / "generated" / "complete_town_backdrops" / "manifest.json"
+    ensure(complete_manifest_path.is_file(), errors, "Complete Town backdrop source manifest is missing")
+    if complete_manifest_path.is_file():
+        complete_manifest = load_json(complete_manifest_path)
+        manifest_items = complete_manifest.get("items", [])
+        manifest_ids = {str(row.get("town_id", "")) for row in manifest_items if isinstance(row, dict)} if isinstance(manifest_items, list) else set()
+        ensure(len(manifest_items) == 15 and manifest_ids == set(list(exact_town_backdrops)[:15]), errors, "Complete Town backdrop manifest must own the fifteen new exact identities")
+        ensure(complete_manifest.get("runtime_dimensions") == [1600, 900] and complete_manifest.get("source_dimensions") == [1672, 941], errors, "Complete Town backdrop manifest dimensions changed")
     for required_token in (
         "func _draw_scenic_backdrop(scene_rect: Rect2) -> bool:",
         "if not _draw_scenic_backdrop(scene_rect):",
@@ -32539,24 +32564,25 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     ):
         ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing scenic-backdrop validation token: {required_token}")
     ensure(town_visual_text.count("TOWN_SCENIC_BACKDROP_PATHS.keys()") == 1, errors, "Town scenic smoke must traverse the exact six-path fixture once")
-    exact_backdrop_report_text = THIRD_HEARTHS_TOWN_BACKDROP_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-    exact_backdrop_scene_text = THIRD_HEARTHS_TOWN_BACKDROP_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    exact_backdrop_report_text = COMPLETE_TOWN_BACKDROP_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    exact_backdrop_scene_text = COMPLETE_TOWN_BACKDROP_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     for required_token in (
         "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
-        'const SCENARIO_ID := "third-hearths-confluence"',
+        '"town_riverwatch": {"scenario_id": "river-pass"',
+        '"town_gloamwake_anchorage": {"scenario_id": "third-hearths-confluence"',
         "for viewport_size in VIEWPORT_SIZES:",
-        "for town_id_value in EXACT_BACKDROPS.keys():",
+        "for town_id_value in TOWN_CASES.keys():",
         "OverworldRules.set_active_town_visit(session, placement_id)",
         'String(summary.get("selection_scope", "")) == "exact_town"',
         'String(summary.get("selection_scope", "")) == "faction_fallback"',
         'summary.get("texture_size", Vector2.ZERO) == Vector2(1600, 900)',
         "viewport_texture.get_image().save_png",
         "session.to_dict() == authority_before",
-        'print("THIRD_HEARTHS_TOWN_BACKDROP_RUNTIME_REPORT %s"',
+        'print("COMPLETE_TOWN_BACKDROP_RUNTIME_REPORT %s"',
     ):
-        ensure(required_token in exact_backdrop_report_text, errors, f"Third Hearths Town backdrop report is missing consolidated live proof: {required_token}")
-    ensure(exact_backdrop_report_text.count('"town_') >= 11 and exact_backdrop_report_text.count('"faction_') >= 12, errors, "Third Hearths Town backdrop report must cover five exact towns and all six faction fallbacks")
-    ensure('path="res://tests/third_hearths_town_backdrop_runtime_report.gd"' in exact_backdrop_scene_text, errors, "Third Hearths Town backdrop report scene must own the focused runtime script")
+        ensure(required_token in exact_backdrop_report_text, errors, f"Complete Town backdrop report is missing consolidated live proof: {required_token}")
+    ensure(exact_backdrop_report_text.count('"town_') >= 26 and exact_backdrop_report_text.count('"faction_') >= 12, errors, "Complete Town backdrop report must cover all twenty exact towns and all six detached faction fallbacks")
+    ensure('path="res://tests/complete_town_backdrop_runtime_report.gd"' in exact_backdrop_scene_text, errors, "Complete Town backdrop report scene must own the focused runtime script")
     for required_token in (
         "func _assert_town_scenic_action_count_label_contract(live_board: Node, session) -> bool:",
         'live_board.has_method("validation_header_action_count_summary")',
@@ -74532,7 +74558,7 @@ def validate_eightfold_guarded_reliquary_march(errors: list[str]) -> None:
         text = packaging_path.read_text(encoding="utf-8")
         ensure('REQUIRED_EIGHTFOLD_GUARDED_RELIQUARY_ATLAS_NAME = "eightfold_guarded_reliquary_atlas"' in text and "eightfold_guarded_reliquary_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Eightfold Reliquary atlas")
         ensure('REQUIRED_THIRD_HEARTHS_ATLAS_NAME = "third_hearths_atlas"' in text and "third_hearths_atlas.png.import" in text, errors, f"{packaging_path.name} must audit the Five-Faction Third Hearths atlas")
-        ensure("REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES" in text and "town_scenic_backdrop_entries_present" in text and text.count("art/towns/runtime/backdrops/third_hearths/") == 5, errors, f"{packaging_path.name} must audit all five exact Third Hearths Town backdrops")
+        ensure("REQUIRED_TOWN_SCENIC_BACKDROP_PCK_IMPORT_ENTRIES" in text and "town_scenic_backdrop_entries_present" in text and text.count("art/towns/runtime/backdrops/third_hearths/") == 5 and text.count("art/towns/runtime/backdrops/complete_identities/") == 15, errors, f"{packaging_path.name} must audit all twenty exact Town backdrops plus six faction fallbacks")
 
 
 def validate_overworld_ten_land_transit_network(errors: list[str]) -> None:

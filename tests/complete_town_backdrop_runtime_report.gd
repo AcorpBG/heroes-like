@@ -2,14 +2,28 @@ extends Node
 
 const TownStageViewScript = preload("res://scenes/town/TownStageView.gd")
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const SCENARIO_ID := "third-hearths-confluence"
-const CAPTURE_DIR := "res://.artifacts/third_hearths_town_backdrops/captures"
-const EXACT_BACKDROPS := {
-	"town_cinderlock_bastion": "res://art/towns/runtime/backdrops/third_hearths/town_cinderlock_bastion.png",
-	"town_dawnmirror_observatory": "res://art/towns/runtime/backdrops/third_hearths/town_dawnmirror_observatory.png",
-	"town_briarwheel_enclave": "res://art/towns/runtime/backdrops/third_hearths/town_briarwheel_enclave.png",
-	"town_cindercoil_foundry": "res://art/towns/runtime/backdrops/third_hearths/town_cindercoil_foundry.png",
-	"town_gloamwake_anchorage": "res://art/towns/runtime/backdrops/third_hearths/town_gloamwake_anchorage.png",
+const CAPTURE_DIR := "res://.artifacts/complete_town_backdrops/captures"
+const TOWN_CASES := {
+	"town_riverwatch": {"scenario_id": "river-pass", "path": "res://art/towns/runtime/backdrops/complete_identities/town_riverwatch.png"},
+	"town_duskfen": {"scenario_id": "river-pass", "path": "res://art/towns/runtime/backdrops/complete_identities/town_duskfen.png"},
+	"town_blackfen_gate": {"scenario_id": "causeway-stand", "path": "res://art/towns/runtime/backdrops/complete_identities/town_blackfen_gate.png"},
+	"town_highwater_keep": {"scenario_id": "stonewake-watch", "path": "res://art/towns/runtime/backdrops/complete_identities/town_highwater_keep.png"},
+	"town_murkward_ford": {"scenario_id": "stonewake-watch", "path": "res://art/towns/runtime/backdrops/complete_identities/town_murkward_ford.png"},
+	"town_reedbarrow_ferry": {"scenario_id": "reedbarrow-ferry", "path": "res://art/towns/runtime/backdrops/complete_identities/town_reedbarrow_ferry.png"},
+	"town_nightglass_redoubt": {"scenario_id": "nightglass-redoubt", "path": "res://art/towns/runtime/backdrops/complete_identities/town_nightglass_redoubt.png"},
+	"town_prismhearth": {"scenario_id": "prismhearth-watch", "path": "res://art/towns/runtime/backdrops/complete_identities/town_prismhearth.png"},
+	"town_halo_spire": {"scenario_id": "prismhearth-watch", "path": "res://art/towns/runtime/backdrops/complete_identities/town_halo_spire.png"},
+	"town_thornwake_graftroot_caravan": {"scenario_id": "mireford-skirmish", "path": "res://art/towns/runtime/backdrops/complete_identities/town_thornwake_graftroot_caravan.png"},
+	"town_brasshollow_orevein_gantry": {"scenario_id": "orevein-contract", "path": "res://art/towns/runtime/backdrops/complete_identities/town_brasshollow_orevein_gantry.png"},
+	"town_veilmourn_bellwake_harbor": {"scenario_id": "bellwake-wreck-claim", "path": "res://art/towns/runtime/backdrops/complete_identities/town_veilmourn_bellwake_harbor.png"},
+	"town_thornwake_rootgate_nursery": {"scenario_id": "rootgate-toll", "path": "res://art/towns/runtime/backdrops/complete_identities/town_thornwake_rootgate_nursery.png"},
+	"town_brasshollow_clauseworks_depot": {"scenario_id": "rootgate-toll", "path": "res://art/towns/runtime/backdrops/complete_identities/town_brasshollow_clauseworks_depot.png"},
+	"town_veilmourn_fogchart_mooring": {"scenario_id": "fogchart-mooring", "path": "res://art/towns/runtime/backdrops/complete_identities/town_veilmourn_fogchart_mooring.png"},
+	"town_cinderlock_bastion": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_cinderlock_bastion.png"},
+	"town_dawnmirror_observatory": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_dawnmirror_observatory.png"},
+	"town_briarwheel_enclave": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_briarwheel_enclave.png"},
+	"town_cindercoil_foundry": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_cindercoil_foundry.png"},
+	"town_gloamwake_anchorage": {"scenario_id": "third-hearths-confluence", "path": "res://art/towns/runtime/backdrops/third_hearths/town_gloamwake_anchorage.png"},
 }
 const FACTION_FALLBACK_CASES := {
 	"town_riverwatch": "faction_embercourt",
@@ -47,7 +61,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(CAPTURE_DIR))
 	var rows := []
 	for viewport_size in VIEWPORT_SIZES:
-		for town_id_value in EXACT_BACKDROPS.keys():
+		for town_id_value in TOWN_CASES.keys():
 			var town_id := String(town_id_value)
 			var row: Dictionary = await _run_town_case(viewport_size, town_id)
 			rows.append(row)
@@ -57,7 +71,7 @@ func _run() -> void:
 	get_window().size = original_size
 	get_window().content_scale_size = _original_content_scale_size
 	SessionState.reset_session()
-	print("THIRD_HEARTHS_TOWN_BACKDROP_RUNTIME_REPORT %s" % JSON.stringify({
+	print("COMPLETE_TOWN_BACKDROP_RUNTIME_REPORT %s" % JSON.stringify({
 		"ok": true,
 		"catalog": catalog,
 		"fallback": fallback,
@@ -69,9 +83,9 @@ func _run() -> void:
 func _catalog_contract() -> Dictionary:
 	var hashes := []
 	var rows := []
-	for town_id_value in EXACT_BACKDROPS.keys():
+	for town_id_value in TOWN_CASES.keys():
 		var town_id := String(town_id_value)
-		var expected_path := String(EXACT_BACKDROPS[town_id])
+		var expected_path := String(TOWN_CASES[town_id].get("path", ""))
 		var town := ContentService.get_town(town_id)
 		var texture: Texture2D = load(expected_path) as Texture2D if ResourceLoader.exists(expected_path, "Texture2D") else null
 		var bytes := FileAccess.get_file_as_bytes(ProjectSettings.globalize_path(expected_path))
@@ -87,7 +101,7 @@ func _catalog_contract() -> Dictionary:
 		rows.append({"town_id": town_id, "path": expected_path, "bytes": bytes.size(), "sha256": digest, "exact": exact})
 		hashes.append(digest)
 	return {
-		"ok": rows.size() == 5 and _unique(hashes).size() == 5 and rows.all(func(row): return bool(row.get("exact", false))),
+		"ok": rows.size() == 20 and _unique(hashes).size() == 20 and rows.all(func(row): return bool(row.get("exact", false))),
 		"town_count": rows.size(),
 		"unique_art_count": _unique(hashes).size(),
 		"rows": rows,
@@ -101,7 +115,8 @@ func _fallback_contract() -> Dictionary:
 	for town_id_value in FACTION_FALLBACK_CASES.keys():
 		var town_id := String(town_id_value)
 		var faction_id := String(FACTION_FALLBACK_CASES[town_id])
-		var town := ContentService.get_town(town_id)
+		var town := ContentService.get_town(town_id).duplicate(true)
+		town.erase("scenic_backdrop_path")
 		fixture.set_precomputed_town_state(null, {
 			"town": {"town_id": town_id, "built_buildings": [], "garrison": [], "available_recruits": {}},
 			"town_template": town,
@@ -128,7 +143,8 @@ func _run_town_case(viewport_size: Vector2i, town_id: String) -> Dictionary:
 	get_window().content_scale_size = viewport_size
 	get_window().size = viewport_size
 	await get_tree().process_frame
-	var session = ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var scenario_id := String(TOWN_CASES[town_id].get("scenario_id", ""))
+	var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	var placement_id := _make_town_player_owned(session, town_id)
 	if placement_id == "":
 		return {"ok": false, "failure": "town_placement_missing", "town_id": town_id, "viewport": [viewport_size.x, viewport_size.y]}
@@ -146,7 +162,7 @@ func _run_town_case(viewport_size: Vector2i, town_id: String) -> Dictionary:
 	var stage: Node = shell.get_node_or_null("%TownStage")
 	var summary: Dictionary = stage.validation_scenic_backdrop_summary() if stage != null else {}
 	var shell_surface := _shell_surface_contract(shell)
-	var expected_path := String(EXACT_BACKDROPS[town_id])
+	var expected_path := String(TOWN_CASES[town_id].get("path", ""))
 	var mapping_exact: bool = (
 		stage != null
 		and String(summary.get("town_id", "")) == town_id
@@ -165,6 +181,7 @@ func _run_town_case(viewport_size: Vector2i, town_id: String) -> Dictionary:
 	var row := {
 		"ok": mapping_exact and bool(shell_surface.get("ok", false)) and capture_ok and authority_exact,
 		"town_id": town_id,
+		"scenario_id": scenario_id,
 		"viewport": [viewport_size.x, viewport_size.y],
 		"mapping": summary,
 		"shell_surface": shell_surface,

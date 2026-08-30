@@ -14589,6 +14589,31 @@ Completion evidence:
 Non-goals:
 - no town mechanics, build/muster roster, economy, AI, interaction, save/schema, UI layout, input, accessibility semantic, animation, audio content, campaign, scenario, overworld, battle, Native RMG, certification, publication, whole-game validation, or release-readiness claim.
 
+## Complete Town-Screen Identity Set
+
+id: `content-complete-town-screen-identity-set-10184`
+
+Status: completed.
+
+Implementation boundary:
+- give the fifteen remaining live towns one original 1600x900 scenic backdrop each, closing exact town-screen identity coverage across all twenty production towns rather than leaving capitals, strongholds, and forward settlements on a shared faction panorama;
+- preserve the established scenery-first Town shell, exact-town resolver, faction fallback, save-version-9 authority, action behavior, compact edge controls, and responsive cover crop without introducing new town mechanics or another presentation subsystem;
+- retain editable generated source art outside release packages, use tracked bounded lossy imports for runtime copies, and keep the 250000000-byte Linux/Windows PCK ceiling.
+
+Completion criteria:
+- every production town resolves a distinct exact-id 1600x900 backdrop while malformed or legacy town templates retain the correct faction fallback;
+- inspected 1280x720 and 1920x1080 captures preserve each town's architectural identity, readable scenery, focal negative space, cover-crop containment, existing edge controls, and no text baked into the art;
+- one consolidated forty-case live Town runtime/capture smoke covers all twenty towns at both supported viewports after the complete batch is implemented, followed by repository validation and bounded Linux/Windows package startup gates.
+
+Completion evidence:
+- shipped fifteen new original 1600x900 exact-id backdrops for the remaining capitals, strongholds, forts, depots, nurseries, and harbors, bringing all twenty production towns to distinct exact scenic identity while retaining the six faction fallbacks for malformed or legacy templates;
+- one consolidated live Town-shell smoke passed all forty town-and-viewport cases at 1280x720 and 1920x1080, verified twenty byte-distinct exact assets, six detached fallback cases, exact scenario placement, cover containment, live controls, captures, and unchanged save-version-9 authority;
+- both full contact sheets were inspected at final import quality and preserve scenery-first composition, distinct architecture, readable controls, and no visible compression failure;
+- repository validation and matching Linux/Windows export-startup gates passed with all twenty exact and six fallback textures present, generated sources excluded, and a 244499456-byte PCK retaining 5500544 bytes of ceiling headroom.
+
+Non-goals:
+- no new town definition, faction, hero, unit, building, economy, muster, AI, interaction, save/schema, UI layout, input, animation, audio, campaign, scenario, overworld, battle, Native RMG, certification, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
