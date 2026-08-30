@@ -5808,6 +5808,7 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
         "metadata_only_boundary_count": 0,
         "live_repeatable_service_count": 0,
         "live_shrine_progression_count": 0,
+        "live_scouting_information_count": 0,
         "route_lock_metadata_count": 0,
         "no_live_reward_activation_count": 0,
         "errors": [],
@@ -5968,14 +5969,26 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             and owner.get("runtime_boundary", {}).get("rare_resource_activation") is False
             for owner in (obj, site)
         )
+        live_scouting_information = role == "scouting_info" and all(
+            str(owner.get("runtime_boundary", {}).get("status", "")) == "scouting_information_live"
+            and owner.get("runtime_boundary", {}).get("live_reward_grants") is False
+            and owner.get("runtime_boundary", {}).get("save_payload_required") is True
+            and owner.get("runtime_boundary", {}).get("renderer_sprite_required") is True
+            and owner.get("runtime_boundary", {}).get("pathing_runtime_adopted") is True
+            and owner.get("runtime_boundary", {}).get("scenario_placement_migration") is True
+            and owner.get("runtime_boundary", {}).get("rare_resource_activation") is False
+            for owner in (obj, site)
+        )
         if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
             section["metadata_only_boundary_count"] += 1
         elif live_repeatable_service:
             section["live_repeatable_service_count"] += 1
         elif live_shrine_progression:
             section["live_shrine_progression_count"] += 1
+        elif live_scouting_information:
+            section["live_scouting_information_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 003 object and site must keep an explicit metadata-only, adopted service, or adopted shrine runtime boundary")
+            add_error(f"{object_id}: Batch 003 object and site must keep an explicit metadata-only, adopted service, adopted shrine, or adopted scouting runtime boundary")
 
         live_ids = live_resource_ids(site)
         if live_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
@@ -6010,8 +6023,12 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             section["route_lock_metadata_count"] += 1
         if role == "repeatable_service" and (not bool(site.get("repeatable", False)) or int(site.get("visit_cooldown_days", 0)) <= 0):
             add_error(f"{object_id}: repeatable services must define repeatable site cooldown metadata")
-        if role == "scouting_info" and int(site.get("vision_radius", 0)) <= 0:
-            add_error(f"{object_id}: scouting/info objects must define vision_radius metadata")
+        if role == "scouting_info":
+            if int(site.get("vision_radius", 0)) <= 0:
+                add_error(f"{object_id}: scouting/info objects must define vision_radius metadata")
+            contract = site.get("scouting_contract", {}) if isinstance(site.get("scouting_contract", {}), dict) else {}
+            if live_scouting_information and (contract.get("metadata_only") is not False or contract.get("runtime_scouting_execution_adopted") is not True):
+                add_error(f"{object_id}: live scouting objects must adopt their scouting execution contract")
 
     section["role_counts"] = sorted_counts(section["role_counts"])
     section["cadence_counts"] = sorted_counts(section["cadence_counts"])
@@ -6027,8 +6044,8 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             add_error("Batch 003 objects must all link resource-site records")
         if section["shape_contract_ready_count"] != len(batch_objects):
             add_error("Batch 003 objects must all pass footprint/body/approach contract checks")
-        if section["metadata_only_boundary_count"] != len(batch_objects) - expected_role_counts["repeatable_service"] - expected_role_counts["shrine_progression"] or section["live_repeatable_service_count"] != expected_role_counts["repeatable_service"] or section["live_shrine_progression_count"] != expected_role_counts["shrine_progression"]:
-            add_error("Batch 003 must retain 16 metadata-only contracts, six adopted repeatable-service contracts, and six adopted shrine-progression contracts")
+        if section["metadata_only_boundary_count"] != len(batch_objects) - expected_role_counts["repeatable_service"] - expected_role_counts["shrine_progression"] - expected_role_counts["scouting_info"] or section["live_repeatable_service_count"] != expected_role_counts["repeatable_service"] or section["live_shrine_progression_count"] != expected_role_counts["shrine_progression"] or section["live_scouting_information_count"] != expected_role_counts["scouting_info"]:
+            add_error("Batch 003 must retain 11 metadata-only contracts, six adopted repeatable-service contracts, six adopted shrine-progression contracts, and five adopted scouting-information contracts")
         if section["no_live_reward_activation_count"] != len(batch_objects):
             add_error("Batch 003 must not add live reward, income, or production fields")
         if section["route_lock_metadata_count"] != expected_role_counts["route_lock"]:
@@ -43212,6 +43229,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas":
                 expected_canvas = (288, 48)
+            elif source_model == "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas":
+                expected_canvas = (240, 48)
             elif source_model == "built_in_image_gen_original_dissident_front_encounter_landmark_atlas":
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_standalone_contract_landmark_atlas":
@@ -50795,7 +50814,7 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
     art = load_json(OVERWORLD_ART_MANIFEST_PATH)
     assets = art.get("object_assets", {})
     mappings = art.get("resource_site_sprites", {})
-    ensure(len(scenario.get("resource_nodes", [])) == 86 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold must expose the 86-site service board without encounter inflation")
+    ensure(len(scenario.get("resource_nodes", [])) == 88 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold must expose the 88-site service and scouting board without encounter inflation")
     source_payloads = []
     for site_id, (object_id, placement_id, xy, cost, rewards, effects, visited_id, region) in expected.items():
         site = sites.get(site_id, {})
@@ -50906,6 +50925,75 @@ def validate_six_progression_shrines(errors: list[str]) -> None:
         ensure('REQUIRED_PROGRESSION_SHRINE_AWAKENED_ATLAS_NAME = "progression_shrine_awakened_atlas"' in packaging_text and 'progression_shrine_awakened_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the progression-shrine awakened atlas")
 
 
+def validate_five_scouting_structures(errors: list[str]) -> None:
+    expected = {
+        "site_hilltop_signal_nest": ("object_hilltop_signal_nest", "ninefold-confluence", "ninefold_hilltop_signal_nest", (13,12), 4, "resource_site_scouting_hilltop_signal_nest_controlled", [0,0,48,48], "1ea9a6becbbd34ff1f5eadb1d04d94c79a08c270091f8d4af5e787345ffa0a58"),
+        "site_marsh_listener_post": ("object_marsh_listener_post", "mudkeel-hive-foreclosure", "mudkeel_dormant_b", (2,5), 3, "resource_site_scouting_marsh_listener_post_controlled", [48,0,48,48], "e179a31058ba88e6a26950ab5785e092e591b77d6ad36004675aaff78cb71c9b"),
+        "site_prism_survey_frame": ("object_prism_survey_frame", "lenscaptain-greenline-survey", "lenscaptain_dormant_a", (1,0), 5, "resource_site_scouting_prism_survey_frame_controlled", [96,0,48,48], "0df5d4316814c140c8a38ff39f0ade26c83c4a99fd6e937e6e78b7d1e3eda310"),
+        "site_underway_echo_well": ("object_underway_echo_well", "ninefold-confluence", "ninefold_underway_echo_well", (32,44), 3, "resource_site_scouting_underway_echo_well_controlled", [144,0,48,48], "870a784fa8578a39b11b4127fbde37e77f7492546ad7e694ef707fb25d0759c6"),
+        "site_coast_bell_watch": ("object_coast_bell_watch", "keelwarden-lockfire-run", "keelwarden_dormant_a", (1,0), 5, "resource_site_scouting_coast_bell_watch_controlled", [192,0,48,48], "e4a04f912ec75d91d39286b7a56a2d774e3aff1c7f7b1beb7fafcf620d3ad079"),
+    }
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "resource_sites" / "scouting_structure_controlled_atlas.png"
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "scouting_structure_controlled_wave1"
+    report_script = ROOT / "tests" / "five_scouting_structures_report.gd"
+    report_scene = ROOT / "tests" / "five_scouting_structures_report.tscn"
+    for path in (atlas_path, source_dir / "manifest.json", report_script, report_scene):
+        ensure(path.is_file(), errors, f"Missing scouting-structure owner: {path.relative_to(ROOT)}")
+    if not atlas_path.is_file():
+        return
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (240,48) and hashlib.sha256(atlas_payload).hexdigest() == "4f7e8161354b351a8a9b65af4244d2c378984f9cc8d5d8e4f00c6167910fc304" and len(atlas_payload) >= 26 and atlas_payload[25] == 6, errors, "Scouting controlled-state atlas bytes, alpha, or dimensions changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Scouting controlled-state atlas import metadata is missing")
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    art = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    assets = art.get("object_assets", {})
+    mappings = art.get("resource_site_sprites", {})
+    source_manifest = load_json(source_dir / "manifest.json")
+    prompt_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("prompts", []) if isinstance(row, dict)}
+    ensure(source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("source_model") == "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas" and source_manifest.get("output_size") == [240,48], errors, "Scouting controlled-state source provenance changed")
+    ensure(set(prompt_rows) == set(expected), errors, "Scouting prompt set must own exactly five sites")
+    source_payloads = []
+    for site_id, (object_id, scenario_id, placement_id, xy, radius, controlled_id, region, source_sha) in expected.items():
+        site = sites.get(site_id, {})
+        obj = objects.get(object_id, {})
+        for owner in (site, obj):
+            boundary = owner.get("runtime_boundary", {})
+            contract = owner.get("scouting_contract", {})
+            ensure(boundary.get("status") == "scouting_information_live" and boundary.get("live_reward_grants") is False and boundary.get("save_payload_required") is True and boundary.get("renderer_sprite_required") is True and boundary.get("pathing_runtime_adopted") is True and boundary.get("scenario_placement_migration") is True and boundary.get("rare_resource_activation") is False, errors, f"{site_id} live scouting boundary changed")
+            ensure(contract.get("planned_reveal_radius") == radius and contract.get("metadata_only") is False and contract.get("runtime_scouting_execution_adopted") is True and len(str(contract.get("live_effect", ""))) >= 48, errors, f"{site_id} runtime scouting contract changed")
+        ensure(site.get("persistent_control") is True and site.get("vision_radius") == radius and len(str(site.get("action_label", ""))) >= 12 and len(str(site.get("summary", ""))) >= 48, errors, f"{site_id} live scouting payload changed")
+        ensure(obj.get("interaction", {}).get("requires_guard_clear") is False and obj.get("interaction", {}).get("cadence") == "persistent_control", errors, f"{site_id} unguarded persistent interaction changed")
+        scenario = scenarios.get(scenario_id, {})
+        node = next((row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id), {})
+        ensure(node.get("site_id") == site_id and (int(node.get("x", -1)), int(node.get("y", -1))) == xy, errors, f"{site_id} exact shipped placement changed")
+        mapping = mappings.get(site_id, {})
+        entry = assets.get(controlled_id, {})
+        ensure(mapping.get("asset_id") == controlled_id and mapping.get("unclaimed_asset_id") == "mapobj_" + site_id.removeprefix("site_"), errors, f"{site_id} ready/controlled mapping changed")
+        ensure(entry.get("path") == "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png" and entry.get("atlas_region") == region and entry.get("atlas_size") == [240,48] and entry.get("presentation_role") == "controlled_scouting_state" and len(str(entry.get("accessible_description", ""))) >= 48, errors, f"{site_id} controlled atlas entry changed")
+        source_path = ROOT / str(entry.get("source_generated", "")).removeprefix("res://")
+        ensure(source_path.is_file() and Path(f"{source_path}.import").is_file(), errors, f"{site_id} generated controlled source or import metadata is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] == 6, errors, f"{site_id} generated controlled source bytes or alpha changed")
+            source_payloads.append(payload)
+        ensure(str(prompt_rows.get(site_id, {}).get("source", "")) == source_path.name and len(str(prompt_rows.get(site_id, {}).get("prompt", ""))) >= 100, errors, f"{site_id} generation prompt ownership changed")
+    ensure(len(source_payloads) == 5 and len(set(source_payloads)) == 5, errors, "All five scouting controlled-state sources must remain byte-distinct")
+    rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for token in ('var site_vision_radius: int = max(0, int(site.get("vision_radius", 0)))', '_reveal_resource_site_claim_fog(session, node, site_vision_radius)', '_reveal_all_current_fog_sources(session, explored_tiles, map_size)', 'String(node.get("collected_by_faction_id", "")) != "player"'):
+        ensure(token in rules_text, errors, f"Scouting runtime is missing live behavior: {token}")
+    if report_scene.is_file():
+        ensure_scene_nodes(report_scene.read_text(encoding="utf-8"), errors, "five_scouting_structures_report.tscn", [("FiveScoutingStructuresReport", "Node")])
+    if report_script.is_file():
+        report_text = report_script.read_text(encoding="utf-8")
+        for token in ('const REPORT_ID := "FIVE_SCOUTING_STRUCTURES_REPORT"', 'OverworldRules._collect_resource_node_result(', 'OverworldRules.refresh_fog_of_war(', 'SessionStateStoreScript.SAVE_VERSION', 'scouting_structure_state_strip.png'):
+            ensure(token in report_text, errors, f"Five-scouting combined smoke is missing live proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_SCOUTING_STRUCTURE_CONTROLLED_ATLAS_NAME = "scouting_structure_controlled_atlas"' in packaging_text and 'scouting_structure_controlled_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the scouting controlled-state atlas")
+
+
 def validate_eight_guarded_route_gates(errors: list[str]) -> None:
     expected = {
         "site_bridge_bastion": ("object_bridge_bastion", "ninefold_bridge_bastion", (18, 61), "ninefold_bridge_bastion_watch", "encounter_roadward_lodge_watch", (20, 61), "high", 26428, "mapobj_bridge_bastion", "resource_site_guarded_route_bridge_bastion_opened", "bridge_bastion_opened", "ccfce539488a679f432683df49379e051ce931aa7a262a0e5bac30d92d2e2d02", [0,0,48,48]),
@@ -50942,7 +51030,7 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
     ensure(source_manifest.get("generation_mode") == "precise-object-edit" and source_manifest.get("source_model") == "built_in_image_gen_precise_object_edit_guarded_route_opened_atlas", errors, "Guarded-route source provenance changed")
     ensure(source_manifest.get("runtime_atlas", {}).get("size") == [384,48] and source_manifest.get("runtime_atlas", {}).get("sha256") == atlas_sha, errors, "Guarded-route source atlas ownership changed")
     ensure(set(source_rows) == set(expected), errors, "Guarded-route source manifest must own exactly eight selected sites")
-    ensure(len(scenario.get("resource_nodes", [])) == 86 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold Confluence must retain the complete 86-site, 23-encounter content board")
+    ensure(len(scenario.get("resource_nodes", [])) == 88 and len(scenario.get("encounters", [])) == 23, errors, "Ninefold Confluence must retain the complete 88-site, 23-encounter content board")
     source_payloads: list[bytes] = []
     for site_id, (object_id, placement_id, site_xy, guard_id, encounter_id, guard_xy, difficulty, seed, unclaimed_id, claimed_id, stem, source_sha, region) in expected.items():
         site = sites.get(site_id, {})
@@ -51619,7 +51707,7 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
     placements = [node for scenario in scenarios if isinstance(scenario, dict) for node in scenario.get("resource_nodes", []) if isinstance(node, dict)] if isinstance(scenarios, list) else []
     placed_site_ids = {str(node.get("site_id", "")) for node in placements}
     placement_counts = {site_id: sum(1 for node in placements if str(node.get("site_id", "")) == site_id) for site_id in expected}
-    ensure(len(scenarios) == 70 and len(placements) == 868 and len(placed_site_ids) == 159, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
+    ensure(len(scenarios) == 70 and len(placements) == 870 and len(placed_site_ids) == 161, errors, "Recurring resource-site coverage baseline changed; re-audit live authored scenarios")
     ensure(placement_counts == {site_id: row[5] for site_id, row in expected.items()}, errors, "Recurring resource-site selected placement counts changed")
 
     resolver_paths: dict[str, str] = {}
@@ -51641,8 +51729,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             resolver_paths[site_id] = "site_mapping"
             continue
         unresolved.add(site_id)
-    ensure(not unresolved and len(resolver_paths) == 159, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 138, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(not unresolved and len(resolver_paths) == 161, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 140, errors, "Placed resource-site map-object resolver coverage changed")
     ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 21, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
@@ -76319,6 +76407,7 @@ def main() -> int:
     validate_seven_minor_guarded_caches(errors)
     validate_six_repeatable_field_services(errors)
     validate_six_progression_shrines(errors)
+    validate_five_scouting_structures(errors)
     validate_eight_guarded_route_gates(errors)
     validate_eight_neutral_dwelling_musters(errors)
     validate_sixteen_neutral_dwelling_musters(errors)

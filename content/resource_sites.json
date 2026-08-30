@@ -4846,19 +4846,24 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "scouting_info",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "scouting_information_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "scouting_contract": {
         "scouting_kind": "watch_fire",
         "planned_reveal_radius": 4,
-        "metadata_only": true
+        "live_effect": "A four-tile hill watch that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
       },
+      "action_label": "Light Signal Nest",
+      "summary": "A high watch basket can carry a cold signal flame across the ridge roads.",
       "persistent_control": true,
       "vision_radius": 4
     },
@@ -4869,19 +4874,24 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "scouting_info",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "scouting_information_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "scouting_contract": {
         "scouting_kind": "sounder_post",
         "planned_reveal_radius": 3,
-        "metadata_only": true
+        "live_effect": "A three-tile listening watch that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
       },
+      "action_label": "Tune Listener Post",
+      "summary": "Reed horns turn distant movement into a readable warning across the fen.",
       "persistent_control": true,
       "vision_radius": 3
     },
@@ -4892,19 +4902,24 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "scouting_info",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "scouting_information_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "scouting_contract": {
         "scouting_kind": "lens_frame",
         "planned_reveal_radius": 5,
-        "metadata_only": true
+        "live_effect": "A five-tile prism survey that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
       },
+      "action_label": "Align Survey Frame",
+      "summary": "A suspended prism fixes the frontier against a bright measured meridian.",
       "persistent_control": true,
       "vision_radius": 5
     },
@@ -4915,19 +4930,24 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "scouting_info",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "scouting_information_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "scouting_contract": {
         "scouting_kind": "echo_survey",
         "planned_reveal_radius": 3,
-        "metadata_only": true
+        "live_effect": "A three-tile echo survey that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
       },
+      "action_label": "Sound Echo Well",
+      "summary": "Brass receivers read footfalls and water echoes through the buried roads.",
       "persistent_control": true,
       "vision_radius": 3
     },
@@ -4938,19 +4958,24 @@
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "scouting_info",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "scouting_information_live",
         "live_reward_grants": false,
-        "save_payload_required": false,
-        "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
         "route_effect_runtime_adopted": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
       },
       "scouting_contract": {
         "scouting_kind": "coast_watch",
         "planned_reveal_radius": 5,
-        "metadata_only": true
+        "live_effect": "A five-tile coast watch that remains visible while player controlled.",
+        "metadata_only": false,
+        "runtime_scouting_execution_adopted": true
       },
+      "action_label": "Ring Coast Watch",
+      "summary": "A harbor bell and signal lamp trace safe water and approaching sails.",
       "persistent_control": true,
       "vision_radius": 5
     },

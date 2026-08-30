@@ -6203,9 +6203,39 @@
       "path": "res://art/overworld/runtime/objects/resource_sites/progression_shrine_awakened_atlas.png", "atlas_region": [240, 0, 48, 48], "atlas_size": [288, 48],
       "source_generated": "res://art/overworld/source/generated/resource_sites/progression_shrine_awakened_wave1/tide_bell_shrine_awakened_source.png", "source_model": "built_in_image_gen_precise_object_edit_progression_shrine_awakened_atlas",
       "assigned_resource_site_id": "site_tide_bell_shrine", "presentation_role": "awakened_shrine_state", "accessible_description": "The Tide Bell Shrine just rung, with a fresh sailor knot, pale mist echoes, and bright tide-pool ripples."
+    },
+    "resource_site_scouting_hilltop_signal_nest_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/hilltop_signal_nest_controlled_source.png", "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+      "assigned_resource_site_id": "site_hilltop_signal_nest", "presentation_role": "controlled_scouting_state", "accessible_description": "A captured hilltop signal nest with a blue-white watch fire, taut teal pennant, and lit platform runes."
+    },
+    "resource_site_scouting_marsh_listener_post_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/marsh_listener_post_controlled_source.png", "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+      "assigned_resource_site_id": "site_marsh_listener_post", "presentation_role": "controlled_scouting_state", "accessible_description": "A captured marsh listening post with three outward brass horns, teal sound rings, and a fresh survey ribbon."
+    },
+    "resource_site_scouting_prism_survey_frame_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/prism_survey_frame_controlled_source.png", "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+      "assigned_resource_site_id": "site_prism_survey_frame", "presentation_role": "controlled_scouting_state", "accessible_description": "A captured prism survey frame with an aligned bright lens, cyan-gold ray, and illuminated meridian circle."
+    },
+    "resource_site_scouting_underway_echo_well_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/underway_echo_well_controlled_source.png", "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+      "assigned_resource_site_id": "site_underway_echo_well", "presentation_role": "controlled_scouting_state", "accessible_description": "A captured echo well with cyan water rings, an amber plumb light, and teal receiver lamps in both horns."
+    },
+    "resource_site_scouting_coast_bell_watch_controlled": {
+      "path": "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/resource_sites/scouting_structure_controlled_wave1/coast_bell_watch_controlled_source.png", "source_model": "built_in_image_gen_precise_object_edit_scouting_structure_controlled_atlas",
+      "assigned_resource_site_id": "site_coast_bell_watch", "presentation_role": "controlled_scouting_state", "accessible_description": "A captured coast bell watch with pale resonance arcs, a cyan harbor lantern, and raised blue-gold pennant."
     }
   },
   "resource_site_sprites": {
+    "site_hilltop_signal_nest": {"asset_id":"resource_site_scouting_hilltop_signal_nest_controlled","unclaimed_asset_id":"mapobj_hilltop_signal_nest","fit":"Lit controlled signal state paired with the original quiet hill watch."},
+    "site_marsh_listener_post": {"asset_id":"resource_site_scouting_marsh_listener_post_controlled","unclaimed_asset_id":"mapobj_marsh_listener_post","fit":"Active listening state paired with the original quiet marsh post."},
+    "site_prism_survey_frame": {"asset_id":"resource_site_scouting_prism_survey_frame_controlled","unclaimed_asset_id":"mapobj_prism_survey_frame","fit":"Aligned controlled survey state paired with the original idle prism frame."},
+    "site_underway_echo_well": {"asset_id":"resource_site_scouting_underway_echo_well_controlled","unclaimed_asset_id":"mapobj_underway_echo_well","fit":"Sounded controlled echo state paired with the original still well."},
+    "site_coast_bell_watch": {"asset_id":"resource_site_scouting_coast_bell_watch_controlled","unclaimed_asset_id":"mapobj_coast_bell_watch","fit":"Rung controlled harbor state paired with the original quiet coast bell."},
     "site_oath_ember_shrine": {"asset_id":"resource_site_progression_shrine_oath_ember_awakened","unclaimed_asset_id":"mapobj_oath_ember_shrine","fit":"Awakened ember rite paired with the ready oath shrine."},
     "site_reedscript_vow_shrine": {"asset_id":"resource_site_progression_shrine_reedscript_vow_awakened","unclaimed_asset_id":"mapobj_reedscript_vow_shrine","fit":"Sealed-vow state paired with the ready reedscript shrine."},
     "site_prism_measure_shrine": {"asset_id":"resource_site_progression_shrine_prism_measure_awakened","unclaimed_asset_id":"mapobj_prism_measure_shrine","fit":"Calibrated-measure state paired with the ready prism shrine."},
