@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 87,
+  "player_facing_active_scenario_count": 88,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -21838,6 +21838,119 @@
           "difficulty": "high",
           "combat_seed": 32606
         }
+      ]
+    },
+    {
+      "id": "horizon-compact-six-citadels",
+      "name": "Horizon Compact: Six Citadels",
+      "selection": {
+        "summary": "Lead Belis Rainledger from Rainwrit Bastion, break six rival horizon courts, and bind five distant citadels into one compact before their pressure closes the circuit.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Six-Citadel Circuit (24x16)",
+        "player_summary": "Belis begins at Rainwrit with a five-stack Cinder-Census company, a complete Embergrain route, and six fortified trials between the citadels.",
+        "enemy_summary": "Hollowreed, Meridian, Crownroot, Blackbell, and Pale Sounding each field an independent town economy, signature battle court, and raid pressure line.",
+        "availability": {"campaign": false, "skirmish": true}
+      },
+      "map_size": {"width": 24, "height": 16},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_belis_grand_convergence_company",
+      "hero_id": "hero_embercourt_belis_rainledger",
+      "starting_resources": {"gold": 2200, "wood": 8, "ore": 8, "embergrain": 2},
+      "map": [
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"],
+        ["grass","grass","grass","grass","mire","mire","mire","mire","sand","sand","sand","sand","forest","forest","forest","forest","lava","lava","lava","lava","rough","rough","rough","rough"]
+      ],
+      "start": {"x": 2, "y": 8},
+      "hero_starts": ["hero_embercourt_belis_rainledger"],
+      "objectives": {
+        "victory_text": "Six horizon courts acknowledge one compact and every citadel road remains open under Rainledger witness.",
+        "defeat_text": "The horizon courts close their separate ledgers before Belis can bind the six-citadel circuit.",
+        "victory": [
+          {"id":"break_horizon_rainwrit_gate","label":"Break the Rainwrit Charter Gate trial","type":"encounter_resolved","placement_id":"horizon_rainwrit_gate"},
+          {"id":"break_horizon_hollowreed_palisade","label":"Break the Hollowreed Moonfang Palisade","type":"encounter_resolved","placement_id":"horizon_hollowreed_palisade"},
+          {"id":"break_horizon_meridian_array","label":"Turn the Meridian Choir Array","type":"encounter_resolved","placement_id":"horizon_meridian_array"},
+          {"id":"break_horizon_crownroot_ring","label":"Open the Crownroot Oathseed Ring","type":"encounter_resolved","placement_id":"horizon_crownroot_ring"},
+          {"id":"break_horizon_blackbell_gantry","label":"Silence the Blackbell Verdict Gantry","type":"encounter_resolved","placement_id":"horizon_blackbell_gantry"},
+          {"id":"break_horizon_pale_mooring","label":"Sound the Pale Ghost Mooring","type":"encounter_resolved","placement_id":"horizon_pale_mooring"},
+          {"id":"claim_horizon_hollowreed","label":"Claim Hollowreed Sanctuary","type":"town_owned_by_player","placement_id":"horizon_hollowreed_town"},
+          {"id":"claim_horizon_meridian","label":"Claim Meridian Choirhold","type":"town_owned_by_player","placement_id":"horizon_meridian_town"},
+          {"id":"claim_horizon_crownroot","label":"Claim Crownroot Refuge","type":"town_owned_by_player","placement_id":"horizon_crownroot_town"},
+          {"id":"claim_horizon_blackbell","label":"Claim Blackbell Foundry","type":"town_owned_by_player","placement_id":"horizon_blackbell_town"},
+          {"id":"claim_horizon_pale","label":"Claim Pale Sounding Harbor","type":"town_owned_by_player","placement_id":"horizon_pale_town"},
+          {"id":"convene_horizon_compact","label":"Convene the Horizon Compact","type":"flag_true","flag":"horizon_compact_convened"}
+        ],
+        "defeat": [
+          {"id":"hold_horizon_rainwrit","label":"Keep Rainwrit Bastion under your banner","type":"town_not_owned_by_player","placement_id":"horizon_rainwrit_town"},
+          {"id":"belis_survives_horizon_compact","label":"Belis Rainledger must survive","type":"session_flag_equals","flag":"campaign","value":"defeat"},
+          {"id":"contain_horizon_pale_pressure","label":"Do not let Pale Sounding pressure reach 16","type":"enemy_pressure_at_least","faction_id":"faction_veilmourn","threshold":16},
+          {"id":"finish_horizon_compact_in_time","label":"Convene the compact before Day 24","type":"day_at_least","day":24}
+        ]
+      },
+      "script_hooks": [
+        {"id":"horizon_compact_day_three_stores","priority":120,"conditions":[{"type":"day_at_least","day":3},{"type":"town_owned_by_player","placement_id":"horizon_rainwrit_town"}],"effects":[{"type":"add_resources","resources":{"gold":360,"wood":2,"ore":2}},{"type":"message","text":"Rainwrit releases its sealed survey chest before the five rival ledgers close."}]},
+        {"id":"horizon_compact_day_four_relief","priority":116,"conditions":[{"type":"day_at_least","day":4},{"type":"town_owned_by_player","placement_id":"horizon_rainwrit_town"}],"effects":[{"type":"town_add_recruits","placement_id":"horizon_rainwrit_town","recruits":{"unit_embercourt_bargebow_crews":3,"unit_embercourt_ash_oath_bailiffs":2}},{"type":"message","text":"A bargebow relief detail reaches Rainwrit along the reopened sluice road."}]},
+        {"id":"horizon_compact_unbroken_pressure","priority":108,"conditions":[{"type":"day_at_least","day":7},{"type":"objective_not_met","objective_id":"convene_horizon_compact"}],"effects":[{"type":"add_enemy_pressure","faction_id":"faction_mireclaw","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_sunvault","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_thornwake","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_brasshollow","amount":1},{"type":"add_enemy_pressure","faction_id":"faction_veilmourn","amount":1},{"type":"message","text":"Five unjoined citadels harden their separate roads against the compact."}]},
+        {"id":"horizon_compact_pale_counterstroke","priority":102,"conditions":[{"type":"day_at_least","day":11},{"type":"objective_not_met","objective_id":"claim_horizon_pale"}],"effects":[{"type":"spawn_encounter","placement":{"placement_id":"horizon_pale_counterstroke","encounter_id":"encounter_bellwake_privateers","x":22,"y":13,"difficulty":"scripted","spawned_by_faction_id":"faction_veilmourn","days_active":0,"arrived":false,"goal_distance":9999}},{"type":"message","text":"Pale Sounding launches a Bellwake counterstroke along the outer rough road."}]},
+        {"id":"horizon_compact_all_writs_convened","priority":96,"conditions":[{"type":"flag_true","flag":"horizon_rainwrit_gate_broken"},{"type":"flag_true","flag":"horizon_hollowreed_palisade_broken"},{"type":"flag_true","flag":"horizon_meridian_array_broken"},{"type":"flag_true","flag":"horizon_crownroot_ring_broken"},{"type":"flag_true","flag":"horizon_blackbell_gantry_broken"},{"type":"flag_true","flag":"horizon_pale_mooring_broken"}],"effects":[{"type":"award_experience","amount":420},{"type":"set_flag","flag":"horizon_compact_convened","value":true},{"type":"message","text":"Six broken court seals align into one Horizon Compact under Rainledger witness."}]}
+      ],
+      "towns": [
+        {"placement_id":"horizon_rainwrit_town","town_id":"town_rainwrit_bastion","x":1,"y":8,"owner":"player"},
+        {"placement_id":"horizon_hollowreed_town","town_id":"town_hollowreed_sanctuary","x":5,"y":2,"owner":"enemy"},
+        {"placement_id":"horizon_meridian_town","town_id":"town_meridian_choirhold","x":9,"y":13,"owner":"enemy"},
+        {"placement_id":"horizon_crownroot_town","town_id":"town_crownroot_refuge","x":13,"y":2,"owner":"enemy"},
+        {"placement_id":"horizon_blackbell_town","town_id":"town_blackbell_foundry","x":17,"y":13,"owner":"enemy"},
+        {"placement_id":"horizon_pale_town","town_id":"town_pale_sounding_harbor","x":22,"y":7,"owner":"enemy"}
+      ],
+      "resource_nodes": [
+        {"placement_id":"horizon_player_wood","site_id":"site_wood_wagon","x":2,"y":5},
+        {"placement_id":"horizon_player_ore","site_id":"site_ore_crates","x":2,"y":11},
+        {"placement_id":"horizon_rainwrit_rare","site_id":"site_embergrain_warm_granary","x":1,"y":4},
+        {"placement_id":"horizon_hollowreed_rare","site_id":"site_peatwax_reed_yard","x":5,"y":0,"collected_by_faction_id":"faction_mireclaw"},
+        {"placement_id":"horizon_meridian_rare","site_id":"site_aetherglass_lens_house","x":9,"y":15,"collected_by_faction_id":"faction_sunvault"},
+        {"placement_id":"horizon_crownroot_rare","site_id":"site_verdant_graft_nursery","x":13,"y":0,"collected_by_faction_id":"faction_thornwake"},
+        {"placement_id":"horizon_blackbell_rare","site_id":"site_brass_scrip_mint","x":17,"y":15,"collected_by_faction_id":"faction_brasshollow"},
+        {"placement_id":"horizon_pale_rare","site_id":"site_memory_salt_pan","x":22,"y":4,"collected_by_faction_id":"faction_veilmourn"},
+        {"placement_id":"horizon_player_exchange","site_id":"site_frontier_rare_exchange","x":3,"y":13},
+        {"placement_id":"horizon_feature_beacon","site_id":"site_watchtower_beacon","x":3,"y":2},
+        {"placement_id":"horizon_feature_bramble","site_id":"site_bramble_hedge","x":7,"y":11},
+        {"placement_id":"horizon_feature_roadside","site_id":"site_roadside_sanctum","x":11,"y":4},
+        {"placement_id":"horizon_feature_glowcap","site_id":"site_glowcap_croft","x":15,"y":10},
+        {"placement_id":"horizon_feature_milestone","site_id":"site_milestone_arsenal","x":19,"y":3},
+        {"placement_id":"horizon_feature_harbor","site_id":"site_harbor_pilot_house","x":23,"y":11}
+      ],
+      "artifact_nodes": [
+        {"placement_id":"horizon_artifact_1","artifact_id":"artifact_bridgefire_standard","x":4,"y":14},
+        {"placement_id":"horizon_artifact_2","artifact_id":"artifact_prismward_mantle","x":12,"y":8},
+        {"placement_id":"horizon_artifact_3","artifact_id":"artifact_black_sail_compass","x":20,"y":1}
+      ],
+      "encounters": [
+        {"placement_id":"horizon_rainwrit_gate","encounter_id":"encounter_horizon_rainwrit_charter_gate","x":3,"y":8,"difficulty":"medium","combat_seed":33101,"prefer_identity_landmark":true},
+        {"placement_id":"horizon_hollowreed_palisade","encounter_id":"encounter_horizon_hollowreed_moonfang_palisade","x":6,"y":6,"difficulty":"medium","combat_seed":33102,"prefer_identity_landmark":true},
+        {"placement_id":"horizon_meridian_array","encounter_id":"encounter_horizon_meridian_choir_array","x":10,"y":9,"difficulty":"medium","combat_seed":33103,"prefer_identity_landmark":true},
+        {"placement_id":"horizon_crownroot_ring","encounter_id":"encounter_horizon_crownroot_oathseed_ring","x":14,"y":6,"difficulty":"high","combat_seed":33104,"prefer_identity_landmark":true},
+        {"placement_id":"horizon_blackbell_gantry","encounter_id":"encounter_horizon_blackbell_verdict_gantry","x":18,"y":9,"difficulty":"high","combat_seed":33105,"prefer_identity_landmark":true},
+        {"placement_id":"horizon_pale_mooring","encounter_id":"encounter_horizon_pale_sounding_ghost_mooring","x":21,"y":7,"difficulty":"high","combat_seed":33106,"prefer_identity_landmark":true}
+      ],
+      "enemy_factions": [
+        {"faction_id":"faction_mireclaw","label":"Hollowreed Moonfang Court","pressure_per_day":1,"pressure_per_enemy_town":1,"raid_threshold":7,"max_active_raids":1,"raid_pillage_delay":2,"raid_pillage":{"gold":120,"peatwax":1},"raid_encounter_ids":["encounter_horizon_hollowreed_moonfang_palisade"],"spawn_points":[{"x":6,"y":1}],"siege_target_placement_id":"horizon_rainwrit_town","siege_active_raid_threshold":2,"siege_capture_progress":2},
+        {"faction_id":"faction_sunvault","label":"Meridian Choir Array","pressure_per_day":1,"pressure_per_enemy_town":1,"raid_threshold":8,"max_active_raids":1,"raid_pillage_delay":2,"raid_pillage":{"gold":120,"aetherglass":1},"raid_encounter_ids":["encounter_horizon_meridian_choir_array"],"spawn_points":[{"x":10,"y":14}],"siege_target_placement_id":"horizon_rainwrit_town","siege_active_raid_threshold":2,"siege_capture_progress":2},
+        {"faction_id":"faction_thornwake","label":"Crownroot Oathseed Ring","pressure_per_day":1,"pressure_per_enemy_town":1,"raid_threshold":8,"max_active_raids":1,"raid_pillage_delay":2,"raid_pillage":{"gold":120,"verdant_grafts":1},"raid_encounter_ids":["encounter_horizon_crownroot_oathseed_ring"],"spawn_points":[{"x":14,"y":1}],"siege_target_placement_id":"horizon_rainwrit_town","siege_active_raid_threshold":2,"siege_capture_progress":2},
+        {"faction_id":"faction_brasshollow","label":"Blackbell Verdict Gantry","pressure_per_day":1,"pressure_per_enemy_town":1,"raid_threshold":9,"max_active_raids":1,"raid_pillage_delay":2,"raid_pillage":{"gold":140,"brass_scrip":1},"raid_encounter_ids":["encounter_horizon_blackbell_verdict_gantry"],"spawn_points":[{"x":18,"y":14}],"siege_target_placement_id":"horizon_rainwrit_town","siege_active_raid_threshold":2,"siege_capture_progress":2},
+        {"faction_id":"faction_veilmourn","label":"Pale Sounding Ghost Mooring","pressure_per_day":2,"pressure_per_enemy_town":1,"raid_threshold":9,"max_active_raids":1,"raid_pillage_delay":2,"raid_pillage":{"gold":150,"memory_salt":1},"raid_encounter_ids":["encounter_horizon_pale_sounding_ghost_mooring"],"spawn_points":[{"x":23,"y":13}],"siege_target_placement_id":"horizon_rainwrit_town","siege_active_raid_threshold":2,"siege_capture_progress":2}
       ]
     }
   ]
