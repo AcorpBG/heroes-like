@@ -1,0 +1,39 @@
+{
+  "schema_id": "briarwheel_covenant_campaign_art_v1",
+  "source_model": "built_in_image_gen_original_campaign_art",
+  "campaign_id": "campaign_briarwheel_covenant",
+  "assets": [
+    {
+      "id": "campaign_emblem_briarwheel_covenant",
+      "source_path": "res://art/campaigns/source/generated/emblems/briarwheel_covenant_source.png",
+      "runtime_path": "res://art/campaigns/runtime/emblems/briarwheel_covenant.png",
+      "source_sha256": "115b2fe04e5d2b15ddd1944cce52330dfa4803aac14bd9746a79c14597984d8d",
+      "runtime_sha256": "6bec2de794e33220add9a8522a7d5c9e1723c493b049a7a305514b044bdf036d",
+      "prompt_summary": "Living briar wheel with three seed lanterns and crown branches."
+    },
+    {
+      "id": "campaign_chapter_seal_briarwheel_reclamation",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/briarwheel_reclamation_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/briarwheel_reclamation.png",
+      "source_sha256": "20caa2caebe55ac2176ee659dd67ff30093f2787fde19aab3a079a5664a6d2b8",
+      "runtime_sha256": "5541203204158edfc49a08c793ffb7a9759840c87e5d1becde6156d2d0010fec",
+      "prompt_summary": "Briar wheel breaking a brass chain over cracked boundary stones."
+    },
+    {
+      "id": "campaign_chapter_seal_rootway_graftmarch",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/rootway_graftmarch_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/rootway_graftmarch.png",
+      "source_sha256": "2f0afe8518651397be590c49bbb46b9f05c89e04dcd089a323396a6c97d8a5ce",
+      "runtime_sha256": "1cac1bc35c241a0c5f4f0b702a1a0e82d96a0185b49ea24cbb5d83d7d45fbc7c",
+      "prompt_summary": "Walking living-root bridge carrying graft shoots and a route lantern."
+    },
+    {
+      "id": "campaign_chapter_seal_worldroot_crown_covenant",
+      "source_path": "res://art/campaigns/source/generated/chapter_seals/worldroot_crown_covenant_source.png",
+      "runtime_path": "res://art/campaigns/runtime/chapter_seals/worldroot_crown_covenant.png",
+      "source_sha256": "efbbab6121c6d1b0599eb07607489f0ffd0a36f0936d7b8081af26904da305bf",
+      "runtime_sha256": "667c0aaaa5542f84fd558def0cd31e1fc0ca4e297996e3f231077a9f4b6fa265",
+      "prompt_summary": "Three-root crown around a heartwood seed with converging roads and survey chains."
+    }
+  ]
+}
