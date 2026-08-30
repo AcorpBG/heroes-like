@@ -15567,6 +15567,37 @@ Completion result:
 - one consolidated thirty-five-case Battle report publicly cast the complete batch and proved nine damage, two recovery, and three cleanse outcomes retain identical authority under reduced-motion/reduced-flash settings; representative Writ Lance, Leech Poultice, and Crown Prism captures passed visual review at 1280x720, 1600x900, and 1920x1080;
 - repository validation and sequential Linux/Windows exports passed; both 247022896-byte PCKs contained matching 4412-entry resource sets plus all fourteen new import/texture pairs, remained 2977104 bytes below the unchanged ceiling, booted successfully, and excluded all generated source masters.
 
+## Eleven Final Generic Battle Spell VFX Identities
+
+id: `content-eleven-final-generic-battle-spell-vfx-identities-10184`
+
+Status: completed.
+
+Current finding:
+- thirty-five of ninety authored Battle spells now own exact imported VFX identities and forty-four status/buff spells retain the shared Command Ward presentation, but the final eleven damage, recovery, and cleanse spells still collapse to generic cast/result feedback despite being tier-three through tier-five actions with distinct authored outcomes;
+- the remaining set is a coherent closure batch: Bell Lance; Silt Rot, Sluice Poultice, and Flood Rot; Mirror Prism, Halo Ray, and Starlens Prism; Loam Thorn and Graft Ward; Mourning Mark; and Index Correction;
+- completing this set through the existing manifest-owned cue path removes generic-only presentation from the authored Battle catalog without changing spell mechanics, introducing a new runtime subsystem, or weakening unknown-id fail-closed behavior.
+
+Implementation boundary:
+- add eleven original transparent spell VFX assets with materially distinct silhouettes, materials, and school language, registering exact spell-to-cue ownership through the existing Battle VFX manifest;
+- retain high-resolution generated masters plus exact prompt/hash/non-color-description provenance outside release packages, normalize compact 384x384 runtime RGBA assets, and use projectile motion only where directional spell identity materially benefits from it;
+- publicly cast the complete batch through Battle rules and prove six damage, two recovery, and three cleanse outcomes preserve authority under reduced-motion/reduced-flash presentation;
+- preserve all authored spell definitions, values, availability, AI choices, save version 9, deterministic outcomes, Windows/Linux behavior, and the unchanged 250000000-byte release-package ceiling.
+
+Completion criteria:
+- all eleven selected spells resolve exact visually and byte-distinct imported cues in live Battle flow, their effect authority is unchanged, and reduced presentation settings suppress strong VFX without changing results;
+- one consolidated gameplay/accessibility/visual report runs after the complete batch, proves the catalog reaches forty-six exact, forty-four shared, and zero authored generic-only VFX mappings, retains unknown-id fail-closed coverage, and captures representative damage, recovery, and cleanse effects at supported viewport sizes;
+- repository validation and sequential Linux/Windows packaged startup pass once after the batch, with matching packaged resource sets below the unchanged ceiling, all eleven runtime import/texture pairs present, and generated masters excluded.
+
+Non-goals:
+- no new spell definition, faction, hero, town, unit, encounter, scenario, combat formula, spell balance, AI rule, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes spell effect, icon, name, animation, text, faction device, or protected visual expression.
+
+Completion result:
+- eleven original transparent and byte-distinct spell VFX identities now ship through the data-driven Battle manifest, raising the ninety-spell catalog from thirty-five to forty-six exact mappings, retaining forty-four shared Command Ward mappings, and reducing authored generic-only VFX mappings from eleven to zero while unknown ids still fail closed;
+- one consolidated thirty-five-case Battle report publicly cast all twenty-five resolution-family identity additions and separately proved the final eleven preserve six damage, two recovery, and three cleanse outcomes with identical authority under reduced-motion/reduced-flash settings; Bell Lance, Sluice Poultice, and Index Correction captures passed visual review at 1280x720, 1600x900, and 1920x1080;
+- repository validation and sequential Linux/Windows exports passed; both 248396264-byte PCKs contained matching 4434-entry resource sets plus all eleven new import/texture pairs, remained 1603736 bytes below the unchanged ceiling, booted successfully, and excluded all generated source masters.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

@@ -35,7 +35,18 @@
     "spell_veil_lantern_mark_16": "vfx_spell_veil_lantern_mark_16",
     "spell_veil_moon_mark_28": "vfx_spell_veil_moon_mark_28",
     "spell_old_measure_compass_correction_22": "vfx_spell_old_measure_compass_correction_22",
-    "spell_old_measure_marker_tally_08": "vfx_spell_old_measure_marker_tally_08"
+    "spell_old_measure_marker_tally_08": "vfx_spell_old_measure_marker_tally_08",
+    "spell_beacon_bell_lance_25": "vfx_spell_beacon_bell_lance_25",
+    "spell_mire_silt_rot_04": "vfx_spell_mire_silt_rot_04",
+    "spell_mire_sluice_poultice_14": "vfx_spell_mire_sluice_poultice_14",
+    "spell_mire_flood_rot_28": "vfx_spell_mire_flood_rot_28",
+    "spell_lens_mirror_prism_04": "vfx_spell_lens_mirror_prism_04",
+    "spell_lens_halo_ray_18": "vfx_spell_lens_halo_ray_18",
+    "spell_lens_starlens_prism_28": "vfx_spell_lens_starlens_prism_28",
+    "spell_root_loam_thorn_10": "vfx_spell_root_loam_thorn_10",
+    "spell_root_graft_graft_18": "vfx_spell_root_graft_graft_18",
+    "spell_veil_mourning_mark_04": "vfx_spell_veil_mourning_mark_04",
+    "spell_old_measure_index_correction_10": "vfx_spell_old_measure_index_correction_10"
   },
   "cues": {
     "vfx_placeholder_projectile_path": {
@@ -391,6 +402,105 @@
       "alt_text": "Iron marker weights split a stack of blank stone tally blocks.",
       "render_mode": "spell_target",
       "scale": 2.14,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_beacon_bell_lance_25": {
+      "spell_id": "spell_beacon_bell_lance_25",
+      "texture_path": "res://art/battle/vfx/spell_beacon_bell_lance_25.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_beacon_bell_lance_25_source.png",
+      "alt_text": "A split bronze bell fires an ivory sound spear through angular shock rings.",
+      "render_mode": "spell_projectile",
+      "scale": 3.20,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_mire_silt_rot_04": {
+      "spell_id": "spell_mire_silt_rot_04",
+      "texture_path": "res://art/battle/vfx/spell_mire_silt_rot_04.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_mire_silt_rot_04_source.png",
+      "alt_text": "A cracked silt basin collapses around black reeds and decay blisters.",
+      "render_mode": "spell_target",
+      "scale": 2.18,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_mire_sluice_poultice_14": {
+      "spell_id": "spell_mire_sluice_poultice_14",
+      "texture_path": "res://art/battle/vfx/spell_mire_sluice_poultice_14.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_mire_sluice_poultice_14_source.png",
+      "alt_text": "A reed poultice opens beneath clean water and amber herbs.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_mire_flood_rot_28": {
+      "spell_id": "spell_mire_flood_rot_28",
+      "texture_path": "res://art/battle/vfx/spell_mire_flood_rot_28.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_mire_flood_rot_28_source.png",
+      "alt_text": "A dark flood ring bursts through rotten reeds and fungal foam.",
+      "render_mode": "spell_target",
+      "scale": 2.18,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_mirror_prism_04": {
+      "spell_id": "spell_lens_mirror_prism_04",
+      "texture_path": "res://art/battle/vfx/spell_lens_mirror_prism_04.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_lens_mirror_prism_04_source.png",
+      "alt_text": "A silver mirror prism draws in black wisps and releases clear droplets.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_halo_ray_18": {
+      "spell_id": "spell_lens_halo_ray_18",
+      "texture_path": "res://art/battle/vfx/spell_lens_halo_ray_18.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_lens_halo_ray_18_source.png",
+      "alt_text": "A narrow ray passes through a segmented brass halo and crystal lens.",
+      "render_mode": "spell_projectile",
+      "scale": 3.10,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_starlens_prism_28": {
+      "spell_id": "spell_lens_starlens_prism_28",
+      "texture_path": "res://art/battle/vfx/spell_lens_starlens_prism_28.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_lens_starlens_prism_28_source.png",
+      "alt_text": "A faceted starlens refracts black fragments into pearl-white beads.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_root_loam_thorn_10": {
+      "spell_id": "spell_root_loam_thorn_10",
+      "texture_path": "res://art/battle/vfx/spell_root_loam_thorn_10.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_root_loam_thorn_10_source.png",
+      "alt_text": "A root-wood thorn spear drags loam, torn roots, and stones behind it.",
+      "render_mode": "spell_projectile",
+      "scale": 3.20,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_root_graft_graft_18": {
+      "spell_id": "spell_root_graft_graft_18",
+      "texture_path": "res://art/battle/vfx/spell_root_graft_graft_18.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_root_graft_graft_18_source.png",
+      "alt_text": "Three bark plates clamp a glowing graft union beneath fresh buds.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_veil_mourning_mark_04": {
+      "spell_id": "spell_veil_mourning_mark_04",
+      "texture_path": "res://art/battle/vfx/spell_veil_mourning_mark_04.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_veil_mourning_mark_04_source.png",
+      "alt_text": "A blank black seal sits beneath a pearl crescent and one silver tear.",
+      "render_mode": "spell_target",
+      "scale": 2.14,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_old_measure_index_correction_10": {
+      "spell_id": "spell_old_measure_index_correction_10",
+      "texture_path": "res://art/battle/vfx/spell_old_measure_index_correction_10.png",
+      "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_old_measure_index_correction_10_source.png",
+      "alt_text": "A brass survey arm aligns blank stone markers and sweeps dark chalk away.",
+      "render_mode": "spell_target",
+      "scale": 2.16,
       "base_rotation_degrees": 0.0
     },
     "vfx_placeholder_idle_shadow": {
