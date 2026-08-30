@@ -6728,6 +6728,33 @@
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "wakeglass_navigation_trial",
       "accessible_description": "A mourning-cloaked pilot beneath a suspended wakeglass compass marks the Veilmourn auxiliary trial company."
+    },
+    "encounter_commission_beaconline_writguard": {
+      "path": "res://art/units/overworld_icons/unit_embercourt_beaconline_writguard.png",
+      "source_generated": "res://art/units/source/curated/unit_embercourt_beaconline_writguard.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_three_banner_beaconline_writguard",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "lantern_pennon_counterseal_trial",
+      "accessible_description": "A red lantern pennon and oath shield mark the Embercourt Beaconline commission trial."
+    },
+    "encounter_commission_fenbell_chainstalkers": {
+      "path": "res://art/units/overworld_icons/unit_mireclaw_fenbell_chainstalkers.png",
+      "source_generated": "res://art/units/source/curated/unit_mireclaw_fenbell_chainstalkers.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_three_banner_fenbell_chainstalkers",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "hooked_chain_fenbell_trial",
+      "accessible_description": "A reed-cloaked chain hook and bronze fen bell mark the Mireclaw ambusher trial."
+    },
+    "encounter_commission_zenith_lensbearers": {
+      "path": "res://art/units/overworld_icons/unit_sunvault_zenith_lensbearers.png",
+      "source_generated": "res://art/units/source/curated/unit_sunvault_zenith_lensbearers.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_three_banner_zenith_lensbearers",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "calibrated_zenith_crossline_trial",
+      "accessible_description": "A gold-and-indigo surveyor with a bright prism aperture marks the Sunvault commission trial."
     }
   },
   "resource_site_sprites": {
@@ -7458,7 +7485,10 @@
     "encounter_nightchart_false_meridian": "encounter_grand_convergence_false_meridian_pilots",
     "encounter_third_hearths_canopy_breachers": "encounter_auxiliary_canopy_breachers",
     "encounter_third_hearths_redline_lancers": "encounter_auxiliary_redline_lancers",
-    "encounter_third_hearths_wakeglass_pilots": "encounter_auxiliary_wakeglass_pilots"
+    "encounter_third_hearths_wakeglass_pilots": "encounter_auxiliary_wakeglass_pilots",
+    "encounter_three_banner_beaconline_writguard": "encounter_commission_beaconline_writguard",
+    "encounter_three_banner_fenbell_chainstalkers": "encounter_commission_fenbell_chainstalkers",
+    "encounter_three_banner_zenith_lensbearers": "encounter_commission_zenith_lensbearers"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

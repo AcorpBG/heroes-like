@@ -4639,6 +4639,179 @@
         "veil": 15
       },
       "status_immunity_ids": []
+    },
+    {
+      "id": "unit_embercourt_beaconline_writguard",
+      "name": "Beaconline Writguard",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 5,
+      "hp": 32,
+      "attack": 10,
+      "defense": 12,
+      "min_damage": 7,
+      "max_damage": 10,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 460,
+        "embergrain": 1
+      },
+      "content_status": "scenario_auxiliary",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Beaconline Counterseal",
+          "description": "The lantern pennon locks a defended line in place and cites the first attacker out of step.",
+          "retaliation_multiplier": 1.08,
+          "defending_cohesion_bonus": 1,
+          "status_id": "status_staggered",
+          "status_label": "Countersealed",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -1
+          }
+        },
+        {
+          "id": "formation_guard",
+          "name": "Writ-Lantern Standard",
+          "description": "A raised writ-lantern steadies the formation and gives supporting volleys one clean measured beat.",
+          "ally_ranged_damage_multiplier": 1.07,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 1,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.08
+        }
+      ],
+      "spell_resistance_pct": 8,
+      "control_resistance_pct": 8,
+      "spell_school_resistance_pct": {
+        "beacon": 12
+      },
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_mireclaw_fenbell_chainstalkers",
+      "name": "Fenbell Chainstalkers",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 5,
+      "hp": 25,
+      "attack": 12,
+      "defense": 8,
+      "min_damage": 7,
+      "max_damage": 11,
+      "speed": 6,
+      "initiative": 9,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 410,
+        "peatwax": 1
+      },
+      "content_status": "scenario_auxiliary",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Fenbell Drag",
+          "description": "Once per battle, a hooked chain and toll-bell feint pull one veteran line off its sure footing.",
+          "status_id": "status_mire_harried",
+          "status_label": "Fenbell-Dragged",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 4,
+          "ai_target_priority_bonus": 0.2
+        },
+        {
+          "id": "backstab",
+          "name": "Chainshadow Cut",
+          "description": "The stalker circles behind any line already broken by a bell, snare, or staggered footing.",
+          "damage_multiplier": 1.12,
+          "momentum_gain": 1,
+          "primary_melee_only": true,
+          "status_ids": [
+            "status_mire_harried",
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.5,
+          "threshold_damage_multiplier": 1.08
+        }
+      ],
+      "spell_resistance_pct": 5,
+      "control_resistance_pct": 10,
+      "spell_school_resistance_pct": {
+        "mire": 12
+      },
+      "status_immunity_ids": []
+    },
+    {
+      "id": "unit_sunvault_zenith_lensbearers",
+      "name": "Zenith Lensbearers",
+      "faction_id": "faction_sunvault",
+      "role": "ranged",
+      "tier": 5,
+      "hp": 22,
+      "attack": 12,
+      "defense": 7,
+      "min_damage": 6,
+      "max_damage": 10,
+      "speed": 4,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 2,
+      "cost": {
+        "gold": 500,
+        "aetherglass": 1
+      },
+      "content_status": "scenario_auxiliary",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Zenith Crossline",
+          "description": "The calibrated aperture folds two surveyed lanes into one precise long-range discharge.",
+          "damage_multiplier": 1.1,
+          "min_distance": 2,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.08,
+          "ally_defending_multiplier": 1.05
+        },
+        {
+          "id": "harry",
+          "name": "False Zenith",
+          "description": "Once per battle, a refracted sighting mark makes one veteran line guard the wrong horizon.",
+          "status_id": "status_harried",
+          "status_label": "Mismeasured",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 4
+        }
+      ],
+      "spell_resistance_pct": 12,
+      "control_resistance_pct": 5,
+      "spell_school_resistance_pct": {
+        "lens": 15
+      },
+      "status_immunity_ids": []
     }
   ]
 }

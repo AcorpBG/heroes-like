@@ -2483,6 +2483,147 @@
         "memory_salt": 1,
         "experience": 230
       }
+    },
+    {
+      "id": "encounter_three_banner_beaconline_writguard",
+      "name": "Beaconline Counterseal Trial",
+      "enemy_group_id": "army_three_banner_beaconline_writguard",
+      "affiliation": "faction_embercourt",
+      "terrain": "grass",
+      "battlefield_tags": [
+        "fortified_line",
+        "open_lane"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Pennon-Reeve Halra Vowlight",
+        "command": {
+          "attack": 1,
+          "defense": 2,
+          "power": 0,
+          "knowledge": 1
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper",
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "three_banner_beaconline_writ_post",
+          "type": "cover_line",
+          "label": "Beaconline Writ Post",
+          "summary": "The raised writ-lantern keeps every defending volley measured until its charter line is crossed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 3,
+          "pressure_tags": [
+            "cohesion",
+            "initiative",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 220,
+        "embergrain": 1,
+        "experience": 230
+      }
+    },
+    {
+      "id": "encounter_three_banner_fenbell_chainstalkers",
+      "name": "Fenbell Chainshadow Trial",
+      "enemy_group_id": "army_three_banner_fenbell_chainstalkers",
+      "affiliation": "faction_mireclaw",
+      "terrain": "mire",
+      "battlefield_tags": [
+        "ambush_cover",
+        "fog_bank"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Bell-Hook Sella Reedshade",
+        "command": {
+          "attack": 2,
+          "defense": 0,
+          "power": 1,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "ambusher",
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "three_banner_fenbell_sunk_toll",
+          "type": "hazard_zone",
+          "label": "Sunk Fenbell Toll",
+          "summary": "A half-drowned bell marks every safe footing for the Chainstalkers until its mire ring is seized.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "momentum",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 220,
+        "peatwax": 1,
+        "experience": 230
+      }
+    },
+    {
+      "id": "encounter_three_banner_zenith_lensbearers",
+      "name": "Zenith Crossline Trial",
+      "enemy_group_id": "army_three_banner_zenith_lensbearers",
+      "affiliation": "faction_sunvault",
+      "terrain": "sand",
+      "battlefield_tags": [
+        "open_lane",
+        "battery_nest"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Aperture-Marshal Ceyra Brightmeasure",
+        "command": {
+          "attack": 2,
+          "defense": 1,
+          "power": 1,
+          "knowledge": 1
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "artillerist",
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "three_banner_zenith_survey_battery",
+          "type": "lane_battery",
+          "label": "Zenith Survey Battery",
+          "summary": "The calibrated aperture measures every open lane until its sighting ring is turned away from the field.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "cohesion",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 220,
+        "aetherglass": 1,
+        "experience": 230
+      }
     }
   ]
 }

@@ -1457,6 +1457,63 @@
           "count": 3
         }
       ]
+    },
+    {
+      "id": "army_three_banner_beaconline_writguard",
+      "name": "Cinderlock Beaconline Commission",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {
+          "unit_id": "unit_embercourt_fordhook_cadets",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_embercourt_bargebow_crews",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_embercourt_beaconline_writguard",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_three_banner_fenbell_chainstalkers",
+      "name": "Duskfen Fenbell Commission",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {
+          "unit_id": "unit_mireclaw_reedsnare_kin",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_mireclaw_mudglass_slingers",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_three_banner_zenith_lensbearers",
+      "name": "Dawnmirror Zenith Commission",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {
+          "unit_id": "unit_sunvault_shard_wardens",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_sunvault_prism_adepts",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_sunvault_zenith_lensbearers",
+          "count": 3
+        }
+      ]
     }
   ]
 }

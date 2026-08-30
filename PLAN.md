@@ -14641,6 +14641,38 @@ Completion evidence:
 Non-goals:
 - no new combat ability engine, faction, town production roster, save-version bump, broad combat rebalance, campaign expansion, Native RMG change, certification, publication, whole-game validation, or release-readiness claim.
 
+## Three-Banner Field Commission
+
+id: `content-three-banner-field-commission-10184`
+
+Status: completed.
+
+Current finding:
+- Embercourt, Mireclaw, and Sunvault are the only production factions without a scenario-earned auxiliary specialist, while Thornwake, Brasshollow, and Veilmourn now exercise that live reward pattern through the Three-Hearth Auxiliary Charter;
+- all three missing factions already have complete town, hero, battle, save, and unit-art runtime boundaries, so one complementary three-unit commission can add meaningful playable breadth without a new system or unused asset family;
+- the current cross-platform PCK retains 3840800 bytes below the unchanged ceiling, enough for three curated masters excluded from packages and their bounded imported runtime surfaces.
+
+Implementation boundary:
+- add one original scenario-earned tier-five auxiliary to Embercourt, Mireclaw, and Sunvault using only supported shared combat contracts and distinct faction roles;
+- generate a transparent curated master plus portrait, battle icon, grounded standee, overworld icon, and battle animation sheet for each auxiliary through the existing production pipeline;
+- ship three faction-correct army groups and encounters in one compact skirmish whose exact one-time resolution hooks recruit two survivors from each trial, with normal relief and counterstroke pacing;
+- preserve save version 9, data-driven ownership, exact encounter map identity, accessibility descriptions, generated-source package exclusion, and Windows/Linux packaging below 250000000 bytes.
+
+Completion criteria:
+- all three auxiliaries resolve exact authored stats, supported combat behavior, complete art and animation surfaces, faction encounter use, and live BattleBoard presentation;
+- the Three-Banner Field Commission scenario loads collision-free, constructs all three production battles, grants each exact two-unit survivor stack once, and preserves the resulting six units through a save-version-9 round trip;
+- one consolidated three-case gameplay/art/reward/save smoke passes after the complete batch, followed by repository validation and bounded Linux/Windows package startup gates.
+
+Completion evidence:
+- shipped Beaconline Writguard, Fenbell Chainstalkers, and Zenith Lensbearers as original scenario-earned Embercourt, Mireclaw, and Sunvault tier-five auxiliaries, bringing the live pattern to exactly one specialist per production faction;
+- each specialist owns a distinct transparent 512x512 curated master, generated portrait, battle icon, grounded standee, overworld icon, battle animation sheet, exact map identity, faction army group, and authored encounter using only supported live combat contracts;
+- shipped the collision-free 18x12 Three-Banner Field Commission skirmish with three production battle trials, exact one-time two-unit survivor rewards, day-three stores, day-four relief, day-seven pressure, a day-ten Bellwake counterstroke, six resource placements, two artifacts, and a final Gloamwake claim;
+- one consolidated live smoke passed all three battle constructions, exact abilities and art hashes, six-faction auxiliary coverage, one-time recruitment, six recruited units, save-version-9 round trip, and live BattleBoard icon, standee, and animation loading;
+- repository validation passed at 109 units, 157 army groups, 99 encounters, and 77 active scenarios; Linux and Windows export/startup gates passed with generated masters excluded and a 247505216-byte PCK, retaining 2494784 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new combat engine contract, faction, hero, town, production muster, save-version bump, broad balance pass, campaign arc, Native RMG change, certification, publication, whole-game validation, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

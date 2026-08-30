@@ -2140,6 +2140,66 @@
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_veilmourn_wakeglass_navigators.png",
       "curated_source_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4"
+    },
+    {
+      "id": "unit_embercourt_beaconline_writguard",
+      "unit_id": "unit_embercourt_beaconline_writguard",
+      "name": "Beaconline Writguard",
+      "faction_id": "faction_embercourt",
+      "tier": 5,
+      "role": "melee",
+      "motif": "shield",
+      "portrait": "res://art/units/portraits/unit_embercourt_beaconline_writguard.png",
+      "battle_icon": "res://art/units/battle_icons/unit_embercourt_beaconline_writguard.png",
+      "battle_standee": "res://art/units/battle_standees/unit_embercourt_beaconline_writguard.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_beaconline_writguard.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_embercourt_beaconline_writguard.png",
+      "curated_source_sha256": "53537eead3a13d8a9ef36fe666cb0093d6a47ed9c50efc0e798d8bfbe1689a9f"
+    },
+    {
+      "id": "unit_mireclaw_fenbell_chainstalkers",
+      "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+      "name": "Fenbell Chainstalkers",
+      "faction_id": "faction_mireclaw",
+      "tier": 5,
+      "role": "melee",
+      "motif": "melee",
+      "portrait": "res://art/units/portraits/unit_mireclaw_fenbell_chainstalkers.png",
+      "battle_icon": "res://art/units/battle_icons/unit_mireclaw_fenbell_chainstalkers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_mireclaw_fenbell_chainstalkers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_mireclaw_fenbell_chainstalkers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_mireclaw_fenbell_chainstalkers.png",
+      "curated_source_sha256": "6c93d3a6302d21f710de10a718b85e6d9c855213d7f64ab3f745cd6f951b3e15"
+    },
+    {
+      "id": "unit_sunvault_zenith_lensbearers",
+      "unit_id": "unit_sunvault_zenith_lensbearers",
+      "name": "Zenith Lensbearers",
+      "faction_id": "faction_sunvault",
+      "tier": 5,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_sunvault_zenith_lensbearers.png",
+      "battle_icon": "res://art/units/battle_icons/unit_sunvault_zenith_lensbearers.png",
+      "battle_standee": "res://art/units/battle_standees/unit_sunvault_zenith_lensbearers.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_sunvault_zenith_lensbearers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_sunvault_zenith_lensbearers.png",
+      "curated_source_sha256": "42c57b8a2ec5449e24d370934bd4f79c01e122bd12de9c678d0e4c93100e81ac"
     }
   ]
 }
