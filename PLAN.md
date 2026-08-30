@@ -24,8 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-six-horizon-compact-skirmish-10184` is completed as one coherent six-faction playable-content and compact-art batch.
-- Current package boundary: matching Linux and Windows release exports measure 249284232 bytes, 715768 bytes below the unchanged 250000000-byte ceiling. New runtime art must stay compact and generated masters must remain excluded.
+- Current implementation slice: `content-five-horizon-court-skirmishes-10184` is completed as one coherent five-faction playable-start and exact-art batch; the broader content-expansion goal remains active for a later selected slice.
+- Current package boundary: matching Linux and Windows release exports measure 249352096 bytes, 647904 bytes below the unchanged 250000000-byte ceiling. New runtime art must stay compact and generated masters must remain excluded.
 
 ## Six Horizon Citadels
 
@@ -15295,6 +15295,38 @@ Completion result:
 
 Non-goals:
 - no new faction, hero, unit, town, spell, artifact, combat rule, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes map, encounter, army, landmark, name, text, heraldry, or protected visual expression.
+
+## Five Horizon Court Skirmishes
+
+id: `content-five-horizon-court-skirmishes-10184`
+
+Status: completed.
+
+Completion result:
+- Hollowreed Noonwire Dispute, Meridian Rootglass Appeal, Crownroot Quenchline Verdict, Blackbell Saltwake Foreclosure, and Pale Sounding Tidewrit Reckoning expand the active catalog from eighty-eight to ninety-three scenarios and make all five formerly enemy-only Horizon Citadels available as player-owned skirmish starts;
+- the five compact 12x8 boards ship fifteen authored battle placements, complete player-town development routes, rival Horizon court captures, five-objective victories, timed relief, enemy pressure, scripted counterstrokes, post-capture reactions, and save-version-9 continuity;
+- five new faction-correct three-stack court companies and encounters add distinct commanders, field objectives, rare-resource rewards, deterministic seeds, victory flags, and original exact landmarks packed into one 240x48 runtime atlas with source/hash/prompt provenance retained outside release packages;
+- the single consolidated smoke passes 5/5 scenario launches, 15/15 live battle victories, 5/5 exact landmark regions, 5/5 scenario victories, and exact save-v9 round trips; repository validation passes, and Linux/Windows packages both boot from matching 249352096-byte PCKs with source art excluded and 647904 bytes of ceiling headroom.
+
+Current finding:
+- Hollowreed Sanctuary, Meridian Choirhold, Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor are live towns with exact scenic and overworld art, but none is player-owned at the start of any authored scenario; Rainwrit Bastion is the only Horizon Citadel currently playable from a town start;
+- the fixed-faction authored-scenario model means the existing six-citadel board cannot expose those five town/economy identities as player starts without separate scenario records;
+- existing Horizon armies, towns, resources, artifacts, deterministic battle payloads, capture rules, script hooks, exact encounter art, and save-version-9 boundaries can support a five-map replayability batch without a new runtime system or schema.
+
+Implementation boundary:
+- add five compact skirmishes, one each for Mireclaw from Hollowreed, Sunvault from Meridian, Thornwake from Crownroot, Brasshollow from Blackbell, and Veilmourn from Pale Sounding, each with a rival Horizon town, complete development resources, multiple battles, timed relief/pressure, capture objectives, and a completable authored route;
+- add five faction-correct three-stack signature court armies and encounters with distinct commanders, deterministic seeds, field objectives, rare-resource rewards, and victory flags, then place one as the defining front of each map;
+- generate five original transparent, non-color-distinct court landmarks, pack them into one compact immutable 240x48 runtime atlas, register exact accessible ownership, and retain high-resolution source provenance outside release packages;
+- preserve save version 9, fixed authored content ownership, existing combat/AI/economy balance, source-art exclusion, Windows/Linux parity, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all five previously enemy-only Horizon Citadels launch as the player town through normal skirmish selection, expose their exact faction economy and army, and can complete their battle/capture/flag objectives through live rules;
+- all five new signature encounters construct valid battles, resolve their exact original atlas regions, execute one-time hooks, and preserve complete scenario authority through save/load;
+- one consolidated five-map gameplay/visual/save smoke passes after the complete batch, followed by repository validation and sequential Linux/Windows package startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, unit, town, spell, artifact, building, combat rule, strategic-AI algorithm, save schema, native RMG behavior, signing, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes map, encounter, army, landmark, name, text, heraldry, or protected visual expression.
 
 ## Progress Reconciliation

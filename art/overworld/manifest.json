@@ -7200,6 +7200,41 @@
       "assigned_encounter_id": "encounter_horizon_pale_sounding_ghost_mooring", "assigned_faction_id": "faction_veilmourn", "presentation_role": "pale_sounding_tideglass_quay",
       "accessible_description": "A salt-frosted bell and hanging tideglass drop stand between pale mooring posts, ghost ropes, and a drowned quay wall."
     },
+    "encounter_horizon_court_meridian_noonwire_tribunal": {
+      "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png", "atlas_region": [0, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/meridian_noonwire_tribunal_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
+      "source_model": "built_in_image_gen_original_horizon_court_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_horizon_court_meridian_noonwire_tribunal", "assigned_faction_id": "faction_sunvault", "presentation_role": "meridian_split_prism_noonwire_tribunal",
+      "accessible_description": "A split sun prism rises above three taut golden sight wires, mirrored judgment plates, and one asymmetric fork mast."
+    },
+    "encounter_horizon_court_crownroot_rootglass_jury": {
+      "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png", "atlas_region": [48, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/crownroot_rootglass_jury_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
+      "source_model": "built_in_image_gen_original_horizon_court_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_horizon_court_crownroot_rootglass_jury", "assigned_faction_id": "faction_thornwake", "presentation_role": "crownroot_five_arch_rootglass_jury",
+      "accessible_description": "Five living root witness arches surround bright seedglass tablets behind a braided thorn rail and hanging amber sap lamps."
+    },
+    "encounter_horizon_court_blackbell_quenchline_assize": {
+      "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png", "atlas_region": [96, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/blackbell_quenchline_assize_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
+      "source_model": "built_in_image_gen_original_horizon_court_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_horizon_court_blackbell_quenchline_assize", "assigned_faction_id": "faction_brasshollow", "presentation_role": "blackbell_quench_trough_verdict_rail",
+      "accessible_description": "A black bell gauge hangs over a red-hot quench trough crossed by a heavy iron verdict rail and massive pressure clamps."
+    },
+    "encounter_horizon_court_pale_saltwake_board": {
+      "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png", "atlas_region": [144, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/pale_saltwake_board_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
+      "source_model": "built_in_image_gen_original_horizon_court_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_horizon_court_pale_saltwake_board", "assigned_faction_id": "faction_veilmourn", "presentation_role": "pale_saltwake_memory_scale_board",
+      "accessible_description": "A salt-frosted tide board and translucent balance scale hang among memory chimes, crooked ghost ropes, and broken quay posts."
+    },
+    "encounter_horizon_court_rainwrit_tidewrit_assize": {
+      "path": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png", "atlas_region": [192, 0, 48, 48], "atlas_size": [240, 48],
+      "source_generated": "res://art/overworld/source/generated/encounters/horizon_courts_wave1/rainwrit_tidewrit_assize_source.png", "source_generated_atlas": "res://art/overworld/runtime/objects/encounters/horizon_courts/horizon_courts_atlas.png",
+      "source_model": "built_in_image_gen_original_horizon_court_landmark_atlas", "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import", "distinct_sprite_assignment": true,
+      "assigned_encounter_id": "encounter_horizon_court_rainwrit_tidewrit_assize", "assigned_faction_id": "faction_embercourt", "presentation_role": "rainwrit_twin_sluice_charter_desk",
+      "accessible_description": "Two oversized copper sluice keys flank a raised flood-charter desk, hooded rain beacon, and narrow wet stone causeway."
+    },
     "encounter_elite_cinderwake_fold_watch": {
       "path": "res://art/units/overworld_icons/unit_neutral_cinderwake_aurochs.png",
       "source_generated": "res://art/units/source/curated/unit_neutral_cinderwake_aurochs.png",
@@ -8156,7 +8191,12 @@
     "encounter_horizon_meridian_choir_array": "encounter_horizon_meridian_choir_array",
     "encounter_horizon_crownroot_oathseed_ring": "encounter_horizon_crownroot_oathseed_ring",
     "encounter_horizon_blackbell_verdict_gantry": "encounter_horizon_blackbell_verdict_gantry",
-    "encounter_horizon_pale_sounding_ghost_mooring": "encounter_horizon_pale_sounding_ghost_mooring"
+    "encounter_horizon_pale_sounding_ghost_mooring": "encounter_horizon_pale_sounding_ghost_mooring",
+    "encounter_horizon_court_meridian_noonwire_tribunal": "encounter_horizon_court_meridian_noonwire_tribunal",
+    "encounter_horizon_court_crownroot_rootglass_jury": "encounter_horizon_court_crownroot_rootglass_jury",
+    "encounter_horizon_court_blackbell_quenchline_assize": "encounter_horizon_court_blackbell_quenchline_assize",
+    "encounter_horizon_court_pale_saltwake_board": "encounter_horizon_court_pale_saltwake_board",
+    "encounter_horizon_court_rainwrit_tidewrit_assize": "encounter_horizon_court_rainwrit_tidewrit_assize"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

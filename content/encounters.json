@@ -2838,6 +2838,41 @@
       "enemy_commander": {"name": "Last-Pilot Sera Palechime", "command": {"attack": 2, "defense": 2, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_obituary_mark"], "battle_traits": ["ambusher", "linekeeper"]},
       "field_objectives": [{"id": "horizon_pale_sounding_bell", "type": "signal_beacon", "label": "Last-Safe Sounding Bell", "summary": "The tideglass bell keeps the ghost ropes taut until its pale quay bearing is claimed before the final chime.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "commander", "urgency"]}],
       "rewards": {"gold": 460, "memory_salt": 1, "experience": 350}, "victory_flags": ["horizon_pale_mooring_broken"]
+    },
+    {
+      "id": "encounter_horizon_court_meridian_noonwire_tribunal", "name": "Meridian Noonwire Tribunal", "enemy_group_id": "army_horizon_court_meridian_noonwire_tribunal", "affiliation": "faction_sunvault", "terrain": "sand",
+      "battlefield_tags": ["elevated_fire", "battery_nest"], "max_rounds": 14,
+      "enemy_commander": {"name": "Noon-Judge Vael Sunthread", "command": {"attack": 2, "defense": 1, "power": 3, "knowledge": 2}, "starting_spell_ids": ["spell_sunlance_arc"], "battle_traits": ["artillerist", "linekeeper"]},
+      "field_objectives": [{"id": "horizon_meridian_noonwire", "type": "lane_battery", "label": "Noonwire Adjudication Mast", "summary": "Three golden sight wires feed the tribunal's split prism; seize the calibrated lane before the final verdict burns through.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "initiative", "urgency"]}],
+      "rewards": {"gold": 440, "aetherglass": 1, "experience": 340}, "victory_flags": ["horizon_meridian_noonwire_broken"]
+    },
+    {
+      "id": "encounter_horizon_court_crownroot_rootglass_jury", "name": "Crownroot Rootglass Jury", "enemy_group_id": "army_horizon_court_crownroot_rootglass_jury", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["fortified_line", "chokepoint"], "max_rounds": 14,
+      "enemy_commander": {"name": "Sap-Witness Liora Ambervein", "command": {"attack": 2, "defense": 3, "power": 1, "knowledge": 2}, "starting_spell_ids": ["spell_briar_bind"], "battle_traits": ["bogwise", "linekeeper"]},
+      "field_objectives": [{"id": "horizon_crownroot_rootglass", "type": "obstruction_line", "label": "Rootglass Witness Rail", "summary": "Living witness arches braid a thorn rail around the seedglass record; break the testimony line before it closes the field.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "momentum", "urgency"]}],
+      "rewards": {"gold": 440, "verdant_grafts": 1, "experience": 340}, "victory_flags": ["horizon_crownroot_rootglass_broken"]
+    },
+    {
+      "id": "encounter_horizon_court_blackbell_quenchline_assize", "name": "Blackbell Quenchline Assize", "enemy_group_id": "army_horizon_court_blackbell_quenchline_assize", "affiliation": "faction_brasshollow", "terrain": "lava",
+      "battlefield_tags": ["fortress_lane", "wall_pressure"], "max_rounds": 14,
+      "enemy_commander": {"name": "Assessor Drenn Blackgauge", "command": {"attack": 3, "defense": 2, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_pressure_clause"], "battle_traits": ["vanguard", "linekeeper"]},
+      "field_objectives": [{"id": "horizon_blackbell_quenchline", "type": "breach_point", "label": "Blackbell Quenchline Rail", "summary": "Pressure clamps hold the verdict rail above a glowing trough; breach the iron interval before the black gauge sounds.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["momentum", "cohesion", "urgency"]}],
+      "rewards": {"gold": 460, "brass_scrip": 1, "experience": 350}, "victory_flags": ["horizon_blackbell_quenchline_broken"]
+    },
+    {
+      "id": "encounter_horizon_court_pale_saltwake_board", "name": "Pale Saltwake Board", "enemy_group_id": "army_horizon_court_pale_saltwake_board", "affiliation": "faction_veilmourn", "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "chokepoint"], "max_rounds": 14,
+      "enemy_commander": {"name": "Board-Pilot Merra Chimewake", "command": {"attack": 1, "defense": 2, "power": 3, "knowledge": 2}, "starting_spell_ids": ["spell_obituary_mark"], "battle_traits": ["ambusher", "bogwise"]},
+      "field_objectives": [{"id": "horizon_pale_saltwake", "type": "signal_beacon", "label": "Saltwake Memory Scale", "summary": "Memory chimes hold the ghost ropes against a tideglass scale; claim its pale bearing before the drowned tally returns.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "commander", "urgency"]}],
+      "rewards": {"gold": 460, "memory_salt": 1, "experience": 350}, "victory_flags": ["horizon_pale_saltwake_broken"]
+    },
+    {
+      "id": "encounter_horizon_court_rainwrit_tidewrit_assize", "name": "Rainwrit Tidewrit Assize", "enemy_group_id": "army_horizon_court_rainwrit_tidewrit_assize", "affiliation": "faction_embercourt", "terrain": "mire",
+      "battlefield_tags": ["open_lane", "fortified_line"], "max_rounds": 14,
+      "enemy_commander": {"name": "Charter-Keeper Oren Floodseal", "command": {"attack": 2, "defense": 3, "power": 1, "knowledge": 2}, "starting_spell_ids": ["spell_lantern_phalanx"], "battle_traits": ["linekeeper", "vanguard"]},
+      "field_objectives": [{"id": "horizon_rainwrit_tidewrit", "type": "cover_line", "label": "Tidewrit Sluice Ledger", "summary": "Twin sluice keys shelter the raised flood charter; turn the wet causeway before its copper plates seal the crossing.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
+      "rewards": {"gold": 440, "embergrain": 1, "experience": 340}, "victory_flags": ["horizon_rainwrit_tidewrit_broken"]
     }
   ]
 }

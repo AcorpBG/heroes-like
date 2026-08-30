@@ -15745,10 +15745,10 @@
   "currentNotes": "Six Horizon Citadels completed as one substantial content batch with one consolidated live smoke, repository validation, and matching Linux/Windows packaged boots.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-horizon-citadels-10184",
-  "currentSliceId": "content-six-horizon-compact-skirmish-10184",
-  "currentSliceNotes": "Shipped the 24x16 six-citadel skirmish, six faction-correct signature battles, and one original compact exact-art atlas. One consolidated full-board smoke passed six battle victories, six exact identity regions, five captures, twelve objectives, timed hooks, and save-v9 roundtrip; repo validation and Linux/Windows package runtime gates passed at matching 249284232-byte PCKs with 715768 bytes headroom and source masters excluded.",
+  "currentSliceId": "content-five-horizon-court-skirmishes-10184",
+  "currentSliceNotes": "Implemented five playable Horizon court skirmishes, five original three-stack court encounters and a 240x48 exact landmark atlas. Consolidated live smoke passed 5 scenarios, 15 battles, 5 exact art regions, 5 victories, and save v9 round trips; repository validation and Linux/Windows package boots passed at matching 249352096-byte PCKs with source masters excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content six horizon compact skirmish 10184",
+  "currentSliceTitle": "content five horizon court skirmishes 10184",
   "currentSliceUpdatedAt": "2026-08-30T15:42:57Z",
   "deferredRiskRegister": [
     {
@@ -106558,6 +106558,16 @@
       "startedAt": "2026-08-30T16:24:43Z",
       "notes": "Shipped the 24x16 six-citadel skirmish, six faction-correct signature battles, and one original compact exact-art atlas. One consolidated full-board smoke passed six battle victories, six exact identity regions, five captures, twelve objectives, timed hooks, and save-v9 roundtrip; repo validation and Linux/Windows package runtime gates passed at matching 249284232-byte PCKs with 715768 bytes headroom and source masters excluded.",
       "completedAt": "2026-08-30T16:51:12Z"
+    },
+    {
+      "id": "content-five-horizon-court-skirmishes-10184",
+      "title": "content five horizon court skirmishes 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T17:22:39Z",
+      "startedAt": "2026-08-30T16:55:06Z",
+      "notes": "Implemented five playable Horizon court skirmishes, five original three-stack court encounters and a 240x48 exact landmark atlas. Consolidated live smoke passed 5 scenarios, 15 battles, 5 exact art regions, 5 victories, and save v9 round trips; repository validation and Linux/Windows package boots passed at matching 249352096-byte PCKs with source masters excluded.",
+      "completedAt": "2026-08-30T17:22:39Z"
     }
   ],
   "project": "heroes-like",
@@ -107102,7 +107112,7 @@
   ],
   "summary": "Implementing Six Horizon Citadels: one new live strategic town per faction with complete original scenic and overworld art and batched validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T16:51:12Z",
+  "updatedAt": "2026-08-30T17:22:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
