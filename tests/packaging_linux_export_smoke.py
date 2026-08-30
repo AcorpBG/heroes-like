@@ -234,7 +234,7 @@ REQUIRED_RECURRING_RESOURCE_SITE_ATLAS_PCK_IMPORT_ENTRIES = (
 REQUIRED_CAMPAIGN_EMBLEM_NAMES = (
     "reedfall_lantern", "stonewake_watchstone", "bogbound_oath_drum",
     "daybreak_shards", "ninefold_survey_compass", "frontier_claims_cairn",
-    "briarwheel_covenant",
+    "briarwheel_covenant", "ashen_ledger", "last_bell_sounding",
 )
 REQUIRED_CAMPAIGN_EMBLEM_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/emblems/{emblem_name}.png.import"
@@ -251,7 +251,9 @@ REQUIRED_CAMPAIGN_CHAPTER_SEAL_NAMES = (
     "nightglass_ledger_reversal", "halo_reserve_refraction",
     "charter_bastion_counterseal",
     "briarwheel_reclamation", "rootway_graftmarch",
-    "worldroot_crown_covenant",
+    "worldroot_crown_covenant", "cindercoil_reclamation", "clausemarch",
+    "furnace_reckoning", "gloamwake_recall", "false_channel_pursuit",
+    "three_harbors_sounding",
 )
 REQUIRED_CAMPAIGN_CHAPTER_SEAL_PCK_IMPORT_ENTRIES = tuple(
     f"art/campaigns/runtime/chapter_seals/{seal_name}.png.import"

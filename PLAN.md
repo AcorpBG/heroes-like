@@ -14743,6 +14743,43 @@ Validation evidence:
 - `python3 tests/validate_repo.py` passed after reconciling the expanded 81-scenario, 173-town-placement, 335-battle-placement, and 192-placed-site baselines;
 - Linux and Windows release export smokes passed with native libraries loaded, all 7 emblems and 27 seals packaged, source art excluded, and an identical 247648148-byte PCK below the unchanged 250000000-byte ceiling.
 
+## Ashen Ledger and Last Bell Campaigns
+
+id: `content-ashen-ledger-last-bell-campaigns-10184`
+
+Status: completed.
+
+Completion result:
+- `Ashen Ledger` and `Last Bell Sounding` close the dedicated-campaign gap for Brasshollow and Veilmourn with six new authored 14x8, 16x10, and 20x12 maps, 28 battle fronts, full town/resource development, relief, pressure, counterstroke, objectives, and same-hero progression;
+- Cindercoil Foundry and Gloamwake Anchorage now serve as player-controlled campaign anchors, and each arc uses all three towns of its faction;
+- two original emblems and six original seals ship as distinct alpha-safe runtime identities with accessible descriptions, exact source/runtime hashes, retained built-in-generation provenance, and generated-source package exclusion.
+
+Current finding:
+- Brasshollow and Veilmourn are the only production factions without a dedicated three-chapter campaign, despite each having eleven player-led scenarios;
+- Cindercoil Foundry and Gloamwake Anchorage have never been player-controlled in shipped scenarios, leaving one signature town in each faction outside its own playable development arc;
+- the highest-impact bounded content batch is to close both campaign gaps together, using existing live systems and one consolidated verification boundary rather than adding disconnected catalog records.
+
+Implementation boundary:
+- add the three-chapter Brasshollow `Ashen Ledger` campaign led by Daxis Chaincaptain, escalating from recovering Cindercoil Foundry through a mobile contract march to a multi-front furnace reckoning;
+- add the three-chapter Veilmourn `Last Bell Sounding` campaign led by Sael Mirrorbell, escalating from reclaiming Gloamwake Anchorage through a fog-channel pursuit to a three-harbor finale;
+- author six new 14x8, 16x10, and 20x12 maps with real town development, resources, battle fronts, objectives, pressure, relief, counterstroke pacing, same-hero carryover, exact unlocks, briefings, aftermath, and journals;
+- create two original campaign emblems and six original chapter seals, wire accessible descriptions and exact runtime hashes into the live campaign browser, retain generated source provenance outside release packages, preserve save version 9, and keep Windows/Linux packages below 250000000 bytes.
+
+Completion criteria:
+- all six scenarios launch through campaign mode, construct their authored production battles, expose complete faction economies, satisfy scenario objectives, and advance only through exact victory/flag authority with same-hero carryover across each arc;
+- Cindercoil Foundry and Gloamwake Anchorage are player-controlled, developable anchors rather than enemy-only scenery, while each campaign uses all three towns of its faction;
+- two emblems and six seals load as distinct alpha-safe original art in the live campaign browser with accessible descriptions and source/runtime integrity checks;
+- one consolidated six-chapter gameplay/progression/visual/save smoke passes after the full batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Validation evidence:
+- the single consolidated dual-campaign report passed all 6 scenario contracts, 28 production battle payloads, both exact same-hero unlock/carryover chains, save version 9 round-trips, 8 distinct campaign-art identities, and six inspected full-map captures;
+- `python3 tests/validate_repo.py` passed after reconciling the expanded 87-scenario, 187-town-placement, 363-battle-placement, 1084-resource-placement, and 9-campaign baselines;
+- Linux and Windows release export/startup gates passed with native libraries loaded, all 9 emblems and 33 seals packaged, generated source art excluded, and an identical 247876860-byte PCK retaining 2123140 bytes below the unchanged ceiling.
+
+Non-goals:
+- no new faction, unit, hero, town, spell, artifact, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, faction story, emblem, seal, name, text, landmark, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

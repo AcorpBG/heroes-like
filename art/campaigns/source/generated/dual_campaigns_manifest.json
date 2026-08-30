@@ -1,0 +1,17 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "generated_at": "2026-08-30T08:00:00Z",
+  "batch": "Ashen Ledger and Last Bell Sounding campaign identity",
+  "license_role": "Original project-owned generated source; no copied names, marks, or protected visual expression.",
+  "runtime_policy": "Generated 1254px RGBA sources are excluded from release packages; downsampled alpha-safe runtime assets are shipped.",
+  "assets": [
+    {"id": "ashen_ledger", "role": "campaign_emblem", "source": "emblems/ashen_ledger_source.png", "runtime": "../../runtime/emblems/ashen_ledger.png"},
+    {"id": "last_bell_sounding", "role": "campaign_emblem", "source": "emblems/last_bell_sounding_source.png", "runtime": "../../runtime/emblems/last_bell_sounding.png"},
+    {"id": "cindercoil_reclamation", "role": "chapter_seal", "source": "chapter_seals/cindercoil_reclamation_source.png", "runtime": "../../runtime/chapter_seals/cindercoil_reclamation.png"},
+    {"id": "clausemarch", "role": "chapter_seal", "source": "chapter_seals/clausemarch_source.png", "runtime": "../../runtime/chapter_seals/clausemarch.png"},
+    {"id": "furnace_reckoning", "role": "chapter_seal", "source": "chapter_seals/furnace_reckoning_source.png", "runtime": "../../runtime/chapter_seals/furnace_reckoning.png"},
+    {"id": "gloamwake_recall", "role": "chapter_seal", "source": "chapter_seals/gloamwake_recall_source.png", "runtime": "../../runtime/chapter_seals/gloamwake_recall.png"},
+    {"id": "false_channel_pursuit", "role": "chapter_seal", "source": "chapter_seals/false_channel_pursuit_source.png", "runtime": "../../runtime/chapter_seals/false_channel_pursuit.png"},
+    {"id": "three_harbors_sounding", "role": "chapter_seal", "source": "chapter_seals/three_harbors_sounding_source.png", "runtime": "../../runtime/chapter_seals/three_harbors_sounding.png"}
+  ]
+}

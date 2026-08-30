@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 81,
+  "player_facing_active_scenario_count": 87,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -17788,6 +17788,3854 @@
         {"placement_id": "covenant_daylight_crown", "encounter_id": "encounter_daybreak_matrix", "x": 13, "y": 3, "difficulty": "high", "combat_seed": 31304},
         {"placement_id": "covenant_archive_closure", "encounter_id": "encounter_archive_wardens", "x": 15, "y": 9, "difficulty": "high", "combat_seed": 31305},
         {"placement_id": "covenant_aurora_closure", "encounter_id": "encounter_aurora_battery", "x": 16, "y": 2, "difficulty": "high", "combat_seed": 31306}
+      ]
+    },
+    {
+      "id": "cindercoil-reclamation",
+      "name": "Cindercoil Reclamation",
+      "selection": {
+        "summary": "Lead Daxis Chain-Captain from Orevein, break the peat foreclosure, and rekindle Cindercoil Foundry.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Cindercoil Foreclosure Line (14x8)",
+        "player_summary": "Daxis begins with an intact contract train and Orevein's assay economy.",
+        "enemy_summary": "Mireclaw occupiers smother Cindercoil behind two peat-fed fronts.",
+        "availability": {
+          "campaign": true,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 8
+      },
+      "player_faction_id": "faction_brasshollow",
+      "player_army_id": "army_daxis_chaincaptain_train",
+      "hero_id": "hero_brasshollow_daxis_chaincaptain",
+      "starting_resources": {
+        "gold": 1000,
+        "wood": 3,
+        "ore": 5,
+        "brass_scrip": 2
+      },
+      "map": [
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "rough"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough"
+        ],
+        [
+          "rough",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "rough"
+        ]
+      ],
+      "start": {
+        "x": 1,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_brasshollow_daxis_chaincaptain"
+      ],
+      "objectives": {
+        "victory_text": "Reclaim Cindercoil, break both foreclosure fronts, and rekindle its furnace heart.",
+        "defeat_text": "The foundry drowns beneath peat levies and Orevein loses its contract road.",
+        "victory": [
+          {
+            "id": "cindercoil_claim",
+            "label": "Reclaim Cindercoil Foundry",
+            "type": "town_owned_by_player",
+            "placement_id": "cindercoil_foundry"
+          },
+          {
+            "id": "cindercoil_signal",
+            "label": "Rekindle the furnace heart",
+            "type": "flag_true",
+            "flag": "cindercoil_furnace_rekindled"
+          },
+          {
+            "id": "cindercoil_front_one",
+            "label": "Break the first blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "cindercoil_front_1"
+          },
+          {
+            "id": "cindercoil_front_two",
+            "label": "Break the second blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "cindercoil_front_2"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "cindercoil_hold_home",
+            "label": "Keep Orevein Gantry",
+            "type": "town_not_owned_by_player",
+            "placement_id": "cindercoil_orevein"
+          },
+          {
+            "id": "cindercoil_hero_survives",
+            "label": "Daxis must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "cindercoil_pressure",
+            "label": "Keep enemy pressure below 12",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_mireclaw",
+            "threshold": 12
+          },
+          {
+            "id": "cindercoil_deadline",
+            "label": "Finish before Day 15",
+            "type": "day_at_least",
+            "day": 15
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "cindercoil_relief",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "cindercoil_orevein"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 300,
+                "ore": 1,
+                "brass_scrip": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "cindercoil_orevein",
+              "recruits": {
+                "unit_brasshollow_scrip_haulers": 4,
+                "unit_brasshollow_rivet_hounds": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Orevein releases measured fuel and scrip to the reclamation train."
+            }
+          ]
+        },
+        {
+          "id": "cindercoil_signal_recorded",
+          "priority": 110,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "cindercoil_front_1"
+            },
+            {
+              "type": "encounter_resolved",
+              "placement_id": "cindercoil_front_2"
+            }
+          ],
+          "effects": [
+            {
+              "type": "set_flag",
+              "flag": "cindercoil_furnace_rekindled",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "The broken fronts leave Cindercoil's furnace heart clear to burn again."
+            }
+          ]
+        },
+        {
+          "id": "cindercoil_counterstroke",
+          "priority": 96,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "cindercoil_orevein"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "cindercoil_counterstroke",
+                "encounter_id": "encounter_gate_marshals",
+                "x": 13,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A fresh peat levy moves against the Orevein road."
+            }
+          ]
+        },
+        {
+          "id": "cindercoil_rising_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 6
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "cindercoil_signal"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_mireclaw",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "Wet fuel and raider tolls tighten the foreclosure around Cindercoil."
+            }
+          ]
+        },
+        {
+          "id": "cindercoil_front_salvage",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "cindercoil_front_1"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "brass_scrip": 2
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 180
+            },
+            {
+              "type": "message",
+              "text": "Daxis converts the captured peat tallies into foundry fuel."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "cindercoil_orevein",
+          "town_id": "town_brasshollow_orevein_gantry",
+          "x": 1,
+          "y": 4,
+          "owner": "player",
+          "recovery": {
+            "pressure": 1,
+            "source": "rolling rootstock"
+          }
+        },
+        {
+          "placement_id": "cindercoil_foundry",
+          "town_id": "town_cindercoil_foundry",
+          "x": 12,
+          "y": 3,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Cindercoil Peat Foreclosure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 170,
+            "wood": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_mire_raid",
+            "encounter_ford_reavers"
+          ],
+          "spawn_points": [
+            {
+              "x": 13,
+              "y": 1
+            },
+            {
+              "x": 13,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "cindercoil_orevein",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 110,
+          "priority_target_placement_ids": [
+            "cindercoil_orevein",
+            "cindercoil_foundry",
+            "cindercoil_resource_1"
+          ]
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "cindercoil_resource_1",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 1
+        },
+        {
+          "placement_id": "cindercoil_resource_2",
+          "site_id": "site_ore_crates",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "cindercoil_resource_3",
+          "site_id": "site_brass_scrip_mint",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "cindercoil_resource_4",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "placement_id": "cindercoil_resource_5",
+          "site_id": "site_brasshollow_gauge_shrine",
+          "x": 7,
+          "y": 4
+        },
+        {
+          "placement_id": "cindercoil_resource_6",
+          "site_id": "site_orevein_assay_depot",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "cindercoil_resource_7",
+          "site_id": "site_brass_oath_wheel",
+          "x": 12,
+          "y": 0
+        },
+        {
+          "placement_id": "cindercoil_resource_8",
+          "site_id": "site_wood_wagon",
+          "x": 13,
+          "y": 7,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "cindercoil_resource_9",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 2,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "cindercoil_resource_10",
+          "site_id": "site_brass_scrip_mint",
+          "x": 11,
+          "y": 3,
+          "collected_by_faction_id": "faction_mireclaw"
+        },
+        {
+          "placement_id": "cindercoil_resource_11",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 4,
+          "y": 5,
+          "collected_by_faction_id": "faction_mireclaw"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "cindercoil_artifact_1",
+          "artifact_id": "artifact_quenchplate_vambrace",
+          "x": 4,
+          "y": 1
+        },
+        {
+          "placement_id": "cindercoil_artifact_2",
+          "artifact_id": "artifact_pressure_gauge_reliquary",
+          "x": 8,
+          "y": 6
+        },
+        {
+          "placement_id": "cindercoil_artifact_3",
+          "artifact_id": "artifact_quarry_tally_rod",
+          "x": 10,
+          "y": 1
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "cindercoil_front_1",
+          "encounter_id": "encounter_hollow_mire",
+          "x": 4,
+          "y": 3,
+          "difficulty": "normal",
+          "combat_seed": 32101
+        },
+        {
+          "placement_id": "cindercoil_front_2",
+          "encounter_id": "encounter_ford_reavers",
+          "x": 6,
+          "y": 2,
+          "difficulty": "normal",
+          "combat_seed": 32102
+        },
+        {
+          "placement_id": "cindercoil_front_3",
+          "encounter_id": "encounter_silt_hunters",
+          "x": 9,
+          "y": 4,
+          "difficulty": "high",
+          "combat_seed": 32103
+        },
+        {
+          "placement_id": "cindercoil_front_4",
+          "encounter_id": "encounter_gate_marshals",
+          "x": 11,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 32104
+        }
+      ]
+    },
+    {
+      "id": "ashen-clausemarch",
+      "name": "The Ashen Clausemarch",
+      "selection": {
+        "summary": "Carry Cindercoil's rekindled ledger through a Sunvault seizure line and reopen Clauseworks Depot.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Clauseworks Contract Road (16x10)",
+        "player_summary": "Daxis continues with his command record and a mobile foundry train.",
+        "enemy_summary": "Sunvault arrays have frozen every contract mile into a measured seizure corridor.",
+        "availability": {
+          "campaign": true,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 16,
+        "height": 10
+      },
+      "player_faction_id": "faction_brasshollow",
+      "player_army_id": "army_daxis_chaincaptain_train",
+      "hero_id": "hero_brasshollow_daxis_chaincaptain",
+      "starting_resources": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 5,
+        "brass_scrip": 3
+      },
+      "map": [
+        [
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough"
+        ],
+        [
+          "rough",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough"
+        ],
+        [
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "rough"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt"
+        ]
+      ],
+      "start": {
+        "x": 1,
+        "y": 5
+      },
+      "hero_starts": [
+        "hero_brasshollow_daxis_chaincaptain"
+      ],
+      "objectives": {
+        "victory_text": "Take Clauseworks, break the meridian screens, and record the Ashen Clausemarch.",
+        "defeat_text": "The mobile foundry is fixed under glass and Cindercoil is isolated again.",
+        "victory": [
+          {
+            "id": "clausemarch_claim",
+            "label": "Reopen Clauseworks Depot",
+            "type": "town_owned_by_player",
+            "placement_id": "clausemarch_depot"
+          },
+          {
+            "id": "clausemarch_signal",
+            "label": "Record the Ashen Clausemarch",
+            "type": "flag_true",
+            "flag": "ashen_clausemarch_recorded"
+          },
+          {
+            "id": "clausemarch_front_one",
+            "label": "Break the first blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "clausemarch_front_1"
+          },
+          {
+            "id": "clausemarch_front_two",
+            "label": "Break the second blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "clausemarch_front_2"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "clausemarch_hold_home",
+            "label": "Keep Cindercoil Foundry",
+            "type": "town_not_owned_by_player",
+            "placement_id": "clausemarch_foundry"
+          },
+          {
+            "id": "clausemarch_hero_survives",
+            "label": "Daxis must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "clausemarch_pressure",
+            "label": "Keep enemy pressure below 12",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_sunvault",
+            "threshold": 12
+          },
+          {
+            "id": "clausemarch_deadline",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "clausemarch_relief",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "clausemarch_foundry"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 300,
+                "ore": 1,
+                "brass_scrip": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "clausemarch_foundry",
+              "recruits": {
+                "unit_brasshollow_scrip_haulers": 4,
+                "unit_brasshollow_rivet_hounds": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Cindercoil rolls a quench wagon and measured ore onto the clause road."
+            }
+          ]
+        },
+        {
+          "id": "clausemarch_signal_recorded",
+          "priority": 110,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "clausemarch_front_1"
+            },
+            {
+              "type": "encounter_resolved",
+              "placement_id": "clausemarch_front_2"
+            }
+          ],
+          "effects": [
+            {
+              "type": "set_flag",
+              "flag": "ashen_clausemarch_recorded",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Daxis stamps the cleared meridian into the moving Ashen Ledger."
+            }
+          ]
+        },
+        {
+          "id": "clausemarch_counterstroke",
+          "priority": 96,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "clausemarch_foundry"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "clausemarch_counterstroke",
+                "encounter_id": "encounter_daxis_meridian_impound",
+                "x": 15,
+                "y": 9,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A fresh relay screen closes behind the contract train."
+            }
+          ]
+        },
+        {
+          "id": "clausemarch_rising_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 6
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "clausemarch_signal"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "Unbroken meridian lenses harden the road into a seizure line."
+            }
+          ]
+        },
+        {
+          "id": "clausemarch_front_salvage",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "clausemarch_front_1"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "brass_scrip": 2
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 200
+            },
+            {
+              "type": "message",
+              "text": "The first shattered relay yields calibrated glass for the furnace gauges."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "clausemarch_foundry",
+          "town_id": "town_cindercoil_foundry",
+          "x": 1,
+          "y": 5,
+          "owner": "player",
+          "recovery": {
+            "pressure": 1,
+            "source": "measured root road"
+          }
+        },
+        {
+          "placement_id": "clausemarch_depot",
+          "town_id": "town_brasshollow_clauseworks_depot",
+          "x": 14,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_sunvault",
+          "label": "Meridian Seizure Array",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 3,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "verdant_grafts": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_relay_pickets",
+            "encounter_mirror_lancers"
+          ],
+          "spawn_points": [
+            {
+              "x": 15,
+              "y": 1
+            },
+            {
+              "x": 15,
+              "y": 8
+            }
+          ],
+          "siege_target_placement_id": "clausemarch_foundry",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": [
+            "clausemarch_foundry",
+            "clausemarch_depot",
+            "clausemarch_resource_1"
+          ]
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "clausemarch_resource_1",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 1
+        },
+        {
+          "placement_id": "clausemarch_resource_2",
+          "site_id": "site_ore_crates",
+          "x": 2,
+          "y": 9
+        },
+        {
+          "placement_id": "clausemarch_resource_3",
+          "site_id": "site_brass_scrip_mint",
+          "x": 1,
+          "y": 3
+        },
+        {
+          "placement_id": "clausemarch_resource_4",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 5
+        },
+        {
+          "placement_id": "clausemarch_resource_5",
+          "site_id": "site_brasshollow_gauge_shrine",
+          "x": 8,
+          "y": 5
+        },
+        {
+          "placement_id": "clausemarch_resource_6",
+          "site_id": "site_orevein_assay_depot",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "clausemarch_resource_7",
+          "site_id": "site_brass_oath_wheel",
+          "x": 14,
+          "y": 1
+        },
+        {
+          "placement_id": "clausemarch_resource_8",
+          "site_id": "site_wood_wagon",
+          "x": 15,
+          "y": 9,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "clausemarch_resource_9",
+          "site_id": "site_ore_crates",
+          "x": 15,
+          "y": 3,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "clausemarch_resource_10",
+          "site_id": "site_brass_scrip_mint",
+          "x": 13,
+          "y": 4,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "clausemarch_resource_11",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 6,
+          "y": 3,
+          "collected_by_faction_id": "faction_sunvault"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "clausemarch_artifact_1",
+          "artifact_id": "artifact_quenchplate_vambrace",
+          "x": 4,
+          "y": 2
+        },
+        {
+          "placement_id": "clausemarch_artifact_2",
+          "artifact_id": "artifact_pressure_gauge_reliquary",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "clausemarch_artifact_3",
+          "artifact_id": "artifact_quarry_tally_rod",
+          "x": 12,
+          "y": 1
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "clausemarch_front_1",
+          "encounter_id": "encounter_relay_pickets",
+          "x": 4,
+          "y": 4,
+          "difficulty": "normal",
+          "combat_seed": 32201
+        },
+        {
+          "placement_id": "clausemarch_front_2",
+          "encounter_id": "encounter_daybreak_matrix",
+          "x": 7,
+          "y": 2,
+          "difficulty": "normal",
+          "combat_seed": 32202
+        },
+        {
+          "placement_id": "clausemarch_front_3",
+          "encounter_id": "encounter_aurora_battery",
+          "x": 10,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 32203
+        },
+        {
+          "placement_id": "clausemarch_front_4",
+          "encounter_id": "encounter_daxis_meridian_impound",
+          "x": 13,
+          "y": 6,
+          "difficulty": "high",
+          "combat_seed": 32204
+        }
+      ]
+    },
+    {
+      "id": "furnace-reckoning",
+      "name": "Furnace Reckoning",
+      "selection": {
+        "summary": "Unite Cindercoil and Orevein, recover Clauseworks, and swear the three-hearth reckoning against the drowned counterledger.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Three-Hearth Contract Crown (20x12)",
+        "player_summary": "Daxis enters with the complete Ashen Ledger and two developing industrial anchors.",
+        "enemy_summary": "Veilmourn controls Clauseworks while a peat-toll rearguard threatens the furnace road.",
+        "availability": {
+          "campaign": true,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 20,
+        "height": 12
+      },
+      "player_faction_id": "faction_brasshollow",
+      "player_army_id": "army_daxis_chaincaptain_train",
+      "hero_id": "hero_brasshollow_daxis_chaincaptain",
+      "starting_resources": {
+        "gold": 1450,
+        "wood": 5,
+        "ore": 6,
+        "brass_scrip": 4
+      },
+      "map": [
+        [
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass"
+        ],
+        [
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass"
+        ],
+        [
+          "rough",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "grass",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt"
+        ],
+        [
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "grass",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "dirt",
+          "rough",
+          "dirt",
+          "grass",
+          "dirt",
+          "rough"
+        ]
+      ],
+      "start": {
+        "x": 1,
+        "y": 6
+      },
+      "hero_starts": [
+        "hero_brasshollow_daxis_chaincaptain"
+      ],
+      "objectives": {
+        "victory_text": "Recover Clauseworks, break the twin counterledger fronts, and bind all three Brasshollow hearths.",
+        "defeat_text": "The ledger is split between drowned contracts and peat tolls.",
+        "victory": [
+          {
+            "id": "reckoning_claim",
+            "label": "Recover Clauseworks Depot",
+            "type": "town_owned_by_player",
+            "placement_id": "reckoning_depot"
+          },
+          {
+            "id": "reckoning_signal",
+            "label": "Swear the three-hearth reckoning",
+            "type": "flag_true",
+            "flag": "three_hearth_reckoning_sworn"
+          },
+          {
+            "id": "reckoning_front_one",
+            "label": "Break the first blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "reckoning_front_1"
+          },
+          {
+            "id": "reckoning_front_two",
+            "label": "Break the second blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "reckoning_front_2"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "reckoning_hold_home",
+            "label": "Keep Cindercoil Foundry",
+            "type": "town_not_owned_by_player",
+            "placement_id": "reckoning_foundry"
+          },
+          {
+            "id": "reckoning_hero_survives",
+            "label": "Daxis must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "reckoning_pressure",
+            "label": "Keep enemy pressure below 12",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_veilmourn",
+            "threshold": 12
+          },
+          {
+            "id": "reckoning_deadline",
+            "label": "Finish before Day 23",
+            "type": "day_at_least",
+            "day": 23
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "reckoning_relief",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "reckoning_foundry"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 300,
+                "ore": 1,
+                "brass_scrip": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "reckoning_foundry",
+              "recruits": {
+                "unit_brasshollow_scrip_haulers": 4,
+                "unit_brasshollow_rivet_hounds": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Orevein and Cindercoil synchronize ore, fuel, and scrip for the final accounting."
+            }
+          ]
+        },
+        {
+          "id": "reckoning_signal_recorded",
+          "priority": 110,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "reckoning_front_1"
+            },
+            {
+              "type": "encounter_resolved",
+              "placement_id": "reckoning_front_2"
+            }
+          ],
+          "effects": [
+            {
+              "type": "set_flag",
+              "flag": "three_hearth_reckoning_sworn",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Three hearths answer one ledger as Daxis swears the furnace reckoning."
+            }
+          ]
+        },
+        {
+          "id": "reckoning_counterstroke",
+          "priority": 96,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "reckoning_foundry"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "reckoning_counterstroke",
+                "encounter_id": "encounter_third_hearths_wakeglass_pilots",
+                "x": 19,
+                "y": 11,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_veilmourn",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A drowned counterledger column lands behind the furnace road."
+            }
+          ]
+        },
+        {
+          "id": "reckoning_rising_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 6
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "reckoning_signal"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_veilmourn",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "Unread wreck claims multiply against the Ashen Ledger."
+            }
+          ]
+        },
+        {
+          "id": "reckoning_front_salvage",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "reckoning_front_1"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "brass_scrip": 2
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 220
+            },
+            {
+              "type": "message",
+              "text": "The seized wreck tally is melted into a final contract seal."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "reckoning_foundry",
+          "town_id": "town_cindercoil_foundry",
+          "x": 1,
+          "y": 6,
+          "owner": "player",
+          "recovery": {
+            "pressure": 1,
+            "source": "rootway relief"
+          }
+        },
+        {
+          "placement_id": "reckoning_orevein",
+          "town_id": "town_brasshollow_orevein_gantry",
+          "x": 4,
+          "y": 10,
+          "owner": "player"
+        },
+        {
+          "placement_id": "reckoning_depot",
+          "town_id": "town_brasshollow_clauseworks_depot",
+          "x": 18,
+          "y": 5,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_veilmourn",
+          "label": "Drowned Counterledger",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 7,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "wood": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_bellwake_privateers",
+            "encounter_drowned_bell_procession"
+          ],
+          "spawn_points": [
+            {
+              "x": 19,
+              "y": 9
+            },
+            {
+              "x": 18,
+              "y": 11
+            }
+          ],
+          "siege_target_placement_id": "reckoning_foundry",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 120,
+          "priority_target_placement_ids": [
+            "reckoning_foundry",
+            "reckoning_depot",
+            "reckoning_resource_1"
+          ]
+        },
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Peat-Toll Rearguard",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 7,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "verdant_grafts": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_mire_raid",
+            "encounter_silt_hunters"
+          ],
+          "spawn_points": [
+            {
+              "x": 19,
+              "y": 1
+            },
+            {
+              "x": 17,
+              "y": 0
+            }
+          ],
+          "siege_target_placement_id": "reckoning_foundry",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 120,
+          "priority_target_placement_ids": [
+            "reckoning_foundry",
+            "reckoning_depot",
+            "reckoning_resource_1"
+          ]
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "reckoning_resource_1",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 2
+        },
+        {
+          "placement_id": "reckoning_resource_2",
+          "site_id": "site_ore_crates",
+          "x": 3,
+          "y": 11
+        },
+        {
+          "placement_id": "reckoning_resource_3",
+          "site_id": "site_brass_scrip_mint",
+          "x": 1,
+          "y": 4
+        },
+        {
+          "placement_id": "reckoning_resource_4",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "reckoning_resource_5",
+          "site_id": "site_brasshollow_gauge_shrine",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "reckoning_resource_6",
+          "site_id": "site_orevein_assay_depot",
+          "x": 7,
+          "y": 9
+        },
+        {
+          "placement_id": "reckoning_resource_7",
+          "site_id": "site_brass_oath_wheel",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "reckoning_resource_8",
+          "site_id": "site_wood_wagon",
+          "x": 18,
+          "y": 2
+        },
+        {
+          "placement_id": "reckoning_resource_9",
+          "site_id": "site_ore_crates",
+          "x": 19,
+          "y": 10
+        },
+        {
+          "placement_id": "reckoning_resource_10",
+          "site_id": "site_brass_scrip_mint",
+          "x": 17,
+          "y": 7,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "reckoning_resource_11",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 17,
+          "y": 3,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "reckoning_resource_12",
+          "site_id": "site_brasshollow_gauge_shrine",
+          "x": 17,
+          "y": 5,
+          "collected_by_faction_id": "faction_veilmourn"
+        },
+        {
+          "placement_id": "reckoning_resource_13",
+          "site_id": "site_orevein_assay_depot",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_veilmourn"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "reckoning_artifact_1",
+          "artifact_id": "artifact_quenchplate_vambrace",
+          "x": 5,
+          "y": 2
+        },
+        {
+          "placement_id": "reckoning_artifact_2",
+          "artifact_id": "artifact_pressure_gauge_reliquary",
+          "x": 9,
+          "y": 10
+        },
+        {
+          "placement_id": "reckoning_artifact_3",
+          "artifact_id": "artifact_quarry_tally_rod",
+          "x": 14,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "reckoning_front_1",
+          "encounter_id": "encounter_bellwake_privateers",
+          "x": 5,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 32301
+        },
+        {
+          "placement_id": "reckoning_front_2",
+          "encounter_id": "encounter_drowned_bell_procession",
+          "x": 7,
+          "y": 2,
+          "difficulty": "high",
+          "combat_seed": 32302
+        },
+        {
+          "placement_id": "reckoning_front_3",
+          "encounter_id": "encounter_tollglass_drowned_tally",
+          "x": 11,
+          "y": 8,
+          "difficulty": "high",
+          "combat_seed": 32303
+        },
+        {
+          "placement_id": "reckoning_front_4",
+          "encounter_id": "encounter_nightchart_false_meridian",
+          "x": 13,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 32304
+        },
+        {
+          "placement_id": "reckoning_front_5",
+          "encounter_id": "encounter_helva_blackwake_levy",
+          "x": 15,
+          "y": 9,
+          "difficulty": "high",
+          "combat_seed": 32305
+        },
+        {
+          "placement_id": "reckoning_front_6",
+          "encounter_id": "encounter_third_hearths_wakeglass_pilots",
+          "x": 16,
+          "y": 2,
+          "difficulty": "high",
+          "combat_seed": 32306
+        }
+      ]
+    },
+    {
+      "id": "gloamwake-recall",
+      "name": "Gloamwake Recall",
+      "selection": {
+        "summary": "Lead Sael Mirrorbell from Bellwake, break Embercourt's lock writ, and call Gloamwake Anchorage out of silence.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Silent Anchorage Reach (14x8)",
+        "player_summary": "Sael begins with a mirror-navigation cadre and Bellwake's tide stores.",
+        "enemy_summary": "Embercourt lock wardens hold the drowned bell beneath two sealed approaches.",
+        "availability": {
+          "campaign": true,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 14,
+        "height": 8
+      },
+      "player_faction_id": "faction_veilmourn",
+      "player_army_id": "army_sael_spellwright_cadre",
+      "hero_id": "hero_veilmourn_sael_mirrorbell",
+      "starting_resources": {
+        "gold": 950,
+        "wood": 5,
+        "ore": 3,
+        "memory_salt": 2
+      },
+      "map": [
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "sand"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand"
+        ],
+        [
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire"
+        ],
+        [
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire"
+        ]
+      ],
+      "start": {
+        "x": 1,
+        "y": 4
+      },
+      "hero_starts": [
+        "hero_veilmourn_sael_mirrorbell"
+      ],
+      "objectives": {
+        "victory_text": "Reclaim Gloamwake, break both lock fronts, and sound the drowned bell.",
+        "defeat_text": "The lock writ seals the anchorage and Bellwake loses the old sounding.",
+        "victory": [
+          {
+            "id": "gloamwake_claim",
+            "label": "Reclaim Gloamwake Anchorage",
+            "type": "town_owned_by_player",
+            "placement_id": "gloamwake_anchorage"
+          },
+          {
+            "id": "gloamwake_signal",
+            "label": "Recall the drowned bell",
+            "type": "flag_true",
+            "flag": "gloamwake_bell_recalled"
+          },
+          {
+            "id": "gloamwake_front_one",
+            "label": "Break the first blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "gloamwake_front_1"
+          },
+          {
+            "id": "gloamwake_front_two",
+            "label": "Break the second blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "gloamwake_front_2"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "gloamwake_hold_home",
+            "label": "Keep Bellwake Harbor",
+            "type": "town_not_owned_by_player",
+            "placement_id": "gloamwake_bellwake"
+          },
+          {
+            "id": "gloamwake_hero_survives",
+            "label": "Sael must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "gloamwake_pressure",
+            "label": "Keep enemy pressure below 12",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_embercourt",
+            "threshold": 12
+          },
+          {
+            "id": "gloamwake_deadline",
+            "label": "Finish before Day 15",
+            "type": "day_at_least",
+            "day": 15
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "gloamwake_relief",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "gloamwake_bellwake"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 280,
+                "wood": 1,
+                "memory_salt": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "gloamwake_bellwake",
+              "recruits": {
+                "unit_veilmourn_bellwake_oars": 4,
+                "unit_veilmourn_mourning_lanterns": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Bellwake pilots release rope, stores, and memory salt for the recall."
+            }
+          ]
+        },
+        {
+          "id": "gloamwake_signal_recorded",
+          "priority": 110,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "gloamwake_front_1"
+            },
+            {
+              "type": "encounter_resolved",
+              "placement_id": "gloamwake_front_2"
+            }
+          ],
+          "effects": [
+            {
+              "type": "set_flag",
+              "flag": "gloamwake_bell_recalled",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "The cleared approaches carry Gloamwake's bell across the black water again."
+            }
+          ]
+        },
+        {
+          "id": "gloamwake_counterstroke",
+          "priority": 96,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "gloamwake_bellwake"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "gloamwake_counterstroke",
+                "encounter_id": "encounter_jessa_lockfire_boom",
+                "x": 13,
+                "y": 7,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A lockward levy advances along the silent quay."
+            }
+          ]
+        },
+        {
+          "id": "gloamwake_rising_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 6
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "gloamwake_signal"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_embercourt",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "Every unsounded tide lets the lock writ harden around Gloamwake."
+            }
+          ]
+        },
+        {
+          "id": "gloamwake_front_salvage",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "gloamwake_front_1"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "memory_salt": 2
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 180
+            },
+            {
+              "type": "message",
+              "text": "Sael reads the first broken seal in the harbor mirror."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "gloamwake_bellwake",
+          "town_id": "town_veilmourn_bellwake_harbor",
+          "x": 1,
+          "y": 4,
+          "owner": "player",
+          "recovery": {
+            "pressure": 1,
+            "source": "rolling rootstock"
+          }
+        },
+        {
+          "placement_id": "gloamwake_anchorage",
+          "town_id": "town_gloamwake_anchorage",
+          "x": 12,
+          "y": 3,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Gloamwake Lock Writ",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 170,
+            "wood": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_charter_guard",
+            "encounter_lantern_patrol"
+          ],
+          "spawn_points": [
+            {
+              "x": 13,
+              "y": 1
+            },
+            {
+              "x": 13,
+              "y": 6
+            }
+          ],
+          "siege_target_placement_id": "gloamwake_bellwake",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 110,
+          "priority_target_placement_ids": [
+            "gloamwake_bellwake",
+            "gloamwake_anchorage",
+            "gloamwake_resource_1"
+          ]
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "gloamwake_resource_1",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 1
+        },
+        {
+          "placement_id": "gloamwake_resource_2",
+          "site_id": "site_ore_crates",
+          "x": 2,
+          "y": 7
+        },
+        {
+          "placement_id": "gloamwake_resource_3",
+          "site_id": "site_tide_bell_shrine",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "placement_id": "gloamwake_resource_4",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "placement_id": "gloamwake_resource_5",
+          "site_id": "site_veilmourn_bell_mast",
+          "x": 7,
+          "y": 4
+        },
+        {
+          "placement_id": "gloamwake_resource_6",
+          "site_id": "site_mist_lighthouse",
+          "x": 5,
+          "y": 0
+        },
+        {
+          "placement_id": "gloamwake_resource_7",
+          "site_id": "site_bellwake_wreck_ledger",
+          "x": 12,
+          "y": 0
+        },
+        {
+          "placement_id": "gloamwake_resource_8",
+          "site_id": "site_wood_wagon",
+          "x": 13,
+          "y": 7,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "gloamwake_resource_9",
+          "site_id": "site_ore_crates",
+          "x": 13,
+          "y": 2,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "gloamwake_resource_10",
+          "site_id": "site_tide_bell_shrine",
+          "x": 11,
+          "y": 3,
+          "collected_by_faction_id": "faction_embercourt"
+        },
+        {
+          "placement_id": "gloamwake_resource_11",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 4,
+          "y": 5,
+          "collected_by_faction_id": "faction_embercourt"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "gloamwake_artifact_1",
+          "artifact_id": "artifact_fogwake_deckboots",
+          "x": 4,
+          "y": 1
+        },
+        {
+          "placement_id": "gloamwake_artifact_2",
+          "artifact_id": "artifact_wakebell_mourning_ensign",
+          "x": 8,
+          "y": 6
+        },
+        {
+          "placement_id": "gloamwake_artifact_3",
+          "artifact_id": "artifact_black_sail_compass",
+          "x": 10,
+          "y": 1
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "gloamwake_front_1",
+          "encounter_id": "encounter_charter_guard",
+          "x": 4,
+          "y": 3,
+          "difficulty": "normal",
+          "combat_seed": 32401
+        },
+        {
+          "placement_id": "gloamwake_front_2",
+          "encounter_id": "encounter_archive_wardens",
+          "x": 6,
+          "y": 2,
+          "difficulty": "normal",
+          "combat_seed": 32402
+        },
+        {
+          "placement_id": "gloamwake_front_3",
+          "encounter_id": "encounter_bridgeward_levies",
+          "x": 9,
+          "y": 4,
+          "difficulty": "high",
+          "combat_seed": 32403
+        },
+        {
+          "placement_id": "gloamwake_front_4",
+          "encounter_id": "encounter_jessa_lockfire_boom",
+          "x": 11,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 32404
+        }
+      ]
+    },
+    {
+      "id": "false-channel-pursuit",
+      "name": "False Channel Pursuit",
+      "selection": {
+        "summary": "Pursue the false meridian from Gloamwake, recover Fogchart Mooring, and sound the true channel through the mirrorwake.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Mirrorwake Channel (16x10)",
+        "player_summary": "Sael continues with the recalled bell and a growing memory-salt reserve.",
+        "enemy_summary": "Sunvault mirrors project a bright false channel toward a prepared battery.",
+        "availability": {
+          "campaign": true,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 16,
+        "height": 10
+      },
+      "player_faction_id": "faction_veilmourn",
+      "player_army_id": "army_sael_spellwright_cadre",
+      "hero_id": "hero_veilmourn_sael_mirrorbell",
+      "starting_resources": {
+        "gold": 1150,
+        "wood": 5,
+        "ore": 4,
+        "memory_salt": 3
+      },
+      "map": [
+        [
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand"
+        ],
+        [
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire"
+        ],
+        [
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "mire",
+          "sand"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire"
+        ],
+        [
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "sand"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand"
+        ]
+      ],
+      "start": {
+        "x": 1,
+        "y": 5
+      },
+      "hero_starts": [
+        "hero_veilmourn_sael_mirrorbell"
+      ],
+      "objectives": {
+        "victory_text": "Take Fogchart, break the mirror screens, and sound the true channel.",
+        "defeat_text": "The false meridian strands Gloamwake beyond its own charts.",
+        "victory": [
+          {
+            "id": "falsechannel_claim",
+            "label": "Recover Fogchart Mooring",
+            "type": "town_owned_by_player",
+            "placement_id": "falsechannel_mooring"
+          },
+          {
+            "id": "falsechannel_signal",
+            "label": "Sound the true channel",
+            "type": "flag_true",
+            "flag": "true_channel_sounded"
+          },
+          {
+            "id": "falsechannel_front_one",
+            "label": "Break the first blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "falsechannel_front_1"
+          },
+          {
+            "id": "falsechannel_front_two",
+            "label": "Break the second blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "falsechannel_front_2"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "falsechannel_hold_home",
+            "label": "Keep Gloamwake Anchorage",
+            "type": "town_not_owned_by_player",
+            "placement_id": "falsechannel_anchorage"
+          },
+          {
+            "id": "falsechannel_hero_survives",
+            "label": "Sael must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "falsechannel_pressure",
+            "label": "Keep enemy pressure below 12",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_sunvault",
+            "threshold": 12
+          },
+          {
+            "id": "falsechannel_deadline",
+            "label": "Finish before Day 18",
+            "type": "day_at_least",
+            "day": 18
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "falsechannel_relief",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "falsechannel_anchorage"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 280,
+                "wood": 1,
+                "memory_salt": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "falsechannel_anchorage",
+              "recruits": {
+                "unit_veilmourn_bellwake_oars": 4,
+                "unit_veilmourn_mourning_lanterns": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Gloamwake sends a night pilot and fresh sounding line into the pursuit."
+            }
+          ]
+        },
+        {
+          "id": "falsechannel_signal_recorded",
+          "priority": 110,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "falsechannel_front_1"
+            },
+            {
+              "type": "encounter_resolved",
+              "placement_id": "falsechannel_front_2"
+            }
+          ],
+          "effects": [
+            {
+              "type": "set_flag",
+              "flag": "true_channel_sounded",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Three true echoes erase the false meridian from Sael's tide mirror."
+            }
+          ]
+        },
+        {
+          "id": "falsechannel_counterstroke",
+          "priority": 96,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "falsechannel_anchorage"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "falsechannel_counterstroke",
+                "encounter_id": "encounter_ilyr_ossuary_battery",
+                "x": 15,
+                "y": 9,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A mirror-lancer screen cuts back toward Gloamwake."
+            }
+          ]
+        },
+        {
+          "id": "falsechannel_rising_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 6
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "falsechannel_signal"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_sunvault",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "Unsounded water lets the false channel multiply across every chart."
+            }
+          ]
+        },
+        {
+          "id": "falsechannel_front_salvage",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "falsechannel_front_1"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "memory_salt": 2
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 200
+            },
+            {
+              "type": "message",
+              "text": "The first shattered lens becomes a clean mirrorwake bearing."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "falsechannel_anchorage",
+          "town_id": "town_gloamwake_anchorage",
+          "x": 1,
+          "y": 5,
+          "owner": "player",
+          "recovery": {
+            "pressure": 1,
+            "source": "measured root road"
+          }
+        },
+        {
+          "placement_id": "falsechannel_mooring",
+          "town_id": "town_veilmourn_fogchart_mooring",
+          "x": 14,
+          "y": 4,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_sunvault",
+          "label": "False Meridian Fleet",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 3,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 180,
+            "verdant_grafts": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_relay_pickets",
+            "encounter_mirror_lancers"
+          ],
+          "spawn_points": [
+            {
+              "x": 15,
+              "y": 1
+            },
+            {
+              "x": 15,
+              "y": 8
+            }
+          ],
+          "siege_target_placement_id": "falsechannel_anchorage",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": [
+            "falsechannel_anchorage",
+            "falsechannel_mooring",
+            "falsechannel_resource_1"
+          ]
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "falsechannel_resource_1",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 1
+        },
+        {
+          "placement_id": "falsechannel_resource_2",
+          "site_id": "site_ore_crates",
+          "x": 2,
+          "y": 9
+        },
+        {
+          "placement_id": "falsechannel_resource_3",
+          "site_id": "site_tide_bell_shrine",
+          "x": 1,
+          "y": 3
+        },
+        {
+          "placement_id": "falsechannel_resource_4",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 5
+        },
+        {
+          "placement_id": "falsechannel_resource_5",
+          "site_id": "site_veilmourn_bell_mast",
+          "x": 8,
+          "y": 5
+        },
+        {
+          "placement_id": "falsechannel_resource_6",
+          "site_id": "site_mist_lighthouse",
+          "x": 5,
+          "y": 7
+        },
+        {
+          "placement_id": "falsechannel_resource_7",
+          "site_id": "site_bellwake_wreck_ledger",
+          "x": 14,
+          "y": 1
+        },
+        {
+          "placement_id": "falsechannel_resource_8",
+          "site_id": "site_wood_wagon",
+          "x": 15,
+          "y": 9,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "falsechannel_resource_9",
+          "site_id": "site_ore_crates",
+          "x": 15,
+          "y": 3,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "falsechannel_resource_10",
+          "site_id": "site_tide_bell_shrine",
+          "x": 13,
+          "y": 4,
+          "collected_by_faction_id": "faction_sunvault"
+        },
+        {
+          "placement_id": "falsechannel_resource_11",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 6,
+          "y": 3,
+          "collected_by_faction_id": "faction_sunvault"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "falsechannel_artifact_1",
+          "artifact_id": "artifact_fogwake_deckboots",
+          "x": 4,
+          "y": 2
+        },
+        {
+          "placement_id": "falsechannel_artifact_2",
+          "artifact_id": "artifact_wakebell_mourning_ensign",
+          "x": 10,
+          "y": 8
+        },
+        {
+          "placement_id": "falsechannel_artifact_3",
+          "artifact_id": "artifact_black_sail_compass",
+          "x": 12,
+          "y": 1
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "falsechannel_front_1",
+          "encounter_id": "encounter_relay_pickets",
+          "x": 4,
+          "y": 4,
+          "difficulty": "normal",
+          "combat_seed": 32501
+        },
+        {
+          "placement_id": "falsechannel_front_2",
+          "encounter_id": "encounter_mirror_lancers",
+          "x": 7,
+          "y": 2,
+          "difficulty": "normal",
+          "combat_seed": 32502
+        },
+        {
+          "placement_id": "falsechannel_front_3",
+          "encounter_id": "encounter_daybreak_array",
+          "x": 10,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 32503
+        },
+        {
+          "placement_id": "falsechannel_front_4",
+          "encounter_id": "encounter_ilyr_ossuary_battery",
+          "x": 13,
+          "y": 6,
+          "difficulty": "high",
+          "combat_seed": 32504
+        }
+      ]
+    },
+    {
+      "id": "three-harbors-sounding",
+      "name": "Three Harbors Sounding",
+      "selection": {
+        "summary": "Join Gloamwake and Bellwake, recover Fogchart, and make all three Veilmourn harbors answer the Last Bell.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Last-Bell Coast (20x12)",
+        "player_summary": "Sael enters with the complete sounding record and two developing harbor anchors.",
+        "enemy_summary": "Brasshollow has foreclosed Fogchart while lock wardens close the rear channel.",
+        "availability": {
+          "campaign": true,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 20,
+        "height": 12
+      },
+      "player_faction_id": "faction_veilmourn",
+      "player_army_id": "army_sael_spellwright_cadre",
+      "hero_id": "hero_veilmourn_sael_mirrorbell",
+      "starting_resources": {
+        "gold": 1400,
+        "wood": 6,
+        "ore": 5,
+        "memory_salt": 4
+      },
+      "map": [
+        [
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire"
+        ],
+        [
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand"
+        ],
+        [
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand"
+        ],
+        [
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand"
+        ],
+        [
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire"
+        ],
+        [
+          "mire",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "sand"
+        ],
+        [
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "sand",
+          "mire",
+          "sand",
+          "mire",
+          "sand",
+          "mire"
+        ]
+      ],
+      "start": {
+        "x": 1,
+        "y": 6
+      },
+      "hero_starts": [
+        "hero_veilmourn_sael_mirrorbell"
+      ],
+      "objectives": {
+        "victory_text": "Recover Fogchart, break the twin foreclosure fronts, and sound all three harbors.",
+        "defeat_text": "The coast is divided into silent claims and the Last Bell goes unanswered.",
+        "victory": [
+          {
+            "id": "lastbell_claim",
+            "label": "Recover Fogchart Mooring",
+            "type": "town_owned_by_player",
+            "placement_id": "lastbell_mooring"
+          },
+          {
+            "id": "lastbell_signal",
+            "label": "Sound the Last Bell across three harbors",
+            "type": "flag_true",
+            "flag": "last_bell_three_harbors_sounded"
+          },
+          {
+            "id": "lastbell_front_one",
+            "label": "Break the first blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "lastbell_front_1"
+          },
+          {
+            "id": "lastbell_front_two",
+            "label": "Break the second blocking front",
+            "type": "encounter_resolved",
+            "placement_id": "lastbell_front_2"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "lastbell_hold_home",
+            "label": "Keep Gloamwake Anchorage",
+            "type": "town_not_owned_by_player",
+            "placement_id": "lastbell_anchorage"
+          },
+          {
+            "id": "lastbell_hero_survives",
+            "label": "Sael must survive",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "lastbell_pressure",
+            "label": "Keep enemy pressure below 12",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_brasshollow",
+            "threshold": 12
+          },
+          {
+            "id": "lastbell_deadline",
+            "label": "Finish before Day 23",
+            "type": "day_at_least",
+            "day": 23
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "lastbell_relief",
+          "priority": 120,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 3
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "lastbell_anchorage"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "gold": 280,
+                "wood": 1,
+                "memory_salt": 1
+              }
+            },
+            {
+              "type": "town_add_recruits",
+              "placement_id": "lastbell_anchorage",
+              "recruits": {
+                "unit_veilmourn_bellwake_oars": 4,
+                "unit_veilmourn_mourning_lanterns": 2
+              }
+            },
+            {
+              "type": "message",
+              "text": "Bellwake and Gloamwake exchange pilots, salt, and repair timber for the final sounding."
+            }
+          ]
+        },
+        {
+          "id": "lastbell_signal_recorded",
+          "priority": 110,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "lastbell_front_1"
+            },
+            {
+              "type": "encounter_resolved",
+              "placement_id": "lastbell_front_2"
+            }
+          ],
+          "effects": [
+            {
+              "type": "set_flag",
+              "flag": "last_bell_three_harbors_sounded",
+              "value": true
+            },
+            {
+              "type": "message",
+              "text": "Gloamwake, Bellwake, and Fogchart answer one another across the Last-Bell Coast."
+            }
+          ]
+        },
+        {
+          "id": "lastbell_counterstroke",
+          "priority": 96,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 5
+            },
+            {
+              "type": "town_owned_by_player",
+              "placement_id": "lastbell_anchorage"
+            }
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "lastbell_counterstroke",
+                "encounter_id": "encounter_third_hearths_redline_lancers",
+                "x": 19,
+                "y": 11,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_brasshollow",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "A redline foreclosure column lands behind the sounding route."
+            }
+          ]
+        },
+        {
+          "id": "lastbell_rising_pressure",
+          "priority": 90,
+          "conditions": [
+            {
+              "type": "day_at_least",
+              "day": 6
+            },
+            {
+              "type": "objective_not_met",
+              "objective_id": "lastbell_signal"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_enemy_pressure",
+              "faction_id": "faction_brasshollow",
+              "amount": 2
+            },
+            {
+              "type": "message",
+              "text": "Every silent harbor becomes another entry in the foreclosure ledger."
+            }
+          ]
+        },
+        {
+          "id": "lastbell_front_salvage",
+          "priority": 84,
+          "conditions": [
+            {
+              "type": "encounter_resolved",
+              "placement_id": "lastbell_front_1"
+            }
+          ],
+          "effects": [
+            {
+              "type": "add_resources",
+              "resources": {
+                "memory_salt": 2
+              }
+            },
+            {
+              "type": "award_experience",
+              "amount": 220
+            },
+            {
+              "type": "message",
+              "text": "Sael washes the seized redline tally clean in the tide mirror."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "lastbell_anchorage",
+          "town_id": "town_gloamwake_anchorage",
+          "x": 1,
+          "y": 6,
+          "owner": "player",
+          "recovery": {
+            "pressure": 1,
+            "source": "rootway relief"
+          }
+        },
+        {
+          "placement_id": "lastbell_bellwake",
+          "town_id": "town_veilmourn_bellwake_harbor",
+          "x": 4,
+          "y": 10,
+          "owner": "player"
+        },
+        {
+          "placement_id": "lastbell_mooring",
+          "town_id": "town_veilmourn_fogchart_mooring",
+          "x": 18,
+          "y": 5,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_brasshollow",
+          "label": "Last-Bell Foreclosure",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 7,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "wood": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_orevein_exactors",
+            "encounter_redline_foreclosure"
+          ],
+          "spawn_points": [
+            {
+              "x": 19,
+              "y": 9
+            },
+            {
+              "x": 18,
+              "y": 11
+            }
+          ],
+          "siege_target_placement_id": "lastbell_anchorage",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 120,
+          "priority_target_placement_ids": [
+            "lastbell_anchorage",
+            "lastbell_mooring",
+            "lastbell_resource_1"
+          ]
+        },
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Lockward Sounding Ban",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 7,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {
+            "gold": 190,
+            "verdant_grafts": 1
+          },
+          "raid_encounter_ids": [
+            "encounter_charter_guard",
+            "encounter_bridgeward_levies"
+          ],
+          "spawn_points": [
+            {
+              "x": 19,
+              "y": 1
+            },
+            {
+              "x": 17,
+              "y": 0
+            }
+          ],
+          "siege_target_placement_id": "lastbell_anchorage",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 3,
+          "priority_target_bonus": 120,
+          "priority_target_placement_ids": [
+            "lastbell_anchorage",
+            "lastbell_mooring",
+            "lastbell_resource_1"
+          ]
+        }
+      ],
+      "resource_nodes": [
+        {
+          "placement_id": "lastbell_resource_1",
+          "site_id": "site_wood_wagon",
+          "x": 2,
+          "y": 2
+        },
+        {
+          "placement_id": "lastbell_resource_2",
+          "site_id": "site_ore_crates",
+          "x": 3,
+          "y": 11
+        },
+        {
+          "placement_id": "lastbell_resource_3",
+          "site_id": "site_tide_bell_shrine",
+          "x": 1,
+          "y": 4
+        },
+        {
+          "placement_id": "lastbell_resource_4",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "placement_id": "lastbell_resource_5",
+          "site_id": "site_veilmourn_bell_mast",
+          "x": 10,
+          "y": 6
+        },
+        {
+          "placement_id": "lastbell_resource_6",
+          "site_id": "site_mist_lighthouse",
+          "x": 7,
+          "y": 9
+        },
+        {
+          "placement_id": "lastbell_resource_7",
+          "site_id": "site_bellwake_wreck_ledger",
+          "x": 8,
+          "y": 3
+        },
+        {
+          "placement_id": "lastbell_resource_8",
+          "site_id": "site_wood_wagon",
+          "x": 18,
+          "y": 2
+        },
+        {
+          "placement_id": "lastbell_resource_9",
+          "site_id": "site_ore_crates",
+          "x": 19,
+          "y": 10
+        },
+        {
+          "placement_id": "lastbell_resource_10",
+          "site_id": "site_tide_bell_shrine",
+          "x": 17,
+          "y": 7,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "lastbell_resource_11",
+          "site_id": "site_frontier_rare_exchange",
+          "x": 17,
+          "y": 3,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "lastbell_resource_12",
+          "site_id": "site_veilmourn_bell_mast",
+          "x": 17,
+          "y": 5,
+          "collected_by_faction_id": "faction_brasshollow"
+        },
+        {
+          "placement_id": "lastbell_resource_13",
+          "site_id": "site_mist_lighthouse",
+          "x": 12,
+          "y": 1,
+          "collected_by_faction_id": "faction_brasshollow"
+        }
+      ],
+      "artifact_nodes": [
+        {
+          "placement_id": "lastbell_artifact_1",
+          "artifact_id": "artifact_fogwake_deckboots",
+          "x": 5,
+          "y": 2
+        },
+        {
+          "placement_id": "lastbell_artifact_2",
+          "artifact_id": "artifact_wakebell_mourning_ensign",
+          "x": 9,
+          "y": 10
+        },
+        {
+          "placement_id": "lastbell_artifact_3",
+          "artifact_id": "artifact_black_sail_compass",
+          "x": 14,
+          "y": 6
+        }
+      ],
+      "encounters": [
+        {
+          "placement_id": "lastbell_front_1",
+          "encounter_id": "encounter_orevein_exactors",
+          "x": 5,
+          "y": 5,
+          "difficulty": "high",
+          "combat_seed": 32601
+        },
+        {
+          "placement_id": "lastbell_front_2",
+          "encounter_id": "encounter_redline_foreclosure",
+          "x": 7,
+          "y": 2,
+          "difficulty": "high",
+          "combat_seed": 32602
+        },
+        {
+          "placement_id": "lastbell_front_3",
+          "encounter_id": "encounter_mirrorstep_redline_calibrators",
+          "x": 11,
+          "y": 8,
+          "difficulty": "high",
+          "combat_seed": 32603
+        },
+        {
+          "placement_id": "lastbell_front_4",
+          "encounter_id": "encounter_debtrune_default_collectors",
+          "x": 13,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 32604
+        },
+        {
+          "placement_id": "lastbell_front_5",
+          "encounter_id": "encounter_halen_furnace_railbreak",
+          "x": 15,
+          "y": 9,
+          "difficulty": "high",
+          "combat_seed": 32605
+        },
+        {
+          "placement_id": "lastbell_front_6",
+          "encounter_id": "encounter_third_hearths_redline_lancers",
+          "x": 16,
+          "y": 2,
+          "difficulty": "high",
+          "combat_seed": 32606
+        }
       ]
     }
   ]
