@@ -42,6 +42,7 @@ func _run() -> void:
 	await _validate_spell_cast_state()
 	await _validate_spell_specific_cue_identity_fail_closed()
 	await _validate_spell_school_batch_vfx_identities()
+	await _validate_generic_spell_batch_vfx_identities()
 	await _validate_resonant_chorus_vfx_identity()
 	await _validate_reduced_flash_spell_state()
 	await _validate_status_cleanse_state()
@@ -89,9 +90,9 @@ func _validate_core_vfx_asset_manifest() -> void:
 	var summary: Dictionary = view.validation_vfx_asset_summary()
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
-	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 36)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 36)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 36)
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 50)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 50)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 50)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
 	var core_cue_paths := {
 		"vfx_placeholder_projectile_path": "res://art/battle/vfx/core_projectile_path.png",
@@ -144,6 +145,20 @@ func _validate_core_vfx_asset_manifest() -> void:
 		"res://art/battle/vfx/spell_fogwake_step.png",
 		"res://art/battle/vfx/spell_old_measure_tally_tally_20.png",
 		"res://art/battle/vfx/spell_old_measure_count_boundary_30.png",
+		"res://art/battle/vfx/spell_beacon_lantern_oath_17.png",
+		"res://art/battle/vfx/spell_beacon_writ_lance_13.png",
+		"res://art/battle/vfx/spell_mire_lowtide_rot_16.png",
+		"res://art/battle/vfx/spell_mire_leech_poultice_26.png",
+		"res://art/battle/vfx/spell_lens_array_ray_06.png",
+		"res://art/battle/vfx/spell_lens_crown_prism_16.png",
+		"res://art/battle/vfx/spell_root_canopy_graft_06.png",
+		"res://art/battle/vfx/spell_root_canopy_thorn_22.png",
+		"res://art/battle/vfx/spell_furnace_coal_clause_17.png",
+		"res://art/battle/vfx/spell_furnace_rivet_clause_05.png",
+		"res://art/battle/vfx/spell_veil_lantern_mark_16.png",
+		"res://art/battle/vfx/spell_veil_moon_mark_28.png",
+		"res://art/battle/vfx/spell_old_measure_compass_correction_22.png",
+		"res://art/battle/vfx/spell_old_measure_marker_tally_08.png",
 		"res://art/battle/vfx/state_idle_shadow.png",
 		"res://art/battle/vfx/state_active_ring.png",
 		"res://art/battle/vfx/state_stack_fade.png",
@@ -237,6 +252,20 @@ func _validate_spell_vfx_asset_surface() -> void:
 		"vfx_spell_fogwake_step": "res://art/battle/vfx/spell_fogwake_step.png",
 		"vfx_spell_old_measure_tally_tally_20": "res://art/battle/vfx/spell_old_measure_tally_tally_20.png",
 		"vfx_spell_old_measure_count_boundary_30": "res://art/battle/vfx/spell_old_measure_count_boundary_30.png",
+		"vfx_spell_beacon_lantern_oath_17": "res://art/battle/vfx/spell_beacon_lantern_oath_17.png",
+		"vfx_spell_beacon_writ_lance_13": "res://art/battle/vfx/spell_beacon_writ_lance_13.png",
+		"vfx_spell_mire_lowtide_rot_16": "res://art/battle/vfx/spell_mire_lowtide_rot_16.png",
+		"vfx_spell_mire_leech_poultice_26": "res://art/battle/vfx/spell_mire_leech_poultice_26.png",
+		"vfx_spell_lens_array_ray_06": "res://art/battle/vfx/spell_lens_array_ray_06.png",
+		"vfx_spell_lens_crown_prism_16": "res://art/battle/vfx/spell_lens_crown_prism_16.png",
+		"vfx_spell_root_canopy_graft_06": "res://art/battle/vfx/spell_root_canopy_graft_06.png",
+		"vfx_spell_root_canopy_thorn_22": "res://art/battle/vfx/spell_root_canopy_thorn_22.png",
+		"vfx_spell_furnace_coal_clause_17": "res://art/battle/vfx/spell_furnace_coal_clause_17.png",
+		"vfx_spell_furnace_rivet_clause_05": "res://art/battle/vfx/spell_furnace_rivet_clause_05.png",
+		"vfx_spell_veil_lantern_mark_16": "res://art/battle/vfx/spell_veil_lantern_mark_16.png",
+		"vfx_spell_veil_moon_mark_28": "res://art/battle/vfx/spell_veil_moon_mark_28.png",
+		"vfx_spell_old_measure_compass_correction_22": "res://art/battle/vfx/spell_old_measure_compass_correction_22.png",
+		"vfx_spell_old_measure_marker_tally_08": "res://art/battle/vfx/spell_old_measure_marker_tally_08.png",
 	}
 	var cue_ids: Array = cue_paths.keys()
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
@@ -254,7 +283,7 @@ func _validate_spell_vfx_asset_surface() -> void:
 		var entry := _vfx_entry_for_cue(playback, cue_id)
 		_expect_equal("spell vfx imported %s" % cue_id, str(bool(entry.get("asset_loaded", false))), "true")
 		_expect_equal("spell vfx asset path %s" % cue_id, String(entry.get("asset_path", "")), String(cue_paths.get(cue_id, "")))
-		var expected_render_mode := "spell_projectile" if cue_id == "vfx_spell_sunlance_arc" else "spell_target"
+		var expected_render_mode := "spell_projectile" if cue_id in ["vfx_spell_sunlance_arc", "vfx_spell_beacon_writ_lance_13", "vfx_spell_lens_array_ray_06"] else "spell_target"
 		_expect_equal("spell vfx render mode %s" % cue_id, String(entry.get("asset_render_mode", "")), expected_render_mode)
 	var resonant_metrics := _vfx_image_metrics("res://art/battle/vfx/spell_resonant_chorus.png")
 	var prism_metrics := _vfx_image_metrics("res://art/battle/vfx/spell_prism_bastion.png")
@@ -758,6 +787,20 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 		"spell_fogwake_step": "vfx_spell_fogwake_step",
 		"spell_old_measure_tally_tally_20": "vfx_spell_old_measure_tally_tally_20",
 		"spell_old_measure_count_boundary_30": "vfx_spell_old_measure_count_boundary_30",
+		"spell_beacon_lantern_oath_17": "vfx_spell_beacon_lantern_oath_17",
+		"spell_beacon_writ_lance_13": "vfx_spell_beacon_writ_lance_13",
+		"spell_mire_lowtide_rot_16": "vfx_spell_mire_lowtide_rot_16",
+		"spell_mire_leech_poultice_26": "vfx_spell_mire_leech_poultice_26",
+		"spell_lens_array_ray_06": "vfx_spell_lens_array_ray_06",
+		"spell_lens_crown_prism_16": "vfx_spell_lens_crown_prism_16",
+		"spell_root_canopy_graft_06": "vfx_spell_root_canopy_graft_06",
+		"spell_root_canopy_thorn_22": "vfx_spell_root_canopy_thorn_22",
+		"spell_furnace_coal_clause_17": "vfx_spell_furnace_coal_clause_17",
+		"spell_furnace_rivet_clause_05": "vfx_spell_furnace_rivet_clause_05",
+		"spell_veil_lantern_mark_16": "vfx_spell_veil_lantern_mark_16",
+		"spell_veil_moon_mark_28": "vfx_spell_veil_moon_mark_28",
+		"spell_old_measure_compass_correction_22": "vfx_spell_old_measure_compass_correction_22",
+		"spell_old_measure_marker_tally_08": "vfx_spell_old_measure_marker_tally_08",
 	}
 	var explicit_audio := {
 		"spell_cinder_burst": "audio_spell_cinder_burst",
@@ -815,9 +858,9 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 			generic_only_audio_count += 1
 			_expect_equal("generic-only spell audio identity %s" % spell_id, actual_audio, "")
 	_expect_int("battle spell identity catalog count", battle_spell_ids.size(), 90)
-	_expect_int("battle spell explicit vfx identity count", explicit_vfx_count, 21)
+	_expect_int("battle spell explicit vfx identity count", explicit_vfx_count, 35)
 	_expect_int("battle spell shared effect vfx identity count", shared_effect_vfx_count, 44)
-	_expect_int("battle spell generic-only vfx identity count", generic_only_vfx_count, 25)
+	_expect_int("battle spell generic-only vfx identity count", generic_only_vfx_count, 11)
 	_expect_int("battle spell explicit audio identity count", explicit_audio_count, 7)
 	_expect_int("battle spell shared effect audio identity count", shared_effect_audio_count, 55)
 	_expect_int("battle spell generic-only audio identity count", generic_only_audio_count, 28)
@@ -926,6 +969,108 @@ func _validate_spell_school_batch_vfx_identities() -> void:
 	_expect_int("school batch exact cast count", rows.size(), 14)
 	_report["cases"]["spell_school_batch_vfx_identities"] = {
 		"cast_count": rows.size(),
+		"spells": rows,
+	}
+
+func _validate_generic_spell_batch_vfx_identities() -> void:
+	var selected := {
+		"spell_beacon_lantern_oath_17": "vfx_spell_beacon_lantern_oath_17",
+		"spell_beacon_writ_lance_13": "vfx_spell_beacon_writ_lance_13",
+		"spell_mire_lowtide_rot_16": "vfx_spell_mire_lowtide_rot_16",
+		"spell_mire_leech_poultice_26": "vfx_spell_mire_leech_poultice_26",
+		"spell_lens_array_ray_06": "vfx_spell_lens_array_ray_06",
+		"spell_lens_crown_prism_16": "vfx_spell_lens_crown_prism_16",
+		"spell_root_canopy_graft_06": "vfx_spell_root_canopy_graft_06",
+		"spell_root_canopy_thorn_22": "vfx_spell_root_canopy_thorn_22",
+		"spell_furnace_coal_clause_17": "vfx_spell_furnace_coal_clause_17",
+		"spell_furnace_rivet_clause_05": "vfx_spell_furnace_rivet_clause_05",
+		"spell_veil_lantern_mark_16": "vfx_spell_veil_lantern_mark_16",
+		"spell_veil_moon_mark_28": "vfx_spell_veil_moon_mark_28",
+		"spell_old_measure_compass_correction_22": "vfx_spell_old_measure_compass_correction_22",
+		"spell_old_measure_marker_tally_08": "vfx_spell_old_measure_marker_tally_08",
+	}
+	var original_reduce_motion := SettingsService.reduced_motion_enabled()
+	var original_reduce_flashes := SettingsService.reduced_flashes_enabled()
+	var rows := {}
+	var effect_type_counts := {}
+	for spell_id_value in selected.keys():
+		var spell_id := String(spell_id_value)
+		var expected_cue_id := String(selected.get(spell_id, ""))
+		var spell: Dictionary = ContentService.get_spell(spell_id)
+		var spell_effect: Dictionary = spell.get("effect", {}) if spell.get("effect", {}) is Dictionary else {}
+		var effect_type := String(spell_effect.get("type", ""))
+		var normal_session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+		normal_session.battle["turn_order"] = ["player_0", "player_0"]
+		normal_session.battle["player_commander_state"] = _spellcaster_state([spell_id])
+		_set_stack_field(normal_session.battle, "enemy_0", "total_health", 9999)
+		if effect_type == "recover_ally":
+			_set_stack_field(normal_session.battle, "player_0", "total_health", 1)
+		elif effect_type == "cleanse_ally":
+			_set_stack_effects(normal_session.battle, "player_0", [_status_effect("status_harried", "Harried", 2)])
+		var player_before := _stack_by_id(normal_session.battle, "player_0")
+		var enemy_before := _stack_by_id(normal_session.battle, "enemy_0")
+		var initial_player_health := int(player_before.get("total_health", 0))
+		var initial_enemy_health := int(enemy_before.get("total_health", 0))
+		var initial_authority := normal_session.to_dict()
+		var reduced_session := SessionStateStoreScript.SessionData.new()
+		reduced_session.from_dict(initial_authority)
+		SettingsService.settings["accessibility"]["reduce_motion"] = false
+		SettingsService.settings["accessibility"]["reduce_flashes"] = false
+		var normal_result := BattleRulesScript.cast_player_spell(normal_session, spell_id)
+		_expect_ok("generic batch normal cast %s" % spell_id, normal_result)
+		var player_after := _stack_by_id(normal_session.battle, "player_0")
+		var enemy_after := _stack_by_id(normal_session.battle, "enemy_0")
+		match effect_type:
+			"damage_enemy":
+				if int(enemy_after.get("total_health", 0)) >= initial_enemy_health:
+					_error("Generic batch damage spell did not reduce enemy authority %s: before=%d after=%s." % [spell_id, initial_enemy_health, enemy_after])
+			"recover_ally":
+				if int(player_after.get("total_health", 0)) <= initial_player_health:
+					_error("Generic batch recovery spell did not restore ally authority %s: before=%d after=%s." % [spell_id, initial_player_health, player_after])
+			"cleanse_ally":
+				if _stack_has_effect(player_after, "status_harried"):
+					_error("Generic batch cleanse spell retained Harried authority %s: %s." % [spell_id, player_after])
+			_:
+				_error("Generic batch spell has unsupported validation effect type %s: %s." % [effect_type, spell_id])
+		var normal_authority := normal_session.to_dict()
+		var normal_summary := await _board_summary_for_session_after_started_playback(normal_session)
+		_expect_equal("generic batch presentation authority %s" % spell_id, JSON.stringify(normal_session.to_dict()), JSON.stringify(normal_authority))
+		var normal_cues: Dictionary = normal_summary.get("cue_playback", {}) if normal_summary.get("cue_playback", {}) is Dictionary else {}
+		var normal_cue := _cue_record_for(normal_cues, "player_0")
+		_expect_array_contains("generic batch exact vfx cue %s" % spell_id, normal_cue.get("selected_vfx_cue_ids", []), expected_cue_id)
+		var normal_vfx: Dictionary = normal_summary.get("vfx_playback", {}) if normal_summary.get("vfx_playback", {}) is Dictionary else {}
+		var normal_entry := _vfx_entry_for_cue(normal_vfx, expected_cue_id)
+		_expect_equal("generic batch imported vfx %s" % spell_id, str(bool(normal_entry.get("asset_loaded", false))), "true")
+		_expect_equal("generic batch vfx kind %s" % spell_id, String(normal_entry.get("kind", "")), spell_id)
+		SettingsService.settings["accessibility"]["reduce_motion"] = true
+		SettingsService.settings["accessibility"]["reduce_flashes"] = true
+		var reduced_result := BattleRulesScript.cast_player_spell(reduced_session, spell_id)
+		_expect_ok("generic batch reduced cast %s" % spell_id, reduced_result)
+		_expect_equal("generic batch reduced result parity %s" % spell_id, JSON.stringify(reduced_result), JSON.stringify(normal_result))
+		_expect_equal("generic batch reduced authority parity %s" % spell_id, JSON.stringify(reduced_session.to_dict()), JSON.stringify(normal_authority))
+		var reduced_summary := await _board_summary_for_session_after_started_playback(reduced_session)
+		var reduced_cues: Dictionary = reduced_summary.get("cue_playback", {}) if reduced_summary.get("cue_playback", {}) is Dictionary else {}
+		var reduced_cue := _cue_record_for(reduced_cues, "player_0")
+		if reduced_cue.get("selected_vfx_cue_ids", []).has(expected_cue_id):
+			_error("Reduced presentation retained generic-batch strong VFX %s: %s." % [spell_id, reduced_cue])
+		effect_type_counts[effect_type] = int(effect_type_counts.get(effect_type, 0)) + 1
+		rows[spell_id] = {
+			"cue_id": expected_cue_id,
+			"effect_type": effect_type,
+			"asset_path": String(normal_entry.get("asset_path", "")),
+			"normal_result": normal_result,
+			"reduced_result": reduced_result,
+			"reduced_selected_vfx": reduced_cue.get("selected_vfx_cue_ids", []),
+		}
+	SettingsService.settings["accessibility"]["reduce_motion"] = original_reduce_motion
+	SettingsService.settings["accessibility"]["reduce_flashes"] = original_reduce_flashes
+	_expect_int("generic batch exact cast count", rows.size(), 14)
+	_expect_int("generic batch damage cast count", int(effect_type_counts.get("damage_enemy", 0)), 9)
+	_expect_int("generic batch recovery cast count", int(effect_type_counts.get("recover_ally", 0)), 2)
+	_expect_int("generic batch cleanse cast count", int(effect_type_counts.get("cleanse_ally", 0)), 3)
+	_report["cases"]["generic_spell_batch_vfx_identities"] = {
+		"cast_count": rows.size(),
+		"effect_type_counts": effect_type_counts,
 		"spells": rows,
 	}
 
@@ -1304,11 +1449,12 @@ func _validate_imported_vfx_live_viewports() -> void:
 func _validate_spell_vfx_live_viewports() -> void:
 	var original_window_size := get_window().size
 	var cue_by_viewport := {
-		"1280x720": "vfx_spell_lens_aurora_chorus_10",
-		"1920x1080": "vfx_spell_bloodwake_drum",
+		"1280x720": "vfx_spell_beacon_writ_lance_13",
+		"1600x900": "vfx_spell_mire_leech_poultice_26",
+		"1920x1080": "vfx_spell_lens_crown_prism_16",
 	}
 	var results := {}
-	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080)]:
 		get_window().size = viewport_size
 		await get_tree().process_frame
 		await get_tree().process_frame

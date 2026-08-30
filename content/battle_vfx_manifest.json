@@ -21,7 +21,21 @@
     "spell_obituary_mark": "vfx_spell_obituary_mark",
     "spell_fogwake_step": "vfx_spell_fogwake_step",
     "spell_old_measure_tally_tally_20": "vfx_spell_old_measure_tally_tally_20",
-    "spell_old_measure_count_boundary_30": "vfx_spell_old_measure_count_boundary_30"
+    "spell_old_measure_count_boundary_30": "vfx_spell_old_measure_count_boundary_30",
+    "spell_beacon_lantern_oath_17": "vfx_spell_beacon_lantern_oath_17",
+    "spell_beacon_writ_lance_13": "vfx_spell_beacon_writ_lance_13",
+    "spell_mire_lowtide_rot_16": "vfx_spell_mire_lowtide_rot_16",
+    "spell_mire_leech_poultice_26": "vfx_spell_mire_leech_poultice_26",
+    "spell_lens_array_ray_06": "vfx_spell_lens_array_ray_06",
+    "spell_lens_crown_prism_16": "vfx_spell_lens_crown_prism_16",
+    "spell_root_canopy_graft_06": "vfx_spell_root_canopy_graft_06",
+    "spell_root_canopy_thorn_22": "vfx_spell_root_canopy_thorn_22",
+    "spell_furnace_coal_clause_17": "vfx_spell_furnace_coal_clause_17",
+    "spell_furnace_rivet_clause_05": "vfx_spell_furnace_rivet_clause_05",
+    "spell_veil_lantern_mark_16": "vfx_spell_veil_lantern_mark_16",
+    "spell_veil_moon_mark_28": "vfx_spell_veil_moon_mark_28",
+    "spell_old_measure_compass_correction_22": "vfx_spell_old_measure_compass_correction_22",
+    "spell_old_measure_marker_tally_08": "vfx_spell_old_measure_marker_tally_08"
   },
   "cues": {
     "vfx_placeholder_projectile_path": {
@@ -251,6 +265,132 @@
       "alt_text": "Six survey stakes and plumb weights lock a brass chain into an irregular boundary.",
       "render_mode": "spell_target",
       "scale": 2.16,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_beacon_lantern_oath_17": {
+      "spell_id": "spell_beacon_lantern_oath_17",
+      "texture_path": "res://art/battle/vfx/spell_beacon_lantern_oath_17.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_beacon_lantern_oath_17_source.png",
+      "alt_text": "An open brass lantern releases its flame while soot-black chains split away.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_beacon_writ_lance_13": {
+      "spell_id": "spell_beacon_writ_lance_13",
+      "texture_path": "res://art/battle/vfx/spell_beacon_writ_lance_13.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_beacon_writ_lance_13_source.png",
+      "alt_text": "A blank parchment lance punches through a narrow white-gold ring.",
+      "render_mode": "spell_projectile",
+      "scale": 3.25,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_mire_lowtide_rot_16": {
+      "spell_id": "spell_mire_lowtide_rot_16",
+      "texture_path": "res://art/battle/vfx/spell_mire_lowtide_rot_16.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_mire_lowtide_rot_16_source.png",
+      "alt_text": "A drained marsh basin cracks around rotten reeds and decay blisters.",
+      "render_mode": "spell_target",
+      "scale": 2.20,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_mire_leech_poultice_26": {
+      "spell_id": "spell_mire_leech_poultice_26",
+      "texture_path": "res://art/battle/vfx/spell_mire_leech_poultice_26.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_mire_leech_poultice_26_source.png",
+      "alt_text": "A glowing herbal poultice draws dark droplets through three curled leech shapes.",
+      "render_mode": "spell_target",
+      "scale": 2.10,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_array_ray_06": {
+      "spell_id": "spell_lens_array_ray_06",
+      "texture_path": "res://art/battle/vfx/spell_lens_array_ray_06.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_lens_array_ray_06_source.png",
+      "alt_text": "Three aligned prism lenses converge into a sharp white-blue ray.",
+      "render_mode": "spell_projectile",
+      "scale": 3.10,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_lens_crown_prism_16": {
+      "spell_id": "spell_lens_crown_prism_16",
+      "texture_path": "res://art/battle/vfx/spell_lens_crown_prism_16.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_lens_crown_prism_16_source.png",
+      "alt_text": "Seven upright crystal shards lift black smoke into clean bright droplets.",
+      "render_mode": "spell_target",
+      "scale": 2.14,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_root_canopy_graft_06": {
+      "spell_id": "spell_root_canopy_graft_06",
+      "texture_path": "res://art/battle/vfx/spell_root_canopy_graft_06.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_root_canopy_graft_06_source.png",
+      "alt_text": "Split branches knit with golden sap beneath unfolding leaves.",
+      "render_mode": "spell_target",
+      "scale": 2.10,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_root_canopy_thorn_22": {
+      "spell_id": "spell_root_canopy_thorn_22",
+      "texture_path": "res://art/battle/vfx/spell_root_canopy_thorn_22.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_root_canopy_thorn_22_source.png",
+      "alt_text": "A forked canopy drives a heavy thorn spear through a hooked briar ring.",
+      "render_mode": "spell_target",
+      "scale": 2.18,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_furnace_coal_clause_17": {
+      "spell_id": "spell_furnace_coal_clause_17",
+      "texture_path": "res://art/battle/vfx/spell_furnace_coal_clause_17.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_furnace_coal_clause_17_source.png",
+      "alt_text": "Brass clamps crush a coal block into molten fractures and steam.",
+      "render_mode": "spell_target",
+      "scale": 2.18,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_furnace_rivet_clause_05": {
+      "spell_id": "spell_furnace_rivet_clause_05",
+      "texture_path": "res://art/battle/vfx/spell_furnace_rivet_clause_05.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_furnace_rivet_clause_05_source.png",
+      "alt_text": "Six red-hot rivets buckle a round iron plate from every side.",
+      "render_mode": "spell_target",
+      "scale": 2.18,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_veil_lantern_mark_16": {
+      "spell_id": "spell_veil_lantern_mark_16",
+      "texture_path": "res://art/battle/vfx/spell_veil_lantern_mark_16.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_veil_lantern_mark_16_source.png",
+      "alt_text": "A hooded harbor lantern stamps a dark salt ring with a hard beam.",
+      "render_mode": "spell_target",
+      "scale": 2.10,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_veil_moon_mark_28": {
+      "spell_id": "spell_veil_moon_mark_28",
+      "texture_path": "res://art/battle/vfx/spell_veil_moon_mark_28.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_veil_moon_mark_28_source.png",
+      "alt_text": "Three black tide arcs crack a pearl disk into a crescent shockwave.",
+      "render_mode": "spell_target",
+      "scale": 2.14,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_old_measure_compass_correction_22": {
+      "spell_id": "spell_old_measure_compass_correction_22",
+      "texture_path": "res://art/battle/vfx/spell_old_measure_compass_correction_22.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_old_measure_compass_correction_22_source.png",
+      "alt_text": "A brass survey needle sweeps broken chalk beyond a clean open circle.",
+      "render_mode": "spell_target",
+      "scale": 2.12,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_old_measure_marker_tally_08": {
+      "spell_id": "spell_old_measure_marker_tally_08",
+      "texture_path": "res://art/battle/vfx/spell_old_measure_marker_tally_08.png",
+      "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_old_measure_marker_tally_08_source.png",
+      "alt_text": "Iron marker weights split a stack of blank stone tally blocks.",
+      "render_mode": "spell_target",
+      "scale": 2.14,
       "base_rotation_degrees": 0.0
     },
     "vfx_placeholder_idle_shadow": {
