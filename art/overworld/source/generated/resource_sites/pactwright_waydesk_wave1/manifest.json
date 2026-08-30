@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "generator_mode": "built_in_image_gen",
+  "source_model": "original_transparent_orthographic_neutral_waydesk",
+  "resource_site_id": "site_pactwright_waydesk",
+  "source_path": "res://art/overworld/source/generated/resource_sites/pactwright_waydesk_wave1/pactwright_waydesk_source.png",
+  "source_sha256": "416b9e58e10a7bc207e64cbe328fe8075c603cb654f663428e9bac12b22d6d32",
+  "generation_original": "/root/.codex/generated_images/019fe72a-30b1-76f3-b911-385c4444bd16/exec-5b26daa3-f3eb-4232-9f42-6548e96602bc.png",
+  "runtime_atlas": "res://art/overworld/runtime/objects/resource_sites/pactwright_waydesk_state_atlas.png",
+  "runtime_atlas_size": [96, 48],
+  "runtime_atlas_sha256": "b1b7c9c8c87ab65c6b3c1f1487bc48b04b7bdf7ac5a363917707cefb82c7786d",
+  "runtime_region_size": [48, 48],
+  "processing": "Preserve generated alpha, alpha-trim and aspect-fit the neutral desk within a transparent 48px cell; derive the witnessed state from the same master with six small physical wax witness marks so identity and footprint remain exact.",
+  "prompt_summary": "An original portable darkwood and brass frontier writing desk with an open route ledger, compact awning, compass rivet, wax kit, strong neutral silhouette, genuine transparency, and no people, text, logos, terrain card, or copied franchise expression.",
+  "states": [
+    {"asset_id": "mapobj_pactwright_waydesk", "atlas_region": [0, 0, 48, 48], "role": "unwitnessed open neutral desk"},
+    {"asset_id": "resource_site_pactwright_waydesk_witnessed", "atlas_region": [48, 0, 48, 48], "role": "same desk bearing six visible wax witness marks"}
+  ]
+}

@@ -14878,6 +14878,39 @@ Non-goals:
 - no new faction, unit, hero, town, spell, artifact, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
 - no copied Heroes campaign, map, faction story, emblem, seal, name, text, creature, dwelling, or protected visual expression.
 
+## Unbound Road Ledger Campaign
+
+id: `content-unbound-road-ledger-campaign-10184`
+
+Status: completed.
+
+Current finding:
+- 45 of the 87 authored scenarios remain skirmish-only, and six compact 11x6 faction contracts already provide one underused commander, one signature rival front, one claimed enemy town, and one exact recovery flag per production faction;
+- Tollglass Relief Run, Muckscript Reliquary Hunt, Mirrorstep Gauge Race, Briarmarshal Fen Cordon, Railhead Charter Seizure, and Mistcorsair Graftwake Raid currently end at isolated faction victories rather than contributing to a connected player-facing arc;
+- the highest-impact bounded follow-up is to add a shared post-boss Waydesk witness objective to those six live roads and connect their recovered tally, reliquary, gauge, drum, charter, and ghost-rope evidence through one original cross-faction campaign.
+
+Implementation boundary:
+- add one original Pactwright Waydesk frontier shrine with a persistent witnessed state, compact neutral/witnessed landmark art, exact claim flag, bounded field reward, response profile, accessibility text, source provenance, and live renderer ownership;
+- place one collision-safe Waydesk behind each scenario's existing signature boss, bind it to that exact guard front, add a local victory objective and one-time testimony hook, enable campaign availability, and preserve every existing skirmish objective, encounter, hero, faction, town, and scripted counterstroke;
+- add the six-chapter `The Unbound Road Ledger` campaign for Torren, Sable, Varis, Ardren, Kuld, and Cela with exact victory-plus-local-witness unlocks and capped resource-only carryover, never transferring hero progression, spells, artifacts, or units across faction changes;
+- create one original campaign emblem and six original chapter seals for the drowned tally, peat reliquary, redline gauge, rooted drum, burning charter, and salted ghost-rope, with non-color descriptions, exact source/runtime integrity, source-art package exclusion, save version 9, and Windows/Linux package size below 250000000 bytes.
+
+Completion criteria:
+- all six chapters launch through campaign mode and skirmish, construct their three existing authored fronts, keep the exact signature boss blocking the new Waydesk, require a local witness claim for victory, and fire their testimony exactly once;
+- chapters unlock sequentially only after the prior victory and scoped Waydesk witness, import only capped common resources and prefixed testimony flags, and retain each commander's original progression, spellbook, artifacts, and army;
+- the Waydesk states, campaign emblem, and six seals load as nine alpha-safe original runtime identities with accessible descriptions, exact provenance, and no generated source art in release packages;
+- one consolidated six-chapter gameplay/progression/guard/site/visual/save smoke passes after the full batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Completion result:
+- shipped one original six-chapter campaign across the Tollglass, Muckscript, Mirrorstep, Briarmarshal, Railhead, and Graftwake contracts, preserving skirmish play while adding one exact post-boss Waydesk witness objective and one-time testimony per faction;
+- added the live Pactwright Waydesk with neutral/witnessed atlas states, one original 128x128 campaign emblem, and six original 64x64 chapter seals backed by alpha-safe 1254x1254 generated sources, exact provenance, accessible descriptions, and source-art package exclusion;
+- the single consolidated campaign smoke passed all six boards, 18 production battle payloads, six guarded claims, sequential unlocks, resource-only cross-faction carryover, exact save-version-9 round trips, six rendered board captures, and seven byte-distinct campaign art identities;
+- repository validation passed, and matching Linux/Windows exports packaged and booted the complete runtime asset set at 249074584 bytes, 925416 bytes below the unchanged 250000000-byte ceiling.
+
+Non-goals:
+- no new faction, unit, hero, town, spell, artifact, encounter definition, combat formula, strategic-AI algorithm, RMG behavior, save-version bump, certification, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes campaign, map, faction story, ledger, shrine, emblem, seal, name, text, landmark, or protected visual expression.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
