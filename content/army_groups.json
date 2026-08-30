@@ -1647,6 +1647,46 @@
         {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 5},
         {"unit_id": "unit_veilmourn_wakeglass_navigators", "count": 2}
       ]
+    },
+    {
+      "id": "army_horizon_court_meridian_noonwire_tribunal", "name": "Meridian Noonwire Tribunal", "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_sunvault_prism_adepts", "count": 8},
+        {"unit_id": "unit_sunvault_resonant_choristers", "count": 4},
+        {"unit_id": "unit_sunvault_zenith_lensbearers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_horizon_court_crownroot_rootglass_jury", "name": "Crownroot Rootglass Jury", "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 8},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 4},
+        {"unit_id": "unit_thornwake_canopy_rammers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_horizon_court_blackbell_quenchline_assize", "name": "Blackbell Quenchline Assize", "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 8},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 4},
+        {"unit_id": "unit_brasshollow_pressure_lancers", "count": 2}
+      ]
+    },
+    {
+      "id": "army_horizon_court_pale_saltwake_board", "name": "Pale Saltwake Board", "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 8},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 4},
+        {"unit_id": "unit_veilmourn_wakeglass_navigators", "count": 2}
+      ]
+    },
+    {
+      "id": "army_horizon_court_rainwrit_tidewrit_assize", "name": "Rainwrit Tidewrit Assize", "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_embercourt_lantern_sappers", "count": 8},
+        {"unit_id": "unit_embercourt_bargebow_crews", "count": 4},
+        {"unit_id": "unit_embercourt_beaconline_writguard", "count": 2}
+      ]
     }
   ]
 }

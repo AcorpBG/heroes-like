@@ -21,13 +21,13 @@ const EXPECTED_CONTROL_SHAPES := {
 	"neutral": "hollow_square",
 }
 const EXPECTED_AUTHORED_TYPE_COUNTS := {
-	"cover_line": 21,
-	"obstruction_line": 8,
-	"lane_battery": 12,
+	"cover_line": 22,
+	"obstruction_line": 9,
+	"lane_battery": 13,
 	"hazard_zone": 14,
-	"breach_point": 6,
+	"breach_point": 7,
 	"ritual_pylon": 8,
-	"signal_beacon": 16,
+	"signal_beacon": 17,
 	"supply_post": 18,
 }
 
@@ -188,7 +188,7 @@ func _authored_coverage_summary() -> Dictionary:
 			authored_objective_count += 1
 	return {
 		"ok": encounters.size() == 113 \
-			and authored_objective_count == 103 \
+			and authored_objective_count == 108 \
 			and type_counts == EXPECTED_AUTHORED_TYPE_COUNTS \
 			and type_counts.keys().all(func(objective_type): return EXPECTED_PATHS.has(objective_type)),
 		"authored_encounter_count": encounters.size(),
