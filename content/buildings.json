@@ -3194,6 +3194,148 @@
       },
       "readiness_bonus": 6,
       "pressure_bonus": 1
+    },
+    {
+      "id": "building_embercourt_beaconline_charter_house",
+      "name": "Beaconline Charter House",
+      "category": "dwelling",
+      "description": "A signal-lit river charter commissions veteran Beaconline Writguard as a repeatable town auxiliary.",
+      "cost": {
+        "gold": 2450,
+        "wood": 2,
+        "ore": 2,
+        "embergrain": 2
+      },
+      "content_status": "auxiliary_charter_hall_live",
+      "faction_id": "faction_embercourt",
+      "requires": [
+        "building_market_square",
+        "building_embercourt_beacon_court"
+      ],
+      "unlock_unit_id": "unit_embercourt_beaconline_writguard",
+      "growth_bonus": {
+        "unit_embercourt_beaconline_writguard": 2
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_mireclaw_fenbell_hunt_lodge",
+      "name": "Fenbell Hunt Lodge",
+      "category": "dwelling",
+      "description": "Antler bells and chained hunt paths call Fenbell Chainstalkers into the town muster.",
+      "cost": {
+        "gold": 2350,
+        "wood": 3,
+        "ore": 1,
+        "peatwax": 2
+      },
+      "content_status": "auxiliary_charter_hall_live",
+      "faction_id": "faction_mireclaw",
+      "requires": [
+        "building_market_square",
+        "building_mireclaw_sporewake_shrine"
+      ],
+      "unlock_unit_id": "unit_mireclaw_fenbell_chainstalkers",
+      "growth_bonus": {
+        "unit_mireclaw_fenbell_chainstalkers": 2
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_sunvault_zenith_relay_hall",
+      "name": "Zenith Relay Hall",
+      "category": "dwelling",
+      "description": "A measured meridian relay commissions Zenith Lensbearers for the town's reserve arrays.",
+      "cost": {
+        "gold": 2550,
+        "wood": 1,
+        "ore": 3,
+        "aetherglass": 2
+      },
+      "content_status": "auxiliary_charter_hall_live",
+      "faction_id": "faction_sunvault",
+      "requires": [
+        "building_market_square",
+        "building_sunvault_zenith_observatory"
+      ],
+      "unlock_unit_id": "unit_sunvault_zenith_lensbearers",
+      "growth_bonus": {
+        "unit_sunvault_zenith_lensbearers": 2
+      },
+      "readiness_bonus": 3
+    },
+    {
+      "id": "building_thornwake_canopy_breach_grove",
+      "name": "Canopy Breach Grove",
+      "category": "dwelling",
+      "description": "Forked living gates raise Canopy Rammers for repeatable breach and countercharge service.",
+      "cost": {
+        "gold": 2400,
+        "wood": 3,
+        "ore": 1
+      },
+      "content_status": "auxiliary_charter_hall_live",
+      "faction_id": "faction_thornwake",
+      "requires": [
+        "building_market_square",
+        "building_thornwake_pilgrim_orchard"
+      ],
+      "unlock_unit_id": "unit_thornwake_canopy_rammers",
+      "growth_bonus": {
+        "unit_thornwake_canopy_rammers": 2
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_brasshollow_redline_charter_bay",
+      "name": "Redline Charter Bay",
+      "category": "dwelling",
+      "description": "Pressure rails and certified lance racks place Redline Lancers on the weekly production ledger.",
+      "cost": {
+        "gold": 2700,
+        "wood": 1,
+        "ore": 3,
+        "brass_scrip": 2
+      },
+      "content_status": "auxiliary_charter_hall_live",
+      "faction_id": "faction_brasshollow",
+      "requires": [
+        "building_market_square",
+        "building_brasshollow_pressure_rail"
+      ],
+      "unlock_unit_id": "unit_brasshollow_pressure_lancers",
+      "growth_bonus": {
+        "unit_brasshollow_pressure_lancers": 2
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_veilmourn_wakeglass_chart_house",
+      "name": "Wakeglass Chart House",
+      "category": "dwelling",
+      "description": "Suspended wakeglass compasses commission Navigators for fog routes beyond the common muster.",
+      "cost": {
+        "gold": 2450,
+        "wood": 2,
+        "ore": 2,
+        "memory_salt": 2
+      },
+      "content_status": "auxiliary_charter_hall_live",
+      "faction_id": "faction_veilmourn",
+      "requires": [
+        "building_market_square",
+        "building_veilmourn_obituary_vault"
+      ],
+      "unlock_unit_id": "unit_veilmourn_wakeglass_navigators",
+      "growth_bonus": {
+        "unit_veilmourn_wakeglass_navigators": 2
+      },
+      "readiness_bonus": 2,
+      "pressure_bonus": 1
     }
   ]
 }

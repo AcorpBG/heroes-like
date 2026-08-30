@@ -47072,7 +47072,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     ensure(atlas.is_file() and Path(f"{atlas}.import").is_file(), errors, "Building category source atlas and import must exist")
 
     buildings = load_json(CONTENT_DIR / "buildings.json").get("items", [])
-    ensure(isinstance(buildings, list) and len(buildings) == 133, errors, "Building category adoption must cover exactly 133 production buildings")
+    ensure(isinstance(buildings, list) and len(buildings) == 139, errors, "Building category adoption must cover exactly 139 production buildings")
     if isinstance(buildings, list):
         for building in buildings:
             if isinstance(building, dict):
@@ -47113,7 +47113,7 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     ensure_scene_nodes(scene_text, errors, "town_building_category_icon_runtime_report.tscn", [("TownBuildingCategoryIconRuntimeReport", "Node")])
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        "building_count == 133", "category_counts.size() == 5", "asset_paths.size() == 5",
+        "building_count == 139", "category_counts.size() == 5", "asset_paths.size() == 5",
         'shell.get_node_or_null("%BuildActions")', 'shell.validation_select_build_plan(action_id)',
         'shell._apply_build_action_icon(invalid_button, {"id": "build:missing_building"})',
         "confirm.emit_signal(\"pressed\")", "TownRules.build_active_town(control, building_id)",
@@ -47305,6 +47305,12 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         "building_veilmourn_saltwake_factor",
         "building_veilmourn_tideglass_chapel",
         "building_veilmourn_wake_oratory",
+        "building_embercourt_beaconline_charter_house",
+        "building_mireclaw_fenbell_hunt_lodge",
+        "building_sunvault_zenith_relay_hall",
+        "building_thornwake_canopy_breach_grove",
+        "building_brasshollow_redline_charter_bay",
+        "building_veilmourn_wakeglass_chart_house",
     ]
     manifest_root = load_json(BUILDING_ART_MANIFEST_PATH)
     rows = manifest_root.get("items", [])
@@ -47333,7 +47339,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
             ensure(row.get("icon_sha256") == icon_hash, errors, f"Building {building_id} icon hash must be exact")
             header = icon_path.read_bytes()[:26]
             ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Building {building_id} icon must retain alpha")
-    ensure(len(set(source_hashes)) == 133 and len(set(icon_hashes)) == 133, errors, "All one hundred thirty-three building sources and icons must be distinct")
+    ensure(len(set(source_hashes)) == 139 and len(set(icon_hashes)) == 139, errors, "All 139 building sources and icons must be distinct")
 
     generator_text = BUILDING_ICON_GENERATOR_PATH.read_text(encoding="utf-8")
     for token in ("BUILDING_IDS = (", "SOURCE_SIZE = (1254, 1254)", "ICON_SIZE = (256, 256)", "ImageOps.contain", "Image.Resampling.LANCZOS", 'compress_level=9', '"source_sha256": sha256(source_path)', '"icon_sha256": sha256(runtime_path)'):
@@ -47368,7 +47374,7 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == _target_building_ids().size()", "specific_count == 133", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == _target_building_ids().size()", "specific_count == 139", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(source_path)", "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     ensure('var fallback_id := "building_embercourt_granary_lock_exchange"' not in report_text, errors, "Focused building icon report must not treat Embercourt's now-specific Granary Lock Exchange as a category fallback")
     ensure('var fallback_id := "building_brasshollow_clause_court"' not in report_text, errors, "Focused building icon report must not treat Brasshollow's now-specific Clause Court as a category fallback")

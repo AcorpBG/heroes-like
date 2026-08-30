@@ -148,6 +148,12 @@ BUILDING_IDS = (
     "building_veilmourn_saltwake_factor",
     "building_veilmourn_tideglass_chapel",
     "building_veilmourn_wake_oratory",
+    "building_embercourt_beaconline_charter_house",
+    "building_mireclaw_fenbell_hunt_lodge",
+    "building_sunvault_zenith_relay_hall",
+    "building_thornwake_canopy_breach_grove",
+    "building_brasshollow_redline_charter_bay",
+    "building_veilmourn_wakeglass_chart_house",
 )
 
 

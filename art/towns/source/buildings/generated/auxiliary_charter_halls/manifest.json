@@ -1,0 +1,71 @@
+{
+  "schema_id": "auxiliary_charter_hall_building_art_v1",
+  "generator": "OpenAI built-in image generation",
+  "generated_at": "2026-08-30",
+  "use_case": "stylized-concept",
+  "asset_type": "fantasy strategy game town building master",
+  "curation": "Accepted outputs were alpha-checked, trimmed, contained within 1170x1170, and centered on the established transparent 1254x1254 curated-building canvas. Brasshollow used one built-in background-extraction pass. Earlier Mireclaw matte and checkerboard attempts were rejected; the retained Mireclaw source is a fresh genuine-alpha generation and required no background cleanup.",
+  "runtime_pipeline": "tools/generate_building_icon_assets.py derives the shipped 256x256 icons; art/towns/source is excluded from Linux and Windows release packages.",
+  "items": [
+    {
+      "building_id": "building_embercourt_beaconline_charter_house",
+      "prompt": "Original Embercourt Beaconline Charter House: a compact fortified river-charter hall with a high ember lantern mast, hooked pike racks, red fired-clay walls, brass writ seals, and a narrow sluice bridge; polished painterly fantasy strategy-game building icon, centered isometric three-quarter view, complete silhouette, warm signal-fire glow, genuine transparent alpha; one building only, no checkerboard, people, text, letters, logos, watermark, border, or copied game imagery.",
+      "generation_original": "res://art/towns/source/buildings/generated/auxiliary_charter_halls/building_embercourt_beaconline_charter_house_generation_original.png",
+      "generation_original_sha256": "2279e17724600e9e2f5cf611efbd81464e14ddea967b97feceb54ab57cd4851d",
+      "curated_source": "res://art/towns/source/buildings/curated/building_embercourt_beaconline_charter_house.png",
+      "curated_source_sha256": "cdf56f6a3c84cd3ec651df590ad6a87727e102cd7d6f9a5e45640c4467b1b2d0",
+      "runtime_icon_sha256": "62fe2c395ae9b338d2982c70c0e1f093273cf7386e0837ef48d7fe723bdd0aa4",
+      "non_color_identity": "Tall caged beacon, fortified red river hall, sluice bridge, and pike racks."
+    },
+    {
+      "building_id": "building_mireclaw_fenbell_hunt_lodge",
+      "prompt": "Original Mireclaw Fenbell Hunt Lodge as one dense solid silhouette: compact closed marsh lodge on a peat-and-timber foundation, steep layered reed roof, one antler-and-chain bell directly above the roof, green fen lanterns, hide shutters, and a short attached plank stair; polished painterly fantasy strategy-game building icon, centered square isometric view, genuine RGBA transparent background and transparent corners; no open archways, detached towers, checkerboard, gradient, studio backdrop, floor card, people, text, letters, logos, watermark, border, or copied game imagery.",
+      "generation_original": "res://art/towns/source/buildings/generated/auxiliary_charter_halls/building_mireclaw_fenbell_hunt_lodge_generation_original.png",
+      "generation_original_sha256": "f1dce33c66cc40a833f502a0591cd96e1572b409bf8ddebf5cd4f7214943a95b",
+      "curated_source": "res://art/towns/source/buildings/curated/building_mireclaw_fenbell_hunt_lodge.png",
+      "curated_source_sha256": "6eb48720fa706e5a2d3d4aecbe62cd886c18cecf15b1d6e58ca2359afe0f27b2",
+      "runtime_icon_sha256": "74df42b25b25439b55b6d5026defd4df28894ff1cd033606325acd8e6ee8d498",
+      "non_color_identity": "Dense reed lodge beneath an oversized antler bell with chained roof braces."
+    },
+    {
+      "building_id": "building_sunvault_zenith_relay_hall",
+      "prompt": "Original Sunvault Zenith Relay Hall: precise stepped observatory hall with a suspended faceted sun lens, slim mirrored colonnades, calibrated brass meridian ring, white stone terraces, and blue-gold relay prisms; polished painterly fantasy strategy-game building icon, centered isometric three-quarter view, complete silhouette, measured noon refraction, genuine transparent alpha; one building only, no checkerboard, people, text, letters, logos, watermark, border, or copied game imagery.",
+      "generation_original": "res://art/towns/source/buildings/generated/auxiliary_charter_halls/building_sunvault_zenith_relay_hall_generation_original.png",
+      "generation_original_sha256": "bd9b57a69293280c62ee41fdafea8f53a1ece471789495b89f7a2e17f91c1601",
+      "curated_source": "res://art/towns/source/buildings/curated/building_sunvault_zenith_relay_hall.png",
+      "curated_source_sha256": "2b279c68d88bfbdae0aeb1f01c4195166536334d554f288ec534b8d33efc2e23",
+      "runtime_icon_sha256": "805b95000c0145e7636ab2ab8a3b1aec4b021b97872f1b8f4e07e04bcf0b48dc",
+      "non_color_identity": "Great suspended faceted orb inside crossing meridian rings above stepped colonnades."
+    },
+    {
+      "building_id": "building_thornwake_canopy_breach_grove",
+      "prompt": "Original Thornwake Canopy Breach Grove: living circular muster grove grown from immense braided roots, forked-antler gate, bark-armored ram training arch, green sap lantern pods, seed pennants, and a low bramble palisade; polished painterly fantasy strategy-game building icon, centered isometric three-quarter view, complete silhouette, warm forest light, genuine transparent alpha; one building only, no checkerboard, people, text, letters, logos, watermark, border, or copied game imagery.",
+      "generation_original": "res://art/towns/source/buildings/generated/auxiliary_charter_halls/building_thornwake_canopy_breach_grove_generation_original.png",
+      "generation_original_sha256": "b5c8144b1c4a7c5555c43c05bd078929ee04c4a55002d843cb5dccc193ea6dac",
+      "curated_source": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "curated_source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "runtime_icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "non_color_identity": "Braided living-root arena with huge forked antlers and a ram training frame."
+    },
+    {
+      "building_id": "building_brasshollow_redline_charter_bay",
+      "prompt": "Original Brasshollow Redline Charter Bay: compact industrial cavalry bay with a sloped iron launch rail, paired pressure cylinders, brass gauges, lance racks, red furnace vent, riveted stone piers, and a contract bell; polished painterly fantasy strategy-game building icon, centered isometric three-quarter view, complete silhouette, furnace glow, genuine transparent alpha; one building only, no checkerboard, people, text, letters, logos, watermark, border, or copied game imagery. A built-in background-extraction pass removed only the initial studio gradient while preserving the building.",
+      "generation_original": "res://art/towns/source/buildings/generated/auxiliary_charter_halls/building_brasshollow_redline_charter_bay_generation_original.png",
+      "generation_original_sha256": "ca595fe5388b8b5318814ef4f8103599d251ad687a529363389e80a66892aab4",
+      "curated_source": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "curated_source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "runtime_icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "non_color_identity": "Twin pressure cylinders feed a long launch rail beside a furnace and vertical lance rack."
+    },
+    {
+      "building_id": "building_veilmourn_wakeglass_chart_house",
+      "prompt": "Original Veilmourn Wakeglass Chart House: fogbound harbor chart house on dark timber pilings, suspended cyan wakeglass compass, mourning bell, black sail awnings, mirrored tide windows, salt-white rope, and a narrow crooked jetty; polished painterly fantasy strategy-game building icon, centered isometric three-quarter view, complete silhouette, cold mist-lantern glow, genuine transparent alpha; one building only, no checkerboard, people, text, letters, logos, watermark, border, or copied game imagery.",
+      "generation_original": "res://art/towns/source/buildings/generated/auxiliary_charter_halls/building_veilmourn_wakeglass_chart_house_generation_original.png",
+      "generation_original_sha256": "b2b2718873ff9c1ae8c504cbba0764eb3f2c71172be19b1209bf4ffafb82f929",
+      "curated_source": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "curated_source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "runtime_icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "non_color_identity": "Tall black-sail chart house with a suspended glass compass, mourning bell, and crooked jetty."
+    }
+  ]
+}
