@@ -2360,6 +2360,66 @@
       "art_source_kind": "curated_original_character_v1",
       "curated_source": "res://art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
       "curated_source_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc"
+    },
+    {
+      "id": "unit_thornwake_seedglass_cantors",
+      "unit_id": "unit_thornwake_seedglass_cantors",
+      "name": "Seedglass Cantors",
+      "faction_id": "faction_thornwake",
+      "tier": 5,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_thornwake_seedglass_cantors.png",
+      "battle_icon": "res://art/units/battle_icons/unit_thornwake_seedglass_cantors.png",
+      "battle_standee": "res://art/units/battle_standees/unit_thornwake_seedglass_cantors.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_thornwake_seedglass_cantors.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_thornwake_seedglass_cantors.png",
+      "curated_source_sha256": "8681a55c2a69ea56fc3c5210e13fa594aec2ce15e9fdb4378e0503c1448e4cce"
+    },
+    {
+      "id": "unit_brasshollow_quenchbell_mortars",
+      "unit_id": "unit_brasshollow_quenchbell_mortars",
+      "name": "Quenchbell Mortars",
+      "faction_id": "faction_brasshollow",
+      "tier": 5,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_brasshollow_quenchbell_mortars.png",
+      "battle_icon": "res://art/units/battle_icons/unit_brasshollow_quenchbell_mortars.png",
+      "battle_standee": "res://art/units/battle_standees/unit_brasshollow_quenchbell_mortars.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_quenchbell_mortars.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_brasshollow_quenchbell_mortars.png",
+      "curated_source_sha256": "d13d6b5da5bd7284e51360a70bc2611e5effcb1ab2d0048af06fded673408bdb"
+    },
+    {
+      "id": "unit_veilmourn_saltwake_eulogists",
+      "unit_id": "unit_veilmourn_saltwake_eulogists",
+      "name": "Saltwake Eulogists",
+      "faction_id": "faction_veilmourn",
+      "tier": 5,
+      "role": "ranged",
+      "motif": "ranged",
+      "portrait": "res://art/units/portraits/unit_veilmourn_saltwake_eulogists.png",
+      "battle_icon": "res://art/units/battle_icons/unit_veilmourn_saltwake_eulogists.png",
+      "battle_standee": "res://art/units/battle_standees/unit_veilmourn_saltwake_eulogists.png",
+      "battle_standee_anchor": {
+        "x": 0.5,
+        "y": 0.973214
+      },
+      "overworld_icon": "res://art/units/overworld_icons/unit_veilmourn_saltwake_eulogists.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+      "curated_source_sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6"
     }
   ]
 }

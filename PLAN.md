@@ -24,8 +24,44 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `content-five-horizon-court-skirmishes-10184` is completed as one coherent five-faction playable-start and exact-art batch; the broader content-expansion goal remains active for a later selected slice.
-- Current package boundary: matching Linux and Windows release exports measure 249352096 bytes, 647904 bytes below the unchanged 250000000-byte ceiling. New runtime art must stay compact and generated masters must remain excluded.
+- Current implementation slice: `content-three-horizon-specialist-companies-10184` is completed as one coherent Thornwake, Brasshollow, and Veilmourn unit/building/battle batch.
+- Current package boundary: matching Linux and Windows release exports measure 249875744 bytes, 124256 bytes below the unchanged 250000000-byte ceiling; generated-source art, reports, Grastl source sheets, and Grastl experiments are excluded from both packages.
+
+## Three Horizon Specialist Companies
+
+id: `content-three-horizon-specialist-companies-10184`
+
+Status: completed.
+
+Completion result:
+- Seedglass Cantors, Quenchbell Mortars, and Saltwake Eulogists are live as three original tier-five ranged specialists with supported tactical contracts, exact faction armies, field objectives, and day-four counterstroke battles in the Crownroot, Blackbell, and Pale Sounding Horizon skirmishes;
+- Seedglass Cantory, Quenchbell Mortar Bay, and Saltwake Eulogy House are buildable live dwellings with weekly growth and muster routes, while the expanded towns still complete their full authored development within thirty turns;
+- resolving each specialist battle recruits two survivors exactly once, and construction, mustering, battle resolution, recruitment, and save-version-9 continuity pass together in one consolidated three-case smoke;
+- six original generated masters provide three complete unit surface sets and three building icons; compact runtime palette generation keeps the inspected silhouettes readable and both release packages below the unchanged ceiling;
+- repository validation and matching Linux and Windows packaged startup pass at 249875744 bytes, with generated sources, reports, Grastl source sheets, and Grastl experiments excluded.
+
+Current finding:
+- Thornwake, Brasshollow, and Veilmourn each own only eight live units while the other production factions own eleven or twelve, and all three underfilled factions remain especially narrow in ranged/support specialists;
+- Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor are live player towns in separate Horizon court skirmishes, and each scenario already owns a scripted day-four counterstroke that can carry one new specialist battle and survivor-recruitment route without adding another scenario record;
+- the Linux and Windows release packages currently include more than 130 MB of unreferenced Grastl terrain-generation source sheets and experiments because the broad generated-directory glob does not exclude the nested workfiles. Live terrain references only the compact `frames_64` output.
+
+Implementation boundary:
+- add one original ranged/support specialist to each underfilled faction, with distinct statistics and established live ability contracts: Crownroot Seedglass Cantors, Blackbell Quenchbell Mortars, and Pale Sounding Saltwake Eulogists;
+- add one faction-correct specialist building to Crownroot Refuge, Blackbell Foundry, and Pale Sounding Harbor, providing repeatable weekly growth and live muster access through the existing town authority and popup flows;
+- replace each selected Horizon court's day-four counterstroke with a new specialist-led army and encounter, then recruit surviving specialists once after that battle resolves;
+- generate three original transparent unit masters and three original transparent building masters, derive the complete established runtime unit surfaces and compact building icons, and retain prompt/hash provenance outside release packages;
+- explicitly exclude Grastl source sheets and experiments from both release presets and make both package gates fail if those development paths reappear;
+- preserve existing objectives, deterministic battle authority, save version 9, Windows/Linux paths, accessibility descriptions, generated-source exclusion, and the unchanged 250000000-byte package ceiling.
+
+Completion criteria:
+- all three units construct in live production battles with their exact statistics, supported abilities, and portrait/icon/standee/animation/overworld art; each counterstroke can be defeated and recruits its exact survivor payload once;
+- all three player towns can build their exact specialist hall, gain the correct weekly growth, and recruit the specialist through TownRules, with built/recruit/save authority round-tripping exactly through save version 9;
+- Grastl source sheets and experiments are absent from both packages while live `frames_64` terrain remains present;
+- one consolidated three-faction gameplay/battle/town/art/save smoke runs only after the complete batch, followed by repository validation and matching Linux/Windows packaged startup below the unchanged ceiling.
+
+Non-goals:
+- no new faction, hero, town, base seven-tier ladder, spell, artifact, campaign, battle algorithm, strategic-AI rewrite, RMG behavior, save schema, signing, publication, whole-game validation, or release-readiness claim;
+- no copied Heroes unit, building, encounter, name, text, visual design, or protected expression.
 
 ## Six Horizon Citadels
 

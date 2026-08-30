@@ -6852,6 +6852,33 @@
       "presentation_role": "wakeglass_navigation_trial",
       "accessible_description": "A mourning-cloaked pilot beneath a suspended wakeglass compass marks the Veilmourn auxiliary trial company."
     },
+    "encounter_horizon_specialist_seedglass_trial": {
+      "path": "res://art/units/overworld_icons/unit_thornwake_seedglass_cantors.png",
+      "source_generated": "res://art/units/source/curated/unit_thornwake_seedglass_cantors.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_crownroot_seedglass_trial",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "seedglass_refrain_company_trial",
+      "accessible_description": "A pale-barked archer hung with amber-green seedglass chimes marks Crownroot's specialist refrain trial."
+    },
+    "encounter_horizon_specialist_quenchbell_proving": {
+      "path": "res://art/units/overworld_icons/unit_brasshollow_quenchbell_mortars.png",
+      "source_generated": "res://art/units/source/curated/unit_brasshollow_quenchbell_mortars.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_blackbell_quenchbell_proving",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "quenchbell_red_gauge_proving",
+      "accessible_description": "A compact black-iron mortar with a glowing bell mouth marks Blackbell's red-gauge specialist proving."
+    },
+    "encounter_horizon_specialist_saltwake_recital": {
+      "path": "res://art/units/overworld_icons/unit_veilmourn_saltwake_eulogists.png",
+      "source_generated": "res://art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+      "source_model": "curated_original_character_unit_landmark_reuse",
+      "assigned_encounter_id": "encounter_pale_saltwake_recital",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "saltwake_last_safe_line_recital",
+      "accessible_description": "A masked mourning chronicler carrying three pale saltglass tablets marks Pale Sounding's last recital."
+    },
     "encounter_commission_beaconline_writguard": {
       "path": "res://art/units/overworld_icons/unit_embercourt_beaconline_writguard.png",
       "source_generated": "res://art/units/source/curated/unit_embercourt_beaconline_writguard.png",
@@ -8196,7 +8223,10 @@
     "encounter_horizon_court_crownroot_rootglass_jury": "encounter_horizon_court_crownroot_rootglass_jury",
     "encounter_horizon_court_blackbell_quenchline_assize": "encounter_horizon_court_blackbell_quenchline_assize",
     "encounter_horizon_court_pale_saltwake_board": "encounter_horizon_court_pale_saltwake_board",
-    "encounter_horizon_court_rainwrit_tidewrit_assize": "encounter_horizon_court_rainwrit_tidewrit_assize"
+    "encounter_horizon_court_rainwrit_tidewrit_assize": "encounter_horizon_court_rainwrit_tidewrit_assize",
+    "encounter_crownroot_seedglass_trial": "encounter_horizon_specialist_seedglass_trial",
+    "encounter_blackbell_quenchbell_proving": "encounter_horizon_specialist_quenchbell_proving",
+    "encounter_pale_saltwake_recital": "encounter_horizon_specialist_saltwake_recital"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_with_procedural_fallback_preserved_for_unmapped_non_decoration_objects",

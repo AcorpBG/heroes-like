@@ -39,7 +39,11 @@ FORBIDDEN_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/homm3_local_prototype/",
     "art/overworld/runtime/terrain_tiles/generated/",
 )
-FORBIDDEN_DEVELOPMENT_PCK_PREFIXES = ("reports/",)
+FORBIDDEN_DEVELOPMENT_PCK_PREFIXES = (
+    "reports/",
+    "art/overworld/runtime/terrain_tiles/generated/grastl/source_sheets/",
+    "art/overworld/runtime/terrain_tiles/generated/grastl/experiments/",
+)
 REQUIRED_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/terrain_tiles/base/",
     "art/overworld/runtime/terrain_tiles/detail/",
@@ -1026,6 +1030,7 @@ def main() -> int:
         "terrain_pck_forbidden_entry_count": len(terrain_payload["forbidden_entries"]),
         "development_pck_forbidden_entry_count": len(terrain_payload["forbidden_development_entries"]),
         "development_reports_pck_excluded": not terrain_payload["forbidden_development_entries"],
+        "terrain_generation_workfiles_pck_excluded": not terrain_payload["forbidden_development_entries"],
         "terrain_pck_required_entries_present": terrain_payload["required_entries_present"],
         "artifact_field_pck_import_entry_count": len(terrain_payload["artifact_field_import_entries"]),
         "artifact_field_pck_texture_count": len(set(terrain_payload["artifact_field_texture_names"])),

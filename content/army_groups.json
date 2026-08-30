@@ -1687,6 +1687,30 @@
         {"unit_id": "unit_embercourt_bargebow_crews", "count": 4},
         {"unit_id": "unit_embercourt_beaconline_writguard", "count": 2}
       ]
+    },
+    {
+      "id": "army_crownroot_seedglass_trial", "name": "Crownroot Seedglass Trial", "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedglass_cantors", "count": 3},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 6},
+        {"unit_id": "unit_thornwake_barkmantle_rams", "count": 3}
+      ]
+    },
+    {
+      "id": "army_blackbell_quenchbell_proving", "name": "Blackbell Quenchbell Proving", "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_quenchbell_mortars", "count": 3},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 6},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 3}
+      ]
+    },
+    {
+      "id": "army_pale_saltwake_recital", "name": "Pale Sounding Last Recital", "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_saltwake_eulogists", "count": 3},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 6},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 3}
+      ]
     }
   ]
 }

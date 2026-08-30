@@ -15745,10 +15745,10 @@
   "currentNotes": "Six Horizon Citadels completed as one substantial content batch with one consolidated live smoke, repository validation, and matching Linux/Windows packaged boots.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-six-horizon-citadels-10184",
-  "currentSliceId": "content-five-horizon-court-skirmishes-10184",
-  "currentSliceNotes": "Implemented five playable Horizon court skirmishes, five original three-stack court encounters and a 240x48 exact landmark atlas. Consolidated live smoke passed 5 scenarios, 15 battles, 5 exact art regions, 5 victories, and save v9 round trips; repository validation and Linux/Windows package boots passed at matching 249352096-byte PCKs with source masters excluded.",
+  "currentSliceId": "content-three-horizon-specialist-companies-10184",
+  "currentSliceNotes": "Implemented three original tier-five specialist units, three buildable dwellings, three live Horizon counterstroke battles with one-time survivor recruitment, six generated source masters and complete runtime art; consolidated gameplay/art/save smoke and repository validation pass; Linux and Windows packages boot from matching 249875744-byte PCKs with source art, reports, and Grastl workfiles excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "content five horizon court skirmishes 10184",
+  "currentSliceTitle": "content three horizon specialist companies 10184",
   "currentSliceUpdatedAt": "2026-08-30T15:42:57Z",
   "deferredRiskRegister": [
     {
@@ -106568,6 +106568,16 @@
       "startedAt": "2026-08-30T16:55:06Z",
       "notes": "Implemented five playable Horizon court skirmishes, five original three-stack court encounters and a 240x48 exact landmark atlas. Consolidated live smoke passed 5 scenarios, 15 battles, 5 exact art regions, 5 victories, and save v9 round trips; repository validation and Linux/Windows package boots passed at matching 249352096-byte PCKs with source masters excluded.",
       "completedAt": "2026-08-30T17:22:39Z"
+    },
+    {
+      "id": "content-three-horizon-specialist-companies-10184",
+      "title": "content three horizon specialist companies 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-30T18:03:49Z",
+      "startedAt": "2026-08-30T17:28:52Z",
+      "notes": "Implemented three original tier-five specialist units, three buildable dwellings, three live Horizon counterstroke battles with one-time survivor recruitment, six generated source masters and complete runtime art; consolidated gameplay/art/save smoke and repository validation pass; Linux and Windows packages boot from matching 249875744-byte PCKs with source art, reports, and Grastl workfiles excluded.",
+      "completedAt": "2026-08-30T18:03:49Z"
     }
   ],
   "project": "heroes-like",
@@ -107112,7 +107122,7 @@
   ],
   "summary": "Implementing Six Horizon Citadels: one new live strategic town per faction with complete original scenic and overworld art and batched validation.",
   "taskId": "10184",
-  "updatedAt": "2026-08-30T17:22:39Z",
+  "updatedAt": "2026-08-30T18:03:49Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

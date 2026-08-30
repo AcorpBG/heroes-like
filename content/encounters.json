@@ -2873,6 +2873,27 @@
       "enemy_commander": {"name": "Charter-Keeper Oren Floodseal", "command": {"attack": 2, "defense": 3, "power": 1, "knowledge": 2}, "starting_spell_ids": ["spell_lantern_phalanx"], "battle_traits": ["linekeeper", "vanguard"]},
       "field_objectives": [{"id": "horizon_rainwrit_tidewrit", "type": "cover_line", "label": "Tidewrit Sluice Ledger", "summary": "Twin sluice keys shelter the raised flood charter; turn the wet causeway before its copper plates seal the crossing.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["cohesion", "commander", "urgency"]}],
       "rewards": {"gold": 440, "embergrain": 1, "experience": 340}, "victory_flags": ["horizon_rainwrit_tidewrit_broken"]
+    },
+    {
+      "id": "encounter_crownroot_seedglass_trial", "name": "Crownroot Seedglass Trial", "enemy_group_id": "army_crownroot_seedglass_trial", "affiliation": "faction_thornwake", "terrain": "forest",
+      "battlefield_tags": ["fortified_line", "open_lane"], "max_rounds": 14,
+      "enemy_commander": {"name": "Cantor-Root Ilyra Clearseed", "command": {"attack": 1, "defense": 3, "power": 2, "knowledge": 2}, "starting_spell_ids": ["spell_graft_mend"], "battle_traits": ["linekeeper", "artillerist"]},
+      "field_objectives": [{"id": "crownroot_seedglass_refrain", "type": "cover_line", "label": "Seedglass Refrain", "summary": "The trial choir holds its amber chime line until Crownroot's living cadence is answered across the marked roots.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 3, "pressure_tags": ["ranged", "cohesion", "urgency"]}],
+      "rewards": {"gold": 360, "verdant_grafts": 1, "experience": 260}, "victory_flags": ["crownroot_seedglass_trial_passed"]
+    },
+    {
+      "id": "encounter_blackbell_quenchbell_proving", "name": "Blackbell Quenchbell Proving", "enemy_group_id": "army_blackbell_quenchbell_proving", "affiliation": "faction_brasshollow", "terrain": "lava",
+      "battlefield_tags": ["battery_nest", "wall_pressure"], "max_rounds": 14,
+      "enemy_commander": {"name": "Gauge-Proctor Varo Blacktone", "command": {"attack": 3, "defense": 2, "power": 1, "knowledge": 1}, "starting_spell_ids": ["spell_pressure_clause"], "battle_traits": ["artillerist", "vanguard"]},
+      "field_objectives": [{"id": "blackbell_quenchbell_interval", "type": "lane_battery", "label": "Quenchbell Interval", "summary": "The proving line remains calibrated while the black bell sounds between its two red gauge marks.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["ranged", "momentum", "urgency"]}],
+      "rewards": {"gold": 380, "brass_scrip": 1, "experience": 270}, "victory_flags": ["blackbell_quenchbell_proving_passed"]
+    },
+    {
+      "id": "encounter_pale_saltwake_recital", "name": "Pale Sounding Last Recital", "enemy_group_id": "army_pale_saltwake_recital", "affiliation": "faction_veilmourn", "terrain": "coast",
+      "battlefield_tags": ["fog_bank", "open_lane"], "max_rounds": 14,
+      "enemy_commander": {"name": "Eulogist Mara Lastwake", "command": {"attack": 1, "defense": 2, "power": 3, "knowledge": 2}, "starting_spell_ids": ["spell_obituary_mark"], "battle_traits": ["ambusher", "linekeeper"]},
+      "field_objectives": [{"id": "pale_saltwake_last_line", "type": "signal_beacon", "label": "Last Safe Line", "summary": "Three saltglass tablets keep the recital inside its false tide margin until the pale bearing is claimed.", "starting_side": "enemy", "capture_threshold": 2, "urgency_round": 2, "pressure_tags": ["initiative", "commander", "urgency"]}],
+      "rewards": {"gold": 370, "memory_salt": 1, "experience": 270}, "victory_flags": ["pale_saltwake_recital_passed"]
     }
   ]
 }

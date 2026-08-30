@@ -48,7 +48,7 @@ func _catalog_contract() -> Dictionary:
 		if String(icon.get("icon_id", "")) != "building_category_sigil_%s" % category_id or texture == null or texture.get_size() != Vector2(128.0, 128.0):
 			return {"ok": false, "failure": "category_asset", "category_id": category_id, "icon": icon, "size": texture.get_size() if texture != null else Vector2.ZERO}
 	return {
-		"ok": building_count == 139 and category_counts.size() == 5 and asset_paths.size() == 5,
+		"ok": building_count == 142 and category_counts.size() == 5 and asset_paths.size() == 5,
 		"building_count": building_count,
 		"category_counts": category_counts,
 		"asset_paths": asset_paths,

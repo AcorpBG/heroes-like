@@ -1260,6 +1260,33 @@
       "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
       "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
       "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064"
+    },
+    {
+      "id": "building_thornwake_seedglass_cantory",
+      "building_id": "building_thornwake_seedglass_cantory",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_seedglass_cantory.png",
+      "source_sha256": "bfe79166b6f683e2dc3ad7fa454816a1d62f5d570811ec94d59302a2548f5ead",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_seedglass_cantory.png",
+      "icon_sha256": "4ba935e1801f23f85698fe9d499354fefc143f88828a4fec5213ce9c457cb9a9"
+    },
+    {
+      "id": "building_brasshollow_quenchbell_mortar_bay",
+      "building_id": "building_brasshollow_quenchbell_mortar_bay",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_quenchbell_mortar_bay.png",
+      "source_sha256": "fe0f69ac21e4c6db7384987dfa97dd374b29283e544a69809e81dca55441e560",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_quenchbell_mortar_bay.png",
+      "icon_sha256": "d22591d5b04db49ba5488b685ac709cf9ecb3e4aa54d035eb6c901df65cd05e2"
+    },
+    {
+      "id": "building_veilmourn_saltwake_eulogy_house",
+      "building_id": "building_veilmourn_saltwake_eulogy_house",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_saltwake_eulogy_house.png",
+      "source_sha256": "87cde663f883e3211d60dcd3b6539fe868ac758dbab0459f6753f8f76e45aa61",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_saltwake_eulogy_house.png",
+      "icon_sha256": "b52b67af0948e3eee627bea3be126245d863cdb9c718ee3af9d94527ad5d3d78"
     }
   ]
 }

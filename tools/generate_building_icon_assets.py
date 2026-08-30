@@ -154,6 +154,9 @@ BUILDING_IDS = (
     "building_thornwake_canopy_breach_grove",
     "building_brasshollow_redline_charter_bay",
     "building_veilmourn_wakeglass_chart_house",
+    "building_thornwake_seedglass_cantory",
+    "building_brasshollow_quenchbell_mortar_bay",
+    "building_veilmourn_saltwake_eulogy_house",
 )
 
 
