@@ -43518,6 +43518,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 expected_canvas = (288, 48)
             elif source_model == "built_in_image_gen_original_grand_convergence_landmark_atlas":
                 expected_canvas = (288, 48)
+            elif source_model == "built_in_image_gen_original_systemic_encounter_landmark_atlas":
+                expected_canvas = (192, 48)
             elif source_model in {"built_in_image_gen_precise_object_edit_coast_route_operational_atlas", "built_in_image_gen_original_coast_route_operational_atlas"}:
                 expected_canvas = (288, 48)
             elif source_model in {"built_in_image_gen_original_elite_neutral_dwelling_atlas", "built_in_image_gen_precise_object_edit_elite_neutral_dwelling_atlas"}:
@@ -51916,7 +51918,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     unplaced_definition_ids = set(encounters) - placed_identity_ids
     ensure(len(all_placement_ids) == 369 and len(placed_identity_ids) == 97, errors, "Authored scenarios must retain exactly 369 placements across 97 distinct encounter identities")
     ensure(placed_identity_ids.issubset(set(identity_sprites)), errors, "Every encounter identity placed in an authored scenario must own exact live Overworld art")
-    ensure(len(encounters) == 101 and len(unplaced_definition_ids) == 4 and not (set(identity_sprites) & unplaced_definition_ids), errors, "Exact encounter art must cover the 97 live placed definitions without creating unused mappings for the 4 system-owned or scripted-only definitions")
+    ensure(len(encounters) == 101 and len(unplaced_definition_ids) == 4 and set(identity_sprites) == set(encounters), errors, "Exact encounter art must cover all 101 authored, system-owned, and scripted encounter definitions")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
@@ -51956,6 +51958,83 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
         ensure('"recurring_encounter_atlas_pck_entries_present"' in packaging_text, errors, f"{packaging_path.name} must report packaged recurring encounter atlas coverage")
         ensure('FORBIDDEN_DEVELOPMENT_PCK_PREFIXES = ("reports/",)' in packaging_text and 'not terrain_payload["forbidden_development_entries"]' in packaging_text, errors, f"{packaging_path.name} must fail when development reports enter the PCK")
         ensure('"development_reports_pck_excluded"' in packaging_text, errors, f"{packaging_path.name} must report development-report exclusion")
+
+
+def validate_systemic_encounter_landmarks(errors: list[str]) -> None:
+    expected = {
+        "encounter_town_assault": ("encounter_systemic_town_assault", "town_assault", [0, 0, 48, 48], "48b1c615c1b1c580dd9a7cc19e731818fd4111e4d67ef6809dc8cfefaf712975", "broken_gate_town_assault", "army_mireclaw_raiding_party"),
+        "encounter_resource_defense": ("encounter_systemic_resource_defense", "resource_defense", [48, 0, 48, 48], "5804dabcea14cc5f628d53e7b49adbaeb877bf43ec44b68713860c1a1043c6ff", "hooked_perimeter_field_defense", "army_mireclaw_raiding_party"),
+        "encounter_mire_raid": ("encounter_systemic_mire_raid", "mire_raid", [96, 0, 48, 48], "515a6a75f33ea5316e7db0a4da6dc5fe3ba3f090da886b5b6f880713a89ea7b9", "open_lane_mireclaw_raid_sled", "army_mireclaw_raiding_party"),
+        "encounter_blackbranch_reavers": ("encounter_systemic_blackbranch_reavers", "blackbranch_reavers", [144, 0, 48, 48], "01664ed60635827a4b0a7f4e5866ba759a824e500437a5e5fd91ab842414c309", "blackbranch_crossed_ambush_blind", "army_blackbranch_reavers"),
+    }
+    source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "encounters" / "systemic_encounters"
+    source_manifest_path = source_dir / "manifest.json"
+    atlas_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "encounters" / "systemic" / "systemic_encounter_landmarks_atlas.png"
+    report_script_path = ROOT / "tests" / "systemic_encounter_landmark_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "systemic_encounter_landmark_runtime_report.tscn"
+    required_paths = (OVERWORLD_ART_MANIFEST_PATH, source_manifest_path, atlas_path, report_script_path, report_scene_path, CONTENT_DIR / "encounters.json", CONTENT_DIR / "army_groups.json", CONTENT_DIR / "scenarios.json")
+    for path in required_paths:
+        ensure(path.is_file(), errors, f"Missing systemic encounter landmark owner: {path.relative_to(ROOT)}")
+    if not all(path.is_file() for path in required_paths):
+        return
+
+    atlas_payload = atlas_path.read_bytes()
+    ensure(png_size(atlas_path) == (192, 48), errors, "Systemic encounter landmark atlas must remain a compact 192x48 strip")
+    ensure(hashlib.sha256(atlas_payload).hexdigest() == "d4c6cf3cabdb6070317a6b467265ff79a5b9f9e0432cb3ff67af56a1d360570f" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Systemic encounter landmark atlas bytes or alpha changed")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Systemic encounter landmark atlas import metadata is missing")
+
+    art_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = art_manifest.get("object_assets", {})
+    identity_sprites = art_manifest.get("encounter_identity_sprites", {})
+    encounters = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "encounters.json").get("items", []) if isinstance(row, dict)}
+    groups = {str(row.get("id", "")): row for row in load_json(CONTENT_DIR / "army_groups.json").get("items", []) if isinstance(row, dict)}
+    scenarios = [row for row in load_json(CONTENT_DIR / "scenarios.json").get("items", []) if isinstance(row, dict)]
+    ensure(len(encounters) == 101 and set(identity_sprites) == set(encounters), errors, "Every one of the 101 encounter definitions must now own exact live Overworld art")
+
+    source_manifest = load_json(source_manifest_path)
+    source_rows = {str(row.get("encounter_id", "")): row for row in source_manifest.get("sources", []) if isinstance(row, dict)}
+    runtime_atlas = source_manifest.get("runtime_atlas", {})
+    ensure(source_manifest.get("schema") == "systemic_encounter_landmark_source_manifest_v1" and source_manifest.get("generation_mode") == "built_in_image_gen", errors, "Systemic encounter generation provenance changed")
+    ensure(runtime_atlas.get("path") == "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png" and runtime_atlas.get("size") == [192, 48] and runtime_atlas.get("cell_size") == [48, 48] and runtime_atlas.get("region_count") == 4 and runtime_atlas.get("sha256") == "d4c6cf3cabdb6070317a6b467265ff79a5b9f9e0432cb3ff67af56a1d360570f" and runtime_atlas.get("package_policy") == "single_imported_atlas_only", errors, "Systemic encounter source manifest atlas contract changed")
+    ensure(set(source_rows) == set(expected), errors, "Systemic encounter source manifest must own exactly the four previously unmapped identities")
+
+    source_payloads: list[bytes] = []
+    for encounter_id, (asset_id, stem, region, source_sha, role, group_id) in expected.items():
+        entry = object_assets.get(asset_id, {}) if isinstance(object_assets, dict) else {}
+        source_res = f"res://art/overworld/source/generated/encounters/systemic_encounters/{stem}_source.png"
+        ensure(identity_sprites.get(encounter_id) == asset_id and entry.get("path") == "res://art/overworld/runtime/objects/encounters/systemic/systemic_encounter_landmarks_atlas.png", errors, f"{encounter_id} exact live mapping is missing")
+        ensure(entry.get("atlas_region") == region and entry.get("atlas_size") == [192, 48] and entry.get("source_generated") == source_res, errors, f"{encounter_id} atlas region or source ownership changed")
+        ensure(entry.get("source_model") == "built_in_image_gen_original_systemic_encounter_landmark_atlas" and entry.get("assigned_encounter_id") == encounter_id and entry.get("assigned_faction_id") == "faction_mireclaw", errors, f"{encounter_id} generation or faction ownership changed")
+        ensure(entry.get("presentation_role") == role and len(str(entry.get("accessible_description", "")).strip()) >= 40, errors, f"{encounter_id} role or non-color description changed")
+        definition = encounters.get(encounter_id, {})
+        ensure(definition.get("enemy_group_id") == group_id and groups.get(group_id, {}).get("faction_id") == "faction_mireclaw" and len(definition.get("battlefield_tags", [])) >= 1, errors, f"{encounter_id} live battle ownership changed")
+        source_path = res_path_to_disk(source_res)
+        ensure(source_path.is_file() and min(png_size(source_path)) >= 1024 and Path(f"{source_path}.import").is_file(), errors, f"{encounter_id} high-resolution source or import is missing")
+        if source_path.is_file():
+            payload = source_path.read_bytes()
+            ensure(hashlib.sha256(payload).hexdigest() == source_sha and len(payload) >= 26 and payload[25] in {4, 6}, errors, f"{encounter_id} source bytes or alpha changed")
+            source_payloads.append(payload)
+        row = source_rows.get(encounter_id, {})
+        ensure(row.get("asset_id") == asset_id and row.get("path") == source_res and row.get("sha256") == source_sha and row.get("atlas_region") == region and str(row.get("generated_original", "")).startswith("/root/.codex/generated_images/") and len(str(row.get("prompt_summary", "")).strip()) >= 40, errors, f"{encounter_id} source manifest row changed")
+    ensure(len(source_payloads) == 4 and len(set(source_payloads)) == 4, errors, "All four systemic encounter sources must remain byte-distinct")
+
+    raid_pool_counts = {encounter_id: 0 for encounter_id in ("encounter_mire_raid", "encounter_blackbranch_reavers")}
+    for scenario in scenarios:
+        for faction in scenario.get("enemy_factions", []):
+            if not isinstance(faction, dict):
+                continue
+            for encounter_id in faction.get("raid_encounter_ids", []):
+                if encounter_id in raid_pool_counts:
+                    raid_pool_counts[encounter_id] += 1
+    ensure(raid_pool_counts == {"encounter_mire_raid": 10, "encounter_blackbranch_reavers": 2}, errors, "Systemic raid landmarks must retain their live authored raid-pool breadth")
+
+    report_text = report_script_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene_path.read_text(encoding="utf-8"), errors, "systemic_encounter_landmark_runtime_report.tscn", [("SystemicEncounterLandmarkRuntimeReport", "Node")])
+    for token in ('const VIEWPORT_SIZE := Vector2i(1280, 720)', 'texture is AtlasTexture', 'BattleRules.create_battle_payload(session, placements[0])', '"exact_art_coverage": "101/101"', 'restored.from_dict(save_payload)', 'session.to_dict() != authority_before', 'OS.get_environment("SYSTEMIC_ENCOUNTER_CAPTURE")', 'print("SYSTEMIC_ENCOUNTER_LANDMARK_RUNTIME_REPORT %s"'):
+        ensure(token in report_text, errors, f"Systemic encounter consolidated runtime owner is missing exact proof: {token}")
+    for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
+        packaging_text = packaging_path.read_text(encoding="utf-8")
+        ensure('REQUIRED_SYSTEMIC_ENCOUNTER_ATLAS_NAME = "systemic_encounter_landmarks_atlas"' in packaging_text and 'systemic/systemic_encounter_landmarks_atlas.png.import' in packaging_text and 'len(required_recurring_encounter_atlas_texture_entries) == 11' in packaging_text, errors, f"{packaging_path.name} must audit the compact systemic encounter atlas")
 
 
 def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
@@ -77485,6 +77564,7 @@ def main() -> int:
     validate_seven_final_neutral_dwelling_musters(errors)
     validate_two_elite_neutral_dwellings(errors)
     validate_recurring_encounter_landmarks(errors)
+    validate_systemic_encounter_landmarks(errors)
     validate_recurring_resource_site_landmarks(errors)
     validate_live_faction_landmarks(errors)
     validate_hero_specialty_insignia(errors)
